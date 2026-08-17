@@ -21,7 +21,8 @@ public class PumpMenu extends MachineMenu {
 
 	/** Client side. */
 	public PumpMenu(int syncId, Inventory playerInventory) {
-		super(ModContent.PUMP_MENU.get(), syncId, playerInventory, new SimpleContainer(4 + UPGRADE_SLOT_COUNT),
+		super(ModContent.PUMP_MENU.get(), syncId, playerInventory,
+				new SimpleContainer(PumpBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
 				new SimpleContainerData(PumpBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL, ModContent.PUMP.get());
 	}
 

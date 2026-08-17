@@ -188,9 +188,7 @@ public final class FluidTankScenarios {
 
 		BlockPos target = POS.east();
 		helper.setBlock(target.below(), net.minecraft.world.level.block.Blocks.STONE);
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
-		player.setGameMode(GameType.SURVIVAL);
-		player.getAbilities().instabuild = false;
+		ServerPlayer player = AlaGameTestHelper.survivalPlayer(helper);
 		player.setItemInHand(InteractionHand.MAIN_HAND, filled);
 		BlockHitResult hit = new BlockHitResult(Vec3.atCenterOf(helper.absolutePos(target.below())),
 				Direction.UP, helper.absolutePos(target.below()), false);
@@ -228,9 +226,7 @@ public final class FluidTankScenarios {
 	public static void tcFluidTank001Fun03_modFluidBucketRoundTripsAndMobBucketIsRefused(
 			GameTestHelper helper) {
 		FluidTankBlockEntity tank = place(helper);
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
-		player.setGameMode(GameType.SURVIVAL);
-		player.getAbilities().instabuild = false;
+		ServerPlayer player = AlaGameTestHelper.survivalPlayer(helper);
 		BlockHitResult hit = new BlockHitResult(Vec3.atCenterOf(tank.getBlockPos()), Direction.UP,
 				tank.getBlockPos(), false);
 
@@ -293,9 +289,7 @@ public final class FluidTankScenarios {
 
 	public static void tcFluidTank001Fun01_bucketAndCapsuleUseRealClickRouting(GameTestHelper helper) {
 		FluidTankBlockEntity tank = place(helper);
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
-		player.setGameMode(GameType.SURVIVAL);
-		player.getAbilities().instabuild = false;
+		ServerPlayer player = AlaGameTestHelper.survivalPlayer(helper);
 		BlockHitResult hit = new BlockHitResult(Vec3.atCenterOf(tank.getBlockPos()), Direction.UP,
 				tank.getBlockPos(), false);
 

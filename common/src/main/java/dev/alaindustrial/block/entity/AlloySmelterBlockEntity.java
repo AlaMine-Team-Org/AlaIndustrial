@@ -41,7 +41,6 @@ public final class AlloySmelterBlockEntity extends MachineBlockEntity implements
 	public static final int INPUT_SLOT_2 = 2;
 	public static final int OUTPUT_SLOT = 3;
 	public static final int SLOT_COUNT = 4;
-	private static final int OUTPUT_MAX = 64;
 	private static final int[] NO_SLOTS = new int[0];
 
 	private final RecipeManager.CachedCheck<AlloyRecipeInput, AlloyingRecipe> recipeCheck =
@@ -102,6 +101,7 @@ public final class AlloySmelterBlockEntity extends MachineBlockEntity implements
 				setChanged();
 			}
 			updateLit(false);
+			recordEuRate(0);
 			return IDLE_SLEEP_TICKS;
 		}
 
@@ -110,9 +110,12 @@ public final class AlloySmelterBlockEntity extends MachineBlockEntity implements
 		// very slot the affordability check approved.
 		int[] assignment = recipe.assign(input, true);
 		ItemStack result = recipe.resultStack();
-		boolean canWork = assignment != null && energy.getAmount() >= euPerTick && canOutput(result);
+		boolean canWork = assignment != null && energy.getAmount() >= euPerTick
+				&& canOutput(OUTPUT_SLOT, result);
 
 		updateLit(canWork);
+		// MOD-125/MOD-440: the statistics panel's "now" line is this tick's draw, 0 when stopped.
+		recordEuRate(canWork ? euPerTick : 0);
 		if (!canWork) {
 			return IDLE_SLEEP_TICKS;
 		}
@@ -122,30 +125,13 @@ public final class AlloySmelterBlockEntity extends MachineBlockEntity implements
 		if (progress >= maxProgress) {
 			recipe.consume(List.of(items.get(INPUT_SLOT_0), items.get(INPUT_SLOT_1), items.get(INPUT_SLOT_2)),
 					assignment);
-			addOutput(result);
+			addOutput(OUTPUT_SLOT, result);
+			recordItemProcessed();
 			progress = 0;
 			creditUsefulWork(level, (long) euPerTick * maxProgress); // MOD-133: completed op → XP
 		}
 		setChanged();
 		return 0;
-	}
-
-	private boolean canOutput(ItemStack result) {
-		if (result.isEmpty()) {
-			return false;
-		}
-		ItemStack out = items.get(OUTPUT_SLOT);
-		return out.isEmpty() || (ItemStack.isSameItem(out, result)
-				&& out.getCount() + result.getCount() <= Math.min(OUTPUT_MAX, out.getMaxStackSize()));
-	}
-
-	private void addOutput(ItemStack result) {
-		ItemStack out = items.get(OUTPUT_SLOT);
-		if (out.isEmpty()) {
-			items.set(OUTPUT_SLOT, result.copy());
-		} else {
-			out.grow(result.getCount());
-		}
 	}
 
 	/** Whether {@code slot} is one of the three interchangeable input slots. */

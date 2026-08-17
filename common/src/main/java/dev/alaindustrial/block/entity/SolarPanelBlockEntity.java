@@ -38,6 +38,8 @@ import net.minecraft.world.level.storage.ValueOutput;
  */
 public class SolarPanelBlockEntity extends AbstractGeneratorBlockEntity implements MenuProvider {
 	public static final int CHIP_SLOT = 0;
+	/** Machine-slot count (indices before the upgrade block) — the client menu stub sizes its container from this (MOD-439). */
+	public static final int SLOT_COUNT = 1;
 	private static final int MAX_EXTRACT = 20;
 
 	/** Caches the sky/weather verdict for {@link Config#solarSkySampleTicks} ticks to avoid a per-tick column scan. */
@@ -63,7 +65,7 @@ public class SolarPanelBlockEntity extends AbstractGeneratorBlockEntity implemen
 	private int evolveProgress;
 
 	public SolarPanelBlockEntity(BlockPos pos, BlockState state) {
-		super(ModContent.SOLAR_PANEL_BE.get(), pos, state, EnergyTier.LV, 1, Config.solarBuffer, MAX_EXTRACT);
+		super(ModContent.SOLAR_PANEL_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT, Config.solarBuffer, MAX_EXTRACT);
 	}
 
 	@Override

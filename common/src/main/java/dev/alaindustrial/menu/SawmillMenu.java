@@ -1,5 +1,6 @@
 package dev.alaindustrial.menu;
 
+import dev.alaindustrial.block.entity.AbstractProcessingMachineBlockEntity;
 import dev.alaindustrial.block.entity.SawmillBlockEntity;
 import dev.alaindustrial.block.entity.SawmillMode;
 import dev.alaindustrial.registry.ModContent;
@@ -10,7 +11,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -33,7 +33,8 @@ public class SawmillMenu extends MachineMenu {
 
 	/** Client side — 5-wide data (energy/capacity/progress/maxProgress + mode) matches the server bridge. */
 	public SawmillMenu(int syncId, Inventory playerInventory) {
-		super(ModContent.SAWMILL_MENU.get(), syncId, playerInventory, new SimpleContainer(2 + UPGRADE_SLOT_COUNT),
+		super(ModContent.SAWMILL_MENU.get(), syncId, playerInventory,
+				new SimpleContainer(AbstractProcessingMachineBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
 				new SimpleContainerData(SawmillBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL, ModContent.SAWMILL.get());
 		this.sawmill = null;
 	}
@@ -44,12 +45,7 @@ public class SawmillMenu extends MachineMenu {
 		// the frame so the band underneath is free for the four mode buttons (see SawmillScreen).
 		addSlot(new Slot(machine, 0, 55, 19));
 		// Output slot: result only, no manual insertion (spec).
-		addSlot(new Slot(machine, 1, 116, 19) {
-			@Override
-			public boolean mayPlace(ItemStack stack) {
-				return false;
-			}
-		});
+		addSlot(new OutputSlot(machine, 1, 116, 19));
 	}
 
 	/** The active cutting mode, read from synced data (works on both sides). */

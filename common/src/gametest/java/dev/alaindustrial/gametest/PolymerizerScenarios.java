@@ -20,6 +20,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.TagValueInput;
 
+import static dev.alaindustrial.gametest.AlaGameTestHelper.drive;
+
 /**
  * Loader-neutral gametest bodies for the Polymerizer (MOD-019, suite TC-POLY-001). Wrapped by the
  * Fabric {@code PolymerizerGameTest} suite and registered on the NeoForge {@code gameTestServer} lane
@@ -72,10 +74,6 @@ public final class PolymerizerScenarios {
 	private static void fill(PolymerizerBlockEntity be, long mb) {
 		be.fluidTank.fluid = FluidHolder.of(ModContent.OIL.get());
 		be.fluidTank.amount = mb;
-	}
-
-	private static void drive(PolymerizerBlockEntity be, GameTestHelper helper, int ticks) {
-		AlaGameTestHelper.drive(be, helper, ticks);
 	}
 
 	// ── FUN01: a stocked, powered machine makes raw rubber and drinks exactly one recipe volume ──────

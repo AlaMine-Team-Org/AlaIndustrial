@@ -42,6 +42,8 @@ import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.phys.AABB;
 
+import static dev.alaindustrial.gametest.AlaGameTestHelper.drive;
+
 /**
  * Loader-neutral gametest bodies for the Assembler (MOD-275). Wrapped by the Fabric
  * {@code AssemblerGameTest} suite and registered on the NeoForge {@code gameTestServer} lane
@@ -98,10 +100,6 @@ public final class AssemblerScenarios {
 	 */
 	private static int ticksFor(int ops) {
 		return ops * (Config.scaledDuration(Config.assemblerDuration) + 2);
-	}
-
-	private static void drive(GameTestHelper helper, AssemblerBlockEntity be, int ticks) {
-		AlaGameTestHelper.drive(be, helper, ticks);
 	}
 
 	/** Builder for a nine-cell pattern; {@link #blueprint()} stamps it onto a recorded blueprint. */
@@ -269,7 +267,7 @@ public final class AssemblerScenarios {
 		store.setItem(0, new ItemStack(Items.OAK_PLANKS, 2));
 		be.setItem(AssemblerBlockEntity.BLUEPRINT_SLOT_START, stickBlueprint());
 
-		drive(helper, be, ticksFor(3));
+		drive(be, helper, ticksFor(3));
 
 		if (output(be, Items.STICK) != 4) {
 			helper.fail("one operation should put 4 sticks in the output area, got " + output(be, Items.STICK));
@@ -301,7 +299,7 @@ public final class AssemblerScenarios {
 		warehouse(helper);
 		be.setItem(AssemblerBlockEntity.BLUEPRINT_SLOT_START, stickBlueprint());
 
-		drive(helper, be, ticksFor(3));
+		drive(be, helper, ticksFor(3));
 
 		if (be.getEnergyStorage().getAmount() != AMPLE_EU) {
 			helper.fail("an assembler with no materials must not spend EU, spent "
@@ -333,7 +331,7 @@ public final class AssemblerScenarios {
 			be.setItem(AssemblerBlockEntity.OUTPUT_SLOT_START + i, new ItemStack(Items.COBBLESTONE, 64));
 		}
 
-		drive(helper, be, ticksFor(3));
+		drive(be, helper, ticksFor(3));
 
 		if (be.getEnergyStorage().getAmount() != AMPLE_EU) {
 			helper.fail("an assembler with a full output area must not spend EU, spent "
@@ -370,7 +368,7 @@ public final class AssemblerScenarios {
 			be.setItem(AssemblerBlockEntity.OUTPUT_SLOT_START + i, new ItemStack(Items.COBBLESTONE, 64));
 		}
 
-		drive(helper, be, ticksFor(3));
+		drive(be, helper, ticksFor(3));
 
 		ItemStack last = be.getItem(AssemblerBlockEntity.OUTPUT_SLOT_END - 1);
 		if (!last.is(Items.STICK) || last.getCount() != 4) {
@@ -412,7 +410,7 @@ public final class AssemblerScenarios {
 		be.setItem(AssemblerBlockEntity.BLUEPRINT_SLOT_START,
 				new Grid().at(4, ModContent.FORGE_HAMMER.get()).at(5, Items.IRON_INGOT).blueprint());
 
-		drive(helper, be, ticksFor(3));
+		drive(be, helper, ticksFor(3));
 
 		if (output(be, ModContent.IRON_PLATE.get()) != 1) {
 			helper.fail("hammering one ingot should make one iron plate, got "
@@ -461,7 +459,7 @@ public final class AssemblerScenarios {
 				new Grid().at(4, ModContent.FORGE_HAMMER.get()).at(5, Items.IRON_INGOT).blueprint());
 
 		// Room for six operations; only two can ever happen.
-		drive(helper, be, ticksFor(6));
+		drive(be, helper, ticksFor(6));
 
 		int plates = output(be, ModContent.IRON_PLATE.get());
 		if (plates != 2) {
@@ -510,7 +508,7 @@ public final class AssemblerScenarios {
 		be.setItem(AssemblerBlockEntity.BLUEPRINT_SLOT_START, ironBlock.blueprint());
 		be.setItem(AssemblerBlockEntity.BLUEPRINT_SLOT_START + 1, stickBlueprint());
 
-		drive(helper, be, ticksFor(3));
+		drive(be, helper, ticksFor(3));
 
 		if (output(be, Items.STICK) != 4) {
 			helper.fail("the queue must skip the starved blueprint and run the second one, got "
@@ -545,7 +543,7 @@ public final class AssemblerScenarios {
 		// The one case here that must NOT bound its materials: the whole point is that the first
 		// blueprint could keep going and hands over anyway, so the warehouse is deliberately deep and
 		// the window is exactly two operations. A top-down machine spends both of them on sticks.
-		drive(helper, be, ticksFor(2));
+		drive(be, helper, ticksFor(2));
 
 		if (output(be, Items.STICK) != 4) {
 			helper.fail("the first blueprint should have run once, got " + output(be, Items.STICK) + " sticks");
@@ -576,7 +574,7 @@ public final class AssemblerScenarios {
 		be.setItem(AssemblerBlockEntity.BLUEPRINT_SLOT_START,
 				new Grid().at(0, Items.DIAMOND).at(1, Items.DIAMOND).blueprint());
 
-		drive(helper, be, ticksFor(3));
+		drive(be, helper, ticksFor(3));
 
 		if (be.getStatus() != AssemblerStatus.NO_RECIPE) {
 			helper.fail("a blueprint with no recipe should report NO_RECIPE, got " + be.getStatus());
@@ -756,7 +754,7 @@ public final class AssemblerScenarios {
 			return;
 		}
 		// A few ticks in: started, nowhere near the 40-tick finish that would clear the slot again.
-		drive(helper, be, 5);
+		drive(be, helper, 5);
 
 		if (be.activeBlueprintSlot() != 1) {
 			helper.fail("the machine should be running the blueprint it can actually feed (slot 1), got "
@@ -941,7 +939,7 @@ public final class AssemblerScenarios {
 		// The player lays out a completely different recipe while the machine works.
 		be.setPatternCell(0, new ItemStack(Items.COBBLESTONE));
 		long before = be.getEnergyStorage().getAmount();
-		drive(helper, be, ticksFor(1));
+		drive(be, helper, ticksFor(1));
 
 		if (output(be, Items.STICK) != 4) {
 			helper.fail("the machine must keep crafting while the player is on the recording tab; got "
@@ -1182,7 +1180,7 @@ public final class AssemblerScenarios {
 		store.setItem(0, new ItemStack(Items.BIRCH_PLANKS, 2)); // one operation's worth, wrong species
 		be.setItem(AssemblerBlockEntity.BLUEPRINT_SLOT_START, oakStickBlueprint(helper, be));
 
-		drive(helper, be, ticksFor(3));
+		drive(be, helper, ticksFor(3));
 
 		if (output(be, Items.STICK) != 0) {
 			helper.fail("substitution is off by default, so birch planks must not satisfy a blueprint "
@@ -1199,7 +1197,7 @@ public final class AssemblerScenarios {
 			helper.fail("the substitution toggle refused a recorded blueprint");
 			return;
 		}
-		drive(helper, be, ticksFor(3));
+		drive(be, helper, ticksFor(3));
 
 		if (output(be, Items.STICK) != 4) {
 			helper.fail("with substitution on, birch planks are a legal stand-in in a recipe written "
@@ -1239,7 +1237,7 @@ public final class AssemblerScenarios {
 		be.toggleSubstitution(0);
 
 		// Exactly one operation's window: with substitution on, a second would eat the oak as well.
-		drive(helper, be, ticksFor(1));
+		drive(be, helper, ticksFor(1));
 
 		if (output(be, Items.STICK) != 4) {
 			helper.fail("one operation should make 4 sticks, got " + output(be, Items.STICK));
@@ -1318,7 +1316,7 @@ public final class AssemblerScenarios {
 		be.setItem(AssemblerBlockEntity.BLUEPRINT_SLOT_START, oakStairsBlueprint(helper, be));
 		be.toggleSubstitution(0);
 
-		drive(helper, be, ticksFor(3));
+		drive(be, helper, ticksFor(3));
 
 		if (output(be, Items.BIRCH_STAIRS) != 0 || output(be, Items.OAK_STAIRS) != 0) {
 			helper.fail("oak_stairs names minecraft:oak_planks literally, so birch is not a candidate — "
@@ -1334,7 +1332,7 @@ public final class AssemblerScenarios {
 
 		// Positive control: the very same blueprint runs the moment its own species is in stock.
 		store.setItem(1, new ItemStack(Items.OAK_PLANKS, 6));
-		drive(helper, be, ticksFor(3));
+		drive(be, helper, ticksFor(3));
 		if (output(be, Items.OAK_STAIRS) != 4) {
 			helper.fail("with oak in stock the blueprint must make 4 oak stairs, got "
 					+ output(be, Items.OAK_STAIRS));
@@ -1362,7 +1360,7 @@ public final class AssemblerScenarios {
 				new Grid().at(0, Items.DYE.red()).at(1, Items.DYE.yellow()).blueprint(helper, be));
 		be.toggleSubstitution(0);
 
-		drive(helper, be, ticksFor(3));
+		drive(be, helper, ticksFor(3));
 
 		if (output(be, Items.DYE.orange()) != 0) {
 			helper.fail("two yellow dyes are not an orange dye recipe — the substituted layout must be "
@@ -1380,7 +1378,7 @@ public final class AssemblerScenarios {
 		// to come back; it cannot overrun, since one red dye is exactly one operation's worth and a
 		// second operation would have to substitute yellow for red — the very thing just refused.
 		store.setItem(1, new ItemStack(Items.DYE.red(), 1));
-		drive(helper, be, ticksFor(4));
+		drive(be, helper, ticksFor(4));
 		if (output(be, Items.DYE.orange()) != 2) {
 			helper.fail("red + yellow makes 2 orange dye, got " + output(be, Items.DYE.orange()));
 			return;
@@ -1575,7 +1573,7 @@ public final class AssemblerScenarios {
 
 		// One whole operation, then a few ticks into the next: the cursor has rotated and progress is
 		// mid-flight, so neither reads as its freshly-placed default.
-		drive(helper, be, ticksFor(1) + 3);
+		drive(be, helper, ticksFor(1) + 3);
 		int cursor0 = be.queueCursor();
 		int progress0 = be.getDataAccess().get(2);
 		int sticks0 = output(be, Items.STICK);

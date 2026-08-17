@@ -32,7 +32,7 @@ public class ComponentRepairBenchMenu extends MachineMenu {
 
 	public ComponentRepairBenchMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.COMPONENT_REPAIR_BENCH_MENU.get(), syncId, playerInventory,
-				new SimpleContainer(2 + UPGRADE_SLOT_COUNT),
+				new SimpleContainer(ComponentRepairBenchBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
 				new SimpleContainerData(ComponentRepairBenchBlockEntity.DATA_COUNT),
 				ContainerLevelAccess.NULL, ModContent.COMPONENT_REPAIR_BENCH.get());
 	}

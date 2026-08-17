@@ -78,9 +78,6 @@ public class GalvanicBathBlockEntity extends MachineBlockEntity implements Overc
 	/** Internal tank: 10 buckets, matching the pump, the geothermal generator and the polymerizer. */
 	public static final long TANK_CAPACITY = FluidAmounts.BUCKET * 10;
 
-	/** Output stack cap, mirroring the other processing machines. */
-	private static final int OUTPUT_MAX = 64;
-
 	/** Sentinel for an empty tank on the fluid-id sync channel — the vanilla {@code IdMap} default. */
 	public static final int FLUID_ID_NONE = IdMap.DEFAULT;
 
@@ -156,10 +153,12 @@ public class GalvanicBathBlockEntity extends MachineBlockEntity implements Overc
 		// water out mid-cycle stops the run instead of completing it underpaid (MOD-271's lesson on
 		// the Vulcanizer's batch price).
 		boolean canWork = recipe != null && recipe.hasEnough(input) && fluidTank.amount >= waterPerOp
-				&& energy.getAmount() >= euPerTick && canOutput(result);
+				&& energy.getAmount() >= euPerTick && canOutput(OUTPUT_SLOT, result);
 
 		setStatus(diagnose(recipe, input, result, waterPerOp));
 		updateLit(canWork);
+		// MOD-125/MOD-440: the statistics panel's "now" line is this tick's draw, 0 when stopped.
+		recordEuRate(canWork ? euPerTick : 0);
 
 		if (canWork) {
 			energy.drainInternal(euPerTick);
@@ -168,7 +167,8 @@ public class GalvanicBathBlockEntity extends MachineBlockEntity implements Overc
 				progress = 0;
 				recipe.consume(List.of(items.get(FIBER_SLOT), items.get(SILVER_SLOT)));
 				consumeWater(waterPerOp);
-				addOutput(result);
+				addOutput(OUTPUT_SLOT, result);
+				recordItemProcessed();
 				creditUsefulWork(level, (long) euPerTick * maxProgress); // MOD-133: completed op → XP
 			}
 			setChanged();
@@ -227,7 +227,7 @@ public class GalvanicBathBlockEntity extends MachineBlockEntity implements Overc
 		if (fluidTank.amount < waterPerOp) {
 			return GalvanicBathStatus.NO_WATER;
 		}
-		if (!canOutput(result)) {
+		if (!canOutput(OUTPUT_SLOT, result)) {
 			return GalvanicBathStatus.OUTPUT_BLOCKED;
 		}
 		return GalvanicBathStatus.READY;
@@ -237,25 +237,6 @@ public class GalvanicBathBlockEntity extends MachineBlockEntity implements Overc
 		if (status != next) {
 			status = next;
 			setChanged();
-		}
-	}
-
-	/** Whether the output slot can accept one more {@code result} stack. */
-	private boolean canOutput(ItemStack result) {
-		if (result.isEmpty()) {
-			return false;
-		}
-		ItemStack out = items.get(OUTPUT_SLOT);
-		return out.isEmpty() || (ItemStack.isSameItem(out, result)
-				&& out.getCount() + result.getCount() <= Math.min(OUTPUT_MAX, out.getMaxStackSize()));
-	}
-
-	private void addOutput(ItemStack result) {
-		ItemStack out = items.get(OUTPUT_SLOT);
-		if (out.isEmpty()) {
-			items.set(OUTPUT_SLOT, result.copy());
-		} else {
-			out.grow(result.getCount());
 		}
 	}
 

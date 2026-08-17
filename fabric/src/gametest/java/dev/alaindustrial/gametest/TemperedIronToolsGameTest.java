@@ -1,17 +1,9 @@
 package dev.alaindustrial.gametest;
 
-import dev.alaindustrial.registry.ModItems;
 import net.fabricmc.fabric.api.gametest.v1.GameTest;
-import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.Enchantments;
 
 /**
  * L2 server game tests for tempered-iron hand tools (MOD-057) — tag membership + enchantability.
@@ -28,13 +20,9 @@ import net.minecraft.world.item.enchantment.Enchantments;
  * the membership (and therefore enchantability) holds, catching any future regression that drops
  * the tag JSON.
  *
- * <p>API symbols verified against {@code minecraft-common-deobf-26.2.jar} via {@code javap}:
- * {@link ItemStack#is(java.util.function.Predicate)} takes {@code Predicate<Holder<Item>>};
- * {@link Holder#is(TagKey)} yields the predicate;
- * {@link Enchantment#canEnchant(ItemStack)} checks {@code definition.supportedItems().contains(stack.typeHolder())}.
- *
- * <p>The NeoForge lane runs the same checks via {@link TemperedIronToolScenarios} (registered in
- * {@code NeoForgeGameTests}); this Fabric class is the mirror, per the MOD-022 dual-lane pattern.
+ * <p>Bodies live in {@link TemperedIronToolScenarios} (API notes there); the NeoForge lane registers the
+ * same bodies in {@code NeoForgeGameTests}, and this class is the Fabric wiring (MOD-445 removed the
+ * inline duplicates).
  */
 public class TemperedIronToolsGameTest {
 
@@ -48,12 +36,7 @@ public class TemperedIronToolsGameTest {
 	 */
 	@GameTest
 	public void tcTi001_toolMembershipTags(GameTestHelper helper) {
-		assertInTag(helper, ModItems.TEMPERED_IRON_PICKAXE, ItemTags.PICKAXES, "tempered_iron_pickaxe", "#minecraft:pickaxes");
-		assertInTag(helper, ModItems.TEMPERED_IRON_AXE,     ItemTags.AXES,     "tempered_iron_axe",     "#minecraft:axes");
-		assertInTag(helper, ModItems.TEMPERED_IRON_HOE,     ItemTags.HOES,     "tempered_iron_hoe",     "#minecraft:hoes");
-		assertInTag(helper, ModItems.TEMPERED_IRON_SHOVEL,  ItemTags.SHOVELS,  "tempered_iron_shovel",  "#minecraft:shovels");
-		assertInTag(helper, ModItems.TEMPERED_IRON_SWORD,   ItemTags.SWORDS,   "tempered_iron_sword",   "#minecraft:swords");
-		helper.succeed();
+		TemperedIronToolScenarios.toolMembershipTags(helper);
 	}
 
 	/**
@@ -70,52 +53,6 @@ public class TemperedIronToolsGameTest {
 	 */
 	@GameTest
 	public void tcTi002_enchantmentAccepted(GameTestHelper helper) {
-		ServerLevel level = helper.getLevel();
-		Holder<Enchantment> efficiency = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.EFFICIENCY);
-		Holder<Enchantment> unbreaking = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.UNBREAKING);
-		Holder<Enchantment> fortune    = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.FORTUNE);
-		Holder<Enchantment> silkTouch  = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.SILK_TOUCH);
-		Holder<Enchantment> mending    = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.MENDING);
-		Holder<Enchantment> sharpness  = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.SHARPNESS);
-		Holder<Enchantment> looting    = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.LOOTING);
-
-		ItemStack pickaxe = new ItemStack(ModItems.TEMPERED_IRON_PICKAXE);
-		ItemStack sword   = new ItemStack(ModItems.TEMPERED_IRON_SWORD);
-
-		// Pickaxe: mining + durability enchantments must be accepted.
-		assertCanEnchant(helper, efficiency, pickaxe, "efficiency", "tempered_iron_pickaxe");
-		assertCanEnchant(helper, unbreaking, pickaxe, "unbreaking", "tempered_iron_pickaxe");
-		assertCanEnchant(helper, fortune,    pickaxe, "fortune",    "tempered_iron_pickaxe");
-		assertCanEnchant(helper, silkTouch,  pickaxe, "silk_touch", "tempered_iron_pickaxe");
-		assertCanEnchant(helper, mending,    pickaxe, "mending",    "tempered_iron_pickaxe");
-
-		// Sword: weapon + durability enchantments must be accepted.
-		assertCanEnchant(helper, sharpness, sword, "sharpness", "tempered_iron_sword");
-		assertCanEnchant(helper, unbreaking, sword, "unbreaking", "tempered_iron_sword");
-		assertCanEnchant(helper, looting,   sword, "looting",   "tempered_iron_sword");
-		assertCanEnchant(helper, mending,   sword, "mending",   "tempered_iron_sword");
-
-		// Negative: a sword is NOT a mining tool — fortune must reject it (guards over-broad tags).
-		if (fortune.value().canEnchant(sword)) {
-			helper.fail("fortune accepted tempered_iron_sword — sword must not be in #minecraft:enchantable/mining");
-		}
-		helper.succeed();
-	}
-
-	/** Assert {@code item}'s default stack is a member of {@code tag}; fail with a readable message otherwise. */
-	private static void assertInTag(GameTestHelper helper, Item item, TagKey<Item> tag,
-			String itemName, String tagName) {
-		ItemStack stack = new ItemStack(item);
-		if (!stack.is(h -> h.is(tag))) {
-			helper.fail(itemName + " is not in " + tagName + " (MOD-057 membership tag missing)");
-		}
-	}
-
-	/** Assert {@code enchantment} accepts {@code stack}; fail with a readable message otherwise. */
-	private static void assertCanEnchant(GameTestHelper helper, Holder<Enchantment> enchantment, ItemStack stack,
-			String enchName, String itemName) {
-		if (!enchantment.value().canEnchant(stack)) {
-			helper.fail(enchName + " rejected " + itemName + " — tool not in the enchantment's supported_items (MOD-057)");
-		}
+		TemperedIronToolScenarios.enchantmentAccepted(helper);
 	}
 }

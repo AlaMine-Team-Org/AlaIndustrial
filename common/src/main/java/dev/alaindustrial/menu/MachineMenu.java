@@ -539,4 +539,21 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 			return kind.accepts(stack);
 		}
 	}
+
+	/**
+	 * A machine's result slot: take-only. The machine fills it; nothing goes in by hand. Hopper insertion
+	 * is refused separately by the block entity's {@code canPlaceItem}/{@code isOutputSlot}. One class
+	 * instead of the same three-line anonymous override in every processing menu (MOD-439); a slot that
+	 * also caps its stack or reacts to {@code onTake} keeps its own subclass.
+	 */
+	public static final class OutputSlot extends Slot {
+		public OutputSlot(Container container, int index, int x, int y) {
+			super(container, index, x, y);
+		}
+
+		@Override
+		public boolean mayPlace(ItemStack stack) {
+			return false;
+		}
+	}
 }

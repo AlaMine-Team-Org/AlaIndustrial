@@ -9,7 +9,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
 
 /** Two-slot Thermal Centrifuge menu: dust in, shavings out, with a rotor-speed gauge. */
 public final class ThermalCentrifugeMenu extends MachineMenu {
@@ -30,12 +29,7 @@ public final class ThermalCentrifugeMenu extends MachineMenu {
 	protected void addMachineSlots() {
 		Container container = machine;
 		addSlot(new Slot(container, ThermalCentrifugeBlockEntity.INPUT_SLOT, 56, 35));
-		addSlot(new Slot(container, ThermalCentrifugeBlockEntity.OUTPUT_SLOT, 117, 35) {
-			@Override
-			public boolean mayPlace(ItemStack stack) {
-				return false;
-			}
-		});
+		addSlot(new OutputSlot(container, ThermalCentrifugeBlockEntity.OUTPUT_SLOT, 117, 35));
 	}
 
 	/** Rotor speed as permille of a full spin-up, for the gauge. */

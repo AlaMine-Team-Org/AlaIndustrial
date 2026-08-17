@@ -49,12 +49,7 @@ public final class AlloySmelterMenu extends MachineMenu {
 		addSlot(new ComponentSlot(container, AlloySmelterBlockEntity.INPUT_SLOT_0, 44, 17));
 		addSlot(new ComponentSlot(container, AlloySmelterBlockEntity.INPUT_SLOT_1, 44, 35));
 		addSlot(new ComponentSlot(container, AlloySmelterBlockEntity.INPUT_SLOT_2, 44, 53));
-		addSlot(new Slot(container, AlloySmelterBlockEntity.OUTPUT_SLOT, 120, 35) {
-			@Override
-			public boolean mayPlace(ItemStack stack) {
-				return false;
-			}
-		});
+		addSlot(new OutputSlot(container, AlloySmelterBlockEntity.OUTPUT_SLOT, 120, 35));
 	}
 
 	/**

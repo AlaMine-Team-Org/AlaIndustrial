@@ -45,12 +45,7 @@ public final class CanningMachineMenu extends MachineMenu {
 				return stack.is(ModContent.EMPTY_CAN.get());
 			}
 		});
-		addSlot(new Slot(container, CanningMachineBlockEntity.OUTPUT_SLOT, 120, 28) {
-			@Override
-			public boolean mayPlace(ItemStack stack) {
-				return false;
-			}
-		});
+		addSlot(new OutputSlot(container, CanningMachineBlockEntity.OUTPUT_SLOT, 120, 28));
 	}
 
 	/** Banked food value in tenths. */

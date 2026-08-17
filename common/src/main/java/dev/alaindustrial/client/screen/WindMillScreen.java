@@ -46,9 +46,10 @@ public class WindMillScreen extends MachineScreen<WindMillMenu> {
 	 * survive a layout change silently: the row would move, the gate would keep measuring the band it
 	 * was written for, find nothing changing there, and stay green while showing nothing.
 	 *
-	 * <p>Deliberately NOT shared with the two T2 wind mills, which declare their own. The three screens
-	 * are laid out independently, so a shared constant would tie a change in one of them to the gates of
-	 * the other two — and the gate is supposed to follow the screen it belongs to.
+	 * <p>Deliberately NOT shared with the two T2 wind mills, which read theirs from their common base
+	 * ({@code AbstractT2WindMillScreen.STATUS_TEXT_Y}). The T1 layout is independent of the T2 one, so a
+	 * shared constant would tie a change here to the T2 gates — and the gate is supposed to follow the
+	 * screen it belongs to.
 	 */
 	public static final int STATUS_TEXT_Y = 50;
 

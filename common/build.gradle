@@ -72,6 +72,16 @@ dependencies {
 
 tasks.named('test', Test) {
     useJUnitPlatform()
+    // MOD-434 — deliberately NO maxParallelForks and NO reduced jqwik tries. Both were measured on
+    // 2026-08-17 (numbers in the task log): the whole L1 run is only a few seconds of execution, about
+    // half of it the single ArchitectureRules class import that no fork can split, and the six jqwik
+    // classes together are ~1.5 s at 1000 tries. Two forks were within run-to-run noise, cpus/2 = 6
+    // forks were SLOWER (six JVM starts, each instrumented by JaCoCo, competing for the box). Do not
+    // read the per-class times in build/test-results/test/*.xml as evidence to the contrary: a jqwik
+    // class run alone takes well under a second, but in the full run its XML `time` stretches from
+    // its start into the Jupiter phase, so the per-class times overlap and their sum overstates the
+    // wall time several times over. Wall time is the task time in `--profile` (or the span of the
+    // XML `timestamp`s), never the sum.
     // JaCoCo coverage for the L1 unit suite. The report lands at
     // common/build/reports/jacoco/test/html/index.html — open it in a browser to see per-class line
     // coverage of core/ + Config (the loader-neutral logic the L1 tests target). Only the L1 JUnit
@@ -190,6 +200,10 @@ pitest {
                      // mutant, but it must still be inside a glob so the day it grows a default method
                      // that method is mutated instead of silently uncounted.
                      'dev.alaindustrial.block.entity.Overclockable',
+                     // MOD-439: the wind-mill readout contract (mode + rate) the shared T2 screen is
+                     // written against. Same shape as Overclockable: a pure interface, targeted here and
+                     // listed in NO_MUTABLE_BYTECODE, so a future default method is mutated, not lost.
+                     'dev.alaindustrial.menu.WindMillReadout',
                      'dev.alaindustrial.block.entity.DistillationColumnStatus',
                      'dev.alaindustrial.block.entity.ElectricHeaterStatus',
                      'dev.alaindustrial.block.entity.GalvanicBathStatus',
@@ -380,17 +394,14 @@ pitest {
     jvmArgs               = ['-Xmx2g']
     useClasspathFile      = true
 
-    // Incremental pitest history (MOD-136). When the history file is restored by ci.yml
-    // (actions/cache on common/build/pitest-history.bin), PIT only re-runs mutants whose bytecode
-    // changed since the last run — keeping CI pitest fast on a warm cache. Enabled only when the
-    // file already exists (cold-cache run = full discovery, then the file is written for next
-    // time). Both locations are set together because PIT's incremental store reads input and
-    // writes output in one pass; splitting them trips ErroringHistoryFactory on a missing input.
-    def historyFile = layout.buildDirectory.file('pitest-history.bin').get().asFile
-    if (historyFile.exists()) {
-        historyInputLocation  = historyFile
-        historyOutputLocation = historyFile
-    }
+    // No historyInputLocation/historyOutputLocation (MOD-431). OSS PIT 1.25.x has no incremental
+    // history: pitest-entry-1.25.7.jar ships no HistoryFactory service, and with ANY history
+    // location set SettingsFactory.createHistory() returns ErroringHistoryFactory, which throws
+    // "History has been enabled but no history plugin has been installed/activated" (arcmutate
+    // only) — verified by javap. The MOD-136 block that used to live here set both locations only
+    // when the history file under common/build/ already existed; PIT never wrote that file, so the
+    // block was dead and the matching actions/cache step in ci.yml never had anything to save.
+    // Do not "fix" it by setting the locations unconditionally: that is the crash above.
 
     // NOTE: mutationThreshold/coverageThreshold are NOT set here. In gradle-pitest-plugin 1.19.0
     // the PIT-side `mutationThreshold` is only used for an early-exit heuristic, not a hard build

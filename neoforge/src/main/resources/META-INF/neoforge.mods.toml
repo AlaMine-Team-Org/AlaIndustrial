@@ -8,6 +8,11 @@ displayName = "Ala Industrial" #mandatory
 credits = "${credits}"
 authors = "${mod_author}"
 description = '''${description}''' #mandatory
+# Icon in the NeoForge mod list (MOD-444). Root-relative jar path, the same asset the Fabric side
+# ships in fabric.mod.json "icon". logoBlur=true: the icon is an anti-aliased render, not pixel
+# art, and the list draws it scaled — linear filtering avoids jagged edges.
+logoFile = "assets/alaindustrial/icon-128.png"
+logoBlur = true
 [[mixins]]
 config = "${mod_id}.mixins.json"
 [[mixins]]

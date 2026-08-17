@@ -37,7 +37,6 @@ public final class VulcanizerBlockEntity extends MachineBlockEntity
 	public static final int OUTPUT_SLOT = 2;
 	public static final int SLOT_COUNT = 3;
 	public static final int DATA_COUNT = 6;
-	private static final int OUTPUT_MAX = 64;
 	private static final int[] NO_SLOTS = new int[0];
 
 	private final RecipeManager.CachedCheck<ProcessingRecipeInput, AlaProcessingRecipe> recipeCheck =
@@ -77,6 +76,7 @@ public final class VulcanizerBlockEntity extends MachineBlockEntity
 			}
 			setStatus(diagnose(null, ItemStack.EMPTY));
 			updateLit(false);
+			recordEuRate(0);
 			return IDLE_SLEEP_TICKS;
 		}
 
@@ -86,7 +86,7 @@ public final class VulcanizerBlockEntity extends MachineBlockEntity
 		// The batch price (MOD-271: four sulfur dust) must be on hand every tick, not just at the
 		// start — pulling dust out mid-cycle stops the run instead of completing it underpaid.
 		boolean canWork = heatEnough && recipe.hasEnough(input)
-				&& energy.getAmount() >= euPerTick && canOutput(result);
+				&& energy.getAmount() >= euPerTick && canOutput(OUTPUT_SLOT, result);
 
 		if (canWork && !WorldHeatSources.consumeForProgress(level, pos, heatSource, overclockerCount())) {
 			canWork = false;
@@ -95,6 +95,8 @@ public final class VulcanizerBlockEntity extends MachineBlockEntity
 
 		setStatus(diagnose(recipe, result));
 		updateLit(canWork);
+		// MOD-125/MOD-440: the statistics panel's "now" line is this tick's draw, 0 when stopped.
+		recordEuRate(canWork ? euPerTick : 0);
 		if (!canWork) {
 			return IDLE_SLEEP_TICKS;
 		}
@@ -107,7 +109,8 @@ public final class VulcanizerBlockEntity extends MachineBlockEntity
 		progress++;
 		if (progress >= maxProgress) {
 			recipe.consume(List.of(items.get(RAW_RUBBER_SLOT), items.get(SULFUR_SLOT)));
-			addOutput(result);
+			addOutput(OUTPUT_SLOT, result);
+			recordItemProcessed();
 			progress = 0;
 			cycleHeatLevel = 0;
 			creditUsefulWork(level, (long) euPerTick * maxProgress);
@@ -133,7 +136,7 @@ public final class VulcanizerBlockEntity extends MachineBlockEntity
 		if (heatSource.level() == 0 || (cycleHeatLevel > 0 && heatSource.level() < cycleHeatLevel)) {
 			return VulcanizerStatus.NO_HEAT;
 		}
-		if (!canOutput(result)) {
+		if (!canOutput(OUTPUT_SLOT, result)) {
 			return VulcanizerStatus.OUTPUT_BLOCKED;
 		}
 		return VulcanizerStatus.READY;
@@ -153,24 +156,6 @@ public final class VulcanizerBlockEntity extends MachineBlockEntity
 		ItemStack result = base.copy();
 		result.setCount(Math.min(result.getMaxStackSize(), base.getCount() * multiplier));
 		return result;
-	}
-
-	private boolean canOutput(ItemStack result) {
-		if (result.isEmpty()) {
-			return false;
-		}
-		ItemStack out = items.get(OUTPUT_SLOT);
-		return out.isEmpty() || (ItemStack.isSameItem(out, result)
-				&& out.getCount() + result.getCount() <= Math.min(OUTPUT_MAX, out.getMaxStackSize()));
-	}
-
-	private void addOutput(ItemStack result) {
-		ItemStack out = items.get(OUTPUT_SLOT);
-		if (out.isEmpty()) {
-			items.set(OUTPUT_SLOT, result.copy());
-		} else {
-			out.grow(result.getCount());
-		}
 	}
 
 	public HeatSource heatSource() {

@@ -460,6 +460,51 @@ public abstract class MachineBlockEntity extends EnergyBlockEntity implements Wo
 		return false;
 	}
 
+	// --- Result slot helpers (MOD-440): one predicate for every machine that fills an output slot ---
+
+	/**
+	 * Output stack cap. A result slot never grows past this even for an item whose own max stack size is
+	 * larger; for the ordinary 64-stack item the two limits coincide.
+	 *
+	 * <p>One declaration for the whole machine family. Before MOD-440 nine block entities each carried a
+	 * private {@code OUTPUT_MAX = 64} and five of them a private copy of {@link #canOutput}/
+	 * {@link #addOutput} — identical in behaviour, free to drift in text.
+	 */
+	protected static final int OUTPUT_MAX = 64;
+
+	/**
+	 * Whether {@code slot} can take one more {@code result} stack: empty, or the same item with room for
+	 * the whole result under {@code min(OUTPUT_MAX, maxStackSize)}.
+	 *
+	 * <p>Item identity only, deliberately — this is the merge rule every processing machine has always
+	 * used, and a recipe result carries no components that could tell two stacks of it apart. A machine
+	 * whose output CAN differ by components (the incubator's graded results) keeps its own component-aware
+	 * test instead of using this one. An empty result never "fits": there is nothing to place, and a
+	 * caller asking is a machine with no recipe.
+	 */
+	protected final boolean canOutput(int slot, ItemStack result) {
+		if (result.isEmpty()) {
+			return false;
+		}
+		ItemStack out = items.get(slot);
+		return out.isEmpty()
+				|| (out.getItem() == result.getItem()
+						&& out.getCount() + result.getCount() <= Math.min(OUTPUT_MAX, out.getMaxStackSize()));
+	}
+
+	/**
+	 * Place one {@code result} stack into {@code slot}, growing the matching stack already there. The
+	 * caller has checked {@link #canOutput} first — this method does not re-check.
+	 */
+	protected final void addOutput(int slot, ItemStack result) {
+		ItemStack out = items.get(slot);
+		if (out.isEmpty()) {
+			items.set(slot, result.copy());
+		} else {
+			out.grow(result.getCount());
+		}
+	}
+
 	@Override
 	public void setItem(int slot, ItemStack stack) {
 		// `baseSlots > 0` guards machines whose input is slot 0; a base-0 machine's slot 0 is an upgrade

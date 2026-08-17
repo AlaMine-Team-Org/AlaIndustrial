@@ -3,6 +3,7 @@ package dev.alaindustrial;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import dev.alaindustrial.client.AlaClientConfig;
 import dev.alaindustrial.client.tooltip.MachineTooltips;
 import dev.alaindustrial.registry.ModContent;
 import java.util.ArrayList;
@@ -71,5 +72,61 @@ class MachineTooltipsTest {
 	void nonMachineItem_getsNoLines(MinecraftServer server) {
 		assertTrue(tooltipKeys(new ItemStack(Items.DIRT), false).isEmpty(),
 				"a non-machine item must not receive machine tooltip lines");
+	}
+
+	/**
+	 * MOD-432 — the Garden Drone Station passes the machine gate: its basic branch (per-action cost) is
+	 * reachable, not dead code behind {@code isMachineBlock()}. Was red on HEAD: the block was absent from
+	 * the gate, so the tooltip was empty although the branch and its 20 translations existed.
+	 */
+	@Test
+	void gardenDroneStation_basicTooltip_showsActionCostAndShiftHint(MinecraftServer server) {
+		List<String> keys = tooltipKeys(new ItemStack(ModContent.GARDEN_DRONE_STATION.get()), false);
+		assertTrue(keys.contains("tooltip.alaindustrial.garden_drone_action_cost"),
+				"garden drone station basic tooltip missing action-cost line (block not admitted by isMachineBlock?)");
+		assertTrue(keys.contains("tooltip.alaindustrial.hold_shift"), "basic tooltip missing hold-shift hint");
+	}
+
+	/** MOD-432 — under shift the drone station shows tier, range and buffer instead of the hint. */
+	@Test
+	void gardenDroneStation_detailedTooltip_onShift(MinecraftServer server) {
+		List<String> keys = tooltipKeys(new ItemStack(ModContent.GARDEN_DRONE_STATION.get()), true);
+		assertTrue(keys.contains("tooltip.alaindustrial.tier_lv"), "detailed tooltip missing tier line");
+		assertTrue(keys.contains("tooltip.alaindustrial.garden_drone_range"), "detailed tooltip missing range line");
+		assertTrue(keys.contains("tooltip.alaindustrial.capacity"), "detailed tooltip missing capacity line");
+		assertFalse(keys.contains("tooltip.alaindustrial.hold_shift"), "shift-down must replace the hold-shift hint");
+	}
+
+	/**
+	 * MOD-432 — the Teleporter passes the machine gate too: it has no basic branch (shift-up shows only the
+	 * hint), so its whole tooltip — HV tier, buffer, I/O rule — lives under shift and was dead on HEAD.
+	 */
+	@Test
+	void teleporter_detailedTooltip_onShift(MinecraftServer server) {
+		List<String> keys = tooltipKeys(new ItemStack(ModContent.TELEPORTER.get()), true);
+		assertTrue(keys.contains("tooltip.alaindustrial.tier_hv"), "teleporter tooltip missing HV tier line");
+		assertTrue(keys.contains("tooltip.alaindustrial.buffer"), "teleporter tooltip missing buffer line");
+		assertTrue(keys.contains("tooltip.alaindustrial.teleporter_io"),
+				"teleporter tooltip missing I/O line (block not admitted by isMachineBlock?)");
+		assertFalse(keys.contains("tooltip.alaindustrial.hold_shift"), "shift-down must replace the hold-shift hint");
+	}
+
+	/**
+	 * MOD-432 — with EU numbers hidden ({@code showEuNumbers=false}) a gated block must still say something
+	 * under shift: the drone station falls into the tier-only group of {@code addNonNumericTooltip()}, so the
+	 * shift-up hint never points at an empty detailed tooltip.
+	 */
+	@Test
+	void gardenDroneStation_nonNumericTooltip_showsTier(MinecraftServer server) {
+		boolean previous = AlaClientConfig.showEuNumbers;
+		AlaClientConfig.showEuNumbers = false;
+		try {
+			List<String> keys = tooltipKeys(new ItemStack(ModContent.GARDEN_DRONE_STATION.get()), true);
+			assertTrue(keys.contains("tooltip.alaindustrial.tier_lv"),
+					"non-numeric tooltip missing tier line (block absent from addNonNumericTooltip?)");
+			assertFalse(keys.contains("tooltip.alaindustrial.hold_shift"), "shift-down must replace the hold-shift hint");
+		} finally {
+			AlaClientConfig.showEuNumbers = previous;
+		}
 	}
 }

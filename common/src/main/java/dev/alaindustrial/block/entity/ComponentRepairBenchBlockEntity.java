@@ -61,7 +61,8 @@ public class ComponentRepairBenchBlockEntity extends MachineBlockEntity
 	/** The grade's repair material; exactly one item is consumed per completed repair. */
 	public static final int MATERIAL_SLOT = 1;
 
-	private static final int SLOT_COUNT = 2;
+	/** Machine-slot count (indices before the upgrade block) — the client menu stub sizes its container from this (MOD-439). */
+	public static final int SLOT_COUNT = 2;
 
 	/** Eight-wide data — see the class javadoc. Hides {@link MachineBlockEntity#DATA_COUNT} (MOD-235). */
 	public static final int DATA_COUNT = 8;
@@ -177,6 +178,8 @@ public class ComponentRepairBenchBlockEntity extends MachineBlockEntity
 
 		boolean canWork = status.canWork() && energy.getAmount() >= euPerTick;
 		updateLit(canWork);
+		// MOD-125/MOD-440: the statistics panel's "now" line is this tick's draw, 0 when stopped.
+		recordEuRate(canWork ? euPerTick : 0);
 
 		if (canWork) {
 			energy.drainInternal(euPerTick);
@@ -185,6 +188,7 @@ public class ComponentRepairBenchBlockEntity extends MachineBlockEntity
 				progress = 0;
 				items.get(MATERIAL_SLOT).shrink(1);
 				applyRepair(target, tier, repairsDone);
+				recordItemProcessed(); // MOD-125/MOD-440: one completed repair
 				creditUsefulWork(level, (long) euPerTick * maxProgress); // MOD-133: completed op → XP
 				// The repaired stack's components changed in place; without this the open screen and the
 				// item in the slot keep drawing the old durability bar until something else dirties the

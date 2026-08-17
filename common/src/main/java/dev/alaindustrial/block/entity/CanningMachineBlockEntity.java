@@ -47,7 +47,6 @@ public final class CanningMachineBlockEntity extends MachineBlockEntity
 	public static final int DATA_COUNT = MachineBlockEntity.DATA_COUNT + 2;
 	private static final int DATA_FOOD_BUFFER = 4;
 	private static final int DATA_VALUE_PER_RATION = 5;
-	private static final int OUTPUT_MAX = 64;
 
 	/** Accumulated food value in tenths; survives save/load and is shown as the calorie gauge. */
 	private int foodBuffer;
@@ -76,6 +75,8 @@ public final class CanningMachineBlockEntity extends MachineBlockEntity
 		boolean canWork = pressReady && CanningMath.hasFullRation(foodBuffer, valuePerRation);
 
 		updateLit(canWork);
+		// MOD-125/MOD-440: the statistics panel's "now" line is this tick's draw, 0 when stopped.
+		recordEuRate(canWork ? euPerTick : 0);
 		if (!canWork) {
 			if (progress != 0) {
 				progress = 0;
@@ -97,6 +98,7 @@ public final class CanningMachineBlockEntity extends MachineBlockEntity
 				items.set(CAN_SLOT, ItemStack.EMPTY);
 			}
 			addRation();
+			recordItemProcessed();
 			creditUsefulWork(level, (long) euPerTick * maxProgress);
 		}
 		setChanged();

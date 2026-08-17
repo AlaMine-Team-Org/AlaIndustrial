@@ -69,7 +69,6 @@ public final class ThermalCentrifugeBlockEntity extends MachineBlockEntity
 	/** {@link ThermalCentrifugeStatus} ordinal. */
 	public static final int DATA_STATUS = 5;
 
-	private static final int OUTPUT_MAX = 64;
 	private static final int[] NO_SLOTS = new int[0];
 
 	/**
@@ -171,12 +170,16 @@ public final class ThermalCentrifugeBlockEntity extends MachineBlockEntity
 			return coast();
 		}
 
+		// MOD-125/MOD-440: every branch of this tick reports the draw it actually decided on — the
+		// working rate here, the ramp rate in spinUp, the idle trickle in coast, 0 when stopped.
+		recordEuRate(euPerTick);
 		energy.drainInternal(euPerTick);
 		progress++;
 		if (progress >= maxProgress) {
 			progress = 0;
 			recipe.consume(List.of(items.get(INPUT_SLOT)));
-			addOutput(result);
+			addOutput(OUTPUT_SLOT, result);
+			recordItemProcessed();
 			creditUsefulWork(level, (long) euPerTick * maxProgress);
 		}
 		setChanged();
@@ -195,6 +198,7 @@ public final class ThermalCentrifugeBlockEntity extends MachineBlockEntity
 		coolParity = 0;
 		setStatus(ThermalCentrifugeStatus.NO_SIGNAL);
 		updateLit(false);
+		recordEuRate(0);
 		if (changed) {
 			setChanged();
 			pushSpinToClients();
@@ -206,8 +210,10 @@ public final class ThermalCentrifugeBlockEntity extends MachineBlockEntity
 	private int spinUp(int euPerTick) {
 		updateLit(false);
 		if (energy.getAmount() < euPerTick) {
+			recordEuRate(0);
 			return 0;
 		}
+		recordEuRate(euPerTick);
 		energy.drainInternal(euPerTick);
 		spin++;
 		setChanged();
@@ -222,10 +228,12 @@ public final class ThermalCentrifugeBlockEntity extends MachineBlockEntity
 	private int coast() {
 		int idle = Math.max(1, Config.thermalCentrifugeIdleEuPerTick);
 		if (energy.getAmount() >= idle) {
+			recordEuRate(idle);
 			energy.drainInternal(idle);
 			setChanged();
 			return 0;
 		}
+		recordEuRate(0);
 		if (spin > 0 && ++coolParity >= 2) {
 			coolParity = 0;
 			spin--;
@@ -251,7 +259,7 @@ public final class ThermalCentrifugeBlockEntity extends MachineBlockEntity
 		if (recipe == null || !recipe.hasEnough(input)) {
 			return ThermalCentrifugeStatus.NO_RECIPE;
 		}
-		if (!canOutput(result)) {
+		if (!canOutput(OUTPUT_SLOT, result)) {
 			return ThermalCentrifugeStatus.OUTPUT_BLOCKED;
 		}
 		if (!isAtSpeed()) {
@@ -294,24 +302,6 @@ public final class ThermalCentrifugeBlockEntity extends MachineBlockEntity
 				|| Math.abs(permille - syncedSpinPermille) >= SPIN_SYNC_STEP_PERMILLE) {
 			syncedSpinPermille = permille;
 			syncBlockEntityToClient();
-		}
-	}
-
-	private boolean canOutput(ItemStack result) {
-		if (result.isEmpty()) {
-			return false;
-		}
-		ItemStack out = items.get(OUTPUT_SLOT);
-		return out.isEmpty() || (ItemStack.isSameItem(out, result)
-				&& out.getCount() + result.getCount() <= Math.min(OUTPUT_MAX, out.getMaxStackSize()));
-	}
-
-	private void addOutput(ItemStack result) {
-		ItemStack out = items.get(OUTPUT_SLOT);
-		if (out.isEmpty()) {
-			items.set(OUTPUT_SLOT, result.copy());
-		} else {
-			out.grow(result.getCount());
 		}
 	}
 

@@ -50,36 +50,13 @@ public class FluidGameTest {
 	 */
 	@GameTest
 	public void tcGeo001Fun01_lavaBucketProducesEu(GameTestHelper helper) {
-		GeothermalGeneratorBlockEntity geo = place(helper);
-		geo.setItem(GeothermalGeneratorBlockEntity.INPUT_SLOT, new ItemStack(Items.LAVA_BUCKET));
-		int ticks = 5;
-		drive(geo, helper, ticks);
-		long expectedEu = (long) ticks * Config.geothermalEuPerTick;
-		long got = geo.getEnergyStorage().getAmount();
-		boolean bucketBack = geo.getItem(GeothermalGeneratorBlockEntity.OUTPUT_SLOT).is(Items.BUCKET);
-		boolean consumed = geo.getItem(GeothermalGeneratorBlockEntity.INPUT_SLOT).isEmpty();
-		if (got != expectedEu) {
-			helper.fail("geothermal produced " + got + " EU over " + ticks + " ticks, expected exactly "
-					+ expectedEu + " (" + ticks + " × geothermalEuPerTick=" + Config.geothermalEuPerTick + ")");
-		}
-		if (!bucketBack) {
-			helper.fail("lava bucket was consumed but the empty bucket was not returned to the output slot");
-		}
-		if (!consumed) {
-			helper.fail("lava bucket was not consumed from the input slot");
-		}
-		helper.succeed();
+		GeneratorEnergyScenarios.geothermalLavaBucketRate(helper);
 	}
 
 	/** @implements TC-GEO-001-NEG01 — no lava → no EU. @covers R-NRG-15 */
 	@GameTest
 	public void tcGeo001Neg01_noLavaNoEu(GameTestHelper helper) {
-		GeothermalGeneratorBlockEntity geo = place(helper);
-		drive(geo, helper, 10);
-		if (geo.getEnergyStorage().getAmount() != 0) {
-			helper.fail("geothermal produced EU without lava: " + geo.getEnergyStorage().getAmount());
-		}
-		helper.succeed();
+		GeneratorEnergyScenarios.geothermalNoLavaNoEu(helper);
 	}
 
 	/**
@@ -528,26 +505,7 @@ public class FluidGameTest {
 	 */
 	@GameTest
 	public void tcGeo001Prf03_oneBucketYieldsTotalEu(GameTestHelper helper) {
-		GeothermalGeneratorBlockEntity geo = place(helper);
-		geo.setItem(GeothermalGeneratorBlockEntity.INPUT_SLOT, new ItemStack(Items.LAVA_BUCKET, 1));
-		long totalMade = 0;
-		int maxTicks = Config.geothermalBurnTicks + 20;
-		for (int i = 0; i < maxTicks; i++) {
-			long before = geo.getEnergyStorage().getAmount();
-			geo.serverTick(helper.getLevel(), geo.getBlockPos(), helper.getLevel().getBlockState(geo.getBlockPos()));
-			long after = geo.getEnergyStorage().getAmount();
-			totalMade += Math.max(0, after - before);
-			geo.getEnergyStorage().setAmountUntracked(0); // drain so the cap never masks further production
-			int lavaTicksLeft = geo.getDataAccess().get(2); // index 2 == progress (lavaTicks)
-			if (lavaTicksLeft == 0 && geo.getItem(GeothermalGeneratorBlockEntity.INPUT_SLOT).isEmpty()) {
-				break;
-			}
-		}
-		long expected = (long) Config.geothermalBurnTicks * Config.geothermalEuPerTick;
-		if (totalMade != expected) {
-			helper.fail("1 bucket expected total " + expected + " EU but measured " + totalMade);
-		}
-		helper.succeed();
+		GeneratorEnergyScenarios.geothermalTankBucketBoundary(helper);
 	}
 
 	// ============================================================================================
@@ -1392,5 +1350,26 @@ public class FluidGameTest {
 					+ " droplets), got " + capacityDroplets);
 		}
 		helper.succeed();
+	}
+
+	// ── MOD-445: loader-neutral bodies the NeoForge lane already ran; wired here so both lanes run the same set ──
+
+	/**
+	 * Cross-loader numeric parity oracle for the fluid feature: lava source → pump → geothermal tank → EU,
+	 * pinning the SAME exact numbers {@link #tcFluidPump_lavaSourceToGeothermal} asserts, so a conversion-factor
+	 * slip on one loader cannot pass both suites. Body: {@link CoreFluidScenarios#sourceToPumpToGeoToEu}.
+	 */
+	@GameTest(maxTicks = 100)
+	public void coreFluid_sourceToPumpToGeoToEu(GameTestHelper helper) {
+		CoreFluidScenarios.sourceToPumpToGeoToEu(helper);
+	}
+
+	/**
+	 * Compressed end-to-end fluid transport check (pump source → geothermal tank → EU) — the loader-neutral
+	 * twin of {@link #tcFluidPump_lavaSourceToGeothermal}. Body: {@link WorldContentScenarios#pumpSourceToTankToSinkToEu}.
+	 */
+	@GameTest(maxTicks = 100)
+	public void worldContent_pumpSourceToTankToSinkToEu(GameTestHelper helper) {
+		WorldContentScenarios.pumpSourceToTankToSinkToEu(helper);
 	}
 }

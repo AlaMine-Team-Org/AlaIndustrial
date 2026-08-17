@@ -18,7 +18,8 @@ public class WaterMillMenu extends MachineMenu {
 
 	/** Client side. */
 	public WaterMillMenu(int syncId, Inventory playerInventory) {
-		super(ModContent.WATER_MILL_MENU.get(), syncId, playerInventory, new SimpleContainer(1 + UPGRADE_SLOT_COUNT),
+		super(ModContent.WATER_MILL_MENU.get(), syncId, playerInventory,
+				new SimpleContainer(WaterMillBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
 				new net.minecraft.world.inventory.SimpleContainerData(WaterMillBlockEntity.DATA_COUNT),
 				ContainerLevelAccess.NULL, ModContent.WATER_MILL.get());
 	}

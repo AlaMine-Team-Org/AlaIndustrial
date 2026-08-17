@@ -823,6 +823,10 @@ public final class CableEnergyScenarios {
 			mac.getEnergyStorage().setAmountUntracked(0);
 		}
 		line.drive(40);
+		if (NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(cable)) != null) {
+			helper.fail("network still present after cable removed");
+			return;
+		}
 		long afterBreak = be(helper, line.consumerPos()) instanceof MachineBlockEntity m
 				? m.getEnergyStorage().getAmount() : -1;
 		if (afterBreak != 0) {
@@ -880,6 +884,11 @@ public final class CableEnergyScenarios {
 			helper.fail("cable delivered no EU even though supply and room were ample: " + got);
 			return;
 		}
+		// No overvoltage penalty: the wire survives the attempt (R-NRG-04).
+		if (helper.getLevel().getBlockState(helper.absolutePos(cablePos)).getBlock() != ModContent.COPPER_CABLE.get()) {
+			helper.fail("cable was destroyed/changed by the overvoltage attempt");
+			return;
+		}
 		helper.succeed();
 	}
 
@@ -921,6 +930,12 @@ public final class CableEnergyScenarios {
 			tick(helper, be(helper, cableB));
 			NetworkManager.tickAll(helper.getLevel());
 			tick(helper, be(helper, boxPos));
+		}
+		EnergyNetwork netA = NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(cableA));
+		EnergyNetwork netB = NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(cableB));
+		if (netA == null || netA != netB) {
+			helper.fail("cable A and cable B must be one network (they are directly adjacent)");
+			return;
 		}
 		long got = be(helper, boxPos) instanceof BatteryBoxBlockEntity bb ? bb.getEnergyStorage().getAmount() : -1;
 		long singleCeiling = Config.fuelEuPerTick * (long) ticks;

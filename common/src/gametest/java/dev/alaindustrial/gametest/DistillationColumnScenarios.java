@@ -23,6 +23,8 @@ import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
+import static dev.alaindustrial.gametest.AlaGameTestHelper.drive;
+
 /**
  * Loader-neutral gametest bodies for the Distillation Column (MOD-251, suite TC-DIST-001). Wrapped
  * by the Fabric {@code DistillationColumnGameTest} suite and registered on the NeoForge
@@ -64,10 +66,6 @@ public final class DistillationColumnScenarios {
 	private static void fillOil(DistillationColumnBlockEntity be, long mb) {
 		be.oilTank.fluid = FluidHolder.of(ModContent.OIL.get());
 		be.oilTank.amount = mb;
-	}
-
-	private static void drive(DistillationColumnBlockEntity be, GameTestHelper helper, int ticks) {
-		AlaGameTestHelper.drive(be, helper, ticks);
 	}
 
 	// ── FUN01: one bucket of crude becomes 700 diesel + 200 fuel oil, the oil tank ends empty ──────

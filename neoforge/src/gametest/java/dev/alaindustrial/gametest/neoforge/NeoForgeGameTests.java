@@ -78,6 +78,9 @@ import dev.alaindustrial.gametest.MuteChipScenarios;
 import dev.alaindustrial.gametest.StatsChipScenarios;
 import dev.alaindustrial.gametest.FluidTankScenarios;
 import dev.alaindustrial.gametest.AlaCommonScenarios;
+import dev.alaindustrial.gametest.BlockCapabilityParityScenarios;
+import dev.alaindustrial.gametest.Mod353DiagnosticScenarios;
+import dev.alaindustrial.gametest.MachineScenarios;
 import dev.alaindustrial.registry.ModContent;
 import java.util.function.Consumer;
 import net.minecraft.core.Holder;
@@ -89,6 +92,7 @@ import net.minecraft.gametest.framework.TestEnvironmentDefinition;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Rotation;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.event.RegisterGameTestsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -1466,8 +1470,7 @@ public final class NeoForgeGameTests {
 		registerTest(event, "component_tier_wheel_slot_accepts_every_grade", 40, true,
 				ComponentTierScenarios::wheelSlotAcceptsEveryGrade);
 		// MOD-384: the component repair bench. Same scenario bodies the Fabric lane runs. The evolution
-		// carry-over scenario is Fabric-only for the same reason as the wind-mill ones above — it needs an
-		// open sky column and this lane's registerTest hardcodes skyAccess=false.
+		// carry-over scenario is registered in the MOD-445 block at the end of this method.
 		registerTest(event, "repair_bench_repairs_worn_rotor", 900, true,
 				ComponentRepairBenchScenarios::repairsWornRotorAndLowersCeiling);
 		registerTest(event, "repair_bench_ceiling_ladder_is_linear", 3200, true,
@@ -1490,10 +1493,9 @@ public final class NeoForgeGameTests {
 				ComponentRepairBenchScenarios::repairedPartSurvivesNbtRoundTrip);
 		registerTest(event, "repair_bench_repaired_wheel_still_wears", 1400, true,
 				ComponentRepairBenchScenarios::repairedWheelStillWearsInTheMill);
-		// The wind-mill grade scenarios (output comparison, cap, evolution carry-over) are Fabric-only:
-		// they need an open sky column, and this lane's registerTest hardcodes skyAccess=false. Same
-		// split the existing wind-mill rate tests already live with. What DOES run on both loaders is
-		// the part that has to: both slot filters and the water-mill output ladder.
+		// The wind-mill grade scenarios (output comparison, cap, evolution carry-over) are registered in
+		// the MOD-445 block at the end of this method — they build their own raised rig above the barrier
+		// ceiling, so skyAccess=false is no obstacle. Here: both slot filters and the water-mill ladder.
 		registerTest(event, "water_mill_crafting_recipe_resolves", 40, true,
 				WaterMillWheelScenarios::waterMill_craftingRecipeResolves);
 		registerTest(event, "water_mill_wheel_crafting_recipe_resolves", 40, true,
@@ -1744,6 +1746,9 @@ public final class NeoForgeGameTests {
 				StatsChipScenarios::statsChip_countingStartsWhenTheChipIsFitted);
 		registerTest(event, "stats_chip_removing_the_chip_keeps_what_was_counted", 140, true,
 				StatsChipScenarios::statsChip_removingTheChipKeepsWhatWasCounted);
+		// MOD-440: the chip counts on a machine that owns its tick loop, not only on the processing base.
+		registerTest(event, "stats_chip_counters_run_on_hand_rolled_machine", 400, true,
+				StatsChipScenarios::statsChip_countersRunOnHandRolledMachine);
 
 		// Silence chip: active slot, persistence, slot filters, drops.
 		registerTest(event, "mute_chip_is_muted_reflects_active_slot", 40, true,
@@ -1845,7 +1850,236 @@ public final class NeoForgeGameTests {
 		// Fabric being green says nothing about the NeoForge construction path.
 		registerTest(event, "block_entity_block_sets_are_immutable", 40, true,
 				AlaCommonScenarios::blockEntityBlockSetsAreImmutable);
+		// MOD-433: the capability this loader hands out on a block-entity face is exactly the port the
+		// block entity exposes there — asked through Capabilities.*.BLOCK, the way a foreign mod would.
+		// The mod's own network never goes through the capability here (NeoForgeEnergyLookup reads the
+		// port straight off the block entity), which is how the CESU stayed invisible to FE mods on
+		// this loader alone until this sweep existed.
+		registerTest(event, "block_capabilities_match_ports", 40, true,
+				helper -> BlockCapabilityParityScenarios.capabilitiesMatchPorts(helper, CAPABILITY_PROBES));
+
+		// ── MOD-445 — scenarios the lane-parity gate found registered on Fabric only ─────────────
+		// docs/tools/gametest_lane_parity_check.py compares the common scenario set with both lanes;
+		// these 28 bodies had a Fabric @GameTest wrapper and no registerTest here. maxTicks mirror
+		// the Fabric wrapper (annotation default 100 where it declares none). The wind-mill grade
+		// scenarios use the same raised rig as the wind-mill rate tests above (glass pillar to y=20,
+		// above the barrier ceiling), so skyAccess=false is not the obstacle earlier comments assumed.
+		registerTest(event, "pad_mod406_payouts_are_batched_not_per_tick", 100, true,
+				ChargePadScenarios::mod406PayoutsAreBatchedNotPerTick);
+		registerTest(event, "pad_mod406_batched_payout_matches_per_tick_total", 100, true,
+				ChargePadScenarios::mod406BatchedPayoutMatchesPerTickTotal);
+		registerTest(event, "repair_bench_repaired_rotor_survives_mill_evolution", 900, true,
+				ComponentRepairBenchScenarios::repairedRotorSurvivesMillEvolution);
+		registerTest(event, "component_tier_wind_mill_better_rotor_produces_more_eu", 600, true,
+				ComponentTierScenarios::windMill_betterRotorProducesMoreEu);
+		registerTest(event, "component_tier_no_grade_exceeds_the_wind_mill_cap", 600, true,
+				ComponentTierScenarios::noGradeExceedsTheWindMillCap);
+		registerTest(event, "component_tier_evolution_carries_the_upgraded_rotor", 600, true,
+				ComponentTierScenarios::evolutionCarriesTheUpgradedRotor);
+		registerTest(event, "tc_gen001_fun02_buffer_caps_at_max", 100, true,
+				GeneratorScenarios::tcGen001Fun02_bufferCapsAtMax);
+		registerTest(event, "tc_gen001_fun04_pushes_to_adjacent_consumer", 100, true,
+				GeneratorScenarios::tcGen001Fun04_pushesToAdjacentConsumer);
+		registerTest(event, "tc_gen001_neg01_rejects_external_eu", 100, true,
+				GeneratorScenarios::tcGen001Neg01_rejectsExternalEu);
+		registerTest(event, "tc_gen001_neg03_full_buffer_pauses_burn", 100, true,
+				GeneratorScenarios::tcGen001Neg03_fullBufferPausesBurn);
+		registerTest(event, "tc_gen001_neg05_full_adjacent_consumer_does_not_drain_generator", 100, true,
+				GeneratorScenarios::tcGen001Neg05_fullAdjacentConsumerDoesNotDrainGenerator);
+		registerTest(event, "tc_gen001_prf01_rate_per_tick_matches_config", 100, true,
+				GeneratorScenarios::tcGen001Prf01_ratePerTickMatchesConfig);
+		registerTest(event, "item_pipe_mod405_configured_chest_pair_still_transfers", 100, true,
+				ItemPipeScenarios::mod405ConfiguredChestPairStillTransfers);
+		registerTest(event, "item_pipe_mod405_two_neutral_chests_move_nothing", 300, true,
+				ItemPipeScenarios::mod405TwoNeutralChestsMoveNothing);
+		registerTest(event, "item_pipe_mod408_extract_plus_insert_still_transfers", 100, true,
+				ItemPipeScenarios::mod408ExtractPlusInsertStillTransfers);
+		registerTest(event, "item_pipe_mod408_extract_without_insert_moves_nothing", 300, true,
+				ItemPipeScenarios::mod408ExtractWithoutInsertMovesNothing);
+		registerTest(event, "item_pipe_mod408_unconfigured_line_still_feeds_a_machine", 100, true,
+				ItemPipeScenarios::mod408UnconfiguredLineStillFeedsAMachine);
+		registerTest(event, "mod353_scene1_box_over_cable_to_teleporter", 100, true,
+				Mod353DiagnosticScenarios::scene1BoxOverCableToTeleporter);
+		registerTest(event, "mod353_scene3_box_flush_against_teleporter", 100, true,
+				Mod353DiagnosticScenarios::scene3BoxFlushAgainstTeleporter);
+		registerTest(event, "mod353_storage_feed_yields_to_machines", 100, true,
+				Mod353DiagnosticScenarios::mod353StorageFeedYieldsToMachines);
+		registerTest(event, "mod353_charge_pad_charges_from_battery_box_over_cable", 100, true,
+				Mod353DiagnosticScenarios::mod353ChargePadChargesFromBatteryBoxOverCable);
+		registerTest(event, "mod314_cascade_ignores_teleporter_fund", 100, true,
+				Mod353DiagnosticScenarios::mod314CascadeIgnoresTeleporterFund);
+		registerTest(event, "tc_tele001_fun01_accepts_but_never_emits", 100, true,
+				TeleporterStationScenarios::tcTele001Fun01_acceptsButNeverEmits);
+		registerTest(event, "tc_tele001_nrg03_front_face_inert", 100, true,
+				TeleporterStationScenarios::tcTele001Nrg03_frontFaceInert);
+		registerTest(event, "water_mill_wheel_installed_wheel_enables_generation", 100, true,
+				WaterMillWheelScenarios::waterMillWheel_installedWheelEnablesGeneration);
+		registerTest(event, "water_mill_wheel_missing_wheel_stops_generation", 100, true,
+				WaterMillWheelScenarios::waterMillWheel_missingWheelStopsGeneration);
+		registerTest(event, "water_mill_wheel_wears_out_and_breaks", 100, true,
+				WaterMillWheelScenarios::waterMillWheel_wearsOutAndBreaks);
+		registerTest(event, "water_mill_face_to_face_adjacent_obstructed", 100, true,
+				WaterMillWheelScenarios::waterMill_faceToFaceAdjacentObstructed);
+
+		// MOD-446: processing-machine bodies shared with the Fabric MachineGameTest (macerator, electric
+		// furnace, compressor, extractor, sawmill: recipe resolution, exact E_op, jam/no-dupe/reset, lit
+		// state). Until this block only ONE recipe case covered the whole family on this lane — the exact
+		// seam (ModRecipesNeoForge frozen registry, BE/menu registration) that has regressed before. The
+		// 8 Fabric-Transfer-API seam cases (*Prf02_*BufferCapsViaInsert, *Con04_*AllFacesAcceptEnergy)
+		// stay in the Fabric suite. Bodies drive the block entity synchronously (AlaGameTestHelper.drive),
+		// so 40 ticks is the same budget the assembler_* block uses.
+		registerTest(event, "machine_tc_mach001_fun01_macerator_grinds_raw_iron", 40, true,
+				MachineScenarios::tcMach001Fun01_maceratorGrindsRawIron);
+		registerTest(event, "machine_tc_mach001_fun_iron_ore_macerator_grinds_iron_ore", 40, true,
+				MachineScenarios::tcMach001FunIronOre_maceratorGrindsIronOre);
+		registerTest(event, "machine_mod245_macerator_grinds_sulfur_ore", 40, true,
+				MachineScenarios::mod245_maceratorGrindsSulfurOre);
+		registerTest(event, "machine_mod245_macerator_grinds_deepslate_sulfur_ore", 40, true,
+				MachineScenarios::mod245_maceratorGrindsDeepslateSulfurOre);
+		registerTest(event, "machine_mod245_macerator_grinds_raw_sulfur", 40, true,
+				MachineScenarios::mod245_maceratorGrindsRawSulfur);
+		registerTest(event, "machine_tc_mach002_fun01_furnace_smelts_raw_iron", 40, true,
+				MachineScenarios::tcMach002Fun01_furnaceSmeltsRawIron);
+		registerTest(event, "machine_mod245_furnace_smelts_raw_sulfur", 40, true,
+				MachineScenarios::mod245_furnaceSmeltsRawSulfur);
+		registerTest(event, "machine_tc_mach003_fun01_compressor_makes_brick", 40, true,
+				MachineScenarios::tcMach003Fun01_compressorMakesBrick);
+		registerTest(event, "machine_tc_mach004_fun01_extractor_makes_blaze_powder", 40, true,
+				MachineScenarios::tcMach004Fun01_extractorMakesBlazePowder);
+		registerTest(event, "machine_tc_mach001_neg01_no_power_no_output", 40, true,
+				MachineScenarios::tcMach001Neg01_noPowerNoOutput);
+		registerTest(event, "machine_tc_mach001_neg02_non_recipe_no_output", 40, true,
+				MachineScenarios::tcMach001Neg02_nonRecipeNoOutput);
+		registerTest(event, "machine_tc_mach002_neg01_furnace_no_power", 40, true,
+				MachineScenarios::tcMach002Neg01_furnaceNoPower);
+		registerTest(event, "machine_tc_mach001_con01_sided_slot_roles", 40, true,
+				MachineScenarios::tcMach001Con01_sidedSlotRoles);
+		registerTest(event, "machine_tc_mach001_prf_macerator_eop_matches_config", 40, true,
+				MachineScenarios::tcMach001Prf_maceratorEopMatchesConfig);
+		registerTest(event, "machine_tc_mach001_neg03_full_output_jams_machine", 40, true,
+				MachineScenarios::tcMach001Neg03_fullOutputJamsMachine);
+		registerTest(event, "machine_tc_mach001_fun_copper_raw_macerator_grinds_raw_copper", 40, true,
+				MachineScenarios::tcMach001FunCopperRaw_maceratorGrindsRawCopper);
+		registerTest(event, "machine_tc_mach001_fun_gold_raw_macerator_grinds_raw_gold", 40, true,
+				MachineScenarios::tcMach001FunGoldRaw_maceratorGrindsRawGold);
+		registerTest(event, "machine_tc_mach001_fun_iron_ingot_macerator_grinds_iron_ingot", 40, true,
+				MachineScenarios::tcMach001FunIronIngot_maceratorGrindsIronIngot);
+		registerTest(event, "machine_tc_efurn001_fun01_furnace_smelts_iron_dust", 40, true,
+				MachineScenarios::tcEfurn001Fun01_furnaceSmeltsIronDust);
+		registerTest(event, "machine_tc_efurn001_fun02_furnace_vanilla_fallback_cooks_beef", 40, true,
+				MachineScenarios::tcEfurn001Fun02_furnaceVanillaFallbackCooksBeef);
+		registerTest(event, "machine_tc_efurn001_fun03a_furnace_smelts_sand", 40, true,
+				MachineScenarios::tcEfurn001Fun03a_furnaceSmeltsSand);
+		registerTest(event, "machine_tc_efurn001_fun03b_furnace_smelts_cobblestone", 40, true,
+				MachineScenarios::tcEfurn001Fun03b_furnaceSmeltsCobblestone);
+		registerTest(event, "machine_tc_efurn001_fun05_furnace_vanilla_fallback_makes_charcoal", 40, true,
+				MachineScenarios::tcEfurn001Fun05_furnaceVanillaFallbackMakesCharcoal);
+		registerTest(event, "machine_tc_efurn001_fun04_furnace_duration_is_half_vanilla", 40, true,
+				MachineScenarios::tcEfurn001Fun04_furnaceDurationIsHalfVanilla);
+		registerTest(event, "machine_tc_comp001_fun02_compressor_makes_copper_ingot", 40, true,
+				MachineScenarios::tcComp001Fun02_compressorMakesCopperIngot);
+		registerTest(event, "machine_tc_comp001_fun03_compressor_makes_gold_ingot", 40, true,
+				MachineScenarios::tcComp001Fun03_compressorMakesGoldIngot);
+		registerTest(event, "machine_tc_comp001_fun04_compressor_makes_iron_ingot", 40, true,
+				MachineScenarios::tcComp001Fun04_compressorMakesIronIngot);
+		registerTest(event, "machine_tc_extr001_fun02a_extractor_makes_flint", 40, true,
+				MachineScenarios::tcExtr001Fun02a_extractorMakesFlint);
+		registerTest(event, "machine_tc_extr001_fun06_extractor_makes_green_dye", 40, true,
+				MachineScenarios::tcExtr001Fun06_extractorMakesGreenDye);
+		registerTest(event, "machine_tc_extr001_fun07_extractor_makes_pumpkin_seeds", 40, true,
+				MachineScenarios::tcExtr001Fun07_extractorMakesPumpkinSeeds);
+		registerTest(event, "machine_tc_mach001_fun02_macerator_consumes_exactly_one_per_operation", 40, true,
+				MachineScenarios::tcMach001Fun02_maceratorConsumesExactlyOnePerOperation);
+		registerTest(event, "machine_tc_mach002_fun02_furnace_consumes_exactly_one_per_operation", 40, true,
+				MachineScenarios::tcMach002Fun02_furnaceConsumesExactlyOnePerOperation);
+		registerTest(event, "machine_tc_mach003_fun02_compressor_consumes_exactly_one_per_operation", 40, true,
+				MachineScenarios::tcMach003Fun02_compressorConsumesExactlyOnePerOperation);
+		registerTest(event, "machine_tc_comp001_fun05_compressor_consumes_exactly_one_of_five", 40, true,
+				MachineScenarios::tcComp001Fun05_compressorConsumesExactlyOneOfFive);
+		registerTest(event, "machine_tc_mach004_fun02_extractor_consumes_exactly_one_per_operation", 40, true,
+				MachineScenarios::tcMach004Fun02_extractorConsumesExactlyOnePerOperation);
+		registerTest(event, "machine_tc_mach002_neg03_furnace_full_output_jams_machine", 40, true,
+				MachineScenarios::tcMach002Neg03_furnaceFullOutputJamsMachine);
+		registerTest(event, "machine_tc_mach003_neg03_compressor_full_output_jams_machine", 40, true,
+				MachineScenarios::tcMach003Neg03_compressorFullOutputJamsMachine);
+		registerTest(event, "machine_tc_extr001_neg01a_multiplied_output_fits_at61", 40, true,
+				MachineScenarios::tcExtr001Neg01a_multipliedOutputFitsAt61);
+		registerTest(event, "machine_tc_extr001_neg01b_multiplied_output_jams_at62", 40, true,
+				MachineScenarios::tcExtr001Neg01b_multipliedOutputJamsAt62);
+		registerTest(event, "machine_tc_mach001_neg04_macerator_wrong_item_in_output_no_dupe", 40, true,
+				MachineScenarios::tcMach001Neg04_maceratorWrongItemInOutputNoDupe);
+		registerTest(event, "machine_tc_mach002_neg04_furnace_wrong_item_in_output_no_dupe", 40, true,
+				MachineScenarios::tcMach002Neg04_furnaceWrongItemInOutputNoDupe);
+		registerTest(event, "machine_tc_mach003_neg04_compressor_wrong_item_in_output_no_dupe", 40, true,
+				MachineScenarios::tcMach003Neg04_compressorWrongItemInOutputNoDupe);
+		registerTest(event, "machine_tc_mach004_neg04_extractor_wrong_item_in_output_no_dupe", 40, true,
+				MachineScenarios::tcMach004Neg04_extractorWrongItemInOutputNoDupe);
+		registerTest(event, "machine_tc_mach001_neg05_macerator_non_recipe_no_eu_spent", 40, true,
+				MachineScenarios::tcMach001Neg05_maceratorNonRecipeNoEuSpent);
+		registerTest(event, "machine_tc_mach002_neg05_furnace_non_recipe_no_eu_spent", 40, true,
+				MachineScenarios::tcMach002Neg05_furnaceNonRecipeNoEuSpent);
+		registerTest(event, "machine_tc_mach003_neg05_compressor_non_recipe_no_eu_spent", 40, true,
+				MachineScenarios::tcMach003Neg05_compressorNonRecipeNoEuSpent);
+		registerTest(event, "machine_tc_comp001_neg03_compressor_raw_ore_not_accepted", 40, true,
+				MachineScenarios::tcComp001Neg03_compressorRawOreNotAccepted);
+		registerTest(event, "machine_tc_mach004_neg05_extractor_non_recipe_no_eu_spent", 40, true,
+				MachineScenarios::tcMach004Neg05_extractorNonRecipeNoEuSpent);
+		registerTest(event, "machine_tc_mach001_fun04_macerator_input_swap_resets_progress", 40, true,
+				MachineScenarios::tcMach001Fun04_maceratorInputSwapResetsProgress);
+		registerTest(event, "machine_tc_mach002_fun04_furnace_input_swap_resets_progress", 40, true,
+				MachineScenarios::tcMach002Fun04_furnaceInputSwapResetsProgress);
+		registerTest(event, "machine_tc_mach003_fun04_compressor_input_swap_resets_progress", 40, true,
+				MachineScenarios::tcMach003Fun04_compressorInputSwapResetsProgress);
+		registerTest(event, "machine_tc_mach004_fun04_extractor_input_swap_resets_progress", 40, true,
+				MachineScenarios::tcMach004Fun04_extractorInputSwapResetsProgress);
+		registerTest(event, "machine_tc_mach001_sta01_macerator_lit_tracks_active", 40, true,
+				MachineScenarios::tcMach001Sta01_maceratorLitTracksActive);
+		registerTest(event, "machine_tc_mach002_sta01_furnace_lit_tracks_active", 40, true,
+				MachineScenarios::tcMach002Sta01_furnaceLitTracksActive);
+		registerTest(event, "machine_tc_mach003_sta01_compressor_lit_tracks_active", 40, true,
+				MachineScenarios::tcMach003Sta01_compressorLitTracksActive);
+		registerTest(event, "machine_tc_mach004_sta01_extractor_lit_tracks_active", 40, true,
+				MachineScenarios::tcMach004Sta01_extractorLitTracksActive);
+		registerTest(event, "machine_tc_mach001_prf04_macerator_eop_exact_completes", 40, true,
+				MachineScenarios::tcMach001Prf04_maceratorEopExactCompletes);
+		registerTest(event, "machine_tc_mach001_prf03_macerator_eop_minus_one_stalls", 40, true,
+				MachineScenarios::tcMach001Prf03_maceratorEopMinusOneStalls);
+		registerTest(event, "machine_tc_efurn001_prf01_furnace_eop_exact_completes", 40, true,
+				MachineScenarios::tcEfurn001Prf01_furnaceEopExactCompletes);
+		registerTest(event, "machine_tc_efurn001_prf02_furnace_eop_minus_one_stalls", 40, true,
+				MachineScenarios::tcEfurn001Prf02_furnaceEopMinusOneStalls);
+		registerTest(event, "machine_tc_comp001_prf01_compressor_eop_exact_completes", 40, true,
+				MachineScenarios::tcComp001Prf01_compressorEopExactCompletes);
+		registerTest(event, "machine_tc_comp001_prf02_compressor_eop_minus_one_stalls", 40, true,
+				MachineScenarios::tcComp001Prf02_compressorEopMinusOneStalls);
+		registerTest(event, "machine_tc_extr001_prf01_extractor_eop_exact_completes", 40, true,
+				MachineScenarios::tcExtr001Prf01_extractorEopExactCompletes);
+		registerTest(event, "machine_tc_extr001_prf02_extractor_eop_minus_one_stalls", 40, true,
+				MachineScenarios::tcExtr001Prf02_extractorEopMinusOneStalls);
+		registerTest(event, "machine_tc_saw001_fun01_planks_mode", 40, true,
+				MachineScenarios::tcSaw001Fun01_planksMode);
+		registerTest(event, "machine_tc_saw001_fun02_bamboo_half_yield", 40, true,
+				MachineScenarios::tcSaw001Fun02_bambooHalfYield);
+		registerTest(event, "machine_tc_saw001_fun03_sticks_mode", 40, true,
+				MachineScenarios::tcSaw001Fun03_sticksMode);
+		registerTest(event, "machine_tc_saw001_fun04_slabs_mode", 40, true,
+				MachineScenarios::tcSaw001Fun04_slabsMode);
+		registerTest(event, "machine_tc_saw001_fun05_stairs_mode", 40, true,
+				MachineScenarios::tcSaw001Fun05_stairsMode);
+		registerTest(event, "machine_tc_saw001_con01_only_active_mode_saws", 40, true,
+				MachineScenarios::tcSaw001Con01_onlyActiveModeSaws);
+		registerTest(event, "machine_tc_saw001_con02_mode_persists_through_nbt", 40, true,
+				MachineScenarios::tcSaw001Con02_modePersistsThroughNbt);
+		registerTest(event, "machine_tc_saw001_con03_mode_switch_resets_progress", 40, true,
+				MachineScenarios::tcSaw001Con03_modeSwitchResetsProgress);
 	}
+
+	/** The three NeoForge probes for {@link BlockCapabilityParityScenarios} (MOD-433). */
+	private static final BlockCapabilityParityScenarios.Probes CAPABILITY_PROBES =
+			new BlockCapabilityParityScenarios.Probes(
+					(level, pos, side) -> level.getCapability(Capabilities.Energy.BLOCK, pos, side) != null,
+					(level, pos, side) -> level.getCapability(Capabilities.Fluid.BLOCK, pos, side) != null,
+					(level, pos, side) -> level.getCapability(Capabilities.Item.BLOCK, pos, side) != null);
 
 	/**
 	 * Structure template every scenario is placed on: 8x8x8 of air, shipped in this source set as

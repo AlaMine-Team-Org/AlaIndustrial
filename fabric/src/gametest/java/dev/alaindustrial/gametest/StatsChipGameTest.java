@@ -31,4 +31,10 @@ public class StatsChipGameTest {
 	public void statsChip_removingTheChipKeepsWhatWasCounted(GameTestHelper helper) {
 		StatsChipScenarios.statsChip_removingTheChipKeepsWhatWasCounted(helper);
 	}
+
+	/** MOD-440: a chip must also count on a machine that owns its tick loop (alloy smelter). */
+	@GameTest(maxTicks = 400)
+	public void statsChip_countersRunOnHandRolledMachine(GameTestHelper helper) {
+		StatsChipScenarios.statsChip_countersRunOnHandRolledMachine(helper);
+	}
 }

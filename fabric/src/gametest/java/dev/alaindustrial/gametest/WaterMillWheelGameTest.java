@@ -173,4 +173,35 @@ public class WaterMillWheelGameTest {
 	public void waterMillWheel_noWearWhileDry(GameTestHelper helper) {
 		WaterMillWheelScenarios.waterMillWheel_noWearWhileDry(helper);
 	}
+
+	// ── MOD-445: loader-neutral bodies the NeoForge lane already ran; wired here so both lanes run the same set.
+	// Each is the GeneratorEnergyScenarios twin of a WaterMillWheelScenarios case above (two common bodies per
+	// behaviour — merging them is a follow-up); until then both lanes run both.
+
+	/**
+	 * Wheel gate: no wheel → no EU, wheel installed → generation (twin of the two WaterMillWheelScenarios cases).
+	 * Body: {@link GeneratorEnergyScenarios#waterMillWheelGate}.
+	 */
+	@GameTest
+	public void waterMillWheel_wheelGate(GameTestHelper helper) {
+		GeneratorEnergyScenarios.waterMillWheelGate(helper);
+	}
+
+	/**
+	 * Wheel wear: the wheel loses durability while the mill turns and breaks at the end.
+	 * Body: {@link GeneratorEnergyScenarios#waterMillWheelWearsOut}.
+	 */
+	@GameTest
+	public void waterMillWheel_wearsOut(GameTestHelper helper) {
+		GeneratorEnergyScenarios.waterMillWheelWearsOut(helper);
+	}
+
+	/**
+	 * Two mills placed face-to-face with no gap stall each other (the audit-found AABB blind spot).
+	 * Body: {@link GeneratorEnergyScenarios#waterMillAdjacentFaceToFaceStalls}.
+	 */
+	@GameTest
+	public void waterMill_adjacentFaceToFaceStalls(GameTestHelper helper) {
+		GeneratorEnergyScenarios.waterMillAdjacentFaceToFaceStalls(helper);
+	}
 }

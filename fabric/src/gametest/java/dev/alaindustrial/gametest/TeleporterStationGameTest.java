@@ -65,4 +65,24 @@ public class TeleporterStationGameTest {
 	public void tcTele001Con02_doesNotStarveMachines(GameTestHelper helper) {
 		TeleporterStationScenarios.tcTele001Con02_doesNotStarveMachines(helper);
 	}
+
+	// ── MOD-445: loader-neutral bodies the NeoForge lane already ran; wired here so both lanes run the same set ──
+
+	/**
+	 * @implements TC-TELE-001-NRG03 — the station's face roles as the energy core sees them (intake on the
+	 * working faces, inert front). Body: {@link MachineEnergyScenarios#teleporterFaceRoles}.
+	 */
+	@GameTest
+	public void tcTele001Nrg03b_faceRoles(GameTestHelper helper) {
+		MachineEnergyScenarios.teleporterFaceRoles(helper);
+	}
+
+	/**
+	 * @implements TC-TELE-001-BRK07 — the {@code teleporter_private} data component rides the dropped station
+	 * (the loader's data-component registration seam). Body: {@link MachineEnergyScenarios#teleporterDropCarriesPrivacy}.
+	 */
+	@GameTest
+	public void tcTele001Brk07b_dropCarriesPrivacy(GameTestHelper helper) {
+		MachineEnergyScenarios.teleporterDropCarriesPrivacy(helper);
+	}
 }

@@ -85,6 +85,8 @@ public class DistillationColumnBlockEntity extends MachineBlockEntity implements
 	public static final int FUEL_OIL_DRAIN_INPUT_SLOT = 4;
 	/** The filled fuel-oil container drops here. */
 	public static final int FUEL_OIL_DRAIN_OUTPUT_SLOT = 5;
+	/** Machine-slot count (indices before the upgrade block) — the client menu stub sizes its container from this (MOD-439). */
+	public static final int SLOT_COUNT = 6;
 
 	/** Each of the three tanks: 10 buckets — the corpus convention (pump/polymerizer/geothermal). */
 	public static final long TANK_CAPACITY = FluidAmounts.BUCKET * 10;
@@ -154,7 +156,7 @@ public class DistillationColumnBlockEntity extends MachineBlockEntity implements
 	public DistillationColumnBlockEntity(BlockPos pos, BlockState state) {
 		// EU consumer: maxInsert = tier voltage, maxExtract = 0. Six slots: three container pairs
 		// (oil in, diesel out, fuel oil out). One 400 EU run fits the shared 800 EU machineBuffer.
-		super(ModContent.DISTILLATION_COLUMN_BE.get(), pos, state, EnergyTier.LV, 6,
+		super(ModContent.DISTILLATION_COLUMN_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT,
 				Config.machineBuffer, EnergyTier.LV.maxVoltage(), 0L);
 		this.maxProgress = Config.scaledDuration(Config.distillationColumnDuration);
 	}
@@ -208,6 +210,7 @@ public class DistillationColumnBlockEntity extends MachineBlockEntity implements
 		// Round 3: a lone segment blank is inert — no ports, no menu, no ticking work.
 		if (!state.getValue(dev.alaindustrial.block.DistillationColumnBlock.FORMED)) {
 			updateLit(false);
+			recordEuRate(0);
 			return IDLE_SLEEP_TICKS;
 		}
 		// 1) Manual container handling, no EU cost: oil in, diesel out, fuel oil out.
@@ -239,6 +242,11 @@ public class DistillationColumnBlockEntity extends MachineBlockEntity implements
 		boolean dieselFits = recipe != null && resultFits(recipe, 0, dieselTank, sectionBonus());
 		boolean fuelOilFits = recipe != null && resultFits(recipe, 1, fuelOilTank, 0);
 		boolean canRun = recipe != null && hasEnergy && dieselFits && fuelOilFits && !fouled;
+		// MOD-125/MOD-440: warming and distilling draw the same rate, so the "now" line is one number
+		// whenever the column pays and 0 when it does not. Recorded BEFORE the drain, like every other
+		// machine: recordEuRate flips the buffer's counters on, and the very tick the chip is fitted
+		// must already count its own draw.
+		recordEuRate(canRun ? euPerTick : 0);
 
 		if (canRun) {
 			energy.drainInternal(euPerTick);
@@ -254,6 +262,7 @@ public class DistillationColumnBlockEntity extends MachineBlockEntity implements
 					progress = 0;
 					consumeOil(recipe.amount());
 					deliver(recipe);
+					recordItemProcessed(); // MOD-125/MOD-440: one completed run
 					fouling = Math.min(FOULING_MAX, fouling + FOULING_PER_RUN);
 					creditUsefulWork(level, (long) euPerTick * maxProgress);
 				}

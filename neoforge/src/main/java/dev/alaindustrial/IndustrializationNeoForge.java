@@ -1,9 +1,11 @@
 package dev.alaindustrial;
 
 import dev.alaindustrial.core.energy.EnergyLookup;
+import dev.alaindustrial.core.energy.EnergyPortHost;
 import dev.alaindustrial.item.energy.ItemEnergyBridge;
 import dev.alaindustrial.core.energy.EnergyTransactions;
 import dev.alaindustrial.core.fluid.FluidLookup;
+import dev.alaindustrial.core.fluid.FluidPortHost;
 import dev.alaindustrial.core.item.ItemLookup;
 import dev.alaindustrial.core.neoforge.BufferAsEnergyHandler;
 import dev.alaindustrial.core.neoforge.NeoForgeEnergyLookup;
@@ -15,21 +17,18 @@ import dev.alaindustrial.core.neoforge.TankAsResourceHandler;
 import dev.alaindustrial.network.NetworkDispatcher;
 import dev.alaindustrial.network.neoforge.NeoForgeNetwork;
 import dev.alaindustrial.network.neoforge.NeoForgeNetworkDispatcher;
+import dev.alaindustrial.registry.BlockCapabilityRoster;
+import dev.alaindustrial.registry.ContentManifest;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.neoforge.ModBlockEntitiesNeoForge;
 import dev.alaindustrial.registry.neoforge.ModBlocksNeoForge;
 import dev.alaindustrial.registry.neoforge.ModItemsNeoForge;
 import dev.alaindustrial.registry.neoforge.ModMenusNeoForge;
-import java.util.List;
-import java.util.function.Supplier;
-import dev.alaindustrial.block.entity.EnergyBlockEntity;
 import dev.alaindustrial.command.AlaCommandCommon;
 import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.core.item.ItemNetworkManager;
-import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLEnvironment;
@@ -40,14 +39,8 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
-import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.transfer.ResourceHandler;
-import net.neoforged.neoforge.transfer.energy.EnergyHandler;
-import net.neoforged.neoforge.transfer.fluid.FluidResource;
-import net.neoforged.neoforge.transfer.item.ItemResource;
-import net.neoforged.neoforge.registries.DeferredHolder;
 
 /**
  * NeoForge {@code @Mod} entrypoint (MOD-022 Phase 3 scaffold). Mirrors the Fabric
@@ -389,163 +382,66 @@ public final class IndustrializationNeoForge {
 	}
 
 	/**
-	 * Registers each machine's per-face energy capability on the REAL {@code BlockEntityType}s. Verified
+	 * Publishes each block entity's per-face capabilities on the REAL {@code BlockEntityType}s. Verified
 	 * pattern (neoforge-26.2.0.8-beta):
 	 * {@code event.registerBlockEntity(Capabilities.Energy.BLOCK, TYPE, (be, side) -> handler)} where the
 	 * provider is an {@code ICapabilityProvider<BE, Direction, EnergyHandler>}
-	 * ({@code getCapability(BE, Direction)}).
+	 * ({@code getCapability(BE, Direction)}); fluid and item go through
+	 * {@code Capabilities.Fluid.BLOCK} / {@code Capabilities.Item.BLOCK} the same way.
 	 *
-	 * <p>Each powered {@code BlockEntity} extends the common {@code EnergyBlockEntity}
-	 * ({@code implements EnergyPortHost}), so {@code be.energyPort(side)} yields the face-scoped neutral
-	 * {@code EnergyPort}; {@link BufferAsEnergyHandler#of} exposes it as a NeoForge {@code EnergyHandler}
-	 * (returns {@code null} for a {@code NONE} face, which the capability system treats as "no
-	 * capability here"). This is the exact NeoForge counterpart to the Fabric
-	 * {@code EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)), TYPE)}
-	 * lines in {@code ModBlockEntities#init()}.
+	 * <p><b>MOD-433 — derived from the manifest by interface, not named per block.</b> The three
+	 * loops below replay {@link BlockCapabilityRoster}: every {@code EnergyPortHost} in
+	 * {@code ContentManifest.BLOCK_ENTITIES} (minus the two pipes, see
+	 * {@code BlockCapabilityRoster#NO_ENERGY_CAPABILITY}) exposes its face-scoped neutral
+	 * {@code EnergyPort} through {@link BufferAsEnergyHandler#of} (which returns {@code null} for a
+	 * {@code NONE} face — "no capability here"); every {@code FluidPortHost} exposes its
+	 * {@code FluidPort} through {@link TankAsResourceHandler}; every {@code Container} exposes a
+	 * transactional side-aware view through {@link ContainerAsItemResourceHandler} — the chests through
+	 * their MOD-391 combined double-chest view. Fabric replays the same rosters in
+	 * {@code ModBlockEntities#init()}.
 	 *
-	 * <p><b>Fluid (MOD-028).</b> The geothermal generator and pump additionally publish their neutral
-	 * {@code FluidPort} (via {@code FluidPortHost#fluidPort}) through {@code Capabilities.Fluid.BLOCK} —
-	 * the exact NeoForge counterpart to the Fabric {@code FluidStorage.SIDED.registerForBlockEntity((be,
-	 * dir) -> TankAsFluidStorage.of(be.fluidPort(dir)), TYPE)} lines in {@code ModBlockEntities#init()}.
+	 * <p><b>Why the hand lists had to go.</b> A 35-entry {@code ENERGY_BLOCK_ENTITIES} list, eight fluid
+	 * lines and ~30 item lines lived here, mirrored by 36 + 8 lines on Fabric, and they had drifted:
+	 * the CESU was on the Fabric energy list and not on this one, so an FE mod (or any capability-based
+	 * meter) saw a CESU on Fabric and nothing on NeoForge — invisible to the mod's own energy gametests
+	 * because {@code NeoForgeEnergyLookup} takes the port straight off the block entity. The item list
+	 * lacked the CESU, the distillation column and the three mob repellers, so the mod's OWN item pipe
+	 * ({@code NeoForgeItemLookup} reads only the capability) was blind to them on this loader alone —
+	 * the MOD-193 defect class, recurring. The both-loader sweep
+	 * {@code BlockCapabilityParityScenarios} now asks {@code Capabilities.*.BLOCK} for every manifest
+	 * entry and every face and goes red on the next omission.
+	 *
+	 * <p><b>Why {@code def.registeredType()} is safe here.</b> The earlier attempt at a shared list read
+	 * {@code ModContent} handles at class-load time, before {@code Mod*.init()} had bound them, and
+	 * crashed. The roster reads only the manifest's {@code Class} objects, and
+	 * {@code RegisterCapabilitiesEvent} fires on the mod bus after the registries are frozen, so the
+	 * vanilla block-entity registry already holds every type by the time these loops run.
+	 *
+	 * <p><b>Zero-slot containers are registered too</b> (moonlit/daylight panel, teleporter, charging
+	 * station, electric heater): Fabric's {@code ItemStorage.SIDED} fallback wraps any {@code Container}
+	 * regardless of size, and parity means answering the same. No misleading pipe arm follows — the
+	 * common {@code ItemPipeBlock.hasEndpointCandidate} refuses a face with no slots (MOD-234) before it
+	 * ever consults the capability, on both loaders.
 	 */
-	/**
-	 * Every block entity that exposes an energy port. All of them extend {@link EnergyBlockEntity}
-	 * (machines and generators through {@code MachineBlockEntity}, the cable and the pipes directly —
-	 * MOD-400 split the energy half of the base out of the machine half), which is both a
-	 * {@code BlockEntity} and an {@code EnergyPortHost} — that shared supertype is what lets the
-	 * registration below be a loop instead of one hand-written pair of lines per machine.
-	 *
-	 * <p><b>Note:</b> this list is inline rather than shared loader-neutral one. A common/ list would
-	 * route through {@code ModContent} handles, but those handles are only bound by each loader's
-	 * {@code Mod*.init()} — which on NeoForge runs AFTER this class's static init (the
-	 * {@code ENERGY_BLOCK_ENTITIES = ...} line resolves at class load, during
-	 * {@code DeferredRegister.register(modBus)} in the constructor). Reading {@code ModContent} here
-	 * would hit the throwing placeholder. So the list references the local
-	 * {@code ModBlockEntitiesNeoForge} {@code DeferredHolder} fields directly. (A shared list was tried
-	 * and reverted for this ordering reason: the shared list's static init read ModContent handles
-	 * before the loaders bound them and crashed the runtime.)
-	 *
-	 * <p>A new powered machine is added here, not in the registration body: forgetting it leaves the
-	 * machine silently without energy, which is exactly the failure this list is meant to make obvious.
-	 */
-	private static final List<Supplier<? extends BlockEntityType<? extends EnergyBlockEntity>>>
-			ENERGY_BLOCK_ENTITIES = List.of(
-					ModBlockEntitiesNeoForge.GENERATOR,
-					ModBlockEntitiesNeoForge.SOLAR_PANEL,
-					ModBlockEntitiesNeoForge.MOONLIT_SOLAR_PANEL,
-					ModBlockEntitiesNeoForge.DAYLIGHT_SOLAR_PANEL,
-					ModBlockEntitiesNeoForge.COPPER_CABLE,
-					ModBlockEntitiesNeoForge.MACERATOR,
-					ModBlockEntitiesNeoForge.MOB_REPELLER,
-					ModBlockEntitiesNeoForge.MOB_REPELLER_MV,
-					ModBlockEntitiesNeoForge.MOB_REPELLER_HV,
-					ModBlockEntitiesNeoForge.BATTERY_BOX,
-					ModBlockEntitiesNeoForge.TELEPORTER,
-					ModBlockEntitiesNeoForge.ELECTRIC_FURNACE,
-					ModBlockEntitiesNeoForge.EXTRACTOR,
-					ModBlockEntitiesNeoForge.COMPRESSOR,
-					ModBlockEntitiesNeoForge.COMPONENT_REPAIR_BENCH,
-					ModBlockEntitiesNeoForge.CANNING_MACHINE,
-					ModBlockEntitiesNeoForge.SAWMILL,
-					ModBlockEntitiesNeoForge.ASSEMBLER,
-					ModBlockEntitiesNeoForge.POLYMERIZER,
-					// MOD-251: only the tower's base BE — the segments expose no energy port.
-					ModBlockEntitiesNeoForge.DISTILLATION_COLUMN,
-					ModBlockEntitiesNeoForge.GALVANIC_BATH,
-					ModBlockEntitiesNeoForge.VULCANIZER,
-					ModBlockEntitiesNeoForge.THERMAL_CENTRIFUGE,
-					ModBlockEntitiesNeoForge.ALLOY_SMELTER,
-					ModBlockEntitiesNeoForge.ELECTRIC_HEATER,
-					ModBlockEntitiesNeoForge.CHARGE_PAD,
-					ModBlockEntitiesNeoForge.ENERGY_CONDENSER,
-					ModBlockEntitiesNeoForge.INCUBATOR,
-					ModBlockEntitiesNeoForge.GEOTHERMAL_GENERATOR,
-					ModBlockEntitiesNeoForge.PUMP,
-					ModBlockEntitiesNeoForge.GARDEN_DRONE_STATION,
-					ModBlockEntitiesNeoForge.WATER_MILL,
-					ModBlockEntitiesNeoForge.WIND_MILL,
-					ModBlockEntitiesNeoForge.HIGH_ALTITUDE_WIND_MILL,
-					ModBlockEntitiesNeoForge.STORM_WIND_MILL);
-
 	private void registerCapabilities(RegisterCapabilitiesEvent event) {
-		BlockCapability<EnergyHandler, Direction> cap = Capabilities.Energy.BLOCK;
-		for (Supplier<? extends BlockEntityType<? extends EnergyBlockEntity>> type : ENERGY_BLOCK_ENTITIES) {
-			event.registerBlockEntity(cap, type.get(),
-					(be, side) -> BufferAsEnergyHandler.of(be.energyPort(side)));
+		for (ContentManifest.BlockEntityDef<?> def : BlockCapabilityRoster.energyHosts()) {
+			registerEnergyPort(event, def);
 		}
-
-		// Only three fluid hosts, and they share no BlockEntity supertype (the fluid tank is a plain
-		// BlockEntity, not a MachineBlockEntity), so these stay explicit — a generic helper carries the
-		// BlockEntity & FluidPortHost bound that a wildcard list cannot express.
-		BlockCapability<ResourceHandler<FluidResource>, Direction> fluidCap = Capabilities.Fluid.BLOCK;
-		registerFluidPort(event, fluidCap, ModBlockEntitiesNeoForge.GEOTHERMAL_GENERATOR);
-		registerFluidPort(event, fluidCap, ModBlockEntitiesNeoForge.PUMP);
-		registerFluidPort(event, fluidCap, ModBlockEntitiesNeoForge.FLUID_TANK);
-		registerFluidPort(event, fluidCap, ModBlockEntitiesNeoForge.POLYMERIZER);
-		registerFluidPort(event, fluidCap, ModBlockEntitiesNeoForge.GALVANIC_BATH);
-		// MOD-251: the tower's three tanks — base (fuel oil; oil on a null side) + segment proxies
-		// (middle → oil intake, top → diesel output), both forwarding to the master BE.
-		registerFluidPort(event, fluidCap, ModBlockEntitiesNeoForge.DISTILLATION_COLUMN);
-		registerFluidPort(event, fluidCap, ModBlockEntitiesNeoForge.DISTILLATION_COLUMN_SEGMENT);
-		registerFluidPort(event, fluidCap, ModBlockEntitiesNeoForge.FLUID_PIPE);
-
-		// MOD-104: publish transactional, side-aware item views for mod containers. This is required
-		// because a vanilla Container is not automatically a 26.2 ResourceHandler on NeoForge.
-		BlockCapability<ResourceHandler<ItemResource>, Direction> itemCap = Capabilities.Item.BLOCK;
-		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.GENERATOR);
-		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.MACERATOR);
-		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.BATTERY_BOX);
-		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.ELECTRIC_FURNACE);
-		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.EXTRACTOR);
-		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.COMPRESSOR);
-		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.COMPONENT_REPAIR_BENCH);
-		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.CANNING_MACHINE);
-		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.SAWMILL);
-		// MOD-393: the condenser's output slot, so a pipe or hopper can take the clot on NeoForge too.
-		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.ENERGY_CONDENSER);
-		// MOD-275: the assembler's blueprint queue and output area. Fabric gets this for free from
-		// ItemStorage.SIDED's global Container fallback; here it must be named, or the machine is
-		// invisible to the item pipe on this loader only (the MOD-193 asymmetry).
-		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.ASSEMBLER);
-		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.POLYMERIZER);
-		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.GALVANIC_BATH);
-		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.VULCANIZER);
-		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.THERMAL_CENTRIFUGE);
-		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.ALLOY_SMELTER);
-		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.INCUBATOR);
-		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.GEOTHERMAL_GENERATOR);
-		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.PUMP);
-		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.GARDEN_DRONE_STATION);
-		// MOD-391: a double chest is ONE inventory to automation. The chest capability resolves the
-		// pair on every query (combinedContainer walks to the partner), so the mod's item pipes and
-		// other cap-based mods see the joined 72/90/108 slots from either half — the same view the
-		// vanilla hopper gets through WorldlyContainerHolder. The pairing/unpairing cache
-		// invalidation is the ChestPairHooks seam installed in installLoaderSeams().
-		registerChestContainer(event, itemCap, ModBlockEntitiesNeoForge.IRON_CHEST);
-		registerChestContainer(event, itemCap, ModBlockEntitiesNeoForge.SILVER_CHEST);
-		registerChestContainer(event, itemCap, ModBlockEntitiesNeoForge.GOLD_CHEST);
-		registerChestContainer(event, itemCap, ModBlockEntitiesNeoForge.ELECTRUM_CHEST);
-		// MOD-287: the warehouse module. Without this line the pipe is blind to it on this loader
-		// only — Fabric wraps any Container through a global fallback — which is exactly the
-		// asymmetry the MOD-193 note below describes.
-		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.STORAGE_MODULE);
-		// MOD-193: the six containers MOD-104 missed. Fabric never showed the gap — ItemStorage.SIDED
-		// wraps any Container through a global fallback, so every machine is visible to the pipe there
-		// for free. Here the capability is per block entity, so anything absent from this list is
-		// invisible to the pipe and to other mods' item transport, while a vanilla hopper still works
-		// on it — an inconsistency visible only on this loader. MachineBlockEntity#getSlotsForFace
-		// states the intended contract: "hoppers/pipes ... on either loader".
-		//
-		// Only containers that actually own slots are listed. Registering a zero-slot block entity
-		// (moonlit/daylight panel, teleporter, item pipe, cable) would make ItemPipeBlock treat its
-		// face as an endpoint and draw a connection arm that can never move an item — the same
-		// misleading-joint defect as MOD-038/MOD-194. FluidTank is not a Container at all.
-		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.IRON_FURNACE);
-		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.SOLAR_PANEL);
-		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.WATER_MILL);
-		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.WIND_MILL);
-		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.HIGH_ALTITUDE_WIND_MILL);
-		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.STORM_WIND_MILL);
+		for (ContentManifest.BlockEntityDef<?> def : BlockCapabilityRoster.fluidHosts()) {
+			registerFluidPort(event, def);
+		}
+		for (ContentManifest.BlockEntityDef<?> def : BlockCapabilityRoster.itemContainers()) {
+			// MOD-391: a double chest is ONE inventory to automation. The chest capability resolves the
+			// pair on every query (combinedContainer walks to the partner), so the mod's item pipes and
+			// other cap-based mods see the joined 72/90/108 slots from either half — the same view the
+			// vanilla hopper gets through WorldlyContainerHolder. The pairing/unpairing cache
+			// invalidation is the ChestPairHooks seam installed in installLoaderSeams().
+			if (dev.alaindustrial.block.entity.AbstractChestBlockEntity.class.isAssignableFrom(def.type())) {
+				registerChestContainer(event, def);
+			} else {
+				registerItemContainer(event, def);
+			}
+		}
 
 		// MOD-063: item-side fluid capability for the Vacuum Capsule, so other mods' pipes/tanks can fill
 		// or drain a capsule sitting in a slot. One CapsuleResourceHandler per stack access, both items.
@@ -578,17 +474,39 @@ public final class IndustrializationNeoForge {
 		// set, dev runs only (see bootstrapGameTests).
 	}
 
-	/** Carries the {@code BlockEntity & FluidPortHost} bound a wildcard list cannot express. */
-	private static <T extends BlockEntity & dev.alaindustrial.core.fluid.FluidPortHost> void registerFluidPort(
-			RegisterCapabilitiesEvent event, BlockCapability<ResourceHandler<FluidResource>, Direction> cap,
-			Supplier<? extends BlockEntityType<T>> type) {
-		event.registerBlockEntity(cap, type.get(), (be, side) -> TankAsResourceHandler.of(be.fluidPort(side)));
+	/**
+	 * Publishes {@code def}'s neutral energy port; the roster guarantees the {@code EnergyPortHost} cast.
+	 *
+	 * <p>MOD-448: {@code side} is nullable — a caller may ask without naming a face, and viewer mods do
+	 * so for every block under the crosshair. That case is answered by {@code energyPortForLookup} (the
+	 * shared contract); passing the null to {@code energyPort} threw inside the port implementation and
+	 * the caller had to catch it.
+	 */
+	private static <T extends BlockEntity> void registerEnergyPort(RegisterCapabilitiesEvent event,
+			ContentManifest.BlockEntityDef<T> def) {
+		event.registerBlockEntity(Capabilities.Energy.BLOCK, def.registeredType(),
+				(be, side) -> BufferAsEnergyHandler.of(((EnergyPortHost) be).energyPortForLookup(side)));
 	}
 
-	private static <T extends BlockEntity & net.minecraft.world.Container> void registerItemContainer(
-			RegisterCapabilitiesEvent event, BlockCapability<ResourceHandler<ItemResource>, Direction> capability,
-			DeferredHolder<BlockEntityType<?>, BlockEntityType<T>> type) {
-		event.registerBlockEntity(capability, type.get(), ContainerAsItemResourceHandler::of);
+	/**
+	 * Publishes {@code def}'s neutral fluid port; the roster guarantees the {@code FluidPortHost} cast.
+	 * The side-less query goes through {@code fluidPortForLookup}; see {@link #registerEnergyPort} (MOD-448).
+	 */
+	private static <T extends BlockEntity> void registerFluidPort(RegisterCapabilitiesEvent event,
+			ContentManifest.BlockEntityDef<T> def) {
+		event.registerBlockEntity(Capabilities.Fluid.BLOCK, def.registeredType(),
+				(be, side) -> TankAsResourceHandler.of(((FluidPortHost) be).fluidPortForLookup(side)));
+	}
+
+	/**
+	 * MOD-104: publishes a transactional, side-aware item view of {@code def}'s container — required
+	 * because a vanilla {@code Container} is not automatically a 26.2 {@code ResourceHandler} on NeoForge.
+	 * The roster guarantees the {@code Container} cast.
+	 */
+	private static <T extends BlockEntity> void registerItemContainer(RegisterCapabilitiesEvent event,
+			ContentManifest.BlockEntityDef<T> def) {
+		event.registerBlockEntity(Capabilities.Item.BLOCK, def.registeredType(),
+				(be, side) -> ContainerAsItemResourceHandler.of((net.minecraft.world.Container) be, side));
 	}
 
 	/**
@@ -598,16 +516,15 @@ public final class IndustrializationNeoForge {
 	 * the double's menu shows) when paired. Resolved per query, so it can never serve a stale pair;
 	 * {@code BlockCapabilityCache} consumers are refreshed by the {@code ChestPairHooks} invalidation.
 	 */
-	private static <T extends BlockEntity & net.minecraft.world.Container> void registerChestContainer(
-			RegisterCapabilitiesEvent event, BlockCapability<ResourceHandler<ItemResource>, Direction> capability,
-			DeferredHolder<BlockEntityType<?>, BlockEntityType<T>> type) {
-		event.registerBlockEntity(capability, type.get(), (be, side) -> {
+	private static <T extends BlockEntity> void registerChestContainer(RegisterCapabilitiesEvent event,
+			ContentManifest.BlockEntityDef<T> def) {
+		event.registerBlockEntity(Capabilities.Item.BLOCK, def.registeredType(), (be, side) -> {
 			net.minecraft.world.level.block.state.BlockState state = be.getBlockState();
 			net.minecraft.world.Container joined =
 					be.getLevel() != null && state.getBlock() instanceof dev.alaindustrial.block.AbstractModChestBlock chest
 							? chest.combinedContainer(state, be.getLevel(), be.getBlockPos())
 							: null;
-			return ContainerAsItemResourceHandler.of(joined != null ? joined : be, side);
+			return ContainerAsItemResourceHandler.of(joined != null ? joined : (net.minecraft.world.Container) be, side);
 		});
 	}
 }

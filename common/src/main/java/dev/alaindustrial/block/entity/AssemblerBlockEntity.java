@@ -223,6 +223,7 @@ public class AssemblerBlockEntity extends MachineBlockEntity implements Overcloc
 			// The blueprint was pulled (or replaced) mid-operation. Drop the operation rather than
 			// leave the machine pointing at an empty slot forever; nothing has been consumed yet.
 			abortOperation();
+			recordEuRate(0);
 			return IDLE_SLEEP_TICKS;
 		}
 		// Re-derived every tick, not once in the constructor: a chip dropped into the panel mid-run has
@@ -236,8 +237,12 @@ public class AssemblerBlockEntity extends MachineBlockEntity implements Overcloc
 				// re-checking every tick is free — any delivery into the buffer commits a transaction,
 				// and that hook wakes the machine on the very next tick (R-29).
 				setStatus(AssemblerStatus.NO_ENERGY);
+				recordEuRate(0);
 				return IDLE_SLEEP_TICKS;
 			}
+			// MOD-125/MOD-440: the statistics panel's "now" line is this tick's draw. Only the paid ticks
+			// report a rate — the planning tick and the finish tick draw nothing and say so.
+			recordEuRate(euPerTick);
 			energy.drainInternal(euPerTick);
 			progress++;
 			setStatus(AssemblerStatus.READY);
@@ -247,12 +252,14 @@ public class AssemblerBlockEntity extends MachineBlockEntity implements Overcloc
 		// At the finish line: re-plan against the warehouse as it is NOW and commit atomically. A plan
 		// that no longer holds (someone emptied the warehouse, the datapack dropped the recipe) parks
 		// the machine here — progress and EU are kept, and it completes the moment the plan holds again.
+		recordEuRate(0);
 		Operation op = planOperation(server, activeSlot);
 		if (op == null) {
 			setStatus(planFailure);
 			return IDLE_SLEEP_TICKS;
 		}
 		op.commit();
+		recordItemProcessed(); // MOD-125/MOD-440: one committed operation
 		creditUsefulWork(server, (long) euPerTick * maxProgress); // MOD-133: op → XP
 		progress = 0;
 		activeSlot = -1;
@@ -272,6 +279,7 @@ public class AssemblerBlockEntity extends MachineBlockEntity implements Overcloc
 	 * one after it.
 	 */
 	private int startNextOperation(ServerLevel server) {
+		recordEuRate(0); // picking spends nothing (MOD-125/MOD-440)
 		AssemblerStatus reason = AssemblerStatus.NO_BLUEPRINT;
 		for (int i = 0; i < BLUEPRINT_SLOT_COUNT; i++) {
 			int slot = (cursor + i) % BLUEPRINT_SLOT_COUNT;

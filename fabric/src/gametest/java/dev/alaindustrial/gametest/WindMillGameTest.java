@@ -1,7 +1,6 @@
 package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Config;
-import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
 import dev.alaindustrial.core.environment.WindMillOutput;
 import dev.alaindustrial.registry.ModBlocks;
@@ -190,25 +189,7 @@ public class WindMillGameTest {
 	 */
 	@GameTest(skyAccess = true, maxTicks = 120)
 	public void tcWindmill001Sta01_thunderMultipliesRate(GameTestHelper helper) {
-		WindMillBlockEntity mill = placeRaised(helper); // raised so base >= 1 (see RAISED_POS)
-		requirePositiveHeightBase(helper, RAISED_POS); // tripwire: fail loudly if the rig ever drops below base 1
-		setClear(helper);
-		int clearRate = expectedRate(helper, RAISED_POS);
-		setRaining(helper, true);
-		int stormRate = expectedRate(helper, RAISED_POS);
-		if (stormRate < clearRate) {
-			helper.fail("thunder rate " + stormRate + " < clear rate " + clearRate + " (weather must not reduce output)");
-		}
-		// Drive one full sample window from a fresh block so the cached rate reflects the storm.
-		mill.getEnergyStorage().setAmountUntracked(0);
-		long perTick = afterGlobalRate(stormRate);
-		drive(mill, helper, Config.windMillSampleTicks);
-		long expected = perTick * Config.windMillSampleTicks;
-		long got = mill.getEnergyStorage().getAmount();
-		if (got != expected) {
-			helper.fail("thunder output: got " + got + " EU, expected " + expected + " (perTick=" + perTick + ")");
-		}
-		helper.succeed();
+		GeneratorEnergyScenarios.windMillThunderMultipliesRate(helper);
 	}
 
 	/**
@@ -221,20 +202,7 @@ public class WindMillGameTest {
 	 */
 	@GameTest(skyAccess = true, maxTicks = 120)
 	public void tcWindmill001Neg01_roofedYieldsZero(GameTestHelper helper) {
-		WindMillBlockEntity mill = place(helper);
-		helper.setBlock(POS.above(), Blocks.STONE);
-		setRaining(helper, true); // even in a storm, a roof kills it
-		mill.getEnergyStorage().setAmountUntracked(0);
-		drive(mill, helper, Config.windMillSampleTicks + 1);
-		long got = mill.getEnergyStorage().getAmount();
-		if (got != 0) {
-			helper.fail("roofed wind mill generated " + got + " EU; expected 0 (no open sky)");
-		}
-		if (mill.getDataAccess().get(3) != WindMillBlockEntity.MODE_ROOFED) {
-			helper.fail("roofed wind mill mode = " + mill.getDataAccess().get(3) + "; expected ROOFED ("
-					+ WindMillBlockEntity.MODE_ROOFED + ")");
-		}
-		helper.succeed();
+		GeneratorEnergyScenarios.windMillRoofedYieldsZero(helper);
 	}
 
 	/**
@@ -362,24 +330,7 @@ public class WindMillGameTest {
 	 */
 	@GameTest(skyAccess = true, maxTicks = 120)
 	public void tcWindmill001Con01_pushesToAdjacentBattery(GameTestHelper helper) {
-		WindMillBlockEntity mill = place(helper); // FACING defaults to NORTH → output face is SOUTH
-		mill.getEnergyStorage().setAmountUntracked(mill.getEnergyStorage().getCapacity()); // ample supply to push
-
-		// Place the BatteryBox on the mill's SOUTH (back/output) face. The mill sits on the battery's
-		// NORTH side, so the battery must face NORTH to expose its input (front) to the mill's output.
-		BlockPos sink = POS.relative(Direction.SOUTH);
-		helper.setBlock(sink, ModBlocks.BATTERY_BOX.defaultBlockState()
-				.setValue(dev.alaindustrial.block.HorizontalMachineBlock.FACING, Direction.NORTH));
-		BatteryBoxBlockEntity battery = helper.getBlockEntity(sink, BatteryBoxBlockEntity.class);
-		if (battery == null) {
-			helper.fail("battery_box block entity missing after placement");
-		}
-		battery.getEnergyStorage().setAmountUntracked(0);
-		drive(mill, helper, 20);
-		if (battery.getEnergyStorage().getAmount() <= 0) {
-			helper.fail("battery_box on the back face received no EU from the wind mill");
-		}
-		helper.succeed();
+		GeneratorEnergyScenarios.windMillChargesAdjacentBox(helper);
 	}
 
 	/**
@@ -921,5 +872,26 @@ public class WindMillGameTest {
 		} finally {
 			Config.windMillRotorEuPerDamage = savedRate;
 		}
+	}
+
+	// ── MOD-445: loader-neutral bodies the NeoForge lane already ran; wired here so both lanes run the same set ──
+
+	/**
+	 * MOD-356 — the wind mill's readout equals the buffer gain AND channel 2 stays the mechanical rate the
+	 * rotor renderer spins on; the {@code max(1, ...)} floor holds under a tiny multiplier. Body: {@link
+	 * GeneratorEnergyScenarios#windMillReadoutMatchesBufferGain}.
+	 */
+	@GameTest(skyAccess = true, maxTicks = 120)
+	public void mod356_windMillReadoutMatchesBufferGain(GameTestHelper helper) {
+		GeneratorEnergyScenarios.windMillReadoutMatchesBufferGain(helper);
+	}
+
+	/**
+	 * MOD-356 — the same readout contract on both T2 mills (high-altitude, storm), which got a
+	 * {@code ContainerData} bridge of their own. Body: {@link GeneratorEnergyScenarios#t2WindMillReadoutsMatchBufferGain}.
+	 */
+	@GameTest(skyAccess = true, maxTicks = 120)
+	public void mod356_t2WindMillReadoutsMatchBufferGain(GameTestHelper helper) {
+		GeneratorEnergyScenarios.t2WindMillReadoutsMatchBufferGain(helper);
 	}
 }

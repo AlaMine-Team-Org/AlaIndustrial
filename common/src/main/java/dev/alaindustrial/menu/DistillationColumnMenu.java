@@ -28,7 +28,7 @@ public class DistillationColumnMenu extends MachineMenu {
 	/** Client side. */
 	public DistillationColumnMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.DISTILLATION_COLUMN_MENU.get(), syncId, playerInventory,
-				new SimpleContainer(6 + UPGRADE_SLOT_COUNT),
+				new SimpleContainer(DistillationColumnBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
 				new SimpleContainerData(DistillationColumnBlockEntity.DATA_COUNT),
 				ContainerLevelAccess.NULL, ModContent.DISTILLATION_COLUMN.get());
 	}

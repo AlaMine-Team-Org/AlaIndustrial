@@ -32,6 +32,8 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.GameType;
 
+import static dev.alaindustrial.gametest.AlaGameTestHelper.survivalPlayer;
+
 /**
  * Loader-neutral gametest bodies for the Electric Saber (MOD-149, suite TC-SABER-001). Wrapped by the
  * Fabric {@code ElectricSaberGameTest} suite and registered on the NeoForge {@code gameTestServer}
@@ -63,19 +65,6 @@ public final class ElectricSaberScenarios {
 		ItemStack stack = new ItemStack(ModContent.ELECTRIC_SABER.get());
 		ItemEnergy.set(stack, eu);
 		return stack;
-	}
-
-	/**
-	 * A survival ServerPlayer mock with {@code instabuild} forced off. {@code makeMockServerPlayerInLevel}
-	 * hardcodes a CREATIVE game mode that {@code setGameMode} cannot undo, and {@link ItemEnergy#spend}
-	 * reads {@code hasInfiniteMaterials()} — leaving the ability on would silently disable every EU
-	 * assertion below and make this whole suite vacuous.
-	 */
-	private static ServerPlayer makeSurvivalPlayer(GameTestHelper helper) {
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
-		player.setGameMode(GameType.SURVIVAL);
-		player.getAbilities().instabuild = false;
-		return player;
 	}
 
 	/** A cow to swing at: a passive LivingEntity, so nothing fights back mid-test. */
@@ -154,7 +143,7 @@ public final class ElectricSaberScenarios {
 
 	/** FUN02: a landed hit with a live saber drains exactly one hit's worth of EU. */
 	public static void fun02DrainOnHit(GameTestHelper helper) {
-		ServerPlayer player = makeSurvivalPlayer(helper);
+		ServerPlayer player = survivalPlayer(helper);
 		LivingEntity target = spawnTarget(helper);
 		ItemStack saber = saber(Config.electricSaberBuffer);
 
@@ -172,7 +161,7 @@ public final class ElectricSaberScenarios {
 	 * degraded to a plain sword, and a plain sword costs no energy.
 	 */
 	public static void fun03NoDrainBelowCost(GameTestHelper helper) {
-		ServerPlayer player = makeSurvivalPlayer(helper);
+		ServerPlayer player = survivalPlayer(helper);
 		LivingEntity target = spawnTarget(helper);
 		long below = Config.electricSaberEuPerHit - 1;
 		ItemStack saber = saber(below);
@@ -222,7 +211,7 @@ public final class ElectricSaberScenarios {
 	 * reach bonus. The flag is the half of the state the player controls, and it must win over charge.
 	 */
 	public static void fun05SwitchedOffSpendsNothing(GameTestHelper helper) {
-		ServerPlayer player = makeSurvivalPlayer(helper);
+		ServerPlayer player = survivalPlayer(helper);
 		LivingEntity target = spawnTarget(helper);
 		ItemStack saber = saber(Config.electricSaberBuffer);
 		double liveDamage = damageOf(saber);
@@ -281,7 +270,7 @@ public final class ElectricSaberScenarios {
 			helper.fail("the saber must carry the WEAPON component");
 		}
 
-		ServerPlayer player = makeSurvivalPlayer(helper);
+		ServerPlayer player = survivalPlayer(helper);
 		LivingEntity target = spawnTarget(helper);
 		if (!saber.hurtEnemy(target, player)) {
 			helper.fail("hurtEnemy must report the hit as a weapon hit — otherwise vanilla never calls "
@@ -307,7 +296,7 @@ public final class ElectricSaberScenarios {
 		if (Config.electricSaberShockSeconds <= 0) {
 			helper.fail("this case assumes the shock is enabled (electricSaberShockSeconds > 0)");
 		}
-		ServerPlayer player = makeSurvivalPlayer(helper);
+		ServerPlayer player = survivalPlayer(helper);
 
 		LivingEntity shocked = spawnTarget(helper);
 		hit(saber(Config.electricSaberBuffer), shocked, player);

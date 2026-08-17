@@ -24,6 +24,8 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
+import static dev.alaindustrial.gametest.AlaGameTestHelper.survivalPlayer;
+
 /**
  * Loader-neutral gametest bodies for the Vacuum Capsule (MOD-063, suite TC-CAPS-001). Same pattern as
  * {@link CoreFluidScenarios}/{@link PouchScenarios}: plain {@code Consumer<GameTestHelper>} bodies over
@@ -172,14 +174,6 @@ public final class CapsuleScenarios {
 	// prevent the capsule's Item.useOn from ever running. FUN05/FUN06 drive the real gameMode path (the
 	// first tests in the suite to do so) so a regression that re-introduces the GUI-eats-click ordering
 	// fails here even though FUN02/FUN03 still pass.
-
-	/** A survival ServerPlayer (real gameMode, no instabuild) so openMenu + item swap both behave. */
-	private static ServerPlayer survivalPlayer(GameTestHelper helper) {
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
-		player.setGameMode(GameType.SURVIVAL);
-		player.getAbilities().instabuild = false;
-		return player;
-	}
 
 	private static BlockHitResult hitOn(GameTestHelper helper, BlockPos rel, Direction face) {
 		BlockPos abs = helper.absolutePos(rel);

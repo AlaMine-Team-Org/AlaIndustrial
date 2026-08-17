@@ -10,13 +10,14 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+
+import static dev.alaindustrial.gametest.AlaGameTestHelper.survivalPlayer;
 
 /**
  * Loader-neutral gametest bodies for the Electric Shovel (suite TC-SHOVEL-001) — its right-click
@@ -91,19 +92,6 @@ public final class ElectricShovelScenarios {
 		return stack;
 	}
 
-	/**
-	 * A survival ServerPlayer mock with {@code instabuild} forced off — the
-	 * {@code makeMockServerPlayerInLevel} default leaves it on (hardcoded CREATIVE gameMode), which would
-	 * make the "this interaction is free" assertion in FUN03 meaningless, since MOD-081 drops every EU
-	 * drain in creative and the charge would sit untouched no matter what the code did.
-	 */
-	private static ServerPlayer makeSurvivalPlayer(GameTestHelper helper) {
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
-		player.setGameMode(GameType.SURVIVAL);
-		player.getAbilities().instabuild = false;
-		return player;
-	}
-
 	/** Simulates a right-click of the main-hand stack on the TOP face of {@link #GROUND} — the face
 	 * matters, {@code ShovelItem.useOn} returns {@code PASS} outright for {@code Direction.DOWN}. */
 	private static void useOnGround(GameTestHelper helper, ServerPlayer player) {
@@ -142,7 +130,7 @@ public final class ElectricShovelScenarios {
 	 * {@code context.getItemInHand()} — still the electric shovel — and answers {@code false}.
 	 */
 	public static void fun01ShovelMakesDirtPath(GameTestHelper helper) {
-		ServerPlayer player = makeSurvivalPlayer(helper);
+		ServerPlayer player = survivalPlayer(helper);
 		player.setItemInHand(InteractionHand.MAIN_HAND, shovel(Config.electricShovelBuffer));
 		prepareGround(helper, Blocks.GRASS_BLOCK);
 
@@ -168,7 +156,7 @@ public final class ElectricShovelScenarios {
 	 * fails here only if the fixture is broken.
 	 */
 	public static void fun02VanillaShovelPathsTheSameFixture(GameTestHelper helper) {
-		ServerPlayer player = makeSurvivalPlayer(helper);
+		ServerPlayer player = survivalPlayer(helper);
 		player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.DIAMOND_SHOVEL));
 		prepareGround(helper, Blocks.GRASS_BLOCK);
 
@@ -192,7 +180,7 @@ public final class ElectricShovelScenarios {
 	 * than a stick with a plank on it.
 	 */
 	public static void fun03PathMakingIsFree(GameTestHelper helper) {
-		ServerPlayer player = makeSurvivalPlayer(helper);
+		ServerPlayer player = survivalPlayer(helper);
 		player.setItemInHand(InteractionHand.MAIN_HAND, shovel(Config.electricShovelBuffer));
 		prepareGround(helper, Blocks.GRASS_BLOCK);
 
@@ -229,7 +217,7 @@ public final class ElectricShovelScenarios {
 	 * never notice half the item's contract was still missing.
 	 */
 	public static void fun04ShovelDousesLitCampfire(GameTestHelper helper) {
-		ServerPlayer player = makeSurvivalPlayer(helper);
+		ServerPlayer player = survivalPlayer(helper);
 		player.setItemInHand(InteractionHand.MAIN_HAND, shovel(Config.electricShovelBuffer));
 		helper.setBlock(GROUND, Blocks.CAMPFIRE.defaultBlockState().setValue(CampfireBlock.LIT, Boolean.TRUE));
 		helper.setBlock(GROUND.above(), Blocks.AIR);

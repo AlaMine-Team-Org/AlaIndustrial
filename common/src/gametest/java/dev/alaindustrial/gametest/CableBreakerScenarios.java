@@ -15,7 +15,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.PipeBlock;
 
 /**
@@ -174,11 +173,7 @@ public final class CableBreakerScenarios {
 	 */
 	public static void tcBrk001Sec01_openBreakerDisarmsTheShock(GameTestHelper helper) {
 		buildLine(helper);
-		ServerPlayer player = (ServerPlayer) helper.makeMockServerPlayer(GameType.SURVIVAL);
-		player.getAbilities().instabuild = false;
-		player.getAbilities().invulnerable = false;
-		player.setInvulnerable(false);
-		player.invulnerableTime = 0;
+		ServerPlayer player = AlaGameTestHelper.detachedSurvivalPlayer(helper);
 		// The player is deliberately left where the mock spawned. shouldShockPlayer's reach test is about
 		// the insulating stand, not distance, so moving them proves nothing — and snapTo() on a mock
 		// player dies in resetPosition() because it has no connection.

@@ -34,6 +34,8 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
+import static dev.alaindustrial.gametest.AlaGameTestHelper.survivalPlayer;
+
 /**
  * Loader-neutral gametest bodies for the oil fluid (MOD-238, suite TC-OIL-001). Same pattern as
  * {@link CoreFluidScenarios}/{@link CapsuleScenarios}: plain {@code Consumer<GameTestHelper>} bodies
@@ -135,14 +137,6 @@ public final class OilScenarios {
 	}
 
 	// ── FUN02: vacuum capsule world exchange through the REAL useItem routing ─────────────────────
-
-	/** A survival ServerPlayer (real gameMode, no instabuild) so the hand swap behaves. */
-	private static ServerPlayer survivalPlayer(GameTestHelper helper) {
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
-		player.setGameMode(GameType.SURVIVAL);
-		player.getAbilities().instabuild = false;
-		return player;
-	}
 
 	/**
 	 * An empty vacuum capsule right-clicked at an oil source (through the real

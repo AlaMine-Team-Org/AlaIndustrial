@@ -18,6 +18,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.storage.TagValueInput;
 
+import static dev.alaindustrial.gametest.AlaGameTestHelper.drive;
+
 /**
  * Loader-neutral MOD-425 world scenarios for the Thermal Centrifuge. Fabric and NeoForge wrappers run
  * these same bodies, so the four gates cannot drift by loader.
@@ -86,10 +88,6 @@ public final class ThermalCentrifugeScenarios {
 	 */
 	private static void signal(GameTestHelper helper, boolean on) {
 		helper.setBlock(SIGNAL, on ? Blocks.REDSTONE_BLOCK : Blocks.AIR);
-	}
-
-	private static void drive(MachineBlockEntity be, GameTestHelper helper, int ticks) {
-		AlaGameTestHelper.drive(be, helper, ticks);
 	}
 
 	/**

@@ -47,8 +47,10 @@ import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
 import dev.alaindustrial.block.entity.HighAltitudeWindMillBlockEntity;
 import dev.alaindustrial.block.entity.StormWindMillBlockEntity;
+import dev.alaindustrial.core.energy.EnergyPortHost;
 import dev.alaindustrial.core.fabric.PortAsEnergyStorage;
 import dev.alaindustrial.core.fabric.TankAsFluidStorage;
+import dev.alaindustrial.core.fluid.FluidPortHost;
 // MOD-022 Phase 2: machines now expose a platform-neutral EnergyPort (MachineBlockEntity#energyPort).
 // The Fabric SIDED capability binding is the per-loader seam: the neutral port is published through
 // Team Reborn's EnergyStorage.SIDED via the PortAsEnergyStorage reverse adapter. NeoForge binds the same
@@ -85,7 +87,7 @@ public final class ModBlockEntities {
 	public static BlockEntityType<CesuBlockEntity> CESU;
 	public static BlockEntityType<TeleporterBlockEntity> TELEPORTER;
 	public static BlockEntityType<ElectricFurnaceBlockEntity> ELECTRIC_FURNACE;
-	// Iron furnace is fuel-burning, not an EnergyPort — so no Team Reborn EnergyStorage.SIDED line below.
+	// Iron furnace is fuel-burning, not an EnergyPortHost — so the roster gives it no energy capability.
 	public static BlockEntityType<IronFurnaceBlockEntity> IRON_FURNACE;
 	public static BlockEntityType<ExtractorBlockEntity> EXTRACTOR;
 	public static BlockEntityType<CompressorBlockEntity> COMPRESSOR;
@@ -114,12 +116,12 @@ public final class ModBlockEntities {
 	public static BlockEntityType<WindMillBlockEntity> WIND_MILL;
 	public static BlockEntityType<HighAltitudeWindMillBlockEntity> HIGH_ALTITUDE_WIND_MILL;
 	public static BlockEntityType<StormWindMillBlockEntity> STORM_WIND_MILL;
-	// Iron chest is a pure Container (no EnergyPort), so no Team Reborn EnergyStorage.SIDED line below.
+	// Iron chest is a pure Container (no EnergyPortHost), so the roster gives it no energy capability.
 	public static BlockEntityType<IronChestBlockEntity> IRON_CHEST;
 	public static BlockEntityType<StorageModuleBlockEntity> STORAGE_MODULE;
-	// Silver chest is likewise a pure Container (no EnergyPort) — no Team Reborn EnergyStorage.SIDED line.
+	// Silver chest is likewise a pure Container (no EnergyPortHost) — no energy capability.
 	public static BlockEntityType<SilverChestBlockEntity> SILVER_CHEST;
-	// Gold chest is likewise a pure Container (no EnergyPort) — no Team Reborn EnergyStorage.SIDED line.
+	// Gold chest is likewise a pure Container (no EnergyPortHost) — no energy capability.
 	public static BlockEntityType<GoldChestBlockEntity> GOLD_CHEST;
 	public static BlockEntityType<ElectrumChestBlockEntity> ELECTRUM_CHEST;
 
@@ -171,72 +173,55 @@ public final class ModBlockEntities {
 		GOLD_CHEST = register(ContentManifest.blockEntity("gold_chest", GoldChestBlockEntity.class));
 		ELECTRUM_CHEST = register(ContentManifest.blockEntity("electrum_chest", ElectrumChestBlockEntity.class));
 
-			// EnergyStorage.SIDED registration: explicit per-block lines, one per energy-exposing block
-			// entity. This is deliberately NOT driven from a shared loader-neutral list: such a list would
-			// route through ModContent handles that are only bound by bindModContent() BELOW this point, so
-			// reading them here would hit the Unbound placeholder. Fabric's static-init ordering forces the
-			// use of the local already-registered BlockEntityType fields directly. (A loader-neutral list
-			// was tried and reverted for exactly this ordering reason: the shared list's static init
-			// read ModContent handles before the loaders bound them and crashed the runtime.)
-			// When adding a powered block entity, add its line here AND in the NeoForge energy loop.
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),GENERATOR);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),GEOTHERMAL_GENERATOR);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),SOLAR_PANEL);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),MOONLIT_SOLAR_PANEL);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),DAYLIGHT_SOLAR_PANEL);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),COPPER_CABLE);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),MACERATOR);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),BATTERY_BOX);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),CESU);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),TELEPORTER);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),ELECTRIC_FURNACE);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),EXTRACTOR);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),COMPRESSOR);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),COMPONENT_REPAIR_BENCH);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),CANNING_MACHINE);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),SAWMILL);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),ASSEMBLER);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),INCUBATOR);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),POLYMERIZER);
-			// MOD-251: energy enters the tower ONLY at the base — the segments expose no energy port.
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),DISTILLATION_COLUMN);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),VULCANIZER);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),ALLOY_SMELTER);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),GALVANIC_BATH);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),THERMAL_CENTRIFUGE);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),ELECTRIC_HEATER);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),CHARGE_PAD);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),ENERGY_CONDENSER);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),MOB_REPELLER);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),MOB_REPELLER_MV);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),MOB_REPELLER_HV);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),PUMP);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),GARDEN_DRONE_STATION);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),WATER_MILL);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),WIND_MILL);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),HIGH_ALTITUDE_WIND_MILL);
-			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),STORM_WIND_MILL);
-
 		// MOD-403: the 40 `ModContent.X_BE = () -> X;` lines that used to sit here are gone — each
 		// BLOCK_ENTITIES entry carries its own `bind`, applied by register() below, so a handle can no
 		// longer be left on its throwing placeholder because someone forgot a line.
 
-		// Fluid (lava) storages: the geothermal generator accepts lava, the pump exposes its tank. Both
-		// publish their neutral FluidPort (via FluidPortHost#fluidPort) through the TankAsFluidStorage
-		// reverse adapter (MOD-028), mirroring the energy PortAsEnergyStorage lines above.
-		FluidStorage.SIDED.registerForBlockEntity((be, dir) -> TankAsFluidStorage.of(be.fluidPort(dir)), GEOTHERMAL_GENERATOR);
-		FluidStorage.SIDED.registerForBlockEntity((be, dir) -> TankAsFluidStorage.of(be.fluidPort(dir)), PUMP);
-		FluidStorage.SIDED.registerForBlockEntity((be, dir) -> TankAsFluidStorage.of(be.fluidPort(dir)), FLUID_TANK);
-		FluidStorage.SIDED.registerForBlockEntity((be, dir) -> TankAsFluidStorage.of(be.fluidPort(dir)), FLUID_PIPE);
-		FluidStorage.SIDED.registerForBlockEntity((be, dir) -> TankAsFluidStorage.of(be.fluidPort(dir)), POLYMERIZER);
+		// MOD-433: capabilities are derived from the manifest by INTERFACE, not named per block. Every
+		// block entity that implements EnergyPortHost publishes its neutral EnergyPort through Team
+		// Reborn's EnergyStorage.SIDED via the PortAsEnergyStorage reverse adapter (minus the two pipes —
+		// see BlockCapabilityRoster.NO_ENERGY_CAPABILITY); every FluidPortHost publishes its FluidPort
+		// through FluidStorage.SIDED via TankAsFluidStorage. NeoForge replays the same rosters through
+		// RegisterCapabilitiesEvent. Before this, 36 + 8 hand-written lines lived here and 35 + 8 more on
+		// NeoForge, and they had already drifted (the CESU was missing from the NeoForge energy list).
+		//
+		// This is safe where the earlier "shared list" attempt was not: the roster reads only the
+		// manifest's Class objects, and def.registeredType() resolves the live BlockEntityType from the
+		// vanilla registry — populated by the register(...) calls above — never a ModContent handle.
+		// Item storage needs no line on Fabric: ItemStorage.SIDED wraps any Container through its
+		// global fallback (the chests' combined view is the one explicit provider, in the entrypoint).
+		for (ContentManifest.BlockEntityDef<?> def : BlockCapabilityRoster.energyHosts()) {
+			bindEnergy(def);
+		}
+		for (ContentManifest.BlockEntityDef<?> def : BlockCapabilityRoster.fluidHosts()) {
+			bindFluid(def);
+		}
+	}
+
+	/**
+	 * Publishes {@code def}'s neutral energy port through {@code EnergyStorage.SIDED}; the roster guarantees the cast.
+	 *
+	 * <p>MOD-448: {@code dir} is nullable here — {@code BlockApiLookup#find} lets a caller ask without naming
+	 * a side, and viewer mods (Jade) do exactly that on every block under the crosshair. The nullable case
+	 * is answered by {@code energyPortForLookup}, which documents the contract for both loaders; handing the
+	 * null to {@code energyPort} threw inside the implementation (NPE in
+	 * {@code EnergyCondenserBlockEntity.energyRoleForFace}) — a defect that predates the manifest derivation
+	 * and lived in the per-block registrations before it.
+	 */
+	private static <T extends BlockEntity> void bindEnergy(ContentManifest.BlockEntityDef<T> def) {
+		EnergyStorage.SIDED.registerForBlockEntity(
+				(be, dir) -> PortAsEnergyStorage.of(((EnergyPortHost) be).energyPortForLookup(dir)),
+				def.registeredType());
+	}
+
+	/**
+	 * Publishes {@code def}'s neutral fluid port through {@code FluidStorage.SIDED}; the roster guarantees the cast.
+	 * The side-less query goes through {@code fluidPortForLookup} for the reason given on {@link #bindEnergy} (MOD-448).
+	 */
+	private static <T extends BlockEntity> void bindFluid(ContentManifest.BlockEntityDef<T> def) {
 		FluidStorage.SIDED.registerForBlockEntity(
-				(be, dir) -> TankAsFluidStorage.of(be.fluidPort(dir)), GALVANIC_BATH);
-		// MOD-251: the tower's three tanks — the base exposes fuel oil (+ oil on a null side), the
-		// segment proxies forward oil (middle) and diesel (top) to the master below them.
-		FluidStorage.SIDED.registerForBlockEntity(
-				(be, dir) -> TankAsFluidStorage.of(be.fluidPort(dir)), DISTILLATION_COLUMN);
-		FluidStorage.SIDED.registerForBlockEntity(
-				(be, dir) -> TankAsFluidStorage.of(be.fluidPort(dir)), DISTILLATION_COLUMN_SEGMENT);
+				(be, dir) -> TankAsFluidStorage.of(((FluidPortHost) be).fluidPortForLookup(dir)),
+				def.registeredType());
 	}
 
 	/**

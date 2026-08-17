@@ -13,8 +13,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.GameType;
 import net.minecraft.world.phys.Vec3;
+
+import static dev.alaindustrial.gametest.AlaGameTestHelper.survivalPlayer;
 
 /**
  * Loader-neutral gametest bodies for the Electromagnet (MOD-132, suite TC-MAGNET-001). Same pattern as
@@ -41,15 +42,6 @@ public final class MagnetScenarios {
 		return stack;
 	}
 
-	/** A survival ServerPlayer mock with {@code instabuild} off, so {@link ItemEnergy#free} is false and EU
-	 * is actually spent (the mock's gameMode() hardcodes CREATIVE — see ElectricDrillScenarios). */
-	private static ServerPlayer makeSurvivalPlayer(GameTestHelper helper) {
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
-		player.setGameMode(GameType.SURVIVAL);
-		player.getAbilities().instabuild = false;
-		return player;
-	}
-
 	/**
 	 * A loose iron-ingot drop {@code (dx, dy, dz)} from the player, with the given pickup delay —
 	 * <em>detached</em> (never added to the world), so only this test can see or move it.
@@ -69,7 +61,7 @@ public final class MagnetScenarios {
 	 *     (velocity points at the player) and spends exactly magnetEuPerItem.
 	 */
 	public static void fun01PullsNearbyDrop(GameTestHelper helper) {
-		ServerPlayer player = makeSurvivalPlayer(helper);
+		ServerPlayer player = survivalPlayer(helper);
 		ItemEntity item = dropNear(helper, player, 2.5, 0.5, 0.0, 0);
 		ItemStack magnet = magnet(Config.magnetBuffer);
 
@@ -91,7 +83,7 @@ public final class MagnetScenarios {
 	 * TC-MAGNET-001-FUN02 — a flat magnet (0 EU) pulls nothing and the drop keeps zero velocity.
 	 */
 	public static void fun02FlatMagnetInert(GameTestHelper helper) {
-		ServerPlayer player = makeSurvivalPlayer(helper);
+		ServerPlayer player = survivalPlayer(helper);
 		ItemEntity item = dropNear(helper, player, 2.5, 0.5, 0.0, 0);
 		ItemStack magnet = magnet(0);
 
@@ -105,7 +97,7 @@ public final class MagnetScenarios {
 	 * TC-MAGNET-001-FUN03 — a disabled magnet (toggled off) pulls nothing even while charged.
 	 */
 	public static void fun03DisabledMagnetInert(GameTestHelper helper) {
-		ServerPlayer player = makeSurvivalPlayer(helper);
+		ServerPlayer player = survivalPlayer(helper);
 		ItemEntity item = dropNear(helper, player, 2.5, 0.5, 0.0, 0);
 		ItemStack magnet = magnet(Config.magnetBuffer);
 		MagnetItem.setEnabled(magnet, false);
@@ -124,7 +116,7 @@ public final class MagnetScenarios {
 	 *     the magnet does not instantly suck back what was just thrown.
 	 */
 	public static void fun04RespectsPickupDelay(GameTestHelper helper) {
-		ServerPlayer player = makeSurvivalPlayer(helper);
+		ServerPlayer player = survivalPlayer(helper);
 		ItemEntity item = dropNear(helper, player, 2.5, 0.5, 0.0, 40);
 		ItemStack magnet = magnet(Config.magnetBuffer);
 
@@ -145,7 +137,7 @@ public final class MagnetScenarios {
 	 *     ({@code canPull}'s {@code distanceToSqr}), which a cube-only test would leave unexercised.
 	 */
 	public static void fun05OutOfRangeIgnored(GameTestHelper helper) {
-		ServerPlayer player = makeSurvivalPlayer(helper);
+		ServerPlayer player = survivalPlayer(helper);
 		double corner = Config.magnetRange - 0.4; // inside inflate(range) cube, outside the sphere (√2·corner > range)
 		ItemEntity outside = dropNear(helper, player, corner, 0.5, corner, 0);
 		ItemStack magnet = magnet(Config.magnetBuffer);
@@ -172,7 +164,7 @@ public final class MagnetScenarios {
 	 */
 	public static void fun06ToggleViaUse(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
-		ServerPlayer player = makeSurvivalPlayer(helper);
+		ServerPlayer player = survivalPlayer(helper);
 		ItemStack magnet = magnet(Config.magnetBuffer);
 		player.setItemInHand(InteractionHand.MAIN_HAND, magnet);
 

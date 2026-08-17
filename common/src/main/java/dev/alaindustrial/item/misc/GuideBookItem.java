@@ -1,5 +1,6 @@
 package dev.alaindustrial.item.misc;
 
+import dev.alaindustrial.client.guide.GuideBookClientAccess;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -24,8 +25,9 @@ public class GuideBookItem extends Item {
 	@Override
 	public InteractionResult use(Level level, Player player, InteractionHand hand) {
 		if (level.isClientSide()) {
-			// Client-only screen opening is wired in phase D (references Minecraft/GuideBookScreen
-			// only inside this branch, so the dedicated server / gametest never loads client classes).
+			// Client-only screen opening: the Minecraft/GuideBookScreen references live in a class
+			// under client.guide, reached only inside this branch, so the dedicated server / gametest
+			// never loads client classes (guarded by ArchitectureRules.clientTypesStayInsideClientPackages).
 			GuideBookClientAccess.open();
 			return InteractionResult.SUCCESS;
 		}

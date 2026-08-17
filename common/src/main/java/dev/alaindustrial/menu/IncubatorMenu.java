@@ -92,12 +92,7 @@ public class IncubatorMenu extends MachineMenu {
 				super.onTake(player, taken);
 			}
 		});
-		addSlot(new Slot(machineContainer, IncubatorBlockEntity.ASH_SLOT, 144, 62) {
-			@Override
-			public boolean mayPlace(ItemStack stack) {
-				return false;
-			}
-		});
+		addSlot(new OutputSlot(machineContainer, IncubatorBlockEntity.ASH_SLOT, 144, 62));
 	}
 
 	// The atlas is 14 pixels taller than the standard machine GUI — the extra height is the band that

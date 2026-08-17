@@ -737,14 +737,11 @@ public final class ScytheScenarios {
 
 	// ── helpers ────────────────────────────────────────────────────────────────────────────────────
 
+	/** The shared survival mock (durability spent, vanilla loot dropped — prf02 flips instabuild back on),
+	 * facing south (+z) so the AOE box direction is deterministic. */
 	private static ServerPlayer makeSurvivalPlayer(GameTestHelper helper) {
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
-		player.setGameMode(GameType.SURVIVAL);
-		// The test mock's gameMode() override hardcodes CREATIVE, which leaves instabuild set → the
-		// break path would suppress both drops and durability. Force it off so the mock behaves like a
-		// real survival player (durability spent, vanilla loot dropped). prf02 flips it back on.
-		player.getAbilities().instabuild = false;
-		player.setYRot(0.0f); // face south (+z) so the AOE box direction is deterministic
+		ServerPlayer player = AlaGameTestHelper.survivalPlayer(helper);
+		player.setYRot(0.0f);
 		return player;
 	}
 

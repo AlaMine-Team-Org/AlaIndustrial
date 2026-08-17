@@ -26,6 +26,8 @@ import dev.alaindustrial.menu.GeneratorMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.level.GameType;
 
+import static dev.alaindustrial.gametest.AlaGameTestHelper.drive;
+
 /**
  * L2 functional suite for the fuel generator — automates the parts of {@code TC-GEN-001}
  * (docs/testing/blocks/generators/generator.md) that need a live {@link net.minecraft.server.level.ServerLevel}.
@@ -45,10 +47,6 @@ public final class GeneratorScenarios {
 	/** Place a generator at {@link #POS} and return its block entity (absolute pos for serverTick). */
 	private static GeneratorBlockEntity placeGenerator(GameTestHelper helper) {
 		return AlaGameTestHelper.place(helper, POS, ModContent.GENERATOR.get(), GeneratorBlockEntity.class);
-	}
-
-	private static void drive(GeneratorBlockEntity gen, GameTestHelper helper, int ticks) {
-		AlaGameTestHelper.drive(gen, helper, ticks);
 	}
 
 	/**

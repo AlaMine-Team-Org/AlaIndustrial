@@ -72,6 +72,8 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 	/** Slot indices shared with the menu. */
 	public static final int ROTOR_SLOT = 0;
 	public static final int CHIP_SLOT = 1;
+	/** Machine-slot count (indices before the upgrade block) — the client menu stub sizes its container from this (MOD-439). */
+	public static final int SLOT_COUNT = 2;
 
 	private static final int MAX_EXTRACT = 32;
 
@@ -111,7 +113,7 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 	private int evolveProgress;
 
 	public WindMillBlockEntity(BlockPos pos, BlockState state) {
-		super(ModContent.WIND_MILL_BE.get(), pos, state, EnergyTier.LV, 2, Config.windMillBuffer, MAX_EXTRACT);
+		super(ModContent.WIND_MILL_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT, Config.windMillBuffer, MAX_EXTRACT);
 	}
 
 	/**

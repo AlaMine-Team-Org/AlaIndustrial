@@ -17,8 +17,8 @@ import com.tngtech.archunit.lang.SimpleConditionEvent;
 /**
  * Architectural boundaries of {@code common/}, enforced against the compiled bytecode (MOD-308).
  *
- * <p><b>Why this exists.</b> Both rules below were written down in the repository contributor guides
- * and enforced by nothing — but they are not equally exposed, and it is worth being
+ * <p><b>Why this exists.</b> The first two rules below were written down in the repository contributor
+ * guides and enforced by nothing — but they are not equally exposed, and it is worth being
  * precise about which is which (both were probed by deliberately breaking them):
  * <ul>
  *   <li><b>Loader dependency.</b> A plain {@code import net.fabricmc…} in {@code common} already
@@ -77,6 +77,46 @@ public class ArchitectureRules {
 			.because("NeoForge freezes its registries before mod init: a register reached from a "
 					+ "static field initializer in common/ throws `already frozen` as soon as the "
 					+ "class loads there, while Fabric shows no symptom at all");
+
+	/**
+	 * Client-only Minecraft types stay inside the client packages (MOD-435).
+	 *
+	 * <p>A dedicated server ships without {@code net.minecraft.client} and {@code com.mojang.blaze3d}
+	 * at all. A block, item or menu class that references one of them at its top level — a field type,
+	 * a method signature, an {@code instanceof} — throws {@code NoClassDefFoundError} the moment the
+	 * server classloads it, and nothing in the dev client, where those classes are always present, will
+	 * show it. The mod's convention is an indirection: the item calls into a small class under
+	 * {@code dev.alaindustrial.client..} from inside a {@code level.isClientSide()} guard, so the client
+	 * class is only ever loaded on the logical client. {@code GuideBookClientAccess} was that indirection
+	 * living in {@code item.misc}, one package away from where the guard is meaningful; this rule was
+	 * red on it before the move and green after.
+	 *
+	 * <p><b>Deliberately NOT forbidden: depending on {@code dev.alaindustrial.client..}.</b> That is the
+	 * indirection itself — {@code GuideBookItem} legitimately references the guarded client-package
+	 * class. The rule guards the raw Minecraft client types, which is where the crash is.
+	 * {@code mixin.client..} is exempt because its accessors and mixins target client classes by design
+	 * and are only applied on the client.
+	 *
+	 * <p><b>Scope includes {@code common/src/gametest}.</b> The {@link AnalyzeClasses} import reads
+	 * every {@code dev.alaindustrial} class on {@code :common}'s test runtime classpath, and
+	 * {@link ImportOption.DoNotIncludeTests} excludes only {@code build/classes/<lang>/test/} — the
+	 * {@code gametest} output directory stays in. So a loader-neutral scenario that calls
+	 * {@code Minecraft.getInstance()} directly is flagged with the same advice; that is the intended
+	 * answer — the loader-neutral scenarios run on a dedicated test server, and the L3 client lane
+	 * (the stands that do touch client types) lives in {@code fabric/src/gametest}, outside this
+	 * subproject and outside this rule.
+	 *
+	 * <p>A fluent rule, so the {@code satisfied}/{@code violated} inversion trap described on
+	 * {@link #useUnorderedCollections()} does not apply here.
+	 */
+	@ArchTest
+	static final ArchRule clientTypesStayInsideClientPackages = noClasses()
+			.that().resideOutsideOfPackages("dev.alaindustrial.client..", "dev.alaindustrial.mixin.client..")
+			.should().dependOnClassesThat().resideInAnyPackage("net.minecraft.client..", "com.mojang.blaze3d..")
+			.because("a dedicated server has no client classes: a top-level reference to one from "
+					+ "block/item/menu code is a NoClassDefFoundError there and invisible in the dev "
+					+ "client. Put the client call in a class under dev.alaindustrial.client.. and reach "
+					+ "it from inside a level.isClientSide() guard");
 
 	/**
 	 * The packages whose iteration order is load-bearing. Kept explicit so the rule cannot silently widen.
@@ -175,8 +215,15 @@ public class ArchitectureRules {
 	 * {@link #callStaticRateShortcutOutsideConstructor()}; it does NOT apply to
 	 * {@link #notCallFromStaticInitializer}, which is consumed by {@code classes().should(…)} and is
 	 * therefore not inverted.
+	 *
+	 * <p><b>Package-private on purpose (MOD-435).</b> The three condition factories are shared with
+	 * {@link ArchitectureRulesNegativeControl}, which composes conditions from the same factories
+	 * (same code, a fresh instance per call) into rules scoped to a fixture package of deliberate
+	 * violators and demands that each of them fails there.
+	 * That is what turns the paragraph above from a remembered lesson into a checked one: flip
+	 * {@code satisfied} back to {@code violated} and the negative control goes red naming the fixture.
 	 */
-	private static ArchCondition<JavaClass> useUnorderedCollections() {
+	static ArchCondition<JavaClass> useUnorderedCollections() {
 		return new ArchCondition<>("use hash- or salt-ordered collections") {
 			@Override
 			public void check(JavaClass item, ConditionEvents events) {
@@ -237,7 +284,7 @@ public class ArchitectureRules {
 	}
 
 	/** The static {@code Config} rate shortcuts, called from anywhere but a constructor. */
-	private static ArchCondition<JavaClass> callStaticRateShortcutOutsideConstructor() {
+	static ArchCondition<JavaClass> callStaticRateShortcutOutsideConstructor() {
 		return new ArchCondition<>("call a static Config rate shortcut outside a constructor") {
 			@Override
 			public void check(JavaClass item, ConditionEvents events) {
@@ -261,7 +308,7 @@ public class ArchitectureRules {
 		};
 	}
 
-	private static ArchCondition<JavaClass> notCallFromStaticInitializer(String ownerSimpleName,
+	static ArchCondition<JavaClass> notCallFromStaticInitializer(String ownerSimpleName,
 			String methodName) {
 		String description = "not call " + ownerSimpleName + "." + methodName
 				+ " from a static initializer";

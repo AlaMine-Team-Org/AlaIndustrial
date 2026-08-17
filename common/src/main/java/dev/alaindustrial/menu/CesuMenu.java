@@ -31,7 +31,8 @@ public class CesuMenu extends MachineMenu {
 
 	/** Client side. */
 	public CesuMenu(int syncId, Inventory playerInventory) {
-		super(ModContent.CESU_MENU.get(), syncId, playerInventory, new SimpleContainer(2 + UPGRADE_SLOT_COUNT),
+		super(ModContent.CESU_MENU.get(), syncId, playerInventory,
+				new SimpleContainer(CesuBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
 				new SimpleContainerData(CesuBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL, ModContent.CESU.get());
 	}
 

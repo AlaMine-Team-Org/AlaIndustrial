@@ -12,10 +12,11 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+
+import static dev.alaindustrial.gametest.AlaGameTestHelper.survivalPlayer;
 
 /**
  * Loader-neutral gametest bodies for the Electric Chainsaw (suite TC-CHAINSAW-001) — the
@@ -72,18 +73,6 @@ public final class ElectricChainsawScenarios {
 		ItemStack stack = new ItemStack(ModContent.ELECTRIC_CHAINSAW_DIAMOND_TIP.get());
 		ItemEnergy.set(stack, eu);
 		return stack;
-	}
-
-	/**
-	 * A survival ServerPlayer mock with {@code instabuild} forced off — the
-	 * {@code makeMockServerPlayerInLevel} default leaves it on (hardcoded CREATIVE gameMode), which
-	 * would make every EU assertion meaningless (MOD-081 drops the drain in creative).
-	 */
-	private static ServerPlayer makeSurvivalPlayer(GameTestHelper helper) {
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
-		player.setGameMode(GameType.SURVIVAL);
-		player.getAbilities().instabuild = false;
-		return player;
 	}
 
 	private static boolean dropsContain(ServerLevel level, BlockState state, BlockPos pos,
@@ -157,7 +146,7 @@ public final class ElectricChainsawScenarios {
 	 */
 	public static void fun02DiamondTipSilkToggleOnLeaves(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
-		ServerPlayer player = makeSurvivalPlayer(helper);
+		ServerPlayer player = survivalPlayer(helper);
 		ItemStack stack = diamondTipChainsaw(Config.electricChainsawBuffer);
 		player.setItemInHand(InteractionHand.MAIN_HAND, stack);
 
@@ -213,7 +202,7 @@ public final class ElectricChainsawScenarios {
 	 */
 	public static void fun03BaseChainsawHasNoSilkMode(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
-		ServerPlayer player = makeSurvivalPlayer(helper);
+		ServerPlayer player = survivalPlayer(helper);
 		ItemStack stack = chainsaw(Config.electricChainsawBuffer);
 		player.setItemInHand(InteractionHand.MAIN_HAND, stack);
 

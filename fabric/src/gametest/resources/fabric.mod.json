@@ -24,6 +24,7 @@
       "dev.alaindustrial.gametest.OreGameTest",
       "dev.alaindustrial.gametest.GeneratorGameTest",
       "dev.alaindustrial.gametest.MachineGameTest",
+      "dev.alaindustrial.gametest.MachineEnergyGameTest",
       "dev.alaindustrial.gametest.IncubatorGameTest",
       "dev.alaindustrial.gametest.TrellisGameTest",
       "dev.alaindustrial.gametest.SolarPanelGameTest",
@@ -91,7 +92,8 @@
       "dev.alaindustrial.gametest.FluxweaveArmorGameTest",
       "dev.alaindustrial.gametest.ThermalCentrifugeGameTest",
       "dev.alaindustrial.gametest.VulcanizerGameTest",
-      "dev.alaindustrial.gametest.ChargePadGameTest"
+      "dev.alaindustrial.gametest.ChargePadGameTest",
+      "dev.alaindustrial.gametest.BlockCapabilityParityGameTest"
     ]
   }
 }

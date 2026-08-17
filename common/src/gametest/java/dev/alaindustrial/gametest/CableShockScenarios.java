@@ -2,6 +2,7 @@ package dev.alaindustrial.gametest;
 
 import static dev.alaindustrial.gametest.EnergyScenarioSupport.be;
 import static dev.alaindustrial.gametest.EnergyScenarioSupport.tick;
+import static dev.alaindustrial.gametest.AlaGameTestHelper.detachedSurvivalPlayer;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.CableBlock;
@@ -41,11 +42,7 @@ public final class CableShockScenarios {
 
 	/** Bare needs committed flow; insulation, config-off and stopped flow are all safe. */
 	public static void energizedBareOnly(GameTestHelper helper) {
-		ServerPlayer player = (ServerPlayer) helper.makeMockServerPlayer(GameType.SURVIVAL);
-		player.getAbilities().instabuild = false;
-		player.getAbilities().invulnerable = false;
-		player.setInvulnerable(false);
-		player.invulnerableTime = 0;
+		ServerPlayer player = detachedSurvivalPlayer(helper);
 
 		buildLine(helper, ModContent.COPPER_CABLE.get());
 		CableBlock bare = (CableBlock) ModContent.COPPER_CABLE.get();
@@ -223,7 +220,7 @@ public final class CableShockScenarios {
 	 * mock player created by {@code makeMockServerPlayer} has none.
 	 */
 	public static void shockGuardGatesShockAndOpensGraceWindow(GameTestHelper helper) {
-		ServerPlayer player = survivalPlayer(helper);
+		ServerPlayer player = detachedSurvivalPlayer(helper);
 		buildLine(helper, ModContent.COPPER_CABLE.get());
 		energize(helper);
 		CableBlock bare = (CableBlock) ModContent.COPPER_CABLE.get();
@@ -297,7 +294,7 @@ public final class CableShockScenarios {
 	 * lives in {@link CableBlock#shouldShockPlayer} rather than in the damage path.
 	 */
 	public static void shockGuardShieldsFromTheSide(GameTestHelper helper) {
-		ServerPlayer player = survivalPlayer(helper);
+		ServerPlayer player = detachedSurvivalPlayer(helper);
 		buildLine(helper, ModContent.COPPER_CABLE.get());
 		energize(helper);
 		CableBlock bare = (CableBlock) ModContent.COPPER_CABLE.get();
@@ -347,7 +344,7 @@ public final class CableShockScenarios {
 	 * volume is taken) both refuse without consuming anything.
 	 */
 	public static void shockGuardInstallRules(GameTestHelper helper) {
-		ServerPlayer player = survivalPlayer(helper);
+		ServerPlayer player = detachedSurvivalPlayer(helper);
 		buildLine(helper, ModContent.COPPER_CABLE.get());
 
 		// A non-oak species proves the exact block is stored, not a canonical stand-in for its category.
@@ -418,7 +415,7 @@ public final class CableShockScenarios {
 
 	/** MOD-279: a connection forming under an existing stand pops it back out as an item. */
 	public static void shockGuardPopsWhenDownConnectionAppears(GameTestHelper helper) {
-		ServerPlayer player = survivalPlayer(helper);
+		ServerPlayer player = detachedSurvivalPlayer(helper);
 		buildLine(helper, ModContent.COPPER_CABLE.get());
 		if (!installStand(helper, player, CABLE, new ItemStack(Items.OAK_PLANKS, 1))) {
 			helper.fail("fixture stand was not installed");
@@ -434,16 +431,6 @@ public final class CableShockScenarios {
 			return;
 		}
 		helper.succeed();
-	}
-
-	/** A survival mock player with every invulnerability path explicitly cleared. */
-	private static ServerPlayer survivalPlayer(GameTestHelper helper) {
-		ServerPlayer player = (ServerPlayer) helper.makeMockServerPlayer(GameType.SURVIVAL);
-		player.getAbilities().instabuild = false;
-		player.getAbilities().invulnerable = false;
-		player.setInvulnerable(false);
-		player.invulnerableTime = 0;
-		return player;
 	}
 
 	/**

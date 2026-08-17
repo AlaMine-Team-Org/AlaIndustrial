@@ -28,6 +28,8 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public class DaylightSolarPanelBlockEntity extends AbstractGeneratorBlockEntity implements MenuProvider {
 	private static final int MAX_EXTRACT = 20;
+	/** No machine slots — the GUI is a readout plus the upgrade panel (MOD-439). */
+	public static final int SLOT_COUNT = 0;
 
 	/** Caches the sky/weather verdict for {@link Config#solarSkySampleTicks} ticks to avoid a per-tick column scan. */
 	private final SolarSkyCache skyCache = new SolarSkyCache();
@@ -40,7 +42,7 @@ public class DaylightSolarPanelBlockEntity extends AbstractGeneratorBlockEntity 
 	public static final int MODE_DAY_SNOW = 4;
 
 	public DaylightSolarPanelBlockEntity(BlockPos pos, BlockState state) {
-		super(ModContent.DAYLIGHT_SOLAR_PANEL_BE.get(), pos, state, EnergyTier.LV, 0, Config.solarBuffer, MAX_EXTRACT);
+		super(ModContent.DAYLIGHT_SOLAR_PANEL_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT, Config.solarBuffer, MAX_EXTRACT);
 	}
 
 	/**

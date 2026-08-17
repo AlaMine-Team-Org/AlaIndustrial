@@ -88,29 +88,34 @@ public final class ChargePadScenarios {
 	}
 
 	/**
-	 * A mock player standing in the station's own cell.
-	 *
-	 * <p>{@code makeMockServerPlayer} is required rather than {@code makeMockPlayer}: the station's
-	 * guard takes a {@link ServerPlayer}, which is also what the real {@code entityInside} path
-	 * delivers. Abilities are forced down because {@link ItemEnergy#free} reads
-	 * {@code hasInfiniteMaterials()} — a creative player would silently skip every debit assertion.
-	 *
-	 * <p>The position is not decoration: the station only serves whoever is standing in its own cell
-	 * (see {@code chargePlayer}), and a mock player is created at the world origin. Leaving them there
-	 * would make every case below pass or fail for the wrong reason.
+	 * A mock player of the given mode standing in the station's own cell — the non-survival leg of
+	 * {@link #survivalPlayer}. {@code makeMockServerPlayer} is required rather than
+	 * {@code makeMockPlayer}: the station's guard takes a {@link ServerPlayer}, which is also what the
+	 * real {@code entityInside} path delivers. Abilities are forced down because {@link ItemEnergy#free}
+	 * reads {@code hasInfiniteMaterials()} — a creative player would silently skip every debit assertion.
 	 */
 	private static ServerPlayer visitor(GameTestHelper helper, GameType mode) {
 		ServerPlayer player = (ServerPlayer) helper.makeMockServerPlayer(mode);
 		player.getAbilities().instabuild = false;
 		player.getAbilities().invulnerable = false;
+		return standingInPad(helper, player);
+	}
+
+	/** The shared detached survival mock (see {@code AlaGameTestHelper}), moved into the pad's cell. */
+	private static ServerPlayer survivalPlayer(GameTestHelper helper) {
+		return standingInPad(helper, AlaGameTestHelper.detachedSurvivalPlayer(helper));
+	}
+
+	/**
+	 * The position is not decoration: the station only serves whoever is standing in its own cell
+	 * (see {@code chargePlayer}), and a mock player is created at the world origin. Leaving them there
+	 * would make every case below pass or fail for the wrong reason.
+	 */
+	private static ServerPlayer standingInPad(GameTestHelper helper, ServerPlayer player) {
 		BlockPos abs = helper.absolutePos(PAD);
 		// Feet inside the plate's cell — the plate is 4px, so a player on top of it is still "in" it.
 		player.setPos(abs.getX() + 0.5, abs.getY() + 0.25, abs.getZ() + 0.5);
 		return player;
-	}
-
-	private static ServerPlayer survivalPlayer(GameTestHelper helper) {
-		return visitor(helper, GameType.SURVIVAL);
 	}
 
 	private static ChargePadState stateAt(GameTestHelper helper) {

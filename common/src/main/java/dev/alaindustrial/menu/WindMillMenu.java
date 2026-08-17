@@ -22,7 +22,8 @@ public class WindMillMenu extends MachineMenu {
 
 	/** Client side. */
 	public WindMillMenu(int syncId, Inventory playerInventory) {
-		super(ModContent.WIND_MILL_MENU.get(), syncId, playerInventory, new SimpleContainer(2 + UPGRADE_SLOT_COUNT),
+		super(ModContent.WIND_MILL_MENU.get(), syncId, playerInventory,
+				new SimpleContainer(WindMillBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
 				new SimpleContainerData(WindMillBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL, ModContent.WIND_MILL.get());
 	}
 

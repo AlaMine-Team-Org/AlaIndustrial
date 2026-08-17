@@ -371,6 +371,10 @@ public final class GeneratorEnergyScenarios {
 				helper.fail("lava bucket consumed but the empty bucket was not returned");
 				return;
 			}
+			if (!geo.getItem(dev.alaindustrial.block.entity.GeothermalGeneratorBlockEntity.INPUT_SLOT).isEmpty()) {
+				helper.fail("lava bucket was not consumed from the input slot");
+				return;
+			}
 			helper.succeed();
 			return;
 		}
@@ -912,6 +916,9 @@ public final class GeneratorEnergyScenarios {
 		if (be(helper, EVO) instanceof dev.alaindustrial.block.entity.SolarPanelBlockEntity panel) {
 			panel.setItem(dev.alaindustrial.block.entity.SolarPanelBlockEntity.CHIP_SLOT,
 					new ItemStack(dev.alaindustrial.registry.ModContent.ALIGNMENT_CHIP_DAY.get()));
+			// Pre-charge the buffer so the carry-EU assertion below is meaningful (placement leaves 0).
+			long energy0 = 1500L;
+			panel.getEnergyStorage().setAmountUntracked(energy0);
 			for (int i = 0; i < Config.solarEvolveTicks + 100; i++) {
 				panel.serverTick(helper.getLevel(), panel.getBlockPos(),
 						helper.getLevel().getBlockState(panel.getBlockPos()));
@@ -925,6 +932,22 @@ public final class GeneratorEnergyScenarios {
 			if (evolved.getBlock() != ModContent.DAYLIGHT_SOLAR_PANEL.get()) {
 				helper.fail("solar panel did not evolve into daylight after " + Config.solarEvolveTicks
 						+ " ticks with a day chip; block=" + evolved.getBlock());
+				return;
+			}
+			// The shared evolveInto helper must carry the stored EU (clamped to the target capacity) and
+			// consume the chip — pin both so a regression in AbstractGeneratorBlockEntity.evolveInto
+			// (e.g. wrong slot override map) does not silently land.
+			if (!(be(helper, EVO) instanceof MachineBlockEntity evolvedBe)) {
+				helper.fail("evolved daylight panel has no MachineBlockEntity");
+				return;
+			}
+			long energy1 = evolvedBe.getEnergyStorage().getAmount();
+			if (energy1 < energy0) {
+				helper.fail("evolution lost stored EU: " + energy0 + " -> " + energy1);
+				return;
+			}
+			if (!evolvedBe.getItem(dev.alaindustrial.block.entity.SolarPanelBlockEntity.CHIP_SLOT).isEmpty()) {
+				helper.fail("evolution did not consume the chip slot");
 				return;
 			}
 			helper.succeed();
@@ -1007,14 +1030,25 @@ public final class GeneratorEnergyScenarios {
 		if (be(helper, millPos) instanceof WindMillBlockEntity mill) {
 			mill.setItem(WindMillBlockEntity.ROTOR_SLOT,
 					new ItemStack(dev.alaindustrial.registry.ModContent.WINDMILL_ROTOR.get()));
+			// Even in a thunderstorm a roof kills it — the sky gate outranks the weather multiplier.
+			ServerLevel level = helper.getLevel();
+			level.getWeatherData().setRaining(true);
+			level.getWeatherData().setThundering(true);
+			level.setRainLevel(1.0f);
 			mill.getEnergyStorage().setAmountUntracked(0);
 			for (int i = 0; i < Config.windMillSampleTicks + 5; i++) {
-				mill.serverTick(helper.getLevel(), mill.getBlockPos(),
-						helper.getLevel().getBlockState(mill.getBlockPos()));
+				mill.serverTick(level, mill.getBlockPos(), level.getBlockState(mill.getBlockPos()));
 			}
 			long got = mill.getEnergyStorage().getAmount();
 			if (got != 0) {
 				helper.fail("roofed wind mill generated " + got + " EU; expected 0 (no open sky)");
+				return;
+			}
+			// The mill sits at the low rig height, so 0 EU alone cannot tell "dead from roof" from "dead
+			// from height": the MODE code on the maxProgress sync channel (3) is the discriminating signal.
+			if (mill.getDataAccess().get(3) != WindMillBlockEntity.MODE_ROOFED) {
+				helper.fail("roofed wind mill mode = " + mill.getDataAccess().get(3) + "; expected ROOFED ("
+						+ WindMillBlockEntity.MODE_ROOFED + ")");
 				return;
 			}
 			helper.succeed();

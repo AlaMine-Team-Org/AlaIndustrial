@@ -1,17 +1,13 @@
-## 0.1.103
+## 0.1.104
 
-<p><img alt="Ala Industrial 0.1.103 statistics panel preview" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.103/release-media/v0.1.103/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial 0.1.104 update preview" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.104/release-media/v0.1.104/changelog.jpeg" width="720"></p>
 
-Machines can tell you what they have actually been doing — once you fit them with the new chip.
-
-### New
-
-- **Statistics Chip.** Craft it from a copper coil, an empty chip, two glass panes and redstone, then drop it into the right slot of the upgrade panel.
-- **A panel of real numbers.** Working time, items processed, energy received, spent, generated and sent to the grid, the current and peak rate, and how many neighbours are wired in.
-- **Working time means working.** A machine that sat unpowered all week reports zero, not a week.
-- **Drag it where you like.** The panel opens on the left of the interface and remembers where you put it.
-- **No chip, no cost.** An un-instrumented machine measures nothing at all, so a base full of them runs exactly as it did before.
+A repair update: machines report their work again, and they talk to the rest of your modpack.
 
 ### Fixed
 
-- **Geothermal and fuel generators show their output.** Their rate readout was missing entirely.
+- **The statistics chip counts in every machine.** Fitted into a Vulcanizer, Galvanic Bath, Thermal Centrifuge, Alloy Smelter, Polymerizer, Canning Machine, Incubator, Distillation Column, Assembler or Component Repair Bench it showed zeroes while the machine was visibly running.
+- **The CESU is visible to other mods again.** Energy meters read it, and item pipes now connect to the CESU, the Distillation Column and the Mob Repellers.
+- **Block-info overlays no longer break on pipes.** Looking at a fluid pipe or an Energy Condenser through an in-game info overlay filled the log with errors instead of showing the tank or the buffer.
+- **Hover tooltips for the Garden Drone Station and the Teleporter.** The station shows its energy cost per action; hold Shift for tier, working range and buffer.
+- **Mod list icon and description.** The mod finally shows its icon in the mod list, and a broken character in its description is gone.

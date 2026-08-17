@@ -104,4 +104,62 @@ public class GeneratorGameTest {
 	public void tcGen001Sta01_litStateTracksBurning(GameTestHelper helper) {
 		GeneratorScenarios.tcGen001Sta01_litStateTracksBurning(helper);
 	}
+
+	// ── MOD-445: loader-neutral bodies the NeoForge lane already ran; wired here so both lanes run the same set.
+	// Each is the GeneratorEnergyScenarios twin of a GeneratorScenarios case above (two common bodies per
+	// behaviour — merging them is a follow-up); until then both lanes run both.
+
+	/**
+	 * @implements TC-GEN-001-FUN02 — buffer tops off to exactly {@code generatorBuffer} from cap−1 (BVA leg).
+	 * Body: {@link GeneratorEnergyScenarios#generatorBufferCapsAtMaxBva}.
+	 */
+	@GameTest
+	public void tcGen001Fun02b_bufferCapsAtMaxBva(GameTestHelper helper) {
+		GeneratorEnergyScenarios.generatorBufferCapsAtMaxBva(helper);
+	}
+
+	/**
+	 * @implements TC-GEN-001-FUN04 — direct push into an adjacent battery box (cable-less path).
+	 * Body: {@link GeneratorEnergyScenarios#generatorChargesAdjacentBox}.
+	 */
+	@GameTest
+	public void tcGen001Fun04b_chargesAdjacentBox(GameTestHelper helper) {
+		GeneratorEnergyScenarios.generatorChargesAdjacentBox(helper);
+	}
+
+	/**
+	 * @implements TC-GEN-001-NEG01 — the generator publishes maxInsert == 0 and takes nothing from outside.
+	 * Body: {@link GeneratorEnergyScenarios#generatorRejectsExternalEu}.
+	 */
+	@GameTest
+	public void tcGen001Neg01b_rejectsExternalEu(GameTestHelper helper) {
+		GeneratorEnergyScenarios.generatorRejectsExternalEu(helper);
+	}
+
+	/**
+	 * @implements TC-GEN-001-NEG03 — a full buffer pauses the burn (R-NRG-11, no fuel waste).
+	 * Body: {@link GeneratorEnergyScenarios#generatorFullBufferPausesBurn}.
+	 */
+	@GameTest
+	public void tcGen001Neg03b_fullBufferPausesBurn(GameTestHelper helper) {
+		GeneratorEnergyScenarios.generatorFullBufferPausesBurn(helper);
+	}
+
+	/**
+	 * @implements TC-GEN-001-NEG05 — a full adjacent consumer does not drain the generator into the void.
+	 * Body: {@link GeneratorEnergyScenarios#fullNeighbourNoLeak}.
+	 */
+	@GameTest
+	public void tcGen001Neg05b_fullNeighbourNoLeak(GameTestHelper helper) {
+		GeneratorEnergyScenarios.fullNeighbourNoLeak(helper);
+	}
+
+	/**
+	 * @implements TC-GEN-001-PRF01 — exact EU/t rate == {@code fuelEuPerTick} × multiplier.
+	 * Body: {@link GeneratorEnergyScenarios#generatorRatePerTickMatchesConfig}.
+	 */
+	@GameTest
+	public void tcGen001Prf01b_ratePerTickMatchesConfig(GameTestHelper helper) {
+		GeneratorEnergyScenarios.generatorRatePerTickMatchesConfig(helper);
+	}
 }

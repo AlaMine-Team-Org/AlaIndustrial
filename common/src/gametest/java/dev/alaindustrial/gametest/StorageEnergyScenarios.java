@@ -12,6 +12,7 @@ import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDataComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.ItemStack;
@@ -829,6 +830,14 @@ public final class StorageEnergyScenarios {
 			Long carried = map.get(ModDataComponents.STORED_ENERGY.get());
 			if (carried == null || carried.longValue() != charge) {
 				helper.fail("battery box did not carry half-charge STORED_ENERGY: " + carried + "/" + charge);
+				return;
+			}
+			// apply = what placement does to the freshly placed block entity: the charge must come back.
+			BatteryBoxBlockEntity restored = new BatteryBoxBlockEntity(bb.getBlockPos(),
+					helper.getLevel().getBlockState(bb.getBlockPos()));
+			restored.applyComponents(map, DataComponentPatch.EMPTY);
+			if (restored.getEnergyStorage().getAmount() != charge) {
+				helper.fail("charge not restored from component: " + restored.getEnergyStorage().getAmount());
 				return;
 			}
 			helper.succeed();

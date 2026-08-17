@@ -45,13 +45,12 @@ import net.minecraft.world.level.block.state.BlockState;
  * lit-state toggle.
  */
 public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockEntity implements Overclockable {
-	/** Output stack cap; per-recipe energy sets the duration. Shared across all processing machines. */
-	protected static final int OUTPUT_MAX = 64;
-
 	/** Input slot index, shared by every processing machine. Subclasses re-export as {@code public} ({@code CompressorBlockEntity.INPUT_SLOT} etc.) for callers. */
 	protected static final int INPUT_SLOT = 0;
 	/** Output slot index, shared by every processing machine. Subclasses re-export as {@code public}. */
 	protected static final int OUTPUT_SLOT = 1;
+	/** Machine-slot count — input + output — shared by every processing machine; the client menu stubs size their container from it (MOD-439). */
+	public static final int SLOT_COUNT = 2;
 
 	/**
 	 * The fixed result of resolving the current input against the machine's recipe source(s). The
@@ -85,7 +84,7 @@ public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockE
 	protected AbstractProcessingMachineBlockEntity(
 			BlockEntityType<?> type, BlockPos pos, BlockState state,
 			EnergyTier tier, long buffer, int defaultDuration) {
-		super(type, pos, state, tier, 2, buffer, EnergyTier.LV.maxVoltage(), 0L);
+		super(type, pos, state, tier, SLOT_COUNT, buffer, EnergyTier.LV.maxVoltage(), 0L);
 		this.defaultDuration = defaultDuration;
 		this.maxProgress = Config.scaledDuration(defaultDuration);
 	}
@@ -110,7 +109,8 @@ public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockE
 		int baseDuration = solution.hasRecipe() && solution.energy() > 0
 				? Math.max(1, solution.energy() / Config.machineEuPerTick) : defaultDuration;
 		this.maxProgress = effectiveDuration(baseDuration);
-		boolean canWork = solution.hasRecipe() && energy.getAmount() >= euPerTick && canOutput(solution.result());
+		boolean canWork = solution.hasRecipe() && energy.getAmount() >= euPerTick
+				&& canOutput(OUTPUT_SLOT, solution.result());
 
 		updateLit(canWork);
 
@@ -124,7 +124,7 @@ public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockE
 			if (progress >= maxProgress) {
 				progress = 0;
 				items.get(INPUT_SLOT).shrink(1);
-				addOutput(solution.result());
+				addOutput(OUTPUT_SLOT, solution.result());
 				recordItemProcessed(); // MOD-125: lifetime operation counter (persisted, drawn later)
 				creditUsefulWork(level, (long) euPerTick * maxProgress); // MOD-133: completed op → XP
 			}
@@ -138,24 +138,6 @@ public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockE
 		}
 		// Idle (no recipe / no power / output full) → sleep until input, energy or output changes (R-29).
 		return canWork ? 0 : IDLE_SLEEP_TICKS;
-	}
-
-	/** Whether the output slot can accept one more {@code result} stack (empty, or same-item with room). */
-	protected final boolean canOutput(ItemStack result) {
-		ItemStack out = items.get(OUTPUT_SLOT);
-		return out.isEmpty()
-				|| (out.getItem() == result.getItem()
-						&& out.getCount() + result.getCount() <= Math.min(OUTPUT_MAX, out.getMaxStackSize()));
-	}
-
-	/** Place one {@code result} stack into the output slot, growing an existing matching stack if present. */
-	protected final void addOutput(ItemStack result) {
-		ItemStack out = items.get(OUTPUT_SLOT);
-		if (out.isEmpty()) {
-			items.set(OUTPUT_SLOT, result.copy());
-		} else {
-			out.grow(result.getCount());
-		}
 	}
 
 	@Override

@@ -43,9 +43,11 @@ public class CesuBlockEntity extends MachineBlockEntity implements MenuProvider 
 	public static final int CHARGE_SLOT = 0;
 	/** Slot 1 — drain a powered item into the buffer. New at this tier. */
 	public static final int DISCHARGE_SLOT = 1;
+	/** Machine-slot count (indices before the upgrade block) — the client menu stub sizes its container from this (MOD-439). */
+	public static final int SLOT_COUNT = 2;
 
 	public CesuBlockEntity(BlockPos pos, BlockState state) {
-		super(ModContent.CESU_BE.get(), pos, state, EnergyTier.MV, 2,
+		super(ModContent.CESU_BE.get(), pos, state, EnergyTier.MV, SLOT_COUNT,
 				Config.cesuBuffer, EnergyTier.MV.maxVoltage(), EnergyTier.MV.maxVoltage());
 	}
 

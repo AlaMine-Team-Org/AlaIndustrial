@@ -42,12 +42,7 @@ public final class VulcanizerMenu extends MachineMenu {
 				return stack.is(ModContent.SULFUR_DUST.get());
 			}
 		});
-		addSlot(new Slot(container, VulcanizerBlockEntity.OUTPUT_SLOT, 120, 28) {
-			@Override
-			public boolean mayPlace(ItemStack stack) {
-				return false;
-			}
-		});
+		addSlot(new OutputSlot(container, VulcanizerBlockEntity.OUTPUT_SLOT, 120, 28));
 	}
 
 	public HeatSource getHeatSource() {

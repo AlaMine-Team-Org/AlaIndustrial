@@ -47,6 +47,8 @@ import net.minecraft.world.level.material.FluidState;
  */
 public class WaterMillBlockEntity extends AbstractGeneratorBlockEntity implements MenuProvider {
 	public static final int WHEEL_SLOT = 0;
+	/** Machine-slot count (indices before the upgrade block) — the client menu stub sizes its container from this (MOD-439). */
+	public static final int SLOT_COUNT = 1;
 
 	/**
 	 * Status carried by the {@code maxProgress} sync channel (slot 3) — the wheel renderer hides the
@@ -102,7 +104,7 @@ public class WaterMillBlockEntity extends AbstractGeneratorBlockEntity implement
 	private int productionRate;
 
 	public WaterMillBlockEntity(BlockPos pos, BlockState state) {
-		super(ModContent.WATER_MILL_BE.get(), pos, state, EnergyTier.LV, 1, Config.waterMillBuffer, MAX_EXTRACT);
+		super(ModContent.WATER_MILL_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT, Config.waterMillBuffer, MAX_EXTRACT);
 	}
 
 	/**

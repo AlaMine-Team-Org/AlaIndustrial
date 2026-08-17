@@ -11,13 +11,14 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FarmlandBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+
+import static dev.alaindustrial.gametest.AlaGameTestHelper.survivalPlayer;
 
 /**
  * Loader-neutral gametest bodies for the Electric Hoe (suite TC-HOE-001) — the diamond-tipped upgrade
@@ -77,19 +78,6 @@ public final class ElectricHoeScenarios {
 		ItemStack stack = new ItemStack(ModContent.ELECTRIC_HOE_DIAMOND_TIP.get());
 		ItemEnergy.set(stack, eu);
 		return stack;
-	}
-
-	/**
-	 * A survival ServerPlayer mock with {@code instabuild} forced off — the
-	 * {@code makeMockServerPlayerInLevel} default leaves it on (hardcoded CREATIVE gameMode), which would
-	 * make every EU assertion meaningless (MOD-081 drops the drain in creative) and would skip the hoe's
-	 * charge gate entirely.
-	 */
-	private static ServerPlayer makeSurvivalPlayer(GameTestHelper helper) {
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
-		player.setGameMode(GameType.SURVIVAL);
-		player.getAbilities().instabuild = false;
-		return player;
 	}
 
 	/**
@@ -168,7 +156,7 @@ public final class ElectricHoeScenarios {
 	 * freezing a number vanilla owns.
 	 */
 	public static void fun02DiamondTipTillLeavesPlotWatered(GameTestHelper helper) {
-		ServerPlayer player = makeSurvivalPlayer(helper);
+		ServerPlayer player = survivalPlayer(helper);
 		player.setItemInHand(InteractionHand.MAIN_HAND, diamondTipHoe(Config.electricHoeBuffer));
 		prepareSoil(helper, Blocks.DIRT);
 
@@ -189,7 +177,7 @@ public final class ElectricHoeScenarios {
 	 * never have noticed.
 	 */
 	public static void fun03BaseHoeLeavesPlotDry(GameTestHelper helper) {
-		ServerPlayer player = makeSurvivalPlayer(helper);
+		ServerPlayer player = survivalPlayer(helper);
 		player.setItemInHand(InteractionHand.MAIN_HAND, hoe(Config.electricHoeBuffer));
 		prepareSoil(helper, Blocks.DIRT);
 
@@ -218,7 +206,7 @@ public final class ElectricHoeScenarios {
 	 * that survives a future reordering of the gate.
 	 */
 	public static void fun04FlatUpgradeCannotWaterExistingFarmland(GameTestHelper helper) {
-		ServerPlayer player = makeSurvivalPlayer(helper);
+		ServerPlayer player = survivalPlayer(helper);
 		player.setItemInHand(InteractionHand.MAIN_HAND, diamondTipHoe(0));
 		prepareSoil(helper, Blocks.FARMLAND);
 
@@ -251,7 +239,7 @@ public final class ElectricHoeScenarios {
 	 * body fails on the first check.
 	 */
 	public static void neg01FlatHoeOnNonTillableDoesNotSwallowClick(GameTestHelper helper) {
-		ServerPlayer player = makeSurvivalPlayer(helper);
+		ServerPlayer player = survivalPlayer(helper);
 		player.setItemInHand(InteractionHand.MAIN_HAND, hoe(0));
 		prepareSoil(helper, Blocks.STONE);
 
@@ -276,7 +264,7 @@ public final class ElectricHoeScenarios {
 	 * green NEG01, and the player silently loses the only feedback that says the hoe needs charging.
 	 */
 	public static void fun05FlatHoeOnTillableStillRefuses(GameTestHelper helper) {
-		ServerPlayer player = makeSurvivalPlayer(helper);
+		ServerPlayer player = survivalPlayer(helper);
 		player.setItemInHand(InteractionHand.MAIN_HAND, hoe(0));
 		prepareSoil(helper, Blocks.DIRT);
 
@@ -307,7 +295,7 @@ public final class ElectricHoeScenarios {
 	 * would be true of a hoe that simply did nothing), and the charge moved by exactly the till cost.
 	 */
 	public static void fun11TillDrainsExactlyTillCost(GameTestHelper helper) {
-		ServerPlayer player = makeSurvivalPlayer(helper);
+		ServerPlayer player = survivalPlayer(helper);
 		long buffer = Config.electricHoeBuffer;
 		player.setItemInHand(InteractionHand.MAIN_HAND, hoe(buffer));
 		prepareSoil(helper, Blocks.DIRT);
@@ -338,7 +326,7 @@ public final class ElectricHoeScenarios {
 	 * untouched by a refusal, so a hoe cannot be charged for work it declined to do.
 	 */
 	public static void fun12TillRefusedJustBelowCost(GameTestHelper helper) {
-		ServerPlayer player = makeSurvivalPlayer(helper);
+		ServerPlayer player = survivalPlayer(helper);
 		long below = Config.electricHoeTillEuCost - 1;
 		player.setItemInHand(InteractionHand.MAIN_HAND, hoe(below));
 		prepareSoil(helper, Blocks.DIRT);
@@ -367,7 +355,7 @@ public final class ElectricHoeScenarios {
 	 * spend moved above the {@code wouldTill} gate, or one keyed on the wrong result, would break.
 	 */
 	public static void fun13ChargedHoeOnNonTillableKeepsBuffer(GameTestHelper helper) {
-		ServerPlayer player = makeSurvivalPlayer(helper);
+		ServerPlayer player = survivalPlayer(helper);
 		long buffer = Config.electricHoeBuffer;
 		player.setItemInHand(InteractionHand.MAIN_HAND, hoe(buffer));
 		prepareSoil(helper, Blocks.STONE);

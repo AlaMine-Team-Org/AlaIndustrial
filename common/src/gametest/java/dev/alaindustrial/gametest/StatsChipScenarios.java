@@ -1,5 +1,7 @@
 package dev.alaindustrial.gametest;
 
+import dev.alaindustrial.Config;
+import dev.alaindustrial.block.entity.AlloySmelterBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.registry.ModContent;
@@ -135,6 +137,47 @@ public final class StatsChipScenarios {
 		}
 		if (be.activeTicks() != worked) {
 			helper.fail("working time moved after the chip was pulled");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * The chip has to work on a machine that owns its tick loop, not only on the shared processing base
+	 * (MOD-440). The four cases above all ride {@code AbstractProcessingMachineBlockEntity}, which was the
+	 * only consumer wired to {@code recordEuRate}/{@code recordItemProcessed} when MOD-125 shipped — so a
+	 * chip in any of the ten machines extending {@code MachineBlockEntity} directly showed 0 EU/t, zero
+	 * working time and a frozen consumption total while the machine visibly ran. The alloy smelter stands
+	 * in for all of them: same rig as {@code AlloySmelterScenarios.fun01BronzeIsSmelted}, plus a chip.
+	 */
+	public static void statsChip_countersRunOnHandRolledMachine(GameTestHelper helper) {
+		AlloySmelterBlockEntity be = AlaGameTestHelper.place(helper, POS, ModContent.ALLOY_SMELTER.get(),
+				AlloySmelterBlockEntity.class);
+		be.setItem(AlloySmelterBlockEntity.INPUT_SLOT_0, new ItemStack(Items.COPPER_INGOT, 3));
+		be.setItem(AlloySmelterBlockEntity.INPUT_SLOT_1, new ItemStack(ModContent.TIN_INGOT.get(), 1));
+		fitChip(be);
+		if (!be.hasStatsChip()) {
+			helper.fail("the chip in the stats arm was not detected on the alloy smelter");
+		}
+		// One operation costs 1200 EU against an 800 EU buffer, so the buffer is topped up every tick the
+		// way a connected cable would keep it fed (the alloy suite's drivePowered contract).
+		int ticks = Config.scaledDuration(Config.alloySmelterDuration) + 20;
+		for (int i = 0; i < ticks; i++) {
+			be.getEnergyStorage().setAmountUntracked(be.getEnergyStorage().getCapacity());
+			AlaGameTestHelper.drive(be, helper, 1);
+		}
+
+		// The rig itself must have run, or every zero below would be vacuous.
+		if (!be.getItem(AlloySmelterBlockEntity.OUTPUT_SLOT).is(ModContent.BRONZE_INGOT.get())) {
+			helper.fail("the alloy smelter rig produced no bronze — the counters below would be meaningless");
+		}
+		if (be.activeTicks() <= 0) {
+			helper.fail("working time did not advance on a hand-rolled machine with a chip fitted");
+		}
+		if (be.getEnergyStorage().getTotalEnergyConsumed() <= 0) {
+			helper.fail("energy consumption was not counted on a hand-rolled machine with a chip fitted");
+		}
+		if (be.totalItemsProcessed() <= 0) {
+			helper.fail("a completed operation was not counted on a hand-rolled machine with a chip fitted");
 		}
 		helper.succeed();
 	}

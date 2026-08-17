@@ -2,90 +2,38 @@ package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
-import dev.alaindustrial.block.entity.SawmillBlockEntity;
-import dev.alaindustrial.block.entity.SawmillMode;
 import dev.alaindustrial.registry.ModBlocks;
-import dev.alaindustrial.registry.ModItems;
 import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import dev.alaindustrial.Config;
-import dev.alaindustrial.recipe.AlaProcessingRecipe;
-import dev.alaindustrial.recipe.ProcessingRecipeInput;
-import dev.alaindustrial.registry.ModRecipes;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import team.reborn.energy.api.EnergyStorage;
 import dev.alaindustrial.core.energy.EnergyPort;
 import dev.alaindustrial.core.fabric.FabricEnergyPort;
 
 /**
- * L2 functional suite for the processing machines (macerator, electric furnace, compressor,
- * extractor). They share {@link MachineBlockEntity} (slots 0=input, 1=output) so one generic helper
- * drives all four — the classifier/EP showcase: valid input → output, no power → no output (frozen),
- * invalid input → no output. Migrated from legacy {@code IndustrializationSelfTest.PROCESSING_RECIPES}.
+ * Fabric lane for the processing machines (macerator, electric furnace, compressor, extractor,
+ * sawmill). Migrated from legacy {@code IndustrializationSelfTest.PROCESSING_RECIPES}.
+ *
+ * <p>Since MOD-446 the loader-neutral bodies live in {@link MachineScenarios} and the NeoForge lane
+ * registers the same set ({@code machine_*}); each wrapper here keeps its {@code @implements} tag so
+ * traceability and the block docs that cite {@code MachineGameTest#tc…} are unchanged. Only the eight
+ * cases that look at a machine THROUGH the Fabric Transfer/Energy API stay as real bodies in this
+ * file — {@code *Prf02_*BufferCapsViaInsert} (transaction-committed {@code insert}) and
+ * {@code *Con04_*AllFacesAcceptEnergy} ({@code EnergyStorage.SIDED}) — because they test this
+ * loader's seam, not the machine.
  *
  * <p>Numbers/recipes come from datapack + {@link dev.alaindustrial.Config}; outputs from the recipe.
  */
 public class MachineGameTest {
 
 	private static final BlockPos POS = new BlockPos(1, 2, 1);
-	private static final int AMPLE_EU = 8000;      // > any single op's E_op; set directly (bypasses cap)
-	private static final int DRIVE_TICKS = 400;    // > longest machine duration (150) + margin
 
 	private static MachineBlockEntity place(GameTestHelper helper, Block block) {
 		return AlaGameTestHelper.place(helper, POS, block);
-	}
-
-	private static void drive(MachineBlockEntity be, GameTestHelper helper, int ticks) {
-		AlaGameTestHelper.drive(be, helper, ticks);
-	}
-
-	/** Positive: powered machine with a valid input produces the expected output (≥ minCount). */
-	private void assertProduces(GameTestHelper helper, Block block, ItemStack input, Item expected, int minCount) {
-		MachineBlockEntity be = place(helper, block);
-		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
-		be.setItem(0, input);
-		drive(be, helper, DRIVE_TICKS);
-		ItemStack out = be.getItem(1);
-		if (out.isEmpty() || !out.is(expected) || out.getCount() < minCount) {
-			helper.fail(block + ": expected ≥" + minCount + "× " + expected + " but got "
-					+ (out.isEmpty() ? "empty" : out.getCount() + "× " + out.getItem()));
-		}
-		helper.succeed();
-	}
-
-	/** Negative: a valid input but NO power yields no output, and progress stays frozen at 0 (R-NRG-10). */
-	private void assertNoPowerNoOutput(GameTestHelper helper, Block block, ItemStack input) {
-		MachineBlockEntity be = place(helper, block);
-		be.getEnergyStorage().setAmountUntracked(0);
-		be.setItem(0, input);
-		drive(be, helper, DRIVE_TICKS);
-		if (!be.getItem(1).isEmpty()) {
-			helper.fail(block + ": produced output without energy");
-		}
-		if (be.getDataAccess().get(2) != 0) {
-			helper.fail(block + ": progress advanced without energy (got " + be.getDataAccess().get(2) + ")");
-		}
-		helper.succeed();
-	}
-
-	/** Negative: a non-recipe input, even fully powered, yields no output. */
-	private void assertNoRecipeNoOutput(GameTestHelper helper, Block block, ItemStack junk) {
-		MachineBlockEntity be = place(helper, block);
-		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
-		be.setItem(0, junk);
-		drive(be, helper, DRIVE_TICKS);
-		if (!be.getItem(1).isEmpty()) {
-			helper.fail(block + ": produced output from a non-recipe input");
-		}
-		helper.succeed();
 	}
 
 	// ── Positive (FUN, EP valid class) ──────────────────────────────────────────────
@@ -94,35 +42,32 @@ public class MachineGameTest {
 	 *      doubles, like ore blocks — Mekanism/IC2 model; only the ingot path is ×1). @covers R-GUI-02 */
 	@GameTest
 	public void tcMach001Fun01_maceratorGrindsRawIron(GameTestHelper helper) {
-		assertProduces(helper, ModBlocks.MACERATOR, new ItemStack(Items.RAW_IRON, 4), ModItems.IRON_DUST, 2);
+		MachineScenarios.tcMach001Fun01_maceratorGrindsRawIron(helper);
 	}
 
 	/** @implements TC-MACH-001-FUN-ironOre — macerator grinds an iron ore block into 2× iron dust
 	 *      (the ×2 doubling path, via {@code #alaindustrial:macerable_iron}). @covers R-GUI-02 */
 	@GameTest
 	public void tcMach001FunIronOre_maceratorGrindsIronOre(GameTestHelper helper) {
-		assertProduces(helper, ModBlocks.MACERATOR, new ItemStack(Items.IRON_ORE, 4), ModItems.IRON_DUST, 2);
+		MachineScenarios.tcMach001FunIronOre_maceratorGrindsIronOre(helper);
 	}
 
 	/** MOD-245: stone sulfur ore follows the tag-driven ×2 maceration path. */
 	@GameTest
 	public void mod245_maceratorGrindsSulfurOre(GameTestHelper helper) {
-		assertProduces(helper, ModBlocks.MACERATOR,
-				new ItemStack(ModItems.SULFUR_ORE_ITEM, 4), ModItems.SULFUR_DUST, 2);
+		MachineScenarios.mod245_maceratorGrindsSulfurOre(helper);
 	}
 
 	/** MOD-245: the deepslate variant is present in the same macerable tag. */
 	@GameTest
 	public void mod245_maceratorGrindsDeepslateSulfurOre(GameTestHelper helper) {
-		assertProduces(helper, ModBlocks.MACERATOR,
-				new ItemStack(ModItems.DEEPSLATE_SULFUR_ORE_ITEM, 4), ModItems.SULFUR_DUST, 2);
+		MachineScenarios.mod245_maceratorGrindsDeepslateSulfurOre(helper);
 	}
 
 	/** MOD-245: raw sulfur has its direct ×2 maceration recipe. */
 	@GameTest
 	public void mod245_maceratorGrindsRawSulfur(GameTestHelper helper) {
-		assertProduces(helper, ModBlocks.MACERATOR,
-				new ItemStack(ModItems.RAW_SULFUR, 4), ModItems.SULFUR_DUST, 2);
+		MachineScenarios.mod245_maceratorGrindsRawSulfur(helper);
 	}
 
 	/**
@@ -132,26 +77,25 @@ public class MachineGameTest {
 	 */
 	@GameTest
 	public void tcMach002Fun01_furnaceSmeltsRawIron(GameTestHelper helper) {
-		assertProduces(helper, ModBlocks.ELECTRIC_FURNACE, new ItemStack(Items.RAW_IRON, 4), Items.IRON_INGOT, 1);
+		MachineScenarios.tcMach002Fun01_furnaceSmeltsRawIron(helper);
 	}
 
 	/** MOD-245: the vanilla smelting recipe is also served by the electric furnace fallback. */
 	@GameTest
 	public void mod245_furnaceSmeltsRawSulfur(GameTestHelper helper) {
-		assertProduces(helper, ModBlocks.ELECTRIC_FURNACE,
-				new ItemStack(ModItems.RAW_SULFUR, 4), ModItems.SULFUR_DUST, 1);
+		MachineScenarios.mod245_furnaceSmeltsRawSulfur(helper);
 	}
 
 	/** @implements TC-MACH-003-FUN01 — compressor compresses clay balls into a brick. */
 	@GameTest
 	public void tcMach003Fun01_compressorMakesBrick(GameTestHelper helper) {
-		assertProduces(helper, ModBlocks.COMPRESSOR, new ItemStack(Items.CLAY_BALL, 4), Items.BRICK, 1);
+		MachineScenarios.tcMach003Fun01_compressorMakesBrick(helper);
 	}
 
 	/** @implements TC-MACH-004-FUN01 — extractor extracts blaze powder from a blaze rod. */
 	@GameTest
 	public void tcMach004Fun01_extractorMakesBlazePowder(GameTestHelper helper) {
-		assertProduces(helper, ModBlocks.EXTRACTOR, new ItemStack(Items.BLAZE_ROD, 4), Items.BLAZE_POWDER, 1);
+		MachineScenarios.tcMach004Fun01_extractorMakesBlazePowder(helper);
 	}
 
 	// ── Negative (NEG) ──────────────────────────────────────────────────────────────
@@ -159,19 +103,19 @@ public class MachineGameTest {
 	/** @implements TC-MACH-001-NEG01 — no energy: no output, progress frozen at 0. @covers R-NRG-10 */
 	@GameTest
 	public void tcMach001Neg01_noPowerNoOutput(GameTestHelper helper) {
-		assertNoPowerNoOutput(helper, ModBlocks.MACERATOR, new ItemStack(Items.RAW_IRON, 4));
+		MachineScenarios.tcMach001Neg01_noPowerNoOutput(helper);
 	}
 
 	/** @implements TC-MACH-001-NEG02 — non-recipe input (dirt) yields no output even when powered. */
 	@GameTest
 	public void tcMach001Neg02_nonRecipeNoOutput(GameTestHelper helper) {
-		assertNoRecipeNoOutput(helper, ModBlocks.MACERATOR, new ItemStack(Items.DIRT, 4));
+		MachineScenarios.tcMach001Neg02_nonRecipeNoOutput(helper);
 	}
 
 	/** @implements TC-MACH-002-NEG01 — electric furnace: no energy → no smelt. @covers R-NRG-10 */
 	@GameTest
 	public void tcMach002Neg01_furnaceNoPower(GameTestHelper helper) {
-		assertNoPowerNoOutput(helper, ModBlocks.ELECTRIC_FURNACE, new ItemStack(Items.RAW_IRON, 4));
+		MachineScenarios.tcMach002Neg01_furnaceNoPower(helper);
 	}
 
 	/**
@@ -181,18 +125,7 @@ public class MachineGameTest {
 	 */
 	@GameTest
 	public void tcMach001Con01_sidedSlotRoles(GameTestHelper helper) {
-		MachineBlockEntity be = place(helper, ModBlocks.MACERATOR);
-		Direction d = Direction.NORTH;
-		if (be.canPlaceItemThroughFace(1, new ItemStack(ModItems.IRON_DUST), d)) {
-			helper.fail("automation can insert into the output slot");
-		}
-		if (be.canTakeItemThroughFace(0, new ItemStack(Items.RAW_IRON), d)) {
-			helper.fail("automation can steal the unprocessed input");
-		}
-		if (!be.canTakeItemThroughFace(1, new ItemStack(ModItems.IRON_DUST), d)) {
-			helper.fail("automation cannot extract the output");
-		}
-		helper.succeed();
+		MachineScenarios.tcMach001Con01_sidedSlotRoles(helper);
 	}
 
 	/**
@@ -203,27 +136,7 @@ public class MachineGameTest {
 	 */
 	@GameTest
 	public void tcMach001Prf_maceratorEopMatchesConfig(GameTestHelper helper) {
-		// Looked up through the vanilla RecipeManager (R-14); iron_ore resolves via the
-		// #alaindustrial:macerable_iron tag (R-15), proving tag ingredients match. Ore blocks and
-		// raw_iron both macerate to ×2 dust (MOD-095, Mekanism/IC2 model); only the ingot path is ×1.
-		ProcessingRecipeInput input = new ProcessingRecipeInput(new ItemStack(Items.IRON_ORE));
-		AlaProcessingRecipe ironRecipe = ModRecipes.MACERATION.newCheck()
-				.getRecipeFor(input, helper.getLevel()).map(RecipeHolder::value).orElse(null);
-		if (ironRecipe == null) {
-			helper.fail("no maceration recipe for iron_ore (datapack not loaded?)");
-			return;
-		}
-		int count = ironRecipe.assemble(input).getCount();
-		if (count != 2) {
-			helper.fail("iron_ore maceration count expected 2 but got " + count);
-		}
-		int eOp = Config.machineEuPerTick * Config.maceratorDuration;
-		if (ironRecipe.energy() / Config.machineEuPerTick != Config.maceratorDuration) {
-			helper.fail("raw_iron maceration E_op mismatch: energy=" + ironRecipe.energy()
-					+ " but machineEuPerTick(" + Config.machineEuPerTick + ")×maceratorDuration("
-					+ Config.maceratorDuration + ")=" + eOp);
-		}
-		helper.succeed();
+		MachineScenarios.tcMach001Prf_maceratorEopMatchesConfig(helper);
 	}
 
 	/**
@@ -235,20 +148,7 @@ public class MachineGameTest {
 	 */
 	@GameTest
 	public void tcMach001Neg03_fullOutputJamsMachine(GameTestHelper helper) {
-		MachineBlockEntity be = place(helper, ModBlocks.MACERATOR);
-		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
-		be.setItem(0, new ItemStack(Items.RAW_IRON, 4));
-		be.setItem(1, new ItemStack(ModItems.IRON_DUST, 64)); // output slot at max stack
-		drive(be, helper, DRIVE_TICKS);
-		int outCount = be.getItem(1).getCount();
-		int progress  = be.getDataAccess().get(2);
-		if (outCount != 64) {
-			helper.fail("output slot overflowed: " + outCount + " items (expected 64)");
-		}
-		if (progress != 0) {
-			helper.fail("machine advanced progress to " + progress + " despite full output slot");
-		}
-		helper.succeed();
+		MachineScenarios.tcMach001Neg03_fullOutputJamsMachine(helper);
 	}
 
 	// ── Extra recipes (FUN) ──────────────────────────────────────────────────────────
@@ -260,7 +160,7 @@ public class MachineGameTest {
 	 */
 	@GameTest
 	public void tcMach001FunCopperRaw_maceratorGrindsRawCopper(GameTestHelper helper) {
-		assertProduces(helper, ModBlocks.MACERATOR, new ItemStack(Items.RAW_COPPER, 4), ModItems.COPPER_DUST, 2);
+		MachineScenarios.tcMach001FunCopperRaw_maceratorGrindsRawCopper(helper);
 	}
 
 	/**
@@ -270,7 +170,7 @@ public class MachineGameTest {
 	 */
 	@GameTest
 	public void tcMach001FunGoldRaw_maceratorGrindsRawGold(GameTestHelper helper) {
-		assertProduces(helper, ModBlocks.MACERATOR, new ItemStack(Items.RAW_GOLD, 4), ModItems.GOLD_DUST, 2);
+		MachineScenarios.tcMach001FunGoldRaw_maceratorGrindsRawGold(helper);
 	}
 
 	/**
@@ -280,13 +180,13 @@ public class MachineGameTest {
 	 */
 	@GameTest
 	public void tcMach001FunIronIngot_maceratorGrindsIronIngot(GameTestHelper helper) {
-		assertProduces(helper, ModBlocks.MACERATOR, new ItemStack(Items.IRON_INGOT, 4), ModItems.IRON_DUST, 1);
+		MachineScenarios.tcMach001FunIronIngot_maceratorGrindsIronIngot(helper);
 	}
 
 	/** @implements TC-EFURN-001-FUN01 — electric furnace: mod recipe dust→ingot, iron_dust path. @covers R-GUI-02 */
 	@GameTest
 	public void tcEfurn001Fun01_furnaceSmeltsIronDust(GameTestHelper helper) {
-		assertProduces(helper, ModBlocks.ELECTRIC_FURNACE, new ItemStack(ModItems.IRON_DUST, 4), Items.IRON_INGOT, 1);
+		MachineScenarios.tcEfurn001Fun01_furnaceSmeltsIronDust(helper);
 	}
 
 	/**
@@ -296,7 +196,7 @@ public class MachineGameTest {
 	 */
 	@GameTest
 	public void tcEfurn001Fun02_furnaceVanillaFallbackCooksBeef(GameTestHelper helper) {
-		assertProduces(helper, ModBlocks.ELECTRIC_FURNACE, new ItemStack(Items.BEEF, 4), Items.COOKED_BEEF, 1);
+		MachineScenarios.tcEfurn001Fun02_furnaceVanillaFallbackCooksBeef(helper);
 	}
 
 	/**
@@ -306,7 +206,7 @@ public class MachineGameTest {
 	 */
 	@GameTest
 	public void tcEfurn001Fun03a_furnaceSmeltsSand(GameTestHelper helper) {
-		assertProduces(helper, ModBlocks.ELECTRIC_FURNACE, new ItemStack(Items.SAND, 4), Items.GLASS, 1);
+		MachineScenarios.tcEfurn001Fun03a_furnaceSmeltsSand(helper);
 	}
 
 	/**
@@ -316,7 +216,7 @@ public class MachineGameTest {
 	 */
 	@GameTest
 	public void tcEfurn001Fun03b_furnaceSmeltsCobblestone(GameTestHelper helper) {
-		assertProduces(helper, ModBlocks.ELECTRIC_FURNACE, new ItemStack(Items.COBBLESTONE, 4), Items.STONE, 1);
+		MachineScenarios.tcEfurn001Fun03b_furnaceSmeltsCobblestone(helper);
 	}
 
 	/**
@@ -326,7 +226,7 @@ public class MachineGameTest {
 	 */
 	@GameTest
 	public void tcEfurn001Fun05_furnaceVanillaFallbackMakesCharcoal(GameTestHelper helper) {
-		assertProduces(helper, ModBlocks.ELECTRIC_FURNACE, new ItemStack(Items.OAK_LOG, 4), Items.CHARCOAL, 1);
+		MachineScenarios.tcEfurn001Fun05_furnaceVanillaFallbackMakesCharcoal(helper);
 	}
 
 	/**
@@ -337,42 +237,31 @@ public class MachineGameTest {
 	 */
 	@GameTest
 	public void tcEfurn001Fun04_furnaceDurationIsHalfVanilla(GameTestHelper helper) {
-		MachineBlockEntity be = place(helper, ModBlocks.ELECTRIC_FURNACE);
-		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
-		be.setItem(0, new ItemStack(ModItems.IRON_DUST, 4));
-		drive(be, helper, Config.electricFurnaceDuration - 1);
-		if (!be.getItem(1).isEmpty()) {
-			helper.fail("furnace finished before electricFurnaceDuration (" + Config.electricFurnaceDuration + ") ticks");
-		}
-		drive(be, helper, 1);
-		if (be.getItem(1).isEmpty() || !be.getItem(1).is(Items.IRON_INGOT)) {
-			helper.fail("furnace did not finish exactly at electricFurnaceDuration ticks");
-		}
-		helper.succeed();
+		MachineScenarios.tcEfurn001Fun04_furnaceDurationIsHalfVanilla(helper);
 	}
 
 	/** @implements TC-COMP-001-FUN02 — compressor: copper_dust → copper_ingot. @covers R-GUI-02 */
 	@GameTest
 	public void tcComp001Fun02_compressorMakesCopperIngot(GameTestHelper helper) {
-		assertProduces(helper, ModBlocks.COMPRESSOR, new ItemStack(ModItems.COPPER_DUST, 4), Items.COPPER_INGOT, 1);
+		MachineScenarios.tcComp001Fun02_compressorMakesCopperIngot(helper);
 	}
 
 	/** @implements TC-COMP-001-FUN03 — compressor: gold_dust → gold_ingot. @covers R-GUI-02 */
 	@GameTest
 	public void tcComp001Fun03_compressorMakesGoldIngot(GameTestHelper helper) {
-		assertProduces(helper, ModBlocks.COMPRESSOR, new ItemStack(ModItems.GOLD_DUST, 4), Items.GOLD_INGOT, 1);
+		MachineScenarios.tcComp001Fun03_compressorMakesGoldIngot(helper);
 	}
 
 	/** @implements TC-COMP-001-FUN04 — compressor: iron_dust → iron_ingot. @covers R-GUI-02 */
 	@GameTest
 	public void tcComp001Fun04_compressorMakesIronIngot(GameTestHelper helper) {
-		assertProduces(helper, ModBlocks.COMPRESSOR, new ItemStack(ModItems.IRON_DUST, 4), Items.IRON_INGOT, 1);
+		MachineScenarios.tcComp001Fun04_compressorMakesIronIngot(helper);
 	}
 
 	/** @implements TC-EXTR-001-FUN02 — extractor: gravel → flint (single-output recipe). @covers R-GUI-02 */
 	@GameTest
 	public void tcExtr001Fun02a_extractorMakesFlint(GameTestHelper helper) {
-		assertProduces(helper, ModBlocks.EXTRACTOR, new ItemStack(Items.GRAVEL, 4), Items.FLINT, 1);
+		MachineScenarios.tcExtr001Fun02a_extractorMakesFlint(helper);
 	}
 
 	/**
@@ -383,8 +272,7 @@ public class MachineGameTest {
 	 */
 	@GameTest
 	public void tcExtr001Fun06_extractorMakesGreenDye(GameTestHelper helper) {
-		assertConsumesExactlyOnePerOperation(helper, ModBlocks.EXTRACTOR, Items.CACTUS, 4,
-				Config.extractorDuration, Items.DYE.green(), 2);
+		MachineScenarios.tcExtr001Fun06_extractorMakesGreenDye(helper);
 	}
 
 	/**
@@ -394,35 +282,10 @@ public class MachineGameTest {
 	 */
 	@GameTest
 	public void tcExtr001Fun07_extractorMakesPumpkinSeeds(GameTestHelper helper) {
-		assertConsumesExactlyOnePerOperation(helper, ModBlocks.EXTRACTOR, Items.PUMPKIN, 4,
-				Config.extractorDuration, Items.PUMPKIN_SEEDS, 5);
+		MachineScenarios.tcExtr001Fun07_extractorMakesPumpkinSeeds(helper);
 	}
 
 	// ── 1→1 accounting (FUN02 family) — exactly one input item consumed per operation ─────────────
-
-	/**
-	 * Positive: exactly one operation's worth of input is consumed, no more — drives ticks for a
-	 * single operation only (not the full DRIVE_TICKS) so a bug that consumes >1 input per op would
-	 * be caught by the input-count assertion.
-	 */
-	private void assertConsumesExactlyOnePerOperation(GameTestHelper helper, Block block, Item inputItem,
-			int startCount, int durationTicks, Item expectedOutput, int expectedOutputCount) {
-		MachineBlockEntity be = place(helper, block);
-		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
-		be.setItem(0, new ItemStack(inputItem, startCount));
-		drive(be, helper, durationTicks);
-		ItemStack in = be.getItem(0);
-		ItemStack out = be.getItem(1);
-		if (in.isEmpty() || in.getCount() != startCount - 1) {
-			helper.fail(block + ": expected " + (startCount - 1) + "× " + inputItem + " left in input but got "
-					+ (in.isEmpty() ? "empty" : in.getCount() + "× " + in.getItem()));
-		}
-		if (out.isEmpty() || !out.is(expectedOutput) || out.getCount() != expectedOutputCount) {
-			helper.fail(block + ": expected exactly " + expectedOutputCount + "× " + expectedOutput
-					+ " in output but got " + (out.isEmpty() ? "empty" : out.getCount() + "× " + out.getItem()));
-		}
-		helper.succeed();
-	}
 
 	/**
 	 * @implements TC-MACH-001-FUN02 — macerator consumes exactly 1 raw_iron per operation (150 ticks),
@@ -431,8 +294,7 @@ public class MachineGameTest {
 	 */
 	@GameTest
 	public void tcMach001Fun02_maceratorConsumesExactlyOnePerOperation(GameTestHelper helper) {
-		assertConsumesExactlyOnePerOperation(helper, ModBlocks.MACERATOR, Items.RAW_IRON, 4,
-				Config.maceratorDuration, ModItems.IRON_DUST, 2);
+		MachineScenarios.tcMach001Fun02_maceratorConsumesExactlyOnePerOperation(helper);
 	}
 
 	/**
@@ -442,8 +304,7 @@ public class MachineGameTest {
 	 */
 	@GameTest
 	public void tcMach002Fun02_furnaceConsumesExactlyOnePerOperation(GameTestHelper helper) {
-		assertConsumesExactlyOnePerOperation(helper, ModBlocks.ELECTRIC_FURNACE, ModItems.IRON_DUST, 4,
-				Config.electricFurnaceDuration, Items.IRON_INGOT, 1);
+		MachineScenarios.tcMach002Fun02_furnaceConsumesExactlyOnePerOperation(helper);
 	}
 
 	/**
@@ -453,8 +314,7 @@ public class MachineGameTest {
 	 */
 	@GameTest
 	public void tcMach003Fun02_compressorConsumesExactlyOnePerOperation(GameTestHelper helper) {
-		assertConsumesExactlyOnePerOperation(helper, ModBlocks.COMPRESSOR, ModItems.COPPER_DUST, 4,
-				Config.compressorDuration, Items.COPPER_INGOT, 1);
+		MachineScenarios.tcMach003Fun02_compressorConsumesExactlyOnePerOperation(helper);
 	}
 
 	/**
@@ -464,8 +324,7 @@ public class MachineGameTest {
 	 */
 	@GameTest
 	public void tcComp001Fun05_compressorConsumesExactlyOneOfFive(GameTestHelper helper) {
-		assertConsumesExactlyOnePerOperation(helper, ModBlocks.COMPRESSOR, ModItems.COPPER_DUST, 5,
-				Config.compressorDuration, Items.COPPER_INGOT, 1);
+		MachineScenarios.tcComp001Fun05_compressorConsumesExactlyOneOfFive(helper);
 	}
 
 	/**
@@ -475,44 +334,21 @@ public class MachineGameTest {
 	 */
 	@GameTest
 	public void tcMach004Fun02_extractorConsumesExactlyOnePerOperation(GameTestHelper helper) {
-		assertConsumesExactlyOnePerOperation(helper, ModBlocks.EXTRACTOR, Items.BLAZE_ROD, 4,
-				Config.extractorDuration, Items.BLAZE_POWDER, 3);
+		MachineScenarios.tcMach004Fun02_extractorConsumesExactlyOnePerOperation(helper);
 	}
 
 	// ── NEG: full output jams the machine, no dupe (parametric across all 4) ───────────────────────
 
-	/**
-	 * Negative: output slot at max stack (64) with the recipe's own product jams the machine — no
-	 * overflow, progress frozen at 0. Generalizes {@link #tcMach001Neg03_fullOutputJamsMachine} to all
-	 * four machines.
-	 */
-	private void assertFullOutputJamsMachine(GameTestHelper helper, Block block, ItemStack input, Item product) {
-		MachineBlockEntity be = place(helper, block);
-		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
-		be.setItem(0, input);
-		be.setItem(1, new ItemStack(product, 64));
-		drive(be, helper, DRIVE_TICKS);
-		int outCount = be.getItem(1).getCount();
-		int progress = be.getDataAccess().get(2);
-		if (outCount != 64) {
-			helper.fail(block + ": output slot overflowed: " + outCount + " items (expected 64)");
-		}
-		if (progress != 0) {
-			helper.fail(block + ": advanced progress to " + progress + " despite full output slot");
-		}
-		helper.succeed();
-	}
-
 	/** @implements TC-MACH-002-NEG03 — electric furnace: full output (64 iron_ingot) jams, no overflow. @covers R-GUI-04 */
 	@GameTest
 	public void tcMach002Neg03_furnaceFullOutputJamsMachine(GameTestHelper helper) {
-		assertFullOutputJamsMachine(helper, ModBlocks.ELECTRIC_FURNACE, new ItemStack(ModItems.IRON_DUST, 4), Items.IRON_INGOT);
+		MachineScenarios.tcMach002Neg03_furnaceFullOutputJamsMachine(helper);
 	}
 
 	/** @implements TC-MACH-003-NEG03 — compressor: full output (64 copper_ingot) jams, no overflow. @covers R-GUI-04 */
 	@GameTest
 	public void tcMach003Neg03_compressorFullOutputJamsMachine(GameTestHelper helper) {
-		assertFullOutputJamsMachine(helper, ModBlocks.COMPRESSOR, new ItemStack(ModItems.COPPER_DUST, 4), Items.COPPER_INGOT);
+		MachineScenarios.tcMach003Neg03_compressorFullOutputJamsMachine(helper);
 	}
 
 	/**
@@ -522,16 +358,7 @@ public class MachineGameTest {
 	 */
 	@GameTest
 	public void tcExtr001Neg01a_multipliedOutputFitsAt61(GameTestHelper helper) {
-		MachineBlockEntity be = place(helper, ModBlocks.EXTRACTOR);
-		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
-		be.setItem(0, new ItemStack(Items.BLAZE_ROD, 4));
-		be.setItem(1, new ItemStack(Items.BLAZE_POWDER, 61));
-		drive(be, helper, DRIVE_TICKS);
-		ItemStack out = be.getItem(1);
-		if (out.getCount() != 64) {
-			helper.fail("extractor with 61 in output should finish and reach 64 (61+3) but got " + out.getCount());
-		}
-		helper.succeed();
+		MachineScenarios.tcExtr001Neg01a_multipliedOutputFitsAt61(helper);
 	}
 
 	/**
@@ -544,58 +371,21 @@ public class MachineGameTest {
 	 */
 	@GameTest
 	public void tcExtr001Neg01b_multipliedOutputJamsAt62(GameTestHelper helper) {
-		MachineBlockEntity be = place(helper, ModBlocks.EXTRACTOR);
-		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
-		be.setItem(0, new ItemStack(Items.BLAZE_ROD, 4));
-		be.setItem(1, new ItemStack(Items.BLAZE_POWDER, 62));
-		drive(be, helper, DRIVE_TICKS);
-		ItemStack in = be.getItem(0);
-		ItemStack out = be.getItem(1);
-		if (out.getCount() != 62) {
-			helper.fail("extractor output slot must stay at 62 (no overflow to 65) but got " + out.getCount());
-		}
-		if (in.isEmpty() || in.getCount() != 4) {
-			helper.fail("extractor must not consume blaze_rod while jammed on output but input is now "
-					+ (in.isEmpty() ? "empty" : in.getCount()));
-		}
-		helper.succeed();
+		MachineScenarios.tcExtr001Neg01b_multipliedOutputJamsAt62(helper);
 	}
 
 	// ── NEG: incompatible item in output slot → no dupe, no corruption (parametric) ────────────────
 
-	/**
-	 * Negative: output slot occupied by a foreign item (not the recipe's product) — machine must not
-	 * mutate/consume that foreign stack, must not lose the input, and must not duplicate anything.
-	 */
-	private void assertWrongItemInOutputNoDupe(GameTestHelper helper, Block block, ItemStack input, ItemStack foreignOutput) {
-		MachineBlockEntity be = place(helper, block);
-		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
-		be.setItem(0, input.copy());
-		be.setItem(1, foreignOutput.copy());
-		drive(be, helper, DRIVE_TICKS);
-		ItemStack out = be.getItem(1);
-		if (!out.is(foreignOutput.getItem()) || out.getCount() != foreignOutput.getCount()) {
-			helper.fail(block + ": foreign item in output slot was mutated: " + out.getCount() + "× " + out.getItem());
-		}
-		ItemStack in = be.getItem(0);
-		if (in.isEmpty() || !in.is(input.getItem()) || in.getCount() != input.getCount()) {
-			helper.fail(block + ": input was consumed despite the output slot being jammed by a foreign item");
-		}
-		helper.succeed();
-	}
-
 	/** @implements TC-MACH-001-NEG04 — macerator: cobblestone in output slot → unchanged, no dupe. @covers R-GUI-04 */
 	@GameTest
 	public void tcMach001Neg04_maceratorWrongItemInOutputNoDupe(GameTestHelper helper) {
-		assertWrongItemInOutputNoDupe(helper, ModBlocks.MACERATOR, new ItemStack(Items.RAW_IRON, 1),
-				new ItemStack(Items.COBBLESTONE, 1));
+		MachineScenarios.tcMach001Neg04_maceratorWrongItemInOutputNoDupe(helper);
 	}
 
 	/** @implements TC-MACH-002-NEG04 — electric furnace: cobblestone (unrelated) in output slot → unchanged. @covers R-GUI-04 */
 	@GameTest
 	public void tcMach002Neg04_furnaceWrongItemInOutputNoDupe(GameTestHelper helper) {
-		assertWrongItemInOutputNoDupe(helper, ModBlocks.ELECTRIC_FURNACE, new ItemStack(ModItems.IRON_DUST, 1),
-				new ItemStack(Items.COBBLESTONE, 1));
+		MachineScenarios.tcMach002Neg04_furnaceWrongItemInOutputNoDupe(helper);
 	}
 
 	/**
@@ -605,45 +395,27 @@ public class MachineGameTest {
 	 */
 	@GameTest
 	public void tcMach003Neg04_compressorWrongItemInOutputNoDupe(GameTestHelper helper) {
-		assertWrongItemInOutputNoDupe(helper, ModBlocks.COMPRESSOR, new ItemStack(ModItems.GOLD_DUST, 1),
-				new ItemStack(Items.IRON_INGOT, 1));
+		MachineScenarios.tcMach003Neg04_compressorWrongItemInOutputNoDupe(helper);
 	}
 
 	/** @implements TC-MACH-004-NEG04 — extractor: cobblestone (unrelated) in output slot → unchanged. @covers R-GUI-04 */
 	@GameTest
 	public void tcMach004Neg04_extractorWrongItemInOutputNoDupe(GameTestHelper helper) {
-		assertWrongItemInOutputNoDupe(helper, ModBlocks.EXTRACTOR, new ItemStack(Items.BLAZE_ROD, 1),
-				new ItemStack(Items.COBBLESTONE, 1));
+		MachineScenarios.tcMach004Neg04_extractorWrongItemInOutputNoDupe(helper);
 	}
 
 	// ── NEG: non-recipe input, even fully powered → no output, EU untouched (parametric) ───────────
 
-	/** Negative: a non-recipe input costs no EU even when the machine is fully powered. */
-	private void assertNonRecipeNoEuSpent(GameTestHelper helper, Block block, ItemStack junk) {
-		MachineBlockEntity be = place(helper, block);
-		long startAmount = 800; // direct amount=, not TR insert — matches PERFORMANCE.md buffer for all 4 machines
-		be.getEnergyStorage().setAmountUntracked(startAmount);
-		be.setItem(0, junk);
-		drive(be, helper, DRIVE_TICKS);
-		if (!be.getItem(1).isEmpty()) {
-			helper.fail(block + ": produced output from a non-recipe input");
-		}
-		if (be.getEnergyStorage().getAmount() != startAmount) {
-			helper.fail(block + ": EU was spent on a non-recipe input, amount now " + be.getEnergyStorage().getAmount());
-		}
-		helper.succeed();
-	}
-
 	/** @implements TC-MACH-001-NEG05 — macerator: non-recipe input (dirt) does not spend EU even when powered. @covers R-NRG-04 */
 	@GameTest
 	public void tcMach001Neg05_maceratorNonRecipeNoEuSpent(GameTestHelper helper) {
-		assertNonRecipeNoEuSpent(helper, ModBlocks.MACERATOR, new ItemStack(Items.DIRT, 1));
+		MachineScenarios.tcMach001Neg05_maceratorNonRecipeNoEuSpent(helper);
 	}
 
 	/** @implements TC-MACH-002-NEG05 — electric furnace: non-recipe input (lava_bucket) does not spend EU. @covers R-NRG-04 */
 	@GameTest
 	public void tcMach002Neg05_furnaceNonRecipeNoEuSpent(GameTestHelper helper) {
-		assertNonRecipeNoEuSpent(helper, ModBlocks.ELECTRIC_FURNACE, new ItemStack(Items.LAVA_BUCKET, 1));
+		MachineScenarios.tcMach002Neg05_furnaceNonRecipeNoEuSpent(helper);
 	}
 
 	/**
@@ -653,7 +425,7 @@ public class MachineGameTest {
 	 */
 	@GameTest
 	public void tcMach003Neg05_compressorNonRecipeNoEuSpent(GameTestHelper helper) {
-		assertNonRecipeNoEuSpent(helper, ModBlocks.COMPRESSOR, new ItemStack(Items.DIAMOND, 1));
+		MachineScenarios.tcMach003Neg05_compressorNonRecipeNoEuSpent(helper);
 	}
 
 	/**
@@ -663,209 +435,115 @@ public class MachineGameTest {
 	 */
 	@GameTest
 	public void tcComp001Neg03_compressorRawOreNotAccepted(GameTestHelper helper) {
-		assertNonRecipeNoEuSpent(helper, ModBlocks.COMPRESSOR, new ItemStack(Items.RAW_IRON, 1));
+		MachineScenarios.tcComp001Neg03_compressorRawOreNotAccepted(helper);
 	}
 
 	/** @implements TC-MACH-004-NEG05 — extractor: non-recipe input (dirt) does not spend EU even when powered. @covers R-NRG-04 */
 	@GameTest
 	public void tcMach004Neg05_extractorNonRecipeNoEuSpent(GameTestHelper helper) {
-		assertNonRecipeNoEuSpent(helper, ModBlocks.EXTRACTOR, new ItemStack(Items.DIRT, 1));
+		MachineScenarios.tcMach004Neg05_extractorNonRecipeNoEuSpent(helper);
 	}
 
 	// ── NEG: recipe swap mid-operation resets progress (parametric FUN04) ──────────────────────────
 
-	/**
-	 * @implements TC-MACH-001-FUN04 — swapping the input item mid-operation (after partial progress)
-	 *     resets progress to 0 and starts a fresh operation for the new item; the old input is not
-	 *     lost/duped. Parametric across all four machines sharing {@code MachineBlockEntity}.
-	 * @covers R-NRG-10
-	 */
-	private void assertInputSwapMidOpResetsProgress(GameTestHelper helper, Block block, ItemStack inputA,
-			ItemStack inputB, int halfwayTicks) {
-		MachineBlockEntity be = place(helper, block);
-		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
-		be.setItem(0, inputA.copy());
-		drive(be, helper, halfwayTicks);
-		int progressBefore = be.getDataAccess().get(2);
-		if (progressBefore <= 0) {
-			helper.fail(block + ": expected partial progress before the input swap but got " + progressBefore);
-		}
-		be.setItem(0, inputB.copy());
-		if (be.getDataAccess().get(2) != 0) {
-			helper.fail(block + ": progress did not reset to 0 immediately after swapping the input item");
-		}
-		helper.succeed();
-	}
-
 	/** @implements TC-MACH-001-FUN04 — macerator: raw_iron swapped for raw_copper mid-op resets progress. @covers R-NRG-10 */
 	@GameTest
 	public void tcMach001Fun04_maceratorInputSwapResetsProgress(GameTestHelper helper) {
-		assertInputSwapMidOpResetsProgress(helper, ModBlocks.MACERATOR, new ItemStack(Items.RAW_IRON, 1),
-				new ItemStack(Items.RAW_COPPER, 1), Config.maceratorDuration / 2);
+		MachineScenarios.tcMach001Fun04_maceratorInputSwapResetsProgress(helper);
 	}
 
 	/** @implements TC-MACH-002-FUN04 — electric furnace: iron_dust swapped for sand mid-op resets progress. @covers R-NRG-10 */
 	@GameTest
 	public void tcMach002Fun04_furnaceInputSwapResetsProgress(GameTestHelper helper) {
-		assertInputSwapMidOpResetsProgress(helper, ModBlocks.ELECTRIC_FURNACE, new ItemStack(ModItems.IRON_DUST, 1),
-				new ItemStack(Items.SAND, 1), Config.electricFurnaceDuration / 2);
+		MachineScenarios.tcMach002Fun04_furnaceInputSwapResetsProgress(helper);
 	}
 
 	/** @implements TC-MACH-003-FUN04 — compressor: copper_dust swapped for iron_dust mid-op resets progress. @covers R-NRG-10 */
 	@GameTest
 	public void tcMach003Fun04_compressorInputSwapResetsProgress(GameTestHelper helper) {
-		assertInputSwapMidOpResetsProgress(helper, ModBlocks.COMPRESSOR, new ItemStack(ModItems.COPPER_DUST, 1),
-				new ItemStack(ModItems.IRON_DUST, 1), Config.compressorDuration / 2);
+		MachineScenarios.tcMach003Fun04_compressorInputSwapResetsProgress(helper);
 	}
 
 	/** @implements TC-MACH-004-FUN04 — extractor: blaze_rod swapped for gravel mid-op resets progress. @covers R-NRG-10 */
 	@GameTest
 	public void tcMach004Fun04_extractorInputSwapResetsProgress(GameTestHelper helper) {
-		assertInputSwapMidOpResetsProgress(helper, ModBlocks.EXTRACTOR, new ItemStack(Items.BLAZE_ROD, 1),
-				new ItemStack(Items.GRAVEL, 1), Config.extractorDuration / 2);
+		MachineScenarios.tcMach004Fun04_extractorInputSwapResetsProgress(helper);
 	}
 
 	// ── STA: lit blockstate tracks active/idle, no light emission (parametric) ─────────────────────
 
-	/**
-	 * Positive/negative pair: the block's {@code lit} property switches on while an operation is
-	 * progressing (powered + valid input) and switches back off once the machine has no work left
-	 * (input exhausted). Mirrors {@code GeneratorGameTest#tcGen001Sta01_litStateTracksBurning} but for
-	 * a processing machine's EU-driven progress instead of a burning generator.
-	 */
-	private void assertLitTracksActive(GameTestHelper helper, Block block, ItemStack singleInput) {
-		MachineBlockEntity be = place(helper, block);
-		BlockPos abs = be.getBlockPos();
-		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
-		be.setItem(0, singleInput.copy());
-		drive(be, helper, 3);
-		if (!helper.getLevel().getBlockState(abs).getValue(BlockStateProperties.LIT)) {
-			helper.fail(block + ": must be LIT while actively processing");
-		}
-		// Drain the input so the machine has nothing left to process; give it a tick to notice and
-		// clear LIT via updateLit(false).
-		be.setItem(0, ItemStack.EMPTY);
-		drive(be, helper, 3);
-		if (helper.getLevel().getBlockState(abs).getValue(BlockStateProperties.LIT)) {
-			helper.fail(block + ": must not stay LIT once there is no input left to process");
-		}
-		helper.succeed();
-	}
-
 	/** @implements TC-MACH-001-STA01 — macerator lit tracks active/idle, no light emission. @covers R-VIS-01 */
 	@GameTest
 	public void tcMach001Sta01_maceratorLitTracksActive(GameTestHelper helper) {
-		assertLitTracksActive(helper, ModBlocks.MACERATOR, new ItemStack(Items.RAW_IRON, 1));
+		MachineScenarios.tcMach001Sta01_maceratorLitTracksActive(helper);
 	}
 
 	/** @implements TC-MACH-002-STA01 — electric furnace lit tracks active/idle, no light emission. @covers R-VIS-01 */
 	@GameTest
 	public void tcMach002Sta01_furnaceLitTracksActive(GameTestHelper helper) {
-		assertLitTracksActive(helper, ModBlocks.ELECTRIC_FURNACE, new ItemStack(ModItems.IRON_DUST, 1));
+		MachineScenarios.tcMach002Sta01_furnaceLitTracksActive(helper);
 	}
 
 	/** @implements TC-COMP-001-STA01 / TC-MACH-003-STA01 — compressor lit tracks active/idle, no light emission. @covers R-VIS-01 */
 	@GameTest
 	public void tcMach003Sta01_compressorLitTracksActive(GameTestHelper helper) {
-		assertLitTracksActive(helper, ModBlocks.COMPRESSOR, new ItemStack(Items.CLAY_BALL, 1));
+		MachineScenarios.tcMach003Sta01_compressorLitTracksActive(helper);
 	}
 
 	/** @implements TC-MACH-004-STA01 — extractor lit tracks active/idle, no light emission. @covers R-VIS-01 */
 	@GameTest
 	public void tcMach004Sta01_extractorLitTracksActive(GameTestHelper helper) {
-		assertLitTracksActive(helper, ModBlocks.EXTRACTOR, new ItemStack(Items.BLAZE_ROD, 1));
+		MachineScenarios.tcMach004Sta01_extractorLitTracksActive(helper);
 	}
 
 	// ── PRF: E_op exact & E_op−1 (BVA), parametric across all 4 machines ────────────────────────────
 
-	/** BVA: exactly E_op available → operation completes and EU is fully spent (amount==0). */
-	private void assertEopExactCompletes(GameTestHelper helper, Block block, ItemStack input, int durationTicks,
-			int euPerTick, Item expectedOutput) {
-		MachineBlockEntity be = place(helper, block);
-		be.getEnergyStorage().setAmountUntracked((long) durationTicks * euPerTick);
-		be.setItem(0, input);
-		drive(be, helper, durationTicks);
-		ItemStack out = be.getItem(1);
-		if (out.isEmpty() || !out.is(expectedOutput)) {
-			helper.fail(block + ": E_op exact (" + (durationTicks * euPerTick) + " EU) did not complete the operation");
-		}
-		if (be.getEnergyStorage().getAmount() != 0) {
-			helper.fail(block + ": E_op exact should leave amount==0 but got " + be.getEnergyStorage().getAmount());
-		}
-		helper.succeed();
-	}
-
-	/** BVA: E_op−1 available → operation never completes; progress freezes one tick short. */
-	private void assertEopMinusOneStalls(GameTestHelper helper, Block block, ItemStack input, int durationTicks,
-			int euPerTick) {
-		MachineBlockEntity be = place(helper, block);
-		be.getEnergyStorage().setAmountUntracked((long) durationTicks * euPerTick - 1);
-		be.setItem(0, input);
-		drive(be, helper, DRIVE_TICKS);
-		if (!be.getItem(1).isEmpty()) {
-			helper.fail(block + ": E_op−1 (one EU short) must not produce any output");
-		}
-		int progress = be.getDataAccess().get(2);
-		if (progress != durationTicks - 1) {
-			helper.fail(block + ": E_op−1 progress expected " + (durationTicks - 1) + " but got " + progress);
-		}
-		helper.succeed();
-	}
-
 	/** @implements TC-MACH-001-PRF04 — macerator: E_op=300 exactly → output + amount==0 (BVA). @covers R-NRG-04 */
 	@GameTest
 	public void tcMach001Prf04_maceratorEopExactCompletes(GameTestHelper helper) {
-		assertEopExactCompletes(helper, ModBlocks.MACERATOR, new ItemStack(Items.RAW_IRON, 1),
-				Config.maceratorDuration, Config.machineEuPerTick, ModItems.IRON_DUST);
+		MachineScenarios.tcMach001Prf04_maceratorEopExactCompletes(helper);
 	}
 
 	/** @implements TC-MACH-001-PRF03 — macerator: E_op−1=299 → no output, progress=149/150 (BVA). @covers R-NRG-04 */
 	@GameTest
 	public void tcMach001Prf03_maceratorEopMinusOneStalls(GameTestHelper helper) {
-		assertEopMinusOneStalls(helper, ModBlocks.MACERATOR, new ItemStack(Items.RAW_IRON, 1),
-				Config.maceratorDuration, Config.machineEuPerTick);
+		MachineScenarios.tcMach001Prf03_maceratorEopMinusOneStalls(helper);
 	}
 
 	/** @implements TC-EFURN-001-PRF01 — electric furnace: E_op=200 exactly → output + amount==0 (BVA). @covers R-NRG-04 */
 	@GameTest
 	public void tcEfurn001Prf01_furnaceEopExactCompletes(GameTestHelper helper) {
-		assertEopExactCompletes(helper, ModBlocks.ELECTRIC_FURNACE, new ItemStack(ModItems.IRON_DUST, 1),
-				Config.electricFurnaceDuration, Config.machineEuPerTick, Items.IRON_INGOT);
+		MachineScenarios.tcEfurn001Prf01_furnaceEopExactCompletes(helper);
 	}
 
 	/** @implements TC-EFURN-001-PRF02 — electric furnace: E_op−1=199 → no output, progress=99/100 (BVA). @covers R-NRG-04 */
 	@GameTest
 	public void tcEfurn001Prf02_furnaceEopMinusOneStalls(GameTestHelper helper) {
-		assertEopMinusOneStalls(helper, ModBlocks.ELECTRIC_FURNACE, new ItemStack(ModItems.IRON_DUST, 1),
-				Config.electricFurnaceDuration, Config.machineEuPerTick);
+		MachineScenarios.tcEfurn001Prf02_furnaceEopMinusOneStalls(helper);
 	}
 
 	/** @implements TC-COMP-001-PRF01 — compressor: E_op=260 exactly → output + amount==0 (BVA). @covers R-NRG-04 */
 	@GameTest
 	public void tcComp001Prf01_compressorEopExactCompletes(GameTestHelper helper) {
-		assertEopExactCompletes(helper, ModBlocks.COMPRESSOR, new ItemStack(ModItems.IRON_DUST, 1),
-				Config.compressorDuration, Config.machineEuPerTick, Items.IRON_INGOT);
+		MachineScenarios.tcComp001Prf01_compressorEopExactCompletes(helper);
 	}
 
 	/** @implements TC-COMP-001-PRF02 — compressor: E_op−1=259 → no output, progress=129/130 (BVA). @covers R-NRG-04 */
 	@GameTest
 	public void tcComp001Prf02_compressorEopMinusOneStalls(GameTestHelper helper) {
-		assertEopMinusOneStalls(helper, ModBlocks.COMPRESSOR, new ItemStack(ModItems.IRON_DUST, 1),
-				Config.compressorDuration, Config.machineEuPerTick);
+		MachineScenarios.tcComp001Prf02_compressorEopMinusOneStalls(helper);
 	}
 
 	/** @implements TC-EXTR-001-PRF01 — extractor: E_op=240 exactly → output + amount==0 (BVA). @covers R-NRG-04 */
 	@GameTest
 	public void tcExtr001Prf01_extractorEopExactCompletes(GameTestHelper helper) {
-		assertEopExactCompletes(helper, ModBlocks.EXTRACTOR, new ItemStack(Items.BLAZE_ROD, 1),
-				Config.extractorDuration, Config.machineEuPerTick, Items.BLAZE_POWDER);
+		MachineScenarios.tcExtr001Prf01_extractorEopExactCompletes(helper);
 	}
 
 	/** @implements TC-EXTR-001-PRF02 — extractor: E_op−1=239 → no output, progress=119/120 (BVA). @covers R-NRG-04 */
 	@GameTest
 	public void tcExtr001Prf02_extractorEopMinusOneStalls(GameTestHelper helper) {
-		assertEopMinusOneStalls(helper, ModBlocks.EXTRACTOR, new ItemStack(Items.BLAZE_ROD, 1),
-				Config.extractorDuration, Config.machineEuPerTick);
+		MachineScenarios.tcExtr001Prf02_extractorEopMinusOneStalls(helper);
 	}
 
 	// ── PRF: buffer cap 800 EU via the real Team Reborn insert() path (parametric) ─────────────────
@@ -978,62 +656,36 @@ public class MachineGameTest {
 
 	// ── Sawmill (MOD-150): four switchable modes, per-species yield, mode persistence ──────────────
 
-	/**
-	 * Place a powered sawmill in the given mode, feed {@code input}, drive exactly ONE operation
-	 * ({@code sawmillDuration} ticks), and assert the output is exactly {@code count} of {@code expected}
-	 * and exactly one input item was consumed. Driving a single op (not {@link #DRIVE_TICKS}) keeps the
-	 * per-op yield assertion exact rather than accumulating across the whole input stack.
-	 */
-	private void assertSawsInMode(GameTestHelper helper, SawmillMode mode, ItemStack input, Item expected, int count) {
-		MachineBlockEntity be = place(helper, ModBlocks.SAWMILL);
-		((SawmillBlockEntity) be).setMode(mode);
-		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
-		int startCount = input.getCount();
-		be.setItem(0, input.copy());
-		drive(be, helper, Config.sawmillDuration);
-		ItemStack out = be.getItem(1);
-		if (out.isEmpty() || !out.is(expected) || out.getCount() != count) {
-			helper.fail("sawmill[" + mode + "]: expected exactly " + count + "× " + expected + " but got "
-					+ (out.isEmpty() ? "empty" : out.getCount() + "× " + out.getItem()));
-		}
-		ItemStack in = be.getItem(0);
-		if (in.getCount() != startCount - 1) {
-			helper.fail("sawmill[" + mode + "]: expected exactly one input consumed (" + (startCount - 1)
-					+ " left) but got " + in.getCount());
-		}
-		helper.succeed();
-	}
-
 	/** @implements TC-SAW-001-FUN01 — PLANKS mode (default): oak log → 6 oak planks (+50% over vanilla 4). */
 	@GameTest
 	public void tcSaw001Fun01_planksMode(GameTestHelper helper) {
-		assertSawsInMode(helper, SawmillMode.PLANKS, new ItemStack(Items.OAK_LOG, 4), Items.OAK_PLANKS, 6);
+		MachineScenarios.tcSaw001Fun01_planksMode(helper);
 	}
 
 	/** @implements TC-SAW-001-FUN02 — PLANKS mode, bamboo: bamboo block → 3 bamboo planks (halved, per vanilla 2/block). */
 	@GameTest
 	public void tcSaw001Fun02_bambooHalfYield(GameTestHelper helper) {
-		assertSawsInMode(helper, SawmillMode.PLANKS, new ItemStack(Items.BAMBOO_BLOCK, 4), Items.BAMBOO_PLANKS, 3);
+		MachineScenarios.tcSaw001Fun02_bambooHalfYield(helper);
 	}
 
 	/** @implements TC-SAW-001-FUN03 — STICKS mode: oak log (#minecraft:logs) → 18 sticks (MOD-215: 1.5× the 12 a
 	 * player gets free from PLANKS mode + a workbench, so the mode is worth its own operation). */
 	@GameTest
 	public void tcSaw001Fun03_sticksMode(GameTestHelper helper) {
-		assertSawsInMode(helper, SawmillMode.STICKS, new ItemStack(Items.OAK_LOG, 4), Items.STICK, 18);
+		MachineScenarios.tcSaw001Fun03_sticksMode(helper);
 	}
 
 	/** @implements TC-SAW-001-FUN04 — SLABS mode: oak log → 18 oak slabs (MOD-215: 1.5× the 12 from PLANKS
 	 * mode + a workbench). */
 	@GameTest
 	public void tcSaw001Fun04_slabsMode(GameTestHelper helper) {
-		assertSawsInMode(helper, SawmillMode.SLABS, new ItemStack(Items.OAK_LOG, 4), Items.OAK_SLAB, 18);
+		MachineScenarios.tcSaw001Fun04_slabsMode(helper);
 	}
 
 	/** @implements TC-SAW-001-FUN05 — STAIRS mode: oak log → 6 oak stairs. */
 	@GameTest
 	public void tcSaw001Fun05_stairsMode(GameTestHelper helper) {
-		assertSawsInMode(helper, SawmillMode.STAIRS, new ItemStack(Items.OAK_LOG, 4), Items.OAK_STAIRS, 6);
+		MachineScenarios.tcSaw001Fun05_stairsMode(helper);
 	}
 
 	/**
@@ -1043,20 +695,7 @@ public class MachineGameTest {
 	 */
 	@GameTest
 	public void tcSaw001Con01_onlyActiveModeSaws(GameTestHelper helper) {
-		MachineBlockEntity be = place(helper, ModBlocks.SAWMILL);
-		((SawmillBlockEntity) be).setMode(SawmillMode.STICKS);
-		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
-		be.setItem(0, new ItemStack(Items.OAK_LOG, 4));
-		drive(be, helper, DRIVE_TICKS);
-		ItemStack out = be.getItem(1);
-		if (out.isEmpty() || !out.is(Items.STICK)) {
-			helper.fail("sawmill in STICKS mode did not produce sticks from a log: "
-					+ (out.isEmpty() ? "empty" : out.getCount() + "× " + out.getItem()));
-		}
-		if (out.is(Items.OAK_PLANKS)) {
-			helper.fail("sawmill ignored the active mode and produced planks");
-		}
-		helper.succeed();
+		MachineScenarios.tcSaw001Con01_onlyActiveModeSaws(helper);
 	}
 
 	/**
@@ -1065,20 +704,7 @@ public class MachineGameTest {
 	 */
 	@GameTest
 	public void tcSaw001Con02_modePersistsThroughNbt(GameTestHelper helper) {
-		MachineBlockEntity be = place(helper, ModBlocks.SAWMILL);
-		((SawmillBlockEntity) be).setMode(SawmillMode.STAIRS);
-
-		var registries = helper.getLevel().registryAccess();
-		net.minecraft.nbt.CompoundTag tag = be.saveCustomOnly(registries);
-		SawmillBlockEntity restored = new SawmillBlockEntity(be.getBlockPos(),
-				helper.getLevel().getBlockState(be.getBlockPos()));
-		restored.loadWithComponents(net.minecraft.world.level.storage.TagValueInput.create(
-				net.minecraft.util.ProblemReporter.DISCARDING, registries, tag));
-
-		if (restored.getMode() != SawmillMode.STAIRS) {
-			helper.fail("sawmill mode lost on NBT round-trip: expected STAIRS but got " + restored.getMode());
-		}
-		helper.succeed();
+		MachineScenarios.tcSaw001Con02_modePersistsThroughNbt(helper);
 	}
 
 	/**
@@ -1087,20 +713,7 @@ public class MachineGameTest {
 	 */
 	@GameTest
 	public void tcSaw001Con03_modeSwitchResetsProgress(GameTestHelper helper) {
-		MachineBlockEntity be = place(helper, ModBlocks.SAWMILL);
-		SawmillBlockEntity saw = (SawmillBlockEntity) be;
-		saw.setMode(SawmillMode.PLANKS);
-		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
-		be.setItem(0, new ItemStack(Items.OAK_LOG, 4));
-		drive(be, helper, Config.sawmillDuration / 2);
-		if (be.getDataAccess().get(2) <= 0) {
-			helper.fail("sawmill made no progress before the mode switch");
-		}
-		saw.setMode(SawmillMode.SLABS);
-		if (be.getDataAccess().get(2) != 0) {
-			helper.fail("sawmill progress did not reset to 0 after switching mode");
-		}
-		helper.succeed();
+		MachineScenarios.tcSaw001Con03_modeSwitchResetsProgress(helper);
 	}
 
 }

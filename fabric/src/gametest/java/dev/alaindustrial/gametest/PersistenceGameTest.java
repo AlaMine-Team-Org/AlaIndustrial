@@ -72,4 +72,25 @@ public class PersistenceGameTest {
 	public void tcCable001Per02_legacyMachineKeysIgnoredOnLoad(GameTestHelper helper) {
 		PersistenceScenarios.tcCable001Per02_legacyMachineKeysIgnoredOnLoad(helper);
 	}
+
+	// ── MOD-445: loader-neutral bodies the NeoForge lane already ran; wired here so both lanes run the same set ──
+
+	/**
+	 * Macerator save/load round-trip through the shared {@code MachineBlockEntity} persistence path (buffer,
+	 * slots, progress). Loader-neutral twin of {@link #rPer01_maceratorNbtRoundTrip}. Body:
+	 * {@link MachineEnergyScenarios#nbtRoundTripPreservesState}.
+	 */
+	@GameTest
+	public void rPer01b_maceratorNbtRoundTripPreservesState(GameTestHelper helper) {
+		MachineEnergyScenarios.nbtRoundTripPreservesState(helper);
+	}
+
+	/**
+	 * Electric furnace save/load round-trip — the same {@code MachineBlockEntity} path for a machine other than
+	 * the macerator. Body: {@link MachineEnergyScenarios#furnaceNbtRoundTrip}.
+	 */
+	@GameTest
+	public void rPer01c_furnaceNbtRoundTrip(GameTestHelper helper) {
+		MachineEnergyScenarios.furnaceNbtRoundTrip(helper);
+	}
 }

@@ -193,9 +193,10 @@ public final class WindMillGuiStand {
      *
      * @param screenClass the screen this mill's menu type MUST open — see {@link #shootWindMill}, which
      *                    fails the run when something else is in front
-     * @param statusTextY the screen's OWN {@code STATUS_TEXT_Y}, read from the screen class rather than
-     *                    copied — a copy survives a layout change and leaves the gate measuring an empty
-     *                    band, green, forever
+     * @param statusTextY the screen's OWN {@code STATUS_TEXT_Y} (or its shared base's — the two T2 mills
+     *                    inherit it from {@code AbstractT2WindMillScreen}, MOD-439), read through the screen
+     *                    class rather than copied — a copy survives a layout change and leaves the gate
+     *                    measuring an empty band, green, forever
      * @param rateChannel the mill's own effective-rate channel: 6 on the T1 mill (seven-wide data), 4 on
      *                    both T2 mills (five-wide). Hardcoding either would make the other gate measure a
      *                    channel the screen does not read.

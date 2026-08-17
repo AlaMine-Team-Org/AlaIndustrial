@@ -81,6 +81,8 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 	public static final int DRAIN_INPUT_SLOT = 2;
 	/** Bottom row — drain the tank: the filled bucket drops here after draining. */
 	public static final int DRAIN_OUTPUT_SLOT = 3;
+	/** Machine-slot count (indices before the upgrade block) — the client menu stub sizes its container from this (MOD-439). */
+	public static final int SLOT_COUNT = 4;
 
 	/** Internal fluid tank: 10 buckets, extractable from any side (so neighbours may pull from it). */
 	public static final long TANK_CAPACITY = FluidAmounts.BUCKET * 10;
@@ -116,7 +118,7 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 		// Buffer (Config.pumpBuffer) must be >= pumpEuPerBucket so the pump can actually accumulate a
 		// full bucket's cost — machineBuffer (800) is below the 1000 EU/bucket threshold and would leave
 		// the pump permanently starved. Four bucket slots: fill-in/out + drain-in/out.
-		super(ModContent.PUMP_BE.get(), pos, state, EnergyTier.LV, 4,
+		super(ModContent.PUMP_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT,
 				Config.pumpBuffer, EnergyTier.LV.maxVoltage(), 0L);
 	}
 

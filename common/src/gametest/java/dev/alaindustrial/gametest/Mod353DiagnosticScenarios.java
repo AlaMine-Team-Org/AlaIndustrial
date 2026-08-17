@@ -5,7 +5,6 @@ import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
-import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.core.energy.StorageFeedShare;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
@@ -13,7 +12,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 
 import static dev.alaindustrial.gametest.EnergyScenarioSupport.be;
-import static dev.alaindustrial.gametest.EnergyScenarioSupport.tick;
+import static dev.alaindustrial.gametest.EnergyScenarioSupport.driveWithNetwork;
 
 /**
  * MOD-353, step 0 — the <b>discriminating experiment</b>, run as a test rather than by hand.
@@ -45,16 +44,6 @@ public final class Mod353DiagnosticScenarios {
 	// Scene 3 — box flush against the teleporter, no cable at all.
 	private static final BlockPos S3_BOX = new BlockPos(1, 2, 4);
 	private static final BlockPos S3_TELEPORTER = new BlockPos(2, 2, 4);
-
-	/** Drive every block of a scene plus the network, {@code ticks} times. */
-	private static void drive(GameTestHelper helper, int ticks, BlockPos... positions) {
-		for (int i = 0; i < ticks; i++) {
-			for (BlockPos pos : positions) {
-				tick(helper, be(helper, pos));
-			}
-			NetworkManager.tickAll(helper.getLevel());
-		}
-	}
 
 	private static long teleporterCharge(GameTestHelper helper, BlockPos pos) {
 		return be(helper, pos) instanceof TeleporterBlockEntity t ? t.getEnergyStorage().getAmount() : -1L;
@@ -98,7 +87,7 @@ public final class Mod353DiagnosticScenarios {
 			return;
 		}
 
-		drive(helper, 200, chain);
+		driveWithNetwork(helper, 200, chain);
 
 		long moved = teleporterCharge(helper, S1_TELEPORTER);
 		long cableHeld = 0;
@@ -160,7 +149,7 @@ public final class Mod353DiagnosticScenarios {
 			return;
 		}
 
-		drive(helper, 40, S3_BOX, S3_TELEPORTER);
+		driveWithNetwork(helper, 40, S3_BOX, S3_TELEPORTER);
 
 		long moved = teleporterCharge(helper, S3_TELEPORTER);
 		if (moved <= 0L) {
@@ -172,19 +161,23 @@ public final class Mod353DiagnosticScenarios {
 	}
 
 	// ── MOD-353 coverage beyond the experiment ────────────────────────────────────────────────────
+	// Each scene below is placed by exactly one scenario, so scenes may share coordinates with the
+	// experiment scenes above. Every scene stays inside the 8x8x8 gametest structure both lanes
+	// register on (MOD-445): the P and C scenes used to sit at z = 10 / 13, outside the box the
+	// engine force-loads and clears (see NeoForgeGameTests#RIG_STRUCTURE).
 
 	private static final BlockPos M_BOX = new BlockPos(1, 2, 7);
 	private static final BlockPos M_CABLE = new BlockPos(2, 2, 7);
 	private static final BlockPos M_MACHINE = new BlockPos(3, 2, 7);
 	private static final BlockPos M_TELEPORTER = new BlockPos(4, 2, 7);
 
-	private static final BlockPos P_BOX = new BlockPos(1, 2, 10);
-	private static final BlockPos P_CABLE = new BlockPos(2, 2, 10);
-	private static final BlockPos P_PAD = new BlockPos(3, 2, 10);
+	private static final BlockPos P_BOX = new BlockPos(1, 2, 4);
+	private static final BlockPos P_CABLE = new BlockPos(2, 2, 4);
+	private static final BlockPos P_PAD = new BlockPos(3, 2, 4);
 
-	private static final BlockPos C_BOX = new BlockPos(1, 2, 13);
-	private static final BlockPos C_CABLE = new BlockPos(2, 2, 13);
-	private static final BlockPos C_TELEPORTER = new BlockPos(3, 2, 13);
+	private static final BlockPos C_BOX = new BlockPos(1, 2, 6);
+	private static final BlockPos C_CABLE = new BlockPos(2, 2, 6);
+	private static final BlockPos C_TELEPORTER = new BlockPos(3, 2, 6);
 
 	/**
 	 * MOD-353 — machines keep their priority: the feed stage runs only when nothing else wants power.
@@ -211,7 +204,7 @@ public final class Mod353DiagnosticScenarios {
 			m.getEnergyStorage().setAmountUntracked(0L);
 		}
 
-		drive(helper, 60, M_BOX, M_CABLE, M_MACHINE, M_TELEPORTER);
+		driveWithNetwork(helper, 60, M_BOX, M_CABLE, M_MACHINE, M_TELEPORTER);
 
 		long machine = be(helper, M_MACHINE) instanceof dev.alaindustrial.block.entity.MachineBlockEntity m
 				? m.getEnergyStorage().getAmount() : -1L;
@@ -245,7 +238,7 @@ public final class Mod353DiagnosticScenarios {
 			return;
 		}
 
-		drive(helper, 120, P_BOX, P_CABLE, P_PAD);
+		driveWithNetwork(helper, 120, P_BOX, P_CABLE, P_PAD);
 
 		long got = be(helper, P_PAD) instanceof dev.alaindustrial.block.entity.MachineBlockEntity padEnd
 				? padEnd.getEnergyStorage().getAmount() : -1L;
@@ -285,7 +278,7 @@ public final class Mod353DiagnosticScenarios {
 			t.getEnergyStorage().setAmountUntracked(Config.teleporterBuffer / 50);  // ~2 %, as in the MOD-314 argument
 		}
 
-		drive(helper, 200, C_BOX, C_CABLE, C_TELEPORTER);
+		driveWithNetwork(helper, 200, C_BOX, C_CABLE, C_TELEPORTER);
 
 		long boxLeft = be(helper, C_BOX) instanceof BatteryBoxBlockEntity b
 				? b.getEnergyStorage().getAmount() : -1L;

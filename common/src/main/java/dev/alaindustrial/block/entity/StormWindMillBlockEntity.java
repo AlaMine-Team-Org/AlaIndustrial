@@ -39,6 +39,8 @@ import net.minecraft.world.level.block.state.BlockState;
 public class StormWindMillBlockEntity extends AbstractGeneratorBlockEntity implements MenuProvider {
 	private static final int MAX_EXTRACT = 32;
 	public static final int ROTOR_SLOT = 0;
+	/** Machine-slot count (indices before the upgrade block) — the client menu stub sizes its container from this (MOD-439). */
+	public static final int SLOT_COUNT = 1;
 
 	/** Transient sampling state — recomputed from the world, never serialised. */
 	private int sampleCounter = 0;
@@ -54,7 +56,7 @@ public class StormWindMillBlockEntity extends AbstractGeneratorBlockEntity imple
 	private int effectiveRate = 0;
 
 	public StormWindMillBlockEntity(BlockPos pos, BlockState state) {
-		super(ModContent.STORM_WIND_MILL_BE.get(), pos, state, EnergyTier.LV, 1, Config.t2WindMillBuffer, MAX_EXTRACT);
+		super(ModContent.STORM_WIND_MILL_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT, Config.t2WindMillBuffer, MAX_EXTRACT);
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package dev.alaindustrial.menu;
 
+import dev.alaindustrial.block.entity.GeothermalGeneratorBlockEntity;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.world.SimpleContainer;
@@ -18,7 +19,8 @@ public class GeothermalGeneratorMenu extends MachineMenu {
 
 	/** Client side. */
 	public GeothermalGeneratorMenu(int syncId, Inventory playerInventory) {
-		super(ModContent.GEOTHERMAL_GENERATOR_MENU.get(), syncId, playerInventory, new SimpleContainer(2 + UPGRADE_SLOT_COUNT),
+		super(ModContent.GEOTHERMAL_GENERATOR_MENU.get(), syncId, playerInventory,
+				new SimpleContainer(GeothermalGeneratorBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
 				new net.minecraft.world.inventory.SimpleContainerData(MachineBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL,
 				ModContent.GEOTHERMAL_GENERATOR.get());
 	}

@@ -59,8 +59,6 @@ public final class IncubatorBlockEntity extends MachineBlockEntity implements Ov
 	public static final int ASH_SLOT = 4;
 	public static final int SLOT_COUNT = 5;
 
-	private static final int OUTPUT_MAX = 64;
-
 	/** ContainerData channels beyond the base four; -1 in DATA_MODE means "no chip inserted". */
 	public static final int DATA_MODE = 4;
 	public static final int DATA_CHARGE = 5;
@@ -201,6 +199,8 @@ public final class IncubatorBlockEntity extends MachineBlockEntity implements Ov
 
 		setStatus(diagnose(mode, recipe, canWork));
 		updateLit(canWork);
+		// MOD-125/MOD-440: the statistics panel's "now" line is this tick's draw, 0 when stopped.
+		recordEuRate(canWork ? euPerTick : 0);
 
 		if (!canWork) {
 			if (recipe == null && progress != 0) {
@@ -336,6 +336,8 @@ public final class IncubatorBlockEntity extends MachineBlockEntity implements Ov
 		}
 		items.get(INPUT_SLOT).shrink(1);
 		spendCharge();
+		// MOD-125/MOD-440: the attempt is the operation — the input is processed whatever the dice say.
+		recordItemProcessed();
 
 		switch (outcome) {
 			case SUCCESS -> {

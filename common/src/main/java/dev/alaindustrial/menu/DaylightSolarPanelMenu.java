@@ -1,5 +1,6 @@
 package dev.alaindustrial.menu;
 
+import dev.alaindustrial.block.entity.DaylightSolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.world.SimpleContainer;
@@ -18,7 +19,8 @@ public class DaylightSolarPanelMenu extends MachineMenu {
 
 	/** Client side. */
 	public DaylightSolarPanelMenu(int syncId, Inventory playerInventory) {
-		super(ModContent.DAYLIGHT_SOLAR_PANEL_MENU.get(), syncId, playerInventory, new SimpleContainer(0 + UPGRADE_SLOT_COUNT),
+		super(ModContent.DAYLIGHT_SOLAR_PANEL_MENU.get(), syncId, playerInventory,
+				new SimpleContainer(DaylightSolarPanelBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
 				new SimpleContainerData(MachineBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL, ModContent.DAYLIGHT_SOLAR_PANEL.get());
 	}
 

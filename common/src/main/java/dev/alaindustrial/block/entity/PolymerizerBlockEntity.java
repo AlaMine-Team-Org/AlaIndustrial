@@ -64,12 +64,11 @@ public class PolymerizerBlockEntity extends MachineBlockEntity implements Overcl
 	public static final int FILL_OUTPUT_SLOT = 1;
 	/** Result slot: raw rubber (insert-only by the machine — see {@link #canPlaceItem}). */
 	public static final int OUTPUT_SLOT = 2;
+	/** Machine-slot count (indices before the upgrade block) — the client menu stub sizes its container from this (MOD-439). */
+	public static final int SLOT_COUNT = 3;
 
 	/** Internal tank: 10 buckets, matching the pump and the geothermal generator. */
 	public static final long TANK_CAPACITY = FluidAmounts.BUCKET * 10;
-
-	/** Output stack cap, mirroring {@link AbstractProcessingMachineBlockEntity}'s. */
-	private static final int OUTPUT_MAX = 64;
 
 	/** Sentinel for an empty tank on the fluid-id sync channel — the vanilla {@code IdMap} default. */
 	public static final int FLUID_ID_NONE = IdMap.DEFAULT;
@@ -96,7 +95,7 @@ public class PolymerizerBlockEntity extends MachineBlockEntity implements Overcl
 		// EU consumer: maxInsert = tier voltage (so the network sees a consumer), maxExtract = 0. Three
 		// slots: fill-in, fill-out, result. Shares machineBuffer with the other LV processing machines —
 		// its operation (400 EU) fits in the 800 EU buffer.
-		super(ModContent.POLYMERIZER_BE.get(), pos, state, EnergyTier.LV, 3,
+		super(ModContent.POLYMERIZER_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT,
 				Config.machineBuffer, EnergyTier.LV.maxVoltage(), 0L);
 		this.maxProgress = Config.scaledDuration(Config.polymerizerDuration);
 	}
@@ -142,8 +141,10 @@ public class PolymerizerBlockEntity extends MachineBlockEntity implements Overcl
 		this.maxProgress = effectiveDuration(baseDuration);
 
 		ItemStack result = recipe != null ? recipe.resultStack() : ItemStack.EMPTY;
-		boolean canWork = recipe != null && energy.getAmount() >= euPerTick && canOutput(result);
+		boolean canWork = recipe != null && energy.getAmount() >= euPerTick && canOutput(OUTPUT_SLOT, result);
 		updateLit(canWork);
+		// MOD-125/MOD-440: the statistics panel's "now" line is this tick's draw, 0 when stopped.
+		recordEuRate(canWork ? euPerTick : 0);
 
 		if (canWork) {
 			energy.drainInternal(euPerTick);
@@ -151,7 +152,8 @@ public class PolymerizerBlockEntity extends MachineBlockEntity implements Overcl
 			if (progress >= maxProgress) {
 				progress = 0;
 				consume(recipe.amount());
-				addOutput(result);
+				addOutput(OUTPUT_SLOT, result);
+				recordItemProcessed();
 				creditUsefulWork(level, (long) euPerTick * maxProgress); // MOD-133: completed op → XP
 			}
 			setChanged();
@@ -184,27 +186,6 @@ public class PolymerizerBlockEntity extends MachineBlockEntity implements Overcl
 		fluidTank.amount = Math.max(0L, fluidTank.amount - amount);
 		if (fluidTank.amount == 0) {
 			fluidTank.fluid = FluidHolder.EMPTY;
-		}
-	}
-
-	/** Whether the output slot can accept one more {@code result} stack (empty, or same-item with room). */
-	private boolean canOutput(ItemStack result) {
-		if (result.isEmpty()) {
-			return false;
-		}
-		ItemStack out = items.get(OUTPUT_SLOT);
-		return out.isEmpty()
-				|| (out.getItem() == result.getItem()
-						&& out.getCount() + result.getCount() <= Math.min(OUTPUT_MAX, out.getMaxStackSize()));
-	}
-
-	/** Place one {@code result} stack into the output slot, growing an existing matching stack if present. */
-	private void addOutput(ItemStack result) {
-		ItemStack out = items.get(OUTPUT_SLOT);
-		if (out.isEmpty()) {
-			items.set(OUTPUT_SLOT, result.copy());
-		} else {
-			out.grow(result.getCount());
 		}
 	}
 

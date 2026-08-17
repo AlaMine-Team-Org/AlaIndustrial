@@ -13,6 +13,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluids;
 
+import static dev.alaindustrial.gametest.AlaGameTestHelper.drive;
+
 /**
  * Loader-neutral gametest bodies for the Galvanic Bath (MOD-127, suite TC-BATH-001). Wrapped by the
  * Fabric {@code GalvanicBathGameTest} suite and registered on the NeoForge {@code gameTestServer}
@@ -71,10 +73,6 @@ public final class GalvanicBathScenarios {
 		// leave the machine water-starved and every production case would read as a failure.
 		fill(be, GalvanicBathBlockEntity.TANK_CAPACITY);
 		return be;
-	}
-
-	private static void drive(GalvanicBathBlockEntity be, GameTestHelper helper, int ticks) {
-		AlaGameTestHelper.drive(be, helper, ticks);
 	}
 
 	/**

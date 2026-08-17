@@ -43,6 +43,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
+import static dev.alaindustrial.gametest.AlaGameTestHelper.survivalPlayer;
+
 /**
  * Loader-neutral gametest bodies for the Electric Drill (MOD-079, suite TC-DRILL-001). Same pattern as
  * {@link EnergyPackScenarios}/{@link TemperedIronToolScenarios}: plain {@code GameTestHelper} bodies
@@ -67,18 +69,6 @@ public final class ElectricDrillScenarios {
 		ItemStack stack = new ItemStack(ModContent.ELECTRIC_DRILL.get());
 		ItemEnergy.set(stack, eu);
 		return stack;
-	}
-
-	/**
-	 * A survival ServerPlayer mock with {@code instabuild} forced off — the {@code makeMockServerPlayerInLevel}
-	 * default leaves it on (hardcoded CREATIVE gameMode), which would skip the inventory decrement and make
-	 * the torch-placement assertions meaningless. Mirrors {@code ScytheScenarios.makeSurvivalPlayer}.
-	 */
-	private static ServerPlayer makeSurvivalPlayer(GameTestHelper helper) {
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
-		player.setGameMode(GameType.SURVIVAL);
-		player.getAbilities().instabuild = false;
-		return player;
 	}
 
 	/** Simulates a right-click of the drill's main-hand stack on the top face of {@code target}. */
@@ -262,7 +252,7 @@ public final class ElectricDrillScenarios {
 		BlockPos torchAt = floor.above();
 		helper.setBlock(floor, Blocks.STONE);
 
-		ServerPlayer player = makeSurvivalPlayer(helper);
+		ServerPlayer player = survivalPlayer(helper);
 		ItemStack drillStack = drill(Config.electricDrillBuffer);
 		player.setItemInHand(InteractionHand.MAIN_HAND, drillStack);
 		// 8 vanilla torches in hotbar slot 1 — slot 0 holds the drill (the selected main-hand slot),
@@ -297,7 +287,7 @@ public final class ElectricDrillScenarios {
 		BlockPos torchAt = floor.above();
 		helper.setBlock(floor, Blocks.STONE);
 
-		ServerPlayer player = makeSurvivalPlayer(helper);
+		ServerPlayer player = survivalPlayer(helper);
 		player.setItemInHand(InteractionHand.MAIN_HAND, drill(Config.electricDrillBuffer));
 		// Both torch kinds in the inventory; slot 0 holds the drill (selected main-hand slot), so the
 		// torches go in slots 1 and 2. Slot order does not matter — priority is uranium-first by item.
@@ -342,7 +332,7 @@ public final class ElectricDrillScenarios {
 		helper.setBlock(dirt, Blocks.DIRT);
 		helper.setBlock(grass, Blocks.SHORT_GRASS);
 
-		ServerPlayer player = makeSurvivalPlayer(helper);
+		ServerPlayer player = survivalPlayer(helper);
 		ItemStack drillStack = drill(Config.electricDrillBuffer);
 		player.setItemInHand(InteractionHand.MAIN_HAND, drillStack);
 		player.getInventory().setItem(1, new ItemStack(Items.TORCH, 8));
@@ -381,7 +371,7 @@ public final class ElectricDrillScenarios {
 		BlockPos torchAt = floor.above();
 		helper.setBlock(floor, Blocks.STONE);
 
-		ServerPlayer player = makeSurvivalPlayer(helper);
+		ServerPlayer player = survivalPlayer(helper);
 		long belowCost = Config.electricDrillTorchEuCost - 1;
 		ItemStack drillStack = drill(belowCost);
 		player.setItemInHand(InteractionHand.MAIN_HAND, drillStack);
@@ -436,7 +426,7 @@ public final class ElectricDrillScenarios {
 		helper.assertBlockPresent(Blocks.AIR, torchAt);
 		helper.assertBlockPresent(Blocks.AIR, torchAt.below());
 
-		ServerPlayer player = makeSurvivalPlayer(helper);
+		ServerPlayer player = survivalPlayer(helper);
 		ItemStack flatDrill = drill(0);
 		player.setItemInHand(InteractionHand.MAIN_HAND, flatDrill);
 		player.getInventory().setItem(1, new ItemStack(Items.TORCH, 8));
@@ -524,7 +514,7 @@ public final class ElectricDrillScenarios {
 	 */
 	public static void fun11DiamondTipSilkToggle(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
-		ServerPlayer player = makeSurvivalPlayer(helper);
+		ServerPlayer player = survivalPlayer(helper);
 		ItemStack stack = diamondTipDrill(Config.electricDrillBuffer);
 		player.setItemInHand(InteractionHand.MAIN_HAND, stack);
 
@@ -616,7 +606,7 @@ public final class ElectricDrillScenarios {
 	 */
 	private static void assertBenchCraft(GameTestHelper helper, ItemStack drillStack, String label) {
 		ServerLevel level = helper.getLevel();
-		ServerPlayer player = makeSurvivalPlayer(helper);
+		ServerPlayer player = survivalPlayer(helper);
 		CraftingMenu menu = new CraftingMenu(1, player.getInventory(),
 				ContainerLevelAccess.create(level, helper.absolutePos(BOX)));
 

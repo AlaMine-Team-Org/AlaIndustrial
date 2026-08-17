@@ -15,8 +15,6 @@ import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.ProblemReporter;
@@ -101,25 +99,7 @@ public class BatteryBoxGameTest {
 	 */
 	@GameTest
 	public void tcBatteryBox001Brk07_energyCarriedByComponent(GameTestHelper helper) {
-		BatteryBoxBlockEntity bat = place(helper);
-		long charge = Math.min(12345L, bat.getEnergyStorage().getCapacity());
-		bat.getEnergyStorage().setAmountUntracked(charge);
-
-		// collect = what loot `copy_components source=block_entity` reads off the broken block.
-		DataComponentMap map = bat.collectComponents();
-		Long carried = map.get(ModDataComponents.STORED_ENERGY.get());
-		if (carried == null || carried != charge) {
-			helper.fail("STORED_ENERGY not emitted on drop: " + carried);
-		}
-
-		// apply = what placement does to the freshly placed block entity.
-		BatteryBoxBlockEntity restored = new BatteryBoxBlockEntity(bat.getBlockPos(),
-				helper.getLevel().getBlockState(bat.getBlockPos()));
-		restored.applyComponents(map, DataComponentPatch.EMPTY);
-		if (restored.getEnergyStorage().getAmount() != charge) {
-			helper.fail("charge not restored from component: " + restored.getEnergyStorage().getAmount());
-		}
-		helper.succeed();
+		StorageEnergyScenarios.batteryBoxDropCarriesEnergyHalfCharge(helper);
 	}
 
 	/**
@@ -661,5 +641,27 @@ public class BatteryBoxGameTest {
 			helper.fail("battery_box recipe produced " + out + " (expected battery_box)");
 		}
 		helper.succeed();
+	}
+
+	// ── MOD-445: loader-neutral bodies the NeoForge lane already ran; wired here so both lanes run the same set ──
+
+	/**
+	 * @implements TC-BATTERYBOX-001-BRK07 — the STORED_ENERGY component carries a 12345 EU charge on
+	 * collectComponents() (the loader's data-component registration seam; the half-charge leg is
+	 * {@link #tcBatteryBox001Brk07_energyCarriedByComponent}). Body: {@link StorageEnergyScenarios#batteryBoxDropCarriesEnergy}.
+	 */
+	@GameTest
+	public void tcBatteryBox001Brk07b_energyCarriedByComponentAt12345(GameTestHelper helper) {
+		StorageEnergyScenarios.batteryBoxDropCarriesEnergy(helper);
+	}
+
+	/**
+	 * @implements TC-BATTERYBOX-001-PRF03 — loader-neutral twin of {@link #tcBatteryBox001Prf03_inputRateCappedAtLv}:
+	 * the shared {@code EnergyBuffer} publishes maxInsert == maxExtract == LV.maxVoltage() exactly (the SIDED-view
+	 * check above exercises the same invariant through the Fabric capability). Body: {@link StorageEnergyScenarios#batteryBoxRateExactLv}.
+	 */
+	@GameTest
+	public void tcBatteryBox001Prf03b_bufferCapsExactLv(GameTestHelper helper) {
+		StorageEnergyScenarios.batteryBoxRateExactLv(helper);
 	}
 }

@@ -19,7 +19,8 @@ public class SolarPanelMenu extends MachineMenu {
 
 	/** Client side. */
 	public SolarPanelMenu(int syncId, Inventory playerInventory) {
-		super(ModContent.SOLAR_PANEL_MENU.get(), syncId, playerInventory, new SimpleContainer(1 + UPGRADE_SLOT_COUNT),
+		super(ModContent.SOLAR_PANEL_MENU.get(), syncId, playerInventory,
+				new SimpleContainer(SolarPanelBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
 				new SimpleContainerData(SolarPanelBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL, ModContent.SOLAR_PANEL.get());
 	}
 

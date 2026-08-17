@@ -174,6 +174,7 @@ public final class MachineTooltips {
 				|| block instanceof ExtractorBlock
 				|| block instanceof IncubatorBlock
 				|| block instanceof AlloySmelterBlock
+				|| block instanceof GardenDroneStationBlock
 				|| block instanceof PumpBlock) {
 			lines.add(tier());
 		}
@@ -495,6 +496,8 @@ public final class MachineTooltips {
 				|| block instanceof VulcanizerBlock
 				|| block instanceof ThermalCentrifugeBlock
 				|| block instanceof ElectricHeaterBlock
+				|| block instanceof GardenDroneStationBlock
+				|| block instanceof TeleporterBlock
 				|| block instanceof BatteryBoxBlock
 				|| block instanceof CableBlock;
 	}

@@ -47,13 +47,8 @@ public final class GalvanicBathMenu extends MachineMenu {
 				return ItemFluidBridge.get().isFluidContainer(stack);
 			}
 		});
-		addSlot(new Slot(container, GalvanicBathBlockEntity.FILL_OUTPUT_SLOT, 62, 23) {
-			@Override
-			public boolean mayPlace(ItemStack stack) {
-				// Machine-filled: the emptied bucket lands here through the exchange, not by hand.
-				return false;
-			}
-		});
+		// Machine-filled: the emptied bucket lands here through the exchange, not by hand.
+		addSlot(new OutputSlot(container, GalvanicBathBlockEntity.FILL_OUTPUT_SLOT, 62, 23));
 		addSlot(new Slot(container, GalvanicBathBlockEntity.FIBER_SLOT, 40, 47) {
 			@Override
 			public boolean mayPlace(ItemStack stack) {
@@ -66,12 +61,7 @@ public final class GalvanicBathMenu extends MachineMenu {
 				return stack.is(ModContent.SILVER_DUST.get());
 			}
 		});
-		addSlot(new Slot(container, GalvanicBathBlockEntity.OUTPUT_SLOT, 117, 35) {
-			@Override
-			public boolean mayPlace(ItemStack stack) {
-				return false;
-			}
-		});
+		addSlot(new OutputSlot(container, GalvanicBathBlockEntity.OUTPUT_SLOT, 117, 35));
 	}
 
 

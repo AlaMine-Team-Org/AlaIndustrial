@@ -1,5 +1,6 @@
 package dev.alaindustrial.menu;
 
+import dev.alaindustrial.block.entity.GeneratorBlockEntity;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.world.SimpleContainer;
@@ -18,7 +19,8 @@ public class GeneratorMenu extends MachineMenu {
 
 	/** Client side. */
 	public GeneratorMenu(int syncId, Inventory playerInventory) {
-		super(ModContent.GENERATOR_MENU.get(), syncId, playerInventory, new SimpleContainer(1 + UPGRADE_SLOT_COUNT),
+		super(ModContent.GENERATOR_MENU.get(), syncId, playerInventory,
+				new SimpleContainer(GeneratorBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
 				new net.minecraft.world.inventory.SimpleContainerData(MachineBlockEntity.DATA_COUNT),
 				ContainerLevelAccess.NULL, ModContent.GENERATOR.get());
 	}

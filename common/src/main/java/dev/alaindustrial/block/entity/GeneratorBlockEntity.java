@@ -23,12 +23,14 @@ import net.minecraft.world.level.storage.ValueOutput;
  */
 public class GeneratorBlockEntity extends AbstractGeneratorBlockEntity implements MenuProvider {
 	public static final int FUEL_SLOT = 0;
+	/** Machine-slot count (indices before the upgrade block) — the client menu stub sizes its container from this (MOD-439). */
+	public static final int SLOT_COUNT = 1;
 
 	private int burnTime;
 	private int burnDuration;
 
 	public GeneratorBlockEntity(BlockPos pos, BlockState state) {
-		super(ModContent.GENERATOR_BE.get(), pos, state, EnergyTier.LV, 1, Config.generatorBuffer,
+		super(ModContent.GENERATOR_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT, Config.generatorBuffer,
 				EnergyTier.LV.maxVoltage());
 	}
 

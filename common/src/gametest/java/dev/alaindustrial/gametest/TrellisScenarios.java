@@ -13,7 +13,6 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.FarmlandBlock;
@@ -21,6 +20,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+
+import static dev.alaindustrial.gametest.AlaGameTestHelper.survivalPlayer;
 
 /**
  * Loader-neutral gametest bodies for the trellis (MOD-280). The Fabric {@code @GameTest} suite
@@ -466,14 +467,6 @@ public final class TrellisScenarios {
 		BlockHitResult hit = new BlockHitResult(Vec3.atCenterOf(abs), Direction.UP, abs, false);
 		player.gameMode.useItemOn(player, helper.getLevel(), player.getMainHandItem(),
 				InteractionHand.MAIN_HAND, hit);
-	}
-
-	private static ServerPlayer survivalPlayer(GameTestHelper helper) {
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
-		player.setGameMode(GameType.SURVIVAL);
-		// The mock hardcodes CREATIVE in gameMode(); leaving instabuild set would suppress drops.
-		player.getAbilities().instabuild = false;
-		return player;
 	}
 
 	/** Guard against a silent property rename breaking every scenario above. */

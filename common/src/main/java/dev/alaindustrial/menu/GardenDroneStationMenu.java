@@ -84,12 +84,8 @@ public class GardenDroneStationMenu extends MachineMenu {
 		for (int i = 0; i < GardenDroneStationBlockEntity.OUTPUT_SLOT_COUNT; i++) {
 			int x = 116 + (i % 2) * 18;
 			int y = 23 + (i / 2) * 18;
-			addSlot(new Slot(machineContainer, GardenDroneStationBlockEntity.OUTPUT_SLOT_START + i, x, y) {
-				@Override
-				public boolean mayPlace(ItemStack stack) {
-					return false; // the station fills these; nothing goes in by hand or by hopper
-				}
-			});
+			// The station fills these; nothing goes in by hand or by hopper.
+			addSlot(new OutputSlot(machineContainer, GardenDroneStationBlockEntity.OUTPUT_SLOT_START + i, x, y));
 		}
 	}
 

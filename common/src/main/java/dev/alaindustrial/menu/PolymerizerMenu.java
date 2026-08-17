@@ -8,7 +8,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
 
 /**
  * Menu for the Polymerizer: a filled-container slot feeding the tank, the emptied container below it, and
@@ -24,7 +23,8 @@ public class PolymerizerMenu extends MachineMenu {
 
 	/** Client side. */
 	public PolymerizerMenu(int syncId, Inventory playerInventory) {
-		super(ModContent.POLYMERIZER_MENU.get(), syncId, playerInventory, new SimpleContainer(3 + UPGRADE_SLOT_COUNT),
+		super(ModContent.POLYMERIZER_MENU.get(), syncId, playerInventory,
+				new SimpleContainer(PolymerizerBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
 				new SimpleContainerData(PolymerizerBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL,
 				ModContent.POLYMERIZER.get());
 	}
@@ -35,18 +35,10 @@ public class PolymerizerMenu extends MachineMenu {
 		// container slots stack beside it (full bucket in at the top, emptied one below), and the result
 		// sits at the far end of the progress arrow.
 		addSlot(new Slot(machine, PolymerizerBlockEntity.FILL_INPUT_SLOT, 44, 23));
-		addSlot(new Slot(machine, PolymerizerBlockEntity.FILL_OUTPUT_SLOT, 44, 47) {
-			@Override
-			public boolean mayPlace(ItemStack stack) {
-				return false; // the emptied container lands here; nothing is placed by hand
-			}
-		});
-		addSlot(new Slot(machine, PolymerizerBlockEntity.OUTPUT_SLOT, 117, 35) {
-			@Override
-			public boolean mayPlace(ItemStack stack) {
-				return false; // result only, no manual insertion (spec)
-			}
-		});
+		// The emptied container lands here; nothing is placed by hand.
+		addSlot(new OutputSlot(machine, PolymerizerBlockEntity.FILL_OUTPUT_SLOT, 44, 47));
+		// Result only, no manual insertion (spec).
+		addSlot(new OutputSlot(machine, PolymerizerBlockEntity.OUTPUT_SLOT, 117, 35));
 	}
 
 	/** Tank fill permille (0..1000) — sync channel 4. */

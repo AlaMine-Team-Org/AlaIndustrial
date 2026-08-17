@@ -13,7 +13,8 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
-import net.minecraft.world.level.GameType;
+
+import static dev.alaindustrial.gametest.AlaGameTestHelper.survivalPlayer;
 
 /**
  * Loader-neutral gametest bodies for the Fluxweave armour set (MOD-127, suite TC-FLUX-001).
@@ -45,13 +46,6 @@ public final class FluxweaveArmorScenarios {
 	}
 
 	private static final long AMPLE_EU = 10_000L;
-
-	private static ServerPlayer survivalPlayer(GameTestHelper helper) {
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
-		player.setGameMode(GameType.SURVIVAL);
-		player.getAbilities().instabuild = false;
-		return player;
-	}
 
 	private static ItemStack piece(java.util.function.Supplier<net.minecraft.world.item.Item> which, long eu) {
 		ItemStack stack = new ItemStack(which.get());

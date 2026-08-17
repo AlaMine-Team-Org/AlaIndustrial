@@ -261,9 +261,7 @@ public final class JetpackScenarios {
 	 * the once-per-tick sweep clears any light a flight left behind (logout/death safety). */
 	public static void fun08FlightGlowPlacedAndSwept(GameTestHelper helper) {
 		net.minecraft.server.level.ServerLevel level = helper.getLevel();
-		net.minecraft.server.level.ServerPlayer player = helper.makeMockServerPlayerInLevel();
-		player.setGameMode(GameType.SURVIVAL);
-		player.getAbilities().instabuild = false;
+		net.minecraft.server.level.ServerPlayer player = AlaGameTestHelper.survivalPlayer(helper);
 		player.setOnGround(true);
 		JetpackItem.serverFlightTick(jetpack(0), level, player, false); // clear any shared-UUID state
 		player.setOnGround(false);

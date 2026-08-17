@@ -48,6 +48,8 @@ public class GeothermalGeneratorBlockEntity extends AbstractGeneratorBlockEntity
 		implements MenuProvider, FluidPortHost {
 	public static final int INPUT_SLOT = 0;
 	public static final int OUTPUT_SLOT = 1;
+	/** Machine-slot count (indices before the upgrade block) — the client menu stub sizes its container from this (MOD-439). */
+	public static final int SLOT_COUNT = 2;
 
 	/** Fluid tank capacity: 10 buckets, in mB. */
 	public static final long TANK_CAPACITY = FluidAmounts.BUCKET * 10;
@@ -61,7 +63,7 @@ public class GeothermalGeneratorBlockEntity extends AbstractGeneratorBlockEntity
 			this::setChanged);
 
 	public GeothermalGeneratorBlockEntity(BlockPos pos, BlockState state) {
-		super(ModContent.GEOTHERMAL_GENERATOR_BE.get(), pos, state, EnergyTier.LV, 2, Config.geothermalBuffer,
+		super(ModContent.GEOTHERMAL_GENERATOR_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT, Config.geothermalBuffer,
 				EnergyTier.LV.maxVoltage());
 		this.maxProgress = tankCapacity();
 	}

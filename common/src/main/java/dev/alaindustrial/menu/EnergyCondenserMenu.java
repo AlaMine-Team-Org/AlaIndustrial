@@ -8,8 +8,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.SimpleContainerData;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
 import dev.alaindustrial.registry.ModContent;
 
 /**
@@ -64,12 +62,7 @@ public class EnergyCondenserMenu extends MachineMenu {
 	@Override
 	protected void addMachineSlots() {
 		// Take-only: the condenser's product appears here, nothing may be put in.
-		addSlot(new Slot(machine, EnergyCondenserBlockEntity.OUTPUT_SLOT, OUTPUT_SLOT_X, OUTPUT_SLOT_Y) {
-			@Override
-			public boolean mayPlace(ItemStack stack) {
-				return false;
-			}
-		});
+		addSlot(new OutputSlot(machine, EnergyCondenserBlockEntity.OUTPUT_SLOT, OUTPUT_SLOT_X, OUTPUT_SLOT_Y));
 	}
 
 	@Override

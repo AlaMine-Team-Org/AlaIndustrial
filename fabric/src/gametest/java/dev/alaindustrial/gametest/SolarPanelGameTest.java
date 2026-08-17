@@ -84,21 +84,7 @@ public class SolarPanelGameTest {
 	 */
 	@GameTest(skyAccess = true, maxTicks = 40)
 	public void tcSolar001Fun01_generatesByDay(GameTestHelper helper) {
-		helper.setBlock(POS, ModBlocks.SOLAR_PANEL);
-		setClearDay(helper);
-		SolarPanelBlockEntity panel = panelAt(helper);
-		int ticks = 20;
-		drive(panel, helper, ticks);
-		long perTick = Math.max(1, Math.round(Config.solarEuPerTick * Config.globalEuRateMultiplier));
-		long expected = perTick * ticks;
-		long got = panel.getEnergyStorage().getAmount();
-		if (got != expected) {
-			helper.fail("day generation over " + ticks + " ticks: got " + got + " EU, expected exactly "
-					+ expected + " (perTick=" + perTick + " = max(1, round(" + Config.solarEuPerTick + " × "
-					+ Config.globalEuRateMultiplier + ")), bright="
-					+ helper.getLevel().isBrightOutside() + ")");
-		}
-		helper.succeed();
+		GeneratorEnergyScenarios.solarPanelGeneratesByDay(helper);
 	}
 
 	/**
@@ -145,37 +131,7 @@ public class SolarPanelGameTest {
 	 *     carrying the stored EU and consuming the chip (the shared evolveInto helper, MOD-166 #4). */
 	@GameTest(skyAccess = true, maxTicks = 40)
 	public void tcSolar001Fun02_dayChipEvolvesToDaylight(GameTestHelper helper) {
-		helper.setBlock(POS, ModBlocks.SOLAR_PANEL);
-		setClearDay(helper);
-		SolarPanelBlockEntity panel = panelAt(helper);
-		panel.setItem(SolarPanelBlockEntity.CHIP_SLOT, new ItemStack(ModItems.ALIGNMENT_CHIP_DAY));
-		// Pre-charge the buffer so the carry-EU assertion is meaningful (default placement leaves 0).
-		long energy0 = 1500L;
-		panel.getEnergyStorage().setAmountUntracked(energy0);
-		BlockPos abs = panel.getBlockPos();
-		// Brightness is settled now; synchronous driving keeps it constant (no world tick between calls).
-		for (int i = 0; i <= Config.solarEvolveTicks
-				&& helper.getLevel().getBlockState(abs).getBlock() == ModBlocks.SOLAR_PANEL; i++) {
-			panel.serverTick(helper.getLevel(), abs, helper.getLevel().getBlockState(abs));
-		}
-		if (helper.getLevel().getBlockState(abs).getBlock() != ModBlocks.DAYLIGHT_SOLAR_PANEL) {
-			helper.fail("day chip did not evolve panel into the daylight panel");
-		}
-		// The shared evolveInto helper must carry the stored EU (clamped to the target capacity) and
-		// consume the chip — pin both so a regression in AbstractGeneratorBlockEntity.evolveInto
-		// (e.g. wrong slot override map) does not silently land.
-		if (!(helper.getLevel().getBlockEntity(abs) instanceof dev.alaindustrial.block.entity.MachineBlockEntity evolved)) {
-			helper.fail("evolved daylight panel has no MachineBlockEntity");
-			return;
-		}
-		long energy1 = evolved.getEnergyStorage().getAmount();
-		if (energy1 < energy0) {
-			helper.fail("evolution lost stored EU: " + energy0 + " -> " + energy1);
-		}
-		if (!evolved.getItem(SolarPanelBlockEntity.CHIP_SLOT).isEmpty()) {
-			helper.fail("evolution did not consume the chip slot");
-		}
-		helper.succeed();
+		GeneratorEnergyScenarios.solarDayChipEvolvesToDaylight(helper);
 	}
 
 	/**
@@ -233,15 +189,7 @@ public class SolarPanelGameTest {
 	/** @implements TC-SOLAR-001-NEG01 — base panel generates 0 EU at night (day-only). @covers R-NRG-15 */
 	@GameTest(skyAccess = true, maxTicks = 40)
 	public void tcSolar001Neg01_noEuAtNight(GameTestHelper helper) {
-		helper.setBlock(POS, ModBlocks.SOLAR_PANEL);
-		setNight(helper);
-		SolarPanelBlockEntity panel = panelAt(helper);
-		drive(panel, helper, 20);
-		long amount = panel.getEnergyStorage().getAmount();
-		if (amount != 0) {
-			helper.fail("solar panel generated " + amount + " EU at midnight; expected 0");
-		}
-		helper.succeed();
+		GeneratorEnergyScenarios.solarPanelNoEuAtNight(helper);
 	}
 
 	/**
@@ -485,18 +433,7 @@ public class SolarPanelGameTest {
 	 */
 	@GameTest(skyAccess = true, maxTicks = 40)
 	public void tcSolar001Prf02_bufferCapsAtMax(GameTestHelper helper) {
-		helper.setBlock(POS, ModBlocks.SOLAR_PANEL);
-		setClearDay(helper);
-		SolarPanelBlockEntity panel = panelAt(helper);
-		long cap = Config.solarBuffer;
-		panel.getEnergyStorage().setAmountUntracked(cap - 1); // BVA: one EU short of full → must top off, not exceed
-		drive(panel, helper, 5);
-		long got = panel.getEnergyStorage().getAmount();
-		if (got != cap) {
-			helper.fail("buffer did not settle at cap: expected " + cap + " (from cap-1=" + (cap - 1)
-					+ " after generation) got " + got);
-		}
-		helper.succeed();
+		GeneratorEnergyScenarios.solarPanelBufferCapsAtMaxBva(helper);
 	}
 
 	// ── Moonlit panel (night generator — inverse conditions of the base panel) ───────
@@ -535,20 +472,7 @@ public class SolarPanelGameTest {
 	 */
 	@GameTest(skyAccess = true, maxTicks = 40)
 	public void tcMoonlit001Fun01_generatesAtNight(GameTestHelper helper) {
-		helper.setBlock(POS, ModBlocks.MOONLIT_SOLAR_PANEL);
-		setNight(helper);
-		MoonlitSolarPanelBlockEntity panel = moonlitAt(helper);
-		int ticks = 20;
-		driveMoonlit(panel, helper, ticks);
-		long perTick = Math.max(1, Math.round(Config.moonlitEuPerTick * Config.globalEuRateMultiplier));
-		long expected = perTick * ticks;
-		long got = panel.getEnergyStorage().getAmount();
-		if (got != expected) {
-			helper.fail("moonlit night generation over " + ticks + " ticks: got " + got + " EU, expected exactly "
-					+ expected + " (perTick=" + perTick + " = max(1, round(" + Config.moonlitEuPerTick + " × "
-					+ Config.globalEuRateMultiplier + ")))");
-		}
-		helper.succeed();
+		GeneratorEnergyScenarios.moonlitPanelGeneratesAtNight(helper);
 	}
 
 	/** @implements TC-MOONLIT-001-STA01 — night + rain flags the weather mode (output 0, MOD-003). @covers R-NRG-15 */
@@ -726,35 +650,13 @@ public class SolarPanelGameTest {
 	 */
 	@GameTest(skyAccess = true, maxTicks = 40)
 	public void tcDaylight001Fun01_generatesByDay(GameTestHelper helper) {
-		helper.setBlock(POS, ModBlocks.DAYLIGHT_SOLAR_PANEL);
-		setClearDay(helper);
-		AbstractGeneratorBlockEntity panel = genAt(helper);
-		int ticks = 20;
-		driveGen(panel, helper, ticks);
-		long perTick = Math.max(1, Math.round(Config.daylightEuPerTick * Config.globalEuRateMultiplier));
-		long expected = perTick * ticks;
-		long got = panel.getEnergyStorage().getAmount();
-		if (got != expected) {
-			helper.fail("daylight day generation over " + ticks + " ticks: got " + got + " EU, expected exactly "
-					+ expected + " (perTick=" + perTick + " = max(1, round(" + Config.daylightEuPerTick + " × "
-					+ Config.globalEuRateMultiplier + ")), bright="
-					+ helper.getLevel().isBrightOutside() + ")");
-		}
-		helper.succeed();
+		GeneratorEnergyScenarios.daylightPanelGeneratesByDay(helper);
 	}
 
 	/** @implements TC-DAYLIGHT-001-NEG01 — daylight panel produces 0 EU at night (day-only). @covers R-NRG-15 */
 	@GameTest(skyAccess = true, maxTicks = 40)
 	public void tcDaylight001Neg01_noEuAtNight(GameTestHelper helper) {
-		helper.setBlock(POS, ModBlocks.DAYLIGHT_SOLAR_PANEL);
-		setNight(helper);
-		AbstractGeneratorBlockEntity panel = genAt(helper);
-		driveGen(panel, helper, 20);
-		long amount = panel.getEnergyStorage().getAmount();
-		if (amount != 0) {
-			helper.fail("daylight panel generated " + amount + " EU at midnight; expected 0");
-		}
-		helper.succeed();
+		GeneratorEnergyScenarios.daylightPanelNoEuAtNight(helper);
 	}
 
 	/**
@@ -1187,5 +1089,17 @@ public class SolarPanelGameTest {
 			}
 		}
 		helper.succeed();
+	}
+
+	// ── MOD-445: loader-neutral bodies the NeoForge lane already ran; wired here so both lanes run the same set ──
+
+	/**
+	 * MOD-356 — the panel's readout channel carries the EFFECTIVE rate (what the buffer really gains under
+	 * {@code globalEuRateMultiplier}), not {@code produce()}'s mechanical figure. Body: {@link
+	 * GeneratorEnergyScenarios#solarPanelReadoutMatchesBufferGain}.
+	 */
+	@GameTest(skyAccess = true, maxTicks = 60)
+	public void mod356_solarPanelReadoutMatchesBufferGain(GameTestHelper helper) {
+		GeneratorEnergyScenarios.solarPanelReadoutMatchesBufferGain(helper);
 	}
 }
