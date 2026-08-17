@@ -377,7 +377,7 @@
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="19 pages">19</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
   <main class="content" id="main-content">
@@ -427,6 +427,28 @@
 <p>It is the hungriest block in the mod — for comparison, the <a href="../fluid-machines/pump.html">pump</a> spends 1,000 EU/FE per bucket. An everyday trip home, though, barely dents the buffer.</p>
 
 <blockquote><strong>64 dirt and 64 diamonds weigh the same.</strong> What counts is how full your inventory is, not what is in it — simpler to grasp than a weight table for every item.</blockquote>
+
+<h2>The random jump</h2>
+
+<p>A station can be <strong>upgraded</strong> — and then it can throw you at a random point in the world, with no second station at the far end at all.</p>
+
+<p><strong>Fitting the upgrade.</strong> Craft a <a href="../components/resonance_chain.html">Random Jump Chip</a> and <strong>shift-right-click a placed station</strong>. The chip is consumed and the station keeps the module for good. A plain right-click will not do — that opens the station's screen; the sneak is the same one the remote uses to bind it.</p>
+
+<p>The module <strong>survives the block being broken</strong> (it rides the item along with the stored EU/FE and the privacy flag), but the chip cannot be taken back out: one chip, one station.</p>
+
+<p><strong>An upgraded station can be told apart at a glance.</strong> Teal brackets light up in the corners of its faces — the only teal on a violet-and-slate block, so there is nothing to confuse it with. The mark appears the moment the chip goes in and travels with the block. You never need to open a screen to find out whether a station is upgraded.</p>
+
+<p><strong>Making the jump.</strong> Select a station in the remote's list and press <strong>Random</strong>. The station you selected is the one that pays — and the one that must carry the chip.</p>
+
+<table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>Price</td><td><strong>50 000 EU/FE</strong>, flat — shown in the tooltip before you press</td></tr><tr><td>Where to</td><td>a random point in a ring <strong>500…5000</strong> blocks out</td></tr><tr><td>Where it works</td><td><strong>the Overworld only</strong></td></tr><tr><td>Warmup / cooldown</td><td>the same 5 s and 60 s as an ordinary jump</td></tr></tbody></table>
+
+<p><strong>Why the price is flat.</strong> An ordinary jump is priced by distance — but here the distance is unknown until the dice have been thrown. A flat price is the only one that can be shown to the player <em>before</em> they commit. Inventory weight is left out for the same reason.</p>
+
+<p><strong>Why the Overworld only.</strong> The search leans on surface height. In the Nether that runs into the bedrock ceiling, and in the End there is void between the islands — "surface" means nothing there, and refusing honestly beats guessing and dropping someone into rock or into nothing.</p>
+
+<p><strong>The landing is safe or the jump does not happen.</strong> The mod tries up to <strong>8</strong> spots: no lava, no water, no cactus, not inside a block, two clear blocks overhead. Nothing found means the jump is cancelled <strong>for free</strong> and you can simply press again. The spot is picked the moment you press (so a refusal is immediate rather than five seconds late) and measured again at the end of the warmup — if it went bad in those five seconds the jump is cancelled rather than carried out blind.</p>
+
+<blockquote><strong>Random is dearer than a targeted jump of the same length</strong> (5000 blocks would cost ~30 000 with an empty pack). That is what you pay for needing nothing built at the far end.</blockquote>
 
 <h2>Privacy</h2>
 

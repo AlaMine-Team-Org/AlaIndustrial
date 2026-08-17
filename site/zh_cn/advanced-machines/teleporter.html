@@ -377,7 +377,7 @@
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="19 个页面">19</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
   <main class="content" id="main-content">
@@ -427,6 +427,28 @@
 <p>模组中最耗能的方块——作为对比，<a href="../fluid-machines/pump.html">抽水泵</a>每桶耗 1 000 EU/FE。 不过相比之下缓冲区中的普通「回家跳」就微不足道了。</p>
 
 <blockquote><strong>64 个泥土和 64 个钻石重量相同。</strong> 计算的是物品栏的填充度，而不是价值——这比按每件 物品列重量表更直观。</blockquote>
+
+<h2>随机跳跃</h2>
+
+<p>传送站可以<strong>升级</strong>——升级后它能把你抛到世界中的随机位置，另一端完全不需要第二座传送站。</p>
+
+<p><strong>如何安装升级。</strong> 合成<a href="../components/resonance_chain.html">随机跳跃芯片</a>，然后对已放置的传送站 <strong>按住潜行键并右键</strong>。芯片被消耗，传送站永久获得该模块。直接右键不行——那会打开传送站界面； 潜行手势与遥控器绑定传送站时用的完全相同。</p>
+
+<p>模块<strong>能挺过方块被破坏</strong>（连同储存的 EU/FE 和隐私标记一起留在掉落物上），但芯片无法取回： 一枚芯片，一座传送站。</p>
+
+<p><strong>升级过的传送站一眼就能认出。</strong> 它各个面的四角会亮起<strong>青色角标</strong>——在这块紫色与石板灰的方块上， 青色是独一份，绝不会认错。芯片装上的瞬间标记就出现，并且随方块一起搬走。想知道某座传送站有没有升级， 不必打开界面。</p>
+
+<p><strong>如何跳跃。</strong> 在遥控器界面选中一座传送站，按<strong>「随机」</strong>。付费的正是你选中的那一座—— 也正是必须装有芯片的那一座。</p>
+
+<table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>价格</td><td><strong>50 000 EU/FE</strong>，固定值——按下之前就显示在提示中</td></tr><tr><td>去哪</td><td>距你 <strong>500…5000</strong> 格环形范围内的随机位置</td></tr><tr><td>在哪可用</td><td><strong>仅主世界</strong></td></tr><tr><td>预热 / 冷却</td><td>与普通跳跃相同的 5 秒和 60 秒</td></tr></tbody></table>
+
+<p><strong>为什么价格是固定的。</strong> 普通跳跃按距离计价——但这里在掷骰之前距离是未知的。只有固定价格才能在玩家 <strong>按下之前</strong>告诉他。背包重量出于同样的理由也不计入。</p>
+
+<p><strong>为什么只有主世界。</strong> 搜索依赖地表高度。下界的地表高度会撞上基岩天花板，末地的岛屿之间是虚空—— 「地表」在那里毫无意义，与其猜测并把人丢进岩石或虚空，不如老实拒绝。</p>
+
+<p><strong>要么安全落地，要么不跳。</strong> 模组最多尝试 <strong>8</strong> 个位置：不是岩浆、不是水、不是仙人掌、不在方块内部、 头顶有两格空间。找不到就<strong>免费</strong>取消跳跃，再按一次即可。位置在按下的瞬间就选定（所以拒绝是立刻的， 而不是等五秒之后），并在预热结束时重新测量——如果这五秒内那里变得不安全，跳跃会被取消，而不是盲目执行。</p>
+
+<blockquote><strong>随机跳跃比同等距离的定点跳跃更贵</strong>（5000 格空背包约需 30 000）。这笔差价买的是「另一端什么都不用建」。</blockquote>
 
 <h2>私有</h2>
 

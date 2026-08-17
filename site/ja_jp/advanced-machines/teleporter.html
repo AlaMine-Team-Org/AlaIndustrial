@@ -377,7 +377,7 @@
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="19 ページ">19</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
   <main class="content" id="main-content">
@@ -429,6 +429,28 @@
 <p>モッドで最も食いしん坊なブロックです — 比較として、<a href="../fluid-machines/pump.html">ポンプ</a>はバケツあたり 1 000 EU/FE を消費します。一方、バッファに照らせば普通の「家への跳躍」は銅貨程度です。</p>
 
 <blockquote><strong>土 64 個もダイヤモンド 64 個も同じ重さです。</strong> 数えるのはインベントリの充填度で、価値ではありません — アイテムごとの重量表より分かりやすい。</blockquote>
+
+<h2>ランダム転移</h2>
+
+<p>ステーションは<strong>アップグレードできます</strong>。すると、向こう側に 2 台目のステーションを建てることなく、 世界のランダムな地点へプレイヤーを飛ばせるようになります。</p>
+
+<p><strong>取り付け方。</strong> <a href="../components/resonance_chain.html">ランダム転移チップ</a>を作り、設置済みのステーションに <strong>シフトを押しながら右クリック</strong>します。チップは消費され、ステーションは永久にモジュールを得ます。 普通の右クリックでは駄目です——それはステーションの画面を開いてしまいます。このシフト操作は、 リモコンが同じステーションを登録するときと同じものです。</p>
+
+<p>モジュールは<strong>ブロックを壊しても失われません</strong>（貯蔵された EU/FE とプライベート設定とともにアイテムに 乗ります）。ただしチップを取り外して回収することはできません。チップ 1 個につきステーション 1 台です。</p>
+
+<p><strong>アップグレード済みのステーションは一目で分かります。</strong> 各面の四隅に<strong>青緑色の角標</strong>が灯ります。 紫とスレート色のブロックの上で青緑はこれだけなので、見間違えようがありません。標はチップを入れた その瞬間に現れ、ブロックと一緒に移動します。アップグレード済みかどうかを知るために画面を開く必要は ありません。</p>
+
+<p><strong>跳び方。</strong> リモコンの一覧でステーションを選び、<strong>「ランダム」</strong>を押します。支払うのは選んだその ステーション——チップが入っていなければならないのも、そのステーションです。</p>
+
+<table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>価格</td><td><strong>50 000 EU/FE</strong> の固定額。押す前にツールチップで確認できます</td></tr><tr><td>行き先</td><td>現在地から <strong>500〜5000</strong> ブロックの環状範囲内のランダムな地点</td></tr><tr><td>使える場所</td><td><strong>通常世界のみ</strong></td></tr><tr><td>予備動作 / クールダウン</td><td>通常の転移と同じ 5 秒と 60 秒</td></tr></tbody></table>
+
+<p><strong>価格が固定である理由。</strong> 通常の転移は距離で決まりますが、ここでは賽を投げるまで距離が分かりません。 プレイヤーが押す<strong>前</strong>に提示できる価格は、固定額だけです。持ち物の重さを見ないのも同じ理由です。</p>
+
+<p><strong>通常世界のみである理由。</strong> 探索は地表の高さに頼っています。ネザーではそれが岩盤の天井に当たり、 エンドでは島と島の間が虚空です。そこでは「地表」に意味がなく、当てずっぽうで岩の中や虚無に落とすより、 正直に断るほうが誠実です。</p>
+
+<p><strong>安全に着地できないなら転移しません。</strong> 最大 <strong>8</strong> か所を試します——溶岩でない、水でない、 サボテンでない、ブロックの中でない、頭上に 2 ブロックの空間がある。見つからなければ転移は<strong>無料で</strong> 中止され、もう一度押すだけです。地点は押した瞬間に決まり（だから拒否は 5 秒後ではなく即座に返ります）、 予備動作の終わりに測り直されます。その 5 秒で状況が悪化していれば、盲目的に実行せず中止します。</p>
+
+<blockquote><strong>同じ距離なら、ランダムは狙った転移より高くつきます</strong>（5000 ブロックを手ぶらで跳べば約 30 000）。 その差額は「向こう側に何も建てなくてよい」ことへの対価です。</blockquote>
 
 <h2>プライバシー</h2>
 
