@@ -148,5 +148,25 @@
         "preload": true
       }
     ]
+  },
+  "sawmill_hum": {
+    "subtitle": "subtitles.alaindustrial.sawmill_hum",
+    "sounds": [
+      {
+        "name": "alaindustrial:sawmill_hum",
+        "stream": false,
+        "preload": true
+      }
+    ]
+  },
+  "polymerizer_hum": {
+    "subtitle": "subtitles.alaindustrial.polymerizer_hum",
+    "sounds": [
+      {
+        "name": "alaindustrial:polymerizer_hum",
+        "stream": false,
+        "preload": true
+      }
+    ]
   }
 }

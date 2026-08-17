@@ -228,6 +228,32 @@ public final class ModSounds {
 		return SoundEvent.createVariableRangeEvent(GALVANIC_BATH_HUM_ID);
 	}
 
+	/** The registry id for the sawmill working loop (MOD-447) — a single lit machine, pattern A. */
+	public static final Identifier SAWMILL_HUM_ID = Industrialization.id("sawmill_hum");
+
+	/** Bound once per loader before any block plays it; unbound = loud failure, never a silent NPE. */
+	public static Supplier<SoundEvent> SAWMILL_HUM = () -> {
+		throw new IllegalStateException("ModSounds.SAWMILL_HUM read before its loader bound it");
+	};
+
+	/** Build the sawmill-hum event instance both loaders register (variable range, single stationary machine). */
+	public static SoundEvent createSawmillHum() {
+		return SoundEvent.createVariableRangeEvent(SAWMILL_HUM_ID);
+	}
+
+	/** The registry id for the polymerizer working loop (MOD-447) — a single lit machine, pattern A. */
+	public static final Identifier POLYMERIZER_HUM_ID = Industrialization.id("polymerizer_hum");
+
+	/** Bound once per loader before any block plays it; unbound = loud failure, never a silent NPE. */
+	public static Supplier<SoundEvent> POLYMERIZER_HUM = () -> {
+		throw new IllegalStateException("ModSounds.POLYMERIZER_HUM read before its loader bound it");
+	};
+
+	/** Build the polymerizer-hum event instance both loaders register (variable range, single stationary machine). */
+	public static SoundEvent createPolymerizerHum() {
+		return SoundEvent.createVariableRangeEvent(POLYMERIZER_HUM_ID);
+	}
+
 	private ModSounds() {
 	}
 }

@@ -31,8 +31,8 @@ import net.minecraft.world.level.storage.ValueOutput;
  *
  * <p>Behaviour lives in {@link AbstractProcessingMachineBlockEntity}; this class adds the four recipe
  * checks, the active-mode field (persisted in NBT, synced to the screen via a 5th ContainerData index),
- * and mode-aware input resolution. Sound is intentionally omitted: {@code SawmillBlock} does not
- * implement {@code MachineHumProvider}, so the machine is silent by contract (MOD-150 decision).
+ * and mode-aware input resolution. Audible while working since MOD-447: {@code SawmillBlock}
+ * implements {@code MachineHumProvider} (pattern A, the vanilla {@code lit} blockstate).
  */
 public final class SawmillBlockEntity extends AbstractProcessingMachineBlockEntity implements MenuProvider {
 	/** Input slot index — re-export of the shared processing-machine slot 0. */

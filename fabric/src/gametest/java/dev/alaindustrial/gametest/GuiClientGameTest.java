@@ -100,6 +100,12 @@ public class GuiClientGameTest implements FabricClientGameTest {
             // ── GUI screenshots (always runs) ─────────────────────────────────────────
             MachineGuiStands.shootGuiScreenshots(context);
 
+            // ── MOD-053: the same catalogue once in Arabic — R-GUI-15, the RTL layout audit ──
+            // Runs after the English frames and restores en_us when done: a lane that left ar_sa
+            // on would quietly shoot every later frame (this class's tail and ScreensClientGameTest)
+            // in Arabic too.
+            RtlGuiStands.shootArabicScreens(context);
+
             // Leave the world the way a player leaves it: with no container open. The last frame of this
             // lane is a GUI, and closing the world while the server still believes a container is open
             // hung the client on the handover to the next client-gametest class (observed in the MOD-362

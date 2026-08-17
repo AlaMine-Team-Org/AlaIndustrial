@@ -306,6 +306,10 @@ public class IndustrializationFabric implements ModInitializer {
 				ModSounds.CANNING_MACHINE_HUM_ID, ModSounds.createCanningMachineHum());
 		ModSounds.GALVANIC_BATH_HUM = registerSound(
 				ModSounds.GALVANIC_BATH_HUM_ID, ModSounds.createGalvanicBathHum());
+		ModSounds.SAWMILL_HUM = registerSound(
+				ModSounds.SAWMILL_HUM_ID, ModSounds.createSawmillHum());
+		ModSounds.POLYMERIZER_HUM = registerSound(
+				ModSounds.POLYMERIZER_HUM_ID, ModSounds.createPolymerizerHum());
 	}
 
 	/**
