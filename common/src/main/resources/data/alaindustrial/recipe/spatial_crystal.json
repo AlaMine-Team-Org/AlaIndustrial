@@ -1,0 +1,11 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"key": {
+		"A": "minecraft:amethyst_shard",
+		"E": "minecraft:ender_pearl",
+		"G": "minecraft:glowstone_dust"
+	},
+	"pattern": [" A ", "AEA", " G "],
+	"result": { "id": "alaindustrial:spatial_crystal" }
+}

@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"key": {
+		"F": "minecraft:chorus_fruit",
+		"C": "alaindustrial:resonance_coil",
+		"E": "alaindustrial:empty_chip",
+		"R": "minecraft:redstone"
+	},
+	"pattern": [" F ", "CEC", " R "],
+	"result": { "id": "alaindustrial:rtp_chip" }
+}

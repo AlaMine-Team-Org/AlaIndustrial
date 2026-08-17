@@ -6,14 +6,19 @@ import dev.alaindustrial.menu.TeleporterStationMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 
 /**
@@ -29,8 +34,58 @@ import net.minecraft.world.phys.BlockHitResult;
 public class TeleporterBlock extends HorizontalMachineBlock {
 	public static final MapCodec<TeleporterBlock> CODEC = simpleCodec(TeleporterBlock::new);
 
+	/**
+	 * Whether a Random Jump Chip is fitted (MOD-116) — a purely VISUAL mirror of
+	 * {@link TeleporterBlockEntity#hasRtpModule()}.
+	 *
+	 * <p>The block entity stays the single source of truth for behaviour; this property exists only so
+	 * the upgrade can be seen. Kept as blockstate rather than read from the block entity at render
+	 * time because a blockstate is synchronised to the client for free — the station has no block
+	 * entity sync of its own, and adding one for a texture swap would be a lot of machinery for a
+	 * picture. The two can in principle disagree, and if they ever do the consequence is a wrong
+	 * texture, never a jump that should not have happened.
+	 *
+	 * <p>Default {@code false}, so every station saved before MOD-116 loads unchanged.
+	 */
+	public static final BooleanProperty UPGRADED = BooleanProperty.create("upgraded");
+
 	public TeleporterBlock(Properties properties) {
 		super(properties);
+		registerDefaultState(defaultBlockState().setValue(UPGRADED, false));
+	}
+
+	@Override
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder);
+		builder.add(UPGRADED);
+	}
+
+	/**
+	 * Light the marker on a station that has just been upgraded.
+	 *
+	 * <p>Changing only a property of the SAME block leaves the block entity in place (vanilla replaces
+	 * it only when the block itself changes), so the fitted module and the banked EU survive this call.
+	 */
+	public static void showUpgraded(Level level, BlockPos pos, BlockState state) {
+		if (state.hasProperty(UPGRADED) && !state.getValue(UPGRADED)) {
+			level.setBlock(pos, state.setValue(UPGRADED, true), Block.UPDATE_ALL);
+		}
+	}
+
+	/**
+	 * Carry the marker across a re-place.
+	 *
+	 * <p>The module rides the dropped item as a data component, so by the time this runs the block
+	 * entity has already been handed it back — but the blockstate was created fresh and knows nothing.
+	 * Without this, moving an upgraded station would silently drop its marker while keeping the
+	 * upgrade, which is the one disagreement between the two that a player would actually notice.
+	 */
+	@Override
+	public void setPlacedBy(Level level, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+		super.setPlacedBy(level, pos, state, placer, stack);
+		if (level.getBlockEntity(pos) instanceof TeleporterBlockEntity station && station.hasRtpModule()) {
+			showUpgraded(level, pos, state);
+		}
 	}
 
 	@Override

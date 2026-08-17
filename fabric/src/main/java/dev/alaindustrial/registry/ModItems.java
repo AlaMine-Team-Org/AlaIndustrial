@@ -67,6 +67,10 @@ public final class ModItems {
 	public static final Item ASSEMBLY_BLUEPRINT = assemblyBlueprint("assembly_blueprint");
 	// Copper Coil — crafting component (copper cable + tin), gates the Electric Drill.
 	public static final Item COPPER_COIL = manifestItem("copper_coil");
+	// Resonance chain (MOD-116): spatial stock -> the coil above the copper one -> the station's chip.
+	public static final Item SPATIAL_CRYSTAL = manifestItem("spatial_crystal");
+	public static final Item RESONANCE_COIL = manifestItem("resonance_coil");
+	public static final Item RTP_CHIP = manifestItem("rtp_chip");
 	public static final Item ALIGNMENT_CHIP_DAY = manifestItem("alignment_chip_day");
 	public static final Item ALIGNMENT_CHIP_NIGHT = manifestItem("alignment_chip_night");
 	// Upgrade chips (MOD-080): empty blank + the mute upgrade. Each shows a gray hint line.
@@ -767,6 +771,9 @@ public final class ModItems {
 		ModContent.ADVANCED_CIRCUIT = () -> ADVANCED_CIRCUIT;
 		ModContent.ASSEMBLY_BLUEPRINT = () -> ASSEMBLY_BLUEPRINT;
 		ModContent.COPPER_COIL = () -> COPPER_COIL;
+		ModContent.SPATIAL_CRYSTAL = () -> SPATIAL_CRYSTAL;
+		ModContent.RESONANCE_COIL = () -> RESONANCE_COIL;
+		ModContent.RTP_CHIP = () -> RTP_CHIP;
 		ModContent.ALIGNMENT_CHIP_DAY = () -> ALIGNMENT_CHIP_DAY;
 		ModContent.ALIGNMENT_CHIP_NIGHT = () -> ALIGNMENT_CHIP_NIGHT;
 		ModContent.EMPTY_CHIP = () -> EMPTY_CHIP;

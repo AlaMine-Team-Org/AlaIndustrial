@@ -239,6 +239,16 @@ public final class ModContent {
 	public static Supplier<Item> ASSEMBLY_BLUEPRINT = unbound("ASSEMBLY_BLUEPRINT");
 	// Copper Coil — a crafting component (copper cable wound on a tin core); gates the Electric Drill.
 	public static Supplier<Item> COPPER_COIL = unbound("COPPER_COIL");
+	// Resonance chain (MOD-116): the crystal is the raw stock, the coil is the reusable component
+	// built on it, and the chip is the first thing that spends the coil. The coil is deliberately a
+	// general-purpose part rather than a teleporter part — it is the tier above COPPER_COIL and is
+	// meant to be reachable by later recipes.
+	/** MOD-116 — ender pearl, amethyst and glowstone pressed into one piece of spatial stock. */
+	public static Supplier<Item> SPATIAL_CRYSTAL = unbound("SPATIAL_CRYSTAL");
+	/** MOD-116 — the tier above the copper coil: a copper winding around a resonating core. */
+	public static Supplier<Item> RESONANCE_COIL = unbound("RESONANCE_COIL");
+	/** MOD-116 — fitted to a teleporter station by hand, it unlocks the station's random jump. */
+	public static Supplier<Item> RTP_CHIP = unbound("RTP_CHIP");
 	public static Supplier<Item> ALIGNMENT_CHIP_DAY = unbound("ALIGNMENT_CHIP_DAY");
 	public static Supplier<Item> ALIGNMENT_CHIP_NIGHT = unbound("ALIGNMENT_CHIP_NIGHT");
 	// Upgrade chips (MOD-080): EMPTY_CHIP is the inert blank/base; MUTE_CHIP is the first functional

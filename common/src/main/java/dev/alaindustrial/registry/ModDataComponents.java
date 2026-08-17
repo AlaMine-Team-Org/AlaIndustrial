@@ -51,6 +51,7 @@ public final class ModDataComponents {
 	public static final Identifier BLUEPRINT_SUBSTITUTE_ID = Industrialization.id("blueprint_substitute");
 	public static final Identifier CAPSULE_FLUID_ID = Industrialization.id("capsule_fluid");
 	public static final Identifier TELEPORTER_PRIVATE_ID = Industrialization.id("teleporter_private");
+	public static final Identifier TELEPORTER_RTP_MODULE_ID = Industrialization.id("teleporter_rtp_module");
 	public static final Identifier TELEPORTER_OWNER_ID = Industrialization.id("teleporter_owner");
 	public static final Identifier TELEPORTER_POINTS_ID = Industrialization.id("teleporter_points");
 	public static final Identifier FLUID_TANK_CONTENTS_ID = Industrialization.id("fluid_tank_contents");
@@ -184,6 +185,17 @@ public final class ModDataComponents {
 	 */
 	public static Supplier<DataComponentType<Boolean>> TELEPORTER_PRIVATE = () -> {
 		throw new IllegalStateException("ModDataComponents.TELEPORTER_PRIVATE read before its loader bound it");
+	};
+
+	/**
+	 * Whether a broken station carries its fitted Random Jump Chip (MOD-116) into its item form.
+	 *
+	 * <p>Present for the same reason {@link #STORED_ENERGY} is: the upgrade cost the player a chip
+	 * built out of the mod's deepest crafting chain, and losing it to a misplaced pickaxe would make
+	 * moving a base a punishment. Absent = the default, no module.
+	 */
+	public static Supplier<DataComponentType<Boolean>> TELEPORTER_RTP_MODULE = () -> {
+		throw new IllegalStateException("ModDataComponents.TELEPORTER_RTP_MODULE read before its loader bound it");
 	};
 
 	/**
@@ -345,6 +357,14 @@ public final class ModDataComponents {
 
 	/** Build the {@code teleporter_private} type both loaders register (MOD-091). */
 	public static DataComponentType<Boolean> createTeleporterPrivate() {
+		return DataComponentType.<Boolean>builder()
+				.persistent(Codec.BOOL)
+				.networkSynchronized(ByteBufCodecs.BOOL)
+				.build();
+	}
+
+	/** Build the {@code teleporter_rtp_module} type both loaders register (MOD-116). */
+	public static DataComponentType<Boolean> createTeleporterRtpModule() {
 		return DataComponentType.<Boolean>builder()
 				.persistent(Codec.BOOL)
 				.networkSynchronized(ByteBufCodecs.BOOL)

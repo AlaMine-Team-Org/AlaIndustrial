@@ -158,6 +158,12 @@ class ConfigSnapshotTest {
 		SENTINELS.put("teleporterCooldownTicks", 1600);
 		SENTINELS.put("teleporterWarmupCancelRadius", 3);
 		SENTINELS.put("teleporterMaxPoints", 24);
+		// MOD-116 — the random jump. Each sentinel differs from the shipped default and clears the
+		// field's own minimum (cost 0, radius 1, min-radius 0, attempts 1).
+		SENTINELS.put("teleporterRtpCost", 33_333);
+		SENTINELS.put("teleporterRtpRadius", 4321);
+		SENTINELS.put("teleporterRtpMinRadius", 321);
+		SENTINELS.put("teleporterRtpMaxAttempts", 5);
 		// Buffers (minimum=1 — sentinel stays >= 1).
 		SENTINELS.put("batteryBoxBuffer", 22_222);
 		// MOD-351 / MOD-353 — the MV store and the storage→fund feed channel.

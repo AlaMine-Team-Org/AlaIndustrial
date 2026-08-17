@@ -34,6 +34,7 @@
       "dev.alaindustrial.gametest.TeleporterStationGameTest",
       "dev.alaindustrial.gametest.TeleporterJumpGameTest",
       "dev.alaindustrial.gametest.TeleporterGuiGameTest",
+      "dev.alaindustrial.gametest.RtpGameTest",
       "dev.alaindustrial.gametest.NetworkGameTest",
       "dev.alaindustrial.gametest.NetworkBenchGameTest",
       "dev.alaindustrial.gametest.NetworkAnalyzerGameTest",

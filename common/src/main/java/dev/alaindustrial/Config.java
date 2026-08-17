@@ -284,6 +284,39 @@ public final class Config {
 	 * Enforced server-side at bind time — never by the screen.
 	 */
 	public static int teleporterMaxPoints = 16;
+	/**
+	 * Price of one random jump (MOD-116) — flat, unlike the targeted jump's distance formula.
+	 *
+	 * <p>Flat because the player has to be able to read the price off the button BEFORE pressing it,
+	 * and where the dice will land is by definition unknown at that moment. A distance-derived price
+	 * would only be knowable after the search had already run.
+	 *
+	 * <p>50 000 EU is a tenth of {@link #teleporterBuffer}, so a full station holds ten random jumps.
+	 * That is deliberately dearer than the ~30 000 EU a targeted 5000-block jump costs an empty pack:
+	 * the targeted jump needs a station built and charged at the far end, the random one needs nothing
+	 * there at all, and that convenience is what the surcharge buys.
+	 */
+	public static int teleporterRtpCost = 50_000;
+	/** How far a random jump may throw the player. The outer edge of the ring, in blocks. */
+	public static int teleporterRtpRadius = 5000;
+	/**
+	 * How close a random jump may leave the player — the inner edge of the ring.
+	 *
+	 * <p>Without a floor an honest draw can land the player where they already stood, having spent a
+	 * full jump's EU. That reads as a broken feature rather than as bad luck, so the ring has a hole
+	 * in the middle.
+	 */
+	public static int teleporterRtpMinRadius = 500;
+	/**
+	 * How many candidate spots a random jump tries before giving up (giving up costs the player
+	 * nothing).
+	 *
+	 * <p>Deliberately small. Each candidate that clears the cheap noise probe costs a real chunk load,
+	 * and on ground nobody has visited that means the full worldgen pipeline running synchronously on
+	 * the server thread. The cheap probe rejects ocean for free, so in practice one candidate is paid
+	 * for; this number is the ceiling on how bad an unlucky run can get.
+	 */
+	public static int teleporterRtpMaxAttempts = 8;
 
 	// --- Storage / per-block buffers (EU) ---
 	public static int batteryBoxBuffer = 20_000;
@@ -1408,6 +1441,14 @@ public final class Config {
 				() -> teleporterWarmupCancelRadius, v -> teleporterWarmupCancelRadius = v, 1),
 			new IntField("teleporterMaxPoints", Section.LOGISTICS, "Max stations one teleport remote can hold.",
 				() -> teleporterMaxPoints, v -> teleporterMaxPoints = v, 1),
+			new IntField("teleporterRtpCost", Section.LOGISTICS, "Flat EU a random jump costs, paid by the station the remote has selected.",
+				() -> teleporterRtpCost, v -> teleporterRtpCost = v, 0),
+			new IntField("teleporterRtpRadius", Section.LOGISTICS, "Outer edge of the ring a random jump throws the player into, in blocks.",
+				() -> teleporterRtpRadius, v -> teleporterRtpRadius = v, 1),
+			new IntField("teleporterRtpMinRadius", Section.LOGISTICS, "Inner edge of that ring: a random jump never leaves the player closer than this.",
+				() -> teleporterRtpMinRadius, v -> teleporterRtpMinRadius = v, 0),
+			new IntField("teleporterRtpMaxAttempts", Section.LOGISTICS, "How many candidate spots a random jump tries before giving up. Giving up costs nothing.",
+				() -> teleporterRtpMaxAttempts, v -> teleporterRtpMaxAttempts = v, 1),
 			new IntField("batteryBoxBuffer", Section.STORAGE, "Battery Box EU buffer. Applies to newly placed blocks (already-placed keep their capacity until the chunk reloads).",
 				() -> batteryBoxBuffer, v -> batteryBoxBuffer = v, 1),
 			new IntField("cesuBuffer", Section.STORAGE, "Reinforced Energy Storage (MV) EU buffer. Applies to newly placed blocks (already-placed keep their capacity until the chunk reloads).",

@@ -1,5 +1,6 @@
 package dev.alaindustrial.client.screen;
 
+import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.item.teleport.TeleportPoint;
 import dev.alaindustrial.item.teleport.TeleportPoints;
@@ -9,6 +10,7 @@ import dev.alaindustrial.network.TeleportRenamePayload;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -50,10 +52,15 @@ public class TeleporterRemoteScreen extends AbstractContainerScreen<TeleporterRe
 	/** Text padding inside a row, left and right. */
 	private static final int ROW_PAD = 4;
 
-	/** Buttons along the bottom. Delete is narrowed from 92 to make room for its padlock. */
+	/**
+	 * Buttons along the bottom. Delete is narrowed from 92 to make room for its padlock, and all three
+	 * were narrowed again in MOD-116 so the random jump could stand beside the ordinary one — the two
+	 * ways of leaving belong on the same row, and the panel has no second row to give.
+	 */
 	private static final int BTN_ROW_Y = 162, BTN_H = 20;
-	private static final int DELETE_X = 5, DELETE_W = 78;
-	private static final int TELEPORT_X = 103, TELEPORT_W = 92;
+	private static final int DELETE_X = 5, DELETE_W = 58;
+	private static final int TELEPORT_X = 80, TELEPORT_W = 57;
+	private static final int RTP_X = 140, RTP_W = 55;
 
 	/**
 	 * The padlock guarding Delete — the same two sprites, at the same atlas coordinates, as the
@@ -87,6 +94,8 @@ public class TeleporterRemoteScreen extends AbstractContainerScreen<TeleporterRe
 	private Button deleteButton;
 	@Nullable
 	private Button teleportButton;
+	@Nullable
+	private Button rtpButton;
 	/** First visible row — the scroll position. */
 	private int scroll;
 	/**
@@ -129,6 +138,16 @@ public class TeleporterRemoteScreen extends AbstractContainerScreen<TeleporterRe
 				Component.translatable("gui.alaindustrial.teleporter.teleport"),
 				b -> press(TeleporterRemoteMenu.Action.TELEPORT))
 				.bounds(this.leftPos + TELEPORT_X, this.topPos + BTN_ROW_Y, TELEPORT_W, BTN_H).build());
+		// The random jump (MOD-116). The selected row is the station that pays for it, which is why the
+		// button lives here rather than on the station's own screen — the choice of payer is made in
+		// this list. Its tooltip carries the price, because unlike a targeted jump the price is flat and
+		// can therefore be told to the player before they commit.
+		rtpButton = addRenderableWidget(Button.builder(
+				Component.translatable("gui.alaindustrial.teleporter.rtp"),
+				b -> press(TeleporterRemoteMenu.Action.RTP))
+				.tooltip(Tooltip.create(Component.translatable("gui.alaindustrial.teleporter.rtp.tooltip",
+						Config.teleporterRtpCost, Config.teleporterRtpRadius)))
+				.bounds(this.leftPos + RTP_X, this.topPos + BTN_ROW_Y, RTP_W, BTN_H).build());
 	}
 
 	/**
@@ -376,6 +395,12 @@ public class TeleporterRemoteScreen extends AbstractContainerScreen<TeleporterRe
 		}
 		if (teleportButton != null) {
 			teleportButton.active = hasSelection;
+		}
+		// Live on the same terms as Teleport: the row picks the station that pays. Whether that station
+		// actually carries the chip is the server's call — it answers with a refusal in the red band,
+		// because the client is never told which stations are upgraded.
+		if (rtpButton != null) {
+			rtpButton.active = hasSelection;
 		}
 	}
 }

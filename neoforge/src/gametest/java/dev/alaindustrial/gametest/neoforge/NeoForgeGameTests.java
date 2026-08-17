@@ -68,6 +68,7 @@ import dev.alaindustrial.gametest.RecipeCoverageScenarios;
 import dev.alaindustrial.gametest.NetworkAnalyzerScenarios;
 import dev.alaindustrial.gametest.TeleporterStationScenarios;
 import dev.alaindustrial.gametest.TeleporterGuiScenarios;
+import dev.alaindustrial.gametest.RtpScenarios;
 import dev.alaindustrial.gametest.TeleporterJumpScenarios;
 import dev.alaindustrial.gametest.OreScenarios;
 import dev.alaindustrial.gametest.EnergyCondenserScenarios;
@@ -1702,6 +1703,20 @@ public final class NeoForgeGameTests {
 				TeleporterJumpScenarios::tcTele002Sec02_remoteBindsToOwner);
 		registerTest(event, "tc_tele002_sta01_warmup_state_starts_clean", 40, true,
 				TeleporterJumpScenarios::tcTele002Sta01_warmupStateStartsClean);
+
+		// Teleporter random jump (MOD-116): the chip, the gate it opens, the energy accounting.
+		registerTest(event, "tc_tele004_fun01_chip_fits_once_and_is_consumed", 40, true,
+				RtpScenarios::tcTele004Fun01_chipFitsOnceAndIsConsumed);
+		registerTest(event, "tc_tele004_neg01_module_is_what_opens_the_gate", 40, true,
+				RtpScenarios::tcTele004Neg01_moduleIsWhatOpensTheGate);
+		registerTest(event, "tc_tele004_nrg01_refused_jump_costs_nothing", 40, true,
+				RtpScenarios::tcTele004Nrg01_refusedJumpCostsNothing);
+		registerTest(event, "tc_tele004_nrg02_charges_exactly_the_flat_price", 40, true,
+				RtpScenarios::tcTele004Nrg02_chargesExactlyTheFlatPrice);
+		registerTest(event, "tc_tele004_sta01_module_survives_a_reload", 40, true,
+				RtpScenarios::tcTele004Sta01_moduleSurvivesAReload);
+		registerTest(event, "tc_tele004_brk01_drop_carries_the_module", 40, true,
+				RtpScenarios::tcTele004Brk01_dropCarriesTheModule);
 
 		// Ores (MOD-310): drops, tier gate, hardness, hitbox, fire resistance.
 		registerTest(event, "tc_ore001_brk01_drops_itself_with_pickaxe", 40, true,

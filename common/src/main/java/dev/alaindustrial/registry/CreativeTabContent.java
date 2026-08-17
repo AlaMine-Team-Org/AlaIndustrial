@@ -199,6 +199,9 @@ public final class CreativeTabContent {
 		show(out, ModContent.ADVANCED_CIRCUIT);
 		show(out, ModContent.ASSEMBLY_BLUEPRINT);
 		show(out, ModContent.COPPER_COIL);
+		show(out, ModContent.SPATIAL_CRYSTAL);
+		show(out, ModContent.RESONANCE_COIL);
+		show(out, ModContent.RTP_CHIP);
 		show(out, ModContent.ALIGNMENT_CHIP_DAY);
 		show(out, ModContent.ALIGNMENT_CHIP_NIGHT);
 		show(out, ModContent.EMPTY_CHIP);
@@ -372,6 +375,9 @@ public final class CreativeTabContent {
 		show(out, ModContent.MUTATION_CHIP_TRANSFORM);
 		show(out, ModContent.MUTATION_CHIP_DUPLICATE);
 		show(out, ModContent.MUTATION_CHIP_CREATE);
+		// Random Jump Chip (MOD-116): fitted to a block by hand like the alignment chips above, not
+		// dropped into an upgrade panel — the teleporter station has none.
+		show(out, ModContent.RTP_CHIP);
 	}
 
 	/** 9 - the parts machines and blocks are assembled from. */
@@ -381,6 +387,10 @@ public final class CreativeTabContent {
 		show(out, ModContent.ADVANCED_CIRCUIT);
 		show(out, ModContent.ASSEMBLY_BLUEPRINT);
 		show(out, ModContent.COPPER_COIL);
+		// Resonance chain (MOD-116): the raw crystal, then the coil built on it. The chip they lead to
+		// sits in upgrades() instead — it is applied to a block, not consumed by a machine recipe.
+		show(out, ModContent.SPATIAL_CRYSTAL);
+		show(out, ModContent.RESONANCE_COIL);
 		// Soul Vessel (MOD-278): the Mob Repeller's upgrade currency, listed with the other parts a
 		// machine is fed. Also in ingredients() — that group feeds the vanilla Ingredients tab.
 		show(out, ModContent.SOUL_VESSEL);

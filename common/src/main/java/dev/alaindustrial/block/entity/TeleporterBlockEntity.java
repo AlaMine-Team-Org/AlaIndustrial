@@ -35,6 +35,15 @@ public class TeleporterBlockEntity extends MachineBlockEntity {
 	// before, so existing stations load unchanged). Only the station-specific privacy flag stays here.
 	/** Private (owner-only) by default; MOD-093 adds the toggle that flips it. */
 	private boolean isPrivate = true;
+	/**
+	 * Whether a Random Jump Chip has been fitted (MOD-116) — the station's one permanent upgrade.
+	 *
+	 * <p>A flag rather than an inventory slot, because the station is deliberately not a
+	 * {@code MenuProvider} and therefore has no upgrade panel (see the class javadoc): giving it one
+	 * would hand it four hidden slots a hopper could stuff. The chip is consumed at fit time and is
+	 * never returned, so there is nothing for a slot to hold anyway.
+	 */
+	private boolean hasRtpModule = false;
 
 	public TeleporterBlockEntity(BlockPos pos, BlockState state) {
 		// Consumer: HV in, nothing out. maxExtract = 0 — the network must never drain the station's
@@ -107,6 +116,20 @@ public class TeleporterBlockEntity extends MachineBlockEntity {
 		setChanged();
 	}
 
+	/** True once a Random Jump Chip has been fitted; without one the station refuses random jumps. */
+	public boolean hasRtpModule() {
+		return hasRtpModule;
+	}
+
+	/**
+	 * Fit the module. One-way on purpose — the chip is consumed and there is no route back to it, so
+	 * a player cannot move one upgrade around a base and pretend to have several.
+	 */
+	public void setRtpModule(boolean value) {
+		this.hasRtpModule = value;
+		setChanged();
+	}
+
 	/** True when {@code player} may bind to / jump to this station: its owner, or anyone if public. */
 	public boolean allowsAccess(UUID player) {
 		return !isPrivate || getOwner() == null || getOwner().equals(player);
@@ -176,12 +199,15 @@ public class TeleporterBlockEntity extends MachineBlockEntity {
 	protected void saveAdditional(ValueOutput output) {
 		super.saveAdditional(output); // base persists Energy/Progress/Items + Owner/OwnerName (MOD-133)
 		output.putBoolean("Private", isPrivate);
+		output.putBoolean("RtpModule", hasRtpModule);
 	}
 
 	@Override
 	protected void loadAdditional(ValueInput input) {
 		super.loadAdditional(input);
 		isPrivate = input.getBooleanOr("Private", true);
+		// Default false: a station saved before MOD-116 simply has no module, which is the truth.
+		hasRtpModule = input.getBooleanOr("RtpModule", false);
 	}
 
 	// R-BRK-07: the dropped station keeps its EU and its privacy flag, so breaking and re-placing a
@@ -196,6 +222,11 @@ public class TeleporterBlockEntity extends MachineBlockEntity {
 		if (!isPrivate) {
 			builder.set(ModDataComponents.TELEPORTER_PRIVATE.get(), false);
 		}
+		// Written only when fitted, like the privacy flag above: an un-upgraded station keeps a bare
+		// component map and therefore still stacks with a freshly crafted one.
+		if (hasRtpModule) {
+			builder.set(ModDataComponents.TELEPORTER_RTP_MODULE.get(), true);
+		}
 	}
 
 	@Override
@@ -203,5 +234,6 @@ public class TeleporterBlockEntity extends MachineBlockEntity {
 		super.applyImplicitComponents(getter);
 		energy.setAmountUntracked(Math.min(getter.getOrDefault(ModDataComponents.STORED_ENERGY.get(), 0L), energy.getCapacity()));
 		isPrivate = getter.getOrDefault(ModDataComponents.TELEPORTER_PRIVATE.get(), true);
+		hasRtpModule = getter.getOrDefault(ModDataComponents.TELEPORTER_RTP_MODULE.get(), false);
 	}
 }

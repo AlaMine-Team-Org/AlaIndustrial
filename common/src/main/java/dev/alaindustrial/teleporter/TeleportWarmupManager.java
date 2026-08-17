@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -30,8 +31,15 @@ public final class TeleportWarmupManager {
 	private TeleportWarmupManager() {
 	}
 
-	/** A jump in progress: where it started (to detect movement), where it goes, and since when. */
-	private record Warmup(TeleportPoint point, Vec3 origin, long startTick) {
+	/**
+	 * A jump in progress: where it started (to detect movement), where it goes, and since when.
+	 *
+	 * <p>{@code rtpTarget} is what tells the two kinds of jump apart (MOD-116). When it is null this is
+	 * an ordinary jump and {@code point} is the destination station. When it is set this is a random
+	 * jump: {@code point} is then the station that PAYS — the row the player had selected — and
+	 * {@code rtpTarget} is the spot the search rolled at trigger time.
+	 */
+	private record Warmup(TeleportPoint point, Vec3 origin, long startTick, @Nullable BlockPos rtpTarget) {
 	}
 
 	private static final Map<UUID, Warmup> WARMUPS = new HashMap<>();
@@ -99,7 +107,20 @@ public final class TeleportWarmupManager {
 
 	/** Begin the countdown. The caller has already run {@link TeleportEngine#checkPolicy}. */
 	public static void start(ServerPlayer player, TeleportPoint point) {
-		WARMUPS.put(player.getUUID(), new Warmup(point, player.position(), player.level().getGameTime()));
+		WARMUPS.put(player.getUUID(), new Warmup(point, player.position(), player.level().getGameTime(), null));
+	}
+
+	/**
+	 * Begin a random jump's countdown (MOD-116). The caller has already run
+	 * {@link TeleportEngine#checkRtpPolicy} and rolled {@code target}.
+	 *
+	 * <p>The destination is fixed here, at trigger time, rather than at the end of the warmup: the roll
+	 * is what pays for a chunk, and doing it up front means a player who is going to be told "nowhere
+	 * safe" hears it immediately instead of after standing still for five seconds.
+	 */
+	public static void startRtp(ServerPlayer player, TeleportPoint payingStation, BlockPos target) {
+		WARMUPS.put(player.getUUID(),
+				new Warmup(payingStation, player.position(), player.level().getGameTime(), target));
 	}
 
 	/**
@@ -178,8 +199,52 @@ public final class TeleportWarmupManager {
 			// Done counting: re-check with the final numbers, then jump. The state is removed first
 			// so a failure here cannot leave a stuck warmup behind.
 			it.remove();
-			fire(player, warmup.point());
+			if (warmup.rtpTarget() != null) {
+				fireRtp(player, warmup.point(), warmup.rtpTarget());
+			} else {
+				fire(player, warmup.point());
+			}
 		}
+	}
+
+	/**
+	 * The authoritative re-check plus the random jump itself (MOD-116).
+	 *
+	 * <p>The destination column stays the one rolled at trigger time, but its height is measured
+	 * again. Five seconds is long enough for a spot to stop being safe — lava spreading, a mob walking
+	 * a block into place — and re-measuring costs nothing, because the chunk it needs is the one the
+	 * trigger-time roll already pulled in. If the column has gone bad the jump is refused for free,
+	 * which is strictly better than honouring a stale answer and dropping somebody into lava.
+	 */
+	private static void fireRtp(ServerPlayer player, TeleportPoint payingStation, BlockPos rolled) {
+		TeleportEngine.Denial denial = TeleportEngine.checkRtpPolicy(player, payingStation);
+		if (!denial.allowed()) {
+			TeleportEffects.clear(player);
+			player.sendSystemMessage(denial.message().copy().withStyle(ChatFormatting.RED), true);
+			return;
+		}
+		BlockPos target = TeleportEngine.revalidateRtpSite(player, rolled);
+		if (target == null) {
+			TeleportEffects.clear(player);
+			player.sendSystemMessage(TeleportEngine.Denial.RTP_NO_SAFE_SPOT.message()
+					.copy().withStyle(ChatFormatting.RED), true);
+			return;
+		}
+		long cost = TeleportEngine.rtpCost();
+		if (!TeleportEngine.executeRtp(player, payingStation, target, cost)) {
+			TeleportEffects.clear(player);
+			player.sendSystemMessage(TeleportEngine.Denial.RTP_NO_SAFE_SPOT.message()
+					.copy().withStyle(ChatFormatting.RED), true);
+			return;
+		}
+		TeleportEffects.arrived(player);
+		COOLDOWNS.put(player.getUUID(), player.level().getGameTime() + Config.teleporterCooldownTicks);
+		// The coordinates go in the message because a random jump is the one case where the player has
+		// no idea where they ended up, and the line lands in chat (not the action bar) precisely so it
+		// stays scrollable: this is the only record of the spot until they get their bearings.
+		player.sendSystemMessage(Component.translatable("alaindustrial.teleporter.rtp_jumped",
+						target.getX(), target.getY(), target.getZ(), cost)
+				.withStyle(ChatFormatting.GREEN), false);
 	}
 
 	/** The authoritative re-check plus the jump itself. */

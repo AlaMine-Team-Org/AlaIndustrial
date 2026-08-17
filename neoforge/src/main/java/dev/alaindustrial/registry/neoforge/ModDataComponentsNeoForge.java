@@ -65,6 +65,9 @@ public final class ModDataComponentsNeoForge {
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> TELEPORTER_PRIVATE =
 			DATA_COMPONENTS.register("teleporter_private", ModDataComponents::createTeleporterPrivate);
 
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> TELEPORTER_RTP_MODULE =
+			DATA_COMPONENTS.register("teleporter_rtp_module", ModDataComponents::createTeleporterRtpModule);
+
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<UUID>> TELEPORTER_OWNER =
 			DATA_COMPONENTS.register("teleporter_owner", ModDataComponents::createTeleporterOwner);
 
@@ -99,6 +102,7 @@ public final class ModDataComponentsNeoForge {
 		ModDataComponents.FLUID_TANK_CONTENTS = FLUID_TANK_CONTENTS;
 		ModDataComponents.DISTILLATION_COLUMN_CONTENTS = DISTILLATION_COLUMN_CONTENTS;
 		ModDataComponents.TELEPORTER_PRIVATE = TELEPORTER_PRIVATE;
+		ModDataComponents.TELEPORTER_RTP_MODULE = TELEPORTER_RTP_MODULE;
 		ModDataComponents.TELEPORTER_OWNER = TELEPORTER_OWNER;
 		ModDataComponents.TELEPORTER_POINTS = TELEPORTER_POINTS;
 		ModDataComponents.MAGNET_ENABLED = MAGNET_ENABLED;

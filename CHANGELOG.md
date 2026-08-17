@@ -1,21 +1,12 @@
-## 0.1.101
+## 0.1.102
 
-<p><img alt="Ala Industrial 0.1.101 update preview" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.101/release-media/v0.1.101/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial 0.1.102 random jump preview" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.102/release-media/v0.1.102/changelog.webp" width="720"></p>
 
-Two more machines found their voice, and the Water Mill finally tells you what it is waiting for.
+Teleporters learned a second trick: sending you somewhere you have never been.
 
 ### New
 
-- **The Canning Machine rattles.** A light metallic clatter of tin down the line while it packs.
-- **The Galvanic Bath hums.** A faint ionic buzz of electrolysis while it plates.
-- Both tones are deliberately unlike the ones already in use — the press thud, the pump suction, the grinder — so you can tell what is running without looking. The silence chip mutes them like everything else, and subtitles are there in every language.
-
-### Fixed
-
-- **The Water Mill says "No wheel".** Place one down and open it, and the screen used to be blank: it looked like it was working, made nothing, and gave no hint. It now names what is missing, the way the Wind Turbine has always announced a missing rotor.
-- The mill's status line is never empty any more. "No wheel", "No water", "Blocked", "Wheel interference" — or how much it is currently making.
-
-### Improved
-
-- Bad numbers in the config file no longer vanish without a word. Type a value the mod cannot use and it says so in the log, instead of quietly swapping it out and rewriting your file.
-- A pump whose search fails now reports it with coordinates. Before, "nothing to pump here" and "the search broke" looked exactly the same.
+- **Random jumps.** A **Random** button now sits next to Teleport in the remote. A flat 50,000 EU throws you 500–5,000 blocks away in the Overworld, and the landing coordinates go straight to chat.
+- **Stations need the upgrade first.** Craft a Random Jump Chip — a Spatial Crystal, then a Resonance Coil, then the chip — and shift-right-click a station with it. The chip is used up, and it survives the block being broken, so moving a base costs nothing.
+- **Upgraded stations are obvious.** Teal corners light up on their faces, so you can tell at a glance which one can send you off.
+- **A safe landing or none at all.** No lava, no water, no landing inside a block. If nothing safe turns up, the jump is refused and you are charged nothing.

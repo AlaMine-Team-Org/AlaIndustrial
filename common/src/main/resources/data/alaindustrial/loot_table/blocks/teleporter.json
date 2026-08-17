@@ -8,7 +8,7 @@
 			"functions": [{
 				"function": "minecraft:copy_components",
 				"source": "block_entity",
-				"include": ["alaindustrial:stored_energy", "alaindustrial:teleporter_private"]
+				"include": ["alaindustrial:stored_energy", "alaindustrial:teleporter_private", "alaindustrial:teleporter_rtp_module"]
 			}]
 		}],
 		"conditions": [{ "condition": "minecraft:survives_explosion" }]

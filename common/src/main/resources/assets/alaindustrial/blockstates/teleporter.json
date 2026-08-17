@@ -1,18 +1,33 @@
 {
   "variants": {
-    "facing=north": {
+    "facing=north,upgraded=false": {
       "model": "alaindustrial:block/teleporter"
     },
-    "facing=south": {
+    "facing=south,upgraded=false": {
       "model": "alaindustrial:block/teleporter",
       "y": 180
     },
-    "facing=west": {
+    "facing=west,upgraded=false": {
       "model": "alaindustrial:block/teleporter",
       "y": 270
     },
-    "facing=east": {
+    "facing=east,upgraded=false": {
       "model": "alaindustrial:block/teleporter",
+      "y": 90
+    },
+    "facing=north,upgraded=true": {
+      "model": "alaindustrial:block/teleporter_upgraded"
+    },
+    "facing=south,upgraded=true": {
+      "model": "alaindustrial:block/teleporter_upgraded",
+      "y": 180
+    },
+    "facing=west,upgraded=true": {
+      "model": "alaindustrial:block/teleporter_upgraded",
+      "y": 270
+    },
+    "facing=east,upgraded=true": {
+      "model": "alaindustrial:block/teleporter_upgraded",
       "y": 90
     }
   }

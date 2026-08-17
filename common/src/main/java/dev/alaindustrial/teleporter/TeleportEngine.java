@@ -2,10 +2,12 @@ package dev.alaindustrial.teleporter;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
+import dev.alaindustrial.core.teleport.RtpSiteFinder;
 import dev.alaindustrial.item.teleport.TeleportPoint;
 import dev.alaindustrial.stats.PlayerStatsTracker;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -43,7 +45,11 @@ public final class TeleportEngine {
 		COOLDOWN("alaindustrial.teleporter.cooldown"),
 		NO_STATION("alaindustrial.teleporter.no_station"),
 		NO_ACCESS("alaindustrial.teleporter.no_access"),
-		NOT_ENOUGH_EU("alaindustrial.teleporter.not_enough_eu");
+		NOT_ENOUGH_EU("alaindustrial.teleporter.not_enough_eu"),
+		// --- random jump only (MOD-116) ---
+		RTP_NO_MODULE("alaindustrial.teleporter.rtp_no_module"),
+		RTP_WRONG_DIMENSION("alaindustrial.teleporter.rtp_wrong_dimension"),
+		RTP_NO_SAFE_SPOT("alaindustrial.teleporter.rtp_no_safe_spot");
 
 		@Nullable
 		private final String key;
@@ -173,6 +179,138 @@ public final class TeleportEngine {
 		// the dashboard this EU was spent — a player living on the teleporter saw "Consumed: 0 EU".
 		// Booked here, next to the deduction and behind the same success guard, so a refused or aborted
 		// jump can never leave a phantom entry; it is spending, not work, so it grants no mastery.
+		PlayerStatsTracker.get().recordSpending(level.getServer(), player.getUUID(), cost);
+		return true;
+	}
+
+	// --- random jump (MOD-116) -----------------------------------------------------------------
+	//
+	// Parallel methods rather than one polymorphic "jump target". A random jump differs from a
+	// targeted one in every part that matters — there is no station at the far end to validate, to
+	// price by distance, or to land on top of — and it is the only second kind of jump there is. An
+	// abstraction over a set of two, one of which is the degenerate case of the other, would cost
+	// more to read than the duplication it removes. If a third kind ever appears, THAT is the moment
+	// to unify them.
+
+	/**
+	 * Everything checked before a random jump's warmup starts, and again when it ends.
+	 *
+	 * <p>{@code payingStation} is the row the player had selected in the remote: a random jump has no
+	 * destination station, so the one that must exist, be reachable and be solvent is the station at
+	 * the near end.
+	 */
+	public static Denial checkRtpPolicy(ServerPlayer player, TeleportPoint payingStation) {
+		if (player.isPassenger()) {
+			return Denial.MOUNTED;
+		}
+		// Overworld only. The search reads a surface height and trusts it, which the other two
+		// dimensions make meaningless: the Nether's heightmap finds its bedrock ceiling, and the End is
+		// mostly void between islands. Refusing outright is honest; guessing there would land people
+		// inside rock or in mid-air over nothing.
+		if (player.level().dimension() != Level.OVERWORLD) {
+			return Denial.RTP_WRONG_DIMENSION;
+		}
+		if (payingStation.dim() != player.level().dimension()) {
+			return Denial.CROSS_DIM;
+		}
+
+		TeleporterBlockEntity station = stationAt(player.level(), payingStation.pos());
+		if (station == null) {
+			return Denial.NO_STATION;
+		}
+		if (!station.allowsAccess(player.getUUID())) {
+			return Denial.NO_ACCESS;
+		}
+		if (!station.hasRtpModule()) {
+			return Denial.RTP_NO_MODULE;
+		}
+		if (station.getEnergyStorage().getAmount() < rtpCost()) {
+			return Denial.NOT_ENOUGH_EU;
+		}
+		return Denial.OK;
+	}
+
+	/**
+	 * What a random jump costs: a flat number, not the targeted jump's distance formula.
+	 *
+	 * <p>Flat because the player has to read the price off the button before pressing it, and where
+	 * the dice will land is unknown until after the search has run. Inventory weight is left out for
+	 * the same reason — a price that moved while the screen was open would be a price nobody could
+	 * check.
+	 */
+	public static long rtpCost() {
+		return Config.teleporterRtpCost;
+	}
+
+	/**
+	 * Roll a destination, or {@code null} if the search gave up.
+	 *
+	 * <p>Called at trigger time and again at the end of the warmup — the second call is what catches a
+	 * spot that stopped being safe while the player stood still, and it costs nothing extra because
+	 * the chunk it needs is the one the first call already pulled in.
+	 */
+	@Nullable
+	public static BlockPos findRtpSite(ServerPlayer player) {
+		if (!(player.level() instanceof ServerLevel level)) {
+			return null;
+		}
+		RandomSource random = level.getRandom();
+		BlockPos origin = player.blockPosition();
+		RtpSiteFinder.Site site = RtpSiteFinder.find(new RtpTerrain(level), origin.getX(), origin.getZ(),
+				Config.teleporterRtpMinRadius, Config.teleporterRtpRadius, level.getSeaLevel(),
+				Config.teleporterRtpMaxAttempts, random::nextDouble);
+		return site == null ? null : new BlockPos(site.x(), site.y(), site.z());
+	}
+
+	/**
+	 * Measure the rolled column again at the end of the warmup.
+	 *
+	 * <p>The COLUMN is kept and only its height re-read: the player was promised the spot the dice
+	 * chose, and re-rolling would quietly turn "the jump you started" into a different one. Its chunk
+	 * is already loaded by then, so this is nearly free.
+	 *
+	 * @return the corrected landing spot, or {@code null} if the column stopped being safe
+	 */
+	@Nullable
+	public static BlockPos revalidateRtpSite(ServerPlayer player, BlockPos rolled) {
+		if (!(player.level() instanceof ServerLevel level)) {
+			return null;
+		}
+		int feet = new RtpTerrain(level).safeFeetY(rolled.getX(), rolled.getZ());
+		return feet == RtpSiteFinder.NO_SITE ? null : new BlockPos(rolled.getX(), feet, rolled.getZ());
+	}
+
+	/**
+	 * Fire a random jump: teleport first, charge only on success — the same order, and for the same
+	 * reason, as {@link #execute}.
+	 *
+	 * <p>{@code target} is a FEET position, so the player is placed at it rather than a block above
+	 * it: unlike a targeted jump, which lands on top of a known block, the search has already
+	 * accounted for the two clear blocks the player occupies.
+	 */
+	public static boolean executeRtp(ServerPlayer player, TeleportPoint payingStation, BlockPos target,
+			long cost) {
+		if (!(player.level() instanceof ServerLevel level)) {
+			return false;
+		}
+		TeleporterBlockEntity station = stationAt(level, payingStation.pos());
+		if (station == null || !station.hasRtpModule()
+				|| station.getEnergyStorage().getAmount() < cost) {
+			return false;
+		}
+		Vec3 destination = new Vec3(target.getX() + 0.5, target.getY(), target.getZ() + 0.5);
+		if (!Level.isInSpawnableBounds(BlockPos.containing(destination))) {
+			return false;
+		}
+		boolean moved = player.teleportTo(level, destination.x, destination.y, destination.z,
+				Set.<Relative>of(), player.getYRot(), player.getXRot(), true);
+		if (!moved) {
+			return false;
+		}
+		player.setDeltaMovement(player.getDeltaMovement().multiply(1.0, 0.0, 1.0));
+		player.setOnGround(true);
+		station.getEnergyStorage().drainInternal(cost);
+		station.setChanged();
 		PlayerStatsTracker.get().recordSpending(level.getServer(), player.getUUID(), cost);
 		return true;
 	}

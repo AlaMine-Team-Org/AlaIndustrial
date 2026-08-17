@@ -1,0 +1,11 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"key": {
+		"R": "alaindustrial:resonant_shard",
+		"C": "alaindustrial:copper_coil",
+		"X": "alaindustrial:spatial_crystal"
+	},
+	"pattern": [" R ", "CXC", " R "],
+	"result": { "id": "alaindustrial:resonance_coil" }
+}

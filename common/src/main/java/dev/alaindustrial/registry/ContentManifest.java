@@ -117,6 +117,7 @@ import dev.alaindustrial.item.misc.HintItem;
 import dev.alaindustrial.item.misc.MutationChipItem;
 import dev.alaindustrial.item.misc.OverclockerChipItem;
 import dev.alaindustrial.item.misc.SoulVesselItem;
+import dev.alaindustrial.item.teleport.RtpChipItem;
 import dev.alaindustrial.menu.AssemblerMenu;
 import dev.alaindustrial.menu.BatteryBoxMenu;
 import dev.alaindustrial.menu.EnergyCondenserMenu;
@@ -856,8 +857,8 @@ public final class ContentManifest {
 				"raw_nickel", "raw_palladium", "raw_rubber",
 				"raw_silver", "raw_sulfur", "raw_tin", "raw_uranium",
 				// MOD-424: the centrifuge's product and what smelting it yields.
-				"refined_uranium", "resonant_shard", "rubber",
-				"silver_dust", "silver_gear", "silver_ingot", "silver_plate", "stone_gear",
+				"refined_uranium", "resonance_coil", "resonant_shard", "rubber",
+				"silver_dust", "silver_gear", "silver_ingot", "silver_plate", "spatial_crystal", "stone_gear",
 				"sulfur_dust", "tempered_iron", "tempered_iron_plate", "tin_dust", "tin_ingot",
 				"tin_plate", "unstable_isotope", "uranium_dust", "uranium_ingot", "uranium_plate",
 				"uranium_shavings", "wooden_gear")) {
@@ -902,6 +903,10 @@ public final class ContentManifest {
 		defs.put("overclocker_chip_i", overclockerChip("overclocker_chip_i", 1));
 		defs.put("overclocker_chip_ii", overclockerChip("overclocker_chip_ii", 2));
 		defs.put("overclocker_chip_iii", overclockerChip("overclocker_chip_iii", 3));
+		// Random Jump Chip (MOD-116): the teleporter station's one permanent upgrade. Its own class
+		// rather than a hintItem because fitting it is an interaction, not just a tooltip.
+		defs.put("rtp_chip", p -> new RtpChipItem(p, "item.alaindustrial.rtp_chip.hint",
+				"item.alaindustrial.rtp_chip.hint2"));
 		// Energy clots (MOD-393): what the condenser packs surplus grid power into. Three tiers, told
 		// apart by how much was banked when the player pulled it out.
 		defs.put("energy_clot_i", hintItem("energy_clot_i"));

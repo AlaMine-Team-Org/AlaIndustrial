@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_1": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:resonance_coil" } ] } },
+    "has_item_2": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:empty_chip" } ] } },
+    "has_item_3": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "minecraft:chorus_fruit" } ] } }
+  },
+  "requirements": [ [ "has_item_1" ], [ "has_item_2" ], [ "has_item_3" ] ],
+  "rewards": {
+    "recipes": [ "alaindustrial:rtp_chip" ]
+  }
+}

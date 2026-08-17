@@ -156,6 +156,8 @@ public class IndustrializationFabric implements ModInitializer {
 				ModDataComponents.createDistillationColumnContents());
 		ModDataComponents.TELEPORTER_PRIVATE = registerDataComponent(
 				ModDataComponents.TELEPORTER_PRIVATE_ID, ModDataComponents.createTeleporterPrivate());
+		ModDataComponents.TELEPORTER_RTP_MODULE = registerDataComponent(
+				ModDataComponents.TELEPORTER_RTP_MODULE_ID, ModDataComponents.createTeleporterRtpModule());
 		ModDataComponents.MAGNET_ENABLED = registerDataComponent(
 				ModDataComponents.MAGNET_ENABLED_ID, ModDataComponents.createMagnetEnabled());
 		ModDataComponents.SOUL_VESSEL_KILLS = registerDataComponent(

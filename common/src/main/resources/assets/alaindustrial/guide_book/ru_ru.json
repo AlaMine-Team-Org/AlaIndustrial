@@ -1192,6 +1192,45 @@
           ]
         },
         {
+          "id": "thermal_centrifuge",
+          "title": "Термоцентрифуга",
+          "icon": "alaindustrial:thermal_centrifuge",
+          "block_id": "alaindustrial:thermal_centrifuge",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Термоцентрифуга",
+              "text": "LV-машина с раскруткой: по сигналу редстоуна ротор набирает обороты, а прогретый нагреватель снизу позволяет ей разделить пыль урана надвое — второе удвоение руды после дробителя."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Энергия: 800 EU/оп",
+                "Буфер: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "minecraft:iron_ingot",
+                "alaindustrial:tempered_iron",
+                "minecraft:redstone",
+                "alaindustrial:machine_casing",
+                "minecraft:redstone",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:thermal_centrifuge",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "Экстрактор",
           "icon": "alaindustrial:extractor",
@@ -2802,6 +2841,37 @@
               "type": "text",
               "title": "Резина",
               "text": "Материал из нефти и серы — Полимеризатор делает сырой каучук, а Вулканизатор с нагревом снизу превращает его в резину."
+            }
+          ]
+        },
+        {
+          "id": "rtp_chip",
+          "title": "Чип случайного скачка",
+          "icon": "alaindustrial:rtp_chip",
+          "block_id": "alaindustrial:rtp_chip",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Чип случайного скачка",
+              "text": "Пространственный кристалл, резонансная катушка и чип случайного скачка — три ступени, открывающие телепорту прыжок наугад."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "",
+                "minecraft:chorus_fruit",
+                "",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:empty_chip",
+                "alaindustrial:resonance_coil",
+                "",
+                "minecraft:redstone",
+                ""
+              ],
+              "result_id": "alaindustrial:rtp_chip",
+              "result_count": 1
             }
           ]
         },

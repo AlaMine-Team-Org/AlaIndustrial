@@ -10,6 +10,7 @@ import dev.alaindustrial.registry.ModDataComponents;
 import dev.alaindustrial.teleporter.TeleportEngine;
 import dev.alaindustrial.teleporter.TeleportWarmupManager;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
@@ -39,7 +40,9 @@ public class TeleporterRemoteMenu extends AbstractContainerMenu {
 	public enum Action {
 		SELECT,
 		DELETE,
-		TELEPORT;
+		TELEPORT,
+		/** MOD-116 — appended, never inserted: the ordinal is the wire format. */
+		RTP;
 
 		private static final Action[] VALUES = values();
 
@@ -121,6 +124,7 @@ public class TeleporterRemoteMenu extends AbstractContainerMenu {
 				syncRemote(serverPlayer);
 			}
 			case TELEPORT -> startJump(serverPlayer, stack, points.get(index));
+			case RTP -> startRandomJump(serverPlayer, points.get(index));
 		}
 		return true;
 	}
@@ -159,6 +163,41 @@ public class TeleporterRemoteMenu extends AbstractContainerMenu {
 		serverPlayer.sendSystemMessage(Component.translatable("alaindustrial.teleporter.warmup_started",
 				point.displayName(), TeleportEngine.computeCost(serverPlayer, point)).withStyle(ChatFormatting.GRAY), false);
 		// The countdown happens in the world, not behind a screen the player is staring at.
+		serverPlayer.closeContainer();
+	}
+
+	/**
+	 * The random jump (MOD-116): same gate as an ordinary jump, but the selected row is the station
+	 * that PAYS rather than the place being jumped to.
+	 *
+	 * <p>The destination is rolled here, before the warmup, so a player standing somewhere the search
+	 * cannot serve is told at once instead of after five seconds of particles. No confirmation lock on
+	 * this one, unlike Delete: a mis-click is undone by walking two blocks, which cancels the warmup
+	 * and costs nothing, whereas a deleted point has no such second chance.
+	 */
+	private void startRandomJump(ServerPlayer serverPlayer, TeleportPoint payingStation) {
+		if (TeleportWarmupManager.isWarming(serverPlayer)) {
+			deny(serverPlayer, TeleportEngine.Denial.ALREADY_WARMING);
+			return;
+		}
+		if (TeleportWarmupManager.isOnCooldown(serverPlayer)) {
+			notify(serverPlayer, Component.translatable("alaindustrial.teleporter.cooldown",
+					TeleportWarmupManager.cooldownSecondsLeft(serverPlayer)));
+			return;
+		}
+		TeleportEngine.Denial denial = TeleportEngine.checkRtpPolicy(serverPlayer, payingStation);
+		if (!denial.allowed()) {
+			deny(serverPlayer, denial);
+			return;
+		}
+		BlockPos target = TeleportEngine.findRtpSite(serverPlayer);
+		if (target == null) {
+			deny(serverPlayer, TeleportEngine.Denial.RTP_NO_SAFE_SPOT);
+			return;
+		}
+		TeleportWarmupManager.startRtp(serverPlayer, payingStation, target);
+		serverPlayer.sendSystemMessage(Component.translatable("alaindustrial.teleporter.rtp_warmup_started",
+				TeleportEngine.rtpCost()).withStyle(ChatFormatting.GRAY), false);
 		serverPlayer.closeContainer();
 	}
 

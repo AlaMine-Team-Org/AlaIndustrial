@@ -1192,6 +1192,45 @@
           ]
         },
         {
+          "id": "thermal_centrifuge",
+          "title": "Thermal Centrifuge",
+          "icon": "alaindustrial:thermal_centrifuge",
+          "block_id": "alaindustrial:thermal_centrifuge",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Thermal Centrifuge",
+              "text": "An LV machine with a spin-up: a redstone signal brings the rotor up to speed, and a hot heater below lets it split uranium dust in two — the second ore doubling after the macerator."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energy: 800 EU/op",
+                "Buffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "minecraft:iron_ingot",
+                "alaindustrial:tempered_iron",
+                "minecraft:redstone",
+                "alaindustrial:machine_casing",
+                "minecraft:redstone",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:thermal_centrifuge",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "Extractor",
           "icon": "alaindustrial:extractor",
@@ -2802,6 +2841,37 @@
               "type": "text",
               "title": "Rubber",
               "text": "Een materiaal uit aardolie en zwavel — de Polymerisator maakt ruwe rubber, waarna een verwarmde Vulkanisator die in rubber omzet."
+            }
+          ]
+        },
+        {
+          "id": "rtp_chip",
+          "title": "Random Jump Chip",
+          "icon": "alaindustrial:rtp_chip",
+          "block_id": "alaindustrial:rtp_chip",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Random Jump Chip",
+              "text": "The Spatial Crystal, the Resonance Coil and the Random Jump Chip — three steps that unlock the teleporter's random jump."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "",
+                "minecraft:chorus_fruit",
+                "",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:empty_chip",
+                "alaindustrial:resonance_coil",
+                "",
+                "minecraft:redstone",
+                ""
+              ],
+              "result_id": "alaindustrial:rtp_chip",
+              "result_count": 1
             }
           ]
         },
