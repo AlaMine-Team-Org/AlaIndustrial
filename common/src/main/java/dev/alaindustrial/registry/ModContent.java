@@ -34,6 +34,7 @@ import dev.alaindustrial.menu.IncubatorMenu;
 import dev.alaindustrial.menu.SawmillMenu;
 import dev.alaindustrial.menu.SilverChestMenu;
 import dev.alaindustrial.menu.SolarPanelMenu;
+import dev.alaindustrial.menu.LightningRodGeneratorMenu;
 import dev.alaindustrial.menu.StormWindMillMenu;
 import dev.alaindustrial.menu.TeleporterRemoteMenu;
 import dev.alaindustrial.menu.TeleporterStationMenu;
@@ -119,6 +120,7 @@ public final class ModContent {
 	public static Supplier<Block> WIND_MILL = unbound("WIND_MILL");
 	public static Supplier<Block> HIGH_ALTITUDE_WIND_MILL = unbound("HIGH_ALTITUDE_WIND_MILL");
 	public static Supplier<Block> STORM_WIND_MILL = unbound("STORM_WIND_MILL");
+	public static Supplier<Block> LIGHTNING_ROD_GENERATOR = unbound("LIGHTNING_ROD_GENERATOR");
 	public static Supplier<Block> PUMP = unbound("PUMP");
 	public static Supplier<Block> GARDEN_DRONE_STATION = unbound("GARDEN_DRONE_STATION");
 	public static Supplier<Block> FLUID_TANK = unbound("FLUID_TANK");
@@ -288,6 +290,11 @@ public final class ModContent {
 	// MOD-385: the reinforced and advanced grades. Balance lives in ComponentTier, not here.
 	public static Supplier<Item> WINDMILL_ROTOR_REINFORCED = unbound("WINDMILL_ROTOR_REINFORCED");
 	public static Supplier<Item> WINDMILL_ROTOR_ADVANCED = unbound("WINDMILL_ROTOR_ADVANCED");
+	public static Supplier<Item> LIGHTNING_ROD_CONDUCTOR_TIP = unbound("LIGHTNING_ROD_CONDUCTOR_TIP");
+	public static Supplier<Item> LIGHTNING_ROD_CONDUCTOR_TIP_REINFORCED =
+			unbound("LIGHTNING_ROD_CONDUCTOR_TIP_REINFORCED");
+	public static Supplier<Item> LIGHTNING_ROD_CONDUCTOR_TIP_ADVANCED =
+			unbound("LIGHTNING_ROD_CONDUCTOR_TIP_ADVANCED");
 	public static Supplier<Item> WATER_MILL_WHEEL_REINFORCED = unbound("WATER_MILL_WHEEL_REINFORCED");
 	public static Supplier<Item> WATER_MILL_WHEEL_ADVANCED = unbound("WATER_MILL_WHEEL_ADVANCED");
 	public static Supplier<Item> WOODEN_GEAR = unbound("WOODEN_GEAR");
@@ -446,6 +453,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> WIND_MILL_ITEM = unbound("WIND_MILL_ITEM");
 	public static Supplier<BlockItem> HIGH_ALTITUDE_WIND_MILL_ITEM = unbound("HIGH_ALTITUDE_WIND_MILL_ITEM");
 	public static Supplier<BlockItem> STORM_WIND_MILL_ITEM = unbound("STORM_WIND_MILL_ITEM");
+	public static Supplier<BlockItem> LIGHTNING_ROD_GENERATOR_ITEM = unbound("LIGHTNING_ROD_GENERATOR_ITEM");
 	public static Supplier<BlockItem> SOLAR_PANEL_ITEM = unbound("SOLAR_PANEL_ITEM");
 	public static Supplier<BlockItem> MOONLIT_SOLAR_PANEL_ITEM = unbound("MOONLIT_SOLAR_PANEL_ITEM");
 	public static Supplier<BlockItem> DAYLIGHT_SOLAR_PANEL_ITEM = unbound("DAYLIGHT_SOLAR_PANEL_ITEM");
@@ -526,6 +534,8 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> WIND_MILL_BE = unbound("WIND_MILL_BE");
 	public static Supplier<BlockEntityType<?>> HIGH_ALTITUDE_WIND_MILL_BE = unbound("HIGH_ALTITUDE_WIND_MILL_BE");
 	public static Supplier<BlockEntityType<?>> STORM_WIND_MILL_BE = unbound("STORM_WIND_MILL_BE");
+	public static Supplier<BlockEntityType<?>> LIGHTNING_ROD_GENERATOR_BE =
+			unbound("LIGHTNING_ROD_GENERATOR_BE");
 	public static Supplier<BlockEntityType<?>> SOLAR_PANEL_BE = unbound("SOLAR_PANEL_BE");
 	public static Supplier<BlockEntityType<?>> MOONLIT_SOLAR_PANEL_BE = unbound("MOONLIT_SOLAR_PANEL_BE");
 	public static Supplier<BlockEntityType<?>> DAYLIGHT_SOLAR_PANEL_BE = unbound("DAYLIGHT_SOLAR_PANEL_BE");
@@ -629,6 +639,8 @@ public final class ModContent {
 	public static Supplier<MenuType<HighAltitudeWindMillMenu>> HIGH_ALTITUDE_WIND_MILL_MENU =
 			unbound("HIGH_ALTITUDE_WIND_MILL_MENU");
 	public static Supplier<MenuType<StormWindMillMenu>> STORM_WIND_MILL_MENU = unbound("STORM_WIND_MILL_MENU");
+	public static Supplier<MenuType<LightningRodGeneratorMenu>> LIGHTNING_ROD_GENERATOR_MENU =
+			unbound("LIGHTNING_ROD_GENERATOR_MENU");
 	public static Supplier<MenuType<IronChestMenu>> IRON_CHEST_MENU = unbound("IRON_CHEST_MENU");
 	// MOD-287 — one menu class, four registered sizes: the client builds its menu from
 	// (syncId, Inventory) alone, so the row count has to travel in the menu type itself.

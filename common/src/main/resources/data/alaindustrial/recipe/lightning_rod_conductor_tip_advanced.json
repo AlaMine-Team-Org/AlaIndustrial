@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"pattern": [
+		"AGA",
+		"GRG",
+		" C "
+	],
+	"key": {
+		"A": "alaindustrial:advanced_circuit",
+		"G": "alaindustrial:gold_plate",
+		"R": "alaindustrial:lightning_rod_conductor_tip_reinforced",
+		"C": "alaindustrial:electronic_circuit"
+	},
+	"result": {
+		"id": "alaindustrial:lightning_rod_conductor_tip_advanced"
+	}
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "alaindustrial:item/lightning_rod_conductor_tip_advanced"
+  }
+}

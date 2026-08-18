@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"pattern": [
+		"ETE",
+		"TRT",
+		" I "
+	],
+	"key": {
+		"E": "alaindustrial:electronic_circuit",
+		"T": "alaindustrial:tempered_iron_plate",
+		"R": "alaindustrial:lightning_rod_conductor_tip",
+		"I": "alaindustrial:tempered_iron"
+	},
+	"result": {
+		"id": "alaindustrial:lightning_rod_conductor_tip_reinforced"
+	}
+}

@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"pattern": [
+		" L ",
+		"CMC",
+		" E "
+	],
+	"key": {
+		"L": "minecraft:lightning_rod",
+		"C": "alaindustrial:copper_cable",
+		"M": "alaindustrial:machine_casing",
+		"E": "alaindustrial:electronic_circuit"
+	},
+	"result": {
+		"id": "alaindustrial:lightning_rod_generator"
+	}
+}

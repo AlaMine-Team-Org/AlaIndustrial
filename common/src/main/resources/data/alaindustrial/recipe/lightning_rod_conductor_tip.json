@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"pattern": [
+		" C ",
+		"CPC",
+		" I "
+	],
+	"key": {
+		"C": "minecraft:copper_ingot",
+		"P": "alaindustrial:iron_plate",
+		"I": "alaindustrial:copper_cable"
+	},
+	"result": {
+		"id": "alaindustrial:lightning_rod_conductor_tip"
+	}
+}

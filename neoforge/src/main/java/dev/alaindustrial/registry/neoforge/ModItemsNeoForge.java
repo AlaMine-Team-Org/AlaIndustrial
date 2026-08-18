@@ -140,6 +140,13 @@ public final class ModItemsNeoForge {
 			manifestItem("windmill_rotor_reinforced");
 	public static final DeferredItem<Item> WINDMILL_ROTOR_ADVANCED =
 			manifestItem("windmill_rotor_advanced");
+	// MOD-386: the lightning rod's conductor tips.
+	public static final DeferredItem<Item> LIGHTNING_ROD_CONDUCTOR_TIP =
+			manifestItem("lightning_rod_conductor_tip");
+	public static final DeferredItem<Item> LIGHTNING_ROD_CONDUCTOR_TIP_REINFORCED =
+			manifestItem("lightning_rod_conductor_tip_reinforced");
+	public static final DeferredItem<Item> LIGHTNING_ROD_CONDUCTOR_TIP_ADVANCED =
+			manifestItem("lightning_rod_conductor_tip_advanced");
 	public static final DeferredItem<Item> WATER_MILL_WHEEL_REINFORCED =
 			manifestItem("water_mill_wheel_reinforced");
 	public static final DeferredItem<Item> WATER_MILL_WHEEL_ADVANCED =
@@ -472,6 +479,8 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("high_altitude_wind_mill", ModBlocksNeoForge.HIGH_ALTITUDE_WIND_MILL);
 	public static final DeferredItem<BlockItem> STORM_WIND_MILL_ITEM =
 			ITEMS.registerSimpleBlockItem("storm_wind_mill", ModBlocksNeoForge.STORM_WIND_MILL);
+	public static final DeferredItem<BlockItem> LIGHTNING_ROD_GENERATOR_ITEM =
+			ITEMS.registerSimpleBlockItem("lightning_rod_generator", ModBlocksNeoForge.LIGHTNING_ROD_GENERATOR);
 	public static final DeferredItem<BlockItem> COPPER_CABLE_ITEM =
 			ITEMS.registerSimpleBlockItem("copper_cable", ModBlocksNeoForge.COPPER_CABLE);
 	public static final DeferredItem<BlockItem> TIN_CABLE_ITEM =
@@ -603,6 +612,9 @@ public final class ModItemsNeoForge {
 		ModContent.WATER_MILL_WHEEL = WATER_MILL_WHEEL;
 		ModContent.WINDMILL_ROTOR_REINFORCED = WINDMILL_ROTOR_REINFORCED;
 		ModContent.WINDMILL_ROTOR_ADVANCED = WINDMILL_ROTOR_ADVANCED;
+		ModContent.LIGHTNING_ROD_CONDUCTOR_TIP = LIGHTNING_ROD_CONDUCTOR_TIP;
+		ModContent.LIGHTNING_ROD_CONDUCTOR_TIP_REINFORCED = LIGHTNING_ROD_CONDUCTOR_TIP_REINFORCED;
+		ModContent.LIGHTNING_ROD_CONDUCTOR_TIP_ADVANCED = LIGHTNING_ROD_CONDUCTOR_TIP_ADVANCED;
 		ModContent.WATER_MILL_WHEEL_REINFORCED = WATER_MILL_WHEEL_REINFORCED;
 		ModContent.WATER_MILL_WHEEL_ADVANCED = WATER_MILL_WHEEL_ADVANCED;
 		ModContent.WOODEN_GEAR = WOODEN_GEAR;
@@ -763,6 +775,7 @@ public final class ModItemsNeoForge {
 		ModContent.WIND_MILL_ITEM = WIND_MILL_ITEM;
 		ModContent.HIGH_ALTITUDE_WIND_MILL_ITEM = HIGH_ALTITUDE_WIND_MILL_ITEM;
 		ModContent.STORM_WIND_MILL_ITEM = STORM_WIND_MILL_ITEM;
+		ModContent.LIGHTNING_ROD_GENERATOR_ITEM = LIGHTNING_ROD_GENERATOR_ITEM;
 		ModContent.COPPER_CABLE_ITEM = COPPER_CABLE_ITEM;
 		ModContent.TIN_CABLE_ITEM = TIN_CABLE_ITEM;
 		ModContent.GOLD_CABLE_ITEM = GOLD_CABLE_ITEM;

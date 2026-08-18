@@ -115,6 +115,7 @@ public class ScreensClientGameTest implements FabricClientGameTest {
             new Screen("wind_mill", "wind_mill", "Wind Mill"),
             new Screen("high_altitude_wind_mill", "high_altitude_wind_mill", "High Altitude Wind Mill"),
             new Screen("storm_wind_mill", "storm_wind_mill", "Storm Wind Mill"),
+			new Screen("lightning_rod_generator", "lightning_rod_generator", "Lightning Rod Generator"),
             new Screen("iron_chest", "iron_chest", "Iron Chest"),
             new Screen("silver_chest", "silver_chest", "Silver Chest"),
             new Screen("gold_chest", "gold_chest", "Gold Chest"),

@@ -1,0 +1,50 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "particle": "alaindustrial:block/lightning_rod_generator_side",
+    "casing_top": "alaindustrial:block/lightning_rod_generator_top",
+    "casing_side": "alaindustrial:block/lightning_rod_generator_side",
+    "casing_bottom": "alaindustrial:block/lightning_rod_generator_bottom",
+    "shaft": "alaindustrial:block/lightning_rod_generator_shaft",
+    "head": "alaindustrial:block/lightning_rod_generator_head"
+  },
+  "elements": [
+    {
+      "name": "casing",
+      "from": [0, 0, 0],
+      "to": [16, 8, 16],
+      "faces": {
+        "north": { "uv": [0, 8, 16, 16], "texture": "#casing_side" },
+        "south": { "uv": [0, 8, 16, 16], "texture": "#casing_side" },
+        "west":  { "uv": [0, 8, 16, 16], "texture": "#casing_side" },
+        "east":  { "uv": [0, 8, 16, 16], "texture": "#casing_side" },
+        "up":    { "uv": [0, 0, 16, 16], "texture": "#casing_top" },
+        "down":  { "uv": [0, 0, 16, 16], "texture": "#casing_bottom", "cullface": "down" }
+      }
+    },
+    {
+      "name": "mast",
+      "from": [7, 8, 7],
+      "to": [9, 14, 9],
+      "faces": {
+        "north": { "uv": [0, 0, 2, 6], "texture": "#shaft" },
+        "south": { "uv": [0, 0, 2, 6], "texture": "#shaft" },
+        "west":  { "uv": [0, 0, 2, 6], "texture": "#shaft" },
+        "east":  { "uv": [0, 0, 2, 6], "texture": "#shaft" }
+      }
+    },
+    {
+      "name": "head",
+      "from": [6, 14, 6],
+      "to": [10, 16, 10],
+      "faces": {
+        "north": { "uv": [0, 0, 4, 2], "texture": "#head" },
+        "south": { "uv": [0, 0, 4, 2], "texture": "#head" },
+        "west":  { "uv": [0, 0, 4, 2], "texture": "#head" },
+        "east":  { "uv": [0, 0, 4, 2], "texture": "#head" },
+        "up":    { "uv": [0, 0, 4, 4], "texture": "#head" },
+        "down":  { "uv": [0, 0, 4, 4], "texture": "#head" }
+      }
+    }
+  ]
+}

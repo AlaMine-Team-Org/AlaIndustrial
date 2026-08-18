@@ -1,0 +1,7 @@
+{
+  "parent": "alaindustrial:block/lightning_rod_generator_tipped",
+  "textures": {
+    "casing_side": "alaindustrial:block/lightning_rod_generator_side_lit",
+    "head": "alaindustrial:block/lightning_rod_generator_head_lit"
+  }
+}

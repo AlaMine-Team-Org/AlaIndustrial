@@ -33,7 +33,18 @@ import java.util.function.IntSupplier;
  *   <tr><td>{@link #WATER_MILL_WHEEL}</td><td>×1.00</td><td>1000</td><td>320</td><td>320 000 EU</td></tr>
  *   <tr><td>{@link #WATER_MILL_WHEEL_REINFORCED}</td><td>×1.25</td><td>3000</td><td>400</td><td>1 200 000 EU</td></tr>
  *   <tr><td>{@link #WATER_MILL_WHEEL_ADVANCED}</td><td>×1.50</td><td>6000</td><td>480</td><td>2 880 000 EU</td></tr>
+ *   <tr><td>{@link #LIGHTNING_ROD_TIP}</td><td>×1.00</td><td>100</td><td>1000</td><td>100 000 EU</td></tr>
+ *   <tr><td>{@link #LIGHTNING_ROD_TIP_REINFORCED}</td><td>×1.25</td><td>320</td><td>1250</td><td>400 000 EU</td></tr>
+ *   <tr><td>{@link #LIGHTNING_ROD_TIP_ADVANCED}</td><td>×1.50</td><td>800</td><td>1500</td><td>1 200 000 EU</td></tr>
  * </table>
+ *
+ * <p>The conductor tips (MOD-386) join the same ladder with one difference worth stating: their
+ * "output" is not a rate but the pair (capacitor size, bleed rate), and their wear is charged
+ * <b>per strike</b> rather than per tick. The arithmetic is unchanged — {@code ComponentWear.step}
+ * divides whatever EU it is handed by {@code euPerDamage}, so a single 20 000 EU call spends 20
+ * durability points at once — which is why a tip's life is stated in STRIKES: 5 / 20 / 60 at the shipped 20 000 EU strike.
+ * Their durability bars are two orders of magnitude shorter than a rotor's for that reason — the
+ * rotor spends its life a few EU per tick, the tip spends a fifth of its own in one event.
  *
  * <p><b>Why {@code euPerDamage} grows with the multiplier.</b> Wear is charged on EU produced, so a
  * component that makes 25 % more EU would wear 25 % faster at a fixed rate and the promised gain in
@@ -96,6 +107,29 @@ public enum ComponentTier {
 			() -> Config.waterMillWheelAdvancedOutputMultiplier,
 			() -> Config.waterMillWheelAdvancedEuPerDamage,
 			() -> Config.waterMillWheelAdvancedMaxDamage,
+			() -> Config.repairBenchTier3EuCost),
+	/**
+	 * Copper conductor tip — the lightning rod's T1 baseline (MOD-386). Its multiplier scales the
+	 * capacitor's SIZE and its bleed rate rather than a per-tick output, because the rod's input is an
+	 * event: a better tip banks more of a strike and pays it out faster, it does not make lightning
+	 * stronger. Both are clamped inside {@code LightningRodOutput}, so the ceilings still hold.
+	 */
+	LIGHTNING_ROD_TIP("lightning_rod_conductor_tip",
+			() -> Config.lightningRodTipOutputMultiplier,
+			() -> Config.lightningRodTipEuPerDamage,
+			() -> Config.lightningRodTipMaxDamage,
+			() -> Config.repairBenchTier1EuCost),
+	/** Reinforced conductor tip — tempered iron: ×1.25 capacity/bleed, ×3 durability. */
+	LIGHTNING_ROD_TIP_REINFORCED("lightning_rod_conductor_tip_reinforced",
+			() -> Config.lightningRodTipReinforcedOutputMultiplier,
+			() -> Config.lightningRodTipReinforcedEuPerDamage,
+			() -> Config.lightningRodTipReinforcedMaxDamage,
+			() -> Config.repairBenchTier2EuCost),
+	/** Advanced conductor tip — electronic circuitry: ×1.50 capacity/bleed, ×6 durability. Top grade. */
+	LIGHTNING_ROD_TIP_ADVANCED("lightning_rod_conductor_tip_advanced",
+			() -> Config.lightningRodTipAdvancedOutputMultiplier,
+			() -> Config.lightningRodTipAdvancedEuPerDamage,
+			() -> Config.lightningRodTipAdvancedMaxDamage,
 			() -> Config.repairBenchTier3EuCost);
 
 	/**

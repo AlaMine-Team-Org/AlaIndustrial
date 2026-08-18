@@ -53,7 +53,7 @@ public final class MenuDataWidthScenarios {
 	 */
 	// 31 -> 32 (MOD-418): the Electric Heater's warm-up readout.
 	// 33 -> 34 (MOD-424): the Thermal Centrifuge — six channels, the last two being spin and status.
-	private static final int EXPECTED_MACHINE_MENUS = 34;
+	private static final int EXPECTED_MACHINE_MENUS = 35;
 
 	/** Reused single cell inside the test region; each machine is placed here, read, then cleared. */
 	private static final BlockPos PROBE = new BlockPos(1, 2, 1);

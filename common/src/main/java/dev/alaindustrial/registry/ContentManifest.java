@@ -49,6 +49,7 @@ import dev.alaindustrial.block.SawmillBlock;
 import dev.alaindustrial.block.SilverChestBlock;
 import dev.alaindustrial.block.SolarPanelBlock;
 import dev.alaindustrial.block.StorageModuleBlock;
+import dev.alaindustrial.block.LightningRodGeneratorBlock;
 import dev.alaindustrial.block.StormWindMillBlock;
 import dev.alaindustrial.block.TeleporterBlock;
 import dev.alaindustrial.block.ThermalCentrifugeBlock;
@@ -104,6 +105,7 @@ import dev.alaindustrial.block.entity.SawmillBlockEntity;
 import dev.alaindustrial.block.entity.SilverChestBlockEntity;
 import dev.alaindustrial.block.entity.SolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.StorageModuleBlockEntity;
+import dev.alaindustrial.block.entity.LightningRodGeneratorBlockEntity;
 import dev.alaindustrial.block.entity.StormWindMillBlockEntity;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
@@ -151,6 +153,7 @@ import dev.alaindustrial.menu.MobRepellerMvMenu;
 import dev.alaindustrial.menu.SawmillMenu;
 import dev.alaindustrial.menu.SilverChestMenu;
 import dev.alaindustrial.menu.SolarPanelMenu;
+import dev.alaindustrial.menu.LightningRodGeneratorMenu;
 import dev.alaindustrial.menu.StormWindMillMenu;
 import dev.alaindustrial.menu.TeleporterRemoteMenu;
 import dev.alaindustrial.menu.TeleporterStationMenu;
@@ -307,7 +310,10 @@ public final class ContentManifest {
 			menu("mob_repeller_mv", MobRepellerMvMenu::new, s -> ModContent.MOB_REPELLER_MV_MENU = s),
 			menu("mob_repeller_hv", MobRepellerHvMenu::new, s -> ModContent.MOB_REPELLER_HV_MENU = s),
 			// MOD-424 — the thermal centrifuge: rotor gauge + status line over the usual two slots.
-			menu("thermal_centrifuge", ThermalCentrifugeMenu::new, s -> ModContent.THERMAL_CENTRIFUGE_MENU = s));
+			menu("thermal_centrifuge", ThermalCentrifugeMenu::new, s -> ModContent.THERMAL_CENTRIFUGE_MENU = s),
+			// MOD-386 — the lightning rod: conductor-tip slot, capacitor gauge, status line.
+			menu("lightning_rod_generator", LightningRodGeneratorMenu::new,
+					s -> ModContent.LIGHTNING_ROD_GENERATOR_MENU = s));
 
 	// ─────────────────────────────────────────────────────────────────────────────────────────
 	// Blocks — the COMPOSITION, not just the definition (MOD-403)
@@ -372,6 +378,9 @@ public final class ContentManifest {
 					s -> ModContent.HIGH_ALTITUDE_WIND_MILL = s);
 	public static final BlockDef<StormWindMillBlock> STORM_WIND_MILL =
 			block("storm_wind_mill", StormWindMillBlock::new, s -> ModContent.STORM_WIND_MILL = s);
+	public static final BlockDef<LightningRodGeneratorBlock> LIGHTNING_ROD_GENERATOR =
+			block("lightning_rod_generator", LightningRodGeneratorBlock::new,
+					s -> ModContent.LIGHTNING_ROD_GENERATOR = s);
 	public static final BlockDef<PumpBlock> PUMP =
 			block("pump", PumpBlock::new, s -> ModContent.PUMP = s);
 	public static final BlockDef<GardenDroneStationBlock> GARDEN_DRONE_STATION =
@@ -582,7 +591,9 @@ public final class ContentManifest {
 			TEMPERED_IRON_PLATE_BLOCK, INDUSTRIAL_WORKBENCH, ENRICHED_URANIUM_TORCH,
 			ENRICHED_URANIUM_WALL_TORCH, OIL, DIESEL, FUEL_OIL,
 			// MOD-424 — appended rather than filed next to VULCANIZER, per the ordering note above.
-			THERMAL_CENTRIFUGE);
+			THERMAL_CENTRIFUGE,
+			// MOD-386 — likewise appended, not filed with the other generators.
+			LIGHTNING_ROD_GENERATOR);
 
 	/**
 	 * Wraps a machine/ore/material block's {@code strength/sound/…} chain with the shared base every such
@@ -614,6 +625,9 @@ public final class ContentManifest {
 			Map.entry("wind_mill", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("high_altitude_wind_mill", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("storm_wind_mill", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
+			// MOD-386: not a full cube (casing plate + mast), hence noOcclusion — R-PHY-05.
+			Map.entry("lightning_rod_generator", machine(p -> p.strength(3.0f, 6.0f)
+					.sound(SoundType.METAL).noOcclusion())),
 			Map.entry("pump", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			// noOcclusion: the dock is a 4px plate, not a full cube — without it the faces below/around
 			// it would be culled as if a solid block sat there.
@@ -930,6 +944,12 @@ public final class ContentManifest {
 		defs.put("windmill_rotor_advanced", durableComponent(() -> Config.windMillRotorAdvancedMaxDamage));
 		defs.put("water_mill_wheel_reinforced", durableComponent(() -> Config.waterMillWheelReinforcedMaxDamage));
 		defs.put("water_mill_wheel_advanced", durableComponent(() -> Config.waterMillWheelAdvancedMaxDamage));
+		// MOD-386: the lightning rod's conductor tips — the third component family on the same ladder.
+		defs.put("lightning_rod_conductor_tip", durableComponent(() -> Config.lightningRodTipMaxDamage));
+		defs.put("lightning_rod_conductor_tip_reinforced",
+				durableComponent(() -> Config.lightningRodTipReinforcedMaxDamage));
+		defs.put("lightning_rod_conductor_tip_advanced",
+				durableComponent(() -> Config.lightningRodTipAdvancedMaxDamage));
 		// Soul Vessel (MOD-278): the repeller's upgrade currency. stacksTo(1) is not a balance knob —
 		// the kill counter is a stack component, and stacks with different components never merge, so a
 		// stackable vessel would only ever look broken.
@@ -1114,7 +1134,10 @@ public final class ContentManifest {
 			blockEntity("mob_repeller_hv", MobRepellerHvBlockEntity.class, MobRepellerHvBlockEntity::new, s -> ModContent.MOB_REPELLER_HV_BE = s, "mob_repeller_hv"),
 			blockEntity("thermal_centrifuge", ThermalCentrifugeBlockEntity.class,
 					ThermalCentrifugeBlockEntity::new, s -> ModContent.THERMAL_CENTRIFUGE_BE = s,
-					"thermal_centrifuge"));
+					"thermal_centrifuge"),
+			blockEntity("lightning_rod_generator", LightningRodGeneratorBlockEntity.class,
+					LightningRodGeneratorBlockEntity::new, s -> ModContent.LIGHTNING_ROD_GENERATOR_BE = s,
+					"lightning_rod_generator"));
 
 	/**
 	 * The definition for block-entity {@code id}, checked against the type the caller expects.

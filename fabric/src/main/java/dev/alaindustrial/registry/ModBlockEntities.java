@@ -46,6 +46,7 @@ import dev.alaindustrial.block.entity.SolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
 import dev.alaindustrial.block.entity.HighAltitudeWindMillBlockEntity;
+import dev.alaindustrial.block.entity.LightningRodGeneratorBlockEntity;
 import dev.alaindustrial.block.entity.StormWindMillBlockEntity;
 import dev.alaindustrial.core.energy.EnergyPortHost;
 import dev.alaindustrial.core.fabric.PortAsEnergyStorage;
@@ -116,6 +117,7 @@ public final class ModBlockEntities {
 	public static BlockEntityType<WindMillBlockEntity> WIND_MILL;
 	public static BlockEntityType<HighAltitudeWindMillBlockEntity> HIGH_ALTITUDE_WIND_MILL;
 	public static BlockEntityType<StormWindMillBlockEntity> STORM_WIND_MILL;
+	public static BlockEntityType<LightningRodGeneratorBlockEntity> LIGHTNING_ROD_GENERATOR;
 	// Iron chest is a pure Container (no EnergyPortHost), so the roster gives it no energy capability.
 	public static BlockEntityType<IronChestBlockEntity> IRON_CHEST;
 	public static BlockEntityType<StorageModuleBlockEntity> STORAGE_MODULE;
@@ -167,6 +169,8 @@ public final class ModBlockEntities {
 		WIND_MILL = register(ContentManifest.blockEntity("wind_mill", WindMillBlockEntity.class));
 		HIGH_ALTITUDE_WIND_MILL = register(ContentManifest.blockEntity("high_altitude_wind_mill", HighAltitudeWindMillBlockEntity.class));
 		STORM_WIND_MILL = register(ContentManifest.blockEntity("storm_wind_mill", StormWindMillBlockEntity.class));
+		LIGHTNING_ROD_GENERATOR = register(ContentManifest.blockEntity("lightning_rod_generator",
+				LightningRodGeneratorBlockEntity.class));
 		IRON_CHEST = register(ContentManifest.blockEntity("iron_chest", IronChestBlockEntity.class));
 		STORAGE_MODULE = register(ContentManifest.blockEntity("storage_module", StorageModuleBlockEntity.class));
 		SILVER_CHEST = register(ContentManifest.blockEntity("silver_chest", SilverChestBlockEntity.class));

@@ -127,9 +127,11 @@ public class ComponentRepairBenchBlockEntity extends MachineBlockEntity
 	 */
 	public static Item materialFor(ComponentTier tier) {
 		return switch (tier) {
-			case WINDMILL_ROTOR, WATER_MILL_WHEEL -> ModContent.IRON_PLATE.get();
-			case WINDMILL_ROTOR_REINFORCED, WATER_MILL_WHEEL_REINFORCED -> ModContent.TEMPERED_IRON_PLATE.get();
-			case WINDMILL_ROTOR_ADVANCED, WATER_MILL_WHEEL_ADVANCED -> ModContent.ELECTRONIC_CIRCUIT.get();
+			case WINDMILL_ROTOR, WATER_MILL_WHEEL, LIGHTNING_ROD_TIP -> ModContent.IRON_PLATE.get();
+			case WINDMILL_ROTOR_REINFORCED, WATER_MILL_WHEEL_REINFORCED, LIGHTNING_ROD_TIP_REINFORCED ->
+					ModContent.TEMPERED_IRON_PLATE.get();
+			case WINDMILL_ROTOR_ADVANCED, WATER_MILL_WHEEL_ADVANCED, LIGHTNING_ROD_TIP_ADVANCED ->
+					ModContent.ELECTRONIC_CIRCUIT.get();
 		};
 	}
 
@@ -228,7 +230,8 @@ public class ComponentRepairBenchBlockEntity extends MachineBlockEntity
 			// component and have the screen explain why it is refused (that is an acceptance criterion,
 			// not a convenience). Automation is held to the stricter test below.
 			case TARGET_SLOT -> stack.is(ModTags.Items.WINDMILL_ROTORS)
-					|| stack.is(ModTags.Items.WATER_MILL_WHEELS);
+					|| stack.is(ModTags.Items.WATER_MILL_WHEELS)
+					|| stack.is(ModTags.Items.CONDUCTOR_TIPS);
 			// Any grade's material. Which one is actually required depends on the component currently in
 			// the target slot, so that check belongs in the tick (and its answer in the status line) —
 			// gating it here would reject a plate the player is staging before inserting the rotor.

@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "tipped=false,lit=false": {
+      "model": "alaindustrial:block/lightning_rod_generator"
+    },
+    "tipped=false,lit=true": {
+      "model": "alaindustrial:block/lightning_rod_generator_lit"
+    },
+    "tipped=true,lit=false": {
+      "model": "alaindustrial:block/lightning_rod_generator_tipped"
+    },
+    "tipped=true,lit=true": {
+      "model": "alaindustrial:block/lightning_rod_generator_tipped_lit"
+    }
+  }
+}

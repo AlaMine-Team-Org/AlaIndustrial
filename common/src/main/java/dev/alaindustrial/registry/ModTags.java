@@ -125,6 +125,13 @@ public final class ModTags {
 		/** Every grade of water mill wheel (MOD-385) — the wheel slot's filter. Twin of {@link #WINDMILL_ROTORS}. */
 		public static final TagKey<Item> WATER_MILL_WHEELS = key("water_mill_wheels");
 
+		/**
+		 * Every grade of lightning rod conductor tip (MOD-386) — the rod's tip slot filter, and the third
+		 * family the repair bench accepts. Same reasoning as the two above: a tag rather than a list, so a
+		 * later grade does not have to be named again in the block entity and in the bench.
+		 */
+		public static final TagKey<Item> CONDUCTOR_TIPS = key("conductor_tips");
+
 		private static TagKey<Item> key(String path) {
 			return TagKey.create(Registries.ITEM, Industrialization.id(path));
 		}

@@ -162,4 +162,67 @@ public class GeneratorGameTest {
 	public void tcGen001Prf01b_ratePerTickMatchesConfig(GameTestHelper helper) {
 		GeneratorEnergyScenarios.generatorRatePerTickMatchesConfig(helper);
 	}
+
+	/**
+	 * MOD-386 — a caught strike banks the whole configured packet into the tip's capacitor.
+	 * Body: {@link LightningRodScenarios#strikeBanksIntoTheCapacitor}.
+	 */
+	@GameTest
+	public void lightningRod_strikeBanksIntoTheCapacitor(GameTestHelper helper) {
+		LightningRodScenarios.strikeBanksIntoTheCapacitor(helper);
+	}
+
+	/**
+	 * MOD-386 — no conductor tip → the strike is lost outright and no EU appears from nothing.
+	 * Body: {@link LightningRodScenarios#strikeWithoutTipBanksNothing}.
+	 */
+	@GameTest
+	public void lightningRod_strikeWithoutTipBanksNothing(GameTestHelper helper) {
+		LightningRodScenarios.strikeWithoutTipBanksNothing(helper);
+	}
+
+	/**
+	 * MOD-386 — a strike on a full capacitor is wasted, never overflows, and costs the tip extra wear.
+	 * Body: {@link LightningRodScenarios#strikeOnFullCapacitorIsWastedAndWearsTheTip}.
+	 */
+	@GameTest
+	public void lightningRod_strikeOnFullCapacitorIsWastedAndWearsTheTip(GameTestHelper helper) {
+		LightningRodScenarios.strikeOnFullCapacitorIsWastedAndWearsTheTip(helper);
+	}
+
+	/**
+	 * MOD-386 — the banked burst leaves as a flat rate, under the LV ceiling.
+	 * Body: {@link LightningRodScenarios#capacitorBleedsIntoTheBuffer}.
+	 */
+	@GameTest
+	public void lightningRod_capacitorBleedsIntoTheBuffer(GameTestHelper helper) {
+		LightningRodScenarios.capacitorBleedsIntoTheBuffer(helper);
+	}
+
+	/**
+	 * MOD-386 — a saturated network parks the reserve instead of destroying it.
+	 * Body: {@link LightningRodScenarios#aFullBufferDoesNotDrainTheCapacitor}.
+	 */
+	@GameTest
+	public void lightningRod_aFullBufferDoesNotDrainTheCapacitor(GameTestHelper helper) {
+		LightningRodScenarios.aFullBufferDoesNotDrainTheCapacitor(helper);
+	}
+
+	/**
+	 * MOD-386 — banked charge survives a save/load round trip.
+	 * Body: {@link LightningRodScenarios#capacitorSurvivesSaveAndLoad}.
+	 */
+	@GameTest
+	public void lightningRod_capacitorSurvivesSaveAndLoad(GameTestHelper helper) {
+		LightningRodScenarios.capacitorSurvivesSaveAndLoad(helper);
+	}
+
+	/**
+	 * MOD-386 — a tip that wears out mid-strike takes its banked charge with it.
+	 * Body: {@link LightningRodScenarios#aBreakingTipTakesItsStoredChargeWithIt}.
+	 */
+	@GameTest
+	public void lightningRod_aBreakingTipTakesItsStoredChargeWithIt(GameTestHelper helper) {
+		LightningRodScenarios.aBreakingTipTakesItsStoredChargeWithIt(helper);
+	}
 }

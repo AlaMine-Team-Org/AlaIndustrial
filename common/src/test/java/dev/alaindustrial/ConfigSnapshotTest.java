@@ -139,6 +139,26 @@ class ConfigSnapshotTest {
 		SENTINELS.put("waterMillWheelAdvancedMaxDamage", 5757);
 		SENTINELS.put("waterMillWheelAdvancedEuPerDamage", 523);
 		SENTINELS.put("waterMillWheelAdvancedOutputMultiplier", 2.7f);
+		// MOD-386 — the lightning rod generator and its conductor-tip ladder.
+		SENTINELS.put("lightningRodBuffer", 6161);
+		SENTINELS.put("lightningRodStrikeEu", 23_456);
+		SENTINELS.put("lightningRodBaseCapacitorEu", 21_212);
+		SENTINELS.put("lightningRodMaxCapacitorEu", 30_303);
+		SENTINELS.put("lightningRodBaseBleedEuPerTick", 19);
+		SENTINELS.put("lightningRodMaxBleedEuPerTick", 29);
+		SENTINELS.put("lightningRodThunderStrikeChanceDivisor", 733);
+		SENTINELS.put("lightningRodRainStrikeChanceDivisor", 5171);
+		SENTINELS.put("lightningRodOverloadWearFactor", 3.3f);
+		SENTINELS.put("lightningRodSampleTicks", 37);
+		SENTINELS.put("lightningRodTipMaxDamage", 137);
+		SENTINELS.put("lightningRodTipEuPerDamage", 971);
+		SENTINELS.put("lightningRodTipOutputMultiplier", 1.7f);
+		SENTINELS.put("lightningRodTipReinforcedMaxDamage", 371);
+		SENTINELS.put("lightningRodTipReinforcedEuPerDamage", 1279);
+		SENTINELS.put("lightningRodTipReinforcedOutputMultiplier", 2.2f);
+		SENTINELS.put("lightningRodTipAdvancedMaxDamage", 877);
+		SENTINELS.put("lightningRodTipAdvancedEuPerDamage", 1531);
+		SENTINELS.put("lightningRodTipAdvancedOutputMultiplier", 2.9f);
 		SENTINELS.put("solarTransparentFactor", 0.625f);
 		SENTINELS.put("solarSnowFactor", 0.375f);
 		SENTINELS.put("solarEvolveTicks", 22_222);

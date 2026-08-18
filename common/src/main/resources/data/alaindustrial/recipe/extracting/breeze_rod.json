@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:extracting",
+  "ingredient": "minecraft:breeze_rod",
+  "result": {
+    "id": "minecraft:wind_charge",
+    "count": 5
+  },
+  "energy": 240
+}

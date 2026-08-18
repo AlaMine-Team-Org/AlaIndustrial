@@ -46,6 +46,7 @@ import dev.alaindustrial.block.entity.SolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
 import dev.alaindustrial.block.entity.HighAltitudeWindMillBlockEntity;
+import dev.alaindustrial.block.entity.LightningRodGeneratorBlockEntity;
 import dev.alaindustrial.block.entity.StormWindMillBlockEntity;
 import dev.alaindustrial.registry.ContentManifest;
 import dev.alaindustrial.registry.ModContent;
@@ -165,6 +166,9 @@ public final class ModBlockEntitiesNeoForge {
 			register(ContentManifest.blockEntity("high_altitude_wind_mill", HighAltitudeWindMillBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<StormWindMillBlockEntity>> STORM_WIND_MILL =
 			register(ContentManifest.blockEntity("storm_wind_mill", StormWindMillBlockEntity.class));
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<LightningRodGeneratorBlockEntity>>
+			LIGHTNING_ROD_GENERATOR = register(ContentManifest.blockEntity("lightning_rod_generator",
+					LightningRodGeneratorBlockEntity.class));
 	// Pure container (no EnergyPort) — no capability binding in IndustrializationNeoForge#registerCapabilities.
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<IronChestBlockEntity>> IRON_CHEST =
 			register(ContentManifest.blockEntity("iron_chest", IronChestBlockEntity.class));

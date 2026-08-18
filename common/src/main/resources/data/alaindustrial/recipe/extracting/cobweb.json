@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:extracting",
+  "ingredient": "minecraft:cobweb",
+  "result": {
+    "id": "minecraft:string",
+    "count": 2
+  },
+  "energy": 240
+}

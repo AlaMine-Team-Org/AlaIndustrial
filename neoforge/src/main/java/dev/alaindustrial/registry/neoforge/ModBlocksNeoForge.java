@@ -48,6 +48,7 @@ import dev.alaindustrial.block.SawmillBlock;
 import dev.alaindustrial.block.SilverChestBlock;
 import dev.alaindustrial.block.SolarPanelBlock;
 import dev.alaindustrial.block.StorageModuleBlock;
+import dev.alaindustrial.block.LightningRodGeneratorBlock;
 import dev.alaindustrial.block.StormWindMillBlock;
 import dev.alaindustrial.block.TeleporterBlock;
 import dev.alaindustrial.block.ThermalCentrifugeBlock;
@@ -112,6 +113,8 @@ public final class ModBlocksNeoForge {
 			handle(ContentManifest.HIGH_ALTITUDE_WIND_MILL);
 	public static final DeferredBlock<StormWindMillBlock> STORM_WIND_MILL =
 			handle(ContentManifest.STORM_WIND_MILL);
+	public static final DeferredBlock<LightningRodGeneratorBlock> LIGHTNING_ROD_GENERATOR =
+			handle(ContentManifest.LIGHTNING_ROD_GENERATOR);
 	public static final DeferredBlock<PumpBlock> PUMP = handle(ContentManifest.PUMP);
 	public static final DeferredBlock<GardenDroneStationBlock> GARDEN_DRONE_STATION =
 			handle(ContentManifest.GARDEN_DRONE_STATION);

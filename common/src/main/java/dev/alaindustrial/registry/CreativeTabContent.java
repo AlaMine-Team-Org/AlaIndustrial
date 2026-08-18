@@ -223,6 +223,9 @@ public final class CreativeTabContent {
 		show(out, ModContent.WATER_MILL_WHEEL);
 		show(out, ModContent.WATER_MILL_WHEEL_REINFORCED);
 		show(out, ModContent.WATER_MILL_WHEEL_ADVANCED);
+		show(out, ModContent.LIGHTNING_ROD_CONDUCTOR_TIP);
+		show(out, ModContent.LIGHTNING_ROD_CONDUCTOR_TIP_REINFORCED);
+		show(out, ModContent.LIGHTNING_ROD_CONDUCTOR_TIP_ADVANCED);
 		show(out, ModContent.WOODEN_GEAR);
 		show(out, ModContent.STONE_GEAR);
 		show(out, ModContent.IRON_GEAR);
@@ -531,6 +534,7 @@ public final class CreativeTabContent {
 		// so they are listed right after the T1 mill as the visible tail of the wind progression.
 		show(out, ModContent.HIGH_ALTITUDE_WIND_MILL_ITEM);
 		show(out, ModContent.STORM_WIND_MILL_ITEM);
+		show(out, ModContent.LIGHTNING_ROD_GENERATOR_ITEM);
 	}
 
 	/**

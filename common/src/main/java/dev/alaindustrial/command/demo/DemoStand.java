@@ -1,5 +1,6 @@
 package dev.alaindustrial.command.demo;
 
+import dev.alaindustrial.block.entity.LightningRodGeneratorBlockEntity;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.block.entity.FluidTankBlockEntity;
 import dev.alaindustrial.core.fluid.FluidHolder;
@@ -222,6 +223,15 @@ public final class DemoStand {
 			set(level, origin, x, 6, 4, mill);
 			x += 5;
 		}
+		// MOD-386: the lightning rod shares this weather row — same mast-on-a-pillar shape, and a
+		// conductor tip pre-installed so the stand shows the configured block rather than an inert one.
+		for (int y = 1; y <= 4; y++) {
+			set(level, origin, x, y, 4, FLOOR);
+		}
+		set(level, origin, x, 5, 4, ModContent.BATTERY_BOX.get());
+		set(level, origin, x, 6, 4, ModContent.LIGHTNING_ROD_GENERATOR.get());
+		fillSlot(level, origin, x, 6, 4, LightningRodGeneratorBlockEntity.TIP_SLOT,
+				new ItemStack(ModContent.LIGHTNING_ROD_CONDUCTOR_TIP.get()));
 	}
 
 	/**

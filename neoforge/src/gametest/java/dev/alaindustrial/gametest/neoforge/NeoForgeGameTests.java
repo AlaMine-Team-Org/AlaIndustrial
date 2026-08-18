@@ -18,6 +18,7 @@ import dev.alaindustrial.gametest.ChargePadScenarios;
 import dev.alaindustrial.gametest.MobRepellerScenarios;
 import dev.alaindustrial.gametest.CoreFluidScenarios;
 import dev.alaindustrial.gametest.GeneratorEnergyScenarios;
+import dev.alaindustrial.gametest.LightningRodScenarios;
 import dev.alaindustrial.gametest.MachineEnergyScenarios;
 import dev.alaindustrial.gametest.BatteryScenarios;
 import dev.alaindustrial.gametest.CesuScenarios;
@@ -646,6 +647,22 @@ public final class NeoForgeGameTests {
 		// Wind mill roofed → 0 EU (open-sky gate, mode wiring).
 		registerTest(event, "wind_mill_roofed_yields_zero", 120, true,
 				GeneratorEnergyScenarios::windMillRoofedYieldsZero);
+
+		// MOD-386 — the lightning rod generator: capacitor banking, overload, bleed, persistence.
+		registerTest(event, "lightning_rod_strike_banks_into_capacitor", 40, true,
+				LightningRodScenarios::strikeBanksIntoTheCapacitor);
+		registerTest(event, "lightning_rod_strike_without_tip_banks_nothing", 60, true,
+				LightningRodScenarios::strikeWithoutTipBanksNothing);
+		registerTest(event, "lightning_rod_overload_wastes_strike_and_wears_tip", 40, true,
+				LightningRodScenarios::strikeOnFullCapacitorIsWastedAndWearsTheTip);
+		registerTest(event, "lightning_rod_capacitor_bleeds_into_buffer", 60, true,
+				LightningRodScenarios::capacitorBleedsIntoTheBuffer);
+		registerTest(event, "lightning_rod_full_buffer_does_not_drain_capacitor", 60, true,
+				LightningRodScenarios::aFullBufferDoesNotDrainTheCapacitor);
+		registerTest(event, "lightning_rod_capacitor_survives_save_and_load", 40, true,
+				LightningRodScenarios::capacitorSurvivesSaveAndLoad);
+		registerTest(event, "lightning_rod_breaking_tip_takes_its_charge", 40, true,
+				LightningRodScenarios::aBreakingTipTakesItsStoredChargeWithIt);
 
 		// Two generators sum into one consumer (R-CON-16, no dupe/shadow).
 		registerTest(event, "two_generators_sum_into_one_consumer", 60, true,

@@ -119,6 +119,12 @@ public final class ModItems {
 	// MOD-385: upper grades — richer craft, higher output, longer life. See core.machine.ComponentTier.
 	public static final Item WINDMILL_ROTOR_REINFORCED = manifestItem("windmill_rotor_reinforced");
 	public static final Item WINDMILL_ROTOR_ADVANCED = manifestItem("windmill_rotor_advanced");
+	// MOD-386: the lightning rod's conductor tips.
+	public static final Item LIGHTNING_ROD_CONDUCTOR_TIP = manifestItem("lightning_rod_conductor_tip");
+	public static final Item LIGHTNING_ROD_CONDUCTOR_TIP_REINFORCED =
+			manifestItem("lightning_rod_conductor_tip_reinforced");
+	public static final Item LIGHTNING_ROD_CONDUCTOR_TIP_ADVANCED =
+			manifestItem("lightning_rod_conductor_tip_advanced");
 	public static final Item WATER_MILL_WHEEL_REINFORCED = manifestItem("water_mill_wheel_reinforced");
 	public static final Item WATER_MILL_WHEEL_ADVANCED = manifestItem("water_mill_wheel_advanced");
 	public static final Item WOODEN_GEAR = manifestItem("wooden_gear");
@@ -333,6 +339,8 @@ public final class ModItems {
 	public static final BlockItem WIND_MILL_ITEM = blockItem("wind_mill", ModBlocks.WIND_MILL);
 	public static final BlockItem HIGH_ALTITUDE_WIND_MILL_ITEM = blockItem("high_altitude_wind_mill", ModBlocks.HIGH_ALTITUDE_WIND_MILL);
 	public static final BlockItem STORM_WIND_MILL_ITEM = blockItem("storm_wind_mill", ModBlocks.STORM_WIND_MILL);
+	public static final BlockItem LIGHTNING_ROD_GENERATOR_ITEM =
+			blockItem("lightning_rod_generator", ModBlocks.LIGHTNING_ROD_GENERATOR);
 	public static final BlockItem TIN_ORE_ITEM = blockItem("tin_ore", ModBlocks.TIN_ORE);
 	public static final BlockItem DEEPSLATE_TIN_ORE_ITEM = blockItem("deepslate_tin_ore", ModBlocks.DEEPSLATE_TIN_ORE);
 	public static final BlockItem SILVER_ORE_ITEM = blockItem("silver_ore", ModBlocks.SILVER_ORE);
@@ -791,6 +799,9 @@ public final class ModItems {
 		ModContent.WATER_MILL_WHEEL = () -> WATER_MILL_WHEEL;
 		ModContent.WINDMILL_ROTOR_REINFORCED = () -> WINDMILL_ROTOR_REINFORCED;
 		ModContent.WINDMILL_ROTOR_ADVANCED = () -> WINDMILL_ROTOR_ADVANCED;
+		ModContent.LIGHTNING_ROD_CONDUCTOR_TIP = () -> LIGHTNING_ROD_CONDUCTOR_TIP;
+		ModContent.LIGHTNING_ROD_CONDUCTOR_TIP_REINFORCED = () -> LIGHTNING_ROD_CONDUCTOR_TIP_REINFORCED;
+		ModContent.LIGHTNING_ROD_CONDUCTOR_TIP_ADVANCED = () -> LIGHTNING_ROD_CONDUCTOR_TIP_ADVANCED;
 		ModContent.WATER_MILL_WHEEL_REINFORCED = () -> WATER_MILL_WHEEL_REINFORCED;
 		ModContent.WATER_MILL_WHEEL_ADVANCED = () -> WATER_MILL_WHEEL_ADVANCED;
 		ModContent.WOODEN_GEAR = () -> WOODEN_GEAR;
@@ -889,6 +900,7 @@ public final class ModItems {
 		ModContent.WIND_MILL_ITEM = () -> WIND_MILL_ITEM;
 		ModContent.HIGH_ALTITUDE_WIND_MILL_ITEM = () -> HIGH_ALTITUDE_WIND_MILL_ITEM;
 		ModContent.STORM_WIND_MILL_ITEM = () -> STORM_WIND_MILL_ITEM;
+		ModContent.LIGHTNING_ROD_GENERATOR_ITEM = () -> LIGHTNING_ROD_GENERATOR_ITEM;
 		ModContent.SOLAR_PANEL_ITEM = () -> SOLAR_PANEL_ITEM;
 		ModContent.MOONLIT_SOLAR_PANEL_ITEM = () -> MOONLIT_SOLAR_PANEL_ITEM;
 		ModContent.DAYLIGHT_SOLAR_PANEL_ITEM = () -> DAYLIGHT_SOLAR_PANEL_ITEM;

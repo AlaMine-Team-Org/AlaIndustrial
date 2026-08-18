@@ -213,6 +213,86 @@ public final class Config {
 	public static int waterMillWheelAdvancedEuPerDamage = 480;
 	/** Advanced wheel output scale. */
 	public static float waterMillWheelAdvancedOutputMultiplier = 1.5f;
+
+	// --- Lightning rod generator (MOD-386) ---------------------------------------------------------
+	// The rod banks a whole strike in the conductor tip's capacitor and bleeds it into the network at a
+	// flat rate, so the burst never has to fit in one tick. See core/environment/LightningRodOutput.
+
+	/** Internal EU buffer of the rod block itself — the same 4000 every other LV generator carries. */
+	public static int lightningRodBuffer = 4000;
+	/**
+	 * EU one lightning strike delivers into the conductor tip's capacitor. Deliberately larger than a
+	 * lava bucket (16 000 EU): a strike is a rare, weather-gated event and has to feel like one. What
+	 * actually lands is capped by the tip's remaining capacity — the surplus is lost, not banked.
+	 */
+	public static int lightningRodStrikeEu = 20_000;
+	/**
+	 * Capacitor size of the T1 conductor tip, before its grade multiplier. A strike of
+	 * {@link #lightningRodStrikeEu} fits whole into an EMPTY T1 capacitor by design — that equality is
+	 * the whole "discharge before the storm" game, so keep the two in step when retuning.
+	 */
+	public static int lightningRodBaseCapacitorEu = 20_000;
+	/** Hard ceiling on a tip's capacitor after its grade multiplier. Headroom, not a target. */
+	public static int lightningRodMaxCapacitorEu = 32_000;
+	/** EU/t the T1 tip bleeds from its capacitor into the buffer, before its grade multiplier. */
+	public static int lightningRodBaseBleedEuPerTick = 16;
+	/** Ceiling on the bleed rate after the grade multiplier — the LV tier voltage, never breached. */
+	public static int lightningRodMaxBleedEuPerTick = 32;
+	/**
+	 * One-in-N chance per tick of a strike while it is <b>thundering</b> over the rod. 900 ≈ one strike
+	 * every 45 s of storm. Same "chance divisor" idiom as {@link #cottonRootingChanceDivisor}: a strike
+	 * is random rather than a timer, so two rods side by side do not fire in lockstep.
+	 */
+	public static int lightningRodThunderStrikeChanceDivisor = 900;
+	/**
+	 * One-in-N chance per tick of a strike in <b>plain rain</b> (no thunder). Vanilla never spawns
+	 * lightning without a thunderstorm, so this branch is entirely ours: it keeps the rod earning
+	 * something through ordinary rain instead of standing dead between storms. Much rarer than thunder.
+	 */
+	public static int lightningRodRainStrikeChanceDivisor = 4800;
+	/**
+	 * Extra wear charged to the tip when a strike is WASTED (capacitor already full). The strike's
+	 * energy is lost either way; this makes an unprepared base pay for it in tip life as well.
+	 *
+	 * <p><b>2.0, not 4.0.</b> The ×4 was set while a tip lasted ~50 strikes; once durability came down
+	 * to 5 / 20 / 60 the same factor spent 80 % of a copper tip on a single mistake — one catch plus
+	 * one overload landed on exactly {@code maxDamage} and destroyed it, taking the banked 20 000 EU
+	 * with it. At ×2 an overload costs two strikes' worth: the lesson still stings, and it takes two
+	 * of them to kill the cheapest tip.
+	 */
+	public static float lightningRodOverloadWearFactor = 2.0f;
+	/**
+	 * How often the rod re-reads "is it storming over open sky here" ({@code isRainingAt}, a heightmap
+	 * + biome lookup). Between samples the cached answer is reused, exactly as the wind mill caches
+	 * its height/sky/weather read. 40 ticks ≈ 2 s: roofing a rod stops it within two seconds, which no
+	 * player can perceive against a strike that happens once every 45 s at best.
+	 */
+	public static int lightningRodSampleTicks = 40;
+	/**
+	 * T1 conductor tip durability (bar). Registration-time, like every component; tune life via the rate.
+	 *
+	 * <p>Sized in STRIKES, not in EU: 100 points ÷ (20 000 EU strike ÷ 1000 EU per point) = <b>5 caught
+	 * strikes</b>. The tip is meant to be a running cost of owning a rod — something you re-craft every
+	 * storm or two — not a part you fit once and forget, which is what a five-figure durability made it.
+	 */
+	public static int lightningRodTipMaxDamage = 100;
+	/** EU banked per one durability point of the T1 tip — 100 × 1000 = 100 000 EU = 5 caught strikes. */
+	public static int lightningRodTipEuPerDamage = 1000;
+	/** T1 tip capacity/bleed scale — the ladder's 1.0 baseline (a field for uniformity, as with the rotor). */
+	public static float lightningRodTipOutputMultiplier = 1.0f;
+	/** Reinforced tip durability: 320 × 1250 = 400 000 EU = 20 caught strikes (×4 the copper one). */
+	public static int lightningRodTipReinforcedMaxDamage = 320;
+	/** EU per durability point of the reinforced tip — ×1.25, matching its output scale. */
+	public static int lightningRodTipReinforcedEuPerDamage = 1250;
+	/** Reinforced tip capacity/bleed scale. Applied before the caps, so it cannot raise them. */
+	public static float lightningRodTipReinforcedOutputMultiplier = 1.25f;
+	/** Advanced tip durability: 800 × 1500 = 1 200 000 EU = 60 caught strikes (×12 the copper one). */
+	public static int lightningRodTipAdvancedMaxDamage = 800;
+	/** EU per durability point of the advanced tip — ×1.5, matching its output scale. */
+	public static int lightningRodTipAdvancedEuPerDamage = 1500;
+	/** Advanced tip capacity/bleed scale — reaches both ceilings, which is the top grade's whole point. */
+	public static float lightningRodTipAdvancedOutputMultiplier = 1.5f;
+
 	/** Output multiplier when a solar panel sees the sky through a translucent block (leaves, cobweb). MOD-004. */
 	public static float solarTransparentFactor = 0.5f;
 	/** Output multiplier under snow: a snow layer above the panel, or snowfall in a cold biome — MODE_SNOW. */
@@ -1407,6 +1487,47 @@ public final class Config {
 				() -> waterMillWheelAdvancedEuPerDamage, v -> waterMillWheelAdvancedEuPerDamage = v, 1),
 			new FloatField("waterMillWheelAdvancedOutputMultiplier", Section.GENERATORS, "MOD-385: advanced wheel output scale.",
 				() -> waterMillWheelAdvancedOutputMultiplier, v -> waterMillWheelAdvancedOutputMultiplier = v, 0.0f),
+			// MOD-386: the lightning rod generator. Strike energy is banked in the tip's capacitor and
+			// bled out at a flat rate, so the two "size" knobs (strike EU, capacitor EU) are what make
+			// "discharge before the storm" a real decision; the chance divisors set how often it happens.
+			new IntField("lightningRodBuffer", Section.GENERATORS, "MOD-386: internal EU buffer of the lightning rod generator block.",
+				() -> lightningRodBuffer, v -> lightningRodBuffer = v, 1),
+			new IntField("lightningRodStrikeEu", Section.GENERATORS, "MOD-386: EU one lightning strike delivers into the conductor tip's capacitor. Surplus over the tip's free room is lost, never banked.",
+				() -> lightningRodStrikeEu, v -> lightningRodStrikeEu = v, 0),
+			new IntField("lightningRodBaseCapacitorEu", Section.GENERATORS, "MOD-386: capacitor size of the T1 conductor tip before its grade multiplier. Keep in step with lightningRodStrikeEu — one strike is meant to fit an empty T1 tip exactly.",
+				() -> lightningRodBaseCapacitorEu, v -> lightningRodBaseCapacitorEu = v, 1),
+			new IntField("lightningRodMaxCapacitorEu", Section.GENERATORS, "MOD-386: ceiling on a conductor tip's capacitor after its grade multiplier. No multiplier can lift it.",
+				() -> lightningRodMaxCapacitorEu, v -> lightningRodMaxCapacitorEu = v, 1),
+			new IntField("lightningRodBaseBleedEuPerTick", Section.GENERATORS, "MOD-386: EU/t the T1 tip bleeds from its capacitor into the buffer, before its grade multiplier.",
+				() -> lightningRodBaseBleedEuPerTick, v -> lightningRodBaseBleedEuPerTick = v, 1),
+			new IntField("lightningRodMaxBleedEuPerTick", Section.GENERATORS, "MOD-386: ceiling on the bleed rate after the grade multiplier (LV tier voltage). No multiplier can lift it.",
+				() -> lightningRodMaxBleedEuPerTick, v -> lightningRodMaxBleedEuPerTick = v, 1),
+			new IntField("lightningRodThunderStrikeChanceDivisor", Section.GENERATORS, "MOD-386: one-in-N chance per tick of a strike while thundering over the rod (900 ~ one strike every 45 s of storm). Higher = rarer.",
+				() -> lightningRodThunderStrikeChanceDivisor, v -> lightningRodThunderStrikeChanceDivisor = v, 1),
+			new IntField("lightningRodRainStrikeChanceDivisor", Section.GENERATORS, "MOD-386: one-in-N chance per tick of a strike in plain rain without thunder (vanilla never does this; the rod does). Higher = rarer.",
+				() -> lightningRodRainStrikeChanceDivisor, v -> lightningRodRainStrikeChanceDivisor = v, 1),
+			new FloatField("lightningRodOverloadWearFactor", Section.GENERATORS, "MOD-386: extra tip wear charged when a strike is wasted on a full capacitor (1.0 = no extra penalty).",
+				() -> lightningRodOverloadWearFactor, v -> lightningRodOverloadWearFactor = v, 1.0f),
+			new IntField("lightningRodSampleTicks", Section.GENERATORS, "MOD-386: how often the rod re-reads storm/open-sky conditions, in ticks. Cached in between, like the wind mill's height/sky sample.",
+				() -> lightningRodSampleTicks, v -> lightningRodSampleTicks = v, 1),
+			new IntField("lightningRodTipMaxDamage", Section.GENERATORS, "MOD-386: T1 conductor tip max durability (bar). Applies at registration (restart); tune life via the EU-per-damage rate.",
+				() -> lightningRodTipMaxDamage, v -> lightningRodTipMaxDamage = v, 1),
+			new IntField("lightningRodTipEuPerDamage", Section.GENERATORS, "MOD-386: EU banked per 1 durability point of the T1 conductor tip (life = maxDamage × this).",
+				() -> lightningRodTipEuPerDamage, v -> lightningRodTipEuPerDamage = v, 1),
+			new FloatField("lightningRodTipOutputMultiplier", Section.GENERATORS, "MOD-386: capacity/bleed scale of the T1 conductor tip — the ladder's 1.0 baseline.",
+				() -> lightningRodTipOutputMultiplier, v -> lightningRodTipOutputMultiplier = v, 0.0f),
+			new IntField("lightningRodTipReinforcedMaxDamage", Section.GENERATORS, "MOD-386: reinforced conductor tip max durability (×3 the copper one). Applies at registration (restart).",
+				() -> lightningRodTipReinforcedMaxDamage, v -> lightningRodTipReinforcedMaxDamage = v, 1),
+			new IntField("lightningRodTipReinforcedEuPerDamage", Section.GENERATORS, "MOD-386: EU per 1 durability point of the reinforced tip, scaled by its ×1.25 output so the life gain is purely the durability gain.",
+				() -> lightningRodTipReinforcedEuPerDamage, v -> lightningRodTipReinforcedEuPerDamage = v, 1),
+			new FloatField("lightningRodTipReinforcedOutputMultiplier", Section.GENERATORS, "MOD-386: reinforced tip capacity/bleed scale. Applied before the caps, so it cannot raise them.",
+				() -> lightningRodTipReinforcedOutputMultiplier, v -> lightningRodTipReinforcedOutputMultiplier = v, 0.0f),
+			new IntField("lightningRodTipAdvancedMaxDamage", Section.GENERATORS, "MOD-386: advanced conductor tip max durability (×6 the copper one). Applies at registration (restart).",
+				() -> lightningRodTipAdvancedMaxDamage, v -> lightningRodTipAdvancedMaxDamage = v, 1),
+			new IntField("lightningRodTipAdvancedEuPerDamage", Section.GENERATORS, "MOD-386: EU per 1 durability point of the advanced tip, scaled by its ×1.5 output.",
+				() -> lightningRodTipAdvancedEuPerDamage, v -> lightningRodTipAdvancedEuPerDamage = v, 1),
+			new FloatField("lightningRodTipAdvancedOutputMultiplier", Section.GENERATORS, "MOD-386: advanced tip capacity/bleed scale — reaches both ceilings, which is the top grade's point.",
+				() -> lightningRodTipAdvancedOutputMultiplier, v -> lightningRodTipAdvancedOutputMultiplier = v, 0.0f),
 			new FloatField("solarTransparentFactor", Section.GENERATORS, "Output multiplier when a solar panel sees sky through a translucent block (leaves, cobweb).",
 				() -> solarTransparentFactor, v -> solarTransparentFactor = v, 0.0f),
 			new FloatField("solarSnowFactor", Section.GENERATORS, "Output multiplier under snow (a snow layer above, or snowfall in a cold biome).",

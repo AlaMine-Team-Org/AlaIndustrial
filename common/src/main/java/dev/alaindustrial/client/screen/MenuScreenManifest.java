@@ -143,5 +143,7 @@ public final class MenuScreenManifest {
 			screen(() -> ModContent.MOB_REPELLER_MV_MENU.get(), MobRepellerMvScreen::new),
 			screen(() -> ModContent.MOB_REPELLER_HV_MENU.get(), MobRepellerHvScreen::new),
 			// MOD-424 — last, at the same index as its MENUS entry.
-			screen(() -> ModContent.THERMAL_CENTRIFUGE_MENU.get(), ThermalCentrifugeScreen::new));
+			screen(() -> ModContent.THERMAL_CENTRIFUGE_MENU.get(), ThermalCentrifugeScreen::new),
+			// MOD-386 — last, at the same index as its MENUS entry.
+			screen(() -> ModContent.LIGHTNING_ROD_GENERATOR_MENU.get(), LightningRodGeneratorScreen::new));
 }
