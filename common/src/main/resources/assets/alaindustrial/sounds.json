@@ -168,5 +168,25 @@
         "preload": true
       }
     ]
+  },
+  "charge_pad_hum": {
+    "subtitle": "subtitles.alaindustrial.charge_pad_hum",
+    "sounds": [
+      {
+        "name": "alaindustrial:charge_pad_hum",
+        "stream": false,
+        "preload": true
+      }
+    ]
+  },
+  "energy_condenser_hum": {
+    "subtitle": "subtitles.alaindustrial.energy_condenser_hum",
+    "sounds": [
+      {
+        "name": "alaindustrial:energy_condenser_hum",
+        "stream": false,
+        "preload": true
+      }
+    ]
   }
 }

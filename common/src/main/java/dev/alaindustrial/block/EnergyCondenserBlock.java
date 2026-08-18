@@ -2,6 +2,9 @@ package dev.alaindustrial.block;
 
 import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.EnergyCondenserBlockEntity;
+import dev.alaindustrial.registry.ModSounds;
+import java.util.function.Supplier;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -30,7 +33,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * for hit-testing, and a shape cut to the frame's ribs would let clicks pass straight through the orb
  * into whatever is behind it — the exact regression the fluid tank's glass once had.
  */
-public class EnergyCondenserBlock extends AbstractMachineBlock {
+public class EnergyCondenserBlock extends AbstractMachineBlock implements MachineHumProvider {
 
 	public static final MapCodec<EnergyCondenserBlock> CODEC = simpleCodec(EnergyCondenserBlock::new);
 
@@ -78,6 +81,14 @@ public class EnergyCondenserBlock extends AbstractMachineBlock {
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
 			BlockEntityType<T> type) {
-		return machineTicker(level);
+		// Hum ticker: drives the client loop off the vanilla lit blockstate (pattern A; the
+		// default isWorking predicate applies — LIT here is the same property LitMachineBlock uses).
+		// MOD-447.
+		return humMachineTicker(level);
+	}
+
+	@Override
+	public Supplier<SoundEvent> humSound() {
+		return ModSounds.ENERGY_CONDENSER_HUM;
 	}
 }

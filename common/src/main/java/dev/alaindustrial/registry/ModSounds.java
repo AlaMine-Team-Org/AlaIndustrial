@@ -254,6 +254,40 @@ public final class ModSounds {
 		return SoundEvent.createVariableRangeEvent(POLYMERIZER_HUM_ID);
 	}
 
+	/**
+	 * The registry id for the charging station's working loop (MOD-447) — plays while the station is
+	 * actively charging someone standing on it (pattern C: the blockstate is {@code ChargePadState.CHARGING},
+	 * not {@code lit}). Variable range, single stationary block.
+	 */
+	public static final Identifier CHARGE_PAD_HUM_ID = Industrialization.id("charge_pad_hum");
+
+	/** Bound once per loader before any block plays it; unbound = loud failure, never a silent NPE. */
+	public static Supplier<SoundEvent> CHARGE_PAD_HUM = () -> {
+		throw new IllegalStateException("ModSounds.CHARGE_PAD_HUM read before its loader bound it");
+	};
+
+	/** Build the charge-pad-hum event instance both loaders register (variable range, single stationary block). */
+	public static SoundEvent createChargePadHum() {
+		return SoundEvent.createVariableRangeEvent(CHARGE_PAD_HUM_ID);
+	}
+
+	/**
+	 * The registry id for the energy condenser's working loop (MOD-447) — plays while the condenser is
+	 * packing grid surplus into clots (pattern A: the block carries {@code BlockStateProperties.LIT},
+	 * the same property {@code LitMachineBlock.LIT} aliases, so the default lit predicate applies).
+	 */
+	public static final Identifier ENERGY_CONDENSER_HUM_ID = Industrialization.id("energy_condenser_hum");
+
+	/** Bound once per loader before any block plays it; unbound = loud failure, never a silent NPE. */
+	public static Supplier<SoundEvent> ENERGY_CONDENSER_HUM = () -> {
+		throw new IllegalStateException("ModSounds.ENERGY_CONDENSER_HUM read before its loader bound it");
+	};
+
+	/** Build the energy-condenser-hum event instance both loaders register (variable range, single stationary machine). */
+	public static SoundEvent createEnergyCondenserHum() {
+		return SoundEvent.createVariableRangeEvent(ENERGY_CONDENSER_HUM_ID);
+	}
+
 	private ModSounds() {
 	}
 }

@@ -1,10 +1,14 @@
-## 0.1.105
+## 0.1.106
 
-<p><img alt="Machines and an item line in an outdoor Ala Industrial base" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.105/release-media/v0.1.105/changelog.png" width="720"></p>
+<p><img alt="Vacuum Capsules tinted by the fluid inside them" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.106/release-media/v0.1.106/changelog.png" width="720"></p>
 
-The mod now speaks Arabic — its 21st language and the first that reads right-to-left — and two machines found their voice.
+Two more machines found their voice, and capsules now show what is inside them.
 
 ### New
 
-- **Arabic translation.** Every name, tooltip, advancement and subtitle is translated. Machine screens keep their layout with right-to-left text, and numbers stay in Latin digits.
-- **The Sawmill and the Polymerizer are audible.** A working sawmill hums with a rhythmic saw, the polymerizer bubbles like a thick boil — and both go quiet when idle.
+- **The Charging Station hums** — a soft transformer note while it tops up your gear.
+- **The Energy Condenser rings** — a gentle chime as it packs surplus power into a clot.
+
+### Fixed
+
+- **Capsules show their contents at a glance.** Crude oil, diesel and fuel oil tint the glass instead of all looking like the same grey filler, so a stack is readable without hovering over it. Pipes and tanks carrying those fluids share the same corrected shades.

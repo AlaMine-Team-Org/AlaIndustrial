@@ -5,7 +5,10 @@
 		"component": "alaindustrial:capsule_fluid",
 		"cases": [
 			{ "when": "minecraft:water", "model": { "type": "minecraft:model", "model": "alaindustrial:item/vacuum_capsule_water" } },
-			{ "when": "minecraft:lava", "model": { "type": "minecraft:model", "model": "alaindustrial:item/vacuum_capsule_lava" } }
+			{ "when": "minecraft:lava", "model": { "type": "minecraft:model", "model": "alaindustrial:item/vacuum_capsule_lava" } },
+			{ "when": "alaindustrial:oil", "model": { "type": "minecraft:model", "model": "alaindustrial:item/vacuum_capsule_oil" } },
+			{ "when": "alaindustrial:diesel", "model": { "type": "minecraft:model", "model": "alaindustrial:item/vacuum_capsule_diesel" } },
+			{ "when": "alaindustrial:fuel_oil", "model": { "type": "minecraft:model", "model": "alaindustrial:item/vacuum_capsule_fuel_oil" } }
 		],
 		"fallback": { "type": "minecraft:model", "model": "alaindustrial:item/vacuum_capsule_filled" }
 	}

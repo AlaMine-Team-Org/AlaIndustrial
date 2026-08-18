@@ -2,8 +2,11 @@ package dev.alaindustrial.block;
 
 import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.ChargePadBlockEntity;
+import dev.alaindustrial.registry.ModSounds;
+import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.InsideBlockEffectApplier;
@@ -36,7 +39,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * the plate's visual height: {@code getEntityInsideCollisionShape} is deliberately left at its default
  * full cube, so standing on a 4px plate counts as being inside it.
  */
-public class ChargePadBlock extends AbstractMachineBlock {
+public class ChargePadBlock extends AbstractMachineBlock implements MachineHumProvider {
 
 	public static final MapCodec<ChargePadBlock> CODEC = simpleCodec(ChargePadBlock::new);
 
@@ -75,7 +78,34 @@ public class ChargePadBlock extends AbstractMachineBlock {
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
 			BlockEntityType<T> type) {
-		return machineTicker(level);
+		// Hum ticker: drives the client loop off ChargePadState.CHARGING (pattern C). MOD-447.
+		return humMachineTicker(level);
+	}
+
+	@Override
+	public Supplier<SoundEvent> humSound() {
+		return ModSounds.CHARGE_PAD_HUM;
+	}
+
+	/**
+	 * The station works while energy is actually moving into someone's gear — pattern C: the pad has no
+	 * {@code lit} property, so the default lit-based predicate cannot apply. Side-agnostic (blockstate
+	 * in the chunk palette), cheap, and the same signal the spark column keys off — sound and particles
+	 * agree on what "charging" means. READY (already full) and EMPTY (starved) both stay silent: the
+	 * quietest block in the mod should not hum at a player who has nothing to gain from it.
+	 */
+	@Override
+	public boolean isWorking(Level level, BlockPos pos, BlockState state) {
+		return state.getValue(STATE) == ChargePadState.CHARGING;
+	}
+
+	/**
+	 * Deliberately quieter than every other stationary machine (0.18, the extractor's level): the player
+	 * stands ON the pad while it charges, so the source sits at their feet rather than across the room.
+	 */
+	@Override
+	public float humVolume() {
+		return 0.18f;
 	}
 
 	/**
