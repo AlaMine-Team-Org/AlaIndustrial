@@ -1,21 +1,13 @@
-## 0.1.107
+## 0.1.108
 
-<p><img alt="Lightning rod generators catching strikes in the rain" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.107/release-media/v0.1.107/changelog.webp" width="720"></p>
+<p><img alt="Ala Industrial 0.1.108 machines preview" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.108/release-media/v0.1.108/changelog.png" width="720"></p>
 
-Storms now pay out — if you are ready to catch them.
+A small polish update: new machine sound and two redesigned tops.
 
 ### New
 
-- **Lightning Rod Generator.** Stands under open sky and gets struck in the rain, far more often in a thunderstorm. One strike is **20000 EU** — more than a bucket of lava. The lightning is harmless: no fires, no damage, no charged creepers.
-- **The catch: you need free space to store it.** A strike lands in the **conductor tip** you fit inside the rod. Still holding the last one? The strike is wasted and the tip wears double. So spend what you banked before the next flash.
-- **Conductor tips come in three grades.** Copper holds 20000 EU and survives 5 strikes; the advanced one holds 30000 and lasts 60. Worn tips go to the Component Repair Bench, same as rotors.
-- **No tip fitted, no mast on the block** — you can see which rods still need one from across the base.
-- **Extractor: breeze rods and cobwebs.** A breeze rod yields 5 wind charges where a crafting bench gives 4; a cobweb yields 2 string, which could not be recycled at all before.
+- **The Component Repair Bench now hammers away** with a soft anvil ring while it works.
 
-### Fixed
+### Improved
 
-- **Bone blocks no longer duplicate bone meal.** The Macerator returned 12 from a block that costs 9 to craft back — an endless, automatable fertiliser loop. It now returns exactly 9.
-
-### Note
-
-- Deserts and snowy biomes get no rain, so a rod placed there will never catch anything.
+- **The Vulcanizer and the Electric Heater got their own tops** instead of sharing one placeholder. The Vulcanizer's press plate glows warm while it runs; the Electric Heater's radiator climbs from dark to full glow as it warms up — glance down and see if it is ready to run at full speed.

@@ -188,5 +188,15 @@
         "preload": true
       }
     ]
+  },
+  "component_repair_bench_hum": {
+    "subtitle": "subtitles.alaindustrial.component_repair_bench_hum",
+    "sounds": [
+      {
+        "name": "alaindustrial:component_repair_bench_hum",
+        "stream": false,
+        "preload": true
+      }
+    ]
   }
 }

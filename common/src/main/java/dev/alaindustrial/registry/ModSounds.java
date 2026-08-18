@@ -288,6 +288,22 @@ public final class ModSounds {
 		return SoundEvent.createVariableRangeEvent(ENERGY_CONDENSER_HUM_ID);
 	}
 
+	/**
+	 * The registry id for the component repair bench's working loop (MOD-447) — a single lit machine,
+	 * pattern A: soft rhythmic hammer taps with a metallic ring, playing only while a repair is running.
+	 */
+	public static final Identifier COMPONENT_REPAIR_BENCH_HUM_ID = Industrialization.id("component_repair_bench_hum");
+
+	/** Bound once per loader before any block plays it; unbound = loud failure, never a silent NPE. */
+	public static Supplier<SoundEvent> COMPONENT_REPAIR_BENCH_HUM = () -> {
+		throw new IllegalStateException("ModSounds.COMPONENT_REPAIR_BENCH_HUM read before its loader bound it");
+	};
+
+	/** Build the component-repair-bench-hum event instance both loaders register (variable range, single stationary machine). */
+	public static SoundEvent createComponentRepairBenchHum() {
+		return SoundEvent.createVariableRangeEvent(COMPONENT_REPAIR_BENCH_HUM_ID);
+	}
+
 	private ModSounds() {
 	}
 }

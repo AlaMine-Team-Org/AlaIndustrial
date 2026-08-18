@@ -2,7 +2,10 @@ package dev.alaindustrial.block;
 
 import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.ComponentRepairBenchBlockEntity;
+import dev.alaindustrial.registry.ModSounds;
+import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -15,11 +18,10 @@ import net.minecraft.world.level.block.state.BlockState;
  * {@link LitMachineBlock}: it faces the player and lights up while repairing, and all the behaviour
  * lives in {@link ComponentRepairBenchBlockEntity}.
  *
- * <p>Deliberately not a {@code MachineHumProvider}: the bench has no ambient loop yet, and declaring
- * one without a registered sound event would be a silent machine that claims to be audible. Adding a
- * hum later is the {@code /alamod-sound} pipeline's job, tracked in {@code docs/SOUND_TRACKING.md}.
+ * <p>Audible while working since MOD-447: implements {@link MachineHumProvider} with the bench's own
+ * anvil-ring loop (pattern A, the vanilla {@code lit} blockstate).
  */
-public class ComponentRepairBenchBlock extends LitMachineBlock {
+public class ComponentRepairBenchBlock extends LitMachineBlock implements MachineHumProvider {
 	public static final MapCodec<ComponentRepairBenchBlock> CODEC = simpleCodec(ComponentRepairBenchBlock::new);
 
 	public ComponentRepairBenchBlock(Properties properties) {
@@ -39,6 +41,12 @@ public class ComponentRepairBenchBlock extends LitMachineBlock {
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
 			BlockEntityType<T> type) {
-		return machineTicker(level);
+		// Hum ticker: drives the client loop off the vanilla lit blockstate (pattern A). MOD-447.
+		return humMachineTicker(level);
+	}
+
+	@Override
+	public Supplier<SoundEvent> humSound() {
+		return ModSounds.COMPONENT_REPAIR_BENCH_HUM;
 	}
 }

@@ -74,6 +74,9 @@ public final class ModSoundsNeoForge {
 	public static final DeferredHolder<SoundEvent, SoundEvent> ENERGY_CONDENSER_HUM =
 			SOUNDS.register("energy_condenser_hum", ModSounds::createEnergyCondenserHum);
 
+	public static final DeferredHolder<SoundEvent, SoundEvent> COMPONENT_REPAIR_BENCH_HUM =
+			SOUNDS.register("component_repair_bench_hum", ModSounds::createComponentRepairBenchHum);
+
 	/** Bind the neutral handles to the deferred holders. Called from the {@code @Mod} ctor after register. */
 	public static void init() {
 		ModSounds.MACERATOR_GRIND = MACERATOR_GRIND;
@@ -95,6 +98,7 @@ public final class ModSoundsNeoForge {
 		ModSounds.POLYMERIZER_HUM = POLYMERIZER_HUM;
 		ModSounds.CHARGE_PAD_HUM = CHARGE_PAD_HUM;
 		ModSounds.ENERGY_CONDENSER_HUM = ENERGY_CONDENSER_HUM;
+		ModSounds.COMPONENT_REPAIR_BENCH_HUM = COMPONENT_REPAIR_BENCH_HUM;
 	}
 
 	private ModSoundsNeoForge() {
