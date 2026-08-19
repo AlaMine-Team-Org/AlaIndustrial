@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепты</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="10 страниц">10</span></a>
 <a class="cat-link active" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="4 страницы">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Прочее</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="14 страниц">14</span></a>
 <div class="group-title">Предметы</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="2 страницы">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="20 страниц">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="20 страниц">20</span></a>
   </aside>
@@ -393,7 +393,7 @@
   </div>
 </div>
 
-<h2>Сводка</h2>
+<h2 id="сводка">Сводка</h2>
 
 <p><strong>Энергохранилище</strong> — первый накопительный блок мода: копит EU/FE от генераторов и отдаёт его машинам. Именно оно позволяет дневной выработке солнечной панели кормить машины всю ночь.</p>
 
@@ -401,7 +401,7 @@
 
 <p>Это буфер, а не источник — сам по себе он EU/FE не вырабатывает. Обе стороны (вход и выход) ограничены LV, поэтому он никогда не перегрузит подключенные LV-машины.</p>
 
-<h2>Энергия</h2>
+<h2 id="энергия">Энергия</h2>
 
 <table><thead><tr><th>Параметр</th><th>Значение</th></tr></thead><tbody><tr><td>Ёмкость</td><td>20 000 EU/FE</td></tr><tr><td>Макс. вход</td><td>32 EU/FE/t (LV)</td></tr><tr><td>Макс. выход</td><td>32 EU/FE/t (LV)</td></tr></tbody></table>
 
@@ -411,7 +411,7 @@
 
 <p>Хранилище можно завести кабелем и на вход, и на выход одной и той же сети — оно не гоняет энергию по кругу и не сжигает её на потерях. Пока машинам не хватает выработки генераторов, хранилище <strong>только отдаёт</strong>; заряжаться оно начнёт, когда машины насытятся или генераторы перекроют их аппетит. Это тот же приоритет «сначала машины, потом накопители», по которому сеть раздаёт энергию.</p>
 
-<h3>Питание телепорта и зарядной станции</h3>
+<h3 id="питание-телепорта-и-зарядной-станции">Питание телепорта и зарядной станции</h3>
 
 <p>Кроме машин и соседних ящиков хранилище питает ещё один класс блоков — «фонды»: <a href="../advanced-machines/teleporter.html">телепорт</a> и <a href="charge_pad.html">зарядную станцию</a>. Они копят энергию для себя, а не работают, поэтому получают её по отдельному, нарочно медленному каналу:</p>
 
@@ -419,7 +419,7 @@
 
 <p>Порог существует не ради красоты: буфер телепорта в 25 раз больше ящика, и без него одна станция выкачала бы весь банк базы. Если нужно залить фонд целиком — поставьте ящик <strong>вплотную</strong> к нему: прямой контакт не знает ни порога, ни лимита скорости.</p>
 
-<h3>Каскад: несколько ящиков в одной сети</h3>
+<h3 id="каскад-несколько-ящиков-в-одной-сети">Каскад: несколько ящиков в одной сети</h3>
 
 <p>Банк расширяется просто — поставьте ещё один ящик и подключите к той же сети. Более заполненный ящик сам подпитывает менее заполненный, пока их <strong>доли заполнения</strong> не сравняются. Ящики выравниваются одновременно, а не «сначала первый до краёв, потом второй»: два ящика по 20 000 EU/FE, где в одном 10 000, а в другом пусто, сойдутся примерно к 5 000 в каждом.</p>
 
@@ -431,7 +431,7 @@
 
 <p>В каскад входят только ящики. Телепортер тоже накопитель, но копит энергию из излишков сам и автоматически из ящика не наполняется — чтобы полный ящик не утекал в него без ведома игрока.</p>
 
-<h2>Инвентарь</h2>
+<h2 id="инвентарь">Инвентарь</h2>
 
 <p>Один слот для переносных EU/FE-предметов (батарейный мешок, энергоранец):</p>
 
@@ -439,25 +439,25 @@
 
 <p>Слот <strong>только заряжает</strong> — слить заряд обратно в хранилище через этот блок нельзя. Воронки им не пользуются: это ручной слот, работает только из GUI.</p>
 
-<h2>Интерфейс</h2>
+<h2 id="интерфейс">Интерфейс</h2>
 
 <p>Один экран: запас энергии, скорость приёма/выдачи, слот зарядки.</p>
 
-<h2>Свойства блока</h2>
+<h2 id="свойства-блока">Свойства блока</h2>
 
 <p>Обычный сплошной блок. Ломается любой киркой и <strong>сохраняет заряд при разрушении</strong> — энергия не теряется при переносе.</p>
 
 <table><thead><tr><th>Параметр</th><th>Значение</th></tr></thead><tbody><tr><td>Инструмент</td><td>кирка</td></tr><tr><td>Сохраняет заряд при ломании</td><td>да</td></tr></tbody></table>
 
-<h2>Рецепты</h2>
+<h2 id="рецепты">Рецепты</h2>
 
 <p>Это накопитель, не процессор — рецептов переработки нет.</p>
 
-<h2>Прогрессия</h2>
+<h2 id="прогрессия">Прогрессия</h2>
 
 <p>Первая ступень линейка накопителей. По росту базы LV-буфера перестаёт хватать, и позже вступают накопители высших тиров (MV/HV).</p>
 
-<h2>Связанное</h2>
+<h2 id="связанное">Связанное</h2>
 
 <p><a href="../generators/generator.html">Генератор</a> — типичный источник заряда. <a href="../generators/solar_panel.html">Солнечная панель</a> — заполняет хранилище днём.</p>
 

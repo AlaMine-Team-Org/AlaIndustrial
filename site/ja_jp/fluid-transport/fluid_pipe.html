@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>液体パイプ</strong>はバケツを持って走り回る代わりに、タンク、ポンプ、機械の間で水、溶岩、石油、任意の液体を 運びます。パイプを一列に置き、<a href="../items/wrench.html">レンチ</a>でどこから汲み、どこへ流すか指定すれば、 あとはパイプが自ら動きます。エネルギーは不要です。</p>
 
@@ -400,7 +400,7 @@
 
 <p>液体は実際にパイプを流れ、もう一方の端に即座に現れるわけではありません：各セグメントは少量を保持し、 さらに先へ渡します。そのため長いラインは次第に満ちていき — 液体の前面がパイプを進むのが見えます。</p>
 
-<h2>液体</h2>
+<h2 id="液体">液体</h2>
 
 <table><thead><tr><th>性質</th><th>値</th></tr></thead><tbody><tr><td>1 セグメントの体積</td><td>50 mB</td></tr><tr><td>スループット</td><td>ティックあたり 50 mB（1 秒に 1 バケツ）</td></tr><tr><td>同時液体</td><td>セグメントにつき 1 種</td></tr><tr><td>エネルギー消費</td><td>なし</td></tr></tbody></table>
 
@@ -410,7 +410,7 @@
 
 <blockquote>パイプを壊すと中の液体は消えます。セグメントあたりバケツ半分未満ですが、流出を追う必要がありません。</blockquote>
 
-<h2>面とキー</h2>
+<h2 id="面とキー">面とキー</h2>
 
 <p>面は<a href="../item-transport/item_pipe.html">アイテムパイプ</a>と同じ設定方法 — 同じレンチ、同じ順序で、 2 つの異なるルールを覚える必要がありません。</p>
 
@@ -420,25 +420,25 @@
 
 <blockquote>Shift + レンチ右クリックで面は設定しません — それはモッドの任意のブロックと同様、パイプを <strong>解体</strong> します。</blockquote>
 
-<h3>パイプ同士の接続</h3>
+<h3 id="パイプ同士の接続">パイプ同士の接続</h3>
 
 <p>パイプが別のパイプと接する場所では、汲んだり流したりするものはなく — 単なる経路の一部です。 そのためレンチはそこで「接続」↔「非接続」のみを切り替えます。切り離して、再接続すれば — ラインは再び動作します。</p>
 
-<h2>ブロックの性質</h2>
+<h2 id="ブロックの性質">ブロックの性質</h2>
 
 <p>パイプは完全な立方体でありません：ブロック中央に 4×4×4 のコア（各軸 6 から 10）に接続された各面への 袖。ツルハシで設置/破壊され、硬度 0.2、爆発耐性 0.5、銅の音。ブロックは光に対し透明 （）、隣接ブロックが透けて見えます。</p>
 
 <p>筐体内部に液体が見え — それはパイプを流れるものの色に染まります：水は青、溶岩はオレンジ、石油は黒。 他モッドの液体も自身の色で表示されます。</p>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
-<p>ガラスの周りに銀インゴット 8 個、結果はパイプ 8 個。ここでガラスは偶然でなく：内部を流れるものが 見えるようにするためです。</p>
+<p>ガラスの周りに銀インゴット 6 個をリング状に（四隅は空き）、結果はパイプ 8 個。ここでガラスは偶然でなく：内部を流れるものが 見えるようにするためです。</p>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p>ベースの液体パイプは LV ティア。計画では次に — 強化型（より大きなスループット）とフィルタ型 （指定した液体のみ通す）。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="../fluid-storage/fluid_tank.html">携帯用流体タンク</a> — 液体の保存 <a href="../fluid-machines/pump.html">ポンプ</a> — ワールドからの液体採取 <a href="../item-transport/item_pipe.html">アイテムパイプ</a> — 同じレンチ、同じ面モード <a href="../items/wrench.html">レンチ</a></p>
 

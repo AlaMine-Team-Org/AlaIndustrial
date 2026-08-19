@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
 <a class="cat-link active" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 
 <p>The <strong>Charging Station</strong> is a flat plate, a quarter of a block tall, that you simply stand on. While you're on it, it charges <strong>everything</strong> you're carrying at once: tools in your hotbar and backpack, whatever is in your offhand, and your <strong>worn</strong> gear too — the Energy Pack, the Jetpack, a set of Fluxweave armour.</p>
 
@@ -400,7 +400,7 @@
 
 <p>Charging never asks you to open a window: step on and it runs. The station does have a screen, but it is <strong>optional</strong> — a reference panel for whoever wants the numbers, not a condition for the plate to work. Ignore it and the only thing you lose is the numbers: the plate behaves identically with the screen open and closed.</p>
 
-<h2>Energy</h2>
+<h2 id="energy">Energy</h2>
 
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Buffer</td><td>20 000 EU/FE</td></tr><tr><td>Max input</td><td>128 EU/FE/t</td></tr><tr><td>Max output to the player</td><td>128 EU/FE/t</td></tr></tbody></table>
 
@@ -432,11 +432,11 @@
 
 <p>All six faces accept energy; the station never gives any back to the network.</p>
 
-<h2>Interface</h2>
+<h2 id="interface">Interface</h2>
 
 <p>The station has two independent feedback channels: the indicator under your feet is the primary one, for play on the move, and the screen is the secondary one, for whoever wants exact numbers.</p>
 
-<h3>Indicator</h3>
+<h3 id="indicator">Indicator</h3>
 
 <p>A four-state indicator: four lamps at the corners of the plate and a coil ring at its centre, mirrored by a lit strip along its edge so the state reads both from above and from across the room.</p>
 
@@ -446,13 +446,13 @@
 
 <p>Sparks lift off the plate while it is charging.</p>
 
-<h3>Click</h3>
+<h3 id="click">Click</h3>
 
 <p>The station clicks like a metal pressure plate: once when you step on, once when you step off. It is an acknowledgement — the sound tells you the plate registered you even when you are facing the other way and can see neither lamps nor sparks.</p>
 
 <p>The click sounds <strong>once per visit</strong>, not once per tick: sprinting along a row of stations gets you one click from each, not a burst. A spectator drifting through the plate clicks nothing at all — they do not charge either.</p>
 
-<h3>Screen</h3>
+<h3 id="screen">Screen</h3>
 
 <p>The screen opens on <strong>right-click</strong>, including while you are standing on the plate. Stepping on does not open it: a window popping up on every step would get in the way of walking, and the whole point of the station is that you can step on it and get on with your business.</p>
 
@@ -464,7 +464,7 @@
 
 <p>"Time left" is measured against the gear of whoever stands on the plate rather than the station's own buffer: what the player wants to know is when they can leave. It is derived from the current delivery rate, so on a thin supply line it honestly grows — the station gives out exactly as much as it manages to take in.</p>
 
-<h2>Behaviour</h2>
+<h2 id="behaviour">Behaviour</h2>
 
 <p>The station <strong>spends energy only when a transfer actually happens</strong>. A station with no visitor, or one whose visitor is already full, spends nothing; left alone, it goes to sleep.</p>
 
@@ -472,13 +472,13 @@
 
 <p>A spectator drifting through the block is charged nothing and costs nothing.</p>
 
-<h3>What the station cannot charge</h3>
+<h3 id="what-the-station-cannot-charge">What the station cannot charge</h3>
 
 <p><strong>Other mods'</strong> items while they are worn. Item energy on both loaders is addressed by <strong>inventory slot index</strong>, and worn armour from another mod has no such index. All of Ala Industrial's own portable gear charges fully, and foreign items sitting in ordinary inventory slots charge normally too.</p>
 
 <p>In creative mode the station still physically spends its reserve, exactly as a machine charges an item in its slot. That is not a bug.</p>
 
-<h2>Block properties</h2>
+<h2 id="block-properties">Block properties</h2>
 
 <p><strong>Shape:</strong> a 16×4×16 plate — the bottom quarter of the block (0 to 4 in height). It has full collision: you stand on it rather than walk through it, and it is low enough that you step over the station instead of jumping onto it. The highlight outline matches exactly what you walk on.</p>
 
@@ -488,7 +488,11 @@
 
 <p>Placed and broken with a pickaxe; hardness 3.0, blast resistance 6.0, metal sound. Breaking it does <strong>not</strong> preserve the EU/FE buffer — the station loses what it had banked, like any machine in the mod.</p>
 
-<h2>Crafting</h2>
+<h2 id="sound">Sound</h2>
+
+<p>While charging, the station gives off a soft transformer hum — the loop (pattern C keyed off the state, the quietest stationary loop in the mod: 0.18 — the player stands ON the block, the source is right at their feet. Standing on it full (green indicator) or with an empty buffer keeps it silent. The step-on / step-off clicks remain vanilla.</p>
+
+<h2 id="crafting">Crafting</h2>
 
 <table><thead><tr><th></th><th></th><th></th></tr></thead><tbody><tr><td>Copper Cable</td><td>Copper Cable</td><td>Copper Cable</td></tr><tr><td>Iron Plate</td><td>Battery</td><td>Iron Plate</td></tr><tr><td>Iron Plate</td><td>Electronic Circuit</td><td>Iron Plate</td></tr></tbody></table>
 

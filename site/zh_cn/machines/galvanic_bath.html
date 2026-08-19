@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -392,19 +392,19 @@
     </div>
   </div>
 </div>
-<h2>概览</h2>
+<h2 id="概览">概览</h2>
 
 <p>电镀槽是一台用于电镀沉积的 LV 等级机器：将纤维与银粉浸入水中并通以电流，银便以导电路径的形式沉积在纤维上。产物是 <strong>通量纤维</strong>，即通量织物材料的半成品。这是本模组第一台同时消耗物品 <strong>和</strong> 液体的机器，也是通往 EU/FE 护甲系列的入口。</p>
 
 <p>所用纤维为 <strong>原版线或棉纤维</strong>，两者通过同一个配方经标签 <code>#</code> 一并接受。在蜘蛛农场与棉花地之间如何选择，是玩法风格问题，与进度无关。</p>
 
-<h2>能量</h2>
+<h2 id="能量">能量</h2>
 
 <table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>角色</td><td>消费端</td></tr><tr><td>缓存（EU/FE）</td><td>800（）</td></tr><tr><td>最大输入（EU/FE/刻）</td><td>32（LV 上限）</td></tr><tr><td>最大输出（EU/FE/刻）</td><td>不适用</td></tr><tr><td>EU/FE/刻</td><td>2（）</td></tr></tbody></table>
 
 <p>传输能力：除正面（）外可从任何面每刻接收至多 32 EU/FE，正面在能量上是惰性的，不会引来电缆分线。超出上限的能量不会被传输，也不会造成破坏。</p>
 
-<h2>加工</h2>
+<h2 id="加工">加工</h2>
 
 <table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>持续时间（刻）</td><td>500 = 25 秒（）</td></tr><tr><td>每次操作耗水</td><td>4000 mB = 4 桶（）</td></tr><tr><td>储罐容量</td><td>10000 mB（10 桶）</td></tr><tr><td>自动卸料</td><td>否</td></tr></tbody></table>
 
@@ -412,33 +412,33 @@
 
 <p>储罐是 <strong>单向</strong> 的：水可以灌入但无法抽出（R-CON-08），进入其中的是原料而非储备，相邻的泵无法把水抽回。</p>
 
-<h2>物品栏</h2>
+<h2 id="物品栏">物品栏</h2>
 
 <table><thead><tr><th>槽位</th><th>接受</th><th>数量</th></tr></thead><tbody><tr><td>纤维</td><td><code>#</code>（线、棉纤维）</td><td>每次 1</td></tr><tr><td>银</td><td></td><td>每次 1</td></tr><tr><td>灌注（输入）</td><td>任何液体容器（桶、真空胶囊、其他模组的单元）</td><td>—</td></tr><tr><td>灌注（输出）</td><td>由机器排空的容器</td><td>—</td></tr><tr><td>结果</td><td>，仅可由机器放入</td><td>最多 64</td></tr></tbody></table>
 
 <p>自动化可以向两个输入槽和灌注槽送料，并从结果槽和空容器槽取走。</p>
 
-<h2>界面</h2>
+<h2 id="界面">界面</h2>
 
 <p>类型：container 显示：储罐水位（悬停可见液体名称与 mB 体积）、能量储备、进度箭头。 <strong>空闲原因</strong> 会以提示显示在箭头上："需要纤维"、"需要银粉"、"需要水"、"无匹配配方"、"输出已满"。之所以需要单独一行，是因为水并不属于配方：缺水时空储罐会被玩家误读为 "无配方"。</p>
 
-<h2>方块属性</h2>
+<h2 id="方块属性">方块属性</h2>
 
 <table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>硬度</td><td>3.0</td></tr><tr><td>爆炸抗性</td><td>6.0</td></tr><tr><td>工具</td><td>镐</td></tr><tr><td>能量 NBT 掉落</td><td>否</td></tr></tbody></table>
 
-<h2>声音</h2>
+<h2 id="声音">声音</h2>
 
 <p>运行时，电镀槽会发出微弱的离子电解嗡鸣声 — 循环音效 （模式 <strong>A</strong>，默认 0.35）。空闲时归于静默（）。</p>
 
-<h2>配方</h2>
+<h2 id="配方">配方</h2>
 
 <p>合成： — 机器外壳、两个铜线圈、两块电子电路以及两块银板。 加工配方：</p>
 
-<h2>进阶</h2>
+<h2 id="进阶">进阶</h2>
 
 <p>等级：LV 需要：<a href="../components/machine_casing.html">机器外壳</a>、铜线圈、电子电路、银板。 开启：通量纤维 → 通量织物 → LV 等级的 Fluxweave 护甲。</p>
 
-<h2>相关内容</h2>
+<h2 id="相关内容">相关内容</h2>
 
 <p><a href="polymerizer.html">聚合机</a> — 带储罐的机器范例 <a href="vulcanizer.html">硫化机</a> — 带两个物品输入的机器范例 <a href="../agriculture/trellis.html">棚架</a> — 棉纤维的来源</p>
 

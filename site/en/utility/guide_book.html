@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Other</div>
 <a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 
 <p>The <strong>Guide Book</strong> is Ala Industrial's in-game manual. A new player lands in a world with non-trivial mechanics (EU/FE instead of FE, LV/MV/HV voltage tiers, cables with distance loss, machine face ports) and, with no built-in tutorial, is left to guess or read an external wiki. The book removes that entry barrier: the player <strong>receives it in their inventory automatically on first spawn</strong> (exactly once), <strong>opens it with a right-click</strong> — a full-screen view with tabs and page navigation — and works through the chapters up to a first working power grid and machine without leaving the game.</p>
 
@@ -400,11 +400,11 @@
 
 <blockquote><strong>Mini-example:</strong> enter a new world → the "Guide Book" is in your inventory → right-click → a screen opens on the "Getting Started" tab → click the "Solar Panel" link → read how much EU/FE it makes and how to craft it.</blockquote>
 
-<h2>How you get it</h2>
+<h2 id="how-you-get-it">How you get it</h2>
 
 <p><strong>Auto-given on first join.</strong> The first time a player enters a world, the book is placed in their inventory <strong>exactly once</strong>. The "already given" ledger lives in <strong>per-world saved data</strong> (a <code>SavedData</code> holding a set of UUIDs) — it survives death/respawn/dimension changes and never double-gives on relog. <strong>Existing players get it once on a mod update</strong> too: their UUID isn't in the ledger yet, so the book is given on their first join after the update and the UUID is added. <strong>Recovery if lost</strong> — two safeguards, neither of which gates the auto-give: a <strong>craft</strong> (cheap, LV-accessible, not schematic-gated); the <strong><code>/alaindustrial guide</code></strong> command (reuses the existing <code>/ala</code> command; gives/opens the book). The player is never locked out of the tutorial. If the inventory is full during auto-give, the book drops at the player's feet (never lost).</p>
 
-<h2>Interface</h2>
+<h2 id="interface">Interface</h2>
 
 <p>Opened with a right-click — a <strong>full-screen window</strong> (not a chest: no slots, no inventory). It has:</p>
 
@@ -414,29 +414,29 @@
 
 <p>Visually it follows the mod style — the same palette and bevel panels as the other interfaces.</p>
 
-<h2>Content</h2>
+<h2 id="content">Content</h2>
 
 <p>The book covers every block and item already in the game: for each one, a short description, its stats (tier, EU/FE, buffer) and its crafting recipe. The numbers in the book (EU/FE, tiers, buffers, recipes) come from the same source as the wiki site, so they always match the game — no drift. Planned and not-yet-added blocks are left out: the book never promises what isn't in the game yet. The framing "Getting Started" and "Energy" chapters are written as an introductory tutorial for new players.</p>
 
-<h2>Block Properties</h2>
+<h2 id="block-properties">Block Properties</h2>
 
 <p>The book is an <strong>item</strong> (not a block): it can't be placed, stacks to 1, has no EU/FE buffer. Its "shape" is an ordinary item model (→ <code>item/generated</code> with the icon). Right-click opens the GUI (see "Interface"); no block is placed in the world, no collision.</p>
 
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Type</td><td>item, not a block</td></tr><tr><td>Stack</td><td>1</td></tr><tr><td>EU/FE buffer</td><td>none</td></tr><tr><td>Right-click</td><td>opens the book screen (client-side)</td></tr><tr><td>World placement</td><td>none</td></tr></tbody></table>
 
-<h2>Recipes</h2>
+<h2 id="recipes">Recipes</h2>
 
 <p>The craft is a <strong>dead-simple</strong> shapeless recipe: a vanilla <code>minecraft:book</code> + (the earliest, cheapest mod component). Not schematic-gated (the book is auto-given anyway; the craft only recovers a lost one).</p>
 
-<h2>Progression</h2>
+<h2 id="progression">Progression</h2>
 
 <p>Tier: none (a utility, not part of the energy chain). Available immediately — it's the entry point into progression, not a rung of it. It guides the player through the mod's real progression (ore → generator → cable → machine → tiers).</p>
 
-<h2>Localization</h2>
+<h2 id="localization">Localization</h2>
 
 <p><strong>v1: <code>en_us</code> + <code>ru_ru</code></strong> — full chapter content (<code>en_us</code> is the source, as everywhere in the mod). The other 18 languages get a translated item name, while chapter content is shown in English for now; a full chapter translation comes later. All book text is via lang keys; no hardcoded strings (project rule).</p>
 
-<h2>Related</h2>
+<h2 id="related">Related</h2>
 
 <p>The book is built from the same source as the mod's wiki site: the same content and the same numbers, but right in the player's hands.</p>
 

@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепты</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="10 страниц">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="4 страницы">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Прочее</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="14 страниц">14</span></a>
 <div class="group-title">Предметы</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="2 страницы">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="20 страниц">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="20 страниц">20</span></a>
   </aside>
@@ -393,7 +393,7 @@
   </div>
 </div>
 
-<h2>Сводка</h2>
+<h2 id="сводка">Сводка</h2>
 
 <p><strong>Жидкостная труба</strong> носит воду, лаву, нефть и любые другие жидкости между баками, насосом и машинами — вместо того чтобы бегать с вёдрами. Ставьте трубы в линию, укажите <a href="../items/wrench.html">ключом</a>, откуда забирать и куда сливать, дальше труба работает сама. Энергия ей не нужна.</p>
 
@@ -401,7 +401,7 @@
 
 <p>Жидкость действительно течёт по трубе, а не появляется сразу на другом конце: каждый сегмент держит небольшой объём и передаёт его дальше. Поэтому длинная линия наполняется постепенно — видно, как фронт жидкости идёт по трубе.</p>
 
-<h2>Жидкость</h2>
+<h2 id="жидкость">Жидкость</h2>
 
 <table><thead><tr><th>Свойство</th><th>Значение</th></tr></thead><tbody><tr><td>Объём одного сегмента</td><td>50 мБ</td></tr><tr><td>Пропускная способность</td><td>50 мБ за тик (1 ведро в секунду)</td></tr><tr><td>Жидкостей одновременно</td><td>одна на сегмент</td></tr><tr><td>Расход энергии</td><td>нет</td></tr></tbody></table>
 
@@ -411,7 +411,7 @@
 
 <blockquote>Если сломать трубу, жидкость из неё пропадает. Это меньше половины ведра на сегмент, зато не приходится ловить разлив.</blockquote>
 
-<h2>Стороны и ключ</h2>
+<h2 id="стороны-и-ключ">Стороны и ключ</h2>
 
 <p>Стороны настраиваются так же, как у <a href="../item-transport/item_pipe.html">предметной трубы</a> — тем же ключом и тем же порядком, чтобы не приходилось запоминать два разных правила.</p>
 
@@ -421,25 +421,25 @@
 
 <blockquote>Shift+ПКМ ключом стороны не настраивает — так труба <strong>разбирается</strong>, как и любой блок мода.</blockquote>
 
-<h3>Труба к трубе</h3>
+<h3 id="труба-к-трубе">Труба к трубе</h3>
 
 <p>Там, где труба стыкуется с другой трубой, забирать и сливать нечего — это просто участок пути. Поэтому ключ там переключает только «соединено» ↔ «разъединено». Разъединили и соединили обратно — линия снова работает.</p>
 
-<h2>Свойства блока</h2>
+<h2 id="свойства-блока">Свойства блока</h2>
 
 <p>Труба — не полный куб: ядро 4×4×4 в центре блока (от 6 до 10 по каждой оси) плюс рукав к каждой подключённой стороне. Ставится и ломается киркой, прочность 0.2, взрывоустойчивость 0.5, звук меди. Блок прозрачный для света, сквозь него видно соседние блоки.</p>
 
 <p>Внутри корпуса видно жидкость — она окрашена в цвет того, что течёт по трубе: вода синяя, лава оранжевая, нефть чёрная. Жидкости из других модов тоже отображаются своим цветом.</p>
 
-<h2>Рецепт</h2>
+<h2 id="рецепт">Рецепт</h2>
 
-<p>8 серебряных слитков вокруг стекла, результат — 8 труб. Стекло здесь не случайно: именно через него видно, что течёт внутри.</p>
+<p>6 серебряных слитков кольцом вокруг стекла (углы пустые), результат — 8 труб. Стекло здесь не случайно: именно через него видно, что течёт внутри.</p>
 
-<h2>Прогрессия</h2>
+<h2 id="прогрессия">Прогрессия</h2>
 
 <p>Базовая труба тира LV. Дальше по плану — усиленная (больше пропускная) и фильтрующая (пропускает только заданную жидкость).</p>
 
-<h2>Связанное</h2>
+<h2 id="связанное">Связанное</h2>
 
 <p><a href="../fluid-storage/fluid_tank.html">Переносной бак</a> — хранение жидкости <a href="../fluid-machines/pump.html">Насос</a> — добыча жидкости из мира <a href="../item-transport/item_pipe.html">Предметная труба</a> — тот же ключ и те же режимы сторон <a href="../items/wrench.html">Ключ</a></p>
 

@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概览</h2>
+<h2 id="概览">概览</h2>
 
 <p><strong>存储模块</strong>——一个 27 格方块，它最擅长的是：<strong>与邻居合并</strong>。把两个模块紧挨着放——就成了 一个 54 格的一体仓库，共用一个窗口。三个——81。四个——108，这就是上限。</p>
 
@@ -402,29 +402,29 @@
 
 <blockquote><strong>示例：</strong> 放了一个模块，塞满了——不够。紧挨着再搭一个：打开两个中的任意一个，里面 已经是 54 格作为一个列表。</blockquote>
 
-<h2>能量</h2>
+<h2 id="能量">能量</h2>
 
 <table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>角色</td><td>无</td></tr><tr><td>缓存（EU/FE）</td><td>0</td></tr><tr><td>最大输入（EU/FE/刻）</td><td>n/a</td></tr><tr><td>最大输出（EU/FE/刻)</td><td>n/a</td></tr><tr><td>EU/FE/刻</td><td>0</td></tr></tbody></table>
 
 <p>模块不参与能源网络：不传导 EU/FE，也不连接电缆。</p>
 
-<h2>物品栏</h2>
+<h2 id="物品栏">物品栏</h2>
 
 <table><thead><tr><th>槽位</th><th>接受</th><th>数量</th></tr></thead><tbody><tr><td>模块仓库</td><td>任何物品</td><td>27（3 行 × 9）</td></tr></tbody></table>
 
 <p><strong>物品物理上存放在被放入的那个模块里。</strong> 没有公共的「主」物品栏：仓库窗口是同时查看所有 模块物品栏的视图，而不是独立的存储。由此衍生出其余一切行为：破坏时掉落什么、卸载区块时 发生什么。</p>
 
-<h3>整体仓库如何累加</h3>
+<h3 id="整体仓库如何累加">整体仓库如何累加</h3>
 
 <table><thead><tr><th>相邻模块数</th><th>仓库格数</th><th>总行数</th><th>可见行数</th><th>滚动</th></tr></thead><tbody><tr><td>1</td><td>27</td><td>3</td><td>3</td><td>无</td></tr><tr><td>2</td><td>54</td><td>6</td><td>6</td><td>无（滚动条不激活）</td></tr><tr><td>3</td><td>81</td><td>9</td><td>6</td><td>3 行</td></tr><tr><td>4</td><td>108</td><td>12</td><td>6</td><td>6 行</td></tr><tr><td>5 个或更多</td><td>108（上限）</td><td>12</td><td>6</td><td>6 行</td></tr></tbody></table>
 
 <p>槽位和行数<strong>没有变</strong>——改变的只是窗口：它最多显示六行，其余通过右侧的滚动条呈现。为什么 是六——正好是原版大型箱子（游戏自带的最高容器窗口）的高度，到处都能放得下。</p>
 
-<h3>合并规则</h3>
+<h3 id="合并规则">合并规则</h3>
 
 <p>当模块以<strong>面</strong>紧邻仓库的另一个模块时，它加入仓库。以棱或角相接不算——这样可以在紧贴的 情况下建成两个独立的仓库。 每次打开窗口时集合重新计算：遍历从你点击的模块开始。什么都不记忆，因此安装和拆除模块 不需要任何重建。 如果结构中模块超过四个，按遍历顺序的前四个会加入仓库。点击同一结构的不同模块可能得到 不同的四个——窗口会显示已连接多少模块，因此可见。</p>
 
-<h2>界面</h2>
+<h2 id="界面">界面</h2>
 
 <p>两种窗口尺寸：单个模块的 <strong>3 行</strong>（176×166）和 任何更大仓库的 <strong>6 行</strong>（195×220）。 <strong>滚动条</strong>——网格右侧，面板宽度为此增加了 19 px。鼠标滚轮、拖动滑块和点击轨道都有效。 两个模块的仓库没什么可滚的，滚动条以<strong>不激活的色调</strong>绘制，而不是消失：时有时无的元素 比明显禁用的元素更难读。 <strong>Shift 点击也会把物品放入屏幕上看不见的行。</strong> 这不是小事：原版 shift 点击按菜单槽位 工作，而窗口正好有六行，因此「显而易见」的实现会默默停在仓库中间，一半还空着时就报 「已满」。 没有搜索——108 格还不足以需要它。</p>
 
@@ -432,11 +432,11 @@
 
 <p><strong>为什么是视图而不是槽位搬家。</strong> <code>Slot.x</code>/<code>Slot.y</code> 是 <code>public final</code>，菜单槽位列表属于网络 契约：<code>ClientboundContainerSetSlot</code> 中的索引就是其中的位置，在活动菜单下重新组装列表会让 客户端失去同步。原版中唯一可滚动的展示（创造物品栏）也是这样做的：槽位不动，动的是容器 在它们背后负责的内容。</p>
 
-<h2>方块属性</h2>
+<h2 id="方块属性">方块属性</h2>
 
 <table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>形状</td><td>完整 16³ 立方体</td></tr><tr><td>硬度</td><td>3.0</td></tr><tr><td>爆炸抗性</td><td>6.0</td></tr><tr><td>工具</td><td>镐</td></tr><tr><td>带 NBT 掉落</td><td>false——内容<strong>不</strong>保存在物品中</td></tr></tbody></table>
 
-<h3>外观：仓库看起来像一个柜子</h3>
+<h3 id="外观仓库看起来像一个柜子">外观：仓库看起来像一个柜子</h3>
 
 <p>模块是带<strong>三个抽屉</strong>的钢制柜子：每个抽屉对应它为窗口添加的一行九格。顶部和底部不是抽屉， 而是带嵌入式服务面板的机身板。</p>
 
@@ -462,17 +462,17 @@
 
 <p><strong>内容经受得住重启。</strong> <code>TC-STOR-013</code> 让模块经过 NBT（与区块保存和加载相同的路径），并检查 槽位不会错位：两个占用槽位之间故意留出的空槽必须保持为空。</p>
 
-<h2>配方</h2>
+<h2 id="配方">配方</h2>
 
 <p>合成：——原版箱子周围十字形摆 4 个 <a href="../components/material_forms.html">铁板</a>。</p>
 
 <p>配方刻意便宜：扩容是消耗品，而不是进度的里程碑。</p>
 
-<h2>进阶</h2>
+<h2 id="进阶">进阶</h2>
 
 <p>等级：无——不需要能量，在最初的板材之后即可使用。 在存储系列中的位置：<a href="iron_chest.html">铁箱子</a> 36 → <a href="silver_chest.html">银箱子</a> 45 → <a href="gold_chest.html">金箱子</a> 54 → <a href="electrum_chest.html">琥珀金箱子</a> 81 → 模块仓库 108。箱子没有被贬值：它们以单个方块 提供全部容量，仓库需要四个。 之后：<a href="../machines/assembler.html">组装机</a>将能直接从此类仓库取料。</p>
 
-<h2>相关内容</h2>
+<h2 id="相关内容">相关内容</h2>
 
 <p><a href="gold_chest.html">金箱子</a>——上一级存储 <a href="../components/material_forms.html">材料形态</a>——合成用的板材 <a href="stock_display_frame.html">库存显示物品展示框</a>——未加载区块防护的范例 <a href="../machines/assembler.html">组装机</a>——仓库的未来消费者 <a href="../item-transport/item_pipe.html">物品管道</a>——从外部填充仓库</p>
 

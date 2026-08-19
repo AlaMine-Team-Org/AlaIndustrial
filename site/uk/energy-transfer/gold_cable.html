@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепти</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="10 сторінок">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="4 сторінки">4</span></a>
 <a class="cat-link active" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Інше</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилітарні блоки</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
 <div class="group-title">Предмети</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
   </aside>
@@ -394,7 +394,7 @@
 </div>
 <blockquote>⚠️ <strong>Електробезпека.</strong> Голий золотий MV- кабель завдає 6 одиниць шкоди гравцеві не лише при прямому дотику, а й у радіусі <strong>0.5 блока</strong> навколо сегмента — але тільки якщо крізь цей сегмент зараз справді рухається енергія. Вимкнена лінія та залишений у буфері заряд безпечні. Звичайна броня зменшує шкоду; вода її не посилює; суцільний блок між кабелем і гравцем гасить удар. Механіку можна вимкнути в налаштуваннях сервера. Знизити шанс удару, не прибираючи його повністю, можна ізолювальною підставкою — або замінити голий сорт на <a href="insulated_gold_cable.html">ізольований золотий кабель</a>, який безпечний зовсім.</blockquote>
 
-<h2>Зведення</h2>
+<h2 id="зведення">Зведення</h2>
 
 <p><strong>Золотий кабель</strong> — перший у моді провід тира <strong>MV</strong>. Він несе 48 EU/FE/тик — учетверо більше за мідь — і піднімає стелю пакета до 128 EU/FE (проти 32 у LV).</p>
 
@@ -402,7 +402,7 @@
 
 <p>Кому він потрібен уже зараз: <a href="../machines/assembler.html">Складальний автомат</a> — перша MV-машина моду — і <a href="../energy-storage/cesu.html">Посилене енергосховище</a>, яке приймає й віддає на MV. Тягнути до них LV-провід безглуздо: він зріже пакет до 32 EU/FE.</p>
 
-<h2>Енергія</h2>
+<h2 id="енергія">Енергія</h2>
 
 <table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Роль</td><td>передача</td></tr><tr><td>Тир</td><td>MV</td></tr><tr><td>Макс. напруга</td><td>128 EU/FE/пакет</td></tr><tr><td>Пропускна здатність</td><td>48 EU/FE/тик = робочий буфер сегмента</td></tr><tr><td>Втрати</td><td>0.03 затухання на блок; доставляється <code>max(1, ceil(N × 0.97^дистанція))</code> EU/FE/тик</td></tr></tbody></table>
 
@@ -410,15 +410,15 @@
 
 <blockquote><strong>Змішані мережі.</strong> Мережа бере і пропускну здатність, і втрати від найсильнішого кабелю в ній. Один золотий сегмент у мідній лінії піднімає всю мережу до 128 EU/FE/пакет — і до золотих 0.03 втрат. Це навмисно: інакше гравець міг би врізати один золотий сегмент заради високої стелі, але платити мідні втрати.</blockquote>
 
-<h2>Властивості блока</h2>
+<h2 id="властивості-блока">Властивості блока</h2>
 
 <table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Форма</td><td>тонкий стрижень</td></tr><tr><td>Міцність</td><td>0.2</td></tr><tr><td>Інструмент</td><td>будь-який / кусачки</td></tr></tbody></table>
 
-<h2>Рецепти</h2>
+<h2 id="рецепти">Рецепти</h2>
 
 <p>Три золоті зливки в ряд дають 3 кабелі. Рецептів переробки немає.</p>
 
-<h2>Пов'язане</h2>
+<h2 id="повязане">Пов'язане</h2>
 
 <p><a href="copper_cable.html">Мідний кабель</a> — LV-основа для довгих магістралей. <a href="insulated_gold_cable.html">Ізольований золотий кабель</a> — удвічі менші втрати й безпека.</p>
 

@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -392,13 +392,13 @@
     </div>
   </div>
 </div>
-<h2>概览</h2>
+<h2 id="概览">概览</h2>
 
 <p><strong>锯木机</strong> 是一台用于木材加工的 LV 等级机器。它能将原木（或木板）锯成比手动合成 <strong>更高产出</strong> 的成品，并可锯出四种不同的产品，拥有 <strong>4 种可切换模式</strong>（界面中的按钮）：<strong>木板 / 木棍 / 半砖 / 楼梯</strong>。任何木种都会产出对应木种的成品，木棍则是无木种区分的。这是本模组能耗最低的操作：锯木头比磨石头更轻松。</p>
 
 <blockquote><strong>小示例：</strong> 在 "木板" 模式下放入一根橡木原木，约 4 秒后就能得到 <strong>6 块橡木木板</strong>，而非原版的 4 块。切换到 "木棍" 模式，同一根原木会产出 <strong>18 根木棍</strong>。</blockquote>
 
-<h2>能量</h2>
+<h2 id="能量">能量</h2>
 
 <p>锯木机只消耗 EU/FE，并保持一个小型缓存以平稳运行。</p>
 
@@ -406,13 +406,13 @@
 
 <p>LV 等级机器：每刻最多接收 32 EU/FE。能量从五个工作面输入。<strong>正面</strong>（机器 "脸" 朝向的那一面）是惰性的，无法连接电缆，也无法通过漏斗工作。</p>
 
-<h2>加工</h2>
+<h2 id="加工">加工</h2>
 
 <p>锯木机始终只在 <strong>当前活动模式</strong> 下工作：其他三种模式的配方在此刻处于非活动状态。切换模式会重置当前进度（新模式锯的是另一种产品）。一次锯切持续约 80 刻（约 4 秒）。</p>
 
 <table><thead><tr><th>项目</th><th>数值</th></tr></thead><tbody><tr><td>配方类型</td><td>/ <code>sawing_sticks</code> / <code>sawing_slabs</code> / <code>sawing_stairs</code></td></tr><tr><td>持续时间</td><td>约 80 刻（约 4 秒）</td></tr><tr><td>单次锯切消耗</td><td>160 EU/FE</td></tr><tr><td>自动卸料</td><td>否</td></tr></tbody></table>
 
-<h2>物品栏</h2>
+<h2 id="物品栏">物品栏</h2>
 
 <p>一个输入槽，一个输出槽。</p>
 
@@ -420,17 +420,21 @@
 
 <p>只要物品符合 <strong>至少一种</strong> 模式，输入就会被接受，这样切换模式时物品不会 "卡住"。在不匹配的模式下，机器只会原地休眠。</p>
 
-<h2>界面</h2>
+<h2 id="界面">界面</h2>
 
 <p>界面复用 <a href="electric_furnace.html">电力熔炉</a> 的设计：能量储备、进度、输入槽和输出槽，中间是 <strong>锯片</strong> 形式的进度指示器，从左向右填充。槽位下方是一排 <strong>4 个模式按钮</strong>，带幽灵图标（木板/木棍/半砖/楼梯）；当前活动模式会高亮，每个按钮都有悬浮提示。</p>
 
-<h2>方块属性</h2>
+<h2 id="方块属性">方块属性</h2>
 
 <p>普通的实心方块，比石头软。用任何镐都可破坏，但 <strong>破坏时不保留能量</strong>。</p>
 
 <table><thead><tr><th>项目</th><th>数值</th></tr></thead><tbody><tr><td>工具</td><td>镐</td></tr><tr><td>破坏时保留能量</td><td>否</td></tr></tbody></table>
 
-<h2>配方</h2>
+<h2 id="声音">声音</h2>
+
+<p>工作时（lit），锯木机会发出有节奏的往复锯木声 — 循环（模式A，默认 0.35）。机器空闲时会静音（）。</p>
+
+<h2 id="配方">配方</h2>
 
 <p>它能锯切的内容（产出为 <strong>对应木种</strong>；竹子减半，原版中竹块也只产出 2 块木板）：</p>
 
@@ -438,15 +442,15 @@
 
 <p>共计 39 个锯切配方（12 个木种 × 木板/半砖/楼梯 + 3 个木棍配方）。半砖、楼梯和木棍 <strong>不接受</strong> 作为输入，不存在逆向循环和复制。</p>
 
-<h3>在配方查看器中</h3>
+<h3 id="在配方查看器中">在配方查看器中</h3>
 
 <p>在 JEI/REI 中，锯木机提供 <strong>4 个类别</strong>，每种模式一个（<code>sawing_planks</code>、<code>sawing_sticks</code>、<code>sawing_slabs</code>、<code>sawing_stairs</code>）；它们的工作站都是锯木机本身。点击进度箭头会同时打开全部四个类别。每个类别都标注了对应模式：锯木机：木板、锯木机：木棍、锯木机：半砖、锯木机：楼梯，以便区分标签页；模式名称取自与机器界面按钮相同的翻译。</p>
 
-<h2>进阶</h2>
+<h2 id="进阶">进阶</h2>
 
 <p>等级：LV。木材加工的早期机器。 升级方向：无（基础 LV 机器）。 需要 LV 电源供电，例如 <a href="../generators/generator.html">发电机</a>。</p>
 
-<h2>相关内容</h2>
+<h2 id="相关内容">相关内容</h2>
 
 <p><a href="electric_furnace.html">电力熔炉</a> — 复用的界面，相邻的 LV 机器。 <a href="../generators/generator.html">发电机</a> — 电源。</p>
 

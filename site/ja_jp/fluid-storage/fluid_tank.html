@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,23 +392,23 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>携帯用流体タンク</strong>は 1 種類の液体を最大 <strong>8 バケツ（8000 mB）</strong> 保存します。EU/FE を消費せず、 自ら液体を運び、GUI も持ちません：液体レベルと種類は筐体のガラス壁を通して直接見えます。</p>
 
 <p>タンクはバケツ、真空カプセル、他モッドの容器経由で水、溶岩、他モッドの液体を受け付けます。 破壊時、中身はドロップしたアイテムに残り、設置後に復元されます。</p>
 
-<h2>液体</h2>
+<h2 id="液体">液体</h2>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>容量</td><td>8000 mB（8 バケツ）</td></tr><tr><td>同時種類</td><td>1</td></tr><tr><td>入出力</td><td>全 6 面</td></tr><tr><td>自動排出</td><td>なし</td></tr><tr><td>コア単位</td><td>mB、1000 mB = 1 バケツ</td></tr></tbody></table>
 
 <p>液体は混ざりません：内部に水がある間、溶岩や別種は受け付けられません。Fabric は体積をミリバケツ（mB） で計算し、NeoForge でもタンクは同じように動作します。</p>
 
-<h2>操作</h2>
+<h2 id="操作">操作</h2>
 
 <p>水または溶岩入りバケツは、空きがあればちょうど 1000 mB をタンクに移します。 空のバケツは、タンクに水または溶岩がバケツ 1 つ分ある場合のみ 1000 mB を取り出します。 <a href="../items/vacuum_capsule.html">真空カプセル</a>はタンクを満たし、また空にします。 他モッドのパイプとコンテナは任意の面から液体を挿入し取出しできます。 コンパレータは空タンクで 0、充填に比例して 1–15 を出力します。</p>
 
-<h2>ブロックの性質</h2>
+<h2 id="ブロックの性質">ブロックの性質</h2>
 
 <p>筐体は完全なブロックを占めます：上下のプレートが各 3 px、4 本の角柱が 3×3 px、4 枚の半透明ガラス壁。 ガラスと液体は別モデルとしてフレーム内に重なりなしで描かれます。</p>
 
@@ -418,7 +418,7 @@
 
 <p>満タンのアイテムは 1 つのアトミックコンポーネント <code>fluid_tank_contents</code> で種と体積を保持します。 これにより、コピーまたはスタック分割で体積が液体の種類から切り離される状態を排除します。 インベントリでは、16×16 アイコン内部レイヤーは登録済みの液体色で着色され、標準の下部アイテム バーが 8000 mB に対する充填割合を示します。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="../items/vacuum_capsule.html">真空カプセル</a> — 1 バケツ用手動容器。 液体パイプ — 将来の輸送自動化。</p>
 

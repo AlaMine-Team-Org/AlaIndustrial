@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 
 <p>The <strong>Assembler</strong> is the mod's first MV machine and the end of hand-crafting 64 stacks at a time. It remembers crafting-table recipes — stored on an Assembly Blueprint and stamps them out continuously for as long as materials and charge hold out. No redstone needed; the machine runs on its own.</p>
 
@@ -400,7 +400,7 @@
 
 <p>Unlike the vanilla Crafter, which re-solves the grid on every redstone pulse and remembers nothing, the Assembler holds a <strong>queue of three blueprints</strong> and switches between them by itself.</p>
 
-<h2>Energy</h2>
+<h2 id="energy">Energy</h2>
 
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>consumer</td></tr><tr><td>Buffer (EU/FE)</td><td>12000</td></tr><tr><td>Max input (EU/FE/tick)</td><td>128 (MV)</td></tr><tr><td>Max output (EU/FE/tick)</td><td>n/a</td></tr><tr><td>EU/FE/tick</td><td>12</td></tr></tbody></table>
 
@@ -408,7 +408,7 @@
 
 <p>Energy is spent <strong>only on a working tick</strong>. Idling for any reason — no blueprint, no ingredients, no room in the output area — costs no EU/FE at all.</p>
 
-<h2>Processing</h2>
+<h2 id="processing">Processing</h2>
 
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>What it can assemble</td><td>any crafting-table recipe, shaped or shapeless</td></tr><tr><td>Duration (ticks)</td><td>40</td></tr><tr><td>Cost per operation (EU/FE)</td><td>480</td></tr><tr><td>Auto-eject</td><td>no</td></tr></tbody></table>
 
@@ -416,7 +416,7 @@
 
 <p>The mod's own machine recipes (macerating, smelting, extracting) are <strong>not</strong> run by the Assembler — those are separate recipe types and separate machines.</p>
 
-<h3>Picking a blueprint from the queue</h3>
+<h3 id="picking-a-blueprint-from-the-queue">Picking a blueprint from the queue</h3>
 
 <p>Blueprints are polled <strong>round-robin</strong>, and the cursor position persists between cycles. A blueprint is skipped if any of the following holds:</p>
 
@@ -426,7 +426,7 @@
 
 <p>Round-robin was chosen deliberately over strict top-down priority: under strict priority the first blueprint with an endless supply would never hand the queue over to the others.</p>
 
-<h3>Order of a single operation</h3>
+<h3 id="order-of-a-single-operation">Order of a single operation</h3>
 
 <p>The order is strict; deviating breaks either the result or the return of remainders:</p>
 
@@ -438,7 +438,7 @@
 
 <p>The planning happens <strong>twice per operation</strong> — once to decide whether to start, once at the finish (the store may have changed over forty ticks) — and not on the forty ticks in between. If the plan no longer holds at the finish (the store ran dry, the recipe vanished), the machine parks on the finish line: progress and the EU/FE already spent are kept, and it completes the moment the plan holds again.</p>
 
-<h3>Ingredient substitution</h3>
+<h3 id="ingredient-substitution">Ingredient substitution</h3>
 
 <p>By default the Assembler takes <strong>exactly the items recorded on the blueprint</strong>, matching by item and ignoring components (the same comparison the stock <code>Ingredient</code> makes). A worn tool therefore satisfies a blueprint written with a fresh one.</p>
 
@@ -459,7 +459,7 @@
 
 <p>Materials from other mods (copper, tin, silver) work exactly as far as recipe ingredients are written with common <code>c:</code> tags — that is separate work, not a property of the machine.</p>
 
-<h3>Remaining items</h3>
+<h3 id="remaining-items">Remaining items</h3>
 
 <p>Recipes with containers (the bucket in a cake, a bottle) hand the item back. A remainder goes back <strong>into the very store slot its ingredient came from</strong>; if that slot cannot take it, into any free store slot; if the store is full, into the output area; and if that is full too, the operation never started (step 2).</p>
 
@@ -467,7 +467,7 @@
 
 <p>Stack-dependent remainders (this mod's hammer, which loses a point of durability instead of disappearing) work automatically, because remainders are taken through the recipe rather than straight off the item.</p>
 
-<h2>Inventory</h2>
+<h2 id="inventory">Inventory</h2>
 
 <table><thead><tr><th>Slot</th><th>Accepts</th><th>Count</th></tr></thead><tbody><tr><td>Blueprints</td><td>Assembly Blueprint with a recorded recipe</td><td>3</td></tr><tr><td>Output area</td><td>output only (the machine fills it, you empty it)</td><td>6</td></tr><tr><td>Blank slot</td><td>a blank assembly blueprint — what "Write" stamps onto</td><td>1</td></tr><tr><td>Upgrades</td><td>upgrade modules</td><td>4 (the first one is live)</td></tr><tr><td>Store</td><td>any items</td><td>27, plus 27 per <a href="../utility/storage_module.html">module</a>, capped at 108</td></tr></tbody></table>
 
@@ -477,7 +477,7 @@
 
 <p>Outside automation: an item pipe fills the <strong>store</strong> and empties the <strong>output area</strong>. Feeding ingredients straight into the machine by pipe is neither needed nor supported.</p>
 
-<h2>Interface</h2>
+<h2 id="interface">Interface</h2>
 
 <p><strong>Machine window</strong> (right-click the Assembler) has <strong>two tabs</strong>: "Work" and "Record". One block, one window — only what is shown changes.</p>
 
@@ -485,28 +485,28 @@
 
 <p><strong>Switching tabs is a view switch, not a mode switch.</strong> The machine keeps crafting while you are on the recording tab: the tab touches neither the queue, nor the progress, nor the energy. There is deliberately no mode that halts production while you record — it would turn "I want to record one more recipe" into stopping the line.</p>
 
-<h3>The "Work" tab</h3>
+<h3 id="the-work-tab">The "Work" tab</h3>
 
 <p>What the machine is doing right now:</p>
 
 <p>three blueprint slots — the queue, the active one ringed; <strong>the active blueprint's 3×3 layout and its product</strong> — view only (see below); the 6-slot output area; an energy bar and a progress bar; a status line: <em>working / no blueprint / missing materials / output full / no energy / recipe not found</em>. You must be able to tell the reasons apart — otherwise "the machine is idle" is indistinguishable from "the machine is broken".</p>
 
-<h3>The "Record" tab</h3>
+<h3 id="the-record-tab">The "Record" tab</h3>
 
 
-<p>a 3×3 grid of ghost cells; a result preview — what that layout makes; a slot for a blank blueprint; a "Write" button — turns the blank into a recorded blueprint; the square arrow button to the left of "Write" — the <a href="index.html#ingredient-substitution">substitution toggle</a> for the blueprint on show: grey arrows for off, green for on.</p>
+<p>a 3×3 grid of ghost cells; a result preview — what that layout makes; a slot for a blank blueprint; a "Write" button — turns the blank into a recorded blueprint; the square arrow button to the left of "Write" — the <a href="#ingredient-substitution">substitution toggle</a> for the blueprint on show: grey arrows for off, green for on.</p>
 
 <p>Grid cells are filled by clicking: hover a cell and click while holding an item on the cursor and one copy of it lands in the cell; clicking with an empty cursor clears it. Nothing is consumed — the grid shows a layout, it does not hold one.</p>
 
 <p>The blank sits <strong>here rather than in the blueprint queue</strong>, and that follows from the same decision: the recording tab has to stand on its own. If "Write" took its blank from the queue you would have to visit the Work tab in order to record a recipe, and the two jobs would be tangled together again. The recorded blueprint appears where the blank was; from there you pick it up and put it in the queue on the Work tab. Recording is not queueing, and the order of operations says so out loud.</p>
 
-<h3>A hidden tab's slots are out of reach</h3>
+<h3 id="a-hidden-tabs-slots-are-out-of-reach">A hidden tab's slots are out of reach</h3>
 
 <p>A slot belonging to the tab that is not on screen can be neither filled nor emptied — not by clicking, not by shift-clicking, not by dragging, not by a double-click "collect all". A hidden tab is not merely undrawn: while it is hidden, its slots do not exist as far as the game is concerned.</p>
 
 <p>The tab is window state, not machine state: it is never saved, and two players at one Assembler can be on different tabs without getting in each other's way.</p>
 
-<h3>Showing the active blueprint</h3>
+<h3 id="showing-the-active-blueprint">Showing the active blueprint</h3>
 
 <p>The Work tab <strong>shows the layout of a blueprint from the queue</strong> — the one the machine is running, or the first recorded one while it is idle. Without that, a working machine looked like this: status "Assembling", the output filling up, and an empty window. The blueprint's product is drawn under the output area it is filling.</p>
 
@@ -526,7 +526,7 @@
 
 <p>With no store attached at all the Assembler behaves exactly as it does with an empty one: the status line reads "missing materials", no EU/FE is spent, and nothing breaks.</p>
 
-<h2>Block properties</h2>
+<h2 id="block-properties">Block properties</h2>
 
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full cube 16³</td></tr><tr><td>Hardness</td><td>3.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Drops with energy NBT</td><td>no</td></tr></tbody></table>
 
@@ -536,7 +536,7 @@
 
 <p>The front face is marked and, as on the mod's other machines, excluded from automation: a pipe pushed against the front will see no slots.</p>
 
-<h2>Recipes</h2>
+<h2 id="recipes">Recipes</h2>
 
 <p>No processing recipes — the machine uses vanilla <code>minecraft:crafting</code></p>
 
@@ -550,11 +550,11 @@ G — Iron Gear ×4 — the arms that move a part into the grid</code></pre>
 
 <p>The corners are <a href="../components/metal_gears.html">Iron Gears</a> rather than more plating: the assembler is the first machine in the mod that moves parts around on its own, and the gear is the part this mod already spends on exactly that — the <a href="../fluid-storage/fluid_tank.html">Fluid Tank</a> and the <a href="../item-transport/item_pipe.html">Item Pipe</a> read the same way. Filling all nine cells also puts the craft in line with the mod's other machines, where an empty corner is the exception.</p>
 
-<h2>Progression</h2>
+<h2 id="progression">Progression</h2>
 
 <p>Tier: MV — the <strong>first MV machine in the mod</strong>, the anchor of the MV phase Requires: a <a href="../utility/storage_module.html">Storage Module</a> (with no store the machine has nowhere to draw from) and an Assembly Blueprint Since it also requires a finished oil line — not directly, but through the <a href="../components/advanced_machine_casing.html">Advanced Machine Casing</a>, which now seats 2 <a href="../components/advanced_circuit.html">Advanced Circuits</a>, each costing 4 rubber. The assembler's own crafting grid is unchanged, but its full cost grew by those 2 circuits, and it can no longer be built before a <a href="polymerizer.html">Polymerizer</a> and a <a href="vulcanizer.html">Vulcanizer</a> Upgrades into: nothing. On-demand autocrafting (order "make 64 X" with a sub-craft tree) is a separate future system, not an upgrade to this machine</p>
 
-<h2>Related</h2>
+<h2 id="related">Related</h2>
 
 <p><a href="../utility/storage_module.html">Storage Module</a> — the store the Assembler draws from Assembly Blueprint — the item that holds a recipe <a href="../energy-transfer/gold_cable.html">Gold Cable</a> — powering an MV machine <a href="../item-transport/item_pipe.html">Item Pipe</a> — fills the store, empties the output <a href="sawmill.html">Sawmill</a> — reference for a machine with switchable modes in its GUI</p>
 

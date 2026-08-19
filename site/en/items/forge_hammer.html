@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
 <a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
@@ -392,27 +392,27 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 
 <p>The <strong>Forge Hammer</strong> is an early-game hand tool for making <a href="../components/material_forms.html">metal plates</a> before machine automation exists. Put the hammer and an ingot on the crafting grid and you get a plate of that metal. The hammer is <strong>not consumed as an ingredient</strong> — it stays in the crafting grid and loses <strong>1 durability</strong> per plate. This is the deliberately "expensive by hand" path: you can hammer a plate from your very first iron, but you pay for each one in wear until you build a <a href="../machines/compressor.html">Compressor</a> and start pressing them on electricity.</p>
 
 <blockquote><strong>Mini-example:</strong> you need 4 iron plates for your first machine hull and have no compressor yet. Craft a hammer from iron and sticks, put hammer + iron ingot on the grid — out drops a plate and the hammer returns to the grid a little more worn. Repeat four times (or shift-craft a whole stack at once) and the hull is built without a single machine.</blockquote>
 
-<h2>Characteristics</h2>
+<h2 id="characteristics">Characteristics</h2>
 
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Durability</td><td>128 (about 128 plates per hammer)</td></tr><tr><td>Stack</td><td>1</td></tr><tr><td>Enchantable</td><td>no</td></tr><tr><td>Repair</td><td>with an iron ingot (anvil)</td></tr></tbody></table>
 
 <p>Durability <strong>128</strong> means roughly 128 plates from one hammer. The number lives in code (like the mod's other tools — a tool material is built before the config is read) and is mirrored in</p>
 
-<h2>How it works</h2>
+<h2 id="how-it-works">How it works</h2>
 
 <p><strong>Crafting a plate:</strong> on the crafting grid hammer <strong>+</strong> ingot → 1 plate. Works for all eight metals: copper, gold, iron, tin, silver, nickel, uranium, tempered iron. <strong>The hammer stays:</strong> after the craft the damaged hammer drops back into the same grid slot. Implemented as a craft-remainder, not a special recipe, so the recipes show in the recipe book, JEI and REI like ordinary crafts. <strong>Wear of 1/plate:</strong> exactly 1 durability per plate. Shift-crafting a stack of ingots spends exactly N durability for N plates and <strong>stops on its own</strong> when the hammer breaks. <strong>Breaking:</strong> on its last durability point the hammer breaks — the last plate is still made, and the grid slot is left empty. <strong>Enchanting:</strong> the hammer <strong>cannot</strong> be enchanted. Unbreaking could not technically work through the craft-remainder mechanic (there is no level or player in it to process a durability change), so rather than a silently useless enchant the hammer is honestly non-enchantable. <strong>Repair:</strong> with an iron ingot on an anvil.</p>
 
-<h2>Block properties</h2>
+<h2 id="block-properties">Block properties</h2>
 
 <p>Not applicable (item).</p>
 
-<h2>Recipes</h2>
+<h2 id="recipes">Recipes</h2>
 
 <p>Crafted on the workbench (<code>crafting_shaped</code>, Equipment category) from iron and a stick — a head on a handle, deliberately different from vanilla tools so it does not clash with the pickaxe recipe:</p>
 
@@ -422,11 +422,11 @@
 
 <p><code>I</code> is an iron ingot, <code>S</code> is a stick. The recipe appears in the recipe book when you pick up iron or a stick.</p>
 
-<h2>Progression</h2>
+<h2 id="progression">Progression</h2>
 
 <p>An early-game hand tool — not tied to the mod's energy tiers. Gives access to plates <strong>before</strong> electricity: hammer them by hand first, then automate with the <a href="../machines/compressor.html">Compressor</a> (ingot → plate for 260 EU/FE). Part of Phase 3 (LV Expansion) — plates are needed in LV machine and electronics recipes.</p>
 
-<h2>Related</h2>
+<h2 id="related">Related</h2>
 
 <p><a href="../components/material_forms.html">Material forms</a> — the plates and other intermediates this hammer makes. <a href="../machines/compressor.html">Compressor</a> — the machine, mass-production path for plates. <a href="../machines/macerator.html">Macerator</a> — recycles a plate back into dust (except tempered iron — it has no dust).</p>
 

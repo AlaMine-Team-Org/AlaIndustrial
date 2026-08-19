@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,17 +392,17 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>工業作業台</strong>は、モッドの鋼色調の「万力付き机」の装飾用フルブロックであり、新職業の村人 — <strong>産業家（Industrialist）</strong> — の職場（job site）です。バニラの「溶鉱炉 → 防具鍛冶」のペアと全く同じように 動きます：作業台を失業中の大人の村人のそばに置くと、彼が近づいて作業台を占い、産業家になります。</p>
 
 <p>産業家は <strong>モッド資源の買い手</strong> です：錫、銀、ニッケル、ウラン、粉類と引き換えにエメラルドを支払い、 最大レベルでは電子回路やコイルを自ら売ります — クラフトが面倒な人向けの高価な「ショートカット」です。 作業台 1 つ = 村人 1 人（バニラのすべての職業と同じ）。</p>
 
-<h2>ブロックの性質</h2>
+<h2 id="ブロックの性質">ブロックの性質</h2>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>形状</td><td>フルブロック（立方体）</td></tr><tr><td>硬度</td><td>2.5（バニラの作業台と同じ）</td></tr><tr><td>ツール</td><td>ツルハシ（ツルハシなしではドロップしない）</td></tr><tr><td>音</td><td>金属</td></tr><tr><td>エネルギー</td><td>不要 — これは村人の職場であり、機械ではない</td></tr><tr><td>役割</td><td>職業「産業家」の POI ブロック（作業台につき村人 1 人）</td></tr></tbody></table>
 
-<h2>産業家の取引</h2>
+<h2 id="産業家の取引">産業家の取引</h2>
 
 <p>「買取」方向 — あなたが資源を渡し、村人がエメラルドで支払います。マスターレベルでは村人があなたに コンポーネントを売ります。レベルはバニラの村人と同じく取引を重ねるごとに解放されます。</p>
 
@@ -412,15 +412,15 @@
 
 <p>取引自体はデータ駆動（、<code>trade_set/</code>）で、サーバーはモッドを 再ビルドせずデータパックで再調整できます。</p>
 
-<h2>村の家</h2>
+<h2 id="村の家">村の家</h2>
 
 <p><strong>5 つのバイオームの新しい村</strong>（平原、砂漠、サバンナ、雪、タイガ）には低確率で <strong>産業家の家</strong> — 作業台、ベッド、村人が入った石の小屋 — が生成されます。すでに生成された村や古いワールドには 現れません — そこではバニラの流れに従います：作業台をクラフトし、失業中の村人のそばに置いてください。</p>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p><strong>作業台：</strong> 上部に錫インゴット 2 個、下部に任意の板材 4 個（2×3 の形 —— バニラ鍛造台に似ますが、モッドの初期金属である錫で作ります）。</p>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p>ティア：なし（村人の職場）。 必要：<a href="../materials/tin.html">錫</a> — レシピにインゴット 2 つ。これは初期の金属なので、ゲーム序盤から 産業家を雇え — 彼の初期の錫買取が最初の電子回路用のエメラルドをくれます。</p>
 

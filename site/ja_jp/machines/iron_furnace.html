@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,39 +392,41 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>鉄のかまど</strong> は、バニラのかまと <a href="electric_furnace.html">電気かまど</a> の間に位置する改良型の燃料かまどです。バニラより速く、バニラと同じものを製錬しますが、EU/FE ではなく固体燃料（石炭、木材、木炭…）で動きます。エネルギーネットワークをまだ組んでいないが、製錬を加速したい初期のプレイヤー向けのアップグレードです。</p>
 
-<p>バニラのかまどのインターフェースを完全に再利用しており、異なるのはタイトルだけです。レシピと挙動はバニラのかまと同じ（バニラの製錬経由）で、加えて同じ入力でモッドのレシピもサポートします。</p>
+<p>バニラのかまどのインターフェースを完全に再利用しており、異なるのはタイトルだけです。レシピと挙動はバニラのかまどと同じです：バニラのかまどで製錬できるものはここでも製錬でき、モッドの鉱石・原石・金属の粉も含まれます。</p>
 
 <blockquote><strong>ミニ例：</strong> バニラのかまどを鉄インゴット8個で囲めば鉄のかまどになります。製錬速度は明らかに速くなり、燃料消費は同じです。電気かまどへの中間ステップです。</blockquote>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <p>EU/FE は使用しません。動力源は固体燃料（バニラのかまと同じ）です。これは既に EU/FE で動く <a href="electric_furnace.html">電気かまど</a> との主な違いです。</p>
 
-<h2>使い方</h2>
+<h2 id="使い方">使い方</h2>
 
-<p>通常のかまどと同様に設置します。右クリックで開くと、同じインターフェース（製錬スロット、燃料スロット、炎のバー、進行矢印）が表示されます。バニラの製錬レシピすべてと、モッドのレシピ（粉 → インゴット、原石 → インゴットなど）を受け付けます。</p>
+<p>通常のかまどと同様に設置します。右クリックで開くと、同じインターフェース（製錬スロット、燃料スロット、炎のバー、進行矢印）が表示されます。バニラの製錬レシピすべてと、モッドが追加するレシピを受け付けます：鉱石 → インゴット、原石 → インゴット、金属の粉 → インゴット、鉄インゴット → 焼き入れ鉄。</p>
 
-<h2>ブロック属性</h2>
+<blockquote><strong>できない</strong> こと：<a href="electric_furnace.html">電気かまど</a> だけに存在するレシピです（あちらは専用のレシピタイプを持っています）。現時点ではウランとパラジウムの粉の製錬がこれにあたり、電気かまどでしか行えません。</blockquote>
+
+<h2 id="ブロック属性">ブロック属性</h2>
 
 <p>前面を持つ立方体ブロック（lit/unlit 状態 — 作業中に発光）。 ティア：LV（モッドの分類では初期の機械）ですが、実際には EU/FE なしで動作します。 硬度とツール：バニラのかまと同じ（石のツルハシ）。</p>
 
-<h2>音</h2>
+<h2 id="音">音</h2>
 
 <p>かまどが燃えている間は、バニラの火のパチパチという音が聞こえます。通常のかまと同じアンビエンスで、不規則な単発のクリック音です（背景ループではありません）。カスタムの音はありません（）。</p>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p>作業台で組み立てます（shaped 3×3）：中央にバニラのかまど、周囲を鉄インゴット8個で囲みます。</p>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p>初期の機械（tier-stone）、EU/FE なし。 チェーンに組み込まれます：バニラのかまど → <strong>鉄のかまど</strong> → <a href="electric_furnace.html">電気かまど</a> → 誘導炉（コンセプト）。各ステップが前のものより速いです。 エネルギーネットワークを必要としません — 燃料さえあれば洞窟や坑道のどこにでも置けます。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="electric_furnace.html">電気かまど</a> — 次のステップ：燃料から EU/FE への移行。 <a href="../utility/iron_chest.html">鉄のチェスト</a> — 系統の近い「バニラ改良型」ブロック。</p>
 

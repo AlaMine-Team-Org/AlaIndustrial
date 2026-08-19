@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепти</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="10 сторінок">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="4 сторінки">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Інше</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилітарні блоки</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
 <div class="group-title">Предмети</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
   </aside>
@@ -392,39 +392,41 @@
     </div>
   </div>
 </div>
-<h2>Зведення</h2>
+<h2 id="зведення">Зведення</h2>
 
 <p><strong>Залізна піч</strong> — покращена паливна піч, що займає нішу між ванільною піччю та <a href="electric_furnace.html">електропіччю</a>. Вона швидша за ванільну й плавить усе те саме, що ванільна, але все ще працює на твердому паливі (вугілля, дошки, деревне вугілля…), а не на EU/FE. Це ранній апгрейд для гравця, який ще не побудував енергомережу, але вже хоче пришвидшити плавку.</p>
 
-<p>Повністю переви користовує ванільний інтерфейс печі — інший лише заголовок. Рецепти й поведінка як у ванільної печі, плюс підтримує рецепти моду на тих самих входах.</p>
+<p>Повністю переви користовує ванільний інтерфейс печі — інший лише заголовок. Рецепти й поведінка як у ванільної печі: усе, що плавиться у ванільній печі, плавиться й тут — включно з рудами, сировиною та металевим пилом моду.</p>
 
 <blockquote><strong>Міні-приклад:</strong> обнесли ванільну піч вісьмома залізними зливками → отримали залізну піч. Швидкість плавки помітно вища, витрата палива та сама. Проміжний крок перед електропіччю.</blockquote>
 
-<h2>Енергія</h2>
+<h2 id="енергія">Енергія</h2>
 
 <p>EU/FE не використовує. Живлення — тверде паливо (як у ванільної печі). Це головна відмінність від <a href="electric_furnace.html">електропечі</a>, яка вже працює від EU/FE.</p>
 
-<h2>Як використовується</h2>
+<h2 id="як-використовується">Як використовується</h2>
 
-<p>Ставиться як звичайна піч. Відкривається ПКМ — той самий інтерфейс (слот для плавки, слот для палива, смужка полум'я і стрілка прогресу). Приймає всі ванільні рецепти плавки плюс рецепти моду (пил → зливок, сировина → зливок тощо).</p>
+<p>Ставиться як звичайна піч. Відкривається ПКМ — той самий інтерфейс (слот для плавки, слот для палива, смужка полум'я і стрілка прогресу). Приймає всі ванільні рецепти плавки — і ті, що додає мод: руда → зливок, сировина → зливок, металевий пил → зливок, залізний зливок → загартоване залізо.</p>
 
-<h2>Властивості блока</h2>
+<blockquote>Чого вона <strong>не</strong> вміє: рецепти, які існують лише для <a href="electric_furnace.html">електропечі</a> (у тієї є власний тип рецептів). Наразі це плавка уранового та паладієвого пилу — вона доступна тільки в електропечі.</blockquote>
+
+<h2 id="властивості-блока">Властивості блока</h2>
 
 <p>Кубічний блок із фронтальною гранню (стани «горить/не горить» — світиться під час роботи). Тир: LV (за класифікацією моду — рання машина), але реально працює без EU/FE. Міцність та інструмент: як у ванільної печі (кам'яне кайло).</p>
 
-<h2>Звук</h2>
+<h2 id="звук">Звук</h2>
 
 <p>Поки піч горить, чути ванільний тріск вогню — та сама амбієнція, що в звичайної печі: нерегулярні, одиночні клацання (не фонова петля). Кастомного звуку немає.</p>
 
-<h2>Рецепти</h2>
+<h2 id="рецепти">Рецепти</h2>
 
 <p>Збирається на верстаку: ванільна піч у центрі, оточена 8 залізними зливками.</p>
 
-<h2>Прогресія</h2>
+<h2 id="прогресія">Прогресія</h2>
 
 <p>Рання машина, без EU/FE. Вбудовується в ланцюжок: ванільна піч → <strong>залізна піч</strong> → <a href="electric_furnace.html">електропіч</a> → індукційна піч (концепт). Кожен крок швидший за попередній. Не потребує енергомережі — можна поставити в будь-якій печері/шахті, де є паливо.</p>
 
-<h2>Пов'язане</h2>
+<h2 id="повязане">Пов'язане</h2>
 
 <p><a href="electric_furnace.html">Електропіч</a> — наступний крок: перехід з палива на EU/FE. <a href="../utility/iron_chest.html">Залізна скриня</a> — споріднений «покращений ванільний» блок.</p>
 

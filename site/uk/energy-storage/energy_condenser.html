@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепти</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="10 сторінок">10</span></a>
 <a class="cat-link active" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="4 сторінки">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Інше</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилітарні блоки</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
 <div class="group-title">Предмети</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Зведення</h2>
+<h2 id="зведення">Зведення</h2>
 
 <p><strong>Згущувач енергії</strong> — рамка-куб з повільно обертовою світлою кулею всередині. Він ловить енергію, яка інакше зникла б: коли генератори виробили більше, ніж з'їли машини, надлишок зазвичай просто щезає. Згущувач забирає його і накопичує, а накопичене віддає одним предметом — <strong>згустком енергії</strong>.</p>
 
@@ -400,21 +400,25 @@
 
 <blockquote><strong>Міні-приклад:</strong> удень сонячні панелі дають більше, ніж треба двом машинам. Раніше різниця йшла в нікуди; тепер куля в згущувачі починає розкручуватися, і за кілька хвилин у ньому лежить згусток I тиру.</blockquote>
 
-<h2>Енергія</h2>
+<h2 id="енергія">Енергія</h2>
 
 <table><thead><tr><th>Параметр</th><th>Значення</th></tr></thead><tbody><tr><td>Приймання</td><td>128 EU/FE/такт</td></tr><tr><td>Віддача</td><td>немає — енергія входить, але назад енергією не виходить</td></tr><tr><td>Банк</td><td>до 4 000 000 EU/FE</td></tr><tr><td>Грані приймання</td><td>лише верх і низ</td></tr></tbody></table>
 
 <p>Вузьке приймання навмисне: згущувач, що стоїть ближче до генератора, ніж машина, інакше перехоплював би потік. Швидше качати — не «дати одному блоку товщий провід», а побудувати другий згущувач.</p>
 
-<h2>Інвентар</h2>
+<h2 id="інвентар">Інвентар</h2>
 
 <p>Один слот — вихідний. Покласти в нього нічого не можна, забрати можна рукою, лійкою чи трубою, але лише крізь <strong>бічні</strong> грані: верх і низ зайняті енергією.</p>
 
-<h2>Властивості блока</h2>
+<h2 id="властивості-блока">Властивості блока</h2>
 
 <p>Повний куб-рамка; кабель під'єднується лише зверху та знизу. Світиться тим яскравіше, чим більше накопичено. Ламається кайлом, дропає сам себе.</p>
 
-<h2>Як працює</h2>
+<h2 id="звук">Звук</h2>
+
+<p>Поки згущувач накопичує надлишок мережі в згусток, він м'яко дзвенить гармонійним тоном — петля (патерн A за <code>lit</code>, 0.35 за замовчуванням; . Виймеш згусток або мережа без надлишку — тиша.</p>
+
+<h2 id="як-працює">Як працює</h2>
 
 <p>Банк росте безперервно, без режимів і перемикачів. Вихідний слот завжди показує **той згусток, який ви</p>
 
@@ -426,11 +430,11 @@
 
 <p>Панелі покращень у згущувача немає. Прискорювач у ньому перетворив би «підбирає надлишки» на насос на мережу — саме те, чого ця механіка уникає.</p>
 
-<h2>Прогресія</h2>
+<h2 id="прогресія">Прогресія</h2>
 
 <p>Єдине джерело <a href="../upgrades/overclocker_upgrade.html">згустків енергії</a>, а отже й усіх прискорювачів машин. Ставиться після того, як з'явилася хоч якась надлишкова генерація: на голодній мережі він не набере нічого, і це чесно видно по нерухомій кулі. Час до згустка скорочується не апгрейдом блока, а кількістю блоків і товщиною проводки.</p>
 
-<h2>Пов'язане</h2>
+<h2 id="повязане">Пов'язане</h2>
 
 <p><a href="../upgrades/overclocker_upgrade.html">Прискорювач</a> — те, заради чого згустки й потрібні. <a href="battery_box.html">Енергосховище</a> — накопичувач для роботи заводу; згущувач йому не конкурент і розряджати його не може.</p>
 

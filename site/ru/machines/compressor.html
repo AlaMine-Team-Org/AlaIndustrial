@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепты</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="10 страниц">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="4 страницы">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Прочее</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="14 страниц">14</span></a>
 <div class="group-title">Предметы</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="2 страницы">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="20 страниц">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="20 страниц">20</span></a>
   </aside>
@@ -393,13 +393,13 @@
   </div>
 </div>
 
-<h2>Сводка</h2>
+<h2 id="сводка">Сводка</h2>
 
 <p><strong>Компрессор</strong> — LV-машина, которая сжимает сырьё в более плотные формы: металлическую пыль — в слитки, угольную и самоцветную пыль — обратно в предметы, лёд и снег — в более плотные блоки, тростник — в бумагу. Её главная работа — замкнуть цикл удвоения руды для <strong>неметаллов</strong>: это единственная машина, которая восстанавливает угольную, алмазную, изумрудную и лазуритовую пыль в пригодный предмет, поэтому схема руда → 2 пыли → 2 предмета работает и для них.</p>
 
 <blockquote><strong>Мини-пример:</strong> перемелите алмазную руду в <a href="macerator.html">Дробителе</a> — получите две алмазные пыли, — и прогоните обе через компрессор. Из одной руды вышло <strong>два алмаза</strong>, и этот последний шаг умеет только он.</blockquote>
 
-<h2>Энергия</h2>
+<h2 id="энергия">Энергия</h2>
 
 <p>Компрессор только потребляет EU/FE и держит небольшой буфер, чтобы не дёргаться при рывках подачи.</p>
 
@@ -409,45 +409,47 @@
 
 <p>Энергия заходит с пяти рабочих граней. <strong>Лицевая грань</strong> (туда «смотрит» морда) инертна — кабели к ней не подключаются, воронки через неё не работают.</p>
 
-<h2>Процессинг</h2>
+<h2 id="процессинг">Процессинг</h2>
 
 <p>Каждое сжатие идёт 130 тиков (~6,5 с) и стоит 260 EU/FE. Готовый результат сам не вылетает — забирайте руками или воронкой.</p>
 
 <table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Длительность</td><td>130 тиков (~6,5 с)</td></tr><tr><td>Цена операции</td><td>260 EU/FE</td></tr><tr><td>Авто-выгрузка</td><td>нет</td></tr></tbody></table>
 
-<h2>Инвентарь</h2>
+<h2 id="инвентарь">Инвентарь</h2>
 
 <p>Один слот на вход, один на выход.</p>
 
 <table><thead><tr><th>Слот</th><th>Принимает</th><th>Кол-во</th></tr></thead><tbody><tr><td>Вход</td><td>предметы, которые компрессор умеет сжимать</td><td>1</td></tr><tr><td>Выход</td><td>результат</td><td>1</td></tr></tbody></table>
 
-<h2>Интерфейс</h2>
+<h2 id="интерфейс">Интерфейс</h2>
 
 <p>На одном экране видны запас энергии, прогресс, слот входа и слот выхода.</p>
 
-<h2>Свойства блока</h2>
+<h2 id="свойства-блока">Свойства блока</h2>
 
 <p>Обычный цельный блок, мягче камня. Ломается любой киркой, но <strong>при сломе заряд НЕ сохраняет</strong>.</p>
 
 <table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Инструмент</td><td>кирка</td></tr><tr><td>Сохраняет заряд при сломе</td><td>нет</td></tr></tbody></table>
 
-<h2>Звук</h2>
+<h2 id="звук">Звук</h2>
 
 <p>Во время работы компрессор издаёт глубокий механический удар уплотнения — петля (паттерн A, 0.35 по умолчанию). Замолкает, когда машина простаивает.</p>
 
-<h2>Рецепты</h2>
+<h2 id="рецепты">Рецепты</h2>
 
 <p>Что он сжимает, сгруппировано по задачам:</p>
 
-<table><thead><tr><th>Вход</th><th>Выход</th><th>Зачем это важно</th></tr></thead><tbody><tr><td>Неметаллическая пыль (уголь, алмаз, изумруд, лазурит)</td><td>обратно в предмет</td><td><strong>единственная машина, которая их восстанавливает</strong> — замыкает неметаллическое удвоение</td></tr><tr><td>Металлическая пыль (медь, железо, золото)</td><td>слиток</td><td>альт. путь вместо электропечи</td></tr><tr><td>Слиток (8 металлов)</td><td><a href="../components/material_forms.html">пластина</a></td><td>машинный путь ковки пластин, альтернатива <a href="../items/forge_hammer.html">кузнечному молоту</a></td></tr><tr><td>Шарик глины</td><td>кирпич</td><td>обжиг глины давлением</td></tr><tr><td>Лёд</td><td>плотный лёд</td><td>1:1, вместо 9 льда на верстаке</td></tr><tr><td>Плотный лёд</td><td>синий лёд</td><td>1:1, вместо 9 плотного льда на верстаке</td></tr><tr><td>Снежный блок</td><td>лёд</td><td>новый путь ко льду, без цикла обратно</td></tr><tr><td>Тростник</td><td>бумага</td><td>1:1, вместо крафта 3→3</td></tr></tbody></table>
+<table><thead><tr><th>Вход</th><th>Выход</th><th>Зачем это важно</th></tr></thead><tbody><tr><td>Неметаллическая пыль (уголь, алмаз, изумруд, лазурит)</td><td>обратно в предмет</td><td><strong>единственная машина, которая их восстанавливает</strong> — замыкает неметаллическое удвоение</td></tr><tr><td>Металлическая пыль (медь, железо, золото)</td><td>слиток</td><td>альт. путь вместо электропечи</td></tr><tr><td>Слиток (8 металлов)</td><td><a href="../components/material_forms.html">пластина</a></td><td>машинный путь ковки пластин, альтернатива <a href="../items/forge_hammer.html">кузнечному молоту</a></td></tr><tr><td>Шарик глины</td><td>кирпич</td><td>обжиг глины давлением</td></tr><tr><td>Лёд</td><td>плотный лёд</td><td>1:1, вместо 9 льда на верстаке</td></tr><tr><td>Плотный лёд</td><td>синий лёд</td><td>1:1, вместо 9 плотного льда на верстаке</td></tr><tr><td>Снежный блок</td><td>лёд</td><td>новый путь ко льду, без цикла обратно</td></tr><tr><td>Тростник</td><td>бумага</td><td>1:1, вместо крафта 3→3</td></tr><tr><td>Светокаменная пыль ×4</td><td>светокамень</td><td>та же цена, что на верстаке, но автоматизируется</td></tr><tr><td>Красная пыль ×9</td><td>блок красного камня</td><td>та же цена, что на верстаке, но автоматизируется</td></tr></tbody></table>
+
+<p>Два последних рецепта — <strong>порционные</strong>: компрессор копит нужное число предметов во входном слоте и тратит их разом. Меньше четырёх светокаменных пылей (или девяти красных) он просто не возьмёт в работу — стрелка прогресса стоит, пока не наберётся полная порция.</p>
 
 <p>Главное: для <strong>угля, алмаза, изумруда и лазурита</strong> компрессор — <em>единственный</em> способ вернуть пыль обратно в предмет, <a href="electric_furnace.html">Электропечь</a> их не плавит. Именно поэтому он — напарник, замыкающий удвоение для неметаллов. (Лазуритовая пыль всё равно даёт ×1 обратно за пыль, так что лишнего дюпа нет: предмет → 1 пыль → 1 предмет.)</p>
 
-<h2>Прогрессия</h2>
+<h2 id="прогрессия">Прогрессия</h2>
 
 <p>Тир: LV. Машина уплотнения и замыкатель неметаллического цикла удвоения. Ни во что не развивается в v0.1. Требует питание от LV-источника, например <a href="../generators/generator.html">Генератор</a>.</p>
 
-<h2>Связанное</h2>
+<h2 id="связанное">Связанное</h2>
 
 <p><a href="macerator.html">Дробитель</a> — даёт пыль, которую эта машина сжимает обратно в предметы. <a href="electric_furnace.html">Электропечь</a> — плавит металлическую пыль (компрессор — неметаллическая пара к ней). <a href="../components/electronic_circuit.html">Электронная схема</a> — компонент по цепочке переработки. <a href="../generators/generator.html">Генератор</a> — источник питания.</p>
 

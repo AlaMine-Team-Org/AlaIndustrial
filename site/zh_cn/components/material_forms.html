@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link active" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概览</h2>
+<h2 id="概览">概览</h2>
 
 <p><strong>材料形态</strong> 是一组半成品物品：粉，以及之后的板、坯料和导线，是机器和配方把矿石和锭变成的东西。在第一阶段，你只会接触到 <strong>粉</strong>：它由 <a href="../machines/macerator.html">粉碎机</a> 产出，也正是它带来了“矿石翻倍”（矿石方块或粗矿 → 2 份粉 → 2 个锭）。</p>
 
@@ -400,27 +400,31 @@
 
 <blockquote><strong>小示例：</strong> 挖到一块铁矿石——把它扔进 <a href="../machines/macerator.html">粉碎机</a>，得到 2 份铁粉，再把每一份都放进熔炉里烧。结果是从同一块矿石得到 2 个锭，而不是平常的 1 个。</blockquote>
 
-<h2>能量</h2>
+<h2 id="能量">能量</h2>
 
 <p>不消耗能量——只是普通的合成原料。</p>
 
-<h2>使用方式</h2>
+<h2 id="使用方式">使用方式</h2>
 
 <p>粉是矿石加工链路中的枢纽：</p>
 
-<p><strong>金属粉</strong>（铁、铜、金，以及模组的锡/银/镍/铀）<strong>可以熔炼</strong> 回锭，无论是在原版熔炉、高炉还是模组的 <a href="../machines/electric_furnace.html">电力熔炉</a> 中。这就闭合了翻倍循环：矿石 → 2 份粉 → 2 个锭。 <strong>非金属粉</strong>（煤炭、钻石、绿宝石、青金石）在 <a href="../machines/compressor.html">压缩机</a> 中 <strong>压回</strong> 成宝石或物品——不能熔炼。同一种循环形态：矿石 → 2 份粉 → 2 个物品。</p>
+<p><strong>金属粉</strong> <strong>可以熔炼</strong> 回锭。这就闭合了翻倍循环：矿石 → 2 份粉 → 2 个锭。具体在哪里熔炼，取决于金属种类：</p>
+
+<table><thead><tr><th>粉</th><th>原版熔炉与 <a href="../machines/iron_furnace.html">铁熔炉</a></th><th><a href="../machines/electric_furnace.html">电力熔炉</a></th></tr></thead><tbody><tr><td>铁、铜、金</td><td>✅</td><td>✅</td></tr><tr><td>银、锡、镍</td><td>✅</td><td>✅</td></tr><tr><td>铀、钯</td><td>✖</td><td>✅</td></tr></tbody></table>
+
+<p>高炉 <strong>对任何一种</strong> 金属的粉都不熔炼，它只处理矿石和粗矿。 <strong>非金属粉</strong>（煤炭、钻石、绿宝石、青金石）在 <a href="../machines/compressor.html">压缩机</a> 中 <strong>压回</strong> 成宝石或物品——不能熔炼。同一种循环形态：矿石 → 2 份粉 → 2 个物品。</p>
 
 <p>材料不会被复制。把成品锭研磨只得到 1 份粉，因此“锭 → 粉 → 锭”是零和的——只消耗能量。</p>
 
-<h2>物品栏</h2>
+<h2 id="物品栏">物品栏</h2>
 
 <p>不适用（物品）。堆叠：64。</p>
 
-<h2>方块属性</h2>
+<h2 id="方块属性">方块属性</h2>
 
 <p>不适用（物品）。</p>
 
-<h2>处理规则</h2>
+<h2 id="处理规则">处理规则</h2>
 
 <p>粉碎机产出多少份粉，取决于你放进去的是什么：</p>
 
@@ -428,15 +432,15 @@
 
 <p>唯一的例外是 <strong>青金石</strong>：青金石矿石给出 <strong>×6 份粉</strong>。原版的青金石矿石本身就掉落 4–9 个，简单的 ×2 会让粉碎毫无价值；6 是一个保证高于镐平均掉落的产量，这才对得起消耗的能量。</p>
 
-<h2>配方</h2>
+<h2 id="配方">配方</h2>
 
-<p><strong>获得粉：</strong> 在 <a href="../machines/macerator.html">粉碎机</a> 中粉碎矿石或金属（每个配方的能量消耗见粉碎机页面）。 <strong>金属粉 → 锭：</strong> 熔炼或高炉烧制（原版熔炉 / 高炉），或模组的 <a href="../machines/electric_furnace.html">电力熔炉</a>。 <strong>非金属粉 → 物品：</strong> 在 <a href="../machines/compressor.html">压缩机</a> 中压制。</p>
+<p><strong>获得粉：</strong> 在 <a href="../machines/macerator.html">粉碎机</a> 中粉碎矿石或金属（每个配方的能量消耗见粉碎机页面）。 <strong>金属粉 → 锭：</strong> 在原版熔炉或 <a href="../machines/iron_furnace.html">铁熔炉</a> 中熔炼（铀粉和钯粉除外），或使用模组的 <a href="../machines/electric_furnace.html">电力熔炉</a>，它能熔炼任何一种粉。高炉不接受粉。 <strong>非金属粉 → 物品：</strong> 在 <a href="../machines/compressor.html">压缩机</a> 中压制。</p>
 
-<h2>进阶</h2>
+<h2 id="进阶">进阶</h2>
 
 <p>没有自身等级的物品。 搭建第一个能源网络的全部意义：正是粉让粉碎机从一台机器变成了一台矿石翻倍器。非金属粉对煤炭和宝石起着同样的作用。</p>
 
-<h2>相关内容</h2>
+<h2 id="相关内容">相关内容</h2>
 
 <p><a href="../machines/macerator.html">粉碎机</a> — 产出粉（矿石翻倍）。 <a href="../machines/electric_furnace.html">电力熔炉</a> — 把金属粉重新熔炼成锭。 <a href="../machines/compressor.html">压缩机</a> — 把非金属粉压回宝石/煤炭。 <a href="electronic_circuit.html">电子电路</a> — 另一件关键的早期组件。</p>
 

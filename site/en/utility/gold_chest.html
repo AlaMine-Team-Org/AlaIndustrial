@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Other</div>
 <a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 
 <p>The <strong>Gold Chest</strong> is a storage block with <strong>54 slots</strong> (6 rows of 9) — one whole row more than the <a href="silver_chest.html">Silver Chest</a>. It uses no energy; it's the "civilian" tier of the storage line, the step above silver. Craft it by putting a silver chest in the center of a crafting grid and surrounding it with 8 gold ingots.</p>
 
@@ -400,31 +400,31 @@
 
 <p>Like the lower tiers, it's a pure content block with no energy hookup — only storage inside.</p>
 
-<h2>Inventory</h2>
+<h2 id="inventory">Inventory</h2>
 
 <p>The chest takes any items — 54 slots across 6 rows of 9. Your inventory shows below it as usual. Shift-click moves items between the chest and your inventory.</p>
 
 <table><thead><tr><th>Slots</th><th>Accepts</th><th>Count</th></tr></thead><tbody><tr><td>Storage</td><td>any items</td><td>54 (6 rows × 9)</td></tr><tr><td>Player inventory</td><td>—</td><td>27 + 9 (hotbar), drawn from the texture</td></tr></tbody></table>
 
-<h2>Interface</h2>
+<h2 id="interface">Interface</h2>
 
 <p>A normal container window — no energy or progress bars (the chest is not a machine). The window is taller than the silver chest's because of the sixth row; both labels — "Gold Chest" above the chest grid and "Inventory" below it — sit on the left.</p>
 
 <p>GUI atlas: (256×256, visible area 176×220 — taller than silver's 202 due to the 6th row). No energy/progress bars (the chest is not a machine). <strong>Both labels on the left:</strong> the "Gold Chest" title above the chest grid and the "Inventory" label in the gap between the chest and the player inventory.</p>
 
-<h2>Rendering and animation</h2>
+<h2 id="rendering-and-animation">Rendering and animation</h2>
 
 <p>In the world it's a volumetric 3D chest on its own texture, with a lid that smoothly opens and closes — exactly like the vanilla wooden chest and the previous mod tiers, just gold-coloured. The inventory icon is volumetric too.</p>
 
 <p><strong>3D model:</strong> reuses the vanilla chest model (lid / lock / body), baked from its own layer. <strong>Texture</strong> — (64×64, vanilla layout). Fed through the same path as the vanilla chests — correct depth, culling and mipmaps (no white outline). <strong>Lid animation:</strong> openness is smoothly interpolated by the client ticker; the easing curve matches vanilla (<code>1 - (1-open)³</code>). <strong>Facing rotation:</strong> the chest rotates to face the player on placement (yaw around the center-top). <strong>Item icon</strong> — 3D render of the chest.</p>
 
-<h2>Sound</h2>
+<h2 id="sound">Sound</h2>
 
 <p>The open and close sounds <strong>reuse the iron chest samples</strong> (<code>iron_chest_open</code> / <code>iron_chest_close</code>) — the metallic sound is shared across all tiers, just like the vanilla wooden sound is shared across all wood variants. There are no separate <code>gold_chest_open/close</code> events, so the subtitles show "Iron Chest opens/closes".</p>
 
 <p>Volume <strong>0.42</strong> (like the previous tiers — quieter than vanilla's 0.5), random pitch 0.9–1.0. Sounds: the iron chest's open and close sounds (no separate gold keys).</p>
 
-<h2>Double Chest</h2>
+<h2 id="double-chest">Double Chest</h2>
 
 <p>Two gold chests placed side by side, facing the same way, <strong>merge into one double chest of 108 slots</strong> — following the vanilla placement rules exactly: without sneaking the new chest joins a matching neighbour automatically, sneak-clicking the side of a lone neighbour attaches to it deliberately, and sneak-placing elsewhere keeps it single. Different tiers never merge.</p>
 
@@ -432,23 +432,23 @@
 
 <p>Along with the doubles, every tier gained two vanilla conveniences: a <strong>comparator</strong> reads the chest's fullness (a double reads combined, the same from either half), and the chest can be <strong>waterlogged</strong> like a vanilla one.</p>
 
-<h2>Block properties</h2>
+<h2 id="block-properties">Block properties</h2>
 
 <p>The chest is squat — not a full cube but a 14×14×14 column (like all vanilla chests and the previous tiers). It breaks with any pickaxe, drops itself when destroyed and spills all of its contents. The block properties are identical to the iron and silver chests (same shape, same hardness).</p>
 
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>squat 14×14×14 column (not a full cube, like vanilla chests); neighbors don't cull their faces against it — the render is correct, no "x-ray"</td></tr><tr><td>Hardness</td><td>3.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe (no tier gate — any)</td></tr><tr><td>Facing</td><td>horizontal, rotated to face the player on placement</td></tr><tr><td>Render shape</td><td><code>MODEL</code> (a 3D chest is drawn on top of the block)</td></tr><tr><td>Drop</td><td>self via loot table; the inventory contents spill on break</td></tr><tr><td>Sounds</td><td><code>iron_chest_open</code> / <code>iron_chest_close</code> (reused, see §Sound)</td></tr></tbody></table>
 
-<h2>Recipes</h2>
+<h2 id="recipes">Recipes</h2>
 
 <p>Crafted at a crafting table: a silver chest in the center, surrounded by 8 gold ingots — the same "previous tier + 8 ingots" pattern as the lower tiers (copper + 8 iron → iron, iron + 8 silver → silver).</p>
 
 <p>Type: <code>minecraft:crafting_shaped</code>, category. <code>C</code>, <code>Gminecraft:gold_ingot</code>.</p>
 
-<h2>Progression</h2>
+<h2 id="progression">Progression</h2>
 
 <p>Chest line: vanilla <code>copper_chest</code> (27) → <strong>Iron Chest (36)</strong> → <strong>Silver Chest (45)</strong> → <strong>Gold Chest (54)</strong> → <a href="electrum_chest.html">Electrum Chest</a> (81).</p>
 
-<h2>Related</h2>
+<h2 id="related">Related</h2>
 
 <p><a href="silver_chest.html">Silver Chest</a> — the previous tier, the template for this block. <a href="iron_chest.html">Iron Chest</a> — the reference implementation for all chest tiers. <a href="../energy-storage/battery_box.html">Battery Box</a> — the mod's other "storage" block, but for energy.</p>
 

@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概览</h2>
+<h2 id="概览">概览</h2>
 
 <p><strong>能量背包</strong>是一件可穿戴的能量缓存：穿在胸甲槽里，只要你戴着它，它就每秒给物品栏中所有电力物品补一次电。目前唯一的此类物品是<a href="battery_pouch.html">电池储物袋</a>：背着背包，储物袋就不会在远征中途没电锁住。</p>
 
@@ -402,29 +402,29 @@
 
 <blockquote><strong>小提示：</strong> 穿上充满电的背包，把半空的储物袋放进快捷栏，安心出门挖半天。背包每秒会给储物袋补电，它再也不会上锁——不必只为了打开自己的仓库就返回基地。</blockquote>
 
-<h2>能量</h2>
+<h2 id="能量">能量</h2>
 
 <p>自带缓存，独立于电网。在储能库充电，把电量交给物品栏中的物品——但仅在穿戴时。</p>
 
 <table><thead><tr><th>项目</th><th>数值</th></tr></thead><tbody><tr><td>电量</td><td>20 000 EU/FE（10 个储物袋；与储能库一样多）</td></tr><tr><td>充电</td><td>储能库槽位——约 31 秒充满</td></tr><tr><td>输出给物品</td><td>每秒最高 640 EU/FE，分给整个物品栏</td></tr><tr><td>被动放电</td><td>无——电量只在给某件物品补电时消耗</td></tr><tr><td>分发顺序</td><td>快捷栏 → 其余物品栏 → 副手 → 光标 → 2×2 合成网格</td></tr><tr><td>护甲</td><td>2 点（低于皮革）</td></tr></tbody></table>
 
-<h2>工作原理</h2>
+<h2 id="工作原理">工作原理</h2>
 
 <p><strong>穿戴：</strong> 胸甲槽。背包<strong>只有穿戴时</strong>才工作——放在背包里、箱子里或手中都不充电。 <strong>物品充电：</strong> 背包每秒向物品栏中任何带电量的物品分发最多 640 EU/FE。按槽位顺序遍历——先是快捷栏，然后主物品栏，接着副手，再是"光标上"的物品和物品栏中的 2×2 合成网格；每件物品取走能装的量，剩余的预算给下一件。 <strong>光标和合成网格：</strong> 你在打开的物品栏中用光标拿住的储物袋，或放在 2×2 合成网格里的储物袋，都与其它物品同等充电——它本来就在你身上，不该因为你在挪动物品而暂停充电。 <strong>不会被充电的物品：</strong> 其它的能量背包（否则两个背包会徒劳地互相灌电）、容器内部的物品——储物袋、原版收纳袋、潜影盒——以及打开的箱子或机器中的内容物：它们属于世界而非属于你。 <strong>创造模式：</strong> 完全不消耗电量——背包、储物袋、电钻都不耗电。就像原版工具在创造模式下不掉耐久。但它仍会继续给其它物品充电，因此充满的背包在创造模式下无限续航；完全空背包依旧没东西可分发。 <strong>空载：</strong> 如果没有可充的对象——满储物袋、空背包、普通物品——背包一分电都不消耗，电量完全不变。 <strong>背包自身充电：</strong> 在储能库的充能槽。同一槽位也接受储物袋——它接受任何带电量的物品。 <strong>指示：</strong> 图标下方的横条显示电量（黄色，与储物袋相同）。悬浮提示——"电量：X / 20 000 EU/FE"，归零时显示红色"空"。 <strong>屏幕指示（HUD）：</strong> 背包穿戴时，左上角显示它的图标、电量百分比和横条（随放电由绿 → 黄 → 红）。默认开启，可用按键 <strong>H</strong> 切换（可在"控制" → Ala Industrial 类别和模组设置中修改）。没穿戴背包时不显示。 <strong>没电外观：</strong> 零电量时，图标和背上的模型都切换为"熄灭"样式——红色指示灯代替绿色，黯淡的电池格。 <strong>耐久与附魔：</strong> 无耐久——背包不会损坏，也不会因玩家受到伤害而损耗；铁砧和附魔台都不接受它。 <strong>丢弃、死亡、重新登录时：</strong> 电量保存在物品中，会保留。</p>
 
-<h2>物品属性</h2>
+<h2 id="物品属性">物品属性</h2>
 
 <p>不适用（物品）。</p>
 
-<h2>配方</h2>
+<h2 id="配方">配方</h2>
 
 <p>在工作台上由三块<strong>电池</strong>——一种由锡、红石和铜缆制成的新型电芯组件——加上皮革外壳制成，顶部放一枚电子电路，下方放一枚锡扣。目前电池只是合成零件：它自身并不储电。</p>
 
-<h2>进阶</h2>
+<h2 id="进阶">进阶</h2>
 
 <p><a href="battery_pouch.html">电池储物袋</a>的下一步：袋子装东西，背包喂袋子。 在<a href="../energy-storage/battery_box.html">储能库</a>之后可用——没有它背包就充不了电。 LV 等级。更高级版本（更大缓存、更快输出）以及把电动工具作为消费者——属于未来工作。</p>
 
-<h2>相关内容</h2>
+<h2 id="相关内容">相关内容</h2>
 
 <p><a href="battery_pouch.html">电池储物袋</a>——背包能量的第一个消费者。 <a href="../energy-storage/battery_box.html">储能库</a>——背包的充电来源（充能槽）。 <a href="../components/electronic_circuit.html">电子电路</a>——合成组件。 <a href="../materials/tin.html">锡</a>——电池外壳和背包的扣环。</p>
 

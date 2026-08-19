@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепты</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="10 страниц">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="4 страницы">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Прочее</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="14 страниц">14</span></a>
 <div class="group-title">Предметы</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="2 страницы">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="20 страниц">20</span></a>
 <a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="20 страниц">20</span></a>
   </aside>
@@ -393,7 +393,7 @@
   </div>
 </div>
 
-<h2>Сводка</h2>
+<h2 id="сводка">Сводка</h2>
 
 <p><strong>Электромотыга</strong> — четвёртый и последний ручной электроинструмент линейки: после <a href="electric_drill.html">бура</a> (камень), <a href="electric_chainsaw.html">пилы</a> (дерево) и <a href="electric_shovel.html">лопаты</a> (земля) она закрывает грядки. Контракт тот же: работает на EU/FE вместо прочности, не ломается, при разряде продолжает работать на скорости руки с полным дропом.</p>
 
@@ -411,7 +411,7 @@
 
 <p>Как и остальные EU/FE-предметы мода, мотыга <strong>не имеет прочности</strong> и не ломается: полоса под иконкой показывает не износ, а заряд EU/FE (жёлтая, цвет LV).</p>
 
-<h2>Энергия</h2>
+<h2 id="энергия">Энергия</h2>
 
 <p>Собственный EU/FE-буфер, вне энергосети. Заряжается в слоте Энергохранилища и от надетого ранца; тратит заряд и на вспашку, и на ломание блоков.</p>
 
@@ -419,25 +419,25 @@
 
 <p>Расход снимается <strong>только на сервере</strong> и <strong>только за блоки с ненулевой твёрдостью</strong>. В творческом режиме заряд не тратится.</p>
 
-<h2>Инвентарь</h2>
+<h2 id="инвентарь">Инвентарь</h2>
 
 <p>Не применимо — у мотыги нет внутреннего хранилища предметов (стак 1).</p>
 
-<h2>Свойства блока</h2>
+<h2 id="свойства-блока">Свойства блока</h2>
 
 <p>Не применимо (предмет).</p>
 
-<h2>Рецепты</h2>
+<h2 id="рецепты">Рецепты</h2>
 
 <p>Крафт — тот же каркас, что у остальных трёх, но в центре алмазная мотыга: ряд железных слитков сверху, две <a href="../components/battery.html">батареи</a> по бокам, снизу две <a href="../components/copper_coil.html">медные катушки</a> и <a href="../components/electronic_circuit.html">электронная схема</a>. Заряд батарей переходит в готовую мотыгу. Рецепт открывается в книге, когда у игрока появляются медная катушка, электронная схема или алмазная мотыга (advancement <code>recipes/misc/electric_hoe</code>).</p>
 
 <p><strong>Ремонт</strong> — не применим: прочности нет, чинить нечего; «ремонт» — это зарядка EU/FE.</p>
 
-<h2>Поведение</h2>
+<h2 id="поведение">Поведение</h2>
 
 <p><strong>Вспашка и прочие превращения по ПКМ — стоят 50 EU/FE.</strong> Земля, трава и тропинка → грядка; уголь-дёрн → земля; корневая земля → земля + висячий корень. Заряд снимается <strong>только когда превращение действительно произошло</strong>: клик по каменной стене или по уже вспаханной грядке буфер не трогает. При нехватке заряда мотыга не вспахивает и пишет об этом над хотбаром — как бур с факелом, <strong>но только если под курсором вспахиваемый блок</strong>: клик разряженной мотыгой по камню, сундуку или чему угодно другому проходит насквозь — без сообщения и без перехвата, так что предмет во второй руке срабатывает штатно. Технически это делегирование в <code>HoeItem.useOn</code> ванильной алмазной мотыги — метод публичный, не читает состояние своего предмета (в байт-коде нет ни одного <code>aload_0</code>), а его единственный — no-op для предмета без <code>MAX_DAMAGE</code>. Плюс: карта <code>TILLABLES</code> изменяемая, поэтому превращения из других модов работают сами собой. Разбор байт-кода — в задаче. <strong>Ломание блоков:</strong> пока заряда ≥ 50 EU/FE, мотыга ломает <code>#minecraft:mineable/hoe</code> на скорости 9.0 (алмазная — 8.0). За каждый такой блок снимается 50 EU/FE. <strong>Разряженная мотыга:</strong> при заряде ниже 50 EU/FE ломает на скорости руки (1.0), но уровень добычи и дроп сохраняются, и EU/FE не тратится. Чара Efficiency при этом не действует (ванильный порог <code>speed &gt; 1.0</code>). Вспахать разряженной мотыгой нельзя — см. выше. <strong>Зарядка:</strong> слот зарядки Энергохранилища и надетый энергоранец принимают мотыгу автоматически, до 32 EU/FE/тик. <strong>Атака:</strong> как ванильная мотыга — оружием не является (урон 1, скорость атаки 4). Удары <strong>не тратят EU/FE</strong> и не изнашивают мотыгу. <strong>Чары:</strong> мотыга входит в <code>#minecraft:hoes</code>, поэтому стол зачарования и наковальня работают с ней как с мотыгой. Unbreaking/Mending на неломаемой мотыге бесполезны, но безвредны. <strong>Сбор урожая — не поддерживается.</strong> Это работа <a href="scythe.html">Косы</a>, она для этого и сделана; дублировать её в мотыге не стали. <strong>Индикация:</strong> полоска под иконкой показывает заряд (жёлтая, LV-цвет). В тултипе — «Заряд: X / 10 000 EU/FE», при нуле — красное «Разряжена». Текстура меняется на «погасший» вариант при нулевом заряде. <strong>Дроп/смерть/релогин:</strong> заряд хранится в предмете и сохраняется. <strong>В креативе:</strong> заряд не тратится.</p>
 
-<h2>Алмазное напыление (апгрейд)</h2>
+<h2 id="алмазное-напыление-апгрейд">Алмазное напыление (апгрейд)</h2>
 
 <p><strong>Электромотыга с алмазным напылением</strong> — вторая ступень мотыги и третий апгрейд линейки после <a href="electric_drill.html">алмазного бура</a> и <a href="electric_chainsaw.html">алмазной пилы</a>. Отличий от базовой мотыги ровно два, всё остальное наследуется без изменений.</p>
 
@@ -463,11 +463,11 @@
 
 <blockquote><strong>Раскладывать рецепт придётся руками.</strong> Кнопка автозаполнения из книги рецептов не подхватывает заряженную мотыгу: ванильный поиск ингредиента в инвентаре сравнивает компоненты предмета, а у заряженной мотыги есть <code>pouch_energy</code>, которого нет у витринного эталона. Ограничение ванильное, общее для всех трёх апгрейдов — подробности в задаче.</blockquote>
 
-<h2>Прогрессия</h2>
+<h2 id="прогрессия">Прогрессия</h2>
 
 <p>Четвёртый и последний электроинструмент линейки: <a href="electric_drill.html">бур</a> — камень, <a href="electric_chainsaw.html">пила</a> — дерево, <a href="electric_shovel.html">лопата</a> — земля, мотыга — грядки. Доступна после <a href="../energy-storage/battery_box.html">Энергохранилища</a> и батареи: без LV-инфраструктуры мотыгу не скрафтить и не зарядить. LV-уровень. Остальные электропредметы (сабля/нано-лук/ваджра) — будущая работа.</p>
 
-<h2>Связанное</h2>
+<h2 id="связанное">Связанное</h2>
 
 <p><a href="electric_drill.html">Электробур</a> — каменная часть линейки, тот же расход за блок. <a href="electric_chainsaw.html">Электропила</a> — деревянная часть линейки. <a href="electric_shovel.html">Электролопата</a> — земляная часть; тот же приём с делегированием ПКМ, но у неё действие бесплатное, а у мотыги платное. <a href="scythe.html">Коса</a> — инструмент для сбора урожая, мотыга её не заменяет. <a href="../energy-storage/battery_box.html">Энергохранилище</a> — зарядка мотыги (слот charge).</p>
 

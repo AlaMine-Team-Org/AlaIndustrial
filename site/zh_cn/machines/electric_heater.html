@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概览</h2>
+<h2 id="概览">概览</h2>
 
 <p><strong>电热器</strong> 直接放置在 <a href="vulcanizer.html">硫化机</a> 下方，为它提供最高一级的热量——3 级，也就是一份原料产出三份橡胶，而不是在营火上的一份。</p>
 
@@ -400,7 +400,7 @@
 
 <blockquote><strong>小示例：</strong> 把电热器放在硫化机下方，接上 LV 电缆并装入原料。最初的约 10 秒什么都不会发生，电热器界面上的温度计不断爬升，方块的电热丝逐渐发红。温度计一满，橡胶就开始产出，而且一次三份。</blockquote>
 
-<h2>能量</h2>
+<h2 id="能量">能量</h2>
 
 <table><thead><tr><th>项目</th><th>数值</th></tr></thead><tbody><tr><td>内部缓存</td><td>2400 EU/FE</td></tr><tr><td>最大输入</td><td>32 EU/FE/刻（LV）</td></tr><tr><td>消耗</td><td>6 EU/FE/刻</td></tr><tr><td>预热</td><td>200 刻（约 10 秒），1200 EU/FE</td></tr><tr><td>无对象可加热时的消耗</td><td>0 EU/FE</td></tr></tbody></table>
 
@@ -414,13 +414,13 @@
 
 <blockquote><strong>超频请当心。</strong> 装到第三级超频芯片时，上方机器会向电热器索取 48 EU/FE/刻，而它的 LV 输入只能承受 32。缓存还能支撑这一对一段时间，之后电热器就会跟不上。这一对方块的实际上限是第二级。</blockquote>
 
-<h2>冷却</h2>
+<h2 id="冷却">冷却</h2>
 
 <p>没有加热对象时，电热器的冷却速度只有升温时的<strong>一半</strong>：完全退回低温大约需要 20 秒。这是为停顿留出的余地——漏斗把原料耽搁了几秒，只会让你损失一小段预热，而不是全部。</p>
 
 <p>冷却是免费的。而且在上方机器等待工作的时候——比如它自己没有能量——电热器会<strong>保持温度</strong>，其间同样什么都不消耗：它不会仅仅因为邻居暂时付不起钱就把预热扔掉。</p>
 
-<h2>界面</h2>
+<h2 id="界面">界面</h2>
 
 <p>右键打开界面。界面没有槽位——电热器里没有东西可放；它从电缆取电，向上输出热量。界面的作用是让预热可以被看见、被规划，而不是靠猜。</p>
 
@@ -432,15 +432,15 @@
 
 <p>底部是状态行：「上方没有机器」「没有能量」「预热中」「已达温度」「冷却中」或「低温」。前两条以红色标出：它们才是玩家需要处理的问题。</p>
 
-<h2>方块属性</h2>
+<h2 id="方块属性">方块属性</h2>
 
 <p>仅对正上方的方块提供热源，且仅在已达温度时提供。 LV 等级的 EU/FE 消费端，通过可用的侧面接收能量。 <strong>发光随温度变化</strong> — 从暗到炽热共四档。不打开界面也能在世界里看出它的状态。 完全预热的方块会从与机器的接缝处透出热气。粒子只在完全预热时出现：这是「正在 ×3」的信号，而不是常驻的背景效果。 使用镐采集；破坏时方块本身掉落。</p>
 
-<h2>配方</h2>
+<h2 id="配方">配方</h2>
 
 <p>在工作台上用红石粉、金锭、铁锭，以及 <code>M</code> — 机器外壳，<code>E</code> — 电子电路合成。</p>
 
-<h2>相关内容</h2>
+<h2 id="相关内容">相关内容</h2>
 
 <p><a href="vulcanizer.html">硫化机</a> — 第一位热源消费者；热量等级会倍增它的产出。 <a href="thermal_centrifuge.html">热力离心机</a> — 第二位消费者。对它而言，电热器不是「最好的热源」，而是<strong>唯一</strong>的热源：熔岩和营火根本无法让它启动。 <a href="../upgrades/overclocker_upgrade.html">超频芯片</a> — 装在上方的机器里，但它的开销也由电热器分担。 熔岩和岩浆块无需任何预热就提供免费的 2 级热源；营火为 1 级。在电热器点燃自己的这段时间里，机器下面的熔岩早已在干活了——这就是 ×3 的代价。</p>
 

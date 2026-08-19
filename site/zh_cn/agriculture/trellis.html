@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概览</h2>
+<h2 id="概览">概览</h2>
 
 <p><strong>棚架</strong>——攀缘植物的支架，也是本模组的第一种农作物。今天上面种的是<strong>棉花</strong>，是蜘蛛作为 纤维来源的替代品：在农田里种植，而不是从怪物身上打。名字刻意是通用的——支架也为未来的 植物设计。</p>
 
@@ -406,7 +406,7 @@
 
 <p>关键：<strong>采集作物不破坏植物</strong>。点击成熟灌木采摘棉花并将其恢复到无果的成熟状态——耐心只在 最开始需要，而不是每次收获。</p>
 
-<h2>种植</h2>
+<h2 id="种植">种植</h2>
 
 <p>两个阶段仅在两个条件下推进：</p>
 
@@ -418,29 +418,29 @@
 
 <p>植物可以任意密集地放置：棚架不像机器那样 tick，因此大型种植园不会给世界带来负担。</p>
 
-<h2>采收</h2>
+<h2 id="采收">采收</h2>
 
 <table><thead><tr><th>动作</th><th>结果</th></tr></thead><tbody><tr><td>右键<strong>成熟</strong>灌木</td><td>1–2 <strong>棉纤维</strong>，35 % 几率得到<strong>棉花种子</strong>；灌木留下并再次长出</td></tr><tr><td>右键未成熟灌木</td><td>什么也不发生，状态不变</td></tr><tr><td>破坏棚架</td><td>返还<strong>棚架</strong>，外加<strong>种子</strong>（如果上面有东西在长）</td></tr><tr><td>破坏高草或普通草</td><td>5 % 几率得到<strong>棉花种子</strong>（剪刀修剪时无效——与小麦种子相同）；时运增加数量</td></tr></tbody></table>
 
 <p>种子只从<strong>已种植</strong>的棚架返还。空的没有——否则「合成棚架、破坏、得到种子」的循环会用 木棍和线印出种子。</p>
 
-<h2>方块属性</h2>
+<h2 id="方块属性">方块属性</h2>
 
 <table><thead><tr><th>属性</th><th>数值</th></tr></thead><tbody><tr><td>高度</td><td>2 格（下半和上半）</td></tr><tr><td>底座</td><td>犁好的土地（标签 <code>#minecraft:supports_crops</code>）</td></tr><tr><td>硬度</td><td>0.2——徒手瞬间破坏</td></tr><tr><td>声音</td><td>草</td></tr><tr><td>碰撞</td><td>有——棚架阻挡通行，如同栅栏柱</td></tr><tr><td>活塞</td><td>不能推动（多方块的一半不能与配对分离）</td></tr><tr><td>破坏</td><td>两半一起消失；棚架只掉落一次</td></tr></tbody></table>
 
-<h2>配方</h2>
+<h2 id="配方">配方</h2>
 
 <p>棚架是用线绑起来的木棍：</p>
 
 <table><thead><tr><th>原料</th><th>结果</th></tr></thead><tbody><tr><td>4 × 木棍 + 2 × 线</td><td>1 × 棚架</td></tr></tbody></table>
 
-<h2>进阶</h2>
+<h2 id="进阶">进阶</h2>
 
 <p>棉纤维是未来通量织物生产线的原料：它给农夫提供与蜘蛛丝给战士相同的路径。</p>
 
 <p>进入此链的入口是<strong>草</strong>：清理平原时，玩家在与找到小麦种子相同的地方找到第一批种子。之后 种植园自我维持，因为种子也从收成中返还。</p>
 
-<h2>相关内容</h2>
+<h2 id="相关内容">相关内容</h2>
 
 <ul><li><a href="incubator.html">培育舱</a>——通过辐照复制种子（棉花稍后添加）。</li><li><a href="../components/rubber.html">橡胶</a>——由单个规格带别名管理的材料示例。</li></ul>
 

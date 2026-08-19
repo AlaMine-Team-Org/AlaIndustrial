@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепти</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="10 сторінок">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="4 сторінки">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Інше</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилітарні блоки</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
 <div class="group-title">Предмети</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Зведення</h2>
+<h2 id="зведення">Зведення</h2>
 
 <p><strong>Термоцентрифуга</strong> — другий ступінь подвоєння руди. Подрібнювач уже перетворює один блок руди на два пили; центрифуга ділить кожен пил ще надвоє, на <strong>уранову стружку</strong>, а та <strong>пресується</strong> в <a href="compressor.html">компресорі</a> на <strong>очищений уран</strong>. Підсумок повної лінії — чотири одиниці з одного блока руди замість однієї при прямій переплавці.</p>
 
@@ -402,13 +402,13 @@
 
 <blockquote><strong>Міні-приклад:</strong> поставте нагрівач, згори центрифугу, підведіть кабель, покладіть урановий пил і клацніть важелем. Ротор почне набирати оберти, нагрівач — розігріватися. Нагрівач вийде на режим першим, секунд за десять, а ротор розкручуватиметься вдвічі довше — і лише потім пил піде у стружку. Приберете важіль — машина стане й розкрутку втратить.</blockquote>
 
-<h2>Енергія</h2>
+<h2 id="енергія">Енергія</h2>
 
 <table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Роль</td><td>споживач</td></tr><tr><td>Буфер (EU/FE)</td><td>800</td></tr><tr><td>Макс. вхід (EU/FE/такт)</td><td>32 (стеля LV)</td></tr><tr><td>EU/FE/такт (робота й розкрутка)</td><td>4</td></tr><tr><td>EU/FE/такт на холостих обертах</td><td>1</td></tr></tbody></table>
 
 <p>Удвічі дорожча за звичайну машину моду: центрифуга подвоює найрідкісніший ресурс і працює не сама, а в парі з нагрівачем. Пара сумарно бере <strong>10 EU/FE/такт</strong> — це ще влазить у мідний кабель (12 EU/FE/такт), але запасу майже не лишається, і це навмисно.</p>
 
-<h2>Розкрутка й сигнал</h2>
+<h2 id="розкрутка-й-сигнал">Розкрутка й сигнал</h2>
 
 <p>Сигнал редстоуну потрібно <strong>тримати</strong>, а не подавати імпульсом. Логіка зворотна звичній за <a href="../utility/mob_repeller.html">відлякувачем мобів</a>, де сигнал ставить блок на паузу: тут сигнал — це пускова кнопка мотора, і трактувати його відсутність як «працюй» для машини, що обертається, безглуздо.</p>
 
@@ -418,38 +418,38 @@
 
 <p>Зняття сигналу — це повна зупинка: оберти обнуляються одразу, а не скидаються поступово. Важіль тут — чесний рубильник усієї лінії.</p>
 
-<h2>Нагрів</h2>
+<h2 id="нагрів">Нагрів</h2>
 
 <p>Годиться <strong>лише електронагрівач</strong>. Лава, магма й багаття, яких вистачає <a href="vulcanizer.html">вулканізатору</a>, центрифугу не запускають: у неї вихід фіксований, тому шкала рівнів тепла була б ручкою, яку нема куди крутити. Поки нагрівач знизу не прогрівся, машина чесно пише про це в рядку стану — окремо від випадку, коли нагрівача немає взагалі.</p>
 
-<h2>Процесинг</h2>
+<h2 id="процесинг">Процесинг</h2>
 
 <table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Тривалість (тики)</td><td>200</td></tr><tr><td>Ціна операції</td><td>800 EU/FE</td></tr><tr><td>Вихід</td><td>1 урановий пил → 2 уранові стружки</td></tr><tr><td>Авто-вивантаження</td><td>немає</td></tr></tbody></table>
 
-<h2>Інвентар</h2>
+<h2 id="інвентар">Інвентар</h2>
 
 <table><thead><tr><th>Слот</th><th>Приймає</th><th>К-сть</th></tr></thead><tbody><tr><td>Вхід</td><td>урановий пил</td><td>1 за операцію</td></tr><tr><td>Результат</td><td>уранова стружка, лише машиною</td><td>до 64</td></tr></tbody></table>
 
 <p>Нижня грань зайнята нагрівачем і для автоматизації закрита — лійки й труби працюють з решти сторін.</p>
 
-<h2>Інтерфейс</h2>
+<h2 id="інтерфейс">Інтерфейс</h2>
 
 <p>Тип: container Показує: запас енергії, шкалу обертів ротора, стрілку прогресу. Рядок стану пояснює, чого бракує: «Потрібен сигнал редстоуну», «Потрібен нагрівач знизу», «Нагрівач ще холодний», «Розкручується», «Потрібен пил урану», «Немає відповідного рецепта», «Вихід заблоковано». Окремий рядок потрібен тому, що дві умови з чотирьох — сигнал і нагрів — зсередини екрана не видно взагалі.</p>
 
-<h2>Властивості блока</h2>
+<h2 id="властивості-блока">Властивості блока</h2>
 
 <p>Корпус — відкритий каркас: крізь нього видно ротор, що обертається. Форма для влучань при цьому суцільна й трохи вужча за повний куб — крізь прорізи каркаса кліки проходили б наскрізь.</p>
 
 <table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Форма</td><td>14×16×14, не оклюдер</td></tr><tr><td>Міцність</td><td>3.0</td></tr><tr><td>Вибухостійкість</td><td>6.0</td></tr><tr><td>Інструмент</td><td>кайло</td></tr></tbody></table>
 
-<h2>Рецепти</h2>
+<h2 id="рецепти">Рецепти</h2>
 
 
-<h2>Прогресія</h2>
+<h2 id="прогресія">Прогресія</h2>
 
 <p>Тир: LV Потребує: <a href="../components/machine_casing.html">машинний корпус</a>, електронні схеми, <a href="electric_heater.html">електронагрівач</a> і джерело сигналу редстоуну. Відкриває: уранову стружку й, через <a href="compressor.html">компресор</a>, очищений уран — матеріал під майбутню ядерну гілку.</p>
 
-<h2>Пов'язане</h2>
+<h2 id="повязане">Пов'язане</h2>
 
 <p><a href="electric_heater.html">Електронагрівач</a> — обов'язкове джерело тепла знизу. <a href="vulcanizer.html">Вулканізатор</a> — друга машина на тому ж нагрівачі. <a href="macerator.html">Подрібнювач</a> — перший ступінь подвоєння, подає пил. <a href="../materials/uranium.html">Уран</a> — матеріал, заради якого побудовано ланцюжок.</p>
 

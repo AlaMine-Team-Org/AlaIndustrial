@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
 <a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 
 <p>The <strong>Electric Saber</strong> is the fifth item in the powered-equipment line and its first weapon: after the <a href="electric_drill.html">Electric Drill</a> (stone), the <a href="electric_chainsaw.html">Electric Chainsaw</a> (wood), the <a href="electric_shovel.html">Electric Shovel</a> (earth) and the <a href="electric_hoe.html">Electric Hoe</a> (farmland), combat gets its turn. Same contract as the rest of the line: it runs on EU/FE instead of durability, never breaks, and on an empty buffer it degrades instead of switching off.</p>
 
@@ -408,7 +408,7 @@
 
 <p>Like the mod's other EU/FE items, the saber has <strong>no durability</strong> and never breaks: the bar under the icon shows charge (gold, the LV colour), not wear.</p>
 
-<h2>Energy</h2>
+<h2 id="energy">Energy</h2>
 
 <p>Its own EU/FE buffer, outside the energy network. It charges in the Battery Box slot, from a worn Energy Pack and on the Charging Station, and spends charge only on hits against living targets.</p>
 
@@ -416,34 +416,34 @@
 
 <p>The drain happens <strong>server-side only</strong>, <strong>only after damage actually landed</strong>, and <strong>only for a player</strong>. Creative mode spends nothing.</p>
 
-<h2>Inventory</h2>
+<h2 id="inventory">Inventory</h2>
 
 <p>Not applicable — the saber has no internal item storage (stacks to 1).</p>
 
-<h2>Block properties</h2>
+<h2 id="block-properties">Block properties</h2>
 
 <p>Not applicable (item).</p>
 
-<h2>Recipes</h2>
+<h2 id="recipes">Recipes</h2>
 
 <p>Crafting — the line's usual frame with a diamond sword in the middle: a row of iron ingots on top, two batteries at the sides, two copper coils and an electronic circuit below. Charge held by the batteries carries over into the finished saber. The recipe unlocks once the player has a copper coil, an electronic circuit or a diamond sword (advancement <code>recipes/misc/electric_saber</code>).</p>
 
 <p><strong>Repair</strong> — not applicable: there is no durability to mend; "repair" here means recharging.</p>
 
-<h2>Behaviour</h2>
+<h2 id="behaviour">Behaviour</h2>
 
 <p><strong>A powered hit.</strong> While the blade is on and the buffer holds at least 100 EU/FE, the saber deals 12 damage, spends 100 EU/FE per landed hit and leaves Slowness II on the target for two seconds along with a burst of electric sparks. Attack speed is 1.6 swings per second, a vanilla sword's rhythm. <strong>Reach.</strong> A live blade adds one block of attack reach (4 instead of 3). It is a real item attribute, so client and server agree on the distance and the line shows up in the tooltip next to the damage. <strong>The switch.</strong> Shift-right-click toggles the blade: a line appears above the hotbar, a metallic click plays, and the icon goes dark. A switched-off saber spends no EU/FE, hits no harder, reaches no further and shocks nothing — but it keeps its charge. A plain right-click does nothing, so the saber never gets in the way of other interactions. <strong>A flat saber.</strong> Below 100 EU/FE the damage drops to 4, the reach bonus and the discharge disappear and no EU/FE is spent. There is no message: the bar, the tooltip and the darkened icon already say it. <strong>Sweep.</strong> The saber is in <code>#minecraft:swords</code>, so the vanilla sweep attack works. Without Sweeping Edge nearby mobs take 1 damage, like with any sword; with it the sweep is computed from the full 12 and hits considerably harder. <strong>Enchantments.</strong> That same tag brings the whole melee set: Sharpness, Smite, Bane of Arthropods, Looting, Fire Aspect, Knockback, Sweeping Edge. Unbreaking and Mending can be applied but do nothing on an unbreakable saber — exactly as on the <a href="electric_drill.html">Drill</a>. <strong>Blocks.</strong> Like a vanilla sword: instant through cobwebs and fast through leaves, bamboo and the rest of <code>#minecraft:sword_efficient</code>. Breaking blocks costs no EU/FE and does not depend on charge. <strong>Charging:</strong> the Battery Box slot, a worn Energy Pack and the Charging Station all take the saber automatically, up to 32 EU/FE/tick. <strong>Readouts:</strong> the bar under the icon shows charge (gold, LV colour). The tooltip lists the cost per hit, the blade state and "Charge: X / 10 000 EU/FE"; below the per-hit cost that line turns red. The texture switches to the dark variant when the saber is flat or switched off. <strong>Drop/death/relog:</strong> charge and switch position live in the item and persist. <strong>In creative:</strong> no charge is spent.</p>
 
-<h2>Progression</h2>
+<h2 id="progression">Progression</h2>
 
 <p>The mod's first EU/FE weapon and the fifth item of the line; the combat branch is separate from the tool branch but shares the energy model and every charger. Available after the <a href="../energy-storage/battery_box.html">Battery Box</a> and the battery: without LV infrastructure the saber can be neither crafted nor charged. The recipe also eats a diamond sword, so the saber replaces finished diamond gear rather than iron. LV tier. Ranged EU/FE weaponry (the nano bow) is future work.</p>
 
-<h2>Related</h2>
+<h2 id="related">Related</h2>
 
 <p><a href="electric_drill.html">Electric Drill</a>, <a href="electric_chainsaw.html">Electric Chainsaw</a>, <a href="electric_shovel.html">Electric Shovel</a>, <a href="electric_hoe.html">Electric Hoe</a> — the tool half of the same line: same energy, same chargers, same unbreakability. <a href="electromagnet.html">Electromagnet</a> — the shift-right-click switch this one copies. <a href="fluxweave_armor.html">Fluxweave armour</a> — the other item whose attributes follow its charge. <a href="../energy-storage/battery_box.html">Battery Box</a> — where the saber charges (charge slot). <a href="tempered_iron_tools.html">Tempered iron tools</a> — the mod's previous combat step.</p>
 
 <h2>Crafting</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="electric saber alaindustrial:electric_saber" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Battery"><img src="../assets/item/battery_3d.png" alt="Battery" width="32" height="32"></div> <div class="cell placeholder" title="Diamond Sword" aria-label="Diamond Sword"><span>diamon</span></div> <div class="cell" title="Battery"><img src="../assets/item/battery_3d.png" alt="Battery" width="32" height="32"></div> <div class="cell" title="Copper Coil"><img src="../assets/item/copper_coil_3d.png" alt="Copper Coil" width="32" height="32"></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit_3d.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Copper Coil"><img src="../assets/item/copper_coil_3d.png" alt="Copper Coil" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Electric Saber"><img src="../assets/item/electric_saber_3d.png" alt="Electric Saber" width="32" height="32"></div><div class="result-name">Electric Saber</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="electric saber alaindustrial:electric_saber" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Battery"><img src="../assets/item/battery_3d.png" alt="Battery" width="32" height="32"></div> <div class="cell" title="Diamond Sword"><img src="../assets/vanilla/item/diamond_sword.png" alt="Diamond Sword" width="32" height="32"></div> <div class="cell" title="Battery"><img src="../assets/item/battery_3d.png" alt="Battery" width="32" height="32"></div> <div class="cell" title="Copper Coil"><img src="../assets/item/copper_coil_3d.png" alt="Copper Coil" width="32" height="32"></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit_3d.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Copper Coil"><img src="../assets/item/copper_coil_3d.png" alt="Copper Coil" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Electric Saber"><img src="../assets/item/electric_saber_3d.png" alt="Electric Saber" width="32" height="32"></div><div class="result-name">Electric Saber</div></div></div></div></div>
   </main>
 </div>
 

@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепти</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="10 сторінок">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="4 сторінки">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Інше</div>
 <a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилітарні блоки</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
 <div class="group-title">Предмети</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
   </aside>
@@ -392,39 +392,39 @@
     </div>
   </div>
 </div>
-<h2>Зведення</h2>
+<h2 id="зведення">Зведення</h2>
 
 <p><strong>Рамка-індикатор</strong> — це рамка, яку вішають на будь-який контейнер (ванільну скриню, бочку, шалкер або модову <a href="iron_chest.html">залізну скриню</a>), і вона <strong>в реальному часі показує просто на собі, скільки предметів лежить усередині</strong>. Енергії не потребує — це зручність для складу: «цінники» на рядах скринь, наповнення видно без відкриття вікна.</p>
 
 <blockquote><strong>Міні-приклад:</strong> покладіть алмаз у рамку на рудній скрині → вона покаже, скільки алмазів усередині. Поміняйте алмаз на залізо → почне рахувати залізні зливки. Порожня рамка → числа немає зовсім.</blockquote>
 
-<h2>Як рахується число</h2>
+<h2 id="як-рахується-число">Як рахується число</h2>
 
 <p><strong>у рамці лежить предмет</strong> → число дорівнює кількості предметів <em>цього типу</em> в контейнері (предмет працює як фільтр); <strong>рамка порожня</strong> → число не відображається (рамка виглядає як звичайна); <strong>за рамкою немає контейнера</strong> → число не відображається; <strong>контейнер порожній</strong> (за наявності фільтра в рамці) → показується <code>0</code>.</p>
 
 <p>Рахуються лише слоти верхнього рівня — <strong>без залізання</strong> в шалкери й мішечки всередині скрині. Подвійна скриня — і ванільна, і подвійна скриня мода — рахується як один контейнер: рамка на будь-якій половині показує загальну суму. Рамка перераховує вміст раз на секунду.</p>
 
-<h2>Інтерфейс</h2>
+<h2 id="інтерфейс">Інтерфейс</h2>
 
 <p>Вікна немає. Число малюється <strong>плоско на лицьовому боці рамки</strong>, у її нижній смузі — біле з чорною обвідкою, без підкладки. Воно повернуте разом із рамкою (не «білбордом»), тож видно лише з того боку, куди рамка дивиться.</p>
 
 <p>ПКМ покладіть предмет-фільтр → з'являється число. ПКМ ще раз (або удар) → фільтр повертається в інвентар, число зникає. Предмет-фільтр трохи піднятий і зменшений, щоб звільнити місце під цифру; без фільтра рамка виглядає як звичайна (предмет по центру). На відміну від ванільної рамки, <strong>предмет не повертається</strong> — поворот для фільтра лише шум. Карти в рамку класти не можна. Дистанція показу — до <strong>24 блоків</strong> (далі текст ховається заради продуктивності). Форматування: точне число до 10 000, далі скорочення — <code>12.3k</code>, <code>1.2M</code>.</p>
 
-<h2>Властивості блока</h2>
+<h2 id="властивості-блока">Властивості блока</h2>
 
 <p>Рамка — це <strong>сутність</strong>, а не блок (як ванільна рамка). Той самий розмір і поведінка: плоска, на стіні, без колізій. ПКМ по грані блока — повісити, удар — зняти; зламаєте опорний блок — рамка відвалиться й випаде своїм предметом.</p>
 
 <table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Тип</td><td>сутність (як ванільна item frame)</td></tr><tr><td>Розміщення</td><td>на грані стіни, підлоги чи стелі</td></tr><tr><td>Випадає сама</td><td>так (предмет рамки + фільтр, якщо був)</td></tr></tbody></table>
 
-<h2>Рецепти</h2>
+<h2 id="рецепти">Рецепти</h2>
 
 <p>Крафтиться на верстаку: ванільна рамка в центрі, обрамлена дерев'яними шестернями, срібними зливками та золотим пилом. Ідея — «покращити» звичайну рамку до лічильної за допомогою точної механіки й дорогої електроніки.</p>
 
-<h2>Прогресія</h2>
+<h2 id="прогресія">Прогресія</h2>
 
 <p>Тир LV: доступна після перших шестерень і срібла.</p>
 
-<h2>Пов'язане</h2>
+<h2 id="повязане">Пов'язане</h2>
 
 <p><a href="iron_chest.html">Залізна скриня</a> — основний «клієнт» рамки в моді. <a href="silver_chest.html">Срібна скриня</a> — ще один контейнер, який вона читає.</p>
 

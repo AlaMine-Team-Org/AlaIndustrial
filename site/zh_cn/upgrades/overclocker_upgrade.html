@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link active" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link active" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>超频芯片</strong>是放入机器升级面板专属槽位（顶部那格，带双箭头提示）的升级物品。共分三档——I、II、III—— 它们是三件不同的物品，而不是同一种叠成一摞，因此一台机器里只会有一枚超频芯片生效。</p>
 
@@ -400,21 +400,21 @@
 
 <blockquote><strong>小例子：</strong>没有超频的粉碎机研磨矿石需要 150 刻、消耗 300 EU/FE。装上 III 档后只要 77 刻——快了将近一倍—— 但要烧掉 1232 EU/FE，是原来的四倍。这样的机器铜线已经喂不饱了，得换金线。</blockquote>
 
-<h2>能量</h2>
+<h2 id="能量">能量</h2>
 
 <p>芯片本身既不储存也不消耗能量——它改变的是装有它的那台机器的消耗。</p>
 
 <table><thead><tr><th>档位</th><th>刻数（粉碎机）</th><th>EU/FE/刻</th><th>加速</th><th>单次操作 EU/FE</th></tr></thead><tbody><tr><td>—</td><td>150</td><td>2</td><td>1.00×</td><td>300</td></tr><tr><td>I</td><td>120</td><td>4</td><td>1.25×</td><td>480</td></tr><tr><td>II</td><td>96</td><td>8</td><td>1.56×</td><td>768</td></tr><tr><td>III</td><td>77</td><td>16</td><td>1.95×</td><td>1232</td></tr></tbody></table>
 
-<h2>物品栏</h2>
+<h2 id="物品栏">物品栏</h2>
 
 <p>不适用（物品）。放入面板的超频槽位，一台机器一枚。漏斗和管道看不到升级面板。</p>
 
-<h2>方块属性</h2>
+<h2 id="方块属性">方块属性</h2>
 
 <p>不适用（物品）。堆叠：普通物品栏 64，升级槽位内 1。</p>
 
-<h2>工作方式</h2>
+<h2 id="工作方式">工作方式</h2>
 
 <p>只要芯片在面板里，机器就跑得更快、吃得更多。把鼠标移到面板的齿轮上，提示框会显示已装档位， 以及速度和消耗各自涨了多少倍。</p>
 
@@ -428,11 +428,11 @@
 
 <p>芯片<strong>不会</strong>做的事：不改变配方，不影响概率（孵化器也一样），不缩短蒸馏塔的预热，在发电机和凝聚器里也不起作用—— 那里的产出与积攒由别的机制决定。</p>
 
-<h2>进程</h2>
+<h2 id="进程">进程</h2>
 
 <p>没有自己等级的升级。 I 档建立在<a href="../components/empty_chip.html">空白芯片</a>之上，之后每一档都由上一档升级而来。 真正的门槛是对应档位的<strong>能量凝块</strong>，而它只能由<a href="../energy-storage/energy_condenser.html">能量凝聚器</a> 从电网余电中取得。超频芯片买不到矿：为它买单的是你的电站。</p>
 
-<h2>相关</h2>
+<h2 id="相关">相关</h2>
 
 <p><a href="../energy-storage/energy_condenser.html">能量凝聚器</a> —— 凝块的唯一来源。 <a href="../components/empty_chip.html">空白芯片</a> —— I 档的底子。 <a href="mute_chip.html">静音芯片</a> —— 同一面板的邻居；两者可以同时安装。 升级系统总览 —— 升级槽位如何工作。</p>
 

@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепты</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="10 страниц">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="4 страницы">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Прочее</div>
 <a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="14 страниц">14</span></a>
 <div class="group-title">Предметы</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="2 страницы">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="20 страниц">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="20 страниц">20</span></a>
   </aside>
@@ -393,7 +393,7 @@
   </div>
 </div>
 
-<h2>Сводка</h2>
+<h2 id="сводка">Сводка</h2>
 
 <p><strong>Малый отпугиватель</strong> — охранный блок: пока он подключён к энергосети и поле включено, враждебные мобы <strong>убегают</strong> из зоны вокруг него — как крипер убегает от кота — и не могут подойти к базе. Мирных животных, жителей и игроков поле не трогает; нейтральные мобы (эндермен, зомби-пиглин) выдворяются <strong>только если уже злы</strong>.</p>
 
@@ -401,7 +401,7 @@
 
 <blockquote><strong>Мини-пример:</strong> поставьте отпугиватель у входа в дом, подведите LV-кабель от Энергохранилища — и ночью криперы больше не прижимаются к стенам, а скелеты не стреляют с порога. Факелы против спавна внутри зоны всё ещё нужны: поле выгоняет мобов, но не запрещает им появляться.</blockquote>
 
-<h2>Энергия</h2>
+<h2 id="энергия">Энергия</h2>
 
 <p>Чистый потребитель LV. Поле — <strong>постоянный расход</strong>: пока включено, тратится 8 EU/FE/такт независимо от того, есть ли мобы рядом. Кончилась энергия — поле гаснет, и мобы снова могут подходить.</p>
 
@@ -409,7 +409,7 @@
 
 <p>Энергия принимается всеми шестью гранями.</p>
 
-<h2>Поведение поля</h2>
+<h2 id="поведение-поля">Поведение поля</h2>
 
 <p>Раз в полсекунды блок осматривает зону и выдворяет из неё активно враждебных мобов:</p>
 
@@ -417,7 +417,7 @@
 
 <p>Зона — куб 17×17×17 (радиус 8 во все стороны от блока), совпадает с куполом подсветки.</p>
 
-<h2>Интерфейс</h2>
+<h2 id="интерфейс">Интерфейс</h2>
 
 <p>ПКМ открывает экран: уровень энергии, слот Сосуда душ и <strong>кнопка купола</strong> — показывает лично вам границу зоны прямо в мире (полупрозрачный куб с каркасом). Другие игроки купол не видят. Кнопка работает как переключатель; купол гаснет сам, если блок убрали.</p>
 
@@ -425,17 +425,17 @@
 
 <p><strong>Редстоун.</strong> Сигнал на блок (рычаг, кнопка, компаратор) <strong>выключает поле</strong>: блок гаснет и перестаёт тратить энергию. Убрали сигнал — поле снова работает.</p>
 
-<h2>Свойства блока</h2>
+<h2 id="свойства-блока">Свойства блока</h2>
 
 <p>Полный блок в корпусе машины с серебряными накладками и соул-эмиттером сверху. При работе эмиттер светится бирюзовым (уровень света 14 — как факел).</p>
 
 <table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Форма</td><td>полный блок</td></tr><tr><td>Инструмент</td><td>кирка</td></tr><tr><td>Свечение</td><td>14 при активном поле (как ванильный факел)</td></tr></tbody></table>
 
-<h2>Прогрессия</h2>
+<h2 id="прогрессия">Прогрессия</h2>
 
 <table><thead><tr><th>Ступень</th><th>Радиус</th><th>Расход</th><th>Как получить</th></tr></thead><tbody><tr><td><strong>Малый (этот блок)</strong></td><td>8</td><td>8 EU/FE/т</td><td>Крафт</td></tr><tr><td><a href="mob_repeller_mv.html">Средний</a></td><td>16</td><td>32 EU/FE/т</td><td>Сосуд душ (80 душ) в малый</td></tr><tr><td><a href="mob_repeller_hv.html">Большой</a></td><td>24</td><td>64 EU/FE/т</td><td>Сосуд душ (250 душ) в средний</td></tr></tbody></table>
 
-<h2>Рецепты</h2>
+<h2 id="рецепты">Рецепты</h2>
 
 <p>Верстак 3×3: 4 серебряные пластины по углам, соул-фонарь сверху, продвинутая схема снизу, 2 медные катушки по бокам, в центре — продвинутый корпус машины.</p>
 
@@ -446,7 +446,7 @@
 <p>Средний и большой не крафтятся — только выращиваются Сосудом душ.</p>
 
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="малый отпугиватель alaindustrial:mob_repeller" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Любая серебряная пластина"><img src="../assets/item/silver_plate_3d.png" alt="Любая серебряная пластина" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell placeholder" title="Soul Lantern" aria-label="Soul Lantern"><span>soul l</span></div> <div class="cell" title="Любая серебряная пластина"><img src="../assets/item/silver_plate_3d.png" alt="Любая серебряная пластина" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Медная катушка"><img src="../assets/item/copper_coil_3d.png" alt="Медная катушка" width="32" height="32"></div> <div class="cell" title="Продвинутый машинный корпус"><img src="../assets/item/advanced_machine_casing_3d.png" alt="Продвинутый машинный корпус" width="32" height="32"></div> <div class="cell" title="Медная катушка"><img src="../assets/item/copper_coil_3d.png" alt="Медная катушка" width="32" height="32"></div> <div class="cell" title="Любая серебряная пластина"><img src="../assets/item/silver_plate_3d.png" alt="Любая серебряная пластина" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Продвинутая схема"><img src="../assets/item/advanced_circuit_3d.png" alt="Продвинутая схема" width="32" height="32"></div> <div class="cell" title="Любая серебряная пластина"><img src="../assets/item/silver_plate_3d.png" alt="Любая серебряная пластина" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Малый отпугиватель"><img src="../assets/item/mob_repeller_3d.png" alt="Малый отпугиватель" width="32" height="32"></div><div class="result-name">Малый отпугиватель</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="малый отпугиватель alaindustrial:mob_repeller" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Любая серебряная пластина"><img src="../assets/item/silver_plate_3d.png" alt="Любая серебряная пластина" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Soul Lantern"><img src="../assets/vanilla/item/soul_lantern.png" alt="Soul Lantern" width="32" height="32"></div> <div class="cell" title="Любая серебряная пластина"><img src="../assets/item/silver_plate_3d.png" alt="Любая серебряная пластина" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Медная катушка"><img src="../assets/item/copper_coil_3d.png" alt="Медная катушка" width="32" height="32"></div> <div class="cell" title="Продвинутый машинный корпус"><img src="../assets/item/advanced_machine_casing_3d.png" alt="Продвинутый машинный корпус" width="32" height="32"></div> <div class="cell" title="Медная катушка"><img src="../assets/item/copper_coil_3d.png" alt="Медная катушка" width="32" height="32"></div> <div class="cell" title="Любая серебряная пластина"><img src="../assets/item/silver_plate_3d.png" alt="Любая серебряная пластина" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Продвинутая схема"><img src="../assets/item/advanced_circuit_3d.png" alt="Продвинутая схема" width="32" height="32"></div> <div class="cell" title="Любая серебряная пластина"><img src="../assets/item/silver_plate_3d.png" alt="Любая серебряная пластина" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Малый отпугиватель"><img src="../assets/item/mob_repeller_3d.png" alt="Малый отпугиватель" width="32" height="32"></div><div class="result-name">Малый отпугиватель</div></div></div></div></div>
   </main>
 </div>
 

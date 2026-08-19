@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,39 +392,39 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>在庫表示額縁</strong>は任意のコンテナ（バニラのチェスト、樽、シュルカー、モッドの<a href="iron_chest.html">鉄のチェスト</a>） に掛けると、<strong>リアルタイムで額縁の上に中のアイテム数を直接表示</strong>する額縁です。エネルギーは不要です — これは倉庫の利便性です：チェスト並びに「値札」を付け、窓を開かずに充填度が見えます。</p>
 
 <blockquote><strong>ミニ例：</strong> 鉱石チェストの額縁にダイヤモンドを置く → 中のダイヤモンド数を表示します。 ダイヤモンドを鉄に変える → 鉄インゴットを数え始めます。空の額縁 → 数字は出ません。</blockquote>
 
-<h2>数の数え方</h2>
+<h2 id="数の数え方">数の数え方</h2>
 
 <p><strong>額縁にアイテムが入っている</strong> → 数はコンテナ内の <em>そのタイプ</em> のアイテム数に等しい （アイテムがフィルタとして働きます）。 <strong>額縁が空</strong> → 数は表示されません（額縁は通常通りに見えます）。 <strong>額縁の後ろにコンテナがない</strong> → 数は表示されません。 <strong>コンテナが空</strong>（額縁にフィルタあり） → <code>0</code> と表示されます。</p>
 
 <p>集計は最上位スロットのみ — 中のシュルカーやバンドルには <strong>潜りません</strong>。 ラージチェスト(バニラのもの、本モッドのダブルチェストの両方)は 1 つのコンテナとして数えられます：どちらか半分の額縁が合計値を表示します。額縁は 1 秒に 1 回コンテンツを再計算します。</p>
 
-<h2>インターフェース</h2>
+<h2 id="インターフェース">インターフェース</h2>
 
 <p>ウィンドウはありません。数は <strong>額縁の表面にフラットに</strong>、下部の帯に描かれます — 白文字に黒い縁取り、 背景なし。額縁と一緒に回転し（「ビルボード」ではなく）、額縁が向いている方向からのみ見えます。</p>
 
 <p>右クリックでフィルタアイテムを置く → 数が現れます。 もう一度右クリック（または攻撃） → フィルタがインベントリに戻り、数が消えます。 フィルタアイテムは数字用のスペースを空けるため、わずかに浮き上がり縮小されます。フィルタがないと 額縁は通常通りに見えます（中央にアイテム）。 バニラの額縁と異なり、<strong>アイテムは回転しません</strong> — フィルタにとって回転はノイズです。 マップ（<code>minecraft:filled_map</code>）は額縁に入れられません。 表示距離 — <strong>24 ブロックまで</strong>（それ以上はパフォーマンスのためテキストが隠れます）。 フォーマット：10 000 までは正確な数、それ以降は短縮 — <code>12.3k</code>、<code>1.2M</code>。</p>
 
-<h2>ブロックの性質</h2>
+<h2 id="ブロックの性質">ブロックの性質</h2>
 
 <p>額縁は <strong>エンティティ</strong>（バニラの額縁と同じ）で、ブロックではありません。同じサイズと挙動です： フラットで、壁に付き、当たり判定はありません。ブロックの面を右クリック — 掛ける、攻撃 — 外す、 支柱ブロックを壊す — 額縁が外れて自身のアイテムとしてドロップします。</p>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>タイプ</td><td>エンティティ（バニラの額縁と同じ）</td></tr><tr><td>設置</td><td>壁、床、天井の面</td></tr><tr><td>自身をドロップ</td><td>はい（額縁アイテム + フィルタ（あれば））</td></tr></tbody></table>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p>作業台でクラフト：中央にバニラのアイテム額縁、周囲を木歯車、銀インゴット、金の粉で囲みます。普通の額縁を精密な機構と貴重な電子部品で「アップグレード」して数え取り型にする、という発想です。</p>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p>ティア LV：最初の歯車と銀の後に利用可能。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="iron_chest.html">鉄のチェスト</a> — モッド内で額縁の主な「顧客」。 <a href="silver_chest.html">銀のチェスト</a> — 額縁が読み取るもう一つのコンテナ。</p>
 

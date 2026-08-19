@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепты</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
-<a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="10 страниц">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="4 страницы">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Прочее</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="14 страниц">14</span></a>
 <div class="group-title">Предметы</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="2 страницы">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="20 страниц">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="20 страниц">20</span></a>
   </aside>
@@ -393,17 +393,17 @@
   </div>
 </div>
 
-<h2>Сводка</h2>
+<h2 id="сводка">Сводка</h2>
 
 <p><strong>Небесный ветряк</strong> (Sky Mill) — вторая ступень небесной ветки (T2), эволюция <a href="wind_mill.html">базового ветряка</a>. Производит EU/FE от ветра при открытом небе, но база растёт с высотой <strong>вдвое быстрее</strong> (гребень достигается за 8 блоков на ступень вместо 16) и упирается в потолок 12 EU/FE/такт. Погода на него влияет слабее, чем на остальные ветряки (дождь ×1.25, гроза ×1.5) — это ветряк ровного дохода, а не пиков. Получается <strong>только через эволюцию</strong> базового ветряка с <strong>солнечным эволюционным чипом</strong>; крафта у него нет.</p>
 
-<h2>Энергия</h2>
+<h2 id="энергия">Энергия</h2>
 
 <p>Ветряк только производит энергию и не принимает чужую. Буфер 8000 EU/FE, выход тира LV. Энергия отдаётся <strong>только с задней грани</strong> — как у T1, чтобы кабель на задней стенке продолжал работать и после эволюции. Остальные 5 граней инертны.</p>
 
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Роль</td><td>производитель с буфером</td></tr><tr><td>Буфер (EU/FE)</td><td>8000</td></tr><tr><td>Макс. вход</td><td>н/п (не принимает энергию)</td></tr><tr><td>Макс. выход (EU/FE/такт)</td><td>32 (LV)</td></tr><tr><td>EU/FE/такт</td><td>0–12 (база 0–8 по кривой высоты, пик под облаками × слабый погодный множитель, кап 12)</td></tr></tbody></table>
 
-<h2>Генерация</h2>
+<h2 id="генерация">Генерация</h2>
 
 <p>Как у T1, но удвоенная отдача от высоты: гребень кривой ветра берётся за 8 блоков на ступень (вместо 16), полная база 8 EU/FE/такт — только на y 188–192; выше воздух разрежен, и к y = 248 выработка падает в 0. Погода умножает базу слабо: дождь ×1.25, гроза ×1.5, потолок 12 EU/FE/такт. На высоте y ≈ 128 небесный ветряк выдаёт 4 EU/FE/такт — ровно вдвое больше базового ветряка на той же высоте, но лишь половину своей полной базы; полные 8 EU/FE/такт — только в полосе y 188–192 — больше всех ветряков при чистом небе.</p>
 
@@ -413,21 +413,21 @@
 
 <p><strong>Зазор для лопастей и интерференция роторов</strong> — точно такие же, как у T1: ротору нужен свободный квадрат 2×2 перед ветряком, а пересечение лопастей с лопастями соседнего ветряка останавливает оба. Подробные правила и схема — в <a href="wind_mill.html">спеке T1</a>.</p>
 
-<h2>Интерфейс</h2>
+<h2 id="интерфейс">Интерфейс</h2>
 
 <p>Тип: container — полоса энергии (тултип при наведении), центральный слот ротора и индикатор состояния в тех же позициях, что у базового ветряка. Пока ветряк работает, в строке статуса показана текущая выработка в EU/FE/такт; когда стоит — причина остановки. Без слота чипа и без прогресса эволюции (T2 — лист, дальше не эволюционирует).</p>
 
-<h2>Свойства блока</h2>
+<h2 id="свойства-блока">Свойства блока</h2>
 
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Форма</td><td>полный куб 16³ (окклюдер)</td></tr><tr><td>Установка</td><td>лицевой гранью к игроку</td></tr><tr><td>Прочность</td><td>3.0</td></tr><tr><td>Взрывоустойчивость</td><td>6.0</td></tr><tr><td>Инструмент</td><td>кирка</td></tr></tbody></table>
 
-<h2>Рецепты</h2>
+<h2 id="рецепты">Рецепты</h2>
 
 <p>Небесный ветряк не крафтится. Единственный способ его получить — вырастить из базового ветряка: вставьте солнечный эволюционный чип и дайте ему поработать под открытым небом с установленным ротором. Накопленная энергия при эволюции сохраняется.</p>
 
 <p><strong>Крафт:</strong> отсутствует. Блок недоступен в столе крафта. <strong>Эволюция (единственный способ получить):</strong> базовый <a href="wind_mill.html">ветряк</a> + ротор установлен + <strong>солнечный эволюционный чип</strong> + накопленное время под открытым небом → превращается в небесный, перенос NBT (энергия).</p>
 
-<h2>Связанное</h2>
+<h2 id="связанное">Связанное</h2>
 
 <p><a href="wind_mill.html">Ветряк</a> — нейтральная T1, источник эволюции. <a href="storm_wind_mill.html">Буревой ветряк</a> — зеркало буровой ветки.</p>
 

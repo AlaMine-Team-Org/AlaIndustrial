@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепты</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="10 страниц">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="4 страницы">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Прочее</div>
 <a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="14 страниц">14</span></a>
 <div class="group-title">Предметы</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="2 страницы">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="20 страниц">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="20 страниц">20</span></a>
   </aside>
@@ -393,7 +393,7 @@
   </div>
 </div>
 
-<h2>Сводка</h2>
+<h2 id="сводка">Сводка</h2>
 
 <p><strong>Книга-путеводитель</strong> — внутриигровой учебник по моду Ala Industrial. Новый игрок попадает в мир с нетривиальной механикой (EU/FE вместо FE, тиры напряжения LV/MV/HV, кабели с потерями, порты граней у машин) и без встроенного туториала вынужден гадать или читать внешнюю вики. Книга снимает барьер входа: игрок <strong>получает её в инвентарь автоматически при первом появлении в мире</strong> (ровно один раз), <strong>открывает правым кликом</strong> — на весь экран, с вкладками и постраничной навигацией — и по главам доходит до первой рабочей энергосети и машины, не выходя из игры.</p>
 
@@ -401,11 +401,11 @@
 
 <blockquote><strong>Мини-пример:</strong> зашли в новый мир → в инвентаре лежит «Книга-путеводитель» → ПКМ → открывается экран с вкладкой «С чего начать» → кликаете по ссылке «Солнечная панель» → читаете, сколько EU/FE она даёт и как её скрафтить.</blockquote>
 
-<h2>Как получить</h2>
+<h2 id="как-получить">Как получить</h2>
 
 <p><strong>Автовыдача при первом входе.</strong> При первом заходе игрока в мир книга кладётся ему в инвентарь <strong>ровно один раз</strong>. Флаг «кому уже выдано» хранится в <strong>per-world сохранёнке</strong> (<code>SavedData</code> с множеством UUID) — переживает смерть/респавн/смену измерения и не дублирует выдачу при повторных входах. <strong>Существующие игроки при обновлении мода</strong> тоже получают книгу один раз: их UUID ещё нет во множестве «выдано» → при первом входе после апдейта книга выдаётся и UUID добавляется. <strong>Восстановление при потере</strong> — две страховки, обе НЕ гейтят автовыдачу: <strong>крафт</strong> (дешёвый, LV-доступный, без гейта за схемой); команда <strong><code>/alaindustrial guide</code></strong> (переиспользует существующий <code>/ala</code>-command; выдаёт/открывает книгу). Игрок никогда не остаётся без туториала. Если инвентарь полон при автовыдаче — книга выпадает под ноги игрока (не теряется).</p>
 
-<h2>Интерфейс</h2>
+<h2 id="интерфейс">Интерфейс</h2>
 
 <p>Открывается по ПКМ — <strong>полноэкранное окно</strong> (не сундук: слотов и инвентаря нет). Состоит из:</p>
 
@@ -417,29 +417,29 @@
 
 <p>Визуально книга выдержана в стиле мода — та же палитра и панели-бевелы, что и в остальных интерфейсах.</p>
 
-<h2>Контент</h2>
+<h2 id="контент">Контент</h2>
 
 <p>Книга покрывает все блоки и предметы, которые уже есть в игре: для каждого — краткое описание, характеристики (тир, EU/FE, буфер) и рецепт крафта. Числа в книге (EU/FE, тиры, буферы, рецепты) берутся из того же источника, что и вики-сайт мода, поэтому они всегда совпадают с игрой — расхождений нет. Ещё не добавленные и планируемые блоки в книгу не попадают: она не обещает того, чего пока нет в игре. Обрамляющие главы «С чего начать» и «Энергия» написаны как вводный туториал для новичка.</p>
 
-<h2>Свойства блока</h2>
+<h2 id="свойства-блока">Свойства блока</h2>
 
 <p>Книга — <strong>предмет</strong> (не блок): не ставится в мир, стак до 1, без EU/FE-буфера. «Форма» — обычная предметная модель с плоской иконкой. Правым кликом открывает GUI (см. «Интерфейс»); никакой блок в мире не размещается, коллизий нет.</p>
 
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Тип</td><td>предмет (item), не блок</td></tr><tr><td>Стак</td><td>1</td></tr><tr><td>EU/FE-буфер</td><td>нет</td></tr><tr><td>ПКМ</td><td>открывает экран книги (client-side)</td></tr><tr><td>Размещение в мире</td><td>нет</td></tr></tbody></table>
 
-<h2>Рецепты</h2>
+<h2 id="рецепты">Рецепты</h2>
 
 <p>Крафт <strong>супер-простой</strong>, без формы: ванильная книга + деревянная шестерня (самый ранний и дешёвый компонент мода). Без гейта за схемой (книга и так выдаётся автоматически; крафт — только для восстановления после потери).</p>
 
-<h2>Прогрессия</h2>
+<h2 id="прогрессия">Прогрессия</h2>
 
 <p>Тир: none (утилита, не часть энерго-цепочки). Доступна сразу — это точка входа в прогрессию, а не её ступень. Ведёт игрока по реальной прогрессии мода (руда → генератор → кабель → машина → тиры).</p>
 
-<h2>Локализация</h2>
+<h2 id="локализация">Локализация</h2>
 
 <p><strong>v1: <code>en_us</code> + <code>ru_ru</code></strong> — полный контент глав (источник — <code>en_us</code>, как во всём моде). Остальные 18 языков получают переведённое название предмета, а содержимое глав пока показывается на английском; полный перевод глав — позже. Весь текст книги — через lang-ключи; хардкод-строк нет (правило проекта).</p>
 
-<h2>Связанное</h2>
+<h2 id="связанное">Связанное</h2>
 
 <p>Книга собрана из того же источника, что и вики-сайт мода: то же содержимое и те же числа, но прямо в руках у игрока.</p>
 

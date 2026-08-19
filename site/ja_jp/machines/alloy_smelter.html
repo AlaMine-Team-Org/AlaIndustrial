@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,19 +392,19 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>合金炉</strong> は、モッドで初めて複数の異なる素材を1つの新しい素材に統合する機械です。入力スロットが3つあり、すべて対等です。かまどは投入されたインゴットの組み合わせ全体を見て、どのスロットに何が入っているかは見ません。</p>
 
 <blockquote><strong>ミニ例：</strong> LV ケーブルを接続し、銅インゴット3つを任意の入力スロットに、スズインゴット1つを別の任意のスロットに入れれば、7.5秒後に青銅インゴット ×2 が得られます。</blockquote>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>内部バッファ</td><td>800 EU/FE</td></tr><tr><td>最大入力</td><td>32 EU/FE/t（LV）</td></tr><tr><td>消費</td><td>作業中 8 EU/FE/t</td></tr><tr><td>操作コスト</td><td>1200 EU/FE</td></tr><tr><td>所要時間</td><td>150ティック（約7.5秒）</td></tr></tbody></table>
 
 <p>8 EU/FE/t はちょうど石炭で稼働する <a href="../generators/generator.html">発電機</a> の発電量であり、銅ケーブルのスループットの3分の2に当たります。そのため、このかまど1台でほぼスタートライン全体を占有します。消費量はすべての合金で同じです。高価な合金は操作コストではなく、インゴットをいくつ消費しどれだけ産出するかで変わります。</p>
 
-<h2>合金</h2>
+<h2 id="合金">合金</h2>
 
 <table><thead><tr><th>合金</th><th>投入</th><th>産出</th><th>1インゴットあたりの EU/FE</th></tr></thead><tbody><tr><td><a href="../materials/bronze.html">青銅</a></td><td>銅 ×3 + スズ ×1</td><td>インゴット ×2</td><td>600</td></tr><tr><td><a href="../materials/invar.html">インバー</a></td><td>鉄 ×2 + ニッケル ×1</td><td>インゴット ×1</td><td>1200</td></tr><tr><td><a href="../materials/cupronickel.html">白銅</a></td><td>銅 ×1 + ニッケル ×1</td><td>インゴット ×1</td><td>1200</td></tr><tr><td><a href="../materials/electrum.html">エレクトラム</a></td><td>金 ×1 + 銀 ×1</td><td>インゴット ×1</td><td>1200</td></tr></tbody></table>
 
@@ -412,7 +412,7 @@
 
 <p>入力は共通タグ（<code>c:ingots/copper</code>、<code>c:ingots/tin</code>、<code>c:ingots/iron</code>、<code>c:ingots/nickel</code>、<code>c:ingots/gold</code>、<code>c:ingots/silver</code>）で受け付けられるため、他のモッドの銅や鉄も自前のものと同等に受け入れます。</p>
 
-<h2>かまどがレシピを決める仕組み</h2>
+<h2 id="かまどがレシピを決める仕組み">かまどがレシピを決める仕組み</h2>
 
 <p>ルールは1つだけ：<strong>スロットの順序は何にも影響しない</strong>。かまどはコンポーネントを占有スロットに1つずつ振り分けられるレシピを探します。</p>
 
@@ -420,7 +420,7 @@
 
 <p><strong>2コンポーネントのレシピは、3つ目のスロットが占有されていると開始されません。</strong> かまどは余分なスタックを暗黙に無視しません。それが入力にある間は、2コンポーネントの合金はどれも該当するものと見なされません。これは、プレイヤーが何か間違ったものを置き、何年も「消費されない」理由を理解できない状況を防ぎます。 <strong>数量の不足は作業を止めますが、レシピをリセットしません。</strong> 銅が3つ必要なところ2つなら、かまどは「レシピがない」と判定するのではなく、3つ目が追加されるのを待ちます。</p>
 
-<h2>インベントリと自動化</h2>
+<h2 id="インベントリと自動化">インベントリと自動化</h2>
 
 <table><thead><tr><th>スロット</th><th>受け入れ</th></tr></thead><tbody><tr><td>3つの入力（左の縦列）</td><td>何らかの合金レシピに含まれる任意のインゴット</td></tr><tr><td>出力</td><td>完成した合金</td></tr></tbody></table>
 
@@ -428,19 +428,21 @@
 
 <p><strong>ホッパーが機械を詰まらせることはありません。</strong> 入力スロットは、別の入力スロットに既にあるアイテムを受け付けません。このルールがなければ、銅を入れたホッパーが3つのスロットすべてを銅で埋め、かまどは完全に止まってしまいます：そのような組み合わせのレシピは1つもなく、ホッパーは余分なものを取り出せません。ルールがあれば、余分な銅はホッパーに留まり、蓄積されているのが見え、空きスロットはスズを待ちます。</p>
 
-<h2>インターフェース</h2>
+<h2 id="インターフェース">インターフェース</h2>
 
 <p>画面にはエネルギー、進行状況、3つの入力スロット（縦列）、出力が表示されます。縦列は意図的に選ばれています。同じセルが上下に並んでいると「ここに構成要素を置く」と読めます。一方で見慣れた「入力 → 出力」の並びは、ここにはない順序を暗示してしまいます。</p>
 
-<h2>ブロック属性</h2>
+<p>進行状況の矢印は、他の加工機械が共有する「1入力・1出力」の矢印ではありません。ここでは3本の独立した線が各入力スロットに1本ずつ対応し、出力を指す1本の帯へと合流します。この絵は機械の動作そのもの——3つの素材が1つになる——を表しており、精錬が進むにつれて左から右へ金色に満ちていきます。矢印にカーソルを合わせると、合金レシピの一覧が開きます。</p>
+
+<h2 id="ブロック属性">ブロック属性</h2>
 
 <p>ツルハシで採取。破壊時にブロック自体とインベントリの中身がドロップします。 作業中に発光します（前面のるつぼと上部のシャフトが赤熱します）。 音は発しません。</p>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p>作業台でレンガ、鉄インゴット、マシンケース、<code>E</code> — 電子回路から組み立てます。合金をまだ入手していなくても作れます。さもなければこのかまどは作れません。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="macerator.html">粉砕機</a> と <a href="compressor.html">圧縮機</a> は鉱石倍化サイクルを提供します：粉 → インゴット、そのインゴットがかまどに送られます。 <a href="../materials/tin.html">スズ</a>、<a href="../materials/nickel.html">ニッケル</a>、<a href="../materials/silver.html">銀</a> — 合金に含まれるモッド独自の金属です。</p>
 

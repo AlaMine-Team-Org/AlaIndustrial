@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概览</h2>
+<h2 id="概览">概览</h2>
 
 <p><strong>流体管道</strong>在储罐、泵和机器之间输送水、熔岩、石油和任何其他流体——免去你提桶奔波。把 管道排成一行，用<a href="../items/wrench.html">扳手</a>指明从哪里抽取、倒向哪里，之后管道自己工作。 它不需要能量。</p>
 
@@ -400,7 +400,7 @@
 
 <p>流体确实沿管道流动，而不是瞬间出现在另一端：每段管道持有一个小体积并将其向前传递。因此 长管线是逐渐填满的——可以看到流体锋面沿管道前进。</p>
 
-<h2>流体</h2>
+<h2 id="流体">流体</h2>
 
 <table><thead><tr><th>属性</th><th>数值</th></tr></thead><tbody><tr><td>单段体积</td><td>50 mB</td></tr><tr><td>通量</td><td>每刻 50 mB（每秒 1 桶）</td></tr><tr><td>同时流体数</td><td>每段一种</td></tr><tr><td>能量消耗</td><td>无</td></tr></tbody></table>
 
@@ -410,7 +410,7 @@
 
 <blockquote>破坏管道时，里面的流体会消失。每段不到半桶，但不必收拾泄漏。</blockquote>
 
-<h2>侧面与密钥</h2>
+<h2 id="侧面与密钥">侧面与密钥</h2>
 
 <p>侧面的配置与<a href="../item-transport/item_pipe.html">物品管道</a>相同——同一把扳手和同一套顺序，这样 就不必记两套不同规则。</p>
 
@@ -420,25 +420,25 @@
 
 <blockquote>Shift+右键扳手不配置侧面——这样是<strong>拆解</strong>管道，与本模组任何方块一样。</blockquote>
 
-<h3>管道与管道相接</h3>
+<h3 id="管道与管道相接">管道与管道相接</h3>
 
 <p>当管道与另一根管道相接时，无需抽取或倒入——这只是路径上的一段。因此扳手在那里只切换 「连接」↔「断开」。断开再连回——管线恢复工作。</p>
 
-<h2>方块属性</h2>
+<h2 id="方块属性">方块属性</h2>
 
 <p>管道不是完整的立方体：方块中心的 4×4×4 核心（每轴 6 到 10）加上通向每个已连接面的接管。 用镐放置和破坏，硬度 0.2，爆炸抗性 0.5，铜的声音。方块对光透明（），可透过 它看到相邻方块。</p>
 
 <p>机身内可见流体——它按管道中流动的流体着色：水蓝、熔岩橙、石油黑。来自其他模组的流体也 以其自身颜色显示。</p>
 
-<h2>配方</h2>
+<h2 id="配方">配方</h2>
 
-<p>玻璃周围 8 个银锭，结果为 8 根管道。玻璃在这里不是偶然的：正是透过它能看到里面在流什么。</p>
+<p>玻璃周围 6 个银锭围成环形（四角留空），结果为 8 根管道。玻璃在这里不是偶然的：正是透过它能看到里面在流什么。</p>
 
-<h2>进阶</h2>
+<h2 id="进阶">进阶</h2>
 
 <p>LV 等的基础管道。计划中还有强化管道（更大通量）和过滤管道（只放行指定流体）。</p>
 
-<h2>相关内容</h2>
+<h2 id="相关内容">相关内容</h2>
 
 <p><a href="../fluid-storage/fluid_tank.html">便携式流体储罐</a>——存储流体 <a href="../fluid-machines/pump.html">抽水泵</a>——从世界抽取流体 <a href="../item-transport/item_pipe.html">物品管道</a>——同样的扳手和侧面模式 <a href="../items/wrench.html">扳手</a></p>
 

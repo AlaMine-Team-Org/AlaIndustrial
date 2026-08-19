@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>熱遠心分離機</strong>は鉱石倍化の第2段階です。粉砕機はすでに鉱石ブロック1個を粉2個に変えていますが、遠心分離機はその粉をさらに2つに分割して<strong>ウランの削り屑</strong>にし、削り屑は<a href="compressor.html">圧縮機</a>で<strong>圧縮</strong>されて<strong>精製ウラン</strong>になります。ライン全体の結果として、鉱石ブロック1個から、そのまま精錬した場合の1個ではなく4個が得られます。</p>
 
@@ -402,13 +402,13 @@
 
 <blockquote><strong>ミニ例：</strong>ヒーターを置き、その上に遠心分離機を置き、ケーブルをつなぎ、ウランの粉を入れてレバーを引きます。ローターは回転を上げ始め、ヒーターは温まり始めます。先に稼働状態へ達するのはヒーターで、約10秒です。ローターの回転上昇にはその2倍かかり——そのあとで初めて粉が削り屑に変わります。レバーを戻せば、機械は停止して回転も失われます。</blockquote>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <table><thead><tr><th>フィールド</th><th>値</th></tr></thead><tbody><tr><td>役割</td><td>消費者</td></tr><tr><td>バッファ（EU/FE）</td><td>800（）</td></tr><tr><td>最大入力（EU/FE/t）</td><td>32（LV の上限）</td></tr><tr><td>EU/FE/t（稼働時と回転上昇時）</td><td>4（）</td></tr><tr><td>EU/FE/t（回転を維持する空転時）</td><td>1（）</td></tr></tbody></table>
 
 <p>本modの通常の機械の2倍のコストです：遠心分離機は最も希少な資源を倍化し、しかも単独では働かず、必ずヒーターと組みになります。2台合計で <strong>10 EU/FE/t</strong> を消費します——これは銅ケーブル（12 EU/FE/t）にまだ収まりますが、余裕はほとんど残りません。それは意図的です。</p>
 
-<h2>回転上昇と信号</h2>
+<h2 id="回転上昇と信号">回転上昇と信号</h2>
 
 <p>レッドストーン信号はパルスではなく、<strong>入れ続ける</strong>必要があります。これは<a href="../utility/mob_repeller.html">小型モブ忌避装置</a>の常識とは逆です。あちらでは信号がブロックを一時停止させますが、こちらでは信号がモーターの始動ボタンであり、回転こそが本質の機械にとって、信号がないことを「稼働せよ」と解釈するのは意味をなしません。</p>
 
@@ -418,39 +418,39 @@
 
 <p>信号を切ることは完全停止を意味します：回転数は徐々に落ちるのではなく、即座にゼロになります。ここでのレバーは、ライン全体の正直な主電源スイッチです。</p>
 
-<h2>加熱</h2>
+<h2 id="加熱">加熱</h2>
 
 <p>使えるのは<strong>電気ヒーターだけ</strong>です。<a href="vulcanizer.html">加硫機</a>には十分な溶岩、マグマ、焚き火では、遠心分離機は起動しません：この機械の産出倍率は固定なので、熱レベルの目盛りは回す先のないダイヤルになってしまいます。下のヒーターがまだ温まっていない間、機械はその旨をステータス行に正直に表示します——ヒーターがそもそも無い場合とは分けて示されます。</p>
 
-<h2>加工</h2>
+<h2 id="加工">加工</h2>
 
 <table><thead><tr><th>フィールド</th><th>値</th></tr></thead><tbody><tr><td>所要時間（ティック）</td><td>200（）</td></tr><tr><td>操作コスト</td><td>800 EU/FE</td></tr><tr><td>産出</td><td>ウランの粉1個 → ウランの削り屑2個</td></tr><tr><td>自動排出</td><td>なし</td></tr></tbody></table>
 
-<h2>インベントリ</h2>
+<h2 id="インベントリ">インベントリ</h2>
 
 <table><thead><tr><th>スロット</th><th>受け入れ</th><th>数</th></tr></thead><tbody><tr><td>入力</td><td>ウランの粉</td><td>操作あたり1</td></tr><tr><td>結果</td><td>ウランの削り屑、機械からのみ</td><td>最大64</td></tr></tbody></table>
 
 <p>底面はヒーターに占有されており、自動化には公開されません——ホッパーやパイプは残りの面から働きます。</p>
 
-<h2>インターフェース</h2>
+<h2 id="インターフェース">インターフェース</h2>
 
 <p>タイプ：container 表示：エネルギー量、ローターの回転ゲージ、進行矢印。 ステータス行が不足しているものを説明します：「レッドストーン信号が必要です」「下にヒーターが必要です」「ヒーターがまだ低温です」「回転上昇中」「ウランの粉が必要です」「対応するレシピがありません」「出力が塞がれています」。個別の行が必要なのは、4つの条件のうち2つ——信号と加熱——が画面の内側からはまったく見えないためです。</p>
 
-<h2>ブロックの性質</h2>
+<h2 id="ブロックの性質">ブロックの性質</h2>
 
 <p>筐体は開いたフレームで、その隙間から回転するローターが見えます。ただし当たり判定の形状は中実で、フルブロックよりわずかに細くなっています——フレームの隙間どおりに切ると、クリックが素通りしてしまうからです。</p>
 
 <table><thead><tr><th>フィールド</th><th>値</th></tr></thead><tbody><tr><td>形状</td><td>14×16×14、オクルーダーではない</td></tr><tr><td>硬度</td><td>3.0</td></tr><tr><td>爆発耐性</td><td>6.0</td></tr><tr><td>ツール</td><td>ツルハシ</td></tr></tbody></table>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p>クラフト： 遠心分離： 削り屑の圧縮：</p>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p>ティア：LV 必要：<a href="../components/machine_casing.html">マシンケース</a>、電子回路、<a href="electric_heater.html">電気ヒーター</a>、そしてレッドストーン信号の供給源。 解放：ウランの削り屑と、<a href="compressor.html">圧縮機</a>を経て得られる精製ウラン——将来の原子力ブランチに向けた素材。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="electric_heater.html">電気ヒーター</a> — 下に必須の熱源。 <a href="vulcanizer.html">加硫機</a> — 同じヒーターを使う2台目の機械。 <a href="macerator.html">粉砕機</a> — 倍化の第1段階で、粉を供給します。 <a href="../materials/uranium.html">ウラン</a> — このチェーン全体が存在する理由となる素材。</p>
 

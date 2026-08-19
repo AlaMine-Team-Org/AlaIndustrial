@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
@@ -392,17 +392,17 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 
 <p>The <strong>Sky Mill</strong> is the second tier of the sky branch (T2), an evolution of the <a href="wind_mill.html">basic Wind Turbine</a>. It produces EU/FE from the wind with open sky above, but its base grows with altitude <strong>twice as fast</strong> (its ridge takes 8 blocks per step instead of 16) and caps at 12 EU/FE/tick. Weather affects it less than the other turbines (rain ×1.25, thunder ×1.5) — this is the steady-income turbine, not the peaky one. It is obtained <strong>only through evolution</strong> of the basic turbine with a <strong>Solar Evolution Chip</strong>; it has no crafting recipe.</p>
 
-<h2>Energy</h2>
+<h2 id="energy">Energy</h2>
 
 <p>The turbine only produces power and never accepts incoming energy. An 8000 EU/FE buffer, LV-tier output. Energy is emitted <strong>from the back face only</strong> — same as T1, so the cable on the back wall keeps working after evolution. The other 5 faces are inert.</p>
 
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>producer with buffer</td></tr><tr><td>Buffer (EU/FE)</td><td>8000</td></tr><tr><td>Max input</td><td>n/a (does not accept energy)</td></tr><tr><td>Max output (EU/FE/tick)</td><td>32 (LV)</td></tr><tr><td>EU/FE/tick</td><td>0–12 (base 0–8 on the altitude curve, peaking under the clouds × weak weather multiplier, capped at 12)</td></tr></tbody></table>
 
-<h2>Generation</h2>
+<h2 id="generation">Generation</h2>
 
 <p>As with T1, but doubled payoff from altitude: the wind curve's ridge is reached at 8 blocks per step above sea level (instead of 16), up to 8 EU/FE/tick, and weather multiplies it only weakly: rain ×1.25, thunder ×1.5, capped at 12 EU/FE/tick. At y ≈ 128 the Sky Mill outputs 4 EU/FE/tick — twice what the basic mill makes at the same height, but only half of its own full base; the full 8 EU/FE/tick comes only in the y 188–192 band, under a clear sky — more than any other turbine in fair weather.</p>
 
@@ -412,21 +412,21 @@
 
 <p><strong>Blade clearance and rotor interference</strong> are exactly the same as on T1: the rotor needs a clear 2×2 square in front of the turbine, and overlapping blades with a neighbouring turbine stops both. Full rules and the diagram are in the <a href="wind_mill.html">T1 spec</a>.</p>
 
-<h2>Interface</h2>
+<h2 id="interface">Interface</h2>
 
 <p>Type: container — energy bar (tooltip on hover), the central rotor slot and status indicator in the same positions as the basic turbine. While the turbine runs, the status row shows the current output in EU/FE/tick; while it is stopped, the reason. No chip slot and no evolution progress (T2 is a leaf — it doesn't evolve further).</p>
 
-<h2>Block Properties</h2>
+<h2 id="block-properties">Block Properties</h2>
 
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full 16³ cube (occluder)</td></tr><tr><td>Placement</td><td>facing the player</td></tr><tr><td>Hardness</td><td>3.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr></tbody></table>
 
-<h2>Recipes</h2>
+<h2 id="recipes">Recipes</h2>
 
 <p>The Sky Mill isn't craftable. The only way to get it is to grow it from a basic turbine: insert a Solar Evolution Chip and let it work under open sky with a rotor installed. The stored energy carries over on evolution.</p>
 
 <p><strong>Crafting:</strong> none. The block is not available from a crafting table. <strong>Evolution (the only way to obtain it):</strong> a basic <a href="wind_mill.html">Wind Turbine</a> + rotor installed + a <strong>sun alignment chip</strong> + accumulated open-sky time → turns into the Sky Mill, keeping the energy it had stored.</p>
 
-<h2>Related</h2>
+<h2 id="related">Related</h2>
 
 <p><a href="wind_mill.html">Wind Turbine</a> — the neutral T1, the source of the evolution. <a href="storm_wind_mill.html">Tempest Mill</a> — the mirror of the tempest branch.</p>
 

@@ -300,7 +300,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -317,7 +317,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -333,7 +333,7 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>これはモッドのブロックではなく、バニラのルートテーブル</strong> <code>minecraft:chests/spawn_bonus_chest</code> <strong>への変更です</strong>。プレイヤーが「ボーナスチェスト（Bonus Chest）」オプションをオンにして新しいワールドを作ると、 スポーン地点のそばに出現するチェストに、標準のバニラプール（原木、板材、リンゴ、石のツール）に加えて <strong>Ala Industrial の初期アイテムのプールが追加</strong>されます。目的はモッドへの早期導入：最初の機械を作る前に、 大鎌、松明、歯車、あるいは稀な tempered_iron ツールを手に入れるチャンスがあります。</p>
 
@@ -341,37 +341,37 @@
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>タイプ</td><td>バニラのルートテーブル変更（add pool）</td></tr><tr><td>対象</td><td><code>minecraft:chests/spawn_bonus_chest</code></td></tr><tr><td>バニラのプール</td><td>維持される</td></tr><tr><td>方式</td><td>バニラのボーナスチェストへ追加し、中身を置き換えない</td></tr><tr><td>ティア</td><td>n/a（複数ティアの混在コンテンツ）</td></tr></tbody></table>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <p>対象外 — ブロックでも機械でもありません。ここに EU/FE は関与せず、プール中の一部アイテムが それ自体 EU/FE アイテム（バッテリー、バッテリーポーチ）であるだけで、それらは <strong>初期充電なし</strong> で （クラフト時と同様に）チェストに入ります。</p>
 
-<h2>加工</h2>
+<h2 id="加工">加工</h2>
 
 <p>対象外。ルートはワールド生成／チェストのスポーン時に一度だけ生成され、ティックでの処理はありません。</p>
 
-<h2>インベントリ</h2>
+<h2 id="インベントリ">インベントリ</h2>
 
 <p>ボーナスチェスト本体はバニラの <code>minecraft:chest</code> で、標準的な 27 スロットのインベントリを持ちます。 当モッドのプールを追加しても容量は変わらず、そこに入りうるアイテムの分布が広がるだけです。</p>
 
-<h2>インターフェース</h2>
+<h2 id="インターフェース">インターフェース</h2>
 
 <p>モッド独自の GUI はありません — バニラのチェストインターフェースを使います。</p>
 
-<h2>ブロックの性質</h2>
+<h2 id="ブロックの性質">ブロックの性質</h2>
 
 <p>ブロック自体は当モッドではなく、バニラのチェストです。変更はルートテーブルのみに関わります。</p>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p>対象外。プール中のアイテムは、すでに登録済みのモッドアイテムです：</p>
 
 <table><thead><tr><th>カテゴリー</th><th>エントリー（LootEntry）</th></tr></thead><tbody><tr><td>大鎌（初期）</td><td>、（ランダムにいずれか一つ）</td></tr><tr><td>松明</td><td>（スタック、ランダムな個数）</td></tr><tr><td>歯車</td><td>（ランダムにいずれか、1–2 個）</td></tr><tr><td>レア：tempered_iron</td><td>/ <code>_axe</code> / <code>_sword</code> / <code>_shovel</code>（ランダムにいずれか一つ、<strong>低確率</strong>）</td></tr><tr><td>レア：電池</td><td>バッテリーまたはバッテリーポーチ（いずれか一つ、<strong>低確率</strong>）</td></tr></tbody></table>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p>これは初期機能であり、いかなる進行よりも前にプレイヤーへモッドのツールとの最初の接点を提供します。 レアな tempered_iron ツールは <strong>意図的に低確率</strong> で、クラフトの価値を下げないようになっています。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="../items/scythe.html">大鎌</a> — 初期ツール。 <a href="../items/tempered_iron_tools.html">調質鉄 — ツール</a> — レアプール。 <a href="../items/battery_pouch.html">バッテリーポーチ</a> — レアな EU/FE アイテム。 <a href="enriched_uranium_torch.html">ウランの松明</a> — 初期の光源。 <a href="../components/metal_gears.html">歯車</a> — 初期クラフトコンポーネント。</p>
 

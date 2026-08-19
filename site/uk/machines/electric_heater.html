@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепти</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="10 сторінок">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="4 сторінки">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Інше</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилітарні блоки</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
 <div class="group-title">Предмети</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Зведення</h2>
+<h2 id="зведення">Зведення</h2>
 
 <p><strong>Електронагрівач</strong> ставиться прямо під <a href="vulcanizer.html">Вулканізатором</a> і дає йому максимальний рівень тепла — 3, тобто три гуми з однієї порції сировини замість однієї на багатті.</p>
 
@@ -400,7 +400,7 @@
 
 <blockquote><strong>Міні-приклад:</strong> поставте нагрівач під Вулканізатор, підведіть LV-кабель і завантажте сировину. Перші ~10 секунд нічого не відбувається, термометр на екрані нагрівача повзе вгору, спіралі блока розжарюються. Щойно термометр повний — пішла гума, одразу по три.</blockquote>
 
-<h2>Енергія</h2>
+<h2 id="енергія">Енергія</h2>
 
 <table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Внутрішній буфер</td><td>2400 EU/FE</td></tr><tr><td>Макс. вхід</td><td>32 EU/FE/такт (LV)</td></tr><tr><td>Споживання</td><td>6 EU/FE/такт</td></tr><tr><td>Прогрів</td><td>200 тактів (~10 с), 1200 EU/FE</td></tr><tr><td>Витрата, коли гріти нема кого</td><td>0 EU/FE</td></tr></tbody></table>
 
@@ -414,13 +414,13 @@
 
 <blockquote><strong>Обережно з розгоном.</strong> На третьому ступені прискорювача машина згори вимагає від нагрівача 48 EU/FE/такт, а його LV-вхід тримає лише 32. Буфер таку пару якийсь час витягне, потім нагрівач почне просідати. Практична стеля для зв'язки — другий ступінь.</blockquote>
 
-<h2>Охолодження</h2>
+<h2 id="охолодження">Охолодження</h2>
 
 <p>Коли гріти нема кого, нагрівач охолоджується <strong>вдвічі повільніше</strong>, ніж нагрівався: повний відкат триває близько 20 секунд. Це зроблено заради пауз — воронка, яка на пару секунд затримала подачу сировини, коштує вам невеликої частини прогріву, а не всього.</p>
 
 <p>Охолодження безкоштовне. І поки машина згори чекає на роботу — наприклад, стоїть без власної енергії — нагрівач <strong>тримає температуру</strong>, не витрачаючи при цьому нічого: він не скидає прогрів лише тому, що сусідові тимчасово нема чим платити.</p>
 
-<h2>Інтерфейс</h2>
+<h2 id="інтерфейс">Інтерфейс</h2>
 
 <p>Екран відкривається правим кліком. Слотів у нього немає — у нагрівач нема чого класти; він бере енергію з кабелю й віддає тепло вгору. Екран потрібен для того, щоб прогрів можна було бачити й планувати, а не вгадувати.</p>
 
@@ -432,15 +432,15 @@
 
 <p>Внизу — рядок стану: «Згори немає машини», «Немає енергії», «Прогрівається», «Прогрітий», «Охолоджується» або «Холодний». Перші два виділені червоним: це те, що лагодить гравець.</p>
 
-<h2>Властивості блока</h2>
+<h2 id="властивості-блока">Властивості блока</h2>
 
 <p>Джерело тепла лише для блока безпосередньо згори і лише у прогрітому стані. EU/FE-споживач LV; приймає енергію через доступні бічні грані. <strong>Свічення змінюється з температурою</strong> — чотири ступені від темної до розжареної. Стан видно у світі, не відкриваючи екран. У повністю прогрітого блока зі стику з машиною пробивається жар. Частинки йдуть лише на повному прогріві: це сигнал «іде ×3», а не постійний фон. Кайло; при руйнуванні випадає сам блок.</p>
 
-<h2>Рецепт</h2>
+<h2 id="рецепт">Рецепт</h2>
 
 <p>Збирається на верстаку з червоного пилу, золотого зливка, залізних зливків, корпусу машини та електронної схеми.</p>
 
-<h2>Зв'язки</h2>
+<h2 id="звязки">Зв'язки</h2>
 
 <p><a href="vulcanizer.html">Вулканізатор</a> — перший споживач тепла; рівень нагріву множить його вихід. <a href="thermal_centrifuge.html">Термоцентрифуга</a> — другий споживач. Для неї нагрівач не «найкраще з джерел», а <strong>єдине</strong>: лава й багаття її взагалі не запускають. <a href="../upgrades/overclocker_upgrade.html">Прискорювач</a> — стоїть у машині згори, але оплачує його й нагрівач. Лава й магматичний блок дають безкоштовний рівень 2 без жодного прогріву; багаття — рівень 1. Поки нагрівач розпалюється, лава під машиною працювала б уже зараз — це і є ціна ×3.</p>
 

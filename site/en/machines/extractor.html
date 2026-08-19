@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
@@ -392,13 +392,13 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 
 <p>The <strong>Extractor</strong> is an LV machine that pulls useful material out of raw inputs: dyes from flowers, seeds from pumpkin and melon, blaze powder from blaze rods, flint from gravel. It's nearly always a better deal than the vanilla routes — a flower gives <strong>two</strong> dyes instead of one at the crafting table — which makes it a nice node for hopper-fed auto-farms.</p>
 
 <blockquote><strong>Mini-example:</strong> drop a poppy in, get <strong>two red dyes</strong> back instead of the one the crafting table gives. Hook a few up to a flower farm and dyes stop being a chore.</blockquote>
 
-<h2>Energy</h2>
+<h2 id="energy">Energy</h2>
 
 <p>The Extractor only consumes EU/FE and keeps a small buffer for smooth running.</p>
 
@@ -408,47 +408,47 @@
 
 <p>Energy comes in on the five working faces. The <strong>front face</strong> (the one the machine "looks" toward) is inert — cables don't connect there and hoppers don't work through it.</p>
 
-<h2>Processing</h2>
+<h2 id="processing">Processing</h2>
 
 <p>Each pull costs 240 EU/FE and takes 120 ticks (~6 s). The finished result doesn't pop out on its own — pick it up by hand or with a hopper.</p>
 
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Duration</td><td>120 ticks (~6 s)</td></tr><tr><td>Cost per operation</td><td>240 EU/FE</td></tr><tr><td>Auto-output</td><td>no</td></tr></tbody></table>
 
-<h2>Inventory</h2>
+<h2 id="inventory">Inventory</h2>
 
 <p>One input slot, one output slot.</p>
 
 <table><thead><tr><th>Slot</th><th>Takes</th><th>Count</th></tr></thead><tbody><tr><td>Input</td><td>items the Extractor can process</td><td>1</td></tr><tr><td>Output</td><td>the result</td><td>1</td></tr></tbody></table>
 
-<h2>Interface</h2>
+<h2 id="interface">Interface</h2>
 
 <p>One screen shows the energy buffer, the progress, the input slot and the output slot.</p>
 
-<h2>Block Properties</h2>
+<h2 id="block-properties">Block Properties</h2>
 
 <p>An ordinary solid block, softer than stone. Any pickaxe breaks it, but <strong>it does NOT keep its charge when broken</strong>.</p>
 
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Keeps charge on break</td><td>no</td></tr></tbody></table>
 
-<h2>Sound</h2>
+<h2 id="sound">Sound</h2>
 
 <p>While running, the extractor emits a mechanical grinding hum — the loop (pattern <strong>A</strong>, 0.18). It falls silent when idle</p>
 
-<h2>Recipes</h2>
+<h2 id="recipes">Recipes</h2>
 
 <p>The Extractor is crafted at a workbench (the same casing layout as the other LV machines).</p>
 
 <p>What it pulls out, and why it's usually worth it:</p>
 
-<table><thead><tr><th>Input</th><th>Output</th><th>Why it's better</th></tr></thead><tbody><tr><td>Most flowers (poppy, dandelion, cornflower, lily of the valley, sea pickle, cactus)</td><td><strong>×2 dye</strong></td><td>crafting table gives ×1</td></tr><tr><td>Lilac, wither rose</td><td><strong>×3 dye</strong></td><td>the rich sources give a little extra</td></tr><tr><td>Kelp</td><td>×1 green dye</td><td>little pigment — same as crafting</td></tr><tr><td>Pumpkin</td><td><strong>×5 seeds</strong></td><td>crafting table gives ×4</td></tr><tr><td>Melon slice</td><td><strong>×2 seeds</strong></td><td>crafting table gives ×1</td></tr><tr><td>Blaze rod</td><td><strong>×3 blaze powder</strong></td><td>handy bulk route</td></tr><tr><td>Gravel</td><td>flint</td><td>a reliable way to get flint</td></tr></tbody></table>
+<table><thead><tr><th>Input</th><th>Output</th><th>Why it's better</th></tr></thead><tbody><tr><td>Most flowers (poppy, dandelion, cornflower, lily of the valley, sea pickle, cactus)</td><td><strong>×2 dye</strong></td><td>crafting table gives ×1</td></tr><tr><td>Lilac, wither rose</td><td><strong>×3 dye</strong></td><td>the rich sources give a little extra</td></tr><tr><td>Kelp</td><td>×1 green dye</td><td>little pigment — same as crafting</td></tr><tr><td>Pumpkin</td><td><strong>×5 seeds</strong></td><td>crafting table gives ×4</td></tr><tr><td>Melon slice</td><td><strong>×2 seeds</strong></td><td>crafting table gives ×1</td></tr><tr><td>Blaze rod</td><td><strong>×3 blaze powder</strong></td><td>handy bulk route</td></tr><tr><td>Breeze rod</td><td><strong>×5 wind charges</strong></td><td>crafting table gives ×4</td></tr><tr><td>Gravel</td><td>flint</td><td>a reliable way to get flint</td></tr><tr><td>Cobweb</td><td><strong>×2 string</strong></td><td>the crafting table can't process it at all</td></tr></tbody></table>
 
 <p>So the rule of thumb: for plant matter the Extractor always pays a little better than the crafting table, and it's the natural sink for a hopper-fed farm's output.</p>
 
-<h2>Progression</h2>
+<h2 id="progression">Progression</h2>
 
 <p>Tier: LV. A convenience machine — dyes and seeds aren't critical to progression, but the Extractor makes them painless. It doesn't evolve into anything in v0.1. Needs power from an LV source, e.g. a <a href="../generators/generator.html">Generator</a>.</p>
 
-<h2>Related</h2>
+<h2 id="related">Related</h2>
 
 <p><a href="compressor.html">Compressor</a> — the neighbouring LV processing machine. <a href="macerator.html">Macerator</a> — the other early grinder (for ores and metals). <a href="../generators/generator.html">Generator</a> — the power source.</p>
 

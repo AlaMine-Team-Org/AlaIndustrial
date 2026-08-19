@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепти</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="10 сторінок">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="4 сторінки">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Інше</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилітарні блоки</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
 <div class="group-title">Предмети</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link active" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Зведення</h2>
+<h2 id="зведення">Зведення</h2>
 
 <p><strong>Форми матеріалів</strong> — родина предметів-напівфабрикатів: пил, а згодом пластина, болванка й дріт, — на які машини та рецепти перетворюють руди й зливки. У першій фазі ви зустрічаєте лише <strong>пил</strong>: його видає <a href="../machines/macerator.html">Подрібнювач</a>, і саме він дає «подвоєння руди» (блок руди або сира руда → 2 пили → 2 зливки).</p>
 
@@ -400,27 +400,31 @@
 
 <blockquote><strong>Міні-приклад:</strong> добули одну залізну руду — прогнали через <a href="../machines/macerator.html">Подрібнювач</a>, отримали 2 залізні пили, а потім переплавили кожен у печі. Підсумок — 2 зливки з однієї руди замість звичного одного.</blockquote>
 
-<h2>Енергія</h2>
+<h2 id="енергія">Енергія</h2>
 
 <p>Енергії не використовують — звичайні інгредієнти для крафта.</p>
 
-<h2>Як використовується</h2>
+<h2 id="як-використовується">Як використовується</h2>
 
 <p>Пил — вузол ланцюжка переробки руди:</p>
 
-<p><strong>Металевий пил</strong> (залізо, мідь, золото, а також олово/срібло/нікель/уран моду) <strong>переплавляється</strong> у ванільній печі, доменній печі або <a href="../machines/electric_furnace.html">Електропечі</a> назад на зливок. Так замикається цикл подвоєння: руда → 2 пили → 2 зливки. <strong>Неметалевий пил</strong> (вугілля, алмаз, смарагд, лазурит) <strong>спресовується</strong> назад на самоцвіт або предмет у <a href="../machines/compressor.html">Компресорі</a> — не переплавляється. Та сама форма циклу: руда → 2 пили → 2 предмети.</p>
+<p><strong>Металевий пил</strong> <strong>переплавляється</strong> назад на зливок. Так замикається цикл подвоєння: руда → 2 пили → 2 зливки. Де саме плавиться — залежить від металу:</p>
+
+<table><thead><tr><th>Пил</th><th>Ванільна піч і <a href="../machines/iron_furnace.html">Залізна піч</a></th><th><a href="../machines/electric_furnace.html">Електропіч</a></th></tr></thead><tbody><tr><td>Залізо, мідь, золото</td><td>✅</td><td>✅</td></tr><tr><td>Срібло, олово, нікель</td><td>✅</td><td>✅</td></tr><tr><td>Уран, паладій</td><td>✖</td><td>✅</td></tr></tbody></table>
+
+<p>Доменна піч не плавить пил <strong>для жодного</strong> металу — вона працює тільки з рудою та сировиною. <strong>Неметалевий пил</strong> (вугілля, алмаз, смарагд, лазурит) <strong>спресовується</strong> назад на самоцвіт або предмет у <a href="../machines/compressor.html">Компресорі</a> — не переплавляється. Та сама форма циклу: руда → 2 пили → 2 предмети.</p>
 
 <p>Дюпу матеріалу немає. Помел готового зливка дає всього 1 пил, тому <code>зливок → пил → зливок</code> виходить у нуль — витрачається лише енергія.</p>
 
-<h2>Інвентар</h2>
+<h2 id="інвентар">Інвентар</h2>
 
 <p>Не застосовно (предмети). Стек: 64.</p>
 
-<h2>Властивості блока</h2>
+<h2 id="властивості-блока">Властивості блока</h2>
 
 <p>Не застосовно (предмети).</p>
 
-<h2>Правила переробки</h2>
+<h2 id="правила-переробки">Правила переробки</h2>
 
 <p>Скільки пилу видасть Подрібнювач, залежить від того, що в нього поклали:</p>
 
@@ -428,15 +432,15 @@
 
 <p>Єдиний виняток — <strong>лазурит</strong>: лазуритова руда дає <strong>×6 пилу</strong>. Ванільна руда лазуриту й так падає 4–9, тож звичайне ×2 знецінило б дроблення; 6 — гарантований вихід вище за середній дроп кайла, що й виправдовує витрату енергії.</p>
 
-<h2>Рецепти</h2>
+<h2 id="рецепти">Рецепти</h2>
 
-<p><strong>Отримання пилу:</strong> дроблення руди або металу в <a href="../machines/macerator.html">Подрібнювачі</a> (вартість енергії на рецепт — на сторінці подрібнювача). <strong>Металевий пил → зливок:</strong> переплавка або випал (ванільна піч / доменна піч), або <a href="../machines/electric_furnace.html">Електропіч</a> моду. <strong>Неметалевий пил → предмет:</strong> пресування в <a href="../machines/compressor.html">Компресорі</a>.</p>
+<p><strong>Отримання пилу:</strong> дроблення руди або металу в <a href="../machines/macerator.html">Подрібнювачі</a> (вартість енергії на рецепт — на сторінці подрібнювача). <strong>Металевий пил → зливок:</strong> переплавка у ванільній або <a href="../machines/iron_furnace.html">Залізній печі</a> (крім уранового та паладієвого пилу), або <a href="../machines/electric_furnace.html">Електропіч</a> моду — вона плавить будь-який. Доменна піч пил не приймає. <strong>Неметалевий пил → предмет:</strong> пресування в <a href="../machines/compressor.html">Компресорі</a>.</p>
 
-<h2>Прогресія</h2>
+<h2 id="прогресія">Прогресія</h2>
 
 <p>Предмети без власного тира. Увесь сенс будувати першу енергомережу: саме пил перетворює Подрібнювач із машини на подвоювач руди. Неметалеві пили дають те саме для вугілля й самоцвітів.</p>
 
-<h2>Пов'язане</h2>
+<h2 id="повязане">Пов'язане</h2>
 
 <p><a href="../machines/macerator.html">Подрібнювач</a> — виробляє пил (подвоєння руди). <a href="../machines/electric_furnace.html">Електропіч</a> — плавить металевий пил назад на зливки. <a href="../machines/compressor.html">Компресор</a> — спресовує неметалевий пил назад на самоцвіти/вугілля. <a href="electronic_circuit.html">Електронна схема</a> — інший ключовий ранній компонент.</p>
 

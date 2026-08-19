@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепты</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="10 страниц">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="4 страницы">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Прочее</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="14 страниц">14</span></a>
 <div class="group-title">Предметы</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="2 страницы">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="20 страниц">20</span></a>
 <a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="20 страниц">20</span></a>
   </aside>
@@ -393,7 +393,7 @@
   </div>
 </div>
 
-<h2>Сводка</h2>
+<h2 id="сводка">Сводка</h2>
 
 <p><strong>Электролопата</strong> — третий ручной электроинструмент мода и земляная часть линейки после <a href="electric_drill.html">электробура</a> (камень) и <a href="electric_chainsaw.html">электропилы</a> (дерево). Работает на EU/FE вместо прочности: пока заряда хватает на блок, лопата копает <code>#minecraft:mineable/shovel</code> <strong>быстрее алмазной лопаты</strong> (скорость 9.0 против 8.0) и тратит <strong>20 EU/FE</strong> за каждый успешно сломанный блок. Полный буфер — <strong>10 000 EU/FE</strong>, около <strong>500 блоков</strong> на одну зарядку.</p>
 
@@ -403,7 +403,7 @@
 
 <p>Как и остальные EU/FE-предметы мода (<a href="battery_pouch.html">мешок</a>, <a href="energy_pack.html">ранец</a>, <a href="electric_drill.html">бур</a>, <a href="electric_chainsaw.html">пила</a>), лопата <strong>не имеет прочности</strong> и не ломается: полоса под иконкой показывает не износ, а заряд EU/FE (жёлтая, цвет LV).</p>
 
-<h2>Энергия</h2>
+<h2 id="энергия">Энергия</h2>
 
 <p>Собственный EU/FE-буфер, вне энергосети. Заряжается в слоте Энергохранилища и от надетого ранца; тратит заряд на копание блоков.</p>
 
@@ -411,29 +411,29 @@
 
 <p>Расход снимается <strong>только на сервере</strong> и <strong>только за блоки с ненулевой твёрдостью</strong>: снежный слой и трава, которые ломаются мгновенно, бесплатны — ровно как они не изнашивают ванильную лопату. В творческом режиме заряд не тратится.</p>
 
-<h2>Инвентарь</h2>
+<h2 id="инвентарь">Инвентарь</h2>
 
 <p>Не применимо — у лопаты нет внутреннего хранилища предметов (стак 1).</p>
 
-<h2>Свойства блока</h2>
+<h2 id="свойства-блока">Свойства блока</h2>
 
 <p>Не применимо (предмет).</p>
 
-<h2>Рецепты</h2>
+<h2 id="рецепты">Рецепты</h2>
 
 <p>Крафт — тот же каркас, что у бура и пилы, но в центре алмазная лопата: ряд железных слитков сверху, две <a href="../components/battery.html">батареи</a> по бокам, снизу две <a href="../components/copper_coil.html">медные катушки</a> и <a href="../components/electronic_circuit.html">электронная схема</a>. Заряд батарей переходит в готовую лопату. Рецепт открывается в книге, когда у игрока появляются медная катушка, электронная схема или алмазная лопата (advancement <code>recipes/misc/electric_shovel</code>).</p>
 
 <p><strong>Ремонт</strong> — не применим: прочности нет, чинить нечего; «ремонт» — это зарядка EU/FE.</p>
 
-<h2>Поведение</h2>
+<h2 id="поведение">Поведение</h2>
 
 <p><strong>Копание:</strong> пока заряда ≥ 20 EU/FE, лопата копает <code>#minecraft:mineable/shovel</code> на скорости 9.0 (алмазная лопата — 8.0). За каждый такой блок снимается 20 EU/FE. <strong>Разряженная лопата:</strong> при заряде ниже 20 EU/FE копает на скорости руки (1.0), но уровень добычи и дроп сохраняются, и EU/FE не тратится. Чара Efficiency при этом не действует (ванильный порог <code>speed &gt; 1.0</code>). <strong>Тропинка и тушение костра — работают.</strong> ПКМ по траве, земле, подзолу, мицелию или корневой земле делает земляную тропинку; ПКМ по горящему костру тушит его — ровно как ванильной лопатой. Это <strong>бесплатно</strong>: заряд на такое действие не тратится, потому что тропинку делает и деревянная лопата, а вся линейка построена на правиле «разряженный инструмент продолжает работать». Технически это делегирование в <code>ShovelItem.useOn</code> ванильной алмазной лопаты — метод публичный, не читает состояние своего предмета, а его единственный — no-op для предмета без <code>MAX_DAMAGE</code>. Разбор байт-кода — в задаче. Дальше пути лоадеров расходятся, хотя результат одинаковый. На Fabric ванильный читает изменяемую карту <code>FLATTENABLES</code> напрямую. На NeoForge этот метод пропатчен и карту не читает: он спрашивает сам блок через, а тот сначала проверяет, объявил ли <strong>предмет в руке</strong> способность <code>SHOVEL_FLATTEN</code> (для костра — <code>SHOVEL_DOUSE</code>). Поэтому лопата обязана объявлять <code>DEFAULT_SHOVEL_ACTIONS</code> — без этого на NeoForge оба действия молча не работали (дефект. В обоих случаях блоки, добавленные другими модами, подхватываются сами собой. <strong>Зарядка:</strong> слот зарядки Энергохранилища и надетый энергоранец принимают лопату автоматически, до 32 EU/FE/тик. <strong>Атака:</strong> бьёт как алмазная лопата (2.5 урона, скорость атаки 1.0), но удары <strong>не тратят EU/FE</strong> и не изнашивают лопату. <strong>Чары:</strong> лопата входит в <code>#minecraft:shovels</code>, поэтому стол зачарования и наковальня работают с ней как с лопатой. Unbreaking/Mending на неломаемой лопате бесполезны, но безвредны. <strong>Индикация:</strong> полоска под иконкой показывает заряд (жёлтая, LV-цвет). В тултипе — «Заряд: X / 10 000 EU/FE», при нуле — красное «Разряжена». Текстура меняется на «погасший» вариант при нулевом заряде. <strong>Дроп/смерть/релогин:</strong> заряд хранится в предмете и сохраняется. <strong>В креативе:</strong> заряд не тратится — как ванильная лопата в креативе не теряет прочность.</p>
 
-<h2>Прогрессия</h2>
+<h2 id="прогрессия">Прогрессия</h2>
 
 <p>Третий электроинструмент мода: <a href="electric_drill.html">бур</a> закрывает камень, <a href="electric_chainsaw.html">пила</a> — дерево, лопата — землю. Линейка LV закрыта по трём основным материалам. Доступна после <a href="../energy-storage/battery_box.html">Энергохранилища</a> и батареи: без LV-инфраструктуры лопату не скрафтить и не зарядить. LV-уровень. Остальные электроинструменты (мотыга/сабля/нано-лук) — будущая работа.</p>
 
-<h2>Связанное</h2>
+<h2 id="связанное">Связанное</h2>
 
 <p><a href="electric_drill.html">Электробур</a> — прецедент EU/FE-инструмента без прочности; каменная часть линейки. <a href="electric_chainsaw.html">Электропила</a> — деревянная часть той же линейки. <a href="energy_pack.html">Энергоранец</a> — заряжает лопату прямо в инвентаре. <a href="../energy-storage/battery_box.html">Энергохранилище</a> — зарядка лопаты (слот charge). <a href="../components/electronic_circuit.html">Электронная схема</a> — компонент крафта.</p>
 

@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link active" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概览</h2>
+<h2 id="概览">概览</h2>
 
 <p><strong>储能库</strong> 是本模组第一个储能方块：积蓄来自发电机的 EU/FE，再将其输送给机器。正是它让太阳能板白天的发电量能够在夜晚继续为机器供电。</p>
 
@@ -400,7 +400,7 @@
 
 <p>它是缓存，而非来源——本身并不产生 EU/FE。两侧（输入与输出）都受 LV 限制，因此绝不会过载所连接的 LV 机器。</p>
 
-<h2>能量</h2>
+<h2 id="能量">能量</h2>
 
 <table><thead><tr><th>参数</th><th>数值</th></tr></thead><tbody><tr><td>容量</td><td>20 000 EU/FE</td></tr><tr><td>最大输入</td><td>32 EU/FE/t（LV）</td></tr><tr><td>最大输出</td><td>32 EU/FE/t（LV）</td></tr></tbody></table>
 
@@ -410,7 +410,7 @@
 
 <p>储能库可以在同一条网络中同时把输入与输出都接上电缆——它不会把能量绕圈推来推去，也不会在损耗中白白消耗。只要机器还没吃饱发电机的产量，储能库就 <strong>只输出</strong>；只有当机器被喂饱，或发电机的产量超过机器所需时，它才会开始充电。这正是网络分配能量时遵循的"机器优先，储能次之"的优先级。</p>
 
-<h3>传送器与充电站的供电（）</h3>
+<h3 id="传送器与充电站的供电">传送器与充电站的供电（）</h3>
 
 <p>除了机器和相邻的储能库之外，储能库还会为一类"基金"方块供电：<a href="../advanced-machines/teleporter.html">传送器</a> 与 <a href="charge_pad.html">充电站</a>。它们为自身积蓄能量，而非即时工作，因此通过一条单独、刻意放慢的通道获取能量：</p>
 
@@ -418,7 +418,7 @@
 
 <p>这个阈值并非装饰：传送器的缓存是储能库的 25 倍，没有它一座充电站就会抽干整个基地的储能库。若要一次灌满整座基金方块——把储能库 <strong>紧贴</strong> 它放置即可：直接接触既无阈值，也无速度限制。</p>
 
-<h3>级联：同一网络中的多个储能库</h3>
+<h3 id="级联同一网络中的多个储能库">级联：同一网络中的多个储能库</h3>
 
 <p>扩展储能库很简单——再放一台储能库，接到同一网络即可。较满的储能库会自行给较空的储能库补能，直到两者的 <strong>填充比例</strong> 拉平。储能库是同时拉平的，而不是"先把第一台装到边、再装第二台"：两台各 20 000 EU/FE 的储能库，一台存 10 000、另一台为空时，最终都会各约为 5 000。</p>
 
@@ -430,7 +430,7 @@
 
 <p>只有储能库会进入级联。传送器虽然是储能方块，但它自己从盈余中积蓄能量，并不会自动从储能库被灌满——以免满满的储能库在玩家不知情的情况下被悄悄抽走。</p>
 
-<h2>物品栏</h2>
+<h2 id="物品栏">物品栏</h2>
 
 <p>一个用于便携式 EU/FE 物品（电池储物袋、能量背包）的槽位：</p>
 
@@ -438,25 +438,25 @@
 
 <p>该槽位 <strong>只充电</strong>——无法通过这个方块把电量回灌进储能库。漏斗不会使用它：这是个手动槽位，仅在 GUI 中可用。</p>
 
-<h2>界面</h2>
+<h2 id="界面">界面</h2>
 
 <p>单屏界面：储能余量、收发速度、充电槽位。</p>
 
-<h2>方块属性</h2>
+<h2 id="方块属性">方块属性</h2>
 
 <p>普通的实心方块。任何镐都能挖，且 <strong>在破坏时保留电量</strong>——搬运过程中能量不会丢失。</p>
 
 <table><thead><tr><th>参数</th><th>数值</th></tr></thead><tbody><tr><td>工具</td><td>镐</td></tr><tr><td>破坏时保留电量</td><td>是</td></tr></tbody></table>
 
-<h2>配方</h2>
+<h2 id="配方">配方</h2>
 
 <p>这是储能方块，不是加工机——没有加工配方。</p>
 
-<h2>进阶</h2>
+<h2 id="进阶">进阶</h2>
 
 <p>这是储能系列的第一级。随着基地规模扩大，LV 缓存将不敷使用，之后会接入更高等级（MV/HV）的储能方块。</p>
 
-<h2>相关内容</h2>
+<h2 id="相关内容">相关内容</h2>
 
 <p><a href="../generators/generator.html">发电机</a> —— 典型的充能来源。 <a href="../generators/solar_panel.html">太阳能板</a> —— 在白天为储能库充能。</p>
 

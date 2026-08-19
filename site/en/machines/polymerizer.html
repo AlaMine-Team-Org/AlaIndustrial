@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 
 <p>The <strong>Polymerizer</strong> is the first machine in the mod that eats a <strong>fluid</strong> rather than an item. Inside it sits a ten-bucket oil tank; one run drinks exactly one bucket and hands back a lump of raw rubber. The raw rubber is then combined with sulfur dust in a <a href="vulcanizer.html">Vulcanizer</a>.</p>
 
@@ -400,7 +400,7 @@
 
 <p>You can also fill it by hand: put a bucket (or a capsule) into the top slot — the fluid moves into the tank and the empty container drops into the slot below it.</p>
 
-<h2>Energy</h2>
+<h2 id="energy">Energy</h2>
 
 <p>The Polymerizer only consumes EU/FE and keeps a small buffer for smooth running.</p>
 
@@ -408,7 +408,7 @@
 
 <p>Energy comes in on the five working faces. The <strong>front face</strong> (the one the machine "looks" toward) is inert — cables don't connect there and hoppers don't work through it.</p>
 
-<h2>Fluid</h2>
+<h2 id="fluid">Fluid</h2>
 
 <p>The tank takes oil only — ours, and any other oil carrying the conventional <code>c:oil</code> tag.</p>
 
@@ -416,7 +416,7 @@
 
 <p>There are two ways to fill it and both land in the same tank: a pipe or pump from outside, or a container through the interface slot. There is no mixing — another fluid simply won't go in.</p>
 
-<h2>Processing</h2>
+<h2 id="processing">Processing</h2>
 
 <p>Each operation costs 400 EU/FE and takes 200 ticks (~10 s). The finished rubber doesn't pop out on its own — pick it up by hand or with a hopper.</p>
 
@@ -424,7 +424,7 @@
 
 <p>With less than a bucket in the tank the machine simply idles: a partial volume is neither spent nor lost. With the result slot full the operation freezes — and the oil stays in the tank.</p>
 
-<h2>Inventory</h2>
+<h2 id="inventory">Inventory</h2>
 
 <p>Three slots: a pair for containers and one for the result.</p>
 
@@ -432,21 +432,21 @@
 
 <p>Hoppers and pipes may only put containers into the top slot, and may only take from the two lower ones.</p>
 
-<h2>Interface</h2>
+<h2 id="interface">Interface</h2>
 
 <p>On the left is the oil gauge (drawn with the fluid's real texture — hover it to see the volume in mB), on the right the energy bar, and in the middle the container slots, the progress arrow and the result slot.</p>
 
-<h2>Block Properties</h2>
+<h2 id="block-properties">Block Properties</h2>
 
 <p>A plain solid block, softer than stone. Any pickaxe breaks it, but it keeps <strong>neither its charge nor its oil</strong> when broken.</p>
 
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full 16³ cube (occluder)</td></tr><tr><td>Hardness</td><td>3.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Keeps charge when broken</td><td>no</td></tr></tbody></table>
 
-<h2>Sound</h2>
+<h2 id="sound">Sound</h2>
 
-<p>Silent for now. The Polymerizer has no hum of its own — same as the Compressor, the Pump and the Sawmill; a working sound is a candidate for the future.</p>
+<p>While running, the Polymerizer bubbles with a thick slow boil — the loop (pattern <strong>A</strong>, default 0.35). It falls silent when idle.</p>
 
-<h2>Recipes</h2>
+<h2 id="recipes">Recipes</h2>
 
 <p>The Polymerizer is crafted at a table from a <a href="../components/machine_casing.html">machine casing</a>, a bucket, iron and an <a href="../components/electronic_circuit.html">electronic circuit</a>.</p>
 
@@ -455,13 +455,13 @@
 
 <p>The raw rubber then goes into a <a href="vulcanizer.html">Vulcanizer</a> together with sulfur dust:</p>
 
-<table><thead><tr><th>Input</th><th>Output</th></tr></thead><tbody><tr><td>1 raw rubber + 1 sulfur dust</td><td>1 / 2 / 3 rubber depending on heat below</td></tr></tbody></table>
+<table><thead><tr><th>Input</th><th>Output</th></tr></thead><tbody><tr><td>1 raw rubber + 4 sulfur dust</td><td>1 / 2 / 3 rubber depending on heat below</td></tr></tbody></table>
 
-<h2>Progression</h2>
+<h2 id="progression">Progression</h2>
 
 <p>Tier: LV. Built once the player has found oil and set up a pump. Rubber is the material for future insulated cables and MV components. Needs power from an LV source, e.g. the <a href="../generators/generator.html">Generator</a>.</p>
 
-<h2>Related</h2>
+<h2 id="related">Related</h2>
 
 <p><a href="../materials/oil.html">Oil</a> — the feedstock and how to get it. <a href="../components/rubber.html">Rubber</a> — what the chain produces. <a href="../fluid-machines/pump.html">Pump</a> — moves oil from a lake into the tank. <a href="../fluid-storage/fluid_tank.html">Portable Tank</a> — a buffer of oil next to the machine.</p>
 

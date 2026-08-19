@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -392,13 +392,13 @@
     </div>
   </div>
 </div>
-<h2>概览</h2>
+<h2 id="概览">概览</h2>
 
 <p><strong>压缩机</strong> 是一台 LV 等级机器，用于将原材料压缩成更致密的形态：金属粉压成锭、煤炭与宝石粉还原成物品、冰和雪压成更致密的方块、甘蔗压成纸。它的主要作用是为 <strong>非金属</strong> 闭合矿石翻倍循环：它是唯一一台能将煤炭粉、钻石粉、绿宝石粉和青金石粉还原成可用物品的机器，因此 "矿石 → 2 份粉 → 2 个物品" 的流程对它们也同样有效。</p>
 
 <blockquote><strong>小示例：</strong> 用 <a href="macerator.html">粉碎机</a> 将钻石矿石研磨成两份钻石粉，然后将其全部送入压缩机。同一块矿石就能产出 <strong>两个钻石</strong>，而这最后一步只有它能完成。</blockquote>
 
-<h2>能量</h2>
+<h2 id="能量">能量</h2>
 
 <p>压缩机只消耗 EU/FE，并保持一个小型缓存，以避免在供能波动时频繁停顿。</p>
 
@@ -408,45 +408,47 @@
 
 <p>能量从五个工作面输入。<strong>正面</strong>（机器 "脸" 朝向的那一面）是惰性的，无法连接电缆，也无法通过漏斗工作。</p>
 
-<h2>加工</h2>
+<h2 id="加工">加工</h2>
 
 <p>每次压缩持续 130 刻（约 6.5 秒），消耗 260 EU/FE。成品不会自动弹出，请手动取走或使用漏斗。</p>
 
 <table><thead><tr><th>项目</th><th>数值</th></tr></thead><tbody><tr><td>持续时间</td><td>130 刻（约 6.5 秒）</td></tr><tr><td>单次操作消耗</td><td>260 EU/FE</td></tr><tr><td>自动卸料</td><td>否</td></tr></tbody></table>
 
-<h2>物品栏</h2>
+<h2 id="物品栏">物品栏</h2>
 
 <p>一个输入槽，一个输出槽。</p>
 
 <table><thead><tr><th>槽位</th><th>接受</th><th>数量</th></tr></thead><tbody><tr><td>输入</td><td>压缩机能压缩的物品</td><td>1</td></tr><tr><td>输出</td><td>产物</td><td>1</td></tr></tbody></table>
 
-<h2>界面</h2>
+<h2 id="界面">界面</h2>
 
 <p>同一界面中可看到能量储备、进度、输入槽和输出槽。</p>
 
-<h2>方块属性</h2>
+<h2 id="方块属性">方块属性</h2>
 
 <p>普通的实心方块，比石头软。用任何镐都可破坏，但 <strong>破坏时不保留能量</strong>。</p>
 
 <table><thead><tr><th>项目</th><th>数值</th></tr></thead><tbody><tr><td>工具</td><td>镐</td></tr><tr><td>破坏时保留能量</td><td>否</td></tr></tbody></table>
 
-<h2>声音</h2>
+<h2 id="声音">声音</h2>
 
 <p>工作时，压缩机会发出低沉的机械压实撞击声。机器空闲时会静音（）。</p>
 
-<h2>配方</h2>
+<h2 id="配方">配方</h2>
 
 <p>它能压缩的内容按用途分组如下：</p>
 
-<table><thead><tr><th>输入</th><th>输出</th><th>为何重要</th></tr></thead><tbody><tr><td>非金属粉（煤炭、钻石、绿宝石、青金石）</td><td>还原成物品</td><td><strong>唯一能还原它们的机器</strong>，闭合非金属翻倍循环</td></tr><tr><td>金属粉（铜、铁、金）</td><td>锭</td><td>电力熔炉之外的替代路径</td></tr><tr><td>锭（8 种金属）</td><td><a href="../components/material_forms.html">板</a></td><td>板的机器锻造路径（），<a href="../items/forge_hammer.html">锻造锤</a> 的替代方案</td></tr><tr><td>粘土球</td><td>红砖</td><td>用压力烧制粘土</td></tr><tr><td>冰</td><td>浮冰</td><td>1:1，取代工作台的 9 块冰合成</td></tr><tr><td>浮冰</td><td>蓝冰</td><td>1:1，取代工作台的 9 块浮冰合成</td></tr><tr><td>雪块</td><td>冰</td><td>通向冰的新路径，无逆向循环</td></tr><tr><td>甘蔗</td><td>纸</td><td>1:1，取代 3→3 的合成</td></tr></tbody></table>
+<table><thead><tr><th>输入</th><th>输出</th><th>为何重要</th></tr></thead><tbody><tr><td>非金属粉（煤炭、钻石、绿宝石、青金石）</td><td>还原成物品</td><td><strong>唯一能还原它们的机器</strong>，闭合非金属翻倍循环</td></tr><tr><td>金属粉（铜、铁、金）</td><td>锭</td><td>电力熔炉之外的替代路径</td></tr><tr><td>锭（8 种金属）</td><td><a href="../components/material_forms.html">板</a></td><td>板的机器锻造路径（），<a href="../items/forge_hammer.html">锻造锤</a> 的替代方案</td></tr><tr><td>粘土球</td><td>红砖</td><td>用压力烧制粘土</td></tr><tr><td>冰</td><td>浮冰</td><td>1:1，取代工作台的 9 块冰合成</td></tr><tr><td>浮冰</td><td>蓝冰</td><td>1:1，取代工作台的 9 块浮冰合成</td></tr><tr><td>雪块</td><td>冰</td><td>通向冰的新路径，无逆向循环</td></tr><tr><td>甘蔗</td><td>纸</td><td>1:1，取代 3→3 的合成</td></tr><tr><td>荧石粉 ×4</td><td>荧石</td><td>与工作台的代价相同，但可以自动化</td></tr><tr><td>红石粉 ×9</td><td>红石块</td><td>与工作台的代价相同，但可以自动化</td></tr></tbody></table>
+
+<p>最后两个配方是 <strong>批量</strong> 配方：压缩机会在输入槽中攒够所需数量，然后一次性全部消耗。荧石粉不足 4 份（或红石粉不足 9 份）时，它根本不会开工 — 进度箭头会一直停着，直到攒满一整批为止。</p>
 
 <p>关键点：对于 <strong>煤炭、钻石、绿宝石和青金石</strong>，压缩机是 <em>唯一</em> 能将粉还原成物品的方式，<a href="electric_furnace.html">电力熔炉</a> 无法熔炼它们。正因如此，它是闭合非金属翻倍循环的搭档。（青金石粉对每份粉仍是 ×1 还原，所以不存在额外复制：物品 → 1 份粉 → 1 个物品。）</p>
 
-<h2>进阶</h2>
+<h2 id="进阶">进阶</h2>
 
 <p>等级：LV。压缩机器，也是非金属翻倍循环的闭合器。 v0.1 中不会升级为任何东西。 需要 LV 电源供电，例如 <a href="../generators/generator.html">发电机</a>。</p>
 
-<h2>相关内容</h2>
+<h2 id="相关内容">相关内容</h2>
 
 <p><a href="macerator.html">粉碎机</a> — 产出本机器压缩回物品的粉。 <a href="electric_furnace.html">电力熔炉</a> — 熔炼金属粉（压缩机是非金属的对应搭档）。 <a href="../components/electronic_circuit.html">电子电路</a> — 加工链中的组件。 <a href="../generators/generator.html">发电机</a> — 电源。</p>
 

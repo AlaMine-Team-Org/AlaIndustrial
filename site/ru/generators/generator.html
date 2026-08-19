@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепты</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
-<a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="10 страниц">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="4 страницы">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Прочее</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="14 страниц">14</span></a>
 <div class="group-title">Предметы</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="2 страницы">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="20 страниц">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="20 страниц">20</span></a>
   </aside>
@@ -393,13 +393,13 @@
   </div>
 </div>
 
-<h2>Сводка</h2>
+<h2 id="сводка">Сводка</h2>
 
 <p><strong>Генератор</strong> сжигает твёрдое топливо — уголь, древесный уголь, блок угля, всё, что горит в ванильной печи — и превращает его в EU/FE. Это безотказный источник, за который берутся, когда нет ни солнца, ни ветра: он просто работает, днём и ночью, в любую погоду.</p>
 
 <blockquote><strong>Мини-пример:</strong> бросьте кусок угля, подведите кабель — и у вас <strong>8 EU/FE/такт</strong> стабильной мощности для первого <a href="../machines/macerator.html">Дробителя</a>. На погоду ему всё равно, волнует только топливо.</blockquote>
 
-<h2>Энергия</h2>
+<h2 id="энергия">Энергия</h2>
 
 <p>Генератор только производит энергию — чужую не принимает. Внутри он держит до 4000 EU/FE и отдаёт их в линию тира LV.</p>
 
@@ -407,7 +407,7 @@
 
 <p>Энергия уходит через 5 рабочих граней. <strong>Лицевая грань</strong> (та, что смотрит на вас при установке) инертна — кабели к ней не подключаются, и воронки через неё не работают.</p>
 
-<h2>Генерация</h2>
+<h2 id="генерация">Генерация</h2>
 
 <p>Кормите его любым ванильным печным топливом. Он жжёт ровным темпом 8 EU/FE/такт, пока хватает топлива; когда буфер полон — делает паузу до освобождения места.</p>
 
@@ -415,7 +415,7 @@
 
 <p>Каждая единица топлива даёт столько EU/FE, сколько тиков она горела бы в печи, выплачиваемых по 8 EU/FE/такт.</p>
 
-<h2>Инвентарь</h2>
+<h2 id="инвентарь">Инвентарь</h2>
 
 <p>Один слот, только под топливо.</p>
 
@@ -423,25 +423,25 @@
 
 <p>Ведро лавы сюда <strong>не класть</strong> — лава нужна <a href="geothermal_generator.html">Геотермальному генератору</a>.</p>
 
-<h2>Интерфейс</h2>
+<h2 id="интерфейс">Интерфейс</h2>
 
 <p>На одном экране видно уровень буфера, сколько времени горения осталось у текущего топлива, слот топлива и скорость выдачи.</p>
 
-<h2>Свойства блока</h2>
+<h2 id="свойства-блока">Свойства блока</h2>
 
 <p>Обычный цельный блок. Ломается любой киркой, но <strong>при сломе заряд НЕ сохраняет</strong> — слейте энергию в Энергохранилище, прежде чем его поднимать.</p>
 
 <table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Инструмент</td><td>кирка</td></tr><tr><td>Сохраняет заряд при сломе</td><td>нет</td></tr></tbody></table>
 
-<h2>Рецепты</h2>
+<h2 id="рецепты">Рецепты</h2>
 
 <p>Собирается на верстаке. Это генератор, а не машина переработки, поэтому рецептов переработки у него нет.</p>
 
-<h2>Прогрессия</h2>
+<h2 id="прогрессия">Прогрессия</h2>
 
 <p>Тир: LV. Стартовый топливный генератор. Ни во что не развивается — более мощный топливный генератор (<a href="geothermal_generator.html">Геотермальный генератор</a>) это отдельный блок, который крафтится из этого.</p>
 
-<h2>Связанное</h2>
+<h2 id="связанное">Связанное</h2>
 
 <p><a href="../machines/macerator.html">Дробитель</a> — типичная первая LV-машина под питание. <a href="../energy-storage/battery_box.html">Энергохранилище</a> — копит излишки, а заодно принимает заряд перед переносом генератора. <a href="geothermal_generator.html">Геотермальный генератор</a> — апгрейд на лаве. <a href="../energy-transfer/copper_cable.html">Медный кабель</a> — чем разводить энергию.</p>
 

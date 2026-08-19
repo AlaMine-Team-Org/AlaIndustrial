@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link active" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -394,7 +394,7 @@
 </div>
 <blockquote>⚠️ <strong>電気安全。</strong> 金の裸 MV ケーブルはプレイヤーに直接接触した時だけでなく、セグメント周囲 <strong>0.5 ブロック</strong>の範囲でも 6 ダメージを与えます——ただし、そのセグメントを今実際にエネルギーが流れている時だけです。切断された路線やバッファに残った充電は安全です。通常の防具はダメージを減らします。水はダメージを増幅しません。ケーブルとプレイヤーの間の固体ブロックが衝撃を遮ります。この仕組みはサーバー設定で無効化できます。衝撃の確率を完全に排除せず下げるには絶縁台（）を使うか、完全に安全な<a href="insulated_gold_cable.html">絶縁金ケーブル</a>に裸線を取り替えてください。</blockquote>
 
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p>金ケーブルはケーブル階段の最上位で、モード初の <strong>MV</strong> ティアの導線です。48 EU/FE/ティック——銅の 4 倍——を運び、パケット上限を 128 EU/FE（LV の 32 に対して）まで引き上げます。</p>
 
@@ -402,7 +402,7 @@
 
 <p>今すぐ必要なのは：<a href="../machines/assembler.html">組立機</a>——モード初の MV 機械——と、MV で受け取り・送出する<a href="../energy-storage/cesu.html">強化エネルギー貯蔵庫</a>です。これらに LV 導線を引くのは無意味で、パケットは 32 EU/FE まで削られます。</p>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <p>ケーブルは MV エネルギーを運び、隣接するブロックに接続します。電源から消費者までの各導線でわずかな EU/FE が失われます。正確な式は表のとおりです。</p>
 
@@ -412,21 +412,21 @@
 
 <blockquote><strong>混成ネットワーク。</strong> ネットワークはそこに含まれる最も強いケーブルからスループット<strong>と</strong>損失を両方受け取ります。銅の路線に金のセグメント 1 本で、ネットワーク全体が 128 EU/FE/パケットと金の 0.03 の損失に切り替わります。これは意図的です：さもなければ、銅の損失を払い続けたまま高い上限のためだけに金を差し込むことができてしまいます。</blockquote>
 
-<h2>ブロックの性質</h2>
+<h2 id="ブロックの性質">ブロックの性質</h2>
 
 <p>隣接するブロックに接続する細い導線です。任意の道具で壊せますが、ケーブルブレーカーだと更に便利です。</p>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>形状</td><td>細い棒（6px コア + スリーブ）</td></tr><tr><td>硬さ</td><td>0.2</td></tr><tr><td>ツール</td><td>任意 / ケーブルブレーカー</td></tr></tbody></table>
 
-<h3>ハーフブロックへの接続</h3>
+<h3 id="ハーフブロックへの接続">ハーフブロックへの接続</h3>
 
 <p>他のケーブルと同様、金も低い隣接ブロック（高さ 8/16 のソーラーパネルや将来の任意のハーフブロック）へ水平スリーブを下ろします——スリーブはプレートの側面に乗り、その上に浮くことはありません。この挙動はすべてのケーブルで共通で、隣接ブロックの型ではなく形状から導かれます。</p>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p>クラフト：金インゴット 3 個を横一列 → ケーブル 3 個。 加工レシピ：なし。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="copper_cable.html">銅ケーブル</a>——汎用 LV ケーブル。 <a href="tin_cable.html">スズケーブル</a>——安価でほぼ損失なし、ソーラーファーム向け。 <a href="insulated_gold_cable.html">絶縁金ケーブル</a>——ゴム版：損失は半分で、接触しても安全。</p>
 

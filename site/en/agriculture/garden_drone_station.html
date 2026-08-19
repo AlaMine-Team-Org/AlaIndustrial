@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
@@ -392,19 +392,19 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 
 <p>The <strong>Garden Drone Station</strong> is a 1×1 dock block (like a robot-vacuum base) from which a drone lifts off and patrols the area around the station within a 4-block radius. The drone is not an Entity — it's an object drawn by the station's own. Visually it looks and moves like a flying craft, but physically it always "belongs" to the station block and can never leave its zone.</p>
 
 <p>The player puts seeds and bone meal into the station and hooks up EU/FE — from there the drone tends the farm on its own: tilling free dirt, planting seeds into empty tilled tiles, speeding up immature crops with bone meal, and hauling ripe harvest straight into its own output slots (no <code>ItemEntity</code> ever spawns in the world). It supersedes the planned-but-unbuilt "Crop Matron" and "Crop Harvester" — one block instead of two, no duplicated mechanics.</p>
 
-<h2>Energy</h2>
+<h2 id="energy">Energy</h2>
 
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>consumer with buffer</td></tr><tr><td>Buffer (EU/FE)</td><td>4000</td></tr><tr><td>Max input (EU/FE/tick)</td><td>32 (LV)</td></tr><tr><td>Max output (EU/FE/tick)</td><td>n/a (does not emit)</td></tr><tr><td>EU/FE per action</td><td><strong>8</strong></td></tr></tbody></table>
 
 <p>The station connects to the energy network like any consumer, on all its working faces. EU/FE is spent <strong>only for a completed action</strong> — tilling, planting, fertilizing, or harvesting one tile — following the <a href="../machines/electric_heater.html">Electric Heater</a> pattern: idling (nothing to do in the zone — out of seeds/fertilizer, or every tile already tended) costs 0 EU/FE, and the station goes into idle sleep instead of wasting energy or becoming a parasitic sink on the network.</p>
 
-<h2>Processing</h2>
+<h2 id="processing">Processing</h2>
 
 <p>The station doesn't use the crafting-recipe system — instead, on every drone flight (when a target is found) it performs one of four actions on a single zone tile.</p>
 
@@ -434,31 +434,31 @@
 
 <p><strong>Harvesting without a player.</strong> The station doesn't break a block through the <code>ServerPlayer</code> path (there is no player) — instead it computes the ripe crop's drop server-side, inserts it into its own output slots, and only removes the crop block on full success. Neither an <code>ItemEntity</code> nor block-break events are created — the same conscious trade-off already accepted by the <a href="../fluid-machines/pump.html">Pump</a> when it drains a fluid source.</p>
 
-<h2>Inventory</h2>
+<h2 id="inventory">Inventory</h2>
 
 <table><thead><tr><th>Slot</th><th>Accepts</th><th>Count</th></tr></thead><tbody><tr><td>Seeds (0)</td><td>items tagged as seeds for the matching crop</td><td>up to a stack</td></tr><tr><td>Fertilizer (1)</td><td><code>minecraft:bone_meal</code></td><td>up to a stack</td></tr><tr><td>Drone (6)</td><td>— the station is inert without it</td><td>1</td></tr><tr><td>Hoe (7)</td><td>any hoe (<code>#minecraft:hoes</code>); spent by tilling and harvesting</td><td>1</td></tr><tr><td>Output 1–4 (2–5)</td><td>insertion only by the station itself (harvest); manual/automated insertion from outside is blocked</td><td>up to a stack each</td></tr></tbody></table>
 
 <p>Four output slots, not one — a ripe crop can yield more than one item type in a single action (e.g. wheat drops both wheat and wheat seeds separately); the mod's base machine model doesn't support mixed contents in a single output slot. Inserting the drop into the output slots is a two-pass operation ("simulate room for every stack first, mutate only on full success") — no partial harvest loss when the output is full.</p>
 
-<h2>Interface</h2>
+<h2 id="interface">Interface</h2>
 
 <p>Type: <strong>container</strong> (station GUI). Shows: energy buffer bar, seed/fertilizer/output slots, station status (out of resources / working / everything tended this cycle — readable from a distance via the drone model's status light color).</p>
 
-<h2>Block properties</h2>
+<h2 id="block-properties">Block properties</h2>
 
 <p>The dock is not a full cube: a thin 1×1-block plate with a lit landing outline, two charging contacts, and yellow corner lamps (see "Appearance" below). The drone is drawn on top of it by a and has no collision/hitbox separate from the station.</p>
 
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>a low-profile plate (not a full cube; occluder covers the lower part of the block)</td></tr><tr><td>Hardness</td><td>3.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Drops with energy NBT</td><td>no (buffer/inventory/drone state persist via <code>ValueInput</code>/<code>ValueOutput</code>, not an item NBT drop)</td></tr></tbody></table>
 
-<h2>Recipes</h2>
+<h2 id="recipes">Recipes</h2>
 
 <p>Crafting: (iron/steel casing, electronic circuit, propellers — the exact composition is fixed during implementation). No processing recipes — the station doesn't process items.</p>
 
-<h2>Progression</h2>
+<h2 id="progression">Progression</h2>
 
 <p>Tier: LV. Power: any LV source, e.g. <a href="../generators/generator.html">Generator</a>. Supersedes (no code): "Crop Matron" and "Crop Harvester" one block instead of two stationary ones with the same outcome. Requires: an electronic circuit to craft, like most of the mod's LV machines.</p>
 
-<h2>Related</h2>
+<h2 id="related">Related</h2>
 
 <p><a href="../items/scythe.html">Scythe</a> — source of the reused crop-maturity predicate. <a href="trellis.html">Trellis</a> — the mod's existing <code>BonemealableBlock</code> precedent. <a href="incubator.html">Incubator</a> — reference for a multi-slot, index-tag-validated inventory with a wider-than-base <code>ContainerData</code>. <a href="../fluid-machines/pump.html">Pump</a> — reference for bounded zone scanning, and the only precedent of a machine mutating a world block from its own tick with no player involved. <a href="../machines/electric_heater.html">Electric Heater</a> — reference for "EU/FE only on a useful tick" (demand-driven consumption).</p>
 

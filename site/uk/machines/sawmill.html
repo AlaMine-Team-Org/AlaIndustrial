@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепти</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="10 сторінок">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="4 сторінки">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Інше</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилітарні блоки</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
 <div class="group-title">Предмети</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
   </aside>
@@ -392,13 +392,13 @@
     </div>
   </div>
 </div>
-<h2>Зведення</h2>
+<h2 id="зведення">Зведення</h2>
 
 <p><strong>Лісопилка</strong> — LV-машина для переробки дерева. Вона розпускає колоду (або дошки) з <strong>більшим виходом</strong>, ніж ручний крафт, і вміє пиляти в чотири різні продукти — у неї <strong>4 перемикані режими</strong> (кнопки в інтерфейсі): <strong>дошки / палиці / напівблоки / сходи</strong>. Будь-яка порода дає вихід своєї породи; палиці — позапородні. Це найдешевша за енергією операція в моді: пиляти дерево простіше, ніж молоти камінь.</p>
 
 <blockquote><strong>Міні-приклад:</strong> покладіть дубову колоду в режимі «Дошки» — через ~4 секунди отримаєте <strong>6 дубових дощок</strong> замість ванільних 4. Перемкніть на «Палиці» — та сама колода дасть <strong>18 палиць</strong>.</blockquote>
 
-<h2>Енергія</h2>
+<h2 id="енергія">Енергія</h2>
 
 <p>Лісопилка лише споживає EU/FE і тримає невеликий буфер для рівної роботи.</p>
 
@@ -406,13 +406,13 @@
 
 <p>LV-машина: бере до 32 EU/FE за тик. Енергія заходить із п'яти робочих граней. <strong>Лицьова грань</strong> (туди «дивиться» морда) інертна — кабелі до неї не підключаються, лійки крізь неї не працюють.</p>
 
-<h2>Процесинг</h2>
+<h2 id="процесинг">Процесинг</h2>
 
 <p>Пилка завжди працює лише в <strong>активному режимі</strong>: рецепти трьох інших режимів у цей момент неактивні. Зміна режиму скидає поточний прогрес (новий режим пиляє інший продукт). Один розпил іде ~80 тиків (~4 с).</p>
 
 <table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Тривалість</td><td>~80 тиків (~4 с)</td></tr><tr><td>Ціна розпилу</td><td>160 EU/FE</td></tr><tr><td>Авто-вивантаження</td><td>немає</td></tr></tbody></table>
 
-<h2>Інвентар</h2>
+<h2 id="інвентар">Інвентар</h2>
 
 <p>Один слот на вхід, один на вихід.</p>
 
@@ -420,17 +420,21 @@
 
 <p>Вхід приймається, якщо предмет підходить <strong>хоча б одному</strong> режиму — так предмет не «застрягає» при перемиканні. У невідповідному режимі машина просто спить.</p>
 
-<h2>Інтерфейс</h2>
+<h2 id="інтерфейс">Інтерфейс</h2>
 
 <p>Екран перевикористовує інтерфейс <a href="electric_furnace.html">Електропечі</a>: запас енергії, прогрес, слот входу й виходу, а між ними — індикатор прогресу у вигляді <strong>пиляльного диска</strong>, який заповнюється зліва направо. Знизу, під слотами, іде ряд із <strong>4 кнопок режимів</strong> з ghost-іконками (дошка/палиця/напівблок/сходинка); активний режим підсвічено, у кожної кнопки — спливна підказка.</p>
 
-<h2>Властивості блока</h2>
+<h2 id="властивості-блока">Властивості блока</h2>
 
 <p>Звичайний суцільний блок, м'якший за камінь. Ламається будь-яким кайлом, але <strong>при зламі заряд НЕ зберігає</strong>.</p>
 
 <table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Інструмент</td><td>кайло</td></tr><tr><td>Зберігає заряд при зламі</td><td>ні</td></tr></tbody></table>
 
-<h2>Рецепти</h2>
+<h2 id="звук">Звук</h2>
+
+<p>Під час роботи лісопилка видає ритмічні рухи пилки туди-сюди — петля (патерн A, 0.35 за замовчуванням). Замовкає, коли машина простоює.</p>
+
+<h2 id="рецепти">Рецепти</h2>
 
 <p>Що вона пиляє (вихід <strong>своєї породи</strong>; бамбук удвічі менший — він і у ванілі дає 2 дошки з блока):</p>
 
@@ -438,15 +442,15 @@
 
 <p>Усього 39 рецептів розпилу (12 порід × дошки/напівблоки/сходи + 3 рецепти палиць). Напівблоки, сходи й палиці на вхід <strong>не приймаються</strong> — зворотного циклу й дюпу немає.</p>
 
-<h3>У переглядачі рецептів</h3>
+<h3 id="у-переглядачі-рецептів">У переглядачі рецептів</h3>
 
 <p>У JEI/REI лісопилка дає <strong>4 категорії</strong> — по одній на режим; робоча станція в усіх — сама лісопилка. Клік по стрілці прогресу відкриває всі чотири категорії одразу. Кожна підписана своїм режимом — «Лісопилка: Дошки», «Лісопилка: Палиці», «Лісопилка: Напівблоки», «Лісопилка: Сходи», — щоб вкладки відрізнялися; ім'я режиму береться з того самого перекладу, що й кнопки в інтерфейсі машини.</p>
 
-<h2>Прогресія</h2>
+<h2 id="прогресія">Прогресія</h2>
 
 <p>Тир: LV. Рання машина переробки дерева. Розвивається в: немає (базова LV-машина). Потребує живлення від LV-джерела, наприклад <a href="../generators/generator.html">Генератора</a>.</p>
 
-<h2>Пов'язане</h2>
+<h2 id="повязане">Пов'язане</h2>
 
 <p><a href="electric_furnace.html">Електропіч</a> — перевикористаний інтерфейс, сусідня LV-машина. <a href="../generators/generator.html">Генератор</a> — джерело живлення.</p>
 

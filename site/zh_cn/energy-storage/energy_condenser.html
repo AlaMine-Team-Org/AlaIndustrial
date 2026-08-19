@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link active" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>能量凝聚器</strong>是一个方框，里面悬着一颗缓慢旋转的发光球体。它接住本来会白白流失的电力：当发电机产出多于机器所耗， 多余的部分通常凭空消失。凝聚器把它存下来，再把存量化作一件物品交还——<strong>能量凝块</strong>。</p>
 
@@ -400,21 +400,25 @@
 
 <blockquote><strong>小例子：</strong>正午时太阳能板产出超过两台机器所需。这点差额以前无处可去；现在凝聚器里的球体开始加速旋转， 几分钟后里面就躺着一枚 I 档凝块。</blockquote>
 
-<h2>能量</h2>
+<h2 id="能量">能量</h2>
 
 <table><thead><tr><th>参数</th><th>数值</th></tr></thead><tbody><tr><td>接收</td><td>128 EU/FE/刻（）</td></tr><tr><td>输出</td><td>无——电能只进不出</td></tr><tr><td>存量</td><td>最多 4 000 000 EU/FE（）</td></tr><tr><td>受电面</td><td>仅顶面与底面</td></tr></tbody></table>
 
 <p>接收速率刻意压得很窄：若不如此，站得比机器更靠近发电机的凝聚器就会截走电流。想更快，不是给这一个方块换更粗的线， 而是再造一台凝聚器。</p>
 
-<h2>物品栏</h2>
+<h2 id="物品栏">物品栏</h2>
 
 <p>只有一个输出槽。放不进任何东西，取出可用手、漏斗或管道，但只能经由<strong>侧面</strong>：顶面和底面归电缆所有。</p>
 
-<h2>方块属性</h2>
+<h2 id="方块属性">方块属性</h2>
 
 <p>整格大小的方框；电缆只能接在顶面和底面。存量越多，发光越亮。用镐开采，掉落自身。</p>
 
-<h2>工作方式</h2>
+<h2 id="声音">声音</h2>
+
+<p>凝聚器将电网盈余凝聚成凝块时，会发出柔和的谐音鸣响 — 循环（基于 <code>lit</code> 的模式A，默认 0.35；）。取出凝块或电网无盈余时保持静音。</p>
+
+<h2 id="工作方式">工作方式</h2>
 
 <p>存量持续增长——没有模式，没有开关。输出槽始终显示<strong>此刻取走能得到的那一枚凝块</strong>：</p>
 
@@ -426,11 +430,11 @@
 
 <p>凝聚器没有升级面板。往里塞超频芯片会把「只捡余电」变成「向电网抽水」——恰恰是这套机制要避免的。</p>
 
-<h2>进程</h2>
+<h2 id="进程">进程</h2>
 
 <p><a href="../upgrades/overclocker_upgrade.html">能量凝块</a>的唯一来源，因而也是一切机器超频芯片的来源。 有了富余发电之后再摆才有意义：电网吃紧时它一点也存不下，而静止的球体会诚实地说明这一点。 缩短出块时间靠的是多摆几台、把线加粗，而不是升级这个方块。</p>
 
-<h2>相关</h2>
+<h2 id="相关">相关</h2>
 
 <p><a href="../upgrades/overclocker_upgrade.html">超频芯片</a> —— 凝块的用途所在。 <a href="battery_box.html">储能箱</a> —— 支撑工厂运转的储能；凝聚器与它无争，也抽不走它的电。</p>
 

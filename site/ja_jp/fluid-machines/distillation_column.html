@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>蒸留塔</strong> は高さ3ブロックの塔で、モッドで最も背の高い機械にして最初のマルチブロックです。塔は同じセグメントを3つ積み重ねて組み上げます。内部には3つのタンクがあります：中段に生の <a href="../materials/oil.html">石油</a> を注入し、上段には軽い目的フラクションの <a href="../materials/diesel.html">ディーゼル</a> が凝縮し、下段には重い残渣の <a href="../materials/fuel_oil.html">重油</a> が流れ落ちます。設定は一切不要：レイアウトはどの塔でも同じで、「軽いものは上、重いものは下」と自明に読み取れます。</p>
 
@@ -400,31 +400,31 @@
 
 <p>冷えた塔はまず <strong>予熱</strong> します（通電下で約10秒）。それが済んで初めて蒸留を始めます。予熱済みの稼働中の塔は窓が光り、頂部から蒸気が上がります — 遠くからでも拠点のシルエットで、製油所が動いているか止まっているかが分かります。</p>
 
-<h2>マルチブロック</h2>
+<h2 id="マルチブロック">マルチブロック</h2>
 
 <table><thead><tr><th>セグメント</th><th>役割</th><th>液体</th></tr></thead><tbody><tr><td>上段</td><td>凝縮器</td><td><strong>ディーゼル — 出力</strong></td></tr><tr><td>中段</td><td>原料受け入れ</td><td><strong>石油 — 入力</strong></td></tr><tr><td>下段</td><td>基部キューブ（「頭脳」）</td><td><strong>重油 — 出力</strong> + エネルギー入力</td></tr></tbody></table>
 
 <p><strong>手で組み立てます</strong>（ラウンド3）：クラフトするのはセグメントブロック1種類だけ。<strong>セグメントを3つ積み重ねる</strong>と塔がひとりでに組み上がります（最下段が基部「頭脳」になり、上の2つは中段と上段のセクションに変わり、金床の鳴る音が響きます）。単独のセグメントは不活性なブランク段です：ポートもメニューもなく、クリックすると組み立ての続け方をヒントで教えてくれます。 分解はその鏡写しです：どのセグメントを壊しても塔は<strong>退化</strong>します — 壊した段はセグメントのアイテムとして落ち、残りはその場でブランク段に戻り、基部は<strong>タンクとコークスの汚れを内部に保持</strong>します。何も消えず、何も複製されません。 GUI は組み上がった塔の <strong>どの</strong> セグメントをクリックしても開きます。 <strong>精留セクション</strong>（別途クラフトするブロック）は頂部の <strong>上に</strong> 設置します — 塔は4ブロックの高さに伸び、損失は 10 % から 5 % に下がります：蒸留1回ごとに <strong>ディーゼル +50 mB</strong>（750/200）。蒸気はセクションへ移ります。セクションは独自のドロップを持つ通常のブロックです。外せばボーナスも消えます。</p>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <p>塔は EU/FE を消費するのみ。エネルギーは <strong>基部</strong> の任意の面（側面と底面）から供給します。中段と上段はエネルギーを受け付けず、ケーブルは接続できません。</p>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>内部バッファ</td><td>800 EU/FE</td></tr><tr><td>最大入力</td><td>32 EU/FE/t（LV）</td></tr><tr><td>消費</td><td>2 EU/FE/t（稼働と予熱）</td></tr></tbody></table>
 
-<h2>予熱</h2>
+<h2 id="予熱">予熱</h2>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>予熱時間</td><td>200ティック（約10秒）</td></tr><tr><td>コールドスタートのコスト</td><td>約400 EU/FE（「空」の蒸留1回分）</td></tr><tr><td>冷却</td><td>加熱の半分の速さ — 電力または石油を失ったとき</td></tr><tr><td>出力タンク満杯時</td><td>一時停止：熱は <strong>保持され</strong>、EU/FE は消費されません</td></tr></tbody></table>
 
 <p>連続稼働する製油所では予熱は気になりません。電源を頻繁に切り替えるのは損です。</p>
 
-<h2>液体</h2>
+<h2 id="液体">液体</h2>
 
 <p>10バケツ分のタンクが3つ。入力タンクは共通モッドタグ <code>c:oil</code> の付いた任意の石油を受け付けます。出力タンクは機械自身だけが満たし、隣接する機器は回収のみ可能です。</p>
 
 <table><thead><tr><th>タンク</th><th>容量</th><th>外部アクセス</th></tr></thead><tbody><tr><td>石油（中段）</td><td>10 000 mB</td><td>注入のみ</td></tr><tr><td>ディーゼル（上段）</td><td>10 000 mB</td><td>回収のみ</td></tr><tr><td>重油（下段）</td><td>10 000 mB</td><td>回収のみ</td></tr></tbody></table>
 
-<h2>加工</h2>
+<h2 id="加工">加工</h2>
 
 <p><code>石油 1000 mB + 400 EU/FE → ディーゼル 700 mB + 重油 200 mB</code>。1000 mB のうち 900 mB — 10 % は「軽いガス」として消えます：このモッドの加工は決して体積を増やしません。精留セクションがあれば — <code>ディーゼル 750 mB + 重油 200 mB</code>（損失 5 %）。</p>
 
@@ -434,11 +434,11 @@
 
 <p>いずれかの出力タンクに自分のフラクションが収まらない場合、塔は <strong>丸ごと一時停止</strong> します：EU/FE は消費されず、石油も減らず、何も失われません。両フラクションは常に一緒に出ます — 半端な操作は存在しません。</p>
 
-<h2>メンテナンス</h2>
+<h2 id="メンテナンス">メンテナンス</h2>
 
 <p>蒸留のたびに塔には <strong>コークスの汚れ</strong> が溜まります（+2 %）。<strong>100 %</strong>（≈50 操作）に達すると塔は「コークス詰まり」ステータスで停止します — EU/FE は消費されず、原料も減りません。任意のセグメントを <strong>レンチで右クリック</strong> すると汚れを掻き出せます：塔はきれいになり、プレイヤーは <strong>石炭 1–3 個</strong> を受け取ります（個数は汚れの度合いに依存）。レンチでのシフト右クリックは従来どおり塔の解体です。汚れ具合は GUI のメーターに表示され、再ログイン後 <strong>も、塔を壊した後も</strong> 保持されます — 置き直しは掃除の代わりになりません。</p>
 
-<h2>インベントリ</h2>
+<h2 id="インベントリ">インベントリ</h2>
 
 <p>6つのスロット — タンクごとに1組、計3組の容器ペアです。</p>
 
@@ -446,31 +446,31 @@
 
 <p>自動化は容器をペアの入力スロットにのみ入れ、出力スロットからのみ取り出します。</p>
 
-<h2>インターフェース</h2>
+<h2 id="インターフェース">インターフェース</h2>
 
 <p>画面の中央には <strong>塔そのもののミニシルエット</strong> があります：その3つの窓に3タンクの実際の液面が映り（上にディーゼル、中に石油、下に重油）、稼働中は石油の窓を泡が上っていき、予熱が進むにつれて基部が熱で光り、セクションが設置されているとシルエットに4階目が生えます。左に石油メーターと容器ペア、右にフラクションのメーターとそれぞれのペア、シルエットの隣に <strong>汚れメーター</strong>、右端にエネルギー量。その下には常設のステータス行（「蒸留中」「予熱中… N %」「エネルギーなし」「原料なし」「ディーゼルタンク満杯」「重油タンク満杯」「コークス詰まり」）と、色付きのタンクマークとともに正確な量を mB で示す行があります。</p>
 
-<h2>ブロック属性</h2>
+<h2 id="ブロック属性">ブロック属性</h2>
 
 <p>塔は立体的な3Dカラム（フランジ、側面のはしご、バルブの付いた ~12px の多面パイプ）であり、立方体を積んだ柱ではありません。各セグメントには自分の液体の側に <strong>色付きノズル</strong> があります：中段に黒（石油）、頂部に黄（ディーゼル）、基部に茶（重油） — ポンプをどこに向ければよいかがツールチップなしで分かります。稼働中は窓が光ります。蒸気は予熱済みで稼働中の塔でのみ上がります。</p>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>形状</td><td>フランジとノズル付きの ~12px カラム（オクルーダーではない）</td></tr><tr><td>硬度</td><td>3.0</td></tr><tr><td>爆発耐性</td><td>6.0</td></tr><tr><td>ツール</td><td>ツルハシ</td></tr><tr><td>液体を保持</td><td><strong>はい</strong> — 分解時はタンクが基部に残り、基部を壊すとドロップに載って運ばれます</td></tr><tr><td>破壊時に予熱を保持</td><td>いいえ</td></tr></tbody></table>
 
-<h2>音</h2>
+<h2 id="音">音</h2>
 
 <p>無音 — 意図的な決定です（2026-08-09）、サウンドレジストリに記録済み。表示はすべて視覚的：窓、蒸気、ステータス行です。</p>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <table><thead><tr><th>入力</th><th>出力</th></tr></thead><tbody><tr><td>石油 1000 mB</td><td>ディーゼル 700 mB + 重油 200 mB（セクションありで 750）</td></tr><tr><td>重油 1000 mB</td><td>ディーゼル 600 mB（クラッキング、400 EU/FE）</td></tr></tbody></table>
 
 <p>続いて両フラクションは液体燃料発電機（このブランチの次のタスク）へ：ディーゼル — 12 EU/FE/t、重油 — 6 EU/FE/t。</p>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p>ティア：LV。ポンプと最初の石油の後に設置します。クラフトは通常の機械より明らかに高価 — 機械ケーシング2つ、回路、そして「筒」用のプレートが必要です。 石油1バケツあたりの正味：出力 9 600 EU/FE − 費用 1 400 EU/FE（ポンプ + 蒸留）= <strong>8 200 EU/FE</strong> — 単位あたりでは石炭（12 800）や溶岩（15 000）より弱いものの、拠点近くの湖が製油所を勝手に養います。 実績 <strong>「石油精製」</strong> — 塔の設置で獲得（「黒い黄金」ブランチ）。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="../materials/oil.html">石油</a> — 原料：探し方と汲み上げ方。 <a href="../materials/diesel.html">ディーゼル</a> — 目的フラクション。 <a href="../materials/fuel_oil.html">重油</a> — 重い残渣。 <a href="pump.html">ポンプ</a> — 石油を塔へ、フラクションを塔から送ります。 <a href="../fluid-storage/fluid_tank.html">携帯用流体タンク</a> — 塔のそばのフラクション用バッファ。</p>
 

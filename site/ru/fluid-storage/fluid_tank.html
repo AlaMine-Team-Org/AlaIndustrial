@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепты</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="10 страниц">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="4 страницы">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Прочее</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="14 страниц">14</span></a>
 <div class="group-title">Предметы</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="2 страницы">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="20 страниц">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="20 страниц">20</span></a>
   </aside>
@@ -393,23 +393,23 @@
   </div>
 </div>
 
-<h2>Сводка</h2>
+<h2 id="сводка">Сводка</h2>
 
 <p><strong>Переносной бак</strong> хранит до <strong>8 вёдер (8000 mB)</strong> одной жидкости. Он не расходует EU/FE, не перекачивает жидкость самостоятельно и не имеет GUI: уровень и тип жидкости видны прямо через стеклянные стенки корпуса.</p>
 
 <p>Бак принимает воду, лаву и жидкости других модов через ведро, вакуумную капсулу или ёмкости других модов. При разрушении содержимое остаётся в выпавшем предмете и восстанавливается после установки.</p>
 
-<h2>Жидкость</h2>
+<h2 id="жидкость">Жидкость</h2>
 
 <table><thead><tr><th>Параметр</th><th>Значение</th></tr></thead><tbody><tr><td>Ёмкость</td><td>8000 mB (8 вёдер)</td></tr><tr><td>Варианты одновременно</td><td>1</td></tr><tr><td>Ввод / вывод</td><td>все 6 граней</td></tr><tr><td>Автоматическая выдача</td><td>нет</td></tr><tr><td>Единица ядра</td><td>mB, 1000 mB = 1 ведро</td></tr></tbody></table>
 
 <p>Жидкости не смешиваются: пока внутри есть вода, лава или другой вариант не принимается. Fabric считает объём в миллибакетах (mB), и на NeoForge бак работает так же.</p>
 
-<h2>Взаимодействие</h2>
+<h2 id="взаимодействие">Взаимодействие</h2>
 
 <p>Ведро воды или лавы переносит в бак ровно 1000 mB, если есть место. Пустое ведро забирает 1000 mB, только если в баке есть целое ведро воды или лавы. <a href="../items/vacuum_capsule.html">Вакуумная капсула</a> заполняет и опустошает бак. Трубы и контейнеры других модов могут вставлять и извлекать жидкость через любую грань. Компаратор выдаёт 0 для пустого бака и 1–15 пропорционально заполнению.</p>
 
-<h2>Свойства блока</h2>
+<h2 id="свойства-блока">Свойства блока</h2>
 
 <p>Корпус занимает полный блок: нижняя и верхняя пластины по 3 px, четыре угловые стойки 3×3 px и четыре полупрозрачные стеклянные стенки. Блок использует; стекло и жидкость рисуются отдельной моделью внутри рамы, без наложений.</p>
 
@@ -419,7 +419,7 @@
 
 <p>Заполненный предмет хранит тип и объём одним атомарным компонентом <code>fluid_tank_contents</code>. Это исключает состояние, где объём отделился от типа жидкости при копировании или разделении стака. В инвентаре внутренний слой 16×16-иконки окрашивается зарегистрированным цветом жидкости, а стандартная нижняя шкала предмета показывает долю заполнения относительно 8000 mB.</p>
 
-<h2>Связанное</h2>
+<h2 id="связанное">Связанное</h2>
 
 <p><a href="../items/vacuum_capsule.html">Вакуумная капсула</a> — ручной контейнер на одно ведро. Жидкостные трубы — будущая автоматизация транспортировки.</p>
 

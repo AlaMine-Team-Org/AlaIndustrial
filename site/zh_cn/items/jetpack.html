@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概览</h2>
+<h2 id="概览">概览</h2>
 
 <p><strong>喷气背包</strong>是一件用于飞行的可穿戴 EU/FE 物品：占用<strong>胸甲槽</strong>（替代护甲），自带 <strong>30 000 EU/FE</strong> 缓存。在空中按住跳跃键——引擎向上推力并消耗 <strong>50 EU/FE/刻</strong>：满电量约可维持 ~<strong>30 秒</strong>持续飞行。松开跳跃键——按正常下落。在飞行中没电（或玩家高于高度上限）时——同一按住的跳跃键会变为<strong>免费滑翔</strong>：下落速度被限制，落地无伤害。滑翔是<strong>本次飞行</strong>的保险：只有当引擎在当前飞行中真正工作过时它才启用；一开始就空的背包会像普通衣物一样坠落，没有"悬停"。缓存总会<strong>精确烧到零</strong>——最后推力一刻把低于费率的余额一并消耗。保险的是引擎本身，而非物品本身：在飞行中松开跳跃键摔下来——依然疼。</p>
 
@@ -400,7 +400,7 @@
 
 <p>和<a href="energy_pack.html">能量背包</a>一样，喷气背包在原版意义上<strong>不是护甲</strong>：无耐久、不可附魔、不能修复；它通过属性修饰提供 <strong>5 点护甲值</strong>（略弱于铁胸甲的 6）——这是占用槽位及飞行中防护的代价。</p>
 
-<h2>能量</h2>
+<h2 id="能量">能量</h2>
 
 <p>自带 EU/FE 缓存，独立于电网。在储能库的充能槽、能量背包（放在物品栏中）和第三方充能器（）中充电；仅在实际推力的每一刻消耗电量。</p>
 
@@ -408,29 +408,29 @@
 
 <p>电量只在服务端扣除。服务端通过原版的输入同步得知跳跃键被按住，因此喷气背包不需要自己的网络包。在创造/旁观模式下不消耗电量（所有 EU/FE 物品的通用规则），但飞行和保险依旧有效。</p>
 
-<h2>物品栏</h2>
+<h2 id="物品栏">物品栏</h2>
 
 <p>不适用——物品（堆叠 1），只存 EU/FE 电量。</p>
 
-<h2>物品属性</h2>
+<h2 id="物品属性">物品属性</h2>
 
 <p>不适用（物品）。</p>
 
-<h2>配方</h2>
+<h2 id="配方">配方</h2>
 
 <p>合成：——3×3 定型配方，本模组最贵的电力物品：上方是带<a href="../components/electronic_circuit.html">电子电路</a>的铁制外壳，中心是<a href="energy_pack.html">能量背包</a>（喷气背包的油箱与心脏），两侧是两枚<a href="../components/battery.html">电池</a>（启动器），下方是锡制喷嘴和<a href="../components/copper_coil.html">铜线圈</a>（涡轮）。电池和放入的能量背包的电量会转移到成品喷气背包中（配方类型 ，）：充满电的能量背包加两枚满电电池最多可提供 24 000 EU/FE，因此喷气背包走下工作台时就已经带电。</p>
 
 <p><strong>修复</strong>——不适用：喷气背包没有耐久；"修复"就是 EU/FE 充电（见"能量"）。</p>
 
-<h2>行为</h2>
+<h2 id="行为">行为</h2>
 
 <p><strong>推力：</strong> 当玩家<strong>在空中</strong>且<strong>按住跳跃键</strong>时引擎工作——地面上按住跳跃依旧是普通跳跃，下一刻起推力接管。每一刻推力：客户端（26.2 中玩家移动是客户端权威）施加 <strong>+0.15 格/刻²</strong> 的垂直加速度，爬升上限 <strong>0.5 格/刻</strong>；服务端独立地按同样三条件烧 50 EU/FE，清零下落距离，并以每 8 刻一次的轻微嘶嘶声绘制尾焰（烟 + 火花）。 <strong>精确烧到零：</strong> 引擎只要缓存里还有 1 EU/FE 就继续推；最后一刻吸收低于费率的余额（扣除会做 clamp）——不会有带着未用 1% 的 15–20 EU/FE"死尾"。 <strong>滑翔（本次飞行的保险）：</strong> 在 0 EU/FE（或高于高度上限）时无推力，但如果引擎在当前飞行中已经工作过，按住的跳跃键会把下落速度限制在 <strong>0.3 格/刻</strong>（~6 m/s），并继续清零下落距离——落地柔和、免费、无声（客户端也清零自己的下落距离，以避免触发硬着陆音效）。本次飞行中从未推力过的喷气背包（一开始就空的）完全不滑翔——坠落如同没有喷气背包。飞行会话在触地时重置。 <strong>松开跳跃键</strong>——正常下落并受正常伤害：下落距离从松开点开始累积。"飞行不会意外致命" = 落地前一直按住跳跃键。 <strong>高度上限：</strong> 高于 <strong>y = 320</strong>（主世界的建筑上限）引擎拒绝推力——只有滑翔。给服主的旋钮。 <strong>飞行时的发光：</strong> 引擎推力期间，玩家周围会发出类似火把的光（ = <strong>10</strong>，略弱于火把；0 关闭）——夜间和洞穴里很显眼。技术上这是一个移动的 <code>minecraft:light</code> 方块（26.2 没有按实体发光）：它在推力时被放在玩家所在格，飞行一结束就移除。移除<strong>无泄漏</strong>：每个服务端刻都会跑一次"清扫"，移除任何在本刻未更新的光方块——因此即便退出游戏、死亡或在飞行中卸下喷气背包，也不会留下孤儿光。光只放在空气或水（waterlogged）中，绝不覆盖真正的方块。 <strong>创造/旁观模式：</strong> 不消耗电量（电力家族的通用规则），原版的创造飞行优先——在启用能力飞行时喷气背包不介入。 <strong>指示：</strong> 图标下方的横条（黄色，LV 颜色）；悬浮提示——电量 <code>X / Y EU/FE</code> 和两行操作说明；左上角的电量 HUD 面板（与能量背包共用的胸部槽位面板，按键 H）。穿戴且带电的喷气背包在背上显示"点亮"模型，没电时显示"熄灭"模型（与能量背包的处理一致）。 <strong>丢弃/死亡/重新登录：</strong> 电量保存在物品中，会保留。</p>
 
-<h2>进阶</h2>
+<h2 id="进阶">进阶</h2>
 
 <p>本模组第一件垂直移动物品：在<a href="../energy-storage/battery_box.html">储能库</a>和能量背包之后可用——没有 LV 基础设施就无法合成与充电。 比其它电力物品更贵（合成中要消耗一整个能量背包）：飞行是重大的便利性跨越。 未来等级（MV/HV：更高速、悬停模式、更大缓存）——单独的任务。</p>
 
-<h2>相关内容</h2>
+<h2 id="相关内容">相关内容</h2>
 
 <p><a href="energy_pack.html">能量背包</a>——喷气背包的合成组件和物品栏充电器；同为胸部槽位的邻居。 <a href="../energy-storage/battery_box.html">储能库</a>——喷气背包的充电来源（充能槽）。 <a href="electric_drill.html">电钻</a>——价格参照：50 EU/FE = 一个挖出的方块 = 一刻飞行。 <a href="../components/electronic_circuit.html">电子电路</a>——合成组件。</p>
 

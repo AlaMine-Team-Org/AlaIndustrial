@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>金のチェスト</strong>は <strong>54 スロット</strong>（6 段 × 9）のシンプルなアイテム収納です。銀のチェスト（45）より ちょうど 1 段多いです。エネルギーは不要です — これは倉庫用の「民生用」ブロックで、銀の次のティアに あたります。銀のチェストを金インゴットでアップグレードする形でクラフトします。</p>
 
@@ -400,31 +400,31 @@
 
 <p>前のティアと同様、エネルギーとは無関係なコンテンツブロックであり、内部は収納のみです。</p>
 
-<h2>インベントリ</h2>
+<h2 id="インベントリ">インベントリ</h2>
 
 <p>チェストはあらゆるアイテムを受け付けます — 6 段 × 9 で 54 スロット。プレイヤーインベントリは いつも通り下に表示されます。Shift クリックでチェストとインベントリの間でアイテムを移動できます。</p>
 
 <table><thead><tr><th>スロット</th><th>受け入れ</th><th>数</th></tr></thead><tbody><tr><td>収納</td><td>あらゆるアイテム</td><td>54（6 段 × 9）</td></tr><tr><td>プレイヤーインベントリ</td><td>—</td><td>27 + 9（ホットバー）、テクスチャから描画</td></tr></tbody></table>
 
-<h2>インターフェース</h2>
+<h2 id="インターフェース">インターフェース</h2>
 
 <p>通常のコンテナウィンドウです — エネルギーや進行のインジケータはありません（チェストは機械ではありません）。 銀より 6 段目がある分ウィンドウが高く、両方のラベル — グリッド上の「金のチェスト」とその下の 「インベントリ」 — は左に配置されます。</p>
 
 <p>画面は銀より 1 段分高い — 6 段目があるためです。 エネルギー/進行のインジケータはありません（チェストは機械ではありません）。 <strong>両方のラベルが左：</strong> チェストグリッド上の「金のチェスト」タイトル（）と、 チェストとプレイヤーインベントリの隙間にある「インベントリ」ラベル。</p>
 
-<h2>描画とアニメーション</h2>
+<h2 id="描画とアニメーション">描画とアニメーション</h2>
 
 <p>ワールド内では、独自の金のテクスチャと滑らかに開閉する蓋を持つ立体 3D チェストです — バニラの 木材チェストやこれまでのティアと全く同じですが、金色です。インベントリのアイコンも立体です。</p>
 
 <p><strong>3D モデル：</strong> バニラのチェストモデル（蓋 / 鍵 / 本体）を再利用し、独自レイヤー からベイクします。 <strong>テクスチャ</strong> は独自で、バニラのチェストと同じフォーマット・同じパスです。 正しい深度、クリッピング、ミップマップを持ち、白い縁取りはありません。 <strong>蓋のアニメーション：</strong> openness はクライアントのティッカーで滑らかに補間されます。 開閉曲線はバニラと同じ（<code>1 - (1-open)³</code>）です。 <strong>facing による回転：</strong> チェストは設置時にプレイヤーを向くよう回転します（中心・上部周りの yaw）。 <strong>アイテムアイコン</strong> はチェストの 3D レンダー（）です。</p>
 
-<h2>サウンド</h2>
+<h2 id="サウンド">サウンド</h2>
 
 <p>開閉音は <strong>鉄のチェストのサンプルを再利用</strong> しています — 金属音は全ティアで共通で、 バニラの木材の音がすべての木材種で共通なのと同じです。個別の <code>gold_chest_open/close</code> イベントは ないため、字幕には「鉄のチェストが開く / 閉じる」と表示されます。</p>
 
 <p>音量は <strong>0.42</strong>（これまでのティアと同じ — バニラの 0.5 より小さく）、ランダムピッチは 0.9–1.0。 開閉音は鉄のチェストと共通で、金独自のものはありません。</p>
 
-<h2>ダブルチェスト</h2>
+<h2 id="ダブルチェスト">ダブルチェスト</h2>
 
 <p>同じ向きで隣り合わせに置いた2つの金のチェストは、<strong>108スロットのダブルチェストに結合</strong>します。 ルールはバニラと同じです:スニークなしで置くと隣の単体チェストに自動で連結し、単体チェストの 側面にスニーククリックで置くと意図的に連結、離れた場所にスニークで置くと単体のままです。 異なるティア同士は結合しません。</p>
 
@@ -432,21 +432,21 @@
 
 <p>ダブルチェストと同時に、全ティアがバニラの2つの便利機能を得ました:<strong>コンパレータ</strong>が チェストの充填率を読めます(ダブルは合算、どちらの半分からでも同じ値)。また、バニラ同様に <strong>水没(waterlogging)</strong>が可能になりました。</p>
 
-<h2>ブロックの性質</h2>
+<h2 id="ブロックの性質">ブロックの性質</h2>
 
 <p>チェストは低く、完全な立方体ではなく 14×14×14 の柱形です（すべてのバニラのチェストやこれまでの ティアと同じ）。任意のツルハシで壊れ、破壊時に自身をドロップし、中身をすべてばらまきます。 ブロックの性質は鉄のチェストや銀のチェストと同一です（同じ形状、同じ硬度）。</p>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>形状</td><td>低い柱 14×14×14（バニラのチェストのように完全な立方体ではない）。隣接ブロックがこちらへ面を投影せず — 描画は正しく、「透視」なし</td></tr><tr><td>硬度</td><td>3.0</td></tr><tr><td>爆発耐性</td><td>6.0</td></tr><tr><td>ツール</td><td>ツルハシ（ティア制限なし — どれでも可）</td></tr><tr><td>facing</td><td>水平、設置時にプレイヤーを向く</td></tr><tr><td>Render shape</td><td><code>MODEL</code>（ブロックの上に 3D チェストが描かれる）</td></tr><tr><td>ドロップ</td><td>ルートテーブル経由で自身をドロップ。インベントリの中身は破壊時にばらまかれる</td></tr><tr><td>音</td><td><code>iron_chest_open</code> / <code>iron_chest_close</code>（再利用、§サウンド参照）</td></tr></tbody></table>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p>クラフトテーブルで作ります：中央にシルバーチェスト、周囲に金インゴット 8 個——より低いティアと同じ「前段階のティア + 8 インゴット」の型です（銅 + 8 鉄 → 鉄、鉄 + 8 銀 → 銀）。</p>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p>チェストの系譜：バニラの <code>copper_chest</code>（27） → <strong>Iron Chest（36）</strong> → <strong>Silver Chest（45）</strong> → <strong>Gold Chest（54）</strong> → <a href="electrum_chest.html">エレクトラムのチェスト</a>（81）。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="silver_chest.html">銀のチェスト</a> — 前のティア、このブロックのパターン元。 <a href="iron_chest.html">鉄のチェスト</a> — すべてのチェストティアの参照実装。 <a href="../energy-storage/battery_box.html">エネルギー貯蔵庫</a> — もう一つの「収納」ブロック、ただしエネルギー用。</p>
 

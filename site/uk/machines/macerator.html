@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепти</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="10 сторінок">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="4 сторінки">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Інше</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилітарні блоки</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
 <div class="group-title">Предмети</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Зведення</h2>
+<h2 id="зведення">Зведення</h2>
 
 <p><strong>Подрібнювач</strong> — машина раннього подвоєння руди. Завантажте в нього руду або метал, і він перемеле їх на пил, причому добутий блок руди дає <strong>дві</strong> пили замість однієї — заради цього його й будують. Це перша машина, заради якої має сенс тягнути кабель.</p>
 
@@ -403,7 +403,7 @@
 
 <p>Подвоєння дається і за блок руди, і за сировину: подрібнювач подвоює будь-що, що в нього покладеш. Зливок лишається ×1 (нетто-нуль, інакше можна було б зациклити «зливок → пил → зливок» з подвоєнням).</p>
 
-<h2>Енергія</h2>
+<h2 id="енергія">Енергія</h2>
 
 <p>Подрібнювач лише споживає EU/FE і тримає невеликий буфер, щоб рівно молоти навіть при нерівній подачі.</p>
 
@@ -413,29 +413,29 @@
 
 <p>Енергія заходить із п'яти робочих граней. <strong>Лицьова грань</strong> (туди «дивиться» морда машини) інертна — кабелі до неї не підключаються, лійки крізь неї не працюють.</p>
 
-<h2>Процесинг</h2>
+<h2 id="процесинг">Процесинг</h2>
 
 <p>Кожне дроблення йде 150 тиків (~7,5 с) і з'їдає EU/FE з буфера. Готовий пил сам у скриню не вилітає — забирайте руками або лійкою.</p>
 
 <table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Тривалість</td><td>150 тиків (~7,5 с)</td></tr><tr><td>Ціна операції</td><td>300 EU/FE</td></tr><tr><td>Авто-вивантаження</td><td>немає</td></tr></tbody></table>
 
-<h2>Інвентар</h2>
+<h2 id="інвентар">Інвентар</h2>
 
 <p>Один слот на вхід, один на вихід. У вихідний нічого вкласти не можна — він лише для результату.</p>
 
 <table><thead><tr><th>Слот</th><th>Приймає</th><th>К-сть</th></tr></thead><tbody><tr><td>Вхід</td><td>предмети, які подрібнювач уміє молоти</td><td>1</td></tr><tr><td>Вихід</td><td>лише результат (вставка заборонена)</td><td>1</td></tr></tbody></table>
 
-<h2>Інтерфейс</h2>
+<h2 id="інтерфейс">Інтерфейс</h2>
 
 <p>На одному екрані видно запас енергії, стрілку прогресу, слот входу й слот виходу.</p>
 
-<h2>Властивості блока</h2>
+<h2 id="властивості-блока">Властивості блока</h2>
 
 <p>Звичайний суцільний блок, м'якший за камінь. Ламається будь-яким кайлом, але <strong>при зламі заряд НЕ зберігає</strong>.</p>
 
 <table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Інструмент</td><td>кайло</td></tr><tr><td>Зберігає заряд при зламі</td><td>ні</td></tr></tbody></table>
 
-<h2>Рецепти</h2>
+<h2 id="рецепти">Рецепти</h2>
 
 <p>Подрібнювач крафтиться на верстаку з <a href="../components/machine_casing.html">корпусу машини</a>: три шматки кременю зверху, залізна рамка з боків, корпус у центрі, <a href="../components/electronic_circuit.html">електронна схема</a> знизу по центру.</p>
 
@@ -446,21 +446,23 @@
 
 <p>Та сама схема працює для неметалевих пилів (вугілля, алмаз, смарагд, лазурит): руда → ×2 пили, чистий предмет → ×1. Один виняток: <strong>лазуритова руда → 6 пилів</strong> (ванільна руда дає одразу 4–9 лазуритів, тож просте ×2 знецінило б дроблення).</p>
 
-<h3>Не тільки метали: органіка й камінь</h3>
+<h3 id="не-тільки-метали-органіка-й-камінь">Не тільки метали: органіка й камінь</h3>
 
 <p>Подрібнювач меле не лише руду. Сім рецептів працюють зі звичайними ванільними предметами й дають більше, ніж ручний крафт, — заради цього їх і ставлять на лінію:</p>
 
-<table><thead><tr><th>Вхід</th><th>Вручну</th><th>У подрібнювачі</th><th>Що це дає</th></tr></thead><tbody><tr><td>Кістка</td><td>3 кісткові борошна</td><td><strong>4</strong></td><td>+33 % борошна з тієї самої кістки</td></tr><tr><td>Кістковий блок</td><td>9 кісткових борошен</td><td><strong>12</strong></td><td>той самий +33 %; пропорція «блок = 3 кістки» збережена</td></tr><tr><td>Брукняк</td><td>—</td><td><strong>1 пісок</strong></td><td><strong>відновлюваний пісок</strong>: скло й бетон без викопування пустель</td></tr><tr><td>Пісковик</td><td>зворотного немає</td><td><strong>4 піски</strong></td><td>розбір пісковику, якого ваніль не вміє</td></tr><tr><td>Вогняний стрижень</td><td>2 порошки</td><td><strong>3</strong></td><td>+50 % порошку для зілль</td></tr><tr><td>Тростина</td><td>1 цукор</td><td><strong>2</strong></td><td>удвічі більше цукру</td></tr><tr><td>Вовна (будь-якого кольору)</td><td>рецепта немає</td><td><strong>4 нитки</strong></td><td>вовна назад у нитку</td></tr></tbody></table>
+<table><thead><tr><th>Вхід</th><th>Вручну</th><th>У подрібнювачі</th><th>Що це дає</th></tr></thead><tbody><tr><td>Кістка</td><td>3 кісткові борошна</td><td><strong>4</strong></td><td>+33 % борошна з тієї самої кістки</td></tr><tr><td>Кістковий блок</td><td>9 кісткових борошен</td><td><strong>9</strong></td><td>виграшу в кількості немає — цінний як автоматичний крок лінії (див. нижче)</td></tr><tr><td>Брукняк</td><td>—</td><td><strong>1 пісок</strong></td><td><strong>відновлюваний пісок</strong>: скло й бетон без викопування пустель</td></tr><tr><td>Пісковик</td><td>зворотного немає</td><td><strong>4 піски</strong></td><td>розбір пісковику, якого ваніль не вміє</td></tr><tr><td>Вогняний стрижень</td><td>2 порошки</td><td><strong>3</strong></td><td>+50 % порошку для зілль</td></tr><tr><td>Тростина</td><td>1 цукор</td><td><strong>2</strong></td><td>удвічі більше цукру</td></tr><tr><td>Вовна (будь-якого кольору)</td><td>рецепта немає</td><td><strong>4 нитки</strong></td><td>вовна назад у нитку</td></tr></tbody></table>
 
-<p>Усі сім коштують стандартні <strong>300 EU/FE</strong>, як і решта рецептів подрібнювача. Кісткові рецепти узгоджені між собою: 1 блок = 3 кістки і у ванілі, і тут, тому «блок → борошно → блок» не дає прибутку.</p>
+<p>Усі сім коштують стандартні <strong>300 EU/FE</strong>, як і решта рецептів подрібнювача.</p>
+
+<p>Кістковий блок — єдиний вхід, який подрібнювач навмисно <strong>не</strong> покращує: він видає рівно ті самі дев'ять борошен, що й безкоштовний верстак. Причина — ванільний крафт стиснення: дев'ять борошен збираються назад у блок, тому будь-який вихід, більший за дев'ять, замикає нескінченну петлю «подрібнити → скрафтити назад» і друкує борошно з повітря. Дев'ять — найбільше значення, за якого петлі немає. Сенс рецепта не в кількості, а в тому, що розпакування блоків можна поставити в автоматичну лінію задовго до Складального автомата.</p>
 
 <p>Найпомітніший із семи — <strong>брукняк → пісок</strong>. До нього пісок у світі скінченний; після нього будь-яка ферма-генератор брукняку перетворюється на джерело скла й бетону.</p>
 
-<h2>Прогресія</h2>
+<h2 id="прогресія">Прогресія</h2>
 
 <p>Тир: LV. Стартовий подрібнювач і привід будувати першу енергомережу. Ні у що не розвивається у v0.1 — MV-подрібнювач це окремий майбутній блок.</p>
 
-<h2>Пов'язане</h2>
+<h2 id="повязане">Пов'язане</h2>
 
 <p><a href="../components/material_forms.html">Форми матеріалів</a> — пил, який він виробляє. <a href="electric_furnace.html">Електропіч</a> — плавить пил назад на зливки. <a href="../components/machine_casing.html">Корпус машини</a> — база крафта. <a href="../components/electronic_circuit.html">Електронна схема</a> — обов'язковий компонент.</p>
 

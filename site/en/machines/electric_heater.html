@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 
 <p>The <strong>Electric Heater</strong> sits directly below a <a href="vulcanizer.html">Vulcanizer</a> and gives it the maximum heat level — 3, that is three rubber from one portion of ingredients instead of one on a campfire.</p>
 
@@ -400,7 +400,7 @@
 
 <blockquote><strong>Mini-example:</strong> put the heater under a Vulcanizer, run an LV cable to it and load the ingredients. For the first ~10 seconds nothing happens, the thermometer on the heater's screen climbs and the coils of the block light up. The moment the thermometer is full the rubber starts coming — three at a time.</blockquote>
 
-<h2>Energy</h2>
+<h2 id="energy">Energy</h2>
 
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Internal buffer</td><td>2400 EU/FE</td></tr><tr><td>Max input</td><td>32 EU/FE/t (LV)</td></tr><tr><td>Consumption</td><td>6 EU/FE/t</td></tr><tr><td>Warm-up</td><td>200 ticks (~10 s), 1200 EU/FE</td></tr><tr><td>Draw with nothing to heat</td><td>0 EU/FE</td></tr></tbody></table>
 
@@ -414,13 +414,13 @@
 
 <blockquote><strong>Careful with overclocking.</strong> On the third overclocker step the machine above asks the heater for 48 EU/FE/t, while its LV input holds only 32. The buffer will carry such a pair for a while, then the heater starts falling behind. The practical ceiling for the pair is the second step.</blockquote>
 
-<h2>Cooling down</h2>
+<h2 id="cooling-down">Cooling down</h2>
 
 <p>Left with nothing to heat, the heater cools down <strong>twice as slowly</strong> as it warmed up: the full slide back takes about 20 seconds. That is deliberate slack for pauses — a hopper that held the ingredients back for a couple of seconds costs you a small slice of the warm-up, not all of it.</p>
 
 <p>Cooling down is free. And while the machine above is waiting for work — standing without energy of its own, say — the heater <strong>holds its temperature</strong> and spends nothing while doing so: it does not throw the warm-up away just because its neighbour temporarily has nothing to pay with.</p>
 
-<h2>Interface</h2>
+<h2 id="interface">Interface</h2>
 
 <p>The screen opens on right-click. It has no slots — there is nothing to put into the heater; it takes energy from the cable and gives heat upwards. The screen is there so that the warm-up can be watched and planned instead of guessed.</p>
 
@@ -432,15 +432,15 @@
 
 <p>At the bottom there is a status line: "No machine above", "No energy", "Warming up", "Up to temperature", "Cooling down" or "Cold". The first two are highlighted in red: those are what the player fixes.</p>
 
-<h2>Block properties</h2>
+<h2 id="block-properties">Block properties</h2>
 
 <p>A heat source for the block directly above it only, and only once it is up to temperature. An LV consumer of EU/FE; it accepts energy on its available side faces. <strong>The glow changes with temperature</strong> — four steps from dark to red hot. The state is readable in the world without opening the screen. A fully warmed block lets heat break out of the seam with the machine. The particles only appear at full warm-up: they are the "×3 is running" signal, not a constant background. Mine with a pickaxe; it drops itself.</p>
 
-<h2>Recipe</h2>
+<h2 id="recipe">Recipe</h2>
 
 <p>Crafted at a table from redstone dust, a gold ingot, iron ingots, <code>M</code> — a machine casing, <code>E</code> — an electronic circuit.</p>
 
-<h2>Links</h2>
+<h2 id="links">Links</h2>
 
 <p><a href="vulcanizer.html">Vulcanizer</a> — the first heat consumer; the heat level multiplies its yield. <a href="thermal_centrifuge.html">Thermal Centrifuge</a> — the second consumer. For it the heater is not the "best of the sources" but the <strong>only</strong> one: lava and campfires will not start it at all. <a href="../upgrades/overclocker_upgrade.html">Overclocker</a> — it sits in the machine above, but the heater pays for it too. Lava and magma blocks give free level 2 with no warm-up at all; a campfire gives level 1. While the heater is lighting up, lava under the machine would already be working — that is the price of ×3.</p>
 

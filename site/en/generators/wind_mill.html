@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 
 <p>The <strong>Wind Turbine</strong> makes EU/FE from the wind — no fuel, no sun, just altitude and weather. Build it high and it pays off; build it on the ground and it does almost nothing. It rewards players who climb a tower and don't mind a storm.</p>
 
@@ -400,7 +400,7 @@
 
 <blockquote><strong>Mini-example:</strong> a turbine in the narrow band under the clouds (<strong>y 183–193</strong>) → <strong>4 EU/FE/t</strong> on a clear day and <strong>8 EU/FE/t</strong> in a thunderstorm. Lower down it drops off sharply: at y ≈ 128 you only get 2 EU/FE/t.</blockquote>
 
-<h2>Energy</h2>
+<h2 id="energy">Energy</h2>
 
 <p>The turbine only produces power — it never takes any in. It holds up to 4000 EU/FE inside and sends it out on an LV line.</p>
 
@@ -408,7 +408,7 @@
 
 <p>Energy comes out <strong>only from the back face</strong>. Connect your cable to the turbine's back wall — the other sides output nothing.</p>
 
-<h2>Generation</h2>
+<h2 id="generation">Generation</h2>
 
 <p>The closer to the clouds and the worse the weather, the more power. The wind does <strong>not</strong> strengthen forever: the strongest air runs right at the cloud deck (y ≈ 192), and above it the air thins out and the wind dies away. The weather multiplies the result.</p>
 
@@ -420,13 +420,13 @@
 
 <p>If something's wrong, the screen says so in plain words: "no rotor", "roofed", "blocked", "interference" or "calm". When it's actually generating, the gear indicator lights up.</p>
 
-<h3>Blade clearance</h3>
+<h3 id="blade-clearance">Blade clearance</h3>
 
 <p>The blades spin in the block <strong>in front of</strong> the turbine and need room around them. Keep these clear: the block in front, one block to each side, and the three blocks directly below (a little pit). If anything solid is there, the turbine shows "blocked" and stops.</p>
 
 <p>"Clear" means air, grass, flowers, saplings or snow — anything you could place a block into. Stone, glass, leaves, fences, slabs or the turbine's own support pillar all count as blocked. You don't need to check the air above the blades — a roof is caught separately by the open-sky check.</p>
 
-<h3>Placing several turbines</h3>
+<h3 id="placing-several-turbines">Placing several turbines</h3>
 
 <p>Simple spacing rules so the blades don't collide:</p>
 
@@ -434,31 +434,31 @@
 
 <p>When two turbines interfere, <strong>both</strong> stop, no exceptions. A neighbour with no rotor causes no trouble — but the moment you put a rotor in it, a running turbine next door stops too.</p>
 
-<h2>Inventory</h2>
+<h2 id="inventory">Inventory</h2>
 
 
 <table><thead><tr><th>Slot</th><th>Takes</th><th>Count</th></tr></thead><tbody><tr><td>Rotor</td><td>Wooden Rotor (required — no rotor, no generation)</td><td>1</td></tr><tr><td>Chip</td><td>evolution chip (solar/lunar) — starts the evolution</td><td>1</td></tr></tbody></table>
 
-<h2>Interface</h2>
+<h2 id="interface">Interface</h2>
 
 <p>The screen shows the energy bar (with exact EU/FE on hover), current output, the working mode, the rotor slot in the centre, the chip slot on the right, evolution progress at the bottom and a status indicator on top.</p>
 
-<h2>Block Properties</h2>
+<h2 id="block-properties">Block Properties</h2>
 
 <p>An ordinary solid block, placed facing the player. Any pickaxe breaks it, and <strong>it keeps its charge when broken</strong>.</p>
 
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Keeps charge on break</td><td>yes</td></tr></tbody></table>
 
-<h2>Sound</h2>
+<h2 id="sound">Sound</h2>
 
 <p>While the rotor spins, the wind mill softly rustles its sails in the wind — the loop (pattern <strong>C</strong>, 0.22, fixed 12-block range). It falls silent in calm weather, under a roof, on a neighbouring rotor's interference, or with no rotor installed.</p>
 
-<h2>Recipes</h2>
+<h2 id="recipes">Recipes</h2>
 
 
 <p><strong>Wind Turbine</strong> — copper ingots in the corners, planks top and bottom, copper cable on the sides, a wooden gear in the centre. <strong>Wooden Rotor</strong> (required to run) — planks in the corners, iron ingots top and bottom, copper cable on the sides, a wooden gear in the centre.</p>
 
-<h2>Progression</h2>
+<h2 id="progression">Progression</h2>
 
 <p>The basic turbine is the neutral tier-1 form. Drop in an <strong>evolution chip</strong> (the same one solar panels use) and let it run under open sky with a rotor in, and it turns into a stronger version, keeping its stored energy:</p>
 
@@ -468,7 +468,7 @@
 
 <table><thead><tr><th>Tier</th><th>Sky branch (altitude)</th><th>Tempest branch (storm)</th></tr></thead><tbody><tr><td>T1</td><td>Wind Turbine (neutral)</td><td>Wind Turbine (neutral)</td></tr><tr><td>T2</td><td><a href="high_altitude_wind_mill.html">Sky Mill</a></td><td><a href="storm_wind_mill.html">Tempest Mill</a></td></tr></tbody></table>
 
-<h2>Related</h2>
+<h2 id="related">Related</h2>
 
 <p><a href="../machines/component_repair_bench.html">Component Repair Bench</a> — restores a worn rotor for one item and some EU/FE; every repair lowers its durability ceiling, and there are four of them. <a href="high_altitude_wind_mill.html">Sky Mill</a> — T2 sky evolution branch. <a href="storm_wind_mill.html">Tempest Mill</a> — T2 tempest evolution branch. <a href="solar_panel.html">Solar Panel</a> — shares its evolution chips with the turbine. <a href="../energy-storage/battery_box.html">Battery Box</a> · <a href="../energy-transfer/copper_cable.html">Copper Cable</a></p>
 

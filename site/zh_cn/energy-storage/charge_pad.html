@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link active" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概览</h2>
+<h2 id="概览">概览</h2>
 
 <p><strong>充电站</strong> 是一块高度只有方块四分之一的扁平板，玩家只需站上去即可。站立的期间，充电站会 <strong>同时</strong> 为玩家身上所有的可充电装备充电：快捷栏和背包里的工具、左手中的物品，以及 <strong>穿戴在身上</strong> 的——能量背包、喷气背包、通量织物护甲套装。</p>
 
@@ -400,7 +400,7 @@
 
 <p>充电本身不需要打开窗口：站上去就开始。充电站确实有一个界面，但它是 <strong>可选的</strong>——那是给想看具体数字的人准备的参考面板，而不是工作的前提。不看它只会少看到数字：无论界面开着还是关着，充电板的行为完全一样。</p>
 
-<h2>能量</h2>
+<h2 id="能量">能量</h2>
 
 <table><thead><tr><th>参数</th><th>数值</th></tr></thead><tbody><tr><td>缓存</td><td>20 000 EU/FE</td></tr><tr><td>最大输入</td><td>128 EU/FE/t</td></tr><tr><td>对玩家最大输出</td><td>128 EU/FE/t</td></tr></tbody></table>
 
@@ -432,11 +432,11 @@
 
 <p>六个面全部接收能量；充电站绝不会把能量回灌进网络。</p>
 
-<h2>界面</h2>
+<h2 id="界面">界面</h2>
 
 <p>充电站有两条互相独立的反馈渠道：脚下的指示器是主要的，供走动中的游戏使用；界面是辅助的，供想要精确数字的人使用。</p>
 
-<h3>指示器</h3>
+<h3 id="指示器">指示器</h3>
 
 <p>一个有四种状态的指示器：板面四角的四盏灯加上中央的线圈环，并在侧面用发光条带复述一遍（这样既能从上方、也能从远处读出状态）。</p>
 
@@ -446,13 +446,13 @@
 
 <p>充电期间会有火花从板上腾起。</p>
 
-<h3>咔哒声</h3>
+<h3 id="咔哒声">咔哒声</h3>
 
 <p>充电站会像金属压力板一样发出咔哒声：踩上去时响一次，离开时再响一次。这是一种确认——即使背对着它、看不见灯光也看不见火花，声音也能告诉你压板已经识别到了你。</p>
 
 <p>咔哒声 <strong>每次造访只响一次</strong>，而不是每刻都响：沿着一排充电站跑过去，每座只给你一声，而不是一串。以旁观者模式穿过压板不会发出任何声音——旁观者也不会被充电。</p>
 
-<h3>界面窗口</h3>
+<h3 id="界面窗口">界面窗口</h3>
 
 <p>界面通过 <strong>右键</strong> 打开，站在板上时也可以。踩上去并不会打开它：否则每走一步都会弹出窗口、妨碍行走，而充电站的全部意义就在于你可以踩上去然后继续忙自己的事。</p>
 
@@ -464,7 +464,7 @@
 
 <p>「剩余时间」按站在板上那位玩家的装备计算，而不是按充电站自身的缓冲区：玩家关心的是何时可以离开。它由当前输出速率推算，所以在供电线路较细时它会如实增长——充电站送出多少，取决于它能收进多少。</p>
 
-<h2>行为</h2>
+<h2 id="行为">行为</h2>
 
 <p>充电站 <strong>只在真正传输时才耗电</strong>。没有访客的充电站，以及访客装备已充满的充电站，都不耗电；独处时它会进入休眠。</p>
 
@@ -472,13 +472,13 @@
 
 <p>spectator 穿过方块时不会被充电，也不耗电。</p>
 
-<h3>充电站无法充电的对象</h3>
+<h3 id="充电站无法充电的对象">充电站无法充电的对象</h3>
 
 <p>玩家身上 <strong>来自其他模组</strong> 的物品。在两个加载器中，物品的能量能力都按 <strong>物品栏槽位号</strong> 寻址，而其他模组穿戴在身上的护甲没有这样的槽位号。Ala Industrial 自身的可穿戴装备可完全充电。放在普通物品栏槽位里的其他模组物品也能正常充电。</p>
 
 <p>在创造模式下，充电站仍会按物理规律消耗自身储能——就像机器给自身槽位里的物品充电一样。这不是错误。</p>
 
-<h2>方块属性</h2>
+<h2 id="方块属性">方块属性</h2>
 
 <p><strong>形状：</strong> 16×4×16 的板——方块下方的四分之一（高度从 0 到 4）。完整碰撞箱：是站上去而非穿过它，且抬高量极小，因此玩家直接跨过充电站，无需跳跃。光照轮廓与玩家行走的表面一致。</p>
 
@@ -488,7 +488,11 @@
 
 <p>用镐放置和拆除，硬度 3.0，爆炸抗性 6.0，金属声音。拆除时 <strong>EU/FE 缓存不保留</strong>——充电站会丢失积蓄的能量，与本模组的任何机器一样。</p>
 
-<h2>合成</h2>
+<h2 id="声音">声音</h2>
+
+<p>充电时，站点会发出轻微的变压器嗡鸣 — 循环（基于 状态的模式C，模组中最安静的固定式循环： 0.18 — 玩家站在方块上，声源就在脚边；）。背包已满（绿色指示灯）或缓冲区为空时保持静音。踏上/离开的咔哒声仍为原版音效（）。</p>
+
+<h2 id="合成">合成</h2>
 
 <table><thead><tr><th></th><th></th><th></th></tr></thead><tbody><tr><td>铜缆</td><td>铜缆</td><td>铜缆</td></tr><tr><td>铁板</td><td>电池</td><td>铁板</td></tr><tr><td>铁板</td><td>电子电路</td><td>铁板</td></tr></tbody></table>
 

@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 
 <p>The <strong>Water Mill</strong> turns on flowing water and runs around the clock — night and storms mean nothing to it. No fuel, no tanks, no pumps: give it a current past the wheel and it produces EU/FE for as long as the water keeps moving.</p>
 
@@ -400,13 +400,13 @@
 
 <p>The one catch: <strong>still water does not count</strong>. Dropping the wheel into a pond or a river is not enough — it needs a real current.</p>
 
-<h2>Energy</h2>
+<h2 id="energy">Energy</h2>
 
 <p>The mill only produces power. Output leaves through the <strong>back face</strong>, which carries the connector; the other five faces are inert for energy.</p>
 
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Internal buffer</td><td>4000 EU/FE</td></tr><tr><td>Output</td><td>up to 32 EU/FE/t (LV)</td></tr><tr><td>Actual production</td><td>0–4 EU/FE/t (1 per wheel side in a current)</td></tr></tbody></table>
 
-<h2>Generation</h2>
+<h2 id="generation">Generation</h2>
 
 <p>The wheel hangs <strong>one cell in front</strong> of the block, and water is counted around the <strong>wheel</strong>, not around the mill. The four working cells mirror how real water wheels are driven:</p>
 
@@ -416,11 +416,11 @@
 
 <p>Only <strong>flowing or falling</strong> water counts. Rivers and oceans are made of source blocks, so "put it in a river" will not work. The reliable trick: place a source <strong>one cell above</strong> the wheel's cell — falling water never becomes a source. Pouring a bucket straight into the wheel's cell is useless, because that cell then becomes a source itself.</p>
 
-<h3>Room for the wheel</h3>
+<h3 id="room-for-the-wheel">Room for the wheel</h3>
 
 <p>The wheel is large (rim about 2.7 blocks) and needs room to turn. All <strong>nine cells</strong> of the wheel's plane are checked — the front column and both neighbours, each on three levels, bottom row and diagonals included. A solid block in any of them hides the wheel and stops generation: the screen reads "Blocked". Water and passable blocks (grass, flowers, snow) do not obstruct it, so a channel around the wheel works fine. The check runs every tick: remove the block and the wheel is back.</p>
 
-<h3>Several mills together</h3>
+<h3 id="several-mills-together">Several mills together</h3>
 
 <p>If two wheels overlap in space, <strong>both</strong> mills stop with the status "Wheel interference".</p>
 
@@ -428,37 +428,37 @@
 
 <p>A neighbour without a wheel causes no trouble — but put a wheel in it and the working mill beside it stops too.</p>
 
-<h2>Inventory</h2>
+<h2 id="inventory">Inventory</h2>
 
 <p>One slot for the <a href="../components/water_mill_wheel.html">water wheel</a> and four upgrade slots. Without a wheel the mill produces nothing and the external model is not drawn.</p>
 
 <p><strong>The wheel is a consumable.</strong> It only wears while the mill is actually producing EU/FE (no current or an obstruction means no wear) and in proportion to output. A full wheel is worth <strong>320 000 EU/FE</strong>: about an hour of non-stop work at maximum, or <strong>6–7 in-game days</strong> at a typical 2 EU/FE/t. When it runs out the wheel breaks with a sound and generation stops until a new one is fitted. A worn wheel need not be thrown away: the <a href="../machines/component_repair_bench.html">component repair bench</a> clears the wear for one item and some EU/FE, at the cost of a lower durability ceiling — and no more than four times.</p>
 
-<h2>Interface</h2>
+<h2 id="interface">Interface</h2>
 
 <p>Energy bar on the left, wheel slot in the centre, indicator on the right: a white wheel means idle, blue means working. The line under the slot shows either the current output or the reason it stopped: "Wheel interference", "Blocked", "No water" or "No wheel".</p>
 
 <p>The line is never empty. A mill with no wheel used to say nothing, on the reasoning that the empty slot spoke for itself. In practice the player saw a working-looking screen producing nothing and got no hint at all. It is now a state of its own with its own line, like the Wind Turbine's "No rotor".</p>
 
-<h2>Block Properties</h2>
+<h2 id="block-properties">Block Properties</h2>
 
 <p>An ordinary full block, broken with any pickaxe.</p>
 
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full cube</td></tr><tr><td>Hardness</td><td>3.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr></tbody></table>
 
-<h2>Visual</h2>
+<h2 id="visual">Visual</h2>
 
 <p>A large open wheel turns in front of the mill: two 24-segment oak rims, eight spokes on each side, twelve buckets between the rims, a wooden hub and a copper axle. The stronger the current, the faster it spins; with no current the wheel stands still.</p>
 
-<h2>Sound</h2>
+<h2 id="sound">Sound</h2>
 
 <p>While the wheel turns you hear a quiet splash of water within about 12 blocks. It falls silent when the wheel stops.</p>
 
-<h2>Recipes</h2>
+<h2 id="recipes">Recipes</h2>
 
 <p>Crafted at a workbench from planks, copper ingots, a copper cable and a wooden gear. The <a href="../components/water_mill_wheel.html">water wheel</a> is crafted separately — the mill does not work without it.</p>
 
-<h2>Related</h2>
+<h2 id="related">Related</h2>
 
 <p><a href="solar_panel.html">Solar Panel</a> — the other passive source, but it depends on the sky and the time of day. <a href="generator.html">Generator</a> — twice the output, but it needs fuel. <a href="../components/water_mill_wheel.html">Water Wheel</a> — the consumable the mill cannot run without.</p>
 

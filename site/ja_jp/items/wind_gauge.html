@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,13 +392,13 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p>風速計はエネルギー不要の手持ち機器です。建てるわけでも、何かを生産するわけでもありません。あなたが立っている地点の風速を示します。<a href="../generators/wind_mill.html">風力タービン</a>用の塔を<strong>建設前</strong>に選ぶためであり、3回も解体して建て直すためではありません。</p>
 
 <p>この機器は<strong>アドバイスを提供しません</strong>。「もっと高く」「ここが最適」「天井まで N ブロック」などと言いません。測定値を示し、結論を出すのはプレイヤーです。</p>
 
-<h2>使い方</h2>
+<h2 id="使い方">使い方</h2>
 
 <p>機器を持って <strong>Shift + 右クリック</strong>——空中でも任意のブロック上でも同じです。アクションバーに行が表示され、機器が短く鳴ります。</p>
 
@@ -408,17 +408,17 @@
 
 <p>通常の右クリックは機器をインターセプトしません。ブロックの設置や機械の開く操作を妨げません。測定は常にカーソルの先ではなく、<strong>プレイヤーが立っている場所</strong>で行われます。</p>
 
-<h2>目盛り</h2>
+<h2 id="目盛り">目盛り</h2>
 
 <p>表示は小数点以下1桁の km/h での風速です。値は<strong>高さ1ブロックごとに変化</strong>します。1ブロック上がれば数値が変わります。きりの良い数値はほぼなく、これは装飾ではありません。風の曲線は非線形で、24.7 や 47.1 はそれらの高さでの値にすぎません。</p>
 
-<p>風は機器と3つの風車すべてに共通の1つの曲線に従います（<a href="index.html#高度プロファイル">高度プロファイル</a>）。要するに、地上では風がなく、雲に向かって強まり、雲のすぐ縁で最も強く、雲を超えると空気が薄くなり風は収まります。</p>
+<p>風は機器と3つの風車すべてに共通の1つの曲線に従います（<a href="#高度プロファイル">高度プロファイル</a>）。要するに、地上では風がなく、雲に向かって強まり、雲のすぐ縁で最も強く、雲を超えると空気が薄くなり風は収まります。</p>
 
 <table><thead><tr><th>高さ（海抜 63）</th><th>晴れ</th><th>雨</th><th>雷雨</th></tr></thead><tbody><tr><td>Y 63 以下</td><td>0.0</td><td>0.0</td><td>0.0</td></tr><tr><td>Y 85</td><td>12.6</td><td>18.9</td><td>25.3</td></tr><tr><td>Y 100</td><td>18.6</td><td>28.0</td><td>37.3</td></tr><tr><td>Y 127</td><td>28.1</td><td>42.2</td><td>56.3</td></tr><tr><td>Y 160</td><td>39.7</td><td>59.6</td><td>79.5</td></tr><tr><td>Y 175</td><td>49.3</td><td>73.9</td><td>98.6</td></tr><tr><td>Y 185</td><td>56.8</td><td>85.2</td><td>113.5</td></tr><tr><td><strong>Y 192（雲）</strong></td><td>62.5</td><td>93.8</td><td>125.0</td></tr><tr><td>Y 198</td><td>47.1</td><td>70.7</td><td>94.2</td></tr><tr><td>Y 210</td><td>32.8</td><td>49.1</td><td>65.5</td></tr><tr><td>Y 230</td><td>15.9</td><td>23.9</td><td>31.9</td></tr><tr><td>Y 248 以上</td><td>3.8</td><td>5.6</td><td>7.5</td></tr></tbody></table>
 
 <p>天候は速度に掛け算されます。晴れ ×1、雨 ×1.5、雷雨 ×2。値は風力タービンの発電量と同じ設定から取られるため、発電と表示がずれることはありません。</p>
 
-<h2>高度プロファイル</h2>
+<h2 id="高度プロファイル">高度プロファイル</h2>
 
 <p>曲線はMOD全体で1つで、機器もこれで km/h を計算し、風力タービンも EU/FE/t を計算します。4つの区間があります。</p>
 
@@ -426,13 +426,13 @@
 
 <p>実用的な帰結：<strong>世界で最も風の強い場所は雲のすぐ下の狭帯域です</strong>。風力タービンが最大発電を出すのはわずかな高さのみです。T1——Y 183–193（11ブロック）、スカイミル——Y 188–192（5）、テンペストミル——Y 189–192（4）。「もっと高く」や「世界の天井すぐ下」は機能しません。Y 230 の塔は Y 127 の塔より弱いです。</p>
 
-<h2>空とワールド</h2>
+<h2 id="空とワールド">空とワールド</h2>
 
 <p><strong>閉じた空 ⇒ 0.0 km/h</strong> で、高さや天候に関わりません。機器は風力タービンと同じくらい厳格に空をチェックします。地点の上の柱が完全に透明でなければなりません。葉とクモの巣は閉じた空と見なされます。その下の風力タービンは停止します。葉の下で生産の一部しか失わないソーラーパネルとは異なります。</p>
 
 <p>ネザーとジ・エンドでは、機器は数値を表示せず、ここには風がないと通知します。風力タービンはそこでは機能せず、どんな数値もでっち上げになるためです。</p>
 
-<h2>目盛りの基準</h2>
+<h2 id="目盛りの基準">目盛りの基準</h2>
 
 <p>加速区間はブランチの峠で決まるため、機器は1つの基準——ベース風力タービン T1——を選びます。プレイヤーが最初に建てるものであり、機器がクラフト可能になる時点で存在する唯一のものです。峠より上は肩と希薄化がすべてのブランチで共通のため、基準は加速の形にのみ影響し、風が最大に達する場所や消える場所には影響しません。</p>
 
@@ -440,11 +440,11 @@
 
 <p>設定編集時の注意点：目盛りの連続性は、ブロックあたりのステップが 0.1 km/h より大きいことに依存します。極端に伸ばしたプロファイルや小さな は、隣接する高さで同じ数値を返すことがあります。</p>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p>棒2本、ガラス板1枚、スズインゴット2個、木の歯車2個。エネルギーも回路も不要で、最初の風力タービンよりずっと前に作れるシンプルな木製機器です。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="../generators/wind_mill.html">風力タービン</a>——機器が目盛りを合わせた T1 ブランチ。 <a href="../generators/high_altitude_wind_mill.html">スカイミル</a>——T2、同じ峠、2倍のベース。 <a href="../generators/storm_wind_mill.html">テンペストミル</a>——T2、より高い峠。</p>
 

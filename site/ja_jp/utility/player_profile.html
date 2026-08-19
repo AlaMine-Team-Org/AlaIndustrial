@@ -300,7 +300,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -317,7 +317,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -333,7 +333,7 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>プレイヤープロフィール</strong>はプレイヤー専用のプロフィール画面（）です。バニラの統計は 「ツルハシを X 個クラフト」と示しますが、モッドでの経歴 — ネットワークがどれだけ EU/FE を生産し、 機械がどれだけ鉱石を処理したか — は見えません。プロフィールはこのモッド活動を集計し、 <strong>経歴進行</strong> に変換します：40 レベルの熟練度ポイントシステムで、8 個のテーマ別階級 （見習いから伝説まで）にまとめられています。</p>
 
@@ -341,7 +341,7 @@
 
 <blockquote>バニラの進捗（一度きりのチェックポイント）やバニラの統計（無味乾燥な表）と <strong>混同しないで</strong>。 プロフィールは経歴の <em>累積メーター</em> に加えて、階級付きの進行です。</blockquote>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p><strong>主なソースは機械の稼働です。</strong> 熟練度は、機械が <strong>操作を完了した</strong> 瞬間（製錬、粉砕、抽出、圧縮）に、 その操作の全コスト分だけ機械の所有者に付与されます。レッドストーン回路で中断された操作は EU/FE を消費しますが熟練度は生み出しません — これは AFK 稼ぎ対策です。</p>
 
@@ -355,31 +355,31 @@
 
 <p>熟練度は <strong>派生値</strong> です：2 つの EU/FE 経歴カウンターから計算され、別途保存されないため、 コンフィグで換算率を調整しても蓄積された熟練度を「食いつぶす」ことはありません。到達した階級は バランス変更で下がりません — 到達した最大レベルが保持されます。</p>
 
-<h3>階級の系譜</h3>
+<h3 id="階級の系譜">階級の系譜</h3>
 
 <table><thead><tr><th>サブレベル</th><th>階級</th></tr></thead><tbody><tr><td>1–5</td><td>見習い</td></tr><tr><td>6–10</td><td>職人</td></tr><tr><td>11–15</td><td>技術者</td></tr><tr><td>16–20</td><td>オペレーター</td></tr><tr><td>21–25</td><td>エンジニア</td></tr><tr><td>26–30</td><td>アーキテクト</td></tr><tr><td>31–35</td><td>大物</td></tr><tr><td>36–40</td><td>伝説</td></tr></tbody></table>
 
-<h2>帰属とプライバシー</h2>
+<h2 id="帰属とプライバシー">帰属とプライバシー</h2>
 
 <p>統計は <strong>機械の所有者</strong> — それを設置した人（再設置時に再割り当て）— に帰属します。友人があなたの 機械に鉱石を入れても、熟練度はあなたに付きます。プロフィールは <strong>プレイヤーごとでプライベート</strong> です： サーバーでは自分の経歴しか見えません。付与は所有者が <strong>オンライン</strong> かつ <strong>クリエイティブでない</strong> 間のみ 行われます（クリエイティブでは EU/FE は無料で経歴に変換されません）。所有者のいない機械 （構造物、デモ台）は誰も熟練度を上げません。</p>
 
 <p><strong>他モッドの自動化による機械。</strong> 「所有者がオンライン」ルールは、機械をプレイヤーでなく他モッドの 「偽プレイヤー」（自動建築機、ロボット）が設置するケースもカバーします。それ用の仕組みは不要です： そのようなプレイヤーは接続済みリストに載ることがないため、UUID は誰にも解決されず、熟練度は誰にも 入りません。一方、自動化が実プレイヤーとして動く場合（権限や保護が所有者を見えるようにする一般的な手法）、 稼働はそのプレイヤーに計上されます — そして手で設置した機械と同様、オンラインの間のみです。 これは意識的な仕様であり、抜け穴ではありません。</p>
 
-<h2>保管</h2>
+<h2 id="保管">保管</h2>
 
 <p>プロフィールは <strong>プレイヤーごとの data attachment</strong> として保存され、再ログインと死亡を耐え、 所有者にのみ同期されます。サーバー側の蓄積はメモリ内でバッチ化され、数秒ごと（および退出/サーバー 停止時）にストレージへフラッシュされ、毎ティックの書き込みはありません。</p>
 
-<h2>ブロックの性質</h2>
+<h2 id="ブロックの性質">ブロックの性質</h2>
 
 <p>プレイヤープロフィールは <strong>純粋な画面（GUI）</strong> で、ブロックでもアイテムでもありません：ワールドに 何も配置されず、形状も当たり判定もありません。「入口」は物理アイテムでなく、ホットキーとバニラ インベントリのウィジェットボタンです（「入口」参照）。データはサーバーのプレイヤーごとの attachment に 存在し、画面は client-side です。</p>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>タイプ</td><td>画面（GUI）、ブロックでもアイテムでもない</td></tr><tr><td>ワールドへの設置</td><td>不可</td></tr><tr><td>形状 / 当たり判定</td><td>なし</td></tr><tr><td>開く方法</td><td>ホットキー <code>K</code> またはインベントリの右上のボタン（client-side）</td></tr><tr><td>データ保管</td><td>プレイヤーごとの data attachment（サーバー）</td></tr></tbody></table>
 
-<h2>入口</h2>
+<h2 id="入口">入口</h2>
 
 <p><strong>ホットキー <code>K</code></strong>（Profile） — デフォルト。「操作」で再割り当て可能。 <strong>ボタン</strong> — インベントリの右上（クリエイティブインベントリにはありません — ホットキーは どこでも動作します）。 <strong><code>/ala profile show|set &lt;xp&gt;</code></strong> — 運営用コマンド（デバッグと進行検証用）。</p>
 
-<h2>初版外</h2>
+<h2 id="初版外">初版外</h2>
 
 <p>クエストシステム、マイルストーン報酬バフ（実装時には — プレイヤーでなく — 機械/ネットワークのみ）、 サーバーでのプロフィール共有カード、拡張統計カテゴリ（クラフト、鉱石別採掘、用途別支出内訳）は 別の将来タスクです。このリストのテレポートはすでに「使用」に計上されています（）が、 プロフィールには独立した行として表示されません。</p>
 

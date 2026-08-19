@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 
 <p>The <strong>Fluid Pipe</strong> carries water, lava, oil and anything else between tanks, the pump and your machines, so you are not hauling buckets around. Lay the pipes in a line, use the <a href="../items/wrench.html">wrench</a> to say which side draws and which side pours, and the pipe handles the rest. It needs no power.</p>
 
@@ -400,7 +400,7 @@
 
 <p>Fluid genuinely travels along the pipe instead of appearing at the far end: every segment holds a small amount and hands it onward. A long run therefore fills up gradually, and you can watch the fluid front make its way down the line.</p>
 
-<h2>Fluid</h2>
+<h2 id="fluid">Fluid</h2>
 
 <table><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody><tr><td>Volume per segment</td><td>50 mB</td></tr><tr><td>Throughput</td><td>50 mB per tick (1 bucket per second)</td></tr><tr><td>Fluids at once</td><td>one per segment</td></tr><tr><td>Power use</td><td>none</td></tr></tbody></table>
 
@@ -410,7 +410,7 @@
 
 <blockquote>Breaking a pipe loses whatever was inside it. That is less than half a bucket per segment, and in exchange there is no spill to clean up.</blockquote>
 
-<h2>Sides and the wrench</h2>
+<h2 id="sides-and-the-wrench">Sides and the wrench</h2>
 
 <p>Sides work exactly like the <a href="../item-transport/item_pipe.html">item pipe</a> — same wrench, same order — so there are not two sets of rules to remember.</p>
 
@@ -420,25 +420,25 @@
 
 <blockquote>Shift+right-click with the wrench does not configure sides — that <strong>dismantles</strong> the pipe, as it does with any block of the mod.</blockquote>
 
-<h3>Pipe to pipe</h3>
+<h3 id="pipe-to-pipe">Pipe to pipe</h3>
 
 <p>Where a pipe meets another pipe there is nothing to draw from or pour into — it is simply part of the route. The wrench there only toggles "joined" and "cut". Cut it and join it back, and the line works again.</p>
 
-<h2>Block properties</h2>
+<h2 id="block-properties">Block properties</h2>
 
 <p>The pipe is not a full cube: a 4×4×4 core in the middle of the block (6 to 10 on each axis) plus a sleeve towards every connected side. Placed and broken with a pickaxe, hardness 0.2, blast resistance 0.5, copper sound. The block does not occlude light and you can see neighbouring blocks through it.</p>
 
 <p>The fluid shows through the casing, coloured by whatever is flowing: water blue, lava orange, oil black. Fluids from other mods show in their own colour too.</p>
 
-<h2>Recipe</h2>
+<h2 id="recipe">Recipe</h2>
 
-<p>Eight silver ingots around a block of glass, yielding eight pipes. The glass is not decorative — it is what lets you see the contents.</p>
+<p>Six silver ingots ringed around a block of glass — corners empty — yielding eight pipes. The glass is not decorative — it is what lets you see the contents.</p>
 
-<h2>Progression</h2>
+<h2 id="progression">Progression</h2>
 
 <p>The basic LV-tier pipe. Planned next: a reinforced one (higher throughput) and a filtering one (passes only a chosen fluid).</p>
 
-<h2>Related</h2>
+<h2 id="related">Related</h2>
 
 <p><a href="../fluid-storage/fluid_tank.html">Portable Tank</a> — fluid storage <a href="../fluid-machines/pump.html">Pump</a> — draws fluid from the world <a href="../item-transport/item_pipe.html">Item Pipe</a> — same wrench, same side modes <a href="../items/wrench.html">Wrench</a></p>
 

@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概览</h2>
+<h2 id="概览">概览</h2>
 
 <p><strong>指南书</strong>——Ala Industrial 模组的游戏内教程。新玩家进入世界时面对的是非平凡的机制 （EU/FE 而非 FE、LV/MV/HV 电压等级、带损耗的电缆、机器的端口朝向），在没有内置教程的情况 下只能猜测或阅读外部 wiki。指南书降低了入门门槛：玩家在<strong>首次进入世界时自动获得此书</strong> （恰好一次），<strong>右键打开</strong>——全屏窗口，带标签页和分页导航——按章节一步步走到第一个能 用的能源网络和机器，全程无需离开游戏。</p>
 
@@ -400,11 +400,11 @@
 
 <blockquote><strong>示例：</strong> 进入新世界 → 物品栏里有一本「指南书」 → 右键 → 打开带「从何开始」标签页的 屏幕 → 点击「太阳能板」链接 → 阅读它产生多少 EU/FE 以及如何合成。</blockquote>
 
-<h2>如何获得</h2>
+<h2 id="如何获得">如何获得</h2>
 
 <p><strong>首次进入时自动发放。</strong> 玩家首次进入世界时，书会被放入物品栏<strong>恰好一次</strong>。「已发放给 谁」的标志存储在<strong>世界级存档</strong>（含多个 UUID 的 <code>SavedData</code>）中——经历死亡/重生/跨维度 都不会丢失，重复进入也不会重复发放。 <strong>模组更新后的现有玩家</strong>也会收到一次：他们的 UUID 尚不在「已发放」集合中 → 更新后首次 进入时书会被发放，UUID 也会被加入。 <strong>丢失时恢复</strong>——两道保险，且都不影响自动发放： <strong>合成</strong>（便宜，LV 即可，无需蓝图门槛）； <strong><code>/alaindustrial guide</code></strong> 命令（复用现有的 <code>/ala</code> 命令；发放/打开书）。玩家永远不会 缺少教程。 如果自动发放时物品栏已满——书会掉落在玩家脚下（不会丢失）。</p>
 
-<h2>界面</h2>
+<h2 id="界面">界面</h2>
 
 <p>右键打开——<strong>全屏窗口</strong>（不是箱子：没有槽位、没有物品栏）。由以下部分组成：</p>
 
@@ -416,29 +416,29 @@
 
 <p>视觉上，指南书沿用模组的风格——与其余界面相同的配色和面板斜面。</p>
 
-<h2>内容</h2>
+<h2 id="内容">内容</h2>
 
 <p>书涵盖游戏中已有的所有方块和物品：每个都有简短描述、属性（等级、EU/FE、缓存）和合成配方。 书中的数值（EU/FE、等级、缓存、配方）来自与模组 wiki 站点相同的数据源，因此永远与游戏 一致——不会出现偏差。 尚未添加或仅计划中的方块不会进入书中：它不会承诺尚未存在的内容。 外围章节「从何开始」和「能量」作为面向新手的基础教程撰写。</p>
 
-<h2>方块属性</h2>
+<h2 id="方块属性">方块属性</h2>
 
 <p>指南书是<strong>物品</strong>（非方块）：不会放置到世界中，堆叠上限为 1，没有 EU/FE 缓存。「形状」就是 普通物品的平面图标。右键打开 GUI（见「界面」）；世界中不会放置任何方块，没有碰撞箱。</p>
 
 <table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>类型</td><td>物品（item），非方块</td></tr><tr><td>堆叠</td><td>1</td></tr><tr><td>EU/FE 缓存</td><td>无</td></tr><tr><td>右键</td><td>打开指南书屏幕（client-side）</td></tr><tr><td>世界放置</td><td>无</td></tr></tbody></table>
 
-<h2>配方</h2>
+<h2 id="配方">配方</h2>
 
 <p>合成<strong>非常简单</strong>，无形状：原版书 + 木质齿轮（模组中最早最廉价的组件）。没有蓝图门槛 （书反正会自动发放；合成仅用于丢失后恢复）。</p>
 
-<h2>进阶</h2>
+<h2 id="进阶">进阶</h2>
 
 <p>等级：无（实用工具，不参与能量链）。即时可用——这是进入进度的入口，而不是进度的一阶。 它引导玩家沿模组真正的进度推进（矿石 → 发电机 → 电缆 → 机器 → 等级）。</p>
 
-<h2>本地化</h2>
+<h2 id="本地化">本地化</h2>
 
 <p><strong>v1：<code>en_us</code> + <code>ru_ru</code></strong>——完整的章节内容（来源是 <code>en_us</code>，与整个模组一致）。 其余 18 种语言获得翻译后的物品名称，章节内容暂时以英文显示；完整章节翻译——稍后。 书中所有文本都走 lang 键；没有硬编码字符串（项目规则）。</p>
 
-<h2>相关内容</h2>
+<h2 id="相关内容">相关内容</h2>
 
 <p>指南书由与模组 wiki 站点相同的数据源生成：相同的内容和相同的数值，但就在玩家手中。</p>
 

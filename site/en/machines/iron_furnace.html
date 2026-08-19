@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
@@ -392,31 +392,33 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 
 <p>The <strong>Iron Furnace</strong> is an upgraded fuel furnace that sits between the vanilla furnace and the <a href="electric_furnace.html">Electric Furnace</a>. It's faster than vanilla and smelts everything vanilla does, but still runs on solid fuel (coal, planks, charcoal…) rather than EU/FE. It's an early upgrade for the player who hasn't built a power grid yet but wants to speed up smelting.</p>
 
-<p>It fully reuses the vanilla furnace UI — only the title differs. Recipes and behaviour match the vanilla furnace (via vanilla smelting), plus it accepts the mod's recipes on the same inputs.</p>
+<p>It fully reuses the vanilla furnace UI — only the title differs. Recipes and behaviour match the vanilla furnace: anything that smelts in a vanilla furnace smelts here too — the mod's ores, raw materials and metal dust included.</p>
 
 <blockquote><strong>Mini-example:</strong> wrap a vanilla furnace in eight iron ingots → get an Iron Furnace. Smelting is noticeably faster, fuel consumption is the same. An intermediate step before the Electric Furnace.</blockquote>
 
-<h2>Energy</h2>
+<h2 id="energy">Energy</h2>
 
 <p>Uses no EU/FE. Fuel is solid (as in a vanilla furnace). This is the key difference from the <a href="electric_furnace.html">Electric Furnace</a>, which runs on EU/FE.</p>
 
-<h2>How it's used</h2>
+<h2 id="how-its-used">How it's used</h2>
 
-<p>Placed like a normal furnace. Right-click opens the same UI (smelt slot, fuel slot, flame bar and progress arrow). Accepts all vanilla smelting recipes plus the mod's (dust → ingot, raw → ingot, etc.).</p>
+<p>Placed like a normal furnace. Right-click opens the same UI (smelt slot, fuel slot, flame bar and progress arrow). It takes every vanilla smelting recipe — and the ones the mod adds: ore → ingot, raw material → ingot, metal dust → ingot, iron ingot → Tempered Iron.</p>
 
-<h2>Block Properties</h2>
+<blockquote>What it <strong>can't</strong> do: recipes that exist only for the <a href="electric_furnace.html">Electric Furnace</a> (that one has a recipe type of its own). Today that means smelting uranium and palladium dust — available in the Electric Furnace only.</blockquote>
+
+<h2 id="block-properties">Block Properties</h2>
 
 <p>Cubic block with a front face (lit/unlit states — lit while working). Tier: LV (by the mod's classification — early machine), but actually runs without EU/FE. Hardness and tool: same as a vanilla furnace (stone pickaxe).</p>
 
-<h2>Sound</h2>
+<h2 id="sound">Sound</h2>
 
 <p>While lit, the furnace plays the vanilla fire crackle — the same ambience as the ordinary furnace (an irregular one-shot via, not a loop). No custom sample.</p>
 
-<h2>Recipes</h2>
+<h2 id="recipes">Recipes</h2>
 
 <p>Crafted at a workbench (shaped 3×3): vanilla furnace in the centre, surrounded by 8 iron ingots.</p>
 
@@ -426,11 +428,11 @@ III</code></pre>
 
 <p><code>I</code> — iron ingot (×8); <code>F</code> — vanilla furnace (×1).</p>
 
-<h2>Progression</h2>
+<h2 id="progression">Progression</h2>
 
 <p>Early machine (tier-stone), no EU/FE. Slots into the chain: vanilla furnace → <strong>Iron Furnace</strong> → <a href="electric_furnace.html">Electric Furnace</a> → Induction Furnace (concept). Each step is faster than the last. Doesn't need a power grid — you can drop it in any cave/mine where you have fuel.</p>
 
-<h2>Related</h2>
+<h2 id="related">Related</h2>
 
 <p><a href="electric_furnace.html">Electric Furnace</a> — the next step: switching from fuel to EU/FE. <a href="../utility/iron_chest.html">Iron Chest</a> — a sibling "upgraded vanilla" block.</p>
 

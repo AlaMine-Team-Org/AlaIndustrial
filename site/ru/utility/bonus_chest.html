@@ -300,7 +300,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепты</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="10 страниц">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="4 страницы">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
@@ -317,7 +317,7 @@
 <div class="group-title">Прочее</div>
 <a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="14 страниц">14</span></a>
 <div class="group-title">Предметы</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="2 страницы">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="20 страниц">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="20 страниц">20</span></a>
   </aside>
@@ -334,7 +334,7 @@
   </div>
 </div>
 
-<h2>Сводка</h2>
+<h2 id="сводка">Сводка</h2>
 
 <p><strong>Это не блок мода, а модификация ванильной loot-таблицы</strong> <code>minecraft:chests/spawn_bonus_chest</code>. Когда игрок создаёт новый мир с включённой опцией «Bonus Chest» (Бонусный сундук), в появившийся рядом со спавном сундук — помимо стандартных ванильных пулов (брёвна, доски, яблоки, каменные инструменты) — <strong>добавляются</strong> пулы со стартовыми предметами Ala Industrial. Цель — раннее знакомство игрока с модом: шанс получить косу, факел, шестерёнку или редкий tempered_iron-инструмент ещё до постройки первой машины.</p>
 
@@ -342,37 +342,37 @@
 
 <table><thead><tr><th>Параметр</th><th>Значение</th></tr></thead><tbody><tr><td>Тип</td><td>модификация ванильной loot-таблицы (add pool)</td></tr><tr><td>Цель</td><td><code>minecraft:chests/spawn_bonus_chest</code></td></tr><tr><td>Ванильные пулы</td><td>сохраняются</td></tr><tr><td>Подход</td><td>добавление в ванильный бонус-сундук, без замены его содержимого</td></tr><tr><td>Тир</td><td>n/a (контент смешанных тиров)</td></tr></tbody></table>
 
-<h2>Энергия</h2>
+<h2 id="энергия">Энергия</h2>
 
 <p>Не применимо — это не блок и не машина. EU/FE здесь не участвует; лишь некоторые предметы в пулах сами по себе являются EU/FE-предметами и попадают в сундук <strong>без начального заряда</strong> (как из крафта).</p>
 
-<h2>Процессинг</h2>
+<h2 id="процессинг">Процессинг</h2>
 
 <p>Не применимо. Лут генерируется один раз при создании мира/спавне сундука — никаких циклов или обработки в тиках.</p>
 
-<h2>Инвентарь</h2>
+<h2 id="инвентарь">Инвентарь</h2>
 
 <p>Сам бонусный сундук — это ванильный <code>minecraft:chest</code> со стандартным инвентарём 27 слотов. Добавление наших пулов не меняет его ёмкость; оно лишь расширяет распределение предметов, которые могут там оказаться.</p>
 
-<h2>Интерфейс</h2>
+<h2 id="интерфейс">Интерфейс</h2>
 
 <p>Без GUI от мода — используется ванильный интерфейс сундука.</p>
 
-<h2>Свойства блока</h2>
+<h2 id="свойства-блока">Свойства блока</h2>
 
 <p>Сам блок не наш — это ванильный сундук. Модификация касается только loot-таблицы.</p>
 
-<h2>Рецепты</h2>
+<h2 id="рецепты">Рецепты</h2>
 
 <p>Не применимо. Предметы в пулах — уже существующие зарегистрированные предметы мода:</p>
 
 <table><thead><tr><th>Категория</th><th>Записи (LootEntry)</th></tr></thead><tbody><tr><td>Коса (стартовая)</td><td>, (рандомно одна из них)</td></tr><tr><td>Факел</td><td>(стопка, рандомное кол-во)</td></tr><tr><td>Шестерёнка</td><td>(рандомно одна, 1–2 шт.)</td></tr><tr><td>Редкая: tempered_iron</td><td>/ <code>_axe</code> / <code>_sword</code> / <code>_shovel</code> (рандомно одна, <strong>мелкий</strong> шанс)</td></tr><tr><td>Редкая: батарейка</td><td>(одна из, <strong>мелкий</strong> шанс)</td></tr></tbody></table>
 
-<h2>Прогрессия</h2>
+<h2 id="прогрессия">Прогрессия</h2>
 
 <p>Это стартовая фича — даёт игроку первый контакт с инструментами мода до какой-либо прогрессии. Редкие tempered_iron-инструменты — <strong>намеренно малый шанс</strong>, чтобы не обесценить крафт.</p>
 
-<h2>Связанное</h2>
+<h2 id="связанное">Связанное</h2>
 
 <p><a href="../items/scythe.html">Косы</a> — стартовые инструменты. <a href="../items/tempered_iron_tools.html">Закалённое железо — инструменты</a> — редкий пул. <a href="../items/battery_pouch.html">Батарейный мешочек</a> — редкий EU/FE-предмет. <a href="enriched_uranium_torch.html">Урановый факел</a> — стартовый источник света. <a href="../components/metal_gears.html">Шестерёнки</a> — стартовый крафт-компонент.</p>
 

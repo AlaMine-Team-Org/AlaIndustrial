@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
@@ -392,13 +392,13 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 
 <p>The <strong>Sawmill</strong> is an LV wood-processing machine. It saws a log (or planks) at a <strong>higher yield</strong> than hand-crafting, and can cut into four different products — it has <strong>4 switchable modes</strong> (GUI buttons): <strong>planks / sticks / slabs / stairs</strong>. Every species yields its own species; sticks are species-agnostic. It is the cheapest operation in the mod by energy — sawing wood is easier than milling stone.</p>
 
 <blockquote><strong>Mini-example:</strong> put an oak log in "Planks" mode — in ~4 seconds you get <strong>6 oak planks</strong> instead of the vanilla 4. Switch to "Sticks" — the same log gives <strong>18 sticks</strong>.</blockquote>
 
-<h2>Energy</h2>
+<h2 id="energy">Energy</h2>
 
 <p>The Sawmill only consumes EU/FE and keeps a small buffer for smooth running.</p>
 
@@ -406,13 +406,13 @@
 
 <p>An LV machine — it draws up to 32 EU/FE per tick. Energy comes in on the five working faces. The <strong>front face</strong> (the one the machine "looks" toward) is inert — cables don't connect there and hoppers don't work through it.</p>
 
-<h2>Processing</h2>
+<h2 id="processing">Processing</h2>
 
 <p>The sawmill always works only in the <strong>active mode</strong>; the recipes of the other three modes are inactive meanwhile. Switching the mode resets the current progress (the new mode cuts a different product). One cut takes ~80 ticks (~4 s).</p>
 
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Recipe type</td><td>/ <code>sawing_sticks</code> / <code>sawing_slabs</code> / <code>sawing_stairs</code></td></tr><tr><td>Duration</td><td>~80 ticks (~4 s)</td></tr><tr><td>Cost per cut</td><td>160 EU/FE</td></tr><tr><td>Auto-output</td><td>no</td></tr></tbody></table>
 
-<h2>Inventory</h2>
+<h2 id="inventory">Inventory</h2>
 
 <p>One input slot, one output slot.</p>
 
@@ -420,17 +420,21 @@
 
 <p>An input is accepted if it matches <strong>any</strong> mode, so an item doesn't get "stuck" when you switch. In a non-matching mode the machine simply sleeps.</p>
 
-<h2>Interface</h2>
+<h2 id="interface">Interface</h2>
 
 <p>The screen has its own GUI: energy buffer, input and output slots, and between them a <strong>saw blade</strong> progress indicator that fills left to right. A row of <strong>4 mode buttons</strong> with ghost icons (plank/stick/slab/stairs) sits below the slots; the active mode is highlighted and each button has a tooltip.</p>
 
-<h2>Block properties</h2>
+<h2 id="block-properties">Block properties</h2>
 
 <p>An ordinary full block, softer than stone. Breaks with any pickaxe, but <strong>does not keep its charge</strong> when broken.</p>
 
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Keeps charge when broken</td><td>no</td></tr></tbody></table>
 
-<h2>Recipes</h2>
+<h2 id="sound">Sound</h2>
+
+<p>While running, the Sawmill emits rhythmic back-and-forth sawing strokes — the loop (pattern <strong>A</strong>, default 0.35). It falls silent when idle.</p>
+
+<h2 id="recipes">Recipes</h2>
 
 <p>The Sawmill is crafted at a workbench from three <strong>iron ingots</strong> on top as saw blades, an <a href="../components/electronic_circuit.html">electronic circuit</a> in the center for control, a <strong>silver ingot</strong> below it (as on every other LV machine) and <strong>planks</strong> (<code>#minecraft:planks</code>) as the wooden body.</p>
 
@@ -440,15 +444,15 @@
 
 <p>39 sawing recipes in total (12 species × planks/slabs/stairs + 3 stick recipes). Slabs, stairs and sticks are <strong>not accepted as input</strong> — there is no reverse loop or duping.</p>
 
-<h3>In the recipe viewer</h3>
+<h3 id="in-the-recipe-viewer">In the recipe viewer</h3>
 
 <p>In JEI/REI the sawmill contributes <strong>4 categories</strong> — one per mode (<code>sawing_planks</code>, <code>sawing_sticks</code>, <code>sawing_slabs</code>, <code>sawing_stairs</code>); the workstation for all of them is the sawmill itself. Clicking the progress arrow opens all four categories at once. Each is titled after its mode — "Sawmill: Planks", "Sawmill: Sticks", "Sawmill: Slabs", "Sawmill: Stairs" — so the tabs can be told apart; the mode name comes from the same translation the machine's own GUI buttons use.</p>
 
-<h2>Progression</h2>
+<h2 id="progression">Progression</h2>
 
 <p>Tier: LV. An early wood-processing machine. Evolves into: none (a base LV machine). Needs power from an LV source, e.g. the <a href="../generators/generator.html">Generator</a>.</p>
 
-<h2>Related</h2>
+<h2 id="related">Related</h2>
 
 <p><a href="electric_furnace.html">Electric Furnace</a> — the reused GUI, a neighboring LV machine. <a href="../generators/generator.html">Generator</a> — a power source.</p>
 

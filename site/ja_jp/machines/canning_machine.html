@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,19 +392,19 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>缶詰機</strong>は食料を缶に詰める機械ではありません。食料を「食料価値」まで煮詰め、それを同一のレーション に注ぎ直します。何を入れても出てくるのは同じアイテム——つまり<strong>手持ちの食料がすべて一つのスタックに まとまります</strong>。</p>
 
 <blockquote><strong>ミニ例：</strong> 収穫の余り物——ニンジン、パン、ベリー——をまとめて入れ、空き缶を添えて LV ケーブルを つなぎます。十数スロットの雑多な食料が、一スタックのレーションになります。</blockquote>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>内部バッファ</td><td>800 EU/FE</td></tr><tr><td>最大入力</td><td>32 EU/FE/tick（LV）</td></tr><tr><td>稼働時の消費</td><td>2 EU/FE/tick</td></tr><tr><td>1 回の操作コスト</td><td>レーション 1 個につき 200 EU/FE</td></tr><tr><td>所要時間</td><td>100 tick（約 5 秒）</td></tr></tbody></table>
 
 <p>エネルギーは 5 つの作業面から入ります。正面は不活性です。</p>
 
-<h2>処理</h2>
+<h2 id="処理">処理</h2>
 
 <p>この機械は独立した 2 段階で動きます。この違いが重要です。</p>
 
@@ -417,7 +417,7 @@
 
 <p>貯まった余りはウィンドウの「カロリー」行に表示され、ワールドを離れても<strong>保持されます</strong>。ただし機械を 壊すと失われます——缶と食料はドロップしますが、貯めたカロリーは戻りません。分解する前に、作りかけの レーションを仕上げてください。</p>
 
-<h2>食料価値</h2>
+<h2 id="食料価値">食料価値</h2>
 
 <p>食料の価値は<strong>満腹度と隠し満腹度の合計</strong>です。高カロリーな食料ほど多くのレーションになり、粗末な ものほど少なくなります。レーション 1 個のコストは <strong>12.0</strong> です。</p>
 
@@ -425,7 +425,7 @@
 
 <p>加工は<strong>常に損をします</strong>：レーションはコスト 12.0 に対して 9.6 しか持ちません。5 分の 1 が失われ ます——これが利便性の代価であり、食料の複製を不可能にしている当のものです。</p>
 
-<h2>機械が受け付けないもの</h2>
+<h2 id="機械が受け付けないもの">機械が受け付けないもの</h2>
 
 <p><strong>危険な食料：</strong> 生の鶏肉、腐った肉、青くなったジャガイモ、フグ、クモの目。加工がその危険を無料で 洗い落としてしまうのは公平ではありません。 <strong>自分のレーション。</strong> さもないと機械は自分の産物をすり潰し、その度に缶を 1 個焼くことになります。 <strong>食料でないすべて</strong>、および満腹度が 0 の食料。</p>
 
@@ -433,7 +433,7 @@
 
 <p><strong>シチューとハチミツは受け付けますが、容器は失われます。</strong> ボウルや瓶は食べたときにだけ返ります。 機械は返しません。</p>
 
-<h2>レーション</h2>
+<h2 id="レーション">レーション</h2>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>満腹度</td><td>8（ステーキと同じ）</td></tr><tr><td>隠し満腹度</td><td>1.6（ステーキは 12.8）</td></tr><tr><td>スタック</td><td>64</td></tr><tr><td>食べる時間</td><td>1 秒（通常の食料は 1.6）</td></tr></tbody></table>
 
@@ -443,23 +443,23 @@
 
 <p>食べている間、手の中の缶は開封された姿になります。</p>
 
-<h2>インベントリ</h2>
+<h2 id="インベントリ">インベントリ</h2>
 
 <table><thead><tr><th>スロット</th><th>受け付けるもの</th></tr></thead><tbody><tr><td>上の入力</td><td>食料</td></tr><tr><td>下の入力</td><td>空き缶</td></tr><tr><td>出力</td><td>レーション</td></tr></tbody></table>
 
-<h2>インターフェース</h2>
+<h2 id="インターフェース">インターフェース</h2>
 
 <p>エネルギー、2 つの入力、進捗、出力。その下に「カロリー」行があり、次のレーションまでに貯まった割合 を示します。</p>
 
-<h2>ブロックの性質</h2>
+<h2 id="ブロックの性質">ブロックの性質</h2>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>道具</td><td>ツルハシ</td></tr><tr><td>破壊時に電力を保持</td><td>いいえ</td></tr></tbody></table>
 
-<h2>音</h2>
+<h2 id="音">音</h2>
 
 <p>稼働中、機械はラインで缶がカタカタと軽く鳴る金属音を発します — ループ （パターン <strong>A</strong>、既定の 0.35）。停止中は無音になります （）。</p>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p>機械本体はマシンケーシングの周りをスズ板で囲んで作ります。空き缶も作業台で作れます：</p>
 
@@ -467,17 +467,17 @@
 T T → 空き缶 8 個
 TTT T — スズ板</code></pre>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p>LV ティア。この機械はスズに初めての大量消費先を与えます。缶は使い切りなので、一食ごとに金属を 新たに消費します。</p>
 
-<h2>この機械が向く相手</h2>
+<h2 id="この機械が向く相手">この機械が向く相手</h2>
 
 <p><strong>ステーキ農場には向きません。</strong> 肉が回っているなら、焼き豚肉 64 個はすでに 1 スロットで、加工した 場合より多くのカロリーがあります。これは意図した設計です。</p>
 
 <p><strong>雑多な食料と、旅路のために。</strong> ベリー、ニンジン、パン、収穫の余り、モブのドロップ——十数スロットの 雑多な食料が、1〜2 スロットの同一レーションにまとまります。</p>
 
-<h2>関連</h2>
+<h2 id="関連">関連</h2>
 
 <p><a href="../materials/tin.html">スズ</a> — 缶の材料。 <a href="compressor.html">圧縮機</a> — スズ板を作ります。 <a href="../generators/generator.html">発電機</a> — 電力源。</p>
 

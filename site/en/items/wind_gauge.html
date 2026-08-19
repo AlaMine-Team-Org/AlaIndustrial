@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
 <a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
@@ -392,13 +392,13 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 
 <p>The Wind Gauge is a hand instrument that needs no power. It builds nothing and produces nothing: it tells you the wind speed where you are standing, so a tower site for a <a href="../generators/wind_mill.html">Wind Mill</a> can be chosen <strong>before</strong> you build, instead of building, dismantling and moving it three times.</p>
 
 <p>The gauge <strong>gives no advice</strong>. No "climb higher", no "this spot is optimal", no "N blocks to the ceiling". It shows a measurement — the conclusion is yours.</p>
 
-<h2>How to use it</h2>
+<h2 id="how-to-use-it">How to use it</h2>
 
 <p><strong>Shift + right-click</strong> with the gauge in hand, in the air or against any block — it makes no difference. A line appears in the action bar and the instrument chimes:</p>
 
@@ -408,17 +408,17 @@
 
 <p>A plain right-click is not intercepted, so the gauge never gets in the way of placing blocks or opening machines. The reading is always taken <strong>where the player stands</strong>, not where the crosshair points.</p>
 
-<h2>The scale</h2>
+<h2 id="the-scale">The scale</h2>
 
 <p>The reading is a wind speed in km/h to one decimal. It <strong>changes on every block of height</strong>: climb one block and the number is different. Round numbers are rare, and that is not decoration — the wind curve is non-linear, so 24.7 and 47.1 are simply what it yields at those heights.</p>
 
-<p>The wind follows a single curve shared by the gauge and all three mills (see <a href="index.html#the-altitude-profile">the altitude profile</a>). In short: no wind at ground level, a climb towards the clouds, the strongest air right at the cloud deck, and thinning air above it.</p>
+<p>The wind follows a single curve shared by the gauge and all three mills (see <a href="#the-altitude-profile">the altitude profile</a>). In short: no wind at ground level, a climb towards the clouds, the strongest air right at the cloud deck, and thinning air above it.</p>
 
 <table><thead><tr><th>Height (sea level 63)</th><th>Clear</th><th>Rain</th><th>Thunder</th></tr></thead><tbody><tr><td>Y 63 and below</td><td>0.0</td><td>0.0</td><td>0.0</td></tr><tr><td>Y 85</td><td>12.6</td><td>18.9</td><td>25.3</td></tr><tr><td>Y 100</td><td>18.6</td><td>28.0</td><td>37.3</td></tr><tr><td>Y 127</td><td>28.1</td><td>42.2</td><td>56.3</td></tr><tr><td>Y 160</td><td>39.7</td><td>59.6</td><td>79.5</td></tr><tr><td>Y 175</td><td>49.3</td><td>73.9</td><td>98.6</td></tr><tr><td>Y 185</td><td>56.8</td><td>85.2</td><td>113.5</td></tr><tr><td><strong>Y 192 (clouds)</strong></td><td>62.5</td><td>93.8</td><td>125.0</td></tr><tr><td>Y 198</td><td>47.1</td><td>70.7</td><td>94.2</td></tr><tr><td>Y 210</td><td>32.8</td><td>49.1</td><td>65.5</td></tr><tr><td>Y 230</td><td>15.9</td><td>23.9</td><td>31.9</td></tr><tr><td>Y 248 and above</td><td>3.8</td><td>5.6</td><td>7.5</td></tr></tbody></table>
 
 <p>Weather multiplies the speed: clear ×1, rain ×1.5, thunder ×2. The values come from the same settings that drive the mills, so the reading cannot drift away from the generation.</p>
 
-<h2>The altitude profile</h2>
+<h2 id="the-altitude-profile">The altitude profile</h2>
 
 <p>One curve serves the whole mod: the gauge turns it into km/h, the mills turn it into EU/FE/t. Four</p>
 
@@ -431,13 +431,13 @@
 
 <p>The practical consequence: <strong>the windiest place in the world is a narrow band right under the clouds</strong>. Full output is available over a handful of heights only: T1 at Y 183–193 (11 blocks), the Sky Mill at Y 188–192 (5), the Tempest Mill at Y 189–192 (4). Neither "a bit higher" nor "at the world ceiling" works: a tower at Y 230 is weaker than one at Y 127.</p>
 
-<h2>Sky and dimension</h2>
+<h2 id="sky-and-dimension">Sky and dimension</h2>
 
 <p><strong>A closed sky means 0.0 km/h</strong>, whatever the height and the weather. The gauge tests the sky as strictly as the mill does: the column above the point must be fully transparent. Leaves and cobwebs count as a closed sky — a mill under them is dead, unlike a solar panel, which merely loses part of its output under foliage.</p>
 
 <p>In the Nether and the End the gauge shows no number and says there is no wind here: mills do not work there, and any number would be an invention.</p>
 
-<h2>The reference branch</h2>
+<h2 id="the-reference-branch">The reference branch</h2>
 
 <p>The climb segment by a branch's ridge, so the gauge picks one reference: the base Wind Mill (T1), the first one a player builds and the only one that exists by the time the gauge is craftable. Above the ridge every branch shares the same shoulder and the same thinning, so the choice only shapes the climb — not where the wind peaks or where it dies.</p>
 
@@ -445,11 +445,11 @@
 
 <p>One caveat if the config is edited: the scale stays continuous only while the per-block step exceeds 0.1 km/h. A heavily stretched profile, or a small, will make adjacent heights read the same.</p>
 
-<h2>Recipe</h2>
+<h2 id="recipe">Recipe</h2>
 
 <p>Two sticks, a glass pane, two tin ingots and two wooden gears. No power and no circuits — a plain wooden instrument, built long before the first mill.</p>
 
-<h2>Related</h2>
+<h2 id="related">Related</h2>
 
 <p><a href="../generators/wind_mill.html">Wind Mill</a> — the T1 branch the gauge is scaled to. <a href="../generators/high_altitude_wind_mill.html">Sky Mill</a> — T2, same ridge, double the base. <a href="../generators/storm_wind_mill.html">Tempest Mill</a> — T2, a higher ridge.</p>
 

@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепти</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="10 сторінок">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="4 сторінки">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Інше</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилітарні блоки</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
 <div class="group-title">Предмети</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
   </aside>
@@ -392,13 +392,13 @@
     </div>
   </div>
 </div>
-<h2>Зведення</h2>
+<h2 id="зведення">Зведення</h2>
 
 <p><strong>Компресор</strong> — LV-машина, яка стискає сировину у щільніші форми: металевий пил — на зливки, вугільний і самоцвітний пил — назад на предмети, лід і сніг — на щільніші блоки, тростину — на папір. Її головна робота — замкнути цикл подвоєння руди для <strong>неметалів</strong>: це єдина машина, яка відновлює вугільний, алмазний, смарагдовий і лазуритовий пил у придатний предмет, тому схема руда → 2 пили → 2 предмети працює і для них.</p>
 
 <blockquote><strong>Міні-приклад:</strong> перемеліть алмазну руду в <a href="macerator.html">Подрібнювачі</a> — отримаєте дві алмазні пили, — і проженіть обидві через компресор. З однієї руди вийшло <strong>два алмази</strong>, і цей останній крок уміє тільки він.</blockquote>
 
-<h2>Енергія</h2>
+<h2 id="енергія">Енергія</h2>
 
 <p>Компресор лише споживає EU/FE і тримає невеликий буфер, щоб не смикатися при ривках подачі.</p>
 
@@ -408,45 +408,47 @@
 
 <p>Енергія заходить із п'яти робочих граней. <strong>Лицьова грань</strong> (туди «дивиться» морда) інертна — кабелі до неї не підключаються, лійки крізь неї не працюють.</p>
 
-<h2>Процесинг</h2>
+<h2 id="процесинг">Процесинг</h2>
 
 <p>Кожне стиснення йде 130 тиків (~6,5 с) і коштує 260 EU/FE. Готовий результат сам не вилітає — забирайте руками або лійкою.</p>
 
 <table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Тривалість</td><td>130 тиків (~6,5 с)</td></tr><tr><td>Ціна операції</td><td>260 EU/FE</td></tr><tr><td>Авто-вивантаження</td><td>немає</td></tr></tbody></table>
 
-<h2>Інвентар</h2>
+<h2 id="інвентар">Інвентар</h2>
 
 <p>Один слот на вхід, один на вихід.</p>
 
 <table><thead><tr><th>Слот</th><th>Приймає</th><th>К-сть</th></tr></thead><tbody><tr><td>Вхід</td><td>предмети, які компресор уміє стискати</td><td>1</td></tr><tr><td>Вихід</td><td>результат</td><td>1</td></tr></tbody></table>
 
-<h2>Інтерфейс</h2>
+<h2 id="інтерфейс">Інтерфейс</h2>
 
 <p>На одному екрані видно запас енергії, прогрес, слот входу й слот виходу.</p>
 
-<h2>Властивості блока</h2>
+<h2 id="властивості-блока">Властивості блока</h2>
 
 <p>Звичайний суцільний блок, м'якший за камінь. Ламається будь-яким кайлом, але <strong>при зламі заряд НЕ зберігає</strong>.</p>
 
 <table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Інструмент</td><td>кайло</td></tr><tr><td>Зберігає заряд при зламі</td><td>ні</td></tr></tbody></table>
 
-<h2>Звук</h2>
+<h2 id="звук">Звук</h2>
 
 <p>Під час роботи компресор видає глибокий механічний удар ущільнення. Замовкає, коли машина простоює.</p>
 
-<h2>Рецепти</h2>
+<h2 id="рецепти">Рецепти</h2>
 
 <p>Що він стискає, згруповано за задачами:</p>
 
-<table><thead><tr><th>Вхід</th><th>Вихід</th><th>Чому це важливо</th></tr></thead><tbody><tr><td>Неметалевий пил (вугілля, алмаз, смарагд, лазурит)</td><td>назад на предмет</td><td><strong>єдина машина, яка їх відновлює</strong> — замикає неметалеве подвоєння</td></tr><tr><td>Металевий пил (мідь, залізо, золото)</td><td>зливок</td><td>альт. шлях замість електропечі</td></tr><tr><td>Зливок (8 металів)</td><td><a href="../components/material_forms.html">пластина</a></td><td>машинний шлях кування пластин, альтернатива <a href="../items/forge_hammer.html">ковальському молоту</a></td></tr><tr><td>Кулька глини</td><td>цегла</td><td>випал глини тиском</td></tr><tr><td>Лід</td><td>щільний лід</td><td>1:1, замість 9 льоду на верстаку</td></tr><tr><td>Щільний лід</td><td>синій лід</td><td>1:1, замість 9 щільного льоду на верстаку</td></tr><tr><td>Сніговий блок</td><td>лід</td><td>новий шлях до льоду, без циклу назад</td></tr><tr><td>Тростина</td><td>папір</td><td>1:1, замість крафта 3→3</td></tr></tbody></table>
+<table><thead><tr><th>Вхід</th><th>Вихід</th><th>Чому це важливо</th></tr></thead><tbody><tr><td>Неметалевий пил (вугілля, алмаз, смарагд, лазурит)</td><td>назад на предмет</td><td><strong>єдина машина, яка їх відновлює</strong> — замикає неметалеве подвоєння</td></tr><tr><td>Металевий пил (мідь, залізо, золото)</td><td>зливок</td><td>альт. шлях замість електропечі</td></tr><tr><td>Зливок (8 металів)</td><td><a href="../components/material_forms.html">пластина</a></td><td>машинний шлях кування пластин, альтернатива <a href="../items/forge_hammer.html">ковальському молоту</a></td></tr><tr><td>Кулька глини</td><td>цегла</td><td>випал глини тиском</td></tr><tr><td>Лід</td><td>щільний лід</td><td>1:1, замість 9 льоду на верстаку</td></tr><tr><td>Щільний лід</td><td>синій лід</td><td>1:1, замість 9 щільного льоду на верстаку</td></tr><tr><td>Сніговий блок</td><td>лід</td><td>новий шлях до льоду, без циклу назад</td></tr><tr><td>Тростина</td><td>папір</td><td>1:1, замість крафта 3→3</td></tr><tr><td>Світлокам'яний пил ×4</td><td>світлокамінь</td><td>та сама ціна, що й на верстаку, але автоматизується</td></tr><tr><td>Червоний пил ×9</td><td>блок червоного каменю</td><td>та сама ціна, що й на верстаку, але автоматизується</td></tr></tbody></table>
+
+<p>Два останні рецепти — <strong>порційні</strong>: компресор накопичує потрібну кількість предметів у вхідному слоті й витрачає їх разом. Менше ніж чотири світлокам'яні пили (або дев'ять червоних) він просто не візьме в роботу — стрілка прогресу стоїть, доки не набереться повна порція.</p>
 
 <p>Головне: для <strong>вугілля, алмазу, смарагду й лазуриту</strong> компресор — <em>єдиний</em> спосіб повернути пил назад на предмет, <a href="electric_furnace.html">Електропіч</a> їх не плавить. Саме тому він — напарник, що замикає подвоєння для неметалів. (Лазуритовий пил усе одно дає ×1 назад за пил, тож зайвого дюпу немає: предмет → 1 пил → 1 предмет.)</p>
 
-<h2>Прогресія</h2>
+<h2 id="прогресія">Прогресія</h2>
 
 <p>Тир: LV. Машина ущільнення й замикач неметалевого циклу подвоєння. Ні у що не розвивається у v0.1. Потребує живлення від LV-джерела, наприклад <a href="../generators/generator.html">Генератора</a>.</p>
 
-<h2>Пов'язане</h2>
+<h2 id="повязане">Пов'язане</h2>
 
 <p><a href="macerator.html">Подрібнювач</a> — дає пил, який ця машина стискає назад на предмети. <a href="electric_furnace.html">Електропіч</a> — плавить металевий пил (компресор — неметалева пара до неї). <a href="../components/electronic_circuit.html">Електронна схема</a> — компонент за ланцюжком переробки. <a href="../generators/generator.html">Генератор</a> — джерело живлення.</p>
 

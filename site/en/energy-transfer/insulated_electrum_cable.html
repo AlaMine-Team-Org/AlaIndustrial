@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link active" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 
 <blockquote>✅ <strong>Safe to touch:</strong> the rubber sheath completely prevents contact shock at every energy flow, regardless of neighbouring cable tiers or configured damage. That matters most here — bare electrum deals 10 damage, the highest of any wire in the mod.</blockquote>
 
@@ -400,7 +400,7 @@
 
 <p>The result is a wire with no operational drawback at all: the widest, the longest-reaching, and safe to touch. Its entire cost sits in the craft — electrum and diamond dust for the bare grade first, then rubber for the sheath.</p>
 
-<h2>Energy</h2>
+<h2 id="energy">Energy</h2>
 
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>transfer</td></tr><tr><td>Tier</td><td>HV</td></tr><tr><td>Max voltage</td><td>512 EU/FE/packet</td></tr><tr><td>Throughput</td><td>192 EU/FE/tick = the segment working buffer</td></tr><tr><td>Loss</td><td><strong>0.0025</strong> attenuation per block; positive flow delivers <code>max(1, ceil(N × 0.9975^distance))</code> EU/FE/tick</td></tr><tr><td>Insulation</td><td>rubber; complete shock protection</td></tr></tbody></table>
 
@@ -408,17 +408,17 @@
 
 <p>In a mixed network the grade with the higher packet cap sets the network loss rate. At an equal cap the bare grade wins over the insulated one: a single insulated segment does not improve an otherwise bare line. The reduced 0.0025 applies only to a fully insulated electrum network.</p>
 
-<h2>Block Properties</h2>
+<h2 id="block-properties">Block Properties</h2>
 
 <p>A thin rubber-sheathed wire that connects to neighbouring blocks. Any tool breaks it, and shears are especially handy.</p>
 
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>thin rod (6px core + sleeves),</td></tr><tr><td>Hardness</td><td>0.2</td></tr><tr><td>Tool</td><td>any / shears</td></tr></tbody></table>
 
-<h2>Recipes</h2>
+<h2 id="recipes">Recipes</h2>
 
 <p>Six electrum cables and three rubber on a crafting table give <strong>6</strong> insulated ones. Rubber cost is 0.5 per cable, same as every other grade. There is no wool alternative: insulation is a consumer of vulcanized rubber. Processing recipes: none.</p>
 
-<h2>Related</h2>
+<h2 id="related">Related</h2>
 
 <p><a href="electrum_cable.html">Electrum Cable</a> — the bare version, which shocks for 10. <a href="insulated_gold_cable.html">Insulated Gold Cable</a> — the MV version for flows up to 48 EU/FE/tick. <a href="../components/rubber.html">Rubber</a> — the sheath material.</p>
 

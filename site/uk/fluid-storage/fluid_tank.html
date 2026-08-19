@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепти</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="10 сторінок">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="4 сторінки">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Інше</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилітарні блоки</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
 <div class="group-title">Предмети</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
   </aside>
@@ -392,23 +392,23 @@
     </div>
   </div>
 </div>
-<h2>Зведення</h2>
+<h2 id="зведення">Зведення</h2>
 
 <p><strong>Переносний бак</strong> зберігає до <strong>8 відер (8000 мБ)</strong> однієї рідини. Він не витрачає EU/FE, не перекачує рідину самостійно й не має GUI: рівень і тип рідини видно прямо крізь скляні стінки корпусу.</p>
 
 <p>Бак приймає воду, лаву й рідини інших модів через відро, вакуумну капсулу або ємності інших модів. При руйнуванні вміст лишається у випалому предметі й відновлюється після встановлення.</p>
 
-<h2>Рідина</h2>
+<h2 id="рідина">Рідина</h2>
 
 <table><thead><tr><th>Параметр</th><th>Значення</th></tr></thead><tbody><tr><td>Місткість</td><td>8000 мБ (8 відер)</td></tr><tr><td>Варіантів одночасно</td><td>1</td></tr><tr><td>Ввід / вивід</td><td>усі 6 граней</td></tr><tr><td>Автоматична видача</td><td>немає</td></tr><tr><td>Одиниця ядра</td><td>мБ, 1000 мБ = 1 відро</td></tr></tbody></table>
 
 <p>Рідини не змішуються: поки всередині є вода, лава чи інший варіант не приймається. Fabric рахує обсяг у мілібакетах (мБ), і на NeoForge бак працює так само.</p>
 
-<h2>Взаємодія</h2>
+<h2 id="взаємодія">Взаємодія</h2>
 
 <p>Відро води або лави переносить у бак рівно 1000 мБ, якщо є місце. Порожнє відро забирає 1000 мБ, лише якщо в баку є ціле відро води або лави. <a href="../items/vacuum_capsule.html">Вакуумна капсула</a> заповнює й спорожняє бак. Труби й контейнери інших модів можуть вставляти й видобувати рідину через будь-яку грань. Компаратор видає 0 для порожнього бака й 1–15 пропорційно заповненню.</p>
 
-<h2>Властивості блока</h2>
+<h2 id="властивості-блока">Властивості блока</h2>
 
 <p>Корпус займає повний блок: нижня й верхня пластини по 3 px, чотири кутові стійки 3×3 px і чотири напівпрозорі скляні стінки. Скло й рідина малюються окремою моделлю всередині рами, без накладань.</p>
 
@@ -418,7 +418,7 @@
 
 <p>Заповнений предмет зберігає тип і обсяг одним атомарним компонентом. Це виключає стан, де обсяг відділився від типу рідини при копіюванні або розділенні стека. В інвентарі внутрішній шар іконки фарбується зареєстрованим кольором рідини, а стандартна нижня шкала предмета показує частку заповнення відносно 8000 мБ.</p>
 
-<h2>Пов'язане</h2>
+<h2 id="повязане">Пов'язане</h2>
 
 <p><a href="../items/vacuum_capsule.html">Вакуумна капсула</a> — ручний контейнер на одне відро. Рідинні труби — майбутня автоматизація транспортування.</p>
 

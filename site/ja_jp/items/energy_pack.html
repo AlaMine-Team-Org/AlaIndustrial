@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>エネルギーパック</strong>は装着可能なエネルギーバッファです。チェストプレートのスロットに装備し、着用している間、毎秒インベントリ内のすべての電力アイテムを充電します。現在、そのようなアイテムは<a href="battery_pouch.html">バッテリーポーチ</a>のみです。パックを背負えば、ポーチは遠征中にゼロまで放電してロックされることはありません。</p>
 
@@ -402,29 +402,29 @@
 
 <blockquote><strong>簡単な例：</strong> 充電済みのパックを装備し、半分空のポーチをホットバーに入れて半日掘りに行きましょう。パックが毎シーズンポーチを充電し、もうロックされることはありません。自分の収納を開けるためだけに拠点へ戻る必要はありません。</blockquote>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <p>エネルギーネットワークから独立した専用のバッファを持ちます。エネルギー貯蔵庫で充電され、インベントリ内のアイテムに充電を供給します。ただし装備中のみです。</p>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>充電量</td><td>20 000 EU/FE（ポーチ10個分、エネルギー貯蔵庫と同等）</td></tr><tr><td>充電</td><td>エネルギー貯蔵庫のスロット——満充電まで約31秒</td></tr><tr><td>アイテムへの供給</td><td>インベントリ全体で毎秒最大 640 EU/FE</td></tr><tr><td>パッシブ放電</td><td>なし——充電は何かを充電するためにのみ消費されます</td></tr><tr><td>配給順序</td><td>ホットバー → 残りのインベントリ → オフハンド → カーソル → 2×2 クラフトグリッド</td></tr><tr><td>防御</td><td>2（革より低い）</td></tr></tbody></table>
 
-<h2>仕組み</h2>
+<h2 id="仕組み">仕組み</h2>
 
 <p><strong>装備：</strong> チェストプレートのスロット。パックは<strong>装備中のみ</strong>機能します。バックパック内、チェスト内、手に持っている場合は何も充電しません。 <strong>アイテムの充電：</strong> 毎秒、インベントリ内の充電可能なあらゆるアイテムに最大 640 EU/FE を配給します。スロット順に巡回します。最初にホットバー、次にメインインベントリ、次にオフハンド、次に「カーソル上」のアイテム、インベントリの 2×2 クラフトグリッドです。各アイテムは収まるだけ受け取り、予算の残りは次に渡されます。 <strong>カーソルとクラフトグリッド：</strong> 開いたインベントリでカーソルで持っている、または 2×2 クラフトグリッドに置いたポーチは、他と同様に充電されます。どのみち手元にあるため、アイテムを並べ替えている間に充電が止まるべきではありません。 <strong>充電しないもの：</strong> 他のエネルギーパック（さもなければ2つのパックが無駄に互いへ充電を送り合うことになります）、コンテナ内のアイテム——ポーチ、バニラのバンドル、シュルカーボックス——および開いたチェストや機械の中身は、あなたではなくワールドに属します。 <strong>クリエイティブ：</strong> パック、ポーチ、ドリルいずれも充電を一切消費しません。バニラのツールがクリエイティブで耐久値を減らさないのと同じです。ただし他のアイテムの充電は継続するため、充電済みパックはクリエイティブで無限に機能します。完全に空のパックは配給するものがありません。 <strong>アイドル時：</strong> 充電する対象がない場合——満タンのポーチ、空のパック、通常のアイテム——パックは何も消費せず、充電量はまったく変化しません。 <strong>パック自身の充電：</strong> エネルギー貯蔵庫の充電スロットで行います。同じスロットはポーチも受け付けます。充電可能なあらゆるアイテムを受け入れます。 <strong>表示：</strong> アイコン下のバーが充電量を示します（黄色、ポーチと同じ）。ツールチップには「充電量：X / 20 000 EU/FE」、ゼロでは赤色の「空」と表示されます。 <strong>画面インジケーター（HUD）：</strong> パックを装備している間、左上にアイコン、充電率のパーセント、バー（放電に伴い緑 → 黄 → 赤）が表示されます。デフォルトでオン、ホットキー <strong>H</strong>（「操作」→ Ala Industrial カテゴリとMOD設定で変更可能）で切り替えできます。パックを装備していないときは表示されません。 <strong>放電時の見た目：</strong> 充電ゼロでは、アイコンと背中のモデルの両方が「消灯」状態に切り替わります。緑のランプが赤になり、セルが薄くなります。 <strong>耐久値とエンチャント：</strong> 耐久値はなく、パックは壊れず、プレイヤーへのダメージで摩耗しません。金床とエンチャントテーブルは受け付けません。 <strong>ドロップ時、死亡時、再ログイン時：</strong> 充電量はアイテムに保存され、保持されます。</p>
 
-<h2>ブロックの性質</h2>
+<h2 id="ブロックの性質">ブロックの性質</h2>
 
 <p>該当なし（アイテム）。</p>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p>作業台で 3 個の<strong>バッテリー</strong>——錫、レッドストーン、銅ケーブルから作る新型セル部品——を革の本体で包んで作り、上部に電子回路、下部に錫のバックルを置きます。バッテリーは今のところクラフト用の部品のみで、単体では充電を持ちません。</p>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p><a href="battery_pouch.html">バッテリーポーチ</a>の次のステップです。ポーチが物を運び、パックがポーチに供給します。 <a href="../energy-storage/battery_box.html">エネルギー貯蔵庫</a>の後に利用可能です。これがなければパックは充電できません。 LV 等級。上位版（より大きなバッファ、より速い供給）や消費者としての電動ツールは今後の課題です。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="battery_pouch.html">バッテリーポーチ</a>——パックのエネルギーの最初の消費者。 <a href="../energy-storage/battery_box.html">エネルギー貯蔵庫</a>——パックの充電源（charge スロット）。 <a href="../components/electronic_circuit.html">電子回路</a>——クラフトの構成要素。 <a href="../materials/tin.html">スズ</a>——バッテリーの筐体とパックのバックル。</p>
 

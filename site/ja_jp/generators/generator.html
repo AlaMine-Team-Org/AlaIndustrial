@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,13 +392,13 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>発電機</strong>は固体燃料 — 石炭、木炭、石炭ブロック、バニラのかまどで燃えるものすべて — を燃やしてEUに変えます。 太陽も風もない時に頼れる、気の利かない安定源です: 昼夜・天候を問わず、ただ動きます。</p>
 
 <blockquote><strong>ミニ例:</strong> 石炭を1つ投げ込み、ケーブルを繋げば、最初の<a href="../machines/macerator.html">粉砕機</a>用に <strong>8 EU/FE/t</strong> の安定電力が得られます。天候は関係なく、燃料だけが問題です。</blockquote>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <p>発電機はエネルギーを生産するだけで、外部からの電力は受け取りません。内部に最大4000 EUを保持し、LVのラインに出力します。</p>
 
@@ -406,7 +406,7 @@
 
 <p>エネルギーは5つの稼働面から流出します。<strong>正面</strong> (設置時にあなたを向く面) は不活性で、 ケーブルも接続できず、ホッパーも機能しません。</p>
 
-<h2>発電</h2>
+<h2 id="発電">発電</h2>
 
 <p>任意のバニラかまど燃料を供給してください。燃料がある限り 8 EU/FE/t の一定ペースで燃え、 バッファが満杯になると空きができるまで一時停止します。</p>
 
@@ -414,7 +414,7 @@
 
 <p>燃料1単位が与えるEUは、かまどで燃えるティック数と同量で、8 EU/FE/t で支払われます。</p>
 
-<h2>インベントリ</h2>
+<h2 id="インベントリ">インベントリ</h2>
 
 <p>燃料用のスロット1つだけです。</p>
 
@@ -422,25 +422,25 @@
 
 <p>溶岩の入ったバケツは<strong>入れないでください</strong> — 溶岩は<a href="geothermal_generator.html">地熱発電機</a>用です。</p>
 
-<h2>インターフェース</h2>
+<h2 id="インターフェース">インターフェース</h2>
 
 <p>1画面でバッファの充填度、現在の燃料の残り燃焼時間、燃料スロット、出力速度が分かります。</p>
 
-<h2>ブロックの性質</h2>
+<h2 id="ブロックの性質">ブロックの性質</h2>
 
 <p>通常の全面キューブブロックです。任意のツルハシで壊せますが、<strong>破壊時に電荷は保持しません</strong> — 持ち上げる前にエネルギーをエネルギー貯蔵庫に逃がしてください。</p>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>ツール</td><td>ツルハシ</td></tr><tr><td>破壊時に電荷を保持</td><td>いいえ</td></tr></tbody></table>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p>クラフトテーブルで組み立てます。発電機であり、加工機ではないため、再加工レシピはありません。</p>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p>ティア: LV。初期の燃料発電機です。 どこにも進化しません — より強力な燃料発電機 (<a href="geothermal_generator.html">地熱発電機</a>)は別ブロックで、これからクラフトします。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="../machines/macerator.html">粉砕機</a> — 給電すべき典型的な最初のLV機械。 <a href="../energy-storage/battery_box.html">エネルギー貯蔵庫</a> — 余剰を蓄え、発電機移動前の充電受け入れもします。 <a href="geothermal_generator.html">地熱発電機</a> — 溶岩によるアップグレード。 <a href="../energy-transfer/copper_cable.html">銅ケーブル</a> — エネルギー分配用。</p>
 

@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>真空カプセル</strong>はスタック可能な液体コンテナです。バニラのバケツの問題を解決します。バケツはスタックできず、バケツごとにスロットを占めるため、大量の液体を運ぶのが不便です。</p>
 
@@ -402,7 +402,7 @@
 
 <blockquote><strong>簡単な例：</strong> ポンプから遠く離れた溶岩発電所を建てていますか？ 1スタックに空のカプセルを16個持ち、ポンプのタンクで数回のクリックで全て満たし、16バケツの溶岩をインベントリ1スロットで持ち帰りましょう。通常のバケツなら16スロットを占める旅行です。</blockquote>
 
-<h2>内容物</h2>
+<h2 id="内容物">内容物</h2>
 
 <p>満杯のカプセルはバケツと同じ量の1つの液体を正確に保持します。スタックの仕方：</p>
 
@@ -410,23 +410,23 @@
 
 <p>同じ液体の2つのカプセルは常に等しく、一緒にスタックします。内容物はドロップ、死亡、移動時に保持されます。</p>
 
-<h2>仕組み</h2>
+<h2 id="仕組み">仕組み</h2>
 
-<p><strong>ワールドからの充填：</strong> 空のカプセルで液体源（水、溶岩、他MODの液体）を右クリックします。カプセルは源を取り込み、バニラのバケツのように満杯になります。 <strong>タンクからの充填：</strong> ブロックタンクの面——MODのポンプや地熱発電機、他MODの機械を含むあらゆる fluid ポート——を右クリックすると、正確に1バケツをカプセルに抽出します。一部抽出はありません。全体のバケツか無いかです。 <strong>ワールドへの空き：</strong> 満杯のカプセルで右クリックすると液体を配置します（ブロック形態のない一部の特殊な液体はタンクにのみ注入でき、ワールドにはできません）。ネザーでは水はバケツと同様に蒸発します。 <strong>タンクへの空き：</strong> 満杯のカプセルでタンクの面を右クリックすると、そのバケツを注入します。タンクが全体のバケツを受け入れた場合、カプセルは空になります。 <strong>アイテムの交換：</strong> 充填または空きにより、空のカプセルと満杯のカプセルが入れ替わります。クリエイティブモードではバニラのバケツと同様に元のスタックは消費されません。 <strong>名前：</strong> 満杯のカプセルは動的な名前「カプセル：&lt;液体&gt;」を持ち、ツールチップには「1000 mB（1 バケツ）」と表示されます。 <strong>パイプとタンク：</strong> カプセルは他MODと調和します。他MODのパイプとタンクはスロット内で直接充填・空にできます。</p>
+<p><strong>ワールドからの充填：</strong> 空のカプセルで液体源（水、溶岩、他MODの液体）を右クリックします。カプセルは源を取り込み、バニラのバケツのように満杯になります。 <strong>タンクからの充填：</strong> ブロックタンクの面——MODのポンプや地熱発電機、他MODの機械を含むあらゆる fluid ポート——を右クリックすると、正確に1バケツをカプセルに抽出します。一部抽出はありません。全体のバケツか無いかです。 <strong>ワールドへの空き：</strong> 満杯のカプセルで右クリックすると液体を配置します（ブロック形態のない一部の特殊な液体はタンクにのみ注入でき、ワールドにはできません）。ネザーでは水はバケツと同様に蒸発します。 <strong>タンクへの空き：</strong> 満杯のカプセルでタンクの面を右クリックすると、そのバケツを注入します。タンクが全体のバケツを受け入れた場合、カプセルは空になります。 <strong>アイテムの交換：</strong> 充填または空きにより、空のカプセルと満杯のカプセルが入れ替わります。クリエイティブモードではバニラのバケツと同様に元のスタックは消費されません。 <strong>見た目：</strong> カプセルのガラスは中の液体の色に染まります——水は青、溶岩はオレンジ、原油はほぼ黒、ディーゼルは金色、重油は濃い茶色です。インベントリのカプセルのスタックはカーソルを合わせずとも一目で判別できます。本MODが色を持たない液体（他MODのものなど）は、中立的な灰青色の充填として表示されます。 <strong>パイプとタンク：</strong> カプセルは他MODと調和します。他MODのパイプとタンクはスロット内で直接充填・空にできます。</p>
 
-<h2>ブロックの性質</h2>
+<h2 id="ブロックの性質">ブロックの性質</h2>
 
 <p>該当なし（アイテム）。</p>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p>すべての構成要素が揃うとレシピ帳にレシピが表示され、空のカプセル1つを与えます。</p>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p>早期に利用可能です。スズはフェーズ1の金属、銅ケーブルはエネルギーネットワークと共に登場し、レッドストーンとガラスはバニラです。カプセルは焼き入れ鉄や電子回路を必要としないため、<a href="battery_pouch.html">バッテリーポーチ</a>より早く現れます。 MODの液体機械——<a href="../fluid-machines/pump.html">ポンプ</a>と地熱発電機——とペアで機能し、16回充填可能なスタック可能な携帯バケツとして働きます。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="../fluid-machines/pump.html">ポンプ</a>——液体を自身のタンクに汲み上げます。カプセルはそこから充填し、戻し注入します。 <a href="../energy-transfer/copper_cable.html">銅ケーブル</a>——クラフトの構成要素。 <a href="../materials/tin.html">スズ</a>——クラフトの筐体と留め具。 <a href="battery_pouch.html">バッテリーポーチ</a>——本MODのもう1つのスタック可能な収納アイテム。</p>
 

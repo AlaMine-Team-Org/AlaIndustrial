@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 
 <p>The <strong>Incubator</strong> is a 1×2 multiblock: a squat mechanical base below and a glass dome above. Place any glass (the <code>c:glass</code> tag) on the base and it turns into a volumetric chamber, with the irradiated item floating and spinning inside.</p>
 
@@ -402,7 +402,7 @@
 
 <table><thead><tr><th>What it does</th><th>How</th></tr></thead><tbody><tr><td>Forms the multiblock</td><td>base + any <code>c:glass</code> block on top → dome</td></tr><tr><td>Mutates items</td><td>EU/FE (LV) + a charge (1 <code>uranium_ingot</code> = 3 attempts → 1 <code>depleted_uranium</code>)</td></tr><tr><td>Mode</td><td>chip slot: duplication / transformation / creation</td></tr><tr><td>Mutation kinds</td><td>duplicate (×2), transform (A→B), create (A→new mod item)</td></tr><tr><td>Rarity</td><td>every success rolls Common / Rare / Epic / Legendary (70/20/8/2 %)</td></tr><tr><td>Slag</td><td>5 % of attempts yield <code>irradiated_slag</code> instead of an empty failure</td></tr></tbody></table>
 
-<h2>Energy</h2>
+<h2 id="energy">Energy</h2>
 
 <p>Hybrid model: EU/FE from the grid (LV) <strong>plus</strong> uranium as the irradiation fuel. Uranium is not destroyed — it becomes <code>depleted_uranium</code>, a feedstock for the future nuclear phase.</p>
 
@@ -410,7 +410,7 @@
 
 <p>Without uranium in the fuel slot an operation will not start; EU/FE is spent only while a cycle runs.</p>
 
-<h2>Processing</h2>
+<h2 id="processing">Processing</h2>
 
 <p>Duration and cost are tied to the mutation kind. The Incubator is the mod's most energy-hungry LV machine: the floor is 2400 EU/FE per operation versus 200–300 for routine machines.</p>
 
@@ -426,13 +426,13 @@
 
 <p><strong>The input gene burns.</strong> The input item's grade grants its chance bonus (+5 / +10 / +15 p.p. for Rare / Epic / Legendary, the total capped at 0.95) and <strong>burns away</strong> — the result always gets a fresh grade roll. A Legendary cannot be multiplied via duplicate; it can only be spent for the higher chance.</p>
 
-<h2>Inventory</h2>
+<h2 id="inventory">Inventory</h2>
 
 <p>Five slots: chip, fuel (uranium), the item to mutate, the result, and ash. The result and ash slots are read-only for the player; automation into the ash slot is pull-only.</p>
 
 <table><thead><tr><th>Slot</th><th>Accepts</th><th>Behaviour</th></tr></thead><tbody><tr><td>Chip</td><td><code>#</code> (3 chips)</td><td>1 item; not consumed; sets the mode; an empty slot means the machine will not run; automation cannot take it out</td></tr><tr><td>Fuel</td><td><code>#</code> (= <code>uranium_ingot</code>)</td><td>1 ingot is taken the moment it lands in an assembled machine; a charge = 3 attempts</td></tr><tr><td>Input</td><td>items with a mutation recipe in the selected mode</td><td>1 stack; consumes 1/attempt (lost on failure)</td></tr><tr><td>Result</td><td>the mutation result or <code>irradiated_slag</code></td><td>1 stack; fill-only</td></tr><tr><td>Ash</td><td><code>depleted_uranium</code></td><td>1 stack; +1 per exhausted ingot; pull-only</td></tr></tbody></table>
 
-<h2>Interface</h2>
+<h2 id="interface">Interface</h2>
 
 <p>The screen shows: EU/FE storage, cycle progress, the <strong>irradiation charge (0–3)</strong>, the five slots and a <strong>formed</strong> indicator. The energy bar runs down the left edge; the irradiation charge is a vertical column of pips right of the fuel slot, filling from the bottom up. Top row: chip, input, progress arrow, result; bottom row: fuel and ash.</p>
 
@@ -440,13 +440,13 @@
 
 <p>Both halves of the multiblock are clickable: right-clicking the dome opens the same menu as clicking the base.</p>
 
-<h2>Block Properties</h2>
+<h2 id="block-properties">Block Properties</h2>
 
 <p>A two-tier multiblock with deliberately different silhouettes: a heavy mechanical bottom and a light rounded top — not "two cubes stacked on each other".</p>
 
 <p><strong>Base</strong> — a full cube with a recessed front panel, an emitter ring along the top face and cooling ports on the sides. While running, an emitter glow rises above it. <strong>Dome</strong> — a volumetric rounded chamber, placed automatically from any <code>c:glass</code> block. The original glass type is remembered, so: dismantling the multiblock returns <strong>exactly your glass</strong> — nothing is lost; <strong>stained glass tints the dome</strong> — 17 colors with no extra recipes: 16 stained-glass dyes plus an uncolored variant. The frame and the spire always stay the casing's dark metal. The irradiated item floats at the center of the chamber and slowly spins; while running — particles and a pulsing glow.</p>
 
-<h2>Recipes</h2>
+<h2 id="recipes">Recipes</h2>
 
 <p><strong>Base block</strong> follows the machine-assembly standard, full 3×3 grid: 1 machine casing + 2 uranium plates + 3 glass + 1 electronic circuit + 2 iron plates. The uranium plates gate entry into the mechanic behind an established uranium chain (ore → ingot → plate).</p>
 
@@ -456,7 +456,7 @@
 
 <p><strong>Recipe type</strong> — three separate types, one per mode: <code>mutation_transform</code>, <code>mutation_duplicate</code>, <code>mutation_create</code>. Each JSON describes one input → one output with an optional override. Fuel is not mentioned in the recipe — uranium is the machine's charge, not an ingredient.</p>
 
-<h3>Duplicate — four value classes</h3>
+<h3 id="duplicate-four-value-classes">Duplicate — four value classes</h3>
 
 <p>The cost of an attempt is fixed (⅓ of an ingot + 4000 EU/FE + 25 s), so the only balance lever is the <strong>success chance: the more valuable the item, the lower the chance.</strong></p>
 
@@ -466,13 +466,13 @@
 
 <p><strong>Rubber is a stated exception.</strong> It is a machine product, so by the rule above it should not duplicate. But oil is a <strong>finite</strong> resource — lakes do not refill and nothing turns water into oil — so without the Incubator the amount of rubber in a world is capped by the deposits you happen to find. Duplication is an expensive renewable route, not a free one: an attempt costs 4000 EU/FE and a third of a uranium ingot at a 0.55 chance, while the same rubber made from fresh oil costs 400 EU/FE. While there is oil left, pumping is ten times cheaper; the Incubator matters once there is not.</p>
 
-<h3>Transform — a horizontal exchange</h3>
+<h3 id="transform-a-horizontal-exchange">Transform — a horizontal exchange</h3>
 
 <p><strong>Like is traded for like.</strong> Upgrading by value (iron → gold) is forbidden. All 27 recipes share a 0.75 chance, 300-tick duration and 2400 EU/FE cost. For families with many members (saplings, flowers, soils) a <strong>ring</strong> is used: each item turns into the next one around the circle until the wanted one comes up.</p>
 
 <table><thead><tr><th>Category</th><th>Recipes</th><th>Ring</th></tr></thead><tbody><tr><td>Minerals</td><td>3</td><td><code>lapis_lazuli</code> ↔, ↔ <code>glowstone_dust</code>, <code>coal</code> ↔ (all 1:1)</td></tr><tr><td>Saplings</td><td>8</td><td>oak → birch → spruce → jungle → acacia → dark oak → cherry → mangrove → oak</td></tr><tr><td>Flowers</td><td>8</td><td>dandelion → poppy → blue orchid → allium → azure bluet → cornflower → lily of the valley → oxeye daisy → dandelion</td></tr><tr><td>Soils</td><td>5</td><td>dirt → podzol → mycelium → dirt; sand ↔ red sand</td></tr></tbody></table>
 
-<h3>Create — evolution ladders</h3>
+<h3 id="create-evolution-ladders">Create — evolution ladders</h3>
 
 <p>An ordinary item <strong>evolves</strong> into a unique mod material along a three-tier ladder. The higher the tier, the lower the chance and the costlier the operation. From tier 2 onward a failure <strong>returns the input intact</strong> (only the charge and EU/FE burn) — otherwise no one would risk climbing past tier 1.</p>
 
@@ -484,11 +484,11 @@
 
 <p>The current release ships only the 4 tier-1 recipes (one per branch): → <code>irradiated_diamond</code>, <code>amethyst_shard</code> → <code>resonant_shard</code>, <code>lapis_lazuli</code> → <code>mutagen_dust</code>, <code>depleted_uranium</code> → <code>unstable_isotope</code>. Tiers 2–3 and upgrade chips from the upper materials come in the next release.</p>
 
-<h2>Progression</h2>
+<h2 id="progression">Progression</h2>
 
 <p>Tier: LV. Best built after the first machines (macerator/extractor), once you have a stable uranium vein and an EU/FE grid. Introduces 7 new items: <code>depleted_uranium</code>, <code>irradiated_diamond</code>, <code>mutagen_dust</code>, <code>resonant_shard</code>, <code>unstable_isotope</code>, <code>irradiated_slag</code> (a by-product of 5 % of attempts — no consumers in this release, groundwork for the future) and three mode chips. <strong>Grade "genes"</strong> on materials grant a bonus to further mutation chances (+5/+10/+15 p.p.) — consumers will arrive in future agriculture/nuclear phases. Mutation advancements: first mutation, first result, first Legendary outcome.</p>
 
-<h2>Related</h2>
+<h2 id="related">Related</h2>
 
 <p><a href="../materials/uranium.html">Uranium</a> — the fuel ingot. Nuclear theme — where <code>depleted_uranium</code> goes. <a href="../advanced-machines/teleporter.html">Teleporter multiblock</a> — a sibling structural task. <a href="../machines/sawmill.html">Sawmill</a> — the reference machine with switchable modes. <a href="../generators/solar_panel.html">Solar panel</a> — the reference for a chip slot driving machine behaviour.</p>
 

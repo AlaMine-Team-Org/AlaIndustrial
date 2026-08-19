@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепти</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="10 сторінок">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="4 сторінки">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Інше</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилітарні блоки</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
 <div class="group-title">Предмети</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
 <a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Зведення</h2>
+<h2 id="зведення">Зведення</h2>
 
 <p><strong>Електропила</strong> — другий ручний електроінструмент моду й дзеркало <a href="electric_drill.html">електробура</a> по дереву: сокира, яка працює на EU/FE замість міцності. Поки заряду вистачає на блок, пила валить дерево <strong>швидше за алмазну сокиру</strong> (швидкість 9.0 проти 8.0) і витрачає <strong>30 EU/FE</strong> за кожен успішно зламаний блок. Повний буфер — <strong>10 000 EU/FE</strong>, близько <strong>333 блоків</strong> на одне заряджання.</p>
 
@@ -402,7 +402,7 @@
 
 <p>Як і решта EU/FE-предметів моду, пила <strong>не має міцності</strong> й не ламається: смуга під іконкою показує не знос, а заряд EU/FE (жовта, колір LV).</p>
 
-<h2>Енергія</h2>
+<h2 id="енергія">Енергія</h2>
 
 <p>Власний EU/FE-буфер, поза енергомережею. Заряджається у слоті Енергосховища й від надягнутого ранця; витрачає заряд на пиляння блоків.</p>
 
@@ -412,25 +412,25 @@
 
 <p>Листя й саджанці, які ламаються миттєво, безкоштовні — рівно як вони не зношують ванільну сокиру.</p>
 
-<h2>Інвентар</h2>
+<h2 id="інвентар">Інвентар</h2>
 
 <p>Не застосовно — внутрішнього сховища предметів немає (стек 1).</p>
 
-<h2>Властивості блока</h2>
+<h2 id="властивості-блока">Властивості блока</h2>
 
 <p>Не застосовно (предмет).</p>
 
-<h2>Рецепти</h2>
+<h2 id="рецепти">Рецепти</h2>
 
 <p>Крафт: той самий каркас, що в бура, але в центрі алмазна сокира замість алмазного кайла: ряд залізних зливків зверху, дві <a href="../components/battery.html">батареї</a> з боків, знизу дві <a href="../components/copper_coil.html">мідні котушки</a> та <a href="../components/electronic_circuit.html">електронна схема</a>. Заряд батарей переходить у готову пилу.</p>
 
 <p><strong>Ремонт</strong> — не застосовний: міцності немає, лагодити нічого; «ремонт» — це заряджання EU/FE.</p>
 
-<h2>Поведінка</h2>
+<h2 id="поведінка">Поведінка</h2>
 
 <p><strong>Пиляння:</strong> поки заряд ≥ 30 EU/FE, пила ріже дерево й листя на швидкості 9.0 (алмазна сокира — 8.0). За кожен такий блок знімається 30 EU/FE. <strong>Розряджена пила:</strong> при заряді нижче 30 EU/FE пиляє на швидкості руки (1.0), але рівень видобутку й дроп зберігаються, і EU/FE не витрачається. Чара Efficiency при цьому не діє. <strong>Заряджання:</strong> слот заряджання Енергосховища й надягнутий енергоранець приймають пилу автоматично, до 32 EU/FE/тик. <strong>Атака:</strong> б'є як алмазна сокира (6 шкоди, швидкість атаки 1.0), але удари <strong>не витрачають EU/FE</strong> і не зношують пилу. <strong>Чари:</strong> пила входить у теґ сокир, тому стіл зачарування й ковадло працюють з нею як із сокирою. <strong>Індикація:</strong> смужка під іконкою показує заряд. У тултипі — «Заряд: X / 10 000 EU/FE», при нулі — червоне «Розряджена». Текстура міняється на «згаслий» варіант при нульовому заряді. <strong>Дроп/смерть/релогін:</strong> заряд зберігається у предметі. <strong>Обкорування колод — не підтримується.</strong> Обкоровуйте звичайною сокирою. <strong>У креативі:</strong> заряд не витрачається.</p>
 
-<h2>Алмазне напилення (апгрейд)</h2>
+<h2 id="алмазне-напилення-апгрейд">Алмазне напилення (апгрейд)</h2>
 
 <p><strong>Електропила з алмазним напиленням</strong> — другий щабель пили й дзеркало <a href="electric_drill.html">алмазного бура</a> по дереву. Відмінностей від базової пили рівно дві, решта успадковується без змін.</p>
 
@@ -456,11 +456,11 @@
 
 <blockquote><strong>Заряд при апгрейді зберігається.</strong> Рецепт пили переносить EU/FE з вкладеної пили в результат, а не спалює його — так само, як рецепт бура і базові електроінструменти. Кнопка <strong>автозаповнення</strong> (книга рецептів і «+» у REI/JEI) заряджену пилу все одно не знайде: ваніль шукає предмет із точно такими самими компонентами, як на вітрині, а там пила намальована порожньою. Розкладіть сітку руками — працює з пилою в будь-якому стані.</blockquote>
 
-<h2>Прогресія</h2>
+<h2 id="прогресія">Прогресія</h2>
 
 <p>Другий електроінструмент моду після <a href="electric_drill.html">електробура</a>: бур закриває камінь, пила — дерево. Доступна після <a href="../energy-storage/battery_box.html">Енергосховища</a> і батареї. LV-рівень.</p>
 
-<h2>Пов'язане</h2>
+<h2 id="повязане">Пов'язане</h2>
 
 <p><a href="electric_drill.html">Електробур</a> — прецедент EU/FE-інструмента без міцності; кам'яна половина пари. <a href="energy_pack.html">Енергоранець</a> — заряджає пилу прямо в інвентарі. <a href="../energy-storage/battery_box.html">Енергосховище</a> — заряджання пили (слот charge). <a href="../components/electronic_circuit.html">Електронна схема</a> — компонент крафта.</p>
 

@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепти</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="10 сторінок">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="4 сторінки">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Інше</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилітарні блоки</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
 <div class="group-title">Предмети</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
   </aside>
@@ -392,19 +392,19 @@
     </div>
   </div>
 </div>
-<h2>Зведення</h2>
+<h2 id="зведення">Зведення</h2>
 
 <p><strong>Консервний завод</strong> не пакує продукт у бляшанку — він переробляє їжу на харчову цінність і розливає її по однакових пайках. Хоч би що ви туди поклали, на виході завжди той самий предмет, а отже <strong>весь ваш харч складається в один стос</strong>.</p>
 
 <blockquote><strong>Міні-приклад:</strong> складіть у машину рештки врожаю — моркву, хліб, ягоди, — додайте порожніх бляшанок і підведіть LV-кабель. Десяток комірок різносортиці перетвориться на один стос пайків.</blockquote>
 
-<h2>Енергія</h2>
+<h2 id="енергія">Енергія</h2>
 
 <table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Внутрішній буфер</td><td>800 EU/FE</td></tr><tr><td>Макс. вхід</td><td>32 EU/FE/такт (LV)</td></tr><tr><td>Споживання</td><td>2 EU/FE/такт під час роботи</td></tr><tr><td>Ціна операції</td><td>200 EU/FE за пайок</td></tr><tr><td>Тривалість</td><td>100 тіків (~5 с)</td></tr></tbody></table>
 
 <p>Енергія заходить із п'яти робочих граней. Лицьова грань інертна.</p>
 
-<h2>Обробка</h2>
+<h2 id="обробка">Обробка</h2>
 
 <p>Машина працює у два незалежні кроки, і різниця тут важлива.</p>
 
@@ -417,7 +417,7 @@
 
 <p>Накопичений залишок видно у вікні рядком «Калорії», і він <strong>зберігається</strong> після виходу зі світу. А от при зламі машини він зникає: бляшанки та їжа випадуть, накопичені калорії — ні. Доробіть розпочатий пайок, перш ніж розбирати машину.</p>
 
-<h2>Харчова цінність</h2>
+<h2 id="харчова-цінність">Харчова цінність</h2>
 
 <p>Цінність продукту — це <strong>ситість плюс насичення</strong>. Калорійна їжа дає більше пайків, дешева — менше. Один пайок коштує <strong>12,0</strong> цінності.</p>
 
@@ -425,7 +425,7 @@
 
 <p>Переробка <strong>завжди збиткова</strong>: пайок коштує 12,0 цінності, а несе 9,6. П'ята частина втрачається — це ціна зручності, і саме вона унеможливлює розмноження їжі.</p>
 
-<h2>Чого машина не приймає</h2>
+<h2 id="чого-машина-не-приймає">Чого машина не приймає</h2>
 
 <p><strong>Небезпечну їжу:</strong> сиру курку, гниле м'ясо, отруйну картоплю, риб-їжака та павуче око. Переробка прибрала б їхній ризик безкоштовно, а це нечесно. <strong>Власний пайок.</strong> Інакше машина перемелювала б свій же вихід, спалюючи бляшанку за прохід. <strong>Усе, що не їжа,</strong> і їжу з нульовою ситістю.</p>
 
@@ -433,7 +433,7 @@
 
 <p><strong>Супи й мед приймаються, але тара зникає.</strong> Миска й пляшка повертаються лише тоді, коли їх з'їдають; машина їх не поверне.</p>
 
-<h2>Пайок</h2>
+<h2 id="пайок">Пайок</h2>
 
 <table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Ситість</td><td>8 (як стейк)</td></tr><tr><td>Насичення</td><td>1,6 (у стейка 12,8)</td></tr><tr><td>Стос</td><td>64</td></tr><tr><td>Час їсти</td><td>1 секунда (звичайна їжа — 1,6)</td></tr></tbody></table>
 
@@ -443,23 +443,23 @@
 
 <p>Під час їжі бляшанка в руці виглядає розкритою.</p>
 
-<h2>Інвентар</h2>
+<h2 id="інвентар">Інвентар</h2>
 
 <table><thead><tr><th>Комірка</th><th>Приймає</th></tr></thead><tbody><tr><td>Верхній вхід</td><td>їжа</td></tr><tr><td>Нижній вхід</td><td>порожні бляшанки</td></tr><tr><td>Вихід</td><td>пайки</td></tr></tbody></table>
 
-<h2>Інтерфейс</h2>
+<h2 id="інтерфейс">Інтерфейс</h2>
 
 <p>Запас енергії, два входи, поступ і вихід. Під ними — рядок «Калорії» з відсотком накопиченого до наступного пайка.</p>
 
-<h2>Властивості блоку</h2>
+<h2 id="властивості-блоку">Властивості блоку</h2>
 
 <table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Інструмент</td><td>кайло</td></tr><tr><td>Зберігає заряд після зламу</td><td>ні</td></tr></tbody></table>
 
-<h2>Звук</h2>
+<h2 id="звук">Звук</h2>
 
 <p>Під час роботи машина видає легке металеве деренчання жерсті на лінії — петля (патерн A, 0.35 за замовчуванням). Замовкає, коли машина простоює.</p>
 
-<h2>Рецепти</h2>
+<h2 id="рецепти">Рецепти</h2>
 
 <p>Сама машина збирається з олов'яних пластин навколо корпусу. Порожня бляшанка — теж верстат:</p>
 
@@ -467,17 +467,17 @@
 T T → 8 порожніх бляшанок
 TTT T — олов'яна пластина</code></pre>
 
-<h2>Прогресія</h2>
+<h2 id="прогресія">Прогресія</h2>
 
 <p>Тир LV. Машина дає олову першого масового споживача: бляшанка витрачається назавжди, тож кожна порція з'їдає метал заново.</p>
 
-<h2>Для кого ця машина</h2>
+<h2 id="для-кого-ця-машина">Для кого ця машина</h2>
 
 <p><strong>Не для стейк-ферми.</strong> Якщо м'ясо налагоджено, 64 смажені свинини — це вже одна комірка й більше калорій, ніж дасть переробка. Так і задумано.</p>
 
 <p><strong>Для різносортиці й для дороги.</strong> Десяток комірок випадкового харчу — ягоди, морква, хліб, рештки врожаю, здобич із мобів — згортається в одну-дві комірки однакових пайків.</p>
 
-<h2>Пов'язане</h2>
+<h2 id="повязане">Пов'язане</h2>
 
 <p><a href="../materials/tin.html">Олово</a> — з чого роблять бляшанки. <a href="compressor.html">Компресор</a> — робить олов'яні пластини. <a href="../generators/generator.html">Генератор</a> — джерело живлення.</p>
 

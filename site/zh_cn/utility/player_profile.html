@@ -300,7 +300,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -317,7 +317,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -333,7 +333,7 @@
     </div>
   </div>
 </div>
-<h2>概览</h2>
+<h2 id="概览">概览</h2>
 
 <p><strong>玩家档案</strong>——独立的玩家档案屏幕（）。原版统计只能显示「合成了多少把镐」，但看 不到模组中的职业表现——能源网络生产了多少 EU/FE、机器处理了多少矿石。玩家档案收集这些 模组活动并将其转化为<strong>职业进度</strong>：一套 40 级的精通点数系统，归入 8 个主题称号（从学徒 到传奇）。</p>
 
@@ -341,7 +341,7 @@
 
 <blockquote><strong>不要混淆：</strong> 与原版成就（一次性检查点）和原版统计（枯燥的表格）不同。玩家档案是 <em>累积的职业度量</em>加带称号的进度系统。</blockquote>
 
-<h2>进阶</h2>
+<h2 id="进阶">进阶</h2>
 
 <p><strong>主要来源是机器工作。</strong> 当机器<strong>完成一次操作</strong>（熔炼、粉碎、提取、压缩）时，精通按操作 的全额成本发放给机器的所有者。被红石电路打断的操作会烧 EU/FE 但不带来精通——这是防 AFK 农场的保护。</p>
 
@@ -355,31 +355,31 @@
 
 <p>精通是<strong>派生</strong>量：它由两个职业 EU/FE 计数器计算得出，而不是单独存储，因此在配置中调整汇率 不会「吃掉」积累的精通。更改平衡时不会降低已达成的称号——保留最大已达到的等级。</p>
 
-<h3>称号系列</h3>
+<h3 id="称号系列">称号系列</h3>
 
 <table><thead><tr><th>子等级</th><th>称号</th></tr></thead><tbody><tr><td>1–5</td><td>学徒</td></tr><tr><td>6–10</td><td>学徒工</td></tr><tr><td>11–15</td><td>技师</td></tr><tr><td>16–20</td><td>操作员</td></tr><tr><td>21–25</td><td>工程师</td></tr><tr><td>26–30</td><td>架构师</td></tr><tr><td>31–35</td><td>巨头</td></tr><tr><td>36–40</td><td>传奇</td></tr></tbody></table>
 
-<h2>归因与隐私</h2>
+<h2 id="归因与隐私">归因与隐私</h2>
 
 <p>统计<strong>归属于机器的所有者</strong>——放置机器的人（重新放置时重新归属）。如果朋友把矿石放进你 的机器，精通报给你。档案<strong>按玩家私有</strong>：在服务器上你只能看到自己的职业。仅在所有者<strong>在线</strong> 且<strong>不在创造模式</strong>时才会发放（创造模式 EU/FE 免费且不转化为职业）；没有所有者的机器 （结构、演示台）不给任何人升级。</p>
 
 <p><strong>来自其他模组自动化的机器。</strong> 「所有者在线」规则也覆盖了机器由「假玩家」（其他模组的 自动建造器、机器人）放置的情况。没有为它们设独立机制也不需要：这种玩家永远不会列入 在线中，因此其 UUID 不会解析到任何人，精通不给任何人。如果自动化以真实玩家的名义行动 （常见做法，以便权限和私有可见所有者），工作则归属于他——而且仅在他在线时，与手动放置 的机器相同。这是有意行为，不是漏洞。</p>
 
-<h2>存储</h2>
+<h2 id="存储">存储</h2>
 
 <p>档案作为<strong>按玩家的 data attachment</strong>存储，经历重登和死亡依然保留，仅同步给其所有者。 服务器端的累积在内存中批处理，每隔几秒（以及在退出/停止服务器时）刷入存储，而不是每刻 都写入。</p>
 
-<h2>方块属性</h2>
+<h2 id="方块属性">方块属性</h2>
 
 <p>玩家档案是<strong>纯屏幕（GUI）</strong>，不是方块也不是物品：世界中不会放置任何东西，没有形状和 碰撞箱。「入口点」不是物理物品，而是快捷键和原版物品栏中的按钮小部件（见「入口点」）。 数据存储在服务器上的按玩家 attachment 中，屏幕是 client-side。</p>
 
 <table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>类型</td><td>屏幕（GUI），非方块非物品</td></tr><tr><td>世界放置</td><td>无</td></tr><tr><td>形状 / 碰撞</td><td>无</td></tr><tr><td>打开</td><td>快捷键 <code>K</code> 或物品栏右上角的按钮（client-side）</td></tr><tr><td>数据存储</td><td>按玩家 data attachment（服务器）</td></tr></tbody></table>
 
-<h2>入口点</h2>
+<h2 id="入口点">入口点</h2>
 
 <p><strong>快捷键 <code>K</code></strong>（Profile）——默认，可在「控制」中重新绑定。 <strong>按钮</strong>位于物品栏右上角（创造物品栏中没有——但快捷键在所有地方都有效）。 <strong><code>/ala profile show|set &lt;xp&gt;</code></strong>——运维命令（用于调试和验证进度）。</p>
 
-<h2>第一版之外的内容</h2>
+<h2 id="第一版之外的内容">第一版之外的内容</h2>
 
 <p>任务系统、里程碑奖励 buff（出现时只作用于机器/网络，不作用于玩家）、服务器上的档案分享 卡片，以及扩展的统计类别（合成、按矿石的采集、按用途的开销细分）都是独立的未来任务。 此列表中的传送已经计入「已使用」（），但不会在档案中以单独一行显示。</p>
 

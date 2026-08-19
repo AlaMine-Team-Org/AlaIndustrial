@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепти</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
-<a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="10 сторінок">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="4 сторінки">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Інше</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилітарні блоки</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
 <div class="group-title">Предмети</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
   </aside>
@@ -392,19 +392,19 @@
     </div>
   </div>
 </div>
-<h2>Зведення</h2>
+<h2 id="зведення">Зведення</h2>
 
 <p><strong>Буревий вітряк</strong> — другий щабель буревої гілки (T2), еволюція базового <a href="wind_mill.html">вітряка</a>. База трохи вища за T1 (стеля <strong>6</strong>), але <strong>погодні множники посилені</strong>: дощ ×2, гроза ×3.5, загальна стеля 24 EU/FE/такт (реально досяжний пік — 21). Ясної погоди він слабший за небесний, зате в дощ і грозу — азартний «ловець штормів». Отримується <strong>лише через еволюцію</strong> базового вітряка з <strong>місячним еволюційним чипом</strong>; крафта в нього немає.</p>
 
 <blockquote><strong>Міні-приклад:</strong> у смузі під хмарами (<strong>y 189–192</strong>) гроза дає <strong>21 EU/FE/такт</strong> — більше за будь-який інший генератор тира LV. Але смуга вузька, лише 4 висоти: на y ≈ 159 та сама гроза дає вже 11 EU/FE/такт, а ясної погоди там усього 3.</blockquote>
 
-<h2>Енергія</h2>
+<h2 id="енергія">Енергія</h2>
 
 <p>Вітряк лише виробляє енергію й не приймає чужої. Енергія віддається лише із задньої грані — як у T1. Решта 5 граней інертні.</p>
 
 <table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Внутрішній буфер</td><td>8000 EU/FE</td></tr><tr><td>Вихід</td><td>до 32 EU/FE/такт (LV)</td></tr><tr><td>Реальний виробіток</td><td>0–21 EU/FE/такт</td></tr></tbody></table>
 
-<h2>Генерація</h2>
+<h2 id="генерація">Генерація</h2>
 
 <p>Як у T1, база йде за кривою вітру (повна база лише на y 189–192, нуль вище y = 248), але стеля трохи вища (6), а погода б'є сильніше.</p>
 
@@ -418,29 +418,29 @@
 
 <p>Зазор для лопатей та інтерференція роторів — точно такі самі, як у T1. Докладні правила — у <a href="wind_mill.html">спеці T1</a>.</p>
 
-<h2>Інтерфейс</h2>
+<h2 id="інтерфейс">Інтерфейс</h2>
 
 <p>Смуга енергії, центральний слот ротора й індикатор стану в тих самих позиціях, що й у базового вітряка. Поки вітряк працює, у рядку статусу показано поточний виробіток; коли стоїть — причину зупинки. Без слота чипа й без прогресу еволюції: T2 — лист, далі не еволюціонує.</p>
 
-<h2>Властивості блока</h2>
+<h2 id="властивості-блока">Властивості блока</h2>
 
 <p>Звичайний суцільний блок. Ламається будь-якою кайлом.</p>
 
 <table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Інструмент</td><td>кайло</td></tr></tbody></table>
 
-<h2>Звук</h2>
+<h2 id="звук">Звук</h2>
 
 <p>Те саме гудіння вітру, що й у базового вітряка, поки лопаті обертаються.</p>
 
-<h2>Рецепти</h2>
+<h2 id="рецепти">Рецепти</h2>
 
 <p><strong>Крафта немає.</strong> Єдиний спосіб отримати — виростити базовий <a href="wind_mill.html">вітряк</a> зі встановленим ротором і <strong>місячним еволюційним чипом</strong>: за накопичений час під відкритим небом він перетворюється на буревий, зберігаючи накопичену енергію.</p>
 
-<h2>Прогресія</h2>
+<h2 id="прогресія">Прогресія</h2>
 
 <p>T2 буревої гілки. Далі не розвивається — це лист гілки.</p>
 
-<h2>Пов'язане</h2>
+<h2 id="повязане">Пов'язане</h2>
 
 <p><a href="wind_mill.html">Вітрогенератор</a> — база, з якої його вирощують. <a href="high_altitude_wind_mill.html">Небесний вітряк</a> — дзеркальна гілка рівного доходу. <a href="../energy-storage/battery_box.html">Енергосховище</a> — згладжує штормові піки.</p>
 

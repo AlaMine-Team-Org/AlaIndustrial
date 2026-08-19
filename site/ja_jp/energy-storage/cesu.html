@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link active" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>強化エネルギー貯蔵庫</strong>は貯蔵系列の第 2 段階で、<a href="battery_box.html">エネルギー貯蔵庫</a>と同じ役割ですが、ティアが 1 つ上です。<strong>100 000 EU/FE</strong> を保持し、32 ではなく <strong>128 EU/FE/ティック</strong>で受け取り・送出します。</p>
 
@@ -402,7 +402,7 @@
 
 <p><strong>完成した初期の貯蔵庫から</strong>組み立てます——レシピの中央に置かれ、新しいブロックの核になります。これは「鉱石から作り直す」ではなく、文字通りアップグレードです。</p>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>容量</td><td>100 000 EU/FE</td></tr><tr><td>最大入力</td><td>128 EU/FE/t（MV）</td></tr><tr><td>最大出力</td><td>128 EU/FE/t（MV）</td></tr></tbody></table>
 
@@ -418,13 +418,13 @@
 
 <p>分配の優先順位はネットワーク全体で共通で、ここでも変わりません：機械が発電機の発電量を満たすまで、貯蔵库は<strong>出力のみ</strong>を行い、機械が飽和すると充電を始めます。</p>
 
-<h3>カスケード：初期型との同一ネットワーク</h3>
+<h3 id="カスケード初期型との同一ネットワーク">カスケード：初期型との同一ネットワーク</h3>
 
 <p>強化エネルギー貯蔵库は初期型と同じバンクの平均化に参加し、平均化は絶対 EU/FE ではなく<strong>充填率</strong>で行われます。これは混合バンクでは重要です：初期型（20 000）と強化型（100 000）は、等しい充電量ではなく等しいパーセント——例えば両方とも 50 %、つまり 10 000 と 50 000 EU/FE——に収束します。「大きな箱が小さな箱を吸い尽くした」という印象は誤りです：小さな箱は自分の分を正確に受け取ります。</p>
 
 <p>送電はケーブルを経由し、通常の距離損失を支払うため、バンクはコンパクトに保つほうがお得です。</p>
 
-<h2>インベントリ</h2>
+<h2 id="インベントリ">インベントリ</h2>
 
 <p>携帯用 EU/FE アイテム用のスロットが 2 つ：</p>
 
@@ -434,11 +434,11 @@
 
 <p>両スロットとも手動で、ホッパーは使用せず、GUI からのみ動作します。</p>
 
-<h2>インターフェース</h2>
+<h2 id="インターフェース">インターフェース</h2>
 
 <p>1 画面：エネルギー残量、入出力速度、充電スロットと放電スロット。</p>
 
-<h2>外観</h2>
+<h2 id="外観">外観</h2>
 
 <p>ブロックは冷たい鋼鉄——本体の材料である<a href="../components/advanced_machine_casing.html">高度なマシンケース</a>と同じ——で組み立てられています。枠と縞のリズムは<a href="battery_box.html">初期の貯蔵庫</a>と同じなので、2 つの段階は別々のブロックではなく、ひとつの系列として読めます。</p>
 
@@ -446,13 +446,13 @@
 
 <p><strong>入力と出力は形ではなく色で区別されます。</strong> これは初期の貯蔵庫とは意図的な違いです：あちらは出力が大きなコネクタで、入力は目立たないレンズなので、プレイヤーは目立つコネクタへケーブルを引いて出力に当ててしまいます。こちらは両面とも同じコネクタで、役割は色が担います：青が受け取り、オレンジが出力します。</p>
 
-<h2>ブロックの性質</h2>
+<h2 id="ブロックの性質">ブロックの性質</h2>
 
 <p>通常の固体ブロックで、完全な立方体 16³（オクルーダー）です。初期型より頑丈——板の箱ではなく金属だからです。任意のツルハシで壊せ、<strong>破壊時に充電量を保持</strong>します。</p>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>形状</td><td>完全な立方体 16³（オクルーダー）</td></tr><tr><td>硬さ</td><td>4.0</td></tr><tr><td>爆発耐性</td><td>6.0</td></tr><tr><td>ツール</td><td>ツルハシ</td></tr><tr><td>音</td><td>金属</td></tr><tr><td>破壊時に充電量を保持</td><td>はい</td></tr></tbody></table>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p>これは貯蔵ブロックであり、加工機ではないため、加工レシピはありません。</p>
 
@@ -464,11 +464,11 @@
 
 <p>ここでのエレクトラムは偶然の合金ではありません：金と銀の合金で、モードで最も優れた導電体であり、貯蔵库では電流が入出力する場所に配置されています。以前は四隅にゴムがありましたが、ゴムは絶縁体です：ケーブルでは適していますが、貯蔵库の四隅に絶縁体が 4 つあっても何も説明していませんでした。</p>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p>ティア：MV。貯蔵系列の第 2 段階。 先行者：<a href="battery_box.html">エネルギー貯蔵庫</a>（LV）——「ただクリアした」のではなく、レシピで<strong>消費</strong>されます。 <strong>2 つの</strong>生産ラインを同時に要求します： <strong>合金</strong>——エレクトラムは<a href="../machines/alloy_smelter.html">合金炉</a>で金と銀から作られます； <strong>石油</strong>——ゴムをエレクトラムに替えても消滅しません：ゴムは<a href="../components/advanced_circuit.html">高度な回路</a>内部に残っており、それはここでも高度なマシンケースでも必須です。<code>石油 → 重合機 → 加硫機</code>のゲートは有効で、ただ間接的になりました。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="battery_box.html">エネルギー貯蔵庫</a>——LV の先行者で、レシピに組み込まれます。 MFSU——貯蔵系列の頂点。 <a href="../energy-transfer/gold_cable.html">金ケーブル</a>——速度向上を実感するために必要な引き込み線。 <a href="../components/advanced_circuit.html">高度な回路</a>・<a href="../components/advanced_machine_casing.html">高度なマシンケース</a>——MV のレシパーツ。</p>
 

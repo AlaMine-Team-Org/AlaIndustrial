@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概览</h2>
+<h2 id="概览">概览</h2>
 
 <p><strong>蒸馏塔</strong> 是一座高三格的塔——本模组最高的机器，也是它的第一个多方块结构。塔由三个相同的塔段上下叠放组装而成。内部有三个储罐：中段灌入原<a href="../materials/oil.html">石油</a>，顶部凝结出<a href="../materials/diesel.html">柴油</a>——轻质目标馏分，底部流下<a href="../materials/fuel_oil.html">重油</a>——重质残渣。无需任何设置：每座塔的布局都相同，一目了然——“轻的在上，重的在下”。</p>
 
@@ -400,31 +400,31 @@
 
 <p>冷的蒸馏塔要先<strong>预热</strong>（通电约 10 秒），然后才开始蒸馏。预热完成、正在工作的塔会亮起舷窗，塔顶冒出蒸汽——远远看基地的轮廓就能知道炼油厂是在运转还是停着。</p>
 
-<h2>多方块结构</h2>
+<h2 id="多方块结构">多方块结构</h2>
 
 <table><thead><tr><th>段</th><th>作用</th><th>液体</th></tr></thead><tbody><tr><td>顶部</td><td>冷凝器</td><td><strong>柴油——输出</strong></td></tr><tr><td>中段</td><td>原料接收</td><td><strong>石油——输入</strong></td></tr><tr><td>底部</td><td>基座方块（“大脑”）</td><td><strong>重油——输出</strong> + 能量输入</td></tr></tbody></table>
 
 <p><strong>手动搭建</strong>（第 3 轮）：只需合成一种塔段方块；把<strong>三个塔段叠放在一起</strong>——塔会自行组装（最下面的变成基座“大脑”，上面两个变成中段和顶段，并能听到铁砧的铿锵声）。单独的塔段是惰性的空白段：没有端口也没有菜单，点击它会提示如何继续搭建。 拆解与之镜像：破坏任意一段都会使塔<strong>退化</strong>——被破坏的那段以塔段物品掉落，其余各段原地退回空白段，而基座会把<strong>储罐和积炭保留</strong>在自身内部。什么都不会消失，也不会被复制。 点击已组装塔的<strong>任意</strong>一段都能打开 GUI。 <strong>精馏段</strong>（单独合成的方块）安装<strong>在</strong>塔顶之上——塔长到四格高，损耗从 10% 降到 5%：每次蒸馏多产出 <strong>+50 mB 柴油</strong>（750/200）。蒸汽改从精馏段冒出。精馏段是有自己掉落物的普通方块；拆掉它，加成就没了。</p>
 
-<h2>能量</h2>
+<h2 id="能量">能量</h2>
 
 <p>蒸馏塔只消耗 EU/FE；能量从<strong>基座</strong>的任意面（侧面和底面）输入。中段和顶部不接受能量——电缆无法连接。</p>
 
 <table><thead><tr><th>项目</th><th>数值</th></tr></thead><tbody><tr><td>内部缓存</td><td>800 EU/FE</td></tr><tr><td>最大输入</td><td>32 EU/FE/刻（LV）</td></tr><tr><td>消耗</td><td>2 EU/FE/刻（工作和预热）</td></tr></tbody></table>
 
-<h2>预热</h2>
+<h2 id="预热">预热</h2>
 
 <table><thead><tr><th>项目</th><th>数值</th></tr></thead><tbody><tr><td>预热时间</td><td>200 刻（约 10 秒）</td></tr><tr><td>冷启动成本</td><td>约 400 EU/FE（一次“空转”蒸馏）</td></tr><tr><td>冷却</td><td>比加热慢一倍——在失去电力或石油时</td></tr><tr><td>输出储罐已满</td><td>暂停：热量<strong>保持</strong>，不消耗 EU/FE</td></tr></tbody></table>
 
 <p>对持续运转的炼油厂来说预热毫无存在感；反复通断电源则得不偿失。</p>
 
-<h2>液体</h2>
+<h2 id="液体">液体</h2>
 
 <p>三个储罐，各容 10 桶。输入罐接受任何带通用模组标签 <code>c:oil</code> 的石油；输出罐只由机器自己填充，邻接设备只能抽取。</p>
 
 <table><thead><tr><th>储罐</th><th>容量</th><th>外部访问</th></tr></thead><tbody><tr><td>石油（中段）</td><td>10 000 mB</td><td>仅灌入</td></tr><tr><td>柴油（顶部）</td><td>10 000 mB</td><td>仅抽取</td></tr><tr><td>重油（底部）</td><td>10 000 mB</td><td>仅抽取</td></tr></tbody></table>
 
-<h2>加工</h2>
+<h2 id="加工">加工</h2>
 
 <p><code>1000 mB 石油 + 400 EU/FE → 700 mB 柴油 + 200 mB 重油</code>。1000 mB 只出 900 mB——10% 化作“轻质气体”散失了：本模组的加工从不放大体积。装有精馏段时——<code>750 mB 柴油 + 200 mB 重油</code>（损耗 5%）。</p>
 
@@ -434,11 +434,11 @@
 
 <p>如果某个输出罐装不下自己那份馏分，整座塔会<strong>完全暂停</strong>：不消耗 EU/FE，不消耗石油，什么都不会损毁。两种馏分永远一起产出——不存在半次操作。</p>
 
-<h2>维护</h2>
+<h2 id="维护">维护</h2>
 
 <p>每蒸馏一次，塔内就会积累<strong>积炭</strong>（+2%）；到 <strong>100%</strong>（≈50 次操作）时塔会以“已结焦”状态停机——不消耗 EU/FE，也不消耗原料。用<strong>扳手右键</strong>任意一段即可清出积炭：塔恢复洁净，玩家获得 <strong>1–3 个煤炭</strong>（数量取决于结焦程度）。扳手潜行右键仍然是拆塔。结焦程度显示在 GUI 的量表上，重新进入游戏<strong>乃至拆掉塔</strong>都会保留——重新放置代替不了清理。</p>
 
-<h2>物品栏</h2>
+<h2 id="物品栏">物品栏</h2>
 
 <p>六个槽位——三对容器槽，每个储罐一对。</p>
 
@@ -446,31 +446,31 @@
 
 <p>自动化只会把容器放进各对的输入槽，并从输出槽取走。</p>
 
-<h2>界面</h2>
+<h2 id="界面">界面</h2>
 
 <p>屏幕中央是<strong>塔本身的迷你剪影</strong>：它的三扇窗显示三个储罐的真实液位（柴油在上，石油在中，重油在下），工作时石油窗里升起气泡，基座随预热进度透出热光，装有精馏段时剪影还会长出第四层。左边是石油量表和它的容器槽对，右边是各馏分的量表及各自的槽对，剪影旁边是<strong>积炭量表</strong>，右侧边缘是能量储备。下方是常驻状态栏（“蒸馏中”、“预热中… N %”、“无能量”、“无原料”、“柴油罐已满”、“重油罐已满”、“已结焦”）和一行带彩色储罐标记的精确 mB 容量读数。</p>
 
-<h2>方块属性</h2>
+<h2 id="方块属性">方块属性</h2>
 
 <p>塔是一根立体的 3D 柱体（带法兰、侧面爬梯和阀门的 ~12px 多棱管），而不是几个立方体摞成的柱子。每一段在自己液体的一侧都有<strong>彩色接管</strong>：中段黑色（石油）、顶部黄色（柴油）、基座棕色（重油）——泵该接在哪里，不看提示也一目了然。工作时舷窗发光；只有预热完成、正在工作的塔才冒蒸汽。</p>
 
 <table><thead><tr><th>项目</th><th>数值</th></tr></thead><tbody><tr><td>形状</td><td>带法兰和接管的 ~12px 柱体（非遮挡器）</td></tr><tr><td>硬度</td><td>3.0</td></tr><tr><td>爆炸抗性</td><td>6.0</td></tr><tr><td>工具</td><td>镐</td></tr><tr><td>保留液体</td><td><strong>是</strong>——拆解时储罐留在基座里，破坏基座时随掉落物一起带走</td></tr><tr><td>破坏时保留预热</td><td>否</td></tr></tbody></table>
 
-<h2>声音</h2>
+<h2 id="声音">声音</h2>
 
 <p>静音——这是有意的决定（2026-08-09），已记录在声音注册表中。所有指示都是视觉的：舷窗、蒸汽、状态栏。</p>
 
-<h2>配方</h2>
+<h2 id="配方">配方</h2>
 
 <table><thead><tr><th>输入</th><th>输出</th></tr></thead><tbody><tr><td>1000 mB 石油</td><td>700 mB 柴油 + 200 mB 重油（有精馏段则 750）</td></tr><tr><td>1000 mB 重油</td><td>600 mB 柴油（裂化，400 EU/FE）</td></tr></tbody></table>
 
 <p>接下来两种馏分都将送入液体燃料发电机（本分支的下一个任务）：柴油——12 EU/FE/刻，重油——6 EU/FE/刻。</p>
 
-<h2>进阶</h2>
+<h2 id="进阶">进阶</h2>
 
 <p>等级：LV。在泵和第一桶石油之后建造；合成明显比普通机器昂贵——两个机器外壳、一块电路板，外加做“塔筒”的板材。 每桶石油的净收益：产出 9 600 EU/FE − 消耗 1 400 EU/FE（泵 + 蒸馏）= <strong>8 200 EU/FE</strong>——单位收益不如煤（12 800）和熔岩（15 000），但基地旁的油湖能自己养活炼油厂。 成就<strong>“石油精炼”</strong>——放置蒸馏塔即可获得（“黑金”分支）。</p>
 
-<h2>相关内容</h2>
+<h2 id="相关内容">相关内容</h2>
 
 <p><a href="../materials/oil.html">石油</a>——原料：去哪里找、怎么抽。 <a href="../materials/diesel.html">柴油</a>——目标馏分。 <a href="../materials/fuel_oil.html">重油</a>——重质残渣。 <a href="pump.html">泵</a>——把石油抽进塔、把馏分抽出来。 <a href="../fluid-storage/fluid_tank.html">便携式流体储罐</a>——塔旁的馏分缓冲。</p>
 

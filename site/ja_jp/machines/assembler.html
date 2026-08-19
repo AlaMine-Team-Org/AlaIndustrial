@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>組立機</strong> はモッド初の MV マシンであり、64スタックの手作業クラフトの終わりです。作業台のレシピ（組立設計図 に記録したもの）を記憶し、原料とチャージがある間それらを連続的に生産します。レッドストーンは不要 — 機械は自律的に動作します。</p>
 
@@ -400,7 +400,7 @@
 
 <p>バニラの「クラフター」がレッドストーンのパルスごとにグリッドを再計算し、何も記憶しないのとは異なり、この機械は <strong>3枚の設計図のキュー</strong> を保持し、それらを自動的に切り替えます。</p>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <table><thead><tr><th>フィールド</th><th>値</th></tr></thead><tbody><tr><td>役割</td><td>消費者</td></tr><tr><td>バッファ（EU/FE）</td><td>12000</td></tr><tr><td>最大入力（EU/FE/t）</td><td>128（MV）</td></tr><tr><td>最大出力（EU/FE/t）</td><td>該当なし</td></tr><tr><td>EU/FE/t</td><td>12</td></tr></tbody></table>
 
@@ -408,7 +408,7 @@
 
 <p>エネルギーは <strong>作業ティック中にのみ</strong> 消費されます。レシピがない、材料がない、出力ゾーンに空きがないなど、理由を問わずアイドリング中は EU/FE を一切消費しません。</p>
 
-<h2>加工</h2>
+<h2 id="加工">加工</h2>
 
 <table><thead><tr><th>フィールド</th><th>値</th></tr></thead><tbody><tr><td>組み立て可能なもの</td><td>作業台のレシピ全般 — shaped・shapeless 問わず</td></tr><tr><td>所要時間（ティック）</td><td>40</td></tr><tr><td>操作コスト（EU/FE）</td><td>480</td></tr><tr><td>自動排出</td><td>なし</td></tr></tbody></table>
 
@@ -416,7 +416,7 @@
 
 <p>モッドの機械レシピ（粉砕、製錬、抽出）は機械が <strong>実行しません</strong> — これは別のレシピタイプであり、別の機械です。</p>
 
-<h3>キューからの設計図選択</h3>
+<h3 id="キューからの設計図選択">キューからの設計図選択</h3>
 
 <p>設計図は <strong>ラウンドロビン</strong> で照会され、カーソル位置はサイクル間で保持されます。次のいずれか1つでも該当すると設計図はスキップされます：</p>
 
@@ -426,7 +426,7 @@
 
 <p>ラウンドロビンは「上から下」の厳格な優先順位の代わりに意図的に選ばれました。厳格な優先順位では、無限の原料を持つ最初の設計図がキューを他のものに渡さなくなってしまいます。</p>
 
-<h3>1回の操作の順序</h3>
+<h3 id="1回の操作の順序">1回の操作の順序</h3>
 
 <p>順序は厳格で、逸脱は結果か残余の返却のいずれかを壊します：</p>
 
@@ -436,7 +436,7 @@
 
 <p>計算は <strong>操作あたり2回</strong> 行われます — 開始時（始めるかどうかを決める）とフィニッシュ時（40ティックの間に倉庫が変わった可能性がある）ですが、中間の40ティックでは行われません。フィニッシュ時にもう計画が成立しなければ（倉庫が空になった、レシピが消えた）、機械はフィニッシュラインで凍結します：進行状況と消費済みの EU/FE は保持され、計画が再び成立した瞬間に操作が完了します。</p>
 
-<h3>材料の代替</h3>
+<h3 id="材料の代替">材料の代替</h3>
 
 <p>デフォルトでは、機械は倉庫から <strong>設計図に記録された正確なアイテム</strong> を、コンポーネントを無視してアイテム単位で比較して取り出します（標準の <code>Ingredient</code> と同じです）。そのため、設計図に新品を置いた場所では、使い古したツールも使えます。</p>
 
@@ -452,7 +452,7 @@
 
 <p>他のモッドの素材（銅、スズ、銀）は、レシピの材料が共通タグ <code>c:</code> で記録されている範囲でのみ機能します — これは別の課題であり、機械の属性ではありません。</p>
 
-<h3>残余アイテム</h3>
+<h3 id="残余アイテム">残余アイテム</h3>
 
 <p>コンテナを含むレシピ（ケーキのバケツ、瓶）はアイテムを返します。残余は <strong>材料を取り出した倉庫の同じセル</strong> に置かれ、占有されていれば倉庫の空きセルに、倉庫が満杯なら出力ゾーンに、そこも満杯なら操作は始まりませんでした（ステップ2）。</p>
 
@@ -460,7 +460,7 @@
 
 <p>スタック依存の残余（モッドのハンマーが消滅せず耐久値を1失う）も自動的に機能します。残余はアイテムから直接ではなくレシピ経由で取得されるためです。</p>
 
-<h2>インベントリ</h2>
+<h2 id="インベントリ">インベントリ</h2>
 
 <table><thead><tr><th>スロット</th><th>受け入れ</th><th>数</th></tr></thead><tbody><tr><td>設計図</td><td>レシピが記録された 組立設計図</td><td>3</td></tr><tr><td>出力ゾーン</td><td>排出のみ（機械が置き、プレイヤーが取る）</td><td>6</td></tr><tr><td>設計図ブランク</td><td>空の 組立設計図 — 「記録」の書き込み先</td><td>1</td></tr><tr><td>アップグレード</td><td>アップグレードモジュール</td><td>4（1つ目が作業用）</td></tr><tr><td>倉庫</td><td>任意のアイテム</td><td>27 + <a href="../utility/storage_module.html">モジュール</a> 1つにつき27、上限108</td></tr></tbody></table>
 
@@ -470,7 +470,7 @@
 
 <p>外部からの自動化：アイテムパイプは <strong>倉庫</strong> に充填し、<strong>出力ゾーン</strong> から引き出します。パイプで直接機械に材料を送る必要はなく、想定されていません。</p>
 
-<h2>インターフェース</h2>
+<h2 id="インターフェース">インターフェース</h2>
 
 <p><strong>機械ウィンドウ</strong>（組立機を右クリックで開く）は <strong>2つのタブ</strong>：「作業」と「記録」で構成されます。1つのブロック、1つのウィンドウで、切り替わるのは表示内容だけです。</p>
 
@@ -478,29 +478,29 @@
 
 <p><strong>タブの切り替えはビューの変更であって、モードの変更ではありません。</strong> プレイヤーが記録タブにいる間も機械はクラフトを続けます：タブはキューにも進行状況にもエネルギーにも触れません。記録中に生産を止めるモードは意図的に作られていません — 「もう1つレシピを記録したい」を生産ラインの停止に変えてしまうからです。</p>
 
-<h3>「作業」タブ</h3>
+<h3 id="作業タブ">「作業」タブ</h3>
 
 <p>機械が今していること：</p>
 
 <p>3つの設計図スロット — キューで、アクティブなものに枠； <strong>アクティブ設計図の3×3 レイアウトとその産物</strong> — 表示のみ（後述）； 6スロットの出力ゾーン； エネルギーバーと進行バー； ステータス行：<em>稼働中 / 設計図なし / 材料不足 / 出力満杯 / エネルギーなし / レシピが見つかりません</em>。プレイヤーはアイドリングの理由を区別できなければなりません — さもなければ「機械が止まっている」と「機械が壊れた」が区別できません。</p>
 
-<h3>「記録」タブ</h3>
+<h3 id="記録タブ">「記録」タブ</h3>
 
 <p>レシピを組み立てるときにすること：</p>
 
-<p>ゴーストセルの3×3 グリッド； 結果のプレビュー — このレイアウトが何を作るか； 空のブランクスロット； 「記録」ボタン — ブランクを記録済み設計図に変える； 「記録」の左にある矢印付きの四角いボタン — 表示中の設計図の <a href="index.html#材料の代替">代替トグル</a>：グレーの矢印は無効、緑は有効。</p>
+<p>ゴーストセルの3×3 グリッド； 結果のプレビュー — このレイアウトが何を作るか； 空のブランクスロット； 「記録」ボタン — ブランクを記録済み設計図に変える； 「記録」の左にある矢印付きの四角いボタン — 表示中の設計図の <a href="#材料の代替">代替トグル</a>：グレーの矢印は無効、緑は有効。</p>
 
 <p>グリッドのセルはクリックで埋まります：アイテムをカーソルに持った状態でセルに合わせてクリックすると、コピー1つがセルに置かれます。空のカーソルでのクリックはセルをクリアします。このときアイテムは <strong>消費されません</strong>：グリッドはレイアウトを表示するもので、保存するものではありません。</p>
 
 <p>ブランクは <strong>キューではなくここに</strong> 置かれます。これは同じ決定の帰結です：記録タブは自己完結していなければなりません。「記録」がキューからブランクを取ると、レシピを記録するために「作業」タブに行かなければならず、2つの作業が再び結合されてしまいます。記録済み設計図はブランクの場所に現れ、そこから取って「作業」タブのキューに入れます。記録することとキューに入れることは同じではなく、行動の順序がそれを明示しています。</p>
 
-<h3>非表示タブのスロットはアクセス不可</h3>
+<h3 id="非表示タブのスロットはアクセス不可">非表示タブのスロットはアクセス不可</h3>
 
 <p>現在見えないタブに属するスロットは、クリック、シフトクリック、ドラッグ、ダブルクリックの「すべて集める」のいずれでも埋めることも空にすることもできません。非表示タブは単に描画されないだけでなく、非表示の間そのスロットはゲーム上存在しません。</p>
 
 <p>タブは機械ではなくウィンドウの状態です：どこにも保存されず、1つの組立機で2人のプレイヤーが互いに邪魔せずに異なるタブを見られます。</p>
 
-<h3>アクティブ設計図の表示</h3>
+<h3 id="アクティブ設計図の表示">アクティブ設計図の表示</h3>
 
 <p>「作業」タブは <strong>キューの設計図のレイアウトを表示</strong> します — 機械が作業中の設計図、アイドリング中なら最初に記録された設計図です。これがないと、稼働中の機械は「組み立て中」のステータスで出力が満ちていくのにウィンドウは空っぽ — 「どんなレシピが記録されているか分からない」という見た目になります。設計図の産物は、それが満たす出力ゾーンの下に描かれます。</p>
 
@@ -520,7 +520,7 @@
 
 <p>倉庫が近くに全くない場合、機械は空の倉庫の場合と全く同じ挙動をとります：ステータス行は「材料不足」を示し、EU/FE は消費されず、何も壊れません。</p>
 
-<h2>ブロック属性</h2>
+<h2 id="ブロック属性">ブロック属性</h2>
 
 <table><thead><tr><th>フィールド</th><th>値</th></tr></thead><tbody><tr><td>形状</td><td>完全立方体 16³</td></tr><tr><td>硬度</td><td>3.0</td></tr><tr><td>爆発耐性</td><td>6.0</td></tr><tr><td>ツール</td><td>ツルハシ</td></tr><tr><td>エネルギー NBT のドロップ</td><td>なし</td></tr></tbody></table>
 
@@ -530,7 +530,7 @@
 
 <p>前面はマークされており、モッドの他の機械と同様に自動化から除外されます：前面に突き立てたパイプはスロットを見ません。</p>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p>クラフト： 処理レシピはありません — 機械はバニラの <code>minecraft:crafting</code> を使用</p>
 
@@ -546,11 +546,11 @@ G — [鉄の歯車] ×4 — グリッドに部品を送る「腕」</code></pre
 
 <p>角がプレートではなく歯車なのは意図的です：組立機はモッド初の、自ら部品を移動させる機械で、歯車はモッドがまさにその用途 (<a href="../fluid-storage/fluid_tank.html">液体タンク</a>、<a href="../item-transport/item_pipe.html">アイテムパイプ</a>) で消費する部品です。埋まった9マスは同時に、このクラフトをモッドの他の機械と並べます — そちらでは空き角が例外的です。</p>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p>ティア：MV — <strong>モッド初の MV マシン</strong>、MV フェーズの錨 必要：<a href="../utility/storage_module.html">ストレージモジュール</a>（倉庫がなければ原料の調達先がない）と 組立設計図 以降、完成した石油ラインも必要 — 直接ではなく <a href="../components/advanced_machine_casing.html">高度なマシンケース</a> 経由で：そこには <a href="../components/advanced_circuit.html">高度な回路</a> が2つ入り、それぞれがゴム ×4 です。組立機自身のクラフトグリッドは変わっていませんが、完全なコストはこの回路2つ分増え、<a href="polymerizer.html">重合機</a> と <a href="vulcanizer.html">加硫機</a> の構築前に組立機を作ることはもうできません 発展先：なし。「オンデマンドのオートクラフト」（「Xを64個作る」とそのサブクラフトツリー付き）は別の将来システムであり、この機械のアップグレードではありません</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="../utility/storage_module.html">ストレージモジュール</a> — 機械が原料を取り出す倉庫 組立設計図 — レシピを保持するアイテム <a href="../energy-transfer/gold_cable.html">金ケーブル</a> — MV マシンの給電 <a href="../item-transport/item_pipe.html">アイテムパイプ</a> — 倉庫を満たし、出力を引き出す <a href="sawmill.html">製材機</a> — GUI で切り替え可能なモードを持つ機械のお手本</p>
 

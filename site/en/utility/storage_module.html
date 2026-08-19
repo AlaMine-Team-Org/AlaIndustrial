@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Other</div>
 <a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 
 <p>The <strong>Storage Module</strong> is a 27-slot block whose whole point is that it <strong>merges with its neighbours</strong>. Put two modules against each other and you have one 54-slot warehouse behind a single window. Three makes 81. Four makes 108, and that is the ceiling.</p>
 
@@ -402,29 +402,29 @@
 
 <blockquote><strong>Quick example:</strong> you placed a module, filled it, ran out. Butt a second one against it: open either of the two and you are looking at 54 slots as one list.</blockquote>
 
-<h2>Energy</h2>
+<h2 id="energy">Energy</h2>
 
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>none</td></tr><tr><td>Buffer (EU/FE)</td><td>0</td></tr><tr><td>Max input (EU/FE/tick)</td><td>n/a</td></tr><tr><td>Max output (EU/FE/tick)</td><td>n/a</td></tr><tr><td>EU/FE/tick</td><td>0</td></tr></tbody></table>
 
 <p>The module takes no part in the energy network: it neither carries EU/FE nor connects to cables.</p>
 
-<h2>Inventory</h2>
+<h2 id="inventory">Inventory</h2>
 
 <table><thead><tr><th>Slot</th><th>Accepts</th><th>Count</th></tr></thead><tbody><tr><td>Module storage</td><td>any items</td><td>27 (3 rows of 9)</td></tr></tbody></table>
 
 <p><strong>Items physically sit in the module they were put into.</strong> There is no master inventory: the warehouse window is a view over every module's inventory at once, not a separate store. Everything else follows from that — what drops when you break one, and what happens when a chunk unloads.</p>
 
-<h3>How the warehouse adds up</h3>
+<h3 id="how-the-warehouse-adds-up">How the warehouse adds up</h3>
 
 <table><thead><tr><th>Modules adjacent</th><th>Warehouse slots</th><th>Rows total</th><th>Rows shown</th><th>Scroll</th></tr></thead><tbody><tr><td>1</td><td>27</td><td>3</td><td>3</td><td>none</td></tr><tr><td>2</td><td>54</td><td>6</td><td>6</td><td>none (bar drawn inactive)</td></tr><tr><td>3</td><td>81</td><td>9</td><td>6</td><td>3 rows</td></tr><tr><td>4</td><td>108</td><td>12</td><td>6</td><td>6 rows</td></tr><tr><td>5 or more</td><td>108 (cap)</td><td>12</td><td>6</td><td>6 rows</td></tr></tbody></table>
 
 <p>Slots and rows are <strong>unchanged</strong> — only the window is: it shows at most six rows and the rest are reached with the scrollbar on the right. Why six is in the Balance section.</p>
 
-<h3>Merging rules</h3>
+<h3 id="merging-rules">Merging rules</h3>
 
 <p>A module joins the warehouse if it touches another member <strong>face to face</strong>. Edge and corner contact does not count — so you can build two separate warehouses flush against each other. The set is worked out afresh every time the window opens, walking out from the module you clicked. Nothing is remembered, so placing or breaking a module needs no rebuilding. If a build holds more than four modules, the first four in walk order form the warehouse. Clicking a different module of the same build may give a different four — the window shows how many are connected, so this is visible.</p>
 
-<h2>Interface</h2>
+<h2 id="interface">Interface</h2>
 
 <p>Two window sizes: <strong>3 rows</strong> (176x166) for a lone module and <strong>6 rows</strong> (195x220) for anything larger. <strong>A scrollbar</strong> sits to the right of the grid, in the 19 px added to the panel width for it. The mouse wheel, dragging the thumb and clicking the track all work. A two-module warehouse has nothing to scroll to, and the bar is drawn <strong>in its inactive shade</strong> rather than disappearing: a control that comes and goes is harder to read than one visibly off. <strong>Shift-click fills the rows that are off screen too.</strong> Not a detail: vanilla's shift-click moves between menu slots, and the window only has six rows of them, so the obvious implementation would quietly stop halfway and report the warehouse full while half of it was empty. No search — 108 slots is too few to need one.</p>
 
@@ -432,11 +432,11 @@
 
 <p><strong>Why a view rather than moving the slots.</strong> <code>Slot.x</code>/<code>Slot.y</code> are <code>public final</code>, and a menu's slot list is part of the network contract: the indices in <code>ClientboundContainerSetSlot</code> are positions in it, so rebuilding the list under a live menu desynchronises the client. Vanilla's one scrolling display (the creative inventory) does the same thing: the slots never move, what moves is the answer the container behind them gives.</p>
 
-<h2>Block Properties</h2>
+<h2 id="block-properties">Block Properties</h2>
 
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full cube 16³</td></tr><tr><td>Hardness</td><td>3.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Drops with NBT</td><td>false — contents are <strong>not</strong> kept in the item</td></tr></tbody></table>
 
-<h3>Looks: a warehouse reads as one cabinet</h3>
+<h3 id="looks-a-warehouse-reads-as-one-cabinet">Looks: a warehouse reads as one cabinet</h3>
 
 <p>The module is a steel cabinet with <strong>three drawers</strong> — one per row of nine slots it adds to the window. Top and bottom are not drawers but a body plate with an inset service panel.</p>
 
@@ -462,17 +462,17 @@
 
 <p><strong>Contents survive a reload.</strong> <code>TC-STOR-013</code> takes a module through NBT — the same path a chunk save and load takes — and checks among other things that slots do not shift: an empty slot left deliberately between two occupied ones has to come back empty.</p>
 
-<h2>Recipes</h2>
+<h2 id="recipes">Recipes</h2>
 
 <p>Craft — 4 <a href="../components/material_forms.html">iron plates</a> in a cross around a vanilla chest.</p>
 
 <p>The recipe is cheap on purpose: growing the warehouse is a consumable, not a milestone.</p>
 
-<h2>Progression</h2>
+<h2 id="progression">Progression</h2>
 
 <p>Tier: none — no energy required, available as soon as you have plates. Where it sits in the storage line: <a href="iron_chest.html">Iron Chest</a> 36 → <a href="silver_chest.html">Silver</a> 45 → <a href="gold_chest.html">Gold</a> 54 → <a href="electrum_chest.html">Electrum</a> 81 → a module warehouse 108. The chests keep their value: they give their whole capacity in one block, the warehouse needs four. Later: the <a href="../machines/assembler.html">Assembler</a> will draw its materials straight from a warehouse like this.</p>
 
-<h2>Related</h2>
+<h2 id="related">Related</h2>
 
 <p><a href="gold_chest.html">Gold Chest</a> — the previous storage step <a href="../components/material_forms.html">Material Forms</a> — the plates for the recipe <a href="stock_display_frame.html">Stock Display Frame</a> — the reference for unloaded-chunk safety <a href="../machines/assembler.html">Assembler</a> — the future consumer of the warehouse <a href="../item-transport/item_pipe.html">Item Pipe</a> — fills the warehouse from outside</p>
 

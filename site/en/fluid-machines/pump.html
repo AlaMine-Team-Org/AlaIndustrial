@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 
 <blockquote><strong>Status:</strong> a public block — present in the creative tab, has a crafting recipe, GUI, and is visible in JEI/REI. It's one of the most energy-hungry machines in the mod (1000 EU/FE per bucket).</blockquote>
 
@@ -402,7 +402,7 @@
 
 <p>The main use case is feeding the <a href="../generators/geothermal_generator.html">Geothermal Generator</a> with lava through a pipe instead of hauling buckets by hand; the pump also moves water for future fluid chains.</p>
 
-<h2>Energy</h2>
+<h2 id="energy">Energy</h2>
 
 <p>The pump is a pure energy consumer: it takes EU/FE in, emits none, and spends 1000 EU/FE per bucket it draws.</p>
 
@@ -412,9 +412,9 @@
 
 <p>As an LV machine the pump accepts up to 32 EU/FE per tick. At 1000 EU/FE/bucket and a 32 EU/FE/tick limit, filling the buffer for one bucket takes ~32 ticks; the 4000 EU/FE buffer holds the cost of 4 buckets, so even under bursty energy supply the pump rarely idles.</p>
 
-<p><strong>Per-face energy role.</strong> The pump draws EU/FE on its five working faces; the front face is energy-inert (no port there), like every other horizontal machine. A cable therefore draws an arm toward the five working faces only — not toward the front. Fluid intake is a separate subsystem and still reads the front face directly (see <a href="index.html#processing">Intake</a>), so the front being energy-inert does <strong>not</strong> change which way the pump draws fluid from.</p>
+<p><strong>Per-face energy role.</strong> The pump draws EU/FE on its five working faces; the front face is energy-inert (no port there), like every other horizontal machine. A cable therefore draws an arm toward the five working faces only — not toward the front. Fluid intake is a separate subsystem and still reads the front face directly (see <a href="#processing">Intake</a>), so the front being energy-inert does <strong>not</strong> change which way the pump draws fluid from.</p>
 
-<h2>Processing</h2>
+<h2 id="processing">Processing</h2>
 
 <p>The pump doesn't use the recipe system: it doesn't process items, it moves fluid. Each working tick runs three steps.</p>
 
@@ -430,7 +430,7 @@
 
 <p>While working the pump lights up (lit on any tick where something happened — intake, push, or a bucket fill).</p>
 
-<h2>Inventory</h2>
+<h2 id="inventory">Inventory</h2>
 
 <p>Two slots for buckets — for manually pouring fluid into the tank. This isn't the pump's main way of working, just a handy convenience.</p>
 
@@ -438,7 +438,7 @@
 
 <p>Filling via buckets: a bucket from the input slot is emptied into the tank (1 bucket = 1000 mB), the empty bucket drops into the output slot — same as the Geothermal Generator. This <strong>costs no EU/FE</strong> (manual fill, not the pump). Hoppers can take empty buckets out of the output slot and put fresh fluid buckets into the input slot.</p>
 
-<h2>Internal tank</h2>
+<h2 id="internal-tank">Internal tank</h2>
 
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Implementation</td><td>neutral (in, works on Fabric and NeoForge)</td></tr><tr><td>Capacity</td><td><strong>10 buckets</strong> (10 buckets = 10000 mB)</td></tr><tr><td>Accepts</td><td>allowlist: lava + water (→)</td></tr><tr><td>Mixing</td><td><strong>forbidden</strong> — the tank is single-variant: while it holds one fluid, the other is rejected (guaranteed by the core's <code>.insert</code>)</td></tr><tr><td>Extraction</td><td>allowed from any side (→ true)</td></tr><tr><td>Access</td><td>per face; pipes and tanks of other mods connect to it on both loaders</td></tr></tbody></table>
 
@@ -448,7 +448,7 @@
 
 <p><strong>Persistence and migration.</strong> After a reload the tank restores both its volume and its fluid type. Worlds saved under the older version of the pump (lava-only) are picked up correctly: if any fluid is present it's read back as lava — the only one the old tank knew.</p>
 
-<h2>Exchanging with capsules and foreign containers</h2>
+<h2 id="exchanging-with-capsules-and-foreign-containers">Exchanging with capsules and foreign containers</h2>
 
 <p>The internal tank is not sealed off: it exchanges fluid with any container held in your hand.</p>
 
@@ -456,7 +456,7 @@
 
 <p>The pump never accepts a fluid that differs from what is already in the tank — mixing is impossible. Empty the tank first if you need to switch fluids.</p>
 
-<h2>Interface</h2>
+<h2 id="interface">Interface</h2>
 
 <p>The pump has a graphical screen with two slots (for buckets) and two indicator bars.</p>
 
@@ -468,19 +468,19 @@
 
 <p>Block state: the pump turns to "face the player" when placed (that face is where it draws fluid from) and lights up while working.</p>
 
-<h2>Block Properties</h2>
+<h2 id="block-properties">Block Properties</h2>
 
 <p>An ordinary solid block: a pickaxe breaks it, and on break it does not keep its energy charge (the tank and its fluid are kept — see Internal tank).</p>
 
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full 16³ cube (occluder)</td></tr><tr><td>Hardness</td><td>3.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Sound</td><td>metal</td></tr><tr><td>Drops with NBT energy</td><td>no</td></tr></tbody></table>
 
-<h2>Sound</h2>
+<h2 id="sound">Sound</h2>
 
 <p>While running, the pump emits a wet suction of liquid being drawn into a pipe — the loop (pattern <strong>A</strong>, default 0.35). It falls silent when idle</p>
 
 <p>What sets the pump apart from the other pattern-A machines: a bucket transfer is <strong>atomic</strong> — it completes within a single tick rather than spanning processing ticks the way the macerator's grind does. So <code>lit</code> (and with it the loop) is held for a further ticks after the last transfer (60 ticks = 3s by default). Without that hold, both the indicator and the sound would flash for one tick and the pump could never be heard working. Under continuous pumping, new transfers restart the countdown before it expires, so the pump reads as continuously running rather than flickering.</p>
 
-<h2>Recipes</h2>
+<h2 id="recipes">Recipes</h2>
 
 <p>One workbench recipe: an iron casing, two buckets, and an Electronic Circuit.</p>
 
@@ -495,13 +495,13 @@
 
 <p>The two buckets in the pattern reflect what the block does — moving fluid; the <a href="../components/index.html">Electronic Circuit</a> sets the machine's LV tier.</p>
 
-<h2>Progression</h2>
+<h2 id="progression">Progression</h2>
 
 <p>An early LV machine — placed once a stable generator and an Electronic Circuit for crafting are available. It frees you from hauling lava buckets by hand.</p>
 
 <p>Tier: LV Power: from an LV source, e.g. the <a href="../generators/generator.html">Generator</a>. Purpose: automatically feeding lava to the <a href="../generators/geothermal_generator.html">Geothermal Generator</a> as a fluid instead of by hand; moving water for future fluid chains. Requires: an <a href="../components/index.html">Electronic Circuit</a> to craft.</p>
 
-<h2>Related</h2>
+<h2 id="related">Related</h2>
 
 <p><a href="../generators/geothermal_generator.html">Geothermal Generator</a> — the main consumer of the pump's lava. <a href="../generators/generator.html">Generator</a> — the typical LV power source for the pump. <a href="../components/index.html">Components</a> — the Electronic Circuit for crafting.</p>
 

@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link active" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -394,13 +394,13 @@
 </div>
 <blockquote>✅ <strong>接触安全。</strong> 无论能量流量多大、相邻段如何、伤害数值如何设置，橡胶外皮都完全消除接触电击。</blockquote>
 
-<h2>概览</h2>
+<h2 id="概览">概览</h2>
 
 <p>绝缘金缆是用橡胶强化后的 <a href="gold_cable.html">金缆</a>。它保留金的吞吐量 48 EU/FE/刻 和数据包上限 128 EU/FE，但衰减减半：从 0.03 降到每格 <strong>0.015</strong>。这是本模组唯一接触安全的 MV 导线，因此在打通石油-硫磺链路与硫化机之后，它是基地内部布线的首选。</p>
 
 <p>裸金是本模组最危险的电缆：6 点伤害，对比 LV 的 2 点。橡胶外皮完全消除这一风险。 设定了绝缘的能量收益， 负责用电安全， 加入了金的品种与批量合成。</p>
 
-<h2>能量</h2>
+<h2 id="能量">能量</h2>
 
 <table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>角色</td><td>传输</td></tr><tr><td>等级</td><td>MV</td></tr><tr><td>最大电压</td><td>128 EU/FE/包</td></tr><tr><td>吞吐量</td><td>48 EU/FE/刻 = 段工作缓存</td></tr><tr><td>损耗</td><td>每格 <strong>0.015</strong> 衰减；当流量为正时，按 <code>max(1, ceil(N × 0.985^距离))</code> EU/FE/刻 送达</td></tr><tr><td>绝缘</td><td>橡胶；完全防触电</td></tr></tbody></table>
 
@@ -408,17 +408,17 @@
 
 <p>在混合网络中，数据包上限更高的品种决定网络的损耗系数。在上限相同时，裸线优先于绝缘线：单独一段绝缘不会整条改善裸线线路。降低后的 0.015 仅在全绝缘金网络中生效。</p>
 
-<h2>方块属性</h2>
+<h2 id="方块属性">方块属性</h2>
 
 <p>一根带橡胶外皮的细导线，与相邻方块相连。任何工具都能挖，用电缆闸刀更方便。</p>
 
 <table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>形状</td><td>细杆（6px 芯 + 连接套）</td></tr><tr><td>硬度</td><td>0.2</td></tr><tr><td>工具</td><td>任意 / 电缆闸刀</td></tr></tbody></table>
 
-<h2>配方</h2>
+<h2 id="配方">配方</h2>
 
 <p>在工作台上六根金缆加三份橡胶，产出 <strong>6</strong> 根绝缘金缆。 橡胶消耗为每根电缆 0.5。 没有羊毛替代配方：绝缘是硫化橡胶的消费端。 加工配方：无。</p>
 
-<h2>相关内容</h2>
+<h2 id="相关内容">相关内容</h2>
 
 <p><a href="gold_cable.html">金缆</a> —— 廉价的裸线版本，带触电风险。 <a href="insulated_copper_cable.html">绝缘铜缆</a> —— 适用于最高 12 EU/FE/刻 流量的 LV 版本。 <a href="../components/rubber.html">橡胶</a> —— 外皮材料。</p>
 

@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепты</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="10 страниц">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="4 страницы">4</span></a>
 <a class="cat-link active" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Прочее</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="14 страниц">14</span></a>
 <div class="group-title">Предметы</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="2 страницы">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="20 страниц">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="20 страниц">20</span></a>
   </aside>
@@ -395,13 +395,13 @@
 
 <blockquote>✅ <strong>Безопасен при касании.</strong> Резиновая оболочка полностью исключает контактный удар током при любом потоке энергии независимо от соседних сегментов и настроек величины урона. Для HV это особенно заметно: голый электрум бьёт на 10 единиц — самый опасный провод мода.</blockquote>
 
-<h2>Сводка</h2>
+<h2 id="сводка">Сводка</h2>
 
 <p>Изолированный электрумный кабель — улучшенная резиной версия <a href="electrum_cable.html">электрумного кабеля</a>. Он сохраняет электрумную пропускную способность 192 EU/FE/тик и потолок пакета 512 EU/FE, но затухание уменьшается вдвое: с 0.005 до <strong>0.0025 на блок</strong>. Это <strong>самые низкие потери в моде</strong> — вдвое ниже прежнего рекорда, изолированного оловянного кабеля (0.003), и вчетверо ниже голого электрума-предшественника по лестнице.</p>
 
 <p>Получается провод без единого недостатка в эксплуатации: шире всех, дальнобойнее всех и безопасен при касании. Вся цена вынесена в крафт — сначала электрум и алмазная пыль на голый сорт, затем ещё и резина на оболочку.</p>
 
-<h2>Энергия</h2>
+<h2 id="энергия">Энергия</h2>
 
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Роль</td><td>передача</td></tr><tr><td>Тир</td><td>HV</td></tr><tr><td>Макс. напряжение</td><td>512 EU/FE/пакет</td></tr><tr><td>Пропускная способность</td><td>192 EU/FE/тик = рабочий буфер сегмента</td></tr><tr><td>Потери</td><td><strong>0.0025</strong> затухания на блок; при положительном потоке доставляется <code>max(1, ceil(N × 0.9975^дистанция))</code> EU/FE/тик</td></tr><tr><td>Изоляция</td><td>резина; полная защита от удара током</td></tr></tbody></table>
 
@@ -409,17 +409,17 @@
 
 <p>В смешанной сети сорт с большим потолком пакета задаёт сетевой коэффициент потерь. При равном потолке голый сорт имеет приоритет над изолированным: один изолированный сегмент не улучшает целиком голую линию. Пониженные 0.0025 действуют только в полностью изолированной электрумной сети.</p>
 
-<h2>Свойства блока</h2>
+<h2 id="свойства-блока">Свойства блока</h2>
 
 <p>Тонкий провод с резиновой оболочкой, соединяется с соседними блоками. Ломается любым инструментом, удобнее — кусачками.</p>
 
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Форма</td><td>тонкий стержень (6px core + рукава)</td></tr><tr><td>Прочность</td><td>0.2</td></tr><tr><td>Инструмент</td><td>любой / кусачки</td></tr></tbody></table>
 
-<h2>Рецепты</h2>
+<h2 id="рецепты">Рецепты</h2>
 
 <p>Шесть электрумных кабелей и три резины на верстаке дают <strong>6</strong> изолированных. Расход резины — 0.5 на кабель, как у остальных сортов. Шерстяного альтернативного рецепта нет: изоляция является потребителем вулканизированной резины. Рецепты переработки: нет.</p>
 
-<h2>Связанное</h2>
+<h2 id="связанное">Связанное</h2>
 
 <p><a href="electrum_cable.html">Электрумный кабель</a> — голая версия с ударом током на 10 единиц. <a href="insulated_gold_cable.html">Изолированный золотой кабель</a> — MV-версия для потоков до 48 EU/FE/тик. <a href="../components/rubber.html">Резина</a> — материал оболочки.</p>
 

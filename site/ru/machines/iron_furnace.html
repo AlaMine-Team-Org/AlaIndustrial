@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепты</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="10 страниц">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="4 страницы">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Прочее</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="14 страниц">14</span></a>
 <div class="group-title">Предметы</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="2 страницы">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="20 страниц">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="20 страниц">20</span></a>
   </aside>
@@ -393,39 +393,41 @@
   </div>
 </div>
 
-<h2>Сводка</h2>
+<h2 id="сводка">Сводка</h2>
 
 <p><strong>Железная печь</strong> — улучшенная топливная печь, занимающая нишу между ванильной печью и <a href="electric_furnace.html">электропечью</a>. Она быстрее ванильной и плавит всё то же, что ванильная, но всё ещё работает на твёрдом топливе (уголь, доски, древесный уголь…), а не на EU/FE. Это ранний апгрейд для игрока, который ещё не построил энергосеть, но уже хочет ускорить плавку.</p>
 
-<p>Полностью переиспользует ванильный интерфейс печи — другой только заголовок. Рецепты и поведение как у ванильной печи (через vanilla smelting), плюс поддерживает рецепты мода на тех же входах.</p>
+<p>Полностью переиспользует ванильный интерфейс печи — другой только заголовок. Рецепты и поведение как у ванильной печи: всё, что плавится в ванильной печи, плавится и здесь — включая руды, сырьё и металлическую пыль мода.</p>
 
 <blockquote><strong>Мини-пример:</strong> обнесли ванильную печь восемью железными слитками → получили железную печь. Скорость плавки заметно выше, расход топлива тот же. Промежуточный шаг перед электропечью.</blockquote>
 
-<h2>Энергия</h2>
+<h2 id="энергия">Энергия</h2>
 
 <p>EU/FE не использует. Питание — твёрдое топливо (как ванильная печь). Это главное отличие от <a href="electric_furnace.html">электропечи</a>, которая уже работает от EU/FE.</p>
 
-<h2>Как используется</h2>
+<h2 id="как-используется">Как используется</h2>
 
-<p>Ставится как обычная печь. Открывается ПКМ — тот же интерфейс (slot для плавки, slot для топлива, полоску пламени и стрелку прогресса). Принимает все ванильные smelting-рецепты плюс рецепты мода (пыль → слиток, сырец → слиток и т.п.).</p>
+<p>Ставится как обычная печь. Открывается ПКМ — тот же интерфейс (slot для плавки, slot для топлива, полоску пламени и стрелку прогресса). Принимает все ванильные smelting-рецепты — и те, что добавляет мод: руда → слиток, сырец → слиток, металлическая пыль → слиток, железный слиток → закалённое железо.</p>
 
-<h2>Свойства блока</h2>
+<blockquote>Чего она <strong>не</strong> умеет: рецепты, которые существуют только для <a href="electric_furnace.html">электропечи</a> (у той есть собственный тип рецептов). На сегодня это плавка урановой и палладиевой пыли — она доступна только в электропечи.</blockquote>
+
+<h2 id="свойства-блока">Свойства блока</h2>
 
 <p>Кубический блок с фронтальной гранью (lit/unlit состояния — горит во время работы). Тир: LV (по классификации мода — ранняя машина), но реально работает без EU/FE. Прочность и инструмент: как у ванильной печи (каменная кирка).</p>
 
-<h2>Звук</h2>
+<h2 id="звук">Звук</h2>
 
 <p>Пока печь горит, слышен ванильный треск огня — та же амбиенция, что у обычной печи: нерегулярный, одиночные щелчки (не фоновая петля). Кастомного звука нет.</p>
 
-<h2>Рецепты</h2>
+<h2 id="рецепты">Рецепты</h2>
 
 <p>Собирается на верстаке (shaped 3×3): ванильная печь в центре, окружена 8 железными слитками.</p>
 
-<h2>Прогрессия</h2>
+<h2 id="прогрессия">Прогрессия</h2>
 
 <p>Ранняя машина (tier-stone), без EU/FE. Встраивается в цепочку: ванильная печь → <strong>железная печь</strong> → <a href="electric_furnace.html">электропечь</a> → индукционная печь (концепт). Каждый шаг быстрее предыдущего. Не требует энергосети — можно поставить в любой пещере/шахте, где есть топливо.</p>
 
-<h2>Связанное</h2>
+<h2 id="связанное">Связанное</h2>
 
 <p><a href="electric_furnace.html">Электропечь</a> — следующий шаг: переход с топлива на EU/FE. <a href="../utility/iron_chest.html">Железный сундук</a> — родственный «улучшенный ванильный» блок.</p>
 

@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,19 +392,19 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p>電解槽は LV のめっき機械です：繊維と銀の粉を水中に浸して電流を通し、銀が繊維の上に導電性の筋として析出します。出力は <strong>フラックス糸</strong> で、フラックス織布素材の半成品です。これはモッド初の、アイテム <strong>と</strong> 液体を同時に消費する機械で、EU/FE 防具ラインへの入り口です。</p>
 
 <p>繊維としては <strong>バニラの糸または綿繊維</strong> を使います — どちらもタグ <code>#</code> で1つのレシピとして受け付けられます。クモ牧場と綿の畑のどちらを選ぶかは、進行ではなくプレイスタイルの問題です。</p>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <table><thead><tr><th>フィールド</th><th>値</th></tr></thead><tbody><tr><td>役割</td><td>消費者</td></tr><tr><td>バッファ（EU/FE）</td><td>800（）</td></tr><tr><td>最大入力（EU/FE/t）</td><td>32（LV の上限）</td></tr><tr><td>最大出力（EU/FE/t）</td><td>該当なし</td></tr><tr><td>EU/FE/t</td><td>2（）</td></tr></tbody></table>
 
 <p>スループット：正面（）を除く任意の面から最大32 EU/FE/t を受け付けます。正面はエネルギー的に不活性で、ケーブルの引き込みを引き寄せません。上限を超える余剰は伝達されず、破壊も起きません。</p>
 
-<h2>加工</h2>
+<h2 id="加工">加工</h2>
 
 <table><thead><tr><th>フィールド</th><th>値</th></tr></thead><tbody><tr><td>所要時間（ティック）</td><td>500 = 25秒（）</td></tr><tr><td>操作あたりの水消費</td><td>4000 mB = 4バケツ（）</td></tr><tr><td>タンク容量</td><td>10 000 mB（10バケツ）</td></tr><tr><td>自動排出</td><td>なし</td></tr></tbody></table>
 
@@ -412,33 +412,33 @@
 
 <p>タンクは <strong>一方向</strong> です：水は注げますが汲み上げられません（R-CON-08）— 内部に入ったものは貯蔵庫ではなく原料なので、隣接するポンプは水を逆流させません。</p>
 
-<h2>インベントリ</h2>
+<h2 id="インベントリ">インベントリ</h2>
 
 <table><thead><tr><th>スロット</th><th>受け入れ</th><th>数</th></tr></thead><tbody><tr><td>繊維</td><td><code>#</code>（糸、綿繊維）</td><td>操作あたり1</td></tr><tr><td>銀</td><td></td><td>操作あたり1</td></tr><tr><td>注入（入力）</td><td>液体入り容器（バケツ、真空カプセル、他モッドのセル）</td><td>—</td></tr><tr><td>注入（出力）</td><td>機械が空にした容器</td><td>—</td></tr><tr><td>結果</td><td>、機械からのみ</td><td>最大64</td></tr></tbody></table>
 
 <p>自動化は両方の入力スロットと注入スロットに供給でき、結果スロットと空になった容器スロットから引き抜けます。</p>
 
-<h2>インターフェース</h2>
+<h2 id="インターフェース">インターフェース</h2>
 
 <p>タイプ：container 表示：タンクの水位（ホバーで液体名と mB 単位の量）、エネルギー量、進行矢印。 <strong>アイドリングの理由</strong> が矢印のツールチップに表示されます：「繊維が必要」「銀の粉が必要」「水が必要」「適合するレシピがない」「出力が満杯」。個別の行が必要なのは、水がレシピの一部ではないためです：水がない空のタンクは、プレイヤーには「レシピがない」と読めてしまいます。</p>
 
-<h2>ブロック属性</h2>
+<h2 id="ブロック属性">ブロック属性</h2>
 
 <table><thead><tr><th>フィールド</th><th>値</th></tr></thead><tbody><tr><td>硬度</td><td>3.0</td></tr><tr><td>爆発耐性</td><td>6.0</td></tr><tr><td>ツール</td><td>ツルハシ</td></tr><tr><td>エネルギー NBT のドロップ</td><td>なし</td></tr></tbody></table>
 
-<h2>音</h2>
+<h2 id="音">音</h2>
 
 <p>稼働中、電解槽はかすかなイオン性の電解電鳴を発します — ループ （パターン <strong>A</strong>、既定の 0.35）。停止中は無音になります （）。</p>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p>クラフト： — マシンケース、銅コイル ×2、電子回路 ×2、銀板 ×2。 処理レシピ：</p>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p>ティア：LV 必要：<a href="../components/machine_casing.html">マシンケース</a>、銅コイル、電子回路、銀板。 解放：フラックス糸 → フラックス織布 → LV の Fluxweave 防具。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="polymerizer.html">重合機</a> — タンク付き機械の参考実装 <a href="vulcanizer.html">加硫機</a> — 2つのアイテム入力を持つ機械の参考実装 <a href="../agriculture/trellis.html">支柱</a> — 綿繊維の供給源</p>
 

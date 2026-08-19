@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепты</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="10 страниц">10</span></a>
 <a class="cat-link active" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="4 страницы">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Прочее</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="14 страниц">14</span></a>
 <div class="group-title">Предметы</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="2 страницы">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="20 страниц">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="20 страниц">20</span></a>
   </aside>
@@ -393,7 +393,7 @@
   </div>
 </div>
 
-<h2>Сводка</h2>
+<h2 id="сводка">Сводка</h2>
 
 <p><strong>Усиленное энергохранилище</strong> — вторая ступень линейки накопителей: то же назначение, что у <a href="battery_box.html">Энергохранилища</a>, но на тир выше. Оно держит <strong>100 000 EU/FE</strong> и принимает-отдаёт <strong>128 EU/FE/такт</strong> вместо 32.</p>
 
@@ -403,7 +403,7 @@
 
 <p>Собирается <strong>из готового стартового хранилища</strong> — оно ложится в центр рецепта и становится ядром нового блока. Апгрейд здесь буквальный, а не «сделай заново из руды».</p>
 
-<h2>Энергия</h2>
+<h2 id="энергия">Энергия</h2>
 
 <table><thead><tr><th>Параметр</th><th>Значение</th></tr></thead><tbody><tr><td>Ёмкость</td><td>100 000 EU/FE</td></tr><tr><td>Макс. вход</td><td>128 EU/FE/t (MV)</td></tr><tr><td>Макс. выход</td><td>128 EU/FE/t (MV)</td></tr></tbody></table>
 
@@ -419,13 +419,13 @@
 
 <p>Приоритет раздачи общий для всей сети и здесь не меняется: пока машинам не хватает выработки генераторов, накопитель <strong>только отдаёт</strong>, а заряжаться начинает, когда машины насытятся.</p>
 
-<h3>Каскад: в одной сети со стартовым</h3>
+<h3 id="каскад-в-одной-сети-со-стартовым">Каскад: в одной сети со стартовым</h3>
 
 <p>Усиленное хранилище участвует в том же выравнивании банка, что и стартовое, и выравнивание идёт по <strong>долям заполнения</strong>, а не по абсолютным EU/FE. Это важно на смешанном банке: стартовое (20 000) и усиленное (100 000) сойдутся не к равному заряду, а к равному проценту — например, оба к 50 %, то есть 10 000 и 50 000 EU/FE. Ощущение «большой ящик высосал маленький» ложное: маленький отдаёт ровно свою долю.</p>
 
 <p>Перекачка идёт по кабелю и платит обычные потери на длине, поэтому банк выгоднее держать компактно.</p>
 
-<h2>Инвентарь</h2>
+<h2 id="инвентарь">Инвентарь</h2>
 
 <p>Два слота для переносных EU/FE-предметов:</p>
 
@@ -435,11 +435,11 @@
 
 <p>Оба слота ручные — воронки ими не пользуются, работают только из GUI.</p>
 
-<h2>Интерфейс</h2>
+<h2 id="интерфейс">Интерфейс</h2>
 
 <p>Один экран: запас энергии, скорость приёма/выдачи, слот зарядки и слот разрядки.</p>
 
-<h2>Внешний вид</h2>
+<h2 id="внешний-вид">Внешний вид</h2>
 
 <p>Блок собран из холодной стали — той же, что <a href="../components/advanced_machine_casing.html">продвинутый корпус</a>, из которого он и сделан. Ритм рамки и полос повторяет <a href="battery_box.html">стартовое хранилище</a>, поэтому две ступени читаются как одна линейка, а не как два разных блока.</p>
 
@@ -447,13 +447,13 @@
 
 <p><strong>Вход и выход различаются цветом, а не формой.</strong> Это сознательное отличие от стартового хранилища, где выход помечен крупным разъёмом, а вход — невзрачной линзой: игрок ведёт кабель к заметному разъёму и попадает в выход. Здесь обе грани — одинаковый разъём, и роль несёт цвет: синий принимает, оранжевый отдаёт.</p>
 
-<h2>Свойства блока</h2>
+<h2 id="свойства-блока">Свойства блока</h2>
 
 <p>Обычный сплошной блок, полный куб 16³ (окклюдер). Прочнее стартового — это металл, а не ящик из досок. Ломается любой киркой и <strong>сохраняет заряд при разрушении</strong>.</p>
 
 <table><thead><tr><th>Параметр</th><th>Значение</th></tr></thead><tbody><tr><td>Форма</td><td>полный куб 16³ (окклюдер)</td></tr><tr><td>Прочность</td><td>4.0</td></tr><tr><td>Взрывоустойчивость</td><td>6.0</td></tr><tr><td>Инструмент</td><td>кирка</td></tr><tr><td>Звук</td><td>металл</td></tr><tr><td>Сохраняет заряд при ломании</td><td>да</td></tr></tbody></table>
 
-<h2>Рецепты</h2>
+<h2 id="рецепты">Рецепты</h2>
 
 <p>Это накопитель, не процессор — рецептов переработки нет.</p>
 
@@ -464,11 +464,11 @@
 
 <p>Электрум здесь не случайный сплав: это золото с серебром, лучший проводник в моде, и на накопителе он стоит там, где ток входит и выходит. Раньше по углам стояла резина, но резина — изолятор: на кабеле она уместна, а в накопителе четыре куска изоляции по углам ничего не объясняли.</p>
 
-<h2>Прогрессия</h2>
+<h2 id="прогрессия">Прогрессия</h2>
 
 <p>Тир: MV. Вторая ступень линейки накопителей. Предшественник: <a href="battery_box.html">Энергохранилище</a> (LV) — не просто «пройдено», а <strong>израсходовано</strong> в рецепте. Требует <strong>двух</strong> производственных линий сразу: <strong>сплавы</strong> — электрум варится в <a href="../machines/alloy_smelter.html">сплавочной печи</a> из золота и серебра; <strong>нефть</strong> — она никуда не делась и после замены резины на электрум: резина осталась внутри <a href="../components/advanced_circuit.html">продвинутой схемы</a>, а та обязательна и здесь, и в продвинутом корпусе. Гейт <code>нефть → Полимеризатор → Вулканизатор</code> действует, просто теперь он косвенный.</p>
 
-<h2>Связанное</h2>
+<h2 id="связанное">Связанное</h2>
 
 <p><a href="battery_box.html">Энергохранилище</a> — LV-предшественник, входит в рецепт. MFSU — вершина линейки накопителей. <a href="../energy-transfer/gold_cable.html">Золотой кабель</a> — подводка, без которой прирост скорости не виден. <a href="../components/advanced_circuit.html">Продвинутая схема</a> · <a href="../components/advanced_machine_casing.html">Продвинутый корпус</a> — MV-детали рецепта.</p>
 

@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -392,13 +392,13 @@
     </div>
   </div>
 </div>
-<h2>概览</h2>
+<h2 id="概览">概览</h2>
 
 <p><strong>地热发电机</strong> 烧岩浆而不是煤炭。它的功率是普通 <a href="generator.html">发电机</a> 的两倍，且岩浆可由抽水泵供给——意味着不必再手动搬运燃料。它由现成的发电机构成，所以是升级而非首个能源。</p>
 
 <blockquote><strong>小例子：</strong>一桶岩浆在 <strong>16 EU/FE/t</strong> 的速率下提供 <strong>16 000 EU/FE</strong>。装满 10 桶的 水箱约等于 160 000 EU/FE，大约 8 分钟的持续运行。</blockquote>
 
-<h2>能量</h2>
+<h2 id="能量">能量</h2>
 
 <p>发电机只产出能量——不接受外来能量。内部最多容纳 4000 EU/FE，并将其输出到 LV 等级的线路。</p>
 
@@ -406,13 +406,13 @@
 
 <p>能量从 5 个工作面输出。<strong>正面</strong> 是惰性的——电缆无法接上，漏斗也无法穿过它工作。</p>
 
-<h2>发电</h2>
+<h2 id="发电">发电</h2>
 
 <p>以稳定的 16 EU/FE/t 烧岩浆。一桶约可产出 16 000 EU/FE——按单位燃料折腾成本算明显比煤炭划算。</p>
 
 <table><thead><tr><th>情况</th><th>发电量</th></tr></thead><tbody><tr><td>水箱有岩浆，缓存有空位</td><td>16 EU/FE/t</td></tr><tr><td>缓存已满</td><td>暂停（等待空位）</td></tr><tr><td>水箱为空</td><td>0</td></tr></tbody></table>
 
-<h2>物品栏</h2>
+<h2 id="物品栏">物品栏</h2>
 
 <p>内部有一个 <strong>10 桶岩浆箱</strong> 加上一个用于灌装的物品槽。</p>
 
@@ -424,25 +424,25 @@
 
 <p>水箱满时，上述任何方式都是无操作的静默行为：容器保持满载，什么也不会洒出。</p>
 
-<h2>界面</h2>
+<h2 id="界面">界面</h2>
 
 <p>同一屏可见缓存余量、岩浆箱充盈程度和输出速率。</p>
 
-<h2>方块属性</h2>
+<h2 id="方块属性">方块属性</h2>
 
 <p>普通实心方块。任意镐均可破坏。</p>
 
 <table><thead><tr><th>项目</th><th>数值</th></tr></thead><tbody><tr><td>工具</td><td>镐</td></tr></tbody></table>
 
-<h2>配方</h2>
+<h2 id="配方">配方</h2>
 
 <p>在工作台上用现成的 <a href="generator.html">发电机</a> 套上平滑石头外壳，底部再放上一块 <a href="../components/electronic_circuit.html">电子电路</a> 合成而成。所以它是升级：需要先走完 LV 起步流程， 不可能成为第一个能源。</p>
 
-<h2>进阶</h2>
+<h2 id="进阶">进阶</h2>
 
 <p>等级：LV。 在燃煤 <a href="generator.html">发电机</a> 之上的升级——输出翻倍、燃料可泵送，代价是要折腾岩浆。</p>
 
-<h2>相关内容</h2>
+<h2 id="相关内容">相关内容</h2>
 
 <p><a href="generator.html">发电机</a> —— 固体燃料的基础替代品，也是合成部件。 <a href="../fluid-machines/pump.html">抽水泵</a> —— 自动向水箱注入岩浆。 <a href="../items/vacuum_capsule.html">真空胶囊</a> —— 携带岩浆到水箱的便利容器。</p>
 

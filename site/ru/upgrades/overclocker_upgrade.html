@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепты</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="10 страниц">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="4 страницы">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Прочее</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="14 страниц">14</span></a>
 <div class="group-title">Предметы</div>
-<a class="cat-link active" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="2 страницы">2</span></a>
+<a class="cat-link active" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="20 страниц">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="20 страниц">20</span></a>
   </aside>
@@ -393,7 +393,7 @@
   </div>
 </div>
 
-<h2>Сводка</h2>
+<h2 id="сводка">Сводка</h2>
 
 <p><strong>Ускоритель</strong> — предмет-апгрейд, который кладётся в свой слот панели улучшений машины (верхний, с подсказкой в виде двойной стрелки). Ступеней три — I, II и III; это три разных предмета, а не стопка одинаковых, поэтому в машине работает ровно один ускоритель.</p>
 
@@ -401,21 +401,21 @@
 
 <blockquote><strong>Мини-пример:</strong> дробитель без ускорителя перемалывает руду 150 тиков и тратит 300 EU/FE. С III ступенью он справляется за 77 тиков — почти вдвое быстрее, — но сжигает 1232 EU/FE, вчетверо больше. На медном проводе такая машина уже не наедается: нужен золотой.</blockquote>
 
-<h2>Энергия</h2>
+<h2 id="энергия">Энергия</h2>
 
 <p>Сам ускоритель энергии не хранит и не потребляет — он меняет расход машины, в которую вставлен.</p>
 
 <table><thead><tr><th>Ступень</th><th>Тиков (дробитель)</th><th>EU/FE/такт</th><th>Ускорение</th><th>EU/FE за операцию</th></tr></thead><tbody><tr><td>—</td><td>150</td><td>2</td><td>1.00×</td><td>300</td></tr><tr><td>I</td><td>120</td><td>4</td><td>1.25×</td><td>480</td></tr><tr><td>II</td><td>96</td><td>8</td><td>1.56×</td><td>768</td></tr><tr><td>III</td><td>77</td><td>16</td><td>1.95×</td><td>1232</td></tr></tbody></table>
 
-<h2>Инвентарь</h2>
+<h2 id="инвентарь">Инвентарь</h2>
 
 <p>Не применимо (предмет). Кладётся в слот ускорителя панели улучшений — по одному на машину. Хопперы и трубы панель улучшений не видят.</p>
 
-<h2>Свойства блока</h2>
+<h2 id="свойства-блока">Свойства блока</h2>
 
 <p>Не применимо (предмет). Стак: 64 в обычном инвентаре, 1 в слоте улучшений.</p>
 
-<h2>Как работает</h2>
+<h2 id="как-работает">Как работает</h2>
 
 <p>Пока ускоритель лежит в панели, машина работает быстрее и потребляет больше. Наведите курсор на шестерёнку панели — в подсказке видно установленную ступень и во сколько раз выросли скорость и расход.</p>
 
@@ -429,11 +429,11 @@
 
 <p>Чего ускоритель <strong>не</strong> делает: не меняет рецепты, не влияет на шансы (в инкубаторе — тоже), не ускоряет прогрев перегонной колонны (нагрев холодной колонны — это физика, а не производительность) и не работает в генераторах и в сгущателе — там выработка и накопление регулируются иначе.</p>
 
-<h2>Прогрессия</h2>
+<h2 id="прогрессия">Прогрессия</h2>
 
 <p>Апгрейд без собственного тира. Ступень I строится на <a href="../components/empty_chip.html">пустом чипе</a>; каждая следующая — из предыдущей. Главный гейт — <strong>сгусток энергии</strong> соответствующего тира, а он добывается только <a href="../energy-storage/energy_condenser.html">сгущателем</a> из избытка сети. Ускоритель нельзя купить за руду: за него платит ваша электростанция.</p>
 
-<h2>Связанное</h2>
+<h2 id="связанное">Связанное</h2>
 
 <p><a href="../energy-storage/energy_condenser.html">Сгущатель энергии</a> — единственный источник сгустков. <a href="../components/empty_chip.html">Пустой чип</a> — заготовка первой ступени. <a href="mute_chip.html">Чип-глушитель</a> — сосед по панели; их можно ставить вместе. Обзор системы апгрейдов — как работают слоты улучшений.</p>
 

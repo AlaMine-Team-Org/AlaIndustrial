@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
 <a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 
 <p>The <strong>Electric Hoe</strong> is the fourth and last powered hand tool in the line: after the <a href="electric_drill.html">Electric Drill</a> (stone), the <a href="electric_chainsaw.html">Electric Chainsaw</a> (wood) and the <a href="electric_shovel.html">Electric Shovel</a> (earth), it covers farmland. Same contract: it runs on EU/FE instead of durability, never breaks, and when it runs flat it keeps working at hand speed with every drop intact.</p>
 
@@ -406,7 +406,7 @@
 
 <p>Like the mod's other EU/FE items, the hoe has <strong>no durability</strong> and never breaks: the bar under the icon shows EU/FE charge (gold), not wear. It charges where the <a href="energy_pack.html">Energy Pack</a> does — in the <a href="../energy-storage/battery_box.html">Battery Box</a> charge slot and from a worn pack.</p>
 
-<h2>Energy</h2>
+<h2 id="energy">Energy</h2>
 
 <p>Its own EU/FE buffer, outside the energy network. Charges in the Battery Box slot and from a worn pack; spends charge only on breaking blocks.</p>
 
@@ -414,25 +414,25 @@
 
 <p>In creative no EU/FE is spent.</p>
 
-<h2>How it behaves</h2>
+<h2 id="how-it-behaves">How it behaves</h2>
 
 <p><strong>Tilling and the other right-click conversions cost 50 EU/FE.</strong> Dirt, grass and paths become farmland, exactly like a vanilla hoe. The charge is only taken when a conversion actually happened — clicking a stone wall or already-tilled soil costs nothing. A flat hoe says so only over a block it could have tilled: right-clicking anything else passes straight through, with no message and no interception, so the item in your off-hand still works. <strong>Breaking:</strong> with at least 50 EU/FE it breaks <code>#minecraft:mineable/hoe</code> at speed 9.0. Each such block costs 50 EU/FE. <strong>Flat hoe:</strong> below 50 EU/FE it breaks at hand speed (1.0) but keeps its mining level and drops, and spends nothing. It cannot till — see above. Efficiency does not apply there — vanilla only grants it above speed 1.0. <strong>Charging:</strong> the Battery Box charge slot and a worn Energy Pack both accept it automatically, up to 32 EU/FE/t. <strong>Attack:</strong> like a vanilla hoe, it is not a weapon. Attacking spends no EU/FE and causes no wear. <strong>Enchanting:</strong> it sits in <code>#minecraft:hoes</code>, so the table and anvil treat it as a hoe. <strong>Harvesting is not supported.</strong> That is the <a href="scythe.html">Scythe</a>'s job and it stays there. <strong>Readout:</strong> the bar shows charge; the tooltip reads the exact numbers, or a red "Empty" at zero, and the texture switches to its unpowered variant.</p>
 
-<h2>Inventory</h2>
+<h2 id="inventory">Inventory</h2>
 
 <p>Not applicable — the hoe has no internal item storage (stack size 1).</p>
 
-<h2>Block Properties</h2>
+<h2 id="block-properties">Block Properties</h2>
 
 <p>Not applicable (item).</p>
 
-<h2>Recipes</h2>
+<h2 id="recipes">Recipes</h2>
 
 <p>The same frame as the other three with a diamond hoe in the middle: iron ingots on top, two batteries at the sides, two copper coils and an electronic circuit below. Charge held by the batteries carries over into the finished hoe. The recipe unlocks once you obtain a copper coil, an electronic circuit or a diamond hoe.</p>
 
 <p>Repair is not applicable — there is no durability; "repair" means recharging.</p>
 
-<h2>Diamond tip (upgrade)</h2>
+<h2 id="diamond-tip-upgrade">Diamond tip (upgrade)</h2>
 
 <p><strong>Diamond-Tipped Electric Hoe</strong> (is the hoe's second tier and the line's third upgrade, after the <a href="electric_drill.html">diamond-tipped drill</a> and the <a href="electric_chainsaw.html">diamond-tipped chainsaw</a>. Exactly two things differ from the base hoe; everything else is inherited unchanged.</p>
 
@@ -458,11 +458,11 @@
 
 <blockquote><strong>You have to lay the recipe out by hand.</strong> The recipe book's auto-fill button will not pick up a charged hoe: vanilla's ingredient lookup compares item components, and a charged hoe carries <code>pouch_energy</code>, which the showcase reference does not. This is a vanilla limitation shared by all three upgrades — details in task.</blockquote>
 
-<h2>Progression</h2>
+<h2 id="progression">Progression</h2>
 
 <p>The fourth and last powered tool: drill for stone, chainsaw for wood, shovel for earth, hoe for farmland. Needs LV infrastructure first — without the <a href="../energy-storage/battery_box.html">Battery Box</a> and a battery it can be neither crafted nor charged. LV tier. The remaining electric items (saber/nano bow/vajra) are future work.</p>
 
-<h2>Related</h2>
+<h2 id="related">Related</h2>
 
 <p><a href="electric_drill.html">Electric Drill</a> — the stone part of the line, same cost per block. <a href="electric_chainsaw.html">Electric Chainsaw</a> — the wood part of the line. <a href="electric_shovel.html">Electric Shovel</a> — the soil part; the same right-click delegation trick, but its action is free while the hoe's is paid. <a href="scythe.html">Scythe</a> — the harvesting tool; the hoe does not replace it. <a href="../energy-storage/battery_box.html">Battery Box</a> — charges the hoe (charge slot).</p>
 

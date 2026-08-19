@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link active" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>マテリアルの形態</strong> は、中間製品アイテムのファミリーです。粉、後に板、インゴット、ワイヤなど、マシンやレシピが鉱石やインゴットを変換したものです。第1フェーズで出会うのは <strong>粉</strong> だけです。<a href="../machines/macerator.html">粉砕機</a> がこれを出力し、「鉱石倍化」を実現します（鉱石ブロックまたは原石 → 粉2個 → インゴット2個）。</p>
 
@@ -400,41 +400,45 @@
 
 <blockquote><strong>ミニ例:</strong> 鉄鉱石を1個採掘し、<a href="../machines/macerator.html">粉砕機</a> にかけて鉄の粉2個を取得し、それぞれをかまどで精錬します。結果、通常の1個ではなく1鉱石から2インゴットが得られます。</blockquote>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <p>エネルギーは使用しません。ただのクラフト材料です。</p>
 
-<h2>使用方法</h2>
+<h2 id="使用方法">使用方法</h2>
 
 
-<p><strong>金属の粉</strong>（鉄、銅、金、およびモッドのスズ/銀/ニッケル/ウラン）は、バニラのかまど、溶鉱炉、または <a href="../machines/electric_furnace.html">電気かまど</a> でインゴットに <strong>精錬</strong> できます。これで倍化サイクルが閉じます: 鉱石 → 粉2個 → インゴット2個。 <strong>非金属の粉</strong>（石炭、ダイヤモンド、エメラルド、ラピスラズリ）は <a href="../machines/compressor.html">圧縮機</a> で宝石やアイテムに <strong>圧縮</strong> し直します。精錬されません。同じサイクル形態: 鉱石 → 粉2個 → アイテム2個。</p>
+<p><strong>金属の粉</strong> はインゴットに <strong>精錬</strong> し直せます。これで倍化サイクルが閉じます: 鉱石 → 粉2個 → インゴット2個。どこで溶かせるかは金属によって異なります:</p>
+
+<table><thead><tr><th>粉</th><th>バニラのかまどと <a href="../machines/iron_furnace.html">鉄のかまど</a></th><th><a href="../machines/electric_furnace.html">電気かまど</a></th></tr></thead><tbody><tr><td>鉄、銅、金</td><td>✅</td><td>✅</td></tr><tr><td>銀、スズ、ニッケル</td><td>✅</td><td>✅</td></tr><tr><td>ウラン、パラジウム</td><td>✖</td><td>✅</td></tr></tbody></table>
+
+<p>溶鉱炉は <strong>どの金属の</strong> 粉も精錬しません。鉱石と原石だけを扱います。 <strong>非金属の粉</strong>（石炭、ダイヤモンド、エメラルド、ラピスラズリ）は <a href="../machines/compressor.html">圧縮機</a> で宝石やアイテムに <strong>圧縮</strong> し直します。精錬されません。同じサイクル形態: 鉱石 → 粉2個 → アイテム2個。</p>
 
 <p>素材の複製（デュープ）はありません。完成したインゴットを粉砕すると粉は1個しか出ないため、<code>インゴット → 粉 → インゴット</code> はゼロになります。消費されるのはエネルギーだけです。</p>
 
-<h2>インベントリ</h2>
+<h2 id="インベントリ">インベントリ</h2>
 
 <p>該当なし（アイテム）。スタック: 64。</p>
 
-<h2>ブロック属性</h2>
+<h2 id="ブロック属性">ブロック属性</h2>
 
 <p>該当なし（アイテム）。</p>
 
-<h2>処理ルール</h2>
+<h2 id="処理ルール">処理ルール</h2>
 
 
 <table><thead><tr><th>入力</th><th>出力される粉</th></tr></thead><tbody><tr><td>鉱石ブロック（石または深層岩）</td><td><strong>×2</strong></td></tr><tr><td>原石</td><td><strong>×2</strong></td></tr><tr><td>完成品（インゴット、または純粋な宝石/石炭）</td><td>×1</td></tr></tbody></table>
 
 <p>唯一の例外は <strong>ラピスラズリ</strong> です: ラピスラズリ鉱石は <strong>粉 ×6</strong> を出します。バニラのラピスラズリ鉱石は元々4–9をドロップするため、通常の ×2 では粉砕の価値がなくなります。6 はツルハシの平均ドロップを上回る保証された出力であり、エネルギー消費を正当化します。</p>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
-<p><strong>粉の取得:</strong> <a href="../machines/macerator.html">粉砕機</a> での鉱石または金属の粉砕（レシピごとのエネルギーコストは粉砕機のページを参照）。 <strong>金属の粉 → インゴット:</strong> 精錬または焼成（バニラのかまど / 溶鉱炉）、またはモッドの <a href="../machines/electric_furnace.html">電気かまど</a>。 <strong>非金属の粉 → アイテム:</strong> <a href="../machines/compressor.html">圧縮機</a> での圧縮。</p>
+<p><strong>粉の取得:</strong> <a href="../machines/macerator.html">粉砕機</a> での鉱石または金属の粉砕（レシピごとのエネルギーコストは粉砕機のページを参照）。 <strong>金属の粉 → インゴット:</strong> バニラのかまどか <a href="../machines/iron_furnace.html">鉄のかまど</a> での精錬（ウランとパラジウムの粉を除く）、またはモッドの <a href="../machines/electric_furnace.html">電気かまど</a> — こちらはどの粉でも溶かせます。溶鉱炉は粉を受け付けません。 <strong>非金属の粉 → アイテム:</strong> <a href="../machines/compressor.html">圧縮機</a> での圧縮。</p>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p>独自のティアを持たないアイテムです。 最初のエネルギーネットワークを構築する全体の意義です。粉こそが粉砕機を単なるマシンから鉱石倍化装置に変えます。非金属の粉は石炭や宝石について同じことを提供します。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="../machines/macerator.html">粉砕機</a> — 粉を生産（鉱石倍化）。 <a href="../machines/electric_furnace.html">電気かまど</a> — 金属の粉をインゴットに精錬。 <a href="../machines/compressor.html">圧縮機</a> — 非金属の粉を宝石/石炭に圧縮。 <a href="electronic_circuit.html">電子回路</a> — もう一つの主要な初期コンポーネント。</p>
 

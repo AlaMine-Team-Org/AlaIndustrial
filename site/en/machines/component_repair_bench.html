@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
@@ -392,19 +392,19 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 
 <p>The <strong>Component Repair Bench</strong> restores worn <a href="../components/windmill_rotor.html">wind mill rotors</a> and <a href="../components/water_mill_wheel.html">water mill wheels</a> instead of making you craft new ones. One repair clears the wear, costs <strong>one item</strong> of the grade's material plus EU/FE — and <strong>permanently lowers that part's maximum durability</strong> by 20 % of its original value.</p>
 
 <p>The point is a choice, not free maintenance: repairing is cheaper in metal, but a part gets exactly <strong>four</strong> repairs, after which the bench refuses and it has to be replaced anyway.</p>
 
-<h2>Energy</h2>
+<h2 id="energy">Energy</h2>
 
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>consumer</td></tr><tr><td>Buffer (EU/FE)</td><td>800</td></tr><tr><td>Max input (EU/FE/tick)</td><td>32 (LV)</td></tr><tr><td>Max output (EU/FE/tick)</td><td>n/a</td></tr><tr><td>EU/FE/tick</td><td>8</td></tr></tbody></table>
 
 <p>Energy is accepted on every face except the front: that is the working face, and neither a cable nor a hopper connects through it.</p>
 
-<h2>Processing</h2>
+<h2 id="processing">Processing</h2>
 
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Recipe type</td><td>none — the bench uses no recipes</td></tr><tr><td>Duration (ticks)</td><td>625 / 1250 / 2250 (by grade)</td></tr><tr><td>Auto-output</td><td>true — a hopper collects the finished part</td></tr></tbody></table>
 
@@ -414,7 +414,7 @@
 
 <p>A rotor and a wheel of the same grade repair identically: the price follows the grade, not the family. Overclocker chips work as they do in any other machine — shorter operations, higher draw.</p>
 
-<h2>Inventory</h2>
+<h2 id="inventory">Inventory</h2>
 
 <table><thead><tr><th>Slot</th><th>Accepts</th><th>Count</th></tr></thead><tbody><tr><td>Material (left)</td><td>iron plate, tempered iron plate or electronic circuit</td><td>stack</td></tr><tr><td>Component (right)</td><td>any grade of rotor or wheel</td><td>1</td></tr></tbody></table>
 
@@ -422,7 +422,7 @@
 
 <p><strong>Automation.</strong> A hopper may only insert what the bench can actually work on — a worn part with repairs left. It may only extract what the bench has finished with: a repaired part, or one that has used up its allowance. So a "hopper in, bench, hopper out" line works and never loops. By hand you may insert any part, including a spent one — otherwise you could not read why it is being refused.</p>
 
-<h2>Interface</h2>
+<h2 id="interface">Interface</h2>
 
 <p>Type: container Shows: the energy bar on the left, the material slot, a progress arrow, the component slot, and a status line under the slots.</p>
 
@@ -432,19 +432,23 @@
 
 <p>Hovering the arrow stands in for the recipe-viewer entry this machine cannot have: it prints the repair cost, how much durability the repair burns, and how many repairs the component has left.</p>
 
-<h2>Block Properties</h2>
+<h2 id="block-properties">Block Properties</h2>
 
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full cube</td></tr><tr><td>Hardness</td><td>3.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Drops with energy NBT</td><td>false</td></tr></tbody></table>
 
-<h2>Recipes</h2>
+<h2 id="sound">Sound</h2>
+
+<p>While a repair runs, the bench rings with soft rhythmic hammer taps on a small anvil — the loop (pattern <strong>A</strong>, default 0.35). It falls silent when idle.</p>
+
+<h2 id="recipes">Recipes</h2>
 
 <p>Craft — three iron plates on top, a machine casing in the middle, an electronic circuit below, iron ingots at the sides. No recycling recipes.</p>
 
-<h2>Progression</h2>
+<h2 id="progression">Progression</h2>
 
 <p>Tier: LV. Evolves into: nothing. Requires: a <a href="../components/machine_casing.html">machine casing</a>, an electronic circuit and iron plates — so the bench arrives after the first machines, once enough mills are running for their upkeep to have become a chore.</p>
 
-<h2>Related</h2>
+<h2 id="related">Related</h2>
 
 <p><a href="../components/windmill_rotor.html">Wind Mill Rotor</a> — the consumable the bench restores. <a href="../components/water_mill_wheel.html">Water Mill Wheel</a> — the second consumable. <a href="../generators/wind_mill.html">Wind Mill</a> and <a href="../generators/water_mill.html">Water Mill</a> — the machines that wear these parts out. <a href="../items/forge_hammer.html">Forge Hammer</a> — the mod's only other item that lives on durability; it is repaired at an anvil, not here.</p>
 

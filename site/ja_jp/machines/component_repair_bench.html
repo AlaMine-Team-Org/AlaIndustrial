@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,19 +392,19 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>部品修理台</strong>は、摩耗した<a href="../components/windmill_rotor.html">風車ローター</a>と <a href="../components/water_mill_wheel.html">水車ホイール</a>を、新しく作り直す代わりに修復します。 1 回の修理で摩耗はゼロに戻り、費用はその等級の材料<strong>1 個</strong>と EU/FE——そのかわり、その部品の <strong>最大耐久値が恒久的に</strong>元の値の 20 % だけ下がります。</p>
 
 <p>狙いは「無料の整備」ではなく「選択」です。修理は金属の面では安上がりですが、1 つの部品に許される 修理は<strong>4 回</strong>まで。それを超えると修理台は受け付けず、結局は交換することになります。</p>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>役割</td><td>消費</td></tr><tr><td>バッファ (EU/FE)</td><td>800</td></tr><tr><td>最大入力 (EU/FE/tick)</td><td>32 (LV)</td></tr><tr><td>最大出力 (EU/FE/tick)</td><td>なし</td></tr><tr><td>EU/FE/tick</td><td>8</td></tr></tbody></table>
 
 <p>正面を除くすべての面がエネルギーを受け取ります。正面は作業面で、ケーブルもホッパーも接続できません。</p>
 
-<h2>加工</h2>
+<h2 id="加工">加工</h2>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>レシピ種別</td><td>なし——修理台はレシピを使いません</td></tr><tr><td>所要時間 (tick)</td><td>625 / 1250 / 2250（部品の等級による）</td></tr><tr><td>自動排出</td><td>true——完成した部品はホッパーが回収します</td></tr></tbody></table>
 
@@ -414,7 +414,7 @@
 
 <p>同じ等級のローターとホイールは同じように直ります。価格を決めるのは等級であって、部品の系統では ありません。アップグレード枠のオーバークロックチップは有効で、他の機械と同様に時間を縮めて EU/FE/tick を増やします。</p>
 
-<h2>インベントリ</h2>
+<h2 id="インベントリ">インベントリ</h2>
 
 <table><thead><tr><th>スロット</th><th>受け付けるもの</th><th>数</th></tr></thead><tbody><tr><td>材料（左）</td><td>鉄板、焼き入れ鉄板、または電子回路</td><td>1 スタック</td></tr><tr><td>部品（右）</td><td>任意の等級のローターまたはホイール</td><td>1</td></tr></tbody></table>
 
@@ -422,7 +422,7 @@
 
 <p><strong>自動化。</strong> ホッパーが部品スロットに入れられるのは、修理台が実際に処理できるもの——修理回数が残って いる摩耗した部品——だけです。取り出せるのは、修理台が処理し終えたもの——修理済みの部品か、上限に達した 部品——だけです。そのため「上のホッパー → 修理台 → 下のホッパー」という産業ラインは正しく動き、 ループしません。手作業なら上限に達した部品も含めて何でも入れられます。そうでなければ、なぜ拒否されて いるのかを画面から読み取れなくなるからです。</p>
 
-<h2>インターフェース</h2>
+<h2 id="インターフェース">インターフェース</h2>
 
 <p>種別: container 表示: 左のエネルギーバー、材料スロット、進捗の矢印、部品スロット、そしてスロットの下の状態行。</p>
 
@@ -432,19 +432,23 @@
 
 <p>矢印にカーソルを合わせると、この機械には持てないレシピビューアの項目の代わりになります——修理費用、 1 回あたりに失う耐久、そしてその部品に残っている修理回数が表示されます。</p>
 
-<h2>ブロックの性質</h2>
+<h2 id="ブロックの性質">ブロックの性質</h2>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>形状</td><td>完全な立方体</td></tr><tr><td>硬度</td><td>3.0</td></tr><tr><td>爆発耐性</td><td>6.0</td></tr><tr><td>道具</td><td>ツルハシ</td></tr><tr><td>エネルギー NBT 付きドロップ</td><td>false</td></tr></tbody></table>
 
-<h2>レシピ</h2>
+<h2 id="音">音</h2>
+
+<p>修理中の間、作業台は小さな金床を柔らかくリズミカルに叩く金属音を響かせる —— ループ(パターン A、デフォルト 0.35)。 待機中は鳴らない。</p>
+
+<h2 id="レシピ">レシピ</h2>
 
 <p>クラフト ——上段に鉄板 3 枚、中央に 機械筐体、下に電子回路、両脇に鉄インゴット。 リサイクルレシピはありません。</p>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p>ティア: LV。 進化先: なし。 必要: <a href="../components/machine_casing.html">機械筐体</a>、電子回路、鉄板——つまり修理台は最初の機械群を 作ったあと、風車や水車が増えて整備が雑務になった頃に建てるものです。</p>
 
-<h2>関連</h2>
+<h2 id="関連">関連</h2>
 
 <p><a href="../components/windmill_rotor.html">風車ローター</a>——修理台が復元する消耗品。 <a href="../components/water_mill_wheel.html">水車ホイール</a>——もうひとつの消耗品。 <a href="../generators/wind_mill.html">風力発電機</a>と<a href="../generators/water_mill.html">水車</a>——これらの部品を 摩耗させる機械。 <a href="../items/forge_hammer.html">鍛冶ハンマー</a>——耐久値で動く MOD 内で唯一の別アイテム。修理は金床で 行い、ここではありません。</p>
 

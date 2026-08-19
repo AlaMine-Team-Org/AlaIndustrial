@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link active" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 
 <p>The <strong>material forms</strong> are a family of intermediate items — dust, and later plate, billet and wire — that machines and recipes turn ores and ingots into. In the first phase you only meet <strong>dust</strong>: it's what the <a href="../machines/macerator.html">Macerator</a> produces, and it's the trick behind "ore doubling" (an ore block or raw ore → 2 dust → 2 ingots).</p>
 
@@ -400,27 +400,31 @@
 
 <blockquote><strong>Mini-example:</strong> mine one iron ore, run it through the <a href="../machines/macerator.html">Macerator</a> to get 2 iron dust, then smelt each dust in a furnace — that's 2 iron ingots from a single ore instead of the usual 1.</blockquote>
 
-<h2>Energy</h2>
+<h2 id="energy">Energy</h2>
 
 <p>Uses no energy — these are plain crafting ingredients.</p>
 
-<h2>How it's used</h2>
+<h2 id="how-its-used">How it's used</h2>
 
 <p>Dust is the hub of the ore-processing chain:</p>
 
-<p><strong>Metal dust</strong> (iron, copper, gold, and the mod's tin/silver/nickel/uranium) is <strong>smelted</strong> in a vanilla furnace, blast furnace or the mod's <a href="../machines/electric_furnace.html">Electric Furnace</a> back into an ingot. That closes the doubling loop: ore → 2 dust → 2 ingots. <strong>Non-metal dust</strong> (coal, diamond, emerald, lapis) is <strong>compressed</strong> back into the gem/item in the <a href="../machines/compressor.html">Compressor</a> — not smelted. Same loop shape: ore → 2 dust → 2 items.</p>
+<p><strong>Metal dust</strong> is <strong>smelted</strong> back into an ingot. That closes the doubling loop: ore → 2 dust → 2 ingots. Exactly where it melts depends on the metal:</p>
+
+<table><thead><tr><th>Dust</th><th>Vanilla furnace and the <a href="../machines/iron_furnace.html">Iron Furnace</a></th><th><a href="../machines/electric_furnace.html">Electric Furnace</a></th></tr></thead><tbody><tr><td>Iron, copper, gold</td><td>✅</td><td>✅</td></tr><tr><td>Silver, tin, nickel</td><td>✅</td><td>✅</td></tr><tr><td>Uranium, palladium</td><td>✖</td><td>✅</td></tr></tbody></table>
+
+<p>The blast furnace smelts dust for <strong>no</strong> metal at all — it only works with ore and raw material. <strong>Non-metal dust</strong> (coal, diamond, emerald, lapis) is <strong>compressed</strong> back into the gem/item in the <a href="../machines/compressor.html">Compressor</a> — not smelted. Same loop shape: ore → 2 dust → 2 items.</p>
 
 <p>There's no way to duplicate material. Macerating a finished ingot gives only 1 dust, so <code>ingot → dust → ingot</code> is net-zero (you only spend energy).</p>
 
-<h2>Inventory</h2>
+<h2 id="inventory">Inventory</h2>
 
 <p>Not applicable (items). Stack: 64.</p>
 
-<h2>Block Properties</h2>
+<h2 id="block-properties">Block Properties</h2>
 
 <p>Not applicable (items).</p>
 
-<h2>Processing rules</h2>
+<h2 id="processing-rules">Processing rules</h2>
 
 <p>How much dust the Macerator gives depends on what you feed it:</p>
 
@@ -428,15 +432,15 @@
 
 <p>The one special case is <strong>lapis</strong>: lapis ore gives <strong>×6 dust</strong>. Vanilla lapis ore already drops 4–9, so a plain ×2 would make maceration pointless; 6 is a guaranteed yield above the average pickaxe drop, which is what justifies the energy cost.</p>
 
-<h2>Recipes</h2>
+<h2 id="recipes">Recipes</h2>
 
-<p><strong>Getting dust:</strong> macerate ore or metal in the <a href="../machines/macerator.html">Macerator</a> (see that page for the per-recipe energy cost). <strong>Metal dust → ingot:</strong> smelt or blast it (vanilla furnace / blast furnace), or use the mod's <a href="../machines/electric_furnace.html">Electric Furnace</a>. <strong>Non-metal dust → item:</strong> compress it in the <a href="../machines/compressor.html">Compressor</a>.</p>
+<p><strong>Getting dust:</strong> macerate ore or metal in the <a href="../machines/macerator.html">Macerator</a> (see that page for the per-recipe energy cost). <strong>Metal dust → ingot:</strong> smelt it in a vanilla furnace or the <a href="../machines/iron_furnace.html">Iron Furnace</a> (uranium and palladium dust excepted), or in the mod's <a href="../machines/electric_furnace.html">Electric Furnace</a> — that one melts any of them. The blast furnace does not take dust. <strong>Non-metal dust → item:</strong> compress it in the <a href="../machines/compressor.html">Compressor</a>.</p>
 
-<h2>Progression</h2>
+<h2 id="progression">Progression</h2>
 
 <p>Items with no tier of their own. The whole point of building your first energy network: dust is what turns the Macerator from a machine into an ore-doubler. The non-metal dusts give the same deal for coal and the gems.</p>
 
-<h2>Related</h2>
+<h2 id="related">Related</h2>
 
 <p><a href="../machines/macerator.html">Macerator</a> — produces dust (ore doubling). <a href="../machines/electric_furnace.html">Electric Furnace</a> — smelts metal dust back into ingots. <a href="../machines/compressor.html">Compressor</a> — compresses non-metal dust back into gems/coal. <a href="electronic_circuit.html">Electronic Circuit</a> — the other key early component.</p>
 

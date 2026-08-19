@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
 <a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 
 <p>The <strong>Electric Drill</strong> is the mod's first powered hand tool: a diamond-tier pickaxe that runs on EU/FE instead of durability. With charge it mines <strong>a touch faster than a diamond pickaxe</strong> and spends <strong>50 EU/FE per block</strong>. A full buffer is <strong>10 000 EU/FE</strong> — about <strong>200 blocks</strong> on one charge.</p>
 
@@ -400,9 +400,9 @@
 
 <p>Like the mod's other EU/FE items, the drill has <strong>no durability</strong> and never breaks: the bar under the icon shows EU/FE charge (gold), not wear. It charges where the <a href="energy_pack.html">Energy Pack</a> does — in the <a href="../energy-storage/battery_box.html">Battery Box</a> charge slot and from a worn pack.</p>
 
-<p>The drill has a second tier — the <strong>Diamond-Tipped Electric Drill</strong>: the same tool, but it digs faster and can switch its drops to Silk Touch. See <a href="index.html#diamond-tip-upgrade">Diamond tip (upgrade)</a> below.</p>
+<p>The drill has a second tier — the <strong>Diamond-Tipped Electric Drill</strong>: the same tool, but it digs faster and can switch its drops to Silk Touch. See <a href="#diamond-tip-upgrade">Diamond tip (upgrade)</a> below.</p>
 
-<h2>Energy</h2>
+<h2 id="energy">Energy</h2>
 
 <p>Its own EU/FE buffer, outside the energy network. Charges in the Battery Box slot and from a worn pack; spends charge mining.</p>
 
@@ -410,23 +410,23 @@
 
 <p>Instant-break blocks (grass, torches, flowers) are <strong>free</strong> — just as they never wear a vanilla tool. In creative, blocks drop nothing and no EU/FE is spent.</p>
 
-<h2>How it behaves</h2>
+<h2 id="how-it-behaves">How it behaves</h2>
 
 <p><strong>Mining (charged):</strong> mines everything a pickaxe should, a touch faster than diamond. Diamond ore, obsidian, even ancient debris — drops match a diamond pickaxe. Each block costs 50 EU/FE. <strong>Mining (flat):</strong> below 50 EU/FE it mines at hand speed, but keeps the mining level and drops, and spends no EU/FE. <strong>Charging:</strong> the Battery Box charge slot and a worn Energy Pack both accept it automatically. <strong>Combat:</strong> hits a touch harder than a diamond pickaxe (6 damage), but attacks spend no EU/FE. <strong>Enchantments:</strong> the enchanting table and anvil treat it like a diamond pickaxe — Efficiency, Fortune, Silk Touch, Unbreaking, Mending. (Unbreaking/Mending are harmless but useless on an unbreakable tool.) <strong>Torch placement:</strong> with the drill in your main hand and torches in your inventory, right-clicking a block places a torch — the drill stays in your hotbar and the torch is pulled from your inventory (one used up). It prefers the Enriched Uranium Torch (which stays lit underwater) and falls back to a normal torch. Each placement drains <strong>5 EU/FE</strong>. If the charge is below that the torch is <strong>not</strong> placed: the drill shows a message above your hotbar, no torch leaves your inventory, and the charge is untouched — the torch is powered, not free (you can still place one by hand for free by moving it to your hotbar). That message only appears where a charged drill would really have placed something: where a torch cannot go anyway (no support, or water for a normal torch), a flat drill stays out of the way entirely — no message, and the click goes to your off-hand item as if the drill were not in your hand. Placing a torch this way sounds exactly like placing one by hand, for you and for anyone nearby. Where a torch can't go (no support, or water for a normal torch) nothing happens and nothing is spent. In creative neither the torch nor the EU/FE is consumed and the charge check does not apply. No torches in your inventory and it does nothing (a torch in your off-hand still works as normal). No cooldown. <strong>In creative:</strong> no charge is spent — not on mining, not on torches — just as a vanilla pickaxe takes no durability damage in creative. The rule covers the whole powered family; see the Energy Pack and the Battery Pouch. <strong>HUD:</strong> while in hand, an icon + charge % + bar (green → gold → red) show top-left. Same <strong>H</strong> key toggles it as the Energy Pack.</p>
 
-<h2>Inventory</h2>
+<h2 id="inventory">Inventory</h2>
 
 <p>Not applicable — the drill has no internal item storage (stack size 1).</p>
 
-<h2>Block Properties</h2>
+<h2 id="block-properties">Block Properties</h2>
 
 <p>Not applicable (item).</p>
 
-<h2>Recipes</h2>
+<h2 id="recipes">Recipes</h2>
 
 <p>Built at a workbench <strong>around a finished diamond pickaxe</strong> — it sits in the centre and gives the drill its diamond mining tier (the drill itself digs a touch faster, 8.5 vs a diamond pickaxe's 8.0). Two batteries flank it, an electronic circuit sits below between two copper coils, and an iron body caps the top. All the power components gate the drill behind LV infrastructure. The charge held by the batteries carries over into the finished drill.</p>
 
-<h2>Diamond tip (upgrade)</h2>
+<h2 id="diamond-tip-upgrade">Diamond tip (upgrade)</h2>
 
 <p>The <strong>Diamond-Tipped Electric Drill</strong> (is the drill's second tier. Exactly two things differ from the base drill; everything else is inherited unchanged.</p>
 
@@ -450,11 +450,11 @@
 
 <blockquote><strong>Place the drill in the grid by hand.</strong> The recipe accepts a drill in any state — empty, charged, enchanted — and laying the grid out yourself always works. The <strong>auto-fill</strong> button, though (the recipe book, and the "+" in viewers like REI/JEI), <strong>will not find a charged drill</strong> and will report missing materials. That is a Minecraft limitation rather than a mod one: auto-fill looks for an item whose components exactly match the recipe's display stack, and the display shows an empty drill. It is the same reason auto-fill never picks up enchanted or renamed items, in any recipe in the game. Laying the grid out by hand takes a couple of seconds and works with any drill.</blockquote>
 
-<h2>Progression</h2>
+<h2 id="progression">Progression</h2>
 
 <p>The mod's first powered tool — a bridge between the energy progression and hand mining. Available after the <a href="../energy-storage/battery_box.html">Battery Box</a> and the <a href="energy_pack.html">Energy Pack</a>. Its second tier is the diamond-tip upgrade above, gated behind the <a href="../machines/alloy_smelter.html">Alloy Smelter</a> (invar) and the <a href="../machines/macerator.html">Macerator</a> (diamond dust). Other electric tools (chainsaw/hoe/saber) are future work.</p>
 
-<h2>Related</h2>
+<h2 id="related">Related</h2>
 
 <p><a href="energy_pack.html">Energy Pack</a> — charges the drill in your inventory. <a href="../energy-storage/battery_box.html">Battery Box</a> — charges the drill. <a href="tempered_iron_pickaxe.html">Tempered Iron Pickaxe</a> — the non-powered alternative earlier on.</p>
 

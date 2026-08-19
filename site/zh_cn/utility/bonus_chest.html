@@ -300,7 +300,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -317,7 +317,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -333,7 +333,7 @@
     </div>
   </div>
 </div>
-<h2>概览</h2>
+<h2 id="概览">概览</h2>
 
 <p><strong>这不是一个方块，而是对原版战利品表 <code>minecraft:chests/spawn_bonus_chest</code> 的修改。</strong> 当玩家在创建新世界时开启了「奖励箱」选项，出生点旁出现的箱子里——在标准原版物品池（原木、 木板、苹果、石制工具）之上——会<strong>额外加入</strong> Ala Industrial 的起始物品池。目的是让玩家在 建造第一台机器之前就能早期接触到本模组：有机会拿到大镰刀、火把、齿轮，或稀有的 tempered_iron（回火铁）工具。</p>
 
@@ -341,37 +341,37 @@
 
 <table><thead><tr><th>参数</th><th>数值</th></tr></thead><tbody><tr><td>类型</td><td>修改原版战利品表（add pool）</td></tr><tr><td>目标</td><td><code>minecraft:chests/spawn_bonus_chest</code></td></tr><tr><td>原版物品池</td><td>保留</td></tr><tr><td>做法</td><td>在原版奖励箱中追加，不替换其内容</td></tr><tr><td>等级</td><td>n/a（混合等级内容）</td></tr></tbody></table>
 
-<h2>能量</h2>
+<h2 id="能量">能量</h2>
 
 <p>不适用——这不是方块也不是机器。这里不涉及 EU/FE；只是物品池中某些物品本身是 EU/FE 物品 （电池、电池储物袋），它们进入箱子时<strong>没有初始电量</strong>（就像刚合成出来一样）。</p>
 
-<h2>加工</h2>
+<h2 id="加工">加工</h2>
 
 <p>不适用。战利品在创建世界/生成箱子时只生成一次——没有任何刻循环或处理。</p>
 
-<h2>物品栏</h2>
+<h2 id="物品栏">物品栏</h2>
 
 <p>奖励箱本身是原版的 <code>minecraft:chest</code>，拥有标准的 27 格物品栏。加入我们的物品池不会改变其 容量；它只是扩展了可能出现在里面的物品分布。</p>
 
-<h2>界面</h2>
+<h2 id="界面">界面</h2>
 
 <p>没有来自模组的 GUI——使用原版箱子界面。</p>
 
-<h2>方块属性</h2>
+<h2 id="方块属性">方块属性</h2>
 
 <p>方块本身不是我们的——是原版箱子。修改只涉及战利品表。</p>
 
-<h2>配方</h2>
+<h2 id="配方">配方</h2>
 
 <p>不适用。物品池中的物品都是已经注册好的模组物品：</p>
 
 <table><thead><tr><th>类别</th><th>条目（LootEntry）</th></tr></thead><tbody><tr><td>大镰刀（起始）</td><td>、（随机其中之一）</td></tr><tr><td>火把</td><td>（一摞，随机数量）</td></tr><tr><td>齿轮</td><td>（随机其一，1–2 个）</td></tr><tr><td>稀有：tempered_iron</td><td>/ <code>_axe</code> / <code>_sword</code> / <code>_shovel</code>（随机其一，<strong>小</strong>概率）</td></tr><tr><td>稀有：电池</td><td>一块电池或电池储物袋（<strong>小</strong>概率）</td></tr></tbody></table>
 
-<h2>进阶</h2>
+<h2 id="进阶">进阶</h2>
 
 <p>这是一个起始特性——让玩家在任何进度之前就能第一次接触到模组的工具。稀有的 tempered_iron 工具<strong>刻意设计为低概率</strong>，以免贬低合成的价值。</p>
 
-<h2>相关内容</h2>
+<h2 id="相关内容">相关内容</h2>
 
 <p><a href="../items/scythe.html">大镰刀</a>——起始工具。 <a href="../items/tempered_iron_tools.html">回火铁工具</a>——稀有池。 <a href="../items/battery_pouch.html">电池储物袋</a>——稀有 EU/FE 物品。 <a href="enriched_uranium_torch.html">浓缩铀火把</a>——起始光源。 <a href="../components/metal_gears.html">金属齿轮</a>——起始合成组件。</p>
 

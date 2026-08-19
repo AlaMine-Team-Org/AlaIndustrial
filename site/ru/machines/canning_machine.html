@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепты</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="10 страниц">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="4 страницы">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Прочее</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="14 страниц">14</span></a>
 <div class="group-title">Предметы</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="2 страницы">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="20 страниц">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="20 страниц">20</span></a>
   </aside>
@@ -393,19 +393,19 @@
   </div>
 </div>
 
-<h2>Сводка</h2>
+<h2 id="сводка">Сводка</h2>
 
 <p><strong>Консервный завод</strong> не упаковывает продукт в банку — он перерабатывает еду в пищевую ценность и разливает её по одинаковым пайкам. Что бы вы ни закинули, на выходе всегда один и тот же предмет, а значит <strong>весь ваш харч складывается в один стак</strong>.</p>
 
 <blockquote><strong>Мини-пример:</strong> сложите в машину остатки урожая — морковь, хлеб, ягоды, — добавьте пустых банок, подведите LV-кабель. Десяток слотов разносортицы превратится в один стак пайков.</blockquote>
 
-<h2>Энергия</h2>
+<h2 id="энергия">Энергия</h2>
 
 <table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Внутренний буфер</td><td>800 EU/FE</td></tr><tr><td>Макс. вход</td><td>32 EU/FE/такт (LV)</td></tr><tr><td>Потребление</td><td>2 EU/FE/такт во время работы</td></tr><tr><td>Цена операции</td><td>200 EU/FE за паёк</td></tr><tr><td>Длительность</td><td>100 тиков (~5 с)</td></tr></tbody></table>
 
 <p>Энергия заходит с пяти рабочих граней. Лицевая грань инертна.</p>
 
-<h2>Процессинг</h2>
+<h2 id="процессинг">Процессинг</h2>
 
 <p>Машина работает в два независимых шага, и это важно понимать.</p>
 
@@ -418,7 +418,7 @@
 
 <p>Накопленный остаток виден в окне строкой «Калории» и <strong>сохраняется</strong> при выходе из мира. А вот при сломе машины он пропадает: банки и еда выпадут, накопленные калории — нет. Дорабатывайте начатый паёк до конца, прежде чем разбирать машину.</p>
 
-<h2>Пищевая ценность</h2>
+<h2 id="пищевая-ценность">Пищевая ценность</h2>
 
 <p>Ценность продукта — это <strong>сытость плюс насыщение</strong>. Калорийная еда даёт больше пайков, бросовая — меньше. Один паёк стоит <strong>12,0</strong> ценности.</p>
 
@@ -426,7 +426,7 @@
 
 <p>Переработка <strong>всегда убыточна</strong>: паёк стоит 12,0 ценности, а сам несёт 9,6. Пятая часть теряется — это цена удобства, и именно она делает размножение еды невозможным.</p>
 
-<h2>Что машина не принимает</h2>
+<h2 id="что-машина-не-принимает">Что машина не принимает</h2>
 
 <p><strong>Опасную еду:</strong> сырую курицу, тухлую плоть, ядовитую картошку, иглобрюха и паучий глаз. Переработка убрала бы их риск бесплатно, а это нечестно. <strong>Собственный паёк.</strong> Иначе машина перемалывала бы свой же выход, сжигая банку за проход. <strong>Всё, что не еда,</strong> и еду с нулевой сытостью.</p>
 
@@ -434,7 +434,7 @@
 
 <p><strong>Суп и мёд принимаются, но тара пропадает.</strong> Миска и бутылка возвращаются, только когда их съедают; машина их не вернёт.</p>
 
-<h2>Паёк</h2>
+<h2 id="паёк">Паёк</h2>
 
 <table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Сытость</td><td>8 (как стейк)</td></tr><tr><td>Насыщение</td><td>1,6 (у стейка 12,8)</td></tr><tr><td>Стак</td><td>64</td></tr><tr><td>Едят</td><td>1 секунда (обычная еда — 1,6)</td></tr></tbody></table>
 
@@ -444,23 +444,23 @@
 
 <p>Во время еды банка в руке выглядит вскрытой.</p>
 
-<h2>Инвентарь</h2>
+<h2 id="инвентарь">Инвентарь</h2>
 
 <table><thead><tr><th>Слот</th><th>Принимает</th></tr></thead><tbody><tr><td>Верхний вход</td><td>еда</td></tr><tr><td>Нижний вход</td><td>пустые банки</td></tr><tr><td>Выход</td><td>пайки</td></tr></tbody></table>
 
-<h2>Интерфейс</h2>
+<h2 id="интерфейс">Интерфейс</h2>
 
 <p>Запас энергии, два входа, прогресс и выход. Под ними — строка «Калории» с процентом накопленного до следующего пайка.</p>
 
-<h2>Свойства блока</h2>
+<h2 id="свойства-блока">Свойства блока</h2>
 
 <table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Инструмент</td><td>кирка</td></tr><tr><td>Сохраняет заряд при сломе</td><td>нет</td></tr></tbody></table>
 
-<h2>Звук</h2>
+<h2 id="звук">Звук</h2>
 
 <p>Во время работы машина издаёт лёгкое металлическое дребезжание жести на линии — петля (паттерн A, 0.35 по умолчанию). Замолкает, когда машина простаивает.</p>
 
-<h2>Рецепты</h2>
+<h2 id="рецепты">Рецепты</h2>
 
 <p>Сама машина собирается из оловянных пластин вокруг корпуса. Пустая банка — тоже верстак:</p>
 
@@ -468,17 +468,17 @@
 T T → 8 пустых банок
 TTT T — оловянная пластина</code></pre>
 
-<h2>Прогрессия</h2>
+<h2 id="прогрессия">Прогрессия</h2>
 
 <p>Тир LV. Машина даёт олову первого массового потребителя: банка расходуется навсегда, каждая порция съедает металл заново.</p>
 
-<h2>Для кого эта машина</h2>
+<h2 id="для-кого-эта-машина">Для кого эта машина</h2>
 
 <p><strong>Не для стейк-фермы.</strong> Если мясо налажено, 64 жареные свинины — это уже один слот и больше калорий, чем даст переработка. Так и задумано.</p>
 
 <p><strong>Для разносортицы и для дороги.</strong> Десяток слотов случайного харча — ягоды, морковь, хлеб, остатки урожая, добыча с мобов — сворачивается в один-два слота одинаковых пайков.</p>
 
-<h2>Связанное</h2>
+<h2 id="связанное">Связанное</h2>
 
 <p><a href="../materials/tin.html">Олово</a> — из чего делают банки. <a href="compressor.html">Компрессор</a> — делает оловянные пластины. <a href="../generators/generator.html">Генератор</a> — источник питания.</p>
 

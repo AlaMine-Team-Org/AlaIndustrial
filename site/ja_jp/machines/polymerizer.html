@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>重合機</strong> はモッド初の、アイテムではなく <strong>液体</strong> を消費する機械です。内部には10バケツ分の石油タンクがあり、1回の操作で正確に1バケツを消費して生ゴムを1つ産出します。生ゴムはその後 <a href="vulcanizer.html">加硫機</a> で硫黄の粉と合わせられます。</p>
 
@@ -400,7 +400,7 @@
 
 <p>石油は手作業でも注入できます：上のスロットにバケツ（またはカプセル）を置けば液体がタンクに移り、空になった容器はその下のスロットに落ちます。</p>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <p>重合機は EU/FE を消費するだけで、安定稼働のための小さなバッファを保持します。</p>
 
@@ -408,7 +408,7 @@
 
 <p>エネルギーは5つの作業面から入ります。<strong>正面</strong>（「顔」が向いている面）は不活性で、ケーブルは接続できず、ホッパーも機能しません。</p>
 
-<h2>液体</h2>
+<h2 id="液体">液体</h2>
 
 <p>タンクは石油だけを受け付けます — モッド自前のものも、共通モッドタグ <code>c:oil</code> でマークされた他のものも同様です。</p>
 
@@ -416,7 +416,7 @@
 
 <p>タンクへの充填は2つの方法があり、どちらも同じタンクに至ります：外部からのパイプ/ポンプ、またはインターフェースのスロット経由の容器です。混ざり合うことはありません — 別の液体はタンクに入りません。</p>
 
-<h2>加工</h2>
+<h2 id="加工">加工</h2>
 
 <p>各操作は400 EU/FE で、200ティック（約10秒）かかります。完成したゴムは自動で飛び出しません。手作業かホッパーで回収してください。</p>
 
@@ -424,7 +424,7 @@
 
 <p>タンクに1バケツ未満しかなければ、機械は単に停止します：未満の量は消費も失われもします。結果スロットがいっぱいなら操作は一時停止します — その間、石油はタンクに残ります。</p>
 
-<h2>インベントリ</h2>
+<h2 id="インベントリ">インベントリ</h2>
 
 <p>3つのスロット：容器用のペアと、結果用1つです。</p>
 
@@ -432,21 +432,21 @@
 
 <p>ホッパーとパイプは容器を上のスロットにだけ置き、下2つのスロットから引き抜きます。</p>
 
-<h2>インターフェース</h2>
+<h2 id="インターフェース">インターフェース</h2>
 
 <p>左にタンクの石油メーター（実際の液体テクスチャで描画、ホバーで mB 単位の量が表示）、右にエネルギー量、中央に容器スロット、進行矢印、結果スロットが並びます。</p>
 
-<h2>ブロック属性</h2>
+<h2 id="ブロック属性">ブロック属性</h2>
 
 <p>通常の固体ブロックで、石より柔らかいです。どんなツルハシでも壊せますが、<strong>破壊時にチャージと石油は保持しません</strong>。</p>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>形状</td><td>完全立方体 16³（オクルーダー）</td></tr><tr><td>硬度</td><td>3.0</td></tr><tr><td>爆発耐性</td><td>6.0</td></tr><tr><td>ツール</td><td>ツルハシ</td></tr><tr><td>破壊時にチャージを保持</td><td>いいえ</td></tr></tbody></table>
 
-<h2>音</h2>
+<h2 id="音">音</h2>
 
-<p>今のところ鳴りません。重合機に独自の唸りはありません — 圧縮機、ポンプ、製材機と同様で、将来の作業音の候補です。</p>
+<p>稼働中（lit）、重合機は濃いゆっくりとした沸騰の泡立ち音を発します — ループ（パターンA、デフォルト 0.35）。アイドリング時には鳴りやみます（）。</p>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p>何をするか：</p>
 
@@ -454,13 +454,13 @@
 
 <p>続いて生ゴムは硫黄の粉と共に <a href="vulcanizer.html">加硫機</a> へ：</p>
 
-<table><thead><tr><th>入力</th><th>出力</th></tr></thead><tbody><tr><td>生ゴム ×1 + 硫黄の粉 ×1</td><td>下からの加熱に応じてゴム ×1 / ×2 / ×3</td></tr></tbody></table>
+<table><thead><tr><th>入力</th><th>出力</th></tr></thead><tbody><tr><td>生ゴム ×1 + 硫黄の粉 ×4</td><td>下からの加熱に応じてゴム ×1 / ×2 / ×3</td></tr></tbody></table>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p>ティア：LV。プレイヤーが石油を見つけ、ポンプを建てた後に設置します。 ゴムは将来の絶縁ワイヤや MV コンポーネントの素材です。 <a href="../generators/generator.html">発電機</a> などの LV 電源からの給電が必要です。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="../materials/oil.html">石油</a> — 原料とその採取方法。 <a href="../components/rubber.html">ゴム</a> — チェーンの出力。 <a href="../fluid-machines/pump.html">ポンプ</a> — 石油を湖からタンクへ汲み上げます。 <a href="../fluid-storage/fluid_tank.html">携帯用流体タンク</a> — 機械のそばでの石油備蓄。</p>
 

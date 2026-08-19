@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепти</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="10 сторінок">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="4 сторінки">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Інше</div>
 <a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилітарні блоки</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
 <div class="group-title">Предмети</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Зведення</h2>
+<h2 id="зведення">Зведення</h2>
 
 <p><strong>Малий відлякувач</strong> — охоронний блок: доки він під'єднаний до енергомережі й поле увімкнене, ворожі моби <strong>тікають</strong> із зони навколо нього — так само, як кріпер тікає від кота, — і не можуть підійти до бази. Мирних тварин, жителів і гравців поле не чіпає; нейтральні моби (ендермен, зомбі-піглін) виганяються <strong>лише якщо вже розлючені</strong>.</p>
 
@@ -400,7 +400,7 @@
 
 <blockquote><strong>Міні-приклад:</strong> поставте відлякувач біля входу в дім, підведіть LV-кабель від Енергосховища — і вночі кріпери більше не тиснуться до стін, а скелети не стріляють із порога. Смолоскипи проти спавну всередині зони все одно потрібні: поле виганяє мобів, але не забороняє їм з'являтися.</blockquote>
 
-<h2>Енергія</h2>
+<h2 id="енергія">Енергія</h2>
 
 <p>Чистий споживач LV. Поле — <strong>постійна витрата</strong>: доки воно увімкнене, витрачається 8 EU/FE/такт незалежно від того, є поруч моби чи ні. Скінчилася енергія — поле гасне, і моби знову можуть підходити.</p>
 
@@ -408,7 +408,7 @@
 
 <p>Енергія приймається всіма шістьма гранями.</p>
 
-<h2>Поведінка поля</h2>
+<h2 id="поведінка-поля">Поведінка поля</h2>
 
 <p>Раз на півсекунди блок оглядає зону й виганяє з неї активно ворожих мобів:</p>
 
@@ -416,7 +416,7 @@
 
 <p>Зона — куб 17×17×17 (радіус 8 на всі боки від блока), збігається з куполом підсвічування.</p>
 
-<h2>Інтерфейс</h2>
+<h2 id="інтерфейс">Інтерфейс</h2>
 
 <p>ПКМ відкриває екран: рівень енергії, слот Посудини душ і <strong>кнопка купола</strong> — показує особисто вам межу зони просто у світі (напівпрозорий куб із каркасом). Інші гравці цього купола не бачать. Кнопка працює як перемикач; купол гасне сам, якщо блок прибрали.</p>
 
@@ -424,17 +424,17 @@
 
 <p><strong>Редстоун.</strong> Сигнал на блок (важіль, кнопка, компаратор) <strong>вимикає поле</strong>: блок гасне й перестає витрачати енергію. Прибрали сигнал — поле знову працює.</p>
 
-<h2>Властивості блока</h2>
+<h2 id="властивості-блока">Властивості блока</h2>
 
 <p>Повний блок у корпусі машини зі срібними накладками й емітером душ згори. Під час роботи емітер світиться бірюзовим (рівень світла 14 — як у смолоскипа).</p>
 
 <table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Форма</td><td>повний блок</td></tr><tr><td>Інструмент</td><td>кайло</td></tr><tr><td>Свічення</td><td>14 при активному полі (як у ванільного смолоскипа)</td></tr></tbody></table>
 
-<h2>Прогресія</h2>
+<h2 id="прогресія">Прогресія</h2>
 
 <table><thead><tr><th>Щабель</th><th>Радіус</th><th>Витрата</th><th>Як отримати</th></tr></thead><tbody><tr><td><strong>Малий (цей блок)</strong></td><td>8</td><td>8 EU/FE/т</td><td>Крафт</td></tr><tr><td><a href="mob_repeller_mv.html">Середній</a></td><td>16</td><td>32 EU/FE/т</td><td>Посудина душ (80 душ) у малий</td></tr><tr><td><a href="mob_repeller_hv.html">Великий</a></td><td>24</td><td>64 EU/FE/т</td><td>Посудина душ (250 душ) у середній</td></tr></tbody></table>
 
-<h2>Рецепти</h2>
+<h2 id="рецепти">Рецепти</h2>
 
 <p>Верстак 3×3: 4 срібні пластини по кутах, ліхтар душ згори, просунута схема знизу, 2 мідні котушки з боків, у центрі — просунутий корпус машини.</p>
 
@@ -445,7 +445,7 @@
 <p>Середній і великий не крафтяться — лише вирощуються Посудиною душ.</p>
 
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="малий відлякувач alaindustrial:mob_repeller" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаку</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Silver Plate"><img src="../assets/item/silver_plate_3d.png" alt="Any Silver Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell placeholder" title="Soul Lantern" aria-label="Soul Lantern"><span>soul l</span></div> <div class="cell" title="Any Silver Plate"><img src="../assets/item/silver_plate_3d.png" alt="Any Silver Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Мідна котушка"><img src="../assets/item/copper_coil_3d.png" alt="Мідна котушка" width="32" height="32"></div> <div class="cell" title="Просунутий машинний корпус"><img src="../assets/item/advanced_machine_casing_3d.png" alt="Просунутий машинний корпус" width="32" height="32"></div> <div class="cell" title="Мідна котушка"><img src="../assets/item/copper_coil_3d.png" alt="Мідна котушка" width="32" height="32"></div> <div class="cell" title="Any Silver Plate"><img src="../assets/item/silver_plate_3d.png" alt="Any Silver Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Просунута схема"><img src="../assets/item/advanced_circuit_3d.png" alt="Просунута схема" width="32" height="32"></div> <div class="cell" title="Any Silver Plate"><img src="../assets/item/silver_plate_3d.png" alt="Any Silver Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Малий відлякувач"><img src="../assets/item/mob_repeller_3d.png" alt="Малий відлякувач" width="32" height="32"></div><div class="result-name">Малий відлякувач</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="малий відлякувач alaindustrial:mob_repeller" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаку</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Silver Plate"><img src="../assets/item/silver_plate_3d.png" alt="Any Silver Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Soul Lantern"><img src="../assets/vanilla/item/soul_lantern.png" alt="Soul Lantern" width="32" height="32"></div> <div class="cell" title="Any Silver Plate"><img src="../assets/item/silver_plate_3d.png" alt="Any Silver Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Мідна котушка"><img src="../assets/item/copper_coil_3d.png" alt="Мідна котушка" width="32" height="32"></div> <div class="cell" title="Просунутий машинний корпус"><img src="../assets/item/advanced_machine_casing_3d.png" alt="Просунутий машинний корпус" width="32" height="32"></div> <div class="cell" title="Мідна котушка"><img src="../assets/item/copper_coil_3d.png" alt="Мідна котушка" width="32" height="32"></div> <div class="cell" title="Any Silver Plate"><img src="../assets/item/silver_plate_3d.png" alt="Any Silver Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Просунута схема"><img src="../assets/item/advanced_circuit_3d.png" alt="Просунута схема" width="32" height="32"></div> <div class="cell" title="Any Silver Plate"><img src="../assets/item/silver_plate_3d.png" alt="Any Silver Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Малий відлякувач"><img src="../assets/item/mob_repeller_3d.png" alt="Малий відлякувач" width="32" height="32"></div><div class="result-name">Малий відлякувач</div></div></div></div></div>
   </main>
 </div>
 

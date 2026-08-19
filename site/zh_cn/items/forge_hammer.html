@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -392,34 +392,34 @@
     </div>
   </div>
 </div>
-<h2>概览</h2>
+<h2 id="概览">概览</h2>
 
 <p><strong>锻造锤</strong>是早期阶段的手动工具，在出现机器自动化之前，用它来制作<a href="../components/material_forms.html">金属板</a>。把锤子和锭放到工作台上——就能得到该金属的板。锤子在此过程中<strong>不作为材料被消耗</strong>：它留在合成网格中，每出一块板消耗 <strong>1 点耐久</strong>。这是有意设计的"手工费力"路线：从第一块铁起就能手工锻造板，但每块都要付锤子磨损，直到你建成<a href="../machines/compressor.html">压缩机</a>，开始用电力量产。</p>
 
 <blockquote><strong>小提示：</strong> 第一台机器外壳需要 4 块铁板，而压缩机还没造。用铁和木棍合成一把锤子，把锤子和铁锭放到工作台上——掉出一块板，锤子回到网格，耐久稍减。重复四次（或按住 Shift 一次合成一组）——不靠任何机器就能凑齐外壳。</blockquote>
 
-<h2>特性</h2>
+<h2 id="特性">特性</h2>
 
 <table><thead><tr><th>参数</th><th>数值</th></tr></thead><tbody><tr><td>耐久</td><td>128（一把锤子约 128 块板）</td></tr><tr><td>堆叠</td><td>1</td></tr><tr><td>可附魔性</td><td>无</td></tr><tr><td>修复</td><td>铁锭（铁砧）</td></tr></tbody></table>
 
 
-<h2>工作原理</h2>
+<h2 id="工作原理">工作原理</h2>
 
 <p><strong>合成板：</strong> 在工作台上（<code>crafting_shapeless</code>）锤子 <strong>+</strong> 锭 → 1 块板。适用于全部八种金属：铜、金、铁、锡、银、镍、铀、回火铁。 <strong>锤子保留：</strong> 合成后受损的锤子放回网格的同一个槽位。实现为 craft-remainder 而非特殊配方，因此这些配方像普通合成一样显示在配方书、JEI 和 REI 中。 <strong>每板 1 点磨损：</strong> 每块板恰好 1 点耐久。按住 Shift 合成一堆锭会消耗恰好 N 点耐久产出 N 块板，并在锤子损坏时<strong>自行停止</strong>。 <strong>损坏：</strong> 在最后一点耐久上锤子会损坏——最后一块板仍会产出，网格槽位则变空。 <strong>可附魔性：</strong> 锤子<strong>不能</strong>附魔。耐久在技术上也无法通过 craft-remainder 机制工作（其中既没有世界也没有玩家用于处理耐久附魔），因此与其留下"沉默无效"的附魔，不如直接把锤子做成不可附魔。 <strong>修复：</strong> 在铁砧上用铁锭。</p>
 
-<h2>物品属性</h2>
+<h2 id="物品属性">物品属性</h2>
 
 <p>不适用（物品）。</p>
 
-<h2>配方</h2>
+<h2 id="配方">配方</h2>
 
 <p>当你捡到铁或木棍时，配方会出现在配方书中。</p>
 
-<h2>进阶</h2>
+<h2 id="进阶">进阶</h2>
 
 <p>早期阶段的手动工具——不与本模组的能源等级挂钩。 在<strong>电力之前</strong>就让你获得板：先用手锻造，之后用<a href="../machines/compressor.html">压缩机</a>自动化（锭 → 板，每块 260 EU/FE）。 第 3 阶段（LV Expansion）的一部分——板出现在 LV 机器和电子器件的配方中。</p>
 
-<h2>相关内容</h2>
+<h2 id="相关内容">相关内容</h2>
 
 <p><a href="../components/material_forms.html">材料形态</a>——板以及这把锤子制作的其它半成品。 <a href="../machines/compressor.html">压缩机</a>——机器化的量产板材途径。 <a href="../machines/macerator.html">粉碎机</a>——把板再加工回粉（除回火铁外——它没有粉）。</p>
 

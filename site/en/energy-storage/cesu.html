@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
 <a class="cat-link active" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 
 <p>The <strong>Reinforced Energy Storage</strong> is the second step of the storage line: the same job as the <a href="battery_box.html">Battery Box</a>, one tier up. It holds <strong>100 000 EU/FE</strong> and moves <strong>128 EU/FE/tick</strong> in and out instead of 32.</p>
 
@@ -402,7 +402,7 @@
 
 <p>It's crafted <strong>from a finished Battery Box</strong> — the starter block goes in the centre of the recipe and becomes the core of the new one. The upgrade is literal, not "build it again from ore".</p>
 
-<h2>Energy</h2>
+<h2 id="energy">Energy</h2>
 
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Capacity</td><td>100 000 EU/FE</td></tr><tr><td>Max input</td><td>128 EU/FE/t (MV)</td></tr><tr><td>Max output</td><td>128 EU/FE/t (MV)</td></tr></tbody></table>
 
@@ -418,13 +418,13 @@
 
 <p>The network-wide priority is unchanged here: while the machines need more than the generators produce, the store <strong>only gives</strong>, and starts charging once the machines are satisfied.</p>
 
-<h3>Cascade: sharing a network with the starter box</h3>
+<h3 id="cascade-sharing-a-network-with-the-starter-box">Cascade: sharing a network with the starter box</h3>
 
 <p>The reinforced store takes part in the same bank levelling as the starter one, and levelling works on <strong>fill fractions</strong>, not absolute EU/FE. That matters on a mixed bank: a starter box (20 000) and a reinforced one (100 000) settle at an equal percentage, not an equal charge — both at 50 %, say, which is 10 000 and 50 000 EU/FE. The impression that "the big box drained the small one" is false: the small one gives exactly its share.</p>
 
 <p>The transfer travels by cable and pays the usual distance loss, so a bank is cheaper kept compact.</p>
 
-<h2>Inventory</h2>
+<h2 id="inventory">Inventory</h2>
 
 
 <table><thead><tr><th>Slot</th><th>Does</th></tr></thead><tbody><tr><td>Charge</td><td>charges a portable EU/FE item from the buffer</td></tr><tr><td>Discharge</td><td>drains an item's charge back into the buffer</td></tr></tbody></table>
@@ -433,13 +433,13 @@
 
 <p>Both slots are manual — hoppers don't use them, they work from the GUI only.</p>
 
-<h2>Interface</h2>
+<h2 id="interface">Interface</h2>
 
 <p>A machine window with an energy gauge: the vertical bar on the left shows the buffer fill, and the tooltip gives the exact figure in EU/FE. Two item slots sit beside it — the upper one charges an item from the buffer, the lower one drains a charged item into the buffer.</p>
 
 <p>There is no progress arrow: the CESU processes nothing, it only stores. The output face is chosen with a wrench and shown by the coloured marker on the block itself, not in the window.</p>
 
-<h2>Appearance</h2>
+<h2 id="appearance">Appearance</h2>
 
 <p>The block is built from the same cold steel as the <a href="../components/advanced_machine_casing.html">advanced casing</a> it's made of. The border and banding echo the <a href="battery_box.html">Battery Box</a>, so the two steps read as one line rather than two unrelated blocks.</p>
 
@@ -447,13 +447,13 @@
 
 <p><strong>Input and output differ by colour, not by shape.</strong> That's a deliberate break from the starter box, where the output is a big obvious socket and the input a nondescript lens — players run cable to the socket they can see and hit the output. Here both faces are the same socket and the colour carries the role: blue takes in, orange gives out.</p>
 
-<h2>Block Properties</h2>
+<h2 id="block-properties">Block Properties</h2>
 
 <p>An ordinary solid block, a full 16³ cube (occluder). Tougher than the starter box — this is metal, not a plank crate. Breaks with any pickaxe and <strong>keeps its charge when broken</strong>.</p>
 
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full 16³ cube (occluder)</td></tr><tr><td>Hardness</td><td>4.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Sound</td><td>metal</td></tr><tr><td>Keeps charge when broken</td><td>yes</td></tr></tbody></table>
 
-<h2>Recipes</h2>
+<h2 id="recipes">Recipes</h2>
 
 <p>It's a store, not a processor — no processing recipes.</p>
 
@@ -464,11 +464,11 @@
 
 <p>Electrum is not an arbitrary alloy here: it is gold with silver, the best conductor in the mod, and on a store it sits exactly where current enters and leaves. The corners used to hold rubber, but rubber is an insulator — right on a cable, and meaningless as four lumps in the corners of a battery.</p>
 
-<h2>Progression</h2>
+<h2 id="progression">Progression</h2>
 
 <p>Tier: MV. The second step of the storage line. Predecessor: the <a href="battery_box.html">Battery Box</a> (LV) — not merely "already built", but <strong>consumed</strong> in the recipe. Requires <strong>two</strong> production lines at once: <strong>alloys</strong> — electrum is smelted from gold and silver in the <a href="../machines/alloy_smelter.html">Alloy Smelter</a>; <strong>oil</strong> — still required after rubber left the corners: rubber lives on inside the <a href="../components/advanced_circuit.html">advanced circuit</a>, which this recipe needs both directly and through the advanced casing. The <code>oil → Polymerizer → Vulcanizer</code> gate still holds, just indirectly.</p>
 
-<h2>Related</h2>
+<h2 id="related">Related</h2>
 
 <p><a href="battery_box.html">Battery Box</a> — the LV predecessor, and an ingredient. MFSU — the top of the storage line. <a href="../energy-transfer/gold_cable.html">Gold cable</a> — the supply line without which the speed gain is invisible. <a href="../components/advanced_circuit.html">Advanced circuit</a> · <a href="../components/advanced_machine_casing.html">Advanced casing</a> — the MV parts in the recipe.</p>
 

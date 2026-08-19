@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепты</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="10 страниц">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="4 страницы">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Прочее</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="14 страниц">14</span></a>
 <div class="group-title">Предметы</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="2 страницы">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="20 страниц">20</span></a>
 <a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="20 страниц">20</span></a>
   </aside>
@@ -393,19 +393,19 @@
   </div>
 </div>
 
-<h2>Сводка</h2>
+<h2 id="сводка">Сводка</h2>
 
 <p><strong>Броня из Флюкс-ткани</strong> — первый в моде полноценный EU/FE-комплект и конец цепочки волокно → Флюкс-нить → Флюкс-ткань. Это <strong>не танк, а утилитарный костюм</strong>: защита у него на уровне железа, а платит игрок за набор бонусов, которые включаются, пока в предмете есть заряд.</p>
 
 <p>Ключевое правило: <strong>заряд включает бонусы, но не выключает защиту</strong>. На нуле EU/FE комплект продолжает работать как обычная броня своего материала — он не ломается, не пропадает и не теряет ни очка брони.</p>
 
-<h2>Энергия</h2>
+<h2 id="энергия">Энергия</h2>
 
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Буфер (EU/FE)</td><td><strong>15 000</strong> на каждый предмет</td></tr><tr><td>Макс. вход (EU/FE/такт)</td><td><strong>32</strong> (потолок LV)</td></tr><tr><td>Пассивный расход</td><td><strong>1 EU/FE/сек</strong> на надетый заряженный предмет</td></tr><tr><td>Событийный расход</td><td><strong>200 EU/FE</strong> за пол-сердца регенерации сет-бонуса</td></tr></tbody></table>
 
 <p>Заряжается в слоте Энергохранилища, от надетого Энергоранца и сторонними зарядниками через capability (только на вход). Полный буфер при 1 EU/FE/сек — около <strong>4 часов</strong> ношения.</p>
 
-<h2>Бонусы по слотам</h2>
+<h2 id="бонусы-по-слотам">Бонусы по слотам</h2>
 
 <p>Все бонусы — <strong>атрибуты</strong>, а не зелья: без частиц, без иконок на HUD и без конфликта с настоящими зельями. Действуют, только пока в предмете есть заряд.</p>
 
@@ -417,30 +417,30 @@
 
 <p><strong>Сет-бонус требует, чтобы заряжены были все четыре предмета.</strong> Комплект с тремя живыми и одним разряженным не лечит.</p>
 
-<h2>Свойства предметов</h2>
+<h2 id="свойства-предметов">Свойства предметов</h2>
 
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Прочность</td><td>не расходуется никогда (износ платится в EU/FE)</td></tr><tr><td>Зачарование</td><td><strong>да</strong>, как обычная броня (стол чар, наковальня)</td></tr><tr><td>Ремонт</td><td>тег → Флюкс-ткань</td></tr><tr><td>Стойкость (toughness)</td><td>1.0 базово, +2 у заряженного нагрудника</td></tr><tr><td>Полоса в инвентаре</td><td>заряд EU/FE, цвет LV</td></tr></tbody></table>
 
 <p>Прочность формально существует (её приносит ванильный хелпер брони), но никогда не тратится: компонент экипировки собран с запретом урона по броне. Поэтому комплект нельзя сломать, а полоса в инвентаре показывает EU/FE, а не износ.</p>
 
-<h2>Внешний вид</h2>
+<h2 id="внешний-вид">Внешний вид</h2>
 
 <p>Не броня поверх одежды, а цельный костюм: рукава закрыты до кисти, шлем закрывает голову и обрывается по линии рта, так что открытыми остаются только рот, подбородок и кисти. Полотно светлое, серебристое, с тёмными стыками панелей на плечах, поясе, локтях и коленях.</p>
 
 <p>Заряженный комплект идёт в полную яркость и хорошо читается на игроке, разряженный темнеет целиком, сохраняя рисунок, — состояние передаётся яркостью, потому что золотого акцента в этом наборе нет.</p>
 
-<h2>Рецепты</h2>
+<h2 id="рецепты">Рецепты</h2>
 
 <p>Каждый предмет требует <strong>четыре разных компонента</strong>: Флюкс-ткань, электронную схему, <a href="../components/battery.html">батарейку</a> и закалённое железо как силовой каркас. Ни один рецепт не сводится к «один материал на всю форму».</p>
 
 
 <p>Заряд вложенной батарейки переходит в готовый предмет (все четыре рецепта типа ,: полная батарея на 2 000 EU/FE выходит из верстака уже заряженной — бонусы доступны сразу, без отдельной зарядки.</p>
 
-<h2>Прогрессия</h2>
+<h2 id="прогрессия">Прогрессия</h2>
 
 <p>Тир: LV Требует: <a href="../machines/galvanic_bath.html">Электрованна</a> → Флюкс-нить → Флюкс-ткань, плюс схему, батарейку и закалённое железо. Дальше: nano-комплект (тир 2) — туда осознанно отложены ночное зрение и замедление голода.</p>
 
-<h2>Связанное</h2>
+<h2 id="связанное">Связанное</h2>
 
 <p><a href="../machines/galvanic_bath.html">Электрованна</a> — производит Флюкс-нить <a href="tempered_iron_armor.html">Броня из закалённого железа</a> — обычный набор без EU/FE <a href="energy_pack.html">Энергоранец</a> — эталон носимого EU/FE-предмета</p>
 

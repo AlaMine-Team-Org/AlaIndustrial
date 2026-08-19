@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 
 <p><strong>The Distillation Column</strong> is a tower three blocks tall — the tallest machine in the mod and its first multiblock. The tower is assembled from three identical segments stacked on top of each other. Inside are three tanks: crude <a href="../materials/oil.html">oil</a> is poured into the middle, <a href="../materials/diesel.html">diesel</a> — the light target fraction — condenses at the top, and <a href="../materials/fuel_oil.html">fuel oil</a> — the heavy residue — runs down to the bottom. There is nothing to configure: the layout is the same on every column and reads itself — "light at the top, heavy at the bottom".</p>
 
@@ -400,31 +400,31 @@
 
 <p>A cold column first <strong>warms up</strong> (~10 seconds under power), and only then starts distilling. A warmed-up working tower has glowing windows and steam rising from the top — from far away the base's silhouette tells you whether the refinery is running or standing idle.</p>
 
-<h2>Multiblock</h2>
+<h2 id="multiblock">Multiblock</h2>
 
 <table><thead><tr><th>Segment</th><th>Role</th><th>Fluid</th></tr></thead><tbody><tr><td>Top</td><td>condenser</td><td><strong>diesel — output</strong></td></tr><tr><td>Middle</td><td>feedstock intake</td><td><strong>oil — input</strong></td></tr><tr><td>Bottom</td><td>base cube (the "brain")</td><td><strong>fuel oil — output</strong> + energy input</td></tr></tbody></table>
 
 <p><strong>Hand-built</strong> (round 3): a single kind of segment block is crafted; stack <strong>three segments on top of each other</strong> — the tower assembles itself (the bottom one becomes the "brain" base, the upper two turn into the middle and top sections, an anvil clang is heard). A lone segment is an inert blank: it has no ports and no menu, and a click hints how to finish the build. Disassembly is mirrored: breaking any segment <strong>degrades</strong> the tower — the broken one drops as a segment item, the others revert to blanks in place, and the base <strong>keeps the tanks and the coke fouling</strong> inside. Nothing vanishes and nothing is duplicated. The GUI opens with a click on <strong>any</strong> segment of an assembled tower. The <strong>Rectification Section</strong> (a separate craftable block) is placed <strong>onto</strong> the top of the tower — the tower grows to four blocks and the losses drop from 10 % to 5 %: every distillation yields <strong>+50 mB of diesel</strong> (750/200). The steam moves up to the section. The section is an ordinary block with its own drop; take it off and the bonus is gone.</p>
 
-<h2>Energy</h2>
+<h2 id="energy">Energy</h2>
 
 <p>The column only consumes EU/FE; power is fed into the <strong>base</strong> on any of its faces (sides and bottom). The middle and the top take no energy — a cable will not connect to them.</p>
 
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Internal buffer</td><td>800 EU/FE</td></tr><tr><td>Max input</td><td>32 EU/FE/t (LV)</td></tr><tr><td>Consumption</td><td>2 EU/FE/t (working and warming up)</td></tr></tbody></table>
 
-<h2>Warm-up</h2>
+<h2 id="warm-up">Warm-up</h2>
 
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Warm-up time</td><td>200 ticks (~10 s)</td></tr><tr><td>Cold-start cost</td><td>~400 EU/FE (one "empty" distillation run)</td></tr><tr><td>Cooling</td><td>twice as slow as heating — on loss of power or oil</td></tr><tr><td>Full output tank</td><td>freeze: the heat <strong>holds</strong>, no EU/FE is spent</td></tr></tbody></table>
 
 <p>For a continuously running refinery the warm-up is invisible; flicking the power on and off is a losing proposition.</p>
 
-<h2>Fluid</h2>
+<h2 id="fluid">Fluid</h2>
 
 <p>Three tanks of ten buckets each. The input tank accepts any oil with the conventional <code>c:oil</code> tag; the output tanks are filled only by the machine itself — neighbours may only extract.</p>
 
 <table><thead><tr><th>Tank</th><th>Volume</th><th>Outside access</th></tr></thead><tbody><tr><td>Oil (middle)</td><td>10 000 mB</td><td>fill only</td></tr><tr><td>Diesel (top)</td><td>10 000 mB</td><td>extract only</td></tr><tr><td>Fuel oil (bottom)</td><td>10 000 mB</td><td>extract only</td></tr></tbody></table>
 
-<h2>Processing</h2>
+<h2 id="processing">Processing</h2>
 
 <p><code>1000 mB of oil + 400 EU/FE → 700 mB of diesel + 200 mB of fuel oil</code>. That is 900 out of 1000 mB — 10 % is lost "to light gases": processing in this mod never multiplies volume. With the Rectification Section — <code>750 mB of diesel + 200 mB of fuel oil</code> (5 % losses).</p>
 
@@ -434,11 +434,11 @@
 
 <p>If either output tank cannot fit its fraction, the column <strong>freezes entirely</strong>: no EU/FE is spent, no oil is consumed, nothing is destroyed. Both fractions always come out together — there are no half-operations.</p>
 
-<h2>Maintenance</h2>
+<h2 id="maintenance">Maintenance</h2>
 
 <p>Every distillation builds up <strong>coke fouling</strong> in the column (+2 %); at <strong>100 %</strong> (≈50 operations) the column stops with the "Coked up" status — no EU/FE is spent, no feedstock is consumed. A <strong>right-click with the wrench</strong> on any segment scrapes the fouling out: the column is clean, and the player receives <strong>1–3 coal</strong> (how many depends on the degree of fouling). Shift-right-click with the wrench remains the tower's disassembly. The fouling shows on a gauge in the GUI and survives a relog <strong>and a tower break</strong> — re-placing is no substitute for cleaning.</p>
 
-<h2>Inventory</h2>
+<h2 id="inventory">Inventory</h2>
 
 <p>Six slots — three container pairs, one per tank.</p>
 
@@ -446,31 +446,31 @@
 
 <p>Automation puts containers only into the pairs' input slots and takes from the output ones.</p>
 
-<h2>Interface</h2>
+<h2 id="interface">Interface</h2>
 
 <p>In the centre of the screen sits a <strong>mini-silhouette of the tower itself</strong>: its three windows show the real levels of the three tanks (diesel at the top, oil in the middle, fuel oil at the bottom), bubbles rise through the oil window while it works, the base glows with heat as the warm-up progresses, and with the section installed the silhouette grows a fourth storey. On the left is the oil gauge with its container pair, on the right the fraction gauges with their own pairs, next to the silhouette the <strong>fouling gauge</strong>, and at the right edge the energy reserve. Below sit a permanent status line ("Distilling", "Warming up… N %", "No energy", "No feedstock", "Diesel tank full", "Fuel oil tank full", "Coked up") and a line of exact volumes in mB with coloured tank markers.</p>
 
-<h2>Block Properties</h2>
+<h2 id="block-properties">Block Properties</h2>
 
 <p>The tower is a volumetric 3D column (a faceted ~12px pipe with flanges, a side ladder and a valve), not a stack of cubes. Each segment carries <strong>coloured nozzles</strong> on the side of its fluid: black (oil) in the middle, yellow (diesel) at the top, brown (fuel oil) at the base — where to point the pump is visible without tooltips. The windows glow while it works; steam rises only from a warmed-up working column.</p>
 
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>a ~12px column with flanges and nozzles (not an occluder)</td></tr><tr><td>Hardness</td><td>3.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Keeps its fluids</td><td><strong>yes</strong> — disassembly leaves the tanks in the base; breaking the base carries them on the drop</td></tr><tr><td>Keeps warm-up when broken</td><td>no</td></tr></tbody></table>
 
-<h2>Sound</h2>
+<h2 id="sound">Sound</h2>
 
 <p>Silent — a deliberate decision (2026-08-09), recorded in the sound registry. All the indication is visual: the windows, the steam, the status line.</p>
 
-<h2>Recipes</h2>
+<h2 id="recipes">Recipes</h2>
 
 <table><thead><tr><th>Input</th><th>Output</th></tr></thead><tbody><tr><td>1000 mB of oil</td><td>700 mB of diesel + 200 mB of fuel oil (750 with the section)</td></tr><tr><td>1000 mB of fuel oil</td><td>600 mB of diesel (cracking, 400 EU/FE)</td></tr></tbody></table>
 
 <p>Both fractions then go to the liquid fuel generator (the branch's next task): diesel — 12 EU/FE/t, fuel oil — 6 EU/FE/t.</p>
 
-<h2>Progression</h2>
+<h2 id="progression">Progression</h2>
 
 <p>Tier: LV. Built after the pump and the first oil; noticeably more expensive to craft than an ordinary machine — two machine casings, a circuit and plates for the "pipe". Net per bucket of oil: 9 600 EU/FE out − 1 400 EU/FE spent (pump + distillation = <strong>8 200 EU/FE</strong> — weaker per unit than coal (12 800) and lava (15 000), but a lake next to the base feeds the refinery on its own. The <strong>"Oil Refining"</strong> advancement — for placing the column (the "Black Gold" branch).</p>
 
-<h2>Related</h2>
+<h2 id="related">Related</h2>
 
 <p><a href="../materials/oil.html">Oil</a> — the feedstock: where to look and how to pump it out. <a href="../materials/diesel.html">Diesel</a> — the target fraction. <a href="../materials/fuel_oil.html">Fuel Oil</a> — the heavy residue. <a href="pump.html">Pump</a> — moves oil into the column and fractions out of it. <a href="../fluid-storage/fluid_tank.html">Portable Tank</a> — a fraction buffer next to the tower.</p>
 

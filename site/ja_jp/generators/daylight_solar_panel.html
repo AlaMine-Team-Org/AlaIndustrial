@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>日光ソーラーパネル</strong>は<a href="solar_panel.html">基本パネル</a>から成長した、昼用ブランチの第2段階です。 4倍強力で、これまで通り昼間・開放空でのみ動作し、夜には何も生産しません。</p>
 
@@ -400,7 +400,7 @@
 
 <blockquote><strong>ミニ例:</strong> 基本パネルを昼用チップで成長させると → 晴天昼に <strong>4 EU/FE/t</strong>。2枚を屋根に置けば、 昼間の作業場を余裕で支え、夜に向けエネルギー貯蔵庫を充電します。</blockquote>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <p>パネルはエネルギーを生産するだけで、外部からの電力は受け取りません。最大8000 EUを保持し、LVラインに出力します。</p>
 
@@ -408,37 +408,37 @@
 
 <p>エネルギーは4つの側面と底から流出します。<strong>上面は作業面</strong>なので、ふさがないでください。</p>
 
-<h2>発電</h2>
+<h2 id="発電">発電</h2>
 
 <p>基本パネルと同じルール: オーバーワールドのみ、昼間のみ、開放空でのみ動作します。 ガラスは妨げず、雨・雷雨・全面屋根は発電を停止させます。</p>
 
 <table><thead><tr><th>状況</th><th>発電量</th></tr></thead><tbody><tr><td>晴天昼、開放空</td><td>4 EU/FE/t</td></tr><tr><td>上にガラス (透明)</td><td>4 EU/FE/t (変化なし)</td></tr><tr><td>上に葉/クモの巣 (軽い日よけ)</td><td>~2 EU/FE/t</td></tr><tr><td>雪の層または降雪</td><td>1 EU/FE/t (微弱なトリクル)</td></tr><tr><td>雨または雷雨</td><td>0</td></tr><tr><td>夜</td><td>0</td></tr></tbody></table>
 
-<h2>インターフェース</h2>
+<h2 id="インターフェース">インターフェース</h2>
 
 <p>1画面でバッファの充填度、現在の発電量、空の状態 (昼/雪/雨/夜) が分かります。</p>
 
-<h2>ブロックの性質</h2>
+<h2 id="ブロックの性質">ブロックの性質</h2>
 
 <p>基本パネルと同じ、高さ半ブロックの平らなスラブです。任意のツルハシで壊せます。</p>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>形状</td><td>低いパネル (ハーフスラブ)</td></tr><tr><td>ツール</td><td>ツルハシ</td></tr></tbody></table>
 
-<h2>サウンド</h2>
+<h2 id="サウンド">サウンド</h2>
 
 <p>基本パネルと同じ穏やかな唆音 — 動作中 (昼・開放空) のみ鳴り、夜、悪天候、屋根の下では鳴りません。詳細は<a href="solar_panel.html">基本パネル</a>を参照。</p>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p>クラフトできません。唯一の入手方法は基本の<a href="solar_panel.html">ソーラーパネル</a>から育成すること: <strong>太陽進化チップ</strong>を投入し、数日の晴天で稼働させてください。蓄積したエネルギーは引き継がれます。</p>
 
 <p>REI/JEIで <strong>R</strong> を押すと、進化の説明情報ページが開きます (クラフトレシピではありません)。</p>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p>昼用ブランチの第2段階 (T2) で、基本の<a href="solar_panel.html">ソーラーパネル</a>から育成します。以降は将来のティアで昼用ブランチ沿いに発展する可能性があります。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="solar_panel.html">ソーラーパネル</a> — 育成元の中立T1。 <a href="moonlit_solar_panel.html">月光ソーラーパネル</a> — 夜用ブランチの鏡像。 <a href="../energy-storage/battery_box.html">エネルギー貯蔵庫</a> · <a href="../energy-transfer/copper_cable.html">銅ケーブル</a></p>
 

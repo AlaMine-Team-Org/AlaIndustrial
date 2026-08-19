@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>粉砕機</strong> は鉱石倍化を行う初期の機械です。鉱石や金属を投入すると粉に粉砕し、掘った鉱石ブロック1つから粉 <strong>2つ</strong> を産出します。これこそが粉砕機を作る目的であり、ケーブルを引く価値のある最初の機械です。</p>
 
@@ -402,7 +402,7 @@
 
 <p>鉱石ブロックでも原石でも倍化します：粉砕機は投入したものを何でも倍化します。インゴットは ×1 のまま（ネットゼロ。さもなければ「インゴット → 粉 → インゴット」のループで無限に倍化できてしまいます）。これはエネルギーネットワークを組む価値のある最初の機械です。</p>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <p>粉砕機は EU/FE を消費するだけで、供給が不安定でも安定して粉砕できるよう小さなバッファを保持します。</p>
 
@@ -412,29 +412,29 @@
 
 <p>エネルギーは5つの作業面から入ります。<strong>正面</strong>（機械の「顔」が向いている面）は不活性で、ケーブルは接続できず、ホッパーも機能しません。</p>
 
-<h2>加工</h2>
+<h2 id="加工">加工</h2>
 
 <p>各粉砕は150ティック（約7.5秒）かかり、バッファから EU/FE を消費します。完成した粉はチェストに自動で飛び出しません。手作業かホッパーで回収してください。</p>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>所要時間</td><td>150ティック（約7.5秒）</td></tr><tr><td>操作コスト</td><td>300 EU/FE</td></tr><tr><td>自動排出</td><td>なし</td></tr></tbody></table>
 
-<h2>インベントリ</h2>
+<h2 id="インベントリ">インベントリ</h2>
 
 <p>入力が1スロット、出力が1スロットです。出力には何も挿入できません。結果だけを保持します。</p>
 
 <table><thead><tr><th>スロット</th><th>受け入れ</th><th>数</th></tr></thead><tbody><tr><td>入力</td><td>粉砕機が粉砕できるアイテム</td><td>1</td></tr><tr><td>出力</td><td>結果のみ（挿入不可）</td><td>1</td></tr></tbody></table>
 
-<h2>インターフェース</h2>
+<h2 id="インターフェース">インターフェース</h2>
 
 <p>1つの画面にエネルギー量、進行矢印、入力スロット、出力スロットが表示されます。</p>
 
-<h2>ブロック属性</h2>
+<h2 id="ブロック属性">ブロック属性</h2>
 
 <p>通常の固体ブロックで、石より柔らかいです。どんなツルハシでも壊せますが、<strong>破壊時にチャージは保持しません</strong>。</p>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>ツール</td><td>ツルハシ</td></tr><tr><td>破壊時にチャージを保持</td><td>いいえ</td></tr></tbody></table>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p>粉砕機は作業台で <a href="../components/machine_casing.html">マシンケース</a> から作ります。上部に火打石3つ、両脇に鉄の枠、中央にケース、下中央に <a href="../components/electronic_circuit.html">電子回路</a> を配置します。ケースは全機械の共通基盤です（）。</p>
 
@@ -446,21 +446,23 @@
 
 <p>同じ方式は非金属の粉（石炭、ダイヤモンド、エメラルド、ラピスラズリ）にも当てはまります：鉱石 → 粉 ×2、純粋なアイテム → 粉 ×1。1つだけ例外：<strong>ラピスラズリ鉱石 → 粉 ×6</strong>（バニラの鉱石は元々4〜9個のラピスラズリをドロップするため、単純な ×2 では粉砕の価値がなくなってしまいます）。</p>
 
-<h3>金属以外：有機物と石（）</h3>
+<h3 id="金属以外有機物と石">金属以外：有機物と石（）</h3>
 
 <p>粉砕機が粉砕するのは鉱石だけではありません。7つのレシピが一般的なバニラアイテムを処理し、手作業のクラフトより多く産出します。これらが生産ラインに組み込まれる理由です：</p>
 
-<table><thead><tr><th>入力</th><th>手作業</th><th>粉砕機では</th><th>得られるもの</th></tr></thead><tbody><tr><td>骨</td><td>骨粉 ×3</td><td><strong>×4</strong></td><td>同じ骨から骨粉 +33%</td></tr><tr><td>骨ブロック</td><td>骨粉 ×9</td><td><strong>×12</strong></td><td>同じ +33%；「ブロック = 骨3つ」の比率は維持され、ループ不可</td></tr><tr><td>丸石</td><td>—</td><td><strong>砂 ×1</strong></td><td><strong>再生可能な砂</strong>：砂漠を掘り尽くさずにガラスとコンクリートを得る</td></tr><tr><td>砂岩</td><td>逆レシピなし</td><td><strong>砂 ×4</strong></td><td>砂岩を分解、バニラにはできない</td></tr><tr><td>ブレイズロッド</td><td>パウダー ×2</td><td><strong>×3</strong></td><td>ポーション用のパウダー +50%</td></tr><tr><td>サトウキビ</td><td>砂糖 ×1</td><td><strong>×2</strong></td><td>砂糖が2倍</td></tr><tr><td>羊毛（任意の色）</td><td>レシピなし</td><td><strong>糸 ×4</strong></td><td>羊毛を糸に戻す</td></tr></tbody></table>
+<table><thead><tr><th>入力</th><th>手作業</th><th>粉砕機では</th><th>得られるもの</th></tr></thead><tbody><tr><td>骨</td><td>骨粉 ×3</td><td><strong>×4</strong></td><td>同じ骨から骨粉 +33%</td></tr><tr><td>骨ブロック</td><td>骨粉 ×9</td><td><strong>×9</strong></td><td>数量的な利得はなし — ラインの自動化ステップとしての価値（下記参照）</td></tr><tr><td>丸石</td><td>—</td><td><strong>砂 ×1</strong></td><td><strong>再生可能な砂</strong>：砂漠を掘り尽くさずにガラスとコンクリートを得る</td></tr><tr><td>砂岩</td><td>逆レシピなし</td><td><strong>砂 ×4</strong></td><td>砂岩を分解、バニラにはできない</td></tr><tr><td>ブレイズロッド</td><td>パウダー ×2</td><td><strong>×3</strong></td><td>ポーション用のパウダー +50%</td></tr><tr><td>サトウキビ</td><td>砂糖 ×1</td><td><strong>×2</strong></td><td>砂糖が2倍</td></tr><tr><td>羊毛（任意の色）</td><td>レシピなし</td><td><strong>糸 ×4</strong></td><td>羊毛を糸に戻す</td></tr></tbody></table>
 
-<p>この7つはすべて標準 <strong>300 EU/FE</strong> で、粉砕機の他のレシピと同じです。骨のレシピは互いに整合しています：バニラでもここでも「ブロック = 骨3つ」なので、「ブロック → 骨粉 → ブロック」のループで利益は出ません。</p>
+<p>この7つはすべて標準 <strong>300 EU/FE</strong> で、粉砕機の他のレシピと同じです。</p>
+
+<p>骨ブロックは、粉砕機が意図的に<strong>改良しない</strong>唯一の入力です：無料の作業台とまったく同じ 9 個の骨粉を産出します。理由はバニラの圧縮レシピにあります — 骨粉 9 個はブロックに戻せるため、9 を超える産出は「粉砕 → 作り直す」の無限ループとなり、骨粉が無から生まれてしまいます。9 はループが発生しない最大値です。このレシピの価値は数量ではなく、組立機よりずっと早い段階でブロックの解体を自動ラインに組み込める点にあります。</p>
 
 <p>中でも最も注目すべきは <strong>丸石 → 砂</strong> です。これ以前は砂は有限資源でした。これ以降は、丸石ファームがあればガラスとコンクリートの供給源になります。</p>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p>ティア：LV。初期の粉砕工程であり、最初のエネルギーネットワークを組む理由です。 v0.1 では上位に進化しません。MV の粉砕機は別の将来ブロックです。 <a href="../generators/generator.html">発電機</a> などの LV 電源からの給電が必要です。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="../generators/generator.html">発電機</a> — この機械の典型的な電源。 <a href="electric_furnace.html">電気かまど</a> — 粉をインゴットに製錬し直します。 <a href="compressor.html">圧縮機</a> — 非金属の粉（石炭、ダイヤモンド…）のループを閉じます。 <a href="../components/electronic_circuit.html">電子回路</a> — この機械の構成要素。</p>
 

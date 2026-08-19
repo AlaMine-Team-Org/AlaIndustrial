@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link active" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -394,13 +394,13 @@
 </div>
 <blockquote>✅ <strong>接触安全。</strong> ゴムの鞘は、隣接セグメントやダメージ量の設定にかかわらず、あらゆるエネルギー流量で接触による電気ショックを完全に排除します。HV ではこれが特に顕著です：裸エレクトラムは 10 ダメージ——モードで最も危険な導線——を与えます。</blockquote>
 
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p>絶縁エレクトラムケーブルは<a href="electrum_cable.html">エレクトラムケーブル</a>のゴム強化版です。エレクトラムのスループット 192 EU/FE/ティックとパケット上限 512 EU/FE を保ちつつ、減衰を半分——0.005 から <strong>ブロックあたり 0.0025</strong>——に減らします。これは<strong>モードで最も低い損失</strong>で、かつての記録である絶縁スズケーブル（0.003）の半分、階段の先行者である裸エレクトラムの 4 分の 1 です。</p>
 
 <p>運用上の欠点が一つもない導線になります：最も太く、最も遠くまで届き、接触しても安全です。コストはすべてクラフトに押し出されています——まず裸種にエレクトラムとダイヤモンドの粉、さらに鞘にゴムです。</p>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>役割</td><td>伝送</td></tr><tr><td>ティア</td><td>HV</td></tr><tr><td>最大電圧</td><td>512 EU/FE/パケット</td></tr><tr><td>スループット</td><td>192 EU/FE/ティック = セグメント稼働バッファ</td></tr><tr><td>損失</td><td>ブロックあたり <strong>0.0025</strong> 減衰。正の流れでは <code>max(1, ceil(N × 0.9975^距離))</code> EU/FE/ティックが届く</td></tr><tr><td>絶縁</td><td>ゴム。電気ショックを完全に防止</td></tr></tbody></table>
 
@@ -408,17 +408,17 @@
 
 <p>混成ネットワークでは、パケット上限が大きい種類がネットワークの損失係数を決定します。パケット上限が同じ場合、裸種が絶縁種より優先され、絶縁セグメント 1 本が全体が裸の路線を改善することはありません。0.0025 の低減は完全に絶縁されたエレクトラムネットワークでのみ有効です。</p>
 
-<h2>ブロックの性質</h2>
+<h2 id="ブロックの性質">ブロックの性質</h2>
 
 <p>ゴムの鞘を持つ細い導線で、隣接するブロックに接続します。任意の道具で壊せますが、ケーブルブレーカーだと更に便利です。</p>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>形状</td><td>細い棒（6px コア + スリーブ）</td></tr><tr><td>硬さ</td><td>0.2</td></tr><tr><td>ツール</td><td>任意 / ケーブルブレーカー</td></tr></tbody></table>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p>クラフトテーブルでエレクトラムケーブル 6 個とゴム 3 個から絶縁型 <strong>6</strong> 個ができます （）。 ゴム消費は他種と同じくケーブル 1 本あたり 0.5 です（）。 羊毛の代替レシピはありません：絶縁は加硫ゴムの消費先です。 加工レシピ：なし。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="electrum_cable.html">エレクトラムケーブル</a>——10 ダメージの電気ショックがある裸版。 <a href="insulated_gold_cable.html">絶縁金ケーブル</a>——最大 48 EU/FE/ティックの流れ向けの MV 版。 <a href="../components/rubber.html">ゴム</a>——鞘の素材。</p>
 

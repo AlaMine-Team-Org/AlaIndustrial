@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link active" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>エネルギー貯蔵庫</strong>はこのモード最初の貯蔵ブロックで、発電機から EU/FE を蓄え、機械へ送り出します。ソーラーパネルの昼間の発電を夜通し機械へ給電できるのは、このブロックのおかげです。</p>
 
@@ -400,7 +400,7 @@
 
 <p>これはバッファであり、発電源ではありません——単体では EU/FE を生み出しません。入出力の両側とも LV に制限されているため、接続した LV 機械を決して過負荷にしません。</p>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>容量</td><td>20 000 EU/FE</td></tr><tr><td>最大入力</td><td>32 EU/FE/t（LV）</td></tr><tr><td>最大出力</td><td>32 EU/FE/t（LV）</td></tr></tbody></table>
 
@@ -410,7 +410,7 @@
 
 <p>貯蔵庫は同じネットワークの入力と出力の両方にケーブルを接続できます——エネルギーをぐるぐると回すことも、損失で焼き切ることもありません。機械が発電機の発電量を満たすまで、貯蔵庫は<strong>出力のみ</strong>を行い、機械が飽和するか発電機が需要を上回ると充電を始めます。これはネットワークがエネルギーを分配する際の「機械優先、貯蔵库が後」という優先順位と同じです。</p>
 
-<h3>テレポーターと充電ステーションへの給電（）</h3>
+<h3 id="テレポーターと充電ステーションへの給電">テレポーターと充電ステーションへの給電（）</h3>
 
 <p>機械や隣接する貯蔵庫に加えて、貯蔵库はもう一つのクラス——「ファンド」ブロック：<a href="../advanced-machines/teleporter.html">テレポーター</a>と<a href="charge_pad.html">充電ステーション</a>——にも給電します。これらは即時に動作するわけではなく自身のための蓄電を行うため、意図的に遅い別の経路でエネルギーを受け取ります：</p>
 
@@ -418,7 +418,7 @@
 
 <p>この閾値は飾りではありません：テレポーターのバッファは貯蔵库の 25 倍あり、閾値がなければ 1 基のステーションが拠点の全貯蔵库を吸い尽くしてしまいます。ファンドを一気に満たしたい場合は、貯蔵庫を<strong>隣接</strong>させてください：直接接触には閾値も速度制限もありません。</p>
 
-<h3>カスケード：同じネットワーク内の複数の貯蔵庫</h3>
+<h3 id="カスケード同じネットワーク内の複数の貯蔵庫">カスケード：同じネットワーク内の複数の貯蔵庫</h3>
 
 <p>バンクの拡張は簡単です——もう一つ貯蔵库を置き、同じネットワークに接続するだけです。より充填された貯蔵庫が、<strong>充填率</strong>が揃うまで、より空いている貯蔵库へ自動的に給電します。貯蔵库は「まず 1 台目を満たし、それから 2 台目」ではなく、同時に平均化します：20 000 EU/FE の貯蔵庫 2 台（片方に 10 000、もう片方が空）は、それぞれ約 5 000 に収束します。</p>
 
@@ -430,7 +430,7 @@
 
 <p>カスケードに参加するのは貯蔵库だけです。テレポーターも貯蔵ブロックですが、余剰から自力で蓄電し、貯蔵库からは自動では満たされません——満杯の貯蔵库がプレイヤーの知らない間に流出するのを防ぐためです。</p>
 
-<h2>インベントリ</h2>
+<h2 id="インベントリ">インベントリ</h2>
 
 <p>携帯用 EU/FE アイテム（バッテリーポーチ、エネルギーパック）用のスロットが 1 つ：</p>
 
@@ -438,25 +438,25 @@
 
 <p>このスロットは<strong>充電専用</strong>です——このブロックを経由して貯蔵库へ充電を戻すことはできません。ホッパーは使用しません：GUI からのみ動作する手動スロットです。</p>
 
-<h2>インターフェース</h2>
+<h2 id="インターフェース">インターフェース</h2>
 
 <p>1 画面：エネルギー残量、入出力速度、充電スロット。</p>
 
-<h2>ブロックの性質</h2>
+<h2 id="ブロックの性質">ブロックの性質</h2>
 
 <p>通常の固体ブロックです。任意のツルハシで壊せ、<strong>破壊時に充電量を保持</strong>します——運搬中にエネルギーは失われません。</p>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>ツール</td><td>ツルハシ</td></tr><tr><td>破壊時に充電量を保持</td><td>はい</td></tr></tbody></table>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p>これは貯蔵ブロックであり、加工機ではないため、加工レシピはありません。</p>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p>貯蔵系列の最初の段階です。拠点が成長するにつれて LV バッファでは足りなくなり、後に上位ティア（MV/HV）の貯蔵ブロックが登場します。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="../generators/generator.html">発電機</a>——典型的な充電源。 <a href="../generators/solar_panel.html">ソーラーパネル</a>——昼間に貯蔵库を満たします。</p>
 

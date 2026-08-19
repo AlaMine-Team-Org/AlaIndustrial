@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>電磁石</strong>は EU/FE で充電できる利便性アイテムです。インベントリの<strong>任意のスロット</strong>（ホットバー／メイン／オフハンド）に配置され、周辺の落ちているドロップアイテムをプレイヤーに自動的に<strong>引き寄せます</strong>。坑内での鉱石ドロップ、爆発後の破片、他人の放置ドロップなどが対象です。これは <strong>ティア 1</strong> で、<strong>5 ブロック</strong>の球状半径（上下・左右）を持ち、実際に移動したアイテムごとに <strong>2 EU/FE</strong> を消費します。周囲に何もないアイドルスキャンは無料です。</p>
 
@@ -400,7 +400,7 @@
 
 <p><strong>トグル（Shift+右クリック）：</strong> 電磁石はオフにでき、ファーム、仕分け、パイプの近くでアイテムを吸い出さずに持ち運べます。クラフト直後の電磁石はオンです。</p>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <p>エネルギーネットワークから独立した専用の EU/FE バッファを持ちます。エネルギー貯蔵庫のスロットと装備したパックで充電され、引き寄せたアイテムごとに充電を消費します。</p>
 
@@ -408,29 +408,29 @@
 
 <p>消費はサーバー側でのみ差し引かれます。クリエイティブ／スペクテイターモードでは充電を消費しません（すべての EU/FE アイテム共通のルール）。ただし引き寄せ自体は機能します。</p>
 
-<h2>インベントリ</h2>
+<h2 id="インベントリ">インベントリ</h2>
 
 <p>該当なし——電磁石は内部のアイテム収納を持ちません（スタック1）。EU/FE 充電量と オン／オフのフラグ（、不在 = オン）のみを保持します。</p>
 
-<h2>ブロックの性質</h2>
+<h2 id="ブロックの性質">ブロックの性質</h2>
 
 <p>該当なし（アイテム）。</p>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p>クラフト：。</p>
 
 <p><strong>修理</strong>——該当なし：電磁石に耐久値はなく、「修理」は EU/FE の充電を指します（「エネルギー」を参照）。</p>
 
-<h2>挙動</h2>
+<h2 id="挙動">挙動</h2>
 
 <p><strong>引き寄せ（シーク）：</strong> 電磁石は毎ティック、球状半径内のドロップアイテムを集め、それぞれにプレイヤーの体の中心へ向かう速度を<strong>設定</strong>します（最大 0.55 ブロック/ティック）。遠いものは最大速度で飛び、プレイヤーの近くでプールが緩やかに減速します。速度は<strong>設定</strong>される（加算ではない）ため、プールは重力と摩擦を上書きします。下にあるアイテムは上に向かって持ち上がり、上にあるアイテムは下がります。実際のピックアップはアイテムがプレイヤーに到達したとき、バニラが行います。 <strong>料金：</strong> 実際に移動したアイテムごとに、飛んでいる間 2 EU/FE/ティックが差し引かれます。充電が不足すると電磁石は「止まり」、0 EU/FE では引き寄せを完全に停止します。1パスあたり最大 <strong>64</strong> 個のアイテムを処理します（大量ドロップ時のラグ対策）。 <strong>引き寄せないもの：</strong> ピックアップ遅延中のアイテム——プレイヤーが投げたばかりのドロップ（電磁石は出した直後のものを即座に吸い戻しません）や「ピックアップ不可」（遅延 32767）のアイテム、溶岩にあるアイテム（火を通して引き寄せないため）、半径外のアイテムです。額縁／ディスプレイは対象外です（ドロップアイテムのみでフィルタリング）。 <strong>シーク速度は</strong> <code>SEEK_SPEED</code>（0.55 ブロック/ティック）に制限されます。アイテムが明確に「飛び込む」のに十分な速さですが、バニラのピックアップ窓の下で、プレイヤーを突き抜けないようにします。 <strong>任意のスロットから機能：</strong> 電磁石はホットバー、メインインベントリ、オフハンドでティックします（26.2 ではオフハンドは装備パスを通じてティックします）。手に持たずどこにでも置けます。 <strong>トグル（Shift+右クリック）：</strong> Shift を押しながら右クリックでオン／オフを切り替えます。状態は <code>magnet_enabled</code> コンポーネントに保存されます（不在 = オン。オフは を書き込み、再度オンにするとコンポーネントが削除され、オンの電磁石は新品とバイト単位で同一になります）。切り替えには<strong>金属的なクリック音</strong>（<code>copper_bulb</code> のオン／オフ——布ではなく電気的な音）とホットバー上のメッセージが伴います。オフの電磁石は何も引き寄せず、EU/FE も消費しません。 <strong>表示：</strong> アイコン下のバーが充電量を示します（黄色、LV 色）。ツールチップには短い行として説明、状態（緑の「稼働中」／グレーの「オフ」）、<strong>充電量 <code>X / Y EU/FE</code></strong>、半径／料金の行が表示されます。 <strong>ドロップ／死亡／再ログイン：</strong> 充電量と オン／オフ のフラグはアイテムに保存され、保持されます。 <strong>クリエイティブ：</strong> 充電を消費しません（電力系ファミリーの共通ルール、）が、引き寄せは機能します。</p>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p>LV 等級の利便性アイテム：「坑内を歩けばルートが自動で私のもとへ」というテックMODの古典的な悩みを解決します。 <a href="../energy-storage/battery_box.html">エネルギー貯蔵庫</a>と銅コイル／回路の後に利用可能です。LV インフラなしにはクラフトも充電もできません。 フィルター（タグによるホワイトリスト／ブラックリスト）、デッドゾーン、半径のティア進化（LV／MV／HV）は今後の課題です。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="electric_drill.html">電動ドリル</a>——EU/FE 消耗品の先例。坑内での典型的な相棒。 <a href="energy_pack.html">エネルギーパック</a>——移動中にインベントリ内で電磁石を充電します。 <a href="../energy-storage/battery_box.html">エネルギー貯蔵庫</a>——電磁石の充電源（charge スロット）。 <a href="../components/copper_coil.html">銅コイル</a>、<a href="../components/electronic_circuit.html">電子回路</a>——クラフトの構成要素。</p>
 

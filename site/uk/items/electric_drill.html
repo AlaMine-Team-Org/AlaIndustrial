@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепти</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="10 сторінок">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="4 сторінки">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Інше</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилітарні блоки</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
 <div class="group-title">Предмети</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
 <a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Зведення</h2>
+<h2 id="зведення">Зведення</h2>
 
 <p><strong>Електробур</strong> — перший ручний електроінструмент моду: алмазне кайло, яке працює на EU/FE замість міцності. Поки заряду вистачає на блок, бур копає <strong>трохи швидше за алмазне кайло</strong> (швидкість 8.5 проти 8.0, рівень видобутку алмазу) і витрачає <strong>50 EU/FE</strong> за кожен успішно зламаний блок. Повний буфер — <strong>10 000 EU/FE</strong>, тобто близько <strong>200 блоків</strong> на одне заряджання.</p>
 
@@ -402,7 +402,7 @@
 
 <p>У бура є другий щабель — <strong>електробур з алмазним напиленням</strong>: той самий інструмент, але копає швидше й уміє перемикати видобуток у режим шовкового дотику. Докладніше — у розділі «Алмазне напилення (апгрейд)» нижче.</p>
 
-<h2>Енергія</h2>
+<h2 id="енергія">Енергія</h2>
 
 <p>Власний EU/FE-буфер, поза енергомережею. Заряджається у слоті Енергосховища й від надягнутого ранця; витрачає заряд на копання блоків.</p>
 
@@ -410,25 +410,25 @@
 
 <p>Витрата знімається <strong>лише на сервері</strong> й <strong>лише за блоки з ненульовою твердістю</strong>. У творчому режимі заряд не витрачається.</p>
 
-<h2>Інвентар</h2>
+<h2 id="інвентар">Інвентар</h2>
 
 <p>Не застосовно — внутрішнього сховища предметів немає (стек 1).</p>
 
-<h2>Властивості блока</h2>
+<h2 id="властивості-блока">Властивості блока</h2>
 
 <p>Не застосовно (предмет).</p>
 
-<h2>Рецепти</h2>
+<h2 id="рецепти">Рецепти</h2>
 
 <p>Крафт: у центрі алмазне кайло, ряд залізних зливків зверху, дві <a href="../components/battery.html">батареї</a> з боків, знизу дві <a href="../components/copper_coil.html">мідні котушки</a> та <a href="../components/electronic_circuit.html">електронна схема</a>.</p>
 
 <p><strong>Ремонт</strong> — не застосовний: міцності немає, лагодити нічого; «ремонт» — це заряджання EU/FE.</p>
 
-<h2>Поведінка</h2>
+<h2 id="поведінка">Поведінка</h2>
 
 <p><strong>Копання:</strong> поки заряд ≥ 50 EU/FE, бур копає на швидкості 8.5 з рівнем видобутку алмазу. За кожен такий блок знімається 50 EU/FE. <strong>Розряджений бур:</strong> при заряді нижче 50 EU/FE копає на швидкості руки (1.0), але рівень видобутку й дроп зберігаються, і EU/FE не витрачається. Чара Efficiency при цьому не діє. <strong>Заряджання:</strong> слот заряджання Енергосховища й надягнутий енергоранець приймають бур автоматично, до 32 EU/FE/тик. <strong>Атака:</strong> б'є як алмазне кайло, але удари <strong>не витрачають EU/FE</strong> і не зношують бур. <strong>Чари:</strong> бур входить у теґ кайл, тому стіл зачарування й ковадло працюють з ним як з кайлом. Unbreaking/Mending на неламкому бурі марні, але нешкідливі. <strong>Індикація:</strong> смужка під іконкою показує заряд. У тултипі — «Заряд: X / 10 000 EU/FE», при нулі — червоне «Розряджений». <strong>Індикатор на екрані (HUD):</strong> поки бур у руці, у лівому верхньому куті видно його іконку, відсоток заряду й смужку (зелена → жовта → червона в міру розряду). Вмикається тією ж клавішею <strong>H</strong>, що й у <a href="energy_pack.html">енергоранця</a>; без бура в руці індикатор не показується. <strong>Дроп/смерть/релогін:</strong> заряд зберігається у предметі. <strong>Встановлення смолоскипа (ПКМ):</strong> з буром у головній руці й смолоскипами в інвентарі ПКМ по блоку ставить смолоскип, наче він у руці, — бур лишається в хотбарі, смолоскип витрачається з інвентарю. Пріоритет має <a href="../utility/enriched_uranium_torch.html">збагачений урановий смолоскип</a>, за його відсутності береться ванільний. За встановлення знімається <strong>5 EU/FE</strong>; якщо заряду менше — смолоскип <strong>не ставиться</strong>, бур пише повідомлення над хотбаром, а смолоскип і заряд лишаються недоторканими. Повідомлення з'являється лише там, де заряджений бур справді поставив би смолоскип: якщо в цій точці смолоскип не стане й так (немає опори, вода для ванільного), розряджений бур мовчить і не заважає — клік дістається предмету в другій руці, наче бура в руці немає. <strong>У креативі:</strong> заряд не витрачається ні на копання, ні на смолоскипи.</p>
 
-<h2>Алмазне напилення (апгрейд)</h2>
+<h2 id="алмазне-напилення-апгрейд">Алмазне напилення (апгрейд)</h2>
 
 <p><strong>Електробур з алмазним напиленням</strong> — другий щабель бура. Відмінностей від базового рівно дві, решта успадковується без змін.</p>
 
@@ -452,11 +452,11 @@
 
 <p><strong>Заряд бура переходить в апгрейд</strong>. Розряджати бур перед крафтом не треба: скільки EU/FE у ньому було, стільки й буде в апгрейді. Буфер в обох однаковий — 10 000 EU/FE, — тож перенесення йде без втрат. Це загальне правило мода: енергія переходить у результат, а не згорає, — так само поводяться всі рецепти, у яких результат має власний EU/FE-буфер (див. <a href="../components/battery.html">батарею</a>).</p>
 
-<h2>Прогресія</h2>
+<h2 id="прогресія">Прогресія</h2>
 
 <p>Перший електроінструмент моду — з нього починається лінійка EU/FE-інструментів. Доступний після <a href="../energy-storage/battery_box.html">Енергосховища</a> і батареї: без LV-інфраструктури бур не скрафтити й не зарядити. Другий щабель — апгрейд «алмазне напилення» (вища швидкість, перемикальний шовковий дотик), див. розділ вище. Гейт — <a href="../machines/alloy_smelter.html">сплавна піч</a> (інвар) і <a href="../machines/macerator.html">подрібнювач</a> (алмазний пил). LV-рівень.</p>
 
-<h2>Пов'язане</h2>
+<h2 id="повязане">Пов'язане</h2>
 
 <p><a href="electric_chainsaw.html">Електропила</a> — дерев'яна половина пари. <a href="electric_shovel.html">Електролопата</a> · <a href="electric_hoe.html">Електромотика</a> — решта лінійки. <a href="energy_pack.html">Енергоранець</a> — заряджає бур прямо в інвентарі. <a href="../energy-storage/battery_box.html">Енергосховище</a> — заряджання бура (слот charge). <a href="../components/copper_coil.html">Мідна котушка</a> — компонент крафта.</p>
 

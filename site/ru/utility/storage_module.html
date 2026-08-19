@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепты</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="10 страниц">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="4 страницы">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Прочее</div>
 <a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="14 страниц">14</span></a>
 <div class="group-title">Предметы</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="2 страницы">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="20 страниц">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="20 страниц">20</span></a>
   </aside>
@@ -393,7 +393,7 @@
   </div>
 </div>
 
-<h2>Сводка</h2>
+<h2 id="сводка">Сводка</h2>
 
 <p><strong>Модуль хранения</strong> — блок на 27 слотов, который умеет главное: <strong>срастаться с соседями</strong>. Поставьте два модуля вплотную — и это уже одно хранилище на 54 слота с общим окном. Три — 81. Четыре — 108, и это потолок.</p>
 
@@ -403,29 +403,29 @@
 
 <blockquote><strong>Мини-пример:</strong> поставили модуль, забили — не хватило. Пристроили второй вплотную: открываете любой из двух, а внутри уже 54 слота одним списком.</blockquote>
 
-<h2>Энергия</h2>
+<h2 id="энергия">Энергия</h2>
 
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Роль</td><td>нет</td></tr><tr><td>Буфер (EU/FE)</td><td>0</td></tr><tr><td>Макс. вход (EU/FE/такт)</td><td>н/п</td></tr><tr><td>Макс. выход (EU/FE/такт)</td><td>н/п</td></tr><tr><td>EU/FE/такт</td><td>0</td></tr></tbody></table>
 
 <p>Модуль не участвует в энергосети: не проводит EU/FE и не подключается к кабелям.</p>
 
-<h2>Инвентарь</h2>
+<h2 id="инвентарь">Инвентарь</h2>
 
 <table><thead><tr><th>Слот</th><th>Принимает</th><th>Кол-во</th></tr></thead><tbody><tr><td>Хранилище модуля</td><td>любые предметы</td><td>27 (3 ряда × 9)</td></tr></tbody></table>
 
 <p><strong>Предметы физически лежат в том модуле, куда их положили.</strong> Общего «главного» инвентаря нет: окно склада — это вид на инвентари всех модулей сразу, а не отдельное хранилище. Отсюда всё остальное поведение: что выпадает при разрушении и что происходит с выгруженным чанком.</p>
 
-<h3>Как складывается общий склад</h3>
+<h3 id="как-складывается-общий-склад">Как складывается общий склад</h3>
 
 <table><thead><tr><th>Модулей рядом</th><th>Слотов у склада</th><th>Рядов всего</th><th>Рядов видно</th><th>Прокрутка</th></tr></thead><tbody><tr><td>1</td><td>27</td><td>3</td><td>3</td><td>нет</td></tr><tr><td>2</td><td>54</td><td>6</td><td>6</td><td>нет (полоса неактивна)</td></tr><tr><td>3</td><td>81</td><td>9</td><td>6</td><td>3 ряда</td></tr><tr><td>4</td><td>108</td><td>12</td><td>6</td><td>6 рядов</td></tr><tr><td>5 и более</td><td>108 (потолок)</td><td>12</td><td>6</td><td>6 рядов</td></tr></tbody></table>
 
 <p>Слоты и ряды <strong>не менялись</strong> — изменилось только окно: оно показывает не больше шести рядов, а остальные достаются полосой прокрутки справа. Почему шесть — в разделе «Баланс».</p>
 
-<h3>Правила объединения</h3>
+<h3 id="правила-объединения">Правила объединения</h3>
 
 <p>Модуль входит в склад, если примыкает <strong>гранью</strong> к другому модулю склада. Касание ребром или углом не считается — так можно построить два отдельных склада вплотную. Набор считается заново при каждом открытии окна: обход идёт от того модуля, по которому щёлкнули. Ничего не запоминается, поэтому установка и снос модуля не требуют никакой перестройки. Если модулей в постройке больше четырёх, в склад войдут первые четыре по порядку обхода. Щелчок по другому модулю той же постройки может дать другую четвёрку — окно показывает, сколько модулей подключено, так что это видно.</p>
 
-<h2>Интерфейс</h2>
+<h2 id="интерфейс">Интерфейс</h2>
 
 <p>Два размера окна: <strong>3 ряда</strong> (176×166) у одиночного модуля и <strong>6 рядов</strong> (195×220) у любого склада крупнее. <strong>Полоса прокрутки</strong> — справа от сетки, в 19 px, которые для неё добавлены к ширине панели. Работают колесо мыши, перетаскивание ползунка и щелчок по дорожке. У склада из двух модулей прокручивать нечего, и полоса рисуется <strong>в неактивном оттенке</strong>, а не исчезает: элемент, который то есть, то нет, читается хуже, чем видимо выключенный. <strong>Shift-клик кладёт предметы и в те ряды, которых на экране нет.</strong> Это не мелочь: ванильный shift-клик работает по слотам меню, а их у окна ровно шесть рядов, поэтому «очевидная» реализация молча останавливалась бы на середине склада и сообщала «полно», пока половина пуста. Поиска нет — 108 слотов для него мало.</p>
 
@@ -433,11 +433,11 @@
 
 <p><strong>Почему вид, а не переезд слотов.</strong> <code>Slot.x</code>/<code>Slot.y</code> — <code>public final</code>, а список слотов меню входит в сетевой контракт: индексы в <code>ClientboundContainerSetSlot</code> — это позиции в нём, и пересборка списка под живым меню рассинхронизирует клиент. Единственная прокручиваемая витрина в ванили (креативный инвентарь) решает это так же: слоты не двигаются, двигается то, что отвечает контейнер за ними.</p>
 
-<h2>Свойства блока</h2>
+<h2 id="свойства-блока">Свойства блока</h2>
 
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Форма</td><td>полный куб 16³</td></tr><tr><td>Прочность</td><td>3.0</td></tr><tr><td>Взрывоустойчивость</td><td>6.0</td></tr><tr><td>Инструмент</td><td>кирка</td></tr><tr><td>Дроп с NBT</td><td>false — содержимое <strong>не</strong> сохраняется в предмете</td></tr></tbody></table>
 
-<h3>Внешний вид: склад выглядит одним шкафом</h3>
+<h3 id="внешний-вид-склад-выглядит-одним-шкафом">Внешний вид: склад выглядит одним шкафом</h3>
 
 <p>Модуль — стальной шкаф с <strong>тремя выдвижными ящиками</strong>: по одному на каждый ряд из девяти слотов, которые он добавляет в окно. Сверху и снизу — не ящики, а плита корпуса с утопленной сервисной панелью.</p>
 
@@ -463,17 +463,17 @@
 
 <p><strong>Содержимое переживает перезагрузку.</strong> <code>TC-STOR-013</code> гоняет модуль через NBT (тот же путь, что сохранение и загрузка чанка) и проверяет в том числе, что слоты не съезжают: намеренно пустой слот между двумя занятыми обязан остаться пустым.</p>
 
-<h2>Рецепты</h2>
+<h2 id="рецепты">Рецепты</h2>
 
 <p>Крафт — 4 <a href="../components/material_forms.html">железные пластины</a> крестом вокруг ванильного сундука.</p>
 
 <p>Рецепт намеренно дешёвый: наращивание объёма — расходник, а не веха прогрессии.</p>
 
-<h2>Прогрессия</h2>
+<h2 id="прогрессия">Прогрессия</h2>
 
 <p>Тир: none — энергии не требует, доступен сразу после первых пластин. Место в линейке хранения: <a href="iron_chest.html">железный сундук</a> 36 → <a href="silver_chest.html">серебряный</a> 45 → <a href="gold_chest.html">золотой</a> 54 → <a href="electrum_chest.html">электрумовый</a> 81 → склад из модулей 108. Сундуки не обесцениваются: они дают весь объём одним блоком, склад требует четырёх. Дальше: <a href="../machines/assembler.html">сборочный автомат</a> сможет брать сырьё прямо из такого склада.</p>
 
-<h2>Связанное</h2>
+<h2 id="связанное">Связанное</h2>
 
 <p><a href="gold_chest.html">Золотой сундук</a> — предыдущая ступень хранения <a href="../components/material_forms.html">Формы материалов</a> — пластины для крафта <a href="stock_display_frame.html">Рамка-индикатор</a> — образец защиты от невыгруженных чанков <a href="../machines/assembler.html">Сборочный автомат</a> — будущий потребитель склада <a href="../item-transport/item_pipe.html">Предметная труба</a> — наполняет склад снаружи</p>
 

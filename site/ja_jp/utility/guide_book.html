@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>ガイドブック</strong>は Ala Industrial モッドのゲーム内チュートリアルです。新規プレイヤーは 非自明なメカニクス（FE の代わりの EU/FE、電圧ティア LV/MV/HV、損失のあるケーブル、機械の面ポート）の あるワールドに入り、組み込みのチュートリアルがないまま推測したり外部 wiki を読まされたりしてきました。 この本はその参入障壁を下げます。プレイヤーは <strong>最初のワールド参加時に自動でインベントリに受け取り</strong> （1 回限り）、<strong>右クリックで開く</strong> — 全画面タブとページごとのナビゲーション付き — ことで、 ゲームを抜けることなく章を追って最初の稼働するエネルギーネットワークと機械に到達します。</p>
 
@@ -400,11 +400,11 @@
 
 <blockquote><strong>ミニ例：</strong> 新しいワールドに入る → インベントリに「ガイドブック」が入っている → 右クリック → 「ここから始める」タブが開いた画面 →「ソーラーパネル」のリンクをクリック → どれだけ EU/FE を 出力し、どうクラフトするかを読む。</blockquote>
 
-<h2>入手方法</h2>
+<h2 id="入手方法">入手方法</h2>
 
 <p><strong>初回ログイン時の自動配付。</strong> プレイヤーが初めてワールドに入る際、本がインベントリに <strong>ちょうど 1 回だけ</strong> 配られます。「すでに配った人」のフラグは <strong>ワールドごとのセーブデータ</strong> （複数 UUID を持つ <code>SavedData</code>）に保存され、死亡 / リスポーン / ディメンション変更を耐え、 再ログインでも重複配付されません。 <strong>モッド更新時の既存プレイヤー</strong> も 1 回だけ本を受け取ります。その UUID はまだ「配付済み」集合に ないため、更新後の初回ログインで本が配られ、UUID が追加されます。 <strong>紛失時の復元</strong> — 2 つの保険があり、どちらも自動配付をブロックしません： <strong>クラフト</strong>（安価、LV で利用可能、設計図によるゲートなし）。 <strong><code>/alaindustrial guide</code></strong> コマンド（既存の <code>/ala</code> コマンドを再利用、本を配付/表示）。 プレイヤーがチュートリアルなしで取り残されることはありません。 自動配付時にインベントリが満杯なら — 本はプレイヤーの足元に落ちます（失われません）。</p>
 
-<h2>インターフェース</h2>
+<h2 id="インターフェース">インターフェース</h2>
 
 <p>右クリックで開く — <strong>全画面ウィンドウ</strong>（チェストではなく、スロットもインベントリもありません）。 構成は以下の通りです：</p>
 
@@ -416,29 +416,29 @@
 
 <p>視覚的に本はモッドのスタイルに合わせてあり — ほかのインターフェースと同じパレットとベベル付き パネルです。</p>
 
-<h2>コンテント</h2>
+<h2 id="コンテント">コンテント</h2>
 
 <p>本はすでにゲームに存在するすべてのブロックとアイテムをカバーします。それぞれについて簡潔な説明、 特性（ティア、EU/FE、バッファ）、クラフトレシピ。 本の中の数値（EU/FE、ティア、バッファ、レシピ）はモッドの wiki サイトと同じソースから取られるため、 つねにゲームと一致し — 食い違いはありません。 まだ追加されていない計画中のブロックは本には入りません — まだゲームにないものを約束しません。 枠となる章「ここから始める」と「エネルギー」は新規プレイヤー向けの入門チュートリアルとして 書かれています。</p>
 
-<h2>ブロックの性質</h2>
+<h2 id="ブロックの性質">ブロックの性質</h2>
 
 <p>本は <strong>アイテム</strong>（ブロックではありません）：ワールドに設置できず、スタックは 1 まで、EU/FE バッファは ありません。「形」はフラットなアイコンを持つ通常のアイテムモデルです。右クリックで GUI を開きます （「インターフェース」参照）。ワールドにブロックは配置されず、当たり判定もありません。</p>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>タイプ</td><td>アイテム（item）、ブロックではない</td></tr><tr><td>スタック</td><td>1</td></tr><tr><td>EU/FE バッファ</td><td>なし</td></tr><tr><td>右クリック</td><td>本の画面を開く（client-side）</td></tr><tr><td>ワールドへの設置</td><td>不可</td></tr></tbody></table>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p>クラフトは <strong>超シンプル</strong> で、不定形：バニラの本 + 木の歯車（モッドで最も早く安いコンポーネント）。 設計図によるゲートはありません（本は自動で配付されるため。クラフトは紛失後の復元専用です）。</p>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p>ティア：なし（ユーティリティで、エネルギー連鎖の一部ではありません）。すぐ利用可能 — これは進行の 中の段階ではなく、入口です。モッドの実際の進行（鉱石 → 発電機 → ケーブル → 機械 → ティア）を プレイヤーに沿って導きます。</p>
 
-<h2>ローカライズ</h2>
+<h2 id="ローカライズ">ローカライズ</h2>
 
 <p><strong>v1：<code>en_us</code> + <code>ru_ru</code></strong> — 章の完全なコンテント（ソースは <code>en_us</code>、モッド全体と同じ）。 残り 18 言語はアイテム名の翻訳を受け取り、章のコンテントは当面は英語で表示されます。 完全な章の翻訳は後日。 本の全テキストは lang キー経由です。ハードコード文字列はありません（プロジェクトのルール）。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p>本はモッドの wiki サイトと同じソースから作られています：同じ内容と同じ数値ですが、 プレイヤーの手の中に直接あります。</p>
 

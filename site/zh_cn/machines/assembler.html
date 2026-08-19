@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概览</h2>
+<h2 id="概览">概览</h2>
 
 <p><strong>组装机</strong> 是本模组第一台 MV 等级机器，也是对 64 堆物品手动合成的终结。它会记住工作台配方（记录在 装配蓝图 上），只要有原料和能量就持续不断地生产。无需红石，机器会自行运作。</p>
 
@@ -400,7 +400,7 @@
 
 <p>与原版 "合成器"（每个红石脉冲重新求解一次网格、什么都不记忆）不同，本机会保存一个 <strong>三格蓝图队列</strong>，并在它们之间自动切换。</p>
 
-<h2>能量</h2>
+<h2 id="能量">能量</h2>
 
 <table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>角色</td><td>消费端</td></tr><tr><td>缓存（EU/FE）</td><td>12000</td></tr><tr><td>最大输入（EU/FE/刻）</td><td>128（MV）</td></tr><tr><td>最大输出（EU/FE/刻）</td><td>不适用</td></tr><tr><td>EU/FE/刻</td><td>12</td></tr></tbody></table>
 
@@ -408,7 +408,7 @@
 
 <p>能量 <strong>仅在工作刻消耗</strong>。任何原因的空闲（无蓝图、无原料、输出区无空位）都完全不消耗 EU/FE。</p>
 
-<h2>加工</h2>
+<h2 id="加工">加工</h2>
 
 <table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>能组装的内容</td><td>任何工作台配方，有形无形皆可</td></tr><tr><td>持续时间（刻）</td><td>40</td></tr><tr><td>单次操作消耗（EU/FE）</td><td>480</td></tr><tr><td>自动卸料</td><td>否</td></tr></tbody></table>
 
@@ -416,7 +416,7 @@
 
 <p>本模组的机器配方（粉碎、熔炼、提取）不会被本机执行，它们是独立的配方类型，归独立的机器处理。</p>
 
-<h3>从队列中选取蓝图</h3>
+<h3 id="从队列中选取蓝图">从队列中选取蓝图</h3>
 
 <p>蓝图按 <strong>轮转</strong>（round-robin）方式轮询，游标位置会在循环之间保留。出现以下任一情况时，蓝图会被跳过：</p>
 
@@ -426,7 +426,7 @@
 
 <p>轮转而非 "自上而下" 的严格优先级是刻意为之：在严格优先级下，第一个拥有无限原料的蓝图永远不会把队列让给其他蓝图。</p>
 
-<h3>单次操作的执行顺序</h3>
+<h3 id="单次操作的执行顺序">单次操作的执行顺序</h3>
 
 <p>顺序是硬性的，偏离会破坏结果或残余物的归还：</p>
 
@@ -436,7 +436,7 @@
 
 <p>一次操作会 <strong>计算两遍</strong>，启动时一次（决定是否开始），结束时一次（仓库可能在 40 刻内发生变化），但不会在中间的四十刻上反复计算。如果结束时计划不再成立（仓库被掏空、配方消失），机器会停在终点线上：进度和已花费的 EU/FE 都会保留，一旦计划重新吻合，操作就会立刻完成。</p>
 
-<h3>原料替换</h3>
+<h3 id="原料替换">原料替换</h3>
 
 <p>默认情况下，机器从仓库取出 <strong>与蓝图记录完全一致的物品</strong>，按物品本身比较，忽略组件（与标准 <code>Ingredient</code> 的行为相同）。因此，如果蓝图中放的是崭新工具，磨损过的工具同样可用。</p>
 
@@ -452,7 +452,7 @@
 
 <p>来自其他模组的材料（铜、锡、银）能否生效，完全取决于配方中的原料是否以通用 <code>c:</code> 标签书写，这是另一项工作，并非本机的属性。</p>
 
-<h3>残余物</h3>
+<h3 id="残余物">残余物</h3>
 
 <p>带容器（蛋糕里的桶、瓶装物）的配方会把容器物品归还。残余物会被放回 <strong>当初取走其原料的那个仓库格子</strong>；若该格被占用则放到任意空格；仓库满则放到输出区；输出区也满则操作不开始（步骤 2）。</p>
 
@@ -460,7 +460,7 @@
 
 <p>依赖堆叠的残余物（本模组的锻造锤每用一次损失一点耐久而非消失）会自动生效，因为残余物是经由配方取出的，而非直接取自物品。</p>
 
-<h2>物品栏</h2>
+<h2 id="物品栏">物品栏</h2>
 
 <table><thead><tr><th>槽位</th><th>接受</th><th>数量</th></tr></thead><tbody><tr><td>蓝图</td><td>已记录配方的 装配蓝图</td><td>3</td></tr><tr><td>输出区</td><td>仅出料（机器放入，玩家取走）</td><td>6</td></tr><tr><td>空白蓝图</td><td>空白 装配蓝图，"写入" 的对象</td><td>1</td></tr><tr><td>升级</td><td>升级模块</td><td>4（工作槽为第一个）</td></tr><tr><td>仓库</td><td>任意物品</td><td>27 + 每个存储<a href="../utility/storage_module.html">模块</a> +27，上限 108</td></tr></tbody></table>
 
@@ -470,7 +470,7 @@
 
 <p>外部自动化：物品管道负责填充 <strong>仓库</strong> 并从 <strong>输出区</strong> 取走。无需、也无法通过管道直接向机器送料。</p>
 
-<h2>界面</h2>
+<h2 id="界面">界面</h2>
 
 <p><strong>机器窗口</strong>（右键组装机打开）由 <strong>两个标签页</strong> 组成："工作" 和 "写入"。这是同一个方块、同一个窗口，切换的只是所显示的内容。</p>
 
@@ -478,29 +478,29 @@
 
 <p><strong>切换标签页是切换视图，而非模式。</strong> 玩家停留在写入页时，机器仍在继续合成：标签页不动队列、不动进度、不动能量。会暂停生产以便写入的模式被刻意排除，否则 "想再记一个配方" 就会变成停下整条产线。</p>
 
-<h3>"工作" 标签页</h3>
+<h3 id="工作-标签页">"工作" 标签页</h3>
 
 <p>机器当前正在做的事：</p>
 
 <p>三个蓝图槽位即队列，活动蓝图带边框； <strong>活动蓝图的 3×3 布局及其产物</strong>，仅作展示（见下）； 6 格输出区； 能量条与进度条； 状态行：<em>运行中 / 无蓝图 / 缺原料 / 输出已满 / 无能量 / 配方未找到</em>。玩家需要能区分空闲的原因，否则 "机器停着" 与 "机器坏了" 将无从分辨。</p>
 
-<h3>"写入" 标签页</h3>
+<h3 id="写入-标签页">"写入" 标签页</h3>
 
 <p>构思配方时所用：</p>
 
-<p>3×3 幽灵格子网格； 结果预览，即该布局会合成出什么； 空白蓝图槽； "写入" 按钮，把空白蓝图变成已记录的蓝图； "写入" 左侧的方形箭头按钮，即所显示蓝图的 <a href="index.html#原料替换">替换开关</a>：灰色箭头表示关闭，绿色表示开启。</p>
+<p>3×3 幽灵格子网格； 结果预览，即该布局会合成出什么； 空白蓝图槽； "写入" 按钮，把空白蓝图变成已记录的蓝图； "写入" 左侧的方形箭头按钮，即所显示蓝图的 <a href="#原料替换">替换开关</a>：灰色箭头表示关闭，绿色表示开启。</p>
 
 <p>网格格子通过点击填充：将物品悬停在光标上点击某个格子，该格子就会放入一份它的副本；空光标点击则清除该格。期间物品 <strong>不会被消耗</strong>：网格只是展示布局，而非存储它。</p>
 
 <p>空白蓝图放在 <strong>此处，而非蓝图队列中</strong>，这与上面的决策一脉相承：写入标签页应当自给自足。如果 "写入" 要从队列里取空白蓝图，玩家就得跑到 "工作" 页才能记录配方，两件事又被绑在了一起。记录完成的蓝图会出现在空白蓝图的位置，再从那里取出放入 "工作" 页的队列。记录并不等同于排队，操作顺序本身就把这点讲明白了。</p>
 
-<h3>隐藏标签页的槽位不可访问</h3>
+<h3 id="隐藏标签页的槽位不可访问">隐藏标签页的槽位不可访问</h3>
 
 <p>属于当前不可见标签页的槽位既不能填充也不能清空，无论是点击、Shift 点击、拖拽，还是双击 "收集全部"。隐藏的标签页不仅仅是没有绘制：在它隐藏期间，其槽位对游戏而言根本不存在。</p>
 
 <p>标签页是窗口状态而非机器状态：它不会被保存到任何地方，两个玩家面对同一台组装机可以查看不同标签页而互不干扰。</p>
 
-<h3>活动蓝图的展示</h3>
+<h3 id="活动蓝图的展示">活动蓝图的展示</h3>
 
 <p>"工作" 标签页会 <strong>显示队列中蓝图的布局</strong>，即机器正在执行的蓝图；若机器空闲，则显示第一张已记录的蓝图。否则运行中的机器看起来会是这样：状态写着 "组装中"，输出区在被填充，而窗口空空如也，"无从得知记录的是什么配方"。蓝图的产物会绘制在它所填充的输出区下方。</p>
 
@@ -520,7 +520,7 @@
 
 <p>如果附近根本没有仓库，组装机的表现与空仓库完全一致：状态行显示 "缺原料"，不消耗 EU/FE，也不会出任何故障。</p>
 
-<h2>方块属性</h2>
+<h2 id="方块属性">方块属性</h2>
 
 <table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>形状</td><td>16³ 完整立方</td></tr><tr><td>硬度</td><td>3.0</td></tr><tr><td>爆炸抗性</td><td>6.0</td></tr><tr><td>工具</td><td>镐</td></tr><tr><td>能量 NBT 掉落</td><td>否</td></tr></tbody></table>
 
@@ -530,7 +530,7 @@
 
 <p>正面被标记，与模组其他机器一样被排除在自动化之外：插到正面的管道看不到任何槽位。</p>
 
-<h2>配方</h2>
+<h2 id="配方">配方</h2>
 
 <p>合成： 没有加工配方，机器使用原版 <code>minecraft:crafting</code></p>
 
@@ -546,11 +546,11 @@ G — [铁齿轮] ×4 — 把零件送入网格的 "手"</code></pre>
 
 <p>四个角放的正是齿轮而非更多的板：组装机是本模组第一台自己搬动零件的机器，而齿轮正是本模组专门用于此事的零件（<a href="../fluid-storage/fluid_tank.html">便携式流体储罐</a>、<a href="../item-transport/item_pipe.html">物品管道</a> 的读法相同）。填满的九格也使本合成与本模组其他机器保持一致，那里空角才是例外。</p>
 
-<h2>进阶</h2>
+<h2 id="进阶">进阶</h2>
 
 <p>等级：MV — <strong>本模组第一台 MV 机器</strong>，MV 阶段的锚点。 需要：<a href="../utility/storage_module.html">存储模块</a>（没有仓库，机器无处取原料）和 装配蓝图。 自 起还要求已打通石油产线，不是直接的，而是通过 <a href="../components/advanced_machine_casing.html">高级机器外壳</a>：其中现在要放 2 张 <a href="../components/advanced_circuit.html">高级电路</a>，而每张高级电路需要 4 份橡胶。组装机自身的合成网格没有变化，但其总成本因此多了这 2 张电路，在建造 <a href="polymerizer.html">聚合机</a> 和 <a href="vulcanizer.html">硫化机</a> 之前已无法造出组装机。 升级方向：无。"按需自动合成"（下达 "做 64 个 X" 的订单，附带子合成的依赖树）是一个独立的未来系统，并非本机的升级。</p>
 
-<h2>相关内容</h2>
+<h2 id="相关内容">相关内容</h2>
 
 <p><a href="../utility/storage_module.html">存储模块</a> — 组装机取原料的仓库 装配蓝图 — 存储配方的物品 <a href="../energy-transfer/gold_cable.html">金缆</a> — MV 机器的能源供应 <a href="../item-transport/item_pipe.html">物品管道</a> — 填充仓库、取走输出 <a href="sawmill.html">锯木机</a> — 在 GUI 中可切换模式的机器范例</p>
 

@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link active" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>エネルギー凝縮器</strong>は、ゆっくり回る発光する球を内側に抱えた枠状のブロックです。本来なら失われる電力を受け止めます。 発電機が機械の消費を上回ったとき、その余剰はふつう消えてなくなります。凝縮器はそれを蓄え、蓄えた分をひとつの アイテム——<strong>エネルギー塊</strong>——として返します。</p>
 
@@ -400,21 +400,25 @@
 
 <blockquote><strong>例：</strong>昼、太陽光パネルの出力が機械2台の必要量を上回ります。その差はこれまでどこにも行きませんでしたが、 いまは凝縮器の球が回り始め、数分後には I 段階の塊が入っています。</blockquote>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>受け入れ</td><td>128 EU/FE/t（）</td></tr><tr><td>出力</td><td>なし——電力は入るが、電力としては出ていかない</td></tr><tr><td>蓄え</td><td>最大 4,000,000 EU/FE（）</td></tr><tr><td>受電面</td><td>上面と下面のみ</td></tr></tbody></table>
 
 <p>受け入れが狭いのは意図的です。そうでなければ、機械より発電機に近い凝縮器が流れを横取りしてしまいます。 速く貯めたいなら、この1台に太いケーブルを与えるのではなく、2台目を建てることです。</p>
 
-<h2>インベントリ</h2>
+<h2 id="インベントリ">インベントリ</h2>
 
 <p>スロットは出力の1つだけ。入れることはできず、取り出しは手・ホッパー・パイプのいずれでも可能ですが、 <strong>側面</strong>からのみです。上面と下面はケーブルのものだからです。</p>
 
-<h2>ブロックの性質</h2>
+<h2 id="ブロックの性質">ブロックの性質</h2>
 
 <p>フルブロックの枠。ケーブルは上面と下面にだけ接続します。蓄えが増えるほど明るく光ります。 ツルハシで採掘でき、自身をドロップします。</p>
 
-<h2>動作</h2>
+<h2 id="音">音</h2>
+
+<p>凝縮器がネットワークの余剰を塊に凝縮している間、柔らかなハーモニックな音色で鳴ります — ループ（<code>lit</code> に基づくパターンA、デフォルト 0.35；）。塊を取り出すか余剰がなくなると静かになります。</p>
+
+<h2 id="動作">動作</h2>
 
 <p>蓄えは止まらずに増え続けます。モードも切り替えもありません。出力スロットは常に<strong>いま取ればもらえる塊</strong>を映します。</p>
 
@@ -426,11 +430,11 @@
 
 <p>凝縮器にアップグレードパネルはありません。ここにオーバークロックチップを挿せば「余りを拾う」装置が 「送電網を吸い上げるポンプ」に変わってしまい、それはこの仕組みが避けたいことそのものです。</p>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p><a href="../upgrades/overclocker_upgrade.html">エネルギー塊</a>の唯一の入手源であり、したがってすべての機械用 オーバークロックチップの源でもあります。 余剰発電ができてから置く価値が出ます。逼迫した送電網では何も貯まらず、止まったままの球がそれを正直に示します。 塊までの時間を縮めるのは、このブロックの強化ではなく、台数とケーブルの太さです。</p>
 
-<h2>関連</h2>
+<h2 id="関連">関連</h2>
 
 <p><a href="../upgrades/overclocker_upgrade.html">オーバークロックチップ</a> — 塊の使い道。 <a href="battery_box.html">蓄電箱</a> — 工場を回すための蓄電。凝縮器はその競争相手ではなく、そこから引き抜くこともできません。</p>
 

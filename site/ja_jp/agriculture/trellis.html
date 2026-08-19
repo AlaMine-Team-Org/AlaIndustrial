@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>支柱</strong>は蔓性植物の支柱で、モッド初の農業作物です。今日は <strong>綿</strong> が育ち、これは糸の供給源としての クモに代わるもので：モブから叩き出すのでなく農場で育てます。名前は意図的に汎用です — 支柱は将来の植物も 見込んでいます。</p>
 
@@ -407,7 +407,7 @@
 
 <p>重要なのは、<strong>収穫が植物を壊さない</strong> ことです。熟した低木のクリックで綿を取り、実のない熟した状態へ戻す だけです — 我慢が必要なのは最初だけで、各収穫ごとではありません。</p>
 
-<h2>栽培</h2>
+<h2 id="栽培">栽培</h2>
 
 <p>両フェーズは 2 つの条件が揃った時にのみ進みます：</p>
 
@@ -419,29 +419,29 @@
 
 <p>植物はいくら密にでも置けます：支柱は機械のようにティックしないため、大きな農園がワールドに負荷を かけません。</p>
 
-<h2>収穫</h2>
+<h2 id="収穫">収穫</h2>
 
 <table><thead><tr><th>アクション</th><th>結果</th></tr></thead><tbody><tr><td><strong>熟した</strong> 低木の右クリック</td><td>1–2 個の <strong>綿繊維</strong>、35 % の確率で <strong>綿の種</strong>。低木は残り、再び膨らむ</td></tr><tr><td>未熟な低木の右クリック</td><td>何も起きず、状態は不変</td></tr><tr><td>支柱を破壊</td><td><strong>支柱</strong> が戻り、加えて何か育っていた場合は <strong>種</strong> も</td></tr><tr><td>高い草または普通の草を壊す</td><td>5 % の確率で <strong>綿の種</strong>（ハサミでの刈り取りでは機能しない — 小麦の種と同様）。幸運は量を増やす</td></tr></tbody></table>
 
 <p>種は <strong>植えられた</strong> 支柱からのみ戻ります。空のものからでなく — さもなければ「支柱をクラフトし、 壊し、種を得る」サイクルが棒と糸から種を印刷してしまいます。</p>
 
-<h2>ブロックの性質</h2>
+<h2 id="ブロックの性質">ブロックの性質</h2>
 
 <table><thead><tr><th>性質</th><th>値</th></tr></thead><tbody><tr><td>高さ</td><td>2 ブロック（下側半分と上側半分）</td></tr><tr><td>基台</td><td>耕された土（タグ <code>#minecraft:supports_crops</code>）</td></tr><tr><td>硬度</td><td>0.2 — 素手で瞬時に壊れる</td></tr><tr><td>音</td><td>草</td></tr><tr><td>当たり判定</td><td>あり — 支柱は通り抜けを塞ぐ、柵の柱のように</td></tr><tr><td>ピストン</td><td>動かさない（マルチブロックの半分を対から引き離せない）</td></tr><tr><td>破壊</td><td>両半分は一緒に消える。支柱は 1 回だけドロップ</td></tr></tbody></table>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p>支柱は糸で結んだ棒です：</p>
 
 <table><thead><tr><th>材料</th><th>結果</th></tr></thead><tbody><tr><td>棒 × 4 + 糸 × 2</td><td>支柱 × 1</td></tr></tbody></table>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p>綿繊維は将来のフラックス織布生産ラインの原料です：それは農家に、戦士がクモの糸から得るのと同じ経路を 与えます。</p>
 
 <p>連鎖の入口は <strong>草</strong> です：平原を開墾する際、プレイヤーは小麦の種を見つけるのと同じ場所で最初の種を 見つけます。以降、種は収穫からも戻るため、農園は自給自足です。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <ul><li><a href="incubator.html">インキュベーター</a> — 照射による種の複製（綿は後日追加予定）。</li><li><a href="../components/rubber.html">ゴム</a> — 1 つのスペックにエイリアス付きで管理される材料の例。</li></ul>
 

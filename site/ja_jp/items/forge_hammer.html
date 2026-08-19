@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,34 +392,34 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>鍛造ハンマー</strong>は機械による自動化が現れる前に<a href="../components/material_forms.html">金属プレート</a>を作るための早期段階の手動ツールです。作業台にハンマーとインゴットを置くと、その金属のプレートが得られます。ハンマーは<strong>材料として消費されず</strong>、クラフトグリッドに残り、プレートごとに <strong>1 ポイント</strong> の耐久値を失います。これは意図的な「手作業で高コスト」な経路です。最初の鉄からプレートを鍛造できますが、<a href="../machines/compressor.html">圧縮機</a>を建造して電力でプレートを打ち出せるようになるまで、プレートごとにハンマーの摩耗を支払うことになります。</p>
 
 <blockquote><strong>簡単な例：</strong> 最初の機械の筐体に鉄プレートが4枚必要ですが、圧縮機はまだありません。鉄と棒からハンマーをクラフトし、作業台にハンマー＋鉄インゴットを置くとプレートが出ます。ハンマーは少し耐久値を減らしてグリッドに戻ります。これを4回繰り返す（または Shift クラフトでスタックを一度に）と、機械なしで筐体が完成します。</blockquote>
 
-<h2>特性</h2>
+<h2 id="特性">特性</h2>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>耐久値</td><td>128（ハンマー1つで約128枚のプレート）</td></tr><tr><td>スタック</td><td>1</td></tr><tr><td>エンチャント性</td><td>なし</td></tr><tr><td>修理</td><td>鉄インゴット（金床）</td></tr></tbody></table>
 
 
-<h2>仕組み</h2>
+<h2 id="仕組み">仕組み</h2>
 
 <p><strong>プレートのクラフト：</strong> 作業台で（<code>crafting_shapeless</code>）ハンマー <strong>＋</strong> インゴット → プレート1枚。8種のすべての金属で機能します。銅、金、鉄、スズ、銀、ニッケル、ウラン、焼き入れ鉄。 <strong>ハンマーは残る：</strong> クラフト後、破損したハンマーは同じグリッドスロットに戻ります。特別なレシピではなく craft-remainder として実装されているため、レシピは通常のクラフトとしてレシピ帳、JEI、REI に表示されます。 <strong>プレートごとに1の摩耗：</strong> プレートごとにちょうど 1 ポイント。スタックしたインゴットの Shift クラフトは N 枚のプレートに対してちょうど N の耐久値を消費し、ハンマーが壊れると<strong>自動的に停止</strong>します。 <strong>破損：</strong> 最後の耐久値ポイントでハンマーは壊れます。最後のプレートはそれでも作成され、グリッドのスロットは空になります。 <strong>エンチャント性：</strong> ハンマーはエンチャント<strong>できません</strong>。耐久強化は技術的に craft-remainder の仕組み（耐久値エンチャントを処理するためのワールドもプレイヤーもない）では機能できないため、「黙って無意味な」エンチャントの代わりに、ハンマーは正直にエンチャント不可とされています。 <strong>修理：</strong> 金床で鉄インゴットを使います。</p>
 
-<h2>ブロックの性質</h2>
+<h2 id="ブロックの性質">ブロックの性質</h2>
 
 <p>該当なし（アイテム）。</p>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p>鉄または棒を手に入れると、レシピ帳にレシピが表示されます。</p>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p>早期段階の手動ツール——MODのエネルギーティアには縛られません。 電力の<strong>前</strong>にプレートへのアクセスを提供します。まず手で鍛造し、その後<a href="../machines/compressor.html">圧縮機</a>（インゴット → プレートを 260 EU/FE で）で自動化します。 フェーズ 3（LV 拡張）の一部——プレートは LV 機械やエレクトロニクスのレシピに必要です。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="../components/material_forms.html">素材の形状</a>——このハンマーが作るプレートや他の半成品。 <a href="../machines/compressor.html">圧縮機</a>——機械によるプレートの量産経路。 <a href="../machines/macerator.html">粉砕機</a>——プレートを粉に戻します（焼き入れ鉄を除く。粉はありません）。</p>
 

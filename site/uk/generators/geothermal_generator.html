@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепти</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
-<a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="10 сторінок">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="4 сторінки">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Інше</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилітарні блоки</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
 <div class="group-title">Предмети</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
   </aside>
@@ -392,13 +392,13 @@
     </div>
   </div>
 </div>
-<h2>Зведення</h2>
+<h2 id="зведення">Зведення</h2>
 
 <p><strong>Геотермальний генератор</strong> палить лаву замість вугілля. Він удвічі потужніший за звичайний <a href="generator.html">Генератор</a>, а лаву можна подавати насосом — тож носити паливо руками вже не треба. Збирається з готового Генератора, тобто це апгрейд, а не перше джерело енергії.</p>
 
 <blockquote><strong>Міні-приклад:</strong> одне відро лави дає <strong>16 000 EU/FE</strong> на швидкості <strong>16 EU/FE/такт</strong>. Повний бак на 10 відер — це 160 000 EU/FE, приблизно вісім хвилин безперервної роботи.</blockquote>
 
-<h2>Енергія</h2>
+<h2 id="енергія">Енергія</h2>
 
 <p>Генератор лише виробляє енергію — чужої не приймає. Усередині він тримає до 4000 EU/FE й віддає їх у лінію тира LV.</p>
 
@@ -406,13 +406,13 @@
 
 <p>Енергія виходить крізь 5 робочих граней. Лицьова грань інертна — кабелі до неї не під'єднуються, і лійки крізь неї не працюють.</p>
 
-<h2>Генерація</h2>
+<h2 id="генерація">Генерація</h2>
 
 <p>Палить лаву рівним темпом 16 EU/FE/такт. Одного відра вистачає приблизно на 16 000 EU/FE.</p>
 
 <table><thead><tr><th>Ситуація</th><th>Виробіток</th></tr></thead><tbody><tr><td>У баку є лава, у буфері є місце</td><td>16 EU/FE/такт</td></tr><tr><td>Буфер повний</td><td>пауза (чекає місця)</td></tr><tr><td>Бак порожній</td><td>0</td></tr></tbody></table>
 
-<h2>Інвентар</h2>
+<h2 id="інвентар">Інвентар</h2>
 
 <p>Усередині бак лави на 10 відер плюс предметний слот для його заповнення.</p>
 
@@ -420,25 +420,25 @@
 
 <p>Залити бак можна трьома способами: покласти відро лави чи лава-капсулу в слот — порожня тара повернеться у вихідний слот; подати лаву як рідину (наприклад, від сусіднього насоса); Shift+ПКМ просто по блоку відром лави чи капсулою — лава піде в бак, а порожня тара лишиться в руці (нічого не виливається перед блоком). Коли бак повний, будь-який зі способів — тихий no-op: тара лишається повною, нічого не проливається.</p>
 
-<h2>Інтерфейс</h2>
+<h2 id="інтерфейс">Інтерфейс</h2>
 
 <p>На одному екрані видно рівень буфера, наскільки заповнений бак лави та швидкість видачі.</p>
 
-<h2>Властивості блока</h2>
+<h2 id="властивості-блока">Властивості блока</h2>
 
 <p>Звичайний суцільний блок. Ламається будь-якою кайлом.</p>
 
 <table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Інструмент</td><td>кайло</td></tr></tbody></table>
 
-<h2>Рецепти</h2>
+<h2 id="рецепти">Рецепти</h2>
 
 <p>Збирається на верстаку з уже готового <a href="generator.html">Генератора</a> у корпусі з гладкого каменю, з електронною схемою знизу. Тому це апгрейд: потрібен пройдений LV-старт, і першим джерелом енергії він бути не може.</p>
 
-<h2>Прогресія</h2>
+<h2 id="прогресія">Прогресія</h2>
 
 <p>Тир: LV. Апгрейд над вугільним Генератором — удвічі більший вихід і можливість подавати паливо насосом, ціною мороки з лавою.</p>
 
-<h2>Пов'язане</h2>
+<h2 id="повязане">Пов'язане</h2>
 
 <p><a href="generator.html">Генератор</a> — базова альтернатива на твердому паливі й деталь для крафта. <a href="../fluid-machines/pump.html">Насос</a> — автоматично подає лаву в бак. <a href="../items/vacuum_capsule.html">Капсула</a> — зручна тара для перенесення лави в бак.</p>
 

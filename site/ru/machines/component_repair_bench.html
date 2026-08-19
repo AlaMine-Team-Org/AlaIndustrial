@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепты</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="10 страниц">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="4 страницы">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Прочее</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="14 страниц">14</span></a>
 <div class="group-title">Предметы</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="2 страницы">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="20 страниц">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="20 страниц">20</span></a>
   </aside>
@@ -393,19 +393,19 @@
   </div>
 </div>
 
-<h2>Сводка</h2>
+<h2 id="сводка">Сводка</h2>
 
 <p><strong>Ремонтный верстак</strong> чинит изношенные <a href="../components/windmill_rotor.html">ротор ветряка</a> и <a href="../components/water_mill_wheel.html">колесо водяной мельницы</a> вместо того, чтобы крафтить новые. Одна починка обнуляет износ, стоит <strong>один предмет</strong> материала своего сорта плюс EU/FE — и <strong>навсегда снижает максимальную прочность</strong> этой детали на 20 % от исходной.</p>
 
 <p>Смысл в выборе, а не в бесплатном ремонте: чинить дешевле по металлу, но у детали ровно <strong>четыре</strong> починки, после которых верстак откажет и деталь всё равно пойдёт в замену.</p>
 
-<h2>Энергия</h2>
+<h2 id="энергия">Энергия</h2>
 
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Роль</td><td>потребитель</td></tr><tr><td>Буфер (EU/FE)</td><td>800</td></tr><tr><td>Макс. вход (EU/FE/такт)</td><td>32 (LV)</td></tr><tr><td>Макс. выход (EU/FE/такт)</td><td>н/п</td></tr><tr><td>EU/FE/такт</td><td>8</td></tr></tbody></table>
 
 <p>Энергия принимается всеми гранями, кроме лицевой: перед верстаком стоит рабочая сторона, через неё не подключается ни кабель, ни воронка.</p>
 
-<h2>Процессинг</h2>
+<h2 id="процессинг">Процессинг</h2>
 
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Тип рецепта</td><td>нет — верстак не использует рецепты</td></tr><tr><td>Длительность (тики)</td><td>625 / 1250 / 2250 (по сорту детали)</td></tr><tr><td>Авто-выгрузка</td><td>true — готовую деталь забирает воронка</td></tr></tbody></table>
 
@@ -415,7 +415,7 @@
 
 <p>Ротор и колесо одного сорта чинятся одинаково: цену определяет сорт, а не семейство детали. Ускорители в панели улучшений работают — они сокращают время и поднимают расход EU/FE/такт, как у любой другой машины.</p>
 
-<h2>Инвентарь</h2>
+<h2 id="инвентарь">Инвентарь</h2>
 
 <table><thead><tr><th>Слот</th><th>Принимает</th><th>Кол-во</th></tr></thead><tbody><tr><td>Материал (слева)</td><td>железная пластина, пластина закалённого железа или электронная схема</td><td>стак</td></tr><tr><td>Деталь (справа)</td><td>любой сорт ротора или колеса</td><td>1</td></tr></tbody></table>
 
@@ -423,7 +423,7 @@
 
 <p><strong>Автоматизация.</strong> Воронка может положить в слот детали только то, что верстак действительно починит — изношенную деталь, у которой остались починки. Забрать она может только то, с чем верстак закончил: починенную деталь или ту, что исчерпала лимит. Поэтому линия «воронка сверху → верстак → воронка снизу» работает и не зацикливается. Руками можно вложить любую деталь, включая исчерпанную, — иначе игрок не смог бы прочитать в интерфейсе, почему её не чинят.</p>
 
-<h2>Интерфейс</h2>
+<h2 id="интерфейс">Интерфейс</h2>
 
 <p>Тип: container Показывает: запас энергии слева, слот материала, стрелку прогресса, слот детали и строку статуса под слотами.</p>
 
@@ -433,19 +433,23 @@
 
 <p>Наведение на стрелку заменяет запись в просмотрщике рецептов, которой у верстака быть не может: там цена починки, размер потери прочности и сколько починок у детали осталось.</p>
 
-<h2>Свойства блока</h2>
+<h2 id="свойства-блока">Свойства блока</h2>
 
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Форма</td><td>полный куб</td></tr><tr><td>Прочность</td><td>3.0</td></tr><tr><td>Взрывоустойчивость</td><td>6.0</td></tr><tr><td>Инструмент</td><td>кирка</td></tr><tr><td>Дроп с NBT энергии</td><td>false</td></tr></tbody></table>
 
-<h2>Рецепты</h2>
+<h2 id="звук">Звук</h2>
+
+<p>Пока идёт починка, верстак стучит молотком по маленькой наковальне — мягкие ритмичные удары с металлическим звоном, петля (паттерн A, 0.35 по умолчанию). Замолкает, когда верстак простаивает.</p>
+
+<h2 id="рецепты">Рецепты</h2>
 
 <p>Крафт — три железные пластины сверху, корпус машины в центре, электронная схема снизу, железные слитки по бокам. Рецептов переработки нет.</p>
 
-<h2>Прогрессия</h2>
+<h2 id="прогрессия">Прогрессия</h2>
 
 <p>Тир: LV. Развивается в: нет. Требует: <a href="../components/machine_casing.html">корпус машины</a>, электронную схему и железные пластины — то есть верстак строится уже после первых машин, когда ветряков и мельниц накопилось столько, что их обслуживание стало рутиной.</p>
 
-<h2>Связанное</h2>
+<h2 id="связанное">Связанное</h2>
 
 <p><a href="../components/windmill_rotor.html">Ротор ветряка</a> — расходник, который чинит верстак. <a href="../components/water_mill_wheel.html">Колесо водяной мельницы</a> — второй расходник. <a href="../generators/wind_mill.html">Ветрогенератор</a> и <a href="../generators/water_mill.html">Водяная мельница</a> — машины, изнашивающие эти детали. <a href="../items/forge_hammer.html">Кузнечный молот</a> — единственный другой предмет мода, живущий прочностью; чинится наковальней, а не здесь.</p>
 

@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепти</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="10 сторінок">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="4 сторінки">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Інше</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилітарні блоки</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
 <div class="group-title">Предмети</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
 <a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Зведення</h2>
+<h2 id="зведення">Зведення</h2>
 
 <p><strong>Електролопата</strong> — третій ручний електроінструмент моду й земляна частина лінійки після <a href="electric_drill.html">електробура</a> (камінь) та <a href="electric_chainsaw.html">електропили</a> (дерево). Працює на EU/FE замість міцності: поки заряду вистачає на блок, лопата копає <strong>швидше за алмазну лопату</strong> (швидкість 9.0 проти 8.0) і витрачає <strong>20 EU/FE</strong> за кожен успішно зламаний блок. Повний буфер — <strong>10 000 EU/FE</strong>, близько <strong>500 блоків</strong> на одне заряджання.</p>
 
@@ -402,7 +402,7 @@
 
 <p>Як і решта EU/FE-предметів моду, лопата <strong>не має міцності</strong> й не ламається: смуга під іконкою показує не знос, а заряд EU/FE (жовта, колір LV).</p>
 
-<h2>Енергія</h2>
+<h2 id="енергія">Енергія</h2>
 
 <p>Власний EU/FE-буфер, поза енергомережею. Заряджається у слоті Енергосховища й від надягнутого ранця; витрачає заряд на копання блоків.</p>
 
@@ -410,29 +410,29 @@
 
 <p>Витрата знімається <strong>лише на сервері</strong> й <strong>лише за блоки з ненульовою твердістю</strong>. У творчому режимі заряд не витрачається.</p>
 
-<h2>Інвентар</h2>
+<h2 id="інвентар">Інвентар</h2>
 
 <p>Не застосовно — внутрішнього сховища предметів немає (стек 1).</p>
 
-<h2>Властивості блока</h2>
+<h2 id="властивості-блока">Властивості блока</h2>
 
 <p>Не застосовно (предмет).</p>
 
-<h2>Рецепти</h2>
+<h2 id="рецепти">Рецепти</h2>
 
 <p>Крафт: той самий каркас, що в решти трьох, але в центрі алмазна лопата: ряд залізних зливків зверху, дві <a href="../components/battery.html">батареї</a> з боків, знизу дві <a href="../components/copper_coil.html">мідні котушки</a> та <a href="../components/electronic_circuit.html">електронна схема</a>. Заряд батарей переходить у готову лопату.</p>
 
 <p><strong>Ремонт</strong> — не застосовний: міцності немає, лагодити нічого; «ремонт» — це заряджання EU/FE.</p>
 
-<h2>Поведінка</h2>
+<h2 id="поведінка">Поведінка</h2>
 
 <p><strong>Копання:</strong> поки заряд ≥ 20 EU/FE, лопата копає землю, пісок, гравій і решту на швидкості 9.0 (алмазна — 8.0). За кожен такий блок знімається 20 EU/FE. <strong>Розряджена лопата:</strong> при заряді нижче 20 EU/FE копає на швидкості руки (1.0), але рівень видобутку й дроп зберігаються, і EU/FE не витрачається. <strong>Стежка й гасіння багаття</strong> по ПКМ працюють як у ванільної лопати — і <strong>безкоштовно</strong>, заряд за них не знімається. <strong>Заряджання:</strong> слот заряджання Енергосховища й надягнутий енергоранець приймають лопату автоматично, до 32 EU/FE/тик. <strong>Атака:</strong> як ванільна алмазна лопата; удари <strong>не витрачають EU/FE</strong>. <strong>Чари:</strong> лопата входить у теґ лопат, тому стіл зачарування й ковадло працюють з нею як з лопатою. <strong>Індикація:</strong> смужка під іконкою показує заряд. У тултипі — «Заряд: X / 10 000 EU/FE», при нулі — червоне «Розряджена». <strong>Дроп/смерть/релогін:</strong> заряд зберігається у предметі. <strong>У креативі:</strong> заряд не витрачається.</p>
 
-<h2>Прогресія</h2>
+<h2 id="прогресія">Прогресія</h2>
 
 <p>Третій електроінструмент лінійки: бур — камінь, пила — дерево, лопата — земля. Доступна після <a href="../energy-storage/battery_box.html">Енергосховища</a> і батареї. LV-рівень.</p>
 
-<h2>Пов'язане</h2>
+<h2 id="повязане">Пов'язане</h2>
 
 <p><a href="electric_drill.html">Електробур</a> — кам'яна частина лінійки. <a href="electric_chainsaw.html">Електропила</a> — дерев'яна частина лінійки. <a href="electric_hoe.html">Електромотика</a> — грядкова частина лінійки. <a href="../energy-storage/battery_box.html">Енергосховище</a> — заряджання лопати (слот charge).</p>
 

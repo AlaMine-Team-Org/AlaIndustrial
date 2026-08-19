@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,19 +392,19 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>ガーデンドローンステーション</strong>は 1×1 のドックブロック（ロボット掃除機のベースステーションのようなもので）、 そこからドローンが離陸し、ステーション周囲半径 4 ブロックの範囲を巡回します。ドローンはエンティティでなく、 ステーション自体の が描画するオブジェクトです — 見た目も動きも飛行装置のように 見えますが、物理的には常にステーションブロックに「属し」、その領域を離れることはできません。</p>
 
 <p>プレイヤーはステーションに種と骨粉を入れ、EU/FE を接続します — あとはドローンが自ら農場を維持します： 空いている土を耕し、空の耕されたマスに種を蒔き、未成熟の作物を骨粉で成長させ、成熟した収穫物を そのまま出力スロットへ運びます（ワールド内に <code>ItemEntity</code> は発生しません）。計画されていたが未実装の 「作物自動管理」（<code>crop_matron</code>）と「収穫機」（<code>crop_harvester</code>）を置き換えます — 2 つではなく 1 つの ブロックで、メカニクスの重複なしに。</p>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>役割</td><td>バッファ付き消費者</td></tr><tr><td>バッファ（EU/FE）</td><td>4000（）</td></tr><tr><td>最大入力（EU/FE/ティック）</td><td>32（LV）</td></tr><tr><td>最大出力（EU/FE/ティック）</td><td>n/a（放出しない）</td></tr><tr><td>動作あたりの EU/FE</td><td><strong>8</strong>（）</td></tr></tbody></table>
 
 <p>ステーションはすべての稼働面で通常の消費者としてエネルギーネットワークに接続します。EU/FE は <strong>実際に実行された動作</strong> — 耕起、植え付け、施肥、1 マスの収穫 — に対してのみ引き落とされ、 <a href="../machines/electric_heater.html">電気ヒーター</a>のパターンに倣います：アイドル（範囲内にやることがない — 種/肥料切れ、または全マスがすでに対処済み）は 0 EU/FE で、ステーションはスリープに入り でアイドルスリープに入り、無駄にエネルギーを消費せず、ネットワークの寄生吸い口にもなりません。</p>
 
-<h2>加工</h2>
+<h2 id="加工">加工</h2>
 
 <p>ステーションは加工レシピシステムを使いません — 代わりに、（目標が見つかった）各飛行で、 範囲内の 1 マスに対する 4 つの動作のいずれか 1 つを実行します。</p>
 
@@ -436,31 +436,31 @@
 
 <p><strong>プレイヤーなしの収穫。</strong> ステーションは <code>ServerPlayer</code> 経由でブロックを壊しません（プレイヤーが いないため） — 代わりに server-side で成熟した作物のドロップを計算し、それを出力スロットに入れ、 完全に成功した場合にのみ作物ブロックを直接撤去します。その際 <code>ItemEntity</code> もブロック破壊イベントも 作成されません — <a href="../fluid-machines/pump.html">ポンプ</a>が水源を枯渇させる際と同じ意識的な妥協です。</p>
 
-<h2>インベントリ</h2>
+<h2 id="インベントリ">インベントリ</h2>
 
 <table><thead><tr><th>スロット</th><th>受け入れ</th><th>数</th></tr></thead><tbody><tr><td>種（0）</td><td>該当作物の種タグ付きアイテム</td><td>スタックまで</td></tr><tr><td>肥料（1）</td><td><code>minecraft:bone_meal</code></td><td>スタックまで</td></tr><tr><td>ドローン（6）</td><td>— これがないとステーションは動かない</td><td>1</td></tr><tr><td>クワ（7）</td><td>任意のクワ（<code>#minecraft:hoes</code>）。耕起と収穫で消費</td><td>1</td></tr><tr><td>出力 1–4（2–5）</td><td>ステーションによる自動挿入のみ（収穫物）。外部からの手動/自動挿入は不可</td><td>各スタックまで</td></tr></tbody></table>
 
 <p>出力スロットが 1 つでなく 4 つ — 成熟した作物は 1 動作で複数タイプのアイテムを出すことがあるため （例：小麦は小麦本体と小麦の種を別々に）。モッドの機械基盤モデルで混合内容の単一スロットはサポート されていません。出力スロットへのドロップ挿入は 2 パス（「全スタックの容量をシミュレート → 完全成功時 のみ改変」）で、出力が満杯の際の収穫物の部分損失はありません。</p>
 
-<h2>インターフェース</h2>
+<h2 id="インターフェース">インターフェース</h2>
 
 <p>タイプ：<strong>container</strong>（ステーションの GUI）。 表示：エネルギーバッファ（バー）、種/肥料/出力スロット、ステーション状態（資源なし / 稼働中 / サイクル完了 — ドローンモデルの灯火の色で遠くから読める）。</p>
 
-<h2>ブロックの性質</h2>
+<h2 id="ブロックの性質">ブロックの性質</h2>
 
 <p>ドックステーションは完全な立方体でありません：薄い 1×1 ブロックのスラブで、照光された着陸輪郭、 2 つの充電接点、四隅の黄色いランプを持ちます。ドローンはその上に で描かれ、 ステーションと別個の物理的当たり判定/ヒットボックスはありません。</p>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>形状</td><td>低い高さのスラブ（完全な立方体でない。ブロック下半のオクルーダ）</td></tr><tr><td>硬度</td><td>3.0</td></tr><tr><td>爆発耐性</td><td>6.0</td></tr><tr><td>ツール</td><td>ツルハシ</td></tr><tr><td>NBT エネルギードロップ</td><td>なし（バッファ/インベントリ/ドローン状態は NBT アイテムドロップでなく <code>ValueInput</code>/<code>ValueOutput</code> 経由で保存）</td></tr></tbody></table>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p>クラフト：（鉄/鋼の筐体、電子回路、 「中に集める」ホッパー、ネジとしての銅）。 加工レシピはありません — ステーションはアイテムを加工しません。</p>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p>ティア：LV。 電源：任意の LV ソースから、例えば<a href="../generators/generator.html">発電機</a>。 置き換え（バックログ、コードなし）：「作物自動管理」（<code>crop_matron</code>）と「収穫機」（<code>crop_harvester</code>） 2 つの定置ブロックでなく 1 ブロックで同じ結果。 必要：クラフト用の電子回路（モッドの大部分の LV 機械と同様）。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="../items/scythe.html">大鎌</a> — 再利用可能な作物成熟度述語の供給源。 <a href="trellis.html">トレリス</a> — モッド内の既存の <code>BonemealableBlock</code> の先例。 <a href="incubator.html">インキュベーター</a> — インデックスでタグ検証するマルチスロットインベントリと 基盤より広い <code>ContainerData</code> の見本。 <a href="../fluid-machines/pump.html">ポンプ</a> — リミット付き範囲走査の見本と、機械が自身のティックからプレイヤー なしでワールドブロックを変更する唯一の先例。 <a href="../machines/electric_heater.html">電気ヒーター</a> — 「有用ティックでのみ EU/FE」（需要駆動）の見本。</p>
 

@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -392,23 +392,23 @@
     </div>
   </div>
 </div>
-<h2>概览</h2>
+<h2 id="概览">概览</h2>
 
 <p><strong>便携式流体储罐</strong>可存储多达 <strong>8 桶（8000 mB）</strong>的单种流体。它不消耗 EU/FE，不自行输送流体， 也没有 GUI：液位和流体类型直接透过机身的玻璃壁可见。</p>
 
 <p>储罐通过桶、真空胶囊或其他模组的容器接受水、熔岩和其他模组的流体。破坏时，内容物保留在 掉落物品中，放置后恢复。</p>
 
-<h2>流体</h2>
+<h2 id="流体">流体</h2>
 
 <table><thead><tr><th>参数</th><th>数值</th></tr></thead><tbody><tr><td>容量</td><td>8000 mB（8 桶）</td></tr><tr><td>同时种类</td><td>1</td></tr><tr><td>输入 / 输出</td><td>全部 6 个面</td></tr><tr><td>自动输出</td><td>无</td></tr><tr><td>核心单位</td><td>mB，1000 mB = 1 桶</td></tr></tbody></table>
 
 <p>流体不混合：里面有水时，熔岩或其他种类不被接受。Fabric 以毫桶（mB）计算体积，NeoForge 上 储罐工作方式相同。</p>
 
-<h2>交互</h2>
+<h2 id="交互">交互</h2>
 
 <p>水桶或熔岩桶在有空间时恰好向储罐转移 1000 mB。 空桶仅在储罐中有整桶水或熔岩时取走 1000 mB。 <a href="../items/vacuum_capsule.html">真空胶囊</a>可灌装和排空储罐。 其他模组的管道和容器可通过任何面插入和取出流体。 比较器对空储罐输出 0，对 1–15 按填充比例输出。</p>
 
-<h2>方块属性</h2>
+<h2 id="方块属性">方块属性</h2>
 
 <p>机身占一个完整方块：上下各 3 px 的板、四根 3×3 px 的角柱和四面半透明玻璃壁。玻璃和流体由框架内的单独模型绘制，无叠加。</p>
 
@@ -418,7 +418,7 @@
 
 <p>装满的物品以单个原子组件 <code>fluid_tank_contents</code> 存储类型和体积。这消除了在复制或拆分堆叠时 体积与流体类型分离的状态。在物品栏中，16×16 图标的内部层以注册的流体颜色染色，物品的标准 底部条显示相对 8000 mB 的填充比例。</p>
 
-<h2>相关内容</h2>
+<h2 id="相关内容">相关内容</h2>
 
 <p><a href="../items/vacuum_capsule.html">真空胶囊</a>——一桶装的手动容器。 流体管道——未来的运输自动化。</p>
 

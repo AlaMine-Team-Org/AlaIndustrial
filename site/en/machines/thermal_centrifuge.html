@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 
 <p>The <strong>Thermal Centrifuge</strong> is the second ore-doubling step. The macerator already turns one ore block into two dusts; the centrifuge splits each dust in two again, into <strong>uranium shavings</strong>, which are then <strong>pressed</strong> in the <a href="compressor.html">Compressor</a> into <strong>refined uranium</strong>. A full line yields four units from one ore block, against one from a plain smelt.</p>
 
@@ -402,13 +402,13 @@
 
 <blockquote><strong>Quick example:</strong> place the heater, the centrifuge on top, run a cable to it, drop in uranium dust and flip a lever. The rotor starts picking up speed and the heater starts warming. The heater gets there first, in about ten seconds, while the rotor takes twice as long to spin up — and only then does the dust turn into shavings. Remove the lever and the machine stops and loses its spin.</blockquote>
 
-<h2>Energy</h2>
+<h2 id="energy">Energy</h2>
 
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>consumer</td></tr><tr><td>Buffer (EU/FE)</td><td>800</td></tr><tr><td>Max input (EU/FE/tick)</td><td>32 (the LV ceiling)</td></tr><tr><td>EU/FE/tick (working and spinning up)</td><td>4</td></tr><tr><td>EU/FE/tick while idling at speed</td><td>1</td></tr></tbody></table>
 
 <p>Twice the price of an ordinary machine in this mod: the centrifuge doubles the rarest resource there is, and it never works alone — the heater below is part of the deal. Together the pair draws <strong>10 EU/FE/tick</strong>, which still fits a copper cable (12 EU/FE/tick), but with almost nothing to spare. That is deliberate.</p>
 
-<h2>Spin-up and the signal</h2>
+<h2 id="spin-up-and-the-signal">Spin-up and the signal</h2>
 
 <p>The redstone signal must be <strong>held</strong>, not pulsed. This is the opposite of the <a href="../utility/mob_repeller.html">Mob Repeller</a>, where a signal pauses the block: here the signal is the motor's start button, and reading its absence as "keep running" would make no sense for a machine whose whole identity is a spinning rotor.</p>
 
@@ -418,38 +418,38 @@
 
 <p>Cutting the signal is a full stop: the revolutions go to zero at once rather than winding down. The lever is an honest master switch for the whole line.</p>
 
-<h2>Heat</h2>
+<h2 id="heat">Heat</h2>
 
 <p>Only the Electric Heater will do. Lava, magma and campfires — all good enough for the <a href="vulcanizer.html">Vulcanizer</a> — will not start the centrifuge: its output multiplier is fixed, so a scale of heat tiers would be a dial with nothing to turn. While the heater below is still warming, the machine says so on its status line, separately from the case where there is no heater at all.</p>
 
-<h2>Processing</h2>
+<h2 id="processing">Processing</h2>
 
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Duration (ticks)</td><td>200</td></tr><tr><td>Cost per operation</td><td>800 EU/FE</td></tr><tr><td>Yield</td><td>1 uranium dust → 2 uranium shavings</td></tr><tr><td>Auto-eject</td><td>no</td></tr></tbody></table>
 
-<h2>Inventory</h2>
+<h2 id="inventory">Inventory</h2>
 
 <table><thead><tr><th>Slot</th><th>Accepts</th><th>Count</th></tr></thead><tbody><tr><td>Input</td><td>uranium dust</td><td>1 per operation</td></tr><tr><td>Result</td><td>uranium shavings, machine-filled only</td><td>up to 64</td></tr></tbody></table>
 
 <p>The bottom face belongs to the heater and is closed to automation — hoppers and pipes work from the other sides.</p>
 
-<h2>Interface</h2>
+<h2 id="interface">Interface</h2>
 
 <p>Type: container Shows: stored energy, the rotor speed gauge, the progress arrow. The status line explains what is missing: "Needs a redstone signal", "Needs a heater below", "Heater is still cold", "Spinning up", "Uranium dust required", "No matching recipe", "Output is blocked". It earns its place because two of the four conditions — the signal and the heat — are invisible from inside the screen.</p>
 
-<h2>Block properties</h2>
+<h2 id="block-properties">Block properties</h2>
 
 <p>The housing is an open frame with the spinning rotor visible through it. The hit shape is nevertheless solid and slightly smaller than a full cube — cut to the frame's openings, clicks would pass straight through.</p>
 
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>14×16×14, not an occluder</td></tr><tr><td>Hardness</td><td>3.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr></tbody></table>
 
-<h2>Recipes</h2>
+<h2 id="recipes">Recipes</h2>
 
 
-<h2>Progression</h2>
+<h2 id="progression">Progression</h2>
 
 <p>Tier: LV Requires: a <a href="../components/machine_casing.html">machine casing</a>, electronic circuits, an <a href="electric_heater.html">Electric Heater</a> and a source of redstone signal. Unlocks: uranium shavings and, through the <a href="compressor.html">Compressor</a>, refined uranium — the material behind the future nuclear branch.</p>
 
-<h2>Related</h2>
+<h2 id="related">Related</h2>
 
 <p><a href="electric_heater.html">Electric Heater</a> — the required heat source below. <a href="vulcanizer.html">Vulcanizer</a> — the second machine on the same heater. <a href="macerator.html">Macerator</a> — the first doubling step, which feeds the dust. <a href="../materials/uranium.html">Uranium</a> — the material the whole chain exists for.</p>
 

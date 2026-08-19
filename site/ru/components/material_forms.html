@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепты</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="10 страниц">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="4 страницы">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Прочее</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="14 страниц">14</span></a>
 <div class="group-title">Предметы</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="2 страницы">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link active" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="20 страниц">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="20 страниц">20</span></a>
   </aside>
@@ -393,7 +393,7 @@
   </div>
 </div>
 
-<h2>Сводка</h2>
+<h2 id="сводка">Сводка</h2>
 
 <p><strong>Формы материалов</strong> — семейство предметов-полуфабрикатов: пыль, а позже пластина, болванка и провод, — в которые машины и рецепты превращают руды и слитки. В первой фазе вы встречаете только <strong>пыль</strong>: её выдаёт <a href="../machines/macerator.html">Дробитель</a>, и именно она даёт «удвоение руды» (блок руды или сырая руда → 2 пыли → 2 слитка).</p>
 
@@ -401,27 +401,31 @@
 
 <blockquote><strong>Мини-пример:</strong> добыли одну железную руду — прогнали через <a href="../machines/macerator.html">Дробитель</a>, получили 2 железной пыли, а потом переплавили каждую в печи. Итог — 2 слитка из одной руды вместо привычного одного.</blockquote>
 
-<h2>Энергия</h2>
+<h2 id="энергия">Энергия</h2>
 
 <p>Энергии не используют — обычные ингредиенты для крафта.</p>
 
-<h2>Как используется</h2>
+<h2 id="как-используется">Как используется</h2>
 
 <p>Пыль — узел цепочки переработки руды:</p>
 
-<p><strong>Металлическая пыль</strong> (железо, медь, золото, а также олово/серебро/никель/уран мода) <strong>переплавляется</strong> в ванильной печи, доменной печи или <a href="../machines/electric_furnace.html">Электропечи</a> обратно в слиток. Так замыкается цикл удвоения: руда → 2 пыли → 2 слитка. <strong>Неметаллическая пыль</strong> (уголь, алмаз, изумруд, лазурит) <strong>спрессовывается</strong> обратно в самоцвет или предмет в <a href="../machines/compressor.html">Компрессоре</a> — не переплавляется. Та же форма цикла: руда → 2 пыли → 2 предмета.</p>
+<p><strong>Металлическая пыль</strong> <strong>переплавляется</strong> обратно в слиток. Так замыкается цикл удвоения: руда → 2 пыли → 2 слитка. Где именно плавится — зависит от металла:</p>
+
+<table><thead><tr><th>Пыль</th><th>Ванильная печь и <a href="../machines/iron_furnace.html">Железная печь</a></th><th><a href="../machines/electric_furnace.html">Электропечь</a></th></tr></thead><tbody><tr><td>Железо, медь, золото</td><td>✅</td><td>✅</td></tr><tr><td>Серебро, олово, никель</td><td>✅</td><td>✅</td></tr><tr><td>Уран, палладий</td><td>✖</td><td>✅</td></tr></tbody></table>
+
+<p>Доменная печь пыль не плавит <strong>ни для одного</strong> металла — она работает только с рудой и сырьём. <strong>Неметаллическая пыль</strong> (уголь, алмаз, изумруд, лазурит) <strong>спрессовывается</strong> обратно в самоцвет или предмет в <a href="../machines/compressor.html">Компрессоре</a> — не переплавляется. Та же форма цикла: руда → 2 пыли → 2 предмета.</p>
 
 <p>Дюпа материала нет. Помол готового слитка даёт всего 1 пыль, поэтому <code>слиток → пыль → слиток</code> выходит в ноль — расходуется только энергия.</p>
 
-<h2>Инвентарь</h2>
+<h2 id="инвентарь">Инвентарь</h2>
 
 <p>Не применимо (предметы). Стак: 64.</p>
 
-<h2>Свойства блока</h2>
+<h2 id="свойства-блока">Свойства блока</h2>
 
 <p>Не применимо (предметы).</p>
 
-<h2>Правила переработки</h2>
+<h2 id="правила-переработки">Правила переработки</h2>
 
 <p>Сколько пыли выдаст Дробитель, зависит от того, что в него положили:</p>
 
@@ -429,15 +433,15 @@
 
 <p>Единственное исключение — <strong>лазурит</strong>: лазуритовая руда даёт <strong>×6 пыли</strong>. Ванильная руда лазурита и так падает 4–9, так что обычное ×2 обесценило бы дробление; 6 — гарантированный выход выше среднего дропа кирки, что и оправдывает трату энергии.</p>
 
-<h2>Рецепты</h2>
+<h2 id="рецепты">Рецепты</h2>
 
-<p><strong>Получение пыли:</strong> дробление руды или металла в <a href="../machines/macerator.html">Дробителе</a> (стоимость энергии на рецепт — на странице дробителя). <strong>Металлическая пыль → слиток:</strong> переплавка или обжиг (ванильная печь / доменная печь), либо <a href="../machines/electric_furnace.html">Электропечь</a> мода. <strong>Неметаллическая пыль → предмет:</strong> прессование в <a href="../machines/compressor.html">Компрессоре</a>.</p>
+<p><strong>Получение пыли:</strong> дробление руды или металла в <a href="../machines/macerator.html">Дробителе</a> (стоимость энергии на рецепт — на странице дробителя). <strong>Металлическая пыль → слиток:</strong> переплавка в ванильной или <a href="../machines/iron_furnace.html">Железной печи</a> (кроме урановой и палладиевой пыли), либо <a href="../machines/electric_furnace.html">Электропечь</a> мода — она плавит любую. Доменная печь пыль не принимает. <strong>Неметаллическая пыль → предмет:</strong> прессование в <a href="../machines/compressor.html">Компрессоре</a>.</p>
 
-<h2>Прогрессия</h2>
+<h2 id="прогрессия">Прогрессия</h2>
 
 <p>Предметы без собственного тира. Весь смысл строить первый энергосет: именно пыль превращает Дробитель из машины в удвоитель руды. Неметаллические пыли дают то же самое для угля и самоцветов.</p>
 
-<h2>Связанное</h2>
+<h2 id="связанное">Связанное</h2>
 
 <p><a href="../machines/macerator.html">Дробитель</a> — производит пыль (удвоение руды). <a href="../machines/electric_furnace.html">Электропечь</a> — плавит металлическую пыль обратно в слитки. <a href="../machines/compressor.html">Компрессор</a> — спрессовывает неметаллическую пыль обратно в самоцветы/уголь. <a href="electronic_circuit.html">Электронная схема</a> — другой ключевой ранний компонент.</p>
 

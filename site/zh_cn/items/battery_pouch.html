@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概览</h2>
+<h2 id="概览">概览</h2>
 
 <p><strong>电池储物袋</strong>是本模组第一个电力物品：一件便携式收纳容器，运作方式类似原版收纳袋，但容量翻倍且需要电量。它只占用物品栏一个槽位，却能装下 <strong>128 重量</strong>的物品（约两组普通方块）——在长途远行或物品栏吃紧时格外好用。</p>
 
@@ -400,35 +400,35 @@
 
 <blockquote><strong>小提示：</strong> 打算挖矿一小时？把圆石、矿石和几件工具塞进袋子，清空快捷栏。出门前在储能库里把袋子充满，一满电足够整次出行，大约能携带 33 分钟。</blockquote>
 
-<h2>能量</h2>
+<h2 id="能量">能量</h2>
 
 <p>袋子自带一个独立于电网的小型电量。在储能库里充电；只有当里面有物品且袋子在物品栏中时才耗电。</p>
 
 <table><thead><tr><th>项目</th><th>数值</th></tr></thead><tbody><tr><td>电量</td><td>2 000 EU/FE</td></tr><tr><td>充电</td><td>储能库的充能槽——约 3 秒可充满</td></tr><tr><td>放电</td><td>每秒 1 EU/FE，仅当里面有物品且袋子在物品栏中时</td></tr><tr><td>续航</td><td>可携带物品约 33 分钟</td></tr><tr><td>电量归零时</td><td>内容物被安全锁定，直到重新充能</td></tr></tbody></table>
 
-<h2>容量</h2>
+<h2 id="容量">容量</h2>
 
 <p>袋子只占用物品栏一个槽位，最多可装 <strong>128 重量</strong>。一件物品占多少重量取决于它的堆叠上限——规则与原版收纳袋相同：</p>
 
 <table><thead><tr><th>物品类型</th><th>单件重量</th><th>128 可装</th></tr></thead><tbody><tr><td>方块与资源（堆叠 64）</td><td>1</td><td>128 件（约 2 组）</td></tr><tr><td>末影珍珠、雪球（堆叠 16）</td><td>4</td><td>32 件</td></tr><tr><td>工具、桶（不可堆叠）</td><td>64</td><td>2 件</td></tr></tbody></table>
 
-<h2>工作原理</h2>
+<h2 id="工作原理">工作原理</h2>
 
 <p><strong>放入：</strong> 在物品栏中右键点击物品堆（或将袋子右键点击物品堆）。物品会先填入已存在的同类型不完整堆，再占用新的重量。装不下的剩余部分会留在手中。 <strong>取出：</strong> 在空气中或空槽位上右键点击袋子，可取出<strong>整个最上方的堆</strong>（后进先出）。 <strong>零电量锁定：</strong> 一旦电量耗尽，两种操作都会被阻止。什么都不会丢失——内容物只是被锁住，直到重新充能。 <strong>什么会耗电：</strong> 每秒 1 EU/FE，但仅当里面<strong>有</strong>物品<strong>且</strong>袋子在玩家物品栏中时。放在箱子、地上或储能库槽位中都不会放电。 <strong>创造模式：</strong> 完全不放电——就像原版工具在创造模式下不会掉耐久。同一规则适用于整个电力系列：<a href="energy_pack.html">能量背包</a>和<a href="electric_drill.html">电钻</a>在创造模式下也不耗电。 <strong>电量指示：</strong> 图标下方的横条显示电量（黄色）。悬浮提示中——内容物的网格列表，以及填充度"重量 / 128（NN%）"百分比标尺（）；电量低于 10% 时显示警告，归零时显示红色"已放电"。 <strong>嵌套：</strong> 不能把袋子塞进另一个袋子。但可以放进原版收纳袋或潜影盒中。 <strong>重命名：</strong> 在原版铁砧上完成。 <strong>丢弃或死亡时：</strong> 电量、内容物和自定义名称都保存在物品中。</p>
 
-<h2>物品属性</h2>
+<h2 id="物品属性">物品属性</h2>
 
 <p>不适用（物品）。</p>
 
-<h2>配方</h2>
+<h2 id="配方">配方</h2>
 
 <p>只要你凑齐所有材料，配方就会出现在配方书中。</p>
 
-<h2>进阶</h2>
+<h2 id="进阶">进阶</h2>
 
 <p>本模组第一个电力物品——进入便携电池科技线的大门。 在<a href="../energy-storage/battery_box.html">储能库</a>之后可用；没有它袋子就充不了电。 未来会推出更高级版本——更大容量、过滤器以及袋子之间的链接。</p>
 
-<h2>相关内容</h2>
+<h2 id="相关内容">相关内容</h2>
 
 <p><a href="../energy-storage/battery_box.html">储能库</a>——本模组侧的充电来源（充能槽）；自 起袋子也能被其他模组的充能器充电（见"兼容性"）。 <a href="energy_pack.html">能量背包</a>——下一步：穿在身上的背包会直接给物品栏里的袋子补电。 <a href="../components/electronic_circuit.html">电子电路</a>——合成组件。 <a href="../materials/tin.html">锡</a>——合成中的锁扣。</p>
 

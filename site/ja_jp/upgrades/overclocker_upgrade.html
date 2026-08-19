@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link active" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link active" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>オーバークロックチップ</strong>は、機械のアップグレードパネルの専用アーム（上側、二重矢印の目印がある枠）に 入れるアイテムです。段階は I・II・III の三つ。これらは同じ物を重ねるのではなく三種類の別アイテムなので、 一台の機械で効くオーバークロックチップはちょうど一枚です。</p>
 
@@ -400,21 +400,21 @@
 
 <blockquote><strong>例：</strong>素の粉砕機は鉱石を150ティックかけて挽き、300 EUを使います。III 段階なら77ティック——ほぼ倍の速さ—— ですが、1232 EU/FE、4倍を燃やします。こうなると銅線では足りず、金線が必要です。</blockquote>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <p>チップ自体はエネルギーを蓄えも消費もしません。変わるのは、チップを入れた機械の消費です。</p>
 
 <table><thead><tr><th>段階</th><th>ティック（粉砕機）</th><th>EU/FE/t</th><th>加速</th><th>1処理あたりEU</th></tr></thead><tbody><tr><td>—</td><td>150</td><td>2</td><td>1.00×</td><td>300</td></tr><tr><td>I</td><td>120</td><td>4</td><td>1.25×</td><td>480</td></tr><tr><td>II</td><td>96</td><td>8</td><td>1.56×</td><td>768</td></tr><tr><td>III</td><td>77</td><td>16</td><td>1.95×</td><td>1232</td></tr></tbody></table>
 
-<h2>インベントリ</h2>
+<h2 id="インベントリ">インベントリ</h2>
 
 <p>該当なし（アイテム）。パネルのオーバークロック用アームに入れます。1台につき1枚です。 ホッパーやパイプはアップグレードパネルを見ることができません。</p>
 
-<h2>ブロックの性質</h2>
+<h2 id="ブロックの性質">ブロックの性質</h2>
 
 <p>該当なし（アイテム）。スタック：通常のインベントリで64、アップグレードスロットでは1。</p>
 
-<h2>動作</h2>
+<h2 id="動作">動作</h2>
 
 <p>チップがパネルに入っているあいだ、機械はより速く動き、より多く消費します。パネルの歯車にカーソルを合わせれば、 入っている段階と、速度と消費がそれぞれ何倍になったかが表示されます。</p>
 
@@ -428,11 +428,11 @@
 
 <p>チップが<strong>しない</strong>こと：レシピを変えない、確率に影響しない（インキュベーターでも同様）、蒸留塔の予熱を 早めない、発電機と凝縮器では働かない——そこでは出力と蓄積が別の仕組みで決まります。</p>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p>独自のティアを持たないアップグレード。 I 段階は<a href="../components/empty_chip.html">空チップ</a>を土台にし、以降は前の段階から作ります。 本当の関門は同じ段階の<strong>エネルギー塊</strong>で、それは <a href="../energy-storage/energy_condenser.html">エネルギー凝縮器</a>が送電網の余剰から作る以外に入手経路がありません。 オーバークロックチップは鉱石では買えません。代金を払うのはあなたの発電所です。</p>
 
-<h2>関連</h2>
+<h2 id="関連">関連</h2>
 
 <p><a href="../energy-storage/energy_condenser.html">エネルギー凝縮器</a> — 塊の唯一の入手源。 <a href="../components/empty_chip.html">空チップ</a> — I 段階の土台。 <a href="mute_chip.html">消音チップ</a> — パネルの隣人。併用できます。 アップグレードシステムの概要 — アップグレードスロットの仕組み。</p>
 

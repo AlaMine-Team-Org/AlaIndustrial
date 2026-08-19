@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>水車</strong>は流れる水で回り、24時間動作します — 夜でも雷雨でも関係ありません。燃料を要求せず、 タンクもポンプも不要です: 車輪の脇を流れる水路を作れば、水が流れている限りEUを生み出します。</p>
 
@@ -400,13 +400,13 @@
 
 <p>最大の落とし穴: <strong>止水は無効</strong>です。池や川に車輪を沈めるだけでは不十分で、 本物の水流が必要です。</p>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <p>水車はエネルギーを生産するだけです。出力は<strong>背面</strong>で、そこに端子が描かれています。 他の5面はエネルギー的に不活性です。</p>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>内部バッファ</td><td>4000 EU/FE</td></tr><tr><td>出力</td><td>最大 32 EU/FE/t (LV)</td></tr><tr><td>実発電量</td><td>0–4 EU/FE/t (水流に触れる車輪の面1枚につき1)</td></tr></tbody></table>
 
-<h2>発電</h2>
+<h2 id="発電">発電</h2>
 
 <p>車輪はブロックの<strong>1マス前に</strong>浮いており、水は水車ではなく<strong>車輪の周囲</strong>で判定されます。</p>
 
@@ -416,11 +416,11 @@
 
 <p><strong>流れるか落下する</strong>水のみが加算されます。川や海は水源でできているため、「川に置く」は機能しません。 確実な手法: 車輪のマスより<strong>1マス上</strong>に水源を置く — 落下する水は決して水源になりません。 車輪のマスに直接バケツで注ぐのは無意味です: そのマス自体が水源になります。</p>
 
-<h3>車輪用スペース</h3>
+<h3 id="車輪用スペース">車輪用スペース</h3>
 
 <p>車輪は大きく (リム直径約2.7ブロック)、自由に回転する必要があります。車輪平面の<strong>9マスすべて</strong>を チェックします — 前列と両隣の列、それぞれ3段、下段と対角を含みます。 いずれかに固体ブロックがあると車輪が隠れて発電が止まり、画面に「障害物」と表示されます。 水や通り抜け可能なブロック (草、花、雪) は支障なく、車輪の周囲の水路は正常に機能します。 チェックは毎ティック行われ、ブロックを撤去すれば車輪が戻ります。</p>
 
-<h3>複数の水車を並べる</h3>
+<h3 id="複数の水車を並べる">複数の水車を並べる</h3>
 
 <p>車輪同士が空間的に重なると、<strong>両方</strong>の水車が停止し、ステータスは「車輪の障害物」になります。</p>
 
@@ -428,37 +428,37 @@
 
 <p>車輪のない隣接機は支障ありません — ただしそこに車輪を入れると、稼働中の隣の水車も止まります。</p>
 
-<h2>インベントリ</h2>
+<h2 id="インベントリ">インベントリ</h2>
 
 <p><a href="../components/water_mill_wheel.html">水車</a>用のスロット1つと、アップグレードスロット4つです。車輪がないと 発電せず、外部モデルも表示されません。</p>
 
 <p><strong>車輪は消耗品です。</strong> 水車が実際にEUを生産している間のみ摩耗し (水流なしや障害物時は停止)、 発電量に比例します。完全な耐久で <strong>320 000 EU/FE</strong> 分: 最大連続稼働で約1時間、 通常の 2 EU/FE/t で<strong>ゲーム内6〜7日</strong>です。耐久を使い切ると音と共に車輪が壊れ、 新しいものを取り付けるまで発電は止まります。摩耗したホイールは捨てなくても構いません。<a href="../machines/component_repair_bench.html">部品修理台</a>がアイテム 1 個と EU/FE で摩耗をゼロに戻します。ただし耐久の上限が下がり、修理は 4 回までです。</p>
 
-<h2>インターフェース</h2>
+<h2 id="インターフェース">インターフェース</h2>
 
 <p>左にエネルギーバー、中央に車輪スロット、右にインジケーター: 白い車輪は停止、青い車輪は稼働です。 スロット下の行には現在の発電量または停止理由が表示されます: 「車輪の障害物」「障害物」「水なし」 「水車がありません」。</p>
 
 <p>この行が空になることはありません。以前は車輪のない水車は何も表示せず、空のスロットが語ると考えられて いました。実際には、プレイヤーは動いているように見えて何も生産しない画面を見るだけで、手がかりを得られ ませんでした。現在は風力発電機の「ローターなし」と同じく、独自の行を持つ独立した状態です。</p>
 
-<h2>ブロックの性質</h2>
+<h2 id="ブロックの性質">ブロックの性質</h2>
 
 <p>通常の全面キューブブロックで、任意のツルハシで壊せます。</p>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>形状</td><td>全面キューブ</td></tr><tr><td>硬度</td><td>3.0</td></tr><tr><td>爆発耐性</td><td>6.0</td></tr><tr><td>ツール</td><td>ツルハシ</td></tr></tbody></table>
 
-<h2>外観</h2>
+<h2 id="外観">外観</h2>
 
 <p>水車の前に大型のオープンな車輪が回転します: 2つのオークのリムが24分割、両側にそれぞれ8本のスポーク、 リム間に12個のバケツ、木製ハブと銅の軸。水流が強いほど回転が速く、水流なしでは停止します。</p>
 
-<h2>サウンド</h2>
+<h2 id="サウンド">サウンド</h2>
 
 <p>車輪が回っている間、約12ブロック半径で穏やかな水のしぶく音が聞こえます。車輪の停止と共に鳴りやみます。</p>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p>クラフトテーブルで木材、銅インゴット、銅線、木の歯車から組み立てます。 <a href="../components/water_mill_wheel.html">水車</a>は別途クラフトします — これがないと水車は動きません。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="solar_panel.html">ソーラーパネル</a> — 別の受動源だが、空と時間帯に依存。 <a href="generator.html">発電機</a> — 2倍強力だが燃料が必要。 <a href="../components/water_mill_wheel.html">水車</a> — これがないと水車は止まる消耗品。</p>
 

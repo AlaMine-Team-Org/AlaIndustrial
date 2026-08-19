@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概览</h2>
+<h2 id="概览">概览</h2>
 
 <p><strong>抽水泵</strong>——以 EU/FE 为动力的 LV 机器，用于输送流体。它会寻找世界中的任何流体源（从自己前方 的方块开始，沿流动流体继续），或从相邻储罐抽取流体，将其积累到内部 <strong>10 桶</strong>容量的储罐中， 并自己将其推出去——到任何相邻的接收储罐。储罐接受<strong>任何</strong>流体（不仅限于熔岩/水），因此也 可以倒入模组流体——通过胶囊或其他模组的容器。</p>
 
@@ -400,7 +400,7 @@
 
 <p>主要场景是用管道给<a href="../generators/geothermal_generator.html">地热发电机</a>供熔岩，而不是徒手搬 桶；同时泵也输送水和任何其他流体，为未来的流体链做准备。</p>
 
-<h2>能量</h2>
+<h2 id="能量">能量</h2>
 
 <p>泵是纯粹的能量消费者：它接收 EU/FE，不输出任何东西，每抽取一桶消耗 1000 EU/FE。</p>
 
@@ -410,9 +410,9 @@
 
 <p>作为低等级机器，泵每刻最多接收 32 EU/FE。在 1000 EU/FE/桶、32 EU/FE/刻限制下，攒够一桶的缓冲约 需 ~32 刻；4000 EU/FE 的缓冲可容纳 4 桶的成本，因此即使在能量断续供应时泵也极少空闲。</p>
 
-<p><strong>按面的能量。</strong> 泵在五个工作面上接收 EU/FE；正面在能量上是惰性的（那里没有接口）——与任何 水平机器相同。因此电缆只在五个工作面绘制接管，而正面不绘制。抽取流体是独立的子系统， 它仍然直接读取正面（见<a href="index.html#加工">抽取</a>），因此正面的能量惰性<strong>不改变</strong>泵从哪里抽取流体。</p>
+<p><strong>按面的能量。</strong> 泵在五个工作面上接收 EU/FE；正面在能量上是惰性的（那里没有接口）——与任何 水平机器相同。因此电缆只在五个工作面绘制接管，而正面不绘制。抽取流体是独立的子系统， 它仍然直接读取正面（见<a href="#加工">抽取</a>），因此正面的能量惰性<strong>不改变</strong>泵从哪里抽取流体。</p>
 
-<h2>加工</h2>
+<h2 id="加工">加工</h2>
 
 <p>泵不使用配方系统：它不加工物品，而是移动流体。一个工作刻内它走三步。</p>
 
@@ -428,7 +428,7 @@
 
 <p>工作时泵会亮起（每个有动作的刻——抽取、供应或倒桶——都会亮）。</p>
 
-<h2>物品栏</h2>
+<h2 id="物品栏">物品栏</h2>
 
 <p>2×2 网格中的四个槽——用于手动灌装和排空流体。这不是泵的主要工作方式，而是方便的辅助。</p>
 
@@ -442,7 +442,7 @@
 
 <p>漏斗和管道只放入<strong>输入</strong>槽（0 和 2），只从<strong>输出</strong>槽（1 和 3）取出——输出由机器自己填充。</p>
 
-<h2>内部储罐</h2>
+<h2 id="内部储罐">内部储罐</h2>
 
 <table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>容量</td><td><strong>10 桶</strong>（10 000 mB）</td></tr><tr><td>接受</td><td>任何非空流体，不仅限于熔岩/水</td></tr><tr><td>混合</td><td><strong>禁止</strong>——被一种占据时，另一种在排空前不被接受</td></tr><tr><td>取出</td><td>允许从任何面</td></tr></tbody></table>
 
@@ -452,7 +452,7 @@
 
 <p><strong>保存与迁移。</strong> 重登后储罐恢复容量和流体类型——类型存储为完整标识符（例如 <code>minecraft:lava</code>），因此任何流体都能经受重启。旧存档（储罐只知熔岩/水）被正确接续：当存在 无识别键的流体时，它被读作熔岩——最早的泵所知的唯一流体。</p>
 
-<h2>与胶囊和其他模组容器的交换</h2>
+<h2 id="与胶囊和其他模组容器的交换">与胶囊和其他模组容器的交换</h2>
 
 <p>泵是流体交换的完全参与者：其储罐不仅可通过桶槽灌装和排空，还可用<strong>我们的胶囊</strong>和<strong>其他 模组的容器</strong>。</p>
 
@@ -460,37 +460,37 @@
 
 <p><strong>其他模组的容器和管道。</strong> 泵的储罐在任何面上可被其他模组的管道、泵和储罐访问——它们可以 从泵抽取流体并灌入泵，双向均可，无需手动点击。</p>
 
-<h2>界面</h2>
+<h2 id="界面">界面</h2>
 
 <p>泵有图形界面，带两个槽（用于桶）和两条指示条。</p>
 
 <p>类型：<strong>GUI</strong>，两个槽（桶）和两条条： 左侧——储罐中的液位（从下往上增长）。储罐用<strong>流体本身的实际材质</strong>（其方块的 still 材质带原生 tint）填充，按 16×16 平铺并根据液位裁剪——水看起来像水，熔岩像熔岩。模组 流体自动以其材质绘制：取自原版的流体模型，模组图集中不需要为每种流体准备单独材质。 右侧——能量缓存。 悬停时工具提示显示流体名称 + mB 体积和 EU/FE / 缓存容量。 方块状态：放置时泵「面向玩家」（它用这一面抽取流体），工作时亮起。</p>
 
-<h2>方块属性</h2>
+<h2 id="方块属性">方块属性</h2>
 
 <p>普通的完整方块：用镐破坏，破坏时不保留电荷（储罐和流体——保留，见内部储罐）。</p>
 
 <table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>形状</td><td>完整 16³ 立方体（遮挡体）</td></tr><tr><td>硬度</td><td>3.0</td></tr><tr><td>爆炸抗性</td><td>6.0</td></tr><tr><td>工具</td><td>镐</td></tr><tr><td>声音</td><td>金属</td></tr><tr><td>破坏时保留电荷</td><td>否</td></tr></tbody></table>
 
-<h2>声音</h2>
+<h2 id="声音">声音</h2>
 
 <p>运行时（<code>lit</code>），水泵会发出液体被吸入管道的湿润吸吮声 — 循环音效 （模式 <strong>A</strong>，默认 0.35）。空闲时归于静默（）。</p>
 
 <p>水泵与其他模式 A 机器的不同之处：桶的转移是<strong>原子性的</strong> — 它在单个刻内完成，而不像粉碎机的研磨 那样横跨多个处理刻。因此 <code>lit</code>（以及循环音效）在最后一次转移后会继续保持 刻（默认 60 刻 = 3 秒）。没有这段保持，指示灯和声音都只会闪现一刻， 玩家根本无法听到水泵工作。在连续抽取时，新的转移会在倒计时结束前重新启动它，因此水泵读起来是 持续运转的，而不会闪烁。</p>
 
-<h2>配方</h2>
+<h2 id="配方">配方</h2>
 
 <p>工作台上一个配方：铁外壳、两个桶和<a href="../components/index.html">电子电路</a>。配方中的两个桶反映方块的本质 —输送流体；电子电路设定机器的低等级。</p>
 
 <p>合成：</p>
 
-<h2>进阶</h2>
+<h2 id="进阶">进阶</h2>
 
 <p>早期 LV 机器——有了稳定的发电机和合成用的电子电路后即可放置。免除了手动处理熔岩桶的麻烦。</p>
 
 <p>等级：LV 供电：来自 LV 源，例如<a href="../generators/generator.html">发电机</a>。 用途：以流体方式自动给<a href="../generators/geothermal_generator.html">地热发电机</a>供熔岩，替代手动 桶；为未来的流体链输送水。 需要：合成用的<a href="../components/index.html">电子电路</a>。</p>
 
-<h2>相关内容</h2>
+<h2 id="相关内容">相关内容</h2>
 
 <p><a href="../generators/geothermal_generator.html">地热发电机</a>——泵的熔岩主要消费者。 <a href="../generators/generator.html">发电机</a>——泵的典型 LV 供电来源。 <a href="../components/index.html">组件</a>——合成用的电子电路。 I/O 网络逻辑——方块各面流体供应的工作方式。</p>
 

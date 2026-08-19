@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -392,39 +392,41 @@
     </div>
   </div>
 </div>
-<h2>概览</h2>
+<h2 id="概览">概览</h2>
 
 <p><strong>铁熔炉</strong> 是一台改进型燃料熔炉，定位介于原版熔炉和 <a href="electric_furnace.html">电力熔炉</a> 之间。它比原版更快，能熔炼与原版相同的一切，但仍以固体燃料（煤炭、木板、木炭……）供能，而非 EU/FE。对于尚未搭建能源网络、却想加速熔炼的玩家来说，这是一个早期升级选择。</p>
 
-<p>它完全复用原版熔炉的界面，仅标题不同。配方和行为与原版熔炉一致（通过 vanilla smelting），同时也在相同输入上支持模组配方。</p>
+<p>它完全复用原版熔炉的界面，仅标题不同。配方和行为与原版熔炉一致：凡是能在原版熔炉里熔炼的东西，在这里同样能熔炼，包括模组的矿石、粗矿和金属粉。</p>
 
 <blockquote><strong>小示例：</strong> 用八个铁锭将原版熔炉围起来，就得到了铁熔炉。熔炼速度明显提升，燃料消耗不变。这是通向电力熔炉的中间一步。</blockquote>
 
-<h2>能量</h2>
+<h2 id="能量">能量</h2>
 
 <p>不使用 EU/FE。燃料为固体燃料（与原版熔炉相同）。这是它与已经使用 EU/FE 的 <a href="electric_furnace.html">电力熔炉</a> 的主要区别。</p>
 
-<h2>使用方式</h2>
+<h2 id="使用方式">使用方式</h2>
 
-<p>像普通熔炉一样放置。右键打开后是相同的界面（熔炼槽、燃料槽、火焰条和进度箭头）。接受所有原版 smelting 配方以及模组配方（粉 → 锭、粗矿 → 锭等）。</p>
+<p>像普通熔炉一样放置。右键打开后是相同的界面（熔炼槽、燃料槽、火焰条和进度箭头）。它接受所有原版熔炼配方，以及模组新增的那些：矿石 → 锭、粗矿 → 锭、金属粉 → 锭、铁锭 → 回火铁。</p>
 
-<h2>方块属性</h2>
+<blockquote>它 <strong>做不到</strong> 的事：只为 <a href="electric_furnace.html">电力熔炉</a> 准备的配方（那台机器有自己的配方类型）。目前这指的是铀粉和钯粉的熔炼，只有电力熔炉能做到。</blockquote>
+
+<h2 id="方块属性">方块属性</h2>
 
 <p>带有正面的立方方块（有 lit/unlit 状态，工作时发光）。 等级：LV（按模组分类属于早期机器），但实际不使用 EU/FE 运行。 硬度与工具：与原版熔炉相同（石镐）。</p>
 
-<h2>声音</h2>
+<h2 id="声音">声音</h2>
 
 <p>熔炉燃烧时可听到原版的火焰噼啪声，与普通熔炉的环境音一致：不规则的单次咔哒声（不是背景循环）。没有自定义音效（）。</p>
 
-<h2>配方</h2>
+<h2 id="配方">配方</h2>
 
 <p>在工作台上合成（shaped 3×3）：中心放原版熔炉，周围用 8 个铁锭包围。</p>
 
-<h2>进阶</h2>
+<h2 id="进阶">进阶</h2>
 
 <p>早期机器（tier-stone），不使用 EU/FE。 融入链路：原版熔炉 → <strong>铁熔炉</strong> → <a href="electric_furnace.html">电力熔炉</a> → 感应炉（概念）。每一步都比上一步更快。 不需要能源网络，只要哪里有燃料就能就地安放在任何洞穴或矿井中。</p>
 
-<h2>相关内容</h2>
+<h2 id="相关内容">相关内容</h2>
 
 <p><a href="electric_furnace.html">电力熔炉</a> — 下一步：从燃料转向 EU/FE。 <a href="../utility/iron_chest.html">铁箱子</a> — 同属 "改进型原版" 方块系列。</p>
 

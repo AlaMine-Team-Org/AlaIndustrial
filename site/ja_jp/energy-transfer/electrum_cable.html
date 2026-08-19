@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link active" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -394,7 +394,7 @@
 </div>
 <blockquote>⚠️ <strong>電気安全。</strong> エレクトラムの裸 HV ケーブルはプレイヤーに <strong>10</strong> ダメージを与えます（ティア階段：LV 2 → MV 6 → HV 10、キー ）。これは直接接触した時だけでなく、セグメント周囲 <strong>0.5 ブロック</strong>の範囲でも適用されます——ただし、そのセグメントを今実際にエネルギーが流れている時だけです。切断された路線やバッファに残った充電は安全です。通常の防具はダメージを減らします。水はダメージを増幅しません。ケーブルとプレイヤーの間の固体ブロックが衝撃を遮ります。この仕組みはサーバー設定で無効化できます。</blockquote>
 
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>エレクトラムケーブル</strong>は <strong>HV</strong> ティアの初の導線です。ティア自体は空ではありませんでした： 以降、<a href="../advanced-machines/teleporter.html">テレポーターステーション</a>——モード唯一の HV 消費者——が動作していましたが、金（MV）ケーブル以外で給電する手段がこれまでありませんでした。このケーブルは、より以前の「ガラスファイバー EV ケーブル」のコンセプトを置き換えます——「最も高価で最も効率的な導線」としての役割は同じですが、より早く、すでに用意されたティアで、モードとしてより現実的な素材で実現します：合金 <strong>エレクトラム</strong>（金 + 銀、0.1.67 から合金炉で精錬可能だが、今まで消費者が 1 つもなかった）に、導線に信頼性と低損失を与える <strong>ダイヤモンドの粉</strong> を加えたものです。</p>
 
@@ -404,7 +404,7 @@
 
 <blockquote><strong>今日ですでに実感できる場所。</strong> モードには HV 機械・HV 発電機・HV 貯蔵库はまだありませんが、HV-<strong>消費者</strong>はいます：バッファ 500 000 EU/FE の<a href="../advanced-machines/teleporter.html">テレポーターステーション</a>です。金ケーブル（48 EU/FE/t）では全バッファまで ~10 400 ティック ≈ 8.7 分かかりますが、エレクトラム（192 EU/FE/t）では ~2 600 ティック ≈ <strong>2.2 分</strong>です。  この約束が正しいために必要な但し書き：ステーションは蓄電式の消費先で、そのような消費先はケーブル経由では<strong>他の貯蔵库から給電されません</strong>（エネルギー貯蔵库は機械の不足時だけ EU/FE を放出します）。加速は、あなたの<strong>発電機</strong>が合計で 48 EU/FE/t を超える分だけ現実のものになります——さもなければボトルネックは導線ではありません。その他のコンテンツ（LV/MV）では、密集路線での 192 EU/FE/t の太いバッファ自体が有用です。</blockquote>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>役割</td><td>伝送</td></tr><tr><td>最大電圧</td><td>512 EU/FE/パケット（ティア HV）</td></tr><tr><td>スループット</td><td>192 EU/FE/ティック = セグメント稼働バッファ</td></tr><tr><td>損失</td><td>ブロックあたり <strong>0.005</strong> 減衰（スズより低い！）。N &gt; 0 の場合、消費者あたり <code>max(1, ceil(N × 0.995^距離))</code> EU/FE/ティックが届く</td></tr><tr><td>絶縁</td><td>あり——<a href="insulated_electrum_cable.html">絶縁エレクトラムケーブル</a>（損失 0.0025）</td></tr></tbody></table>
 
@@ -414,19 +414,19 @@
 
 <blockquote><strong>混成ネットワーク。</strong> ネットワークはそこに含まれる最も強いケーブルからスループット<strong>と</strong>損失を両方受け取ります——銅の路線での金と同じルールです。金の路線にエレクトラムセグメントを 1 本入れると、ネットワーク全体が 512 EU/FE/パケットとエレクトラムの 0.005 損失に引き上げられます。</blockquote>
 
-<h2>ブロックの性質</h2>
+<h2 id="ブロックの性質">ブロックの性質</h2>
 
 <p>隣接するブロックに接続する細い導線です。任意の道具で壊せますが、ケーブルブレーカーだと更に便利です。</p>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>形状</td><td>細い棒（6px コア + スリーブ）</td></tr><tr><td>硬さ</td><td>0.2</td></tr><tr><td>ツール</td><td>任意 / ケーブルブレーカー</td></tr></tbody></table>
 
-<h3>ハーフブロックへの接続</h3>
+<h3 id="ハーフブロックへの接続">ハーフブロックへの接続</h3>
 
 <p>他のケーブルと同様、エレクトラムも低い隣接ブロック（高さ 8/16 のソーラーパネルや将来の任意のハーフブロック）へ水平スリーブを下ろします——スリーブはプレートの側面に乗り、その上に浮くことはありません。この挙動はすべてのケーブルで共通で、隣接ブロックの型ではなく形状から導かれます。</p>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
-<p><strong>儀式的レシピ：</strong> エレクトラムインゴット 8 個を円形に、その間にダイヤモンドの粉 4 個で、ケーブル <strong>3</strong> 個ができます。</p>
+<p><strong>儀式的レシピ：</strong> エレクトラムインゴット 5 個（四隅と中央）と、各辺の中点にダイヤモンドの粉 4 個で、ケーブル <strong>3</strong> 個ができます。</p>
 
 <p>価格は意図的に高く設定されており、これはバランス上の決定で、化粧付けではありません。混成ネットワークは上限も損失も最強のセグメントから受け取るため、安いエレクトラムなら 1 ブロックでキロメートルの銅を 0.005 損失まで引き上げられてしまいます。導線は主要な路線にピンポイントで置かれ、拠点全体をこれで配線するものではありません。</p>
 
@@ -436,7 +436,7 @@
 
 <p>加工レシピ：なし。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="gold_cable.html">金ケーブル</a>——階段の前段、MV。 <a href="copper_cable.html">銅ケーブル</a>——汎用 LV ケーブル。 <a href="tin_cable.html">スズケーブル</a>——安価でほぼ損失なし、ソーラーファーム向け。 <a href="insulated_electrum_cable.html">絶縁エレクトラムケーブル</a>——ゴム版：192 EU/FE/t を保ちつつ損失は半分で、衝撃なし。</p>
 

@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>電動クワ</strong>は同ラインの4つ目で最後の手持ち電動ツールです。<a href="electric_drill.html">ドリル</a>（石）、<a href="electric_chainsaw.html">チェーンソー</a>（木）、<a href="electric_shovel.html">ショベル</a>（土）に続いて、農地を担当します。契約は同じで、耐久値の代わりに EU/FE で動作し、壊れず、放電時は素手速度でフルドロップとともに動作し続けます。</p>
 
@@ -410,7 +410,7 @@
 
 <p>他の EU/FE アイテムと同様に、クワは<strong>耐久値がなく</strong>壊れることはありません。アイコン下のバーは摩耗ではなく EU/FE の充電量（黄色、LV 色）を示します。</p>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <p>エネルギーネットワークから独立した専用の EU/FE バッファを持ちます。エネルギー貯蔵庫のスロットと装備したパックで充電され、耕起とブロックの破壊によって充電を消費します。</p>
 
@@ -418,25 +418,25 @@
 
 <p>消費は<strong>サーバー側でのみ</strong>、かつ<strong>硬度が非ゼロのブロックに対してのみ</strong>差し引かれます。クリエイティブモードでは充電を消費しません（）。</p>
 
-<h2>インベントリ</h2>
+<h2 id="インベントリ">インベントリ</h2>
 
 <p>該当なし——クワは内部のアイテム収納を持ちません（スタック1）。</p>
 
-<h2>ブロックの性質</h2>
+<h2 id="ブロックの性質">ブロックの性質</h2>
 
 <p>該当なし（アイテム）。</p>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p>クラフト：他の3つと同じ枠組みですが、中央はダイヤモンドのクワです。上段に鉄インゴットの列、両脇に<a href="../components/battery.html">バッテリー</a>を2つ、下段に<a href="../components/copper_coil.html">銅コイル</a>を2つと<a href="../components/electronic_circuit.html">電子回路</a>を配置します。バッテリーが持つ充電は完成品のクワに引き継がれます。プレイヤーが銅コイル、電子回路、またはダイヤモンドのクワを入手するとレシピ帳で解放されます。</p>
 
 <p><strong>修理</strong>——該当なし：耐久値がないため修理するものがなく、「修理」は EU/FE の充電を指します。</p>
 
-<h2>挙動</h2>
+<h2 id="挙動">挙動</h2>
 
 <p><strong>耕起およびその他の右クリック変換——50 EU/FE がかかります。</strong> 土、草、土の道 → 農地、炭素土 → 土、根付いた土 → 土 + 垂れ根、バニラのクワと全く同じです。充電は<strong>変換が実際に発生したときのみ</strong>差し引かれます。石の壁やすでに耕された農地をクリックしてもバッファは変更されません。充電が不足するとクワは耕やさず、ドリルの松明と同様にホットバー上で通知します。ただし通知するのは<strong>耕せるブロックを右クリックしたときだけ</strong>です。放電したクワで石やチェストなどを右クリックしても、メッセージも横取りもなくそのまま通過するため、オフハンドのアイテムは正常に機能します（）。 <strong>ブロックの破壊：</strong> 充電が ≥ 50 EU/FE の間、クワは <code>#minecraft:mineable/hoe</code> を速度 9.0（ダイヤモンドは 8.0）で破壊します。このようなブロックごとに 50 EU/FE が差し引かれます。 <strong>放電したクワ：</strong> 充電が 50 EU/FE 未満では素手速度（1.0）で破壊しますが、採掘レベルとドロップは維持され、EU/FE は消費されません。このとき効率強化のエンチャントは機能しません（バニラのしきい値 <code>speed &gt; 1.0</code>）。放電したクワでは耕やせません。上記を参照してください。 <strong>充電：</strong> エネルギー貯蔵庫の充電スロットと装備したエネルギーパックは自動的にクワを受け付け、最大 32 EU/FE/ティックまで充電します。 <strong>攻撃：</strong> バニラのクワと同様に武器ではなく（ダメージ 1、攻撃速度 4）。打撃は<strong>EU/FE を消費せず</strong>、クワを摩耗させません。 <strong>エンチャント：</strong> クワは <code>#minecraft:hoes</code> に属するため、エンチャントテーブルと金床はクワとして扱います。耐久・修繕は壊れないクワでは無意味ですが、無害です。 <strong>収穫——対応していません。</strong> これは<a href="scythe.html">大鎌</a>の役割であり、そのために作られています。クワに重複させることはしませんでした。 <strong>表示：</strong> アイコン下のバーが充電量を示します（黄色、LV 色）。ツールチップには「充電量：X / 10 000 EU/FE」、ゼロでは赤色の「放電済み」と表示されます。テクスチャはゼロ充電で「消灯」状態に切り替わります。 <strong>ドロップ／死亡／再ログイン：</strong> 充電量はアイテムに保存され、保持されます。 <strong>クリエイティブ：</strong> 充電を消費しません。</p>
 
-<h2>ダイヤモンドチップ（アップグレード）</h2>
+<h2 id="ダイヤモンドチップアップグレード">ダイヤモンドチップ（アップグレード）</h2>
 
 <p><strong>ダイヤモンドチップ電動クワ</strong>（、）はクワの第2段階であり、 <a href="electric_drill.html">ダイヤモンドチップ電動ドリル</a>と<a href="electric_chainsaw.html">ダイヤモンドチップ電動チェーンソー</a> に続くシリーズ3つ目のアップグレードです。基本のクワとの違いはちょうど2点で、それ以外はすべてそのまま 継承されます。</p>
 
@@ -462,11 +462,11 @@
 
 <blockquote><strong>レシピは手で並べる必要があります。</strong> レシピブックの自動入力ボタンは充電済みのクワを拾いません。 バニラのインベントリ内の材料検索はアイテムのコンポーネントを比較しますが、充電済みのクワには <code>pouch_energy</code> があり、見本側にはないためです。これはバニラ側の制限で、3つのアップグレードに共通です — 詳細はタスク を参照してください。</blockquote>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p>同ラインの4つ目で最後の電動ツールです。<a href="electric_drill.html">ドリル</a>——石、<a href="electric_chainsaw.html">チェーンソー</a>——木、<a href="electric_shovel.html">ショベル</a>——土、クワ——農地。 <a href="../energy-storage/battery_box.html">エネルギー貯蔵庫</a>とバッテリーの後に利用可能です。LV インフラなしにはクラフトも充電もできません。 LV 等級。残りの電動アイテム（サーベル／ナノボウ／ヴァジュラ）は今後の課題です。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="electric_drill.html">電動ドリル</a>——ラインの石担当で、ブロックごとの消費も同じ。 <a href="electric_chainsaw.html">電動チェーンソー</a>——ラインの木担当。 <a href="electric_shovel.html">電動ショベル</a>——土担当。右クリック委譲の仕掛けは同じですが、そちらは無料、クワは有料です。 <a href="scythe.html">大鎌</a>——収穫用のツールで、クワは代わりになりません。 <a href="../energy-storage/battery_box.html">エネルギー貯蔵庫</a>——クワの充電源（charge スロット）。</p>
 

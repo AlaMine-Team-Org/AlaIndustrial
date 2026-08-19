@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепты</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="10 страниц">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="4 страницы">4</span></a>
 <a class="cat-link active" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Прочее</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="14 страниц">14</span></a>
 <div class="group-title">Предметы</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="2 страницы">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="20 страниц">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="20 страниц">20</span></a>
   </aside>
@@ -395,7 +395,7 @@
 
 <blockquote>⚠️ <strong>Электробезопасность.</strong> Голый золотой MV-кабель наносит 6 единиц урона игроку не только при прямом касании, но и в радиусе <strong>0.5 блока</strong> вокруг сегмента — но лишь если через этот сегмент сейчас действительно движется энергия. Отключённая линия и оставшийся в буфере заряд безопасны. Обычная броня уменьшает урон; вода его не усиливает; сплошной блок между кабелем и игроком гасит удар. Механику можно отключить в настройках сервера. Снизить шанс удара, не убирая его полностью, можно изолирующей подставкой — либо заменить голый сорт на <a href="insulated_gold_cable.html">изолированный золотой кабель</a>, который безопасен вовсе.</blockquote>
 
-<h2>Сводка</h2>
+<h2 id="сводка">Сводка</h2>
 
 <p>Золотой кабель — верхняя ступень кабельной лестницы и первый в моде провод тира <strong>MV</strong>. Он несёт 48 EU/FE/тик — вчетверо больше меди — и поднимает потолок пакета до 128 EU/FE (против 32 у LV).</p>
 
@@ -403,7 +403,7 @@
 
 <p>Кому он нужен уже сейчас: <a href="../machines/assembler.html">Сборочный автомат</a> — первая MV-машина мода — и <a href="../energy-storage/cesu.html">Усиленное энергохранилище</a>, которое принимает и отдаёт на MV. Тянуть к ним LV-провод бессмысленно: он срежет пакет до 32 EU/FE.</p>
 
-<h2>Энергия</h2>
+<h2 id="энергия">Энергия</h2>
 
 <p>Кабель несёт MV-энергию и подключается к соседним блокам. На каждом проводе от источника до потребителя уходит немного EU/FE; точная формула — в таблице.</p>
 
@@ -413,21 +413,21 @@
 
 <blockquote><strong>Смешанные сети.</strong> Сеть берёт пропускную способность <strong>и</strong> потери от самого сильного кабеля в ней. Достаточно одного золотого сегмента в медной линии, чтобы вся сеть перешла и на 128 EU/FE/пакет, и на золотые 0.03 потерь. Это сделано намеренно: иначе можно было бы вставить кусок золота ради высокого потолка, продолжая платить медные потери.</blockquote>
 
-<h2>Свойства блока</h2>
+<h2 id="свойства-блока">Свойства блока</h2>
 
 <p>Тонкий провод, который соединяется с соседними блоками. Ломается любым инструментом, удобнее — кусачками.</p>
 
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Форма</td><td>тонкий стержень (6px core + рукава)</td></tr><tr><td>Прочность</td><td>0.2</td></tr><tr><td>Инструмент</td><td>любой / кусачки</td></tr></tbody></table>
 
-<h3>Подключение к полублокам</h3>
+<h3 id="подключение-к-полублокам">Подключение к полублокам</h3>
 
 <p>Как и остальные кабели, золотой опускает горизонтальный рукав к приземистому соседу (солнечная панель высотой 8/16 и любой будущий полублок) — рукав ложится на бок плиты, а не висит над ней. Поведение общее для всех кабелей и выводится из формы соседа, а не из его типа.</p>
 
-<h2>Рецепты</h2>
+<h2 id="рецепты">Рецепты</h2>
 
 <p>Крафт: 3 золотых слитка в ряд → 3 кабеля Рецепты переработки: нет.</p>
 
-<h2>Связанное</h2>
+<h2 id="связанное">Связанное</h2>
 
 <p><a href="copper_cable.html">Медный кабель</a> — универсальный LV-кабель. <a href="tin_cable.html">Оловянный кабель</a> — дешёвый и почти без потерь, для солнечных ферм. <a href="insulated_gold_cable.html">Изолированный золотой кабель</a> — резиновая версия: вдвое меньше потерь и безопасна при касании.</p>
 

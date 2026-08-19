@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,13 +392,13 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>製材機</strong> は木材加工用の LV マシンです。原木（または板材）を手作業クラフトより <strong>多い産出</strong> で製材し、4種類の異なる製品に切ることもできます。<strong>切替可能な4つのモード</strong>（インターフェースのボタン）があります：<strong>板材 / 棒 / ハーフブロック / 階段</strong>。任意の樹種はその樹種の産物を与えます。棒は樹種に依存しません。これはモッドで最もエネルギー効率の良い操作です：石を粉砕するより木材を切る方が簡単です。</p>
 
 <blockquote><strong>ミニ例：</strong> 「板材」モードでオークの原木を置けば、約4秒でバニラの4枚ではなく <strong>オークの板材 ×6</strong> が得られます。「棒」に切り替えれば、同じ原木から <strong>棒 ×18</strong> が得られます。</blockquote>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <p>製材機は EU/FE を消費するだけで、安定稼働のための小さなバッファを保持します。</p>
 
@@ -406,13 +406,13 @@
 
 <p>LV マシンで、1ティックあたり最大 32 EU/FE を取り込みます。エネルギーは5つの作業面から入ります。<strong>正面</strong>（「顔」が向いている面）は不活性で、ケーブルは接続できず、ホッパーも機能しません。</p>
 
-<h2>加工</h2>
+<h2 id="加工">加工</h2>
 
 <p>製材機は常に <strong>アクティブなモード</strong> だけで動作します。その間、他の3モードのレシピは非アクティブです。モードを切り替えると現在の進行状況がリセットされます（新しいモードは別の製品を切ります）。1回の製材は約80ティック（約4秒）かかります。</p>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>レシピタイプ</td><td>/ <code>sawing_sticks</code> / <code>sawing_slabs</code> / <code>sawing_stairs</code></td></tr><tr><td>所要時間</td><td>約80ティック（約4秒）</td></tr><tr><td>製材コスト</td><td>160 EU/FE</td></tr><tr><td>自動排出</td><td>なし</td></tr></tbody></table>
 
-<h2>インベントリ</h2>
+<h2 id="インベントリ">インベントリ</h2>
 
 <p>入力が1スロット、出力が1スロットです。</p>
 
@@ -420,17 +420,21 @@
 
 <p>入力は、アイテムが <strong>少なくとも1つの</strong> モードに合致すれば受け付けられます — これにより切り替え時のアイテムの「行き詰まり」を防ぎます。不適合なモードでは機械は単にスリープします。</p>
 
-<h2>インターフェース</h2>
+<h2 id="インターフェース">インターフェース</h2>
 
 <p>画面は <a href="electric_furnace.html">電気かまど</a> のインターフェースを再利用します：エネルギー量、進行状況、入力スロットと出力スロット、その間に左から右に埋まる <strong>丸鋸</strong> 型の進行インジケーター。スロットの下には、ghost アイコン（板/棒/ハーフブロック/階段）付きの <strong>4つのモードボタン</strong> が並び、アクティブなモードがハイライトされ、各ボタンにツールチップがあります。</p>
 
-<h2>ブロック属性</h2>
+<h2 id="ブロック属性">ブロック属性</h2>
 
 <p>通常の固体ブロックで、石より柔らかいです。どんなツルハシでも壊せますが、<strong>破壊時にチャージは保持しません</strong>。</p>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>ツール</td><td>ツルハシ</td></tr><tr><td>破壊時にチャージを保持</td><td>いいえ</td></tr></tbody></table>
 
-<h2>レシピ</h2>
+<h2 id="音">音</h2>
+
+<p>稼働中（lit）、製材機はギコギコと往復する鋸の音を発します — ループ（パターンA、デフォルト 0.35）。アイドリング時には鳴りやみます（）。</p>
+
+<h2 id="レシピ">レシピ</h2>
 
 <p>何を切るか（産出は <strong>その樹種</strong> のもの。竹は半分 — バニラでもブロックあたり板材2枚です）：</p>
 
@@ -438,15 +442,15 @@
 
 <p>製材レシピは計39個（12樹種 × 板材/ハーフブロック/階段 + 棒3レシピ）です。ハーフブロック、階段、棒は入力に <strong>受け付けられません</strong> — 逆ループや増殖はありません。</p>
 
-<h3>レシピビューアーで</h3>
+<h3 id="レシピビューアーで">レシピビューアーで</h3>
 
 <p>JEI/REI では、製材機は <strong>4つのカテゴリ</strong> を提供します — モードごとに1つ（<code>sawing_planks</code>、<code>sawing_sticks</code>、<code>sawing_slabs</code>、<code>sawing_stairs</code>）。すべてのワークステーションは製材機自身です。進行矢印をクリックすると4つのカテゴリすべてが一度に開きます。各カテゴリは自身のモード名でラベル付けされています — 「製材機：板材」「製材機：棒」「製材機：ハーフブロック」「製材機：階段」— タブを区別するためで、モード名は機械のインターフェースのボタンと同じ翻訳から取られます。</p>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p>ティア：LV。木材加工の初期機械です。 発展先：なし（基本 LV マシン）。 <a href="../generators/generator.html">発電機</a> などの LV 電源からの給電が必要です。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="electric_furnace.html">電気かまど</a> — 再利用されるインターフェース、隣接する LV マシン。 <a href="../generators/generator.html">発電機</a> — 電源。</p>
 

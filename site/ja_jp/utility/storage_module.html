@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>ストレージモジュール</strong>は 27 スロットのブロックで、最大の特徴は <strong>隣接する仲間と結合できる</strong> ことです。 2 つのモジュールをぴったりと置けば、共通ウィンドウで 54 スロットの 1 つの収納になります。3 つで 81。 4 つで 108、これが上限です。</p>
 
@@ -402,29 +402,29 @@
 
 <blockquote><strong>ミニ例：</strong> モジュールを置き、詰め切れなくなった。2 つ目を隣接して増設：どちらを開いても 中は 54 スロットの一覧。</blockquote>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>役割</td><td>なし</td></tr><tr><td>バッファ（EU/FE）</td><td>0</td></tr><tr><td>最大入力（EU/FE/ティック）</td><td>n/a</td></tr><tr><td>最大出力（EU/FE/ティック）</td><td>n/a</td></tr><tr><td>EU/FE/ティック</td><td>0</td></tr></tbody></table>
 
 <p>モジュールはエネルギーネットワークに参加しません：EU/FE を伝導せず、ケーブルに接続されません。</p>
 
-<h2>インベントリ</h2>
+<h2 id="インベントリ">インベントリ</h2>
 
 <table><thead><tr><th>スロット</th><th>受け入れ</th><th>数</th></tr></thead><tbody><tr><td>モジュールの収納</td><td>あらゆるアイテム</td><td>27（3 段 × 9）</td></tr></tbody></table>
 
 <p><strong>アイテムは物理的に置いたモジュールの中にあります。</strong> 共通の「メイン」インベントリはありません： 倉庫のウィンドウは全モジュールのインベントリを一覧できるビューであり、独立した収納ではありません。 ここから他の挙動が派生します：破壊時に何がドロップするか、チャンクがアンロードされた時に何が起きるか。</p>
 
-<h3>共通倉庫の積み上げ方</h3>
+<h3 id="共通倉庫の積み上げ方">共通倉庫の積み上げ方</h3>
 
 <table><thead><tr><th>隣接モジュール数</th><th>倉庫のスロット</th><th>全段数</th><th>表示される段数</th><th>スクロール</th></tr></thead><tbody><tr><td>1</td><td>27</td><td>3</td><td>3</td><td>なし</td></tr><tr><td>2</td><td>54</td><td>6</td><td>6</td><td>なし（バーは非活性）</td></tr><tr><td>3</td><td>81</td><td>9</td><td>6</td><td>3 段</td></tr><tr><td>4</td><td>108</td><td>12</td><td>6</td><td>6 段</td></tr><tr><td>5 以上</td><td>108（上限）</td><td>12</td><td>6</td><td>6 段</td></tr></tbody></table>
 
 <p>スロットと段数は <strong>変わっていません</strong> — 変わったのはウィンドウだけです：6 段以上は表示せず、 残りは右側のスクロールバーで表示します。なぜ 6 段なのかは「バランス」の節で。</p>
 
-<h3>結合ルール</h3>
+<h3 id="結合ルール">結合ルール</h3>
 
 <p>モジュールは、倉庫の別のモジュールに <strong>面で</strong> 接する場合に倉庫へ入ります。辺や角での接触は カウントされません — これで 2 つの独立した倉庫をぴったりと並べられます。 セットはウィンドウを開くたびに再計算されます：クリックしたモジュールから走査します。 何も記憶されないため、モジュールの設置や撤去は再構築を一切不要とします。 構造内にモジュールが 4 個より多い場合、走査順の最初の 4 個が倉庫に入ります。同じ構造の別の モジュールをクリックすると別の 4 個になる可能性があります — ウィンドウは接続されたモジュール数を 表示するため、見えます。</p>
 
-<h2>インターフェース</h2>
+<h2 id="インターフェース">インターフェース</h2>
 
 <p>ウィンドウは 2 サイズ：単体モジュールは <strong>3 段</strong>（176×166）、 それより大きい倉庫は <strong>6 段</strong>（195×220）。 <strong>スクロールバー</strong> — グリッドの右、パネル幅に追加された 19 px。マウスホイール、つまみのドラッグ、 レールのクリックに対応します。 2 モジュールの倉庫にはスクロール対象がなく、バーは <strong>非活性の色合い</strong> で描かれます。消えるのでは ありません：あるかないか分かりにくい要素より、見えて無効な方が読みやすいです。 <strong>Shift クリックは画面にない段にもアイテムを置きます。</strong> これは些細なことではありません：バニラの shift クリックはメニュースロットで動作し、ウィンドウには 6 段しかないため、「自明な」実装は倉庫の 中途で静かに止まり、半分空いているのに「満杯」と報告していました。 検索はありません — 108 スロットには小さすぎます。</p>
 
@@ -432,11 +432,11 @@
 
 <p><strong>なぜビューであって、スロットの引っ越しかでないか。</strong> <code>Slot.x</code>/<code>Slot.y</code> は <code>public final</code> で、 メニューのスロットリストはネットワーク契約の一部です：<code>ClientboundContainerSetSlot</code> のインデックスは その中の位置であり、稼働中のメニュー下でリストを再構築するとクライアントを同期不全にします。 バニラで唯一のスクロール可能なショーケース（クリエイティブインベントリ）も同じ解決策です： スロットは動かず、動くのは後ろのコンテナが応答する対象です。</p>
 
-<h2>ブロックの性質</h2>
+<h2 id="ブロックの性質">ブロックの性質</h2>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>形状</td><td>完全な立方体 16³</td></tr><tr><td>硬度</td><td>3.0</td></tr><tr><td>爆発耐性</td><td>6.0</td></tr><tr><td>ツール</td><td>ツルハシ</td></tr><tr><td>NBT ドロップ</td><td>false — 中身はアイテムに <strong>保存されない</strong></td></tr></tbody></table>
 
-<h3>外観：倉庫は 1 つのキャビネットに見える</h3>
+<h3 id="外観倉庫は-1-つのキャビネットに見える">外観：倉庫は 1 つのキャビネットに見える</h3>
 
 <p>モジュールは <strong>3 つの引き出し</strong> を持つ鋼のキャビネットです：ウィンドウに追加する 9 スロットの段につき 1 つの引き出し。上下は引き出示ではなく、奥まったサービスパネル付きの本体のスラブです。</p>
 
@@ -462,17 +462,17 @@
 
 <p><strong>中身は再読み込みを生き残ります。</strong> <code>TC-STOR-013</code> はモジュールを NBT 経由で（チャンクの保存と 読み込みと同じ経路で）駆動し、スロットがずれないことも検証します：2 つの占有スロットの間に意図的に 空けたスロットは空のままでなければなりません。</p>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p>クラフト： — <a href="../components/material_forms.html">鉄板</a> 4 個を バニラのチェストの周りに十字に。</p>
 
 <p>レシピは意図的に安価です：容量増設は進行の節目ではなく、消耗品です。</p>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p>ティア：なし — エネルギー不要、最初の板の直後に利用可能。 収納の系譜での位置：<a href="iron_chest.html">鉄のチェスト</a> 36 → <a href="silver_chest.html">銀のチェスト</a> 45 → <a href="gold_chest.html">金のチェスト</a> 54 → <a href="electrum_chest.html">エレクトラムのチェスト</a> 81 → モジュールの倉庫 108。チェストは価値を下げません：1 ブロックで全容量を与え、倉庫は 4 個を要します。 次：<a href="../machines/assembler.html">組立機</a>がこの倉庫から直接原料を取れるようになります。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="gold_chest.html">金のチェスト</a> — 前段の収納 <a href="../components/material_forms.html">材料の形態</a> — クラフト用の板 <a href="stock_display_frame.html">在庫表示額縁</a> — アンロード済みチャンク対策の見本 <a href="../machines/assembler.html">組立機</a> — 倉庫の将来の消費者 <a href="../item-transport/item_pipe.html">アイテムパイプ</a> — 倉庫を外から充填</p>
 

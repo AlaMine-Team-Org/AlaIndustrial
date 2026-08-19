@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепти</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="10 сторінок">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="4 сторінки">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Інше</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилітарні блоки</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
 <div class="group-title">Предмети</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
   </aside>
@@ -392,17 +392,17 @@
     </div>
   </div>
 </div>
-<h2>Зведення</h2>
+<h2 id="зведення">Зведення</h2>
 
 <p><strong>Вулканізатор</strong> завершує нафтовий ланцюжок: один сирий каучук і чотири пили сірки перетворюються на гуму. Машина працює лише при подачі EU/FE і наявності джерела тепла прямо під нею.</p>
 
 <blockquote><strong>Міні-приклад:</strong> поставте Вулканізатор на запалене багаття, покладіть сирий каучук у лівий слот, чотири пили сірки — у правий, підведіть LV-кабель збоку й отримайте одну гуму.</blockquote>
 
-<h2>Енергія</h2>
+<h2 id="енергія">Енергія</h2>
 
 <table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Внутрішній буфер</td><td>800 EU/FE</td></tr><tr><td>Макс. вхід</td><td>32 EU/FE/такт (LV)</td></tr><tr><td>Споживання</td><td>2 EU/FE/такт під час роботи</td></tr><tr><td>Ціна операції</td><td>400 EU/FE</td></tr><tr><td>Тривалість</td><td>200 тиків (~10 с)</td></tr></tbody></table>
 
-<h2>Нагрів знизу</h2>
+<h2 id="нагрів-знизу">Нагрів знизу</h2>
 
 <p>Джерело читається в блоці безпосередньо під машиною.</p>
 
@@ -414,25 +414,25 @@
 
 <p>Якщо рівень нагріву <strong>падає</strong> під час операції, прогрес безпечно починається заново з новим множником; інгредієнти при перезапуску не витрачаються. Якщо рівень <strong>зростає</strong>, партія спокійно дограється на тому множнику, з яким почалася, а підвищення дістається вже наступній — так підміна нагріву в останній тик не підвищує вихід майже завершеної операції.</p>
 
-<h2>Інвентар і автоматизація</h2>
+<h2 id="інвентар-і-автоматизація">Інвентар і автоматизація</h2>
 
 <table><thead><tr><th>Слот</th><th>Приймає</th></tr></thead><tbody><tr><td>Лівий вхід</td><td>сирий каучук</td></tr><tr><td>Правий вхід</td><td>пил сірки</td></tr><tr><td>Вихід</td><td>гума</td></tr></tbody></table>
 
 <p>Входи обслуговуються зверху, вихід — з бічних граней. Нижня грань зарезервована під нагрів і не публікується предметній автоматизації.</p>
 
-<h2>Інтерфейс</h2>
+<h2 id="інтерфейс">Інтерфейс</h2>
 
 <p>Екран показує енергію, прогрес, обидва входи, вихід, джерело тепла й множник ×1/×2/×3. Статус пояснює простій: немає інгредієнтів, немає EU/FE, потрібен нагрів знизу або зайнятий вихід.</p>
 
-<h2>Властивості блока</h2>
+<h2 id="властивості-блока">Властивості блока</h2>
 
 <p>Кайло; при руйнуванні випадає сам блок і вміст інвентаря. Світиться й випускає пару лише під час роботи. Зміна блока знизу помічається одразу.</p>
 
-<h2>Рецепт</h2>
+<h2 id="рецепт">Рецепт</h2>
 
 <p>Збирається на верстаку з пилу сірки, залізних зливків, корпусу машини та електронної схеми.</p>
 
-<h2>Зв'язки</h2>
+<h2 id="звязки">Зв'язки</h2>
 
 <p><a href="polymerizer.html">Полімеризатор</a> виробляє сирий каучук. <a href="../materials/sulfur.html">Сірка</a> дає пил сірки. <a href="../components/rubber.html">Гума</a> описує продукт і весь ланцюжок.</p>
 

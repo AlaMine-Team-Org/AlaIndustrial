@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -392,19 +392,19 @@
     </div>
   </div>
 </div>
-<h2>概览</h2>
+<h2 id="概览">概览</h2>
 
 <p><strong>园艺无人机基站</strong>——1×1 的方块底座（如同扫地机器人的基座），无人机会从中升空并巡视基站 周围半径 4 格的区域。无人机不是 Entity，而是由基站本身的 绘制的对象 —视觉上它看起来和移动起来都像飞行器，但物理上始终「属于」基站方块，无法离开其区域。</p>
 
 <p>玩家把种子和骨粉放进基站，接上 EU/FE——无人机就会自己维护农田：犁空闲的土地、在空的犁好 格子里种种子、用骨粉加速未成熟作物的生长，并把成熟作物直接运回其输出槽（世界中不出现 <code>ItemEntity</code>）。它取代了计划中但未实现的「自动作物护理」（<code>crop_matron</code>）和「收割机」 （<code>crop_harvester</code>）——一个方块替代两个，不重复机制。</p>
 
-<h2>能量</h2>
+<h2 id="能量">能量</h2>
 
 <table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>角色</td><td>带缓存的消费者</td></tr><tr><td>缓存（EU/FE）</td><td>4000（）</td></tr><tr><td>最大输入（EU/FE/刻）</td><td>32（LV）</td></tr><tr><td>最大输出（EU/FE/刻）</td><td>n/a（不输出）</td></tr><tr><td>每次行动 EU/FE</td><td><strong>8</strong>（）</td></tr></tbody></table>
 
 <p>基站作为普通消费者在所有工作面上接入能源网络。EU/FE 仅<strong>为实际执行的动作</strong>扣除——犁地、 种植、施肥或采集一格——遵循<a href="../machines/electric_heater.html">电热器</a>的模式：空闲（区域内 无事可做——种子/肥料耗尽，或所有格子已处理）消耗 0 EU/FE，基站会进入休眠 进入 idle-sleep，不浪费能量，也不变成网络的寄生槽。</p>
 
-<h2>加工</h2>
+<h2 id="加工">加工</h2>
 
 <p>基站不使用加工配方系统——取而代之，每次无人机起飞（找到目标时）对区域中的一个格子执行 四种动作之一。</p>
 
@@ -436,31 +436,31 @@
 
 <p><strong>无玩家的采集。</strong> 基站不通过 <code>ServerPlayer</code> 路径破坏方块（没有玩家）——取而代之，它在 server-side 计算成熟作物的掉落，放入自己的输出槽，仅在全成功时直接拆除作物方块。不创建 <code>ItemEntity</code>，也不创建方块破坏事件——与<a href="../fluid-machines/pump.html">抽水泵</a>抽干水源时相同的 有意取舍。</p>
 
-<h2>物品栏</h2>
+<h2 id="物品栏">物品栏</h2>
 
 <table><thead><tr><th>槽位</th><th>接受</th><th>数量</th></tr></thead><tbody><tr><td>种子（0）</td><td>带对应作物种子标签的物品</td><td>至一叠</td></tr><tr><td>肥料（1）</td><td><code>minecraft:bone_meal</code></td><td>至一叠</td></tr><tr><td>无人机（6）</td><td>——没有它基站不工作</td><td>1</td></tr><tr><td>锄（7）</td><td>任何锄（<code>#minecraft:hoes</code>）；在犁地和采集时消耗</td><td>1</td></tr><tr><td>输出 1–4（2–5）</td><td>仅基站自动插入（作物）；外部手动/自动化插入被阻止</td><td>各至一叠</td></tr></tbody></table>
 
 <p>四个输出槽而非一个——成熟作物一次动作可能产生多种类型的物品（例如小麦会分别给出小麦本 身和小麦种子）；模组机器基础模型不支持单一槽位混合内容。掉落物插入输出槽是两遍式的 （「先模拟所有堆叠容量 → 仅在全成功时变更」），输出满时不会有部分作物丢失。</p>
 
-<h2>界面</h2>
+<h2 id="界面">界面</h2>
 
 <p>类型：<strong>container</strong>（基站 GUI）。 显示：能量缓存（条）、种子/肥料/输出槽、基站状态（缺资源 / 工作中 / 本周期全部完成 —可从远处通过无人机模型上的灯颜色读出）。</p>
 
-<h2>方块属性</h2>
+<h2 id="方块属性">方块属性</h2>
 
 <p>基站基座不是完整的立方体：1×1 方块的薄板，带高亮的着陆轮廓、两个充电触点和角落的黄灯。 无人机由 绘制在其上，物理上没有独立于基站的碰撞箱/选中箱。</p>
 
 <table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>形状</td><td>较低高度的板（非完整立方体；遮挡体在方块下半部分）</td></tr><tr><td>硬度</td><td>3.0</td></tr><tr><td>爆炸抗性</td><td>6.0</td></tr><tr><td>工具</td><td>镐</td></tr><tr><td>带 NBT 能量掉落</td><td>无（缓存/物品栏/无人机状态通过 <code>ValueInput</code>/<code>ValueOutput</code> 保存，而非通过物品 NBT 掉落）</td></tr></tbody></table>
 
-<h2>配方</h2>
+<h2 id="配方">配方</h2>
 
 <p>合成：（铁/钢外壳、电子电路、作为 「向内收集」的漏斗、作为螺钉的铜）。 没有加工配方——基站不加工物品。</p>
 
-<h2>进阶</h2>
+<h2 id="进阶">进阶</h2>
 
 <p>等级：LV。 供电：来自任何 LV 源，例如<a href="../generators/generator.html">发电机</a>。 取代（在 中，无代码）：「自动作物护理」（<code>crop_matron</code>）和「收割机」 （<code>crop_harvester</code>）——一个方块替代两个固定方块，结果相同。 需要：合成用的电子电路（与本模组大多数 LV 机器一样）。</p>
 
-<h2>相关内容</h2>
+<h2 id="相关内容">相关内容</h2>
 
 <p><a href="../items/scythe.html">大镰刀</a>——可复用作物成熟度谓词的来源。 <a href="trellis.html">棚架</a>——本模组中已有的 <code>BonemealableBlock</code> 先例。 <a href="incubator.html">培育舱</a>——带按索引标签验证的多槽物品栏和超出基础的 <code>ContainerData</code> 的范例。 <a href="../fluid-machines/pump.html">抽水泵</a>——带限制的区域扫描范例，以及机器在自己的 tick 中 无玩家地改变世界方块的唯一先例。 <a href="../machines/electric_heater.html">电热器</a>——「仅因有用的刻消耗 EU/FE」（需求驱动）的范例。</p>
 

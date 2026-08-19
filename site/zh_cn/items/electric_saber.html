@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概览</h2>
+<h2 id="概览">概览</h2>
 
 <p><strong>电动军刀</strong>是电力装备系列第五件物品，也是该系列的第一件武器：在<a href="electric_drill.html">电钻</a>（石头）、<a href="electric_chainsaw.html">链锯</a>（木材）、<a href="electric_shovel.html">铲</a>（泥土）和<a href="electric_hoe.html">锄</a>（农田）之后，轮到战斗。系列契约不变：用 EU/FE 代替耐久，不会损坏，没电时不关闭而是降级。</p>
 
@@ -408,7 +408,7 @@
 
 <p>和本模组的其它 EU/FE 物品一样，军刀<strong>没有耐久</strong>且不会损坏：图标下方的横条显示的不是磨损，而是电量（黄色，LV 颜色）。</p>
 
-<h2>能量</h2>
+<h2 id="能量">能量</h2>
 
 <p>自带 EU/FE 缓存，独立于电网。在储能库的充能槽、穿在身上的能量背包以及充能站充电；只对生物的挥击消耗电量。</p>
 
@@ -416,34 +416,34 @@
 
 <p>消耗<strong>仅在服务端</strong>扣除，<strong>仅在真实造成伤害之后</strong>扣除，且<strong>仅对玩家</strong>。在创造模式下不消耗电量（）。</p>
 
-<h2>物品栏</h2>
+<h2 id="物品栏">物品栏</h2>
 
 <p>不适用——军刀没有内部物品存储（堆叠 1）。</p>
 
-<h2>物品属性</h2>
+<h2 id="物品属性">物品属性</h2>
 
 <p>不适用（物品）。</p>
 
-<h2>配方</h2>
+<h2 id="配方">配方</h2>
 
 <p>合成：——整系列相同框架，但中心是钻石剑：上方一行铁锭，两侧是两枚<a href="../components/battery.html">电池</a>，下方是两件<a href="../components/copper_coil.html">铜线圈</a>和一张<a href="../components/electronic_circuit.html">电子电路</a>。电池的电量会转移到成品军刀中。当玩家拥有铜线圈、电子电路或钻石剑时，配方会在配方书中解锁（进度 <code>recipes/misc/electric_saber</code>）。</p>
 
 <p><strong>修复</strong>——不适用：没有耐久，没什么可修；"修复"就是 EU/FE 充电。</p>
 
-<h2>行为</h2>
+<h2 id="行为">行为</h2>
 
 <p><strong>满电攻击。</strong> 只要刀刃开启且缓存中至少有 100 EU/FE，军刀造成 12 点伤害，每次有效命中扣 100 EU/FE，并对目标施加缓慢 II 持续 2 秒，伴随一串电火花。攻击速度为每秒 1.6 次，与原版剑一致。 <strong>攻击距离。</strong> 激活的刀刃让攻击距离 +1 格（4 而非 3）。这是真正的物品属性，因此客户端和服务端对距离的计算一致，相关说明也会出现在悬浮提示中伤害值旁边。 <strong>开关。</strong> Shift+右键切换刀刃；快捷栏上方出现提示信息，伴随金属咔哒声，图标熄灭。关闭的军刀不消耗 EU/FE、不造成加成攻击、不加距离也不造成电击——但电量保留。普通的右键什么也不做，也不干扰其他交互。 <strong>没电的军刀。</strong> 低于 100 EU/FE 时伤害降为 4，距离加成和电击消失，且不消耗 EU/FE。无任何消息：玩家通过横条、悬浮提示和熄灭的图标就能看出。 <strong>横扫。</strong> 军刀属于 <code>#minecraft:swords</code>，因此原版横扫攻击有效。无横扫之刃附魔时，相邻生物受到 1 点伤害，与任何剑一致；有该附魔时，横扫以基础 12 点计算，伤害明显更高。 <strong>附魔。</strong> 同一标签带来整套战斗附魔：锋利、亡灵杀手、节肢杀手、抢夺、火焰附加、击退、横扫之刃。耐久和经验修补可以附上，但在不损坏的军刀上毫无用处——就像<a href="electric_drill.html">电钻</a>那样。 <strong>方块。</strong> 像原版剑一样：瞬间切断蜘蛛网，快速破坏树叶、竹子等 <code>#minecraft:sword_efficient</code> 内容。破坏方块不消耗 EU/FE，也与电量无关。 <strong>充电：</strong> 储能库的充能槽、穿在身上的能量背包和充能站都会自动接受军刀，最高 32 EU/FE/刻。 <strong>指示：</strong> 图标下方的横条显示电量（黄色，LV 颜色）。悬浮提示——单次攻击消耗、刀刃状态、"电量：X / 10 000 EU/FE"；电量低于攻击消耗时该行变红。纹理在没电或关闭时切换为"熄灭"样式。 <strong>丢弃/死亡/重新登录：</strong> 电量和开关状态都保存在物品中，会保留。 <strong>创造模式：</strong> 不消耗电量。</p>
 
-<h2>进阶</h2>
+<h2 id="进阶">进阶</h2>
 
 <p>本模组第一件 EU/FE 武器，也是系列第五件物品；战斗分支与工具分支相互独立，但使用相同的电力和充能器。 在<a href="../energy-storage/battery_box.html">储能库</a>和电池之后可用：没有 LV 基础设施就无法合成与充电。加上配方里的钻石剑——意味着军刀是已有钻石武器的升级，而不是铁剑的替代。 LV 等级。远程 EU/FE 武器（纳米弓）属于未来工作。</p>
 
-<h2>相关内容</h2>
+<h2 id="相关内容">相关内容</h2>
 
 <p><a href="electric_drill.html">电钻</a>、<a href="electric_chainsaw.html">电动链锯</a>、<a href="electric_shovel.html">电动铲</a>、<a href="electric_hoe.html">电动锄</a>——同一系列的工具部分：相同的电力、相同的充能器、相同的不损坏特性。 <a href="electromagnet.html">电磁铁</a>——Shift+右键开关的范例。 <a href="fluxweave_armor.html">通量织物护甲</a>——第二件属性随电量变化的物品。 <a href="../energy-storage/battery_box.html">储能库</a>——军刀的充电来源（充能槽）。 <a href="tempered_iron_tools.html">淬火铁工具</a>——本模组上一阶战斗装备。</p>
 
 <h2>合成</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="电动军刀 alaindustrial:electric_saber" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="任意铁锭"><img src="../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铁锭"><img src="../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铁锭"><img src="../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="电池"><img src="../assets/item/battery_3d.png" alt="电池" width="32" height="32"></div> <div class="cell placeholder" title="Diamond Sword" aria-label="Diamond Sword"><span>diamon</span></div> <div class="cell" title="电池"><img src="../assets/item/battery_3d.png" alt="电池" width="32" height="32"></div> <div class="cell" title="铜线圈"><img src="../assets/item/copper_coil_3d.png" alt="铜线圈" width="32" height="32"></div> <div class="cell" title="电子电路"><img src="../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="铜线圈"><img src="../assets/item/copper_coil_3d.png" alt="铜线圈" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="电动军刀"><img src="../assets/item/electric_saber_3d.png" alt="电动军刀" width="32" height="32"></div><div class="result-name">电动军刀</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="电动军刀 alaindustrial:electric_saber" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="任意铁锭"><img src="../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铁锭"><img src="../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铁锭"><img src="../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="电池"><img src="../assets/item/battery_3d.png" alt="电池" width="32" height="32"></div> <div class="cell" title="Diamond Sword"><img src="../assets/vanilla/item/diamond_sword.png" alt="Diamond Sword" width="32" height="32"></div> <div class="cell" title="电池"><img src="../assets/item/battery_3d.png" alt="电池" width="32" height="32"></div> <div class="cell" title="铜线圈"><img src="../assets/item/copper_coil_3d.png" alt="铜线圈" width="32" height="32"></div> <div class="cell" title="电子电路"><img src="../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="铜线圈"><img src="../assets/item/copper_coil_3d.png" alt="铜线圈" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="电动军刀"><img src="../assets/item/electric_saber_3d.png" alt="电动军刀" width="32" height="32"></div><div class="result-name">电动军刀</div></div></div></div></div>
   </main>
 </div>
 

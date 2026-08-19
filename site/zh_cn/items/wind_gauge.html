@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -392,13 +392,13 @@
     </div>
   </div>
 </div>
-<h2>概览</h2>
+<h2 id="概览">概览</h2>
 
 <p>风速计是一件不需要能量的手持仪器。它不建造、不生产任何东西：它显示你所站位置的风速——以便在<a href="../generators/wind_mill.html">风力涡轮机</a>建造<strong>之前</strong>就选好塔的高度，而不是把塔拆了重搭三次。</p>
 
 <p>仪器<strong>不给建议</strong>。没有"再高一点"、"这里最优"或"距上限 N 格"之类的提示。它只给测量值——结论由玩家自己下。</p>
 
-<h2>使用方式</h2>
+<h2 id="使用方式">使用方式</h2>
 
 <p><strong>Shift + 右键</strong>手持仪器——对空气或对方块都一样，没有区别。行动栏会出现一行字，仪器短促地响一下：</p>
 
@@ -408,17 +408,17 @@
 
 <p>普通的右键不会被仪器拦截：它不会干扰放方块和打开机器。测量永远取自<strong>玩家所站位置</strong>，而非光标所瞄准的位置。</p>
 
-<h2>刻度</h2>
+<h2 id="刻度">刻度</h2>
 
 <p>读数是带一位小数的风速 km/h。该值<strong>在每个高度层都不同</strong>：上一格数字就变。几乎不会出现整数，这不是装饰：风力曲线是非线性的，因此 24.7 和 47.1 只是它在这些高度上的输出。</p>
 
-<p>风遵循同一条曲线，仪器和三台风力涡轮机共用（<a href="index.html#高度剖面">高度剖面</a>）。简而言之：地面无风，到云层逐渐加速，云缘处最强，云层之上空气稀薄风就减弱。</p>
+<p>风遵循同一条曲线，仪器和三台风力涡轮机共用（<a href="#高度剖面">高度剖面</a>）。简而言之：地面无风，到云层逐渐加速，云缘处最强，云层之上空气稀薄风就减弱。</p>
 
 <table><thead><tr><th>高度（海平面 63）</th><th>晴</th><th>雨</th><th>雷暴</th></tr></thead><tbody><tr><td>Y 63 及以下</td><td>0.0</td><td>0.0</td><td>0.0</td></tr><tr><td>Y 85</td><td>12.6</td><td>18.9</td><td>25.3</td></tr><tr><td>Y 100</td><td>18.6</td><td>28.0</td><td>37.3</td></tr><tr><td>Y 127</td><td>28.1</td><td>42.2</td><td>56.3</td></tr><tr><td>Y 160</td><td>39.7</td><td>59.6</td><td>79.5</td></tr><tr><td>Y 175</td><td>49.3</td><td>73.9</td><td>98.6</td></tr><tr><td>Y 185</td><td>56.8</td><td>85.2</td><td>113.5</td></tr><tr><td><strong>Y 192（云层）</strong></td><td>62.5</td><td>93.8</td><td>125.0</td></tr><tr><td>Y 198</td><td>47.1</td><td>70.7</td><td>94.2</td></tr><tr><td>Y 210</td><td>32.8</td><td>49.1</td><td>65.5</td></tr><tr><td>Y 230</td><td>15.9</td><td>23.9</td><td>31.9</td></tr><tr><td>Y 248 及以上</td><td>3.8</td><td>5.6</td><td>7.5</td></tr></tbody></table>
 
 <p>天气会乘以风速：晴 ×1，雨 ×1.5，雷暴 ×2。数值取自与风力涡轮机产能相同的设置，因此读数与产能不可能不一致。</p>
 
-<h2>高度剖面</h2>
+<h2 id="高度剖面">高度剖面</h2>
 
 <p>整模组共用一条曲线——仪器按它计算 km/h，风力涡轮机按它计算 EU/FE/t。四段：</p>
 
@@ -426,13 +426,13 @@
 
 <p>实践结论：<strong>世界上最风大的位置是紧贴云层下方的一条窄带</strong>。风力涡轮机只在少数几个高度上输出全功率：T1——Y 183–193（11 格），天空风车——Y 188–192（5 格），风暴风车——Y 189–192（4 格）。无论"再高一点"还是"快到世界上限"都不行：Y 230 上的塔比 Y 127 上的塔还弱。</p>
 
-<h2>天空与世界</h2>
+<h2 id="天空与世界">天空与世界</h2>
 
 <p><strong>封闭的天空 ⇒ 0.0 km/h</strong>，无论高度和天气如何。仪器检查天空的严格程度与风力涡轮机一致：点上方的整列必须完全通透。树叶和蜘蛛网算作封闭天空——它们下面的风力涡轮机是死的，不像太阳能板在树叶下只是损失部分产能。</p>
 
 <p>在下界和末地，仪器不显示数字，而是提示这里没有风：风力涡轮机在那里不工作，任何数字都只是杜撰。</p>
 
-<h2>刻度基准</h2>
+<h2 id="刻度基准">刻度基准</h2>
 
 <p>加速段由分支的峰顶定义，因此仪器选择一个基准——基础风力涡轮机 T1：玩家建造的第一台，也是仪器按合成可用时唯一存在的风力涡轮机。峰顶之上肩段和稀薄段对所有分支共用，因此基准只影响加速段的形状，而不影响风在哪里达到峰值、在哪里消亡。</p>
 
@@ -440,11 +440,11 @@
 
 <p>一个改配置时需要注意的细节：刻度的连续性依赖于每格步长大于 0.1 km/h。过度拉伸的剖面或过小的 会让相邻高度给出相同的数字。</p>
 
-<h2>配方</h2>
+<h2 id="配方">配方</h2>
 
 <p>两根木棍、一块玻璃板、两锭锡和两只木齿轮。不需要能量、不需要电路——一个简单的木质仪器，远在第一台风力涡轮机之前就能做出来。</p>
 
-<h2>相关内容</h2>
+<h2 id="相关内容">相关内容</h2>
 
 <p><a href="../generators/wind_mill.html">风力涡轮机</a>——仪器所参照的 T1 分支。 <a href="../generators/high_altitude_wind_mill.html">天空风车</a>——T2，同样的峰顶，基数翻倍。 <a href="../generators/storm_wind_mill.html">风暴风车</a>——T2，峰顶更高。</p>
 

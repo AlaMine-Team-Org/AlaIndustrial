@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>電動サーベル</strong>は電力装備ラインの5つ目のアイテムで、初の武器です。<a href="electric_drill.html">ドリル</a>（石）、<a href="electric_chainsaw.html">チェーンソー</a>（木）、<a href="electric_shovel.html">ショベル</a>（土）、<a href="electric_hoe.html">クワ</a>（農地）に続いて、戦闘の番です。ラインの契約は同じで、耐久値の代わりに EU/FE で動作し、壊れず、充電ゼロではオフになるのではなく性能が低下します。</p>
 
@@ -408,7 +408,7 @@
 
 <p>他の EU/FE アイテムと同様に、サーベルは<strong>耐久値がなく</strong>壊れることはありません。アイコン下のバーは摩耗ではなく EU/FE の充電量（黄色、LV 色）を示します。</p>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <p>エネルギーネットワークから独立した専用の EU/FE バッファを持ちます。エネルギー貯蔵庫のスロット、装備したエネルギーパック、充電ステーションで充電され、生物への打撃によってのみ充電を消費します。</p>
 
@@ -416,34 +416,34 @@
 
 <p>消費は<strong>サーバー側でのみ</strong>、<strong>実際にダメージが通った後のみ</strong>、<strong>プレイヤーのみ</strong>で差し引かれます。クリエイティブモードでは充電を消費しません（）。</p>
 
-<h2>インベントリ</h2>
+<h2 id="インベントリ">インベントリ</h2>
 
 <p>該当なし——サーベルは内部のアイテム収納を持ちません（スタック1）。</p>
 
-<h2>ブロックの性質</h2>
+<h2 id="ブロックの性質">ブロックの性質</h2>
 
 <p>該当なし（アイテム）。</p>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p>クラフト：——ライン全体と同じ枠組みですが、中央はダイヤモンドの剣です。上段に鉄インゴットの列、両脇に<a href="../components/battery.html">バッテリー</a>を2つ、下段に<a href="../components/copper_coil.html">銅コイル</a>を2つと<a href="../components/electronic_circuit.html">電子回路</a>を配置します。バッテリーの充電は完成したサーベルに引き継がれます。プレイヤーが銅コイル、電子回路、またはダイヤモンドの剣を入手するとレシピ帳で解放されます（進捗 <code>recipes/misc/electric_saber</code>）。</p>
 
 <p><strong>修理</strong>——該当なし：耐久値がないため修理するものがなく、「修理」は EU/FE の充電を指します。</p>
 
-<h2>挙動</h2>
+<h2 id="挙動">挙動</h2>
 
 <p><strong>充電時の打撃。</strong> ブレードがオンで、バッファに 100 EU/FE 以上ある間、サーベルはダメージ 12 を与え、ダメージが通った打撃ごとに 100 EU/FE を差し引き、ターゲットに移動速度低下 II を2秒間と電気火花の飛散を与えます。攻撃速度はバニラの剣と同じ 1.6 回/秒です。 <strong>リーチ。</strong> 活きたブレードは打撃の距離に +1 ブロックを加えます（3 ではなく 4）。これは実際のアイテム属性であるため、クライアントとサーバーの両方が同じように距離を計算し、ツールチップのダメージの隣にその行が表示されます。 <strong>スイッチ。</strong> Shift+右クリックでブレードを切り替えます。ホットバー上にメッセージが表示され、金属的なクリック音が鳴り、アイコンが消灯します。オフのサーベルは EU/FE を消費せず、強化打撃や延長リーチ、スタンを与えませんが、充電は維持します。通常の右クリックは何もせず、他の操作を妨げません。 <strong>放電したサーベル。</strong> 100 EU/FE 未満ではダメージが 4 に低下し、リーチボーナスと放電が失われ、EU/FE は消費されません。メッセージは一切ありません。プレイヤーはバー、ツールチップ、消灯したアイコンで判断します。 <strong>なぎ払い。</strong> サーバベルは <code>#minecraft:swords</code> に属するため、バニラのなぎ払い打撃が機能します。なぎ払い強化のエンチャントがない場合、隣接する mob は他の剣と同様に 1 ダメージを受けます。エンチャントがある場合、基本 12 から計算され、顕著に強くなります。 <strong>エンチャント。</strong> 同じタグにより全戦闘セットが付与可能です。ダメージ増加、特効、虫特効、ドロップ増加、火属性、ノックバック、なぎ払い強化。耐久と修繕は付与できますが、壊れないサーベルでは<a href="electric_drill.html">ドリル</a>と同様に無意味です。 <strong>ブロック。</strong> バニラの剣と同様で、クモの巣を瞬時に切り、葉、竹など <code>#minecraft:sword_efficient</code> を素早く破壊します。ブロックの破壊は EU/FE を消費せず、充電にも依存しません。 <strong>充電：</strong> エネルギー貯蔵庫のスロット、装備したエネルギーパック、充電ステーションは自動的にサーベルを受け付け、最大 32 EU/FE/ティックまで充電します。 <strong>表示：</strong> アイコン下のバーが充電量を示します（黄色、LV 色）。ツールチップには打撃コスト、ブレードの状態、「充電量：X / 10 000 EU/FE」が表示されます。打撃コストを下回ると行が赤くなります。テクスチャはサーベルが放電またはオフのとき「消灯」状態に切り替わります。 <strong>ドロップ／死亡／再ログイン：</strong> 充電量とスイッチの状態はアイテムに保存され、保持されます。 <strong>クリエイティブ：</strong> 充電を消費しません。</p>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p>本MOD初の EU/FE 武器であり、ラインの5つ目のアイテムです。戦闘系統は道具系統から分岐していますが、同じエネルギーと同じ充電器を使用します。 <a href="../energy-storage/battery_box.html">エネルギー貯蔵庫</a>とバッテリーの後に利用可能です。LV インフラなしにはクラフトも充電もできません。加えてレシピにはダイヤモンドの剣が必要で、サーベルは鉄の武器ではなく完成したダイヤモンド武器の後継として登場します。 LV 等級。遠距離 EU/FE 武器（ナノボウ）は今後の課題です。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="electric_drill.html">電動ドリル</a>、<a href="electric_chainsaw.html">電動チェーンソー</a>、<a href="electric_shovel.html">電動ショベル</a>、<a href="electric_hoe.html">電動クワ</a>——同じラインの道具陣で、同じエネルギー、同じ充電器、同じ耐久値なし。 <a href="electromagnet.html">電磁石</a>——Shift+右クリックのスイッチの先例。 <a href="fluxweave_armor.html">フラックスウィーブ防具</a>——属性が充電に追従する2つ目のアイテム。 <a href="../energy-storage/battery_box.html">エネルギー貯蔵庫</a>——サーベルの充電源（charge スロット）。 <a href="tempered_iron_tools.html">焼き入れ鉄の道具</a>——本MODの前段階の戦闘装備。</p>
 
 <h2>クラフト</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="電動サーベル alaindustrial:electric_saber" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="いずれかの鉄インゴット"><img src="../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの鉄インゴット"><img src="../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの鉄インゴット"><img src="../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="電池"><img src="../assets/item/battery_3d.png" alt="電池" width="32" height="32"></div> <div class="cell placeholder" title="Diamond Sword" aria-label="Diamond Sword"><span>diamon</span></div> <div class="cell" title="電池"><img src="../assets/item/battery_3d.png" alt="電池" width="32" height="32"></div> <div class="cell" title="銅コイル"><img src="../assets/item/copper_coil_3d.png" alt="銅コイル" width="32" height="32"></div> <div class="cell" title="電子回路"><img src="../assets/item/electronic_circuit_3d.png" alt="電子回路" width="32" height="32"></div> <div class="cell" title="銅コイル"><img src="../assets/item/copper_coil_3d.png" alt="銅コイル" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="電動サーベル"><img src="../assets/item/electric_saber_3d.png" alt="電動サーベル" width="32" height="32"></div><div class="result-name">電動サーベル</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="電動サーベル alaindustrial:electric_saber" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="いずれかの鉄インゴット"><img src="../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの鉄インゴット"><img src="../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの鉄インゴット"><img src="../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="電池"><img src="../assets/item/battery_3d.png" alt="電池" width="32" height="32"></div> <div class="cell" title="Diamond Sword"><img src="../assets/vanilla/item/diamond_sword.png" alt="Diamond Sword" width="32" height="32"></div> <div class="cell" title="電池"><img src="../assets/item/battery_3d.png" alt="電池" width="32" height="32"></div> <div class="cell" title="銅コイル"><img src="../assets/item/copper_coil_3d.png" alt="銅コイル" width="32" height="32"></div> <div class="cell" title="電子回路"><img src="../assets/item/electronic_circuit_3d.png" alt="電子回路" width="32" height="32"></div> <div class="cell" title="銅コイル"><img src="../assets/item/copper_coil_3d.png" alt="銅コイル" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="電動サーベル"><img src="../assets/item/electric_saber_3d.png" alt="電動サーベル" width="32" height="32"></div><div class="result-name">電動サーベル</div></div></div></div></div>
   </main>
 </div>
 

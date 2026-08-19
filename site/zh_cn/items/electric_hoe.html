@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概览</h2>
+<h2 id="概览">概览</h2>
 
 <p><strong>电动锄</strong>是本系列第四件也是最后一件手持电动工具：在<a href="electric_drill.html">电钻</a>（石头）、<a href="electric_chainsaw.html">链锯</a>（木材）和<a href="electric_shovel.html">铲</a>（泥土）之后，它负责农田。契约相同：用 EU/FE 代替耐久，不会损坏，没电时仍以徒手速度工作并完整保留掉落。</p>
 
@@ -410,7 +410,7 @@
 
 <p>和本模组的其它 EU/FE 物品一样，锄<strong>没有耐久</strong>且不会损坏：图标下方的横条显示的不是磨损，而是 EU/FE 电量（黄色，LV 颜色）。</p>
 
-<h2>能量</h2>
+<h2 id="能量">能量</h2>
 
 <p>自带 EU/FE 缓存，独立于电网。在储能库的充能槽和穿戴在身上的能量背包中充电；锄地和破坏方块都消耗电量。</p>
 
@@ -418,25 +418,25 @@
 
 <p>消耗<strong>仅在服务端</strong>扣除，且<strong>仅针对硬度非零的方块</strong>。在创造模式下不消耗电量（）。</p>
 
-<h2>物品栏</h2>
+<h2 id="物品栏">物品栏</h2>
 
 <p>不适用——锄没有内部物品存储（堆叠 1）。</p>
 
-<h2>物品属性</h2>
+<h2 id="物品属性">物品属性</h2>
 
 <p>不适用（物品）。</p>
 
-<h2>配方</h2>
+<h2 id="配方">配方</h2>
 
 <p>合成：框架与其余三件相同，但中心是钻石锄：上方一行铁锭，两侧是两枚<a href="../components/battery.html">电池</a>，下方是两件<a href="../components/copper_coil.html">铜线圈</a>和一张<a href="../components/electronic_circuit.html">电子电路</a>。电池中持有的电量会带入成品锄中。当玩家拥有铜线圈、电子电路或钻石锄时，配方会在配方书中解锁。</p>
 
 <p><strong>修复</strong>——不适用：没有耐久，没什么可修；"修复"就是 EU/FE 充电。</p>
 
-<h2>行为</h2>
+<h2 id="行为">行为</h2>
 
 <p><strong>锄地及其它右键转化——消耗 50 EU/FE。</strong> 泥土、草地、土路 → 农田；灰化土 → 泥土；缠根泥土 → 泥土 + 垂根，与原版锄头完全一致。<strong>只有当转化真正发生时</strong>才扣电量：点在石墙上或已经锄过的农田上都不会动缓存。电量不够时锄不会锄地，并会在快捷栏上方提示——就像电钻放火把那样，但<strong>仅限指向可锄方块时</strong>：没电的锄右键点在石头、箱子或别的方块上会直接放行，既不提示也不拦截，副手物品照常生效（）。 <strong>破坏方块：</strong> 当电量 ≥ 50 EU/FE 时，锄以 9.0 的速度破坏 <code>#minecraft:mineable/hoe</code>（钻石锄为 8.0）。每破这样一个方块扣 50 EU/FE。 <strong>没电的锄：</strong> 电量低于 50 EU/FE 时以徒手速度（1.0）破坏，但采集等级和掉落都保留，且不消耗 EU/FE。此时效率附魔不起作用（原版门槛为 <code>speed &gt; 1.0</code>）。没电的锄不能锄地——见上文。 <strong>充电：</strong> 储能库的充能槽和穿在身上的能量背包都会自动接受锄，最高 32 EU/FE/刻。 <strong>攻击：</strong> 像原版锄一样——不是武器（伤害 1，攻击速度 4）。挥击<strong>不消耗 EU/FE</strong>，也不磨损锄。 <strong>附魔：</strong> 锄属于 <code>#minecraft:hoes</code>，因此附魔台和铁砧把它当作锄。耐久和经验修补在不损坏的锄上毫无用处，但也没有害处。 <strong>作物收割——不支持。</strong> 这是<a href="scythe.html">大镰刀</a>的工作，它就是为此而做；没必要在锄里复制一遍。 <strong>指示：</strong> 图标下方的横条显示电量（黄色，LV 颜色）。悬浮提示——"电量：X / 10 000 EU/FE"，归零时显示红色"已放电"。纹理在零电量时切换为"熄灭"样式。 <strong>丢弃/死亡/重新登录：</strong> 电量保存在物品中，会保留。 <strong>创造模式：</strong> 不消耗电量。</p>
 
-<h2>金刚石涂层（升级）</h2>
+<h2 id="金刚石涂层升级">金刚石涂层（升级）</h2>
 
 <p><strong>金刚石涂层电动锄</strong>（，）是电动锄的第二档，也是本系列继 <a href="electric_drill.html">金刚石涂层电钻</a>和<a href="electric_chainsaw.html">金刚石涂层电动链锯</a>之后的第三个升级。相对基础 电动锄只有两处不同，其余一切原样继承。</p>
 
@@ -462,11 +462,11 @@
 
 <blockquote><strong>配方需要手动摆放。</strong> 配方书的自动填充按钮不会拾取已充电的锄头：原版在物品栏中查找材料时会比较物品 组件，而已充电的锄头带有 <code>pouch_energy</code>，展示用的样品却没有。这是原版的限制，三个升级都一样——详见任务 。</blockquote>
 
-<h2>进阶</h2>
+<h2 id="进阶">进阶</h2>
 
 <p>本系列第四件也是最后一件电动工具：<a href="electric_drill.html">电钻</a>负责石头，<a href="electric_chainsaw.html">链锯</a>负责木材，<a href="electric_shovel.html">铲</a>负责泥土，锄负责农田。 在<a href="../energy-storage/battery_box.html">储能库</a>和电池之后可用：没有 LV 基础设施就无法合成与充电。 LV 等级。其余电力物品（军刀/纳米弓/纳米激光剑）属于未来工作。</p>
 
-<h2>相关内容</h2>
+<h2 id="相关内容">相关内容</h2>
 
 <p><a href="electric_drill.html">电钻</a>——系列中负责石料的部分，每方块消耗相同。 <a href="electric_chainsaw.html">电动链锯</a>——系列中负责木材的部分。 <a href="electric_shovel.html">电动铲</a>——负责泥土的部分；同样使用右键委托，但它的动作免费，而锄的是付费。 <a href="scythe.html">大镰刀</a>——收割作物的工具，锄无法替代它。 <a href="../energy-storage/battery_box.html">储能库</a>——锄的充电来源（充能槽）。</p>
 

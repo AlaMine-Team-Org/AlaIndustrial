@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Other</div>
 <a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 
 <p>The <strong>Electrum Chest</strong> is a storage block with <strong>81 slots</strong> (9 rows of 9) — half again as much as the <a href="gold_chest.html">Gold Chest</a> (54). It uses no energy; it's the "civilian" top tier of the storage line.</p>
 
@@ -400,19 +400,19 @@
 
 <p>Electrum is an alloy of gold and silver, and the chest looks the part: pale gold, lighter and cooler than the gold tier. The lid is animated, and the open sound is the same metallic one the other tiers use.</p>
 
-<h2>Inventory</h2>
+<h2 id="inventory">Inventory</h2>
 
 <p>Takes any items — 81 slots across 9 rows of 9.</p>
 
 <table><thead><tr><th>Slots</th><th>Accepts</th><th>Count</th></tr></thead><tbody><tr><td>Storage</td><td>any items</td><td>81 (9 rows × 9)</td></tr></tbody></table>
 
-<h2>Interface</h2>
+<h2 id="interface">Interface</h2>
 
 <p>The window shows <strong>six rows out of nine</strong>; the rest are reached with the <strong>scrollbar</strong> on the right — the same way the <a href="storage_module.html">modular warehouse</a> and the double chest work. The mouse wheel, dragging the thumb and clicking the groove all work.</p>
 
 <p><strong>Shift-click puts items into the rows that are off screen too.</strong> That matters: a plain shift-click works over the window's visible slots and at this capacity would silently stop at the sixth row, reporting "full" while a third of the chest sits empty.</p>
 
-<h3>Why scrolling instead of one more row</h3>
+<h3 id="why-scrolling-instead-of-one-more-row">Why scrolling instead of one more row</h3>
 
 <p>The three tiers below grew by exactly one row each, because the window grew with them. That ended at gold — not by choice, but against a measured screen ceiling.</p>
 
@@ -422,7 +422,7 @@
 
 <p>The gold chest already sits on that ceiling. So the next tier changes the <strong>window</strong> rather than the number of rows on screen. And once the window stopped being the limit, there was no reason to charge a ring of expensive alloy for a token nine slots — hence the jump straight to 81.</p>
 
-<h2>Double Chest</h2>
+<h2 id="double-chest">Double Chest</h2>
 
 <p>Two electrum chests placed side by side, facing the same way, <strong>merge into one double chest of 162 slots</strong> (18 rows) — by the same vanilla placement rules as the other tiers: without sneaking a new chest joins a suitable neighbour by itself, sneak-clicking a side face attaches it deliberately, and sneaking elsewhere keeps it single. Different tiers never merge.</p>
 
@@ -430,25 +430,25 @@
 
 <p><strong>Lid and sound</strong> are shared: both halves lift together and the sound plays once, from the seam. <strong>Automation sees a double as one container</strong>: a hopper, dropper or item pipe that fills one half continues into the other. <strong>Breaking one half</strong> returns the other to single; each half drops only its own contents. A comparator reads the fill level (for a double — the combined one, identically from either half), and the chest can be waterlogged.</p>
 
-<h2>Block properties</h2>
+<h2 id="block-properties">Block properties</h2>
 
 <p>A squat chest block, like every vanilla chest and the previous tiers. Properties are identical to the iron, silver and gold chests.</p>
 
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>squat 14×14×14 column</td></tr><tr><td>Hardness</td><td>3.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe (any, no tier gate)</td></tr><tr><td>Drops itself</td><td>yes; contents spill when broken</td></tr></tbody></table>
 
-<h2>Recipes</h2>
+<h2 id="recipes">Recipes</h2>
 
 <p>A ring of eight <a href="../materials/electrum.html">electrum ingots</a> around a gold chest. Contents survive the upgrade.</p>
 
 <p>The same ring of eight ingots gave +9 slots on the previous tiers and gives +27 here — deliberately: once the window changes mechanics anyway, a token increase for the mod's top alloy is not justified.</p>
 
-<h2>Progression</h2>
+<h2 id="progression">Progression</h2>
 
 <p>The chest line: vanilla copper (27) → <a href="iron_chest.html">iron</a> (36) → <a href="silver_chest.html">silver</a> (45) → <a href="gold_chest.html">gold</a> (54) → <strong>electrum (81)</strong>.</p>
 
 <p>The electrum chest does <strong>not</strong> devalue the <a href="storage_module.html">modular warehouse</a>: 81 slots is less than the warehouse's 108, but it is one block instead of four and needs no room to build. A double electrum chest (162) is the largest storage in the mod — and it costs sixteen electrum ingots on top of the whole upgrade chain beneath it.</p>
 
-<h2>Related</h2>
+<h2 id="related">Related</h2>
 
 <p><a href="gold_chest.html">Gold Chest</a> — the previous tier. <a href="../materials/electrum.html">Electrum</a> — the crafting material. <a href="storage_module.html">Storage Module</a> — the other warehouse answer; the source of the GUI-height measurements the scrolling decision rests on. <a href="stock_display_frame.html">Stock Display Frame</a> — shows the item count without opening the chest.</p>
 

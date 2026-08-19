@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепти</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="10 сторінок">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="4 сторінки">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Інше</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилітарні блоки</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
 <div class="group-title">Предмети</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
 <a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Зведення</h2>
+<h2 id="зведення">Зведення</h2>
 
 <p><strong>Батарейний мішок</strong> — перший електро-предмет моду: переносне сховище, яке працює як ванільний мішечок, але вдвічі місткіше й потребує заряду. В один слот інвентаря він вміщує <strong>128 ваги</strong> предметів (приблизно два стеки звичайних блоків) — виручає в довгих походах і при тісному інвентарі.</p>
 
@@ -400,35 +400,35 @@
 
 <blockquote><strong>Міні-приклад:</strong> ідете копати на годину? Набийте мішок брукняком, рудою, парою інструментів і звільніть хотбар. Зарядіть мішок на Енергосховищі перед виходом — повного заряду вистачить на весь рейс, приблизно на 33 хвилини носіння.</blockquote>
 
-<h2>Енергія</h2>
+<h2 id="енергія">Енергія</h2>
 
 <p>У мішка власний невеликий заряд, окремий від енергомережі. Заряджається на Енергосховищі; витрачає заряд лише поки всередині лежать предмети й мішок в інвентарі.</p>
 
 <table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Заряд</td><td>2 000 EU/FE</td></tr><tr><td>Заряджання</td><td>слот Енергосховища — повний заряд приблизно за 3 секунди</td></tr><tr><td>Розряд</td><td>1 EU/FE за секунду, лише поки всередині є предмети й мішок в інвентарі</td></tr><tr><td>Вистачає на</td><td>~33 хвилини носіння предметів</td></tr><tr><td>При нулі</td><td>вміст замикається (у безпеці) до заряджання</td></tr></tbody></table>
 
-<h2>Вміст</h2>
+<h2 id="вміст">Вміст</h2>
 
 <p>Мішок займає один слот інвентаря й вміщує до <strong>128 ваги</strong>. Скільки важить предмет, залежить від того, як він стекається — те саме правило, що у ванільного мішечка:</p>
 
 <table><thead><tr><th>Тип предмета</th><th>Вага 1 шт</th><th>Влазить у 128</th></tr></thead><tbody><tr><td>Блоки й ресурси (стек до 64)</td><td>1</td><td>128 шт (приблизно 2 стеки)</td></tr><tr><td>Перли, сніжки (стек до 16)</td><td>4</td><td>32 шт</td></tr><tr><td>Інструменти, відра (без стека)</td><td>64</td><td>2 шт</td></tr></tbody></table>
 
-<h2>Як працює</h2>
+<h2 id="як-працює">Як працює</h2>
 
 <p><strong>Покласти:</strong> правий клік стеком по мішку (або мішком по стеку) в інвентарі. Предмети спочатку доливаються в уже наявний неповний стек того самого типу, потім займають нову вагу. Залишок, що не вліз за вагою, лишається в руці. <strong>Дістати:</strong> правий клік мішком у повітрі або по порожньому слоту дістає <strong>цілий верхній стек</strong> (останній покладений — першим назовні). <strong>Замок при нулі:</strong> щойно заряд сідає, обидві операції блокуються. Нічого не зникає — вміст просто лежить замкненим до заряджання. <strong>Що витрачає заряд:</strong> 1 EU/FE за секунду, але лише поки всередині є предмети <strong>і</strong> мішок в інвентарі гравця. У скрині, на землі або в слоті Енергосховища він не розряджається. <strong>У креативі:</strong> не розряджається взагалі — як ванільний інструмент у креативі не втрачає міцність. Те саме правило діє для всієї електро-родини. <strong>Індикатор заряду:</strong> смужка під іконкою показує заряд (жовта). У тултипі — список вмісту сіткою й шкала заповненості «вага / 128 (NN%)», нижче 10 % заряду — попередження, при нулі — червоне «розряджений». <strong>Вкладеність:</strong> мішок не можна вкласти в інший мішок. У ванільний мішечок або шалкер — можна. <strong>Перейменування:</strong> на ванільному ковадлі. <strong>При дропі або смерті:</strong> заряд, вміст і задане ім'я зберігаються у предметі.</p>
 
-<h2>Властивості блока</h2>
+<h2 id="властивості-блока">Властивості блока</h2>
 
 <p>Не застосовно (предмет).</p>
 
-<h2>Рецепти</h2>
+<h2 id="рецепти">Рецепти</h2>
 
 <p>Рецепт з'являється в книзі рецептів, щойно у вас є всі компоненти.</p>
 
-<h2>Прогресія</h2>
+<h2 id="прогресія">Прогресія</h2>
 
 <p>Перший електро-предмет моду — вхід у лінійку переносної техніки на батареї. Доступний після <a href="../energy-storage/battery_box.html">Енергосховища</a>; без нього мішок не зарядити. Згодом з'являться старші версії — більше ваги, фільтри й лінковка між мішками.</p>
 
-<h2>Пов'язане</h2>
+<h2 id="повязане">Пов'язане</h2>
 
 <p><a href="../energy-storage/battery_box.html">Енергосховище</a> — заряджання з боку цього моду (слот charge); мішок заряджають і чужі зарядники. <a href="energy_pack.html">Енергоранець</a> — наступний крок: надягнутий ранець підживлює мішок прямо в інвентарі. <a href="../components/electronic_circuit.html">Електронна схема</a> — компонент крафта. <a href="../materials/tin.html">Олово</a> — застібка в крафті.</p>
 

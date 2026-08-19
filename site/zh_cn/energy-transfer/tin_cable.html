@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link active" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -394,13 +394,13 @@
 </div>
 <blockquote>⚠️ <strong>用电安全。</strong> 裸锡缆不仅会在直接接触时对玩家造成 2 点伤害，还会在段周围 <strong>0.5 格</strong> 范围内造成伤害——但仅限该段此刻确实有能量流过时。断开的线路和残留在缓存中的电量是安全的。普通护甲会减少伤害；水不会放大伤害；电缆与玩家之间的实心方块会挡下电击。该机制可在服务器设置中关闭。要降低（而非完全消除）电击几率，可使用绝缘底座（）——或者把裸线换成 <a href="insulated_tin_cable.html">绝缘锡缆</a>，后者完全安全。</blockquote>
 
-<h2>概览</h2>
+<h2 id="概览">概览</h2>
 
 <p>锡缆是本模组最便宜的导线，也是电缆阶梯的第一档。它很 <strong>窄</strong>（8 EU/FE/刻，相比之下铜为 12），但能量损耗速度只有铜的 3.3 分之一——每格 0.006 份衰减，而铜为 0.02。</p>
 
 <p>由此决定了它的定位：<strong>太阳能农场</strong>。任何电缆都能让单块面板的数据包免于完全损失，但在农场总流量上，锡的衰减只有铜的 3.3 分之一。例如，8 EU/FE/刻 经过 50 格，锡能送达 6 EU/FE，铜只能送达 3 EU/FE。而对密集大流量的线路（燃油发电机 8 EU/FE/刻、地热发电机 16），锡的窄缓存就不够用了：那里需要 <a href="copper_cable.html">铜</a>。</p>
 
-<h2>能量</h2>
+<h2 id="能量">能量</h2>
 
 <p>锡缆与铜缆一样承载 LV 能量，并与相邻方块连接。从电源到耗电方的每一节导线都会损耗少量 EU/FE；精确公式见下表。</p>
 
@@ -410,17 +410,17 @@
 
 <blockquote><strong>混合网络。</strong> 网络从其中最强的电缆那里取得 <strong>吞吐量和损耗</strong>。一根金段插进锡缆线路，会把整条网络抬到 128 EU/FE/包——但也会抬到金的每格 0.03 损耗。锡只有在线路全为锡时才给出低损耗。</blockquote>
 
-<h2>方块属性</h2>
+<h2 id="方块属性">方块属性</h2>
 
 <p>一根细导线，与相邻方块相连。任何工具都能挖，用电缆闸刀更方便。</p>
 
 <table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>形状</td><td>细杆（6px 芯 + 连接套）</td></tr><tr><td>硬度</td><td>0.2</td></tr><tr><td>工具</td><td>任意 / 电缆闸刀</td></tr></tbody></table>
 
-<h2>配方</h2>
+<h2 id="配方">配方</h2>
 
 <p>合成：3 个锡锭横排 → 3 根电缆。 加工配方：无。</p>
 
-<h2>相关内容</h2>
+<h2 id="相关内容">相关内容</h2>
 
 <p><a href="copper_cable.html">铜缆</a> —— 容量更大的 LV 主力电缆。 <a href="gold_cable.html">金缆</a> —— MV 电缆：宽度是四倍，但损耗更大。 <a href="insulated_tin_cable.html">绝缘锡缆</a> —— 带绝缘的版本。</p>
 

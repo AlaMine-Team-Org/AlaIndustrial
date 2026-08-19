@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,17 +392,17 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>加硫機</strong> は石油チェーンの仕上げです：生ゴム1つと硫黄の粉4つをゴムに変えます。機械は EU/FE の供給と、その真下に熱源がある場合にのみ動作します。</p>
 
 <blockquote><strong>ミニ例：</strong> 火の付いた焚き火の上に加硫機を置き、左のスロットに生ゴム、右に硫黄の粉4つを入れ、横から LV ケーブルを接続すれば、ゴム1つが得られます。</blockquote>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>内部バッファ</td><td>800 EU/FE</td></tr><tr><td>最大入力</td><td>32 EU/FE/t（LV）</td></tr><tr><td>消費</td><td>作業中 2 EU/FE/t</td></tr><tr><td>操作コスト</td><td>400 EU/FE</td></tr><tr><td>所要時間</td><td>200ティック（約10秒）</td></tr></tbody></table>
 
-<h2>下からの加熱</h2>
+<h2 id="下からの加熱">下からの加熱</h2>
 
 <p>熱源は機械のすぐ下のブロックから読み取られます。</p>
 
@@ -414,25 +414,25 @@
 
 <p>操作中に加熱レベルが<strong>下がった</strong>場合、進行状況は新しい乗数で安全に最初からやり直します。再開時に材料は消費されません。加熱レベルが<strong>上がった</strong>場合、そのバッチは開始時の乗数のまま最後まで進み、上昇分は次のバッチに回ります — そのため、最後のティックで熱源を差し替えても、ほぼ完了した操作の産出は上がりません。</p>
 
-<h2>インベントリと自動化</h2>
+<h2 id="インベントリと自動化">インベントリと自動化</h2>
 
 <table><thead><tr><th>スロット</th><th>受け入れ</th></tr></thead><tbody><tr><td>左入力</td><td></td></tr><tr><td>右入力</td><td></td></tr><tr><td>出力</td><td></td></tr></tbody></table>
 
 <p>入力は上から供給され、出力は側面から送り出されます。底面は加熱用に予約されており、アイテム自動化には公開されません。</p>
 
-<h2>インターフェース</h2>
+<h2 id="インターフェース">インターフェース</h2>
 
 <p>画面にはエネルギー、進行状況、両入力、出力、熱源、×1/×2/×3 の乗数が表示されます。ステータスはアイドリングの理由を説明します：材料がない、EU/FE がない、下からの加熱が必要、出力が満杯。</p>
 
-<h2>ブロック属性</h2>
+<h2 id="ブロック属性">ブロック属性</h2>
 
 <p>ツルハシ。破壊時にブロック自体とインベントリの中身がドロップします。 作業中にのみ発光し、蒸気を出します。 下のブロックの変化は即座に検知されます。</p>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p>作業台で、硫黄の粉、鉄インゴット、マシンケース、<code>E</code> — 電子回路から組み立てます。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="polymerizer.html">重合機</a> は生ゴムを生産します。 <a href="../materials/sulfur.html">硫黄</a> は硫黄の粉を提供します。 <a href="../components/rubber.html">ゴム</a> は産物とチェーン全体を説明します。</p>
 

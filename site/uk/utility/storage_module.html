@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепти</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="10 сторінок">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="4 сторінки">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Інше</div>
 <a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилітарні блоки</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
 <div class="group-title">Предмети</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Зведення</h2>
+<h2 id="зведення">Зведення</h2>
 
 <p><strong>Модуль зберігання</strong> — блок на 27 слотів, який уміє головне: <strong>зростатися із сусідами</strong>. Поставте два модулі впритул — і це вже одне сховище на 54 слоти зі спільним вікном. Три — 81. Чотири — 108, і це стеля.</p>
 
@@ -402,35 +402,35 @@
 
 <blockquote><strong>Міні-приклад:</strong> поставили модуль, забили — не вистачило. Прибудували другий впритул: відкриваєте будь-який із двох, а всередині вже 54 слоти одним списком.</blockquote>
 
-<h2>Енергія</h2>
+<h2 id="енергія">Енергія</h2>
 
 <table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Роль</td><td>немає</td></tr><tr><td>Буфер (EU/FE)</td><td>0</td></tr><tr><td>Макс. вхід (EU/FE/такт)</td><td>н/з</td></tr><tr><td>Макс. вихід (EU/FE/такт)</td><td>н/з</td></tr><tr><td>EU/FE/такт</td><td>0</td></tr></tbody></table>
 
 <p>Модуль не бере участі в енергомережі: не проводить EU/FE і не підключається до кабелів.</p>
 
-<h2>Інвентар</h2>
+<h2 id="інвентар">Інвентар</h2>
 
 <table><thead><tr><th>Слот</th><th>Приймає</th><th>К-сть</th></tr></thead><tbody><tr><td>Сховище модуля</td><td>будь-які предмети</td><td>27 (3 ряди × 9)</td></tr></tbody></table>
 
 <p><strong>Предмети фізично лежать у тому модулі, куди їх поклали.</strong> Спільного «головного» інвентаря немає: вікно складу — це вид на інвентарі всіх модулів одразу, а не окреме сховище. Звідси й уся решта поведінки: що випадає при руйнуванні та що відбувається з вивантаженим чанком.</p>
 
-<h3>Як складається спільний склад</h3>
+<h3 id="як-складається-спільний-склад">Як складається спільний склад</h3>
 
 <table><thead><tr><th>Модулів поруч</th><th>Слотів у складу</th><th>Рядів усього</th><th>Рядів видно</th><th>Прокрутка</th></tr></thead><tbody><tr><td>1</td><td>27</td><td>3</td><td>3</td><td>немає</td></tr><tr><td>2</td><td>54</td><td>6</td><td>6</td><td>немає (смуга неактивна)</td></tr><tr><td>3</td><td>81</td><td>9</td><td>6</td><td>3 ряди</td></tr><tr><td>4</td><td>108</td><td>12</td><td>6</td><td>6 рядів</td></tr><tr><td>5 і більше</td><td>108 (стеля)</td><td>12</td><td>6</td><td>6 рядів</td></tr></tbody></table>
 
-<h3>Правила об'єднання</h3>
+<h3 id="правила-обєднання">Правила об'єднання</h3>
 
 <p>Модуль входить у склад, якщо прилягає <strong>гранню</strong> до іншого модуля складу. Дотик ребром або кутом не рахується — так можна побудувати два окремі склади впритул. Набір рахується заново при кожному відкритті вікна: обхід іде від того модуля, по якому клацнули. Нічого не запам'ятовується, тому встановлення й знесення модуля не потребують жодної перебудови. Якщо модулів у споруді більше чотирьох, у склад увійдуть перші чотири за порядком обходу. Клацання по іншому модулю тієї самої споруди може дати іншу четвірку — вікно показує, скільки модулів підключено, тож це видно.</p>
 
-<h2>Інтерфейс</h2>
+<h2 id="інтерфейс">Інтерфейс</h2>
 
 <p>Два розміри вікна: <strong>3 ряди</strong> в одиночного модуля й <strong>6 рядів</strong> у будь-якого складу більшого. <strong>Смуга прокрутки</strong> — праворуч від сітки. Працюють колесо миші, перетягування повзунка й клацання по доріжці. У складу з двох модулів прокручувати нічого, і смуга малюється <strong>в неактивному відтінку</strong>, а не зникає: елемент, який то є, то немає, читається гірше за видимо вимкнений. <strong>Shift-клік кладе предмети і в ті ряди, яких на екрані немає.</strong> Це не дрібниця: «очевидна» реалізація мовчки зупинялася б на середині складу й повідомляла «повно», поки половина порожня. Пошуку немає — 108 слотів для нього замало.</p>
 
-<h2>Властивості блока</h2>
+<h2 id="властивості-блока">Властивості блока</h2>
 
 <table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Форма</td><td>повний куб</td></tr><tr><td>Міцність</td><td>3.0</td></tr><tr><td>Вибухостійкість</td><td>6.0</td></tr><tr><td>Інструмент</td><td>кайло</td></tr><tr><td>Вміст у предметі</td><td><strong>не</strong> зберігається</td></tr></tbody></table>
 
-<h3>Зовнішній вигляд: склад виглядає однією шафою</h3>
+<h3 id="зовнішній-вигляд-склад-виглядає-однією-шафою">Зовнішній вигляд: склад виглядає однією шафою</h3>
 
 <p>Модуль — сталева шафа з <strong>трьома висувними шухлядами</strong>: по одній на кожен ряд із дев'яти слотів, які він додає у вікно. Зверху й знизу — не шухляди, а плита корпусу з утопленою сервісною панеллю.</p>
 
@@ -446,17 +446,17 @@
 
 <p>Вміст переживає перезавантаження світу: намеренно порожній слот між двома зайнятими лишається порожнім, слоти не з'їжджають.</p>
 
-<h2>Рецепти</h2>
+<h2 id="рецепти">Рецепти</h2>
 
 <p>Крафт: 4 <a href="../components/material_forms.html">залізні пластини</a> хрестом навколо ванільної скрині.</p>
 
 <p>Рецепт навмисно дешевий: нарощування обсягу — витратний матеріал, а не віха прогресії.</p>
 
-<h2>Прогресія</h2>
+<h2 id="прогресія">Прогресія</h2>
 
 <p>Тир: немає — енергії не потребує, доступний одразу після перших пластин. Місце в лінійці зберігання: <a href="iron_chest.html">залізна скриня</a> 36 → <a href="silver_chest.html">срібна</a> 45 → <a href="gold_chest.html">золота</a> 54 → <a href="electrum_chest.html">електрумова</a> 81 → склад із модулів 108. Скрині не знецінюються: вони дають увесь обсяг одним блоком, склад вимагає чотирьох. Далі: <a href="../machines/assembler.html">складальний автомат</a> зможе брати сировину прямо з такого складу.</p>
 
-<h2>Пов'язане</h2>
+<h2 id="повязане">Пов'язане</h2>
 
 <p><a href="gold_chest.html">Золота скриня</a> — попередній щабель зберігання <a href="../components/material_forms.html">Форми матеріалів</a> — пластини для крафта <a href="stock_display_frame.html">Рамка-індикатор</a> — зразок захисту від невивантажених чанків <a href="../machines/assembler.html">Складальний автомат</a> — майбутній споживач складу <a href="../item-transport/item_pipe.html">Предметна труба</a> — наповнює склад ззовні</p>
 

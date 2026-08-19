@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link active" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>充電ステーション</strong>はブロックの高さ 4 分の 1 の薄いプレートで、プレイヤーがただ乗るだけです。乗っている間、ステーションは<strong>すべて</strong>の装備を一気に充電します：ホットバーとバックパック内のツール、左手のアイテム、そして<strong>装着している</strong>エネルギーパック、ジェットパック、フラックス織一式です。</p>
 
@@ -400,7 +400,7 @@
 
 <p>充電そのものにウィンドウを開く必要はありません：乗れば動きます。ステーションに画面はありますが、これは<strong>任意</strong>です——数値を知りたい人のための参照パネルであって、動作の条件ではありません。見なくても失うのは数値だけで、プレート自体の挙動は画面を開いていても閉じていても同じです。</p>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>バッファ</td><td>20 000 EU/FE</td></tr><tr><td>最大入力</td><td>128 EU/FE/t</td></tr><tr><td>プレイヤーへの最大出力</td><td>128 EU/FE/t</td></tr></tbody></table>
 
@@ -432,11 +432,11 @@
 
 <p>全 6 面がエネルギーを受け取り、ステーションはネットワークへは決して何も戻しません。</p>
 
-<h2>インターフェース</h2>
+<h2 id="インターフェース">インターフェース</h2>
 
 <p>ステーションには独立した 2 つのフィードバック経路があります：足元のインジケーターが主で、動きながらの遊びのため。画面が従で、正確な数値が欲しい人のためです。</p>
 
-<h3>インジケーター</h3>
+<h3 id="インジケーター">インジケーター</h3>
 
 <p>4 状態のインジケーターがあります：プレート四隅の 4 つのランプと中央のコイルの輪で、側面の光る帯で重複表示されます（状態が上からも遠くからも読めるように）。</p>
 
@@ -446,13 +446,13 @@
 
 <p>充電中、プレートから火花が立ち上ります。</p>
 
-<h3>クリック音</h3>
+<h3 id="クリック音">クリック音</h3>
 
 <p>ステーションは金属の感圧板と同じ音で鳴ります：乗ったときに 1 回、降りたときに 1 回。これは「認識した」という合図です——別の方向を向いていてランプも火花も見えないときでも、音でプレートが反応したと分かります。</p>
 
 <p>音が鳴るのは<strong>1 回の訪問につき 1 回</strong>で、毎ティックではありません：ステーションの列を走り抜けても、鳴るのは各 1 回であって連打にはなりません。スペクテイターがプレートをすり抜けても何も鳴りません——充電もされないからです。</p>
 
-<h3>画面</h3>
+<h3 id="画面">画面</h3>
 
 <p>画面は<strong>右クリック</strong>で開きます。プレートに乗ったままでも開けます。乗っただけでは開きません：一歩ごとにウィンドウが出ては歩く邪魔になりますし、乗ったまま自分の用事を続けられることこそがステーションの狙いだからです。</p>
 
@@ -464,7 +464,7 @@
 
 <p>「残り時間」はステーション自身のバッファではなく、プレートに乗っている人の装備を基準に計算します：プレイヤーが知りたいのは、いつ立ち去れるかだからです。現在の供給速度から導くため、配線が細ければ正直に伸びます——ステーションは受け取れる分だけしか渡せません。</p>
 
-<h2>挙動</h2>
+<h2 id="挙動">挙動</h2>
 
 <p>ステーションは<strong>実際の送電時だけ</strong>エネルギーを消費します。ゲストのいないステーションも、すでに充電済みのゲストがいるステーションも、何も消費せず、一人になるとスリープします。</p>
 
@@ -472,13 +472,13 @@
 
 <p>ブロックを通り抜けるスペクテイターは充電されず、エネルギーも消費しません。</p>
 
-<h3>ステーションが充電できないもの</h3>
+<h3 id="ステーションが充電できないもの">ステーションが充電できないもの</h3>
 
 <p>プレイヤーが装着している<strong>他のモード</strong>のアイテム。両ローダーとも、アイテムのエネルギー機能は<strong>インベントリのスロット番号</strong>でアドレッシングされ、他モードの装着中の防具にはその番号がありません。Ala Industrial 自体の携帯装備は完全に充電されます。他モードのアイテムでも、通常のインベントリスロットに入っていれば正常に充電されます。</p>
 
 <p>クリエイティブモードでも、ステーションは物理的に自身の蓄えを消費します——機械が自身のスロットのアイテムを充電するのと同じです。これはバグではありません。</p>
 
-<h2>ブロックの性質</h2>
+<h2 id="ブロックの性質">ブロックの性質</h2>
 
 <p><strong>形状：</strong> プレート 16×4×16——ブロックの下半分（高さ 0 から 4）。完全なコリジョンがあり、すり抜けずに乗れます。上がり幅が非常に小さいので、ジャンプせずに単に踏み越えられます。輪郭のハイライトはプレイヤーが歩く面と一致します。</p>
 
@@ -488,7 +488,11 @@
 
 <p>ツルハシで設置・破壊し、硬さ 3.0、爆発耐性 6.0、金属音。破壊時に <strong>EU/FE バッファは保存されません</strong>——モードのどの機械とも同様に、蓄えを失います。</p>
 
-<h2>クラフト</h2>
+<h2 id="音">音</h2>
+
+<p>充電中、ステーションは静かな変圧器の唴り音を発します — ループ（ 状態に基づくパターンC、MOD内で最も静かな定置ループ： 0.18 — プレイヤーがブロックの上に立つため音源はすぐ足元です；）。インベントリ満タン（緑のインジケーター）またはバッファー空では鳴りません。乗り降りのクリック音は従来どおりバニラのままです（）。</p>
+
+<h2 id="クラフト">クラフト</h2>
 
 <table><thead><tr><th></th><th></th><th></th></tr></thead><tbody><tr><td>銅ケーブル</td><td>銅ケーブル</td><td>銅ケーブル</td></tr><tr><td>鉄板</td><td>電池</td><td>鉄板</td></tr><tr><td>鉄板</td><td>電子回路</td><td>鉄板</td></tr></tbody></table>
 

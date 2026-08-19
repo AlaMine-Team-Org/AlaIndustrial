@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link active" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -394,7 +394,7 @@
 </div>
 <blockquote>⚠️ <strong>用电安全。</strong> 裸琥珀金 HV 电缆会对玩家造成 <strong>10</strong> 点伤害（等级阶梯：LV 2 → MV 6 → HV 10，键 ），不仅限于直接接触，还包括段周围 <strong>0.5 格</strong> 范围——但仅限该段此刻确实有能量流过时。断开的线路和残留在缓存中的电量是安全的。普通护甲会减少伤害；水不会放大伤害；电缆与玩家之间的实心方块会挡下电击。该机制可在服务器设置中关闭。</blockquote>
 
-<h2>概览</h2>
+<h2 id="概览">概览</h2>
 
 <p><strong>琥珀金缆</strong> 是第一条 <strong>HV</strong> 等级的导线。HV 等级此前并非空白：自 起 <a href="../advanced-machines/teleporter.html">传送站</a> 就运行在 HV 上——它是本模组唯一的 HV 耗电方，此前一直只能用金制（MV）电缆来供电。这条电缆取代了更早的"玻璃纤维 EV 电缆"概念——同样的"最贵也最高效的导线"角色定位，但落在更早、已经就绪的等级上，材料也更贴合本模组：<strong>琥珀金</strong> 合金（金 + 银，自 0.1.67 起即可在合金熔炉熔炼，但此前没有任何耗电方）加入 <strong>钻石粉</strong>，正是钻石粉赋予导线其可靠性/低损耗。</p>
 
@@ -404,7 +404,7 @@
 
 <blockquote><strong>今天就能看到差异之处。</strong> 模组目前还没有 HV 机器、HV 发电机和 HV 储能方块，但有一个 HV <strong>耗电方</strong>：缓存为 500 000 EU/FE 的 <a href="../advanced-machines/teleporter.html">传送站</a>。通过金缆（48 EU/FE/刻）充满完整缓存约需 ~10 400 刻 ≈ 8.7 分钟；通过琥珀金缆（192 EU/FE/刻）则约需 ~2 600 刻 ≈ <strong>2.2 分钟</strong>。  离开这条前提，承诺就站不住脚：传送站是储能型耗电方，而这类耗电方 <strong>不会从其他储能方块</strong> 获取能量（储能库只为机器的缺口放出 EU/FE）。加速的实际幅度，精确等于你的 <strong>发电机</strong> 总出力超出 48 EU/FE/刻 的部分——否则瓶颈不在导线。对其余内容（LV/MV）来说，最实用的是密集线路上 192 EU/FE/刻 这一宽缓存本身。</blockquote>
 
-<h2>能量</h2>
+<h2 id="能量">能量</h2>
 
 <table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>角色</td><td>传输</td></tr><tr><td>最大电压</td><td>512 EU/FE/包（HV 等级）</td></tr><tr><td>吞吐量</td><td>192 EU/FE/刻 = 段工作缓存</td></tr><tr><td>损耗</td><td>每格 <strong>0.005</strong> 衰减（比锡还低！）；当 N &gt; 0 时，按 <code>max(1, ceil(N × 0.995^距离))</code> EU/FE/刻 送达耗电方</td></tr><tr><td>绝缘</td><td>有——<a href="insulated_electrum_cable.html">绝缘琥珀金缆</a>（损耗 0.0025）</td></tr></tbody></table>
 
@@ -414,19 +414,19 @@
 
 <blockquote><strong>混合网络。</strong> 网络从其中最强的电缆那里取得 <strong>吞吐量和损耗</strong>——与金在铜线路中生效的规则相同。在金缆线路里插入一段琥珀金缆，会把整条网络抬到 512 EU/FE/包 和琥珀金的每格 0.005 损耗。</blockquote>
 
-<h2>方块属性</h2>
+<h2 id="方块属性">方块属性</h2>
 
 <p>一根细导线，与相邻方块相连。任何工具都能挖，用电缆闸刀更方便。</p>
 
 <table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>形状</td><td>细杆（6px 芯 + 连接套）</td></tr><tr><td>硬度</td><td>0.2</td></tr><tr><td>工具</td><td>任意 / 电缆闸刀</td></tr></tbody></table>
 
-<h3>与半方块的连接</h3>
+<h3 id="与半方块的连接">与半方块的连接</h3>
 
 <p>与其他电缆一样，琥珀金缆的水平连接套会下沉到矮邻居（高度 8/16 的太阳能板以及任何未来的半方块）——连接套搭在板侧而非悬在板上方。该行为对所有电缆通用，由邻居的形状推出，而非其类型。</p>
 
-<h2>配方</h2>
+<h2 id="配方">配方</h2>
 
-<p><strong>仪式配方：</strong> 八块琥珀金锭沿外圈摆放，四份钻石粉分置其间，产出 <strong>3</strong> 根电缆。</p>
+<p><strong>仪式配方：</strong> 五块琥珀金锭（四角与中心各一块），四份钻石粉置于各边中点，产出 <strong>3</strong> 根电缆。</p>
 
 <p>价格刻意定得很高，这是平衡决策而非润色。混合网络从最强段取得上限和损耗，因此便宜的琥珀金会让一个方块把一公里的铜缆都抬到 0.005 损耗。导线应被精准地点缀在关键干线，而非用它铺设整座基地。</p>
 
@@ -436,7 +436,7 @@
 
 <p>加工配方：无。</p>
 
-<h2>相关内容</h2>
+<h2 id="相关内容">相关内容</h2>
 
 <p><a href="gold_cable.html">金缆</a> —— 阶梯的上一档，MV。 <a href="copper_cable.html">铜缆</a> —— 通用 LV 电缆。 <a href="tin_cable.html">锡缆</a> —— 廉价、近乎无损耗，适用于太阳能农场。 <a href="insulated_electrum_cable.html">绝缘琥珀金缆</a> —— 橡胶版：同样 192 EU/FE/刻，但损耗减半且不会触电。</p>
 

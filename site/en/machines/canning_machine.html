@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
@@ -392,19 +392,19 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 
 <p>The <strong>Canning Machine</strong> does not pack a product into a tin — it renders food down to food value and pours that value back out as identical rations. Whatever you feed it, the same item comes out, which means <strong>your whole larder collapses into a single stack</strong>.</p>
 
 <blockquote><strong>Mini-example:</strong> load the leftovers of a harvest — carrots, bread, berries — add some empty cans and connect LV power. A dozen slots of odds and ends become one stack of rations.</blockquote>
 
-<h2>Energy</h2>
+<h2 id="energy">Energy</h2>
 
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Internal buffer</td><td>800 EU/FE</td></tr><tr><td>Max input</td><td>32 EU/FE/tick (LV)</td></tr><tr><td>Draw</td><td>2 EU/FE/tick while working</td></tr><tr><td>Cost per operation</td><td>200 EU/FE per ration</td></tr><tr><td>Duration</td><td>100 ticks (~5 s)</td></tr></tbody></table>
 
 <p>Energy enters through five working faces. The front face is inert.</p>
 
-<h2>Processing</h2>
+<h2 id="processing">Processing</h2>
 
 <p>The machine works in two independent steps, and the difference matters.</p>
 
@@ -417,7 +417,7 @@
 
 <p>The banked remainder is shown in the window as the "Calories" line and <strong>survives</strong> leaving the world. Breaking the machine, however, loses it: the cans and the food drop, the banked calories do not. Finish the ration you started before you take the machine apart.</p>
 
-<h2>Food value</h2>
+<h2 id="food-value">Food value</h2>
 
 <p>A product's value is its <strong>nutrition plus its saturation</strong>. Rich food buys more rations, poor food fewer. One ration costs <strong>12.0</strong> of value.</p>
 
@@ -425,7 +425,7 @@
 
 <p>Processing is <strong>always a loss</strong>: a ration costs 12.0 of value and carries 9.6. A fifth is spent — that is the price of convenience, and it is exactly what makes duplicating food impossible.</p>
 
-<h2>What the machine refuses</h2>
+<h2 id="what-the-machine-refuses">What the machine refuses</h2>
 
 <p><strong>Hazardous food:</strong> raw chicken, rotten flesh, poisonous potato, pufferfish and spider eye. Processing would launder their risk away for free, which is not a fair trade. <strong>Its own ration.</strong> Otherwise the machine would grind its own output down, burning a can each pass. <strong>Anything that is not food,</strong> and food with no nutrition at all.</p>
 
@@ -433,7 +433,7 @@
 
 <p><strong>Stews and honey are accepted, but their container is lost.</strong> A bowl or a bottle comes back only when you eat from it; the machine will not return one.</p>
 
-<h2>The ration</h2>
+<h2 id="the-ration">The ration</h2>
 
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Nutrition</td><td>8 (the same as a steak)</td></tr><tr><td>Saturation</td><td>1.6 (a steak has 12.8)</td></tr><tr><td>Stack</td><td>64</td></tr><tr><td>Time to eat</td><td>1 second (ordinary food takes 1.6)</td></tr></tbody></table>
 
@@ -443,23 +443,23 @@
 
 <p>While it is being eaten, the can in your hand appears opened.</p>
 
-<h2>Inventory</h2>
+<h2 id="inventory">Inventory</h2>
 
 <table><thead><tr><th>Slot</th><th>Accepts</th></tr></thead><tbody><tr><td>Top input</td><td>food</td></tr><tr><td>Bottom input</td><td>empty cans</td></tr><tr><td>Output</td><td>rations</td></tr></tbody></table>
 
-<h2>Interface</h2>
+<h2 id="interface">Interface</h2>
 
 <p>Energy, two inputs, progress and the output. Below them sits the "Calories" line with the percentage banked towards the next ration.</p>
 
-<h2>Block properties</h2>
+<h2 id="block-properties">Block properties</h2>
 
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Keeps its charge when broken</td><td>no</td></tr></tbody></table>
 
-<h2>Sound</h2>
+<h2 id="sound">Sound</h2>
 
 <p>While running, the machine emits a light metallic clatter of tin cans on the line — the loop (pattern <strong>A</strong>, default 0.35). It falls silent when idle.</p>
 
-<h2>Recipes</h2>
+<h2 id="recipes">Recipes</h2>
 
 <p>The machine itself is built from tin plates around a casing. The empty can is a bench craft too:</p>
 
@@ -467,17 +467,17 @@
 T T → 8 empty cans
 TTT T — tin plate</code></pre>
 
-<h2>Progression</h2>
+<h2 id="progression">Progression</h2>
 
 <p>Tier LV. This machine gives tin its first mass consumer: a can is spent for good, so every meal eats metal again.</p>
 
-<h2>Who this machine is for</h2>
+<h2 id="who-this-machine-is-for">Who this machine is for</h2>
 
 <p><strong>Not for a steak farm.</strong> With meat sorted, 64 cooked porkchops are already one slot and more calories than processing would return. That is by design.</p>
 
 <p><strong>For odds and ends, and for the road.</strong> A dozen slots of assorted food — berries, carrots, bread, harvest leftovers, mob drops — collapse into one or two slots of identical rations.</p>
 
-<h2>Related</h2>
+<h2 id="related">Related</h2>
 
 <p><a href="../materials/tin.html">Tin</a> — what cans are made of. <a href="compressor.html">Compressor</a> — makes the tin plates. <a href="../generators/generator.html">Generator</a> — a power source.</p>
 

@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепти</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="10 сторінок">10</span></a>
 <a class="cat-link active" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="4 сторінки">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Інше</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилітарні блоки</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
 <div class="group-title">Предмети</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Зведення</h2>
+<h2 id="зведення">Зведення</h2>
 
 <p><strong>Енергосховище</strong> — перший накопичувальний блок моду: копить EU/FE від генераторів і віддає його машинам. Саме воно дозволяє денному виробітку сонячної панелі годувати машини всю ніч.</p>
 
@@ -400,7 +400,7 @@
 
 <p>Це буфер, а не джерело — сам по собі він EU/FE не виробляє. Обидва боки (вхід і вихід) обмежені LV, тому він ніколи не перевантажить підключені LV-машини.</p>
 
-<h2>Енергія</h2>
+<h2 id="енергія">Енергія</h2>
 
 <table><thead><tr><th>Параметр</th><th>Значення</th></tr></thead><tbody><tr><td>Місткість</td><td>20 000 EU/FE</td></tr><tr><td>Макс. вхід</td><td>32 EU/FE/т (LV)</td></tr><tr><td>Макс. вихід</td><td>32 EU/FE/т (LV)</td></tr></tbody></table>
 
@@ -410,7 +410,7 @@
 
 <p>Сховище можна завести кабелем і на вхід, і на вихід однієї й тієї самої мережі — воно не ганяє енергію по колу й не палить її на втратах. Поки машинам не вистачає виробітку генераторів, сховище <strong>лише віддає</strong>; заряджатися воно почне, коли машини наситяться або генератори перекриють їхній апетит. Це той самий пріоритет «спочатку машини, потім накопичувачі», за яким мережа роздає енергію.</p>
 
-<h3>Живлення телепорта та зарядної станції</h3>
+<h3 id="живлення-телепорта-та-зарядної-станції">Живлення телепорта та зарядної станції</h3>
 
 <p>Крім машин і сусідніх ящиків сховище живить ще один клас блоків — «фонди»: <a href="../advanced-machines/teleporter.html">телепорт</a> і <a href="charge_pad.html">зарядну станцію</a>. Вони коплять енергію для себе, а не працюють, тому отримують її окремим, навмисно повільним каналом:</p>
 
@@ -418,7 +418,7 @@
 
 <p>Поріг існує не заради краси: буфер телепорта у 25 разів більший за ящик, і без нього одна станція викачала б увесь банк бази. Якщо треба залити фонд цілком — поставте ящик <strong>впритул</strong> до нього: прямий контакт не знає ні порога, ні ліміту швидкості.</p>
 
-<h3>Каскад: кілька ящиків в одній мережі</h3>
+<h3 id="каскад-кілька-ящиків-в-одній-мережі">Каскад: кілька ящиків в одній мережі</h3>
 
 <p>Банк розширюється просто — поставте ще один ящик і підключіть до тієї самої мережі. Заповненіший ящик сам підживлює менш заповнений, доки їхні <strong>частки заповнення</strong> не зрівняються. Ящики вирівнюються одночасно, а не «спочатку перший до країв, потім другий»: два ящики по 20 000 EU/FE, де в одному 10 000, а в іншому порожньо, зійдуться приблизно до 5 000 у кожному.</p>
 
@@ -430,7 +430,7 @@
 
 <p>У каскад входять лише ящики. Телепорт теж накопичувач, але копить енергію з надлишків сам і автоматично з ящика не наповнюється — щоб повний ящик не витікав у нього без відома гравця.</p>
 
-<h2>Інвентар</h2>
+<h2 id="інвентар">Інвентар</h2>
 
 <p>Один слот для переносних EU/FE-предметів (батарейний мішок, енергоранець):</p>
 
@@ -438,25 +438,25 @@
 
 <p>Слот <strong>лише заряджає</strong> — злити заряд назад у сховище через цей блок не можна. Лійки ним не користуються: це ручний слот, працює лише з GUI.</p>
 
-<h2>Інтерфейс</h2>
+<h2 id="інтерфейс">Інтерфейс</h2>
 
 <p>Один екран: запас енергії, швидкість прийому/видачі, слот заряджання.</p>
 
-<h2>Властивості блока</h2>
+<h2 id="властивості-блока">Властивості блока</h2>
 
 <p>Звичайний суцільний блок. Ламається будь-яким кайлом і <strong>зберігає заряд при руйнуванні</strong> — енергія не губиться при перенесенні.</p>
 
 <table><thead><tr><th>Параметр</th><th>Значення</th></tr></thead><tbody><tr><td>Інструмент</td><td>кайло</td></tr><tr><td>Зберігає заряд при ламанні</td><td>так</td></tr></tbody></table>
 
-<h2>Рецепти</h2>
+<h2 id="рецепти">Рецепти</h2>
 
 <p>Це накопичувач, не процесор — рецептів переробки немає.</p>
 
-<h2>Прогресія</h2>
+<h2 id="прогресія">Прогресія</h2>
 
 <p>Перший щабель лінійки накопичувачів. Зі зростанням бази LV-буфера перестає вистачати, і згодом вступають накопичувачі вищих тирів (MV/HV).</p>
 
-<h2>Пов'язане</h2>
+<h2 id="повязане">Пов'язане</h2>
 
 <p><a href="../generators/generator.html">Генератор</a> — типове джерело заряду. <a href="../generators/solar_panel.html">Сонячна панель</a> — заповнює сховище вдень. <a href="cesu.html">Посилене енергосховище</a> — наступний щабель, MV.</p>
 

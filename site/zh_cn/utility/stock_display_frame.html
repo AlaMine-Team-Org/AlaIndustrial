@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -392,39 +392,39 @@
     </div>
   </div>
 </div>
-<h2>概览</h2>
+<h2 id="概览">概览</h2>
 
 <p><strong>库存显示物品展示框</strong>——挂在任何容器（原版箱子、木桶、潜影盒或模组的<a href="iron_chest.html">铁箱子</a>） 上的展示框，它会<strong>实时地直接在框上显示内部有多少物品</strong>。不需要能量——它是仓库的便利 设施：一排排箱子上的「价签」，无需打开窗口即可看到存量。</p>
 
 <blockquote><strong>示例：</strong> 在矿石箱上的展示框里放一个钻石 → 它会显示箱内有多少钻石。把钻石换成铁 → 开始计算铁锭的数量。空的展示框 → 没有数字显示。</blockquote>
 
-<h2>数字如何计算</h2>
+<h2 id="数字如何计算">数字如何计算</h2>
 
 <p><strong>框里放有物品</strong> → 数字等于容器中<em>此类型</em>物品的数量（物品充当过滤器）； <strong>框是空的</strong> → 不显示数字（框看起来和普通展示框一样）； <strong>框后面没有容器</strong> → 不显示数字； <strong>容器为空</strong>（框内有过滤器时）→ 显示 <code>0</code>。</p>
 
 <p>只计算顶层槽位——<strong>不深入</strong>箱子内的潜影盒和收纳袋。大型箱子(原版的或本模组的)算作一个容器：任何一半上 的展示框显示总和。展示框每秒重新计算一次内容。</p>
 
-<h2>界面</h2>
+<h2 id="界面">界面</h2>
 
 <p>没有窗口。数字<strong>平面绘制在展示框的正面</strong>，在其底部条带——白色带黑色描边，无底板。它 随展示框一起旋转（不是「广告牌」式），因此只能从展示框朝向的那一侧看到。</p>
 
 <p>右键放入过滤物品 → 出现数字。 再次右键（或攻击）→ 过滤器返回物品栏，数字消失。 过滤物品略微上抬并缩小，为数字腾出空间；无过滤器时展示框看起来和普通的一样（物品在 中心）。 与原版展示框不同，<strong>物品不会旋转</strong>——对过滤器而言，旋转只是噪音。不能把地图 （<code>minecraft:filled_map</code>）放入展示框。 显示距离——最多 <strong>24 个方块</strong>（更远时文本因性能隐藏）。 格式化：精确数字到 10 000，之后简写——<code>12.3k</code>、<code>1.2M</code>。</p>
 
-<h2>方块属性</h2>
+<h2 id="方块属性">方块属性</h2>
 
 <p>展示框是<strong>实体</strong>，不是方块（如同原版展示框）。相同的尺寸和行为：扁平，挂在墙上，无碰撞 箱。右键点击方块的面——挂上，攻击——取下；破坏支撑方块——展示框会脱落并以物品形式 掉落。</p>
 
 <table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>类型</td><td>entity（如同原版 item frame）</td></tr><tr><td>放置</td><td>墙面、地板或天花板的面</td></tr><tr><td>掉落自身</td><td>是（展示框物品 + 过滤器，如有）</td></tr></tbody></table>
 
-<h2>配方</h2>
+<h2 id="配方">配方</h2>
 
 <p>在工作台上合成：中心放一个原版物品展示框，周围用木齿轮、银锭和金粉围起来。思路是把一个普通展示框"升级"成带有精密机械和贵重电子元件的计数型展示框。</p>
 
-<h2>进阶</h2>
+<h2 id="进阶">进阶</h2>
 
 <p>LV 等级：在早期的齿轮和银之后可用。</p>
 
-<h2>相关内容</h2>
+<h2 id="相关内容">相关内容</h2>
 
 <p><a href="iron_chest.html">铁箱子</a>——展示框在本模组中的主要「客户」。 <a href="silver_chest.html">银箱子</a>——它可读取的另一种容器。</p>
 

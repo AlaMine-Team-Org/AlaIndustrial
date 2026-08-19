@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепти</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="10 сторінок">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="4 сторінки">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Інше</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилітарні блоки</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
 <div class="group-title">Предмети</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
 <a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
   </aside>
@@ -392,13 +392,13 @@
     </div>
   </div>
 </div>
-<h2>Зведення</h2>
+<h2 id="зведення">Зведення</h2>
 
 <p>Анемометр — ручний прилад без енергії. Він не будується й нічого не виробляє: він показує швидкість вітру в тій точці, де ви стоїте, — щоб вежу під <a href="../generators/wind_mill.html">вітряк</a> обрати <strong>до</strong> будівництва, а не розбирати й переставляти її по три рази.</p>
 
 <p>Прилад <strong>не дає порад</strong>. Жодних «підніміться вище», «тут оптимально» чи «до стелі N блоків». Він показує вимірювання — висновок робить гравець.</p>
 
-<h2>Як користуватися</h2>
+<h2 id="як-користуватися">Як користуватися</h2>
 
 <p><strong>Shift + ПКМ</strong> з приладом у руці — у повітрі або по будь-якому блоку, різниці немає. В action bar з'являється рядок, і прилад коротко дзвенить:</p>
 
@@ -406,7 +406,7 @@
 
 <p>Тон дзвінка росте разом із показанням, тому посилення вітру чутно раніше, ніж прочитано рядок.</p>
 
-<h2>Скільки вітру на висоті</h2>
+<h2 id="скільки-вітру-на-висоті">Скільки вітру на висоті</h2>
 
 <p>Вітер росте з висотою, найсильніший біля кромки хмар, а вище хмар повітря розріджене й вітер стихає.</p>
 
@@ -414,7 +414,7 @@
 
 <p>Погода множить швидкість: ясно ×1, дощ ×1.5, гроза ×2. Значення беруться з тих самих полів налаштувань, що й виробіток вітряків, тому розійтися з генерацією показання не можуть.</p>
 
-<h2>Профіль висоти</h2>
+<h2 id="профіль-висоти">Профіль висоти</h2>
 
 <p>Крива одна на весь мод — за нею і прилад рахує км/год, і вітряки рахують EU/FE/т. Чотири ділянки:</p>
 
@@ -427,23 +427,23 @@
 
 <p>Практичний наслідок: <strong>найвітряніше місце у світі — вузька смуга прямо під хмарами</strong>. Повний виробіток вітряк видає лише на кількох висотах: T1 — Y 183–193 (11 блоків), небесний млин — Y 188–192 (5), штормовий — Y 189–192 (4). Ні «вище», ні «під саму стелю світу» не працює: вежа на Y 230 слабша за вежу на Y 127.</p>
 
-<h2>Небо і світ</h2>
+<h2 id="небо-і-світ">Небо і світ</h2>
 
 <p><strong>Закрите небо ⇒ 0.0 км/год</strong>, якою б не була висота й погода. Прилад перевіряє небо так само строго, як вітряк: стовп над точкою має бути повністю прозорим. Листя й павутина вважаються закритим небом — вітряк під ними мертвий, на відміну від сонячної панелі, яка під листям лише втрачає частину виробітку.</p>
 
 <p>У Нижньому світі й Краї прилад не показує число, а пише, що вітру тут немає: вітряки там не працюють, і будь-яке число було б вигадкою.</p>
 
-<h2>Еталон шкали</h2>
+<h2 id="еталон-шкали">Еталон шкали</h2>
 
 <p>Розгінна ділянка задається гребенем гілки, тому прилад обирає один еталон — базовий вітряк T1: перший, що будує гравець, і єдиний, який існує на момент, коли прилад доступний за крафтом. Вище гребеня плече й розрідження в усіх гілок спільні, тож еталон впливає лише на форму розгону, але не на те, де вітер досягає максимуму й де вмирає.</p>
 
 <p>У небесного млина гребінь <strong>збігається</strong> з T1: 8 ступенів по 8 блоків — ті самі +64, що й 4 по 16. Ці дві гілки відрізняються не висотою, а базою під хмарами (8 проти 4) і погодними множниками. Своїм гребенем володіє лише штормовий (+96), і для нього розгін розтягнутий — але пік і смерть вітру спільні.</p>
 
-<h2>Рецепт</h2>
+<h2 id="рецепт">Рецепт</h2>
 
 <p>Дві палиці, скляна панель, два олов'яні зливки й дві дерев'яні шестерні. Без енергії та без схем — простий дерев'яний прилад, який робиться задовго до першого вітряка.</p>
 
-<h2>Пов'язане</h2>
+<h2 id="повязане">Пов'язане</h2>
 
 <p><a href="../generators/wind_mill.html">Вітрогенератор</a> — гілка T1, за якою відшкальовано прилад. <a href="../generators/high_altitude_wind_mill.html">Небесний млин</a> — T2, той самий гребінь, удвічі більша база. <a href="../generators/storm_wind_mill.html">Штормовий млин</a> — T2, гребінь вищий.</p>
 

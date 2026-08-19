@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">其他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概览</h2>
+<h2 id="概览">概览</h2>
 
 <p><strong>培育舱</strong>——1×2 多方块：下方矮型机械底座，上方玻璃穹顶。把任何玻璃（标签 <code>c:glass</code>）放到 底座上——它会变成一个立体腔室，被辐照的物品在内部悬浮旋转。</p>
 
@@ -402,7 +402,7 @@
 
 <table><thead><tr><th>做什么</th><th>怎么做</th></tr></thead><tbody><tr><td>组装多方块</td><td>底座 + 顶部任意 <code>c:glass</code> 标签方块 → 穹顶</td></tr><tr><td>诱变物品</td><td>EU/FE（LV）+ 电荷（1 个 <code>uranium_ingot</code> = 3 次尝试 → 1 个 <code>depleted_uranium</code>）</td></tr><tr><td>模式</td><td>芯片槽：复制 / 转化 / 创造</td></tr><tr><td>突变种类</td><td>复制（×2）、转化（A→B）、创造（A→模组新物品）</td></tr><tr><td>稀有度</td><td>每次成功——等级 普通 / 稀有 / 史诗 / 传说（70/20/8/2 %）</td></tr><tr><td>矿渣</td><td>5 % 的尝试给出 <code>irradiated_slag</code> 而非空失败</td></tr></tbody></table>
 
-<h2>能量</h2>
+<h2 id="能量">能量</h2>
 
 <p>混合模型：来自网络（LV）的 EU/FE <strong>加上</strong>作为辐照燃料的铀。铀不消失——变成 <code>depleted_uranium</code>，为未来核能阶段做准备。</p>
 
@@ -410,7 +410,7 @@
 
 <p>燃料槽没有铀时操作不启动；EU/FE 仅在循环期间消耗。</p>
 
-<h2>加工</h2>
+<h2 id="加工">加工</h2>
 
 <p>时长和价格与突变种类绑定。培育舱是本模组最耗能的 LV 机器：每次操作最少 2400 EU/FE，而普通 机器是 200–300。</p>
 
@@ -426,13 +426,13 @@
 
 <p><strong>输入基因会燃尽。</strong> 输入物品的等级给成功率加成（稀有 / 史诗 / 传说 +5 / +10 / +15 个百分点， 总成功率上限 0.95）并<strong>燃尽</strong>——结果获得全新的等级掷骰。传说不能通过复制繁殖，只能为提高 成功率而消耗。</p>
 
-<h2>物品栏</h2>
+<h2 id="物品栏">物品栏</h2>
 
 <p>五个槽：芯片、燃料（铀）、被诱变物品、结果、灰渣。结果和灰渣仅对玩家只读；灰渣槽的自动化 —仅 pull。</p>
 
 <table><thead><tr><th>槽</th><th>接受</th><th>行为</th></tr></thead><tbody><tr><td>芯片</td><td><code>#</code>（3 种芯片）</td><td>1 件；不消耗；设定模式；空槽 = 机器不工作；自动化不取出</td></tr><tr><td>燃料</td><td><code>#</code>（= <code>uranium_ingot</code>）</td><td>放入组装好的机器时立即取出 1 锭；电荷 = 3 次尝试</td></tr><tr><td>输入</td><td>在所选模式下有诱变配方的物品</td><td>1 叠；每次尝试消耗 1（失败时损失）</td></tr><tr><td>结果</td><td>诱变结果或 <code>irradiated_slag</code></td><td>1 叠；仅 fill</td></tr><tr><td>灰渣</td><td><code>depleted_uranium</code></td><td>1 叠；每耗尽一锭 +1；仅 pull</td></tr></tbody></table>
 
-<h2>界面</h2>
+<h2 id="界面">界面</h2>
 
 <p>屏幕显示：EU/FE 储量、循环进度、<strong>辐照电荷（0–3）</strong>、五个槽和多方块组装指示器。能量条—— 左侧，辐照电荷——燃料槽右侧的垂直 pip 条，从下往上填充。上排：芯片、输入、进度箭头、 结果；下排——燃料和灰渣。</p>
 
@@ -440,17 +440,17 @@
 
 <p>多方块的两半都可点击：右键穹顶打开与底座相同的菜单。</p>
 
-<h2>方块属性</h2>
+<h2 id="方块属性">方块属性</h2>
 
 <p>双层多方块，轮廓不同：沉重的机械下部和轻盈圆润的上部——不是「两个立方体叠在一起」。</p>
 
 <p><strong>底座</strong>——完整立方体，带凹陷的前面板、顶面的发射器环和侧面的冷却管。工作时其上方升起 发射器辉光。 <strong>穹顶</strong>——立体圆润腔室，由任意 <code>c:glass</code> 标签玻璃自动放置。原始玻璃类型会被记住，因此： 拆解多方块时返还<strong>恰好你的玻璃</strong>——不丢失任何东西； <strong>彩色玻璃给穹顶染色</strong>——17 种着色变体，无需新配方：16 种染色玻璃加无色。框架和尖刺 始终是深色金属。 被辐照物品在腔室中央悬浮并缓慢旋转；工作时——粒子和辉光脉动。</p>
 
-<h2>配方</h2>
+<h2 id="配方">配方</h2>
 
 <p><strong>配方类型</strong>——三种独立类型，每种模式一个：<code>mutation_transform</code>、<code>mutation_duplicate</code>、 <code>mutation_create</code>。每个 JSON 描述一个输入 → 一个输出，带可选的 （覆盖）。配方中 不提及燃料——铀是机器的电荷，而非配料。</p>
 
-<h3>复制——4 个价值等级</h3>
+<h3 id="复制4-个价值等级">复制——4 个价值等级</h3>
 
 <p>每次尝试的价格固定（⅓ 锭 + 4000 EU/FE + 25 秒），因此平衡杠杆只有一个——<strong>成功率：物品越 贵，成功率越低。</strong></p>
 
@@ -460,13 +460,13 @@
 
 <p><strong>橡胶是约定的例外（）。</strong> 严格来说它是机器产品，按上述规则不应被复制。但石油是 <strong>有限</strong>资源：湖泊不补充，也没有办法把水变成石油，因此没有培育舱的话世界中的橡胶储量被 找到的油田数量硬性限制。复制提供了一条昂贵的可再生路径，而非免费：每次尝试花 4000 EU/FE 和 ⅓ 铀锭，几率 0.55，而从新鲜石油获得同样的橡胶只需 400 EU/FE。还有石油时——开采划算十倍； 培育舱在无油可采时才启用。</p>
 
-<h3>转化——水平交换</h3>
+<h3 id="转化水平交换">转化——水平交换</h3>
 
 <p><strong>等价换等价。</strong> 按价值的升级（铁 → 金）被禁止。全部 27 个配方——几率 0.75、300 刻、 2400 EU/FE。对多物品家族（树苗、花、土壤）采用<strong>环</strong>：每件物品按圆环变为下一个，直到落出所需 的。</p>
 
 <table><thead><tr><th>类别</th><th>配方</th><th>环</th></tr></thead><tbody><tr><td>矿物</td><td>3</td><td><code>lapis_lazuli</code> ↔ 、 ↔ <code>glowstone_dust</code>、<code>coal</code> ↔ （全部 1:1）</td></tr><tr><td>树苗</td><td>8</td><td>橡树 → 白桦 → 云杉 → 丛林 → 金合欢 → 深色橡树 → 樱花 → 红树 → 橡树</td></tr><tr><td>花</td><td>8</td><td>蒲公英 → 虞美人 → 兰花 → 茜草花 → 蓝花美耳草 → 矢车菊 → 铃兰 → 雏菊 → 蒲公英</td></tr><tr><td>土壤</td><td>5</td><td>草方块 → 灰化土 → 菌丝 → 草方块；沙子 ↔ 红沙</td></tr></tbody></table>
 
-<h3>创造——进化阶梯</h3>
+<h3 id="创造进化阶梯">创造——进化阶梯</h3>
 
 <p>普通物品<strong>进化</strong>为模组的独特材料，沿三级阶梯。阶级越高，几率越低、操作越贵。在 2–3 阶 失败<strong>完整返还输入</strong>（仅电荷和 EU/FE 燃尽）——否则没人会冒险上到第一阶以上。</p>
 
@@ -478,11 +478,11 @@
 
 <p>当前版本仅包含 4 个阶 1 配方（每分支一个）： → <code>irradiated_diamond</code>、 <code>amethyst_shard</code> → <code>resonant_shard</code>、<code>lapis_lazuli</code> → <code>mutagen_dust</code>、<code>depleted_uranium</code> → <code>unstable_isotope</code>。阶 2–3 和来自上层材料的升级芯片——下一个版本。</p>
 
-<h2>进阶</h2>
+<h2 id="进阶">进阶</h2>
 
 <p>等级：LV。在最初的机器（macerator/extractor）之后建造，那时有稳定的铀矿脉和 EU/FE 网络。 引入 7 个新物品：<code>depleted_uranium</code>、<code>irradiated_diamond</code>、<code>mutagen_dust</code>、 <code>resonant_shard</code>、<code>unstable_isotope</code>、<code>irradiated_slag</code>（5 % 尝试的副产物——本版本无消费者， 为未来铺垫）+ 三种模式芯片。 <strong>材料上的「基因」等级</strong>给再次突变的成功率加成（+5/+10/+15 pp）——消费者将出现在未来的 农业/核能阶段。 突变成就：「有什么变了」（任何突变物品）、「无中生有」（ 模式材料）、「五十分之一」 （传说结果）。</p>
 
-<h2>相关内容</h2>
+<h2 id="相关内容">相关内容</h2>
 
 <p><a href="../materials/uranium.html">铀</a>——燃料锭。 核能主题（）——<code>depleted_uranium</code> 的去处。 <a href="../advanced-machines/teleporter.html">传送器多方块</a>——结构上的相关任务。 <a href="../machines/sawmill.html">锯木机</a>——可切换模式机器的范例。 <a href="../generators/solar_panel.html">太阳能板</a>——设定模式的芯片槽的范例。</p>
 

@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>小型モブ忌避装置</strong>は防衛用のブロックです。エネルギーネットワークに接続され、フィールドが有効な あいだ、周囲のゾーンから敵対モブが<strong>逃げ出し</strong>——クリーパーがネコから逃げるように——拠点へ近づけ なくなります。友好的な動物、村人、プレイヤーにフィールドは作用しません。中立モブ（エンダーマン、 ゾンビ化ピグリン）は<strong>すでに怒っている場合にのみ</strong>追い出されます。</p>
 
@@ -400,7 +400,7 @@
 
 <blockquote><strong>ミニ例：</strong> 家の入口に忌避装置を置き、エネルギー貯蔵庫から LV ケーブルを引きましょう——夜に クリーパーが壁際へ張り付くことも、スケルトンが戸口から射かけてくることもなくなります。ゾーン内 の湧き潰しには松明が依然として必要です：フィールドはモブを追い出しますが、出現そのものを禁じる わけではありません。</blockquote>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <p>純粋な LV 消費者です。フィールドは<strong>常時消費</strong>します：有効なあいだは、近くにモブがいるかどうかに 関係なく 8 EU/FE/t を消費します。エネルギーが尽きるとフィールドは消え、モブは再び近づけるように なります。</p>
 
@@ -408,7 +408,7 @@
 
 <p>エネルギーは 6 面すべてから受け取ります。</p>
 
-<h2>フィールドの挙動</h2>
+<h2 id="フィールドの挙動">フィールドの挙動</h2>
 
 <p>0.5 秒ごとにブロックはゾーンを走査し、積極的に敵対しているモブを追い出します：</p>
 
@@ -416,7 +416,7 @@
 
 <p>ゾーンは 17×17×17 の立方体（ブロックから全方向へ半径 8）で、ハイライトのドームと一致します。</p>
 
-<h2>インターフェース</h2>
+<h2 id="インターフェース">インターフェース</h2>
 
 <p>右クリックで画面が開きます：エネルギー残量、魂の器のスロット、そして<strong>ドームボタン</strong>——ゾーンの 境界をワールド上であなただけに表示します（ワイヤーフレーム付きの半透明の立方体）。他のプレイヤーに ドームは見えません。ボタンはトグルとして働き、ブロックを撤去するとドームは自動的に消えます。</p>
 
@@ -424,17 +424,17 @@
 
 <p><strong>レッドストーン。</strong> ブロックへの信号（レバー、ボタン、コンパレーター）は<strong>フィールドを停止</strong> します：ブロックは消灯し、エネルギーを消費しなくなります。信号を切れば、フィールドは再び働きます。</p>
 
-<h2>ブロックの性質</h2>
+<h2 id="ブロックの性質">ブロックの性質</h2>
 
 <p>銀の装飾板と上面のソウルエミッターを備えたマシンケースのフルブロックです。稼働中、エミッターは 青緑色に光ります（光度 14——松明と同じ）。</p>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>形状</td><td>フルブロック</td></tr><tr><td>ツール</td><td>ツルハシ</td></tr><tr><td>発光</td><td>フィールド稼働中は 14（バニラの松明と同じ）</td></tr></tbody></table>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <table><thead><tr><th>段階</th><th>半径</th><th>消費</th><th>入手方法</th></tr></thead><tbody><tr><td><strong>小型（このブロック）</strong></td><td>8</td><td>8 EU/FE/t</td><td>クラフト</td></tr><tr><td><a href="mob_repeller_mv.html">中型</a></td><td>16</td><td>32 EU/FE/t</td><td>小型に魂の器（魂 80）</td></tr><tr><td><a href="mob_repeller_hv.html">大型</a></td><td>24</td><td>64 EU/FE/t</td><td>中型に魂の器（魂 250）</td></tr></tbody></table>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p>作業台 3×3：四隅に銀板 4 枚、上段中央にソウルランタン、下段中央に高度な回路、左右に銅コイル 2 個、 中央に高度なマシンケース。</p>
 
@@ -445,7 +445,7 @@
 <p>中型と大型はクラフトできません——魂の器で成長させるしかありません。</p>
 
 <h2>クラフト</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="小型モブ忌避装置 alaindustrial:mob_repeller" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="いずれかの銀板"><img src="../assets/item/silver_plate_3d.png" alt="いずれかの銀板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell placeholder" title="Soul Lantern" aria-label="Soul Lantern"><span>soul l</span></div> <div class="cell" title="いずれかの銀板"><img src="../assets/item/silver_plate_3d.png" alt="いずれかの銀板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="銅コイル"><img src="../assets/item/copper_coil_3d.png" alt="銅コイル" width="32" height="32"></div> <div class="cell" title="高度なマシンケース"><img src="../assets/item/advanced_machine_casing_3d.png" alt="高度なマシンケース" width="32" height="32"></div> <div class="cell" title="銅コイル"><img src="../assets/item/copper_coil_3d.png" alt="銅コイル" width="32" height="32"></div> <div class="cell" title="いずれかの銀板"><img src="../assets/item/silver_plate_3d.png" alt="いずれかの銀板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="高度な回路"><img src="../assets/item/advanced_circuit_3d.png" alt="高度な回路" width="32" height="32"></div> <div class="cell" title="いずれかの銀板"><img src="../assets/item/silver_plate_3d.png" alt="いずれかの銀板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="小型モブ忌避装置"><img src="../assets/item/mob_repeller_3d.png" alt="小型モブ忌避装置" width="32" height="32"></div><div class="result-name">小型モブ忌避装置</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="小型モブ忌避装置 alaindustrial:mob_repeller" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="いずれかの銀板"><img src="../assets/item/silver_plate_3d.png" alt="いずれかの銀板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Soul Lantern"><img src="../assets/vanilla/item/soul_lantern.png" alt="Soul Lantern" width="32" height="32"></div> <div class="cell" title="いずれかの銀板"><img src="../assets/item/silver_plate_3d.png" alt="いずれかの銀板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="銅コイル"><img src="../assets/item/copper_coil_3d.png" alt="銅コイル" width="32" height="32"></div> <div class="cell" title="高度なマシンケース"><img src="../assets/item/advanced_machine_casing_3d.png" alt="高度なマシンケース" width="32" height="32"></div> <div class="cell" title="銅コイル"><img src="../assets/item/copper_coil_3d.png" alt="銅コイル" width="32" height="32"></div> <div class="cell" title="いずれかの銀板"><img src="../assets/item/silver_plate_3d.png" alt="いずれかの銀板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="高度な回路"><img src="../assets/item/advanced_circuit_3d.png" alt="高度な回路" width="32" height="32"></div> <div class="cell" title="いずれかの銀板"><img src="../assets/item/silver_plate_3d.png" alt="いずれかの銀板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="小型モブ忌避装置"><img src="../assets/item/mob_repeller_3d.png" alt="小型モブ忌避装置" width="32" height="32"></div><div class="result-name">小型モブ忌避装置</div></div></div></div></div>
   </main>
 </div>
 

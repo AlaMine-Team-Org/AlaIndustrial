@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link active" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 
 <blockquote>⚠️ <strong>Electrical safety.</strong> The bare electrum HV cable deals <strong>10</strong> damage (the tier ladder runs LV 2 → MV 6 → HV 10, key) not only on direct contact but also within <strong>0.5 blocks</strong> of the segment — but only while energy is actually moving through this exact bare segment. A disconnected line and retained buffer EU/FE are safe. Normal armor applies; water does not amplify the hit; a solid block between the cable and the player blocks the shock. Servers can turn the mechanic off in the config.</blockquote>
 
@@ -404,7 +404,7 @@
 
 <blockquote><strong>Where this already shows.</strong> The mod has no HV machines, generators or storage yet, but it does have an HV <strong>consumer</strong>: the <a href="../advanced-machines/teleporter.html">Teleporter Station</a> and its 500,000 EU/FE buffer. Over a gold cable (48 EU/FE/t) it fills in ~10,400 ticks ≈ 8.7 minutes; over electrum (192 EU/FE/t), in ~2,600 ticks ≈ <strong>2.2 minutes</strong>. The caveat that makes the promise honest: the station is a storage sink, and a storage sink is <strong>never fed from other storage</strong> over a cable (battery boxes only discharge into a machine's deficit). The speed-up is real exactly to the extent that your <strong>generators</strong> together exceed 48 EU/FE/t — below that the wire is not the bottleneck. On the rest of the content (LV/MV) what helps is the wide 192 EU/FE/t buffer itself on dense lines.</blockquote>
 
-<h2>Energy</h2>
+<h2 id="energy">Energy</h2>
 
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>transfer</td></tr><tr><td>Max voltage</td><td>512 EU/FE/packet (HV tier)</td></tr><tr><td>Throughput</td><td>192 EU/FE/tick = the segment working buffer</td></tr><tr><td>Loss</td><td><strong>0.005</strong> attenuation per block (lower than tin!); a consumer receives <code>max(1, ceil(N × 0.995^distance))</code> EU/FE/tick when N &gt; 0</td></tr><tr><td>Insulation</td><td>shipped — <a href="insulated_electrum_cable.html">insulated electrum cable</a> (0.0025 loss)</td></tr></tbody></table>
 
@@ -414,19 +414,19 @@
 
 <blockquote><strong>Mixed networks.</strong> A network takes both its throughput cap <strong>and</strong> its loss from the strongest cable in it — the same rule that already applies to gold in a copper line. A single electrum segment in a gold line moves the whole network to 512 EU/FE/packet and to electrum's 0.005 loss.</blockquote>
 
-<h2>Block Properties</h2>
+<h2 id="block-properties">Block Properties</h2>
 
 <p>A thin wire that connects to neighbouring blocks. Any tool breaks it, and shears are especially handy.</p>
 
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>thin rod (6px core + sleeves),</td></tr><tr><td>Hardness</td><td>0.2</td></tr><tr><td>Tool</td><td>any / shears</td></tr></tbody></table>
 
-<h3>Connecting to half blocks</h3>
+<h3 id="connecting-to-half-blocks">Connecting to half blocks</h3>
 
 <p>Like every other cable, electrum drops its horizontal sleeve toward a low neighbour (a solar panel, 8/16 tall, and any future half block) so the sleeve hugs the slab's side instead of floating above it. The behaviour is shared by all cables and is derived from the neighbour's shape, not its type.</p>
 
-<h2>Recipes</h2>
+<h2 id="recipes">Recipes</h2>
 
-<p><strong>The ritual recipe:</strong> eight electrum ingots around the edge and four diamond dust between them (8x) and <code>D</code> is diamond dust (4x) → <strong>3</strong> cables.</p>
+<p><strong>The ritual recipe:</strong> five electrum ingots — the four corners and the center — and four diamond dust at the edge midpoints yield <strong>3</strong> cables.</p>
 
 <p>The price is deliberately steep, and that is a balance decision rather than flavour. A mixed network takes both its cap and its loss from the strongest segment present, so a cheap electrum cable would let one block lift a kilometre of copper to 0.005 loss. This wire is laid on key routes, not used to wire a whole base.</p>
 
@@ -436,7 +436,7 @@
 
 <p>Processing recipes: none.</p>
 
-<h2>Related</h2>
+<h2 id="related">Related</h2>
 
 <p><a href="gold_cable.html">Gold Cable</a> — the previous rung of the ladder, MV. <a href="copper_cable.html">Copper Cable</a> — the universal LV cable. <a href="tin_cable.html">Tin Cable</a> — cheap and nearly lossless, for solar farms. <a href="insulated_electrum_cable.html">Insulated Electrum Cable</a> — the rubber version: the same 192 EU/FE/t at half the loss and no shock.</p>
 

@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепты</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="10 страниц">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="4 страницы">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Прочее</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="14 страниц">14</span></a>
 <div class="group-title">Предметы</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="2 страницы">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="20 страниц">20</span></a>
 <a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="20 страниц">20</span></a>
   </aside>
@@ -393,7 +393,7 @@
   </div>
 </div>
 
-<h2>Сводка</h2>
+<h2 id="сводка">Сводка</h2>
 
 <p><strong>Электромагнит</strong> — заряжаемый на EU/FE предмет-удобство: лежит в <strong>любом слоте</strong> инвентаря (хотбар / основной / вторая рука) и автоматически <strong>притягивает</strong> к игроку лежащие рядом выпавшие предметы — дроп с руды в шахте, куски после взрыва, чужой бесхозный дроп. Это <strong>tier 1</strong>: сферический радиус <strong>5 блоков</strong> (вверх/вниз/ в стороны); за каждый реально сдвинутый предмет магнит тратит <strong>2 EU/FE</strong>. Холостой скан, когда рядом ничего нет, ничего не стоит.</p>
 
@@ -401,7 +401,7 @@
 
 <p><strong>Тумблер (Shift-ПКМ):</strong> магнит можно выключить, чтобы носить его в инвентаре рядом с фермами, сортировками и трубами, не высасывая из них предметы. Свежекрафтованный магнит включён.</p>
 
-<h2>Энергия</h2>
+<h2 id="энергия">Энергия</h2>
 
 <p>Собственный EU/FE-буфер, вне энергосети. Заряжается в слоте Энергохранилища и от надетого ранца; тратит заряд за каждый притянутый предмет.</p>
 
@@ -409,28 +409,28 @@
 
 <p>Расход снимается <strong>только на сервере</strong> (в 26.2 вызывается лишь на <code>ServerLevel</code>). В творческом/наблюдательном режиме заряд не тратится (общее правило для всех EU/FE-предметов) — магнит при этом всё равно притягивает.</p>
 
-<h2>Инвентарь</h2>
+<h2 id="инвентарь">Инвентарь</h2>
 
 <p>Не применимо — у магнита нет внутреннего хранилища предметов (стак 1). Хранит только заряд EU/FE и флаг вкл/выкл (absent = включён).</p>
 
-<h2>Свойства блока</h2>
+<h2 id="свойства-блока">Свойства блока</h2>
 
 <p>Не применимо (предмет).</p>
 
-<h2>Рецепты</h2>
+<h2 id="рецепты">Рецепты</h2>
 
 
 <p><strong>Ремонт</strong> — не применим: у магнита нет прочности; «ремонт» — это зарядка EU/FE (см. «Энергия»).</p>
 
-<h2>Поведение</h2>
+<h2 id="поведение">Поведение</h2>
 
 <p><strong>Притягивание (seek):</strong> <strong>каждый тик</strong> магнит собирает выпавшие предметы в сферическом радиусе и <strong>задаёт</strong> каждому скорость прямо к центру тела игрока — до 0.55 бл/тик (далёкие летят на максимуме, у игрока пул мягко тормозит). Скорость именно <strong>задаётся</strong> (а не добавляется), поэтому пул перекрывает гравитацию и трение: предмет снизу поднимается вверх к игроку, сверху — опускается. Собственно подбор делает сама ваниль, когда предмет долетает к игроку. <strong>Тариф:</strong> за каждый реально сдвинутый предмет снимается 2 EU/FE/тик, пока он летит. При нехватке заряда магнит «глохнет»; при 0 EU/FE — не притягивает вовсе. За проход обрабатывается не более <strong>64</strong> предметов (защита от лага при массовом дропе). <strong>Что НЕ притягивается:</strong> предметы на задержке подбора — это и свеже выброшенный игроком дроп (магнит не всасывает мгновенно обратно то, что только что выкинули), и «неподбираемые» (задержка 32767); предметы, лежащие в лаве (чтобы не тащить их через огонь); предметы вне радиуса. Рамки/дисплеи не трогаются (фильтр только по выпавшим предметам). <strong>Скорость seek ограничена</strong> <code>SEEK_SPEED</code> (0.55 бл/тик): достаточно быстро, чтобы предмет заметно «влетал», но под окном подбора ваниль — чтобы не проскочить сквозь игрока. <strong>Работает из любого слота:</strong> магнит тикает в хотбаре, основном инвентаре и второй руке (в 26.2 вторая рука тикает через путь экипировки) — носить его можно где угодно, не обязательно в руке. <strong>Тумблер (Shift-ПКМ):</strong> правый клик с зажатым Shift переключает вкл/выкл. Состояние — в компоненте <code>magnet_enabled</code> (absent = включён; выключение пишет, повторное включение убирает компонент, так что включённый магнит побайтно идентичен свежему). Переключение сопровождается <strong>металлическим щелчком</strong> (<code>copper_bulb</code> on/off — электрический звук, а не тканевый) и сообщением над хотбаром. Выключенный магнит ничего не притягивает и не тратит EU/FE. <strong>Индикация:</strong> полоска под иконкой показывает заряд (жёлтая, LV-цвет). В тултипе — короткие строки: пояснение, статус (зелёное «Активен» / серое «Выключен»), <strong>заряд <code>X / Y EU/FE</code></strong> и строка радиуса/тарифа. <strong>Дроп/смерть/релогин:</strong> заряд и флаг вкл/выкл хранятся в предмете и сохраняются. <strong>В креативе:</strong> заряд не тратится (общее правило электро-семьи,, но притягивание работает.</p>
 
-<h2>Прогрессия</h2>
+<h2 id="прогрессия">Прогрессия</h2>
 
 <p>Предмет-удобство LV-уровня: решает классическую боль тех-мода «иду по шахте — лут сам ко мне». Доступен после <a href="../energy-storage/battery_box.html">Энергохранилища</a> и медной катушки/схемы: без LV-инфраструктуры магнит не скрафтить и не зарядить. Фильтры (whitelist/blacklist по тегам), зоны-глушилки и tier-эволюция радиуса (LV/MV/HV) — будущая работа.</p>
 
-<h2>Связанное</h2>
+<h2 id="связанное">Связанное</h2>
 
 <p><a href="electric_drill.html">Электробур</a> — прецедент EU/FE-расходника; типичный компаньон в шахте. <a href="energy_pack.html">Энергоранец</a> — заряжает магнит в инвентаре на ходу. <a href="../energy-storage/battery_box.html">Энергохранилище</a> — зарядка магнита (слот charge). <a href="../components/copper_coil.html">Медная катушка</a>, <a href="../components/electronic_circuit.html">электронная схема</a> — компоненты крафта.</p>
 

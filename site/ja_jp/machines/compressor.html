@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,13 +392,13 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>圧縮機</strong> は LV マシンで、原料をより密度の高い形に圧縮します：金属の粉をインゴットに、石炭や宝石の粉を元のアイテムに、氷や雪をより密度の高いブロックに、サトウキビを紙にします。主な役割は <strong>非金属</strong> の鉱石倍化サイクルを閉じることです。石炭・ダイヤモンド・エメラルド・ラピスラズリの粉を再び利用可能なアイテムに戻せる唯一の機械なので、「鉱石 → 粉 ×2 → アイテム ×2」の流れがこれらにも適用できます。</p>
 
 <blockquote><strong>ミニ例：</strong> <a href="macerator.html">粉砕機</a> でダイヤモンド鉱石を粉砕してダイヤモンドの粉 ×2 を得て、両方を圧縮機にかけてください。1つの鉱石から <strong>ダイヤモンド ×2</strong> が手に入ります。この最後のステップができるのは圧縮機だけです。</blockquote>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <p>圧縮機は EU/FE を消費するだけで、供給の変動で引っかからないよう小さなバッファを保持します。</p>
 
@@ -408,45 +408,47 @@
 
 <p>エネルギーは5つの作業面から入ります。<strong>正面</strong>（「顔」が向いている面）は不活性で、ケーブルは接続できず、ホッパーも機能しません。</p>
 
-<h2>加工</h2>
+<h2 id="加工">加工</h2>
 
 <p>各圧縮は130ティック（約6.5秒）かかり、260 EU/FE を消費します。完成した結果は自動で飛び出しません。手作業かホッパーで回収してください。</p>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>所要時間</td><td>130ティック（約6.5秒）</td></tr><tr><td>操作コスト</td><td>260 EU/FE</td></tr><tr><td>自動排出</td><td>なし</td></tr></tbody></table>
 
-<h2>インベントリ</h2>
+<h2 id="インベントリ">インベントリ</h2>
 
 <p>入力が1スロット、出力が1スロットです。</p>
 
 <table><thead><tr><th>スロット</th><th>受け入れ</th><th>数</th></tr></thead><tbody><tr><td>入力</td><td>圧縮機が圧縮できるアイテム</td><td>1</td></tr><tr><td>出力</td><td>結果</td><td>1</td></tr></tbody></table>
 
-<h2>インターフェース</h2>
+<h2 id="インターフェース">インターフェース</h2>
 
 <p>1つの画面にエネルギー量、進行状況、入力スロット、出力スロットが表示されます。</p>
 
-<h2>ブロック属性</h2>
+<h2 id="ブロック属性">ブロック属性</h2>
 
 <p>通常の固体ブロックで、石より柔らかいです。どんなツルハシでも壊せますが、<strong>破壊時にチャージは保持しません</strong>。</p>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>ツール</td><td>ツルハシ</td></tr><tr><td>破壊時にチャージを保持</td><td>いいえ</td></tr></tbody></table>
 
-<h2>音</h2>
+<h2 id="音">音</h2>
 
 <p>作業中、圧縮機は圧縮の重い機械的な打撃音を発します。機械がアイドリング状態のときは鳴りやみます（）。</p>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p>何を圧縮するか、目的ごとにまとめたもの：</p>
 
-<table><thead><tr><th>入力</th><th>出力</th><th>なぜ重要か</th></tr></thead><tbody><tr><td>非金属の粉（石炭、ダイヤモンド、エメラルド、ラピスラズリ）</td><td>元のアイテムに戻す</td><td><strong>これらを復元できる唯一の機械</strong> — 非金属の倍化ループを閉じる</td></tr><tr><td>金属の粉（銅、鉄、金）</td><td>インゴット</td><td>電気かまどの代替ルート</td></tr><tr><td>インゴット（8種の金属）</td><td><a href="../components/material_forms.html">プレート</a></td><td>プレート鍛造の機械ルート（）。<a href="../items/forge_hammer.html">鍛冶ハンマー</a> の代替</td></tr><tr><td>粘土玉</td><td>レンガ</td><td>圧力による粘土の焼成</td></tr><tr><td>氷</td><td>氷塊</td><td>1:1。作業台の9個氷の代替</td></tr><tr><td>氷塊</td><td>青氷</td><td>1:1。作業台の9個氷塊の代替</td></tr><tr><td>雪ブロック</td><td>氷</td><td>氷への新しいルート。逆ループなし</td></tr><tr><td>サトウキビ</td><td>紙</td><td>1:1。クラフトの3→3の代替</td></tr></tbody></table>
+<table><thead><tr><th>入力</th><th>出力</th><th>なぜ重要か</th></tr></thead><tbody><tr><td>非金属の粉（石炭、ダイヤモンド、エメラルド、ラピスラズリ）</td><td>元のアイテムに戻す</td><td><strong>これらを復元できる唯一の機械</strong> — 非金属の倍化ループを閉じる</td></tr><tr><td>金属の粉（銅、鉄、金）</td><td>インゴット</td><td>電気かまどの代替ルート</td></tr><tr><td>インゴット（8種の金属）</td><td><a href="../components/material_forms.html">プレート</a></td><td>プレート鍛造の機械ルート（）。<a href="../items/forge_hammer.html">鍛冶ハンマー</a> の代替</td></tr><tr><td>粘土玉</td><td>レンガ</td><td>圧力による粘土の焼成</td></tr><tr><td>氷</td><td>氷塊</td><td>1:1。作業台の9個氷の代替</td></tr><tr><td>氷塊</td><td>青氷</td><td>1:1。作業台の9個氷塊の代替</td></tr><tr><td>雪ブロック</td><td>氷</td><td>氷への新しいルート。逆ループなし</td></tr><tr><td>サトウキビ</td><td>紙</td><td>1:1。クラフトの3→3の代替</td></tr><tr><td>グロウストーンダスト ×4</td><td>グロウストーン</td><td>作業台と同じコストですが、自動化できます</td></tr><tr><td>レッドストーンダスト ×9</td><td>レッドストーンブロック</td><td>作業台と同じコストですが、自動化できます</td></tr></tbody></table>
+
+<p>最後の2つのレシピは <strong>まとめ処理</strong> です：圧縮機は必要な数を入力スロットに貯め、一度にまとめて消費します。グロウストーンダストが4個（レッドストーンなら9個）に満たないうちは作業を始めません。1回分がそろうまで進捗の矢印は止まったままです。</p>
 
 <p>重要なのは、<strong>石炭、ダイヤモンド、エメラルド、ラピスラズリ</strong> について、圧縮機が粉を元のアイテムに戻す <em>唯一の</em> 方法であり、<a href="electric_furnace.html">電気かまど</a> はこれらを製錬できません。だからこそ非金属の倍化を閉じるパートナーです。（ラピスラズリの粉は粉あたり ×1 しか戻らないので、余分な増殖はありません：アイテム → 粉 ×1 → アイテム ×1。）</p>
 
-<h2>進行</h2>
+<h2 id="進行">進行</h2>
 
 <p>ティア：LV。圧縮機であり、非金属の倍化サイクルを閉じる機械です。 v0.1 では上位に進化しません。 <a href="../generators/generator.html">発電機</a> などの LV 電源からの給電が必要です。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="macerator.html">粉砕機</a> — この機械が粉を圧縮して元のアイテムにするための粉を供給します。 <a href="electric_furnace.html">電気かまど</a> — 金属の粉を製錬します（圧縮機は非金属向けのペア）。 <a href="../components/electronic_circuit.html">電子回路</a> — 処理チェーンの構成要素。 <a href="../generators/generator.html">発電機</a> — 電源。</p>
 

@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
 <a class="cat-link active" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
@@ -376,7 +376,7 @@
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
@@ -392,7 +392,7 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 
 <p>The <strong>Energy Condenser</strong> is a cube frame with a slowly turning, glowing orb inside. It catches the power that would otherwise be lost: when the generators make more than the machines eat, the surplus normally just vanishes. The condenser banks it instead, and hands the bank back as a single item — an <strong>energy clot</strong>.</p>
 
@@ -400,21 +400,25 @@
 
 <blockquote><strong>Example:</strong> at noon your solar panels make more than two machines need. That difference used to go nowhere; now the orb starts spinning up, and a few minutes later there is a tier-I clot inside.</blockquote>
 
-<h2>Energy</h2>
+<h2 id="energy">Energy</h2>
 
 <table><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody><tr><td>Intake</td><td>128 EU/FE/tick</td></tr><tr><td>Output</td><td>none — energy goes in, but never comes back out as energy</td></tr><tr><td>Bank</td><td>up to 4,000,000 EU/FE</td></tr><tr><td>Powered faces</td><td>top and bottom only</td></tr></tbody></table>
 
 <p>The narrow intake is deliberate: a condenser standing closer to a generator than a machine would otherwise intercept the flow. Faster banking is not "give this one block a thicker cable" — it is a second condenser.</p>
 
-<h2>Inventory</h2>
+<h2 id="inventory">Inventory</h2>
 
 <p>One slot, output only. Nothing can be put in; the clot is taken by hand, hopper or pipe — but only through the <strong>side</strong> faces, since top and bottom belong to the cable.</p>
 
-<h2>Block properties</h2>
+<h2 id="block-properties">Block properties</h2>
 
 <p>A full-cube frame; cable connects only on top and bottom. It glows brighter the more is banked. Mined with a pickaxe, drops itself.</p>
 
-<h2>How it works</h2>
+<h2 id="sound">Sound</h2>
+
+<p>While the condenser packs the grid's surplus into a clot, it gives off a soft harmonic ring — the loop (pattern A on <code>lit</code>, default 0.35; . Take the clot out or starve the grid and it falls silent.</p>
+
+<h2 id="how-it-works">How it works</h2>
 
 <p>The bank grows continuously — no modes, no switches. The output slot always shows **the clot you would</p>
 
@@ -426,11 +430,11 @@
 
 <p>The condenser has no upgrade panel. An overclocker in it would turn "sips the surplus" into a pump on the grid — exactly what this mechanic avoids.</p>
 
-<h2>Progression</h2>
+<h2 id="progression">Progression</h2>
 
 <p>The only source of <a href="../upgrades/overclocker_upgrade.html">energy clots</a>, and therefore of every machine overclocker. Worth placing once you have some surplus generation: on a starved grid it banks nothing, and the motionless orb says so honestly. Time to a clot shrinks with more condensers and thicker cable, not with an upgrade to the block.</p>
 
-<h2>Related</h2>
+<h2 id="related">Related</h2>
 
 <p><a href="../upgrades/overclocker_upgrade.html">Overclocker</a> — what the clots are for. <a href="battery_box.html">Battery Box</a> — storage for running the factory; the condenser is no rival to it and cannot drain it.</p>
 

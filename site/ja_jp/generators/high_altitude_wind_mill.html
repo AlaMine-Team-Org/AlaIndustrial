@@ -359,7 +359,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <div class="group-title">加工</div>
@@ -376,7 +376,7 @@
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
@@ -392,17 +392,17 @@
     </div>
   </div>
 </div>
-<h2>概要</h2>
+<h2 id="概要">概要</h2>
 
 <p><strong>スカイミル</strong> (Sky Mill) はスカイブランチの第2段階 (T2) で、<a href="wind_mill.html">基本風力タービン</a>の進化形です。 開放空で風からEUを生み出しますが、ベースは高さと共に<strong>2倍速く</strong>成長し (山は1段階16ブロックではなく8ブロックで到達)、 12 EU/FE/t の上限に達します。天候の影響は他の風力タービンより弱く (雨 ×1.25、雷雨 ×1.5) — ピークではなく安定収入の風力タービンです。<strong>進化のみ</strong>で入手可能で、 基本風力タービンに<strong>太陽進化チップ</strong>を使って育成します。クラフトはありません。</p>
 
-<h2>エネルギー</h2>
+<h2 id="エネルギー">エネルギー</h2>
 
 <p>風力タービンはエネルギーを生産するだけで、外部からの電力は受け取りません。バッファ8000 EU/FE、LV出力。 エネルギーは<strong>背面からのみ</strong>流出 — T1と同じで、背面のケーブルが進化後も機能し続けます。 他の5面は不活性です。</p>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>役割</td><td>バッファ付き生産機</td></tr><tr><td>バッファ (EU/FE)</td><td>8000</td></tr><tr><td>最大入力</td><td>N/A (電力を受け付けない)</td></tr><tr><td>最大出力 (EU/FE/t)</td><td>32 (LV)</td></tr><tr><td>EU/FE/t</td><td>0–12 (ベース0–8を高さカーブで、雲下でピーク × 弱い天候倍率、上限12)</td></tr></tbody></table>
 
-<h2>発電</h2>
+<h2 id="発電">発電</h2>
 
 <p>T1と同様ですが、高さによる恩恵が2倍: 風カーブの山は8ブロックごと1段階 (16の代わり) で到達し、 完全ベース8 EU/FE/t は y 188–192 のみです。それより上は空気が薄く、y = 248 で発電量は0に落ちます。 天候はベースに弱く掛かり: 雨 ×1.25、雷雨 ×1.5、上限12 EU/FE/t。 高さ y ≈ 128 ではスカイミルは 4 EU/FE/t を出力 — 同じ高さの基本風力タービンのちょうど2倍ですが、 自身の完全ベースの半分にとどまります。完全な 8 EU/FE/t は y 188–192 の帯のみ — 晴天時の全風力タービン中最強です。</p>
 
@@ -412,21 +412,21 @@
 
 <p><strong>ブレードの隙間とローター干渉</strong>はT1と全く同じ: ローターは風力タービンの前に 2×2 の空き領域を必要とし、 隣接風力タービンのブレードとの交差は両者を停止させます。詳細なルールと図は<a href="wind_mill.html">T1の仕様</a>を参照。</p>
 
-<h2>インターフェース</h2>
+<h2 id="インターフェース">インターフェース</h2>
 
 <p>タイプ: container — エネルギーバー (ホバーでツールチップ)、中央のロータースロットと状態インジケーターは 基本風力タービンと同じ位置。風力タービン稼働中はステータス行に現在の EU/FE/t 発電量が表示され、 停止時はその理由が表示されます。チップスロットや進化進行はありません (T2は末端で、これ以上進化しない)。</p>
 
-<h2>ブロックの性質</h2>
+<h2 id="ブロックの性質">ブロックの性質</h2>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>形状</td><td>全面キューブ 16³ (オクルーダー)</td></tr><tr><td>設置</td><td>正面をプレイヤーに向けて</td></tr><tr><td>硬度</td><td>3.0</td></tr><tr><td>爆発耐性</td><td>6.0</td></tr><tr><td>ツール</td><td>ツルハシ</td></tr></tbody></table>
 
-<h2>レシピ</h2>
+<h2 id="レシピ">レシピ</h2>
 
 <p>スカイミルはクラフトできません。唯一の入手方法は基本風力タービンから育成すること: 太陽進化チップを入れ、ローターを装着したまま開放空で稼働させてください。 進化時の蓄積エネルギーは引き継がれます。</p>
 
 <p><strong>クラフト:</strong> なし。クラフトテーブルでは入手できません。 <strong>進化 (唯一の入手方法):</strong> 基本<a href="wind_mill.html">風力タービン</a> + ローター装着 + <strong>太陽進化チップ</strong> + 開放空での蓄積時間 → スカイミルに変化、NBT (エネルギー) を引き継ぎ。</p>
 
-<h2>関連項目</h2>
+<h2 id="関連項目">関連項目</h2>
 
 <p><a href="wind_mill.html">風力タービン</a> — 進化元の中立T1。 <a href="storm_wind_mill.html">テンペストミル</a> — テンペストブランチの鏡像。</p>
 
