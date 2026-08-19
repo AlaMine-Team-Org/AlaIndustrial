@@ -406,11 +406,11 @@
 
 <h2 id="processing">Processing</h2>
 
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Recipe type</td><td>none — the bench uses no recipes</td></tr><tr><td>Duration (ticks)</td><td>625 / 1250 / 2250 (by grade)</td></tr><tr><td>Auto-output</td><td>true — a hopper collects the finished part</td></tr></tbody></table>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Recipe type</td><td>none — the bench uses no recipes</td></tr><tr><td>Duration (ticks)</td><td>1200 / 2400 / 3600 — exactly 1 / 2 / 3 minutes (by grade)</td></tr><tr><td>Auto-output</td><td>true — a hopper collects the finished part</td></tr></tbody></table>
 
 <p>The bench has no recipes on purpose: a repair does not turn one item into another, it changes the properties of the <strong>same</strong> item in the slot. What is repaired, and with what, by code and config.</p>
 
-<table><thead><tr><th>Grade</th><th>Material (1)</th><th>EU/FE per repair</th><th>Ticks</th></tr></thead><tbody><tr><td>Plain</td><td>iron plate</td><td>5,000</td><td>625</td></tr><tr><td>Reinforced (<code>*_reinforced</code>)</td><td>tempered iron plate</td><td>10,000</td><td>1250</td></tr><tr><td>Advanced (<code>*_advanced</code>)</td><td>electronic circuit</td><td>18,000</td><td>2250</td></tr></tbody></table>
+<table><thead><tr><th>Grade</th><th>Material (1)</th><th>EU/FE per repair</th><th>Ticks</th></tr></thead><tbody><tr><td>Plain</td><td>iron plate</td><td>9,600</td><td>1200</td></tr><tr><td>Reinforced (<code>*_reinforced</code>)</td><td>tempered iron plate</td><td>19,200</td><td>2400</td></tr><tr><td>Advanced (<code>*_advanced</code>)</td><td>electronic circuit</td><td>28,800</td><td>3600</td></tr></tbody></table>
 
 <p>A rotor and a wheel of the same grade repair identically: the price follows the grade, not the family. Overclocker chips work as they do in any other machine — shorter operations, higher draw.</p>
 

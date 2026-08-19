@@ -424,6 +424,12 @@
 
 <p>One screen shows the energy buffer, the progress, the input slot and the output slot.</p>
 
+<p>The status line under the slots explains why the machine stands idle: "Not enough material", "No matching recipe", "Output is blocked", "No energy". An empty machine gets no line at all — an empty slot speaks for itself.</p>
+
+<p>A line of its own is exactly what the Compressor needs: it has <strong>batch</strong> recipes where one operation eats several items at once (4 glowstone dusts, 9 redstone). An incomplete batch is accepted into the slot but starts nothing — without a caption that just looks like a breakdown. Redstone shows it best: a full stack of 64 splits into batches of 9 with 1 left over, so a single item sitting in the input slot after a whole stack has been processed is normal, not a jam.</p>
+
+<p>The energy line does not appear the moment the buffer runs dry, but only once it has stayed empty for a while: a machine that barely has enough power runs one tick on, one tick off, and a caption blinking along with it would lie about a stall.</p>
+
 <h2 id="block-properties">Block Properties</h2>
 
 <p>An ordinary solid block, softer than stone. Any pickaxe breaks it, but <strong>it does NOT keep its charge when broken</strong>.</p>

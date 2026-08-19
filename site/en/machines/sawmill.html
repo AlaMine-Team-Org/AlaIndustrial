@@ -424,6 +424,8 @@
 
 <p>The screen has its own GUI: energy buffer, input and output slots, and between them a <strong>saw blade</strong> progress indicator that fills left to right. A row of <strong>4 mode buttons</strong> with ghost icons (plank/stick/slab/stairs) sits below the slots; the active mode is highlighted and each button has a tooltip.</p>
 
+<p>The status line between the slots and the mode buttons explains why the machine stands idle: "Not enough material", "No matching recipe", "Output is blocked", "No energy". An empty machine gets no line at all — an empty slot speaks for itself. The energy line does not appear the moment the buffer runs dry, but only once it has stayed empty for a while: a machine that barely has enough power runs one tick on, one tick off, and a caption blinking along with it would lie about a stall.</p>
+
 <h2 id="block-properties">Block properties</h2>
 
 <p>An ordinary full block, softer than stone. Breaks with any pickaxe, but <strong>does not keep its charge</strong> when broken.</p>

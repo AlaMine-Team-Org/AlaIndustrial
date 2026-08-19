@@ -406,11 +406,11 @@
 
 <h2 id="加工">加工</h2>
 
-<table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>レシピ種別</td><td>なし——修理台はレシピを使いません</td></tr><tr><td>所要時間 (tick)</td><td>625 / 1250 / 2250（部品の等級による）</td></tr><tr><td>自動排出</td><td>true——完成した部品はホッパーが回収します</td></tr></tbody></table>
+<table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>レシピ種別</td><td>なし——修理台はレシピを使いません</td></tr><tr><td>所要時間 (tick)</td><td>1200 / 2400 / 3600 — ちょうど 1 / 2 / 3 分（部品の等級による）</td></tr><tr><td>自動排出</td><td>true——完成した部品はホッパーが回収します</td></tr></tbody></table>
 
 <p>修理台にレシピがないのは意図的です。修理はあるアイテムを別のアイテムに変えるのではなく、スロットに 入っている<strong>同じ</strong>アイテムの性質を書き換えます。何を何で直すかはコードと設定で決まっています。</p>
 
-<table><thead><tr><th>部品の等級</th><th>材料 (1 個)</th><th>修理 1 回の EU/FE</th><th>tick</th></tr></thead><tbody><tr><td>通常</td><td>鉄板</td><td>5,000</td><td>625</td></tr><tr><td>強化 (<code>*_reinforced</code>)</td><td>焼き入れ鉄板</td><td>10,000</td><td>1250</td></tr><tr><td>電子 (<code>*_advanced</code>)</td><td>電子回路</td><td>18,000</td><td>2250</td></tr></tbody></table>
+<table><thead><tr><th>部品の等級</th><th>材料 (1 個)</th><th>修理 1 回の EU/FE</th><th>tick</th></tr></thead><tbody><tr><td>通常</td><td>鉄板</td><td>9,600</td><td>1200</td></tr><tr><td>強化 (<code>*_reinforced</code>)</td><td>焼き入れ鉄板</td><td>19,200</td><td>2400</td></tr><tr><td>電子 (<code>*_advanced</code>)</td><td>電子回路</td><td>28,800</td><td>3600</td></tr></tbody></table>
 
 <p>同じ等級のローターとホイールは同じように直ります。価格を決めるのは等級であって、部品の系統では ありません。アップグレード枠のオーバークロックチップは有効で、他の機械と同様に時間を縮めて EU/FE/tick を増やします。</p>
 

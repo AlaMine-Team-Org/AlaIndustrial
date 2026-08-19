@@ -406,11 +406,11 @@
 
 <h2 id="加工">加工</h2>
 
-<table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>配方类型</td><td>无——修理台不使用配方</td></tr><tr><td>时长（刻）</td><td>625 / 1250 / 2250（按部件等级）</td></tr><tr><td>自动输出</td><td>true——漏斗会取走修好的部件</td></tr></tbody></table>
+<table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>配方类型</td><td>无——修理台不使用配方</td></tr><tr><td>时长（刻）</td><td>1200 / 2400 / 3600 — 正好 1 / 2 / 3 分钟（按部件等级）</td></tr><tr><td>自动输出</td><td>true——漏斗会取走修好的部件</td></tr></tbody></table>
 
 <p>修理台故意没有配方：修理不会把一件物品变成另一件，而是改变槽位中<strong>同一件</strong>物品的属性。修什么、 用什么修，由代码和配置决定。</p>
 
-<table><thead><tr><th>部件等级</th><th>材料（1 个）</th><th>每次修理 EU/FE</th><th>刻数</th></tr></thead><tbody><tr><td>普通</td><td>铁板</td><td>5,000</td><td>625</td></tr><tr><td>强化 (<code>*_reinforced</code>)</td><td>淬火铁板</td><td>10,000</td><td>1250</td></tr><tr><td>电子 (<code>*_advanced</code>)</td><td>电子电路</td><td>18,000</td><td>2250</td></tr></tbody></table>
+<table><thead><tr><th>部件等级</th><th>材料（1 个）</th><th>每次修理 EU/FE</th><th>刻数</th></tr></thead><tbody><tr><td>普通</td><td>铁板</td><td>9,600</td><td>1200</td></tr><tr><td>强化 (<code>*_reinforced</code>)</td><td>淬火铁板</td><td>19,200</td><td>2400</td></tr><tr><td>电子 (<code>*_advanced</code>)</td><td>电子电路</td><td>28,800</td><td>3600</td></tr></tbody></table>
 
 <p>同等级的转子和轮子修理方式完全一致：决定价格的是等级，而不是部件所属的家族。升级面板中的超频芯片 有效——它们缩短时间并提高 EU/FE/刻 的消耗，与其他机器一样。</p>
 
