@@ -328,6 +328,44 @@ public class MachineGameTest {
 	}
 
 	/**
+	 * @implements TC-COMP-001-FUN15 — compressor compacts 4× glowstone_dust into 1 glowstone in one
+	 *     operation (130 ticks), leaving the 5th dust untouched (MOD-455 batch price).
+	 * @covers R-GUI-02
+	 */
+	@GameTest
+	public void tcComp001Fun15_compressorCompactsGlowstoneDust(GameTestHelper helper) {
+		MachineScenarios.tcComp001Fun15_compressorCompactsGlowstoneDust(helper);
+	}
+
+	/**
+	 * @implements TC-COMP-001-FUN16 — compressor compacts 9× redstone into 1 redstone_block in one
+	 *     operation (130 ticks), leaving the 10th untouched.
+	 * @covers R-GUI-02
+	 */
+	@GameTest
+	public void tcComp001Fun16_compressorCompactsRedstone(GameTestHelper helper) {
+		MachineScenarios.tcComp001Fun16_compressorCompactsRedstone(helper);
+	}
+
+	/**
+	 * @implements TC-COMP-001-NEG07 — 3 glowstone_dust is an underpaid batch: no output, no progress,
+	 *     no input consumed. Pins the dupe MOD-455 closed.
+	 */
+	@GameTest
+	public void tcComp001Neg07_compressorRejectsPartialGlowstoneBatch(GameTestHelper helper) {
+		MachineScenarios.tcComp001Neg07_compressorRejectsPartialGlowstoneBatch(helper);
+	}
+
+	/**
+	 * @implements TC-COMP-001-NEG08 — 8 redstone is an underpaid batch: the 9-item price is not
+	 *     negotiable.
+	 */
+	@GameTest
+	public void tcComp001Neg08_compressorRejectsPartialRedstoneBatch(GameTestHelper helper) {
+		MachineScenarios.tcComp001Neg08_compressorRejectsPartialRedstoneBatch(helper);
+	}
+
+	/**
 	 * @implements TC-MACH-004-FUN02 — extractor consumes exactly 1 blaze_rod per operation
 	 *     (extractorDuration ticks), yielding exactly 3× blaze_powder (multiplied output).
 	 * @covers R-GUI-02

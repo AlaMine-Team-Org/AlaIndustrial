@@ -1,0 +1,10 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_1": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:nickel_dust" } ] } }
+  },
+  "requirements": [ [ "has_item_1" ] ],
+  "rewards": {
+    "recipes": [ "alaindustrial:nickel_ingot_from_nickel_dust" ]
+  }
+}

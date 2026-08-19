@@ -228,8 +228,12 @@ public final class AlaCommandCommon {
 					// Freeze the time of day via the API, not a dispatched command string: 26.2
 					// renamed the rule doDaylightCycle -> advance_time (GameRules.ADVANCE_TIME;
 					// the old camelCase id survives only in the world datafixer), so the literal
-					// "gamerule doDaylightCycle false" fails to parse.
+					// "gamerule doDaylightCycle false" fails to parse. Same for the weather twin
+					// (ADVANCE_WEATHER, MOD-294): a polygon for screenshots and loss-lane reads
+					// needs both cycles stopped, or the frame drifts mid-session.
 					level.getGameRules().set(net.minecraft.world.level.gamerules.GameRules.ADVANCE_TIME,
+							false, ctx.getSource().getServer());
+					level.getGameRules().set(net.minecraft.world.level.gamerules.GameRules.ADVANCE_WEATHER,
 							false, ctx.getSource().getServer());
 					ctx.getSource().sendSuccess(() -> Component.literal(
 							"Demo stand built at " + origin.toShortString()

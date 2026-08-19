@@ -409,6 +409,82 @@ public final class MachineScenarios {
 				Config.compressorDuration, Items.COPPER_INGOT, 1);
 	}
 
+	// ── Batch recipes (MOD-455): input_counts > 1 on a single-slot processing machine ──────────────
+
+	/**
+	 * Positive: a batch recipe consumes its WHOLE stated price in one operation, not one item. The
+	 * regression this pins is a dupe: before MOD-455 the shared tick loop shrank the input by a
+	 * hard-coded 1 regardless of the recipe's {@code input_counts}, so four-dust glowstone would have
+	 * been bought with a single dust while JEI/REI honestly drew "4×".
+	 */
+	private static void assertConsumesBatchPerOperation(GameTestHelper helper, Block block, Item inputItem,
+			int startCount, int batchSize, int durationTicks, Item expectedOutput, int expectedOutputCount) {
+		MachineBlockEntity be = place(helper, block);
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
+		be.setItem(0, new ItemStack(inputItem, startCount));
+		drive(be, helper, durationTicks);
+		ItemStack in = be.getItem(0);
+		ItemStack out = be.getItem(1);
+		int expectedLeft = startCount - batchSize;
+		int actualLeft = in.isEmpty() ? 0 : in.getCount();
+		if (actualLeft != expectedLeft) {
+			helper.fail(block + ": batch of " + batchSize + " should leave " + expectedLeft + "× " + inputItem
+					+ " but left " + actualLeft);
+		}
+		if (out.isEmpty() || !out.is(expectedOutput) || out.getCount() != expectedOutputCount) {
+			helper.fail(block + ": expected exactly " + expectedOutputCount + "× " + expectedOutput
+					+ " in output but got " + (out.isEmpty() ? "empty" : out.getCount() + "× " + out.getItem()));
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * Negative: a partial batch produces nothing and burns no progress. Guards the other half of the
+	 * MOD-455 dupe — the price must be on hand BEFORE the operation runs, not merely at its end.
+	 */
+	private static void assertPartialBatchProducesNothing(GameTestHelper helper, Block block, ItemStack partial,
+			int durationTicks) {
+		MachineBlockEntity be = place(helper, block);
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
+		be.setItem(0, partial.copy());
+		drive(be, helper, durationTicks * 2);
+		if (!be.getItem(1).isEmpty()) {
+			helper.fail(block + ": produced " + be.getItem(1) + " from an underpaid batch");
+		}
+		if (be.getItem(0).getCount() != partial.getCount()) {
+			helper.fail(block + ": consumed input from an underpaid batch (left "
+					+ be.getItem(0).getCount() + " of " + partial.getCount() + ")");
+		}
+		if (be.getDataAccess().get(2) != 0) {
+			helper.fail(block + ": advanced progress to " + be.getDataAccess().get(2) + " on an underpaid batch");
+		}
+		helper.succeed();
+	}
+
+	/** TC-COMP-001-FUN14: compressor, 4× glowstone_dust → 1 glowstone, leaving the 5th dust untouched. */
+	public static void tcComp001Fun15_compressorCompactsGlowstoneDust(GameTestHelper helper) {
+		assertConsumesBatchPerOperation(helper, compressor(), Items.GLOWSTONE_DUST, 5, 4,
+				Config.compressorDuration, Items.GLOWSTONE, 1);
+	}
+
+	/** TC-COMP-001-FUN15: compressor, 9× redstone → 1 redstone_block, leaving the 10th untouched. */
+	public static void tcComp001Fun16_compressorCompactsRedstone(GameTestHelper helper) {
+		assertConsumesBatchPerOperation(helper, compressor(), Items.REDSTONE, 10, 9,
+				Config.compressorDuration, Items.REDSTONE_BLOCK, 1);
+	}
+
+	/** TC-COMP-001-NEG05: 3 glowstone_dust is an underpaid batch — no output, no progress, no loss. */
+	public static void tcComp001Neg07_compressorRejectsPartialGlowstoneBatch(GameTestHelper helper) {
+		assertPartialBatchProducesNothing(helper, compressor(), new ItemStack(Items.GLOWSTONE_DUST, 3),
+				Config.compressorDuration);
+	}
+
+	/** TC-COMP-001-NEG06: 8 redstone is an underpaid batch — the 9-item price is not negotiable. */
+	public static void tcComp001Neg08_compressorRejectsPartialRedstoneBatch(GameTestHelper helper) {
+		assertPartialBatchProducesNothing(helper, compressor(), new ItemStack(Items.REDSTONE, 8),
+				Config.compressorDuration);
+	}
+
 	/** TC-MACH-004-FUN02: extractor consumes exactly 1 blaze_rod per operation, yielding exactly 3× blaze_powder. */
 	public static void tcMach004Fun02_extractorConsumesExactlyOnePerOperation(GameTestHelper helper) {
 		assertConsumesExactlyOnePerOperation(helper, extractor(), Items.BLAZE_ROD, 4,

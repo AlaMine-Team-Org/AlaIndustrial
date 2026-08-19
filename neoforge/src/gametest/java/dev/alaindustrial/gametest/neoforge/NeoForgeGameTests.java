@@ -2013,6 +2013,14 @@ public final class NeoForgeGameTests {
 				MachineScenarios::tcMach003Fun02_compressorConsumesExactlyOnePerOperation);
 		registerTest(event, "machine_tc_comp001_fun05_compressor_consumes_exactly_one_of_five", 40, true,
 				MachineScenarios::tcComp001Fun05_compressorConsumesExactlyOneOfFive);
+		registerTest(event, "machine_tc_comp001_fun15_compressor_compacts_glowstone_dust", 40, true,
+				MachineScenarios::tcComp001Fun15_compressorCompactsGlowstoneDust);
+		registerTest(event, "machine_tc_comp001_fun16_compressor_compacts_redstone", 40, true,
+				MachineScenarios::tcComp001Fun16_compressorCompactsRedstone);
+		registerTest(event, "machine_tc_comp001_neg07_compressor_rejects_partial_glowstone_batch", 40, true,
+				MachineScenarios::tcComp001Neg07_compressorRejectsPartialGlowstoneBatch);
+		registerTest(event, "machine_tc_comp001_neg08_compressor_rejects_partial_redstone_batch", 40, true,
+				MachineScenarios::tcComp001Neg08_compressorRejectsPartialRedstoneBatch);
 		registerTest(event, "machine_tc_mach004_fun02_extractor_consumes_exactly_one_per_operation", 40, true,
 				MachineScenarios::tcMach004Fun02_extractorConsumesExactlyOnePerOperation);
 		registerTest(event, "machine_tc_mach002_neg03_furnace_full_output_jams_machine", 40, true,

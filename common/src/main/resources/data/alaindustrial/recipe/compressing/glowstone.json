@@ -1,0 +1,12 @@
+{
+  "type": "alaindustrial:compressing",
+  "ingredient": "minecraft:glowstone_dust",
+  "input_counts": [
+    4
+  ],
+  "result": {
+    "id": "minecraft:glowstone",
+    "count": 1
+  },
+  "energy": 260
+}

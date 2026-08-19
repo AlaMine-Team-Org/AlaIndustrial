@@ -13,6 +13,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.block.entity.SignBlockEntity;
 
 /**
  * MOD-058 smoke test: builds the {@code /ala demo} stand with the very same
@@ -24,6 +25,9 @@ import net.minecraft.resources.Identifier;
  *   <li><b>Liveness</b> — after 100 world ticks the fuelled generators have delivered EU into
  *       their battery boxes and the pre-charged macerator is processing (progress or consumed
  *       energy). A stand of dead props would pass a pure block-scan; this catches it.</li>
+ *   <li><b>Polygon (MOD-294)</b> — the label signs carry readable text, the 36-cable loss lane
+ *       actually delivers EU to its far furnace, and the LV-cycle farm's macerator works. Scenery
+ *       that quietly died is the failure mode these three catch.</li>
  * </ol>
  *
  * <p>Runs in a custom 44×14×28 empty structure ({@code demo_stand_area.snbt}) because the stand
@@ -70,6 +74,18 @@ public class DemoStandGameTest {
 					+ " — add them to a DemoStand zone");
 		}
 
+		// --- MOD-294: the polygon's labels are real (waxed signs carrying text, not blank props) ---
+		// A label zone that silently stopped placing signs — or placed them unwritable-empty — would
+		// pass every block-coverage scan above, because oak signs are vanilla. Read the text back.
+		if (!(helper.getLevel().getBlockEntity(origin.offset(2, 1, 8)) instanceof SignBlockEntity lossSign)
+				|| lossSign.getFrontText().getMessage(0, false).getString().isEmpty()) {
+			helper.fail("loss-lane label sign missing or empty at (2, 1, 8)");
+		}
+		if (!(helper.getLevel().getBlockEntity(origin.offset(12, 1, 0)) instanceof SignBlockEntity tierSign)
+				|| tierSign.getFrontText().getMessage(0, false).getString().isEmpty()) {
+			helper.fail("tier-zone label sign missing or empty at (12, 1, 0)");
+		}
+
 		// --- liveness after 100 ticks of normal world ticking ---
 		helper.runAfterDelay(100, () -> {
 			BatteryBoxBlockEntity coalBattery = helper.getLevel()
@@ -109,6 +125,36 @@ public class DemoStandGameTest {
 						|| !macerator.getItem(MaceratorBlockEntity.OUTPUT_SLOT).isEmpty();
 				if (!working) {
 					helper.fail("pre-charged macerator with input shows no processing after 100 ticks");
+				}
+			}
+
+			// MOD-294 loss lane: the 36-cable copper run is the demo's whole point — if EU never
+			// arrives at the far furnace, the lane is a dead prop, not a loss exhibit.
+			ElectricFurnaceBlockEntity laneFurnace = helper.getLevel()
+					.getBlockEntity(origin.offset(39, 1, 7)) instanceof ElectricFurnaceBlockEntity lf ? lf : null;
+			if (laneFurnace == null) {
+				helper.fail("loss-lane end furnace missing on the stand");
+			} else {
+				boolean fed = laneFurnace.getEnergyStorage().getAmount() > 0
+						|| laneFurnace.getDataAccess().get(2) > 0 // progress
+						|| !laneFurnace.getItem(ElectricFurnaceBlockEntity.OUTPUT_SLOT).isEmpty();
+				if (!fed) {
+					helper.fail("loss-lane battery box delivered no EU across 36 copper cables after 100 ticks");
+				}
+			}
+
+			// MOD-294 farm A: the LV-cycle chain's macerator works like its showcase sibling — the
+			// farm is "ready to test", not scenery.
+			MaceratorBlockEntity farmMacerator = helper.getLevel()
+					.getBlockEntity(origin.offset(6, 1, 23)) instanceof MaceratorBlockEntity fm ? fm : null;
+			if (farmMacerator == null) {
+				helper.fail("LV-cycle farm macerator missing on the stand");
+			} else {
+				boolean working = farmMacerator.getDataAccess().get(2) > 0
+						|| farmMacerator.getEnergyStorage().getAmount() < farmMacerator.getEnergyStorage().getCapacity()
+						|| !farmMacerator.getItem(MaceratorBlockEntity.OUTPUT_SLOT).isEmpty();
+				if (!working) {
+					helper.fail("LV-cycle farm macerator shows no processing after 100 ticks");
 				}
 			}
 			helper.succeed();

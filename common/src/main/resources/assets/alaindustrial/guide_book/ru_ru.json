@@ -257,6 +257,45 @@
           ]
         },
         {
+          "id": "lightning_rod_generator",
+          "title": "Громоотвод-генератор",
+          "icon": "alaindustrial:lightning_rod_generator",
+          "block_id": "alaindustrial:lightning_rod_generator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Громоотвод-генератор",
+              "text": "Ловит удар молнии и запасает его в наконечнике — редкая, но крупная порция энергии; если запас не разряжен, удар пропадает впустую."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Энергия: 16–24 EU/т при разрядке",
+                "Буфер: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "",
+                "minecraft:lightning_rod",
+                "",
+                "alaindustrial:copper_cable",
+                "alaindustrial:machine_casing",
+                "alaindustrial:copper_cable",
+                "",
+                "alaindustrial:electronic_circuit",
+                ""
+              ],
+              "result_id": "alaindustrial:lightning_rod_generator",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "daylight_solar_panel",
           "title": "Дневная солнечная панель",
           "icon": "alaindustrial:daylight_solar_panel",

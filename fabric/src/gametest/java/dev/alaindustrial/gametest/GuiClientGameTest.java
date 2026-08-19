@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestServerContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
 import net.minecraft.world.entity.player.ChatVisiblity;
+import net.minecraft.world.level.gamerules.GameRules;
 
 /**
  * Visual regression suite for AlaIndustrial. Runs a real Minecraft client (headless, no display
@@ -120,11 +121,17 @@ public class GuiClientGameTest implements FabricClientGameTest {
 
     private static void configureVisualTestClient(ClientGameTestContext context, TestSingleplayerContext singleplayer) {
         TestServerContext server = singleplayer.getServer();
-        server.runCommand("gamerule announceAdvancements false");
-        server.runCommand("gamerule sendCommandFeedback false");
-        server.runCommand("gamerule commandBlockOutput false");
-        server.runCommand("gamerule fallDamage false");
-        server.runCommand("gamerule doImmediateRespawn true");
+        // GameRules API, not command strings — 26.2 renamed the rule ids, so the camelCase literals
+        // this used to dispatch failed to parse and configured nothing (see VisualWorld.quarantine,
+        // unified there first in MOD-294).
+        server.runOnServer(mc -> {
+            GameRules rules = mc.overworld().getGameRules();
+            rules.set(GameRules.SHOW_ADVANCEMENT_MESSAGES, false, mc);
+            rules.set(GameRules.SEND_COMMAND_FEEDBACK, false, mc);
+            rules.set(GameRules.COMMAND_BLOCK_OUTPUT, false, mc);
+            rules.set(GameRules.FALL_DAMAGE, false, mc);
+            rules.set(GameRules.IMMEDIATE_RESPAWN, true, mc);
+        });
 
         context.runOnClient(mc -> {
             mc.options.inGameNotification().set(false);

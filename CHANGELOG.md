@@ -1,13 +1,19 @@
-## 0.1.108
+## 0.1.109
 
-<p><img alt="Ala Industrial 0.1.108 machines preview" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.108/release-media/v0.1.108/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial 0.1.109 — the Alloy Smelter merging tin and copper into bronze" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.109/release-media/v0.1.109/changelog.png" width="720"></p>
 
-A small polish update: new machine sound and two redesigned tops.
-
-### New
-
-- **The Component Repair Bench now hammers away** with a soft anvil ring while it works.
+The Alloy Smelter finally looks like what it does, ore dust stops being picky about which furnace it goes in, and the Compressor learned to pack dust into blocks.
 
 ### Improved
 
-- **The Vulcanizer and the Electric Heater got their own tops** instead of sharing one placeholder. The Vulcanizer's press plate glows warm while it runs; the Electric Heater's radiator climbs from dark to full glow as it warms up — glance down and see if it is ready to run at full speed.
+- **The Alloy Smelter has its own arrow now.** Three strands, one per input slot, merging into one — three metals becoming one, right there on the screen.
+- **Easier to open the recipe list.** Hover anywhere on that arrow and the alloy recipes come up. The old target was a tiny strip most people missed.
+
+### New
+
+- **Compressor packs dust into blocks.** 4 glowstone dust into a glowstone block, 9 redstone into a block of redstone.
+
+### Fixed
+
+- **Silver, tin and nickel dust smelt in any furnace.** They used to need the Electric Furnace, while copper, gold and iron dust worked anywhere. Now they all behave the same.
+- **Closed a duplication exploit.** Machines charged for one item no matter how many a recipe asked for, so any batch recipe handed you the full result for a single item.

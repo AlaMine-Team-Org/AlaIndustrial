@@ -1,0 +1,12 @@
+{
+  "type": "alaindustrial:compressing",
+  "ingredient": "minecraft:redstone",
+  "input_counts": [
+    9
+  ],
+  "result": {
+    "id": "minecraft:redstone_block",
+    "count": 1
+  },
+  "energy": 260
+}

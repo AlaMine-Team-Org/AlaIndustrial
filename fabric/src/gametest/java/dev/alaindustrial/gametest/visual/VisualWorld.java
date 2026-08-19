@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.player.ChatVisiblity;
+import net.minecraft.world.level.gamerules.GameRules;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,22 +42,31 @@ public final class VisualWorld {
 
         // Chrome: toasts, chat and advancement popups are timing-dependent overlays. A toast that
         // happens to be on screen changes thousands of pixels and has nothing to do with the subject.
-        server.runCommand("gamerule announceAdvancements false");
-        server.runCommand("gamerule sendCommandFeedback false");
-        server.runCommand("gamerule commandBlockOutput false");
-
         // Nuisance: a mob wandering into frame, or the player taking damage mid-capture, is noise that
         // no amount of tolerance tuning can filter out.
-        server.runCommand("gamerule doMobSpawning false");
-        server.runCommand("gamerule doFireTick false");
-        server.runCommand("gamerule fallDamage false");
-        server.runCommand("gamerule doImmediateRespawn true");
+        //
+        // Every gamerule goes through the GameRules API, never a dispatched command string: 26.2
+        // renamed the whole rule set (camelCase ids are gone — doDaylightCycle became advance_time,
+        // doMobSpawning became spawn_mobs, doFireTick became the INTEGER
+        // fire_spread_radius_around_player), so the pre-26.2 literals this method used to dispatch
+        // failed to parse and silently configured nothing. Same unification /ala demo build has used
+        // since MOD-058 (MOD-294).
+        server.runOnServer(mc -> {
+            GameRules rules = mc.overworld().getGameRules();
+            rules.set(GameRules.SHOW_ADVANCEMENT_MESSAGES, false, mc);
+            rules.set(GameRules.SEND_COMMAND_FEEDBACK, false, mc);
+            rules.set(GameRules.COMMAND_BLOCK_OUTPUT, false, mc);
+            rules.set(GameRules.SPAWN_MOBS, false, mc);
+            rules.set(GameRules.FIRE_SPREAD_RADIUS_AROUND_PLAYER, 0, mc);
+            rules.set(GameRules.FALL_DAMAGE, false, mc);
+            rules.set(GameRules.IMMEDIATE_RESPAWN, true, mc);
+            // The two clocks that make an unchanged scene photograph differently: time of day changes
+            // every shadow in the frame, weather changes the sky, the light level and the solar
+            // panels' readouts.
+            rules.set(GameRules.ADVANCE_TIME, false, mc);
+            rules.set(GameRules.ADVANCE_WEATHER, false, mc);
+        });
         server.runCommand("difficulty peaceful");
-
-        // The two clocks that make an unchanged scene photograph differently: time of day changes every
-        // shadow in the frame, weather changes the sky, the light level and the solar panels' readouts.
-        server.runCommand("gamerule doDaylightCycle false");
-        server.runCommand("gamerule doWeatherCycle false");
         server.runCommand("time set " + FIXED_TIME);
         server.runCommand("weather clear");
 

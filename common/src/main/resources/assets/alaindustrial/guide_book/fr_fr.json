@@ -257,6 +257,45 @@
           ]
         },
         {
+          "id": "lightning_rod_generator",
+          "title": "Lightning Rod Generator",
+          "icon": "alaindustrial:lightning_rod_generator",
+          "block_id": "alaindustrial:lightning_rod_generator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lightning Rod Generator",
+              "text": "Catches a lightning strike and banks it in its conductor tip — a rare but large helping of power; if the reserve is still full, the strike is wasted."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiques",
+              "lines": [
+                "Energy: 16–24 EU/т при разрядке",
+                "Tampon : 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "",
+                "minecraft:lightning_rod",
+                "",
+                "alaindustrial:copper_cable",
+                "alaindustrial:machine_casing",
+                "alaindustrial:copper_cable",
+                "",
+                "alaindustrial:electronic_circuit",
+                ""
+              ],
+              "result_id": "alaindustrial:lightning_rod_generator",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "daylight_solar_panel",
           "title": "Panneau solaire diurne",
           "icon": "alaindustrial:daylight_solar_panel",

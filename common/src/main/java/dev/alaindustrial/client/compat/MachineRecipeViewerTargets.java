@@ -92,9 +92,15 @@ public final class MachineRecipeViewerTargets {
 			GuiRect progressArea) {
 	}
 
-	/** The alloy smelter's click target. The rect tracks {@code AlloySmelterScreen.PROGRESS}. */
+	/**
+	 * The alloy smelter's click target. The rect tracks {@code AlloySmelterScreen.PROGRESS}.
+	 *
+	 * <p>MOD-457 replaced the shared 25×9 arrow with the 42×43 merge arrow, and this rect had been left
+	 * describing the old one — a 225 px² hitbox floating inside a 1806 px² picture. The player aiming at
+	 * the arrow to open the recipe list mostly missed it. It now covers the whole arrow.
+	 */
 	public static final List<AlloyTarget> ALLOY_ALL = List.of(
-			new AlloyTarget(AlloySmelterScreen.class, ModRecipes.ALLOYING, new GuiRect(79, 38, 25, 9)));
+			new AlloyTarget(AlloySmelterScreen.class, ModRecipes.ALLOYING, new GuiRect(65, 22, 42, 43)));
 
 	/**
 	 * And a fourth list for the Canning Machine (MOD-383), which has no {@link ModRecipes.Kind} to key on

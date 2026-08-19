@@ -257,6 +257,45 @@
           ]
         },
         {
+          "id": "lightning_rod_generator",
+          "title": "Lightning Rod Generator",
+          "icon": "alaindustrial:lightning_rod_generator",
+          "block_id": "alaindustrial:lightning_rod_generator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lightning Rod Generator",
+              "text": "Catches a lightning strike and banks it in its conductor tip — a rare but large helping of power; if the reserve is still full, the strike is wasted."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "Energy: 16–24 EU/т при разрядке",
+                "버퍼: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "",
+                "minecraft:lightning_rod",
+                "",
+                "alaindustrial:copper_cable",
+                "alaindustrial:machine_casing",
+                "alaindustrial:copper_cable",
+                "",
+                "alaindustrial:electronic_circuit",
+                ""
+              ],
+              "result_id": "alaindustrial:lightning_rod_generator",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "daylight_solar_panel",
           "title": "햇빛 태양광 패널",
           "icon": "alaindustrial:daylight_solar_panel",

@@ -1,0 +1,8 @@
+{
+	"type": "minecraft:smelting",
+	"category": "misc",
+	"ingredient": "alaindustrial:tin_dust",
+	"result": { "id": "alaindustrial:tin_ingot" },
+	"experience": 0.5,
+	"cookingtime": 200
+}

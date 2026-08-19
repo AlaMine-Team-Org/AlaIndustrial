@@ -62,16 +62,29 @@ public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockE
 	 *     carry an EU field), the machine's default duration applies — pass the default explicitly
 	 *     only when the subclass wants that fallback.
 	 * @param result the assembled output stack; {@link ItemStack#EMPTY} means "no recipe matched".
+	 * @param inputCount how many items one operation consumes from the single input slot — the recipe's
+	 *     {@code input_counts} entry (MOD-455). Carried as a plain number rather than the whole
+	 *     {@link AlaProcessingRecipe} because these machines have exactly ONE input slot, so
+	 *     {@code inputCount(0)} is the complete story — and because the Electric Furnace's vanilla
+	 *     fallback has no {@code AlaProcessingRecipe} to carry in the first place.
 	 */
-	public record RecipeSolution(int energy, ItemStack result) {
+	public record RecipeSolution(int energy, ItemStack result, int inputCount) {
+		/**
+		 * A solution consuming one item per operation — the shape of every recipe but the batch ones,
+		 * and the form the Electric Furnace's vanilla fallback builds.
+		 */
+		public RecipeSolution(int energy, ItemStack result) {
+			this(energy, result, 1);
+		}
+
 		/** No recipe matched — equivalent to "nothing to do this tick". */
 		public static RecipeSolution empty() {
 			return new RecipeSolution(0, ItemStack.EMPTY);
 		}
 
-		/** A mod {@link AlaProcessingRecipe} matched — carries its EU cost and result stack. */
+		/** A mod {@link AlaProcessingRecipe} matched — carries its EU cost, result stack and batch size. */
 		public static RecipeSolution of(AlaProcessingRecipe recipe) {
-			return new RecipeSolution(recipe.energy(), recipe.resultStack());
+			return new RecipeSolution(recipe.energy(), recipe.resultStack(), recipe.inputCount(0));
 		}
 
 		public boolean hasRecipe() {
@@ -109,7 +122,10 @@ public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockE
 		int baseDuration = solution.hasRecipe() && solution.energy() > 0
 				? Math.max(1, solution.energy() / Config.machineEuPerTick) : defaultDuration;
 		this.maxProgress = effectiveDuration(baseDuration);
-		boolean canWork = solution.hasRecipe() && energy.getAmount() >= euPerTick
+		// MOD-455: a batch recipe (glowstone dust ×4) needs its whole price on hand every tick, not just
+		// at completion — checking it only in the completion branch would let one dust buy a full block.
+		boolean canWork = solution.hasRecipe() && input.getCount() >= solution.inputCount()
+				&& energy.getAmount() >= euPerTick
 				&& canOutput(OUTPUT_SLOT, solution.result());
 
 		updateLit(canWork);
@@ -123,7 +139,7 @@ public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockE
 			progress++;
 			if (progress >= maxProgress) {
 				progress = 0;
-				items.get(INPUT_SLOT).shrink(1);
+				items.get(INPUT_SLOT).shrink(solution.inputCount());
 				addOutput(OUTPUT_SLOT, solution.result());
 				recordItemProcessed(); // MOD-125: lifetime operation counter (persisted, drawn later)
 				creditUsefulWork(level, (long) euPerTick * maxProgress); // MOD-133: completed op → XP
