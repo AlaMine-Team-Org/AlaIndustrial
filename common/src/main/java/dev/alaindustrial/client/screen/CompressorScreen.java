@@ -97,4 +97,15 @@ public class CompressorScreen extends MachineScreen<CompressorMenu> {
         // Hovering the energy bar shows the exact buffer as "X / max EU" (R-GUI-14).
         renderEnergyTooltip(graphics, mouseX, mouseY, EnergyBarSpec.LEFT);
     }
+
+    /**
+     * Status row (MOD-458). The compressor is the machine that made the family need one: its two batch
+     * recipes stop the machine dead on a partial portion, and every other signal in this frame — the lit
+     * arrows, the energy bar — looks exactly the same as an idle machine with nothing to do.
+     */
+    @Override
+    public void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        super.extractContents(graphics, mouseX, mouseY, partialTick);
+        drawProcessingStatus(graphics, this.menu.getStatus(), STATUS_ROW_Y);
+    }
 }

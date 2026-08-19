@@ -40,14 +40,24 @@ public final class SawmillBlockEntity extends AbstractProcessingMachineBlockEnti
 	/** Output slot index — re-export of the shared processing-machine slot 1. */
 	public static final int OUTPUT_SLOT = 1;
 
-	/** ContainerData index carrying the active {@link SawmillMode} ordinal (0..3), appended after the base 0..3. */
-	public static final int DATA_MODE = 4;
+	/**
+	 * ContainerData index carrying the active {@link SawmillMode} ordinal (0..3), appended after everything
+	 * the family already publishes.
+	 *
+	 * <p><b>Offset from the family constant, never a literal.</b> Written as {@code 4} this collided head-on
+	 * with {@link AbstractProcessingMachineBlockEntity#DATA_STATUS} the moment MOD-458 added it — and no gate
+	 * would have caught it: {@code MenuDataWidthScenarios} compares channel counts, and both sides would have
+	 * stayed five wide while the mode buttons quietly highlighted by status ordinal instead. As an expression
+	 * the index simply moves when the family grows.
+	 */
+	public static final int DATA_MODE = AbstractProcessingMachineBlockEntity.DATA_COUNT;
 
 	/**
-	 * Five-wide data — hides {@link MachineBlockEntity#DATA_COUNT} so {@code SawmillBlockEntity.DATA_COUNT}
-	 * names this machine's width for the bridge below and for {@link SawmillMenu}'s client stub (MOD-235).
+	 * Six-wide data — hides {@link AbstractProcessingMachineBlockEntity#DATA_COUNT} so
+	 * {@code SawmillBlockEntity.DATA_COUNT} names this machine's width for the bridge below and for
+	 * {@link SawmillMenu}'s client stub (MOD-235).
 	 */
-	public static final int DATA_COUNT = 5;
+	public static final int DATA_COUNT = AbstractProcessingMachineBlockEntity.DATA_COUNT + 1;
 
 	// One cached lookup per mode: resolveInput uses the active mode's, canPlaceInput scans all four.
 	private final RecipeManager.CachedCheck<ProcessingRecipeInput, AlaProcessingRecipe>[] checks = newChecks();
@@ -55,15 +65,18 @@ public final class SawmillBlockEntity extends AbstractProcessingMachineBlockEnti
 	private SawmillMode mode = SawmillMode.PLANKS;
 
 	/**
-	 * A 5-wide data bridge: indices 0..3 delegate to the shared machine data (energy/capacity/progress/
-	 * maxProgress); index {@link #DATA_MODE} carries the active mode ordinal so the screen can highlight
-	 * the selected button. The client menu binds a {@code SimpleContainerData(5)} that vanilla fills from
-	 * this on sync.
+	 * A 6-wide data bridge: everything below {@link #DATA_MODE} delegates to the family bridge
+	 * (energy/capacity/progress/maxProgress plus the MOD-458 status); {@link #DATA_MODE} carries the active
+	 * mode ordinal so the screen can highlight the selected button. The client menu binds a
+	 * {@code SimpleContainerData(DATA_COUNT)} that vanilla fills from this on sync.
+	 *
+	 * <p>Delegation goes to {@code processingData}, not to {@code dataAccess}: routing straight to the base
+	 * machine bridge would skip the status channel and hand the screen a permanent zero.
 	 */
 	private final ContainerData sawmillData = new ContainerData() {
 		@Override
 		public int get(int index) {
-			return index == DATA_MODE ? mode.ordinal() : dataAccess.get(index);
+			return index == DATA_MODE ? mode.ordinal() : processingData.get(index);
 		}
 
 		@Override
@@ -71,7 +84,7 @@ public final class SawmillBlockEntity extends AbstractProcessingMachineBlockEnti
 			if (index == DATA_MODE) {
 				mode = SawmillMode.byOrdinal(value);
 			} else {
-				dataAccess.set(index, value);
+				processingData.set(index, value);
 			}
 		}
 

@@ -9,6 +9,7 @@ import dev.alaindustrial.registry.ModRecipes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
@@ -53,6 +54,44 @@ public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockE
 	public static final int SLOT_COUNT = 2;
 
 	/**
+	 * {@link ProcessingMachineStatus} ordinal — the family's readout channel (MOD-458), appended after the
+	 * base 0..3.
+	 */
+	public static final int DATA_STATUS = MachineBlockEntity.DATA_COUNT;
+
+	/**
+	 * Five-wide data — hides {@link MachineBlockEntity#DATA_COUNT} so this name is the single source of
+	 * width for the bridge below AND for every client menu stub in the family (MOD-235).
+	 *
+	 * <p>Widened here rather than in {@link MachineBlockEntity} on purpose: five menus outside this family
+	 * (the generators, the solar panels, the mob repeller) size their stubs from the base constant and
+	 * would otherwise inherit a channel nothing ever fills.
+	 *
+	 * <p><b>A subclass that appends its own channels must offset them from this constant, not from a
+	 * literal</b> — {@link SawmillBlockEntity#DATA_MODE} does. Nothing checks the semantics of an index:
+	 * {@code MenuDataWidthScenarios} compares channel <em>counts</em>, so two machines claiming index 4
+	 * would leave every gate green and merely feed the sawmill's mode buttons a status ordinal.
+	 */
+	public static final int DATA_COUNT = MachineBlockEntity.DATA_COUNT + 1;
+
+	/**
+	 * How many consecutive unpaid evaluations it takes before an empty buffer is reported as
+	 * {@link ProcessingMachineStatus#NO_ENERGY}.
+	 *
+	 * <p>Without this the line strobes. A machine fed slightly under its draw — one LV solar panel at
+	 * 1 EU/t against a 2 EU/t machine, an extremely ordinary early setup — banks a tick, spends it, banks
+	 * the next: it works every other tick, and a bare {@code buffer < cost} test would flip the caption on
+	 * and off at 10 Hz while the arrow visibly advances. Two evaluations is the smallest grace that covers
+	 * that pattern, because the alternating case never fails twice in a row.
+	 *
+	 * <p>Counted in evaluations, not game ticks, deliberately: an idle machine sleeps
+	 * {@link #IDLE_SLEEP_TICKS} between ticks, so a truly dead one reports within about two seconds while
+	 * a game-time threshold would need the sleep folded back in — and {@code drive()} in the gametests
+	 * does not advance game time at all.
+	 */
+	private static final int STARVED_GRACE_EVALUATIONS = 2;
+
+	/**
 	 * The fixed result of resolving the current input against the machine's recipe source(s). The
 	 * base class's per-tick loop calls {@link #resolveInput} once per tick to obtain one of these;
 	 * subclasses populate it from their recipe source(s).
@@ -94,6 +133,12 @@ public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockE
 
 	private final int defaultDuration;
 
+	/** Why the machine is idle, for the screen. Server-authoritative, derived every tick, not persisted. */
+	private ProcessingMachineStatus status = ProcessingMachineStatus.NO_INPUT;
+
+	/** Consecutive evaluations that could not pay for a tick; see {@link #STARVED_GRACE_EVALUATIONS}. */
+	private int starvedEvaluations;
+
 	protected AbstractProcessingMachineBlockEntity(
 			BlockEntityType<?> type, BlockPos pos, BlockState state,
 			EnergyTier tier, long buffer, int defaultDuration) {
@@ -128,6 +173,15 @@ public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockE
 				&& energy.getAmount() >= euPerTick
 				&& canOutput(OUTPUT_SLOT, solution.result());
 
+		// MOD-458: the starvation counter is driven by the SAME expression that gates work, so the caption
+		// can never contradict the arrow. It resets on any paid tick, including one that finishes an op.
+		if (canWork) {
+			starvedEvaluations = 0;
+		} else if (energy.getAmount() < euPerTick) {
+			starvedEvaluations = Math.min(starvedEvaluations + 1, STARVED_GRACE_EVALUATIONS);
+		}
+		setStatus(diagnose(input, solution, euPerTick));
+
 		updateLit(canWork);
 
 		// MOD-125: the statistics panel's "now" line for a consumer is its draw, and a stopped machine must
@@ -154,6 +208,80 @@ public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockE
 		}
 		// Idle (no recipe / no power / output full) → sleep until input, energy or output changes (R-29).
 		return canWork ? 0 : IDLE_SLEEP_TICKS;
+	}
+
+	/**
+	 * Why the machine is idle, in the order the player should fix things (MOD-458).
+	 *
+	 * <p>Each test is only meaningful once the ones above it pass, so the order is structural rather than
+	 * a matter of taste: there is no useful recipe verdict on an empty slot, no batch size without a
+	 * recipe, and no "output blocked" without a result stack to test the output against.
+	 *
+	 * <p><b>Energy comes last, and only after a grace period.</b> Last because the energy bar sits a few
+	 * pixels from this line and already draws an empty buffer — the Incubator omits the state outright for
+	 * exactly that reason. It is reported here anyway because an unpowered machine is the one stall a new
+	 * player has no vocabulary for; the grace period is what keeps that honest rather than strobing (see
+	 * {@link #STARVED_GRACE_EVALUATIONS}).
+	 */
+	private ProcessingMachineStatus diagnose(ItemStack input, RecipeSolution solution, int euPerTick) {
+		if (input.isEmpty()) {
+			return ProcessingMachineStatus.NO_INPUT;
+		}
+		if (!solution.hasRecipe()) {
+			return ProcessingMachineStatus.NO_RECIPE;
+		}
+		if (input.getCount() < solution.inputCount()) {
+			return ProcessingMachineStatus.NOT_ENOUGH_INPUT;
+		}
+		if (!canOutput(OUTPUT_SLOT, solution.result())) {
+			return ProcessingMachineStatus.OUTPUT_BLOCKED;
+		}
+		if (energy.getAmount() < euPerTick && starvedEvaluations >= STARVED_GRACE_EVALUATIONS) {
+			return ProcessingMachineStatus.NO_ENERGY;
+		}
+		return ProcessingMachineStatus.READY;
+	}
+
+	private void setStatus(ProcessingMachineStatus next) {
+		if (status != next) {
+			status = next;
+			setChanged();
+		}
+	}
+
+	/** Why the machine is idle. Read by the menu's readout channel and by the gametests. */
+	public ProcessingMachineStatus status() {
+		return status;
+	}
+
+	/**
+	 * Five-wide bridge: 0..3 delegate to the shared machine data, {@link #DATA_STATUS} carries the
+	 * diagnosis. Exposed to subclasses so one that appends further channels delegates <em>here</em> and
+	 * not to {@code dataAccess} — routing round this bridge would drop the status silently.
+	 */
+	protected final ContainerData processingData = new ContainerData() {
+		@Override
+		public int get(int index) {
+			return index == DATA_STATUS ? status.ordinal() : dataAccess.get(index);
+		}
+
+		@Override
+		public void set(int index, int value) {
+			// The diagnosis is derived and server-authoritative; only the base channels take a write.
+			if (index < DATA_STATUS) {
+				dataAccess.set(index, value);
+			}
+		}
+
+		@Override
+		public int getCount() {
+			return DATA_COUNT;
+		}
+	};
+
+	@Override
+	public ContainerData getDataAccess() {
+		return processingData;
 	}
 
 	@Override

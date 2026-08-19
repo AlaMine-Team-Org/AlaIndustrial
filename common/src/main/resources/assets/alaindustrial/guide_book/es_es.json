@@ -89,7 +89,7 @@
             {
               "type": "text",
               "title": "En qué se convierte",
-              "text": "El petróleo es el comienzo de la cadena del caucho.\n\n1. Recógelo: con un cubo, una Cápsula de vacío o una Bomba\n2. Polimerizador: 1000 mB de petróleo y 400 EU producen caucho en bruto\n3. Vulcanizador: caucho en bruto + polvo de azufre + 400 EU\n4. Coloca debajo una hoguera (×1), lava/magma (×2) o un Calentador eléctrico (×3)\n\nUn calor mejor ahorra materiales: cada operación siempre consume un caucho en bruto y un polvo de azufre."
+              "text": "El petróleo es el comienzo de la cadena del caucho.\n\n1. Recógelo: con un cubo, una Cápsula de vacío o una Bomba\n2. Polimerizador: 1000 mB de petróleo y 400 EU producen caucho en bruto\n3. Vulcanizador: caucho en bruto + polvo de azufre + 400 EU\n4. Coloca debajo una hoguera (×1), lava/magma (×2) o un Calentador eléctrico (×3)\n\nUn calor mejor ahorra materiales: cada operación siempre consume un caucho en bruto y cuatro polvos de azufre."
             }
           ]
         }
@@ -1585,7 +1585,7 @@
               "type": "stats",
               "title": "Estadísticas",
               "lines": [
-                "Energía: 10 cubos"
+                "Energy: 8 buckets"
               ]
             },
             {
@@ -4028,7 +4028,7 @@
               "type": "stats",
               "title": "Estadísticas",
               "lines": [
-                "Energía: 30 000 EU"
+                "Energía: 20 000 EU"
               ]
             },
             {

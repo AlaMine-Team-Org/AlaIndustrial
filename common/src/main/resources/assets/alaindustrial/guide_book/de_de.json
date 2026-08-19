@@ -89,7 +89,7 @@
             {
               "type": "text",
               "title": "Was daraus wird",
-              "text": "Öl ist der Anfang der Gummikette.\n\n1. Sammle es ein — mit Eimer, Vakuumkapsel oder Pumpe\n2. Polymerisator: 1000 mB Öl und 400 EU ergeben Rohkautschuk\n3. Vulkanisator: Rohkautschuk + Schwefelstaub + 400 EU\n4. Stelle darunter ein Lagerfeuer (×1), Lava/Magma (×2) oder einen Elektroerhitzer (×3)\n\nBessere Hitze spart Material: Jeder Vorgang verbraucht immer einen Rohkautschuk und einen Schwefelstaub."
+              "text": "Öl ist der Anfang der Gummikette.\n\n1. Sammle es ein — mit Eimer, Vakuumkapsel oder Pumpe\n2. Polymerisator: 1000 mB Öl und 400 EU ergeben Rohkautschuk\n3. Vulkanisator: Rohkautschuk + Schwefelstaub + 400 EU\n4. Stelle darunter ein Lagerfeuer (×1), Lava/Magma (×2) oder einen Elektroerhitzer (×3)\n\nBessere Hitze spart Material: Jeder Vorgang verbraucht immer einen Rohkautschuk und vier Schwefelstaub."
             }
           ]
         }
@@ -1585,7 +1585,7 @@
               "type": "stats",
               "title": "Werte",
               "lines": [
-                "Energie: 10 Eimer"
+                "Energy: 8 buckets"
               ]
             },
             {
@@ -4028,7 +4028,7 @@
               "type": "stats",
               "title": "Werte",
               "lines": [
-                "Energie: 30 000 EU"
+                "Energie: 20 000 EU"
               ]
             },
             {

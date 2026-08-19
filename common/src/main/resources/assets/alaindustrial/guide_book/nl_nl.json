@@ -89,7 +89,7 @@
             {
               "type": "text",
               "title": "Wat het wordt",
-              "text": "Aardolie is het begin van de rubberketen.\n\n1. Verzamel het — met een emmer, Vacuümcapsule of Pomp\n2. Polymerisator: 1000 mB aardolie en 400 EU leveren ruwe rubber\n3. Vulkanisator: ruwe rubber + zwavelstof + 400 EU\n4. Plaats er een kampvuur (×1), lava/magma (×2) of een Elektrische verwarmer (×3) onder\n\nBetere hitte bespaart materiaal: elke bewerking verbruikt altijd één ruwe rubber en één zwavelstof."
+              "text": "Aardolie is het begin van de rubberketen.\n\n1. Verzamel het — met een emmer, Vacuümcapsule of Pomp\n2. Polymerisator: 1000 mB aardolie en 400 EU leveren ruwe rubber\n3. Vulkanisator: ruwe rubber + zwavelstof + 400 EU\n4. Plaats er een kampvuur (×1), lava/magma (×2) of een Elektrische verwarmer (×3) onder\n\nBetere hitte bespaart materiaal: elke bewerking verbruikt altijd één ruwe rubber en vier zwavelstof."
             }
           ]
         }
@@ -1585,7 +1585,7 @@
               "type": "stats",
               "title": "Statistieken",
               "lines": [
-                "Energie: 10 emmers"
+                "Energy: 8 buckets"
               ]
             },
             {
@@ -4028,7 +4028,7 @@
               "type": "stats",
               "title": "Statistieken",
               "lines": [
-                "Energie: 30 000 EU"
+                "Energie: 20 000 EU"
               ]
             },
             {

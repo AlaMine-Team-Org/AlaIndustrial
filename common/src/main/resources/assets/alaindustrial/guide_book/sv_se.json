@@ -89,7 +89,7 @@
             {
               "type": "text",
               "title": "Vad den blir",
-              "text": "Olja är början på gummikedjan.\n\n1. Samla in den — med hink, Vakuumkapsel eller Pump\n2. Polymerisator: 1000 mB olja och 400 EU ger rågummi\n3. Vulkanisator: rågummi + svavelstoft + 400 EU\n4. Placera en lägereld (×1), lava/magma (×2) eller en Elektrisk värmare (×3) under den\n\nBättre värme sparar material: varje körning förbrukar alltid ett rågummi och ett svavelstoft."
+              "text": "Olja är början på gummikedjan.\n\n1. Samla in den — med hink, Vakuumkapsel eller Pump\n2. Polymerisator: 1000 mB olja och 400 EU ger rågummi\n3. Vulkanisator: rågummi + svavelstoft + 400 EU\n4. Placera en lägereld (×1), lava/magma (×2) eller en Elektrisk värmare (×3) under den\n\nBättre värme sparar material: varje körning förbrukar alltid ett rågummi och fyra svavelstoft."
             }
           ]
         }
@@ -1585,7 +1585,7 @@
               "type": "stats",
               "title": "Statistik",
               "lines": [
-                "Energi: 10 hinkar"
+                "Energy: 8 buckets"
               ]
             },
             {
@@ -4028,7 +4028,7 @@
               "type": "stats",
               "title": "Statistik",
               "lines": [
-                "Energi: 30 000 EU"
+                "Energi: 20 000 EU"
               ]
             },
             {

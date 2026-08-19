@@ -1,19 +1,18 @@
-## 0.1.109
+## 0.1.110
 
-<p><img alt="Ala Industrial 0.1.109 — the Alloy Smelter merging tin and copper into bronze" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.109/release-media/v0.1.109/changelog.png" width="720"></p>
+<p><img alt="Machines showing why they are idle in Ala Industrial 0.1.110" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.110/release-media/v0.1.110/changelog.png" width="720"></p>
 
-The Alloy Smelter finally looks like what it does, ore dust stops being picky about which furnace it goes in, and the Compressor learned to pack dust into blocks.
-
-### Improved
-
-- **The Alloy Smelter has its own arrow now.** Three strands, one per input slot, merging into one — three metals becoming one, right there on the screen.
-- **Easier to open the recipe list.** Hover anywhere on that arrow and the alloy recipes come up. The old target was a tiny strip most people missed.
+Machines no longer go quiet when they stop — they tell you what is wrong.
 
 ### New
 
-- **Compressor packs dust into blocks.** 4 glowstone dust into a glowstone block, 9 redstone into a block of redstone.
+- **Machines explain why they stopped.** Compressor, Macerator, Extractor, Electric Furnace and Sawmill print the reason right in the interface: missing material, no matching recipe, output blocked, or no power. A Compressor holding 3 glowstone dust out of 4 used to just sit there in silence.
+
+### Improved
+
+- **Macerator and Component Repair Bench got their own progress arrows.** Each machine is recognisable at a glance now, instead of every screen wearing the same one.
+- **Repairs take real time.** A repair now runs 1, 2 or 3 minutes depending on the part's grade — it used to be over in half a minute.
 
 ### Fixed
 
-- **Silver, tin and nickel dust smelt in any furnace.** They used to need the Electric Furnace, while copper, gold and iron dust worked anywhere. Now they all behave the same.
-- **Closed a duplication exploit.** Machines charged for one item no matter how many a recipe asked for, so any batch recipe handed you the full result for a single item.
+- **Repair progress resets when the material runs out.** Pulling the plate out mid-repair no longer freezes the job waiting for it to come back.

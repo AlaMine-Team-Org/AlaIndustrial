@@ -42,17 +42,21 @@ public class ComponentRepairBenchScreen extends ProgressMachineScreen<ComponentR
 	private static final Identifier TEXTURE =
 			Industrialization.id("textures/gui/container/component_repair_bench.png");
 
-	/** Golden progress arrow in the atlas service area — same geometry as the Electric Furnace family. */
+	/**
+	 * Golden progress arrow in the atlas service area — its own shape (MOD-462), 13 px tall rather
+	 * than the family's 9: the bench's pinched-waist arrow needs the extra height its taper draws
+	 * into, and the slot column has the room (the 18 px slots either side clear it easily).
+	 */
 	private static final ProgressSpec PROGRESS = new ProgressSpec(
-			176, 44, 25, 9,   // sprite u/v/w/h
-			82, 38,            // dest x/y in the 176×166 frame
-			true);             // min 1 px: a T3 repair is 2250 ticks, so the first visible pixel is slow
+			176, 48, 25, 13,   // sprite u/v/w/h
+			82, 35,            // dest x/y in the 176×166 frame
+			true);             // min 1 px: a T3 repair is 3600 ticks, so the first visible pixel is slow
 
 	/** Hover box of the progress arrow, matching {@link #PROGRESS}'s destination. */
 	private static final int ARROW_X = 82;
-	private static final int ARROW_Y = 38;
+	private static final int ARROW_Y = 35;
 	private static final int ARROW_W = 25;
-	private static final int ARROW_H = 9;
+	private static final int ARROW_H = 13;
 
 	/**
 	 * How long each item stays up in a cycling ghost hint. Was 1200 ms; playtesting called that
@@ -77,17 +81,6 @@ public class ComponentRepairBenchScreen extends ProgressMachineScreen<ComponentR
 	 */
 	private static final int STATUS_BAND_LEFT = 32;
 	private static final int STATUS_BAND_RIGHT = 168;
-
-	/**
-	 * Smallest the status row may shrink to before it stops being readable at GUI scale 2.
-	 *
-	 * <p>0.7 rather than a rounder 0.75 for measured headroom: the longest shipped translation of the
-	 * "insert a worn part" prompt runs about 176 px against a 136 px band, i.e. it needs 0.77 — a 0.75
-	 * floor would have clipped the very string that exposed this bug, and the next translation could
-	 * be longer still. Below the floor the label overflows rather than becoming unreadable, and that
-	 * is the signal to shorten the translation instead.
-	 */
-	private static final float MIN_STATUS_SCALE = 0.7f;
 
 	public ComponentRepairBenchScreen(ComponentRepairBenchMenu menu, Inventory inventory, Component title) {
 		super(menu, inventory, title, PROGRESS);
@@ -162,40 +155,7 @@ public class ComponentRepairBenchScreen extends ProgressMachineScreen<ComponentR
 		};
 		Component label = Component.translatable(key);
 		int colour = status == RepairStatus.READY ? GuiStyle.TEXT : GuiStyle.TEXT_DIM;
-		drawFittedStatus(graphics, label, colour);
-	}
-
-	/**
-	 * Draw the status label inside the band between the energy bar and the right border, shrinking it
-	 * rather than letting it escape the frame.
-	 *
-	 * <p><b>Both edges are load-bearing and both were got wrong once.</b> Centring across the whole
-	 * window put the label over the energy bar (the bar runs to y=64, this row sits at y=57). Clamping
-	 * only the left edge then pushed long locales out through the right border instead — Russian
-	 * the longest translation of the prompt ran past the frame in the dev client. A status row cannot be
-	 * truncated (the whole point is that the player reads the reason) and there is no second line to
-	 * wrap onto: the band below is 8 px before the inventory label. So it scales to fit, which is also
-	 * the only approach that cannot be re-broken by a future translation.
-	 */
-	private void drawFittedStatus(GuiGraphicsExtractor graphics, Component label, int colour) {
-		int band = STATUS_BAND_RIGHT - STATUS_BAND_LEFT;
-		int width = this.font.width(label);
-		int y = this.topPos + STATUS_TEXT_Y;
-		if (width <= band) {
-			graphics.text(this.font, label,
-					this.leftPos + STATUS_BAND_LEFT + (band - width) / 2, y, colour, false);
-			return;
-		}
-		// Floor the shrink: past roughly three quarters the row stops being readable at GUI scale 2,
-		// and a label that long is a translation to shorten, not a rendering problem to hide.
-		float scale = Math.max(MIN_STATUS_SCALE, (float) band / width);
-		graphics.pose().pushMatrix();
-		graphics.pose().translate(this.leftPos + STATUS_BAND_LEFT, y);
-		graphics.pose().scale(scale, scale);
-		// Centre inside the band measured in the SCALED coordinate space, or the row drifts left.
-		int tx = Math.max(0, (int) ((band / scale - width) / 2.0f));
-		graphics.text(this.font, label, tx, 0, colour, false);
-		graphics.pose().popMatrix();
+		drawFittedStatus(graphics, label, STATUS_TEXT_Y, STATUS_BAND_LEFT, STATUS_BAND_RIGHT, colour);
 	}
 
 	@Override

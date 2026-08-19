@@ -54,17 +54,18 @@ public enum RepairStatus {
 	}
 
 	/**
-	 * Whether a component that still HAS repairs coming sits in the slot — true for {@link #READY} and
-	 * {@link #NEEDS_MATERIAL}.
+	 * Whether the job itself is still intact — true only for {@link #READY}.
 	 *
-	 * <p>This is what decides whether progress freezes or resets, mirroring the processing machines'
-	 * contract (R-NRG-10): a run interrupted by a missing plate or a flat buffer resumes where it left
-	 * off, while pulling the component out — or dropping in one that cannot be repaired — starts over.
-	 * It is also the "still the bench's business" test that keeps automation from hauling a component
-	 * away mid-repair.
+	 * <p>This is what decides whether progress freezes or resets. R-NRG-10 covers power loss only: a
+	 * run interrupted by a flat buffer resumes where it left off once power returns, exactly like the
+	 * processing machines ({@code AbstractProcessingMachineBlockEntity}). But those same machines reset
+	 * immediately when their INPUT disappears — a missing plate is no different, and the bench used to
+	 * be the one place that treated it as a mere stall instead. Pulling the component out, dropping in
+	 * one that cannot be repaired, or losing the material all mean the job is gone: progress starts
+	 * over, matching every sibling machine's "recipe gone → reset" rule.
 	 */
-	public boolean hasRepairableTarget() {
-		return this == READY || this == NEEDS_MATERIAL;
+	public boolean jobIntact() {
+		return this == READY;
 	}
 
 	/** The sync-channel code for this status; see {@link #byCode}. */

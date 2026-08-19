@@ -38,8 +38,8 @@ public final class ComponentRepairBenchScenarios {
 	private ComponentRepairBenchScenarios() {}
 
 	private static final BlockPos BENCH = new BlockPos(1, 2, 1);
-	/** Comfortably longer than a T1 repair (625 ticks at the shipped 8 EU/t). */
-	private static final int T1_TICKS = 700;
+	/** Comfortably longer than a T1 repair (1200 ticks at the shipped 8 EU/t — MOD-465). */
+	private static final int T1_TICKS = 1300;
 
 	// --- rig -----------------------------------------------------------------------------------
 
@@ -70,8 +70,8 @@ public final class ComponentRepairBenchScenarios {
 	/**
 	 * Drive the bench for {@code ticks}, keeping the buffer full.
 	 *
-	 * <p>The buffer holds 800 EU and a T1 repair costs 5000, so a bench charged once would stall
-	 * a fifth of the way in and every completion assertion would fail for the wrong reason. Refilling
+	 * <p>The buffer holds 800 EU and a T1 repair costs 9600, so a bench charged once would stall
+	 * a twelfth of the way in and every completion assertion would fail for the wrong reason. Refilling
 	 * each tick stands in for a grid that can actually feed it.
 	 */
 	private static void run(GameTestHelper helper, ComponentRepairBenchBlockEntity bench, int ticks) {
@@ -142,20 +142,20 @@ public final class ComponentRepairBenchScenarios {
 	/** TC-RBENCH-001-FUN02: each grade is repaired by its own material at its own price. */
 	public static void everyGradeRepairsWithItsOwnMaterial(GameTestHelper helper) {
 		ComponentRepairBenchBlockEntity bench = placeBench(helper);
-		// Reinforced: 3000 durability, tempered plate, 10 000 EU -> 1250 ticks at 8 EU/t.
+		// Reinforced: 3000 durability, tempered plate, 19 200 EU -> 2400 ticks at 8 EU/t.
 		load(bench, worn(ModContent.WINDMILL_ROTOR_REINFORCED.get(), 1500, 0),
 				new ItemStack(ModContent.TEMPERED_IRON_PLATE.get(), 4));
-		run(helper, bench, 1400);
+		run(helper, bench, 2500);
 		ItemStack reinforced = targetOf(bench);
 		if (reinforced.getDamageValue() != 0 || reinforced.getMaxDamage() != 2400) {
 			helper.fail("reinforced rotor should read damage 0 / ceiling 2400, got "
 					+ reinforced.getDamageValue() + " / " + reinforced.getMaxDamage());
 			return;
 		}
-		// Advanced: 6000 durability, electronic circuit, 18 000 EU -> 2250 ticks.
+		// Advanced: 6000 durability, electronic circuit, 28 800 EU -> 3600 ticks.
 		load(bench, worn(ModContent.WATER_MILL_WHEEL_ADVANCED.get(), 3000, 0),
 				new ItemStack(ModContent.ELECTRONIC_CIRCUIT.get(), 4));
-		run(helper, bench, 2400);
+		run(helper, bench, 3700);
 		ItemStack advanced = targetOf(bench);
 		if (advanced.getDamageValue() != 0 || advanced.getMaxDamage() != 4800) {
 			helper.fail("advanced wheel should read damage 0 / ceiling 4800, got "
@@ -165,22 +165,36 @@ public final class ComponentRepairBenchScenarios {
 		helper.succeed();
 	}
 
-	/** TC-RBENCH-001-FUN05: a missing plate freezes progress; putting it back resumes, not restarts. */
-	public static void missingMaterialFreezesProgressRatherThanResetting(GameTestHelper helper) {
+	/**
+	 * TC-RBENCH-001-FUN05: a missing plate resets progress — it is a lost job, not a power stall. Only
+	 * a flat buffer (status stays READY) may leave progress standing (R-NRG-10 covers power only); a
+	 * missing material means the job itself is gone, matching every sibling processing machine's
+	 * "recipe gone" reset.
+	 */
+	public static void missingMaterialResetsProgress(GameTestHelper helper) {
 		ComponentRepairBenchBlockEntity bench = placeBench(helper);
 		load(bench, worn(ModContent.WINDMILL_ROTOR.get(), 500, 0),
 				new ItemStack(ModContent.IRON_PLATE.get(), 1));
-		run(helper, bench, 400);                       // most of the way through
+		run(helper, bench, 800);                       // most of the way through (1200 needed)
 		bench.setItem(ComponentRepairBenchBlockEntity.MATERIAL_SLOT, ItemStack.EMPTY);
-		run(helper, bench, 100);                       // stalled
+		run(helper, bench, 100);                       // material missing: progress resets, not just pauses
 		bench.setItem(ComponentRepairBenchBlockEntity.MATERIAL_SLOT,
 				new ItemStack(ModContent.IRON_PLATE.get(), 1));
-		run(helper, bench, 300);                       // 400 + 300 = 700 > 625 only if progress survived
+		run(helper, bench, 600);                       // 800 + 600 = 1400 > 1200 -- would finish if progress had survived
 
+		ItemStack stillWorn = targetOf(bench);
+		if (stillWorn.getDamageValue() == 0) {
+			helper.fail("progress survived the missing material instead of resetting: the repair "
+					+ "completed after only 600 ticks since the plate came back, which only adds up if "
+					+ "the earlier 800 ticks were kept");
+			return;
+		}
+		run(helper, bench, T1_TICKS);                  // a full run from the reset point must still finish
 		ItemStack rotor = targetOf(bench);
 		if (rotor.getDamageValue() != 0) {
-			helper.fail("progress was thrown away by the stall: the repair never completed "
-					+ "(damage still " + rotor.getDamageValue() + ")");
+			helper.fail("repair never completed even after a full run from the reset point (damage "
+					+ rotor.getDamageValue() + ")");
+			return;
 		}
 		helper.succeed();
 	}

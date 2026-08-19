@@ -89,7 +89,7 @@
             {
               "type": "text",
               "title": "Nó biến thành gì",
-              "text": "Dầu mỏ là khởi đầu của chuỗi cao su.\n\n1. Thu dầu — bằng xô, Viên nang chân không hoặc Máy bơm\n2. Máy Trùng Hợp: 1000 mB dầu và 400 EU cho ra cao su thô\n3. Máy Lưu Hóa: cao su thô + bột lưu huỳnh + 400 EU\n4. Đặt lửa trại (×1), dung nham/khối magma (×2) hoặc Máy sưởi điện (×3) bên dưới\n\nNhiệt tốt hơn giúp tiết kiệm vật liệu: mỗi lượt luôn tiêu thụ một cao su thô và một bột lưu huỳnh."
+              "text": "Dầu mỏ là khởi đầu của chuỗi cao su.\n\n1. Thu dầu — bằng xô, Viên nang chân không hoặc Máy bơm\n2. Máy Trùng Hợp: 1000 mB dầu và 400 EU cho ra cao su thô\n3. Máy Lưu Hóa: cao su thô + bột lưu huỳnh + 400 EU\n4. Đặt lửa trại (×1), dung nham/khối magma (×2) hoặc Máy sưởi điện (×3) bên dưới\n\nNhiệt tốt hơn giúp tiết kiệm vật liệu: mỗi lượt luôn tiêu thụ một cao su thô và bốn bột lưu huỳnh."
             }
           ]
         }
@@ -1585,7 +1585,7 @@
               "type": "stats",
               "title": "Thông số",
               "lines": [
-                "Năng lượng: 10 xô"
+                "Energy: 8 buckets"
               ]
             },
             {
@@ -4028,7 +4028,7 @@
               "type": "stats",
               "title": "Thông số",
               "lines": [
-                "Năng lượng: 30 000 EU"
+                "Năng lượng: 20 000 EU"
               ]
             },
             {

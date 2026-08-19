@@ -73,14 +73,15 @@ class RepairStatusTest {
 	}
 
 	@Test
-	void progressSurvivesAStallButNotALostJob() {
-		// hasRepairableTarget() decides freeze-vs-reset: a missing plate must not throw away a
-		// half-finished repair, while pulling the component out must.
-		assertTrue(RepairStatus.READY.hasRepairableTarget());
-		assertTrue(RepairStatus.NEEDS_MATERIAL.hasRepairableTarget(), "a stall, not a lost job");
-		assertFalse(RepairStatus.NO_TARGET.hasRepairableTarget());
-		assertFalse(RepairStatus.NOT_DAMAGED.hasRepairableTarget());
-		assertFalse(RepairStatus.LIMIT_REACHED.hasRepairableTarget());
+	void onlyReadyKeepsTheJobIntact() {
+		// jobIntact() decides freeze-vs-reset: only a power stall (status stays READY) may leave
+		// progress standing. Every other status — including a missing plate — means the job itself is
+		// gone, matching the sibling processing machines' "recipe gone" reset (R-NRG-10 is power-only).
+		assertTrue(RepairStatus.READY.jobIntact());
+		assertFalse(RepairStatus.NEEDS_MATERIAL.jobIntact(), "a missing plate resets, it does not stall");
+		assertFalse(RepairStatus.NO_TARGET.jobIntact());
+		assertFalse(RepairStatus.NOT_DAMAGED.jobIntact());
+		assertFalse(RepairStatus.LIMIT_REACHED.jobIntact());
 	}
 
 	// --- sync-channel round trip ---

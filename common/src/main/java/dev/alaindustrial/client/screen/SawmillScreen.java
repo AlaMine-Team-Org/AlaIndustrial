@@ -36,6 +36,16 @@ public class SawmillScreen extends ProgressMachineScreen<SawmillMenu> {
 	private static final int BUTTON_Y = 48;
 	private static final int BUTTON_X0 = 52;
 
+	/**
+	 * The sawmill's status row sits ABOVE the mode buttons, not in the family's usual place.
+	 *
+	 * <p>{@link MachineScreen#STATUS_ROW_Y} is y=61, which on every other machine in the family is empty
+	 * frame — here it is the middle of the four 18×18 mode buttons (y=48..65, x=52..123). The band this
+	 * screen has instead is the gap between the slot row (which ends at y=35, the slots being higher on
+	 * this frame than on the others) and the buttons.
+	 */
+	private static final int STATUS_Y = 38;
+
 	private static final int COLOR_BG = 0xFF2B2B2B;
 	private static final int COLOR_BG_ACTIVE = 0xFF5A4A21;
 	private static final int COLOR_BORDER_ACTIVE = 0xFFFFC94A;
@@ -77,6 +87,7 @@ public class SawmillScreen extends ProgressMachineScreen<SawmillMenu> {
 	@Override
 	public void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		super.extractContents(graphics, mouseX, mouseY, partialTick);
+		drawProcessingStatus(graphics, this.menu.getStatus(), STATUS_Y);
 		SawmillMode active = this.menu.getMode();
 		for (SawmillMode m : SawmillMode.values()) {
 			int bx = this.leftPos + buttonX(m.ordinal());

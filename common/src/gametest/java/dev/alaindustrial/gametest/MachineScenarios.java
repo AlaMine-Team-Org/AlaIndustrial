@@ -1,7 +1,9 @@
 package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.block.entity.AbstractProcessingMachineBlockEntity;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
+import dev.alaindustrial.block.entity.ProcessingMachineStatus;
 import dev.alaindustrial.block.entity.SawmillBlockEntity;
 import dev.alaindustrial.block.entity.SawmillMode;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
@@ -483,6 +485,115 @@ public final class MachineScenarios {
 	public static void tcComp001Neg08_compressorRejectsPartialRedstoneBatch(GameTestHelper helper) {
 		assertPartialBatchProducesNothing(helper, compressor(), new ItemStack(Items.REDSTONE, 8),
 				Config.compressorDuration);
+	}
+
+	// ── Status channel (MOD-458): the machine says WHY it is stalled ───────────────────────────────
+
+	private static AbstractProcessingMachineBlockEntity processing(GameTestHelper helper, Block block) {
+		return (AbstractProcessingMachineBlockEntity) place(helper, block);
+	}
+
+	/**
+	 * Assert BOTH halves of the readout every time. {@code status()} is the server's own verdict; the
+	 * {@code DATA_STATUS} channel is what a screen actually reads — and the two can part company, because
+	 * a subclass that appends channels of its own supplies its own bridge (the Sawmill does, for its mode).
+	 * Checking only the field would leave that bridge untested and the caption blank in game.
+	 */
+	private static void assertStatus(GameTestHelper helper, AbstractProcessingMachineBlockEntity be,
+			ProcessingMachineStatus expected, String what) {
+		if (be.status() != expected) {
+			helper.fail(what + ": expected " + expected + " but the machine reports " + be.status());
+		}
+		int wire = be.getDataAccess().get(AbstractProcessingMachineBlockEntity.DATA_STATUS);
+		if (wire != expected.ordinal()) {
+			helper.fail(what + ": readout channel carries ordinal " + wire + " ("
+					+ ProcessingMachineStatus.byOrdinal(wire) + ") instead of " + expected);
+		}
+	}
+
+	/** TC-COMP-001-GUI06: a partial batch names itself — and stops the moment it is topped up. */
+	public static void tcComp001Gui06_compressorReportsPartialBatch(GameTestHelper helper) {
+		AbstractProcessingMachineBlockEntity be = processing(helper, compressor());
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
+
+		drive(be, helper, 1);
+		assertStatus(helper, be, ProcessingMachineStatus.NO_INPUT, "an empty compressor");
+
+		be.setItem(0, new ItemStack(Items.GLOWSTONE_DUST, 3));
+		drive(be, helper, 1);
+		assertStatus(helper, be, ProcessingMachineStatus.NOT_ENOUGH_INPUT, "3 of a 4-dust batch");
+
+		// The redstone leftover: 64 / 9 parks exactly one item in the slot after every full stack, which
+		// without this caption is the single most jam-looking state the compressor can reach.
+		be.setItem(0, new ItemStack(Items.REDSTONE, 1));
+		drive(be, helper, 1);
+		assertStatus(helper, be, ProcessingMachineStatus.NOT_ENOUGH_INPUT, "1 of a 9-redstone batch");
+
+		be.setItem(0, new ItemStack(Items.GLOWSTONE_DUST, 4));
+		drive(be, helper, 1);
+		assertStatus(helper, be, ProcessingMachineStatus.READY, "a full 4-dust batch");
+		helper.succeed();
+	}
+
+	/** TC-COMP-001-GUI07: the two stalls that are not about the batch — a wrong item and a jammed output. */
+	public static void tcComp001Gui07_compressorReportsWrongItemAndJammedOutput(GameTestHelper helper) {
+		AbstractProcessingMachineBlockEntity be = processing(helper, compressor());
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
+
+		// setItem bypasses canPlaceItem deliberately: a datapack reload or a /setblock can leave an item in
+		// the slot that no longer resolves, and that is exactly the state worth captioning.
+		be.setItem(0, new ItemStack(Items.DIAMOND, 1));
+		drive(be, helper, 1);
+		assertStatus(helper, be, ProcessingMachineStatus.NO_RECIPE, "an item the compressor cannot press");
+
+		be.setItem(0, new ItemStack(Items.CLAY_BALL, 8));
+		be.setItem(1, new ItemStack(Items.BRICK, 64));
+		drive(be, helper, 1);
+		assertStatus(helper, be, ProcessingMachineStatus.OUTPUT_BLOCKED, "a full output slot");
+		helper.succeed();
+	}
+
+	/**
+	 * TC-COMP-001-GUI08: an empty buffer is captioned only once it means something.
+	 *
+	 * <p>The second half is the regression this case exists for. A machine fed just under its draw works
+	 * every other tick; a bare {@code buffer < cost} test would strobe "No energy" at 10 Hz while the arrow
+	 * visibly advances. One LV solar panel against one LV machine is exactly that setup, so this is an
+	 * ordinary early-game base, not a contrived one.
+	 */
+	public static void tcComp001Gui08_compressorReportsStarvationButNotTrickle(GameTestHelper helper) {
+		AbstractProcessingMachineBlockEntity be = processing(helper, compressor());
+		be.setItem(0, new ItemStack(Items.CLAY_BALL, 8));
+		be.getEnergyStorage().setAmountUntracked(0);
+		// Two unpaid evaluations, and an idle machine sleeps 40 ticks between them (R-29).
+		drive(be, helper, 90);
+		assertStatus(helper, be, ProcessingMachineStatus.NO_ENERGY, "input but no power at all");
+
+		int cost = Config.machineEuPerTick;
+		int supply = cost - 1;
+		BlockPos pos = be.getBlockPos();
+		boolean hasWorked = false;
+		int lastProgress = be.getDataAccess().get(2);
+		for (int tick = 0; tick < 200; tick++) {
+			be.getEnergyStorage().setAmountUntracked(be.getEnergyStorage().getAmount() + supply);
+			be.wake(); // an arriving packet wakes the machine, the way the buffer's commit hook does in world
+			be.serverTick(helper.getLevel(), pos, helper.getLevel().getBlockState(pos));
+			int progress = be.getDataAccess().get(2);
+			hasWorked |= progress > lastProgress;
+			lastProgress = progress;
+			// Assertions start once the machine has visibly worked. The invariant being pinned is about the
+			// STEADY state of a trickle-fed machine; the one transition tick out of a dead buffer is not part
+			// of it, and there "no energy" is simply true — the machine has not managed a paid tick in ninety.
+			if (hasWorked && be.status() == ProcessingMachineStatus.NO_ENERGY) {
+				helper.fail("trickling at " + supply + " EU/t against " + cost + " EU/t reported NO_ENERGY on"
+						+ " tick " + tick + ", after the machine had already resumed making progress");
+			}
+		}
+		// Without this the loop above is vacuous: a machine that never worked also never says NO_ENERGY.
+		if (!hasWorked) {
+			helper.fail("the trickle half advanced no progress at all — it proves nothing");
+		}
+		helper.succeed();
 	}
 
 	/** TC-MACH-004-FUN02: extractor consumes exactly 1 blaze_rod per operation, yielding exactly 3× blaze_powder. */

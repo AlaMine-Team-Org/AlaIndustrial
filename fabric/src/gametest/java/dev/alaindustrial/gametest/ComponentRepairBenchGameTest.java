@@ -11,42 +11,42 @@ import net.minecraft.gametest.framework.GameTestHelper;
  * {@code @GameTest} annotation and a delegation, so the SAME scenario also runs on NeoForge, which
  * registers it in {@code NeoForgeGameTests}.
  *
- * <p>{@code maxTicks} is generous on purpose: a repair is 625 ticks at T1 and 2250 at T3, and the
- * grade scenario runs two of them back to back.
+ * <p>{@code maxTicks} is generous on purpose: a repair is 1200 ticks at T1 and 3600 at T3 (MOD-465),
+ * and the grade scenario runs two of them back to back.
  */
 public class ComponentRepairBenchGameTest {
 
-	@GameTest(maxTicks = 900)
+	@GameTest(maxTicks = 1800)
 	public void repairsWornRotorAndLowersCeiling(GameTestHelper helper) {
 		ComponentRepairBenchScenarios.repairsWornRotorAndLowersCeiling(helper);
 	}
 
-	@GameTest(maxTicks = 3200)
+	@GameTest(maxTicks = 6200)
 	public void ceilingLadderIsLinearAcrossRepeatedRepairs(GameTestHelper helper) {
 		ComponentRepairBenchScenarios.ceilingLadderIsLinearAcrossRepeatedRepairs(helper);
 	}
 
-	@GameTest(maxTicks = 4200)
+	@GameTest(maxTicks = 8000)
 	public void everyGradeRepairsWithItsOwnMaterial(GameTestHelper helper) {
 		ComponentRepairBenchScenarios.everyGradeRepairsWithItsOwnMaterial(helper);
 	}
 
-	@GameTest(maxTicks = 1000)
-	public void missingMaterialFreezesProgressRatherThanResetting(GameTestHelper helper) {
-		ComponentRepairBenchScenarios.missingMaterialFreezesProgressRatherThanResetting(helper);
+	@GameTest(maxTicks = 3200)
+	public void missingMaterialResetsProgress(GameTestHelper helper) {
+		ComponentRepairBenchScenarios.missingMaterialResetsProgress(helper);
 	}
 
-	@GameTest(maxTicks = 1600)
+	@GameTest(maxTicks = 3100)
 	public void spentComponentIsRefusedWithoutSpendingAnything(GameTestHelper helper) {
 		ComponentRepairBenchScenarios.spentComponentIsRefusedWithoutSpendingAnything(helper);
 	}
 
-	@GameTest(maxTicks = 900)
+	@GameTest(maxTicks = 1800)
 	public void intactComponentIsNotTouched(GameTestHelper helper) {
 		ComponentRepairBenchScenarios.intactComponentIsNotTouched(helper);
 	}
 
-	@GameTest(maxTicks = 900)
+	@GameTest(maxTicks = 1800)
 	public void wrongGradeMaterialIsRejected(GameTestHelper helper) {
 		ComponentRepairBenchScenarios.wrongGradeMaterialIsRejected(helper);
 	}
@@ -56,22 +56,22 @@ public class ComponentRepairBenchGameTest {
 		ComponentRepairBenchScenarios.slotsRejectWhatTheyShould(helper);
 	}
 
-	@GameTest(maxTicks = 900)
+	@GameTest(maxTicks = 1800)
 	public void extractionOpensOnlyWhenTheBenchIsDone(GameTestHelper helper) {
 		ComponentRepairBenchScenarios.extractionOpensOnlyWhenTheBenchIsDone(helper);
 	}
 
-	@GameTest(maxTicks = 900)
+	@GameTest(maxTicks = 1800)
 	public void repairedPartSurvivesNbtRoundTrip(GameTestHelper helper) {
 		ComponentRepairBenchScenarios.repairedPartSurvivesNbtRoundTrip(helper);
 	}
 
-	@GameTest(maxTicks = 1400)
+	@GameTest(maxTicks = 2600)
 	public void repairedWheelStillWearsInTheMill(GameTestHelper helper) {
 		ComponentRepairBenchScenarios.repairedWheelStillWearsInTheMill(helper);
 	}
 
-	@GameTest(skyAccess = true, maxTicks = 900)
+	@GameTest(skyAccess = true, maxTicks = 1800)
 	public void repairedRotorSurvivesMillEvolution(GameTestHelper helper) {
 		ComponentRepairBenchScenarios.repairedRotorSurvivesMillEvolution(helper);
 	}

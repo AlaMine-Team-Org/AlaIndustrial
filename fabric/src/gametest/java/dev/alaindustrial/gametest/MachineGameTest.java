@@ -366,6 +366,36 @@ public class MachineGameTest {
 	}
 
 	/**
+	 * @implements TC-COMP-001-GUI06 — a partial batch (3 of 4 dust, 1 of 9 redstone) reports
+	 *     NOT_ENOUGH_INPUT on the readout channel, and clears to READY the moment it is topped up.
+	 * @covers R-GUI-03
+	 */
+	@GameTest
+	public void tcComp001Gui06_compressorReportsPartialBatch(GameTestHelper helper) {
+		MachineScenarios.tcComp001Gui06_compressorReportsPartialBatch(helper);
+	}
+
+	/**
+	 * @implements TC-COMP-001-GUI07 — an item with no compressing recipe reports NO_RECIPE, and a full
+	 *     output slot reports OUTPUT_BLOCKED, on both the field and the synced channel.
+	 * @covers R-GUI-03
+	 */
+	@GameTest
+	public void tcComp001Gui07_compressorReportsWrongItemAndJammedOutput(GameTestHelper helper) {
+		MachineScenarios.tcComp001Gui07_compressorReportsWrongItemAndJammedOutput(helper);
+	}
+
+	/**
+	 * @implements TC-COMP-001-GUI08 — a machine with input and no power reports NO_ENERGY, while one
+	 *     trickling just under its draw never does, because it is still making progress.
+	 * @covers R-GUI-03
+	 */
+	@GameTest
+	public void tcComp001Gui08_compressorReportsStarvationButNotTrickle(GameTestHelper helper) {
+		MachineScenarios.tcComp001Gui08_compressorReportsStarvationButNotTrickle(helper);
+	}
+
+	/**
 	 * @implements TC-MACH-004-FUN02 — extractor consumes exactly 1 blaze_rod per operation
 	 *     (extractorDuration ticks), yielding exactly 3× blaze_powder (multiplied output).
 	 * @covers R-GUI-02

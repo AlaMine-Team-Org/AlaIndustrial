@@ -45,13 +45,6 @@ public class ThermalCentrifugeScreen extends ProgressMachineScreen<ThermalCentri
 	private static final int STATUS_BAND_LEFT = 32;
 	private static final int STATUS_BAND_RIGHT = 146;
 
-	/**
-	 * Smallest the status row may shrink to before it stops being readable at GUI scale 2. Same floor and
-	 * same reasoning as the Component Repair Bench, which hit this first: below it, a label that long is a
-	 * translation to shorten, not a rendering problem to hide.
-	 */
-	private static final float MIN_STATUS_SCALE = 0.7f;
-
 	public ThermalCentrifugeScreen(ThermalCentrifugeMenu menu, Inventory inventory, Component title) {
 		super(menu, inventory, title, PROGRESS);
 	}
@@ -94,30 +87,7 @@ public class ThermalCentrifugeScreen extends ProgressMachineScreen<ThermalCentri
 			return;
 		}
 		Component line = Component.translatable(status.translationKey()).withStyle(ChatFormatting.DARK_RED);
-		drawFittedStatus(graphics, line, 0xFF404040);
-	}
-
-	/**
-	 * Draws the status row centred in the band between the two gauges, shrinking it if it does not fit
-	 * rather than letting it escape over them. A status row cannot be truncated — reading the reason is
-	 * the entire point of it — and there is no second line to wrap onto, so scaling is the only approach
-	 * that a future translation cannot re-break.
-	 */
-	private void drawFittedStatus(GuiGraphicsExtractor graphics, Component label, int colour) {
-		int band = STATUS_BAND_RIGHT - STATUS_BAND_LEFT;
-		int width = font.width(label);
-		int y = topPos + STATUS_Y;
-		if (width <= band) {
-			graphics.text(font, label, leftPos + STATUS_BAND_LEFT + (band - width) / 2, y, colour, false);
-			return;
-		}
-		float scale = Math.max(MIN_STATUS_SCALE, (float) band / width);
-		graphics.pose().pushMatrix();
-		graphics.pose().translate(leftPos + STATUS_BAND_LEFT, y);
-		graphics.pose().scale(scale, scale);
-		// Centre inside the band measured in the SCALED space, or the row drifts left.
-		int tx = Math.max(0, (int) ((band / scale - width) / 2.0f));
-		graphics.text(font, label, tx, 0, colour, false);
-		graphics.pose().popMatrix();
+		// The band is this screen's own, narrower than the family default: see STATUS_BAND_LEFT/RIGHT above.
+		drawFittedStatus(graphics, line, STATUS_Y, STATUS_BAND_LEFT, STATUS_BAND_RIGHT, 0xFF404040);
 	}
 }

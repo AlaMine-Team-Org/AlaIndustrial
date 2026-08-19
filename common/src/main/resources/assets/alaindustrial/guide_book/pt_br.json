@@ -89,7 +89,7 @@
             {
               "type": "text",
               "title": "No que ele vira",
-              "text": "O petróleo é o começo da cadeia da borracha.\n\n1. Colete — com balde, Cápsula de vácuo ou Bomba\n2. Polimerizador: 1000 mB de petróleo e 400 EU produzem borracha bruta\n3. Vulcanizador: borracha bruta + pó de enxofre + 400 EU\n4. Coloque embaixo uma fogueira (×1), lava/magma (×2) ou um Aquecedor elétrico (×3)\n\nCalor melhor economiza materiais: cada operação sempre consome uma borracha bruta e um pó de enxofre."
+              "text": "O petróleo é o começo da cadeia da borracha.\n\n1. Colete — com balde, Cápsula de vácuo ou Bomba\n2. Polimerizador: 1000 mB de petróleo e 400 EU produzem borracha bruta\n3. Vulcanizador: borracha bruta + pó de enxofre + 400 EU\n4. Coloque embaixo uma fogueira (×1), lava/magma (×2) ou um Aquecedor elétrico (×3)\n\nCalor melhor economiza materiais: cada operação sempre consome uma borracha bruta e quatro pós de enxofre."
             }
           ]
         }
@@ -1585,7 +1585,7 @@
               "type": "stats",
               "title": "Estatísticas",
               "lines": [
-                "Energia: 10 baldes"
+                "Energy: 8 buckets"
               ]
             },
             {
@@ -4028,7 +4028,7 @@
               "type": "stats",
               "title": "Estatísticas",
               "lines": [
-                "Energia: 30 000 EU"
+                "Energia: 20 000 EU"
               ]
             },
             {

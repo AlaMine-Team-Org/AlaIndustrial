@@ -89,7 +89,7 @@
             {
               "type": "text",
               "title": "In cosa si trasforma",
-              "text": "Il petrolio è l'inizio della filiera della gomma.\n\n1. Raccoglilo — con un secchio, una Capsula sottovuoto o una Pompa\n2. Polimerizzatore: 1000 mB di petrolio e 400 EU producono caucciù grezzo\n3. Vulcanizzatore: caucciù grezzo + polvere di zolfo + 400 EU\n4. Metti sotto un falò (×1), lava/magma (×2) o un Riscaldatore elettrico (×3)\n\nUn calore migliore fa risparmiare materiali: ogni operazione consuma sempre un caucciù grezzo e una polvere di zolfo."
+              "text": "Il petrolio è l'inizio della filiera della gomma.\n\n1. Raccoglilo — con un secchio, una Capsula sottovuoto o una Pompa\n2. Polimerizzatore: 1000 mB di petrolio e 400 EU producono caucciù grezzo\n3. Vulcanizzatore: caucciù grezzo + polvere di zolfo + 400 EU\n4. Metti sotto un falò (×1), lava/magma (×2) o un Riscaldatore elettrico (×3)\n\nUn calore migliore fa risparmiare materiali: ogni operazione consuma sempre un caucciù grezzo e quattro polveri di zolfo."
             }
           ]
         }
@@ -1585,7 +1585,7 @@
               "type": "stats",
               "title": "Statistiche",
               "lines": [
-                "Energia: 10 secchi"
+                "Energy: 8 buckets"
               ]
             },
             {
@@ -4028,7 +4028,7 @@
               "type": "stats",
               "title": "Statistiche",
               "lines": [
-                "Energia: 30 000 EU"
+                "Energia: 20 000 EU"
               ]
             },
             {

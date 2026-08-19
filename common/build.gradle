@@ -213,6 +213,10 @@ pitest {
                      // MOD-424: the centrifuge's status enum — MC-free like the six above, listed here
                      // WITH its L1 suite (ThermalCentrifugeStatusTest), not a release later.
                      'dev.alaindustrial.block.entity.ThermalCentrifugeStatus',
+                     // MOD-458: the processing family's shared status enum — the first status enum in the
+                     // mod that belongs to five machines rather than one. Listed WITH its L1 suite
+                     // (ProcessingMachineStatusTest), same as the two above.
+                     'dev.alaindustrial.block.entity.ProcessingMachineStatus',
                      'dev.alaindustrial.client.compat.FluidOutputViewerModel',
                      'dev.alaindustrial.client.compat.RecipeViewerLayout',
                      // MOD-125: the shared readout formatter (compact magnitudes, duration parts). Pure

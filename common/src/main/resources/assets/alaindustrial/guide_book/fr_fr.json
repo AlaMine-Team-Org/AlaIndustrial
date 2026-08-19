@@ -89,7 +89,7 @@
             {
               "type": "text",
               "title": "Ce qu'il devient",
-              "text": "Le pétrole est le début de la chaîne du caoutchouc.\n\n1. Récoltez-le — au seau, à la Capsule à vide ou à la Pompe\n2. Polymériseur : 1000 mB de pétrole et 400 EU donnent du caoutchouc brut\n3. Vulcaniseur : caoutchouc brut + poudre de soufre + 400 EU\n4. Placez dessous un feu de camp (×1), de la lave/du magma (×2) ou un Chauffage électrique (×3)\n\nUne meilleure chaleur économise les matériaux : chaque opération consomme toujours un caoutchouc brut et une poudre de soufre."
+              "text": "Le pétrole est le début de la chaîne du caoutchouc.\n\n1. Récoltez-le — au seau, à la Capsule à vide ou à la Pompe\n2. Polymériseur : 1000 mB de pétrole et 400 EU donnent du caoutchouc brut\n3. Vulcaniseur : caoutchouc brut + poudre de soufre + 400 EU\n4. Placez dessous un feu de camp (×1), de la lave/du magma (×2) ou un Chauffage électrique (×3)\n\nUne meilleure chaleur économise les matériaux : chaque opération consomme toujours un caoutchouc brut et quatre poudres de soufre."
             }
           ]
         }
@@ -1585,7 +1585,7 @@
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 10 seaux"
+                "Energy: 8 buckets"
               ]
             },
             {
@@ -4028,7 +4028,7 @@
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 30 000 EU"
+                "Énergie : 20 000 EU"
               ]
             },
             {

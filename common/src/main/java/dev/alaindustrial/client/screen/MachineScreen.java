@@ -2,6 +2,7 @@ package dev.alaindustrial.client.screen;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.block.entity.ProcessingMachineStatus;
 import dev.alaindustrial.client.ReadoutFormat;
 import dev.alaindustrial.menu.MachineMenu;
 import dev.alaindustrial.network.MachineStatsPayload;
@@ -194,6 +195,83 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 					Component.translatable("gui.alaindustrial.energy", this.menu.getEnergy(), this.menu.getCapacity()),
 					mouseX, mouseY);
 		}
+	}
+
+	// --- Status row: the one-line "why am I idle" caption (MOD-458 lifted the two shipped copies here) ---
+
+	/**
+	 * Smallest the status row may shrink to before it stops being readable at GUI scale 2.
+	 *
+	 * <p>0.7, not 0.75, and the difference is not arbitrary: the longest shipped translation of the Repair
+	 * Bench's caption — the screen that hit this first — runs about 176 px against a 136 px band, i.e. it
+	 * needs 0.77, and a 0.75 floor would have clipped the very string that exposed the bug.
+	 */
+	protected static final float MIN_STATUS_SCALE = 0.7f;
+
+	/**
+	 * Where the status row sits on a standard 176×166 machine frame: below the slot row (which ends at
+	 * y=51) and above the "Inventory" label (y=72). Public because an L3 stand may crop its pixel
+	 * comparison to exactly this row, the way the generator screens' status constants already are.
+	 */
+	public static final int STATUS_ROW_Y = 61;
+
+	/**
+	 * Left edge of the status band — clear of the energy bar, which occupies x=15..28 down to y=65.
+	 */
+	public static final int STATUS_ROW_LEFT = 32;
+
+	/** Right edge of the status band — the frame's inner border on a screen with no second gauge. */
+	public static final int STATUS_ROW_RIGHT = 168;
+
+	/** Dark red, matching every other machine's blocking caption. */
+	private static final int STATUS_ROW_COLOUR = 0xFFAA0000;
+
+	/**
+	 * Draw the one-line caption for a {@link ProcessingMachineStatus}, or nothing when the state is a
+	 * silent one. The family's five screens differ only in the row's height, so that is the only parameter.
+	 *
+	 * <p>Lives on the shared machine screen rather than a screen class of its own because the family is
+	 * split across two bases: four of the five extend {@link ProgressMachineScreen}, while the Compressor
+	 * extends this class directly (its converging twin arrows are not the shared progress sprite).
+	 */
+	protected void drawProcessingStatus(GuiGraphicsExtractor graphics, ProcessingMachineStatus status, int y) {
+		if (!status.isBlocking()) {
+			return;
+		}
+		drawFittedStatus(graphics, Component.translatable(status.translationKey()),
+				y, STATUS_ROW_LEFT, STATUS_ROW_RIGHT, STATUS_ROW_COLOUR);
+	}
+
+	/**
+	 * Draw a status row centred in the band between {@code bandLeft} and {@code bandRight}, shrinking it if
+	 * it does not fit rather than letting it escape over whatever flanks the band.
+	 *
+	 * <p><b>A status row cannot be truncated</b> — reading the reason is the entire point of it — and there
+	 * is no second line to wrap onto, so scaling is the only approach a future translation cannot re-break.
+	 *
+	 * <p><b>Both band edges are load-bearing and both were got wrong once</b>, in the two screens this
+	 * method was lifted from. Centring across the whole window printed the caption over the energy bar (and,
+	 * on the Thermal Centrifuge, over the rotor gauge on the other side too). Clamping only the left edge
+	 * then pushed long locales out through the right border instead — Russian ran past the frame in the dev
+	 * client. Hence a band, not an origin.
+	 */
+	protected void drawFittedStatus(GuiGraphicsExtractor graphics, Component label,
+			int y, int bandLeft, int bandRight, int colour) {
+		int band = bandRight - bandLeft;
+		int width = this.font.width(label);
+		int top = this.topPos + y;
+		if (width <= band) {
+			graphics.text(this.font, label, this.leftPos + bandLeft + (band - width) / 2, top, colour, false);
+			return;
+		}
+		float scale = Math.max(MIN_STATUS_SCALE, (float) band / width);
+		graphics.pose().pushMatrix();
+		graphics.pose().translate(this.leftPos + bandLeft, top);
+		graphics.pose().scale(scale, scale);
+		// Centre inside the band measured in the SCALED coordinate space, or the row drifts left.
+		int tx = Math.max(0, (int) ((band / scale - width) / 2.0f));
+		graphics.text(this.font, label, tx, 0, colour, false);
+		graphics.pose().popMatrix();
 	}
 
 	// --- Ghost hints: "what goes here" pictures in empty machine slots (MOD-251, generalised MOD-387) ---

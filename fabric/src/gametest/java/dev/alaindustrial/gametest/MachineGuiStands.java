@@ -9,6 +9,8 @@ import dev.alaindustrial.menu.MachineMenu;
 import dev.alaindustrial.menu.SolarPanelMenu;
 import dev.alaindustrial.block.entity.ComponentRepairBenchBlockEntity;
 import dev.alaindustrial.core.machine.RepairStatus;
+import dev.alaindustrial.block.entity.AbstractProcessingMachineBlockEntity;
+import dev.alaindustrial.block.entity.ProcessingMachineStatus;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModItems;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
@@ -167,6 +169,13 @@ public final class MachineGuiStands {
                 ModContent.SAWMILL_MENU.get(), "Sawmill",
                 CAP, CAP, SAW, SAW);
 
+        // The sawmill's status row is the family's one exception: MachineScreen.STATUS_ROW_Y (61) is the
+        // middle of this screen's four mode buttons, so the caption sits higher, in the gap above them.
+        // That gap is 13 px against an 8 px glyph — narrow enough that it is worth a frame, not an argument.
+        shootProcessing(context, "gui_sawmill_output_blocked",
+                ModContent.SAWMILL_MENU.get(), "Sawmill",
+                CAP, CAP, 0, SAW, ProcessingMachineStatus.OUTPUT_BLOCKED);
+
         // ── Assembler (MOD-275) — three states ───────────────────────────────────────
         // The one screen in the mod with ghost cells: nine slots that show items nobody owns, plus a
         // result preview, a Write button drawn in code and a status line. None of that is in the
@@ -303,6 +312,18 @@ public final class MachineGuiStands {
                 ModContent.COMPRESSOR_MENU.get(), "Compressor",
                 CAP, CAP, BURN, BURN);
 
+        // State 4: the stall this whole channel exists for — a partial batch (3 of 4 glowstone dust).
+        // Energy full and no progress: without the caption this frame is indistinguishable from an idle
+        // machine, which is exactly the player complaint MOD-458 answers.
+        shootProcessing(context, "gui_compressor_not_enough_input",
+                ModContent.COMPRESSOR_MENU.get(), "Compressor",
+                CAP, CAP, 0, BURN, ProcessingMachineStatus.NOT_ENOUGH_INPUT);
+
+        // State 5: the other caption a player meets often — the output slot is full.
+        shootProcessing(context, "gui_compressor_output_blocked",
+                ModContent.COMPRESSOR_MENU.get(), "Compressor",
+                CAP, CAP, 0, BURN, ProcessingMachineStatus.OUTPUT_BLOCKED);
+
         // ── Component Repair Bench — four states ─────────────────────────────────
         // The fourth channel is the RepairStatus code, and it is the point of these frames: three of
         // the bench's four idle states look identical without the caption under the slots.
@@ -406,6 +427,32 @@ public final class MachineGuiStands {
                     && acs.getMenu() instanceof MachineMenu menu) {
                 menu.injectTestData(energy, capacity, progress, maxProgress);
                 menu.injectTestChannel(ComponentRepairBenchBlockEntity.STATUS_CHANNEL, status.code());
+            }
+        });
+        awaitMenuScreen(context);
+        java.nio.file.Path path = takeCleanScreenshot(context, name);
+        LOG.info("[GUITEST] screenshot {} -> {}", name, path.toAbsolutePath());
+    }
+
+    /**
+     * Processing-family variant of {@link #shootMenuWithState} (MOD-458): also fills the status channel
+     * the five one-input machines share.
+     *
+     * <p>Needed because that channel is the only difference between a machine that is idle for a reason a
+     * player can act on and one that is simply empty — every other pixel in the frame is identical.
+     */
+    private static void shootProcessing(ClientGameTestContext context, String name,
+                                        net.minecraft.world.inventory.MenuType<?> type, String title,
+                                        int energy, int capacity, int progress, int maxProgress,
+                                        ProcessingMachineStatus status) {
+        LOG.info("[GUITEST] opening {} (E={}/{} P={}/{} status={})",
+                name, energy, capacity, progress, maxProgress, status);
+        context.runOnClient(mc -> {
+            MenuScreens.create(type, mc, 0, Component.literal(title));
+            if (mc.gui.screen() instanceof AbstractContainerScreen<?> acs
+                    && acs.getMenu() instanceof MachineMenu menu) {
+                menu.injectTestData(energy, capacity, progress, maxProgress);
+                menu.injectTestChannel(AbstractProcessingMachineBlockEntity.DATA_STATUS, status.ordinal());
             }
         });
         awaitMenuScreen(context);

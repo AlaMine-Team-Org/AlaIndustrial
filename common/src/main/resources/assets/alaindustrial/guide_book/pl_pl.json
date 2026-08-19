@@ -89,7 +89,7 @@
             {
               "type": "text",
               "title": "W co się zmienia",
-              "text": "Ropa to początek łańcucha gumy.\n\n1. Zbierz ją — wiadrem, Kapsułą próżniową albo Pompą\n2. Polimeryzator: 1000 mB ropy i 400 EU dają surowy kauczuk\n3. Wulkanizator: surowy kauczuk + pył siarkowy + 400 EU\n4. Umieść pod nim ognisko (×1), lawę/magmę (×2) albo Grzałkę elektryczną (×3)\n\nLepsze ciepło oszczędza materiały: każda operacja zawsze zużywa jeden surowy kauczuk i jeden pył siarkowy."
+              "text": "Ropa to początek łańcucha gumy.\n\n1. Zbierz ją — wiadrem, Kapsułą próżniową albo Pompą\n2. Polimeryzator: 1000 mB ropy i 400 EU dają surowy kauczuk\n3. Wulkanizator: surowy kauczuk + pył siarkowy + 400 EU\n4. Umieść pod nim ognisko (×1), lawę/magmę (×2) albo Grzałkę elektryczną (×3)\n\nLepsze ciepło oszczędza materiały: każda operacja zawsze zużywa jeden surowy kauczuk i cztery pyły siarkowe."
             }
           ]
         }
@@ -1585,7 +1585,7 @@
               "type": "stats",
               "title": "Statystyki",
               "lines": [
-                "Energia: 10 wiader"
+                "Energy: 8 buckets"
               ]
             },
             {
@@ -4028,7 +4028,7 @@
               "type": "stats",
               "title": "Statystyki",
               "lines": [
-                "Energia: 30 000 EU"
+                "Energia: 20 000 EU"
               ]
             },
             {

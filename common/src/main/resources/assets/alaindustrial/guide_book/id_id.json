@@ -89,7 +89,7 @@
             {
               "type": "text",
               "title": "Menjadi apa",
-              "text": "Minyak bumi adalah awal rantai karet.\n\n1. Kumpulkan — dengan ember, Kapsul Vakum, atau Pompa\n2. Polimerisator: 1000 mB minyak dan 400 EU menghasilkan karet mentah\n3. Vulkanisator: karet mentah + debu belerang + 400 EU\n4. Letakkan api unggun (×1), lava/magma (×2), atau Pemanas Listrik (×3) di bawahnya\n\nPanas yang lebih baik menghemat bahan: setiap proses selalu memakai satu karet mentah dan satu debu belerang."
+              "text": "Minyak bumi adalah awal rantai karet.\n\n1. Kumpulkan — dengan ember, Kapsul Vakum, atau Pompa\n2. Polimerisator: 1000 mB minyak dan 400 EU menghasilkan karet mentah\n3. Vulkanisator: karet mentah + debu belerang + 400 EU\n4. Letakkan api unggun (×1), lava/magma (×2), atau Pemanas Listrik (×3) di bawahnya\n\nPanas yang lebih baik menghemat bahan: setiap proses selalu memakai satu karet mentah dan empat debu belerang."
             }
           ]
         }
@@ -1585,7 +1585,7 @@
               "type": "stats",
               "title": "Statistik",
               "lines": [
-                "Energi: 10 ember"
+                "Energy: 8 buckets"
               ]
             },
             {
@@ -4028,7 +4028,7 @@
               "type": "stats",
               "title": "Statistik",
               "lines": [
-                "Energi: 30 000 EU"
+                "Energi: 20 000 EU"
               ]
             },
             {

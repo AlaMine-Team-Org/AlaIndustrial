@@ -89,7 +89,7 @@
             {
               "type": "text",
               "title": "Neye dönüşür",
-              "text": "Petrol, kauçuk zincirinin başlangıcıdır.\n\n1. Toplayın — kovayla, Vakum Kapsülüyle veya Pompayla\n2. Polimerleştirici: 1000 mB petrol ve 400 EU ham kauçuk verir\n3. Vulkanizatör: ham kauçuk + kükürt tozu + 400 EU\n4. Altına kamp ateşi (×1), lav/magma (×2) veya Elektrikli Isıtıcı (×3) yerleştirin\n\nDaha iyi ısı malzeme tasarrufu sağlar: her işlem daima bir ham kauçuk ve bir kükürt tozu tüketir."
+              "text": "Petrol, kauçuk zincirinin başlangıcıdır.\n\n1. Toplayın — kovayla, Vakum Kapsülüyle veya Pompayla\n2. Polimerleştirici: 1000 mB petrol ve 400 EU ham kauçuk verir\n3. Vulkanizatör: ham kauçuk + kükürt tozu + 400 EU\n4. Altına kamp ateşi (×1), lav/magma (×2) veya Elektrikli Isıtıcı (×3) yerleştirin\n\nDaha iyi ısı malzeme tasarrufu sağlar: her işlem daima bir ham kauçuk ve dört kükürt tozu tüketir."
             }
           ]
         }
@@ -1585,7 +1585,7 @@
               "type": "stats",
               "title": "İstatistikler",
               "lines": [
-                "Enerji: 10 kova"
+                "Energy: 8 buckets"
               ]
             },
             {
@@ -4028,7 +4028,7 @@
               "type": "stats",
               "title": "İstatistikler",
               "lines": [
-                "Enerji: 30 000 EU"
+                "Enerji: 20 000 EU"
               ]
             },
             {

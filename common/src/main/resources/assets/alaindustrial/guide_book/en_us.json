@@ -89,7 +89,7 @@
             {
               "type": "text",
               "title": "What it becomes",
-              "text": "Oil is the start of the rubber chain.\n\n1. Collect it — by bucket, Vacuum Capsule or Pump\n2. Polymerizer: 1000 mB of oil and 400 EU give raw rubber\n3. Vulcanizer: raw rubber + sulfur dust + 400 EU\n4. Put a campfire (×1), lava/magma (×2), or an Electric Heater (×3) below it\n\nBetter heat saves materials: every operation always consumes one raw rubber and one sulfur dust."
+              "text": "Oil is the start of the rubber chain.\n\n1. Collect it — by bucket, Vacuum Capsule or Pump\n2. Polymerizer: 1000 mB of oil and 400 EU give raw rubber\n3. Vulcanizer: raw rubber + sulfur dust + 400 EU\n4. Put a campfire (×1), lava/magma (×2), or an Electric Heater (×3) below it\n\nBetter heat saves materials: every operation always consumes one raw rubber and four sulfur dust."
             }
           ]
         }
@@ -1585,7 +1585,7 @@
               "type": "stats",
               "title": "Stats",
               "lines": [
-                "Energy: 10 buckets"
+                "Energy: 8 buckets"
               ]
             },
             {
@@ -4028,7 +4028,7 @@
               "type": "stats",
               "title": "Stats",
               "lines": [
-                "Energy: 30 000 EU"
+                "Energy: 20 000 EU"
               ]
             },
             {

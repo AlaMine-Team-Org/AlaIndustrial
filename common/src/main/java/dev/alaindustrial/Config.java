@@ -865,20 +865,25 @@ public final class Config {
 
 	// --- MOD-384 component repair bench. Restores a worn rotor/wheel instead of replacing it, at the
 	// price of a permanently lower durability ceiling. Its own rate, like the alloy smelter above: at the
-	// shared 2 EU/t a T3 repair would run 9000 ticks (7.5 minutes) and read as broken rather than
-	// expensive. At 8 EU/t the three grades take 625 / 1250 / 2250 ticks (~31 / 62 / 112 s).
+	// shared 2 EU/t a T3 repair would run 14 400 ticks (12 minutes) and read as broken rather than
+	// expensive. At 8 EU/t the three grades take 1200 / 2400 / 3600 ticks — exactly 60 / 120 / 180 s
+	// (MOD-465 raised these from 625/1250/2250: half a minute for a T1 repair read as an errand rather
+	// than as a job, and the bench was finished before the player had walked back to it).
 	/** EU/t the repair bench draws while repairing. Four times the machine standard. */
 	public static int repairBenchEuPerTick = 8;
 	/**
 	 * EU one repair of a T1 component costs (plain {@code windmill_rotor} / {@code water_mill_wheel}).
 	 * The material side is deliberately cheap — ONE plate — so energy, not metal, is what a repair
 	 * really spends; see {@code docs/PERFORMANCE.md} for the full economy.
+	 *
+	 * <p>9600 rather than a rounder 10 000 so the figure divides exactly by {@link #repairBenchEuPerTick}
+	 * into a whole minute (1200 ticks). The grade ladder below is then a clean ×2 / ×3 of it.
 	 */
-	public static int repairBenchTier1EuCost = 5000;
-	/** EU one repair of a reinforced (T2) component costs — double T1, matching its dearer material. */
-	public static int repairBenchTier2EuCost = 10000;
-	/** EU one repair of an advanced (T3) component costs. */
-	public static int repairBenchTier3EuCost = 18000;
+	public static int repairBenchTier1EuCost = 9600;
+	/** EU one repair of a reinforced (T2) component costs — double T1 (2400 ticks, 2 min). */
+	public static int repairBenchTier2EuCost = 19200;
+	/** EU one repair of an advanced (T3) component costs — triple T1 (3600 ticks, 3 min). */
+	public static int repairBenchTier3EuCost = 28800;
 	/**
 	 * How much of the component's ORIGINAL durability ceiling one repair burns, in percent. Linear in
 	 * the original, not compounding on the current value: at 20 % that is 1000 → 800 → 600 → 400 → 200.
@@ -1837,11 +1842,11 @@ public final class Config {
 				() -> alloySmelterDuration, v -> alloySmelterDuration = v, 1),
 			new IntField("repairBenchEuPerTick", Section.MACHINES, "EU/t the component repair bench draws while repairing (MOD-384). Four times the machine standard, like the alloy smelter.",
 				() -> repairBenchEuPerTick, v -> repairBenchEuPerTick = v, 1),
-			new IntField("repairBenchTier1EuCost", Section.MACHINES, "MOD-384: EU one repair of a T1 rotor/wheel costs (material: 1 iron plate). 5000 EU / 8 EU-t = 625 ticks.",
+			new IntField("repairBenchTier1EuCost", Section.MACHINES, "MOD-384: EU one repair of a T1 rotor/wheel costs (material: 1 iron plate). 9600 EU / 8 EU-t = 1200 ticks (60 s).",
 				() -> repairBenchTier1EuCost, v -> repairBenchTier1EuCost = v, 1),
-			new IntField("repairBenchTier2EuCost", Section.MACHINES, "MOD-384: EU one repair of a reinforced rotor/wheel costs (material: 1 tempered iron plate).",
+			new IntField("repairBenchTier2EuCost", Section.MACHINES, "MOD-384: EU one repair of a reinforced rotor/wheel costs (material: 1 tempered iron plate). 19200 EU / 8 EU-t = 2400 ticks (120 s).",
 				() -> repairBenchTier2EuCost, v -> repairBenchTier2EuCost = v, 1),
-			new IntField("repairBenchTier3EuCost", Section.MACHINES, "MOD-384: EU one repair of an advanced rotor/wheel costs (material: 1 electronic circuit).",
+			new IntField("repairBenchTier3EuCost", Section.MACHINES, "MOD-384: EU one repair of an advanced rotor/wheel costs (material: 1 electronic circuit). 28800 EU / 8 EU-t = 3600 ticks (180 s).",
 				() -> repairBenchTier3EuCost, v -> repairBenchTier3EuCost = v, 1),
 			new IntField("repairBenchMaxDamageDecayPercent", Section.MACHINES, "MOD-384: percent of the ORIGINAL durability ceiling one repair burns, linear (1000 -> 800 -> 600 -> 400). Also sets how many repairs a part gets (four at 20%). 0 disables the decay and the limit with it.",
 				() -> repairBenchMaxDamageDecayPercent, v -> repairBenchMaxDamageDecayPercent = v, 0),

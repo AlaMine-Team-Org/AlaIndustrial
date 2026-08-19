@@ -1,6 +1,7 @@
 package dev.alaindustrial.menu;
 
 import dev.alaindustrial.block.entity.AbstractProcessingMachineBlockEntity;
+import dev.alaindustrial.block.entity.ProcessingMachineStatus;
 import dev.alaindustrial.block.entity.SawmillBlockEntity;
 import dev.alaindustrial.block.entity.SawmillMode;
 import dev.alaindustrial.registry.ModContent;
@@ -17,7 +18,7 @@ import org.jspecify.annotations.Nullable;
  * Menu for the LV sawmill (MOD-150) — one input slot + a result-only output slot, plus a mode selector.
  * The four cutting modes ({@link SawmillMode}) are switched with GUI buttons that ride the vanilla
  * {@link #clickMenuButton} channel (no custom packet, works on both loaders): the button id is the
- * target mode ordinal. The active mode is read back for the screen from the machine's 5-wide
+ * target mode ordinal. The active mode is read back for the screen from the machine's 6-wide
  * {@link net.minecraft.world.inventory.ContainerData} (index {@link SawmillBlockEntity#DATA_MODE}).
  */
 public class SawmillMenu extends MachineMenu {
@@ -31,7 +32,7 @@ public class SawmillMenu extends MachineMenu {
 		this.sawmill = be;
 	}
 
-	/** Client side — 5-wide data (energy/capacity/progress/maxProgress + mode) matches the server bridge. */
+	/** Client side — 6-wide data (the family's four + status, plus mode) matches the server bridge. */
 	public SawmillMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.SAWMILL_MENU.get(), syncId, playerInventory,
 				new SimpleContainer(AbstractProcessingMachineBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
@@ -66,5 +67,9 @@ public class SawmillMenu extends MachineMenu {
 		}
 		sawmill.setMode(SawmillMode.byOrdinal(buttonId));
 		return true;
+	}
+	/** Why the machine is idle (MOD-458), read from synced data — works on both sides. */
+	public ProcessingMachineStatus getStatus() {
+		return ProcessingMachineStatus.byOrdinal(data.get(AbstractProcessingMachineBlockEntity.DATA_STATUS));
 	}
 }

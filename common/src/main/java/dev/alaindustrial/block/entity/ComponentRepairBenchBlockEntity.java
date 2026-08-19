@@ -198,9 +198,10 @@ public class ComponentRepairBenchBlockEntity extends MachineBlockEntity
 				syncBlockEntityToClient();
 			}
 			setChanged();
-		} else if (progress != 0 && !status.hasRepairableTarget()) {
-			// The job itself is gone (component pulled, swapped for an undamaged or spent one) → start
-			// over. A missing plate or a flat buffer leaves progress FROZEN and it resumes (R-NRG-10).
+		} else if (progress != 0 && !status.jobIntact()) {
+			// The job itself is gone (component pulled, swapped for an undamaged/spent one, or the
+			// material ran out) → start over, matching the sibling processing machines' "recipe gone"
+			// reset. Only a flat buffer (status stays READY) leaves progress FROZEN and resumes (R-NRG-10).
 			progress = 0;
 			setChanged();
 		}

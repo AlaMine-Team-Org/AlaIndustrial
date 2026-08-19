@@ -1488,27 +1488,27 @@ public final class NeoForgeGameTests {
 				ComponentTierScenarios::wheelSlotAcceptsEveryGrade);
 		// MOD-384: the component repair bench. Same scenario bodies the Fabric lane runs. The evolution
 		// carry-over scenario is registered in the MOD-445 block at the end of this method.
-		registerTest(event, "repair_bench_repairs_worn_rotor", 900, true,
+		registerTest(event, "repair_bench_repairs_worn_rotor", 1800, true,
 				ComponentRepairBenchScenarios::repairsWornRotorAndLowersCeiling);
-		registerTest(event, "repair_bench_ceiling_ladder_is_linear", 3200, true,
+		registerTest(event, "repair_bench_ceiling_ladder_is_linear", 6200, true,
 				ComponentRepairBenchScenarios::ceilingLadderIsLinearAcrossRepeatedRepairs);
-		registerTest(event, "repair_bench_every_grade_has_its_material", 4200, true,
+		registerTest(event, "repair_bench_every_grade_has_its_material", 8000, true,
 				ComponentRepairBenchScenarios::everyGradeRepairsWithItsOwnMaterial);
-		registerTest(event, "repair_bench_missing_material_freezes_progress", 1000, true,
-				ComponentRepairBenchScenarios::missingMaterialFreezesProgressRatherThanResetting);
-		registerTest(event, "repair_bench_spent_component_is_refused", 1600, true,
+		registerTest(event, "repair_bench_missing_material_resets_progress", 3200, true,
+				ComponentRepairBenchScenarios::missingMaterialResetsProgress);
+		registerTest(event, "repair_bench_spent_component_is_refused", 3100, true,
 				ComponentRepairBenchScenarios::spentComponentIsRefusedWithoutSpendingAnything);
-		registerTest(event, "repair_bench_intact_component_is_not_touched", 900, true,
+		registerTest(event, "repair_bench_intact_component_is_not_touched", 1800, true,
 				ComponentRepairBenchScenarios::intactComponentIsNotTouched);
-		registerTest(event, "repair_bench_wrong_grade_material_rejected", 900, true,
+		registerTest(event, "repair_bench_wrong_grade_material_rejected", 1800, true,
 				ComponentRepairBenchScenarios::wrongGradeMaterialIsRejected);
 		registerTest(event, "repair_bench_slots_reject_what_they_should", 40, true,
 				ComponentRepairBenchScenarios::slotsRejectWhatTheyShould);
-		registerTest(event, "repair_bench_extraction_opens_when_done", 900, true,
+		registerTest(event, "repair_bench_extraction_opens_when_done", 1800, true,
 				ComponentRepairBenchScenarios::extractionOpensOnlyWhenTheBenchIsDone);
-		registerTest(event, "repair_bench_repaired_part_survives_round_trip", 900, true,
+		registerTest(event, "repair_bench_repaired_part_survives_round_trip", 1800, true,
 				ComponentRepairBenchScenarios::repairedPartSurvivesNbtRoundTrip);
-		registerTest(event, "repair_bench_repaired_wheel_still_wears", 1400, true,
+		registerTest(event, "repair_bench_repaired_wheel_still_wears", 2600, true,
 				ComponentRepairBenchScenarios::repairedWheelStillWearsInTheMill);
 		// The wind-mill grade scenarios (output comparison, cap, evolution carry-over) are registered in
 		// the MOD-445 block at the end of this method — they build their own raised rig above the barrier
@@ -1885,7 +1885,7 @@ public final class NeoForgeGameTests {
 				ChargePadScenarios::mod406PayoutsAreBatchedNotPerTick);
 		registerTest(event, "pad_mod406_batched_payout_matches_per_tick_total", 100, true,
 				ChargePadScenarios::mod406BatchedPayoutMatchesPerTickTotal);
-		registerTest(event, "repair_bench_repaired_rotor_survives_mill_evolution", 900, true,
+		registerTest(event, "repair_bench_repaired_rotor_survives_mill_evolution", 1800, true,
 				ComponentRepairBenchScenarios::repairedRotorSurvivesMillEvolution);
 		registerTest(event, "component_tier_wind_mill_better_rotor_produces_more_eu", 600, true,
 				ComponentTierScenarios::windMill_betterRotorProducesMoreEu);
@@ -2021,6 +2021,13 @@ public final class NeoForgeGameTests {
 				MachineScenarios::tcComp001Neg07_compressorRejectsPartialGlowstoneBatch);
 		registerTest(event, "machine_tc_comp001_neg08_compressor_rejects_partial_redstone_batch", 40, true,
 				MachineScenarios::tcComp001Neg08_compressorRejectsPartialRedstoneBatch);
+		registerTest(event, "machine_tc_comp001_gui06_compressor_reports_partial_batch", 40, true,
+				MachineScenarios::tcComp001Gui06_compressorReportsPartialBatch);
+		registerTest(event, "machine_tc_comp001_gui07_compressor_reports_wrong_item_and_jammed_output", 40, true,
+				MachineScenarios::tcComp001Gui07_compressorReportsWrongItemAndJammedOutput);
+		// 400 ticks: this one drives 90 ticks of sleep-gated starvation plus a 200-tick trickle loop.
+		registerTest(event, "machine_tc_comp001_gui08_compressor_reports_starvation_but_not_trickle", 400, true,
+				MachineScenarios::tcComp001Gui08_compressorReportsStarvationButNotTrickle);
 		registerTest(event, "machine_tc_mach004_fun02_extractor_consumes_exactly_one_per_operation", 40, true,
 				MachineScenarios::tcMach004Fun02_extractorConsumesExactlyOnePerOperation);
 		registerTest(event, "machine_tc_mach002_neg03_furnace_full_output_jams_machine", 40, true,

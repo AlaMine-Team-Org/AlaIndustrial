@@ -2,6 +2,7 @@ package dev.alaindustrial.client.screen;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.menu.ElectricFurnaceMenu;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
@@ -28,5 +29,14 @@ public class ElectricFurnaceScreen extends ProgressMachineScreen<ElectricFurnace
 	@Override
 	protected Identifier texture() {
 		return TEXTURE;
+	}
+	/**
+	 * Status row (MOD-458) — the family's shared "why am I idle" caption: no recipe, a partial batch, a
+	 * blocked output, or a buffer that has stayed empty long enough to mean something.
+	 */
+	@Override
+	public void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+		super.extractContents(graphics, mouseX, mouseY, partialTick);
+		drawProcessingStatus(graphics, this.menu.getStatus(), STATUS_ROW_Y);
 	}
 }
