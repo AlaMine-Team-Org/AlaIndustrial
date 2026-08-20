@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_empty_fuel_rod": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:empty_fuel_rod"
+          }
+        ]
+      }
+    },
+    "has_refined_uranium": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:refined_uranium"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "alaindustrial:uranium_fuel_rod"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_empty_fuel_rod",
+      "has_refined_uranium",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:uranium_fuel_rod"
+    ]
+  }
+}

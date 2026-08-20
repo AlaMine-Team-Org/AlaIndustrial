@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": {
+      "sprite": "alaindustrial:block/reactor_glass_edge",
+      "force_translucent": true
+    }
+  }
+}

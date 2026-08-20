@@ -110,6 +110,10 @@ public final class IndustrializationNeoForgeClient {
 			event.register(fluidModel("fuel_oil"),
 					dev.alaindustrial.registry.neoforge.ModFluidsNeoForge.FUEL_OIL,
 					dev.alaindustrial.registry.neoforge.ModFluidsNeoForge.FLOWING_FUEL_OIL);
+			// MOD-468: steam, through the single-fluid overload — it has no flowing form, and with no
+			// model every tank and pipe holding it would draw the missing-texture sprite.
+			event.register(fluidModel("steam"),
+					dev.alaindustrial.registry.neoforge.ModFluidsNeoForge.STEAM);
 		});
 		// MOD-085: green flame particle provider for the Enriched Uranium Torch. registerSpriteSet =
 		// json-backed particle (assets/alaindustrial/particles/enriched_uranium_flame.json); reuses the

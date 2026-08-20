@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:compressing",
+  "ingredient": "#c:ingots/shielding_alloy",
+  "result": {
+    "id": "alaindustrial:shielding_alloy_plate",
+    "count": 1
+  },
+  "energy": 260
+}

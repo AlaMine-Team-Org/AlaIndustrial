@@ -773,6 +773,150 @@ public final class Config {
 	 * its own mass, which is the whole point of a centrifuge.
 	 */
 	public static int thermalCentrifugeSpinupTicks = 400;
+
+	// ── MOD-468, stage 1: the reactor room ───────────────────────────────────────────────────────
+	/**
+	 * Ticks the airlock stays open after a redstone pulse. Two seconds: long enough to walk through,
+	 * short enough that the room is never casually left open. Holding the signal does NOT extend it —
+	 * the door closes on this timer and only a fresh rising edge opens it again.
+	 */
+	public static int reactorDoorOpenTicks = 40;
+	/**
+	 * How long the door waits before re-testing a doorway someone is standing in. Small, because this
+	 * is a politeness delay, not a timer the player should feel.
+	 */
+	public static int reactorDoorOccupiedRecheckTicks = 10;
+	/**
+	 * How often a controller re-scans its room. {@code neighborChanged} only sees the six blocks
+	 * touching the controller, and a room is up to 14 across — this sweep is the only thing that
+	 * notices a far wall being mined. Two seconds keeps a 1016-cell walk off the hot path while still
+	 * reacting faster than a player can cross the room.
+	 */
+	public static int reactorScanIntervalTicks = 40;
+	/** Smallest interior edge a reactor room may have, in blocks (shell 5x5x5). */
+	public static int reactorRoomMinInner = 3;
+	/**
+	 * Largest interior edge a reactor room may have, in blocks (shell 14x14x14, 1016 shell blocks).
+	 * A cap rather than free growth: it bounds both the scan cost and how much power one room can ever
+	 * hold, which is what keeps later stages balanceable.
+	 */
+	public static int reactorRoomMaxInner = 12;
+	/**
+	 * Largest share of a reactor shell, in percent, that may be glass. Glass counts as shell and costs
+	 * the same to make, so without a cap the pretty option would also be the strictly correct one and
+	 * every room would be a glass box. At 30 the player gets real windows on the side they care about
+	 * while the structure still reads as containment.
+	 */
+	public static int reactorRoomMaxGlassPercent = 30;
+	/**
+	 * Ticks the reactor button stays pressed. Vanilla's stone button is 20; this matches it, which is
+	 * comfortably longer than the airlock needs to see the rising edge even through a run of dust.
+	 */
+	public static int reactorButtonPressTicks = 20;
+
+	// ── MOD-468, stage 2: the reactor actually runs ───────────────────────────────────────────────
+	/**
+	 * EU/t one fully-lowered fuel rod contributes before neighbour bonuses. Four rods per assembly, so
+	 * a single rack at full depth is 4x this. The mod's whole existing ceiling is 16 EU/t (geothermal),
+	 * which is what makes even a small reactor worth the trip to the Nether.
+	 */
+	public static int reactorEuPerRod = 6;
+	/**
+	 * Extra output, in percent, each adjacent loaded assembly grants a rack. Packing racks together is
+	 * how a reactor is made powerful — and it heats up on exactly the same curve, so density is the
+	 * risk/reward dial rather than a free win.
+	 */
+	public static int reactorNeighbourBonusPercent = 25;
+	/**
+	 * Ticks of burn in one uranium rod at full depth — twenty minutes of real time.
+	 *
+	 * <p><b>This number is the whole uranium economy, and the first guess at it was wrong by an order
+	 * of magnitude.</b> A 3x3x3 room holds nine assemblies of four rods; at two minutes per rod that
+	 * came to several hundred uranium ore per hour, and uranium generates about seven times more
+	 * rarely than diamond. At twenty minutes a full room costs roughly a hundred ore an hour — still a
+	 * serious appetite, which is the point, but one a mining trip can actually feed. Running the
+	 * reactor part-loaded or at reduced control-rod depth scales it down proportionally.
+	 */
+	public static int reactorRodBurnTicks = 24000;
+	/** Heat, in thousandths of the scale, added per active rod per tick at full depth. */
+	public static int reactorHeatPerRod = 4;
+	/**
+	 * Extra <em>heat</em> per adjacency, in percent — deliberately larger than
+	 * {@link #reactorNeighbourBonusPercent}, which is the energy figure.
+	 *
+	 * <p>While the two were one number, density was cosmetic. The tier ceiling caps output at 512 EU/t
+	 * and both fuel and heat are scaled by the depth the reactor actually needed to reach it, so heat
+	 * collapsed to a fixed fraction of output: every core, sparse or packed, ran at exactly the same
+	 * temperature for the same power. Splitting them restores the trade the room is built around — a
+	 * tight core reaches full power on shallower rods, but runs hotter doing it and therefore drinks
+	 * more water.
+	 */
+	public static int reactorHeatNeighbourBonusPercent = 40;
+	/**
+	 * Heat units one millibucket of water carries away as it boils. This is the cooling exchange rate
+	 * and therefore the reactor's thirst.
+	 *
+	 * <p>Heat is bounded above by the tier ceiling — a core at 512 EU/t cannot exceed 546 heat a tick
+	 * however large it grows — so the loop's demand tops out at 247 mB/t, which no single
+	 * {@link #reactorPortThroughput} inlet can deliver: five feed the water and five more carry the
+	 * steam back out. Needing more than one is the point: "hook up an infinite source and forget" was
+	 * the thing to design against.
+	 */
+	public static int reactorHeatPerWater = 2;
+	/** Water one reactor column holds, in mB. Four buckets — a visible level and a few seconds of buffer. */
+	public static int reactorColumnWaterCapacity = 4000;
+	/** Steam one reactor column holds before it stops accepting water and cooling stalls. */
+	public static int reactorColumnSteamCapacity = 4000;
+	/**
+	 * Fluid a single reactor inlet passes per tick, in mB. The shell's only crossing point, and on
+	 * purpose the tightest one: the pipe itself carries {@link #fluidPipeSegmentBuffer}.
+	 */
+	public static int reactorPortThroughput = 50;
+	/** Steam a nozzle releases per tick, in mB. Above one inlet's throughput, so the pipe is the limit. */
+	/**
+	 * EU a single reactor outlet holds. One tick of HV: a socket, not a battery — the reactor's own
+	 * buffer is where energy waits, and a big one here would just be storage the player did not build.
+	 */
+	public static int reactorOutletBuffer = 512;
+	public static int reactorNozzleVentRate = 100;
+	/** Steam a nozzle holds. A few ticks of slack, far too little to be used as storage. */
+	public static int reactorNozzleBuffer = 500;
+	/**
+	 * Heat the shell sheds every tick no matter how cold it is — the floor of the cooling curve.
+	 *
+	 * <p>Small on purpose. It used to be 30, larger than everything a starter reactor produced, so a
+	 * single column sat at exactly 0% forever: the temperature gauge on a working reactor never moved,
+	 * which reads as a broken feature rather than as a safe one. See {@link #reactorHeatLossPermille}
+	 * for the part that actually shapes the curve.
+	 */
+	public static int reactorPassiveCooling = 4;
+	/**
+	 * Extra heat shed per tick as thousandths of the CURRENT temperature — a hot shell loses heat
+	 * faster than a warm one, as any real one does.
+	 *
+	 * <p>This is what gives the reactor an equilibrium instead of a switch. With a flat loss the
+	 * temperature had only two outcomes: production below it pinned the gauge at zero, production above
+	 * it climbed to the top and stayed. Now every core settles at the temperature where its output and
+	 * its losses balance — one column near 15%, two near two thirds, and anything larger climbing past
+	 * the warning line and into the coolant loop.
+	 */
+	public static int reactorHeatLossPermille = 8;
+	/** Heat scale maximum. Above {@code reactorHeatWarnPercent} of it the controller warns. */
+	public static int reactorHeatCapacity = 10000;
+	/** Percentage of the heat scale at which the reactor is reported as running hot. */
+	public static int reactorHeatWarnPercent = 70;
+	/**
+	 * Percentage of the scale the coolant loop holds a reactor at. Deliberately BELOW
+	 * {@link #reactorHeatWarnPercent}.
+	 *
+	 * <p>The loop used to engage at the warning line itself, which meant it parked every reactor
+	 * larger than two columns exactly there — a perfectly healthy installation showed an amber gauge
+	 * for ever, and amber stopped meaning "look at me". Aiming lower gives the warning colour its job
+	 * back: a working loop sits green, and amber now says the coolant is losing.
+	 */
+	public static int reactorCoolantTargetPercent = 60;
+	/** EU the controller can bank. Sized to a few seconds of full output so the grid can lag behind. */
+	public static int reactorBuffer = 200000;
 	/**
 	 * EU/t a spun-up centrifuge spends with nothing to process — the cost of holding revolutions instead
 	 * of coasting to a stop. Small on purpose: it should read as "standing by", not as a penalty for
@@ -1808,6 +1952,56 @@ public final class Config {
 				() -> thermalCentrifugeEuPerTick, v -> thermalCentrifugeEuPerTick = v, 1),
 			new IntField("thermalCentrifugeSpinupTicks", Section.MACHINES, "Ticks a stopped centrifuge rotor needs to reach working speed after the redstone signal arrives; it sheds speed at half this rate.",
 				() -> thermalCentrifugeSpinupTicks, v -> thermalCentrifugeSpinupTicks = v, 1),
+			new IntField("reactorDoorOpenTicks", Section.MACHINES, "Ticks the reactor airlock stays open after a redstone pulse before closing itself; holding the signal does not extend it.",
+				() -> reactorDoorOpenTicks, v -> reactorDoorOpenTicks = v, 1),
+			new IntField("reactorDoorOccupiedRecheckTicks", Section.MACHINES, "Ticks the airlock waits before re-testing a doorway that still has someone standing in it.",
+				() -> reactorDoorOccupiedRecheckTicks, v -> reactorDoorOccupiedRecheckTicks = v, 1),
+			new IntField("reactorScanIntervalTicks", Section.MACHINES, "Ticks between full re-scans of a reactor room by its controller; catches shell changes out of neighbour range.",
+				() -> reactorScanIntervalTicks, v -> reactorScanIntervalTicks = v, 1),
+			new IntField("reactorRoomMinInner", Section.MACHINES, "Smallest interior edge of a reactor room, in blocks.",
+				() -> reactorRoomMinInner, v -> reactorRoomMinInner = v, 1),
+			new IntField("reactorRoomMaxInner", Section.MACHINES, "Largest interior edge of a reactor room, in blocks; bounds both the scan cost and how much one room can hold.",
+				() -> reactorRoomMaxInner, v -> reactorRoomMaxInner = v, 1),
+			new IntField("reactorRoomMaxGlassPercent", Section.MACHINES, "Largest share of a reactor shell that may be glass, in percent; above it the room reports a weak structure.",
+				() -> reactorRoomMaxGlassPercent, v -> reactorRoomMaxGlassPercent = v, 0),
+			new IntField("reactorButtonPressTicks", Section.MACHINES, "Ticks the reactor button stays pressed before releasing itself.",
+				() -> reactorButtonPressTicks, v -> reactorButtonPressTicks = v, 1),
+			new IntField("reactorEuPerRod", Section.MACHINES, "EU/t one fully lowered uranium rod contributes, before neighbour bonuses.",
+				() -> reactorEuPerRod, v -> reactorEuPerRod = v, 1),
+			new IntField("reactorNeighbourBonusPercent", Section.MACHINES, "Extra output in percent granted per adjacent loaded fuel assembly; heat scales with it too.",
+				() -> reactorNeighbourBonusPercent, v -> reactorNeighbourBonusPercent = v, 0),
+			new IntField("reactorRodBurnTicks", Section.MACHINES, "Ticks of burn in one uranium fuel rod at full control-rod depth.",
+				() -> reactorRodBurnTicks, v -> reactorRodBurnTicks = v, 1),
+			new IntField("reactorHeatPerRod", Section.MACHINES, "Heat units added per active rod per tick at full depth.",
+				() -> reactorHeatPerRod, v -> reactorHeatPerRod = v, 0),
+			new IntField("reactorHeatNeighbourBonusPercent", Section.MACHINES, "Extra heat in percent per adjacent loaded reactor column; larger than the energy bonus, which is what makes a dense core hotter for the same power.",
+				() -> reactorHeatNeighbourBonusPercent, v -> reactorHeatNeighbourBonusPercent = v, 0),
+			new IntField("reactorHeatPerWater", Section.MACHINES, "Heat units carried away by one mB of water as it boils into steam.",
+				() -> reactorHeatPerWater, v -> reactorHeatPerWater = v, 1),
+			new IntField("reactorColumnWaterCapacity", Section.MACHINES, "Water a single reactor column holds, in mB.",
+				() -> reactorColumnWaterCapacity, v -> reactorColumnWaterCapacity = v, 1),
+			new IntField("reactorColumnSteamCapacity", Section.MACHINES, "Steam a single reactor column holds before cooling stalls, in mB.",
+				() -> reactorColumnSteamCapacity, v -> reactorColumnSteamCapacity = v, 1),
+			new IntField("reactorPortThroughput", Section.MACHINES, "Fluid a single reactor inlet passes per tick, in mB.",
+				() -> reactorPortThroughput, v -> reactorPortThroughput = v, 1),
+			new IntField("reactorOutletBuffer", Section.MACHINES, "EU a single reactor outlet holds before a cable drains it.",
+				() -> reactorOutletBuffer, v -> reactorOutletBuffer = v, 1),
+			new IntField("reactorNozzleVentRate", Section.MACHINES, "Steam a nozzle releases into the world per tick, in mB.",
+				() -> reactorNozzleVentRate, v -> reactorNozzleVentRate = v, 1),
+			new IntField("reactorNozzleBuffer", Section.MACHINES, "Steam a nozzle holds, in mB.",
+				() -> reactorNozzleBuffer, v -> reactorNozzleBuffer = v, 1),
+			new IntField("reactorPassiveCooling", Section.MACHINES, "Heat units that bleed away on their own each tick regardless of temperature.",
+				() -> reactorPassiveCooling, v -> reactorPassiveCooling = v, 0),
+			new IntField("reactorHeatLossPermille", Section.MACHINES, "Extra heat shed per tick, in thousandths of the current temperature.",
+				() -> reactorHeatLossPermille, v -> reactorHeatLossPermille = v, 0),
+			new IntField("reactorHeatCapacity", Section.MACHINES, "Maximum of the reactor heat scale.",
+				() -> reactorHeatCapacity, v -> reactorHeatCapacity = v, 1),
+			new IntField("reactorCoolantTargetPercent", Section.MACHINES, "Percentage of the heat scale the coolant loop holds the reactor at; below the warning threshold on purpose.",
+				() -> reactorCoolantTargetPercent, v -> reactorCoolantTargetPercent = v, 0),
+			new IntField("reactorHeatWarnPercent", Section.MACHINES, "Percentage of the heat scale above which the reactor reports running hot.",
+				() -> reactorHeatWarnPercent, v -> reactorHeatWarnPercent = v, 1),
+			new IntField("reactorBuffer", Section.MACHINES, "EU buffer of the reactor controller.",
+				() -> reactorBuffer, v -> reactorBuffer = v, 1),
 			new IntField("thermalCentrifugeIdleEuPerTick", Section.MACHINES, "EU/t a spun-up thermal centrifuge spends holding revolutions with nothing to process.",
 				() -> thermalCentrifugeIdleEuPerTick, v -> thermalCentrifugeIdleEuPerTick = v, 1),
 			new IntField("canningMachineDuration", Section.MACHINES, "Ticks the canning machine takes per ration at 1.0 speed; x machineEuPerTick 2 = 200 EU per ration.",

@@ -1,0 +1,64 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_iron_door": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:iron_door"
+          }
+        ]
+      }
+    },
+    "has_reactor_glass": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:reactor_glass"
+          }
+        ]
+      }
+    },
+    "has_control_rod_drive": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:control_rod_drive"
+          }
+        ]
+      }
+    },
+    "has_reinforced_plate": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:shielding_alloy_reinforced_plate"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_iron_door"
+    ],
+    [
+      "has_reactor_glass"
+    ],
+    [
+      "has_control_rod_drive"
+    ],
+    [
+      "has_reinforced_plate"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:reactor_door"
+    ]
+  }
+}

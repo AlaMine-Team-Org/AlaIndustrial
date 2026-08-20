@@ -96,6 +96,101 @@
       ]
     },
     {
+      "id": "nuclear_basics",
+      "title": "Nükleer Enerji",
+      "icon": "alaindustrial:reactor_controller",
+      "entries": [
+        {
+          "id": "reactor_room",
+          "title": "Reaktör Odası",
+          "icon": "alaindustrial:reactor_casing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Nedir bu",
+              "text": "Nükleer reaktör bir blok değil, kendi ördüğün bir oda. Reaktör gövdesinden yapılmış boş bir kutu ve içinde dikilen yakıt kolonları.\n\nKabuk süs değil: orada olan biteni içeride tutan şey odur."
+            },
+            {
+              "type": "text",
+              "title": "Nasıl kurulur",
+              "text": "1. Reaktör gövdesinden sızdırmaz bir kutu ör. İç ölçü: 3x3x3 ile 12x12x12 arası.\n2. Kontrol ünitesini duvara, yüzü dışarı bakacak şekilde otur.\n3. Tek bir delik bile olmayacak — açığın nerede olduğunu kontrol ünitesi söyler.\n\nKapı zorunlu değil: kendini içeri örüp sonra kazarak çıkabilirsin."
+            },
+            {
+              "type": "text",
+              "title": "Kabuğun parçaları",
+              "text": "- Reaktör Camı: pencere, ama duvarların üçte birinden fazlası olmasın\n- Reaktör Hava Kilidi Kapısı: kilit odası, kırmızı taşla açılır ve kendi kapanır\n- Reaktör Girişi: su borusu duvarı buradan geçer\n- Reaktör Çıkışı: kablo buraya takılır\n- Reaktör Lambası: yalnızca odayı aydınlatır, dışarıyı asla"
+            }
+          ]
+        },
+        {
+          "id": "reactor_fuel",
+          "title": "Yakıt",
+          "icon": "alaindustrial:uranium_fuel_rod",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Uranyumun yolu",
+              "text": "Uranyum cevheri -> öğütücü -> termal santrifüj -> kompresör.\n\nSantrifüj uranyum konsantresi verir; kompresör bunlardan ikisini bir zenginleştirilmiş uranyuma (U-235) presler.\n\nArdından bir yakıt çubuğu kılıfı üret ve içine bir zenginleştirilmiş uranyum koy."
+            },
+            {
+              "type": "text",
+              "title": "Reaktör kolonu",
+              "text": "Odanın içine bir kolon koy ve sağ tıkla çubukları yerleştir, dörde kadar. Camın ardından görünürler.\n\nKolonlar üst üste dizilir: bir kule tek bir kap gibi çalışır."
+            },
+            {
+              "type": "text",
+              "title": "Çubuklar tükenir",
+              "text": "Bir çubuğun dayanıklılığı, kalan yüküNÜN ta kendisidir. Bir kolondaki bütün çubuklar birlikte ve eşit biçimde aşınır.\n\nTükenen çubuk boş kılıfa dönüşür ve rafta kalır. Elinle çıkar, bir zenginleştirilmiş uranyumla doldur — yenisini üretmene gerek yok."
+            }
+          ]
+        },
+        {
+          "id": "reactor_run",
+          "title": "Devreye Alma",
+          "icon": "alaindustrial:reactor_controller",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Beş adım",
+              "text": "1. Oda sızdırmaz\n2. Kolonlarda çubuk var\n3. Reaktör çıkışında kablo var\n4. Kontrol ünitesine kırmızı taş sinyali geliyor\n5. Derinlik sürgüsü sıfırda değil"
+            },
+            {
+              "type": "text",
+              "title": "Hiçbir şey olmuyorsa",
+              "text": "Kontrol ünitesini aç: üretim satırı eksiği kendi yazar — çubuk yok, sinyal yok, çubuklar yukarıda ya da tampon dolu.\n\nSinyalin kesilmesi acil durdurmadır. Kolu indirdin mi reaktör durur."
+            },
+            {
+              "type": "text",
+              "title": "Güç",
+              "text": "Bir kolon 24 EU/t verir. Daha çok çubuk ve daha sık dizilmiş kolonlar daha fazlasını verir: komşu kolonlar birbirini güçlendirir.\n\nTavan 512 EU/t. Derinlik sürgüsü gücü, ısıyı ve yakıt tüketimini aynı oranda böler."
+            }
+          ]
+        },
+        {
+          "id": "reactor_cooling",
+          "title": "Soğutma",
+          "icon": "alaindustrial:reactor_port",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Isı",
+              "text": "Reaktör ısınır, oda ısıyı kendiliğinden atar — hem de ne kadar sıcaksa o kadar hızlı. Bu yüzden her reaktör kendi sıcaklığını bulur ve orada kalır.\n\nBir kolon 15% civarında durur. Yan yana iki tanesi üçte ikiye çıkar. Üç ve fazlasını oda tek başına tutamaz."
+            },
+            {
+              "type": "text",
+              "title": "Su devresi",
+              "text": "Su bir radyatör değil, bir güvenlik sistemidir: gösterge sarı işarete yaklaşınca devreye girer ve reaktörü onun altında tutar; dolayısıyla sarı, soğutmanın yetişemediği anlamına gelir.\n\nPompa -> boru -> reaktör girişi -> kolon. Girişteki boru yüzlerini İngiliz anahtarıyla ayarla: dışarıda çekme, içeride verme. Kolon ve nozul anahtar istemez — kolon suyu yalnızca alır, buharı yalnızca verir."
+            },
+            {
+              "type": "text",
+              "title": "Buhar",
+              "text": "Kaynayan su buhara dönüşür ve kolonda birikir. Dışarı verilmesi gerekir: kolonun üst yüzünden bir boru → reaktör girişi → dışarıda bir buhar memesi.\n\nMeme açık havaya bakmalı. Duvara gömülü meme hiçbir şey üflemez, arkasındaki devre de tıkanır."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "energy",
       "title": "Enerji",
       "icon": "alaindustrial:wind_mill",
@@ -258,20 +353,20 @@
         },
         {
           "id": "lightning_rod_generator",
-          "title": "Lightning Rod Generator",
+          "title": "Paratoner jeneratörü",
           "icon": "alaindustrial:lightning_rod_generator",
           "block_id": "alaindustrial:lightning_rod_generator",
           "pages": [
             {
               "type": "text",
-              "title": "Lightning Rod Generator",
-              "text": "Catches a lightning strike and banks it in its conductor tip — a rare but large helping of power; if the reserve is still full, the strike is wasted."
+              "title": "Paratoner jeneratörü",
+              "text": "Bir yıldırımı yakalar ve iletken ucunda biriktirir — seyrek ama iri bir enerji payı; rezerv hâlâ doluysa yıldırım boşa gider."
             },
             {
               "type": "stats",
               "title": "İstatistikler",
               "lines": [
-                "Energy: 16–24 EU/т при разрядке",
+                "Energy: 16–24 EU/t on discharge",
                 "Tampon: 4000 EU"
               ]
             },
@@ -417,20 +512,20 @@
         },
         {
           "id": "energy_condenser",
-          "title": "Energy Condenser",
+          "title": "Enerji Yoğunlaştırıcı",
           "icon": "alaindustrial:energy_condenser",
           "block_id": "alaindustrial:energy_condenser",
           "pages": [
             {
               "type": "text",
-              "title": "Energy Condenser",
-              "text": "Catches the grid's surplus and packs it into an energy clot; which tier you get is decided by when you take it."
+              "title": "Enerji Yoğunlaştırıcı",
+              "text": "Şebekenin fazlasını toplayıp bir enerji pıhtısına sıkıştırır; hangi kademeyi alacağını, ne zaman çektiğin belirler."
             },
             {
               "type": "stats",
               "title": "İstatistikler",
               "lines": [
-                "Energy: 128 EU/т приём"
+                "Energy: 128 EU/t intake"
               ]
             },
             {
@@ -840,6 +935,434 @@
               "result_count": 3
             }
           ]
+        },
+        {
+          "id": "reactor_controller",
+          "title": "Reaktör Kontrol Ünitesi",
+          "icon": "alaindustrial:reactor_controller",
+          "block_id": "alaindustrial:reactor_controller",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reaktör Kontrol Ünitesi",
+              "text": "Bir reaktör odasının beyni: kabuğu tarar, nesinin yanlış olduğunu söyler ve tam olarak nerede olduğunu gösterir — bir durum satırı ve arıza noktasında bir duman bulutu ile."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Tampon: 200 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:reactor_circuit",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:control_rod_drive",
+                "alaindustrial:shielding_alloy_plate"
+              ],
+              "result_id": "alaindustrial:reactor_controller",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "empty_fuel_rod",
+          "title": "Yakıt Çubuğu Kılıfı",
+          "icon": "alaindustrial:empty_fuel_rod",
+          "block_id": "alaindustrial:empty_fuel_rod",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Yakıt Çubuğu Kılıfı",
+              "text": "İçinde uranyum olmayan bir yakıt çubuğu kılıfı: 3x3 üretilir, tek bir zenginleştirilmiş uranyumla doldurulur ve çubuk tükenir tükenmez kolon tarafından geri verilir."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:iron_nugget",
+                "minecraft:iron_ingot",
+                "minecraft:iron_nugget",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:iron_ingot",
+                "minecraft:iron_nugget",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:iron_nugget"
+              ],
+              "result_id": "alaindustrial:empty_fuel_rod",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "steam_nozzle",
+          "title": "Buhar Memesi",
+          "icon": "alaindustrial:steam_nozzle",
+          "block_id": "alaindustrial:steam_nozzle",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Buhar Memesi",
+              "text": "Soğutma devresinin en uç noktası: borudan buharı alır, havaya bir tüy gibi salar ve yok eder — nozul başına 100 mB/t."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:iron_ingot",
+                "alaindustrial:fluid_pipe",
+                "minecraft:iron_ingot",
+                "",
+                "alaindustrial:machine_casing",
+                ""
+              ],
+              "result_id": "alaindustrial:steam_nozzle",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_button",
+          "title": "Reaktör Düğmesi",
+          "icon": "alaindustrial:reactor_button",
+          "block_id": "alaindustrial:reactor_button",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reaktör Düğmesi",
+              "text": "Zırh alaşımından bir düğme: mühürlü bir odanın içinden hava kilidine darbe göndermenin yolu; tıpkı bir vanilla düğmesi gibi yapılmıştır ama odanın var oluş nedenine dayanabilir."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Tampon: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilsiz Üretim",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:stone_button",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_button",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "fuel_rod_assembly",
+          "title": "Reaktör Kolonu",
+          "icon": "alaindustrial:fuel_rod_assembly",
+          "block_id": "alaindustrial:fuel_rod_assembly",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reaktör Kolonu",
+              "text": "Dört çubukluk şeffaf bir raf, iki tanklı — su ve buhar: sağ tıkla doldurulur, yüklü bütün çubukları birlikte aşındırır; hem yakıt hem de soğutucu seviyesi odanın öbür ucundan, hiçbir menü olmadan okunur."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:iron_ingot",
+                "alaindustrial:reactor_glass",
+                "minecraft:iron_ingot",
+                "alaindustrial:reactor_glass",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:reactor_glass",
+                "minecraft:iron_ingot",
+                "alaindustrial:reactor_glass",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:fuel_rod_assembly",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lamp",
+          "title": "Reaktör Lambası",
+          "icon": "alaindustrial:reactor_lamp",
+          "block_id": "alaindustrial:reactor_lamp",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reaktör Lambası",
+              "text": "Yalnızca oda kurulduğunda yanan bir kabuk bloğu: mühürlü bir kutunun içindeki tek ışık kaynağı ve aynı zamanda yapının kabul edildiğini dışarıdan gösteren bir işaret."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Tampon: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:glowstone",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:reactor_lamp",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "reactor_casing",
+          "title": "Reaktör Gövdesi",
+          "icon": "alaindustrial:reactor_casing",
+          "block_id": "alaindustrial:reactor_casing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reaktör Gövdesi",
+              "text": "Zırh alaşımından bir panel — bir reaktör odasının mühürlü kabuğunun yapılabileceği tek malzeme."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Tampon: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reactor_casing",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_glass",
+          "title": "Reaktör Camı",
+          "icon": "alaindustrial:reactor_glass",
+          "block_id": "alaindustrial:reactor_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reaktör Camı",
+              "text": "Şeffaf bir kabuk paneli: tıpkı kaplama gibi duvar sayılır, ancak bir kabuğun en fazla %30'u cam olabilir — bunun ötesinde oda bir muhafaza olmaktan çıkıp vitrine döner."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Tampon: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass"
+              ],
+              "result_id": "alaindustrial:reactor_glass",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_port",
+          "title": "Reaktör Girişi",
+          "icon": "alaindustrial:reactor_port",
+          "block_id": "alaindustrial:reactor_port",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reaktör Girişi",
+              "text": "Bir sıvının mühürlü kabuğu geçebileceği tek yer: iki yönde de çalışan 50 mB/t'lik bir geçiş — su içeri, buhar dışarı — ve yine de tam anlamıyla bir duvar parçası."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Tampon: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:rubber",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:rubber",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:reactor_casing",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:rubber",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:rubber"
+              ],
+              "result_id": "alaindustrial:reactor_port",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "reactor_outlet",
+          "title": "Reaktör Çıkışı",
+          "icon": "alaindustrial:reactor_outlet",
+          "block_id": "alaindustrial:reactor_outlet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reaktör Çıkışı",
+              "text": "Reaktör odasının kabuğuna gömülü bir priz: kontrolcü duvara örülmüştür ve kablonun ulaşabileceği hiçbir yüzü yoktur, bu yüzden enerji bunun için yapılmış bir duvar parçasından çıkar — her yüzünden veren ve kontrolcü tarafından doldurulan 512 EU'luk bir tampon."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Tampon: 512 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:rubber",
+                "alaindustrial:copper_cable",
+                "alaindustrial:rubber",
+                "minecraft:iron_ingot",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:iron_ingot",
+                "alaindustrial:rubber",
+                "alaindustrial:copper_cable",
+                "alaindustrial:rubber"
+              ],
+              "result_id": "alaindustrial:reactor_outlet",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "uranium_fuel_rod",
+          "title": "Yakıt Çubuğu",
+          "icon": "alaindustrial:uranium_fuel_rod",
+          "block_id": "alaindustrial:uranium_fuel_rod",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Yakıt Çubuğu",
+              "text": "Reaktörün yakıtı: zırh tabanı üzerindeki demir kovanda zenginleştirilmiş uranyum. 144.000 EU taşır, kalanını dayanıklılık olarak gösterir ve tükendiğinde geriye boş bir kılıf bırakır."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilsiz Üretim",
+              "grid": [
+                "alaindustrial:empty_fuel_rod",
+                "alaindustrial:refined_uranium",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:uranium_fuel_rod",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "reactor_door",
+          "title": "Reaktör Hava Kilidi Kapısı",
+          "icon": "alaindustrial:reactor_door",
+          "block_id": "alaindustrial:reactor_door",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reaktör Hava Kilidi Kapısı",
+              "text": "Bir reaktör odasına giden tek yol: yalnızca bir redstone darbesiyle açılır, iki saniye sonra kendiliğinden kapanır ve kapı boşluğunda duranın üzerine asla kapanmaz."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Tampon: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:reactor_glass",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:insulated_copper_cable",
+                "minecraft:iron_door",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:control_rod_drive",
+                "alaindustrial:shielding_alloy_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:reactor_door",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },
@@ -998,20 +1521,20 @@
         },
         {
           "id": "canning_machine",
-          "title": "Canning Machine",
+          "title": "Konserve Makinesi",
           "icon": "alaindustrial:canning_machine",
           "block_id": "alaindustrial:canning_machine",
           "pages": [
             {
               "type": "text",
-              "title": "Canning Machine",
-              "text": "An LV machine that renders any food down to identical rations. Rations stack together no matter what they were made from, so a dozen slots of assorted scraps collapse into one."
+              "title": "Konserve Makinesi",
+              "text": "Her yiyeceği birbirinin aynı tayınlara indiren bir LV makinesi. Tayınlar neyden yapıldığına bakmaksızın üst üste yığılır, böylece bir düzine yuva dolusu artık tek yuvaya iner."
             },
             {
               "type": "stats",
               "title": "İstatistikler",
               "lines": [
-                "Energy: 200 EU/паёк",
+                "Energy: 200 EU/ration",
                 "Tampon: 800 EU"
               ]
             },
@@ -1115,20 +1638,20 @@
         },
         {
           "id": "component_repair_bench",
-          "title": "Component Repair Bench",
+          "title": "Parça Onarım Tezgâhı",
           "icon": "alaindustrial:component_repair_bench",
           "block_id": "alaindustrial:component_repair_bench",
           "pages": [
             {
               "type": "text",
-              "title": "Component Repair Bench",
-              "text": "Restores a worn wind mill rotor or water mill wheel for one item and some EU — but every repair permanently lowers that part's durability ceiling."
+              "title": "Parça Onarım Tezgâhı",
+              "text": "Yıpranmış bir rüzgâr rotorunu ya da su çarkını bir eşya ve biraz EU karşılığında onarır — ama her onarım o parçanın dayanıklılık tavanını kalıcı olarak düşürür."
             },
             {
               "type": "stats",
               "title": "İstatistikler",
               "lines": [
-                "Energy: 5000–18000 EU/op",
+                "Enerji: 9600–28800 EU/işlem",
                 "Tampon: 800 EU"
               ]
             },
@@ -1232,20 +1755,20 @@
         },
         {
           "id": "thermal_centrifuge",
-          "title": "Thermal Centrifuge",
+          "title": "Termal Santrifüj",
           "icon": "alaindustrial:thermal_centrifuge",
           "block_id": "alaindustrial:thermal_centrifuge",
           "pages": [
             {
               "type": "text",
-              "title": "Thermal Centrifuge",
-              "text": "An LV machine with a spin-up: a redstone signal brings the rotor up to speed, and a hot heater below lets it split uranium dust in two — the second ore doubling after the macerator."
+              "title": "Termal Santrifüj",
+              "text": "Rölantiden açılan bir LV makinesi: kırmızı taş sinyali rotoru devrine çıkarır, altındaki kızgın ısıtıcı da uranyum tozunu ikiye ayırmasını sağlar — öğütücüden sonraki ikinci cevher katlaması."
             },
             {
               "type": "stats",
               "title": "İstatistikler",
               "lines": [
-                "Energy: 800 EU/op",
+                "Enerji: 800 EU/işlem",
                 "Tampon: 800 EU"
               ]
             },
@@ -1355,14 +1878,14 @@
             {
               "type": "text",
               "title": "Elektrikli Isıtıcı",
-              "text": "An LV support block that sits under the Vulcanizer. It has to warm up first; once hot it gives the maximum x3 heat. While cold it is not a heat source at all."
+              "text": "Vulkanizatörün altına giren bir LV destek bloğu. Önce ısınması gerekir; kızdığında en yüksek x3 ısıyı verir. Soğukken hiçbir şekilde ısı kaynağı değildir."
             },
             {
               "type": "stats",
               "title": "İstatistikler",
               "lines": [
-                "Energy: 6 EU/t",
-                "Buffer: 2400 EU"
+                "Enerji: 6 EU/t",
+                "Tampon: 2400 EU"
               ]
             },
             {
@@ -1585,7 +2108,7 @@
               "type": "stats",
               "title": "İstatistikler",
               "lines": [
-                "Energy: 8 buckets"
+                "Enerji: 8 kova"
               ]
             },
             {
@@ -1783,14 +2306,27 @@
         },
         {
           "id": "palladium_ore",
-          "title": "Palladium Ore",
+          "title": "Paladyum Cevheri",
           "icon": "alaindustrial:palladium_ore",
           "block_id": "alaindustrial:palladium_ore",
           "pages": [
             {
               "type": "text",
-              "title": "Palladium Ore",
-              "text": "The mod's only Nether ore — hidden in netherrack, basalt and blackstone, requires a diamond pickaxe, and processes into dust, ingot and plate."
+              "title": "Paladyum Cevheri",
+              "text": "Modun tek Nether cevheri — nether taşının, bazaltın ve kara taşın içinde saklı, elmas kazma ister ve toz, külçe ve levhaya işlenir."
+            }
+          ]
+        },
+        {
+          "id": "steam",
+          "title": "Buhar",
+          "icon": "alaindustrial:steam",
+          "block_id": "alaindustrial:steam",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Buhar",
+              "text": "Reaktör odasının çalışma akışkanı. Modun dünyada hiçbir biçimi olmayan tek sıvısı: ne birikinti, ne blok, ne kova — buhar yalnızca tankların ve boruların içinde bulunur."
             }
           ]
         },
@@ -2176,21 +2712,21 @@
         },
         {
           "id": "mob_repeller_hv",
-          "title": "Large Mob Repeller",
+          "title": "Büyük Yaratık Kovucu",
           "icon": "alaindustrial:mob_repeller_hv",
           "block_id": "alaindustrial:mob_repeller_hv",
           "pages": [
             {
               "type": "text",
-              "title": "Large Mob Repeller",
-              "text": "The top guard-field tier — a 24-block radius at 64 EU/t; grown from the medium one with a Soul Vessel."
+              "title": "Büyük Yaratık Kovucu",
+              "text": "Koruma alanının en üst kademesi — 64 EU/t ile 24 blokluk yarıçap; orta kademeden bir ruh kabıyla büyütülür."
             },
             {
               "type": "stats",
               "title": "İstatistikler",
               "lines": [
-                "Energy: 64 EU/t (поле)",
-                "Buffer: 32000 EU"
+                "Energy: 64 EU/t (field)",
+                "Tampon: 32000 EU"
               ]
             }
           ]
@@ -2279,21 +2815,21 @@
         },
         {
           "id": "mob_repeller",
-          "title": "Small Mob Repeller",
+          "title": "Küçük Yaratık Kovucu",
           "icon": "alaindustrial:mob_repeller",
           "block_id": "alaindustrial:mob_repeller",
           "pages": [
             {
               "type": "text",
-              "title": "Small Mob Repeller",
-              "text": "A guard EU-field — while powered, hostile mobs flee an 8-block radius and cannot approach. Grows into the medium and large tiers via the Soul Vessel."
+              "title": "Küçük Yaratık Kovucu",
+              "text": "EU ile çalışan bir koruma alanı — güç geldiği sürece düşman yaratıklar 8 blokluk yarıçaptan kaçar ve yaklaşamaz. Ruh kabıyla orta ve büyük kademeye büyür."
             },
             {
               "type": "stats",
               "title": "İstatistikler",
               "lines": [
-                "Energy: 8 EU/t (поле)",
-                "Buffer: 2000 EU"
+                "Energy: 8 EU/t (field)",
+                "Tampon: 2000 EU"
               ]
             },
             {
@@ -2414,20 +2950,20 @@
         },
         {
           "id": "mob_repeller_mv",
-          "title": "Medium Mob Repeller",
+          "title": "Orta Yaratık Kovucu",
           "icon": "alaindustrial:mob_repeller_mv",
           "block_id": "alaindustrial:mob_repeller_mv",
           "pages": [
             {
               "type": "text",
-              "title": "Medium Mob Repeller",
-              "text": "The second guard-field tier — a 16-block radius at 32 EU/t; grown from the small one with a Soul Vessel."
+              "title": "Orta Yaratık Kovucu",
+              "text": "Koruma alanının ikinci kademesi — 32 EU/t ile 16 blokluk yarıçap; küçük kademeden bir ruh kabıyla büyütülür."
             },
             {
               "type": "stats",
               "title": "İstatistikler",
               "lines": [
-                "Energy: 32 EU/t (поле)",
+                "Energy: 32 EU/t (field)",
                 "Tampon: 8000 EU"
               ]
             }
@@ -2435,20 +2971,20 @@
         },
         {
           "id": "electrum_chest",
-          "title": "Electrum Chest",
+          "title": "Elektrum Sandık",
           "icon": "alaindustrial:electrum_chest",
           "block_id": "alaindustrial:electrum_chest",
           "pages": [
             {
               "type": "text",
-              "title": "Electrum Chest",
-              "text": "An 81-slot chest — the tier above gold. Nine rows behind a six-row window with a scrollbar. Needs no energy."
+              "title": "Elektrum Sandık",
+              "text": "81 yuvalı bir sandık — altının bir üst kademesi. Altı sıralık pencerenin ardında dokuz sıra, kaydırma çubuğuyla. Enerji istemez."
             },
             {
               "type": "stats",
               "title": "İstatistikler",
               "lines": [
-                "Energy: 81 slot"
+                "Enerji: 81 yuva"
               ]
             },
             {
@@ -2480,14 +3016,14 @@
       "entries": [
         {
           "id": "overclocker_chip_i",
-          "title": "Overclocker Chip I",
+          "title": "Hızlandırma Çipi I",
           "icon": "alaindustrial:overclocker_chip_i",
           "block_id": "alaindustrial:overclocker_chip_i",
           "pages": [
             {
               "type": "text",
-              "title": "Overclocker Chip I",
-              "text": "A three-tier upgrade: each tier shortens the operation and doubles the energy draw. Made from energy clots."
+              "title": "Hızlandırma Çipi I",
+              "text": "Üç kademeli bir yükseltme: her kademe işlemi kısaltır ve enerji çekişini ikiye katlar. Enerji pıhtılarından yapılır."
             },
             {
               "type": "recipe",
@@ -2511,14 +3047,14 @@
         },
         {
           "id": "stats_chip",
-          "title": "Statistics Chip",
+          "title": "Istatistik cipi",
           "icon": "alaindustrial:stats_chip",
           "block_id": "alaindustrial:stats_chip",
           "pages": [
             {
               "type": "text",
-              "title": "Statistics Chip",
-              "text": "An upgrade that makes a machine keep a record of its work — time, energy and items processed."
+              "title": "Istatistik cipi",
+              "text": "Makineye kendi işinin kaydını tutturan bir yükseltme — süre, enerji ve işlenen eşya."
             },
             {
               "type": "recipe",
@@ -2766,14 +3302,14 @@
         },
         {
           "id": "mutation_chip_duplicate",
-          "title": "Duplication Chip",
+          "title": "Çoğaltma Çipi",
           "icon": "alaindustrial:mutation_chip_duplicate",
           "block_id": "alaindustrial:mutation_chip_duplicate",
           "pages": [
             {
               "type": "text",
-              "title": "Duplication Chip",
-              "text": "Three chips set the Incubator's mode — duplicate, transform or create. They are never consumed, but without one the machine will not start."
+              "title": "Çoğaltma Çipi",
+              "text": "Üç çip kuluçkanın kipini belirler — çoğalt, dönüştür ya da yarat. Asla tükenmezler, ama biri olmadan makine çalışmaz."
             },
             {
               "type": "recipe",
@@ -2859,14 +3395,14 @@
         },
         {
           "id": "resonant_shard",
-          "title": "Resonant Shard",
+          "title": "Rezonans Parçası",
           "icon": "alaindustrial:resonant_shard",
           "block_id": "alaindustrial:resonant_shard",
           "pages": [
             {
               "type": "text",
-              "title": "Resonant Shard",
-              "text": "Materials only the Incubator yields: the four first rungs of the evolution ladders, plus depleted uranium and irradiated slag."
+              "title": "Rezonans Parçası",
+              "text": "Yalnızca kuluçkanın verdiği malzemeler: evrim merdivenlerinin ilk dört basamağı, artı tükenmiş uranyum ve ışınlanmış cüruf."
             }
           ]
         },
@@ -2916,14 +3452,14 @@
         },
         {
           "id": "rtp_chip",
-          "title": "Random Jump Chip",
+          "title": "Rastgele sıçrama çipi",
           "icon": "alaindustrial:rtp_chip",
           "block_id": "alaindustrial:rtp_chip",
           "pages": [
             {
               "type": "text",
-              "title": "Random Jump Chip",
-              "text": "The Spatial Crystal, the Resonance Coil and the Random Jump Chip — three steps that unlock the teleporter's random jump."
+              "title": "Rastgele sıçrama çipi",
+              "text": "Uzamsal kristal, rezonans bobini ve rastgele sıçrama çipi — ışınlayıcının rastgele sıçramasını açan üç adım."
             },
             {
               "type": "recipe",
@@ -2978,14 +3514,14 @@
         },
         {
           "id": "energy_clot_i",
-          "title": "Energy Clot I",
+          "title": "Enerji Pıhtısı I",
           "icon": "alaindustrial:energy_clot_i",
           "block_id": "alaindustrial:energy_clot_i",
           "pages": [
             {
               "type": "text",
-              "title": "Energy Clot I",
-              "text": "Three tiers of clots — the grid's surplus, frozen solid by the Energy Condenser. The only ingredient overclockers are made of."
+              "title": "Enerji Pıhtısı I",
+              "text": "Üç kademe pıhtı — şebekenin fazlası, enerji yoğunlaştırıcı tarafından katılaştırılmış hâli. Hızlandırma çiplerinin yapıldığı tek malzeme."
             }
           ]
         },
@@ -3022,14 +3558,14 @@
         },
         {
           "id": "fluxweave_cloth",
-          "title": "Fluxweave Cloth",
+          "title": "Fluks kumaşı",
           "icon": "alaindustrial:fluxweave_cloth",
           "block_id": "alaindustrial:fluxweave_cloth",
           "pages": [
             {
               "type": "text",
-              "title": "Fluxweave Cloth",
-              "text": "The EU armour intermediates: thread is plated in the Galvanic Bath, four threads make one bolt of cloth — and cloth is what repairs the finished set."
+              "title": "Fluks kumaşı",
+              "text": "EU zırhının ara ürünleri: iplik galvanik banyoda kaplanır, dört iplik bir top fluks kumaşı eder — bitmiş takımı onaran da bu kumaştır."
             },
             {
               "type": "recipe",
@@ -3755,14 +4291,14 @@
         },
         {
           "id": "soul_vessel",
-          "title": "Soul Vessel",
+          "title": "Ruh Kabı",
           "icon": "alaindustrial:soul_vessel",
           "block_id": "alaindustrial:soul_vessel",
           "pages": [
             {
               "type": "text",
-              "title": "Soul Vessel",
-              "text": "A soul reservoir that upgrades the Mob Repeller — filled only by the player's own hostile-mob kills; a full vessel is consumed to evolve the block."
+              "title": "Ruh Kabı",
+              "text": "Yaratık kovucuyu yükselten bir ruh haznesi — yalnızca oyuncunun kendi öldürdüğü düşman yaratıklarla dolar; dolu bir kap, bloğu geliştirmek için harcanır."
             },
             {
               "type": "recipe",

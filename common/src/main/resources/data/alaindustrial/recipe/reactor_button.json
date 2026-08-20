@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "alaindustrial:shielding_alloy_plate",
+    "minecraft:stone_button"
+  ],
+  "result": {
+    "id": "alaindustrial:reactor_button",
+    "count": 2
+  }
+}

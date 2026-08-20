@@ -139,6 +139,18 @@ public final class CreativeTabContent {
 		show(out, ModContent.TEMPERED_IRON_PLATE);
 	}
 
+	/** Alloy plates + their reinforced tier (MOD-460), alloy by alloy. */
+	public static void alloyPlates(Sink out) {
+		show(out, ModContent.BRONZE_PLATE);
+		show(out, ModContent.BRONZE_REINFORCED_PLATE);
+		show(out, ModContent.INVAR_PLATE);
+		show(out, ModContent.INVAR_REINFORCED_PLATE);
+		show(out, ModContent.CUPRONICKEL_PLATE);
+		show(out, ModContent.CUPRONICKEL_REINFORCED_PLATE);
+		show(out, ModContent.ELECTRUM_PLATE);
+		show(out, ModContent.ELECTRUM_REINFORCED_PLATE);
+	}
+
 	/** Blocks made from plates (MOD-225): the machine casing and two decorative panels. */
 	public static void plateBlocks(Sink out) {
 		show(out, ModContent.MACHINE_CASING_ITEM);
@@ -194,9 +206,14 @@ public final class CreativeTabContent {
 		show(out, ModContent.PALLADIUM_DUST);
 		show(out, ModContent.EMPTY_CAN);
 		plates(out);
+		alloyPlates(out);
 		show(out, ModContent.ELECTRONIC_CIRCUIT);
 		// MOD-299 — the MV tier of the circuit, listed right after its LV predecessor.
 		show(out, ModContent.ADVANCED_CIRCUIT);
+		// MOD-468 - the reactor's own control circuit, one rung above the advanced one it is built on,
+		// and the rod drive that goes into the controller and the airlock.
+		show(out, ModContent.REACTOR_CIRCUIT);
+		show(out, ModContent.CONTROL_ROD_DRIVE);
 		show(out, ModContent.ASSEMBLY_BLUEPRINT);
 		show(out, ModContent.COPPER_COIL);
 		show(out, ModContent.SPATIAL_CRYSTAL);
@@ -420,38 +437,70 @@ public final class CreativeTabContent {
 		show(out, ModContent.FLUXWEAVE_CLOTH);
 	}
 
-	/** 10 - raw materials: ore -> dust -> ingot per metal, then the plates and the alloys. */
+	/**
+	 * 10 - raw materials, one metal at a time: ore -> dust -> ingot -> plate (-> reinforced plate
+	 * for the alloys). MOD-460: previously the dusts, the {@link #plates} block and the alloys were
+	 * three separate walls with no visible link to each other — a player saw nine plates in a row
+	 * with no ore/dust/ingot next to any of them. Every metal's full chain now sits together.
+	 */
 	private static void materials(Sink out) {
 		show(out, ModContent.RAW_TIN);
 		show(out, ModContent.TIN_DUST);
 		show(out, ModContent.TIN_INGOT);
+		show(out, ModContent.TIN_PLATE);
 		show(out, ModContent.RAW_SILVER);
 		show(out, ModContent.SILVER_DUST);
 		show(out, ModContent.SILVER_INGOT);
+		show(out, ModContent.SILVER_PLATE);
 		show(out, ModContent.RAW_NICKEL);
 		show(out, ModContent.NICKEL_DUST);
 		show(out, ModContent.NICKEL_INGOT);
+		show(out, ModContent.NICKEL_PLATE);
+		// Sulfur has no ingot or plate form — the chain stops at dust.
 		show(out, ModContent.RAW_SULFUR);
 		show(out, ModContent.SULFUR_DUST);
 		// MOD-423 — the Nether metal; sits after the overworld chain it is a tier above.
 		show(out, ModContent.RAW_PALLADIUM);
 		show(out, ModContent.PALLADIUM_DUST);
 		show(out, ModContent.PALLADIUM_INGOT);
+		show(out, ModContent.PALLADIUM_PLATE);
+		// MOD-468 - the shielding alloy, listed straight after the palladium half of its recipe: it is
+		// the first thing palladium is actually FOR, so the chain should read as one run.
+		show(out, ModContent.SHIELDING_ALLOY_INGOT);
+		show(out, ModContent.SHIELDING_ALLOY_PLATE);
+		show(out, ModContent.SHIELDING_ALLOY_REINFORCED_PLATE);
+		// Tempered Iron is a crafted upgrade material with no ore/dust of its own.
 		show(out, ModContent.TEMPERED_IRON);
-		// Dusts of vanilla materials: what the macerator gives back from ordinary ore.
+		show(out, ModContent.TEMPERED_IRON_PLATE);
+		// Dusts of vanilla-ingot metals: no mod ingot to pair with, so dust -> plate directly.
 		show(out, ModContent.IRON_DUST);
+		show(out, ModContent.IRON_PLATE);
 		show(out, ModContent.COPPER_DUST);
+		show(out, ModContent.COPPER_PLATE);
 		show(out, ModContent.GOLD_DUST);
+		show(out, ModContent.GOLD_PLATE);
+		// Dust-only byproducts with no metallic form at all.
 		show(out, ModContent.COAL_DUST);
 		show(out, ModContent.DIAMOND_DUST);
 		show(out, ModContent.EMERALD_DUST);
 		show(out, ModContent.LAPIS_DUST);
-		plates(out);
-		// MOD-064 alloys: made from the metals above rather than mined, so they close the list.
+		// Uranium's raw ore/dust/ingot live in the nuclear line below (11); only its plate is a
+		// plain material here.
+		show(out, ModContent.URANIUM_PLATE);
+		// MOD-064 alloys: smelted from the metals above rather than mined, so they close the metal
+		// list. MOD-460: each alloy's plate + reinforced plate sit right after its ingot.
 		show(out, ModContent.BRONZE_INGOT);
+		show(out, ModContent.BRONZE_PLATE);
+		show(out, ModContent.BRONZE_REINFORCED_PLATE);
 		show(out, ModContent.INVAR_INGOT);
+		show(out, ModContent.INVAR_PLATE);
+		show(out, ModContent.INVAR_REINFORCED_PLATE);
 		show(out, ModContent.CUPRONICKEL_INGOT);
+		show(out, ModContent.CUPRONICKEL_PLATE);
+		show(out, ModContent.CUPRONICKEL_REINFORCED_PLATE);
 		show(out, ModContent.ELECTRUM_INGOT);
+		show(out, ModContent.ELECTRUM_PLATE);
+		show(out, ModContent.ELECTRUM_REINFORCED_PLATE);
 		// Canning line (MOD-383): the tin can and what the machine fills it with.
 		show(out, ModContent.EMPTY_CAN);
 		show(out, ModContent.CANNED_RATION);
@@ -466,12 +515,27 @@ public final class CreativeTabContent {
 		// becomes an ingot in a furnace or twice as many shavings here, which press into refined uranium.
 		show(out, ModContent.URANIUM_SHAVINGS);
 		show(out, ModContent.REFINED_URANIUM);
-		show(out, ModContent.DEPLETED_URANIUM);
 		show(out, ModContent.UNSTABLE_ISOTOPE);
 		show(out, ModContent.IRRADIATED_SLAG);
 		show(out, ModContent.IRRADIATED_DIAMOND);
 		show(out, ModContent.RESONANT_SHARD);
 		show(out, ModContent.MUTAGEN_DUST);
+		// MOD-468, stage 1 - the reactor room's shell. Kept in the nuclear group rather than with the
+		// building blocks: these are reactor parts that happen to be cubes, and a player hunting for
+		// them will look here.
+		show(out, ModContent.REACTOR_CASING_ITEM);
+		show(out, ModContent.REACTOR_GLASS_ITEM);
+		show(out, ModContent.REACTOR_PORT_ITEM);
+		show(out, ModContent.REACTOR_DOOR_ITEM);
+		show(out, ModContent.REACTOR_CONTROLLER_ITEM);
+		show(out, ModContent.REACTOR_LAMP_ITEM);
+		show(out, ModContent.REACTOR_OUTLET_ITEM);
+		show(out, ModContent.STEAM_NOZZLE_ITEM);
+		show(out, ModContent.REACTOR_BUTTON_ITEM);
+		show(out, ModContent.FUEL_ROD_ASSEMBLY_ITEM);
+		show(out, ModContent.DEPLETED_URANIUM);
+		show(out, ModContent.EMPTY_FUEL_ROD);
+		show(out, ModContent.URANIUM_FUEL_ROD);
 	}
 
 	/** 12 - blocks: ores as they are found underground, then what is built out of metal. */

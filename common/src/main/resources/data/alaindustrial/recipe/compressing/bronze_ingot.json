@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:compressing",
+  "ingredient": "#c:ingots/bronze",
+  "result": {
+    "id": "alaindustrial:bronze_plate",
+    "count": 1
+  },
+  "energy": 260
+}

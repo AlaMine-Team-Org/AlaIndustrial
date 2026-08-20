@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SCS",
+    "RAR",
+    "SDS"
+  ],
+  "key": {
+    "S": "alaindustrial:shielding_alloy_plate",
+    "C": "alaindustrial:reactor_circuit",
+    "R": "alaindustrial:shielding_alloy_reinforced_plate",
+    "A": "alaindustrial:advanced_machine_casing",
+    "D": "alaindustrial:control_rod_drive"
+  },
+  "result": {
+    "id": "alaindustrial:reactor_controller",
+    "count": 1
+  }
+}

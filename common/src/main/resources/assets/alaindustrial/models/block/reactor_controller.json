@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "alaindustrial:block/reactor_controller_side",
+    "down": "alaindustrial:block/machine_bottom",
+    "up": "alaindustrial:block/reactor_controller_top",
+    "north": "alaindustrial:block/reactor_controller_front",
+    "east": "alaindustrial:block/reactor_controller_side",
+    "south": "alaindustrial:block/reactor_controller_side",
+    "west": "alaindustrial:block/reactor_controller_side"
+  }
+}

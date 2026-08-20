@@ -1,0 +1,38 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_hammer": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:forge_hammer"
+          }
+        ]
+      }
+    },
+    "has_material": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:shielding_alloy_plate"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_hammer"
+    ],
+    [
+      "has_material"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:shielding_alloy_reinforced_plate_from_hammering"
+    ]
+  }
+}

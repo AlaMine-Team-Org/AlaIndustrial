@@ -1,5 +1,13 @@
 package dev.alaindustrial.command.demo;
 
+import dev.alaindustrial.block.FuelRodAssemblyBlock;
+import dev.alaindustrial.block.SteamNozzleBlock;
+import dev.alaindustrial.block.ReactorDoorBlock;
+import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
+import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.state.properties.AttachFace;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import dev.alaindustrial.block.entity.LightningRodGeneratorBlockEntity;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.block.entity.FluidTankBlockEntity;
@@ -120,6 +128,7 @@ public final class DemoStand {
 		buildMisc(level, origin);
 		buildLossLane(level, origin);
 		buildFarms(level, origin);
+		buildReactorZone(level, origin);
 		buildLabels(level, origin);
 	}
 
@@ -786,6 +795,66 @@ public final class DemoStand {
 		// Transport row (z=25, in front of the z=26 pipes).
 		label(level, origin, 16, 1, 25, "ITEM PIPES", "2 items/s");
 		label(level, origin, 25, 1, 25, "FLUID PIPES", "1 bucket/s");
+	}
+
+	/**
+	 * Zone <b>reactor</b> (MOD-468, row z=21): every part of the reactor room laid out side by side.
+	 *
+	 * <p>A row rather than an actual room, and deliberately so: a sealed 5x5x5 shell would hide its own
+	 * contents, and the stand exists to SHOW blocks. The pieces are spaced so each reads on its own —
+	 * casing, glass, feedthrough and lamp in a run, the airlock standing free, the controller facing the
+	 * camera, and a fuel assembly loaded to the brim so the rods are visible through its casing.
+	 *
+	 * <p>Nothing here is wired: the reactor only runs inside a sealed room, and a controller reporting
+	 * "not formed" on the stand is the honest state for a block sitting in the open.
+	 */
+	private static void buildReactorZone(ServerLevel level, BlockPos origin) {
+		int z = 21;
+		set(level, origin, 2, 1, z, ModContent.REACTOR_CASING.get());
+		set(level, origin, 3, 1, z, ModContent.REACTOR_GLASS.get());
+		set(level, origin, 4, 1, z, ModContent.REACTOR_PORT.get());
+		set(level, origin, 5, 1, z, ModContent.REACTOR_LAMP.get());
+		set(level, origin, 6, 1, z, ModContent.REACTOR_OUTLET.get());
+
+		// The button needs something to hang on, so it gets its own casing block to sit against.
+		set(level, origin, 7, 1, z, ModContent.REACTOR_CASING.get());
+		level.setBlockAndUpdate(origin.offset(7, 2, z),
+				ModContent.REACTOR_BUTTON.get().defaultBlockState()
+						.setValue(FaceAttachedHorizontalDirectionalBlock.FACE, AttachFace.FLOOR)
+						.setValue(HorizontalDirectionalBlock.FACING, Direction.SOUTH));
+
+		// The airlock is two blocks: the stand places both halves by hand, because setPlacedBy (which
+		// normally raises the upper half) does not run for a programmatic setBlock.
+		BlockState door = ModContent.REACTOR_DOOR.get().defaultBlockState()
+				.setValue(ReactorDoorBlock.FACING, Direction.SOUTH);
+		level.setBlockAndUpdate(origin.offset(9, 1, z), door);
+		level.setBlockAndUpdate(origin.offset(9, 2, z),
+				door.setValue(ReactorDoorBlock.HALF, DoubleBlockHalf.UPPER));
+
+		level.setBlockAndUpdate(origin.offset(11, 1, z),
+				ModContent.REACTOR_CONTROLLER.get().defaultBlockState()
+						.setValue(HorizontalDirectionalBlock.FACING, Direction.SOUTH));
+
+		// The exhaust, facing south into open air — a nozzle pointing at a block vents nothing, and a
+		// stand that showed one buried in a wall would be showing a broken installation.
+		level.setBlockAndUpdate(origin.offset(15, 1, z),
+				ModContent.STEAM_NOZZLE.get().defaultBlockState()
+						.setValue(SteamNozzleBlock.FACING, Direction.SOUTH));
+
+		// Loaded to four rods, so the stand shows the state the fill level exists to communicate.
+		level.setBlockAndUpdate(origin.offset(13, 1, z),
+				ModContent.FUEL_ROD_ASSEMBLY.get().defaultBlockState()
+						.setValue(FuelRodAssemblyBlock.RODS, FuelRodAssemblyBlock.MAX_RODS));
+		if (level.getBlockEntity(origin.offset(13, 1, z))
+				instanceof FuelRodAssemblyBlockEntity assembly) {
+			for (int i = 0; i < FuelRodAssemblyBlock.MAX_RODS; i++) {
+				assembly.insertRod(new ItemStack(ModContent.URANIUM_FUEL_ROD.get()));
+			}
+			// Half a tank, so the stand shows the coolant level doing what it is for: a column that is
+			// full and a column that is empty look the same from the front, and neither is the state
+			// the property exists to communicate.
+			assembly.setTank(true, assembly.waterTank.capacity / 2);
+		}
 	}
 
 	private static void set(ServerLevel level, BlockPos origin, int x, int y, int z, Block block) {

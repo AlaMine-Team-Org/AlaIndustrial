@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "GGG",
+    "GSG",
+    "GGG"
+  ],
+  "key": {
+    "G": "#c:glass_blocks/colorless",
+    "S": "alaindustrial:shielding_alloy_plate"
+  },
+  "result": {
+    "id": "alaindustrial:reactor_glass",
+    "count": 8
+  }
+}

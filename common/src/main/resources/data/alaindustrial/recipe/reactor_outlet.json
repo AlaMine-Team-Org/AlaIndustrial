@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "RCR",
+    "IPI",
+    "RCR"
+  ],
+  "key": {
+    "R": "alaindustrial:rubber",
+    "C": "alaindustrial:copper_cable",
+    "I": "minecraft:iron_ingot",
+    "P": "alaindustrial:shielding_alloy_plate"
+  },
+  "result": {
+    "id": "alaindustrial:reactor_outlet",
+    "count": 2
+  }
+}

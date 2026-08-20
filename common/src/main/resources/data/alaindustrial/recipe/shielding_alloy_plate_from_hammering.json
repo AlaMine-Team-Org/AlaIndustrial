@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "alaindustrial:forge_hammer",
+    "alaindustrial:shielding_alloy_ingot"
+  ],
+  "result": {
+    "id": "alaindustrial:shielding_alloy_plate",
+    "count": 1
+  }
+}

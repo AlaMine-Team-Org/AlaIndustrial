@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PGP",
+    "WDW",
+    "RVR"
+  ],
+  "key": {
+    "P": "alaindustrial:shielding_alloy_plate",
+    "G": "alaindustrial:reactor_glass",
+    "W": "alaindustrial:insulated_copper_cable",
+    "D": "minecraft:iron_door",
+    "R": "alaindustrial:shielding_alloy_reinforced_plate",
+    "V": "alaindustrial:control_rod_drive"
+  },
+  "result": {
+    "id": "alaindustrial:reactor_door",
+    "count": 1
+  }
+}

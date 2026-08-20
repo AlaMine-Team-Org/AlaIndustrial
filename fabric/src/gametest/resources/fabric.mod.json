@@ -93,7 +93,8 @@
       "dev.alaindustrial.gametest.ThermalCentrifugeGameTest",
       "dev.alaindustrial.gametest.VulcanizerGameTest",
       "dev.alaindustrial.gametest.ChargePadGameTest",
-      "dev.alaindustrial.gametest.BlockCapabilityParityGameTest"
+      "dev.alaindustrial.gametest.BlockCapabilityParityGameTest",
+      "dev.alaindustrial.gametest.ReactorGameTest"
     ]
   }
 }

@@ -1,0 +1,38 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_advanced_circuit": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:advanced_circuit"
+          }
+        ]
+      }
+    },
+    "has_resonance_coil": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:resonance_coil"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_advanced_circuit"
+    ],
+    [
+      "has_resonance_coil"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:reactor_circuit"
+    ]
+  }
+}

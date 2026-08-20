@@ -96,6 +96,101 @@
       ]
     },
     {
+      "id": "nuclear_basics",
+      "title": "Nuclear Power",
+      "icon": "alaindustrial:reactor_controller",
+      "entries": [
+        {
+          "id": "reactor_room",
+          "title": "The Reactor Room",
+          "icon": "alaindustrial:reactor_casing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "What it is",
+              "text": "The nuclear reactor is not a block — it is a room you build. An empty box of reactor casing with fuel columns standing inside it.\n\nThe shell is not decoration: it is what holds in whatever happens in there."
+            },
+            {
+              "type": "text",
+              "title": "Building it",
+              "text": "1. Lay a sealed box of reactor casing. Inside: from 3x3x3 up to 12x12x12.\n2. Set the controller into a wall, facing outward.\n3. No holes anywhere — the controller tells you where the breach is.\n\nA door is optional: you may wall yourself in and mine back out."
+            },
+            {
+              "type": "text",
+              "title": "Shell parts",
+              "text": "- Reactor Glass: a window, but no more than a third of the walls\n- Reactor Door: an airlock, opens on redstone and shuts itself\n- Reactor Inlet: where the water pipe crosses the wall\n- Reactor Outlet: where the cable plugs in\n- Reactor Lamp: lights the room only, never the outside"
+            }
+          ]
+        },
+        {
+          "id": "reactor_fuel",
+          "title": "Fuel",
+          "icon": "alaindustrial:uranium_fuel_rod",
+          "pages": [
+            {
+              "type": "text",
+              "title": "The uranium chain",
+              "text": "Uranium ore -> macerator -> thermal centrifuge -> compressor.\n\nThe centrifuge yields uranium concentrate; the compressor presses two of those into one enriched uranium (U-235).\n\nThen craft a fuel rod cladding and put one piece of enriched uranium into it."
+            },
+            {
+              "type": "text",
+              "title": "The reactor column",
+              "text": "Place a column inside the room and right-click rods into it, up to four. They are visible through the glass.\n\nColumns stack: a tower of them behaves as one vessel."
+            },
+            {
+              "type": "text",
+              "title": "Rods run out",
+              "text": "A rod's durability IS its remaining charge. Every rod in a column wears down together, evenly.\n\nA spent rod becomes an empty casing and stays racked. Take it out by hand and refill it with one piece of enriched uranium — no need to craft a new one."
+            }
+          ]
+        },
+        {
+          "id": "reactor_run",
+          "title": "Starting Up",
+          "icon": "alaindustrial:reactor_controller",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Five steps",
+              "text": "1. The room is sealed\n2. There are rods in the columns\n3. A cable is on the reactor outlet\n4. A redstone signal reaches the controller\n5. The depth slider is off zero"
+            },
+            {
+              "type": "text",
+              "title": "If nothing happens",
+              "text": "Open the controller: the output row names what is missing — no rods, no signal, rods withdrawn, or buffer full.\n\nNo signal is the scram. Pull the lever and the reactor stops."
+            },
+            {
+              "type": "text",
+              "title": "Power",
+              "text": "One column gives 24 EU/t. More rods and tighter packing give more: adjacent columns boost each other.\n\nThe ceiling is 512 EU/t. The depth slider divides power, heat and fuel use alike."
+            }
+          ]
+        },
+        {
+          "id": "reactor_cooling",
+          "title": "Cooling",
+          "icon": "alaindustrial:reactor_port",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Heat",
+              "text": "The reactor heats up and the room sheds heat on its own — faster the hotter it is. So every reactor settles at its own temperature and stays there.\n\nOne column sits near 15%. Two side by side reach two thirds. Three or more the room cannot hold alone."
+            },
+            {
+              "type": "text",
+              "title": "The water loop",
+              "text": "Water is not a radiator, it is a safety system: it engages once the gauge nears the amber mark and holds the reactor under it, so amber means the cooling is losing.\n\nPump -> pipe -> reactor inlet -> column. Wrench the pipe faces at the inlet: extract on the outside, insert on the inside. The column and the nozzle need no wrench — a column takes water only in and gives steam only out."
+            },
+            {
+              "type": "text",
+              "title": "Steam",
+              "text": "Boiled water becomes steam and collects in the column. It has to leave: a pipe from the column's top face -> reactor inlet -> a steam nozzle outside.\n\nThe nozzle must face open air. Buried in a wall it vents nothing, and the loop behind it stalls."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "energy",
       "title": "Energy",
       "icon": "alaindustrial:wind_mill",
@@ -271,7 +366,7 @@
               "type": "stats",
               "title": "Stats",
               "lines": [
-                "Energy: 16–24 EU/т при разрядке",
+                "Energy: 16–24 EU/t on discharge",
                 "Buffer: 4000 EU"
               ]
             },
@@ -430,7 +525,7 @@
               "type": "stats",
               "title": "Stats",
               "lines": [
-                "Energy: 128 EU/т приём"
+                "Energy: 128 EU/t intake"
               ]
             },
             {
@@ -840,6 +935,434 @@
               "result_count": 3
             }
           ]
+        },
+        {
+          "id": "reactor_controller",
+          "title": "Reactor Controller",
+          "icon": "alaindustrial:reactor_controller",
+          "block_id": "alaindustrial:reactor_controller",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reactor Controller",
+              "text": "The brain of a reactor room: it scans the shell, says what is wrong with it and shows exactly where — as a status line and a puff of smoke at the fault."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Buffer: 200 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:reactor_circuit",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:control_rod_drive",
+                "alaindustrial:shielding_alloy_plate"
+              ],
+              "result_id": "alaindustrial:reactor_controller",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "empty_fuel_rod",
+          "title": "Fuel Rod Cladding",
+          "icon": "alaindustrial:empty_fuel_rod",
+          "block_id": "alaindustrial:empty_fuel_rod",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Fuel Rod Cladding",
+              "text": "A fuel rod's casing with no uranium in it: crafted 3x3, filled with a single piece of enriched uranium, and handed back by the column once the rod is spent."
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "minecraft:iron_nugget",
+                "minecraft:iron_ingot",
+                "minecraft:iron_nugget",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:iron_ingot",
+                "minecraft:iron_nugget",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:iron_nugget"
+              ],
+              "result_id": "alaindustrial:empty_fuel_rod",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "steam_nozzle",
+          "title": "Steam Nozzle",
+          "icon": "alaindustrial:steam_nozzle",
+          "block_id": "alaindustrial:steam_nozzle",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Steam Nozzle",
+              "text": "The far end of the cooling loop: it takes steam from a pipe, releases it into the air as a plume and destroys it — 100 mB/t per nozzle."
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:iron_ingot",
+                "alaindustrial:fluid_pipe",
+                "minecraft:iron_ingot",
+                "",
+                "alaindustrial:machine_casing",
+                ""
+              ],
+              "result_id": "alaindustrial:steam_nozzle",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_button",
+          "title": "Reactor Button",
+          "icon": "alaindustrial:reactor_button",
+          "block_id": "alaindustrial:reactor_button",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reactor Button",
+              "text": "A button made of shielding alloy: the way to pulse the airlock from inside a sealed room, built exactly like a vanilla button but able to survive what the room is for."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Buffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shapeless Crafting",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:stone_button",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_button",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "fuel_rod_assembly",
+          "title": "Reactor Column",
+          "icon": "alaindustrial:fuel_rod_assembly",
+          "block_id": "alaindustrial:fuel_rod_assembly",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reactor Column",
+              "text": "A transparent rack for four rods with two tanks — water and steam: filled by right-clicking, it wears every fuelled rod down together, and both the fuel and the coolant level read from across the room, with no menu at all."
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "minecraft:iron_ingot",
+                "alaindustrial:reactor_glass",
+                "minecraft:iron_ingot",
+                "alaindustrial:reactor_glass",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:reactor_glass",
+                "minecraft:iron_ingot",
+                "alaindustrial:reactor_glass",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:fuel_rod_assembly",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lamp",
+          "title": "Reactor Lamp",
+          "icon": "alaindustrial:reactor_lamp",
+          "block_id": "alaindustrial:reactor_lamp",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reactor Lamp",
+              "text": "A shell block that lights up only once the room is formed: the only source of light inside a sealed box, and at the same time a visible outside sign that the build was accepted."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Buffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:glowstone",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:reactor_lamp",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "reactor_casing",
+          "title": "Reactor Casing",
+          "icon": "alaindustrial:reactor_casing",
+          "block_id": "alaindustrial:reactor_casing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reactor Casing",
+              "text": "A shielding-alloy panel — the only material a reactor room's sealed shell may be built from."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Buffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reactor_casing",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_glass",
+          "title": "Reactor Glass",
+          "icon": "alaindustrial:reactor_glass",
+          "block_id": "alaindustrial:reactor_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reactor Glass",
+              "text": "A transparent shell panel: it counts as wall exactly like casing, but no more than 30 % of a shell may be glass — past that the room stops being containment and becomes a display case."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Buffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass"
+              ],
+              "result_id": "alaindustrial:reactor_glass",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_port",
+          "title": "Reactor Inlet",
+          "icon": "alaindustrial:reactor_port",
+          "block_id": "alaindustrial:reactor_port",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reactor Inlet",
+              "text": "The one place fluid may cross a sealed shell: a 50 mB/t crossing that works both ways — water in, steam out — and is still a full piece of wall."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Buffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "alaindustrial:rubber",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:rubber",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:reactor_casing",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:rubber",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:rubber"
+              ],
+              "result_id": "alaindustrial:reactor_port",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "reactor_outlet",
+          "title": "Reactor Outlet",
+          "icon": "alaindustrial:reactor_outlet",
+          "block_id": "alaindustrial:reactor_outlet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reactor Outlet",
+              "text": "A socket set into the reactor room's shell: the controller is walled in and has no face a cable can reach, so power leaves through a purpose-built piece of wall — a 512 EU buffer that gives on every face and is topped up by the controller."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Buffer: 512 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "alaindustrial:rubber",
+                "alaindustrial:copper_cable",
+                "alaindustrial:rubber",
+                "minecraft:iron_ingot",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:iron_ingot",
+                "alaindustrial:rubber",
+                "alaindustrial:copper_cable",
+                "alaindustrial:rubber"
+              ],
+              "result_id": "alaindustrial:reactor_outlet",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "uranium_fuel_rod",
+          "title": "Fuel Rod",
+          "icon": "alaindustrial:uranium_fuel_rod",
+          "block_id": "alaindustrial:uranium_fuel_rod",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Fuel Rod",
+              "text": "The reactor's fuel: enriched uranium in an iron sleeve on a shielding base. It holds 144,000 EU, shows what is left of it as durability, and leaves an empty casing behind when it burns out."
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shapeless Crafting",
+              "grid": [
+                "alaindustrial:empty_fuel_rod",
+                "alaindustrial:refined_uranium",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:uranium_fuel_rod",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "reactor_door",
+          "title": "Reactor Airlock Door",
+          "icon": "alaindustrial:reactor_door",
+          "block_id": "alaindustrial:reactor_door",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reactor Airlock Door",
+              "text": "The only way into a reactor room: it opens on a redstone pulse alone, shuts itself two seconds later, and never closes through whoever is standing in the doorway."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Buffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:reactor_glass",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:insulated_copper_cable",
+                "minecraft:iron_door",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:control_rod_drive",
+                "alaindustrial:shielding_alloy_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:reactor_door",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },
@@ -1011,7 +1534,7 @@
               "type": "stats",
               "title": "Stats",
               "lines": [
-                "Energy: 200 EU/паёк",
+                "Energy: 200 EU/ration",
                 "Buffer: 800 EU"
               ]
             },
@@ -1128,7 +1651,7 @@
               "type": "stats",
               "title": "Stats",
               "lines": [
-                "Energy: 5000–18000 EU/op",
+                "Energy: 9600–28800 EU/op",
                 "Buffer: 800 EU"
               ]
             },
@@ -1795,6 +2318,19 @@
           ]
         },
         {
+          "id": "steam",
+          "title": "Steam",
+          "icon": "alaindustrial:steam",
+          "block_id": "alaindustrial:steam",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Steam",
+              "text": "The working fluid of the reactor room. The one mod fluid with no world form at all: no pool, no block, no bucket — steam lives only inside tanks and pipes."
+            }
+          ]
+        },
+        {
           "id": "silver_plate_block",
           "title": "Silver Plating",
           "icon": "alaindustrial:silver_plate_block",
@@ -2189,7 +2725,7 @@
               "type": "stats",
               "title": "Stats",
               "lines": [
-                "Energy: 64 EU/t (поле)",
+                "Energy: 64 EU/t (field)",
                 "Buffer: 32000 EU"
               ]
             }
@@ -2292,7 +2828,7 @@
               "type": "stats",
               "title": "Stats",
               "lines": [
-                "Energy: 8 EU/t (поле)",
+                "Energy: 8 EU/t (field)",
                 "Buffer: 2000 EU"
               ]
             },
@@ -2427,7 +2963,7 @@
               "type": "stats",
               "title": "Stats",
               "lines": [
-                "Energy: 32 EU/t (поле)",
+                "Energy: 32 EU/t (field)",
                 "Buffer: 8000 EU"
               ]
             }

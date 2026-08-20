@@ -87,6 +87,18 @@ public final class ModBlocks {
 	public static final Block VULCANIZER = handle(ContentManifest.VULCANIZER);
 	public static final Block GALVANIC_BATH = handle(ContentManifest.GALVANIC_BATH);
 	public static final Block THERMAL_CENTRIFUGE = handle(ContentManifest.THERMAL_CENTRIFUGE);
+
+	// MOD-468, stage 1 — the reactor room's shell (handles: block items below reference them).
+	public static final Block REACTOR_CASING = handle(ContentManifest.REACTOR_CASING);
+	public static final Block REACTOR_GLASS = handle(ContentManifest.REACTOR_GLASS);
+	public static final Block REACTOR_PORT = handle(ContentManifest.REACTOR_PORT);
+	public static final Block REACTOR_DOOR = handle(ContentManifest.REACTOR_DOOR);
+	public static final Block REACTOR_CONTROLLER = handle(ContentManifest.REACTOR_CONTROLLER);
+	public static final Block REACTOR_LAMP = handle(ContentManifest.REACTOR_LAMP);
+	public static final Block STEAM_NOZZLE = handle(ContentManifest.STEAM_NOZZLE);
+	public static final Block REACTOR_OUTLET = handle(ContentManifest.REACTOR_OUTLET);
+	public static final Block REACTOR_BUTTON = handle(ContentManifest.REACTOR_BUTTON);
+	public static final Block FUEL_ROD_ASSEMBLY = handle(ContentManifest.FUEL_ROD_ASSEMBLY);
 	public static final Block ELECTRIC_HEATER = handle(ContentManifest.ELECTRIC_HEATER);
 	public static final Block CHARGE_PAD = handle(ContentManifest.CHARGE_PAD);
 	public static final Block ENERGY_CONDENSER = handle(ContentManifest.ENERGY_CONDENSER);

@@ -1,5 +1,6 @@
 package dev.alaindustrial.client.screen;
 
+import dev.alaindustrial.item.fluid.FluidDisplayNames;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockTintSource;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -90,15 +91,11 @@ public final class FluidGauge {
 	}
 
 	/**
-	 * A player-facing name for {@code fluid}: its placed block's name (e.g. "Water", "Oil"), mirroring
-	 * {@code CapsuleInteractions.fluidDisplayName}. Falls back to a generic label for fluids with no
-	 * placeable block (exotic modded fluids only reachable via tanks).
+	 * A player-facing name for {@code fluid}, for the gauge's tooltip. The naming itself is
+	 * {@link FluidDisplayNames#of} — one implementation shared with the Vacuum Capsule, which prints
+	 * the very same name for the very same fluid.
 	 */
 	public static Component displayName(Fluid fluid) {
-		BlockState legacy = fluid.defaultFluidState().createLegacyBlock();
-		if (!legacy.isAir()) {
-			return legacy.getBlock().getName();
-		}
-		return Component.translatable("item.alaindustrial.filled_vacuum_capsule.fluid_unknown");
+		return FluidDisplayNames.of(fluid);
 	}
 }

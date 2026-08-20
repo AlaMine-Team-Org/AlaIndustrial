@@ -1,0 +1,12 @@
+{
+  "type": "alaindustrial:compressing",
+  "ingredient": "alaindustrial:electrum_plate",
+  "input_counts": [
+    2
+  ],
+  "result": {
+    "id": "alaindustrial:electrum_reinforced_plate",
+    "count": 1
+  },
+  "energy": 260
+}

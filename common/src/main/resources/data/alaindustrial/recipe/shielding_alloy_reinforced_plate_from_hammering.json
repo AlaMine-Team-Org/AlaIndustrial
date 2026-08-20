@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "alaindustrial:forge_hammer",
+    "alaindustrial:shielding_alloy_plate",
+    "alaindustrial:shielding_alloy_plate",
+    "alaindustrial:depleted_uranium"
+  ],
+  "result": {
+    "id": "alaindustrial:shielding_alloy_reinforced_plate",
+    "count": 1
+  }
+}

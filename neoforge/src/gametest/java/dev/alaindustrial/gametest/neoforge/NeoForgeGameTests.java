@@ -20,6 +20,7 @@ import dev.alaindustrial.gametest.CoreFluidScenarios;
 import dev.alaindustrial.gametest.GeneratorEnergyScenarios;
 import dev.alaindustrial.gametest.LightningRodScenarios;
 import dev.alaindustrial.gametest.MachineEnergyScenarios;
+import dev.alaindustrial.gametest.ReactorScenarios;
 import dev.alaindustrial.gametest.BatteryScenarios;
 import dev.alaindustrial.gametest.CesuScenarios;
 import dev.alaindustrial.gametest.StorageEnergyScenarios;
@@ -164,6 +165,21 @@ public final class NeoForgeGameTests {
 				dev.alaindustrial.gametest.IndustrialistScenarios::houseStructureLoads);
 		registerTest(event, "macerator_processes_recipe", 420, true,
 				MachineEnergyScenarios::maceratorProcessesRecipe);
+
+		// MOD-468 stage 3 — the reactor room, end to end. Written after a player could not start one
+		// and the source alone could not say why.
+		registerTest(event, "reactor_sealed_fuelled_powered_produces", 400, true,
+				ReactorScenarios::sealedFuelledAndPoweredReactorProduces);
+		registerTest(event, "reactor_signal_removal_scrams", 400, true,
+				ReactorScenarios::removingTheSignalScramsTheReactor);
+		registerTest(event, "reactor_coolant_catches_runaway", 400, true,
+				ReactorScenarios::coolantCatchesACoreTheShellCannotHold);
+		registerTest(event, "reactor_rods_wear_together", 400, true,
+				ReactorScenarios::everyRackedRodWearsTogether);
+		registerTest(event, "reactor_nozzle_vents_and_stalls", 400, true,
+				ReactorScenarios::nozzleVentsIntoAirAndStallsAgainstAWall);
+		registerTest(event, "reactor_feeds_cable_outside_shell", 400, true,
+				ReactorScenarios::poweredReactorFeedsACableOutsideTheShell);
 		// MOD-022 data-component seam: a charged battery box carries STORED_ENERGY on drop (frozen-registry
 		// fix — ModDataComponentsNeoForge). Fabric covers this via BatteryBoxGameTest; NeoForge world lane's first.
 		registerTest(event, "battery_box_drop_carries_energy", 40, true,

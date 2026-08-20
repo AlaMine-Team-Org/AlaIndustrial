@@ -1,0 +1,391 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_core"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_shell"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_shell_up"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_shell_down"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_shell_up_down"
+      }
+    },
+    {
+      "when": {
+        "up": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_cap"
+      }
+    },
+    {
+      "when": {
+        "down": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_base"
+      }
+    },
+    {
+      "when": {
+        "up": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_column_up"
+      }
+    },
+    {
+      "when": {
+        "down": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_column_down"
+      }
+    },
+    {
+      "when": {
+        "fuelled": "1|2|3|4"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_rod_a"
+      }
+    },
+    {
+      "when": {
+        "rods": "1|2|3|4",
+        "fuelled": "0"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_empty_a"
+      }
+    },
+    {
+      "when": {
+        "fuelled": "1|2|3|4",
+        "up": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_rod_a_up"
+      }
+    },
+    {
+      "when": {
+        "rods": "1|2|3|4",
+        "fuelled": "0",
+        "up": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_empty_a_up"
+      }
+    },
+    {
+      "when": {
+        "fuelled": "1|2|3|4",
+        "down": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_rod_a_down"
+      }
+    },
+    {
+      "when": {
+        "rods": "1|2|3|4",
+        "fuelled": "0",
+        "down": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_empty_a_down"
+      }
+    },
+    {
+      "when": {
+        "fuelled": "2|3|4"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_rod_b"
+      }
+    },
+    {
+      "when": {
+        "rods": "2|3|4",
+        "fuelled": "0|1"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_empty_b"
+      }
+    },
+    {
+      "when": {
+        "fuelled": "2|3|4",
+        "up": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_rod_b_up"
+      }
+    },
+    {
+      "when": {
+        "rods": "2|3|4",
+        "fuelled": "0|1",
+        "up": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_empty_b_up"
+      }
+    },
+    {
+      "when": {
+        "fuelled": "2|3|4",
+        "down": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_rod_b_down"
+      }
+    },
+    {
+      "when": {
+        "rods": "2|3|4",
+        "fuelled": "0|1",
+        "down": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_empty_b_down"
+      }
+    },
+    {
+      "when": {
+        "fuelled": "3|4"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_rod_c"
+      }
+    },
+    {
+      "when": {
+        "rods": "3|4",
+        "fuelled": "0|1|2"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_empty_c"
+      }
+    },
+    {
+      "when": {
+        "fuelled": "3|4",
+        "up": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_rod_c_up"
+      }
+    },
+    {
+      "when": {
+        "rods": "3|4",
+        "fuelled": "0|1|2",
+        "up": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_empty_c_up"
+      }
+    },
+    {
+      "when": {
+        "fuelled": "3|4",
+        "down": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_rod_c_down"
+      }
+    },
+    {
+      "when": {
+        "rods": "3|4",
+        "fuelled": "0|1|2",
+        "down": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_empty_c_down"
+      }
+    },
+    {
+      "when": {
+        "fuelled": "4"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_rod_d"
+      }
+    },
+    {
+      "when": {
+        "rods": "4",
+        "fuelled": "0|1|2|3"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_empty_d"
+      }
+    },
+    {
+      "when": {
+        "fuelled": "4",
+        "up": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_rod_d_up"
+      }
+    },
+    {
+      "when": {
+        "rods": "4",
+        "fuelled": "0|1|2|3",
+        "up": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_empty_d_up"
+      }
+    },
+    {
+      "when": {
+        "fuelled": "4",
+        "down": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_rod_d_down"
+      }
+    },
+    {
+      "when": {
+        "rods": "4",
+        "fuelled": "0|1|2|3",
+        "down": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_empty_d_down"
+      }
+    },
+    {
+      "when": {
+        "water": "1",
+        "down": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_water_1"
+      }
+    },
+    {
+      "when": {
+        "water": "1",
+        "down": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_water_1_down"
+      }
+    },
+    {
+      "when": {
+        "water": "2",
+        "down": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_water_2"
+      }
+    },
+    {
+      "when": {
+        "water": "2",
+        "down": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_water_2_down"
+      }
+    },
+    {
+      "when": {
+        "water": "3",
+        "down": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_water_3"
+      }
+    },
+    {
+      "when": {
+        "water": "3",
+        "down": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_water_3_down"
+      }
+    },
+    {
+      "when": {
+        "water": "4",
+        "up": "false",
+        "down": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_water_4"
+      }
+    },
+    {
+      "when": {
+        "water": "4",
+        "up": "false",
+        "down": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_water_4_down"
+      }
+    },
+    {
+      "when": {
+        "water": "4",
+        "up": "true",
+        "down": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_water_4_up"
+      }
+    },
+    {
+      "when": {
+        "water": "4",
+        "up": "true",
+        "down": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fuel_rod_assembly_water_4_up_down"
+      }
+    }
+  ]
+}

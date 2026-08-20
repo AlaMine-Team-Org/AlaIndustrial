@@ -23,6 +23,11 @@ import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
 import dev.alaindustrial.block.entity.AlloySmelterBlockEntity;
 import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
 import dev.alaindustrial.block.entity.GalvanicBathBlockEntity;
+import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
+import dev.alaindustrial.block.entity.ReactorOutletBlockEntity;
+import dev.alaindustrial.block.entity.ReactorPortBlockEntity;
+import dev.alaindustrial.block.entity.SteamNozzleBlockEntity;
+import dev.alaindustrial.block.entity.ReactorControllerBlockEntity;
 import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
 import dev.alaindustrial.block.entity.ElectricHeaterBlockEntity;
 import dev.alaindustrial.block.entity.SawmillBlockEntity;
@@ -136,6 +141,22 @@ public final class ModBlockEntitiesNeoForge {
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ThermalCentrifugeBlockEntity>>
 			THERMAL_CENTRIFUGE =
 					register(ContentManifest.blockEntity("thermal_centrifuge", ThermalCentrifugeBlockEntity.class));
+	/** MOD-468, stage 1 — the reactor room's brain. */
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ReactorControllerBlockEntity>>
+			REACTOR_CONTROLLER =
+					register(ContentManifest.blockEntity("reactor_controller", ReactorControllerBlockEntity.class));
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FuelRodAssemblyBlockEntity>>
+			FUEL_ROD_ASSEMBLY =
+					register(ContentManifest.blockEntity("fuel_rod_assembly", FuelRodAssemblyBlockEntity.class));
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ReactorPortBlockEntity>>
+			REACTOR_PORT =
+					register(ContentManifest.blockEntity("reactor_port", ReactorPortBlockEntity.class));
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SteamNozzleBlockEntity>>
+			STEAM_NOZZLE =
+					register(ContentManifest.blockEntity("steam_nozzle", SteamNozzleBlockEntity.class));
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ReactorOutletBlockEntity>>
+			REACTOR_OUTLET =
+					register(ContentManifest.blockEntity("reactor_outlet", ReactorOutletBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ElectricHeaterBlockEntity>> ELECTRIC_HEATER =
 			register(ContentManifest.blockEntity("electric_heater", ElectricHeaterBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ChargePadBlockEntity>> CHARGE_PAD =

@@ -1,0 +1,38 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_reactor_glass": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:reactor_glass"
+          }
+        ]
+      }
+    },
+    "has_shielding_alloy_plate": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:shielding_alloy_plate"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_reactor_glass"
+    ],
+    [
+      "has_shielding_alloy_plate"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:fuel_rod_assembly"
+    ]
+  }
+}

@@ -285,6 +285,31 @@ class ConfigSnapshotTest {
 		SENTINELS.put("thermalCentrifugeDuration", 341);
 		SENTINELS.put("thermalCentrifugeEuPerTick", 342);
 		SENTINELS.put("thermalCentrifugeSpinupTicks", 343);
+		SENTINELS.put("reactorDoorOpenTicks", 57);
+		SENTINELS.put("reactorDoorOccupiedRecheckTicks", 13);
+		SENTINELS.put("reactorScanIntervalTicks", 61);
+		SENTINELS.put("reactorRoomMinInner", 4);
+		SENTINELS.put("reactorRoomMaxInner", 9);
+		SENTINELS.put("reactorRoomMaxGlassPercent", 44);
+		SENTINELS.put("reactorButtonPressTicks", 27);
+		SENTINELS.put("reactorEuPerRod", 19);
+		SENTINELS.put("reactorNeighbourBonusPercent", 37);
+		SENTINELS.put("reactorRodBurnTicks", 1717);
+		SENTINELS.put("reactorHeatPerRod", 7);
+		SENTINELS.put("reactorHeatLossPermille", 41);
+		SENTINELS.put("reactorCoolantTargetPercent", 37);
+		SENTINELS.put("reactorHeatNeighbourBonusPercent", 63);
+		SENTINELS.put("reactorHeatPerWater", 9);
+		SENTINELS.put("reactorColumnWaterCapacity", 7300);
+		SENTINELS.put("reactorColumnSteamCapacity", 6100);
+		SENTINELS.put("reactorPortThroughput", 87);
+		SENTINELS.put("reactorOutletBuffer", 733);
+		SENTINELS.put("reactorNozzleVentRate", 131);
+		SENTINELS.put("reactorNozzleBuffer", 909);
+		SENTINELS.put("reactorPassiveCooling", 41);
+		SENTINELS.put("reactorHeatCapacity", 8123);
+		SENTINELS.put("reactorHeatWarnPercent", 63);
+		SENTINELS.put("reactorBuffer", 123456);
 		SENTINELS.put("thermalCentrifugeIdleEuPerTick", 344);
 		// Overclocker chip (MOD-392). The EU factor must stay above its own minimum of 1.0, and the
 		// speed factor above 0.0 — a sentinel that trips the clamp would be silently rewritten on load.

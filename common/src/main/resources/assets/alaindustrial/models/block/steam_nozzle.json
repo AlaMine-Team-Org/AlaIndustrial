@@ -1,0 +1,670 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "alaindustrial:block/steam_nozzle",
+    "skin": "alaindustrial:block/steam_nozzle",
+    "throat": "alaindustrial:block/steam_nozzle_throat",
+    "glass": {
+      "sprite": "alaindustrial:block/fluid_pipe_glass",
+      "force_translucent": true
+    },
+    "steam": "alaindustrial:block/steam_nozzle_steam"
+  },
+  "elements": [
+    {
+      "name": "collar_top",
+      "from": [
+        3,
+        11,
+        14
+      ],
+      "to": [
+        13,
+        13,
+        16
+      ],
+      "faces": {
+        "down": {
+          "texture": "#skin"
+        },
+        "up": {
+          "texture": "#skin"
+        },
+        "north": {
+          "texture": "#skin"
+        },
+        "south": {
+          "texture": "#skin"
+        },
+        "west": {
+          "texture": "#skin"
+        },
+        "east": {
+          "texture": "#skin"
+        }
+      }
+    },
+    {
+      "name": "collar_bottom",
+      "from": [
+        3,
+        3,
+        14
+      ],
+      "to": [
+        13,
+        5,
+        16
+      ],
+      "faces": {
+        "down": {
+          "texture": "#skin"
+        },
+        "up": {
+          "texture": "#skin"
+        },
+        "north": {
+          "texture": "#skin"
+        },
+        "south": {
+          "texture": "#skin"
+        },
+        "west": {
+          "texture": "#skin"
+        },
+        "east": {
+          "texture": "#skin"
+        }
+      }
+    },
+    {
+      "name": "collar_left",
+      "from": [
+        3,
+        5,
+        14
+      ],
+      "to": [
+        5,
+        11,
+        16
+      ],
+      "faces": {
+        "down": {
+          "texture": "#skin"
+        },
+        "up": {
+          "texture": "#skin"
+        },
+        "north": {
+          "texture": "#skin"
+        },
+        "south": {
+          "texture": "#skin"
+        },
+        "west": {
+          "texture": "#skin"
+        },
+        "east": {
+          "texture": "#skin"
+        }
+      }
+    },
+    {
+      "name": "collar_right",
+      "from": [
+        11,
+        5,
+        14
+      ],
+      "to": [
+        13,
+        11,
+        16
+      ],
+      "faces": {
+        "down": {
+          "texture": "#skin"
+        },
+        "up": {
+          "texture": "#skin"
+        },
+        "north": {
+          "texture": "#skin"
+        },
+        "south": {
+          "texture": "#skin"
+        },
+        "west": {
+          "texture": "#skin"
+        },
+        "east": {
+          "texture": "#skin"
+        }
+      }
+    },
+    {
+      "name": "root",
+      "from": [
+        5,
+        5,
+        12
+      ],
+      "to": [
+        11,
+        11,
+        16
+      ],
+      "faces": {
+        "down": {
+          "texture": "#skin"
+        },
+        "up": {
+          "texture": "#skin"
+        },
+        "north": {
+          "texture": "#skin"
+        },
+        "south": {
+          "texture": "#skin"
+        },
+        "west": {
+          "texture": "#skin"
+        },
+        "east": {
+          "texture": "#skin"
+        }
+      }
+    },
+    {
+      "name": "clampA_top",
+      "from": [
+        5,
+        10,
+        11.5
+      ],
+      "to": [
+        11,
+        11,
+        12
+      ],
+      "faces": {
+        "down": {
+          "texture": "#skin"
+        },
+        "up": {
+          "texture": "#skin"
+        },
+        "north": {
+          "texture": "#skin"
+        },
+        "south": {
+          "texture": "#skin"
+        },
+        "west": {
+          "texture": "#skin"
+        },
+        "east": {
+          "texture": "#skin"
+        }
+      }
+    },
+    {
+      "name": "clampA_bottom",
+      "from": [
+        5,
+        5,
+        11.5
+      ],
+      "to": [
+        11,
+        6,
+        12
+      ],
+      "faces": {
+        "down": {
+          "texture": "#skin"
+        },
+        "up": {
+          "texture": "#skin"
+        },
+        "north": {
+          "texture": "#skin"
+        },
+        "south": {
+          "texture": "#skin"
+        },
+        "west": {
+          "texture": "#skin"
+        },
+        "east": {
+          "texture": "#skin"
+        }
+      }
+    },
+    {
+      "name": "clampA_left",
+      "from": [
+        5,
+        6,
+        11.5
+      ],
+      "to": [
+        6,
+        10,
+        12
+      ],
+      "faces": {
+        "down": {
+          "texture": "#skin"
+        },
+        "up": {
+          "texture": "#skin"
+        },
+        "north": {
+          "texture": "#skin"
+        },
+        "south": {
+          "texture": "#skin"
+        },
+        "west": {
+          "texture": "#skin"
+        },
+        "east": {
+          "texture": "#skin"
+        }
+      }
+    },
+    {
+      "name": "clampA_right",
+      "from": [
+        10,
+        6,
+        11.5
+      ],
+      "to": [
+        11,
+        10,
+        12
+      ],
+      "faces": {
+        "down": {
+          "texture": "#skin"
+        },
+        "up": {
+          "texture": "#skin"
+        },
+        "north": {
+          "texture": "#skin"
+        },
+        "south": {
+          "texture": "#skin"
+        },
+        "west": {
+          "texture": "#skin"
+        },
+        "east": {
+          "texture": "#skin"
+        }
+      }
+    },
+    {
+      "name": "glass",
+      "from": [
+        6,
+        6,
+        9
+      ],
+      "to": [
+        10,
+        10,
+        11.5
+      ],
+      "faces": {
+        "down": {
+          "texture": "#glass"
+        },
+        "up": {
+          "texture": "#glass"
+        },
+        "west": {
+          "texture": "#glass"
+        },
+        "east": {
+          "texture": "#glass"
+        }
+      }
+    },
+    {
+      "name": "steam",
+      "from": [
+        6.4,
+        6.4,
+        9.1
+      ],
+      "to": [
+        9.6,
+        9.6,
+        11.4
+      ],
+      "faces": {
+        "down": {
+          "texture": "#steam"
+        },
+        "up": {
+          "texture": "#steam"
+        },
+        "west": {
+          "texture": "#steam"
+        },
+        "east": {
+          "texture": "#steam"
+        }
+      }
+    },
+    {
+      "name": "clampB_top",
+      "from": [
+        5,
+        10,
+        8.5
+      ],
+      "to": [
+        11,
+        11,
+        9
+      ],
+      "faces": {
+        "down": {
+          "texture": "#skin"
+        },
+        "up": {
+          "texture": "#skin"
+        },
+        "north": {
+          "texture": "#skin"
+        },
+        "south": {
+          "texture": "#skin"
+        },
+        "west": {
+          "texture": "#skin"
+        },
+        "east": {
+          "texture": "#skin"
+        }
+      }
+    },
+    {
+      "name": "clampB_bottom",
+      "from": [
+        5,
+        5,
+        8.5
+      ],
+      "to": [
+        11,
+        6,
+        9
+      ],
+      "faces": {
+        "down": {
+          "texture": "#skin"
+        },
+        "up": {
+          "texture": "#skin"
+        },
+        "north": {
+          "texture": "#skin"
+        },
+        "south": {
+          "texture": "#skin"
+        },
+        "west": {
+          "texture": "#skin"
+        },
+        "east": {
+          "texture": "#skin"
+        }
+      }
+    },
+    {
+      "name": "clampB_left",
+      "from": [
+        5,
+        6,
+        8.5
+      ],
+      "to": [
+        6,
+        10,
+        9
+      ],
+      "faces": {
+        "down": {
+          "texture": "#skin"
+        },
+        "up": {
+          "texture": "#skin"
+        },
+        "north": {
+          "texture": "#skin"
+        },
+        "south": {
+          "texture": "#skin"
+        },
+        "west": {
+          "texture": "#skin"
+        },
+        "east": {
+          "texture": "#skin"
+        }
+      }
+    },
+    {
+      "name": "clampB_right",
+      "from": [
+        10,
+        6,
+        8.5
+      ],
+      "to": [
+        11,
+        10,
+        9
+      ],
+      "faces": {
+        "down": {
+          "texture": "#skin"
+        },
+        "up": {
+          "texture": "#skin"
+        },
+        "north": {
+          "texture": "#skin"
+        },
+        "south": {
+          "texture": "#skin"
+        },
+        "west": {
+          "texture": "#skin"
+        },
+        "east": {
+          "texture": "#skin"
+        }
+      }
+    },
+    {
+      "name": "flare_top",
+      "from": [
+        3,
+        11,
+        6
+      ],
+      "to": [
+        13,
+        13,
+        7.5
+      ],
+      "faces": {
+        "down": {
+          "texture": "#skin"
+        },
+        "up": {
+          "texture": "#skin"
+        },
+        "north": {
+          "texture": "#skin"
+        },
+        "south": {
+          "texture": "#skin"
+        },
+        "west": {
+          "texture": "#skin"
+        },
+        "east": {
+          "texture": "#skin"
+        }
+      }
+    },
+    {
+      "name": "flare_bottom",
+      "from": [
+        3,
+        3,
+        6
+      ],
+      "to": [
+        13,
+        5,
+        7.5
+      ],
+      "faces": {
+        "down": {
+          "texture": "#skin"
+        },
+        "up": {
+          "texture": "#skin"
+        },
+        "north": {
+          "texture": "#skin"
+        },
+        "south": {
+          "texture": "#skin"
+        },
+        "west": {
+          "texture": "#skin"
+        },
+        "east": {
+          "texture": "#skin"
+        }
+      }
+    },
+    {
+      "name": "flare_left",
+      "from": [
+        3,
+        5,
+        6
+      ],
+      "to": [
+        5,
+        11,
+        7.5
+      ],
+      "faces": {
+        "down": {
+          "texture": "#skin"
+        },
+        "up": {
+          "texture": "#skin"
+        },
+        "north": {
+          "texture": "#skin"
+        },
+        "south": {
+          "texture": "#skin"
+        },
+        "west": {
+          "texture": "#skin"
+        },
+        "east": {
+          "texture": "#skin"
+        }
+      }
+    },
+    {
+      "name": "flare_right",
+      "from": [
+        11,
+        5,
+        6
+      ],
+      "to": [
+        13,
+        11,
+        7.5
+      ],
+      "faces": {
+        "down": {
+          "texture": "#skin"
+        },
+        "up": {
+          "texture": "#skin"
+        },
+        "north": {
+          "texture": "#skin"
+        },
+        "south": {
+          "texture": "#skin"
+        },
+        "west": {
+          "texture": "#skin"
+        },
+        "east": {
+          "texture": "#skin"
+        }
+      }
+    },
+    {
+      "name": "throat",
+      "from": [
+        5,
+        5,
+        7.5
+      ],
+      "to": [
+        11,
+        11,
+        8.5
+      ],
+      "faces": {
+        "down": {
+          "texture": "#skin"
+        },
+        "up": {
+          "texture": "#skin"
+        },
+        "north": {
+          "texture": "#throat",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#skin"
+        },
+        "west": {
+          "texture": "#skin"
+        },
+        "east": {
+          "texture": "#skin"
+        }
+      }
+    }
+  ]
+}

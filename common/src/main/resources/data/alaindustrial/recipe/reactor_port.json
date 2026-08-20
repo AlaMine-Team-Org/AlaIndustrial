@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "RPR",
+    "SCS",
+    "RPR"
+  ],
+  "key": {
+    "R": "alaindustrial:rubber",
+    "P": "alaindustrial:fluid_pipe",
+    "S": "alaindustrial:shielding_alloy_plate",
+    "C": "alaindustrial:reactor_casing"
+  },
+  "result": {
+    "id": "alaindustrial:reactor_port",
+    "count": 1
+  }
+}

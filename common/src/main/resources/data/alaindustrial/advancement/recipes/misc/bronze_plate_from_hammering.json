@@ -1,0 +1,30 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_hammer": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          { "items": "alaindustrial:forge_hammer" }
+        ]
+      }
+    },
+    "has_material": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          { "items": "alaindustrial:bronze_ingot" }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [ "has_hammer" ],
+    [ "has_material" ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:bronze_plate_from_hammering"
+    ]
+  }
+}

@@ -38,6 +38,7 @@ import dev.alaindustrial.menu.LightningRodGeneratorMenu;
 import dev.alaindustrial.menu.StormWindMillMenu;
 import dev.alaindustrial.menu.TeleporterRemoteMenu;
 import dev.alaindustrial.menu.TeleporterStationMenu;
+import dev.alaindustrial.menu.ReactorControllerMenu;
 import dev.alaindustrial.menu.ThermalCentrifugeMenu;
 import dev.alaindustrial.menu.WaterMillMenu;
 import dev.alaindustrial.menu.WindMillMenu;
@@ -56,6 +57,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.Fluid;
 
 /**
  * Loader-neutral registration facade (MOD-022 registration-facade step). Content classes
@@ -163,6 +165,18 @@ public final class ModContent {
 	public static Supplier<Block> GALVANIC_BATH = unbound("GALVANIC_BATH");
 	/** Thermal Centrifuge (MOD-424) — redstone-started, heated from below; doubles a dust a second time. */
 	public static Supplier<Block> THERMAL_CENTRIFUGE = unbound("THERMAL_CENTRIFUGE");
+
+	// MOD-468, stage 1 — the reactor room's shell.
+	public static Supplier<Block> REACTOR_CASING = unbound("REACTOR_CASING");
+	public static Supplier<Block> REACTOR_GLASS = unbound("REACTOR_GLASS");
+	public static Supplier<Block> REACTOR_PORT = unbound("REACTOR_PORT");
+	public static Supplier<Block> REACTOR_DOOR = unbound("REACTOR_DOOR");
+	public static Supplier<Block> REACTOR_CONTROLLER = unbound("REACTOR_CONTROLLER");
+	public static Supplier<Block> REACTOR_LAMP = unbound("REACTOR_LAMP");
+	public static Supplier<Block> STEAM_NOZZLE = unbound("STEAM_NOZZLE");
+	public static Supplier<Block> REACTOR_OUTLET = unbound("REACTOR_OUTLET");
+	public static Supplier<Block> REACTOR_BUTTON = unbound("REACTOR_BUTTON");
+	public static Supplier<Block> FUEL_ROD_ASSEMBLY = unbound("FUEL_ROD_ASSEMBLY");
 	public static Supplier<Block> ELECTRIC_HEATER = unbound("ELECTRIC_HEATER");
 	/** Charging Station (MOD-274) — the plate that tops up the gear of whoever stands on it. */
 	public static Supplier<Block> CHARGE_PAD = unbound("CHARGE_PAD");
@@ -228,6 +242,13 @@ public final class ModContent {
 	public static Supplier<FlowingFluid> OIL = unbound("OIL");
 	public static Supplier<FlowingFluid> FLOWING_OIL = unbound("FLOWING_OIL");
 	// Distillation fractions (MOD-251): diesel + fuel oil, same still/flowing pairs as oil.
+	/**
+	 * Steam (MOD-468, stage 3). A plain {@link Fluid}, not a {@link FlowingFluid} like the other four:
+	 * it exists only inside tanks and pipes, has no bucket and no block, and therefore cannot be poured
+	 * into the world. That is the whole specification — steam is a thing the reactor makes and the
+	 * exhaust destroys, not terrain.
+	 */
+	public static Supplier<Fluid> STEAM = unbound("STEAM");
 	public static Supplier<FlowingFluid> DIESEL = unbound("DIESEL");
 	public static Supplier<FlowingFluid> FLOWING_DIESEL = unbound("FLOWING_DIESEL");
 	public static Supplier<FlowingFluid> FUEL_OIL = unbound("FUEL_OIL");
@@ -261,7 +282,6 @@ public final class ModContent {
 	public static Supplier<Item> MUTATION_CHIP_TRANSFORM = unbound("MUTATION_CHIP_TRANSFORM");
 	public static Supplier<Item> MUTATION_CHIP_DUPLICATE = unbound("MUTATION_CHIP_DUPLICATE");
 	public static Supplier<Item> MUTATION_CHIP_CREATE = unbound("MUTATION_CHIP_CREATE");
-	public static Supplier<Item> DEPLETED_URANIUM = unbound("DEPLETED_URANIUM");
 	public static Supplier<Item> IRRADIATED_SLAG = unbound("IRRADIATED_SLAG");
 	public static Supplier<Item> IRRADIATED_DIAMOND = unbound("IRRADIATED_DIAMOND");
 	public static Supplier<Item> RESONANT_SHARD = unbound("RESONANT_SHARD");
@@ -348,6 +368,17 @@ public final class ModContent {
 	// smelting a shaving gives refined uranium. Four ingots per ore block once macerated first.
 	public static Supplier<Item> URANIUM_SHAVINGS = unbound("URANIUM_SHAVINGS");
 	public static Supplier<Item> REFINED_URANIUM = unbound("REFINED_URANIUM");
+
+	// MOD-468, stage 1 — the shielding chain and the controller's parts.
+	public static Supplier<Item> SHIELDING_ALLOY_INGOT = unbound("SHIELDING_ALLOY_INGOT");
+	public static Supplier<Item> SHIELDING_ALLOY_PLATE = unbound("SHIELDING_ALLOY_PLATE");
+	public static Supplier<Item> SHIELDING_ALLOY_REINFORCED_PLATE =
+			unbound("SHIELDING_ALLOY_REINFORCED_PLATE");
+	public static Supplier<Item> REACTOR_CIRCUIT = unbound("REACTOR_CIRCUIT");
+	public static Supplier<Item> CONTROL_ROD_DRIVE = unbound("CONTROL_ROD_DRIVE");
+	public static Supplier<Item> URANIUM_FUEL_ROD = unbound("URANIUM_FUEL_ROD");
+	public static Supplier<Item> EMPTY_FUEL_ROD = unbound("EMPTY_FUEL_ROD");
+	public static Supplier<Item> DEPLETED_URANIUM = unbound("DEPLETED_URANIUM");
 	public static Supplier<Item> PALLADIUM_DUST = unbound("PALLADIUM_DUST");
 	public static Supplier<Item> RAW_PALLADIUM = unbound("RAW_PALLADIUM");
 	public static Supplier<Item> PALLADIUM_INGOT = unbound("PALLADIUM_INGOT");
@@ -415,6 +446,17 @@ public final class ModContent {
 	public static Supplier<Item> URANIUM_PLATE = unbound("URANIUM_PLATE");
 	public static Supplier<Item> PALLADIUM_PLATE = unbound("PALLADIUM_PLATE");
 	public static Supplier<Item> TEMPERED_IRON_PLATE = unbound("TEMPERED_IRON_PLATE");
+	// Alloy plates + reinforced tier (MOD-460) — bronze/invar/cupronickel/electrum plates by the
+	// same hammer/compressor path as MOD-078; each also gets a reinforced plate (2 plates -> 1),
+	// craftable by hammer OR compressor. No alloy dust exists, so no maceration recycle either tier.
+	public static Supplier<Item> BRONZE_PLATE = unbound("BRONZE_PLATE");
+	public static Supplier<Item> INVAR_PLATE = unbound("INVAR_PLATE");
+	public static Supplier<Item> CUPRONICKEL_PLATE = unbound("CUPRONICKEL_PLATE");
+	public static Supplier<Item> ELECTRUM_PLATE = unbound("ELECTRUM_PLATE");
+	public static Supplier<Item> BRONZE_REINFORCED_PLATE = unbound("BRONZE_REINFORCED_PLATE");
+	public static Supplier<Item> INVAR_REINFORCED_PLATE = unbound("INVAR_REINFORCED_PLATE");
+	public static Supplier<Item> CUPRONICKEL_REINFORCED_PLATE = unbound("CUPRONICKEL_REINFORCED_PLATE");
+	public static Supplier<Item> ELECTRUM_REINFORCED_PLATE = unbound("ELECTRUM_REINFORCED_PLATE");
 	// Forge Hammer (MOD-078) — pre-machine hand tool: ingot + hammer on the grid → plate; the hammer
 	// stays and loses 1 durability per plate. Behaviour lives in dev.alaindustrial.item.tool.HammerItem
 	// (common) + a loader subclass for the craft-remainder hook.
@@ -486,6 +528,18 @@ public final class ModContent {
 	public static Supplier<BlockItem> ALLOY_SMELTER_ITEM = unbound("ALLOY_SMELTER_ITEM");
 	public static Supplier<BlockItem> GALVANIC_BATH_ITEM = unbound("GALVANIC_BATH_ITEM");
 	public static Supplier<BlockItem> THERMAL_CENTRIFUGE_ITEM = unbound("THERMAL_CENTRIFUGE_ITEM");
+
+	// MOD-468, stage 1 — block items for the reactor shell.
+	public static Supplier<BlockItem> REACTOR_CASING_ITEM = unbound("REACTOR_CASING_ITEM");
+	public static Supplier<BlockItem> REACTOR_GLASS_ITEM = unbound("REACTOR_GLASS_ITEM");
+	public static Supplier<BlockItem> REACTOR_PORT_ITEM = unbound("REACTOR_PORT_ITEM");
+	public static Supplier<BlockItem> REACTOR_DOOR_ITEM = unbound("REACTOR_DOOR_ITEM");
+	public static Supplier<BlockItem> REACTOR_CONTROLLER_ITEM = unbound("REACTOR_CONTROLLER_ITEM");
+	public static Supplier<BlockItem> REACTOR_LAMP_ITEM = unbound("REACTOR_LAMP_ITEM");
+	public static Supplier<BlockItem> STEAM_NOZZLE_ITEM = unbound("STEAM_NOZZLE_ITEM");
+	public static Supplier<BlockItem> REACTOR_OUTLET_ITEM = unbound("REACTOR_OUTLET_ITEM");
+	public static Supplier<BlockItem> REACTOR_BUTTON_ITEM = unbound("REACTOR_BUTTON_ITEM");
+	public static Supplier<BlockItem> FUEL_ROD_ASSEMBLY_ITEM = unbound("FUEL_ROD_ASSEMBLY_ITEM");
 	public static Supplier<BlockItem> ELECTRIC_HEATER_ITEM = unbound("ELECTRIC_HEATER_ITEM");
 	public static Supplier<BlockItem> CHARGE_PAD_ITEM = unbound("CHARGE_PAD_ITEM");
 	public static Supplier<BlockItem> ENERGY_CONDENSER_ITEM = unbound("ENERGY_CONDENSER_ITEM");
@@ -561,6 +615,11 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> ALLOY_SMELTER_BE = unbound("ALLOY_SMELTER_BE");
 	public static Supplier<BlockEntityType<?>> GALVANIC_BATH_BE = unbound("GALVANIC_BATH_BE");
 	public static Supplier<BlockEntityType<?>> THERMAL_CENTRIFUGE_BE = unbound("THERMAL_CENTRIFUGE_BE");
+	public static Supplier<BlockEntityType<?>> REACTOR_CONTROLLER_BE = unbound("REACTOR_CONTROLLER_BE");
+	public static Supplier<BlockEntityType<?>> FUEL_ROD_ASSEMBLY_BE = unbound("FUEL_ROD_ASSEMBLY_BE");
+	public static Supplier<BlockEntityType<?>> REACTOR_PORT_BE = unbound("REACTOR_PORT_BE");
+	public static Supplier<BlockEntityType<?>> STEAM_NOZZLE_BE = unbound("STEAM_NOZZLE_BE");
+	public static Supplier<BlockEntityType<?>> REACTOR_OUTLET_BE = unbound("REACTOR_OUTLET_BE");
 	public static Supplier<BlockEntityType<?>> ELECTRIC_HEATER_BE = unbound("ELECTRIC_HEATER_BE");
 	public static Supplier<BlockEntityType<?>> CHARGE_PAD_BE = unbound("CHARGE_PAD_BE");
 	public static Supplier<BlockEntityType<?>> ENERGY_CONDENSER_BE = unbound("ENERGY_CONDENSER_BE");
@@ -609,6 +668,8 @@ public final class ModContent {
 	/** Thermal Centrifuge readout (MOD-424): rotor spin-up gauge + the status line for its three gates. */
 	public static Supplier<MenuType<ThermalCentrifugeMenu>> THERMAL_CENTRIFUGE_MENU =
 			unbound("THERMAL_CENTRIFUGE_MENU");
+	public static Supplier<MenuType<ReactorControllerMenu>> REACTOR_CONTROLLER_MENU =
+			unbound("REACTOR_CONTROLLER_MENU");
 	public static Supplier<MenuType<IncubatorMenu>> INCUBATOR_MENU = unbound("INCUBATOR_MENU");
 	public static Supplier<MenuType<BatteryBoxMenu>> BATTERY_BOX_MENU = unbound("BATTERY_BOX_MENU");
 	public static Supplier<MenuType<EnergyCondenserMenu>> ENERGY_CONDENSER_MENU = unbound("ENERGY_CONDENSER_MENU");

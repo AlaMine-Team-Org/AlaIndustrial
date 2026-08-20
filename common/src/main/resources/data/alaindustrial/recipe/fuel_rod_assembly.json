@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "IGI",
+    "GSG",
+    "IGI"
+  ],
+  "key": {
+    "I": "minecraft:iron_ingot",
+    "G": "alaindustrial:reactor_glass",
+    "S": "alaindustrial:shielding_alloy_plate"
+  },
+  "result": {
+    "id": "alaindustrial:fuel_rod_assembly",
+    "count": 2
+  }
+}

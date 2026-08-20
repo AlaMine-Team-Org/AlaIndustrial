@@ -1,0 +1,38 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_shielding_alloy_plate": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:shielding_alloy_plate"
+          }
+        ]
+      }
+    },
+    "has_glowstone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:glowstone"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_shielding_alloy_plate"
+    ],
+    [
+      "has_glowstone"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:reactor_lamp"
+    ]
+  }
+}

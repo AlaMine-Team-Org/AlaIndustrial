@@ -19,7 +19,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
@@ -129,14 +128,10 @@ final class CapsuleInteractions {
 	}
 
 	/**
-	 * A player-facing name for {@code fluid}: its placed block's name (e.g. "Water", "Lava"). Falls back
-	 * to a generic label for fluids with no placeable block (exotic modded fluids only reachable via tanks).
+	 * A player-facing name for {@code fluid}, for the filled capsule's item name. The naming itself is
+	 * {@link FluidDisplayNames#of} — one implementation shared with the GUI tank gauge.
 	 */
 	static Component fluidDisplayName(Fluid fluid) {
-		BlockState legacy = fluid.defaultFluidState().createLegacyBlock();
-		if (!legacy.isAir()) {
-			return legacy.getBlock().getName();
-		}
-		return Component.translatable("item.alaindustrial.filled_vacuum_capsule.fluid_unknown");
+		return FluidDisplayNames.of(fluid);
 	}
 }

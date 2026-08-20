@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "NIN",
+    "I I",
+    "NPN"
+  ],
+  "key": {
+    "N": "minecraft:iron_nugget",
+    "I": "minecraft:iron_ingot",
+    "P": "alaindustrial:shielding_alloy_plate"
+  },
+  "result": {
+    "id": "alaindustrial:empty_fuel_rod",
+    "count": 1
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "alaindustrial:block/fuel_rod_assembly_frame",
+    "rod": "alaindustrial:block/empty_rod_side"
+  },
+  "elements": [
+    {
+      "name": "empty_rod_down",
+      "from": [
+        5,
+        0,
+        9
+      ],
+      "to": [
+        7,
+        1,
+        11
+      ],
+      "faces": {
+        "down": {
+          "texture": "#rod"
+        },
+        "north": {
+          "texture": "#rod"
+        },
+        "south": {
+          "texture": "#rod"
+        },
+        "west": {
+          "texture": "#rod"
+        },
+        "east": {
+          "texture": "#rod"
+        }
+      }
+    }
+  ]
+}

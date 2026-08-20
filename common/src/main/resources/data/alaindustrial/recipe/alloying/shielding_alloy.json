@@ -1,0 +1,17 @@
+{
+  "type": "alaindustrial:alloying",
+  "components": [
+    {
+      "ingredient": "#c:ingots/palladium"
+    },
+    {
+      "ingredient": "alaindustrial:tempered_iron",
+      "count": 3
+    }
+  ],
+  "result": {
+    "id": "alaindustrial:shielding_alloy_ingot",
+    "count": 3
+  },
+  "energy": 1200
+}

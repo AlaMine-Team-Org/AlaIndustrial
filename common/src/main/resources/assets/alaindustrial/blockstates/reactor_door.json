@@ -1,0 +1,244 @@
+{
+  "variants": {
+    "facing=east,formed=false,half=lower,hinge=left,open=false": {
+      "model": "alaindustrial:block/reactor_door_bottom_left"
+    },
+    "facing=east,formed=false,half=lower,hinge=left,open=true": {
+      "model": "alaindustrial:block/reactor_door_bottom_left_open",
+      "y": 90
+    },
+    "facing=east,formed=false,half=lower,hinge=right,open=false": {
+      "model": "alaindustrial:block/reactor_door_bottom_right"
+    },
+    "facing=east,formed=false,half=lower,hinge=right,open=true": {
+      "model": "alaindustrial:block/reactor_door_bottom_right_open",
+      "y": 270
+    },
+    "facing=east,formed=false,half=upper,hinge=left,open=false": {
+      "model": "alaindustrial:block/reactor_door_top_left"
+    },
+    "facing=east,formed=false,half=upper,hinge=left,open=true": {
+      "model": "alaindustrial:block/reactor_door_top_left_open",
+      "y": 90
+    },
+    "facing=east,formed=false,half=upper,hinge=right,open=false": {
+      "model": "alaindustrial:block/reactor_door_top_right"
+    },
+    "facing=east,formed=false,half=upper,hinge=right,open=true": {
+      "model": "alaindustrial:block/reactor_door_top_right_open",
+      "y": 270
+    },
+    "facing=east,formed=true,half=lower,hinge=left,open=false": {
+      "model": "alaindustrial:block/reactor_door_bottom_left"
+    },
+    "facing=east,formed=true,half=lower,hinge=left,open=true": {
+      "model": "alaindustrial:block/reactor_door_bottom_left_open",
+      "y": 90
+    },
+    "facing=east,formed=true,half=lower,hinge=right,open=false": {
+      "model": "alaindustrial:block/reactor_door_bottom_right"
+    },
+    "facing=east,formed=true,half=lower,hinge=right,open=true": {
+      "model": "alaindustrial:block/reactor_door_bottom_right_open",
+      "y": 270
+    },
+    "facing=east,formed=true,half=upper,hinge=left,open=false": {
+      "model": "alaindustrial:block/reactor_door_top_left"
+    },
+    "facing=east,formed=true,half=upper,hinge=left,open=true": {
+      "model": "alaindustrial:block/reactor_door_top_left_open",
+      "y": 90
+    },
+    "facing=east,formed=true,half=upper,hinge=right,open=false": {
+      "model": "alaindustrial:block/reactor_door_top_right"
+    },
+    "facing=east,formed=true,half=upper,hinge=right,open=true": {
+      "model": "alaindustrial:block/reactor_door_top_right_open",
+      "y": 270
+    },
+    "facing=north,formed=false,half=lower,hinge=left,open=false": {
+      "model": "alaindustrial:block/reactor_door_bottom_left",
+      "y": 270
+    },
+    "facing=north,formed=false,half=lower,hinge=left,open=true": {
+      "model": "alaindustrial:block/reactor_door_bottom_left_open"
+    },
+    "facing=north,formed=false,half=lower,hinge=right,open=false": {
+      "model": "alaindustrial:block/reactor_door_bottom_right",
+      "y": 270
+    },
+    "facing=north,formed=false,half=lower,hinge=right,open=true": {
+      "model": "alaindustrial:block/reactor_door_bottom_right_open",
+      "y": 180
+    },
+    "facing=north,formed=false,half=upper,hinge=left,open=false": {
+      "model": "alaindustrial:block/reactor_door_top_left",
+      "y": 270
+    },
+    "facing=north,formed=false,half=upper,hinge=left,open=true": {
+      "model": "alaindustrial:block/reactor_door_top_left_open"
+    },
+    "facing=north,formed=false,half=upper,hinge=right,open=false": {
+      "model": "alaindustrial:block/reactor_door_top_right",
+      "y": 270
+    },
+    "facing=north,formed=false,half=upper,hinge=right,open=true": {
+      "model": "alaindustrial:block/reactor_door_top_right_open",
+      "y": 180
+    },
+    "facing=north,formed=true,half=lower,hinge=left,open=false": {
+      "model": "alaindustrial:block/reactor_door_bottom_left",
+      "y": 270
+    },
+    "facing=north,formed=true,half=lower,hinge=left,open=true": {
+      "model": "alaindustrial:block/reactor_door_bottom_left_open"
+    },
+    "facing=north,formed=true,half=lower,hinge=right,open=false": {
+      "model": "alaindustrial:block/reactor_door_bottom_right",
+      "y": 270
+    },
+    "facing=north,formed=true,half=lower,hinge=right,open=true": {
+      "model": "alaindustrial:block/reactor_door_bottom_right_open",
+      "y": 180
+    },
+    "facing=north,formed=true,half=upper,hinge=left,open=false": {
+      "model": "alaindustrial:block/reactor_door_top_left",
+      "y": 270
+    },
+    "facing=north,formed=true,half=upper,hinge=left,open=true": {
+      "model": "alaindustrial:block/reactor_door_top_left_open"
+    },
+    "facing=north,formed=true,half=upper,hinge=right,open=false": {
+      "model": "alaindustrial:block/reactor_door_top_right",
+      "y": 270
+    },
+    "facing=north,formed=true,half=upper,hinge=right,open=true": {
+      "model": "alaindustrial:block/reactor_door_top_right_open",
+      "y": 180
+    },
+    "facing=south,formed=false,half=lower,hinge=left,open=false": {
+      "model": "alaindustrial:block/reactor_door_bottom_left",
+      "y": 90
+    },
+    "facing=south,formed=false,half=lower,hinge=left,open=true": {
+      "model": "alaindustrial:block/reactor_door_bottom_left_open",
+      "y": 180
+    },
+    "facing=south,formed=false,half=lower,hinge=right,open=false": {
+      "model": "alaindustrial:block/reactor_door_bottom_right",
+      "y": 90
+    },
+    "facing=south,formed=false,half=lower,hinge=right,open=true": {
+      "model": "alaindustrial:block/reactor_door_bottom_right_open"
+    },
+    "facing=south,formed=false,half=upper,hinge=left,open=false": {
+      "model": "alaindustrial:block/reactor_door_top_left",
+      "y": 90
+    },
+    "facing=south,formed=false,half=upper,hinge=left,open=true": {
+      "model": "alaindustrial:block/reactor_door_top_left_open",
+      "y": 180
+    },
+    "facing=south,formed=false,half=upper,hinge=right,open=false": {
+      "model": "alaindustrial:block/reactor_door_top_right",
+      "y": 90
+    },
+    "facing=south,formed=false,half=upper,hinge=right,open=true": {
+      "model": "alaindustrial:block/reactor_door_top_right_open"
+    },
+    "facing=south,formed=true,half=lower,hinge=left,open=false": {
+      "model": "alaindustrial:block/reactor_door_bottom_left",
+      "y": 90
+    },
+    "facing=south,formed=true,half=lower,hinge=left,open=true": {
+      "model": "alaindustrial:block/reactor_door_bottom_left_open",
+      "y": 180
+    },
+    "facing=south,formed=true,half=lower,hinge=right,open=false": {
+      "model": "alaindustrial:block/reactor_door_bottom_right",
+      "y": 90
+    },
+    "facing=south,formed=true,half=lower,hinge=right,open=true": {
+      "model": "alaindustrial:block/reactor_door_bottom_right_open"
+    },
+    "facing=south,formed=true,half=upper,hinge=left,open=false": {
+      "model": "alaindustrial:block/reactor_door_top_left",
+      "y": 90
+    },
+    "facing=south,formed=true,half=upper,hinge=left,open=true": {
+      "model": "alaindustrial:block/reactor_door_top_left_open",
+      "y": 180
+    },
+    "facing=south,formed=true,half=upper,hinge=right,open=false": {
+      "model": "alaindustrial:block/reactor_door_top_right",
+      "y": 90
+    },
+    "facing=south,formed=true,half=upper,hinge=right,open=true": {
+      "model": "alaindustrial:block/reactor_door_top_right_open"
+    },
+    "facing=west,formed=false,half=lower,hinge=left,open=false": {
+      "model": "alaindustrial:block/reactor_door_bottom_left",
+      "y": 180
+    },
+    "facing=west,formed=false,half=lower,hinge=left,open=true": {
+      "model": "alaindustrial:block/reactor_door_bottom_left_open",
+      "y": 270
+    },
+    "facing=west,formed=false,half=lower,hinge=right,open=false": {
+      "model": "alaindustrial:block/reactor_door_bottom_right",
+      "y": 180
+    },
+    "facing=west,formed=false,half=lower,hinge=right,open=true": {
+      "model": "alaindustrial:block/reactor_door_bottom_right_open",
+      "y": 90
+    },
+    "facing=west,formed=false,half=upper,hinge=left,open=false": {
+      "model": "alaindustrial:block/reactor_door_top_left",
+      "y": 180
+    },
+    "facing=west,formed=false,half=upper,hinge=left,open=true": {
+      "model": "alaindustrial:block/reactor_door_top_left_open",
+      "y": 270
+    },
+    "facing=west,formed=false,half=upper,hinge=right,open=false": {
+      "model": "alaindustrial:block/reactor_door_top_right",
+      "y": 180
+    },
+    "facing=west,formed=false,half=upper,hinge=right,open=true": {
+      "model": "alaindustrial:block/reactor_door_top_right_open",
+      "y": 90
+    },
+    "facing=west,formed=true,half=lower,hinge=left,open=false": {
+      "model": "alaindustrial:block/reactor_door_bottom_left",
+      "y": 180
+    },
+    "facing=west,formed=true,half=lower,hinge=left,open=true": {
+      "model": "alaindustrial:block/reactor_door_bottom_left_open",
+      "y": 270
+    },
+    "facing=west,formed=true,half=lower,hinge=right,open=false": {
+      "model": "alaindustrial:block/reactor_door_bottom_right",
+      "y": 180
+    },
+    "facing=west,formed=true,half=lower,hinge=right,open=true": {
+      "model": "alaindustrial:block/reactor_door_bottom_right_open",
+      "y": 90
+    },
+    "facing=west,formed=true,half=upper,hinge=left,open=false": {
+      "model": "alaindustrial:block/reactor_door_top_left",
+      "y": 180
+    },
+    "facing=west,formed=true,half=upper,hinge=left,open=true": {
+      "model": "alaindustrial:block/reactor_door_top_left_open",
+      "y": 270
+    },
+    "facing=west,formed=true,half=upper,hinge=right,open=false": {
+      "model": "alaindustrial:block/reactor_door_top_right",
+      "y": 180
+    },
+    "facing=west,formed=true,half=upper,hinge=right,open=true": {
+      "model": "alaindustrial:block/reactor_door_top_right_open",
+      "y": 90
+    }
+  }
+}

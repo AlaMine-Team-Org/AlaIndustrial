@@ -5,5 +5,8 @@
     "id": "alaindustrial:refined_uranium",
     "count": 1
   },
-  "energy": 260
+  "energy": 260,
+  "input_counts": [
+    2
+  ]
 }

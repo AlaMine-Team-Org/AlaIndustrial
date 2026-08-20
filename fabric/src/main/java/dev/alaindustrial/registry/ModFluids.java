@@ -4,6 +4,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.fluid.DieselFluid;
 import dev.alaindustrial.fluid.FuelOilFluid;
 import dev.alaindustrial.fluid.OilFluid;
+import dev.alaindustrial.fluid.SteamFluid;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -44,6 +45,11 @@ public final class ModFluids {
 	public static final ResourceKey<Fluid> FLOWING_FUEL_OIL_KEY = key("flowing_fuel_oil");
 	public static final FlowingFluid FLOWING_FUEL_OIL = register(FLOWING_FUEL_OIL_KEY, new FuelOilFluid.Flowing());
 
+	// Steam (MOD-468): a single entry, not a still/flowing pair — steam has no world form at all
+	// (see SteamFluid). Registered here so both loaders resolve the same id; no block, no bucket.
+	public static final ResourceKey<Fluid> STEAM_KEY = key("steam");
+	public static final Fluid STEAM = register(STEAM_KEY, new SteamFluid());
+
 	private static ResourceKey<Fluid> key(String path) {
 		return ResourceKey.create(Registries.FLUID, Industrialization.id(path));
 	}
@@ -76,5 +82,6 @@ public final class ModFluids {
 		ModContent.FLOWING_DIESEL = () -> FLOWING_DIESEL;
 		ModContent.FUEL_OIL = () -> FUEL_OIL;
 		ModContent.FLOWING_FUEL_OIL = () -> FLOWING_FUEL_OIL;
+		ModContent.STEAM = () -> STEAM;
 	}
 }

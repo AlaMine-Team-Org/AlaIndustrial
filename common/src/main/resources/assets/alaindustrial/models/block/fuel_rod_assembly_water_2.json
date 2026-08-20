@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "alaindustrial:block/reactor_coolant",
+    "coolant": {
+      "sprite": "alaindustrial:block/reactor_coolant",
+      "force_translucent": true
+    }
+  },
+  "elements": [
+    {
+      "name": "coolant",
+      "from": [
+        2.75,
+        1.75,
+        2.75
+      ],
+      "to": [
+        13.25,
+        6.75,
+        13.25
+      ],
+      "faces": {
+        "down": {
+          "texture": "#coolant"
+        },
+        "up": {
+          "texture": "#coolant"
+        },
+        "north": {
+          "texture": "#coolant"
+        },
+        "south": {
+          "texture": "#coolant"
+        },
+        "west": {
+          "texture": "#coolant"
+        },
+        "east": {
+          "texture": "#coolant"
+        }
+      }
+    }
+  ]
+}

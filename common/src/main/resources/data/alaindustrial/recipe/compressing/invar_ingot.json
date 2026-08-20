@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:compressing",
+  "ingredient": "#c:ingots/invar",
+  "result": {
+    "id": "alaindustrial:invar_plate",
+    "count": 1
+  },
+  "energy": 260
+}

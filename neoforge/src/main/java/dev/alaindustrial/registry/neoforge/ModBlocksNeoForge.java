@@ -51,6 +51,15 @@ import dev.alaindustrial.block.StorageModuleBlock;
 import dev.alaindustrial.block.LightningRodGeneratorBlock;
 import dev.alaindustrial.block.StormWindMillBlock;
 import dev.alaindustrial.block.TeleporterBlock;
+import dev.alaindustrial.block.ReactorDoorBlock;
+import dev.alaindustrial.block.ReactorLampBlock;
+import dev.alaindustrial.block.ReactorOutletBlock;
+import dev.alaindustrial.block.ReactorPortBlock;
+import dev.alaindustrial.block.FuelRodAssemblyBlock;
+import dev.alaindustrial.block.ReactorButtonBlock;
+import dev.alaindustrial.block.ReactorShellBlock;
+import dev.alaindustrial.block.SteamNozzleBlock;
+import dev.alaindustrial.block.ReactorControllerBlock;
 import dev.alaindustrial.block.ThermalCentrifugeBlock;
 import dev.alaindustrial.block.TrellisBlock;
 import dev.alaindustrial.block.VulcanizerBlock;
@@ -162,6 +171,28 @@ public final class ModBlocksNeoForge {
 	public static final DeferredBlock<GalvanicBathBlock> GALVANIC_BATH = handle(ContentManifest.GALVANIC_BATH);
 	public static final DeferredBlock<ThermalCentrifugeBlock> THERMAL_CENTRIFUGE =
 			handle(ContentManifest.THERMAL_CENTRIFUGE);
+
+	// MOD-468, stage 1 — the reactor room's shell.
+	public static final DeferredBlock<ReactorShellBlock> REACTOR_CASING =
+			handle(ContentManifest.REACTOR_CASING);
+	public static final DeferredBlock<ReactorShellBlock> REACTOR_GLASS =
+			handle(ContentManifest.REACTOR_GLASS);
+	public static final DeferredBlock<ReactorPortBlock> REACTOR_PORT =
+			handle(ContentManifest.REACTOR_PORT);
+	public static final DeferredBlock<ReactorDoorBlock> REACTOR_DOOR =
+			handle(ContentManifest.REACTOR_DOOR);
+	public static final DeferredBlock<ReactorControllerBlock> REACTOR_CONTROLLER =
+			handle(ContentManifest.REACTOR_CONTROLLER);
+	public static final DeferredBlock<ReactorLampBlock> REACTOR_LAMP =
+			handle(ContentManifest.REACTOR_LAMP);
+	public static final DeferredBlock<SteamNozzleBlock> STEAM_NOZZLE =
+			handle(ContentManifest.STEAM_NOZZLE);
+	public static final DeferredBlock<ReactorOutletBlock> REACTOR_OUTLET =
+			handle(ContentManifest.REACTOR_OUTLET);
+	public static final DeferredBlock<ReactorButtonBlock> REACTOR_BUTTON =
+			handle(ContentManifest.REACTOR_BUTTON);
+	public static final DeferredBlock<FuelRodAssemblyBlock> FUEL_ROD_ASSEMBLY =
+			handle(ContentManifest.FUEL_ROD_ASSEMBLY);
 	public static final DeferredBlock<ElectricHeaterBlock> ELECTRIC_HEATER =
 			handle(ContentManifest.ELECTRIC_HEATER);
 	public static final DeferredBlock<ChargePadBlock> CHARGE_PAD = handle(ContentManifest.CHARGE_PAD);

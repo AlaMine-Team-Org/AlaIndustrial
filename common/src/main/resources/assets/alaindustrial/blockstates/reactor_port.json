@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "formed=false,edge=false": {
+      "model": "alaindustrial:block/reactor_port"
+    },
+    "formed=false,edge=true": {
+      "model": "alaindustrial:block/reactor_port"
+    },
+    "formed=true,edge=false": {
+      "model": "alaindustrial:block/reactor_port_formed"
+    },
+    "formed=true,edge=true": {
+      "model": "alaindustrial:block/reactor_port_edge"
+    }
+  }
+}

@@ -175,6 +175,13 @@ pitest {
                      // The two entries above kept main's post-MOD-243 package paths: this change was
                      // branched before that split, and taking its side would have aimed pitest at
                      // dev.alaindustrial.item.* classes that no longer live there.
+                     // MOD-468: the reactor room's status enum — MC-free by the same design as the
+                     // status enums above, and added here WITH the class and its L1 suite
+                     // (ReactorRoomStatusTest), not a release later.
+                     'dev.alaindustrial.block.entity.ReactorRoomStatus',
+                     // MOD-468 stage 3: the reason a reactor is idle. Same shape and same reason as
+                     // the enum above — MC-free so the panel's diagnostics can be exercised by L1.
+                     'dev.alaindustrial.block.entity.ReactorIdleReason',
                      'dev.alaindustrial.block.entity.IncubatorStatus',
                      'dev.alaindustrial.mutation.MutationGrade',
                      'dev.alaindustrial.mutation.MutationRoll',
@@ -252,6 +259,11 @@ pitest {
             // to (CanningMath) is deliberately Minecraft-free and stays IN the run, covered by
             // CanningMathTest; the predicate itself is covered by the L2 gametests instead.
             'dev.alaindustrial.core.food.CanningRules',
+            // MOD-468: the reactor room's world adapter — it resolves BlockState/Level to ask
+            // "what shell block stands here". The geometry it delegates to (RoomScan) is deliberately
+            // Minecraft-free and stays IN the run, covered by RoomScanTest; this half is covered by the
+            // L2 room scenarios instead.
+            'dev.alaindustrial.core.structure.RoomValidator',
             'dev.alaindustrial.core.energy.EnergyLookup',
             'dev.alaindustrial.core.energy.DirectAdjacencyDistributor', // was EnergyNet (renamed MOD-168 #7)
             'dev.alaindustrial.core.energy.EnergyNetwork',

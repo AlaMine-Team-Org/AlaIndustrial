@@ -1,0 +1,27 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "alaindustrial:block/steam_nozzle"
+    },
+    "facing=east": {
+      "model": "alaindustrial:block/steam_nozzle",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "alaindustrial:block/steam_nozzle",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "alaindustrial:block/steam_nozzle",
+      "y": 270
+    },
+    "facing=up": {
+      "model": "alaindustrial:block/steam_nozzle",
+      "x": 270
+    },
+    "facing=down": {
+      "model": "alaindustrial:block/steam_nozzle",
+      "x": 90
+    }
+  }
+}

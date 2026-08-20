@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "TTT",
+    "SCS",
+    "TTT"
+  ],
+  "key": {
+    "T": "#c:plates/tempered_iron",
+    "S": "alaindustrial:shielding_alloy_plate",
+    "C": "alaindustrial:machine_casing"
+  },
+  "result": {
+    "id": "alaindustrial:reactor_casing",
+    "count": 8
+  }
+}

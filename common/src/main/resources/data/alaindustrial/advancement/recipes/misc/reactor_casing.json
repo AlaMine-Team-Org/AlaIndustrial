@@ -1,0 +1,38 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_shielding_alloy_plate": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:shielding_alloy_plate"
+          }
+        ]
+      }
+    },
+    "has_machine_casing": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:machine_casing"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_shielding_alloy_plate"
+    ],
+    [
+      "has_machine_casing"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:reactor_casing"
+    ]
+  }
+}

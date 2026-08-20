@@ -252,6 +252,15 @@ public final class AlaCommonScenarios {
 					|| id.getPath().equals("distillation_column_top")) {
 				continue;
 			}
+			// MOD-468: reactor glass is the mod's first TRANSPARENT full cube, and the occlusion rule
+			// below cannot express it. "Occlusion == full collision cube" holds for opaque blocks; glass
+			// is a full cube that must NOT occlude, or the room's interior would be culled away behind
+			// it and the window would show nothing. Vanilla's own glass is built exactly this way
+			// (full cube + noOcclusion). Waived for the same reason liquids are, and only for this one
+			// block — anything else claiming the exemption has to earn its own line here.
+			if (id.getPath().equals("reactor_glass")) {
+				continue;
+			}
 			Block block = BuiltInRegistries.BLOCK.getValue(id);
 			BlockState state = block.defaultBlockState();
 

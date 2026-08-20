@@ -1,0 +1,38 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_reactor_circuit": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:reactor_circuit"
+          }
+        ]
+      }
+    },
+    "has_control_rod_drive": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:control_rod_drive"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_reactor_circuit"
+    ],
+    [
+      "has_control_rod_drive"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:reactor_controller"
+    ]
+  }
+}

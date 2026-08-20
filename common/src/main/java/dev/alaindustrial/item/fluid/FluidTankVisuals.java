@@ -33,6 +33,15 @@ public final class FluidTankVisuals {
 	private static final int DIESEL = 0xB78515;
 	private static final int FUEL_OIL = 0x362614;
 
+	/**
+	 * Steam (MOD-468) — the average colour of {@code block/steam_still}, like the three above. It has to
+	 * be named here for a stronger reason than they do: steam has no block, so the {@link MapColor}
+	 * branch below cannot see it either ({@code createLegacyBlock()} is air, whose map colour is
+	 * {@code NONE}), and it would fall all the way through to the id-hash — a colour that is stable but
+	 * arbitrary, and nothing to do with vapour.
+	 */
+	private static final int STEAM = 0xD7E6F3;
+
 	private FluidTankVisuals() {
 	}
 
@@ -53,6 +62,9 @@ public final class FluidTankVisuals {
 		}
 		if (ModContent.FUEL_OIL.get().isSame(fluid)) {
 			return FUEL_OIL;
+		}
+		if (ModContent.STEAM.get().isSame(fluid)) {
+			return STEAM;
 		}
 		MapColor mapColor = fluid.defaultFluidState().createLegacyBlock().getMapColor(null, BlockPos.ZERO);
 		if (mapColor != MapColor.NONE) {

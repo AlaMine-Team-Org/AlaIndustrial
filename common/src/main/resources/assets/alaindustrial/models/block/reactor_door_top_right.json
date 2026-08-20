@@ -1,0 +1,10 @@
+{
+  "parent": "minecraft:block/door_top_right",
+  "textures": {
+    "bottom": "alaindustrial:block/reactor_door_bottom",
+    "top": {
+      "sprite": "alaindustrial:block/reactor_door_top",
+      "force_translucent": true
+    }
+  }
+}

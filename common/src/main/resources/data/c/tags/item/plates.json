@@ -9,6 +9,11 @@
     "#c:plates/nickel",
     "#c:plates/uranium",
     "#c:plates/tempered_iron",
-    "#c:plates/palladium"
+    "#c:plates/palladium",
+    "#c:plates/bronze",
+    "#c:plates/invar",
+    "#c:plates/cupronickel",
+    "#c:plates/electrum",
+    "#c:plates/shielding_alloy"
   ]
 }

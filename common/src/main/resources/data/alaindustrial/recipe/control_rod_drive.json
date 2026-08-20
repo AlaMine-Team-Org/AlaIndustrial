@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SSS",
+    "BDB",
+    "TPT"
+  ],
+  "key": {
+    "S": "alaindustrial:shielding_alloy_plate",
+    "B": "minecraft:iron_ingot",
+    "D": "alaindustrial:electronic_circuit",
+    "T": "#c:plates/tempered_iron",
+    "P": "minecraft:piston"
+  },
+  "result": {
+    "id": "alaindustrial:control_rod_drive",
+    "count": 1
+  }
+}

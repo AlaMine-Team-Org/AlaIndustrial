@@ -23,6 +23,11 @@ import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
 import dev.alaindustrial.block.entity.AlloySmelterBlockEntity;
 import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
 import dev.alaindustrial.block.entity.GalvanicBathBlockEntity;
+import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
+import dev.alaindustrial.block.entity.ReactorOutletBlockEntity;
+import dev.alaindustrial.block.entity.ReactorPortBlockEntity;
+import dev.alaindustrial.block.entity.SteamNozzleBlockEntity;
+import dev.alaindustrial.block.entity.ReactorControllerBlockEntity;
 import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
 import dev.alaindustrial.block.entity.ElectricHeaterBlockEntity;
 import dev.alaindustrial.block.entity.SawmillBlockEntity;
@@ -103,6 +108,12 @@ public final class ModBlockEntities {
 	public static BlockEntityType<AlloySmelterBlockEntity> ALLOY_SMELTER;
 	public static BlockEntityType<GalvanicBathBlockEntity> GALVANIC_BATH;
 	public static BlockEntityType<ThermalCentrifugeBlockEntity> THERMAL_CENTRIFUGE;
+	/** MOD-468, stage 1 — the reactor room's brain. */
+	public static BlockEntityType<ReactorControllerBlockEntity> REACTOR_CONTROLLER;
+	public static BlockEntityType<FuelRodAssemblyBlockEntity> FUEL_ROD_ASSEMBLY;
+	public static BlockEntityType<ReactorPortBlockEntity> REACTOR_PORT;
+	public static BlockEntityType<SteamNozzleBlockEntity> STEAM_NOZZLE;
+	public static BlockEntityType<ReactorOutletBlockEntity> REACTOR_OUTLET;
 	public static BlockEntityType<ElectricHeaterBlockEntity> ELECTRIC_HEATER;
 	public static BlockEntityType<ChargePadBlockEntity> CHARGE_PAD;
 	public static BlockEntityType<EnergyCondenserBlockEntity> ENERGY_CONDENSER;
@@ -155,6 +166,16 @@ public final class ModBlockEntities {
 		ALLOY_SMELTER = register(ContentManifest.blockEntity("alloy_smelter", AlloySmelterBlockEntity.class));
 		GALVANIC_BATH = register(ContentManifest.blockEntity("galvanic_bath", GalvanicBathBlockEntity.class));
 		THERMAL_CENTRIFUGE = register(ContentManifest.blockEntity("thermal_centrifuge", ThermalCentrifugeBlockEntity.class));
+		REACTOR_CONTROLLER =
+				register(ContentManifest.blockEntity("reactor_controller", ReactorControllerBlockEntity.class));
+		FUEL_ROD_ASSEMBLY =
+				register(ContentManifest.blockEntity("fuel_rod_assembly", FuelRodAssemblyBlockEntity.class));
+		REACTOR_PORT =
+				register(ContentManifest.blockEntity("reactor_port", ReactorPortBlockEntity.class));
+		STEAM_NOZZLE =
+				register(ContentManifest.blockEntity("steam_nozzle", SteamNozzleBlockEntity.class));
+		REACTOR_OUTLET =
+				register(ContentManifest.blockEntity("reactor_outlet", ReactorOutletBlockEntity.class));
 		ELECTRIC_HEATER = register(ContentManifest.blockEntity("electric_heater", ElectricHeaterBlockEntity.class));
 		CHARGE_PAD = register(ContentManifest.blockEntity("charge_pad", ChargePadBlockEntity.class));
 		ENERGY_CONDENSER = register(ContentManifest.blockEntity("energy_condenser", EnergyCondenserBlockEntity.class));

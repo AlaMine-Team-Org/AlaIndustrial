@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "formed=false,edge=false": {
+      "model": "alaindustrial:block/reactor_lamp"
+    },
+    "formed=false,edge=true": {
+      "model": "alaindustrial:block/reactor_lamp"
+    },
+    "formed=true,edge=false": {
+      "model": "alaindustrial:block/reactor_lamp_formed"
+    },
+    "formed=true,edge=true": {
+      "model": "alaindustrial:block/reactor_lamp_edge"
+    }
+  }
+}

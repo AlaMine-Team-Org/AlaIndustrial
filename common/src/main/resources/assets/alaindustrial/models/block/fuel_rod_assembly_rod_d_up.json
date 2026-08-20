@@ -1,0 +1,40 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "alaindustrial:block/fuel_rod_assembly_frame",
+    "rod": "alaindustrial:block/uranium_rod_side"
+  },
+  "elements": [
+    {
+      "name": "rod_up",
+      "from": [
+        5,
+        13,
+        5
+      ],
+      "to": [
+        7,
+        16,
+        7
+      ],
+      "faces": {
+        "up": {
+          "texture": "#rod"
+        },
+        "north": {
+          "texture": "#rod"
+        },
+        "south": {
+          "texture": "#rod"
+        },
+        "west": {
+          "texture": "#rod"
+        },
+        "east": {
+          "texture": "#rod"
+        }
+      }
+    }
+  ]
+}

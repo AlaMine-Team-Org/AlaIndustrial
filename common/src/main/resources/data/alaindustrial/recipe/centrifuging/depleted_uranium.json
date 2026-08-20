@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:centrifuging",
+  "ingredient": "alaindustrial:uranium_ingot",
+  "result": {
+    "id": "alaindustrial:depleted_uranium",
+    "count": 2
+  },
+  "energy": 800
+}

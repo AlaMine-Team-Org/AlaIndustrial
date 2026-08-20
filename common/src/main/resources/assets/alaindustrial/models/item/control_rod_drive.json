@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "alaindustrial:item/control_rod_drive"
+  }
+}

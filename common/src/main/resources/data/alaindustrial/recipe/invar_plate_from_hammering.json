@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "alaindustrial:forge_hammer",
+    "#c:ingots/invar"
+  ],
+  "result": {
+    "id": "alaindustrial:invar_plate",
+    "count": 1
+  }
+}

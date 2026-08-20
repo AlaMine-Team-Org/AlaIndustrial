@@ -101,6 +101,12 @@ public class ScreensClientGameTest implements FabricClientGameTest {
             // dash rather than as zeroes, which is exactly the state worth guarding against regressing
             // into "0 items at 0 EU/t".
             new Screen("charge_pad", "charge_pad", "Charging Station"),
+            // MOD-468: the reactor controller. The stand places a bare controller with no room around
+            // it, so the frame captures the state a player meets first — an unformed shell, dashes
+            // instead of numbers, and the fault line naming what is missing. That is the state worth
+            // guarding: this screen's whole job is telling a builder what is wrong, and a regression
+            // into a blank panel would look identical to a working one at a glance.
+            new Screen("reactor_controller", "reactor_controller", "Reactor Controller"),
             // MOD-393: the condenser's readout IS its mechanic (which tier now, how far to the
             // next), so the frame is what guards those two lines against silently vanishing.
             new Screen("energy_condenser", "energy_condenser", "Energy Condenser"),

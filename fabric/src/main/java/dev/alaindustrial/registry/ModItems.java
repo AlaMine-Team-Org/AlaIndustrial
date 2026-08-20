@@ -80,7 +80,6 @@ public final class ModItems {
 	public static final Item MUTATION_CHIP_TRANSFORM = manifestItem("mutation_chip_transform");
 	public static final Item MUTATION_CHIP_DUPLICATE = manifestItem("mutation_chip_duplicate");
 	public static final Item MUTATION_CHIP_CREATE = manifestItem("mutation_chip_create");
-	public static final Item DEPLETED_URANIUM = manifestItem("depleted_uranium");
 	public static final Item IRRADIATED_SLAG = manifestItem("irradiated_slag");
 	public static final Item IRRADIATED_DIAMOND = manifestItem("irradiated_diamond");
 	public static final Item RESONANT_SHARD = manifestItem("resonant_shard");
@@ -200,6 +199,16 @@ public final class ModItems {
 	// MOD-424: the centrifuge's product, and what smelting it yields.
 	public static final Item URANIUM_SHAVINGS = manifestItem("uranium_shavings");
 	public static final Item REFINED_URANIUM = manifestItem("refined_uranium");
+
+	// MOD-468, stage 1 — the shielding chain and the controller's parts.
+	public static final Item SHIELDING_ALLOY_INGOT = manifestItem("shielding_alloy_ingot");
+	public static final Item SHIELDING_ALLOY_PLATE = manifestItem("shielding_alloy_plate");
+	public static final Item SHIELDING_ALLOY_REINFORCED_PLATE = manifestItem("shielding_alloy_reinforced_plate");
+	public static final Item REACTOR_CIRCUIT = manifestItem("reactor_circuit");
+	public static final Item CONTROL_ROD_DRIVE = manifestItem("control_rod_drive");
+	public static final Item URANIUM_FUEL_ROD = manifestItem("uranium_fuel_rod");
+	public static final Item EMPTY_FUEL_ROD = manifestItem("empty_fuel_rod");
+	public static final Item DEPLETED_URANIUM = manifestItem("depleted_uranium");
 	public static final Item PALLADIUM_DUST = manifestItem("palladium_dust");
 	public static final Item RAW_PALLADIUM = manifestItem("raw_palladium");
 	public static final Item PALLADIUM_INGOT = manifestItem("palladium_ingot");
@@ -269,6 +278,15 @@ public final class ModItems {
 	public static final Item URANIUM_PLATE = manifestItem("uranium_plate");
 	public static final Item PALLADIUM_PLATE = manifestItem("palladium_plate");
 	public static final Item TEMPERED_IRON_PLATE = manifestItem("tempered_iron_plate");
+	// Alloy plates + reinforced tier (MOD-460): same hammer/compressor path, no dust to recycle to.
+	public static final Item BRONZE_PLATE = manifestItem("bronze_plate");
+	public static final Item INVAR_PLATE = manifestItem("invar_plate");
+	public static final Item CUPRONICKEL_PLATE = manifestItem("cupronickel_plate");
+	public static final Item ELECTRUM_PLATE = manifestItem("electrum_plate");
+	public static final Item BRONZE_REINFORCED_PLATE = manifestItem("bronze_reinforced_plate");
+	public static final Item INVAR_REINFORCED_PLATE = manifestItem("invar_reinforced_plate");
+	public static final Item CUPRONICKEL_REINFORCED_PLATE = manifestItem("cupronickel_reinforced_plate");
+	public static final Item ELECTRUM_REINFORCED_PLATE = manifestItem("electrum_reinforced_plate");
 	// Forge Hammer (MOD-078): pre-machine hand tool — ingot + hammer on the grid → plate; the hammer
 	// stays and loses 1 durability per plate via the Fabric craft-remainder hook (HammerItemFabric).
 	public static final Item FORGE_HAMMER = forgeHammer("forge_hammer");
@@ -322,6 +340,18 @@ public final class ModItems {
 			blockItem("galvanic_bath", ModBlocks.GALVANIC_BATH);
 	public static final BlockItem THERMAL_CENTRIFUGE_ITEM =
 			blockItem("thermal_centrifuge", ModBlocks.THERMAL_CENTRIFUGE);
+
+	// MOD-468, stage 1 — block items for the reactor shell.
+	public static final BlockItem REACTOR_CASING_ITEM = blockItem("reactor_casing", ModBlocks.REACTOR_CASING);
+	public static final BlockItem REACTOR_GLASS_ITEM = blockItem("reactor_glass", ModBlocks.REACTOR_GLASS);
+	public static final BlockItem REACTOR_PORT_ITEM = blockItem("reactor_port", ModBlocks.REACTOR_PORT);
+	public static final BlockItem REACTOR_DOOR_ITEM = blockItem("reactor_door", ModBlocks.REACTOR_DOOR);
+	public static final BlockItem REACTOR_CONTROLLER_ITEM = blockItem("reactor_controller", ModBlocks.REACTOR_CONTROLLER);
+	public static final BlockItem REACTOR_LAMP_ITEM = blockItem("reactor_lamp", ModBlocks.REACTOR_LAMP);
+	public static final BlockItem STEAM_NOZZLE_ITEM = blockItem("steam_nozzle", ModBlocks.STEAM_NOZZLE);
+	public static final BlockItem REACTOR_OUTLET_ITEM = blockItem("reactor_outlet", ModBlocks.REACTOR_OUTLET);
+	public static final BlockItem REACTOR_BUTTON_ITEM = blockItem("reactor_button", ModBlocks.REACTOR_BUTTON);
+	public static final BlockItem FUEL_ROD_ASSEMBLY_ITEM = blockItem("fuel_rod_assembly", ModBlocks.FUEL_ROD_ASSEMBLY);
 	public static final BlockItem ELECTRIC_HEATER_ITEM = blockItem("electric_heater", ModBlocks.ELECTRIC_HEATER);
 	public static final BlockItem CHARGE_PAD_ITEM = blockItem("charge_pad", ModBlocks.CHARGE_PAD);
 	public static final BlockItem ENERGY_CONDENSER_ITEM = blockItem("energy_condenser", ModBlocks.ENERGY_CONDENSER);
@@ -889,6 +919,14 @@ public final class ModItems {
 		ModContent.URANIUM_PLATE = () -> URANIUM_PLATE;
 		ModContent.PALLADIUM_PLATE = () -> PALLADIUM_PLATE;
 		ModContent.TEMPERED_IRON_PLATE = () -> TEMPERED_IRON_PLATE;
+		ModContent.BRONZE_PLATE = () -> BRONZE_PLATE;
+		ModContent.INVAR_PLATE = () -> INVAR_PLATE;
+		ModContent.CUPRONICKEL_PLATE = () -> CUPRONICKEL_PLATE;
+		ModContent.ELECTRUM_PLATE = () -> ELECTRUM_PLATE;
+		ModContent.BRONZE_REINFORCED_PLATE = () -> BRONZE_REINFORCED_PLATE;
+		ModContent.INVAR_REINFORCED_PLATE = () -> INVAR_REINFORCED_PLATE;
+		ModContent.CUPRONICKEL_REINFORCED_PLATE = () -> CUPRONICKEL_REINFORCED_PLATE;
+		ModContent.ELECTRUM_REINFORCED_PLATE = () -> ELECTRUM_REINFORCED_PLATE;
 		ModContent.FORGE_HAMMER = () -> FORGE_HAMMER;
 		ModContent.OIL_BUCKET = () -> OIL_BUCKET;
 		ModContent.DIESEL_BUCKET = () -> DIESEL_BUCKET;
@@ -932,6 +970,24 @@ public final class ModItems {
 		ModContent.ALLOY_SMELTER_ITEM = () -> ALLOY_SMELTER_ITEM;
 		ModContent.GALVANIC_BATH_ITEM = () -> GALVANIC_BATH_ITEM;
 		ModContent.THERMAL_CENTRIFUGE_ITEM = () -> THERMAL_CENTRIFUGE_ITEM;
+		// MOD-468, stage 1.
+		ModContent.SHIELDING_ALLOY_INGOT = () -> SHIELDING_ALLOY_INGOT;
+		ModContent.SHIELDING_ALLOY_PLATE = () -> SHIELDING_ALLOY_PLATE;
+		ModContent.SHIELDING_ALLOY_REINFORCED_PLATE = () -> SHIELDING_ALLOY_REINFORCED_PLATE;
+		ModContent.REACTOR_CIRCUIT = () -> REACTOR_CIRCUIT;
+		ModContent.CONTROL_ROD_DRIVE = () -> CONTROL_ROD_DRIVE;
+		ModContent.REACTOR_CASING_ITEM = () -> REACTOR_CASING_ITEM;
+		ModContent.REACTOR_GLASS_ITEM = () -> REACTOR_GLASS_ITEM;
+		ModContent.REACTOR_PORT_ITEM = () -> REACTOR_PORT_ITEM;
+		ModContent.REACTOR_DOOR_ITEM = () -> REACTOR_DOOR_ITEM;
+		ModContent.REACTOR_CONTROLLER_ITEM = () -> REACTOR_CONTROLLER_ITEM;
+		ModContent.REACTOR_LAMP_ITEM = () -> REACTOR_LAMP_ITEM;
+		ModContent.STEAM_NOZZLE_ITEM = () -> STEAM_NOZZLE_ITEM;
+		ModContent.REACTOR_OUTLET_ITEM = () -> REACTOR_OUTLET_ITEM;
+		ModContent.REACTOR_BUTTON_ITEM = () -> REACTOR_BUTTON_ITEM;
+		ModContent.FUEL_ROD_ASSEMBLY_ITEM = () -> FUEL_ROD_ASSEMBLY_ITEM;
+		ModContent.URANIUM_FUEL_ROD = () -> URANIUM_FUEL_ROD;
+		ModContent.EMPTY_FUEL_ROD = () -> EMPTY_FUEL_ROD;
 		ModContent.ELECTRIC_HEATER_ITEM = () -> ELECTRIC_HEATER_ITEM;
 		ModContent.CHARGE_PAD_ITEM = () -> CHARGE_PAD_ITEM;
 		ModContent.ENERGY_CONDENSER_ITEM = () -> ENERGY_CONDENSER_ITEM;

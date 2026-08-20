@@ -568,8 +568,15 @@ public class CableBlock extends AbstractMachineBlock {
 	private static boolean connectsTo(LevelReader level, BlockPos pos, Direction dir) {
 		BlockState neighborState = level.getBlockState(pos.relative(dir));
 		Block block = neighborState.getBlock();
-		return block instanceof AbstractMachineBlock machine
-				&& machine.isCableConnectable(neighborState, dir.getOpposite());
+		if (block instanceof AbstractMachineBlock machine) {
+			return machine.isCableConnectable(neighborState, dir.getOpposite());
+		}
+		// The reactor outlet is the one non-machine a cable may join. It cannot extend
+		// AbstractMachineBlock — it has to be a ReactorShellBlock to carry the room's formed/edge
+		// painting and to count as casing in the room scan — yet it publishes an energy port on every
+		// face and is the reactor's only power tap. Without this clause the cable drew no arm and the
+		// player read a working connection as a broken one.
+		return block instanceof ReactorOutletBlock;
 	}
 
 	/**

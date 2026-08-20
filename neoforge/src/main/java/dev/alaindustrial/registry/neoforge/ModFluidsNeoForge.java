@@ -4,6 +4,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.fluid.DieselFluid;
 import dev.alaindustrial.fluid.FuelOilFluid;
 import dev.alaindustrial.fluid.OilFluid;
+import dev.alaindustrial.fluid.SteamFluid;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.material.FlowingFluid;
@@ -120,6 +121,45 @@ public final class ModFluidsNeoForge {
 	public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_FUEL_OIL =
 			FLUIDS.register("flowing_fuel_oil", FuelOilFlowing::new);
 
+	// --- Steam (MOD-468) ---
+
+	/**
+	 * Steam's {@link FluidType}. Steam is a gas that exists only inside tanks and pipes, so every
+	 * number here is metadata another mod's GUI may print, never physics the player meets: density 1
+	 * and temperature 373 K state "water vapour at the boil", and the entity-physics fields are pinned
+	 * inert for the same reason as {@link #oilTypeProperties()} — Fabric gives a custom fluid no entity
+	 * physics at all, and the parity must survive NeoForge re-enabling its {@code IEntityExtension}
+	 * integration.
+	 *
+	 * <p>{@code descriptionId} is {@code fluid.alaindustrial.steam} and not a block key like the other
+	 * three: steam has no block to borrow a name from. That key is the same one
+	 * {@code FluidDisplayNames} falls back to, and it is present in every lang file the mod ships.
+	 */
+	public static final DeferredHolder<FluidType, FluidType> STEAM_TYPE =
+			FLUID_TYPES.register("steam", () -> new FluidType(steamTypeProperties()));
+
+	/**
+	 * The steam {@link FluidType.Properties}, split out like the other two so they can be asserted
+	 * without booting the registries (the pattern {@code NeoForgeOilWorldGenTest} uses for oil).
+	 */
+	public static FluidType.Properties steamTypeProperties() {
+		return FluidType.Properties.create()
+				.descriptionId("fluid.alaindustrial.steam")
+				.density(1)
+				.temperature(373)
+				.viscosity(200)
+				.canConvertToSource(false)
+				.canSwim(false)
+				.canDrown(false)
+				.canPushEntity(false)
+				.motionScale(0.0D)
+				.fallDistanceModifier(1.0F)
+				.supportsBoating(false);
+	}
+
+	/** One entry, not a still/flowing pair — steam has no flowing form (see {@code SteamFluid}). */
+	public static final DeferredHolder<Fluid, Fluid> STEAM = FLUIDS.register("steam", Steam::new);
+
 	private ModFluidsNeoForge() {
 	}
 
@@ -171,6 +211,14 @@ public final class ModFluidsNeoForge {
 		}
 	}
 
+	/** Steam with NeoForge's mandatory {@code getFluidType()} attached. */
+	public static final class Steam extends SteamFluid {
+		@Override
+		public FluidType getFluidType() {
+			return STEAM_TYPE.get();
+		}
+	}
+
 	/**
 	 * Binds the fluid {@code DeferredHolder}s into the loader-neutral {@link ModContent} facade,
 	 * mirroring the Fabric {@code ModFluids.init()}. Called from the {@code @Mod} constructor after
@@ -183,5 +231,6 @@ public final class ModFluidsNeoForge {
 		ModContent.FLOWING_DIESEL = FLOWING_DIESEL::get;
 		ModContent.FUEL_OIL = FUEL_OIL::get;
 		ModContent.FLOWING_FUEL_OIL = FLOWING_FUEL_OIL::get;
+		ModContent.STEAM = STEAM::get;
 	}
 }

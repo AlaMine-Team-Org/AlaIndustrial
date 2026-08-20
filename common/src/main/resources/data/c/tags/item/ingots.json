@@ -9,6 +9,7 @@
     "#c:ingots/invar",
     "#c:ingots/cupronickel",
     "#c:ingots/electrum",
-    "#c:ingots/palladium"
+    "#c:ingots/palladium",
+    "#c:ingots/shielding_alloy"
   ]
 }

@@ -1,0 +1,11 @@
+{
+  "parent": "alaindustrial:block/reactor_controller",
+  "textures": {
+    "particle": "alaindustrial:block/reactor_controller_side_formed",
+    "up": "alaindustrial:block/reactor_controller_top_formed",
+    "north": "alaindustrial:block/reactor_controller_front_on",
+    "east": "alaindustrial:block/reactor_controller_side_formed",
+    "south": "alaindustrial:block/reactor_controller_side_formed",
+    "west": "alaindustrial:block/reactor_controller_side_formed"
+  }
+}

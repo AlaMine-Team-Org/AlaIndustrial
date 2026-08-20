@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "formed=false,edge=false": {
+      "model": "alaindustrial:block/reactor_casing"
+    },
+    "formed=false,edge=true": {
+      "model": "alaindustrial:block/reactor_casing"
+    },
+    "formed=true,edge=false": {
+      "model": "alaindustrial:block/reactor_casing_formed"
+    },
+    "formed=true,edge=true": {
+      "model": "alaindustrial:block/reactor_casing_edge"
+    }
+  }
+}

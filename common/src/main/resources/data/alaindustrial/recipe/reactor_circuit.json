@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PUP",
+    "ABA",
+    "PRP"
+  ],
+  "key": {
+    "P": "alaindustrial:palladium_plate",
+    "U": "alaindustrial:resonance_coil",
+    "A": "alaindustrial:advanced_circuit",
+    "B": "alaindustrial:electronic_circuit",
+    "R": "minecraft:redstone"
+  },
+  "result": {
+    "id": "alaindustrial:reactor_circuit",
+    "count": 1
+  }
+}

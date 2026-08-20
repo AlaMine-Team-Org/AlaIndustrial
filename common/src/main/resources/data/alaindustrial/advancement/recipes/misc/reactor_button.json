@@ -1,0 +1,38 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_shielding_alloy_plate": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:shielding_alloy_plate"
+          }
+        ]
+      }
+    },
+    "has_stone_button": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:stone_button"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_shielding_alloy_plate"
+    ],
+    [
+      "has_stone_button"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:reactor_button"
+    ]
+  }
+}

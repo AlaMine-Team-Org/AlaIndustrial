@@ -52,6 +52,15 @@ import dev.alaindustrial.block.StorageModuleBlock;
 import dev.alaindustrial.block.LightningRodGeneratorBlock;
 import dev.alaindustrial.block.StormWindMillBlock;
 import dev.alaindustrial.block.TeleporterBlock;
+import dev.alaindustrial.block.ReactorShellBlock;
+import dev.alaindustrial.block.SteamNozzleBlock;
+import dev.alaindustrial.block.ReactorOutletBlock;
+import dev.alaindustrial.block.ReactorPortBlock;
+import dev.alaindustrial.block.ReactorLampBlock;
+import dev.alaindustrial.block.FuelRodAssemblyBlock;
+import dev.alaindustrial.block.ReactorButtonBlock;
+import dev.alaindustrial.block.ReactorControllerBlock;
+import dev.alaindustrial.block.ReactorDoorBlock;
 import dev.alaindustrial.block.ThermalCentrifugeBlock;
 import dev.alaindustrial.block.TrellisBlock;
 import dev.alaindustrial.block.VulcanizerBlock;
@@ -108,6 +117,12 @@ import dev.alaindustrial.block.entity.StorageModuleBlockEntity;
 import dev.alaindustrial.block.entity.LightningRodGeneratorBlockEntity;
 import dev.alaindustrial.block.entity.StormWindMillBlockEntity;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
+import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
+import dev.alaindustrial.block.entity.ReactorControllerBlockEntity;
+import dev.alaindustrial.block.entity.ReactorOutletBlockEntity;
+import dev.alaindustrial.core.structure.FuelRodMath;
+import dev.alaindustrial.block.entity.ReactorPortBlockEntity;
+import dev.alaindustrial.block.entity.SteamNozzleBlockEntity;
 import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
 import dev.alaindustrial.block.entity.AlloySmelterBlockEntity;
 import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
@@ -157,6 +172,7 @@ import dev.alaindustrial.menu.LightningRodGeneratorMenu;
 import dev.alaindustrial.menu.StormWindMillMenu;
 import dev.alaindustrial.menu.TeleporterRemoteMenu;
 import dev.alaindustrial.menu.TeleporterStationMenu;
+import dev.alaindustrial.menu.ReactorControllerMenu;
 import dev.alaindustrial.menu.ThermalCentrifugeMenu;
 import dev.alaindustrial.menu.WaterMillMenu;
 import dev.alaindustrial.menu.WindMillMenu;
@@ -313,7 +329,10 @@ public final class ContentManifest {
 			menu("thermal_centrifuge", ThermalCentrifugeMenu::new, s -> ModContent.THERMAL_CENTRIFUGE_MENU = s),
 			// MOD-386 — the lightning rod: conductor-tip slot, capacitor gauge, status line.
 			menu("lightning_rod_generator", LightningRodGeneratorMenu::new,
-					s -> ModContent.LIGHTNING_ROD_GENERATOR_MENU = s));
+					s -> ModContent.LIGHTNING_ROD_GENERATOR_MENU = s),
+			// MOD-468 — the reactor controller: a slotless diagnostic readout for the room multiblock.
+			menu("reactor_controller", ReactorControllerMenu::new,
+					s -> ModContent.REACTOR_CONTROLLER_MENU = s));
 
 	// ─────────────────────────────────────────────────────────────────────────────────────────
 	// Blocks — the COMPOSITION, not just the definition (MOD-403)
@@ -467,6 +486,38 @@ public final class ContentManifest {
 	// Thermal Centrifuge (MOD-424): redstone-started, heated from below; doubles a dust a second time.
 	public static final BlockDef<ThermalCentrifugeBlock> THERMAL_CENTRIFUGE =
 			block("thermal_centrifuge", ThermalCentrifugeBlock::new, s -> ModContent.THERMAL_CENTRIFUGE = s);
+
+	// ── MOD-468, stage 1: the reactor room's shell. Four inert building blocks and one brain. ──
+	/** Wall, floor and ceiling of a reactor room — the only material its shell may be built from. */
+	public static final BlockDef<ReactorShellBlock> REACTOR_CASING =
+			block("reactor_casing", ReactorShellBlock::new, s -> ModContent.REACTOR_CASING = s);
+	/** A window that still counts as shell; capped by share, so a room cannot be all windows. */
+	public static final BlockDef<ReactorShellBlock> REACTOR_GLASS =
+			block("reactor_glass", ReactorShellBlock::new, s -> ModContent.REACTOR_GLASS = s);
+	/** Feedthrough: pipes and cables cross the shell here instead of breaking it (live in stage 3). */
+	public static final BlockDef<ReactorPortBlock> REACTOR_PORT =
+			block("reactor_port", ReactorPortBlock::new, s -> ModContent.REACTOR_PORT = s);
+
+	public static final BlockDef<ReactorOutletBlock> REACTOR_OUTLET =
+			block("reactor_outlet", ReactorOutletBlock::new, s -> ModContent.REACTOR_OUTLET = s);
+	/** Shell block that lights the inside of the room — and only once the room is sealed. */
+	public static final BlockDef<ReactorLampBlock> REACTOR_LAMP =
+			block("reactor_lamp", ReactorLampBlock::new, s -> ModContent.REACTOR_LAMP = s);
+	/** The way out: a shielded button that survives what the room is built to contain. */
+	public static final BlockDef<ReactorButtonBlock> REACTOR_BUTTON =
+			block("reactor_button", ReactorButtonBlock::new, s -> ModContent.REACTOR_BUTTON = s);
+
+	public static final BlockDef<SteamNozzleBlock> STEAM_NOZZLE =
+			block("steam_nozzle", SteamNozzleBlock::new, s -> ModContent.STEAM_NOZZLE = s);
+	/** MOD-468 stage 2 — the fuel rack: stands on the floor, fills with rods, shows its level. */
+	public static final BlockDef<FuelRodAssemblyBlock> FUEL_ROD_ASSEMBLY =
+			block("fuel_rod_assembly", FuelRodAssemblyBlock::new, s -> ModContent.FUEL_ROD_ASSEMBLY = s);
+	/** The airlock — pulse-only, self-closing; a room without one cannot be entered and does not form. */
+	public static final BlockDef<ReactorDoorBlock> REACTOR_DOOR =
+			block("reactor_door", ReactorDoorBlock::new, s -> ModContent.REACTOR_DOOR = s);
+	/** The room's brain: scans the shell, reports what is wrong and where. */
+	public static final BlockDef<ReactorControllerBlock> REACTOR_CONTROLLER =
+			block("reactor_controller", ReactorControllerBlock::new, s -> ModContent.REACTOR_CONTROLLER = s);
 	public static final BlockDef<ElectricHeaterBlock> ELECTRIC_HEATER =
 			block("electric_heater", ElectricHeaterBlock::new, s -> ModContent.ELECTRIC_HEATER = s);
 	public static final BlockDef<ChargePadBlock> CHARGE_PAD =
@@ -593,7 +644,12 @@ public final class ContentManifest {
 			// MOD-424 — appended rather than filed next to VULCANIZER, per the ordering note above.
 			THERMAL_CENTRIFUGE,
 			// MOD-386 — likewise appended, not filed with the other generators.
-			LIGHTNING_ROD_GENERATOR);
+			LIGHTNING_ROD_GENERATOR,
+			// MOD-468 — the reactor room's shell, appended as one group.
+			REACTOR_CASING, REACTOR_GLASS, REACTOR_PORT, REACTOR_DOOR, REACTOR_CONTROLLER,
+			REACTOR_LAMP, REACTOR_BUTTON, FUEL_ROD_ASSEMBLY, REACTOR_OUTLET,
+			// Stage 3 — the exhaust. Outside the shell, so it is not part of the group above.
+			STEAM_NOZZLE);
 
 	/**
 	 * Wraps a machine/ore/material block's {@code strength/sound/…} chain with the shared base every such
@@ -684,6 +740,32 @@ public final class ContentManifest {
 			// It glows through those openings while the rotor is doing work, hence litLight.
 			Map.entry("thermal_centrifuge", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
 					.noOcclusion().lightLevel(ModBlockProperties::litLight))),
+			// ── MOD-468, stage 1: the reactor room's shell. Tougher than a machine casing (5.0) and far
+			// harder to blow up (30.0): the room is what stands between a meltdown and the world, so a
+			// creeper must not be able to open it. Glass and door are the same material, hence the same
+			// numbers — a window is not a weak point, it just costs the same palladium as a wall.
+			Map.entry("reactor_casing", machine(p -> p.strength(5.0f, 30.0f).sound(SoundType.METAL))),
+			Map.entry("reactor_glass", machine(p -> p.strength(5.0f, 30.0f).sound(SoundType.GLASS)
+					.noOcclusion())),
+			Map.entry("reactor_outlet", machine(p -> p.strength(5.0f, 30.0f).sound(SoundType.METAL))),
+			Map.entry("reactor_port", machine(p -> p.strength(5.0f, 30.0f).sound(SoundType.METAL))),
+			Map.entry("reactor_door", machine(p -> p.strength(5.0f, 30.0f).sound(SoundType.METAL)
+					.noOcclusion().pushReaction(PushReaction.DESTROY))),
+			Map.entry("reactor_controller", machine(p -> p.strength(5.0f, 30.0f).sound(SoundType.METAL))),
+			// The lamp glows only while its shell passes the scan — light is the room's "done" signal.
+			Map.entry("reactor_lamp", machine(p -> p.strength(5.0f, 30.0f).sound(SoundType.METAL)
+					.lightLevel(ReactorLampBlock::lightLevel))),
+			// A button is not a wall: no tool requirement, no collision, and it must not resist an
+			// explosion the way the shell does, or it would survive a blast that took the wall with it.
+			Map.entry("reactor_button", p -> p.strength(0.5f).sound(SoundType.METAL).noCollision()
+					.pushReaction(PushReaction.DESTROY)),
+			// Bolted to the outside of the shell: the shell's toughness, none of its bulk.
+			Map.entry("steam_nozzle", machine(p -> p.strength(4.0f, 20.0f).sound(SoundType.METAL)
+					.noOcclusion())),
+			// A rack, not armour: it lives inside the shell, so it needs none of the shell's toughness.
+			// noOcclusion because the casing is transparent and the rods inside have to be drawn.
+			Map.entry("fuel_rod_assembly", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
+					.noOcclusion())),
 			// MOD-418: the heater's glow is a four-rung thermometer, not the boolean litLight the rest of
 			// the machine family uses — see HeaterGlow.
 			Map.entry("electric_heater", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
@@ -861,6 +943,11 @@ public final class ContentManifest {
 				"advanced_circuit", "alignment_chip_day", "alignment_chip_night",
 				// MOD-064 alloys: the four products of the alloy smelter.
 				"bronze_ingot", "cupronickel_ingot", "electrum_ingot", "invar_ingot",
+				// MOD-460: plate forms for the four alloys above, plus their reinforced tier
+				// (two plates -> one reinforced plate, hammer or compressor).
+				"bronze_plate", "bronze_reinforced_plate", "cupronickel_plate",
+				"cupronickel_reinforced_plate", "electrum_plate", "electrum_reinforced_plate",
+				"invar_plate", "invar_reinforced_plate",
 				"coal_dust", "copper_coil", "copper_dust", "copper_plate", "cotton_fiber",
 				"cotton_seeds", "depleted_uranium", "diamond_dust", "electronic_circuit",
 				"emerald_dust", "empty_can", "flux_thread", "fluxweave_cloth", "garden_drone", "gold_dust",
@@ -875,9 +962,21 @@ public final class ContentManifest {
 				"silver_dust", "silver_gear", "silver_ingot", "silver_plate", "spatial_crystal", "stone_gear",
 				"sulfur_dust", "tempered_iron", "tempered_iron_plate", "tin_dust", "tin_ingot",
 				"tin_plate", "unstable_isotope", "uranium_dust", "uranium_ingot", "uranium_plate",
-				"uranium_shavings", "wooden_gear")) {
+				"uranium_shavings", "wooden_gear",
+				// MOD-468: the shielding chain (palladium + tempered iron) and the controller's parts.
+				"shielding_alloy_ingot", "shielding_alloy_plate", "shielding_alloy_reinforced_plate",
+				"reactor_circuit", "control_rod_drive",
+				// MOD-468 stage 4: the empty casing. Crafted 3x3, filled with one refined uranium, and
+				// handed back by the column when its charge is spent — refuelling a reactor is topping up
+				// casings you already own, not building rods from scratch every time.
+				"empty_fuel_rod")) {
 			defs.put(id, Item::new);
 		}
+		// Uranium Fuel Rod (MOD-468 stage 4). Durability IS its remaining charge: the column wears the
+		// rod down as the reactor draws on it, so a half-spent rod shows a half-empty bar in the hand
+		// and can be pulled out and put back without losing what is left. Before this it was a plain
+		// item and a rod taken out mid-burn was simply destroyed.
+		defs.put("uranium_fuel_rod", p -> new Item(p.durability(FuelRodMath.ROD_DURABILITY)));
 		// Battery (MOD-083): the stackable EU carrier. Charge is per item, so the stack size is what
 		// keeps stack transfers exact — see BatteryItem for why 16 and not 64.
 		defs.put("battery", p -> new BatteryItem(p.stacksTo(BatteryItem.MAX_STACK)));
@@ -1137,7 +1236,22 @@ public final class ContentManifest {
 					"thermal_centrifuge"),
 			blockEntity("lightning_rod_generator", LightningRodGeneratorBlockEntity.class,
 					LightningRodGeneratorBlockEntity::new, s -> ModContent.LIGHTNING_ROD_GENERATOR_BE = s,
-					"lightning_rod_generator"));
+					"lightning_rod_generator"),
+			blockEntity("reactor_controller", ReactorControllerBlockEntity.class,
+					ReactorControllerBlockEntity::new, s -> ModContent.REACTOR_CONTROLLER_BE = s,
+					"reactor_controller"),
+			blockEntity("fuel_rod_assembly", FuelRodAssemblyBlockEntity.class,
+					FuelRodAssemblyBlockEntity::new, s -> ModContent.FUEL_ROD_ASSEMBLY_BE = s,
+					"fuel_rod_assembly"),
+			blockEntity("reactor_port", ReactorPortBlockEntity.class,
+					ReactorPortBlockEntity::new, s -> ModContent.REACTOR_PORT_BE = s,
+					"reactor_port"),
+			blockEntity("steam_nozzle", SteamNozzleBlockEntity.class,
+					SteamNozzleBlockEntity::new, s -> ModContent.STEAM_NOZZLE_BE = s,
+					"steam_nozzle"),
+			blockEntity("reactor_outlet", ReactorOutletBlockEntity.class,
+					ReactorOutletBlockEntity::new, s -> ModContent.REACTOR_OUTLET_BE = s,
+					"reactor_outlet"));
 
 	/**
 	 * The definition for block-entity {@code id}, checked against the type the caller expects.

@@ -94,18 +94,32 @@ public class IndustrializationClient implements ClientModInitializer {
 				dev.alaindustrial.registry.ModFluids.FLOWING_DIESEL, "diesel");
 		registerFluidModel(dev.alaindustrial.registry.ModFluids.FUEL_OIL,
 				dev.alaindustrial.registry.ModFluids.FLOWING_FUEL_OIL, "fuel_oil");
+		// MOD-468: steam. Registered through the single-fluid overload — it has no flowing form, and
+		// without a model here every tank and pipe holding it would draw the missing-texture sprite.
+		registerFluidModel(dev.alaindustrial.registry.ModFluids.STEAM, "steam");
 	}
 
 	/** One still+flowing pair → its {@code FluidModel.Unbaked} built from {@code block/<name>_still|_flow}. */
 	private static void registerFluidModel(net.minecraft.world.level.material.FlowingFluid still,
 			net.minecraft.world.level.material.FlowingFluid flowing, String name) {
 		net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderingRegistry.register(still, flowing,
-				new net.minecraft.client.renderer.block.FluidModel.Unbaked(
-						new net.minecraft.client.resources.model.sprite.Material(
-								Industrialization.id("block/" + name + "_still")),
-						new net.minecraft.client.resources.model.sprite.Material(
-								Industrialization.id("block/" + name + "_flow")),
-						null, null));
+				fluidModel(name));
+	}
+
+	/** A blockless fluid with no flowing form (steam) → the same model bound to that one fluid. */
+	private static void registerFluidModel(net.minecraft.world.level.material.Fluid fluid, String name) {
+		net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderingRegistry.register(fluid,
+				fluidModel(name));
+	}
+
+	/** One fluid's {@code FluidModel.Unbaked} built from {@code block/<name>_still|_flow}. */
+	private static net.minecraft.client.renderer.block.FluidModel.Unbaked fluidModel(String name) {
+		return new net.minecraft.client.renderer.block.FluidModel.Unbaked(
+				new net.minecraft.client.resources.model.sprite.Material(
+						Industrialization.id("block/" + name + "_still")),
+				new net.minecraft.client.resources.model.sprite.Material(
+						Industrialization.id("block/" + name + "_flow")),
+				null, null);
 	}
 
 	/**

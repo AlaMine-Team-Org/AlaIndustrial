@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "alaindustrial:empty_fuel_rod",
+    "alaindustrial:refined_uranium"
+  ],
+  "result": {
+    "id": "alaindustrial:uranium_fuel_rod",
+    "count": 1
+  }
+}

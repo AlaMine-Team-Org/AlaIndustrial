@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "IGI",
+    "GLG",
+    "IPI"
+  ],
+  "key": {
+    "I": "minecraft:iron_ingot",
+    "G": "#c:glass_blocks/colorless",
+    "L": "minecraft:glowstone",
+    "P": "alaindustrial:shielding_alloy_plate"
+  },
+  "result": {
+    "id": "alaindustrial:reactor_lamp",
+    "count": 1
+  }
+}

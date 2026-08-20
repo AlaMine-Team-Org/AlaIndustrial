@@ -138,9 +138,22 @@ public final class FluidNetwork {
 				if (port == null) {
 					continue;
 				}
-				if (mode == PipeFaceMode.EXTRACT && port.supportsExtraction()) {
+				// NEUTRAL asks the port which way it goes, and takes the answer only when there is no
+				// question: a one-way port has a role whether or not anybody wrenched it. Ordinary tanks
+				// answer "both" and still wait for the wrench, which is right — there the direction is a
+				// decision, and guessing it would move a player's fluid the wrong way. But the reactor's
+				// parts are one-way by construction (a column drinks water and gives steam, an exhaust
+				// only takes), and making the player configure a fitting that has no second option is a
+				// step that can only be got wrong.
+				boolean extract = mode == PipeFaceMode.EXTRACT
+						|| (mode == PipeFaceMode.NEUTRAL && port.supportsExtraction()
+								&& !port.supportsInsertion());
+				boolean insert = mode == PipeFaceMode.INSERT
+						|| (mode == PipeFaceMode.NEUTRAL && port.supportsInsertion()
+								&& !port.supportsExtraction());
+				if (extract && port.supportsExtraction()) {
 					sources.add(new Endpoint(pos.immutable(), dir));
-				} else if (mode == PipeFaceMode.INSERT && port.supportsInsertion()) {
+				} else if (insert && port.supportsInsertion()) {
 					sinks.add(new Endpoint(pos.immutable(), dir));
 				}
 			}
