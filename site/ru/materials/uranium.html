@@ -362,6 +362,7 @@
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="10 страниц">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="4 страницы">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Ядерная техника</span><span class="cat-count" aria-label="12 страниц">12</span></a>
 <div class="group-title">Переработка</div>
 <a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="15 страниц">15</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машины для жидкостей</span><span class="cat-count" aria-label="2 страницы">2</span></a>
@@ -370,7 +371,7 @@
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логистика жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Хранение жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Мир и автоматизация</div>
-<a class="cat-link active" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="16 страниц">16</span></a>
+<a class="cat-link active" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="17 страниц">17</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сельское хозяйство</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Хай-тек машины</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Прочее</div>
@@ -401,9 +402,9 @@
 
 <p>Ванильного урана в игре нет, поэтому слиток — модовый. Уран не лежит без дела: его пыль идёт на факел обогащённого урана, слиток входит в крафт телепорта, а инкубатор расходует слиток как заряд облучения при мутациях (один слиток — три попытки, после остаётся отработанный уран).</p>
 
-<p><strong>Есть и второй путь переработки — через <a href="../machines/thermal_centrifuge.html">термоцентрифугу</a>.</strong> Пыль можно не плавить в слиток, а разделить надвое: пыль → 2 стружки → (компрессор) → 2 очищенного урана. Вместе с удвоением дробителя это даёт <strong>четыре</strong> единицы с одного блока руды вместо одной при прямой переплавке — но требует линии с нагревателем и сигналом редстоуна. Полноценная ядерная ветка (реактор, РИТЭГ) появится позже; очищенный уран — задел под неё.</p>
+<p><strong>Есть и второй путь переработки — через <a href="../machines/thermal_centrifuge.html">термоцентрифугу</a>.</strong> Пыль можно не плавить в слиток, а разделить надвое: пыль → 2 концентрата → (компрессор, два в один) → 1 обогащённый уран. Вместе с удвоением дробителя это даёт <strong>два</strong> обогащённых урана с одного блока руды вместо одного слитка при прямой переплавке — но требует линии с нагревателем и сигналом редстоуна. Полноценная ядерная ветка (реактор, РИТЭГ) появится позже; обогащённый уран — задел под неё.</p>
 
-<table><thead><tr><th>Форма</th><th>Как получить</th></tr></thead><tbody><tr><td>Руда (камень / глубосланец)</td><td>добыть в мире; кирка даёт сырьё, Silk Touch — сам блок</td></tr><tr><td>Сырьё</td><td>дроп с руды; плавится в слиток</td></tr><tr><td>Пыль</td><td>блок руды (или сырьё) дробится в 2 пыли; слиток — в 1</td></tr><tr><td>Слиток</td><td>переплавка сырья, руды или пыли</td></tr><tr><td>Стружка</td><td>пыль разделяется надвое в термоцентрифуге</td></tr><tr><td>Очищенный уран</td><td>прессование стружки в компрессоре, 1:1</td></tr></tbody></table>
+<table><thead><tr><th>Форма</th><th>Как получить</th></tr></thead><tbody><tr><td>Руда (камень / глубосланец)</td><td>добыть в мире; кирка даёт сырьё, Silk Touch — сам блок</td></tr><tr><td>Сырьё</td><td>дроп с руды; плавится в слиток</td></tr><tr><td>Пыль</td><td>блок руды (или сырьё) дробится в 2 пыли; слиток — в 1</td></tr><tr><td>Слиток</td><td>переплавка сырья, руды или пыли</td></tr><tr><td>Концентрат</td><td>пыль разделяется надвое в термоцентрифуге</td></tr><tr><td>Обогащённый уран (U-235)</td><td>два концентрата прессуются в компрессоре в один</td></tr></tbody></table>
 
 <h2 id="где-искать">Где искать</h2>
 
@@ -427,7 +428,7 @@
 
 <p>Уран зарезервирован под ядерный трек — реактор и РИТЭГ, — который появится в более поздних фазах. Но и сейчас у него есть потребители: пыль идёт на <a href="../utility/enriched_uranium_torch.html">факел обогащённого урана</a>, слиток входит в крафт <a href="../advanced-machines/teleporter.html">телепорта</a>, а <a href="../agriculture/incubator.html">инкубатор</a> расходует слиток как заряд облучения при мутациях (один слиток — три попытки, остаётся отработанный уран). Лишний слиток также можно сбывать жителю-индустриалисту за изумруды.</p>
 
-<p>Первый шаг ядерного трека уже сделан: <a href="../machines/thermal_centrifuge.html">термоцентрифуга</a> даёт <strong>очищенный уран</strong> — материал, ради которого стоит строить линию с нагревателем. Своих потребителей у него пока нет, он копится под будущий реактор.</p>
+<p>Первый шаг ядерного трека уже сделан: <a href="../machines/thermal_centrifuge.html">термоцентрифуга</a> даёт <strong>обогащённый уран</strong> — материал, ради которого стоит строить линию с нагревателем. Своих потребителей у него пока нет, он копится под будущий реактор.</p>
 
 <h2 id="связанное">Связанное</h2>
 

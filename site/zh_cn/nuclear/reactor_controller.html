@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="zh_cn" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>反应堆控制器 — Ala Industrial — 指南</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="打开菜单" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../assets/item/guide_book_3d.png" alt="">全部内容</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <details class="language-menu"><summary aria-label="Language">中文</summary><div class="language-popover"><span>中文</span><a href="../../en/nuclear/reactor_controller.html">EN</a><a href="../../ru/nuclear/reactor_controller.html">RU</a><a href="../../uk/nuclear/reactor_controller.html">UA</a><a href="../../ja_jp/nuclear/reactor_controller.html">日本語</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">浏览</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../assets/item/tempered_iron_pickaxe.png" alt=""><span>新手入门</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
+<div class="group-title">能源</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
+<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="12 个页面">12</span></a>
+<div class="group-title">加工</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="15 个页面">15</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<div class="group-title">物流</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>物品物流</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<div class="group-title">世界与自动化</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="17 个页面">17</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<div class="group-title">其他</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
+<div class="group-title">物品</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">首页</a><span class="sep">/</span><a href="../nuclear/index.html">核能设施</a><span class="sep">/</span><span>反应堆控制器</span></div>
+<div class="block-card" data-hero-alt="Every block and item of the Ala Industrial reactor room in item frames: casing, glass, door, lamp, inlet, outlet, controller, column, fuel rod and its cladding." style="background-image:linear-gradient(180deg,rgba(22,22,26,.55) 0%,rgba(22,22,26,.92) 100%),url(../assets/screenshots/nuclear_reactor_block_set.png);background-size:cover;background-position:center center;background-repeat:no-repeat;">
+  <div class="card-head">
+    <img class="icon" src="../assets/block/reactor_controller_top.png" alt="反应堆控制器" width="64" height="64">
+    <div class="info">
+      <h1>反应堆控制器</h1>
+      <div class="block-id">alaindustrial:reactor_controller</div>
+      <div class="tags"><span class="tag cat" style="background:#ef4444">核能设施</span><span class="tag tier">HV</span><span class="tag lifecycle" style="background:#22c55e">已实现</span><span class="tag">nuclear</span><span class="tag">reactor</span><span class="tag">multiblock</span><span class="tag">shielding</span><span class="tag">automation</span><span class="tag">tier-hv</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="概览">概览</h2>
+
+<p><strong>反应堆控制器</strong>是外壳里唯一"聪明"的方块，也是这间房间里唯一的机器。房间还在建的时候，它在自己 周围寻找这间房间、检查它，并告诉你哪里不对、在哪儿。房间一旦封闭，它本身就成了反应堆：收集反应堆 柱、计算发电与发热、烧开水、整理每一摞柱子内部的流体、消耗燃料棒、输出 EU/FE。</p>
+
+<p>控制器要<strong>顶替竖墙上的一块外壳</strong>放置，正面朝外：正面是玩家看的屏幕，红石也接在那里。电缆接在其他 任意一面。有两个控制器的房间不会成形——一间房间只有一个大脑。</p>
+
+<blockquote><strong>反应堆目前还没有的东西。</strong>热量刻度会计算也会显示，但 100% 没有任何后果：反应堆既不会熔毁， 也不会爆炸。运转中的堆芯周围同样没有辐射。</blockquote>
+
+<h2 id="它该立在哪儿">它该立在哪儿</h2>
+
+<table><thead><tr><th>要求</th><th>为什么</th></tr></thead><tbody><tr><td>在竖墙上（不能在地板或天花板）</td><td>正面是要读的面板，红石也接在那里；装在天花板上就看不见了</td></tr><tr><td>不能在外壳的棱或角上</td><td>棱上的格子没有"内侧"可以朝向</td></tr><tr><td>正面朝外</td><td>房间内部在控制器<strong>背后</strong>；把它转过来，玩家会看到"控制器不在墙上"</td></tr><tr><td>每间房间正好一个</td><td>同一个外壳里的第二个控制器会给出"房间里有第二个控制器"并附上坐标</td></tr></tbody></table>
+
+<p>这四个条件由同一次扫描检查，给出的也是同一类回答——状态加位置。没有单独的"配置模式"：放好、看屏幕、 改。</p>
+
+<h2 id="扫描">扫描</h2>
+
+<p>扫描分两趟，这不是实现细节，而是那些提示之所以有用的原因。</p>
+
+<ol><li><strong>六条射线</strong>，从控制器面前的格子出发，沿 ±X、±Y、±Z 一直射到第一块外壳方块。什么也没射到的射线</li></ol>
+<p>意味着"房间在这个方向上没有边界"——要么它太大，要么墙上有个能看见天的洞。</p>
+<ol><li><strong>沿整个周长巡视</strong>，范围由那六次命中确定。正是这一趟能在 14³ 的外壳里找出唯一缺失的那一格并说出</li></ol>
+<p>它的坐标。同一趟里还会统计控制器数量、记住门的格子、算出玻璃的占比。</p>
+
+<p>射线的射程是尺寸上限<strong>再加一步</strong>，而不是正好到上限。多出的这一步不是余量，而是"房间太大"这个状态 能够存在的前提：一条恰好在上限处截断的射线，永远看不到那面比规格宽出一格的远墙。</p>
+
+<p>为什么不用简单的洪水填充：填充分不清"房间太大"和"房间漏了"——两种情况下它都只是一直跑到头。两趟 扫描回答的是两个不同的问题。</p>
+
+<p>检查的顺序同样是关于体验的决定，而不是关于代码的：</p>
+
+<ol><li>控制器的位置（它正面前方是否有一格是空的）；</li><li>边界——六条射线；</li><li>尺寸（太小，然后太大）；</li><li>密封性——巡视中遇到的第一块非外壳格（随即中断巡视）；</li><li>控制器本身是作为墙格而不是棱格被找到的；</li><li>第二个控制器；</li><li>门，然后门洞；</li><li>玻璃占比。</li></ol>
+
+<p>每一条回答都可以单独修好，玩家一次修一件事，而不是拿到一张清单。玻璃上限刻意排在最后：这是唯一 "软性"的问题——出现它时建筑仍然密封且正确，只是不算作防护性的。</p>
+
+<table><thead><tr><th>什么时候重新扫描</th><th>条件</th></tr></thead><tbody><tr><td>定期</td><td>每 <strong>40 刻 = 2 秒</strong></td></tr><tr><td>邻居变化时</td><td>立刻：旁边的墙被砸了、装了端口、门被炸了</td></tr></tbody></table>
+
+<p>定期扫描是必需的：邻居更新只对紧挨着控制器的六个方块生效，而房间可以有 14 格宽。远墙上被挖掉的 方块对控制器来说不是邻居。也正因如此，控制器从不"休眠"。</p>
+
+<h2 id="状态">状态</h2>
+
+<p>一共十种状态。其中九种是待解决的问题，第十种是"就绪"。</p>
+
+<table><thead><tr><th>状态</th><th>含义</th><th>显示位置</th><th>显示尺寸</th></tr></thead><tbody><tr><td>房间已成形</td><td>密封、尺寸合规、有入口</td><td>—</td><td>是</td></tr><tr><td>控制器不在墙上</td><td>在地板/天花板、在棱上、被封死或转错了面</td><td>是</td><td>—</td></tr><tr><td>房间没有边界</td><td>射线越过上限也没找到墙</td><td>—</td><td>—</td></tr><tr><td>房间太小</td><td>某个轴上的内部尺寸小于下限</td><td>—</td><td>是</td></tr><tr><td>房间太大</td><td>某个轴上的内部尺寸大于上限</td><td>—</td><td>是</td></tr><tr><td>外壳有缺口</td><td>周长上的某一格不是外壳方块</td><td>是</td><td>—</td></tr><tr><td>没有气闸门</td><td>外壳密封，但里面没有门</td><td>—</td><td>—</td></tr><tr><td>没有门洞</td><td>有门，但没有门洞</td><td>—</td><td>—</td></tr><tr><td>房间里有第二个控制器</td><td>同一个外壳里还立着一个</td><td>是</td><td>—</td></tr><tr><td>玻璃太多</td><td>玻璃超过外壳格数的 30%</td><td>是</td><td>—</td></tr></tbody></table>
+
+<p>"玻璃太多"指出的位置不是"有罪"的那一格（有罪的是占比，不是方块），而是巡视顺序里的第一块玻璃。 它的作用是让烟把玩家引到外壳的玻璃部分。</p>
+
+<h2 id="它怎么带动反应堆">它怎么带动反应堆</h2>
+
+<p>成形的房间是一台机器，它的整个刻更新都由控制器执行。燃料柱完全没有自己的刻更新：摆了三十根柱子的 大厅，对服务器的开销和一个带实体的方块相同。</p>
+
+<h3 id="收集柱子">收集柱子</h3>
+
+<p>控制器用检查外壳的同一趟巡视（每 40 刻一次）走过房间<strong>内部</strong>，记下<strong>每一根</strong>反应堆柱——装了料的和 空的都算。同时它累加带铀的燃料棒，并统计相邻对数。</p>
+
+<p>空柱子被收进名单是有意为之。按燃料过滤看起来无害，其实不然：空料架会掉出水回路和整摞流体的整理， 以至于从底部送进去的水升不过第一根装了料的柱子。柱子属于这台机器，是因为它立在房间里，而不是因为 有人给它装了料。</p>
+
+<p>而相邻加成仍然<strong>按燃料</strong>统计：两根并排的空料架什么也加速不了，否则加成就等于花在脚手架上。</p>
+
+<p>巡视 12³ 的内部意味着 1728 次方块读取：每秒六十次很荒唐，每两秒一次很便宜。代价是延迟：用手插进去 的燃料棒要到下一趟巡视才计入。</p>
+
+<h3 id="发电燃料与发热">发电、燃料与发热</h3>
+
+<table><thead><tr><th>量</th><th>怎么算</th></tr></thead><tbody><tr><td>潜力（100% 时）</td><td><code>燃料棒 × 6 × M能</code>，其中 <code>M能 = 1 + 0.5 × 相邻对数</code></td></tr><tr><td>产出</td><td>× 深度‰ / 1000`，且不超过缓存的剩余空间</td></tr><tr><td>发热</td><td><code>满热 × 产出 / 潜力</code>，其中满热 <code>燃料棒 × 4 × M热</code>，<code>M热 = 1 + 0.8 × 相邻对数</code></td></tr><tr><td>燃料消耗</td><td>正好是<code>产出</code>那么多 EU/FE，按各柱子的燃料棒数成比例分摊</td></tr><tr><td>热量</td><td><code>clamp(热量 + 发热 − 水带走 − 自然散热, 0, 10000)</code></td></tr></tbody></table>
+
+<p><strong>上限在深度之前生效，而不是之后。</strong>先把潜力钳到 512 EU/FE/刻，然后才按深度取。反过来看似等价，其实 不然：任何潜力已经超过 512 的区域，滑块的每一档都给出同样的 512 EU/FE/刻。</p>
+
+<p><strong>燃料是按 EU/FE 计的，不是按时间。</strong>控制器从柱子那里扣掉的正是它输出的能量，而柱子把它换算成燃料棒 的耐久格（每格 144 EU/FE）。由此得到这套模型的核心性质：<strong>一根燃料棒在哪里都值 144 000 EU/FE</strong>，没有 任何布局能让铀变便宜。</p>
+
+<p><strong>发热有自己的相邻系数，而且比发电的大</strong>——<strong>40%</strong> 对 25%。这是水回路最关键的数字：密集的区域升温 比增益更快，因此提高功率的布局同样提高了<strong>冷却的代价</strong>。</p>
+
+<p>也正是这个除法<strong>从上方限制</strong>了发热：</p>
+
+<pre><code class="lang-">HV 上限时的发热 → 512 × (4 × 0.8) / (6 × 0.5 = 546 点/刻</code></pre>
+
+<p>处在上限的密集房间每刻发热 500…546 点，没有哪一间会超过 <strong>546</strong>。</p>
+
+<blockquote><strong>大房间给的不是功率，而是自持力。</strong>任何超过 512 EU/FE/刻 的配置，输出都是同样的 512 EU/FE/刻；变长的 只是两次装料之间的时间。而房间的胃口在任何到达上限的布局上都<strong>一样</strong>：256 根燃料棒 = 每小时 128 块铀矿石。各种布局的数字见</blockquote>
+
+<p>热量<strong>每刻</strong>都会结算，哪怕反应堆已经停机：冷却必须照常工作，否则"停堆再等等"就不成其为自救手段。 满刻度降到零需要 <strong>395 刻（19.8 秒）</strong>。</p>
+
+<h3 id="操作红石与深度">操作：红石与深度</h3>
+
+<table><thead><tr><th>机构</th><th>作用</th></tr></thead><tbody><tr><td>接到控制器的红石信号</td><td><strong>有</strong>——反应堆运转，<strong>撤掉</strong>——紧急停堆</td></tr><tr><td>深度滑块</td><td>五档 0 / 25 / 50 / 75 / 100%；0% 就是停堆，只不过是在屏幕里操作</td></tr></tbody></table>
+
+<p>刻意不再有别的操作机构：两个，正好是站在冒烟的大厅里的玩家脑子里装得下的数量。</p>
+
+<p>滑块在<strong>任何规模上都有效</strong>：它切的是已经被上限钳过的值，所以 3×3 一层用 50% 就是 256 EU/FE/刻——热量、 水和每小时的铀也正好减半。</p>
+
+<h3 id="冷却外壳自己散水只在阈值之外">冷却：外壳自己散，水只在阈值之外</h3>
+
+<p>散热曲线由两项组成，而第二项才是关键：</p>
+
+<pre><code class="lang-">散热 = 4 + 热量 × 8 / 1000</code></pre>
+
+<p>正比的那一项让反应堆有了<strong>平衡点，而不是一个开关</strong>。现在每个区域都停在产热与散热相等的地方：</p>
+
+<pre><code class="lang-">平衡点 = (发热 − 4) × 1000 / 8</code></pre>
+
+<table><thead><tr><th>活性区</th><th>发热，点/刻</th><th>平衡点</th><th>刻度</th><th>水</th></tr></thead><tbody><tr><td>1 根柱子（4 根燃料棒）</td><td>16</td><td>1500</td><td>15%</td><td>不需要</td></tr><tr><td>2 根并排</td><td>57</td><td>干烧 6625</td><td>干烧 66%，带水 60%</td><td>非必需（接上就是 3 mB/刻）</td></tr><tr><td>3 根一排（12 根燃料棒）</td><td>124</td><td>高于上限</td><td>带水 60%</td><td><strong>必需</strong></td></tr></tbody></table>
+
+<p><strong>外壳的上限是 84 点/刻。</strong>产热低于它的都能自己撑住；高于它才需要回路。</p>
+
+<p>水是<strong>安全系统，不是散热器</strong>。它只在越过目标点（60% = 6000 点）之后才启动，并带走两样东西：当前的 增量，以及已经积下的过热的二十分之一。目标点刻意低于黄区（70%）：回路的职责是把反应堆带回绿色， 而不是把它停在警告线上。</p>
+
+<pre><code class="lang-">目标 = 10000 × 60 / 100 （默认为 6000）
+超出 = 热量 &lt; 目标 ? 0: (发热 − 散热) + (热量 − 目标) / 20
+水，mB = ceil(超出 / 2) （向**上**取整）
+带走 = 沸腾量 × 2</code></pre>
+
+<p>第一项守住这条线，第二项把它拉回来。没有第二项，烧红的区域就会僵在被发现的那个温度上——那和回路 根本不工作没有区别。</p>
+
+<p><strong>起步的反应堆不需要管道。</strong>一根插了四根燃料棒的柱子每刻产热 16 点，干烧着停在刻度的 15%。真正 非要接水不可，是从<strong>第三根</strong>柱子开始（124 点/刻，36 mB/刻）。</p>
+
+<blockquote><strong>接了水正常运转的反应堆停在刻度的 60%</strong>——也就是说它的热量条是绿的，而黄色重新意味着"有点 不对劲"：供水跟不上、排气堵了，或者反应堆是在没有回路的情况下被拉高的。</blockquote>
+
+<p>烧水的是控制器而不是柱子：它沿自己的柱子名单走一遍，向每根要还差的那部分。烧不掉的那部分留作 热量，爬上刻度。</p>
+
+<h3 id="整理每一摞">整理每一摞</h3>
+
+<p>控制器每刻都会把<strong>每一摞连续的竖直柱子内部</strong>的流体理顺：水全部沉到底，蒸汽全部升到顶。这样一摞 就表现得像一个容器，插在它任意一格上的管道就能把整摞灌满。</p>
+
+<blockquote>⚠️ <strong>并排站立的柱子彼此不相连。</strong>冷却剂出现在一根什么都没接的柱子里，无论多方便，读起来都像 是 bug。</blockquote>
+
+<h2 id="界面">界面</h2>
+
+<p>类型：一个没有任何槽位的屏幕——控制器是用来读的，不是用来装东西的。刻意没有物品栏：空槽位会招来 漏斗。 没有升级面板：控制器不是加工机器。 没有进度箭头：反应堆没有"正在进行"的操作。</p>
+
+<p><strong>布局有两种，而且永远不会同时出现。</strong>外壳没封闭时，反应堆连一个数字都不存在；封闭之后，关于缺口 的那一行也就无话可说。</p>
+
+<table><thead><tr><th>布局</th><th>何时</th><th>上面有什么</th></tr></thead><tbody><tr><td><strong>建造</strong></td><td>除"已成形"以外的任何状态</td><td>状态；"房间"——尺寸 <code>X × Y × Z</code>；"问题"——到故障格的方向；<strong>电量条</strong></td></tr><tr><td><strong>运行</strong></td><td>房间已成形</td><td>状态；"燃料棒"；"产出"，EU/FE/刻；<strong>热量条</strong>；带耗水量标注的<strong>水位条</strong>；五个按钮的深度滑块；<strong>电量条</strong></td></tr></tbody></table>
+
+<p><strong>缓存电量条在两种布局里都会画</strong>——它是唯一这样做的元素。被停掉的反应堆和刚被砸开的房间，照样存着 之前攒下的电，而恰恰是这种时候玩家才在意里面还剩多少。</p>
+
+<p><strong>"产出"这一行永远不会显示破折号。</strong>已经成形、已经装料却一声不吭的反应堆，是这台机器最糟糕的状态， 所以那里印的不是零，而是用红色写出的<strong>停机原因</strong>：未密封、没有燃料、燃料棒已抽出、没有红石、缓存 已满。</p>
+
+<p>水位条的标注同时带着<strong>水位和耗量</strong>："水 62% · 243 mB/刻"。</p>
+
+<p>热量条在有余量时是绿色的，从 70% 起变黄，再到那里与 100% 的中点（85%）变红。阈值取自配置，而不是 写死在界面里。</p>
+
+<p><strong>水位条的颜色是排气堵塞的指示灯：</strong></p>
+
+<table><thead><tr><th>颜色</th><th>何时</th><th>含义</th></tr></thead><tbody><tr><td>青色</td><td>水多于零、蒸汽少于 90%</td><td>回路在转</td></tr><tr><td><strong>黄色</strong></td><td>蒸汽 <strong>≥ 90%</strong></td><td>蒸汽无处可去：排气没接、堵了，或喷口对着墙</td></tr><tr><td>红色</td><td>水为<strong>零</strong></td><td>回路干了：供水跟不上或者停了</td></tr></tbody></table>
+
+<p>黄色这一档才是这套配色真正的理由。排气堵住时，水位条<strong>安心地满着</strong>，而温度却在涨。</p>
+
+<p><strong>位置是方向，不是坐标。</strong>偏移量从控制器自身算起，读作"向东 4、向上 2"：读屏幕的玩家就站在控制器 旁边，这样一句话比三个数字更快把他带到那一格。</p>
+
+<p>从外面也能看出状态：成形房间的控制器正面会发亮，未成形的则是暗的。</p>
+
+<h2 id="世界中的反馈">世界中的反馈</h2>
+
+<p>对一间上千方块的房间来说，光有文字是不够的，所以控制器还会用声音和粒子回应。</p>
+
+<table><thead><tr><th>事件</th><th>会发生什么</th></tr></thead><tbody><tr><td>房间成形</td><td>控制器处响起铁砧落地声 + 它上方 12 个粒子</td></tr><tr><td>房间解体</td><td><strong>在缺口处</strong>响起信标熄灭声，只响一次</td></tr><tr><td>问题未修好期间</td><td>每次扫描都在问题格里冒 16 个烟粒子</td></tr></tbody></table>
+
+<p>故障声只在<strong>状态切换时</strong>响一次，而不是循环播放，这是原则问题。每两秒重复一次的警报，会从提示变成 惩罚。</p>
+
+<p>成形的声音与<a href="../fluid-machines/distillation_column.html">蒸馏塔</a>搭好塔身时相同：模组里"多方块组好了" 就该是同一个声音。</p>
+
+<h2 id="外壳状态的刷写">外壳状态的刷写</h2>
+
+<p>控制器是唯一会给外壳打上"已成形"和"棱"标记的一方，而且它是给<strong>整个</strong>外壳打，不只是给自己。房间里 的灯也由它点亮（见<a href="reactor_lamp.html">反应堆灯</a>）。</p>
+
+<table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>遍历什么</td><td><strong>显式指定</strong>的那个盒子的周长格</td></tr><tr><td>成功时用哪个盒子</td><td>本次扫描量出的那个；它同时被记住</td></tr><tr><td>失败时用哪个盒子</td><td>最后一次<strong>记住</strong>的那个——控制器曾经认可过的</td></tr><tr><td>写什么</td><td>只写值发生了变化的格子</td></tr><tr><td>光</td><td>每一格正对着灯的内部格里出现亮度 15 的光方块</td></tr></tbody></table>
+
+<p><strong>为什么盒子要显式传入，而不是取自扫描结果。</strong>失败的扫描量不出盒子，因此以扫描结果为准的刷写在 物理上就只会<strong>打开</strong>标记：墙被砸穿之后，房间照旧无缝、照旧亮着，就像什么也没发生。现在控制器记住 最后一次认可的盒子，扫描失败时熄灭的正是它；盒子会被存档，因为区块可能在完好时卸载、再加载时已经 带着一个洞。</p>
+
+<h2 id="能量">能量</h2>
+
+<table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>角色</td><td>发电方，等级 <strong>HV</strong></td></tr><tr><td>缓存（EU/FE）</td><td><strong>200 000</strong></td></tr><tr><td>最大输入（EU/FE/刻）</td><td><strong>0</strong>——反应堆不从外面充电</td></tr><tr><td>最大输出（EU/FE/刻）</td><td><strong>512</strong> = HV 上限</td></tr><tr><td>各面</td><td>除正面外全部输出；正面没有任何能量角色</td></tr></tbody></table>
+
+<p>正面在能量上是惰性的：那上面是玩家要读的面板，一根从界面正中间钻出来的电缆会同时毁掉观感和理解。</p>
+
+<p>200 000 EU/FE 的缓存不是储能库而是缓冲：一时取不走电的电网，不该在一刻之内把堆芯停下。按上限算这是 391 刻（19.5 秒）的输出。一段<a href="../energy-transfer/electrum_cable.html">琥珀金缆</a>承载 192 EU/FE/刻，因此 满负荷运转的反应堆要用<strong>三条</strong>独立线路才能取空。</p>
+
+<h2 id="方块属性">方块属性</h2>
+
+<table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>形状</td><td>完整方块 16³（遮挡）</td></tr><tr><td>硬度</td><td>5.0</td></tr><tr><td>爆炸抗性</td><td>30.0</td></tr><tr><td>工具</td><td>镐（掉落必需）</td></tr><tr><td>声音</td><td>金属</td></tr><tr><td>朝向</td><td>水平；外加"已成形"状态</td></tr></tbody></table>
+
+<p>控制器<strong>不会</strong>把判定结果写进存档：房间<strong>本身</strong>就是存档。世界加载后，第一次扫描就会从周围立着的 东西里重新推出状态。</p>
+
+<p>存下来的只有从世界推不出来的东西：<strong>最后一次认可的盒子边界</strong>、累积的<strong>热量</strong>和<strong>滑块的位置</strong>。 一个在区块卸载时把它们忘掉的反应堆，会白白冷却，还会擅自回到满功率。</p>
+
+<h2 id="配方">配方</h2>
+
+<p>合成：每次 <strong>×1</strong>。</p>
+
+<pre><code class="lang-">S C S S = 屏蔽板 ×4
+R A R R = 强化屏蔽板 ×2
+S D S C = 反应堆控制电路 ×1
+A = 高级机器外壳 ×1
+D = 控制棒驱动机构 ×1</code></pre>
+
+<p>反应堆控制电路是单独的物品：4 块钯板、<strong>共鸣线圈</strong>、2 个高级电路、1 个电子电路和红石。</p>
+
+<p>线圈取代了第一版里的不稳定同位素。同位素是<a href="../agriculture/incubator.html">培育舱</a>的产物，而培育舱这条 支线已从反应堆的前置里移除：它为了一件物品把玩家带进模组的生物学部分。</p>
+
+<h2 id="进阶">进阶</h2>
+
+<p>等级：<strong>HV</strong>——最高 512 EU/FE/刻 的发电方。 需要：屏蔽板与强化屏蔽板（材料链见<a href="reactor_casing.html">反应堆外壳</a>）、 <a href="../components/advanced_machine_casing.html">高级机器外壳</a>、 <a href="../components/advanced_circuit.html">高级电路</a>、钯板、 <a href="../components/resonance_chain.html">共鸣线圈</a>。 解锁：反应堆房间本身——没有控制器，这堆方块就只是一堆方块。</p>
+
+<h2 id="相关内容">相关内容</h2>
+
+<p><a href="reactor_casing.html">反应堆外壳</a>——它扫描的对象、几何和合成链。 <a href="reactor_door.html">气闸门</a>——房间成形的必要条件。 <a href="reactor_glass.html">反应堆玻璃</a>、<a href="reactor_lamp.html">灯</a>、 <a href="reactor_port.html">入口</a>和<a href="reactor_outlet.html">输出端</a>——其余会被扫描器算作墙的 方块。 <a href="fuel_rod_assembly.html">反应堆柱</a>——它烧的、煮的和整理的对象。 <a href="uranium_fuel_rod.html">燃料棒</a>和<a href="empty_fuel_rod.html">燃料包壳</a>——它消耗的燃料， 以及留下的包壳。 <a href="../materials/steam.html">蒸汽</a>——回路的工质。 <a href="steam_nozzle.html">蒸汽喷口</a>——回路的末端；它不工作时水位条会变黄、热量会上升。 <a href="reactor_button.html">反应堆按钮</a>——这套方块里唯一<strong>不</strong>被扫描器算作墙的一个。 <a href="../components/resonance_chain.html">共鸣链</a>——控制电路里的线圈从哪来。 <a href="../fluid-machines/distillation_column.html">蒸馏塔</a>和<a href="../agriculture/incubator.html">培育舱</a>——模组此前的 两个多方块结构；它们检查的都是固定形状，体积扫描器是在这里第一次写出来的。</p>
+
+<h2>合成</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="反应堆控制器 alaindustrial:reactor_controller" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="屏蔽板"><img src="../assets/item/shielding_alloy_plate.png" alt="屏蔽板" width="32" height="32"></div> <div class="cell" title="反应堆控制电路"><img src="../assets/item/reactor_circuit.png" alt="反应堆控制电路" width="32" height="32"></div> <div class="cell" title="屏蔽板"><img src="../assets/item/shielding_alloy_plate.png" alt="屏蔽板" width="32" height="32"></div> <div class="cell" title="强化屏蔽板"><img src="../assets/item/shielding_alloy_reinforced_plate.png" alt="强化屏蔽板" width="32" height="32"></div> <div class="cell" title="高级机器外壳"><img src="../assets/item/advanced_machine_casing_3d.png" alt="高级机器外壳" width="32" height="32"></div> <div class="cell" title="强化屏蔽板"><img src="../assets/item/shielding_alloy_reinforced_plate.png" alt="强化屏蔽板" width="32" height="32"></div> <div class="cell" title="屏蔽板"><img src="../assets/item/shielding_alloy_plate.png" alt="屏蔽板" width="32" height="32"></div> <div class="cell" title="控制棒驱动机构"><img src="../assets/item/control_rod_drive.png" alt="控制棒驱动机构" width="32" height="32"></div> <div class="cell" title="屏蔽板"><img src="../assets/item/shielding_alloy_plate.png" alt="屏蔽板" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="反应堆控制器"><img src="../assets/block/reactor_controller_top.png" alt="反应堆控制器" width="32" height="32"></div><div class="result-name">反应堆控制器</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

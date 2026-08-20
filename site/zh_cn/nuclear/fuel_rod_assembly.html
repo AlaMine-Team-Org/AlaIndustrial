@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="zh_cn" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>反应堆柱 — Ala Industrial — 指南</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="打开菜单" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../assets/item/guide_book_3d.png" alt="">全部内容</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <details class="language-menu"><summary aria-label="Language">中文</summary><div class="language-popover"><span>中文</span><a href="../../en/nuclear/fuel_rod_assembly.html">EN</a><a href="../../ru/nuclear/fuel_rod_assembly.html">RU</a><a href="../../uk/nuclear/fuel_rod_assembly.html">UA</a><a href="../../ja_jp/nuclear/fuel_rod_assembly.html">日本語</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">浏览</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../assets/item/tempered_iron_pickaxe.png" alt=""><span>新手入门</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
+<div class="group-title">能源</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
+<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="12 个页面">12</span></a>
+<div class="group-title">加工</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="15 个页面">15</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<div class="group-title">物流</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>物品物流</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<div class="group-title">世界与自动化</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="17 个页面">17</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<div class="group-title">其他</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
+<div class="group-title">物品</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">首页</a><span class="sep">/</span><a href="../nuclear/index.html">核能设施</a><span class="sep">/</span><span>反应堆柱</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../assets/block/fuel_rod_assembly_top.png" alt="反应堆柱" width="64" height="64">
+    <div class="info">
+      <h1>反应堆柱</h1>
+      <div class="block-id">alaindustrial:fuel_rod_assembly</div>
+      <div class="tags"><span class="tag cat" style="background:#ef4444">核能设施</span><span class="tag lifecycle" style="background:#22c55e">已实现</span><span class="tag">nuclear</span><span class="tag">reactor</span><span class="tag">multiblock</span><span class="tag">fuel</span><span class="tag">uranium</span><span class="tag">steam</span><span class="tag">fluid-transport</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="概览">概览</h2>
+
+<p><strong>反应堆柱</strong>既是给反应堆装料的地方，也是给它降温的地方。这根能看穿的料架可以插<strong>四</strong>根燃料棒， 立在<a href="reactor_controller.html">反应堆房间</a>里，手持 <a href="uranium_fuel_rod.html">燃料棒</a>右键即可装入，空手右键即可取出。它没有任何界面。</p>
+
+<p>它还带<strong>两个储罐</strong>——水和蒸汽。水由管道送来，沸腾并带走热量；蒸汽再由管道排到外面。水位和燃料棒 数量一样，都能从<strong>外面</strong>在模型上看见。</p>
+
+<p>这是核能支线最重要的一个决定：燃料不是躺在某个槽位里，而是<strong>立在房间里</strong>。空料架和满料架在大厅 另一头就能分辨，"添燃料"是世界里的动作而不是窗口里的操作，堆芯烧掉一半也是一眼看出来的，而不是 靠界面上的一个数字。</p>
+
+<h2 id="它存的是物品不是计数">它存的是物品，不是计数</h2>
+
+<p>从前料架只存燃料棒的<strong>数量</strong>，外加一个公用的"当前燃烧的那根还剩多少"。由此产生的两件事，玩家 第一个小时就会撞上：取出用过一半的燃料棒会<strong>销毁</strong>它（剩余量没地方记），烧尽的燃料棒会<strong>消失</strong> —也就是说，每一次续料都要一块新的屏蔽板，也就是钯。</p>
+
+<p>现在料架存的是<strong>四件物品</strong>。两个后果随着它们的原因一起消失了：</p>
+
+<table><thead><tr><th>从前</th><th>现在</th></tr></thead><tbody><tr><td>没烧完的燃料棒会丢失</td><td>连同耐久一起返还，放回去从原处继续</td></tr><tr><td>烧尽的会消失</td><td>变成<a href="empty_fuel_rod.html">燃料包壳</a>，留在料架上</td></tr><tr><td>一个公用的燃烧计数</td><td>每根燃料棒各有自己的耐久（见<a href="uranium_fuel_rod.html">燃料棒规格</a>）</td></tr></tbody></table>
+
+<h2 id="怎么用它">怎么用它</h2>
+
+<table><thead><tr><th>操作</th><th>会发生什么</th></tr></thead><tbody><tr><td>手持<a href="uranium_fuel_rod.html">燃料棒</a>右键</td><td>燃料棒插入第一个空位，伴随金属声；创造模式不消耗物品</td></tr><tr><td>手持<a href="empty_fuel_rod.html">燃料包壳</a>右键</td><td>同样可以插入：包壳能先存放在料架里备用</td></tr><tr><td>对已插满的料架右键</td><td>什么也不会拿走——物品留在手里</td></tr><tr><td>空手右键</td><td>料架交还一根，<strong>用过的优先</strong></td></tr><tr><td>手持<strong>任何其他物品</strong>右键</td><td>与空手同一条分支：燃料棒照样取出</td></tr><tr><td>破坏方块</td><td><strong>全部</strong>内容物掉落，完好的和没烧完的都在内</td></tr></tbody></table>
+
+<h3 id="用过的优先交还">用过的优先交还</h3>
+
+<p>这正是整个交互的用意。玩家走到跑完一轮的柱子前，是来取<strong>包壳</strong>去续料的，最不希望的就是先把自己 十分钟前插进去的、还活着的燃料棒一根根捞出来。顺序是固定的：先给空包壳，只有它们都取完了，才从上 往下给装料的燃料棒。</p>
+
+<p>被苦力怕炸开的料架也会掉落内容物——那正是最不该丢东西的场合。</p>
+
+<h2 id="磨损同时落在所有装料的燃料棒上">磨损同时落在所有装料的燃料棒上</h2>
+
+<p>控制器从柱子扣除 EU/FE，柱子把它换算成耐久格——<strong>所有装料的燃料棒同时，每一轮各扣一格</strong>。</p>
+
+<pre><code class="lang-">一轮的价格 = 144 EU/FE × （带铀的燃料棒根数）</code></pre>
+
+<p>在攒下的消耗还不够一整轮之前，它会<strong>结转</strong>到下一刻；一旦够了，每根装料的燃料棒各加 1 点损伤。 攒到 1000 的燃料棒会就地换成包壳。</p>
+
+<p>之所以这样做，是因为"轮流烧"根本不成立：四根燃料棒立在同一束中子流里，四根都在出力，老化的却只有 一根。玩家看到的是四根在工作的燃料棒和一条在减少的耐久条。而算术并没有跑偏：柱子消耗的仍然是每根 燃料棒一根的能量，只是从所有燃料棒身上一起取。</p>
+
+<p>实际结果是：<strong>一根装了四根燃料棒的柱子会整柱同时耗尽</strong>。二十分钟里（单根柱子）四根都是满的， 然后四根同时变成包壳。装得参差不齐的料架也会自动拉平：新燃料棒比半空的邻居活得久，因为每一轮都从 所有装料的燃料棒身上扣，而扣完的会退出。</p>
+
+<p><strong>只有需要能量时才消耗燃料。</strong>如果控制器的缓存是满的、又没有人取电，料架完全不会磨损。</p>
+
+<h2 id="装填量从外面看得见">装填量从外面看得见</h2>
+
+<p>模型带的是<strong>两个</strong>计数，而不是一个：</p>
+
+<table><thead><tr><th>属性</th><th>含义</th><th>怎么画</th></tr></thead><tbody><tr><td>燃料棒 = 0…4</td><td><strong>一共</strong>插了几根，包括包壳</td><td>被占用的插槽</td></tr><tr><td>装料 = 0…4</td><td>其中几根<strong>带铀</strong></td><td>明亮的燃料棒；其余是暗色的包壳</td></tr></tbody></table>
+
+<p>两个属性并不是为了好看。若只有一个只数燃料的计数，跑完一轮的柱子会报告零——里面的包壳不但看不见， 而且<strong>取不出来</strong>。那样的料架既不能清空也不能装料，只能砸掉。</p>
+
+<h3 id="柱子在竖直方向上连成一体">柱子在竖直方向上连成一体</h3>
+
+<p>当正上方或正下方也立着同样的柱子时，相连的柱子会去掉顶盖和底板，接缝由一段插件补上，于是三节 叠起来的柱子读起来是<strong>一根高柱</strong>，而不是三个摞在一起的箱子。这与本模组里电缆和管道相互连接是同 一种手法。</p>
+
+<p>这种连接<strong>不是</strong>纯装饰：流体也沿着它走（见"一摞就是一个容器"）。它不影响发电和发热——影响这些的是 <strong>相邻加成</strong>，而控制器沿三个轴独立计算相邻，与外观无关。</p>
+
+<h2 id="水与蒸汽">水与蒸汽</h2>
+
+<p>柱子的两个储罐合起来，是反应堆冷却回路的一半。</p>
+
+<table><thead><tr><th>储罐</th><th>容量</th><th>接受什么</th><th>向外交出什么</th></tr></thead><tbody><tr><td>水</td><td><strong>4000 mB</strong>（4 桶）</td><td>只接受水</td><td><strong>什么都不给</strong></td></tr><tr><td>蒸汽</td><td><strong>4000 mB</strong></td><td><strong>什么都不接受</strong></td><td>蒸汽</td></tr></tbody></table>
+
+<p>两个储罐刻意是镜像的。水只能<strong>灌进去</strong>：反应堆里的水不是可以随手借走的储备。若允许抽出来，玩家就 会往烧红的堆芯上接一台泵，把冷却剂抽回来——那等于既白拿蒸汽，又能随时要一次熔毁。蒸汽反过来只能 <strong>取出来</strong>：没有任何办法从外面把蒸汽灌进柱子。</p>
+
+<h3 id="面的规则蒸汽只走顶面水走其余各面">面的规则：蒸汽只走顶面，水走其余各面</h3>
+
+<table><thead><tr><th>面</th><th>那里公开的是什么</th></tr></thead><tbody><tr><td>顶面</td><td><strong>蒸汽</strong>罐</td></tr><tr><td>其余五面</td><td><strong>水</strong>罐</td></tr></tbody></table>
+
+<p>这样一根管道永远是明确的：一个面对应一种流体、一个方向。而且这条规则经得起柱子竖直堆叠——"蒸汽从 每根柱子的顶面出来"就经不起：一摞里下面几节根本没有空着的顶面。</p>
+
+<p>取蒸汽的管道必须接在柱子<strong>上方</strong>并设为"抽取"；供水的管道接在其他任意一面，设为"输入"。</p>
+
+<h3 id="一摞是一个容器旁边那根柱子是另一个">一摞是一个容器，旁边那根柱子是另一个</h3>
+
+<p>管道看到的端口，代表的是<strong>整摞竖直柱子</strong>，而不是单个方块：总量、总容量、自下而上灌注、自上而下 取汽。控制器每刻还会<strong>重新整理</strong>这一摞的内容——水沉到底部，蒸汽升到顶部。</p>
+
+<blockquote>⚠️ <strong>并排站立的柱子是不同的容器。</strong>冷却剂出现在一根什么都没接的柱子里，无论多方便，读起来都 像是个 bug。想冷却哪些柱子就给哪些接管；最省事的做法是把它们摞起来，然后把管道接到这一摞的 任意一格上。</blockquote>
+
+<h3 id="沸腾">沸腾</h3>
+
+<p>柱子并不自己烧水——是控制器在烧，而且<strong>只有当反应堆越过回路的目标点（刻度的 60%）时</strong>才烧。在这 之下，外壳自己就能把热量全部散掉，回路一滴水也不用：水是安全系统，不是散热器。目标点刻意低于黄区 （70%），所以接了水的健康反应堆停在绿色区间，而黄色重新意味着"有点不对劲"。</p>
+
+<p>1 mB 水带走 <strong>2 点热量</strong>，并变成 <strong>1 mB 蒸汽</strong>——按体积一比一交换。</p>
+
+<p>沸腾同时受<strong>两个</strong>上限约束：柱子里还有多少水，以及还剩多少装蒸汽的空间。因此被蒸汽塞满的回路和 空水罐一样，都会可靠地让冷却停摆——水还在，刻度是满的，温度却在涨。这不是 bug，而是排气 （<a href="steam_nozzle.html">蒸汽喷口</a>）之所以必需的唯一理由。</p>
+
+<h3 id="水位从外面看得见">水位从外面看得见</h3>
+
+<p>模型显示的是储罐的四分之几，取整规则很特别：<strong>只要大于零，就至少显示四分之一。</strong>只剩一口水的柱子 不该和干透的柱子长得一样——这两种状态该有的反应完全不同。</p>
+
+<h2 id="它不进行刻更新">它不进行刻更新</h2>
+
+<p>这个方块有方块实体，但<strong>没有自己的刻更新</strong>。反应堆是一台机器，而不是摆满机器的地板： <a href="reactor_controller.html">控制器</a>在一次刻更新里带动它房间里的所有柱子，所以摆了三十根柱子 的大厅对服务器的开销，和一个带实体的方块相同，而不是三十个。</p>
+
+<p>职责划分是这样的：料架是<strong>状态以及改变状态的规则</strong>（哪些插槽里有什么、燃料棒还剩多少、破坏时该 掉什么），控制器是<strong>时间表</strong>。</p>
+
+<p>有一个实际影响值得知道：控制器并不是每刻都巡视房间，而是每 <strong>40 刻（2 秒）</strong>一次。用手插进去的 燃料棒会从下一次巡视起才计入——最多两秒延迟，与要烧上好几分钟的燃料棒相比察觉不到。</p>
+
+<p><strong>空料架不再被排除在计算之外。</strong>控制器的清单里是所有柱子，而不只是装了料的：柱子属于这台机器，是 因为它立在房间里，而不是因为有人来得及给它装料。而相邻加成仍然<strong>按燃料</strong>计算：两根空料架挨在 一起，什么也加不了。</p>
+
+<h2 id="反应堆怎么烧它">反应堆怎么烧它</h2>
+
+<table><thead><tr><th>步骤</th><th>控制器做了什么</th></tr></thead><tbody><tr><td>每 2 秒</td><td>巡视房间内部，收集<strong>所有</strong>柱子，累加装料的燃料棒，统计相邻对数</td></tr><tr><td>每一刻发电时</td><td>按每根柱子<strong>装料燃料棒的根数成比例</strong>分配产出</td></tr><tr><td>在柱子内部</td><td>分到的份额换算成耐久格，从<strong>所有</strong>装料的燃料棒身上一起扣</td></tr><tr><td>每一刻</td><td>重新整理每一摞竖直柱子内部的流体</td></tr></tbody></table>
+
+<p>除不尽的余数交给第一根有燃料的柱子，而不是丢弃：燃料棒根数除不尽产出的房间，也要为每一点发出的 EU/FE 付账。</p>
+
+<h2 id="方块属性">方块属性</h2>
+
+<table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>形状</td><td>12×14×12 的料架（单独时）、12×16×12（上方接续时）——<strong>不是</strong>完整方块</td></tr><tr><td>透明</td><td>外壳透明，里面的燃料棒必须能画出来</td></tr><tr><td>硬度</td><td>3.0</td></tr><tr><td>爆炸抗性</td><td>6.0</td></tr><tr><td>工具</td><td>镐</td></tr><tr><td>声音</td><td>金属</td></tr><tr><td>方块实体</td><td>有，<strong>但没有自己的刻更新</strong></td></tr></tbody></table>
+
+<p>燃料棒的耐久存在<strong>物品自身</strong>上，所以料架的数据里没有、也不可能有专门的字段——"还剩多少"和"里面 是什么"不会对不上。</p>
+
+<p>方块硬度刻意低于外壳（5.0 / 30.0）：柱子活在受保护的房间<strong>里面</strong>，用不着自己的装甲——要打开反应堆 终归得穿墙。</p>
+
+<h2 id="配方">配方</h2>
+
+<p>合成：每次 <strong>×2</strong>。</p>
+
+<pre><code class="lang-">I G I I = 铁锭 ×4
+G S G G = 反应堆玻璃 ×4
+I G I S = 屏蔽板 ×1</code></pre>
+
+<p>配方本身就在描述这件物品：能看见装料的玻璃壁、铁制骨架，以及核心处的一块屏蔽板。一次两个——柱子 要用几十根，单个产出的配方会把给大厅装料变成工作台上的苦役。</p>
+
+<h2 id="进阶">进阶</h2>
+
+<p>等级：无（这个方块完全不涉及能量）。 需要：<a href="reactor_glass.html">反应堆玻璃</a>和屏蔽板——也就是钯，也就是下界。 解锁：让<a href="reactor_controller.html">反应堆控制器</a>真正开始发电。没有一根装料的柱子，组好的 房间只是一台诊断装置。</p>
+
+<h2 id="相关内容">相关内容</h2>
+
+<p><a href="uranium_fuel_rod.html">燃料棒</a>——插进它里面的东西。 <a href="empty_fuel_rod.html">燃料包壳</a>——它交还回来的东西。 <a href="reactor_controller.html">反应堆控制器</a>——烧它、并统计相邻加成的那一位。 <a href="reactor_port.html">反应堆入口</a>——水怎么进入房间，蒸汽又怎么出去。 <a href="steam_nozzle.html">蒸汽喷口</a>——蒸汽去了哪里，以及为什么没有它沸腾就会停。 <a href="../materials/steam.html">蒸汽</a>——柱子上部储罐里出现的东西。 <a href="reactor_glass.html">反应堆玻璃</a>——配方的一半，也是"看得见里面"这同一个想法。 <a href="reactor_casing.html">反应堆外壳</a>——柱子立于其中的那些墙。</p>
+
+<h2>合成</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="反应堆柱 alaindustrial:fuel_rod_assembly" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="铁锭"><img src="../assets/item/iron_ingot_3d.png" alt="铁锭" width="32" height="32"></div> <div class="cell" title="反应堆玻璃"><img src="../assets/block/reactor_glass.png" alt="反应堆玻璃" width="32" height="32"></div> <div class="cell" title="铁锭"><img src="../assets/item/iron_ingot_3d.png" alt="铁锭" width="32" height="32"></div> <div class="cell" title="反应堆玻璃"><img src="../assets/block/reactor_glass.png" alt="反应堆玻璃" width="32" height="32"></div> <div class="cell" title="屏蔽板"><img src="../assets/item/shielding_alloy_plate.png" alt="屏蔽板" width="32" height="32"></div> <div class="cell" title="反应堆玻璃"><img src="../assets/block/reactor_glass.png" alt="反应堆玻璃" width="32" height="32"></div> <div class="cell" title="铁锭"><img src="../assets/item/iron_ingot_3d.png" alt="铁锭" width="32" height="32"></div> <div class="cell" title="反应堆玻璃"><img src="../assets/block/reactor_glass.png" alt="反应堆玻璃" width="32" height="32"></div> <div class="cell" title="铁锭"><img src="../assets/item/iron_ingot_3d.png" alt="铁锭" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="反应堆柱"><img src="../assets/block/fuel_rod_assembly_top.png" alt="反应堆柱" width="32" height="32"><span class="count">×2</span></div><div class="result-name">反应堆柱</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

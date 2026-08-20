@@ -362,6 +362,7 @@
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="12 个页面">12</span></a>
 <div class="group-title">加工</div>
 <a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="15 个页面">15</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="2 个页面">2</span></a>
@@ -370,7 +371,7 @@
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">世界与自动化</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="16 个页面">16</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="17 个页面">17</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">其他</div>
@@ -394,13 +395,13 @@
 </div>
 <h2 id="概览">概览</h2>
 
-<p><strong>热力离心机</strong>是矿石翻倍的第二级。粉碎机已经把一块矿石变成两份粉；离心机再把每份粉一分为二，得到<strong>铀屑</strong>，铀屑再在<a href="compressor.html">压缩机</a>中<strong>压制</strong>成<strong>精炼铀</strong>。完整生产线的结果是：一块矿石方块产出四份，而直接熔炼只有一份。</p>
+<p><strong>热力离心机</strong>是矿石翻倍的第二级。粉碎机已经把一块矿石变成两份粉；离心机再把每份粉一分为二，得到<strong>铀精矿</strong>，铀精矿再在<a href="compressor.html">压缩机</a>中<strong>压制</strong>——<strong>两份铀精矿压成一份浓缩铀（U-235）</strong>。完整生产线的结果是：一块矿石方块产出四份铀精矿，也就是<strong>两</strong>份浓缩铀，而直接熔炼只有一块锭。</p>
 
-<blockquote>铀屑是压制而成，而不是熔炼：熔炉本来就收铀<strong>粉</strong>，再让它多一条相似的路线，既不合逻辑（铀屑该压紧，而不是熔化），也让人困惑——同一台机器里摆着两个相似的配方。</blockquote>
+<blockquote>铀精矿是压制而成，而不是熔炼：熔炉本来就收铀<strong>粉</strong>，再让它多一条相似的路线，既不合逻辑（铀精矿该压紧，而不是熔化），也让人困惑——同一台机器里摆着两个相似的配方。</blockquote>
 
 <p>但仅仅放好并投入原料还不够。这是本模组第一台需要<strong>通电启动</strong>并<strong>提升转速</strong>的机器：它需要红石信号，以及正下方一台已经预热完毕的<a href="electric_heater.html">电热器</a>。</p>
 
-<blockquote><strong>小示例：</strong>放好电热器，在其上方放离心机，接上电缆，放入铀粉，然后拉下拉杆。转子开始提速，电热器开始升温。电热器会先一步就绪，大约十秒；而转子提速要花上两倍的时间——之后铀粉才会变成铀屑。移走拉杆——机器停机，转速也随之清零。</blockquote>
+<blockquote><strong>小示例：</strong>放好电热器，在其上方放离心机，接上电缆，放入铀粉，然后拉下拉杆。转子开始提速，电热器开始升温。电热器会先一步就绪，大约十秒；而转子提速要花上两倍的时间——之后铀粉才会变成铀精矿。移走拉杆——机器停机，转速也随之清零。</blockquote>
 
 <h2 id="能量">能量</h2>
 
@@ -424,11 +425,11 @@
 
 <h2 id="加工">加工</h2>
 
-<table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>持续时间（刻）</td><td>200（）</td></tr><tr><td>每次操作耗能</td><td>800 EU/FE</td></tr><tr><td>产出</td><td>1 份铀粉 → 2 份铀屑</td></tr><tr><td>自动卸料</td><td>否</td></tr></tbody></table>
+<table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>持续时间（刻）</td><td>200（）</td></tr><tr><td>每次操作耗能</td><td>800 EU/FE</td></tr><tr><td>产出</td><td>1 份铀粉 → 2 份铀精矿</td></tr><tr><td>自动卸料</td><td>否</td></tr></tbody></table>
 
 <h2 id="物品栏">物品栏</h2>
 
-<table><thead><tr><th>槽位</th><th>接受</th><th>数量</th></tr></thead><tbody><tr><td>输入</td><td>铀粉</td><td>每次操作 1 份</td></tr><tr><td>结果</td><td>铀屑，仅可由机器放入</td><td>最多 64</td></tr></tbody></table>
+<table><thead><tr><th>槽位</th><th>接受</th><th>数量</th></tr></thead><tbody><tr><td>输入</td><td>铀粉</td><td>每次操作 1 份</td></tr><tr><td>结果</td><td>铀精矿，仅可由机器放入</td><td>最多 64</td></tr></tbody></table>
 
 <p>底面被电热器占用，不对自动化开放——漏斗和管道从其余各面工作。</p>
 
@@ -444,11 +445,11 @@
 
 <h2 id="配方">配方</h2>
 
-<p>合成： 离心处理： 压制铀屑：</p>
+<p>合成： 离心处理： 压制铀精矿（两份合一）：</p>
 
 <h2 id="进阶">进阶</h2>
 
-<p>等级：LV 需要：<a href="../components/machine_casing.html">机器外壳</a>、电子电路、<a href="electric_heater.html">电热器</a>以及一个红石信号源。 开启：铀屑，以及经由<a href="compressor.html">压缩机</a>得到的精炼铀——面向未来核能分支的材料。</p>
+<p>等级：LV 需要：<a href="../components/machine_casing.html">机器外壳</a>、电子电路、<a href="electric_heater.html">电热器</a>以及一个红石信号源。 开启：铀精矿，以及经由<a href="compressor.html">压缩机</a>得到的浓缩铀——面向未来核能分支的材料。</p>
 
 <h2 id="相关内容">相关内容</h2>
 

@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="uk" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>Контролер реактора — Ala Industrial — Гід</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="Відкрити меню" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../assets/item/guide_book_3d.png" alt="">Увесь контент</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <details class="language-menu"><summary aria-label="Language">UA</summary><div class="language-popover"><span>UA</span><a href="../../en/nuclear/reactor_controller.html">EN</a><a href="../../ru/nuclear/reactor_controller.html">RU</a><a href="../../zh_cn/nuclear/reactor_controller.html">中文</a><a href="../../ja_jp/nuclear/reactor_controller.html">日本語</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">Огляд</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../assets/item/tempered_iron_pickaxe.png" alt=""><span>З чого почати</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепти</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
+<div class="group-title">Енергія</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="10 сторінок">10</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="4 сторінки">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
+<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Ядерна техніка</span><span class="cat-count" aria-label="12 сторінок">12</span></a>
+<div class="group-title">Переробка</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машини</span><span class="cat-count" aria-label="15 сторінок">15</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машини для рідин</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
+<div class="group-title">Логістика</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логістика предметів</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логістика рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Зберігання рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
+<div class="group-title">Світ та автоматизація</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="17 сторінок">17</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сільське господарство</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Високотехнологічні машини</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
+<div class="group-title">Інше</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилітарні блоки</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
+<div class="group-title">Предмети</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">Головна</a><span class="sep">/</span><a href="../nuclear/index.html">Ядерна техніка</a><span class="sep">/</span><span>Контролер реактора</span></div>
+<div class="block-card" data-hero-alt="Все блоки и предметы реакторной комнаты Ala Industrial в рамках: обшивка, стекло, дверь, лампа, ввод, вывод, контроллер, колонна, ТВЭЛ и его оболочка." style="background-image:linear-gradient(180deg,rgba(22,22,26,.55) 0%,rgba(22,22,26,.92) 100%),url(../assets/screenshots/nuclear_reactor_block_set.png);background-size:cover;background-position:center center;background-repeat:no-repeat;">
+  <div class="card-head">
+    <img class="icon" src="../assets/block/reactor_controller_top.png" alt="Контролер реактора" width="64" height="64">
+    <div class="info">
+      <h1>Контролер реактора</h1>
+      <div class="block-id">alaindustrial:reactor_controller</div>
+      <div class="tags"><span class="tag cat" style="background:#ef4444">Ядерна техніка</span><span class="tag tier">HV</span><span class="tag lifecycle" style="background:#22c55e">Реалізовано</span><span class="tag">nuclear</span><span class="tag">reactor</span><span class="tag">multiblock</span><span class="tag">shielding</span><span class="tag">automation</span><span class="tag">tier-hv</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="зведення">Зведення</h2>
+
+<p><strong>Контролер реактора</strong> — єдиний «розумний» блок оболонки і єдина машина кімнати. Поки кімната будується, він знаходить її навколо себе, перевіряє й повідомляє, що не так і де. Коли кімната закрита, він же стає реактором: збирає реакторні колони, рахує вироблення й нагрів, кип'ятить воду, перезбирає рідини всередині кожної стопки колон, зношує стрижні та віддає EU/FE.</p>
+
+<p>Контролер ставиться <strong>замість одного блока обшивки у вертикальній стіні</strong>, лицем назовні: на лицьовій грані екран, який гравець читає, і туди ж підводять редстоун. Кабель іде на будь-яку іншу грань. Кімната з двома контролерами не формується — у кімнати рівно один мозок.</p>
+
+<blockquote><strong>Чого в реактора поки немає.</strong> Шкала нагріву рахується й показується, але в 100 % наслідків немає: реактор не плавиться й не вибухає. Випромінювання навколо робочої зони теж немає.</blockquote>
+
+<h2 id="де-він-має-стояти">Де він має стояти</h2>
+
+<table><thead><tr><th>Вимога</th><th>Чому</th></tr></thead><tbody><tr><td>У вертикальній стіні (не в підлозі й не в стелі)</td><td>лицьова грань — панель, яку читають і до якої підводять сигнал; у стелі її не видно</td></tr><tr><td>Не в ребрі й не в куті оболонки</td><td>у клітинки на ребрі немає внутрішнього боку, у який дивитися</td></tr><tr><td>Лицем назовні</td><td>внутрішність кімнати лежить <strong>за</strong> контролером; розвернувши його, гравець дістане «Контролер не в стіні»</td></tr><tr><td>Рівно один на кімнату</td><td>другий контролер у тій самій оболонці дає статус «Другий контролер» з його координатами</td></tr></tbody></table>
+
+<p>Усі чотири умови перевіряються тим самим скануванням і дають той самий клас відповіді — статус плюс місце. Окремого «режиму налаштування» немає: поставив, подивився на екран, виправив.</p>
+
+<h2 id="сканування">Сканування</h2>
+
+<p>Сканер працює у два проходи, і це не деталь реалізації, а причина, з якої повідомлення корисні.</p>
+
+<ol><li><strong>Шість променів</strong> від клітинки перед контролером — по ±X, ±Y, ±Z, до першого блока оболонки.</li></ol>
+<p>Промінь, що нічого не знайшов, означає «кімната не обмежена в цьому напрямку» — або вона завелика, або в стіні дірка, крізь яку видно небо.</p>
+<ol><li><strong>Обхід усього периметра</strong>, заданого шістьма влучаннями. Саме цей прохід знаходить одну відсутню</li></ol>
+<p>клітинку будь-де в оболонці 14³ і називає її координати. Тим самим обходом рахуються контролери, запам'ятовуються клітинки дверей і підраховується частка скла.</p>
+
+<p>Дальність променя — межа розміру <strong>плюс один</strong> крок, а не рівно межа. Зайвий крок тут не запас міцності, а умова того, щоб статус «завелика» узагалі існував: промінь, обрізаний рівно на межі, ніколи не побачить дальню стіну кімнати, яка на один блок ширша за норму.</p>
+
+<p>Чому не проста заливка: заливка не вміє відрізнити «кімната завелика» від «кімната протікає» — в обох випадках вона просто працює до упору. Два проходи дають різні відповіді на два різні питання.</p>
+
+<p>Порядок перевірок — теж рішення про зручність, а не про код:</p>
+
+<ol><li>положення контролера (чи є перед його лицем відкрита клітинка);</li><li>межі — шість променів;</li><li>розміри (замала, потім завелика);</li><li>герметичність — перша ж не-оболонкова клітинка обходу (обхід переривається);</li><li>сам контролер знайдено як клітинку стіни, а не ребра;</li><li>другий контролер;</li><li>двері, потім прохід;</li><li>частка скла.</li></ol>
+
+<p>Кожну відповідь можна виправити саму по собі, і гравець лагодить по одній речі за раз, а не отримує список. Ліміт скла стоїть останнім навмисно: це єдина «м'яка» проблема — споруда при ній герметична й правильна, просто не вважається захисною.</p>
+
+<table><thead><tr><th>Коли пересканує</th><th>Умова</th></tr></thead><tbody><tr><td>Періодично</td><td>кожні <strong>40 тиків = 2 с</strong></td></tr><tr><td>За зміною сусіда</td><td>одразу: зламали стіну поряд, поставили порт, вибухнули двері</td></tr></tbody></table>
+
+<p>Періодичний прохід обов'язковий: сповіщення про сусіда спрацьовує лише для шести блоків, що торкаються контролера, а кімната буває 14 блоків завширшки. Блок, виламаний на дальній стіні, для контролера не сусід. З тієї самої причини контролер ніколи не «засинає».</p>
+
+<h2 id="стани">Стани</h2>
+
+<p>Десять станів. Дев'ять із них — задача, яку треба розв'язати; десятий — «готово».</p>
+
+<table><thead><tr><th>Стан</th><th>Що означає</th><th>Показує місце</th><th>Показує розмір</th></tr></thead><tbody><tr><td>Кімната сформована</td><td>герметична, у межах розмірів, є вхід</td><td>—</td><td>так</td></tr><tr><td>Контролер не в стіні</td><td>у підлозі/стелі, у ребрі, замурований або розвернутий не тією гранню</td><td>так</td><td>—</td></tr><tr><td>Кімната ніде не обмежена</td><td>промінь пішов далі за межу й не знайшов стіни</td><td>—</td><td>—</td></tr><tr><td>Кімната замала</td><td>внутрішній розмір менший за мінімум по якійсь осі</td><td>—</td><td>так</td></tr><tr><td>Кімната завелика</td><td>внутрішній розмір більший за максимум по якійсь осі</td><td>—</td><td>так</td></tr><tr><td>Пролом в оболонці</td><td>клітинка периметра — не блок оболонки</td><td>так</td><td>—</td></tr><tr><td>Немає шлюзових дверей</td><td>оболонка герметична, але дверей у ній немає</td><td>—</td><td>—</td></tr><tr><td>Немає дверного отвору</td><td>двері є, а проходу немає</td><td>—</td><td>—</td></tr><tr><td>Другий контролер у кімнаті</td><td>у тій самій оболонці стоїть ще один</td><td>так</td><td>—</td></tr><tr><td>Забагато скла</td><td>скла більше за 30 % клітинок оболонки</td><td>так</td><td>—</td></tr></tbody></table>
+
+<p>Місце в статусу «забагато скла» — не «винна» клітинка (винна частка, а не блок), а перша скляна клітинка в порядку обходу. Вона потрібна, щоб дим привів гравця до скляної частини оболонки.</p>
+
+<h2 id="як-він-веде-реактор">Як він веде реактор</h2>
+
+<p>Зібрана кімната — це одна машина, і весь її тик виконує контролер. Власного тику в топливних збірок немає взагалі: зал із тридцятьма стійками коштує серверу стільки ж, скільки один блок із сутністю.</p>
+
+<h3 id="збір-колон">Збір колон</h3>
+
+<p>Тим самим обходом, що й перевірку оболонки (раз на 40 тиків), контролер проходить <strong>внутрішність</strong> кімнати й записує <strong>кожну</strong> реакторну колону — заряджену й порожню. Тут же він підсумовує стрижні з ураном і рахує пари сусідства.</p>
+
+<p>Порожні колони потрапляють у список навмисно. Фільтр за паливом виглядав нешкідливо й не був ним: порожня стійка випадала з водяного контуру й з перезбирання стопки, через що вода, подана в низ колони, не підіймалася вище за першу заправлену збірку. Колона — частина машини тому, що вона стоїть у кімнаті, а не тому, що її встигли заправити.</p>
+
+<p>Сусідство при цьому рахується <strong>за паливом</strong>: дві порожні стійки поряд нічого не розганяють, інакше бонус платили б за будівельні риштування.</p>
+
+<p>Обхід внутрішності 12³ — це 1728 читань блока: шістдесят разів на секунду абсурдно, раз на дві секунди дешево. Плата — затримка: стрижень, вставлений рукою, потрапляє в розрахунок із наступного обходу.</p>
+
+<h3 id="вироблення-паливо-й-нагрів">Вироблення, паливо й нагрів</h3>
+
+<table><thead><tr><th>Величина</th><th>Як рахується</th></tr></thead><tbody><tr><td>Потенціал (при 100 %)</td><td><code>стрижні × 6 × Mе</code>, де <code>Mе = 1 + 0,5 × пари</code></td></tr><tr><td>Віддача</td><td>× глибина‰ / 1000`, але не більше вільного місця в буфері</td></tr><tr><td>Нагрів</td><td><code>повний нагрів × віддача / потенціал</code>, де повний нагрів <code>стрижні × 4 × Mт</code>, <code>Mт = 1 + 0,8 × пари</code></td></tr><tr><td>Витрата палива</td><td>рівно <code>віддача</code> EU/FE за тик, поділена між колонами пропорційно їхнім стрижням</td></tr><tr><td>Тепло</td><td><code>clamp(тепло + нагрів − знято водою − стік, 0, 10000)</code></td></tr></tbody></table>
+
+<p><strong>Стеля застосовується до повзунка, а не після.</strong> Спершу потенціал затискається в 512 EU/FE/т, і лише потім від нього береться глибина. Зворотний порядок виглядав еквівалентним і не був: на будь-якій зоні, чий потенціал уже перевалив за 512, кожна ступінь повзунка давала одні й ті самі 512 EU/FE/т.</p>
+
+<p><strong>Паливо рахується в EU/FE, а не в часі.</strong> Контролер списує з колон рівно ту енергію, яку видав, а колона переводить її в поділки міцності стрижнів (144 EU/FE за поділку). Звідси головна властивість моделі: <strong>стрижень усюди коштує 144 000 EU/FE</strong>, і жодне розкладання не робить уран дешевшим.</p>
+
+<p><strong>У нагріву свій коефіцієнт сусідства, і він більший за енергетичний</strong> — <strong>40 %</strong> проти 25 %. Це головне число водяного контуру: щільна зона гріється швидше, ніж посилюється, тому розкладання, яке піднімає потужність, піднімає й <strong>ціну охолодження</strong>.</p>
+
+<p>Це саме ділення й <strong>обмежує</strong> нагрів згори:</p>
+
+<pre><code class="lang-">нагрів на стелі HV → 512 × (4 × 0,8) / (6 × 0,5 = 546 од./т</code></pre>
+
+<p>Щільна кімната на стелі гріється 500…546 одиниць за такт, і вище <strong>546</strong> не підіймається жодна.</p>
+
+<blockquote><strong>Велика кімната дає не потужність, а автономність.</strong> Усе, що переросло 512 EU/FE/т, віддає однакові 512 EU/FE/т; росте лише час між заправками. Апетит кімнати при цьому <strong>однаковий</strong> на будь-якому розкладанні, що досягло стелі: 256 стрижнів = 128 уранової руди на годину. Числа за розкладаннями —</blockquote>
+
+<p>Тепло зводиться <strong>щотика</strong>, навіть коли реактор зупинений: охолодження зобов'язане працювати, інакше «заглушити й почекати» не було б способом урятуватися. Повна шкала стікає в нуль за <strong>395 тиків (19,8 с)</strong>.</p>
+
+<h3 id="керування-редстоун-і-глибина">Керування: редстоун і глибина</h3>
+
+<table><thead><tr><th>Орган</th><th>Що робить</th></tr></thead><tbody><tr><td>Редстоун-сигнал на контролері</td><td><strong>є</strong> — реактор працює, <strong>знято</strong> — аварійний стоп</td></tr><tr><td>Повзунок глибини</td><td>п'ять ступенів 0 / 25 / 50 / 75 / 100 %; 0 % — той самий стоп, але зсередини екрана</td></tr></tbody></table>
+
+<p>Більше органів керування немає навмисно: два — це рівно стільки, скільки вміщується в голову гравця, що стоїть у димному залі.</p>
+
+<p>Повзунок працює <strong>на будь-якому масштабі</strong>: він ріже вже затиснуту стелею величину, тому 50 % на шарі 3×3 дають 256 EU/FE/т — і рівно вдвічі менше тепла, води й урану на годину.</p>
+
+<h3 id="охолодження-оболонка-сама-вода-лише-за-порогом">Охолодження: оболонка сама, вода — лише за порогом</h3>
+
+<p>Крива охолодження складається з двох доданків, і другий — головний:</p>
+
+<pre><code class="lang-">стік = 4 + тепло × 8 / 1000</code></pre>
+
+<p>Пропорційна частина дає реактору <strong>рівновагу замість вимикача</strong>. Тепер кожна зона сідає там, де</p>
+
+<pre><code class="lang-">рівновага = (нагрів − 4) × 1000 / 8</code></pre>
+
+<table><thead><tr><th>Активна зона</th><th>Нагрів, од./т</th><th>Рівновага</th><th>Шкала</th><th>Вода</th></tr></thead><tbody><tr><td>1 колона (4 стрижні)</td><td>16</td><td>1500</td><td>15 %</td><td>не потрібна</td></tr><tr><td>2 колони поряд</td><td>57</td><td>6625 всуху</td><td>66 % всуху, 60 % з водою</td><td>не обов'язкова (3 мБ/т, якщо підвести)</td></tr><tr><td>3 в ряд (12 стрижнів)</td><td>124</td><td>вище за стелю</td><td>60 % на воді</td><td><strong>потрібна</strong></td></tr></tbody></table>
+
+<p><strong>Стеля оболонки — 84 од./т.</strong> Усе, що виробляє менше, тримається саме; вище починається контур.</p>
+
+<p>Вода — <strong>система безпеки, а не радіатор</strong>. Вона вмикається лише за цільовою точкою (60 % = 6000 одиниць) і знімає дві речі: поточний приплив і двадцяту частину вже накопиченого перегріву. Цільова точка навмисно стоїть <strong>нижче</strong> за жовту зону (70 %): контур зобов'язаний повертати реактор у зелене, а не паркувати його на попередженні.</p>
+
+<pre><code class="lang-">ціль = 10000 × 60 / 100 (6000 при дефолтах)
+надлишок = тепло &lt; ціль ? 0: (нагрів − стік) + (тепло − ціль) / 20
+вода, мБ = ceil(надлишок / 2) (округлення ВГОРУ)
+знято = скипіло × 2</code></pre>
+
+<p>Перший доданок тримає лінію, другий до неї повертає. Без другого розжарена зона застигала б рівно там, де її застали, — а це невідрізнити від непрацюючого контуру.</p>
+
+<p><strong>Стартовому реактору сантехніка не потрібна.</strong> Одна колона з чотирма стрижнями дає 16 од. тепла за такт і сідає на 15 % шкали, всуху. По-справжньому обов'язковою вода стає з <strong>третьої</strong> колони (124 од./т, 36 мБ/т).</p>
+
+<blockquote><strong>Реактор, що працює на воді, стоїть на 60 % шкали</strong> — тобто його смуга нагріву зелена, а жовта зона знову означає «щось не так»: подача не встигає, вихлоп забитий або реактор розганяли без контуру.</blockquote>
+
+<p>Кип'ятить контролер, а не колона: він проходить по своєму списку колон і просить у кожної стільки, скільки ще не набрав. Чого не вдалося скип'ятити — лишається теплом і йде на шкалу.</p>
+
+<h3 id="перезбирання-стопок">Перезбирання стопок</h3>
+
+<p>Щотика контролер дає лад рідинам <strong>усередині кожної неперервної вертикальної стопки</strong> колон: уся вода збирається знизу, уся пара — згори. Стопка тим самим поводиться як одна посудина, і труба, встромлена в будь-який її блок, наповнює її цілком.</p>
+
+<blockquote>⚠️ <strong>Колони, що стоять пліч-о-пліч, не пов'язані.</strong> Теплоносій, що з'являється всередині стійки, до якої нічого не підведено, читається як баг, хоч би який зручний він був.</blockquote>
+
+<h2 id="інтерфейс">Інтерфейс</h2>
+
+<p>Тип: екран без жодного слота — контролер читають, а не завантажують. Інвентарю немає навмисно: порожні слоти запрошували б до нього лійки. Панелі покращень немає: контролер не машина-переробник. Стрілки прогресу немає: у реактора немає операції, яка «йде».</p>
+
+<p><strong>Розкладок дві, і одночасно вони не показуються ніколи.</strong> Поки оболонка не закрита, у реактора не існує жодного числа, а коли закрита — рядку про проломи нема чого сказати.</p>
+
+<table><thead><tr><th>Розкладка</th><th>Коли</th><th>Що на ній</th></tr></thead><tbody><tr><td><strong>Будівництво</strong></td><td>будь-який стан, крім «сформована»</td><td>стан; «Кімната» — розмір <code>X × Y × Z</code>; «Проблема» — напрямок до несправної клітинки; <strong>шкала заряду</strong></td></tr><tr><td><strong>Робота</strong></td><td>кімната сформована</td><td>стан; «Стрижні»; «Вироблення», EU/FE/т; <strong>шкала нагріву</strong>; <strong>шкала води</strong> з витратою в підписі; повзунок глибини п'ятьма кнопками; <strong>шкала заряду</strong></td></tr></tbody></table>
+
+<p><strong>Шкала заряду буфера малюється в обох розкладках</strong> — єдиний елемент, який це робить. Реактор, який заглушили, і кімната, яку щойно розкрили, все одно тримають те, що встигли накопичити.</p>
+
+<p><strong>Рядок «Вироблення» ніколи не показує прочерк.</strong> Зібраний, заправлений і мовчазний реактор — найгірший стан цієї машини, тому замість нуля там друкується <strong>причина простою</strong> червоним: не загерметизовано, немає палива, стрижні підняті, немає редстоуну, буфер повний.</p>
+
+<p>Підпис шкали води несе <strong>і рівень, і витрату</strong>: «Вода 62 % · 243 мБ/т».</p>
+
+<p>Смуга нагріву зелена, поки є запас, жовта від 70 % і червона на півдорозі звідти до сотні (85 %). Поріг береться з конфігурації, а не зашитий в екран.</p>
+
+<p><strong>Колір смуги води — індикатор забитого вихлопу:</strong></p>
+
+<table><thead><tr><th>Колір</th><th>Коли</th><th>Що це означає</th></tr></thead><tbody><tr><td>бірюзовий</td><td>води більше за нуль, пари менше за 90 %</td><td>контур крутиться</td></tr><tr><td><strong>жовтий</strong></td><td>пари <strong>≥ 90 %</strong></td><td>парі нема куди дітися: вихлоп не під'єднано, забито або насадка дивиться в стіну</td></tr><tr><td>червоний</td><td>води <strong>нуль</strong></td><td>контур сухий: подача не встигає або стала</td></tr></tbody></table>
+
+<p>Жовтий випадок — єдиний, заради якого цей колір узагалі написано. Із забитим вихлопом смуга води стоїть <strong>заспокійливо повною</strong>, поки температура росте.</p>
+
+<p><strong>Місце — це напрямок, а не координати.</strong> Зміщення рахується від самого контролера і звучить як «4 на схід, 2 вгору»: гравець, який читає екран, стоїть біля контролера, і така фраза приводить його до потрібного блока швидше, ніж три числа.</p>
+
+<p>Ззовні стан теж видно: у сформованої кімнати лицьова грань контролера світиться, у несформованої — темна.</p>
+
+<h2 id="зворотний-звязок-у-світі">Зворотний зв'язок у світі</h2>
+
+<p>Одного тексту мало на кімнаті з тисячі блоків, тому контролер відповідає ще й звуком із частинками.</p>
+
+<table><thead><tr><th>Подія</th><th>Що відбувається</th></tr></thead><tbody><tr><td>Кімната зібралася</td><td>звук ковадла біля контролера + 12 частинок над ним</td></tr><tr><td>Кімната розвалилася</td><td>звук згасання маяка <strong>у місці пролому</strong>, рівно один раз</td></tr><tr><td>Поки проблему не виправлено</td><td>16 частинок диму в проблемній клітинці при кожному скануванні</td></tr></tbody></table>
+
+<p>Звук поломки грає <strong>лише на переході</strong>, а не в циклі — це принципово. Сигнал тривоги, що повторюється раз на дві секунди, з підказки перетворюється на покарання.</p>
+
+<p>Звук збирання — той самий, що в <a href="../fluid-machines/distillation_column.html">дистиляційної колони</a> при збиранні башти: «мультиблок зібрався» в моді має звучати однаково.</p>
+
+<h2 id="заливка-стану-оболонки">Заливка стану оболонки</h2>
+
+<p>Контролер — єдиний, хто ставить блокстейти «зібрано» і «ребро», і ставить він їх <strong>усій</strong> оболонці, а не собі одному. Він же запалює світло в кімнаті (див. спеку <a href="reactor_lamp.html">лампи</a>).</p>
+
+<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Що обходиться</td><td>клітинки периметра <strong>явно заданої</strong> коробки</td></tr><tr><td>Яка коробка при успіху</td><td>виміряна цим скануванням; вона ж запам'ятовується</td></tr><tr><td>Яка коробка при провалі</td><td>остання <strong>запам'ятована</strong> — та, яку контролер колись зарахував</td></tr><tr><td>Що пишеться</td><td>лише клітинки, у яких значення змінилося</td></tr><tr><td>Світло</td><td>у кожній внутрішній клітинці навпроти лампи з'являється блок світла рівня 15</td></tr></tbody></table>
+
+<p><strong>Чому коробка передається явно, а не береться з результату скану.</strong> Провалений скан коробки не міряє, тому заливка, що йде від результату, фізично вміла лише <strong>вмикати</strong> прапорець: пробита стіна лишала кімнату безшовною й освітленою, ніби нічого не сталося. Контролер тепер пам'ятає останню зараховану коробку й при провалі гасить її; коробка зберігається, бо чанк може вивантажитися цілим, а завантажитися вже з дірою.</p>
+
+<h2 id="енергія">Енергія</h2>
+
+<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Роль</td><td>виробник, тир <strong>HV</strong></td></tr><tr><td>Буфер (EU/FE)</td><td><strong>200 000</strong></td></tr><tr><td>Макс. вхід (EU/FE/такт)</td><td><strong>0</strong> — реактор ззовні не заряджають</td></tr><tr><td>Макс. вихід (EU/FE/такт)</td><td><strong>512</strong> = стеля HV</td></tr><tr><td>Грані</td><td>усі, крім лицьової, віддають; у лицьової — жодної ролі</td></tr></tbody></table>
+
+<p>Лицьова грань енергетично інертна: на ній панель, яку читає гравець, і кабель, що вилазить із середини інтерфейсу, зіпсував би і вигляд, і розуміння.</p>
+
+<p>Буфер у 200 000 EU/FE — не накопичувач, а демпфер: мережа, яка не може забрати енергію цієї ж секунди, не повинна зупиняти активну зону посеред тика. На стелі це 391 тик (19,5 с) віддачі. Один <a href="../energy-transfer/electrum_cable.html">електрумний кабель</a> несе 192 EU/FE/т на сегмент, тому реактор, що працює на стелі, випивається <strong>трьома</strong> незалежними нитками.</p>
+
+<h2 id="властивості-блока">Властивості блока</h2>
+
+<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Форма</td><td>повний куб 16³ (оклюдер)</td></tr><tr><td>Міцність</td><td>5.0</td></tr><tr><td>Вибухостійкість</td><td>30.0</td></tr><tr><td>Інструмент</td><td>кайло (обов'язкове для дропу)</td></tr><tr><td>Звук</td><td>метал</td></tr><tr><td>Напрямок</td><td>горизонтальний; плюс стан «зібрано»</td></tr></tbody></table>
+
+<p><strong>Вердикт</strong> контролер на диск не пише: кімната <strong>і є</strong> збереження. Після завантаження світу перше ж сканування виведе стан заново з того, що стоїть навколо.</p>
+
+<p>Зберігається лише те, що зі світу не виводиться: <strong>межі останньої зарахованої коробки</strong>, накопичене <strong>тепло</strong> й <strong>положення повзунка</strong>. Реактор, який забув би їх при вивантаженні чанка, остигав би даремно й самовільно повертався б на повну потужність.</p>
+
+<h2 id="рецепти">Рецепти</h2>
+
+<p>Крафт: <strong>×1</strong> за раз.</p>
+
+<pre><code class="lang-">S C S S = екранувальна пластина ×4
+R A R R = посилена екранувальна пластина ×2
+S D S C = схема керування реактором ×1
+A = просунутий машинний корпус ×1
+D = привід керівних стрижнів ×1</code></pre>
+
+<p>Схема керування — окремий предмет: 4 паладієві пластини, <strong>резонансна котушка</strong>, 2 просунуті схеми, електронна схема й редстоун.</p>
+
+<p>Котушка стала на місце нестабільного ізотопу, який стояв тут у першій редакції. Ізотоп — продукт <a href="../agriculture/incubator.html">інкубатора</a>, а інкубаторну гілку з вимог реактора прибрали: вона вела гравця в біологічний розділ мода заради одного предмета.</p>
+
+<h2 id="прогресія">Прогресія</h2>
+
+<p>Тир: <strong>HV</strong> — виробник до 512 EU/FE/такт. Потребує: екранувальні й посилені екранувальні пластини (ланцюг описано в <a href="reactor_casing.html">обшивці</a>), <a href="../components/advanced_machine_casing.html">просунутий машинний корпус</a>, <a href="../components/advanced_circuit.html">просунуті схеми</a>, паладієві пластини, <a href="../components/resonance_chain.html">резонансну котушку</a>. Відкриває: власне реакторну кімнату — без контролера набір блоків лишається набором блоків.</p>
+
+<h2 id="повязане">Пов'язане</h2>
+
+<p><a href="reactor_casing.html">Реакторна обшивка</a> — з чого він сканує кімнату, геометрія й ланцюг крафту. <a href="reactor_door.html">Шлюзові двері</a> — обов'язкова умова сформованої кімнати. <a href="reactor_glass.html">Реакторне скло</a>, <a href="reactor_lamp.html">лампа</a>, <a href="reactor_port.html">реакторний ввід</a> і <a href="reactor_outlet.html">реакторний вивід</a> — решта блоків, які сканер зараховує як стіну. <a href="fuel_rod_assembly.html">Реакторна колона</a> — що він палить, кип'ятить і перезбирає. <a href="uranium_fuel_rod.html">ТВЕЛ</a> і <a href="empty_fuel_rod.html">оболонка ТВЕЛ</a> — паливо, яке він зношує, і оболонка, що лишається. <a href="../materials/steam.html">Пара</a> — робоче тіло контуру. <a href="steam_nozzle.html">Парова насадка</a> — кінець контуру; поки вона не працює, шкала води жовтіє, а нагрів росте. <a href="reactor_button.html">Реакторна кнопка</a> — єдиний блок набору, який сканер як стіну <strong>не</strong> зараховує. <a href="../components/resonance_chain.html">Резонансний ланцюг</a> — звідки береться котушка для схеми керування. <a href="../fluid-machines/distillation_column.html">Дистиляційна колона</a> та <a href="../agriculture/incubator.html">інкубатор</a> — два попередні мультиблоки мода; обидва перевіряють фіксовану форму, об'ємний сканер написано тут уперше.</p>
+
+<h2>Крафт</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="контролер реактора alaindustrial:reactor_controller" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаку</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Екранувальна пластина"><img src="../assets/item/shielding_alloy_plate.png" alt="Екранувальна пластина" width="32" height="32"></div> <div class="cell" title="Схема керування реактором"><img src="../assets/item/reactor_circuit.png" alt="Схема керування реактором" width="32" height="32"></div> <div class="cell" title="Екранувальна пластина"><img src="../assets/item/shielding_alloy_plate.png" alt="Екранувальна пластина" width="32" height="32"></div> <div class="cell" title="Посилена екранувальна пластина"><img src="../assets/item/shielding_alloy_reinforced_plate.png" alt="Посилена екранувальна пластина" width="32" height="32"></div> <div class="cell" title="Просунутий машинний корпус"><img src="../assets/item/advanced_machine_casing_3d.png" alt="Просунутий машинний корпус" width="32" height="32"></div> <div class="cell" title="Посилена екранувальна пластина"><img src="../assets/item/shielding_alloy_reinforced_plate.png" alt="Посилена екранувальна пластина" width="32" height="32"></div> <div class="cell" title="Екранувальна пластина"><img src="../assets/item/shielding_alloy_plate.png" alt="Екранувальна пластина" width="32" height="32"></div> <div class="cell" title="Привід стрижнів керування"><img src="../assets/item/control_rod_drive.png" alt="Привід стрижнів керування" width="32" height="32"></div> <div class="cell" title="Екранувальна пластина"><img src="../assets/item/shielding_alloy_plate.png" alt="Екранувальна пластина" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Контролер реактора"><img src="../assets/block/reactor_controller_top.png" alt="Контролер реактора" width="32" height="32"></div><div class="result-name">Контролер реактора</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

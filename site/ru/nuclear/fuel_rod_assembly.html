@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="ru" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>Реакторная колонна — Ala Industrial — Гайд</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="Открыть меню" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../assets/item/guide_book_3d.png" alt="">Весь контент</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <details class="language-menu"><summary aria-label="Language">RU</summary><div class="language-popover"><span>RU</span><a href="../../en/nuclear/fuel_rod_assembly.html">EN</a><a href="../../uk/nuclear/fuel_rod_assembly.html">UA</a><a href="../../zh_cn/nuclear/fuel_rod_assembly.html">中文</a><a href="../../ja_jp/nuclear/fuel_rod_assembly.html">日本語</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">Обзор</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../assets/item/tempered_iron_pickaxe.png" alt=""><span>С чего начать</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепты</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
+<div class="group-title">Энергия</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="10 страниц">10</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="4 страницы">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
+<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Ядерная техника</span><span class="cat-count" aria-label="12 страниц">12</span></a>
+<div class="group-title">Переработка</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="15 страниц">15</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машины для жидкостей</span><span class="cat-count" aria-label="2 страницы">2</span></a>
+<div class="group-title">Логистика</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логистика предметов</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логистика жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Хранение жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<div class="group-title">Мир и автоматизация</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="17 страниц">17</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сельское хозяйство</span><span class="cat-count" aria-label="3 страницы">3</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Хай-тек машины</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<div class="group-title">Прочее</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="14 страниц">14</span></a>
+<div class="group-title">Предметы</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="3 страницы">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="20 страниц">20</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="20 страниц">20</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="../nuclear/index.html">Ядерная техника</a><span class="sep">/</span><span>Реакторная колонна</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../assets/block/fuel_rod_assembly_top.png" alt="Реакторная колонна" width="64" height="64">
+    <div class="info">
+      <h1>Реакторная колонна</h1>
+      <div class="block-id">alaindustrial:fuel_rod_assembly</div>
+      <div class="tags"><span class="tag cat" style="background:#ef4444">Ядерная техника</span><span class="tag lifecycle" style="background:#22c55e">Реализовано</span><span class="tag">nuclear</span><span class="tag">reactor</span><span class="tag">multiblock</span><span class="tag">fuel</span><span class="tag">uranium</span><span class="tag">steam</span><span class="tag">fluid-transport</span></div>
+    </div>
+  </div>
+</div>
+
+<h2 id="сводка">Сводка</h2>
+
+<p><strong>Реакторная колонна</strong> — то, во что реактор заряжают, и то, чем он охлаждается. Прозрачная стойка на <strong>четыре</strong> стержня стоит внутри <a href="reactor_controller.html">реакторной комнаты</a>, наполняется правым щелчком с <a href="uranium_fuel_rod.html">ТВЭЛом</a> в руке и пустой рукой опустошается. Меню у неё нет вовсе.</p>
+
+<p>С этапа 3 у неё есть ещё <strong>два бака</strong> — вода и пар. Вода приходит трубой, кипит и уносит тепло; пар уходит трубой наружу. Уровень воды, как и число стержней, виден <strong>снаружи</strong>, на самой модели.</p>
+
+<p>Это главное решение этапа 2 эпика: топливо не лежит в слоте, а <strong>стоит в комнате</strong>. Пустая стойка и полная различимы с другого конца зала, «долить топливо» — действие в мире, а не в окне, и наполовину разряженная активная зона видна одним взглядом, а не по числу в ГУИ.</p>
+
+<h2 id="она-хранит-предметы-а-не-счётчик">Она хранит предметы, а не счётчик</h2>
+
+<p>До этапа 4 стойка держала <strong>число</strong> стержней и одно общее «сколько осталось в горящем». Из этого следовали ровно две вещи, с которыми игрок сталкивался в первый же час: начатый стержень при вытаскивании <strong>уничтожался</strong> (записать его остаток было некуда), а выгоревший <strong>исчезал</strong> — то есть каждая заправка стоила новой экранирующей пластины, а значит палладия.</p>
+
+<p>Теперь стойка держит <strong>четыре предмета</strong>. Оба следствия исчезли вместе с их причиной:</p>
+
+<table><thead><tr><th>Что было</th><th>Что стало</th></tr></thead><tbody><tr><td>Недогоревший стержень терялся</td><td>возвращается со своей прочностью и продолжает с того же места</td></tr><tr><td>Выгоревший исчезал</td><td>становится <a href="empty_fuel_rod.html">оболочкой ТВЭЛ</a> и остаётся стоять в стойке</td></tr><tr><td>Один общий счётчик горения</td><td>у каждого стержня своя прочность (см. <a href="uranium_fuel_rod.html">спеку стержня</a>)</td></tr></tbody></table>
+
+<h2 id="как-ей-пользоваться">Как ей пользоваться</h2>
+
+<table><thead><tr><th>Действие</th><th>Что происходит</th></tr></thead><tbody><tr><td>ПКМ со <a href="uranium_fuel_rod.html">ТВЭЛом</a> в руке</td><td>стержень встаёт в первое свободное гнездо, звук металла; в творческом режиме предмет не тратится</td></tr><tr><td>ПКМ с <a href="empty_fuel_rod.html">оболочкой ТВЭЛ</a> в руке</td><td>то же самое: оболочку можно поставить в стойку про запас</td></tr><tr><td>ПКМ в полной стойке</td><td>ничего не берётся — предмет остаётся в руке</td></tr><tr><td>ПКМ пустой рукой</td><td>стойка отдаёт один стержень, <strong>отработавшие первыми</strong></td></tr><tr><td>ПКМ <strong>любым другим предметом</strong></td><td>падает в ту же ветку, что и пустая рука: стержень всё равно вынимается</td></tr><tr><td>Слом блока</td><td>выпадает <strong>всё</strong> содержимое, целое и недогоревшее</td></tr></tbody></table>
+
+<p>Пятая строка не описка, а вынужденное решение: в 26.2 <code>InteractionResult.PASS</code> из <strong>не</strong> проваливается в, поэтому «вынуть стержень с киркой в руке» иначе молча ничего бы не делало. Возвращается <code>TRY_WITH_EMPTY_HAND</code>.</p>
+
+<h3 id="отработавшие-отдаются-первыми">Отработавшие отдаются первыми</h3>
+
+<p>Это и есть весь смысл взаимодействия. Игрок подходит к выработавшейся колонне за <strong>оболочками</strong>, чтобы их заправить, и меньше всего хочет сначала выудить обратно те живые стержни, которые сам туда поставил десять минут назад. Порядок фиксирован: сначала пустые, и только когда их не осталось — заряженные, сверху вниз.</p>
+
+<p>Дропом при сломе занимается, а не игровой хук слома: криппер, вскрывший стойку, — ровно тот случай, когда терять содержимое обиднее всего.</p>
+
+<h2 id="износ-идёт-по-всем-заряженным-стержням-сразу">Износ идёт по всем заряженным стержням сразу</h2>
+
+<p>Контроллер списывает с колонны EU/FE, а колонна переводит их в деления прочности — <strong>у всех заряженных стержней одновременно, по одному делению на круг</strong>.</p>
+
+<pre><code class="lang-">цена круга = 144 EU/FE × (сколько стержней с ураном)</code></pre>
+
+<p>Пока накопленного расхода не хватает на целый круг, он <strong>переносится</strong> на следующий тик; как только хватает — каждый заряженный стержень получает +1 к повреждению. Стержень, добравший до 1000, тут же заменяется пустым прямо в гнезде.</p>
+
+<p>Так сделано потому, что «по очереди» было просто неправдой: четыре стержня стоят в одном потоке нейтронов и все четыре дают энергию, а старела при этом одна штука. Игрок видел четыре работающих стержня и одну убывающую полосу. При этом арифметика не поехала: колонна по-прежнему тратит ровно один стержень энергии на стержень, просто берёт её из всех сразу.</p>
+
+<p>Практическое следствие: <strong>колонна из четырёх стержней вырабатывается вся разом</strong>. Двадцать минут (в одиночной стойке) все четыре полны, потом все четыре одновременно становятся оболочками. Стойка, заправленная вразнобой, тоже выравнивается: свежий стержень доживает дольше полупустых соседей, потому что круг списывается со всех, а выбывшие из него выходят.</p>
+
+<p><strong>Топливо тратится только тогда, когда энергия нужна.</strong> Если буфер контроллера полон и никто не тянет, стойки не изнашиваются вовсе — тот же принцип, по которому <a href="../energy-storage/charge_pad.html">зарядная станция</a> тратит EU/FE за передачу, а не за тик.</p>
+
+<h2 id="заполнение-видно-снаружи">Заполнение видно снаружи</h2>
+
+<p>Blockstate несёт <strong>два</strong> счётчика, а не один:</p>
+
+<table><thead><tr><th>Свойство</th><th>Что значит</th><th>Как рисуется</th></tr></thead><tbody><tr><td><code>rods</code> = 0…4</td><td>сколько стержней стоит <strong>всего</strong>, оболочки в том числе</td><td>занятые гнёзда</td></tr><tr><td>= 0…4</td><td>сколько из них <strong>с ураном</strong></td><td>светлые стержни; остальные — тёмные оболочки</td></tr></tbody></table>
+
+<p>Двух свойств мало не потому, что так красивее. С одним счётчиком, считавшим только топливо, выработавшаяся колонна сообщала ноль — и оболочки в ней становились не только невидимыми, но и <strong>недоступными</strong>: код взаимодействия читал блокстейт, решая, есть ли что вынимать. Такую стойку нельзя было ни опустошить, ни заправить, только сломать.</p>
+
+<p>Блок-сущность считает своё содержимое сама и при каждом изменении приводит блокстейт к нему (<code>syncRods</code>), поэтому модель не может разойтись с тем, что внутри.</p>
+
+<h3 id="стойки-соединяются-по-вертикали">Стойки соединяются по вертикали</h3>
+
+<p>Два дополнительных булевых состояния — <code>up</code> и <code>down</code> — включаются, когда прямо над или под стойкой стоит такая же. У соединённых стоек пропадают крышка и донная плита, а стык закрывается вставкой, так что колонна из трёх сборок читается как <strong>одна высокая стойка</strong>, а не как три поставленных друг на друга ящика. Тот же приём, которым в моде срастаются кабель и труба.</p>
+
+<p>Соединение <strong>не</strong> чисто косметическое: по нему же ходят жидкости (см. «Стопка — это один сосуд»). На выработку и нагрев оно не влияет — влияет <strong>соседство</strong> (см. <a href="#баланс">Баланс</a>), а его контроллер считает по всем трём осям независимо от того, как сборка выглядит.</p>
+
+<p>Форма выделения следует за моделью: одинокая стойка 12×14×12, стыкованная сверху — 12×16×12. Иначе рамка выделения стыкованной сборки висела бы на два пикселя ниже видимой геометрии.</p>
+
+<p>Состояния пересчитываются в, а не в: это тот самый ванильный хук, который вызывается и при обычной установке, и при мировых правках, и при постановке структуры.</p>
+
+<h2 id="вода-и-пар">Вода и пар</h2>
+
+<p>С этапа 3 у колонны два бака, и вместе они — половина охлаждающего контура реактора.</p>
+
+<table><thead><tr><th>Бак</th><th>Ёмкость</th><th>Что принимает</th><th>Что отдаёт наружу</th></tr></thead><tbody><tr><td>Вода</td><td><strong>4000 мБ</strong> (4 ведра)</td><td>только воду</td><td><strong>ничего</strong></td></tr><tr><td>Пар</td><td><strong>4000 мБ</strong></td><td><strong>ничего</strong></td><td>пар</td></tr></tbody></table>
+
+<p>Баки нарочно зеркальны. Воду можно только <strong>залить</strong>: реакторная вода — не запас, из которого удобно одолжить. Разреши её выкачивать — и игрок ставил бы помпу на раскалённую зону и вытягивал теплоноситель обратно, то есть получал бы и бесплатный пар, и расплав по требованию. Пар, наоборот, можно только <strong>забрать</strong>: закачать его в колонну снаружи нельзя ничем.</p>
+
+<h3 id="правило-граней-пар-только-вверх-вода-всем-остальным">Правило граней: пар только вверх, вода — всем остальным</h3>
+
+<table><thead><tr><th>Грань</th><th>Что там опубликовано</th></tr></thead><tbody><tr><td>Верх</td><td>бак <strong>пара</strong></td></tr><tr><td>Все остальные пять</td><td>бак <strong>воды</strong></td></tr></tbody></table>
+
+<p>Так одна труба всегда однозначна: одна грань — одна жидкость, одно направление. И это правило переживает стыковку колонн по вертикали, чего не пережило бы «пар выходит из верха каждой колонны»: у нижних колонн в стопке свободного верха нет вовсе.</p>
+
+<p>Труба, которая забирает пар, должна стоять <strong>над</strong> колонной и работать в режиме «извлечение»; труба, которая подаёт воду, — с любой другой стороны и в режиме «выдача».</p>
+
+<h3 id="стопка-это-один-сосуд-а-соседняя-колонна-другой">Стопка — это один сосуд, а соседняя колонна — другой</h3>
+
+<p>Порт, который видит труба, отчитывается <strong>за всю вертикальную стопку</strong>, а не за один блок: суммарный объём, суммарная ёмкость, заливка снизу вверх, отбор пара сверху вниз. Каждый тик контроллер ещё и <strong>пересобирает</strong> содержимое стопки — вода оседает вниз, пар поднимается вверх.</p>
+
+<p>Без этого двухблочная колонна попросту не наполнялась: вода уходит в нижний блок, тот первым доходит до потолка, и труба, спросившая «есть ли место?», получала «нет» от сосуда, заполненного наполовину, и останавливалась.</p>
+
+<blockquote>⚠️ <strong>Колонны, стоящие бок о бок, — разные сосуды.</strong> Раньше контроллер выравнивал баки по <strong>всей</strong> комнате, и одна труба поила весь зал. Это было удобно и неправдиво: теплоноситель, появляющийся внутри стойки, к которой ничего не подведено, читается как баг, как бы ни был полезен. Обвязывают те колонны, которые хотят охлаждать; проще всего — ставить их стопками и подводить трубу к одной клетке стопки.</blockquote>
+
+<h3 id="кипение">Кипение</h3>
+
+<p>Колонна кипятит воду не сама — её кипятит контроллер, и <strong>только тогда, когда реактор перевалил за целевую точку контура (60 % шкалы)</strong>. Ниже неё оболочка сбрасывает всё тепло сама, и контур не тратит ни капли: вода — это система безопасности, а не радиатор. Целевая точка намеренно ниже жёлтой зоны (= 70 %), поэтому исправный реактор на воде стоит на зелёном, а жёлтый снова означает «что-то не так».</p>
+
+<p>Один миллибуккет воды уносит = <strong>2 единицы тепла</strong> и превращается в <strong>1 мБ пара</strong> — обмен один к одному по объёму.</p>
+
+<p>Кипение упирается в <strong>два</strong> предела сразу: сколько в колонне воды и сколько в ней осталось места под пар. Поэтому забитый паром контур останавливает охлаждение так же надёжно, как пустой водяной бак, — вода на месте, шкала полная, а температура растёт. Это не баг, а единственная причина, по которой выхлоп (<a href="steam_nozzle.html">паровая насадка</a>) обязателен.</p>
+
+<h3 id="уровень-воды-виден-снаружи">Уровень воды виден снаружи</h3>
+
+<p>Blockstate несёт = 0…4 — четверти бака, отдельная часть multipart-модели. Правило округления особое: <strong>всё, что больше нуля, показывает хотя бы одну четверть.</strong> Колонна, в которой остался глоток воды, не должна выглядеть так же, как сухая, — реакции на эти два состояния совершенно разные.</p>
+
+<h2 id="она-не-тикает">Она не тикает</h2>
+
+<p>У сборки есть блок-сущность, но <strong>своего тика у неё нет</strong>. Реактор — это одна машина, а не пол, заставленный машинами: <a href="reactor_controller.html">контроллер</a> ведёт все сборки своей комнаты из одного тика, поэтому зал с тридцатью стойками стоит серверу столько же, сколько один блок с сущностью, а не тридцать.</p>
+
+<p>Разделение обязанностей: стойка — это <strong>состояние и правила его изменения</strong> (что стоит в гнёздах, сколько в стержнях осталось, что отдать при сломе), контроллер — <strong>расписание</strong>.</p>
+
+<p>Практическое следствие, которое стоит знать: контроллер обходит комнату не каждый тик, а раз в = <strong>40 тиков (2 с)</strong>. Стержень, вставленный рукой, попадает в расчёт со следующего обхода — до двух секунд задержки, что незаметно рядом со стержнем, который горит минутами.</p>
+
+<p><strong>Пустая стойка из расчёта больше не выпадает.</strong> В список контроллера попадают все колонны, а не только заряженные: колонна — часть машины потому, что она стоит в комнате, а не потому, что кто-то успел её заправить. Раньше фильтр по топливу оставлял разряженную стойку без охлаждения и без участия в переливе, из-за чего вода, поданная в низ стопки, не поднималась выше первой заряженной колонны. Соседство при этом считается <strong>по топливу</strong>: две пустые стойки рядом ничего не разгоняют.</p>
+
+<h2 id="как-её-жжёт-реактор">Как её жжёт реактор</h2>
+
+<table><thead><tr><th>Шаг</th><th>Что делает контроллер</th></tr></thead><tbody><tr><td>Раз в 2 с</td><td>обходит внутренность комнаты, собирает <strong>все</strong> колонны, суммирует заряженные стержни, считает пары соседства</td></tr><tr><td>Каждый тик выработки</td><td>делит выработку между колоннами <strong>пропорционально числу заряженных стержней</strong> в каждой</td></tr><tr><td>Внутри колонны</td><td>доля переводится в деления прочности и списывается со <strong>всех</strong> заряженных стержней разом</td></tr><tr><td>Каждый тик</td><td>пересобирает жидкости внутри каждой вертикальной стопки</td></tr></tbody></table>
+
+<p>Остаток от деления достаётся первой колонне с топливом, а не отбрасывается: комната, у которой число стержней не делит выработку нацело, всё равно платит за каждый выработанный EU/FE.</p>
+
+<h2 id="свойства-блока">Свойства блока</h2>
+
+<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Форма</td><td>стойка 12×14×12 (одинокая), 12×16×12 (состыкованная сверху) — <strong>не</strong> полный куб</td></tr><tr><td>Окклюзия</td><td>— корпус прозрачный, стержни внутри должны рисоваться</td></tr><tr><td>Прочность</td><td>3.0</td></tr><tr><td>Взрывоустойчивость</td><td>6.0</td></tr><tr><td>Инструмент</td><td>кирка</td></tr><tr><td>Звук</td><td>металл</td></tr><tr><td>Блокстейты</td><td><code>rods</code> = 0…4, = 0…4, = 0…4, <code>up</code>, <code>down</code></td></tr><tr><td>BlockEntity</td><td>есть, <strong>без собственного тика</strong></td></tr><tr><td>NBT</td><td>содержимое стойки как предметы, <code>CarriedEu</code> (недосписанный расход), <code>Water</code>, <code>Steam</code> (содержимое баков, мБ)</td></tr></tbody></table>
+
+<p>Прочность стержней хранится <strong>в самих предметах</strong>, поэтому отдельного поля под неё в NBT стойки нет — и не может быть рассинхрона между «сколько осталось» и «что стоит». Из баков сохраняются только <strong>количества</strong>: каждый бак по построению держит ровно одну жидкость, и поле «а какую именно» могло бы только разойтись с кодом.</p>
+
+<p>Прочность блока нарочно ниже, чем у оболочки (5.0 / 30.0): сборка живёт <strong>внутри</strong> защищённой комнаты, и собственной брони ей не нужно — вскрывать реактор всё равно приходится через стену.</p>
+
+<h2 id="рецепты">Рецепты</h2>
+
+<p>Крафт — <strong>×2</strong> за раз.</p>
+
+<pre><code class="lang-">I G I I = железный слиток ×4
+G S G G = реакторное стекло ×4
+I G I S = экранирующая пластина ×1</code></pre>
+
+<p>Рецепт сам описывает предмет: стеклянные стенки, чтобы видеть заправку, железный каркас и экранирующая пластина в сердцевине. Две штуки за крафт — стоек нужны десятки, и штучный рецепт превратил бы заправку зала в верстачную рутину.</p>
+
+<h2 id="прогрессия">Прогрессия</h2>
+
+<p>Тир: нет (энергии у блока нет вообще). Требует: <a href="reactor_glass.html">реакторное стекло</a> и экранирующую пластину — то есть палладий, а значит Ад. Открывает: работу <a href="reactor_controller.html">контроллера реактора</a> на выработку. Без единой заряженной сборки собранная комната остаётся диагностическим устройством.</p>
+
+<h2 id="связанное">Связанное</h2>
+
+<p><a href="uranium_fuel_rod.html">ТВЭЛ</a> — то, что в неё вставляют. <a href="empty_fuel_rod.html">Оболочка ТВЭЛ</a> — то, что она отдаёт обратно. <a href="reactor_controller.html">Контроллер реактора</a> — тот, кто её жжёт и считает соседство. <a href="reactor_port.html">Реакторный ввод</a> — как вода попадает в комнату и как пар из неё выходит. <a href="steam_nozzle.html">Паровая насадка</a> — куда девается пар, и почему без неё кипение встаёт. <a href="../materials/steam.html">Пар</a> — что появляется в верхнем баке колонны. <a href="reactor_glass.html">Реакторное стекло</a> — половина рецепта и та же идея «видно, что внутри». <a href="reactor_casing.html">Реакторная обшивка</a> — стены, внутри которых стойка стоит.</p>
+
+<h2>Крафт</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="реакторная колонна alaindustrial:fuel_rod_assembly" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Железный слиток" width="32" height="32"></div> <div class="cell" title="Реакторное стекло"><img src="../assets/block/reactor_glass.png" alt="Реакторное стекло" width="32" height="32"></div> <div class="cell" title="Железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Железный слиток" width="32" height="32"></div> <div class="cell" title="Реакторное стекло"><img src="../assets/block/reactor_glass.png" alt="Реакторное стекло" width="32" height="32"></div> <div class="cell" title="Экранирующая пластина"><img src="../assets/item/shielding_alloy_plate.png" alt="Экранирующая пластина" width="32" height="32"></div> <div class="cell" title="Реакторное стекло"><img src="../assets/block/reactor_glass.png" alt="Реакторное стекло" width="32" height="32"></div> <div class="cell" title="Железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Железный слиток" width="32" height="32"></div> <div class="cell" title="Реакторное стекло"><img src="../assets/block/reactor_glass.png" alt="Реакторное стекло" width="32" height="32"></div> <div class="cell" title="Железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Железный слиток" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Реакторная колонна"><img src="../assets/block/fuel_rod_assembly_top.png" alt="Реакторная колонна" width="32" height="32"><span class="count">×2</span></div><div class="result-name">Реакторная колонна</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>Reactor Controller — Ala Industrial — Guide</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="Open menu" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../assets/item/guide_book_3d.png" alt="">All Content</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <details class="language-menu"><summary aria-label="Language">EN</summary><div class="language-popover"><span>EN</span><a href="../../ru/nuclear/reactor_controller.html">RU</a><a href="../../uk/nuclear/reactor_controller.html">UA</a><a href="../../zh_cn/nuclear/reactor_controller.html">中文</a><a href="../../ja_jp/nuclear/reactor_controller.html">日本語</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">Browse</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../assets/item/tempered_iron_pickaxe.png" alt=""><span>Getting Started</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
+<div class="group-title">Energy</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
+<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Nuclear</span><span class="cat-count" aria-label="12 pages">12</span></a>
+<div class="group-title">Processing</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="15 pages">15</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<div class="group-title">Logistics</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
+<div class="group-title">World &amp; Automation</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="17 pages">17</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="3 pages">3</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
+<div class="group-title">Other</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
+<div class="group-title">Items</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../nuclear/index.html">Nuclear</a><span class="sep">/</span><span>Reactor Controller</span></div>
+<div class="block-card" data-hero-alt="Every block and item of the Ala Industrial reactor room in item frames: casing, glass, door, lamp, inlet, outlet, controller, column, fuel rod and its cladding." style="background-image:linear-gradient(180deg,rgba(22,22,26,.55) 0%,rgba(22,22,26,.92) 100%),url(../assets/screenshots/nuclear_reactor_block_set.png);background-size:cover;background-position:center center;background-repeat:no-repeat;">
+  <div class="card-head">
+    <img class="icon" src="../assets/block/reactor_controller_top.png" alt="Reactor Controller" width="64" height="64">
+    <div class="info">
+      <h1>Reactor Controller</h1>
+      <div class="block-id">alaindustrial:reactor_controller</div>
+      <div class="tags"><span class="tag cat" style="background:#ef4444">Nuclear</span><span class="tag tier">HV</span><span class="tag lifecycle" style="background:#22c55e">Implemented</span><span class="tag">nuclear</span><span class="tag">reactor</span><span class="tag">multiblock</span><span class="tag">shielding</span><span class="tag">automation</span><span class="tag">tier-hv</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="summary">Summary</h2>
+
+<p>The <strong>Reactor Controller</strong> is the only intelligent block in the shell and the room's only machine. While the room is being built it finds the shell around itself, checks it and reports what is wrong and where. Once the shell is closed it becomes the reactor: it collects the fuel assemblies, works out output and heat, boils the coolant, re-settles the fluids inside every stack of columns, wears the rods down and pushes EU/FE out.</p>
+
+<p>The controller goes <strong>in place of one casing block in a vertical wall</strong>, facing outwards: the front face carries the screen the player reads, and the redstone goes to the same side. The cable goes on any other face. A room with two controllers does not form — a room has exactly one brain.</p>
+
+<blockquote><strong>What the reactor does not have yet.</strong> The heat gauge is computed and shown, but 100% has no consequences: the reactor neither melts down nor explodes. There is no radiation around a running core either. Both are separate work; for now overheating only costs you the output.</blockquote>
+
+<h2 id="where-it-has-to-stand">Where it has to stand</h2>
+
+<table><thead><tr><th>Requirement</th><th>Why</th></tr></thead><tbody><tr><td>In a vertical wall (not the floor, not the ceiling)</td><td>the front face is a panel to be read, and the wire arrives there in stage 2; in a ceiling nobody sees it</td></tr><tr><td>Not in an edge or a corner of the shell</td><td>a cell on an edge has no interior side to look into</td></tr><tr><td>Facing outwards</td><td>the room's interior lies <strong>behind</strong> the controller; turn it around and you get "Controller not in a wall"</td></tr><tr><td>Exactly one per room</td><td>a second controller in the same shell yields "Second controller" together with its position</td></tr></tbody></table>
+
+<p>All four conditions are checked by the same scan and produce the same class of answer — a status plus a place. There is no separate "setup mode": place it, read the screen, fix the thing.</p>
+
+<h2 id="the-scan">The scan</h2>
+
+<p>The scanner works in two passes, and that is not an implementation detail but the reason its messages are useful.</p>
+
+<ol><li><strong>Six rays</strong> from the cell in front of the controller — along ±X, ±Y, ±Z, to the first shell block.</li></ol>
+<p>A ray that finds nothing means "the room is unbounded in this direction" — either it is too large, or there is a hole in the wall you could fly through. The ray reports where it gave up, so the player at least knows which way to look.</p>
+<ol><li><strong>A walk of the whole perimeter</strong> implied by those six hits. This is the pass that finds a single</li></ol>
+<p>missing cell anywhere in a 14³ shell and names its coordinates. The same walk counts controllers, remembers door cells and tallies the glass share — one pass answers all four questions.</p>
+
+<p>A ray reaches + <strong>1</strong> steps, not exactly the limit. The extra step is not slack but the condition under which "too large" can exist as a status at all: a ray capped at exactly the limit can never see the far wall of a room that is one block too wide, so every oversized room would report "unbounded". With the extra step, "you built it one block too wide" and "there is no wall there" stay different answers.</p>
+
+<p>Why not a plain flood fill: a flood fill cannot tell "this room is too large" from "this room leaks" — both simply run until the cap. Two passes give two different answers to two different questions.</p>
+
+<p>The order of the checks is a usability decision as well, not a coding one:</p>
+
+<ol><li>controller placement (is there an open cell in front of its face);</li><li>bounds — the six rays;</li><li>size (<code>TOO_SMALL</code>, then <code>TOO_LARGE</code>);</li><li>seal — the first non-shell cell of the walk (<code>BREACH</code>, the walk stops there);</li><li>the controller itself found as a wall cell rather than an edge one;</li><li>a second controller;</li><li>a door, then a doorway;</li><li>the glass share.</li></ol>
+
+<p>Each answer is actionable on its own, and the player fixes one thing at a time instead of being handed a list. The glass cap comes last on purpose: it is the one "soft" problem — a room that hits it is sealed and correctly built, it simply does not count as containment — and reporting it ahead of an actual hole would be the wrong order of priorities.</p>
+
+<table><thead><tr><th>When it re-scans</th><th>Condition</th></tr></thead><tbody><tr><td>Periodically</td><td>every (default <strong>40 ticks = 2 s</strong>)</td></tr><tr><td>On a neighbour change</td><td>at once: a wall broken nearby, a port placed, a door blown up</td></tr></tbody></table>
+
+<p>The periodic pass is mandatory: only fires for the six blocks touching the controller, and a room can be 14 blocks across. A block mined on the far wall is nobody's neighbour here, and without its own timer the controller would never notice. For the same reason the controller never goes to sleep.</p>
+
+<h2 id="states">States</h2>
+
+<p>Ten states. Nine of them are a job to be done; the tenth is "done".</p>
+
+<table><thead><tr><th>State</th><th>Meaning</th><th>Shows a place</th><th>Shows a size</th></tr></thead><tbody><tr><td><code>FORMED</code></td><td>sealed, within the size limits, with a way in</td><td>—</td><td>yes</td></tr><tr><td><code>CONTROLLER_NOT_IN_WALL</code></td><td>the controller is in the floor or ceiling, in an edge, buried, or turned the wrong way</td><td>yes</td><td>—</td></tr><tr><td><code>ROOM_UNBOUNDED</code></td><td>a ray ran past the limit without finding a wall</td><td>—</td><td>—</td></tr><tr><td><code>TOO_SMALL</code></td><td>interior below along some axis</td><td>—</td><td>yes</td></tr><tr><td><code>TOO_LARGE</code></td><td>interior above along some axis</td><td>—</td><td>yes</td></tr><tr><td><code>BREACH</code></td><td>a perimeter cell is not a shell block</td><td>yes</td><td>—</td></tr><tr><td><code>NO_DOOR</code></td><td>the shell is sealed but has no door</td><td>—</td><td>—</td></tr><tr><td><code>NO_DOORWAY</code></td><td>there is a door but no doorway (no two door cells stacked at floor level)</td><td>—</td><td>—</td></tr><tr><td><code>SECOND_CONTROLLER</code></td><td>another controller stands in the same shell</td><td>yes</td><td>—</td></tr><tr><td><code>TOO_MUCH_GLASS</code></td><td>glass exceeds (30 %) of the shell's cells</td><td>yes</td><td>—</td></tr></tbody></table>
+
+<p><code>TOO_MUCH_GLASS</code> is appended to the end of the enum rather than slotted in next to <code>BREACH</code> where it belongs by meaning, and that is not sloppiness: the order of the constants <strong>is</strong> the wire format — what travels to the screen is an ordinal. Inserting in the middle would rename every state after it.</p>
+
+<p>The position <code>TOO_MUCH_GLASS</code> reports is not a "guilty" cell — the share is guilty, not any one block but the first glass cell in perimeter-walk order. It is there so the smoke leads the player to the glazed part of the shell: a 14×14 room is large, and "too much glass" without a direction is a message with no action attached.</p>
+
+<h2 id="how-it-runs-the-reactor">How it runs the reactor</h2>
+
+<p>A finished room is one machine, and the controller executes its whole tick. The fuel assemblies have no tick of their own at all: a hall with thirty racks costs the server what one block entity costs.</p>
+
+<h3 id="collecting-the-columns">Collecting the columns</h3>
+
+<p>On the same sweep as the shell check (once every = 40 ticks), the controller walks the room <strong>interior</strong> and records <strong>every</strong> reactor column — loaded and empty alike. The same pass sums the rods that carry uranium and counts the adjacency pairs.</p>
+
+<p>Empty columns go into the list deliberately. Filtering on fuel looked harmless and was not: an empty rack fell out of the water loop and out of the stack settling pass, which is why water pumped into the bottom of a column never rose past the first loaded assembly. A column is part of the machine because it stands in the room, not because somebody has fuelled it yet.</p>
+
+<p>Adjacency, on the other hand, is counted <strong>by fuel</strong>: two empty racks side by side accelerate nothing, or the bonus would be paid for scaffolding.</p>
+
+<p>Sweeping a 12³ interior is 1728 block reads: absurd sixty times a second, cheap once every two seconds. The price is latency: a rod inserted by hand enters the calculation on the next sweep, so no later than two seconds. Next to a rod that burns for minutes, that is invisible.</p>
+
+<p>Adjacency pairs are counted over <code>+X</code>, <code>+Y</code>, <code>+Z</code> — each pair exactly once — but <strong>both</strong> racks of the pair get the bonus, hence the x2 in the output formula.</p>
+
+<h3 id="output-fuel-and-heat">Output, fuel and heat</h3>
+
+<table><thead><tr><th>Quantity</th><th>How it is worked out</th></tr></thead><tbody><tr><td>Potential (at 100 %)</td><td><code>rods x 6 EU/FE x Me</code>, where <code>Me = 1 + 0.5 x pairs</code></td></tr><tr><td>Output</td><td>x depth‰ / 1000`, but never more than the room left in the buffer</td></tr><tr><td>Heat</td><td><code>full heat x output / potential</code>, where full heat <code>rods x 4 x Mh</code>, <code>Mh = 1 + 0.8 x pairs</code></td></tr><tr><td>Fuel spent</td><td>exactly EU/FE a tick, split between the columns in proportion to their rods</td></tr><tr><td>Heat scale</td><td><code>heat + produced − boiled away − losses</code>, clamped to 0…10,000 (the full gauge)</td></tr></tbody></table>
+
+<p><strong>The ceiling is applied before the throttle, not after.</strong> The potential is clamped to 512 EU/FE/t first, and only then scaled by depth. The other order looked equivalent and was not: on any core whose potential had already cleared 512, every stop of the slider produced the same 512 EU/FE/t — the control did precisely nothing at the exact scale it was built for.</p>
+
+<p><strong>Fuel is counted in EU/FE, not in time.</strong> The controller charges the columns with exactly the energy it produced, and a column converts that into durability points on its rods (144 EU/FE per point; the details are in the <a href="uranium_fuel_rod.html">rod spec</a>). Hence the model's central property: <strong>a rod is worth 144,000 EU/FE everywhere</strong>, and no layout makes uranium cheaper.</p>
+
+<p>It was not always so. Before stage 4 fuel was driven by an "effective depth" — the fraction of its potential the room actually delivered — and on a large room that fraction truncated to its floor of 1 ‰. Two absurdities followed from the same line: a rod lasted about a thousand real days, and heat became <code>full heat / 1000</code> and grew without bound as the room grew (a 12x12x12 hall came out at roughly 105,000 heat a tick — more coolant than the shell has surface to admit).</p>
+
+<p><strong>Heat has an adjacency coefficient of its own, and it is the larger one</strong> — = <strong>40 %</strong> against = 25 %. That is the key number of stage 3: a dense core heats up faster than it strengthens, so a layout that raises power raises the <strong>price of cooling</strong> with it. The stage-2 rule "heat = output / 3" no longer holds: it is two thirds on a lone column, 0.79 on two adjacent ones, and it approaches <strong>1.07</strong> on a very dense core at the HV ceiling a room makes more units of heat than it makes EU/FE.</p>
+
+<p>That same division is also what <strong>bounds</strong> the heat from above. Both terms carry the same rods and the same adjacencies, so the heat-per-EU/FE ratio converges as the room grows instead of diverging:</p>
+
+<pre><code class="lang-">heat at the HV ceiling -&gt; 512 x (4 x 0.8) / (6 x 0.5 = 546 units/t</code></pre>
+
+<p>A dense room at the ceiling runs between 500 and 546 heat a tick (six columns in a 2x3 block make 500, a 12x12x12 hall 546), and none runs hotter than <strong>546</strong>: the more sparsely the columns stand, the less heat the same ceiling costs.</p>
+
+<blockquote><strong>A big room buys autonomy, not power.</strong> Everything past 512 EU/FE/t delivers the same 512 EU/FE/t; what grows is the time between refuellings, because the same stream is divided among more rods. The room's appetite is <strong>identical</strong> for every layout that reaches the ceiling: 256 rods = 128 uranium ore an hour. The per-layout figures are in</blockquote>
+
+<p>Heat is settled <strong>every tick</strong>, even with the reactor shut down: cooling has to work, or "scram and wait" would not be a way out. A full scale drains to zero in <strong>395 ticks (19.8 s)</strong>. A full scale still has no consequence — that is and.</p>
+
+<h3 id="controls-redstone-and-depth">Controls: redstone and depth</h3>
+
+<table><thead><tr><th>Control</th><th>What it does</th></tr></thead><tbody><tr><td>Redstone signal on the controller</td><td><strong>present</strong> — the reactor runs; <strong>removed</strong> — emergency stop. A lever by the door kills the core without dismantling anything</td></tr><tr><td>Depth throttle</td><td>five stops, 0 / 25 / 50 / 75 / 100 %; 0 % is the same stop, from inside the screen</td></tr></tbody></table>
+
+<p>There are deliberately no other controls: two is exactly as many as fit in the head of a player standing in a smoking hall.</p>
+
+<p>The throttle rides the vanilla container-button channel, like the dome toggle on the <a href="../utility/mob_repeller_hv.html">repeller</a>: the button id <strong>is</strong> the requested depth in percent, so no payload of its own is needed. The value is clamped on the server, not in the screen.</p>
+
+<p>The throttle works <strong>at every scale</strong>: it cuts a figure that has already been clamped, so 50 % on a 3x3 layer gives 256 EU/FE/t — and exactly half the heat, half the water and half the uranium per hour. In stage 2 that was not so (the ceiling was applied last, and above it every stop was identical); the discrepancy was closed in stage 3.</p>
+
+<h3 id="cooling-the-shell-on-its-own-water-only-past-the-threshold">Cooling: the shell on its own, water only past the threshold</h3>
+
+<p>The cooling curve has two terms, and the second is the important one:</p>
+
+<pre><code class="lang-">losses = 4 + heat x 8 / 1000
+= 4 + heat x 8 / 1000</code></pre>
+
+<p>The proportional term is what gives the reactor <strong>an equilibrium instead of a switch</strong>. With a flat loss a core had exactly two outcomes: production below it and the gauge never leaves zero, above it and the gauge climbs to the top and stays. The first of those is what a player's first reactor looked like, and it looked broken. Now every core settles where production and losses meet:</p>
+
+<pre><code class="lang-">equilibrium = (heat produced − 4) x 1000 / 8</code></pre>
+
+<table><thead><tr><th>Core</th><th>Heat, units/t</th><th>Equilibrium</th><th>Gauge</th><th>Water</th></tr></thead><tbody><tr><td>1 column (4 rods)</td><td>16</td><td>1500</td><td>15 %</td><td>not needed</td></tr><tr><td>2 columns side by side</td><td>57</td><td>6625 dry</td><td>66 % dry, 60 % on water</td><td>optional (3 mB/t if plumbed)</td></tr><tr><td>3 in a row (12 rods)</td><td>124</td><td>above the ceiling</td><td>60 % on water</td><td><strong>needed</strong></td></tr></tbody></table>
+
+<p><strong>The shell's ceiling is 84 units/t</strong> (<code>4 + 10000 x 8 / 1000</code>). Anything producing less holds itself; above it the loop begins.</p>
+
+<p>Water is a <strong>safety system, not a radiator</strong>. It engages only past the loop's own target the coolant target (60 % of the gauge = 6000 units) and takes two things away: this tick's inflow, and a twentieth of whatever overshoot has already piled up. The target sits deliberately <strong>below</strong> the amber band (= 70 %): the loop has to bring the reactor back to green, not park it on a warning.</p>
+
+<pre><code class="lang-">target = 10,000 x 60 % = 6000
+excess = heat &lt; target ? 0: (produced − losses) + (heat − target) / 20
+water, mB = ceil(excess / 2) (rounded UP)
+removed = boiled x 2</code></pre>
+
+<p>The first term holds the line, the second walks back to it. Without the second, a runaway core would freeze exactly where it was caught — indistinguishable from a loop that does nothing. Without the first, the loop would have to undo the whole in one tick: an early version demanded fifteen hundred millibuckets a tick and drained the room in eight of them.</p>
+
+<p>Rounding up rather than down is deliberate: truncation returned 0 for any heat below the exchange rate, and a reactor idling just under the threshold would have held its temperature on no water at all.</p>
+
+<p><strong>A starter reactor needs no plumbing.</strong> One column of four rods makes 16 heat a tick and settles at 15 % of the scale, dry. Two adjacent (57/t) already clear the loop's target — which answers to 52/t — but settle at 66 % on their own anyway, below the amber band; a pipe holds them at 60 % for 3 mB/t. The water loop becomes truly mandatory at the <strong>third</strong> column (124/t, 36 mB/t): the shell sheds no more than 84/t, and everything above that climbs to the top of the scale. Nothing forces pipes early; scale does.</p>
+
+<blockquote><strong>A water-cooled reactor sits at 60 % of the scale</strong> — its heat bar is green, and the amber band means "something is wrong" again: the supply is not keeping up, the exhaust is blocked, or the core was pushed without a loop. Before stage 4 the loop aimed at the warning line itself, and a healthy reactor glowed amber forever.</blockquote>
+
+<p>The controller boils, not the column: it walks its list of columns and asks each one for as much as it has not gathered yet. Whatever could not be boiled stays as heat and goes on the scale. That is the entire failure mode of a starved loop: not an error message, a rising bar.</p>
+
+<h3 id="re-settling-the-stacks">Re-settling the stacks</h3>
+
+<p>Every tick the controller tidies the fluids <strong>inside each unbroken vertical stack</strong> of columns: all the water gathers at the bottom, all the steam at the top. A stack therefore behaves as one vessel, and a pipe plugged into any block of it fills the whole thing.</p>
+
+<p>Without this a stack simply would not fill: water sinks, the bottom block reaches capacity first, and a pipe asking "is there room?" got "no" from a vessel that was half empty.</p>
+
+<blockquote>⚠️ <strong>Columns standing side by side are not connected.</strong> The controller used to even the tanks out across the whole room, and one pipe watered the entire hall. That was convenient and untrue: coolant appearing inside a rack nothing is plumbed to reads as a bug however useful it is. Plumb the columns you want cooled — the easiest way is to build them in stacks.</blockquote>
+
+<h2 id="interface">Interface</h2>
+
+<p>Type: a screen with no slots at all — the controller is read, not loaded. The lack of inventory is deliberate: empty slots would invite hoppers into a block with nothing to hold. No upgrade panel: the controller is not a processing machine, and four hidden upgrade slots would promise what it cannot do. No progress arrow: the reactor has no operation that "runs".</p>
+
+<p><strong>There are two layouts, and they are never shown together.</strong> The controller's panel is much taller than the family default (176x228 instead of 176x166): the art draws two framed boxes — the readout down to y = 87 and the throttle's own frame from y = 96 — with the inventory label at y = 116. A status line, the data rows, two gauges and five throttle buttons fit inside those; together with the shell diagnostics they do not fit at all. They also answer different questions at different times: while the shell is open the reactor has no numbers at all, and once it is closed the fault line has nothing to say.</p>
+
+<table><thead><tr><th>Layout</th><th>When</th><th>Rows</th></tr></thead><tbody><tr><td><strong>Building</strong></td><td>any status but <code>FORMED</code></td><td>the status; "Room" — the interior size <code>X × Y × Z</code>; "Problem" — the direction to the offending cell (only for the states that point at one); the <strong>charge gauge</strong></td></tr><tr><td><strong>Running</strong></td><td><code>FORMED</code></td><td>the status; "Rods"; "Output" in EU/FE/t; a <strong>heat gauge</strong>; a <strong>coolant gauge</strong> carrying the boil rate in its label; the depth throttle as five buttons; the <strong>charge gauge</strong></td></tr></tbody></table>
+
+<p>The running layout, top to bottom: the status headline (<code>STATUS_Y</code> = 21), two text rows (<code>ROW_TOP</code> = 35, step 12), two gauges (<code>GAUGE_TOP</code> = 61, step 13), the throttle strip (<code>THROTTLE_Y</code> = 98, five 28-px buttons) and the charge gauge (<code>ENERGY_Y</code> = 116).</p>
+
+<p><strong>The buffer's charge gauge is drawn in both layouts</strong> — the only element that is. A reactor that has been scrammed, and a room that has just been breached, still hold whatever they banked, and that is exactly when a player wants to know how much is left. It also answers "where does the energy go": the reactor banks what nothing is drawing, and until this bar existed a working reactor gave no sign of that anywhere on the panel.</p>
+
+<p>The charge bar spans the full width of the content area and the figure is written <strong>on</strong> it rather than beside it. Beside it was the first try, and it broke on its own success: at 200,000 EU/FE the label outgrew its column and ran under the gauge. A number that only misbehaves once the reactor is doing well is the worst kind.</p>
+
+<p><strong>Why heat and coolant are bars rather than rows.</strong> Five text rows, three bars and a throttle fit nowhere, and the numbers that want watching continuously read better as a filling bar than as a figure to parse.</p>
+
+<p><strong>The "Output" row never shows a dash.</strong> A sealed, fuelled, silent reactor is the worst state this machine can be in, and every cause has a different fix, so instead of a zero it prints the <strong>reason for the idle</strong> in red: not sealed, no fuel, rods withdrawn, no redstone, buffer full. A dash left the player guessing between five different faults.</p>
+
+<p>The coolant label carries <strong>both the level and the rate</strong>: "Coolant 62 % · 243 mB/t". The level says whether the loop is holding, the rate says what one inlet line has to keep up with, and a player sizing their plumbing needs both at once. There is no separate row for the rate.</p>
+
+<p>The heat bar is green while there is head room, amber from (70 %) and red halfway from there to a hundred (85 %). The threshold comes from the config rather than being hardcoded in the screen: otherwise the gauge would disagree with the machine it displays.</p>
+
+<p><strong>The coolant bar's colour is the blocked-exhaust indicator.</strong> The rule is short and rests on three</p>
+
+<table><thead><tr><th>Colour</th><th>When</th><th>What it means</th></tr></thead><tbody><tr><td>teal</td><td>water above zero, steam below 90 %</td><td>the loop is turning over</td></tr><tr><td><strong>amber</strong></td><td>steam <strong>≥ 90 %</strong></td><td>the steam has nowhere to go: the exhaust is missing, clogged, or the nozzle faces a wall</td></tr><tr><td>red</td><td>water at <strong>zero</strong></td><td>the loop is dry: supply cannot keep up, or has stopped</td></tr></tbody></table>
+
+<p>The amber case is the only one worth the code. With the exhaust blocked the coolant bar sits reassuringly full while the temperature climbs: the water is there, and there is nowhere to boil it to. Without the hint that reads as a broken mod rather than as a plumbing mistake. The steam percentage is shown nowhere as a number — there is no room on the panel, and it would be one gauge too many — but the sync channel carries it precisely for this colour.</p>
+
+<p>There is no way to hit the throttle in the building layout — it is not drawn there, and a click cannot move control rods the player cannot see.</p>
+
+<p>Both layouts are laid out as a "label → value" table rather than as free-flowing lines. The columns are fixed: labels start at <code>LABEL_X = 24</code> (just clear of the 11-pixel room pictogram baked into the atlas at x = 8), values and gauge bars at <code>VALUE_XBAR_X</code> = 98 (bars are 70×5). That is a direct consequence of the first version of this screen, where label and value were one string and the Russian text ran into the pictogram. Separate columns take the layout's dependency on translated length away — however long a label turns out to be, the value still starts in the same place.</p>
+
+<p>A value that does not fit its column is <strong>shrunk</strong>, not clipped: clipping would hide exactly the part the line is read for (the block count or the direction). The same trick has long been used by the machine family's status line.</p>
+
+<p><strong>A dash instead of zeros.</strong> While the room has not been measured, the size row shows "—", not "0 × 0 × 0". Zero is a measurement too, and showing one where no measurement happened is a lie; a dash honestly says "nothing to show". The same goes for the problem row: a direction is printed only for the states that really point at a block (<code>BREACH</code>, <code>SECOND_CONTROLLER</code>, <code>CONTROLLER_NOT_IN_WALL</code>, <code>TOO_MUCH_GLASS</code>); for <code>NO_DOOR</code> and <code>NO_DOORWAY</code> the "place" is the controller itself, and an offset would be noise.</p>
+
+<p><code>ROOM_UNBOUNDED</code> shows <strong>no</strong> direction, even though it technically has a position. That is a post-playtest fix: its "place" is wherever the ray gave up, up to 13 blocks out in open ground, and a lone controller puffing smoke into a hillside turned out to be worse than silence. It pointed at a spot with nothing to fix.</p>
+
+<p><strong>The location is a direction, not coordinates.</strong> The offset is measured from the controller itself and reads as "4 east, 2 up": the player reading the screen is standing at the controller, and that sentence gets them to the right block faster than three numbers do. Axes with no offset are dropped — a breach straight overhead reads "2 up" rather than "0 east, 2 up, 0 south". Technically it is also the only option: a menu sync channel carries a signed 16-bit number, an absolute world coordinate does not fit, while an offset is at most ±14 by construction.</p>
+
+<p>The state is visible from outside too: on a formed room the controller's front face is lit (the blockstate), on an unformed one it is dark. The build can be checked without opening the screen.</p>
+
+<h2 id="feedback-in-the-world">Feedback in the world</h2>
+
+<p>Text alone is not enough in a build of a thousand blocks, so the controller also answers with sound and particles. A multiblock that silently starts working leaves the player wondering whether it did.</p>
+
+<table><thead><tr><th>Event</th><th>What happens</th></tr></thead><tbody><tr><td>The room came together (was not formed → is formed)</td><td><code>ANVIL_LAND</code> (0.6, pitch 1.6) at the controller + 12 <code>END_ROD</code> particles above it</td></tr><tr><td>The room came apart (was formed → is not)</td><td><code>BEACON_DEACTIVATE</code> (0.5, pitch 1.4) <strong>at the breach</strong>, exactly once</td></tr><tr><td>While the problem is unfixed</td><td>16 smoke particles at the offending cell on every scan</td></tr></tbody></table>
+
+<p>The failure sound plays <strong>on the transition only</strong>, never in a loop, and that matters. The scan runs every two seconds; an alarm repeating every two seconds until the player finds the block turns a hint into a punishment. It is needed once because a wall is usually opened by a creeper, and at that moment the player is looking somewhere else. After that the particles do the work: they are unobtrusive, and they are visible the second the player turns round.</p>
+
+<p>Smoke is now the only particle a breach gets. It used to come with angry-villager puffs, and the play session threw them out: over a wall they read as cartoon clouds rather than as a fault marker.</p>
+
+<p>The assembly sound is the same <code>ANVIL_LAND</code> the <a href="../fluid-machines/distillation_column.html">distillation column</a> plays when its tower forms. That is deliberate: "a multiblock came together" should sound the same across the mod, whichever multiblock it was.</p>
+
+<h2 id="painting-the-flag">Painting the flag</h2>
+
+<p>The controller is the only thing that sets the and <code>edge</code> blockstates, and it sets them on the <strong>whole</strong> shell, not just on itself. It also turns the room's lights on (details in <a href="reactor_casing.html">"The seamless look"</a> and in the <a href="reactor_lamp.html">lamp</a> spec).</p>
+
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>What is walked</td><td>the perimeter cells of an <strong>explicitly given</strong> box</td></tr><tr><td>Which box on success</td><td>the one this scan measured; it is also remembered</td></tr><tr><td>Which box on failure</td><td>the last <strong>remembered</strong> one — whatever the controller once accepted</td></tr><tr><td>What is written</td><td>only cells whose value actually changed</td></tr><tr><td><code>edge</code></td><td>set to <code>formed &amp;&amp; the cell is outside the box on more than one axis</code></td></tr><tr><td>Light</td><td>a <code>minecraft:light</code> at level 15 appears in each interior cell facing a lamp (and is removed on teardown)</td></tr><tr><td>flag</td><td>2</td></tr></tbody></table>
+
+<p><strong>Why the box is passed in rather than taken from the scan result.</strong> A failed scan measures no box — its <code>maxX &lt; minX</code>. A sweep driven by the result could therefore physically only ever switch the flag <strong>on</strong>: a breached wall left the room seamless and lit as if nothing had happened. The first play session found exactly that. The controller now remembers the last box it accepted and clears it when a scan fails. The box is written to NBT (<code>BoxMinX</code>…<code>BoxMaxZ</code>): a chunk can unload whole and reload with a hole in it, and a controller that forgot its box would leave the shell looking "formed" forever.</p>
+
+<p>The saving is not a micro-optimisation: the sweep runs on <strong>every</strong> scan, that is every two seconds for every controller in the world. Reading a thousand blockstates is cheap, rewriting a thousand is not, and a needless would additionally fire neighbour updates on every pass. Flag 2 without flag 1 is chosen for the same reason: the properties are cosmetic, so the client must hear about them and no neighbour needs to.</p>
+
+<h2 id="energy">Energy</h2>
+
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>producer, tier <strong>HV</strong></td></tr><tr><td>Buffer (EU/FE)</td><td>= <strong>200,000</strong></td></tr><tr><td>Max input (EU/FE/tick)</td><td><strong>0</strong> — a reactor is not charged from outside</td></tr><tr><td>Max output (EU/FE/tick)</td><td><strong>512</strong> = the HV ceiling</td></tr><tr><td>Faces</td><td>every face but the front pushes out (→ <code>OUT</code>); the front is <code>NONE</code></td></tr></tbody></table>
+
+<p>The front face is energy-inert by rule R-NRG-03: it carries the panel the player reads, and a cable sticking out of the middle of an interface would spoil both the look and the sense of it.</p>
+
+<p>The 200,000 EU/FE buffer is a damper rather than a store: a grid that cannot take the power this instant must not stall the core mid-tick. At the ceiling that is 391 ticks (19.5 s) of output, and exactly as long to fill from empty. One <a href="../energy-transfer/electrum_cable.html">electrum cable</a> carries 192 EU/FE/t per segment, so a reactor running at the ceiling is drained by <strong>three</strong> independent lines — or by machines placed flush against its faces.</p>
+
+<h2 id="block-properties">Block properties</h2>
+
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full cube 16³ (occluder)</td></tr><tr><td>Hardness</td><td>5.0</td></tr><tr><td>Blast resistance</td><td>30.0</td></tr><tr><td>Tool</td><td>pickaxe (required for drops)</td></tr><tr><td>Sound</td><td>metal</td></tr><tr><td>Blockstates</td><td>(horizontal),</td></tr><tr><td>Block entity</td><td>yes (the scan, the reactor and the sync channel)</td></tr></tbody></table>
+
+<p>The <strong>verdict</strong> is not written to disk: the room <strong>is</strong> the save. After a world load the very first scan re-derives the state from whatever stands around. A stored verdict could survive a world edit that took the walls away, and then it would be lying.</p>
+
+<p>Only what cannot be re-derived from the world lives in NBT: the <strong>bounds of the last accepted box</strong> (<code>BoxMinX</code>…<code>BoxMaxZ</code>), the accumulated <strong>heat</strong> and the <strong>throttle position</strong>. The box is not a verdict but an address: it is what gives the next failed scan something to clear (see "Painting the flags"), and it cannot lie — if it is stale, the sweep merely clears flags where there were none. Heat and depth are machine state: a reactor that forgot them on chunk unload would cool for free and come back at full power on its own.</p>
+
+<h2 id="recipes">Recipes</h2>
+
+<p>Craft — <strong>×1</strong> at a time.</p>
+
+<pre><code class="lang-">S C S S = shielding plate ×4
+R A R R = reinforced shielding plate ×2
+S D S C = reactor control circuit ×1
+A = advanced machine casing ×1
+D = control rod drive ×1</code></pre>
+
+<p>The control circuit is a separate item: 4 palladium plates, a <strong>resonance coil</strong>, 2 advanced circuits, an electronic circuit and redstone</p>
+
+<p>The coil took the place of the unstable isotope that stood here in the first version. The isotope is a product of the <a href="../agriculture/incubator.html">Incubator</a>, and the incubator branch has been dropped from the reactor's requirements: it sent the player into the mod's biological wing for a single item and made the nuclear branch a hostage of somebody else's chain. The <a href="../components/resonance_chain.html">resonance coil</a> fits the role better — it already sits at the "endgame electronics" rung, the thermal centrifuge leads to it, and in required progress it is the isotope's equal.</p>
+
+<h2 id="progression">Progression</h2>
+
+<p>Tier: <strong>HV</strong> — a producer of up to 512 EU/FE/tick. Requires: shielding and reinforced shielding plates (the chain is described under <a href="reactor_casing.html">casing</a>), an <a href="../components/advanced_machine_casing.html">advanced machine casing</a>, <a href="../components/advanced_circuit.html">advanced circuits</a>, palladium plates, a <a href="../components/resonance_chain.html">resonance coil</a>. Unlocks: the reactor room itself — without a controller a pile of blocks stays a pile of blocks.</p>
+
+<h2 id="related">Related</h2>
+
+<p><a href="reactor_casing.html">Reactor Casing</a> — what it scans the room out of, the geometry and the crafting chain. <a href="reactor_door.html">Airlock Door</a> — a precondition of the <code>FORMED</code> status. <a href="reactor_glass.html">Reactor Glass</a>, the <a href="reactor_lamp.html">Lamp</a> and the <a href="reactor_port.html">Reactor Inlet</a> — the other blocks the scanner counts as wall. <a href="fuel_rod_assembly.html">Reactor Column</a> — what it burns, boils and re-settles. <a href="uranium_fuel_rod.html">Fuel Rod</a> and the <a href="empty_fuel_rod.html">Fuel Rod Cladding</a> the fuel it wears down and the casing that is left. <a href="../materials/steam.html">Steam</a> — the loop's working fluid. <a href="steam_nozzle.html">Steam Nozzle</a> — the end of the loop; until it works the coolant bar turns amber and the heat climbs. <a href="reactor_button.html">Reactor Button</a> — the one block of the set the scanner does <strong>not</strong> count as wall. <a href="../components/resonance_chain.html">Resonance Chain</a> — where the coil for the control circuit comes from. <a href="../fluid-machines/distillation_column.html">Distillation Column</a> and the <a href="../agriculture/incubator.html">Incubator</a> — the mod's two earlier multiblocks; both check a fixed shape, and the volumetric scanner was written here for the first time.</p>
+
+<h2>Crafting</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="reactor controller alaindustrial:reactor_controller" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Shielding Plate"><img src="../assets/item/shielding_alloy_plate.png" alt="Shielding Plate" width="32" height="32"></div> <div class="cell" title="Reactor Control Circuit"><img src="../assets/item/reactor_circuit.png" alt="Reactor Control Circuit" width="32" height="32"></div> <div class="cell" title="Shielding Plate"><img src="../assets/item/shielding_alloy_plate.png" alt="Shielding Plate" width="32" height="32"></div> <div class="cell" title="Reinforced Shielding Plate"><img src="../assets/item/shielding_alloy_reinforced_plate.png" alt="Reinforced Shielding Plate" width="32" height="32"></div> <div class="cell" title="Advanced Machine Casing"><img src="../assets/item/advanced_machine_casing_3d.png" alt="Advanced Machine Casing" width="32" height="32"></div> <div class="cell" title="Reinforced Shielding Plate"><img src="../assets/item/shielding_alloy_reinforced_plate.png" alt="Reinforced Shielding Plate" width="32" height="32"></div> <div class="cell" title="Shielding Plate"><img src="../assets/item/shielding_alloy_plate.png" alt="Shielding Plate" width="32" height="32"></div> <div class="cell" title="Control Rod Drive"><img src="../assets/item/control_rod_drive.png" alt="Control Rod Drive" width="32" height="32"></div> <div class="cell" title="Shielding Plate"><img src="../assets/item/shielding_alloy_plate.png" alt="Shielding Plate" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Reactor Controller"><img src="../assets/block/reactor_controller_top.png" alt="Reactor Controller" width="32" height="32"></div><div class="result-name">Reactor Controller</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

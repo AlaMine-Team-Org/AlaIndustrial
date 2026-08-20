@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ja_jp" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>燃料棒 — Ala Industrial — ガイド</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="メニューを開く" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../assets/item/guide_book_3d.png" alt="">すべてのコンテンツ</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <details class="language-menu"><summary aria-label="Language">日本語</summary><div class="language-popover"><span>日本語</span><a href="../../en/nuclear/uranium_fuel_rod.html">EN</a><a href="../../ru/nuclear/uranium_fuel_rod.html">RU</a><a href="../../uk/nuclear/uranium_fuel_rod.html">UA</a><a href="../../zh_cn/nuclear/uranium_fuel_rod.html">中文</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">ブラウズ</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../assets/item/tempered_iron_pickaxe.png" alt=""><span>はじめに</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
+<div class="group-title">エネルギー</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
+<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>原子力</span><span class="cat-count" aria-label="12 ページ">12</span></a>
+<div class="group-title">加工</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>マシン</span><span class="cat-count" aria-label="15 ページ">15</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>液体マシン</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<div class="group-title">物流</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>アイテム輸送</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>液体輸送</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>液体貯蔵</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<div class="group-title">世界と自動化</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>素材</span><span class="cat-count" aria-label="17 ページ">17</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>農業</span><span class="cat-count" aria-label="3 ページ">3</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>高度なマシン</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<div class="group-title">その他</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
+<div class="group-title">アイテム</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">ホーム</a><span class="sep">/</span><a href="../nuclear/index.html">原子力</a><span class="sep">/</span><span>燃料棒</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../assets/item/uranium_fuel_rod.png" alt="燃料棒" width="64" height="64">
+    <div class="info">
+      <h1>燃料棒</h1>
+      <div class="block-id">alaindustrial:uranium_fuel_rod</div>
+      <div class="tags"><span class="tag cat" style="background:#ef4444">原子力</span><span class="tag lifecycle" style="background:#22c55e">実装済み</span><span class="tag">nuclear</span><span class="tag">reactor</span><span class="tag">fuel</span><span class="tag">uranium</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="概要">概要</h2>
+
+<p><strong>燃料棒</strong>は原子炉の唯一の燃料であり、このモッドのウランの流れの終点です。 <a href="empty_fuel_rod.html">燃料被覆管</a>と<strong>濃縮ウラン 1 個</strong>から組み立て、 <a href="fuel_rod_assembly.html">原子炉カラム</a>に右クリックで差し込みます——1 本ずつ、ラック 1 つに 最大 4 本。そこでちょうど <strong>144 000 EU/FE</strong> を出し切り、そのあとふたたび空の被覆管になります。</p>
+
+<p>濃縮ウランにとって、これが最初で今のところ唯一の消費先です。モッドは から濃縮ウランを 作っていましたが、原子炉が来るまで<strong>どのレシピもそれを消費しません</strong>でした。鉱石 → 粉 → ウラン精鉱 → 濃縮ウランという長い流れは、行き場のないアイテムで終わっていたのです。</p>
+
+<h2 id="二段構えの燃料-なぜ濃縮ウランを直接燃やさないのか">二段構えの燃料 — なぜ濃縮ウランを直接燃やさないのか</h2>
+
+<p>原子炉が濃縮ウランをそのまま燃やす設計もあり得ましたし、その分だけ工程は短くなります。そうしなかった のは意図的です。</p>
+
+<p><strong>カラムに立つのは燃料棒であって、インゴットではありません。</strong> ここでの燃料は目に見える物体です。 ガラス越しに見え、「燃料棒 4 本」はひとつのモノとして読めますが、「ラックにインゴット 4 個」は そう読めません。 <strong>レシピの遮蔽板は被覆そのものです。</strong> 部屋を組んだのと同じ素材で、この対応関係は説明しなくても 伝わります。 <strong>一段あることが拡張の余地になります。</strong> MOX、劣化ウラン、その他の種類の燃料棒も、鉱石加工に 手を入れずに同じ形へ収まります。 <strong>そして再利用もこの段のおかげです。</strong> 被覆管は戻せますが、ウランのペレットは戻りません。この段が なければ、原子炉の補給は初回装填と何も変わりません（<a href="empty_fuel_rod.html">燃料被覆管</a>を 参照）。</p>
+
+<h2 id="燃え方">燃え方</h2>
+
+<table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>燃料棒の装填量</td><td><strong>144 000 EU/FE</strong></td></tr><tr><td>耐久の目盛</td><td><strong>1000</strong> 段</td></tr><tr><td>1 段の価格</td><td><strong>144 EU/FE</strong>、<strong>切り上げ</strong></td></tr><tr><td>発電への寄与</td><td>隣接ボーナス前・全挿入で <strong>6 EU/FE/t</strong></td></tr><tr><td>発熱への寄与</td><td>全挿入で 1 ティックあたり <strong>4</strong></td></tr><tr><td>6 EU/FE/t での寿命</td><td><strong>24000 ティック = 20 分</strong></td></tr></tbody></table>
+
+<p><strong>燃料棒は「時間」ではなく「エネルギーの量」です。</strong> どんな配置でも 144 000 EU/FE を出します。隣接 ボーナスが買うのは出力（燃料棒は早く燃え尽きます）、HV の上限が買うのは自立時間（燃料棒は長持ち します）で、中身の総量は決して変わりません。</p>
+
+<table><thead><tr><th>配置</th><th>燃料棒 1 本あたり EU/FE/t</th><th>燃料棒の寿命</th></tr></thead><tbody><tr><td>カラム 1 本（燃料棒 4 本）</td><td>6</td><td><strong>20 分</strong></td></tr><tr><td>隣り合う 2 本</td><td>9</td><td>13.3 分</td></tr><tr><td>一列に 3 本</td><td>12</td><td>10 分</td></tr><tr><td>一列に 4 本</td><td>15</td><td>8 分</td></tr><tr><td>正方形に 4 本</td><td>18</td><td><strong>6.7 分</strong></td></tr><tr><td>床一面の 3×3 — 36 本で 512 EU/FE/t の上限を分け合う</td><td>14.2</td><td>8.4 分</td></tr><tr><td>3×3×3 を埋め尽くした部屋 — 108 本</td><td>4.7</td><td><strong>25.3 分</strong></td></tr></tbody></table>
+
+<p>挿入深さは絞りであって割引ではありません。50 % にすれば、1 ティックあたりの EU/FE も熱も燃料消費も 半分になります。半分の力で回すことは、ウランを時間方向へ引き延ばすことであって、捨てることでは ありません。燃料棒の中の EU/FE 総量は何にも左右されないからです。</p>
+
+<h3 id="耐久は残りの装填量そのもの">耐久は残りの装填量そのもの</h3>
+
+<p>燃料棒には耐久バーがあり、その意味は見たままです。<strong>あとどれだけエネルギーが残っているか</strong>を 示します。目盛は 1000 段、1 段が 144 EU/FE。バーが半分なら装填量も半分です。</p>
+
+<p>144 000 ではなく 1000 段にしたのは、幅 16 ピクセルのバーがそれ以上を表示できないからです。丸い数字は 読みやすくもあります——「ダメージ 250」はちょうど 4 分の 1 です。しかも設定に依存しません。サーバー 管理者が燃料棒の装填量を増やしても、満タンのバーは「無傷」を意味し続けます。</p>
+
+<p>制御装置が使うのは 1 ティックにつき数十 EU/FE、対して 1 段は 144 EU/FE なので、端数は<strong>繰り越されます</strong>。 カラムは引ききれなかった分をためておき、1 段分たまった時点で目盛を 1 つ削ります。繰り越しがなければ 燃料棒はまったく摩耗しません——毎ティックがゼロに丸められてしまうからです。</p>
+
+<p>1 段の価格は<strong>切り上げ</strong>です。切り捨てにすると 1 段が生む分より安くなり、最後の数段がただの エネルギーになってしまいます。</p>
+
+<h3 id="燃え残りの燃料棒は戻ってくる">燃え残りの燃料棒は戻ってくる</h3>
+
+<p>以前は違いました。使いかけの燃料棒は取り出せず、ラックを壊しても落ちず、「何が立っているか見てみる」 だけで高くつく失敗でした。いまは残量が<strong>アイテム自身</strong>に載っているので、失う理由がありません。</p>
+
+<p>素手で右クリックすれば、残った耐久ごと燃料棒が返ってきます。 カラムを壊せば（クリーパーに壊されても）中身がすべて落ち、燃え残りも含まれます。 差し戻した燃料棒は止まったところから続きます。</p>
+
+<p>燃え尽きた燃料棒は消えず、ラックの中でそのまま <strong><a href="empty_fuel_rod.html">燃料被覆管</a>になります</strong>。</p>
+
+<h2 id="レシピ">レシピ</h2>
+
+<p>クラフト: <strong>不定形</strong>、一度に ×1。</p>
+
+<pre><code class="lang-">燃料被覆管 + 濃縮ウラン → 燃料棒</code></pre>
+
+<p>2 つのアイテムをグリッドの好きなマスに置くだけです。補給は一度に数十本単位で、1 本ごとに 3×3 を 並べさせるのは規模に対する罰にほかなりません。形を決めるのは <a href="empty_fuel_rod.html">燃料被覆管</a>のレシピの役目で、そちらはきっちり 3×3、しかも一度きりです。</p>
+
+<h3 id="鉱石から燃料棒までの流れ">鉱石から燃料棒までの流れ</h3>
+
+<table><thead><tr><th>手順</th><th>機械</th><th>入力 → 出力</th><th>EU/FE/回</th></tr></thead><tbody><tr><td>1</td><td><a href="../machines/macerator.html">粉砕機</a></td><td>ウランの原石 1 → ウランの粉 <strong>2</strong></td><td>300</td></tr><tr><td>2</td><td><a href="../machines/thermal_centrifuge.html">熱遠心分離機</a></td><td>粉 1 → ウラン精鉱 <strong>2</strong>（×2 回）</td><td>800 × 2</td></tr><tr><td>3</td><td><a href="../machines/compressor.html">圧縮機</a></td><td>ウラン精鉱 <strong>2</strong> → 濃縮ウラン 1（×2 回）</td><td>260 × 2</td></tr><tr><td>4</td><td>作業台</td><td>濃縮ウラン 1 + 燃料被覆管 → <strong>燃料棒 1 本</strong></td><td>—</td></tr></tbody></table>
+
+<p>結果は<strong>ウラン鉱石 1 個 = 燃料棒 2 本</strong>。端数も丸めもありません。加工費は <strong>鉱石あたり 2420 EU/FE = 燃料棒あたり 1210 EU/FE</strong>。最初に組むときはこれに被覆管（遮蔽板に約 400 EU/FE、 プラス鉄）が加わり、<strong>約 1610 EU/FE</strong> になります。<strong>補給では被覆管がすでにある</strong>ので、燃料棒は自分の 1210 EU/FE と鉱石半個ぶんだけです。</p>
+
+<p>遮蔽板はパラジウムインゴット ⅓ 個と焼き入れ鉄 1 個、それに<a href="../items/forge_hammer.html">鍛冶ハンマー</a>の 一撃です。パラジウムはネザーでしか採れないので、チェストがウランで一杯でもネザーへ行くまで原子炉は 作れません——ただし<strong>行くのは一度だけ</strong>です。被覆管は戻ってきます。</p>
+
+<h2 id="進行">進行</h2>
+
+<p>ティア: なし（アイテム自体にエネルギーはありません。動かす原子炉は HV です）。 必要: 濃縮ウラン（ウラン + <a href="../machines/thermal_centrifuge.html">熱遠心分離機</a> + <a href="../machines/compressor.html">圧縮機</a>）と<a href="empty_fuel_rod.html">燃料被覆管</a> — つまり パラジウム、つまりネザー。 解放: <a href="reactor_controller.html">原子炉室</a>の発電。空の部屋は診断装置にすぎず、それを 発電機にするのが燃料棒です。</p>
+
+<h2 id="関連項目">関連項目</h2>
+
+<p><a href="empty_fuel_rod.html">燃料被覆管</a> — 何から組み立てられ、何に戻るのか。 <a href="fuel_rod_assembly.html">原子炉カラム</a> — どこに差し、どう摩耗するのか。 <a href="reactor_controller.html">原子炉制御装置</a> — 何がこれを燃やし、何に変えるのか。 <a href="../machines/thermal_centrifuge.html">熱遠心分離機</a>と<a href="../machines/compressor.html">圧縮機</a> — 濃縮ウランを 作る 2 台の機械。 <a href="../machines/macerator.html">粉砕機</a> — 流れの起点、鉱石を粉に。</p>
+
+<h2>クラフト</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="燃料棒 alaindustrial:uranium_fuel_rod" data-type="minecraft:crafting_shapeless"><div class="recipe-header"><span class="recipe-type">不定形クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="燃料被覆管"><img src="../assets/item/empty_fuel_rod.png" alt="燃料被覆管" width="32" height="32"></div> <div class="cell" title="濃縮ウラン (U-235)"><img src="../assets/item/refined_uranium_3d.png" alt="濃縮ウラン (U-235)" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="燃料棒"><img src="../assets/item/uranium_fuel_rod.png" alt="燃料棒" width="32" height="32"></div><div class="result-name">燃料棒</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

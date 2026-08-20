@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ru" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>Реакторная лампа — Ala Industrial — Гайд</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="Открыть меню" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../assets/item/guide_book_3d.png" alt="">Весь контент</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <details class="language-menu"><summary aria-label="Language">RU</summary><div class="language-popover"><span>RU</span><a href="../../en/nuclear/reactor_lamp.html">EN</a><a href="../../uk/nuclear/reactor_lamp.html">UA</a><a href="../../zh_cn/nuclear/reactor_lamp.html">中文</a><a href="../../ja_jp/nuclear/reactor_lamp.html">日本語</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">Обзор</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../assets/item/tempered_iron_pickaxe.png" alt=""><span>С чего начать</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепты</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
+<div class="group-title">Энергия</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="10 страниц">10</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="4 страницы">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
+<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Ядерная техника</span><span class="cat-count" aria-label="12 страниц">12</span></a>
+<div class="group-title">Переработка</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="15 страниц">15</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машины для жидкостей</span><span class="cat-count" aria-label="2 страницы">2</span></a>
+<div class="group-title">Логистика</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логистика предметов</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логистика жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Хранение жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<div class="group-title">Мир и автоматизация</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="17 страниц">17</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сельское хозяйство</span><span class="cat-count" aria-label="3 страницы">3</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Хай-тек машины</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<div class="group-title">Прочее</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="14 страниц">14</span></a>
+<div class="group-title">Предметы</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="3 страницы">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="20 страниц">20</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="20 страниц">20</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="../nuclear/index.html">Ядерная техника</a><span class="sep">/</span><span>Реакторная лампа</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../assets/block/reactor_lamp.png" alt="Реакторная лампа" width="64" height="64">
+    <div class="info">
+      <h1>Реакторная лампа</h1>
+      <div class="block-id">alaindustrial:reactor_lamp</div>
+      <div class="tags"><span class="tag cat" style="background:#ef4444">Ядерная техника</span><span class="tag lifecycle" style="background:#22c55e">Реализовано</span><span class="tag">nuclear</span><span class="tag">reactor</span><span class="tag">multiblock</span><span class="tag">shielding</span><span class="tag">light</span></div>
+    </div>
+  </div>
+</div>
+
+<h2 id="сводка">Сводка</h2>
+
+<p><strong>Реакторная лампа</strong> — это <a href="reactor_casing.html">обшивка</a>, которая светит. Она появилась из самой очевидной проблемы первого игрового прогона: собранная комната — это герметичная коробка без единого отверстия, и внутри неё абсолютно темно. Свет туда надо чем-то принести, а обычный факел на стену не поставишь — факел не блок оболочки, и клетка под ним для сканера станет брешью.</p>
+
+<p>Лампа решает это ровно так, как решают такие вещи в мультиблоках: она <strong>сама</strong> является блоком оболочки и занимает место любой клетки обшивки. Свет появляется только при, поэтому освещённая комната — это и освещение, и сигнал «постройка принята» одновременно.</p>
+
+<p>Тонкость, из-за которой стоит прочитать раздел «Свет» целиком: <strong>светит не блок</strong>. Сам блок лампы не излучает ничего, а свет живёт в клетке напротив него, внутри комнаты. Наружу не попадает ни капли.</p>
+
+<h2 id="роль-в-оболочке">Роль в оболочке</h2>
+
+<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Считается стеной</td><td>да</td></tr><tr><td>Как её видит сканер</td><td>как <strong>обшивку</strong>, а не как отдельный вид</td></tr><tr><td>Где можно ставить</td><td>в любой клетке любой грани: стены, пол, потолок, рёбра, углы</td></tr><tr><td>Сколько можно</td><td>сколько угодно, включая ноль</td></tr><tr><td>Входит в лимит стекла</td><td><strong>нет</strong></td></tr></tbody></table>
+
+<p>То, что сканер классифицирует лампу как обшивку, — не экономия на перечислении, а балансное решение. Если бы лампа считалась стеклом, каждая лампа съедала бы долю из тридцати процентов, отведённых <a href="reactor_glass.html">окнам</a>, и игроку пришлось бы выбирать между «видно внутрь» и «видно внутри». Это ложный выбор: освещение — не украшение, а условие того, чтобы в комнате можно было работать.</p>
+
+<p>Обратная сторона той же строчки: без явного отнесения лампы к оболочке она читалась бы как посторонний блок, то есть каждая лампа в стене ломала бы комнату. Одно правило сканера отвечает сразу за оба свойства.</p>
+
+<h2 id="свет">Свет</h2>
+
+<p>Главное про лампу: <strong>сам блок не светит вообще</strong>. Его равен нулю в любом состоянии. Светит клетка <strong>внутри</strong> комнаты, и ставит её туда контроллер.</p>
+
+<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Излучение самого блока</td><td>0 всегда</td></tr><tr><td>Что появляется при</td><td>ванильный <code>minecraft:light</code> уровня <strong>15</strong> во внутренней клетке, к которой лампа обращена</td></tr><tr><td>Что происходит при</td><td>этот же блок света убирается обратно в воздух</td></tr><tr><td>Кто ставит и убирает</td><td><a href="reactor_controller.html">контроллер</a> в той же заливке, что и флаг</td></tr><tr><td>Куда именно</td><td>единственный сосед клетки лампы, лежащий внутри коробки</td></tr><tr><td>Если там не воздух</td><td>ничего не ставится — то, что игрок построил у стены, не трогается</td></tr><tr><td>Лампа в ребре или углу</td><td>света не даёт: у такой клетки нет соседа внутри комнаты</td></tr></tbody></table>
+
+<p>Почему не просто «светящийся блок». Первая версия так и была сделана: 15 при. Игровой тест показал очевидное в ретроспективе — свет блока в Minecraft распространяется во все стороны, и лампа, вмурованная в стену, освещает округу снаружи ровно так же, как комнату изнутри. Собранная комната светилась на весь ландшафт. Никакой «геометрии, которая всё решает сама», тут нет: внешняя сторона стены — такой же сосед, как внутренняя.</p>
+
+<p>Перенос источника света внутрь решает это без собственной системы освещения: <code>minecraft:light</code> — ванильный невидимый проходимый блок, придуманный ровно для «свет здесь, источника не видно». Весь свет рождается внутри комнаты, наружу не попадает ни капли, а то, что игрок видит на грани лампы, — её <strong>текстура</strong>, а не излучение.</p>
+
+<p>Пятнадцать — это максимум, и он выбран не «на всякий случай»: комната бывает 12×12×12 внутри, а лампа стоит в её грани, то есть максимально далеко от противоположного угла. Меньший уровень оставлял бы тёмные углы в большой комнате, а тёмный угол в Minecraft — это не эстетика, а спавн мобов внутри герметичного помещения, из которого их потом некуда выгонять.</p>
+
+<p>Привязка к — это ещё и честность сигнала. Лампа, горящая в недостроенной стене, сообщала бы, что конструкция работает, тогда как она не работает. Здесь свет означает ровно одно: комната собрана.</p>
+
+<p>Практическое следствие для строителя: <strong>лампу надо ставить в грань, а не в ребро</strong>. В ребре она останется красивой стеной без единого люмена, потому что светить ей некуда.</p>
+
+<h2 id="энергия">Энергия</h2>
+
+<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Роль</td><td>нет</td></tr><tr><td>Буфер (EU/FE)</td><td>0</td></tr><tr><td>Макс. вход / выход (EU/FE/такт)</td><td>н/п</td></tr></tbody></table>
+
+<p>Лампа не потребляет EU/FE. Это сознательно: питание внутрь герметичной комнаты не заходит вообще — <a href="reactor_port.html">реакторный ввод</a> с этапа 3 проводит жидкость, но не EU/FE, — и лампа, требующая тока, просто не смогла бы работать. Она привязана к состоянию комнаты, а не к сети, и это правильнее в любом случае: свет в реакторном зале не должен гаснуть от того, что где-то оборвался кабель.</p>
+
+<h2 id="свойства-блока">Свойства блока</h2>
+
+<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Форма</td><td>полный куб 16³ (окклюдер)</td></tr><tr><td>Прочность</td><td>5.0</td></tr><tr><td>Взрывоустойчивость</td><td>30.0</td></tr><tr><td>Инструмент</td><td>кирка (обязательна для дропа)</td></tr><tr><td>Звук</td><td>металл</td></tr><tr><td>Излучение света</td><td>0 (свет живёт во внутренней клетке, см. выше)</td></tr><tr><td>Блокстейты</td><td>, <code>edge</code> — оба косметические</td></tr><tr><td>Общие грани</td><td>скрываются между соседними лампами (наследуется от блока оболочки)</td></tr></tbody></table>
+
+<p>Числа те же, что у остальной оболочки: лампа не должна быть местом, по которому стену удобнее всего вскрыть. Текстур у неё три, как и у прочих блоков оболочки: несобранная (с рамкой), собранная грань (без рамки) и собранное ребро (рамка остаётся) — см. <a href="reactor_casing.html">«Бесшовный вид»</a>.</p>
+
+<h2 id="рецепты">Рецепты</h2>
+
+<p>Крафт — <strong>×1</strong> за раз.</p>
+
+<pre><code class="lang-">I G I I = железный слиток ×4
+G L G G = #c:glass_blocks/colorless ×3
+I P I L = светокамень ×1
+P = экранирующая пластина ×1</code></pre>
+
+<p>Читается рецепт как устройство лампы: светокамень в середине, стекло вокруг него, железный корпус по углам и экранирующая пластина в основании — светильник, привинченный к стене из того же сплава. Пластина осталась ровно одна: лампа — удобство, и платить за неё палладием как за узел механики неправильно.</p>
+
+<h2 id="прогрессия">Прогрессия</h2>
+
+<p>Тир: нет (блок пассивный). Требует: экранирующие пластины (цепочка описана в <a href="reactor_casing.html">обшивке</a>), обычное стекло и светокамень — то есть визит в Ад, который для палладия всё равно обязателен. Открывает: ничего нового — это удобство, а не ступень. Комната без ламп формируется точно так же.</p>
+
+<p>Светокамень тут не случайность: он и палладий добываются в одном измерении, так что лампа не добавляет к постройке ни одного нового похода.</p>
+
+<h2 id="связанное">Связанное</h2>
+
+<p><a href="reactor_casing.html">Реакторная обшивка</a> — базовый блок оболочки; вся геометрия комнаты и раздел «Бесшовный вид» описаны там. <a href="reactor_controller.html">Контроллер реактора</a> — тот, кто ставит и, значит, включает свет. <a href="reactor_glass.html">Реакторное стекло</a> — второй «прозрачный» блок оболочки; в отличие от лампы, ограничен долей в 30 %. <a href="reactor_door.html">Шлюзовая дверь</a> и <a href="reactor_button.html">реакторная кнопка</a> — как вообще попасть в освещённую комнату и выйти из неё.</p>
+
+<h2>Крафт</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="реакторная лампа alaindustrial:reactor_lamp" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Железный слиток" width="32" height="32"></div> <div class="cell" title="Любое бесцветное стекло"><img src="../assets/item/glass_3d.png" alt="Любое бесцветное стекло" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Железный слиток" width="32" height="32"></div> <div class="cell" title="Любое бесцветное стекло"><img src="../assets/item/glass_3d.png" alt="Любое бесцветное стекло" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Светокамень"><img src="../assets/item/glowstone_3d.png" alt="Светокамень" width="32" height="32"></div> <div class="cell" title="Любое бесцветное стекло"><img src="../assets/item/glass_3d.png" alt="Любое бесцветное стекло" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Железный слиток" width="32" height="32"></div> <div class="cell" title="Экранирующая пластина"><img src="../assets/item/shielding_alloy_plate.png" alt="Экранирующая пластина" width="32" height="32"></div> <div class="cell" title="Железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Железный слиток" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Реакторная лампа"><img src="../assets/block/reactor_lamp.png" alt="Реакторная лампа" width="32" height="32"></div><div class="result-name">Реакторная лампа</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

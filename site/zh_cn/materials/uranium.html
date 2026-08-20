@@ -362,6 +362,7 @@
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="12 个页面">12</span></a>
 <div class="group-title">加工</div>
 <a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="15 个页面">15</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="2 个页面">2</span></a>
@@ -370,7 +371,7 @@
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">世界与自动化</div>
-<a class="cat-link active" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="16 个页面">16</span></a>
+<a class="cat-link active" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="17 个页面">17</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">其他</div>
@@ -398,11 +399,11 @@
 
 <blockquote><strong>小示例：</strong>与锡相同的两条加工路线——熔炉每块矿石给 1 个锭，粉碎机给 2 个。但铀大约比钻石稀有七倍，所以每块矿石和每个粗矿都很宝贵：粉碎它，别扔进熔炉烧。</blockquote>
 
-<p>原版中不存在铀，所以锭是本模组自带的。铀并非闲置：它的粉用于浓缩铀火把，锭进入传送器的合成，而培育舱在变异时把锭作为辐照充能消耗（一个锭——三次尝试，之后留下 depleted uranium）。</p>
+<p>原版中不存在铀，所以锭是本模组自带的。铀并非闲置：它的粉用于浓缩铀火把，锭进入传送器的合成，而培育舱在变异时把锭作为辐照充能消耗（一个锭——三次尝试，之后留下贫铀）。</p>
 
-<p><strong>还有第二条加工路线——通过<a href="../machines/thermal_centrifuge.html">热力离心机</a>。</strong>粉可以不熔炼成锭，而是一分为二：粉 → 2 份铀屑 →（压缩机）→ 2 份精炼铀。加上粉碎机的翻倍，一块矿石方块可以得到<strong>四</strong>份，而直接熔炼只有一份——但这需要一条带电热器和红石信号的生产线。完整的核能分支（反应堆、RTG）将在之后到来；精炼铀正是为它做的铺垫。</p>
+<p><strong>还有第二条加工路线——通过<a href="../machines/thermal_centrifuge.html">热力离心机</a>。</strong>粉可以不熔炼成锭，而是一分为二：粉 → 2 份铀精矿 →（压缩机，两份合一）→ 1 份浓缩铀。加上粉碎机的翻倍，一块矿石方块可以得到<strong>两</strong>份浓缩铀，而直接熔炼只有一块锭——但这需要一条带电热器和红石信号的生产线。</p>
 
-<table><thead><tr><th>形态</th><th>获取方式</th></tr></thead><tbody><tr><td>矿石（石头 / 深板岩）</td><td>在世界中开采；镐掉落粗矿，精准采集掉落矿石方块本身</td></tr><tr><td>粗矿</td><td>矿石掉落物；可熔炼成锭</td></tr><tr><td>粉</td><td>矿石方块（或粗矿）粉碎得 2 份粉；锭粉碎得 1 份</td></tr><tr><td>锭</td><td>熔炼粗矿、矿石或粉</td></tr><tr><td>铀屑</td><td>在热力离心机中把粉一分为二</td></tr><tr><td>精炼铀</td><td>在压缩机中压制铀屑，1:1</td></tr></tbody></table>
+<table><thead><tr><th>形态</th><th>获取方式</th></tr></thead><tbody><tr><td>矿石（石头 / 深板岩）</td><td>在世界中开采；镐掉落粗矿，精准采集掉落矿石方块本身</td></tr><tr><td>粗矿</td><td>矿石掉落物；可熔炼成锭</td></tr><tr><td>粉</td><td>矿石方块（或粗矿）粉碎得 2 份粉；锭粉碎得 1 份</td></tr><tr><td>锭</td><td>熔炼粗矿、矿石或粉</td></tr><tr><td>铀精矿</td><td>在热力离心机中把粉一分为二</td></tr><tr><td>浓缩铀（U-235）</td><td>在压缩机中把两份铀精矿压成一份</td></tr></tbody></table>
 
 <h2 id="哪里能找到">哪里能找到</h2>
 
@@ -424,9 +425,9 @@
 
 <h2 id="进阶">进阶</h2>
 
-<p>铀预留给核能路线——反应堆与 RTG——将在更晚的阶段到来。但即便现在它也有消费者：粉用于<a href="../utility/enriched_uranium_torch.html">浓缩铀火把</a>，锭进入<a href="../advanced-machines/teleporter.html">传送器</a>的合成，而<a href="../agriculture/incubator.html">培育舱</a>在变异时把锭作为辐照充能消耗（一个锭——三次尝试，留下 depleted uranium）。多余的锭还可以卖给工业化派村民换取绿宝石。</p>
+<p>铀预留给核能路线——反应堆与 RTG——将在更晚的阶段到来。但即便现在它也有消费者：粉用于<a href="../utility/enriched_uranium_torch.html">浓缩铀火把</a>，锭进入<a href="../advanced-machines/teleporter.html">传送器</a>的合成，而<a href="../agriculture/incubator.html">培育舱</a>在变异时把锭作为辐照充能消耗（一个锭——三次尝试，留下贫铀）。多余的锭还可以卖给工业化派村民换取绿宝石。</p>
 
-<p>核能路线的第一步已经完成：<a href="../machines/thermal_centrifuge.html">热力离心机</a>产出<strong>精炼铀</strong>——正是为了它才值得搭建一条带电热器的生产线。它目前还没有自己的消费者，只是为未来的反应堆囤积起来。</p>
+<p>核能路线的第一步已经完成：<a href="../machines/thermal_centrifuge.html">热力离心机</a>产出<strong>浓缩铀（U-235）</strong>——正是为了它才值得搭建一条带电热器的生产线。自 起它有了消费者：装入燃料棒，燃料棒装入反应堆柱。</p>
 
 <h2 id="相关内容">相关内容</h2>
 
