@@ -4321,6 +4321,44 @@
           ]
         },
         {
+          "id": "shielding_chestplate",
+          "title": "Экранирующий нагрудник",
+          "icon": "alaindustrial:shielding_chestplate",
+          "block_id": "alaindustrial:shielding_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Экранирующий нагрудник",
+              "text": "Комплект защиты от радиации — шлем, куртка, штаны и ботинки из кожи, резины и жёлтого красителя; срезает дозу, тратит прочность и полностью закрывает игрока."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Энергия: 4 шт."
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "minecraft:leather",
+                "minecraft:yellow_dye",
+                "minecraft:leather",
+                "alaindustrial:rubber",
+                "minecraft:leather",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "minecraft:leather",
+                "alaindustrial:rubber"
+              ],
+              "result_id": "alaindustrial:shielding_chestplate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electric_drill",
           "title": "Электробур",
           "icon": "alaindustrial:electric_drill",

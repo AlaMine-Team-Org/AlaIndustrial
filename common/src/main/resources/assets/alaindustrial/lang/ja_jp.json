@@ -879,5 +879,12 @@
   "gui.alaindustrial.reactor_controller.idle.buffer_full": "バッファ満杯",
   "block.alaindustrial.reactor_outlet": "原子炉出力端子",
   "gui.alaindustrial.reactor_controller.label.stored": "蓄電 %1$s%% · %2$s EU",
-  "item.alaindustrial.empty_fuel_rod": "燃料被覆管"
+  "item.alaindustrial.empty_fuel_rod": "燃料被覆管",
+  "item.alaindustrial.shielding_helmet": "遮蔽ヘルメット",
+  "item.alaindustrial.shielding_chestplate": "遮蔽チェストプレート",
+  "item.alaindustrial.shielding_leggings": "遮蔽レギンス",
+  "item.alaindustrial.shielding_boots": "遮蔽ブーツ",
+  "effect.alaindustrial.radiation": "被曝",
+  "death.attack.radiation": "%1$sは放射線障害で死亡した",
+  "death.attack.radiation.player": "%1$sは%2$sとの戦闘中に放射線障害で死亡した"
 }

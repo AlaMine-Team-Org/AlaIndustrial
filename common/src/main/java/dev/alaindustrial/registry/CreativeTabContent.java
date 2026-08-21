@@ -111,6 +111,11 @@ public final class CreativeTabContent {
 		show(out, ModContent.FLUXWEAVE_CHESTPLATE);
 		show(out, ModContent.FLUXWEAVE_LEGGINGS);
 		show(out, ModContent.FLUXWEAVE_BOOTS);
+		// Shielding suit (MOD-470) - the sealed anti-radiation set, end of the armour line.
+		show(out, ModContent.SHIELDING_HELMET);
+		show(out, ModContent.SHIELDING_CHESTPLATE);
+		show(out, ModContent.SHIELDING_LEGGINGS);
+		show(out, ModContent.SHIELDING_BOOTS);
 	}
 
 	public static void toolsAndUtilities(Sink out) {
@@ -571,6 +576,11 @@ public final class CreativeTabContent {
 		show(out, ModContent.FLUXWEAVE_CHESTPLATE);
 		show(out, ModContent.FLUXWEAVE_LEGGINGS);
 		show(out, ModContent.FLUXWEAVE_BOOTS);
+		// Shielding suit (MOD-470) - the sealed anti-radiation set, end of the armour line.
+		show(out, ModContent.SHIELDING_HELMET);
+		show(out, ModContent.SHIELDING_CHESTPLATE);
+		show(out, ModContent.SHIELDING_LEGGINGS);
+		show(out, ModContent.SHIELDING_BOOTS);
 		// The scythes are a weapon line of their own, six tiers as one continuous row.
 		scythes(out);
 	}

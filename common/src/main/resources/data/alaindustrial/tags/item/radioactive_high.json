@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "alaindustrial:refined_uranium",
+    "alaindustrial:unstable_isotope",
+    "alaindustrial:uranium_fuel_rod",
+    "alaindustrial:fuel_rod_assembly"
+  ]
+}

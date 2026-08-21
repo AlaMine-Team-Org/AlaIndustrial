@@ -879,5 +879,12 @@
   "gui.alaindustrial.reactor_controller.idle.buffer_full": "bufferten full",
   "block.alaindustrial.reactor_outlet": "Reaktoruttag",
   "gui.alaindustrial.reactor_controller.label.stored": "Laddning %1$s%% · %2$s EU",
-  "item.alaindustrial.empty_fuel_rod": "Bränslestavshölje"
+  "item.alaindustrial.empty_fuel_rod": "Bränslestavshölje",
+  "item.alaindustrial.shielding_helmet": "Skärmande hjälm",
+  "item.alaindustrial.shielding_chestplate": "Skärmande bröstplåt",
+  "item.alaindustrial.shielding_leggings": "Skärmande benskydd",
+  "item.alaindustrial.shielding_boots": "Skärmande stövlar",
+  "effect.alaindustrial.radiation": "Strålning",
+  "death.attack.radiation": "%1$s dog av strålsjuka",
+  "death.attack.radiation.player": "%1$s dog av strålsjuka i strid med %2$s"
 }

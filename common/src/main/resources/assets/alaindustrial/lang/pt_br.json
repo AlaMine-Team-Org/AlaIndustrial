@@ -879,5 +879,12 @@
   "gui.alaindustrial.reactor_controller.idle.buffer_full": "buffer cheio",
   "block.alaindustrial.reactor_outlet": "Saída do Reator",
   "gui.alaindustrial.reactor_controller.label.stored": "Carga %1$s%% · %2$s EU",
-  "item.alaindustrial.empty_fuel_rod": "Revestimento da Barra"
+  "item.alaindustrial.empty_fuel_rod": "Revestimento da Barra",
+  "item.alaindustrial.shielding_helmet": "Capacete de blindagem",
+  "item.alaindustrial.shielding_chestplate": "Peitoral de blindagem",
+  "item.alaindustrial.shielding_leggings": "Calças de blindagem",
+  "item.alaindustrial.shielding_boots": "Botas de blindagem",
+  "effect.alaindustrial.radiation": "Radiação",
+  "death.attack.radiation": "%1$s morreu de doença da radiação",
+  "death.attack.radiation.player": "%1$s morreu de doença da radiação lutando contra %2$s"
 }

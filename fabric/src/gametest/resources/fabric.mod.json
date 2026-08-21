@@ -19,6 +19,7 @@
     "fabric-gametest": [
       "dev.alaindustrial.gametest.AlaCommonGameTest",
       "dev.alaindustrial.gametest.MobRepellerGameTest",
+      "dev.alaindustrial.gametest.RadiationGameTest",
       "dev.alaindustrial.gametest.OverclockerPanelGameTest",
       "dev.alaindustrial.gametest.OverclockerEffectGameTest",
       "dev.alaindustrial.gametest.OreGameTest",

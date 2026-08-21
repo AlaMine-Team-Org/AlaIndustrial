@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "alaindustrial:shielding_helmet",
+    "alaindustrial:shielding_chestplate",
+    "alaindustrial:shielding_leggings",
+    "alaindustrial:shielding_boots"
+  ]
+}

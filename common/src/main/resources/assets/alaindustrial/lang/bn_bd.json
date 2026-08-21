@@ -879,5 +879,12 @@
   "gui.alaindustrial.reactor_controller.idle.buffer_full": "বাফার পূর্ণ",
   "block.alaindustrial.reactor_outlet": "রিঅ্যাক্টর নির্গমন",
   "gui.alaindustrial.reactor_controller.label.stored": "চার্জ %1$s%% · %2$s EU",
-  "item.alaindustrial.empty_fuel_rod": "জ্বালানি দণ্ডের আবরণ"
+  "item.alaindustrial.empty_fuel_rod": "জ্বালানি দণ্ডের আবরণ",
+  "item.alaindustrial.shielding_helmet": "শিল্ডিং হেলমেট",
+  "item.alaindustrial.shielding_chestplate": "শিল্ডিং বক্ষবর্ম",
+  "item.alaindustrial.shielding_leggings": "শিল্ডিং লেগিংস",
+  "item.alaindustrial.shielding_boots": "শিল্ডিং বুট",
+  "effect.alaindustrial.radiation": "বিকিরণ",
+  "death.attack.radiation": "%1$s বিকিরণ রোগে মারা গেছে",
+  "death.attack.radiation.player": "%2$s-এর সাথে লড়াই করার সময় %1$s বিকিরণ রোগে মারা গেছে"
 }

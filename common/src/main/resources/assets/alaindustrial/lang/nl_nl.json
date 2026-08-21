@@ -879,5 +879,12 @@
   "gui.alaindustrial.reactor_controller.idle.buffer_full": "buffer vol",
   "block.alaindustrial.reactor_outlet": "Reactoruitlaat",
   "gui.alaindustrial.reactor_controller.label.stored": "Lading %1$s%% · %2$s EU",
-  "item.alaindustrial.empty_fuel_rod": "Splijtstofomhulling"
+  "item.alaindustrial.empty_fuel_rod": "Splijtstofomhulling",
+  "item.alaindustrial.shielding_helmet": "Afschermende helm",
+  "item.alaindustrial.shielding_chestplate": "Afschermend harnas",
+  "item.alaindustrial.shielding_leggings": "Afschermende broek",
+  "item.alaindustrial.shielding_boots": "Afschermende laarzen",
+  "effect.alaindustrial.radiation": "Straling",
+  "death.attack.radiation": "%1$s stierf aan stralingsziekte",
+  "death.attack.radiation.player": "%1$s stierf aan stralingsziekte tijdens een gevecht met %2$s"
 }

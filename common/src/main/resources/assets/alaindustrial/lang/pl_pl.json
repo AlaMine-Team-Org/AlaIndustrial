@@ -879,5 +879,12 @@
   "gui.alaindustrial.reactor_controller.idle.buffer_full": "bufor pełny",
   "block.alaindustrial.reactor_outlet": "Wyjście reaktora",
   "gui.alaindustrial.reactor_controller.label.stored": "Ładunek %1$s%% · %2$s EU",
-  "item.alaindustrial.empty_fuel_rod": "Koszulka pręta"
+  "item.alaindustrial.empty_fuel_rod": "Koszulka pręta",
+  "item.alaindustrial.shielding_helmet": "Hełm ekranujący",
+  "item.alaindustrial.shielding_chestplate": "Napierśnik ekranujący",
+  "item.alaindustrial.shielding_leggings": "Nogawice ekranujące",
+  "item.alaindustrial.shielding_boots": "Buty ekranujące",
+  "effect.alaindustrial.radiation": "Promieniowanie",
+  "death.attack.radiation": "%1$s zmarł na chorobę popromienną",
+  "death.attack.radiation.player": "%1$s zmarł na chorobę popromienną walcząc z %2$s"
 }

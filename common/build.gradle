@@ -264,6 +264,14 @@ pitest {
             // Minecraft-free and stays IN the run, covered by RoomScanTest; this half is covered by the
             // L2 room scenarios instead.
             'dev.alaindustrial.core.structure.RoomValidator',
+            // MOD-470: the three radiation classes that touch the world — they read Level, BlockPos,
+            // ItemStack and entities to ask "what is irradiating whoever stands here" and to write the
+            // effect. The arithmetic they delegate to (RadiationCore) is deliberately Minecraft-free and
+            // stays IN the run; these halves are covered by the L2 scenarios instead.
+            'dev.alaindustrial.core.radiation.RadiationDose',
+            'dev.alaindustrial.core.radiation.RadiationMobs',
+            'dev.alaindustrial.core.radiation.RadiationSources',
+            'dev.alaindustrial.core.radiation.RadiationTicker',
             'dev.alaindustrial.core.energy.EnergyLookup',
             'dev.alaindustrial.core.energy.DirectAdjacencyDistributor', // was EnergyNet (renamed MOD-168 #7)
             'dev.alaindustrial.core.energy.EnergyNetwork',

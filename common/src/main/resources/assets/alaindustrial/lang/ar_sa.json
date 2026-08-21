@@ -879,5 +879,12 @@
   "gui.alaindustrial.reactor_controller.idle.buffer_full": "المخزن ممتلئ",
   "block.alaindustrial.reactor_outlet": "مخرج المفاعل",
   "gui.alaindustrial.reactor_controller.label.stored": "الشحن %1$s%% · %2$s EU",
-  "item.alaindustrial.empty_fuel_rod": "غلاف قضيب الوقود"
+  "item.alaindustrial.empty_fuel_rod": "غلاف قضيب الوقود",
+  "item.alaindustrial.shielding_helmet": "خوذة واقية من الإشعاع",
+  "item.alaindustrial.shielding_chestplate": "درع صدر واقٍ من الإشعاع",
+  "item.alaindustrial.shielding_leggings": "سروال واقٍ من الإشعاع",
+  "item.alaindustrial.shielding_boots": "حذاء واقٍ من الإشعاع",
+  "effect.alaindustrial.radiation": "إشعاع",
+  "death.attack.radiation": "مات %1$s بمرض الإشعاع",
+  "death.attack.radiation.player": "مات %1$s بمرض الإشعاع أثناء قتال %2$s"
 }

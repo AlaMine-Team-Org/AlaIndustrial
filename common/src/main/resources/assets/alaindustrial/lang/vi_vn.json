@@ -879,5 +879,12 @@
   "gui.alaindustrial.reactor_controller.idle.buffer_full": "bộ đệm đầy",
   "block.alaindustrial.reactor_outlet": "Cổng Ra Lò Phản Ứng",
   "gui.alaindustrial.reactor_controller.label.stored": "Điện tích %1$s%% · %2$s EU",
-  "item.alaindustrial.empty_fuel_rod": "Vỏ Thanh Nhiên Liệu"
+  "item.alaindustrial.empty_fuel_rod": "Vỏ Thanh Nhiên Liệu",
+  "item.alaindustrial.shielding_helmet": "Mũ chắn phóng xạ",
+  "item.alaindustrial.shielding_chestplate": "Giáp chắn phóng xạ",
+  "item.alaindustrial.shielding_leggings": "Quần chắn phóng xạ",
+  "item.alaindustrial.shielding_boots": "Giày chắn phóng xạ",
+  "effect.alaindustrial.radiation": "Phóng xạ",
+  "death.attack.radiation": "%1$s đã chết vì nhiễm phóng xạ",
+  "death.attack.radiation.player": "%1$s đã chết vì nhiễm phóng xạ khi chiến đấu với %2$s"
 }

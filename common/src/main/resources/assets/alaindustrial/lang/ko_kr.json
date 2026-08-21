@@ -879,5 +879,12 @@
   "gui.alaindustrial.reactor_controller.idle.buffer_full": "버퍼 가득 참",
   "block.alaindustrial.reactor_outlet": "원자로 출력 단자",
   "gui.alaindustrial.reactor_controller.label.stored": "충전 %1$s%% · %2$s EU",
-  "item.alaindustrial.empty_fuel_rod": "연료봉 피복관"
+  "item.alaindustrial.empty_fuel_rod": "연료봉 피복관",
+  "item.alaindustrial.shielding_helmet": "차폐 투구",
+  "item.alaindustrial.shielding_chestplate": "차폐 흉갑",
+  "item.alaindustrial.shielding_leggings": "차폐 각반",
+  "item.alaindustrial.shielding_boots": "차폐 장화",
+  "effect.alaindustrial.radiation": "피폭",
+  "death.attack.radiation": "%1$s이(가) 방사선 병으로 사망했습니다",
+  "death.attack.radiation.player": "%1$s이(가) %2$s와(과) 싸우다 방사선 병으로 사망했습니다"
 }

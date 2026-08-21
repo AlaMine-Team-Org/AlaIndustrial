@@ -4,12 +4,18 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.ElectricFurnaceBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
+import dev.alaindustrial.Config;
+import dev.alaindustrial.core.structure.RoomScan;
+import dev.alaindustrial.core.structure.RoomValidator;
+import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.command.demo.DemoStand;
 import dev.alaindustrial.storage.StorageCluster;
 import java.util.HashSet;
 import java.util.Set;
 import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.Identifier;
@@ -52,6 +58,31 @@ public class DemoStandGameTest {
 		if (StorageCluster.of(helper.getLevel(), origin.offset(32, 3, 10)).moduleCount() != 2) {
 			helper.fail("the demo stand's two storage modules do not form one 2-module warehouse "
 					+ "— a second `set` on the same cell overwrote one of them");
+		}
+
+		// --- MOD-470: the reactor room the stand builds actually FORMS ---
+		// The block-coverage scan below is blind to this: every block of the room is also in the loose
+		// sample row, so the room could stop sealing — a wall cell overwritten, the controller facing the
+		// wrong way, the doorway lost — and the stand would still tick every box while showing a reactor
+		// that does nothing.
+		//
+		// Asked of the geometry directly rather than of the controller's own status: the controller scans
+		// on ITS schedule, so on the tick the stand finishes building, its status is still the "never
+		// scanned" default — a first draft of this check read that default and reported a perfectly good
+		// room as broken.
+		BlockPos controllerPos = origin.offset(4, 2, 15);
+		BlockState controllerState = helper.getLevel().getBlockState(controllerPos);
+		if (!controllerState.is(ModContent.REACTOR_CONTROLLER.get())) {
+			helper.fail("the demo stand's reactor controller is missing from the room's north wall");
+		} else {
+			RoomScan.Result room = RoomValidator.scan(helper.getLevel(), controllerPos,
+					controllerState.getValue(HorizontalDirectionalBlock.FACING),
+					Config.reactorRoomMinInner, Config.reactorRoomMaxInner,
+					Config.reactorRoomMaxGlassPercent);
+			if (room.status() != RoomScan.Status.FORMED) {
+				helper.fail("the demo stand's reactor room does not form: " + room.status()
+						+ " at " + room.x() + "," + room.y() + "," + room.z());
+			}
 		}
 
 		// --- coverage: every registered mod block is somewhere in the stand envelope ---

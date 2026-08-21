@@ -132,6 +132,21 @@ public final class ModTags {
 		 */
 		public static final TagKey<Item> CONDUCTOR_TIPS = key("conductor_tips");
 
+		/**
+		 * Radioactivity by degree of refinement (MOD-470). Three tags rather than one because a tag
+		 * cannot carry a number, and the difference is not cosmetic: {@link #RADIOACTIVE_LOW} is ore and
+		 * dust, capped so it can nauseate but never kill — a player mining uranium has not been told
+		 * radiation exists yet. {@link #RADIOACTIVE_HIGH} is refined uranium and fuel rods, uncapped: a
+		 * stack in the pockets is a death sentence, and that is what makes the shielding chest a
+		 * requirement rather than a convenience.
+		 */
+		public static final TagKey<Item> RADIOACTIVE_LOW = key("radioactive_low");
+		public static final TagKey<Item> RADIOACTIVE_MEDIUM = key("radioactive_medium");
+		public static final TagKey<Item> RADIOACTIVE_HIGH = key("radioactive_high");
+
+		/** Worn pieces that shield against radiation (MOD-470) — the four parts of the shielding suit. */
+		public static final TagKey<Item> RADIATION_SHIELDING = key("radiation_shielding");
+
 		private static TagKey<Item> key(String path) {
 			return TagKey.create(Registries.ITEM, Industrialization.id(path));
 		}

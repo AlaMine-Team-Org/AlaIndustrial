@@ -96,6 +96,7 @@ public final class DemoStand {
 			new TpPoint("farms", 20.0, 4.0, 18.0, 0.0f, 20.0f, false),
 			new TpPoint("ores", 36.0, 2.0, 0.5, 0.0f, 5.0f, false),
 			new TpPoint("misc", 33.0, 3.0, 6.5, 0.0f, 15.0f, false),
+			new TpPoint("reactor", 4.5, 4.0, 11.0, 0.0f, 10.0f, false),
 			new TpPoint("night", 10.0, 4.0, 0.0, 0.0f, 20.0f, true));
 
 	/**
@@ -129,6 +130,7 @@ public final class DemoStand {
 		buildLossLane(level, origin);
 		buildFarms(level, origin);
 		buildReactorZone(level, origin);
+		buildReactorRoom(level, origin);
 		buildLabels(level, origin);
 	}
 
@@ -855,6 +857,109 @@ public final class DemoStand {
 			// the property exists to communicate.
 			assembly.setTank(true, assembly.waterTank.capacity / 2);
 		}
+	}
+
+	/**
+	 * A whole reactor room that actually forms and runs (MOD-470), next to the loose sample row above.
+	 *
+	 * <p>The row shows the parts; this shows the machine. Before it existed the only way to see a
+	 * working room was to build a 5x5x5 shell by hand every time the stand was rebuilt — which is
+	 * exactly the kind of chore the demo command exists to remove, and it made the reactor the one
+	 * shipped multiblock the stand could not demonstrate.
+	 *
+	 * <p><b>Shell 5x5x5, interior 3x3x3</b> — the smallest room {@code RoomScan} accepts, so it fits
+	 * beside the other zones. Local coordinates below are (lx, ly, lz) from the room's north-west floor
+	 * corner; the camera looks south, so the north wall is the face the player sees: controller, glass
+	 * and the airlock all live in it.
+	 *
+	 * <p>Three placements are less obvious than they look:
+	 * <ul>
+	 * <li>the <b>controller faces north</b> (outward). {@code RoomScan} demands that the cell behind its
+	 * face be interior, not shell — a controller facing into the wall reports CONTROLLER_NOT_IN_WALL;</li>
+	 * <li>the <b>redstone block sits inside</b>, against the controller's back. The reactor runs only
+	 * while {@code hasNeighborSignal} is true, and every outside cell adjacent to the controller is
+	 * either shell (which would be a breach) or directly in front of its face (which would cover the
+	 * screen the demo is there to show);</li>
+	 * <li>the <b>button needs its own post</b>. A button must hang on a solid block, and no shell cell
+	 * next to the doorway is available without punching a hole in the room, so a single casing block
+	 * outside carries it. Its cell is adjacent to the door's lower half, which is what
+	 * {@code ReactorDoorBlock.neighborChanged} reads.</li>
+	 * </ul>
+	 */
+	private static void buildReactorRoom(ServerLevel level, BlockPos origin) {
+		// x 2..6 / z 15..19 is the one 5x5 hole left in the stand: the cable rows own x>=16 from z=14
+		// down to z=20, the farm row is z=23, and the item-pipe run is x 17..21 at z=26 — the first
+		// attempt put the room straight on top of that run, and the stand's own coverage gametest
+		// caught it ("missing: item_pipe"). Moving a zone means checking the LOOPS, not just the
+		// literal coordinates.
+		final int bx = 2;
+		final int by = 1;
+		final int bz = 15;
+		final int edge = 5;
+
+		// Shell: every perimeter cell of the 5x5x5 box is casing; the interior is left as air.
+		for (int lx = 0; lx < edge; lx++) {
+			for (int ly = 0; ly < edge; ly++) {
+				for (int lz = 0; lz < edge; lz++) {
+					boolean perimeter = lx == 0 || lx == edge - 1 || ly == 0 || ly == edge - 1
+							|| lz == 0 || lz == edge - 1;
+					if (perimeter) {
+						set(level, origin, bx + lx, by + ly, bz + lz, ModContent.REACTOR_CASING.get());
+					}
+				}
+			}
+		}
+
+		// Windows in the north wall — five cells, far under the 30 % glass cap the scan enforces.
+		set(level, origin, bx + 1, by + 2, bz, ModContent.REACTOR_GLASS.get());
+		set(level, origin, bx + 2, by + 2, bz, ModContent.REACTOR_GLASS.get());
+		set(level, origin, bx + 1, by + 3, bz, ModContent.REACTOR_GLASS.get());
+		set(level, origin, bx + 2, by + 3, bz, ModContent.REACTOR_GLASS.get());
+		set(level, origin, bx + 3, by + 3, bz, ModContent.REACTOR_GLASS.get());
+
+		// Plumbing and power crossings, one per side wall.
+		set(level, origin, bx + edge - 1, by + 1, bz + 2, ModContent.REACTOR_PORT.get());
+		set(level, origin, bx, by + 1, bz + 2, ModContent.REACTOR_OUTLET.get());
+		set(level, origin, bx + 2, by + edge - 1, bz + 2, ModContent.REACTOR_LAMP.get());
+
+		// Controller in the north wall, front outward.
+		level.setBlockAndUpdate(origin.offset(bx + 2, by + 1, bz),
+				ModContent.REACTOR_CONTROLLER.get().defaultBlockState()
+						.setValue(HorizontalDirectionalBlock.FACING, Direction.NORTH));
+
+		// Airlock, both halves by hand: setPlacedBy does not run for a programmatic setBlock.
+		BlockState door = ModContent.REACTOR_DOOR.get().defaultBlockState()
+				.setValue(ReactorDoorBlock.FACING, Direction.SOUTH);
+		level.setBlockAndUpdate(origin.offset(bx + 3, by + 1, bz), door);
+		level.setBlockAndUpdate(origin.offset(bx + 3, by + 2, bz),
+				door.setValue(ReactorDoorBlock.HALF, DoubleBlockHalf.UPPER));
+
+		// Control post outside the door: one casing block, and the button on its west face.
+		set(level, origin, bx + 4, by + 1, bz - 1, ModContent.REACTOR_CASING.get());
+		level.setBlockAndUpdate(origin.offset(bx + 3, by + 1, bz - 1),
+				ModContent.REACTOR_BUTTON.get().defaultBlockState()
+						.setValue(FaceAttachedHorizontalDirectionalBlock.FACE, AttachFace.WALL)
+						.setValue(HorizontalDirectionalBlock.FACING, Direction.WEST));
+
+		// Exhaust on the west side, venting into open air — a nozzle facing a block vents nothing.
+		level.setBlockAndUpdate(origin.offset(bx - 1, by + 1, bz + 2),
+				ModContent.STEAM_NOZZLE.get().defaultBlockState()
+						.setValue(SteamNozzleBlock.FACING, Direction.WEST));
+
+		// Interior: the core, and the signal that lets it run.
+		set(level, origin, bx + 2, by + 1, bz + 1, Blocks.REDSTONE_BLOCK);
+		level.setBlockAndUpdate(origin.offset(bx + 2, by + 1, bz + 2),
+				ModContent.FUEL_ROD_ASSEMBLY.get().defaultBlockState()
+						.setValue(FuelRodAssemblyBlock.RODS, FuelRodAssemblyBlock.MAX_RODS));
+		if (level.getBlockEntity(origin.offset(bx + 2, by + 1, bz + 2))
+				instanceof FuelRodAssemblyBlockEntity assembly) {
+			for (int i = 0; i < FuelRodAssemblyBlock.MAX_RODS; i++) {
+				assembly.insertRod(new ItemStack(ModContent.URANIUM_FUEL_ROD.get()));
+			}
+			assembly.setTank(true, assembly.waterTank.capacity / 2);
+		}
+
+		label(level, origin, bx + 1, by, bz - 1, "REACTOR ROOM", "5x5x5 shell", "button = airlock", "runs on place");
 	}
 
 	private static void set(ServerLevel level, BlockPos origin, int x, int y, int z, Block block) {

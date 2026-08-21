@@ -879,5 +879,12 @@
   "gui.alaindustrial.reactor_controller.idle.buffer_full": "tampon plein",
   "block.alaindustrial.reactor_outlet": "Sortie de réacteur",
   "gui.alaindustrial.reactor_controller.label.stored": "Charge %1$s%% · %2$s EU",
-  "item.alaindustrial.empty_fuel_rod": "Gaine de barre"
+  "item.alaindustrial.empty_fuel_rod": "Gaine de barre",
+  "item.alaindustrial.shielding_helmet": "Casque de protection",
+  "item.alaindustrial.shielding_chestplate": "Plastron de protection",
+  "item.alaindustrial.shielding_leggings": "Jambières de protection",
+  "item.alaindustrial.shielding_boots": "Bottes de protection",
+  "effect.alaindustrial.radiation": "Irradiation",
+  "death.attack.radiation": "%1$s est mort du mal des rayons",
+  "death.attack.radiation.player": "%1$s est mort du mal des rayons en combattant %2$s"
 }

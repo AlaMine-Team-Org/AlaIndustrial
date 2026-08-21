@@ -16,6 +16,7 @@ import dev.alaindustrial.gametest.CableBreakerScenarios;
 import dev.alaindustrial.gametest.CableShockScenarios;
 import dev.alaindustrial.gametest.ChargePadScenarios;
 import dev.alaindustrial.gametest.MobRepellerScenarios;
+import dev.alaindustrial.gametest.RadiationScenarios;
 import dev.alaindustrial.gametest.CoreFluidScenarios;
 import dev.alaindustrial.gametest.GeneratorEnergyScenarios;
 import dev.alaindustrial.gametest.LightningRodScenarios;
@@ -2120,6 +2121,25 @@ public final class NeoForgeGameTests {
 				MachineScenarios::tcSaw001Con02_modePersistsThroughNbt);
 		registerTest(event, "machine_tc_saw001_con03_mode_switch_resets_progress", 40, true,
 				MachineScenarios::tcSaw001Con03_modeSwitchResetsProgress);
+		// MOD-470 — radiation: line of sight, transformations, dropped sources.
+		registerTest(event, "rad_rod_irradiates_what_it_can_see", 40, true,
+				RadiationScenarios::rodIrradiatesWhatItCanSee);
+		registerTest(event, "rad_casing_blocks_the_rod", 40, true,
+				RadiationScenarios::casingBlocksTheRod);
+		registerTest(event, "rad_villager_becomes_zombie_villager", 40, true,
+				RadiationScenarios::villagerBecomesZombieVillager);
+		registerTest(event, "rad_cow_becomes_mooshroom", 40, true,
+				RadiationScenarios::cowBecomesMooshroom);
+		registerTest(event, "rad_zombie_villager_is_past_the_end", 40, true,
+				RadiationScenarios::zombieVillagerIsPastTheEnd);
+		registerTest(event, "rad_dropped_uranium_still_radiates", 40, true,
+				RadiationScenarios::droppedUraniumStillRadiates);
+		registerTest(event, "rad_distance_weakens_the_rod", 40, true,
+				RadiationScenarios::distanceWeakensTheRod);
+		registerTest(event, "rad_casing_blocks_dropped_uranium", 40, true,
+				RadiationScenarios::casingBlocksDroppedUranium);
+		registerTest(event, "rad_open_door_leaks_radiation", 40, true,
+				RadiationScenarios::openDoorLeaksRadiation);
 	}
 
 	/** The three NeoForge probes for {@link BlockCapabilityParityScenarios} (MOD-433). */

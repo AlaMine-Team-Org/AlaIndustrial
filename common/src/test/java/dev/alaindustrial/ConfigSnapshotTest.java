@@ -311,6 +311,29 @@ class ConfigSnapshotTest {
 		SENTINELS.put("reactorHeatWarnPercent", 63);
 		SENTINELS.put("reactorBuffer", 123456);
 		SENTINELS.put("thermalCentrifugeIdleEuPerTick", 344);
+		// Radiation (MOD-470). Every value differs from the shipped default, is non-zero and clears the
+		// field's own minimum, or the load would rewrite it and the sentinel would prove nothing.
+		SENTINELS.put("radiationDoseCapacity", 7331);
+		SENTINELS.put("radiationTickInterval", 17);
+		SENTINELS.put("radiationRodDosePerTick", 777);
+		SENTINELS.put("radiationSourceRadius", 9);
+		SENTINELS.put("radiationDoseLowPerItem", 3);
+		SENTINELS.put("radiationDoseMediumPerItem", 7);
+		SENTINELS.put("radiationDoseHighPerItem", 33);
+		SENTINELS.put("radiationLowDoseCapPercent", 17);
+		SENTINELS.put("radiationShieldPerPiecePercent", 19);
+		SENTINELS.put("radiationRodShieldCapPercent", 88);
+		SENTINELS.put("radiationGroundRadius", 11);
+		SENTINELS.put("radiationContainerDepth", 2);
+		SENTINELS.put("radiationSymptomIntervalTicks", 33);
+		SENTINELS.put("radiationDamageIntervalLevel2", 91);
+		SENTINELS.put("radiationDamageIntervalLevel3", 51);
+		SENTINELS.put("radiationDamageIntervalLevel4", 23);
+		SENTINELS.put("radiationDamageSick", 2.5f);
+		SENTINELS.put("radiationDamageLethal", 6.5f);
+		SENTINELS.put("radiationDosePerSuitDurability", 321);
+		SENTINELS.put("radiationMobConvertPercent", 44);
+		SENTINELS.put("radiationMobDamageIntervalTicks", 73);
 		// Overclocker chip (MOD-392). The EU factor must stay above its own minimum of 1.0, and the
 		// speed factor above 0.0 — a sentinel that trips the clamp would be silently rewritten on load.
 		SENTINELS.put("overclockerSpeedFactor", 0.55f);
@@ -428,7 +451,7 @@ class ConfigSnapshotTest {
 	 * as a named set so the completeness guard can tell "covered elsewhere" from "forgotten".
 	 */
 	private static final Set<String> BOOLEAN_TUNABLES =
-			Set.of("bonusChestEnabled", "oilBurns", "bareCableShockEnabled");
+			Set.of("bonusChestEnabled", "oilBurns", "bareCableShockEnabled", "radiationEnabled", "radiationMobsEnabled");
 
 	/**
 	 * Every key in {@link Config}'s own {@code FIELDS} registry is covered by this suite — either by a

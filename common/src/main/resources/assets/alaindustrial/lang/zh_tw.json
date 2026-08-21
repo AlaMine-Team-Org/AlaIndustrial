@@ -879,5 +879,12 @@
   "gui.alaindustrial.reactor_controller.idle.buffer_full": "緩衝已滿",
   "block.alaindustrial.reactor_outlet": "反應爐輸出端",
   "gui.alaindustrial.reactor_controller.label.stored": "蓄電 %1$s%% · %2$s EU",
-  "item.alaindustrial.empty_fuel_rod": "燃料包殼"
+  "item.alaindustrial.empty_fuel_rod": "燃料包殼",
+  "item.alaindustrial.shielding_helmet": "屏蔽頭盔",
+  "item.alaindustrial.shielding_chestplate": "屏蔽胸甲",
+  "item.alaindustrial.shielding_leggings": "屏蔽護腿",
+  "item.alaindustrial.shielding_boots": "屏蔽靴子",
+  "effect.alaindustrial.radiation": "輻射",
+  "death.attack.radiation": "%1$s死於輻射病",
+  "death.attack.radiation.player": "%1$s在與%2$s戰鬥時死於輻射病"
 }

@@ -917,6 +917,126 @@ public final class Config {
 	public static int reactorCoolantTargetPercent = 60;
 	/** EU the controller can bank. Sized to a few seconds of full output so the grid can lag behind. */
 	public static int reactorBuffer = 200000;
+
+	// ── MOD-470: radiation, dose and the shielding suit ───────────────────────────────────────────
+	/**
+	 * Master switch. Off, nothing irradiates anything — the "never break a player's world" rule
+	 * applies to a hazard that can kill in a world built before it existed.
+	 */
+	public static boolean radiationEnabled = true;
+	/**
+	 * Depth of the dose scale, in ticks. Also the recovery time: dose is stored as the remaining
+	 * duration of the radiation effect, so a player at the top of the scale is clean five minutes
+	 * after walking away — and one who keeps walking into the room never gets there.
+	 */
+	public static int radiationDoseCapacity = 6000;
+	/**
+	 * Ticks between exposure sweeps. Every tick would be honest and pointless; this is one per second.
+	 *
+	 * <p><b>This number is also the decay rate, and that is a trap worth naming.</b> The dose lives in
+	 * the duration of the radiation effect, which vanilla ticks down once per tick — so between two
+	 * sweeps a dose loses exactly {@code radiationTickInterval} of itself. A source contributing LESS
+	 * than that per sweep therefore does nothing at all: the dose sits at zero for ever while the
+	 * symptoms still fire, which is precisely what the second playtest reported (a villager took damage
+	 * from a thrown ingot and never transformed, because one ingot added 20 against a decay of 20).
+	 * Every per-source number below must clear this bar with room to spare.
+	 */
+	public static int radiationTickInterval = 20;
+	/**
+	 * Dose per sweep from a fuelled rod within {@link #radiationSourceRadius}, before shielding.
+	 * Sized so an unprotected player at the rods crosses the lethal line in a handful of seconds:
+	 * 900 per second fills the 6000-tick scale in under seven.
+	 */
+	public static int radiationRodDosePerTick = 900;
+	/**
+	 * How far a rod reaches, in blocks — a hard edge, with the strength falling off as the square of
+	 * the distance on the way there ({@code RadiationCore.attenuate}, half strength at 1.5 blocks).
+	 *
+	 * <p>There is no second, larger radius for "a reactor with no shell": the shell blocks the line of
+	 * sight, and that one mechanism covers both cases (see {@code RadiationSources}).
+	 */
+	public static int radiationSourceRadius = 6;
+	/**
+	 * Dose per sweep per item of {@code #radioactive_low} — ore, dust, concentrate, depleted rods.
+	 * Above {@link #radiationTickInterval} so a single piece of ore actually registers, but barely: it
+	 * is also held under {@link #radiationLowDoseCapPercent}, so raw material never stops at more than
+	 * queasiness.
+	 */
+	public static int radiationDoseLowPerItem = 24;
+	/** Dose per sweep per item of {@code #radioactive_medium} — uranium ingots and plates. */
+	public static int radiationDoseMediumPerItem = 30;
+	/**
+	 * Dose per sweep per item of {@code #radioactive_high} — refined uranium, isotopes, fuel rods.
+	 * Net of decay this is 60 a sweep, so one loose rod fills the scale in about a minute and a half and
+	 * a stack does it at once: slow enough that the death reads as the player's own mistake, fast enough
+	 * that carrying fuel loose is not an option.
+	 */
+	public static int radiationDoseHighPerItem = 80;
+	/**
+	 * Ceiling, in percent of the scale, that {@code #radioactive_low} alone may push a dose to.
+	 * Deliberately inside level I: raw ore makes a miner queasy and never kills them. The medium and
+	 * high tiers have no ceiling.
+	 */
+	public static int radiationLowDoseCapPercent = 20;
+	/** Percent of a dose each worn shielding piece cuts. Four pieces = 100 % of ordinary exposure. */
+	public static int radiationShieldPerPiecePercent = 25;
+	/**
+	 * Hard cap on shielding against a bare rod in the open, in percent. Below 100 on purpose: a full
+	 * suit buys working time inside a live reactor, not immunity to it. Anything else turns the suit
+	 * into a switch that ends the mechanic.
+	 */
+	public static int radiationRodShieldCapPercent = 95;
+	/** Blocks around the player in which dropped radioactive items are counted. */
+	public static int radiationGroundRadius = 6;
+	/**
+	 * How deep to look inside containers carried in the inventory. 1 = a shulker box of fuel rods
+	 * irradiates its carrier, a shulker inside a shulker does not. Zero would make any container a free
+	 * shield and the shielding chest pointless.
+	 */
+	public static int radiationContainerDepth = 1;
+	/** Ticks between re-applying the visible symptoms (nausea, weakness, hunger). */
+	public static int radiationSymptomIntervalTicks = 40;
+	/** Ticks between hits at dose level II / III / IV. */
+	public static int radiationDamageIntervalLevel2 = 160;
+	public static int radiationDamageIntervalLevel3 = 100;
+	public static int radiationDamageIntervalLevel4 = 40;
+	/** Damage per hit below the lethal line, in half-hearts. */
+	public static float radiationDamageSick = 1.0f;
+	/**
+	 * Damage per hit at the top of the scale. Halved and slowed after the first playtest (MOD-470):
+	 * at 2 half-hearts every 2 s a healthy player has about twenty seconds at the top of the scale —
+	 * enough to run for the door, which is the point. Death by radiation should be the end of a bad
+	 * decision the player had time to reverse, not a stumble into a kill box.
+	 */
+	public static float radiationDamageLethal = 2.0f;
+	/**
+	 * Absorbed dose worth one point of suit durability — <b>at most one point per piece per sweep</b>,
+	 * however fierce the source, and never zero while the suit is stopping anything at all.
+	 *
+	 * <p>It sets the PACE rather than the amount. Charging a point per this much absorbed dose came to
+	 * seventeen points a second beside a single four-rod column and destroyed the helmet in ten seconds;
+	 * a suit that cannot survive walking past the thing it exists for is not a suit. Making it a plain
+	 * threshold went too far the other way — the suit wore only under a fierce field, so carrying
+	 * uranium cost nothing at all. Now it is a ratio turned into an interval
+	 * ({@code RadiationCore.wearInterval}): a live core spends a point a second, one refined-uranium
+	 * item every two, a piece of ore every eight. Suit life is a TIME in every case.
+	 */
+	public static int radiationDosePerSuitDurability = 200;
+	/**
+	 * Whether radiation touches villagers, wandering traders and cows at all (MOD-470). This is the
+	 * ONE exception to "mobs are never irradiated": nothing dies of it, the list is closed, and the
+	 * sweep only runs where a player already stands in a radiation field. Off, the three
+	 * transformations simply never happen.
+	 */
+	public static boolean radiationMobsEnabled = true;
+	/**
+	 * Percent of the dose scale at which a villager becomes a zombie villager and a cow becomes a
+	 * mooshroom. Below 100 so the transformation lands while the player is still watching, rather than
+	 * after a full scale of standing around — half the scale is two loose rods for half a minute.
+	 */
+	public static int radiationMobConvertPercent = 50;
+	/** Ticks between the light hits a sickening villager takes. A cow takes none — it just changes. */
+	public static int radiationMobDamageIntervalTicks = 60;
 	/**
 	 * EU/t a spun-up centrifuge spends with nothing to process — the cost of holding revolutions instead
 	 * of coasting to a stop. Small on purpose: it should read as "standing by", not as a penalty for
@@ -2102,6 +2222,52 @@ public final class Config {
 				() -> shockGuardGlassHitChance, v -> shockGuardGlassHitChance = v, 0.0, 0.0),
 			new IntField("shockGuardGraceTicks", Section.SAFETY, "Contact ticks a player is spared after an insulating stand absorbs a shock, so the reduced chance is per contact rather than re-rolled every tick.",
 				() -> shockGuardGraceTicks, v -> shockGuardGraceTicks = v, 0),
+			new BoolField("radiationEnabled", Section.SAFETY, "When true, uranium and fuelled reactor rods irradiate players. false disables the entire mechanic, including suit wear.",
+				() -> radiationEnabled, v -> radiationEnabled = v),
+			new IntField("radiationDoseCapacity", Section.SAFETY, "Depth of the radiation dose scale in ticks; also the time a player at the top of the scale needs to recover once clear of every source.",
+				() -> radiationDoseCapacity, v -> radiationDoseCapacity = v, 1),
+			new IntField("radiationTickInterval", Section.SAFETY, "Ticks between radiation exposure sweeps per player.",
+				() -> radiationTickInterval, v -> radiationTickInterval = v, 1),
+			new IntField("radiationRodDosePerTick", Section.SAFETY, "Dose per sweep from a fuelled reactor rod in line of sight, before shielding.",
+				() -> radiationRodDosePerTick, v -> radiationRodDosePerTick = v, 0),
+			new IntField("radiationSourceRadius", Section.SAFETY, "Blocks a fuelled rod irradiates through open air; a shell block in the way stops it entirely.",
+				() -> radiationSourceRadius, v -> radiationSourceRadius = v, 1),
+			new IntField("radiationDoseLowPerItem", Section.SAFETY, "Dose per sweep per carried item of tag radioactive_low (ore, dust, shavings, depleted rods).",
+				() -> radiationDoseLowPerItem, v -> radiationDoseLowPerItem = v, 0),
+			new IntField("radiationDoseMediumPerItem", Section.SAFETY, "Dose per sweep per carried item of tag radioactive_medium (uranium ingots and plates).",
+				() -> radiationDoseMediumPerItem, v -> radiationDoseMediumPerItem = v, 0),
+			new IntField("radiationDoseHighPerItem", Section.SAFETY, "Dose per sweep per carried item of tag radioactive_high (refined uranium, isotopes, fuel rods). Uncapped: a loose stack kills.",
+				() -> radiationDoseHighPerItem, v -> radiationDoseHighPerItem = v, 0),
+			new IntField("radiationLowDoseCapPercent", Section.SAFETY, "Percent of the dose scale that tag radioactive_low alone can reach; inside level I on purpose, so raw ore sickens but never kills.",
+				() -> radiationLowDoseCapPercent, v -> radiationLowDoseCapPercent = v, 0),
+			new IntField("radiationShieldPerPiecePercent", Section.SAFETY, "Percent of incoming dose each worn shielding-suit piece blocks; four pieces block all ordinary exposure.",
+				() -> radiationShieldPerPiecePercent, v -> radiationShieldPerPiecePercent = v, 0),
+			new IntField("radiationRodShieldCapPercent", Section.SAFETY, "Ceiling on suit protection against a rod in line of sight; below 100 on purpose, so a full suit buys working time inside a live reactor rather than immunity.",
+				() -> radiationRodShieldCapPercent, v -> radiationRodShieldCapPercent = v, 0),
+			new IntField("radiationGroundRadius", Section.SAFETY, "Blocks around the player in which dropped radioactive items are counted as a source.",
+				() -> radiationGroundRadius, v -> radiationGroundRadius = v, 0),
+			new IntField("radiationContainerDepth", Section.SAFETY, "How deep to look inside carried containers for radioactive contents; 1 = a shulker box of fuel rods irradiates its carrier.",
+				() -> radiationContainerDepth, v -> radiationContainerDepth = v, 0),
+			new IntField("radiationSymptomIntervalTicks", Section.SAFETY, "Ticks between re-applying the visible radiation symptoms (nausea, weakness, hunger).",
+				() -> radiationSymptomIntervalTicks, v -> radiationSymptomIntervalTicks = v, 1),
+			new IntField("radiationDamageIntervalLevel2", Section.SAFETY, "Ticks between radiation hits at dose level II.",
+				() -> radiationDamageIntervalLevel2, v -> radiationDamageIntervalLevel2 = v, 1),
+			new IntField("radiationDamageIntervalLevel3", Section.SAFETY, "Ticks between radiation hits at dose level III.",
+				() -> radiationDamageIntervalLevel3, v -> radiationDamageIntervalLevel3 = v, 1),
+			new IntField("radiationDamageIntervalLevel4", Section.SAFETY, "Ticks between radiation hits at the top of the dose scale.",
+				() -> radiationDamageIntervalLevel4, v -> radiationDamageIntervalLevel4 = v, 1),
+			new FloatField("radiationDamageSick", Section.SAFETY, "Damage per radiation hit below the lethal line, in half-hearts.",
+				() -> radiationDamageSick, v -> radiationDamageSick = v, 0.0f),
+			new FloatField("radiationDamageLethal", Section.SAFETY, "Damage per radiation hit at the top of the dose scale, in half-hearts.",
+				() -> radiationDamageLethal, v -> radiationDamageLethal = v, 0.0f),
+			new IntField("radiationDosePerSuitDurability", Section.SAFETY, "Dose the shielding suit absorbs per point of durability spent; the suit is a consumable, not a permanent answer.",
+				() -> radiationDosePerSuitDurability, v -> radiationDosePerSuitDurability = v, 1),
+			new BoolField("radiationMobsEnabled", Section.SAFETY, "When true, radiation turns villagers and wandering traders into zombie villagers and cows into mooshrooms. false disables all three transformations.",
+				() -> radiationMobsEnabled, v -> radiationMobsEnabled = v),
+			new IntField("radiationMobConvertPercent", Section.SAFETY, "Percent of the dose scale at which an irradiated villager or cow transforms.",
+				() -> radiationMobConvertPercent, v -> radiationMobConvertPercent = v, 1),
+			new IntField("radiationMobDamageIntervalTicks", Section.SAFETY, "Ticks between the light hits an irradiated villager takes before it transforms.",
+				() -> radiationMobDamageIntervalTicks, v -> radiationMobDamageIntervalTicks = v, 1),
 			new IntField("tinCableBuffer", Section.CABLES, "Per-segment working EU buffer of a tin cable = its real throughput (8 EU/t, narrower than copper's 12).",
 				() -> tinCableBuffer, v -> tinCableBuffer = v, 1),
 			new IntField("tinCablePacketCap", Section.CABLES, "Per-tick ceiling on EU drawn from one source through a tin cable (8 EU/t, below the LV tier voltage by design).",

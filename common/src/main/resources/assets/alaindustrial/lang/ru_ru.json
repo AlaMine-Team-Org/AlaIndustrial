@@ -879,5 +879,12 @@
   "gui.alaindustrial.reactor_controller.idle.buffer_full": "буфер полон",
   "block.alaindustrial.reactor_outlet": "Реакторный вывод",
   "gui.alaindustrial.reactor_controller.label.stored": "Заряд %1$s%% · %2$s EU",
-  "item.alaindustrial.empty_fuel_rod": "Оболочка ТВЭЛ"
+  "item.alaindustrial.empty_fuel_rod": "Оболочка ТВЭЛ",
+  "item.alaindustrial.shielding_helmet": "Экранирующий шлем",
+  "item.alaindustrial.shielding_chestplate": "Экранирующий нагрудник",
+  "item.alaindustrial.shielding_leggings": "Экранирующие поножи",
+  "item.alaindustrial.shielding_boots": "Экранирующие ботинки",
+  "effect.alaindustrial.radiation": "Облучение",
+  "death.attack.radiation": "%1$s умер от лучевой болезни",
+  "death.attack.radiation.player": "%1$s умер от лучевой болезни в бою с %2$s"
 }

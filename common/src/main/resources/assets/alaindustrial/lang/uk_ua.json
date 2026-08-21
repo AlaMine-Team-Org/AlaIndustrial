@@ -879,5 +879,12 @@
   "gui.alaindustrial.reactor_controller.idle.buffer_full": "буфер повний",
   "block.alaindustrial.reactor_outlet": "Реакторний вивід",
   "gui.alaindustrial.reactor_controller.label.stored": "Заряд %1$s%% · %2$s EU",
-  "item.alaindustrial.empty_fuel_rod": "Оболонка ТВЕЛ"
+  "item.alaindustrial.empty_fuel_rod": "Оболонка ТВЕЛ",
+  "item.alaindustrial.shielding_helmet": "Екрануючий шолом",
+  "item.alaindustrial.shielding_chestplate": "Екрануюча кіраса",
+  "item.alaindustrial.shielding_leggings": "Екрануючі поножі",
+  "item.alaindustrial.shielding_boots": "Екрануючі черевики",
+  "effect.alaindustrial.radiation": "Опромінення",
+  "death.attack.radiation": "%1$s помер від променевої хвороби",
+  "death.attack.radiation.player": "%1$s помер від променевої хвороби у бою з %2$s"
 }

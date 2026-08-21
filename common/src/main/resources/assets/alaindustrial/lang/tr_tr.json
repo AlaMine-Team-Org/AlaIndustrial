@@ -879,5 +879,12 @@
   "gui.alaindustrial.reactor_controller.idle.buffer_full": "tampon dolu",
   "block.alaindustrial.reactor_outlet": "Reaktör Çıkışı",
   "gui.alaindustrial.reactor_controller.label.stored": "Şarj %1$s%% · %2$s EU",
-  "item.alaindustrial.empty_fuel_rod": "Yakıt Çubuğu Kılıfı"
+  "item.alaindustrial.empty_fuel_rod": "Yakıt Çubuğu Kılıfı",
+  "item.alaindustrial.shielding_helmet": "Koruyucu miğfer",
+  "item.alaindustrial.shielding_chestplate": "Koruyucu göğüslük",
+  "item.alaindustrial.shielding_leggings": "Koruyucu pantolon",
+  "item.alaindustrial.shielding_boots": "Koruyucu bot",
+  "effect.alaindustrial.radiation": "Radyasyon",
+  "death.attack.radiation": "%1$s radyasyon hastalığından öldü",
+  "death.attack.radiation.player": "%1$s, %2$s ile savaşırken radyasyon hastalığından öldü"
 }

@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "alaindustrial:raw_uranium",
+    "alaindustrial:uranium_dust",
+    "alaindustrial:uranium_shavings",
+    "alaindustrial:depleted_uranium",
+    "alaindustrial:uranium_ore",
+    "alaindustrial:deepslate_uranium_ore"
+  ]
+}

@@ -211,6 +211,15 @@ public final class ModItemsNeoForge {
 	public static final DeferredItem<Item> FLUXWEAVE_BOOTS =
 			ITEMS.registerItem("fluxweave_boots", p -> new FluxweaveArmorItem(p, ArmorType.BOOTS),
 					ItemBuildersNeoForge.fluxweaveArmor(ArmorType.BOOTS));
+	// Shielding suit (MOD-470): ordinary armour items; the shielding lives in the item tag.
+	public static final DeferredItem<Item> SHIELDING_HELMET =
+			ITEMS.registerItem("shielding_helmet", Item::new, ItemBuildersNeoForge.shieldingArmor(ArmorType.HELMET));
+	public static final DeferredItem<Item> SHIELDING_CHESTPLATE =
+			ITEMS.registerItem("shielding_chestplate", Item::new, ItemBuildersNeoForge.shieldingArmor(ArmorType.CHESTPLATE));
+	public static final DeferredItem<Item> SHIELDING_LEGGINGS =
+			ITEMS.registerItem("shielding_leggings", Item::new, ItemBuildersNeoForge.shieldingArmor(ArmorType.LEGGINGS));
+	public static final DeferredItem<Item> SHIELDING_BOOTS =
+			ITEMS.registerItem("shielding_boots", Item::new, ItemBuildersNeoForge.shieldingArmor(ArmorType.BOOTS));
 	public static final DeferredItem<Item> IRON_DUST = manifestItem("iron_dust");
 	public static final DeferredItem<Item> COPPER_DUST = manifestItem("copper_dust");
 	public static final DeferredItem<Item> GOLD_DUST = manifestItem("gold_dust");
@@ -828,6 +837,10 @@ public final class ModItemsNeoForge {
 		ModContent.FLUX_THREAD = FLUX_THREAD::get;
 		ModContent.FLUXWEAVE_CLOTH = FLUXWEAVE_CLOTH::get;
 		ModContent.FLUXWEAVE_HELMET = FLUXWEAVE_HELMET::get;
+		ModContent.SHIELDING_HELMET = SHIELDING_HELMET::get;
+		ModContent.SHIELDING_CHESTPLATE = SHIELDING_CHESTPLATE::get;
+		ModContent.SHIELDING_LEGGINGS = SHIELDING_LEGGINGS::get;
+		ModContent.SHIELDING_BOOTS = SHIELDING_BOOTS::get;
 		ModContent.FLUXWEAVE_CHESTPLATE = FLUXWEAVE_CHESTPLATE::get;
 		ModContent.FLUXWEAVE_LEGGINGS = FLUXWEAVE_LEGGINGS::get;
 		ModContent.FLUXWEAVE_BOOTS = FLUXWEAVE_BOOTS::get;

@@ -879,5 +879,12 @@
   "gui.alaindustrial.reactor_controller.idle.buffer_full": "buffer full",
   "block.alaindustrial.reactor_outlet": "Reactor Outlet",
   "gui.alaindustrial.reactor_controller.label.stored": "Charge %1$s%% · %2$s EU",
-  "item.alaindustrial.empty_fuel_rod": "Fuel Rod Cladding"
+  "item.alaindustrial.empty_fuel_rod": "Fuel Rod Cladding",
+  "item.alaindustrial.shielding_helmet": "Shielding Helmet",
+  "item.alaindustrial.shielding_chestplate": "Shielding Chestplate",
+  "item.alaindustrial.shielding_leggings": "Shielding Leggings",
+  "item.alaindustrial.shielding_boots": "Shielding Boots",
+  "effect.alaindustrial.radiation": "Radiation",
+  "death.attack.radiation": "%1$s died of radiation sickness",
+  "death.attack.radiation.player": "%1$s died of radiation sickness while fighting %2$s"
 }

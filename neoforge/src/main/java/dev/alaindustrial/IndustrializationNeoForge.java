@@ -142,6 +142,7 @@ public final class IndustrializationNeoForge {
 		ModMenusNeoForge.MENUS.register(modBus);
 		dev.alaindustrial.registry.neoforge.ModCreativeTabNeoForge.TABS.register(modBus);
 		dev.alaindustrial.registry.neoforge.ModSoundsNeoForge.SOUNDS.register(modBus);
+		dev.alaindustrial.registry.neoforge.ModEffectsNeoForge.EFFECTS.register(modBus);
 		// MOD-085: the Enriched Uranium Torch's green flame particle type.
 		dev.alaindustrial.registry.neoforge.ModParticlesNeoForge.PARTICLES.register(modBus);
 		dev.alaindustrial.registry.neoforge.ModDataComponentsNeoForge.DATA_COMPONENTS.register(modBus);
@@ -208,6 +209,7 @@ public final class IndustrializationNeoForge {
 		ModBlockEntitiesNeoForge.init();
 		ModMenusNeoForge.init();
 		dev.alaindustrial.registry.neoforge.ModSoundsNeoForge.init();
+		dev.alaindustrial.registry.neoforge.ModEffectsNeoForge.init(); // MOD-470 radiation effect
 		dev.alaindustrial.registry.neoforge.ModDataComponentsNeoForge.init();
 		dev.alaindustrial.registry.neoforge.ModAttachmentsNeoForge.init(); // MOD-133 player-stats store seam
 		dev.alaindustrial.registry.neoforge.ModRecipesNeoForge.init();
@@ -285,6 +287,8 @@ public final class IndustrializationNeoForge {
 			dev.alaindustrial.teleporter.TeleportWarmupManager.tickAll(event.getServer());
 			// MOD-133: fold pending per-player stat deltas into attachments on the configured cadence.
 			dev.alaindustrial.stats.PlayerStatsTracker.get().onServerTick(event.getServer());
+			// MOD-470: per-player radiation exposure, on its own configurable cadence.
+			dev.alaindustrial.core.radiation.RadiationTicker.tickAll(event.getServer());
 			// MOD-148: clear any jetpack flight-glow light block whose flight ended (land, logout,
 			// death, unequip) — the one cleanup path for every exit (see JetpackLight).
 			dev.alaindustrial.item.wearable.JetpackLight.sweep(event.getServer(), event.getServer().getTickCount());

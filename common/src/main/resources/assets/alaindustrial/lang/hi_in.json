@@ -879,5 +879,12 @@
   "gui.alaindustrial.reactor_controller.idle.buffer_full": "बफ़र भरा",
   "block.alaindustrial.reactor_outlet": "रिएक्टर निकास",
   "gui.alaindustrial.reactor_controller.label.stored": "चार्ज %1$s%% · %2$s EU",
-  "item.alaindustrial.empty_fuel_rod": "ईंधन छड़ आवरण"
+  "item.alaindustrial.empty_fuel_rod": "ईंधन छड़ आवरण",
+  "item.alaindustrial.shielding_helmet": "परिरक्षण शिरस्त्राण",
+  "item.alaindustrial.shielding_chestplate": "परिरक्षण कवच",
+  "item.alaindustrial.shielding_leggings": "परिरक्षण जांघिया",
+  "item.alaindustrial.shielding_boots": "परिरक्षण जूते",
+  "effect.alaindustrial.radiation": "विकिरण",
+  "death.attack.radiation": "%1$s विकिरण बीमारी से मर गया",
+  "death.attack.radiation.player": "%2$s से लड़ते हुए %1$s विकिरण बीमारी से मर गया"
 }

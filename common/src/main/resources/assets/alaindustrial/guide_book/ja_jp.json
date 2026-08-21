@@ -4321,6 +4321,44 @@
           ]
         },
         {
+          "id": "shielding_chestplate",
+          "title": "Shielding Chestplate",
+          "icon": "alaindustrial:shielding_chestplate",
+          "block_id": "alaindustrial:shielding_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Shielding Chestplate",
+              "text": "The anti-radiation set — hood, jacket, trousers and boots of leather, rubber and yellow dye; it cuts the dose, spends durability doing it, and seals the wearer completely."
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 4個"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "minecraft:leather",
+                "minecraft:yellow_dye",
+                "minecraft:leather",
+                "alaindustrial:rubber",
+                "minecraft:leather",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "minecraft:leather",
+                "alaindustrial:rubber"
+              ],
+              "result_id": "alaindustrial:shielding_chestplate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electric_drill",
           "title": "電動ドリル",
           "icon": "alaindustrial:electric_drill",

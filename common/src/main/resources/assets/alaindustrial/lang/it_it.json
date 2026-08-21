@@ -879,5 +879,12 @@
   "gui.alaindustrial.reactor_controller.idle.buffer_full": "buffer pieno",
   "block.alaindustrial.reactor_outlet": "Uscita del reattore",
   "gui.alaindustrial.reactor_controller.label.stored": "Carica %1$s%% · %2$s EU",
-  "item.alaindustrial.empty_fuel_rod": "Guaina della barra"
+  "item.alaindustrial.empty_fuel_rod": "Guaina della barra",
+  "item.alaindustrial.shielding_helmet": "Elmo schermante",
+  "item.alaindustrial.shielding_chestplate": "Corazza schermante",
+  "item.alaindustrial.shielding_leggings": "Gambali schermanti",
+  "item.alaindustrial.shielding_boots": "Stivali schermanti",
+  "effect.alaindustrial.radiation": "Radiazione",
+  "death.attack.radiation": "%1$s è morto per malattia da radiazioni",
+  "death.attack.radiation.player": "%1$s è morto per malattia da radiazioni combattendo contro %2$s"
 }

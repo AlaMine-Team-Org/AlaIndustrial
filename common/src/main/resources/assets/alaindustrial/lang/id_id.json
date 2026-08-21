@@ -879,5 +879,12 @@
   "gui.alaindustrial.reactor_controller.idle.buffer_full": "penyangga penuh",
   "block.alaindustrial.reactor_outlet": "Keluaran Reaktor",
   "gui.alaindustrial.reactor_controller.label.stored": "Muatan %1$s%% · %2$s EU",
-  "item.alaindustrial.empty_fuel_rod": "Selongsong Batang"
+  "item.alaindustrial.empty_fuel_rod": "Selongsong Batang",
+  "item.alaindustrial.shielding_helmet": "Helm pelindung radiasi",
+  "item.alaindustrial.shielding_chestplate": "Zirah pelindung radiasi",
+  "item.alaindustrial.shielding_leggings": "Celana pelindung radiasi",
+  "item.alaindustrial.shielding_boots": "Sepatu pelindung radiasi",
+  "effect.alaindustrial.radiation": "Radiasi",
+  "death.attack.radiation": "%1$s meninggal karena penyakit radiasi",
+  "death.attack.radiation.player": "%1$s meninggal karena penyakit radiasi saat melawan %2$s"
 }

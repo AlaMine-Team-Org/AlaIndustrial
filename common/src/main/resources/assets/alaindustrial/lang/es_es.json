@@ -879,5 +879,12 @@
   "gui.alaindustrial.reactor_controller.idle.buffer_full": "búfer lleno",
   "block.alaindustrial.reactor_outlet": "Salida del reactor",
   "gui.alaindustrial.reactor_controller.label.stored": "Carga %1$s%% · %2$s EU",
-  "item.alaindustrial.empty_fuel_rod": "Vaina de barra"
+  "item.alaindustrial.empty_fuel_rod": "Vaina de barra",
+  "item.alaindustrial.shielding_helmet": "Casco de blindaje",
+  "item.alaindustrial.shielding_chestplate": "Peto de blindaje",
+  "item.alaindustrial.shielding_leggings": "Grebas de blindaje",
+  "item.alaindustrial.shielding_boots": "Botas de blindaje",
+  "effect.alaindustrial.radiation": "Radiación",
+  "death.attack.radiation": "%1$s murió de síndrome de irradiación",
+  "death.attack.radiation.player": "%1$s murió de síndrome de irradiación luchando contra %2$s"
 }

@@ -120,7 +120,6 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 	/** Rods burning across the room, refreshed each scan. */
 	private int rods;
 	/** Adjacent loaded-assembly pairs, refreshed each scan — the neighbour bonus. */
-	private int neighbourPairs;
 	/** What the last tick actually produced, for the readout. */
 	private int lastOutput;
 	/** Assemblies found inside the sealed room, refreshed on every scan. */
@@ -230,6 +229,11 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		for (FuelRodAssemblyBlockEntity column : columns) {
 			liveRods += column.getRods();
 		}
+		// Density is counted fresh too, for the same reason the rods are. It used to come from the
+		// periodic scan, so for up to reactorScanIntervalTicks after a column was pulled the remaining
+		// ones went on being paid a neighbour bonus for a rack that was no longer there — free EU, and
+		// exactly the kind that is invisible because it is small and brief.
+		int pairs = countNeighbourPairs(columns);
 
 		if (allowed && liveRods > 0 && energy.getAmount() < energy.getCapacity()) {
 			// What this core could give with the rods all the way down. The tier ceiling is applied to
@@ -237,7 +241,7 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 			// depth-scaled figure against the ceiling looked equivalent and was not: on any core whose
 			// potential already cleared 512 EU/t every slider stop produced the same 512, so the control
 			// the player was given did nothing at exactly the scale it was built for.
-			long full = ReactorCore.output(liveRods, neighbourPairs, Config.reactorEuPerRod,
+			long full = ReactorCore.output(liveRods, pairs, Config.reactorEuPerRod,
 					Config.reactorNeighbourBonusPercent, ReactorCore.FULL_DEPTH);
 			// Two ceilings: the tier's voltage (a reactor is an HV machine, and nothing in the mod could
 			// carry tens of thousands of EU/t anyway) and whatever room is left in the buffer.
@@ -250,7 +254,7 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 				// out of range by a core that has left its own potential far behind. Heat is one
 				// division against the potential at full depth; because both terms carry the same rods
 				// and the same adjacencies, the ratio converges as the room grows instead of diverging.
-				long heatFull = ReactorCore.heatProduced(liveRods, neighbourPairs, Config.reactorHeatPerRod,
+				long heatFull = ReactorCore.heatProduced(liveRods, pairs, Config.reactorHeatPerRod,
 						Config.reactorHeatNeighbourBonusPercent, ReactorCore.FULL_DEPTH);
 				produced = ReactorCore.heatForOutput(heatFull, output, full);
 				burnFuel(columns, output);
@@ -329,6 +333,34 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 			}
 		}
 		return columns;
+	}
+
+	/**
+	 * Adjacent pairs of FUELLED columns among the ones collected this tick.
+	 *
+	 * <p>Adjacency is about fuel, not about racks: two empty columns side by side breed nothing, and
+	 * counting them would pay a neighbour bonus for scaffolding.
+	 */
+	private static int countNeighbourPairs(List<FuelRodAssemblyBlockEntity> columns) {
+		java.util.Set<BlockPos> loaded = new java.util.HashSet<>();
+		for (FuelRodAssemblyBlockEntity column : columns) {
+			if (column.hasFuel()) {
+				loaded.add(column.getBlockPos());
+			}
+		}
+		int pairs = 0;
+		for (BlockPos rack : loaded) {
+			if (loaded.contains(rack.east())) {
+				pairs++;
+			}
+			if (loaded.contains(rack.above())) {
+				pairs++;
+			}
+			if (loaded.contains(rack.south())) {
+				pairs++;
+			}
+		}
+		return pairs;
 	}
 
 	/**
@@ -581,7 +613,6 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 			assemblies.clear();
 			outlets.clear();
 			rods = 0;
-			neighbourPairs = 0;
 		}
 
 		if (level instanceof ServerLevel serverLevel) {
@@ -606,7 +637,6 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		assemblies.clear();
 		outlets.clear();
 		rods = 0;
-		neighbourPairs = 0;
 		BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
 		// The scan reports the INTERIOR box; the shell is the ring one block outside it. Sweeping the
 		// interior alone found every column and no socket at all — a reactor outlet lives in the wall by
@@ -631,26 +661,10 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 				}
 			}
 		}
-		// Adjacency is about FUEL, not about racks: two empty columns side by side breed nothing, and
-		// counting them would pay a neighbour bonus for scaffolding. Collected separately from the list
-		// above now that the list holds empty columns too.
-		java.util.Set<BlockPos> loaded = new java.util.HashSet<>();
-		for (BlockPos rack : assemblies) {
-			if (level.getBlockEntity(rack) instanceof FuelRodAssemblyBlockEntity be && be.hasFuel()) {
-				loaded.add(rack);
-			}
-		}
-		for (BlockPos rack : loaded) {
-			if (loaded.contains(rack.east())) {
-				neighbourPairs++;
-			}
-			if (loaded.contains(rack.above())) {
-				neighbourPairs++;
-			}
-			if (loaded.contains(rack.south())) {
-				neighbourPairs++;
-			}
-		}
+		// Adjacency is NOT counted here any more (MOD-476). It used to be cached by this periodic scan
+		// while the rods were counted every tick, so for up to reactorScanIntervalTicks after a column was
+		// pulled the survivors went on being paid a neighbour bonus for a rack that was no longer there.
+		// countNeighbourPairs does it per tick from the columns runReactor already has in hand.
 	}
 
 	private void rememberBox(RoomScan.Result result) {

@@ -879,5 +879,12 @@
   "gui.alaindustrial.reactor_controller.idle.buffer_full": "Puffer voll",
   "block.alaindustrial.reactor_outlet": "Reaktorauslass",
   "gui.alaindustrial.reactor_controller.label.stored": "Ladung %1$s%% · %2$s EU",
-  "item.alaindustrial.empty_fuel_rod": "Brennstabhülle"
+  "item.alaindustrial.empty_fuel_rod": "Brennstabhülle",
+  "item.alaindustrial.shielding_helmet": "Abschirmhelm",
+  "item.alaindustrial.shielding_chestplate": "Abschirmbrustplatte",
+  "item.alaindustrial.shielding_leggings": "Abschirmhose",
+  "item.alaindustrial.shielding_boots": "Abschirmstiefel",
+  "effect.alaindustrial.radiation": "Strahlung",
+  "death.attack.radiation": "%1$s starb an der Strahlenkrankheit",
+  "death.attack.radiation.player": "%1$s starb an der Strahlenkrankheit im Kampf gegen %2$s"
 }

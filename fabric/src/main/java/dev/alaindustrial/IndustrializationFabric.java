@@ -276,6 +276,12 @@ public class IndustrializationFabric implements ModInitializer {
 		// Sound: Fabric keeps the SOUND_EVENT registry writable during init, so bind the neutral handle
 		// with an eager registration (NeoForge uses a DeferredRegister instead — see ModSoundsNeoForge).
 		// registerSound eagerly registers the event and returns the Supplier the handle expects.
+		// Status effects: same story as sound — Fabric keeps MOB_EFFECT writable during init, NeoForge
+		// does not (see ModEffectsNeoForge). registerForHolder is what yields the Holder the effect API
+		// wants; a bare Registry.register would hand back the MobEffect and nothing could apply it.
+		dev.alaindustrial.registry.ModEffects.RADIATION = registerEffect(
+				dev.alaindustrial.registry.ModEffects.RADIATION_ID,
+				dev.alaindustrial.registry.ModEffects.createRadiation());
 		ModSounds.MACERATOR_GRIND = registerSound(
 				ModSounds.MACERATOR_GRIND_ID, ModSounds.createMaceratorGrind());
 		ModSounds.GENERATOR_HUM = registerSound(
@@ -323,6 +329,13 @@ public class IndustrializationFabric implements ModInitializer {
 	 * (writable during Fabric init) and returns the {@link Supplier} the neutral {@code ModSounds}
 	 * handle expects (MOD-141).
 	 */
+	private static Supplier<net.minecraft.core.Holder<net.minecraft.world.effect.MobEffect>> registerEffect(
+			Identifier id, net.minecraft.world.effect.MobEffect effect) {
+		net.minecraft.core.Holder.Reference<net.minecraft.world.effect.MobEffect> holder =
+				Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, id, effect);
+		return () -> holder;
+	}
+
 	private static Supplier<SoundEvent> registerSound(Identifier id, SoundEvent event) {
 		SoundEvent registered = Registry.register(BuiltInRegistries.SOUND_EVENT, id, event);
 		return () -> registered;
@@ -403,6 +416,8 @@ public class IndustrializationFabric implements ModInitializer {
 			// MOD-148: clear any jetpack flight-glow light block whose flight ended (land, logout,
 			// death, unequip) — the one cleanup path for every exit (see JetpackLight).
 			dev.alaindustrial.item.wearable.JetpackLight.sweep(server, server.getTickCount());
+			// MOD-470: per-player radiation exposure, on its own configurable cadence.
+			dev.alaindustrial.core.radiation.RadiationTicker.tickAll(server);
 		});
 		// Teleport warmup cancellation (MOD-092) — the mod's first player-event listeners. Three
 		// separate hooks are needed, not two: AFTER_DAMAGE does NOT fire for a killing blow, and

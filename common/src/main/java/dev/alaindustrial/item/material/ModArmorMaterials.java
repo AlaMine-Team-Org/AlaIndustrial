@@ -112,6 +112,42 @@ public final class ModArmorMaterials {
 			FLUXWEAVE_ASSET);
 
 	/**
+	 * Visual asset key for the shielding suit (MOD-470). Unlike every other set in the mod, its worn
+	 * textures are fully opaque in every region the model shows: the suit is sealed, so no pixel of the
+	 * player's skin — face, hands, legs, or the skin's own second layer — is visible while the full set
+	 * is worn. That works without a custom model because armour inflates further than the skin does
+	 * (1.0 and 0.5 against the second layer's 0.25), so an opaque texture simply covers it.
+	 */
+	public static final ResourceKey<EquipmentAsset> SHIELDING_ASSET =
+			ResourceKey.create(EquipmentAssets.ROOT_ID, Industrialization.id("shielding"));
+
+	/**
+	 * Shielding suit (MOD-470) — leather sealed with the mod's own rubber, not plate armour.
+	 *
+	 * <p><b>Cheap on purpose, and weak to match.</b> The first version was built from
+	 * {@code shielding_alloy_plate}, which sits at the far end of the palladium chain — so the only
+	 * protection against radiation arrived after the reactor that emits it. The recipe is now leather +
+	 * rubber + a glass pane for the visor + yellow dye (the suit IS yellow), early-game by design.
+	 *
+	 * <p>That forced the stats down with it: defense at the leather line, no toughness, low durability.
+	 * A cheap suit with iron-grade protection would be strictly better than iron armour, and players
+	 * would wear it for the numbers rather than for the job. What the suit sells is the radiation
+	 * shielding that {@code RadiationTicker} reads off the {@code #alaindustrial:radiation_shielding}
+	 * tag — and the durability it spends absorbing dose, which keeps it a consumable.
+	 *
+	 * <p>Repair tag: {@code alaindustrial:shielding_armor_materials} -> {@code alaindustrial:rubber}.
+	 */
+	public static final ArmorMaterial SHIELDING = new ArmorMaterial(
+			15,                                      // durability factor (leather 5, iron 15) — dose eats it
+			makeDefense(1, 3, 2, 1),                 // the leather line: this set is not armour
+			10,                                      // enchantmentValue (leather 15, iron 9)
+			SoundEvents.ARMOR_EQUIP_LEATHER,         // sealed cloth and rubber, not plate
+			0.0f,                                    // toughness
+			0.0f,
+			tagKey("shielding_armor_materials"),
+			SHIELDING_ASSET);
+
+	/**
 	 * Build the per-slot defense map the way vanilla {@code ArmorMaterials.makeDefense(...)} does,
 	 * minus the {@code body} slot (only wolf/animal armor uses it). Order: helmet, chestplate,
 	 * leggings, boots — matching {@link ArmorType} ordinals.

@@ -482,6 +482,12 @@ public final class ModContent {
 	public static Supplier<Item> FLUXWEAVE_CHESTPLATE = unbound("FLUXWEAVE_CHESTPLATE");
 	public static Supplier<Item> FLUXWEAVE_LEGGINGS = unbound("FLUXWEAVE_LEGGINGS");
 	public static Supplier<Item> FLUXWEAVE_BOOTS = unbound("FLUXWEAVE_BOOTS");
+	// Shielding suit (MOD-470): the sealed anti-radiation set. Four plain armour items — what makes
+	// them shielding is the #alaindustrial:radiation_shielding tag, not a class.
+	public static Supplier<Item> SHIELDING_HELMET = unbound("SHIELDING_HELMET");
+	public static Supplier<Item> SHIELDING_CHESTPLATE = unbound("SHIELDING_CHESTPLATE");
+	public static Supplier<Item> SHIELDING_LEGGINGS = unbound("SHIELDING_LEGGINGS");
+	public static Supplier<Item> SHIELDING_BOOTS = unbound("SHIELDING_BOOTS");
 
 	// --- Entity types ---
 	// Stock Display Frame (MOD-066) — the mod's first entity: an ItemFrame subclass that counts the

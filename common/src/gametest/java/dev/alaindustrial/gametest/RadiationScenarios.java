@@ -1,0 +1,321 @@
+package dev.alaindustrial.gametest;
+
+import dev.alaindustrial.Config;
+import dev.alaindustrial.block.FuelRodAssemblyBlock;
+import dev.alaindustrial.block.ReactorDoorBlock;
+import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
+import dev.alaindustrial.core.radiation.RadiationMobs;
+import dev.alaindustrial.core.radiation.RadiationSources;
+import dev.alaindustrial.registry.ModContent;
+import dev.alaindustrial.registry.ModEffects;
+import java.util.List;
+import net.minecraft.core.BlockPos;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.cow.Cow;
+import net.minecraft.world.entity.animal.cow.MushroomCow;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.zombie.ZombieVillager;
+import net.minecraft.world.entity.npc.villager.Villager;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.phys.Vec3;
+
+/**
+ * Loader-neutral gametest bodies for radiation (MOD-470). The same bodies run on the Fabric
+ * {@code @GameTest} lane and the NeoForge {@code gameTestServer} lane.
+ *
+ * <p><b>Every scenario pins the radii to 3 and restores them in a {@code finally}.</b> The gametest
+ * server shares one world and lays the structures a few blocks apart, so the shipped six-block radius
+ * would reach into a neighbour's rig — the exact class of bug that made MOD-277 red on one loader and
+ * green on the other for identical code. Restoring the configured values is part of the contract.
+ *
+ * <p><b>What is worth testing here and what is not.</b> The arithmetic of a dose is MC-free and lives
+ * in {@code RadiationCoreTest} (L1). What only a world can answer is the part these bodies assert: that
+ * a shell block between a rod and a bystander actually stops the radiation, and that a mob carried past
+ * the transformation threshold really becomes the other entity, keeping what it should.
+ */
+public final class RadiationScenarios {
+
+	private RadiationScenarios() {
+	}
+
+	private static final BlockPos RACK = new BlockPos(1, 2, 1);
+	private static final BlockPos WALL = new BlockPos(1, 2, 2);
+	private static final BlockPos BYSTANDER = new BlockPos(1, 2, 3);
+
+	/**
+	 * Run {@code body} with both radiation radii pinned to 3 (see the class doc).
+	 *
+	 * <p>Three, not two: the rack sits two blocks from the bystander, and the trace runs from the
+	 * bystander's EYES to the centre of the rack — about 2.15 blocks, which a radius of 2 rejects. The
+	 * first draft pinned 2 and produced a rig where nothing could ever be irradiated; the suite caught
+	 * it, which is the only reason it is not in the shipped test now saying green about nothing.
+	 */
+	private static void withIsolatedField(Runnable body) {
+		int source = Config.radiationSourceRadius;
+		int ground = Config.radiationGroundRadius;
+		Config.radiationSourceRadius = 3;
+		Config.radiationGroundRadius = 3;
+		try {
+			body.run();
+		} finally {
+			Config.radiationSourceRadius = source;
+			Config.radiationGroundRadius = ground;
+		}
+	}
+
+	/**
+	 * One sweep with a single point source of the given strength standing exactly where the mob is.
+	 * The dose ramp is arithmetic and belongs to L1; what a world has to prove is the transformation.
+	 */
+	private static void sweepWithCarried(ServerLevel level, LivingEntity target, int strength) {
+		// At the EYES, not at the feet: the dose is measured eye-to-source, so a source dropped at the
+		// mob's own position already sits a metre and a half away and comes back attenuated.
+		Vec3 at = target.getEyePosition();
+		RadiationMobs.sweep(level, List.of(at), List.of(new RadiationSources.Source(at, strength)),
+				Config.radiationSourceRadius);
+	}
+
+	/** A fuelled rack: four rods in the assembly, which is what a running reactor column holds. */
+	private static void placeFuelledRack(GameTestHelper helper) {
+		helper.setBlock(RACK, ModContent.FUEL_ROD_ASSEMBLY.get().defaultBlockState()
+				.setValue(FuelRodAssemblyBlock.RODS, FuelRodAssemblyBlock.MAX_RODS));
+		FuelRodAssemblyBlockEntity rack = helper.getBlockEntity(RACK, FuelRodAssemblyBlockEntity.class);
+		for (int i = 0; i < FuelRodAssemblyBlock.MAX_RODS; i++) {
+			rack.insertRod(new ItemStack(ModContent.URANIUM_FUEL_ROD.get()));
+		}
+	}
+
+	/**
+	 * A fuelled rod irradiates whatever it can see.
+	 *
+	 * @implements R-RAD-01 — see docs/testing/RULES.md
+	 */
+	public static void rodIrradiatesWhatItCanSee(GameTestHelper helper) {
+		withIsolatedField(() -> {
+			placeFuelledRack(helper);
+			Cow viewer = helper.spawn(EntityTypes.COW, BYSTANDER);
+			int exposure = RadiationSources.exposureAt(helper.getLevel(), viewer, Config.radiationSourceRadius);
+			if (exposure <= 0) {
+				helper.fail("a fuelled rod two blocks away in open air must irradiate; got " + exposure);
+			}
+			helper.succeed();
+		});
+	}
+
+	/**
+	 * The shell stops it: one casing block between the rod and the bystander takes the exposure to zero,
+	 * and removing that block brings it straight back.
+	 *
+	 * <p>Both halves are asserted on purpose. "With a wall the exposure is zero" alone is the classic
+	 * test that cannot fail — a rig where the rod never reached the bystander in the first place passes
+	 * it just as happily. Measuring the same rack with the wall gone is what proves the zero was the
+	 * wall's doing.
+	 *
+	 * @implements R-RAD-02 — see docs/testing/RULES.md
+	 */
+	public static void casingBlocksTheRod(GameTestHelper helper) {
+		withIsolatedField(() -> {
+			placeFuelledRack(helper);
+			helper.setBlock(WALL, ModContent.REACTOR_CASING.get());
+			Cow viewer = helper.spawn(EntityTypes.COW, BYSTANDER);
+			int blocked = RadiationSources.exposureAt(helper.getLevel(), viewer, Config.radiationSourceRadius);
+			if (blocked != 0) {
+				helper.fail("a casing wall must stop the rod entirely; got " + blocked);
+			}
+			helper.setBlock(WALL, net.minecraft.world.level.block.Blocks.AIR);
+			int open = RadiationSources.exposureAt(helper.getLevel(), viewer, Config.radiationSourceRadius);
+			if (open <= 0) {
+				helper.fail("with the wall gone the same rod must irradiate again; got " + open
+						+ " — the zero above proved nothing");
+			}
+			helper.succeed();
+		});
+	}
+
+	/**
+	 * A villager irradiated past the threshold becomes a zombie villager and keeps its profession.
+	 *
+	 * @implements R-RAD-03 — see docs/testing/RULES.md
+	 */
+	public static void villagerBecomesZombieVillager(GameTestHelper helper) {
+		withIsolatedField(() -> {
+			Villager villager = helper.spawn(EntityTypes.VILLAGER, BYSTANDER);
+			ServerLevel level = helper.getLevel();
+			// One sweep carrying a full scale of dose: the ramp is arithmetic and belongs to L1, while
+			// what a world has to prove is that the transformation itself happens and carries data across.
+			sweepWithCarried(level, villager, Config.radiationDoseCapacity);
+			if (villager.isAlive() && !villager.isRemoved()) {
+				helper.fail("the villager should have been converted, not left standing");
+			}
+			ZombieVillager converted = level.getEntitiesOfClass(ZombieVillager.class,
+					villager.getBoundingBox().inflate(4.0)).stream().findFirst().orElse(null);
+			if (converted == null) {
+				helper.fail("no zombie villager appeared where the villager stood");
+				return;
+			}
+			if (!converted.isPersistenceRequired()) {
+				helper.fail("a converted trader that despawns is a lost trader");
+			}
+			helper.succeed();
+		});
+	}
+
+	/**
+	 * A cow becomes a mooshroom, and takes no damage on the way — radiation transforms livestock rather
+	 * than culling it.
+	 *
+	 * @implements R-RAD-04 — see docs/testing/RULES.md
+	 */
+	public static void cowBecomesMooshroom(GameTestHelper helper) {
+		withIsolatedField(() -> {
+			Cow cow = helper.spawn(EntityTypes.COW, BYSTANDER);
+			float health = cow.getHealth();
+			ServerLevel level = helper.getLevel();
+			sweepWithCarried(level, cow, Config.radiationDoseCapacity);
+			if (cow.getHealth() < health) {
+				helper.fail("a cow must not be hurt by radiation, only changed");
+			}
+			MushroomCow converted = level.getEntitiesOfClass(MushroomCow.class,
+					cow.getBoundingBox().inflate(4.0)).stream().findFirst().orElse(null);
+			if (converted == null) {
+				helper.fail("no mooshroom appeared where the cow stood");
+			}
+			helper.succeed();
+		});
+	}
+
+	/**
+	 * What radiation already made of you, it does not make again: a zombie villager standing in the same
+	 * field takes no dose at all.
+	 *
+	 * @implements R-RAD-05 — see docs/testing/RULES.md
+	 */
+	public static void zombieVillagerIsPastTheEnd(GameTestHelper helper) {
+		withIsolatedField(() -> {
+			ZombieVillager zombie = helper.spawn(EntityTypes.ZOMBIE_VILLAGER, BYSTANDER);
+			sweepWithCarried(helper.getLevel(), zombie, Config.radiationDoseCapacity);
+			if (zombie.hasEffect(ModEffects.RADIATION.get())) {
+				helper.fail("a zombie villager must not accumulate a dose — it is already the outcome");
+			}
+			helper.succeed();
+		});
+	}
+
+	/**
+	 * Uranium dropped on the ground keeps radiating: switching a hazard off by throwing it away would
+	 * make the shielding chest pointless.
+	 *
+	 * @implements R-RAD-06 — see docs/testing/RULES.md
+	 */
+	public static void droppedUraniumStillRadiates(GameTestHelper helper) {
+		withIsolatedField(() -> {
+			ServerLevel level = helper.getLevel();
+			Cow viewer = helper.spawn(EntityTypes.COW, BYSTANDER);
+			BlockPos abs = helper.absolutePos(BYSTANDER);
+			ItemEntity drop = new ItemEntity(level, abs.getX() + 0.5, abs.getY(), abs.getZ() + 0.5,
+					new ItemStack(ModContent.REFINED_URANIUM.get(), 4));
+			level.addFreshEntity(drop);
+			int exposure = RadiationSources.exposureAt(level, viewer, Config.radiationSourceRadius);
+			if (exposure <= 0) {
+				helper.fail("uranium lying on the ground must still irradiate; got " + exposure);
+			}
+			helper.succeed();
+		});
+	}
+
+	/**
+	 * Distance is a defence: the same rack hits far harder at one block than at four.
+	 *
+	 * <p>Before the falloff a rod six blocks away hit exactly as hard as one at your feet, so the only
+	 * way to survive a core was a wall. Asserting the ORDER rather than the numbers keeps this test
+	 * about the rule instead of about the tuning.
+	 *
+	 * @implements R-RAD-07 — see docs/testing/RULES.md
+	 */
+	public static void distanceWeakensTheRod(GameTestHelper helper) {
+		withIsolatedField(() -> {
+			placeFuelledRack(helper);
+			Cow near = helper.spawn(EntityTypes.COW, RACK.above());
+			Cow far = helper.spawn(EntityTypes.COW, BYSTANDER);
+			int close = RadiationSources.exposureAt(helper.getLevel(), near, Config.radiationSourceRadius);
+			int distant = RadiationSources.exposureAt(helper.getLevel(), far, Config.radiationSourceRadius);
+			if (close <= distant) {
+				helper.fail("radiation must fall off with distance; next to the rack " + close
+						+ ", two blocks away " + distant);
+			}
+			if (distant <= 0) {
+				helper.fail("two blocks away must still be inside the field; got " + distant);
+			}
+			helper.succeed();
+		});
+	}
+
+	/**
+	 * Uranium lying inside a sealed box does not irradiate whoever stands outside it.
+	 *
+	 * <p>The first version applied the line-of-sight rule to rods only, so dropped uranium shone
+	 * straight through walls — a shielding chest would have been pointless and the reactor shell was
+	 * only half a shell.
+	 *
+	 * @implements R-RAD-08 — see docs/testing/RULES.md
+	 */
+	public static void casingBlocksDroppedUranium(GameTestHelper helper) {
+		withIsolatedField(() -> {
+			ServerLevel level = helper.getLevel();
+			helper.setBlock(WALL, ModContent.REACTOR_CASING.get());
+			Cow viewer = helper.spawn(EntityTypes.COW, BYSTANDER);
+			BlockPos abs = helper.absolutePos(RACK);
+			ItemEntity drop = new ItemEntity(level, abs.getX() + 0.5, abs.getY() + 0.5, abs.getZ() + 0.5,
+					new ItemStack(ModContent.REFINED_URANIUM.get(), 16));
+			level.addFreshEntity(drop);
+			int blocked = RadiationSources.exposureAt(level, viewer, Config.radiationSourceRadius);
+			if (blocked != 0) {
+				helper.fail("a casing wall must stop dropped uranium too; got " + blocked);
+			}
+			helper.setBlock(WALL, net.minecraft.world.level.block.Blocks.AIR);
+			int open = RadiationSources.exposureAt(level, viewer, Config.radiationSourceRadius);
+			if (open <= 0) {
+				helper.fail("with the wall gone the same pile must irradiate; got " + open
+						+ " — the zero above proved nothing");
+			}
+			helper.succeed();
+		});
+	}
+
+	/**
+	 * An open airlock leaks: the same rod is blocked by a closed door and reaches through an open one.
+	 *
+	 * <p>This is the promise the whole shell rests on — "the room is sealed, the doorway is not" — and
+	 * until now it was the one part of it nothing checked.
+	 *
+	 * @implements R-RAD-09 — see docs/testing/RULES.md
+	 */
+	public static void openDoorLeaksRadiation(GameTestHelper helper) {
+		withIsolatedField(() -> {
+			placeFuelledRack(helper);
+			BlockState door = ModContent.REACTOR_DOOR.get().defaultBlockState()
+					.setValue(ReactorDoorBlock.FACING, Direction.SOUTH);
+			helper.setBlock(WALL, door);
+			helper.setBlock(WALL.above(), door.setValue(ReactorDoorBlock.HALF, DoubleBlockHalf.UPPER));
+			Cow viewer = helper.spawn(EntityTypes.COW, BYSTANDER);
+			int closed = RadiationSources.exposureAt(helper.getLevel(), viewer, Config.radiationSourceRadius);
+			if (closed != 0) {
+				helper.fail("a closed airlock must stop the rod; got " + closed);
+			}
+			helper.setBlock(WALL, door.setValue(ReactorDoorBlock.OPEN, true));
+			helper.setBlock(WALL.above(), door.setValue(ReactorDoorBlock.HALF, DoubleBlockHalf.UPPER)
+					.setValue(ReactorDoorBlock.OPEN, true));
+			int opened = RadiationSources.exposureAt(helper.getLevel(), viewer, Config.radiationSourceRadius);
+			if (opened <= 0) {
+				helper.fail("an open doorway must leak radiation; got " + opened);
+			}
+			helper.succeed();
+		});
+	}
+}

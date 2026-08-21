@@ -54,6 +54,12 @@ final class ItemBuildersNeoForge {
 		return p -> p.humanoidArmor(ModArmorMaterials.TEMPERED_IRON, type);
 	}
 
+	// --- Shielding suit (MOD-470) ---
+	// Plain armour properties; what makes a piece shielding is the #radiation_shielding item tag.
+	static UnaryOperator<Item.Properties> shieldingArmor(ArmorType type) {
+		return p -> p.humanoidArmor(ModArmorMaterials.SHIELDING, type);
+	}
+
 	// --- Fluxweave armour (MOD-127) ---
 	// Unlike tempered iron this one also seeds the charge-driven layer: the drained EQUIPPABLE (with
 	// setDamageOnHurt(false)) and the uncharged attribute set. FluxweaveArmorItem swaps both as EU moves.

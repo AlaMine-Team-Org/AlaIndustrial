@@ -168,6 +168,15 @@ public final class ModItems {
 			fluxweaveArmor("fluxweave_leggings", ArmorType.LEGGINGS);
 	public static final Item FLUXWEAVE_BOOTS =
 			fluxweaveArmor("fluxweave_boots", ArmorType.BOOTS);
+	// Shielding suit (MOD-470): ordinary armour items; the shielding lives in the item tag.
+	public static final Item SHIELDING_HELMET =
+			shieldingArmor("shielding_helmet", ArmorType.HELMET);
+	public static final Item SHIELDING_CHESTPLATE =
+			shieldingArmor("shielding_chestplate", ArmorType.CHESTPLATE);
+	public static final Item SHIELDING_LEGGINGS =
+			shieldingArmor("shielding_leggings", ArmorType.LEGGINGS);
+	public static final Item SHIELDING_BOOTS =
+			shieldingArmor("shielding_boots", ArmorType.BOOTS);
 	public static final Item IRON_DUST = manifestItem("iron_dust");
 	public static final Item COPPER_DUST = manifestItem("copper_dust");
 	public static final Item GOLD_DUST = manifestItem("gold_dust");
@@ -644,6 +653,12 @@ public final class ModItems {
 				FluxweaveArmorItem.equipmentProperties(new Item.Properties().setId(key), type), type));
 	}
 
+	private static Item shieldingArmor(String path, ArmorType type) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		return Registry.register(BuiltInRegistries.ITEM, key,
+				new Item(new Item.Properties().humanoidArmor(ModArmorMaterials.SHIELDING, type).setId(key)));
+	}
+
 	private static Item temperedArmor(String path, ArmorType type) {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
 		return Registry.register(BuiltInRegistries.ITEM, key,
@@ -1011,6 +1026,10 @@ public final class ModItems {
 		ModContent.FLUX_THREAD = () -> FLUX_THREAD;
 		ModContent.FLUXWEAVE_CLOTH = () -> FLUXWEAVE_CLOTH;
 		ModContent.FLUXWEAVE_HELMET = () -> FLUXWEAVE_HELMET;
+		ModContent.SHIELDING_HELMET = () -> SHIELDING_HELMET;
+		ModContent.SHIELDING_CHESTPLATE = () -> SHIELDING_CHESTPLATE;
+		ModContent.SHIELDING_LEGGINGS = () -> SHIELDING_LEGGINGS;
+		ModContent.SHIELDING_BOOTS = () -> SHIELDING_BOOTS;
 		ModContent.FLUXWEAVE_CHESTPLATE = () -> FLUXWEAVE_CHESTPLATE;
 		ModContent.FLUXWEAVE_LEGGINGS = () -> FLUXWEAVE_LEGGINGS;
 		ModContent.FLUXWEAVE_BOOTS = () -> FLUXWEAVE_BOOTS;
