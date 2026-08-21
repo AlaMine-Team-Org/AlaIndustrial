@@ -289,6 +289,7 @@
       <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="assets/platform/github.svg" alt="GitHub"></a>
       <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="assets/platform/discord.svg" alt="Discord"></a>
     </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="Пошук по гіду…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="Пошук по гіду" autocomplete="off" spellcheck="false" data-index="assets/search-index.json" data-root="" data-l10n="{&quot;list&quot;:&quot;Результати пошуку&quot;,&quot;one&quot;:&quot;сторінка знайдена&quot;,&quot;few&quot;:&quot;сторінки знайдені&quot;,&quot;many&quot;:&quot;сторінок знайдено&quot;,&quot;loading&quot;:&quot;Завантаження індексу пошуку…&quot;,&quot;nothing&quot;:&quot;Нічого не знайдено&quot;}"></search>
     <details class="language-menu"><summary aria-label="Language">UA</summary><div class="language-popover"><span>UA</span><a href="../en/getting-started.html">EN</a><a href="../ru/getting-started.html">RU</a><a href="../zh_cn/getting-started.html">中文</a><a href="../ja_jp/getting-started.html">日本語</a></div></details>
   </div>
 </nav>
@@ -320,7 +321,7 @@
 <div class="group-title">Предмети</div>
 <a class="cat-link" href="upgrades/index.html"><img class="nav-icon" src="assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="components/index.html"><img class="nav-icon" src="assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
-<a class="cat-link" href="items/index.html"><img class="nav-icon" src="assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="20 сторінок">20</span></a>
+<a class="cat-link" href="items/index.html"><img class="nav-icon" src="assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="21 сторінка">21</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="index.html">Головна</a><span class="sep">/</span><span>З чого почати</span></div>
@@ -329,22 +330,22 @@
   <p style="color:var(--muted);margin:8px 0 0">Ala Industrial — індустріальний тех-мод про енергетику та автоматизацію. У ньому є енергосистема на EU/FE (енергетичних одиницях), генератори, що їх виробляють, машини, що їх споживають, накопичувачі та кабелі для передавання. Ця сторінка — мінімум, щоб почати грати.</p>
 </div></div>
 
-<h2>Ключові терміни</h2>
+<h2 id="ключові-терміни">Ключові терміни</h2>
 <table><thead><tr><th>Термін</th><th>Значення</th></tr></thead>
 <tbody><tr><td><code>EU/FE</code></td><td>Енергетична одиниця — валюта енергії моду. Виробляється генераторами, зберігається в буфері, витрачається машинами.</td></tr><tr><td><code>Тік</code></td><td>Ігровий тік (1/20 секунди). EU/FE/такт (EU/FE/т) — стандартна швидкість: вироблення, споживання та передавання вимірюються в EU/FE/т.</td></tr><tr><td><code>LV / MV / HV</code></td><td>Тири напруги: низьке LV (32 EU/FE/т), середнє MV (128 EU/FE/т), високе HV (512 EU/FE/т). Кожен генератор, кабель і машина належить до тиру; правильне змішування тирів — основа прогресії.</td></tr><tr><td><code>Буфер</code></td><td>Внутрішнє сховище EU/FE блоку (генератора, машини або Накопичувача енергії). Своє для кожного блоку.</td></tr><tr><td><code>Тир</code></td><td>Рівень напруги блоку. Машини низького тиру (LV) приймають ≤32 EU/FE/т; подати більше від джерела вищого тиру нічого не дасть (вони обмежені своїм лімітом).</td></tr></tbody></table>
 
-<h2>Ваш перший енерголанцюг</h2>
+<h2 id="ваш-перший-енерголанцюг">Ваш перший енерголанцюг</h2>
 <p>Стартова прогресія — це петля з чотирьох блоків. Збудуйте їх у цьому порядку, і ви матимете робочу сітку подвоєння руди:</p>
 <ul class="concept-list intro-list"><a class="concept-card" style="--c:#fcd12a" href="generators/solar_panel.html"><div class="cc-body"><div class="cc-title">Сонячна панель</div><div class="cc-desc">Виробляє EU/FE вдень при відкритому небі. Ваш перше джерело енергії.</div></div></a><a class="concept-card" style="--c:#fcd12a" href="energy-transfer/copper_cable.html"><div class="cc-body"><div class="cc-title">Мідний кабель</div><div class="cc-desc">Дешевий провід низького тиру: несе EU/FE від панелі до машин.</div></div></a><a class="concept-card" style="--c:#fcd12a" href="energy-storage/battery_box.html"><div class="cc-body"><div class="cc-title">Накопичувач енергії</div><div class="cc-desc">Зберігає EU/FE на ніч, щоб машини працювали, коли панель спить.</div></div></a><a class="concept-card" style="--c:#fcd12a" href="machines/macerator.html"><div class="cc-body"><div class="cc-title">Подрібнювач</div><div class="cc-desc">Подрібнює руду в пил — подвоює вихід металу. Перший справжній споживач EU/FE.</div></div></a></ul>
 
-<h2>Перший генератор</h2>
+<h2 id="перший-генератор">Перший генератор</h2>
 <p>Енергія має звідкись братися. Почніть з найпростішого і найдешевшого генератора, а далі зростайте — ось найраніші варіанти:</p>
 <ul class="concept-list intro-list"><a class="concept-card" style="--c:#7bd88f" href="generators/generator.html"><div class="cc-body"><div class="cc-title">Генератор (LV)</div><div class="cc-desc">Найпростіший старт: палить вугілля і дає EU/FE на вимогу, працює і вночі.</div></div></a><a class="concept-card" style="--c:#7bd88f" href="generators/solar_panel.html"><div class="cc-body"><div class="cc-title">Сонячна панель</div><div class="cc-desc">Безкоштовний EU/FE вдень при відкритому небі; вночі спить — ставте з Накопичувачем енергії.</div></div></a><a class="concept-card" style="--c:#7bd88f" href="generators/water_mill.html"><div class="cc-body"><div class="cc-title">Водяний млин / вітряк</div><div class="cc-desc">Пасивне джерело низького тиру від текучої води або вітру — без палива.</div></div></a><a class="concept-card" style="--c:#7bd88f" href="generators/geothermal_generator.html"><div class="cc-body"><div class="cc-title">Геотермальний генератор</div><div class="cc-desc">Потужніший: видає EU/FE з лави. Наступний крок після перших генераторів.</div></div></a></ul>
 
-<h2>Поради</h2>
+<h2 id="поради">Поради</h2>
 <ul><li>Ставте Сонячну панель з чистим небом над нею — будь-який непрозорий блок повністю зупиняє вироблення.</li><li>Подрібнювач подвоює вихід і для блоку руди, і для необробленої руди (сировини) — по 2 пилу з кожного. Лише готовий злиток подрібнюється назад у 1 пил без подвоєння.</li><li>Кабелі не вибухають від перевантаження; вони просто упираються у свою стелю, а надлишок не передається.</li><li>Змішали сорти кабеля в одній лінії? Вся мережа працює за найсильнішим із них — і за його пропускною здатністю, і за його підвищеними втратами. Один золотий сегмент перекриває весь провід.</li><li>Енергія приймається з 5 граней машини; лицьова грань (куди дивиться блок) зазвичай інертна для EU/FE.</li><li>Зберігайте денний EU/FE у Накопичувачі енергії — без нього машини зупиняться, щойно сяде сонце.</li></ul>
 
-<h2>Куди далі</h2>
+<h2 id="куди-далі">Куди далі</h2>
 <p>Коли перший ланцюг працює, досліджуйте категорії в сайдбарі — більше генераторів, машин і переробки матеріалів відкривається в міру розвитку.</p>
   </main>
 </div>

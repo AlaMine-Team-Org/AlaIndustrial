@@ -289,6 +289,7 @@
       <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="assets/platform/github.svg" alt="GitHub"></a>
       <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="assets/platform/discord.svg" alt="Discord"></a>
     </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="Search the wiki…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="Search the guide" autocomplete="off" spellcheck="false" data-index="assets/search-index.json" data-root="" data-l10n="{&quot;list&quot;:&quot;Search results&quot;,&quot;one&quot;:&quot;page found&quot;,&quot;few&quot;:&quot;pages found&quot;,&quot;many&quot;:&quot;pages found&quot;,&quot;loading&quot;:&quot;Loading the search index…&quot;,&quot;nothing&quot;:&quot;Nothing found&quot;}"></search>
     <details class="language-menu"><summary aria-label="Language">EN</summary><div class="language-popover"><span>EN</span><a href="../ru/getting-started.html">RU</a><a href="../uk/getting-started.html">UA</a><a href="../zh_cn/getting-started.html">中文</a><a href="../ja_jp/getting-started.html">日本語</a></div></details>
   </div>
 </nav>
@@ -320,7 +321,7 @@
 <div class="group-title">Items</div>
 <a class="cat-link" href="upgrades/index.html"><img class="nav-icon" src="assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="components/index.html"><img class="nav-icon" src="assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
-<a class="cat-link" href="items/index.html"><img class="nav-icon" src="assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
+<a class="cat-link" href="items/index.html"><img class="nav-icon" src="assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="21 pages">21</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="index.html">Home</a><span class="sep">/</span><span>Getting Started</span></div>
@@ -329,22 +330,22 @@
   <p style="color:var(--muted);margin:8px 0 0">Ala Industrial is an industrial tech mod about energy and automation. It adds an energy system based on EU/FE (Energy Units), generators that produce it, machines that consume it, storage and cables to move it around. This page covers the bare minimum to get going.</p>
 </div></div>
 
-<h2>Key terms</h2>
+<h2 id="key-terms">Key terms</h2>
 <table><thead><tr><th>Term</th><th>Meaning</th></tr></thead>
 <tbody><tr><td><code>EU/FE</code></td><td>Energy Unit — the mod&#x27;s energy currency. Produced by generators, stored in buffers, consumed by machines.</td></tr><tr><td><code>Tick</code></td><td>A game tick (1/20 of a second). EU/FE/tick (EU/FE/t) is the standard rate — generation, consumption and transfer are all measured in EU/FE/t.</td></tr><tr><td><code>LV / MV / HV</code></td><td>Voltage tiers: Low (32 EU/FE/t), Medium (128 EU/FE/t), High (512 EU/FE/t). Every generator, cable and machine belongs to a tier; mixing tiers safely is the core of progression.</td></tr><tr><td><code>Buffer</code></td><td>Internal EU/FE storage of a block (a generator, machine or Battery Box). Sized per block.</td></tr><tr><td><code>Tier</code></td><td>A block&#x27;s voltage tier. LV machines accept ≤32 EU/FE/t; feeding them more from a higher-tier source does nothing (they cap at their limit).</td></tr></tbody></table>
 
-<h2>Your first energy chain</h2>
+<h2 id="your-first-energy-chain">Your first energy chain</h2>
 <p>The starter progression is a loop of four blocks. Build them in this order and you have a working ore-doubling setup:</p>
 <ul class="concept-list intro-list"><a class="concept-card" style="--c:#fcd12a" href="generators/solar_panel.html"><div class="cc-body"><div class="cc-title">Solar Panel</div><div class="cc-desc">Produces EU/FE during the day, with open sky above. Your first power source.</div></div></a><a class="concept-card" style="--c:#fcd12a" href="energy-transfer/copper_cable.html"><div class="cc-body"><div class="cc-title">Copper Cable</div><div class="cc-desc">Cheap LV wire that carries EU/FE from the panel to your machines.</div></div></a><a class="concept-card" style="--c:#fcd12a" href="energy-storage/battery_box.html"><div class="cc-body"><div class="cc-title">Battery Box</div><div class="cc-desc">Stores EU/FE for the night, so your machines can run when the panel sleeps.</div></div></a><a class="concept-card" style="--c:#fcd12a" href="machines/macerator.html"><div class="cc-body"><div class="cc-title">Macerator</div><div class="cc-desc">Grinds ore into dust — doubles your metal output. The first real EU/FE consumer.</div></div></a></ul>
 
-<h2>Your first generator</h2>
+<h2 id="your-first-generator">Your first generator</h2>
 <p>Power has to come from somewhere. Start with the cheapest, simplest generator and grow from there — these are the earliest options:</p>
 <ul class="concept-list intro-list"><a class="concept-card" style="--c:#7bd88f" href="generators/generator.html"><div class="cc-body"><div class="cc-title">Generator (LV)</div><div class="cc-desc">The simplest start: burns coal for EU/FE on demand — and runs at night too.</div></div></a><a class="concept-card" style="--c:#7bd88f" href="generators/solar_panel.html"><div class="cc-body"><div class="cc-title">Solar Panel</div><div class="cc-desc">Free EU/FE in daylight under open sky; it sleeps at night — pair with a Battery Box.</div></div></a><a class="concept-card" style="--c:#7bd88f" href="generators/water_mill.html"><div class="cc-body"><div class="cc-title">Water Mill / Wind Mill</div><div class="cc-desc">Passive LV power from flowing water or wind — no fuel needed.</div></div></a><a class="concept-card" style="--c:#7bd88f" href="generators/geothermal_generator.html"><div class="cc-body"><div class="cc-title">Geothermal Generator</div><div class="cc-desc">Stronger LV output from lava — a solid next step once you have a supply.</div></div></a></ul>
 
-<h2>Tips</h2>
+<h2 id="tips">Tips</h2>
 <ul><li>Place the Solar Panel with clear sky above it — any opaque block stops generation entirely.</li><li>The Macerator doubles both ore blocks and raw ore (2 dust each). Only a ready ingot grinds back into a single dust — no doubling on that.</li><li>Cables don&#x27;t explode from overload; they just cap out, and the excess is simply not transferred.</li><li>Mixing cable grades on one line? The whole network runs on the strongest cable present — both its throughput and its higher loss. One gold segment re-tariffs the entire run.</li><li>Energy flows on 5 faces of a machine; the front face (where it points) is usually inert for EU/FE.</li><li>Store day-time EU/FE in a Battery Box — without it, your machines go dark the moment the sun sets.</li></ul>
 
-<h2>Where next</h2>
+<h2 id="where-next">Where next</h2>
 <p>Once your first chain runs, explore the categories in the sidebar — more generators, machines, and material processing open up.</p>
   </main>
 </div>

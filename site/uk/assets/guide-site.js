@@ -10,27 +10,404 @@
     document.addEventListener('keydown', event => { if (event.key === 'Escape') close(); });
     sidebar.addEventListener('click', event => { if (event.target.closest('a')) close(); });
   }
-  const search = document.getElementById('wiki-search');
-  if (search) {
-    const cards = [...document.querySelectorAll('[data-search]')];
-    const empty = document.getElementById('empty-search');
-    const filter = () => {
-      const query = search.value.trim().toLocaleLowerCase(document.documentElement.lang || 'ru');
-      let visible = 0;
-      cards.forEach(card => {
-        const match = !query || (card.dataset.search + ' ' + card.textContent).toLocaleLowerCase().includes(query);
-        card.hidden = !match;
-        if (match) visible++;
+  /* ── Full-text search over the whole wiki (MOD-414) ────────────────────────
+     The index is built per locale when the site is generated
+     (assets/search-index.json) and fetched lazily on the first focus of a
+     search field. Matching runs entirely on the client: the query and every
+     indexed string go through the SAME normalization pipeline below, so the
+     only Unicode logic in existence lives in this file — the generator writes
+     raw text and never reimplements it. The file itself is byte-identical in
+     all five locales: every UI string arrives via data-l10n on the input. */
+  const searchFields = [...document.querySelectorAll('input[data-wiki-search]')];
+
+  /* Normalization pipeline (order is fixed, query and index share it):
+     1. drop zero-width/invisible chars that break mid-word matching;
+     2. NFKD — folds full-width to ASCII, NBSP to space, splits diacritics;
+     3. hiragana -> katakana (parallel code blocks, +0x60); must run after NFKD
+        so half-width kana is already expanded;
+     4. strip combining marks EXCEPT the meaning-bearing ones: U+3099/U+309A
+        (Japanese dakuten — a naive strip turns ga into ka) and U+0306 (the
+        breve that makes Cyrillic short-i what it is). This is what folds
+        yo->e and yi-with-diaeresis->i while keeping short-i a letter of its
+        own;
+     5. NFC — recomposes what survived (base vowel + breve back into the
+        short-i letter, katakana + dakuten into one char), so short-i does not
+        merge into plain i (that would make "mi" match "mii");
+     6. fold the three visually identical apostrophes and typographic
+        quotes/dashes down to ASCII;
+     7. lowercase (NOT toLocaleLowerCase: locale-independent by spec, so the
+        index is identical for every visitor);
+     8. collapse whitespace runs to one space and trim.
+     With withMap, returns {s, map} where map[k] is the source index of output
+     char k — snippets are cut from the raw text (original yo/katakana kept)
+     with highlights landing at the right spots. */
+  const INVISIBLE_RE = /[\u200B-\u200F\u2060-\u2064\uFEFF\u00AD]/;
+  const MARK_RE = /\p{Mn}/u;
+  const norm = (str, withMap) => {
+    const out = [];
+    const map = [];
+    const put = (ch, src) => { out.push(ch); map.push(src); };
+    for (let i = 0; i < str.length; i++) {
+      const code = str.charCodeAt(i);
+      // ASCII is untouched by every step except lowercasing — skip the heavy path.
+      if (code < 0x80) {
+        put(code >= 0x41 && code <= 0x5A ? String.fromCharCode(code + 32) : str[i], i);
+        continue;
+      }
+      // Plain Cyrillic (U+0410..U+044F except short-i, which must decompose)
+      // and CJK ideographs pass every step unchanged but lowercasing — two
+      // more fast lanes that keep the one-time index preparation cheap.
+      if ((code >= 0x0410 && code <= 0x044F && code !== 0x0419 && code !== 0x0439) ||
+          (code >= 0x4E00 && code <= 0x9FFF) || (code >= 0x3400 && code <= 0x4DBF)) {
+        put(code >= 0x0410 && code <= 0x042F ? String.fromCharCode(code + 32) : str[i], i);
+        continue;
+      }
+      if (INVISIBLE_RE.test(str[i])) continue;
+      let s = str[i].normalize('NFKD');
+      let folded = '';
+      for (const d of s) {
+        const c = d.codePointAt(0);
+        folded += c >= 0x3041 && c <= 0x3096 ? String.fromCodePoint(c + 0x60) : d;
+      }
+      let kept = '';
+      for (const d of folded) {
+        const c = d.codePointAt(0);
+        if (c === 0x3099 || c === 0x309A || c === 0x0306 || !MARK_RE.test(d)) kept += d;
+      }
+      s = kept.normalize('NFC').toLowerCase();
+      for (const ch of s) {
+        const c = ch.codePointAt(0);
+        // Half-width kana arrives as TWO source chars (base + dakuten mark)
+        // while the precomposed syllable is one; merge the trailing mark into
+        // the previous output char so both spellings compare equal.
+        if ((c === 0x3099 || c === 0x309A) && out.length) {
+          const merged = (out[out.length - 1] + ch).normalize('NFC');
+          if (merged.length === 1) { out[out.length - 1] = merged; continue; }
+        }
+        if (c === 0x02BC || c === 0x2018 || c === 0x2019) put("'", i);
+        else if (c === 0x00AB || c === 0x00BB || c === 0x201E || c === 0x201C || c === 0x201D) put('"', i);
+        else if (c >= 0x2010 && c <= 0x2014) put('-', i);
+        else put(ch, i);
+      }
+    }
+    const res = [], rmap = [];
+    for (let k = 0; k < out.length; k++) {
+      const sp = /\s/.test(out[k]);
+      if (sp && (!res.length || res[res.length - 1] === ' ')) continue;
+      res.push(sp ? ' ' : out[k]);
+      rmap.push(map[k]);
+    }
+    while (res.length && res[res.length - 1] === ' ') { res.pop(); rmap.pop(); }
+    return withMap ? { s: res.join(''), map: rmap } : res.join('');
+  };
+
+  /* Pre-normalize the whole index once at load; searches then only substring-
+     scan prepared strings. Headings and titles carry no map — snippets are cut
+     from section bodies only. */
+  const prepareIndex = data => ({
+    pages: data.pages.map(p => {
+      const c = p.c.map(sec => {
+        const n = norm(sec.t, true);
+        return { h: sec.h, a: sec.a, raw: sec.t, hn: norm(sec.h), sn: n.s, map: n.map };
       });
-      if (empty) empty.style.display = visible ? 'none' : 'block';
+      return { u: p.u, t: p.t, s: p.s, i: p.i, tn: norm(p.t), c };
+    }),
+  });
+
+  /* Occurrence counter with saturation: repeats beyond the third add nothing
+     (a wall of the same word must not drown out every other page). */
+  const countHits = (hay, needle) => {
+    let n = 0, i = hay.indexOf(needle);
+    while (i !== -1 && n < 3) { n++; i = hay.indexOf(needle, i + needle.length); }
+    return n;
+  };
+
+  /* Additive scoring: page title x5, section heading x3, section text x1.
+     Whitespace-separated query terms combine with AND within one section (the
+     page title counts towards every section). A light length penalty keeps
+     equally-relevant short pages above equally-relevant walls of text. */
+  const runSearch = (index, query) => {
+    const terms = query.split(' ').filter(Boolean);
+    if (!terms.length) return [];
+    const out = [];
+    for (const page of index.pages) {
+      const titleHits = terms.map(term => countHits(page.tn, term));
+      let best = null, bestScore = 0;
+      for (const sec of page.c) {
+        let secScore = 0, matchedAll = true;
+        for (let k = 0; k < terms.length; k++) {
+          const inTitle = titleHits[k];
+          const inHead = countHits(sec.hn, terms[k]);
+          const inText = countHits(sec.sn, terms[k]);
+          if (!inTitle && !inHead && !inText) { matchedAll = false; break; }
+          secScore += 5 * inTitle + 3 * inHead + inText;
+        }
+        if (matchedAll && secScore > bestScore) { bestScore = secScore; best = sec; }
+      }
+      if (!best && !titleHits.some(n => n)) continue;
+      const len = page.c.reduce((s, c) => s + c.sn.length, 0);
+      const score = best ? bestScore : 5 * titleHits.reduce((a, b) => a + b, 0);
+      out.push({ page, sec: best, score: score - Math.round(len / 10000) });
+    }
+    out.sort((a, b) => b.score - a.score);  // stable: ties keep generator order
+    return out.slice(0, 8);
+  };
+
+  /* Cut a ~90-150 char window around the first match, word-aligned for spaced
+     scripts (fall back to a hard cut mid-run for CJK, never mid-surrogate),
+     then collect every term occurrence inside the window for highlighting. */
+  const rawEnd = (raw, idx) => idx + (raw.codePointAt(idx) > 0xffff ? 2 : 1);
+  const sliceMarks = (raw, map, sn, terms) => {
+    let start = -1, mlen = 0;
+    for (const term of terms) {
+      const i = sn.indexOf(term);
+      if (i !== -1 && (start === -1 || i < start)) { start = i; mlen = term.length; }
+    }
+    if (start === -1) return null;
+    const rStart = map[start];
+    const rEnd = rawEnd(raw, map[start + mlen - 1]);
+    let s0 = rStart;
+    const hardStart = Math.max(0, rStart - 70);
+    while (s0 > hardStart && !/\s/.test(raw[s0 - 1])) s0--;
+    if (rStart - s0 > 70) s0 = rStart - 60;
+    while (s0 > 0 && (raw.charCodeAt(s0) & 0xfc00) === 0xdc00) s0--;
+    let e1 = rEnd;
+    const hardEnd = Math.min(raw.length, rEnd + 90);
+    while (e1 < hardEnd && !/\s/.test(raw[e1])) e1++;
+    if (e1 - rEnd > 90) e1 = rEnd + 80;
+    while (e1 < raw.length && (raw.charCodeAt(e1) & 0xfc00) === 0xdc00) e1--;
+    const marks = [];
+    for (const term of terms) {
+      let i = sn.indexOf(term);
+      while (i !== -1) {
+        const a = map[i], b = rawEnd(raw, map[i + term.length - 1]);
+        if (a >= s0 && b <= e1) marks.push([a, b]);
+        i = sn.indexOf(term, i + term.length);
+      }
+    }
+    marks.sort((x, y) => x[0] - y[0]);
+    return { s0, e1, marks };
+  };
+
+  /* Snippet is assembled from text nodes and <mark> elements only — index text
+     never passes through innerHTML. */
+  const makeSnippet = (result, terms) => {
+    const frag = document.createDocumentFragment();
+    const sec = result.sec || result.page.c[0];
+    if (!sec) return frag;
+    const parts = result.sec ? sliceMarks(sec.raw, sec.map, sec.sn, terms) : null;
+    if (!parts) {
+      // Title-only hit: show how the page opens, no highlight to place.
+      frag.append([...sec.raw].slice(0, 140).join('') + '…');
+      return frag;
+    }
+    if (parts.s0 > 0) frag.append('…');
+    let cursor = parts.s0;
+    for (const [a, b] of parts.marks) {
+      if (a < cursor) continue;  // overlapping matches — first one wins
+      if (a > cursor) frag.append(sec.raw.slice(cursor, a));
+      const mark = document.createElement('mark');
+      mark.textContent = sec.raw.slice(a, b);
+      frag.append(mark);
+      cursor = b;
+    }
+    if (cursor < parts.e1) frag.append(sec.raw.slice(cursor, parts.e1));
+    if (parts.e1 < sec.raw.length) frag.append('…');
+    return frag;
+  };
+
+  let indexState = null;
+  const ensureIndex = () => {
+    if (!indexState) {
+      const src = searchFields.length ? searchFields[0].dataset.index : null;
+      // Plain HTTP caching (no 'no-cache' like the stats fetch): the index
+      // changes only when the site is regenerated, so ETag revalidation is
+      // pure profit between pages.
+      indexState = { ready: false, data: null };
+      indexState.promise = src
+        ? fetch(src)
+            .then(r => (r.ok ? r.json() : Promise.reject(r.status)))
+            .then(data => { indexState.data = prepareIndex(data); indexState.ready = true; })
+            .catch(() => { indexState = null; })  // a later focus retries
+        : Promise.resolve();
+    }
+    return indexState.promise;
+  };
+
+  searchFields.forEach((field, ordinal) => {
+    let L = {};
+    try { L = JSON.parse(field.dataset.l10n || '{}'); } catch (e) { /* keep {} */ }
+    // The popup and the live region are created here: static ids in the markup
+    // would collide between the header field and the hero field of the home page.
+    const pop = document.createElement('div');
+    pop.className = 'wiki-search-pop';
+    pop.id = 'wiki-search-pop-' + ordinal;
+    pop.setAttribute('role', 'listbox');
+    pop.setAttribute('aria-label', L.list || 'Results');
+    pop.hidden = true;
+    const status = document.createElement('div');
+    status.className = 'wiki-search-status';
+    status.setAttribute('role', 'status');
+    field.after(pop);
+    field.after(status);
+    field.setAttribute('aria-controls', pop.id);
+
+    let results = [], optionEls = [], active = -1, composing = false, timer = 0, terms = [];
+
+    const plural = n => {
+      const lang = (document.documentElement.lang || '').slice(0, 2);
+      const n10 = n % 10, n100 = n % 100;
+      if (lang === 'ru' || lang === 'uk') {
+        if (n10 === 1 && n100 !== 11) return L.one;
+        if (n10 >= 2 && n10 <= 4 && (n100 < 12 || n100 > 14)) return L.few;
+        return L.many;
+      }
+      return n === 1 ? L.one : L.many;
     };
-    search.addEventListener('input', filter);
-    document.addEventListener('keydown', event => {
-      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
-        event.preventDefault(); search.focus();
+    const setStatus = text => { status.textContent = text || ''; };
+    const close = () => {
+      pop.hidden = true;
+      field.setAttribute('aria-expanded', 'false');
+      field.removeAttribute('aria-activedescendant');
+      active = -1;
+    };
+    const open = () => { pop.hidden = false; field.setAttribute('aria-expanded', 'true'); };
+    const setActive = idx => {
+      active = idx;
+      optionEls.forEach((el, i) => {
+        const on = i === idx;
+        el.setAttribute('aria-selected', String(on));
+        el.classList.toggle('on', on);
+      });
+      if (optionEls[idx]) {
+        field.setAttribute('aria-activedescendant', optionEls[idx].id);
+        optionEls[idx].scrollIntoView({ block: 'nearest' });
+      } else {
+        field.removeAttribute('aria-activedescendant');
+      }
+    };
+    const go = result => {
+      if (!result) return;
+      const root = field.dataset.root || '';
+      location.href = root + result.page.u + (result.sec && result.sec.a ? '#' + result.sec.a : '');
+    };
+
+    const render = list => {
+      results = list;
+      pop.textContent = '';
+      optionEls = [];
+      if (!list.length) {
+        const empty = document.createElement('div');
+        empty.className = 'wso-empty';
+        empty.textContent = L.nothing || '';
+        pop.append(empty);
+        return;
+      }
+      const root = field.dataset.root || '';
+      list.forEach((r, idx) => {
+        const opt = document.createElement('div');
+        opt.className = 'wso';
+        opt.setAttribute('role', 'option');
+        opt.id = pop.id + '-opt-' + idx;
+        // mousedown is cancelled so focus never leaves the input (APG
+        // combobox: DOM focus stays in the field, options are pointed at via
+        // aria-activedescendant); the click itself navigates.
+        opt.addEventListener('mousedown', e => e.preventDefault());
+        opt.addEventListener('click', () => go(r));
+        if (r.page.i) {
+          const img = document.createElement('img');
+          img.className = 'wso-icon';
+          img.src = root + r.page.i;
+          img.alt = '';
+          img.loading = 'lazy';
+          opt.append(img);
+        }
+        const body = document.createElement('span');
+        body.className = 'wso-body';
+        const title = document.createElement('span');
+        title.className = 'wso-title';
+        title.textContent = r.page.t;
+        const sec = document.createElement('span');
+        sec.className = 'wso-sec';
+        sec.textContent = r.page.s + (r.sec && r.sec.h ? ' · ' + r.sec.h : '');
+        const snip = document.createElement('span');
+        snip.className = 'wso-snip';
+        snip.append(makeSnippet(r, terms));
+        body.append(title, sec, snip);
+        opt.append(body);
+        pop.append(opt);
+        optionEls.push(opt);
+      });
+    };
+
+    const run = () => {
+      const q = norm(field.value);
+      if (!q) { close(); setStatus(''); return; }
+      if (!indexState || !indexState.ready) { setStatus(L.loading || '…'); return; }
+      terms = q.split(' ').filter(Boolean);
+      const list = runSearch(indexState.data, q);
+      render(list);
+      open();
+      setStatus(list.length ? list.length + ' ' + plural(list.length) : (L.nothing || ''));
+      setActive(list.length ? 0 : -1);
+    };
+
+    field.addEventListener('focus', () => {
+      ensureIndex().then(() => { if (norm(field.value)) run(); });
+    });
+    field.addEventListener('input', e => {
+      if (composing || e.isComposing) return;
+      clearTimeout(timer);
+      timer = setTimeout(run, 200);
+    });
+    // IME gate: 'input' fires mid-composition for ja/zh — searching on every
+    // pinyin syllable flickers, and Enter confirms the candidate, not a result.
+    field.addEventListener('compositionstart', () => { composing = true; clearTimeout(timer); });
+    field.addEventListener('compositionend', () => { composing = false; clearTimeout(timer); run(); });
+    field.addEventListener('keydown', e => {
+      if (e.isComposing || e.keyCode === 229) return;
+      const isOpen = !pop.hidden;
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (!indexState || !indexState.ready) { ensureIndex().then(() => { if (norm(field.value)) run(); }); return; }
+        if (!isOpen && optionEls.length === 0) run();
+        if (!optionEls.length) return;
+        const down = e.key === 'ArrowDown';
+        if (!isOpen) { open(); setActive(down ? 0 : optionEls.length - 1); }
+        else setActive(down ? (active + 1) % optionEls.length : (active - 1 + optionEls.length) % optionEls.length);
+      } else if (e.key === 'Enter') {
+        if (isOpen && active >= 0 && results[active]) { e.preventDefault(); go(results[active]); }
+      } else if (e.key === 'Escape') {
+        // Two steps: first Esc closes the popup, second clears the field.
+        // preventDefault stops Chrome's type=search native clear from eating
+        // the first Esc and skipping the close step.
+        e.preventDefault();
+        if (isOpen) close();
+        else { field.value = ''; clearTimeout(timer); run(); }
+      } else if (e.key === 'Tab') {
+        close();
       }
     });
-  }
+    field.addEventListener('focusout', e => {
+      if (!pop.contains(e.relatedTarget)) close();
+    });
+    document.addEventListener('click', e => {
+      const wrap = field.parentElement;
+      if (wrap && !wrap.contains(e.target)) close();
+    });
+  });
+
+  // Ctrl/Cmd+K focuses the first search field — the header one on every page.
+  // event.code names the PHYSICAL key: on a Cyrillic layout Ctrl+K reports
+  // key=U+043A, not 'k' — a key-only check would silently die for ru/uk users.
+  document.addEventListener('keydown', event => {
+    if ((event.ctrlKey || event.metaKey) && searchFields.length &&
+        (event.code === 'KeyK' || event.key.toLowerCase() === 'k')) {
+      event.preventDefault();
+      searchFields[0].focus();
+      searchFields[0].select();
+    }
+  });
 
   /* ── Download statistics block (MOD-412) ─────────────────────────────────
      The markup ships hidden; the figures come from data/stats.json, refreshed by a

@@ -289,6 +289,7 @@
       <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="assets/platform/github.svg" alt="GitHub"></a>
       <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="assets/platform/discord.svg" alt="Discord"></a>
     </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="搜索维基…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="搜索指南" autocomplete="off" spellcheck="false" data-index="assets/search-index.json" data-root="" data-l10n="{&quot;list&quot;:&quot;搜索结果&quot;,&quot;one&quot;:&quot;个页面&quot;,&quot;few&quot;:&quot;个页面&quot;,&quot;many&quot;:&quot;个页面&quot;,&quot;loading&quot;:&quot;正在加载搜索索引…&quot;,&quot;nothing&quot;:&quot;未找到结果&quot;}"></search>
     <details class="language-menu"><summary aria-label="Language">中文</summary><div class="language-popover"><span>中文</span><a href="../en/getting-started.html">EN</a><a href="../ru/getting-started.html">RU</a><a href="../uk/getting-started.html">UA</a><a href="../ja_jp/getting-started.html">日本語</a></div></details>
   </div>
 </nav>
@@ -320,7 +321,7 @@
 <div class="group-title">物品</div>
 <a class="cat-link" href="upgrades/index.html"><img class="nav-icon" src="assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="components/index.html"><img class="nav-icon" src="assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
-<a class="cat-link" href="items/index.html"><img class="nav-icon" src="assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
+<a class="cat-link" href="items/index.html"><img class="nav-icon" src="assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="21 个页面">21</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="index.html">首页</a><span class="sep">/</span><span>新手入门</span></div>
@@ -329,22 +330,22 @@
   <p style="color:var(--muted);margin:8px 0 0">Ala Industrial 是一款关于能源与自动化的工业科技模组。它带来一套基于 EU/FE（能量单位）的能量系统、生产 EU/FE 的发电机、消耗 EU/FE 的机器，以及用于传输能量的储能装置与电缆。本页介绍上手所需的最低限度知识。</p>
 </div></div>
 
-<h2>关键术语</h2>
+<h2 id="关键术语">关键术语</h2>
 <table><thead><tr><th>术语</th><th>含义</th></tr></thead>
 <tbody><tr><td><code>EU/FE</code></td><td>能量单位 —— 本模组的能量货币。由发电机产出，存放在缓存中，被机器消耗。</td></tr><tr><td><code>刻（Tick）</code></td><td>游戏刻（一秒的 1/20）。EU/FE/刻（EU/FE/t）是标准速率 —— 发电、耗电与传输都以 EU/FE/t 衡量。</td></tr><tr><td><code>LV / MV / HV</code></td><td>电压等级：低压 LV（32 EU/FE/t）、中压 MV（128 EU/FE/t）、高压 HV（512 EU/FE/t）。每种发电机、电缆和机器都属于某个等级；安全地混用等级是进阶的核心。</td></tr><tr><td><code>缓存</code></td><td>某个方块（发电机、机器或储能箱）内部的 EU/FE 存储。容量因方块而异。</td></tr><tr><td><code>等级</code></td><td>方块的电压等级。低压（LV）机器只能接受 ≤32 EU/FE/t；从更高等级的电源输入更多能量也无济于事（它们受自身上限限制）。</td></tr></tbody></table>
 
-<h2>你的第一条能量链路</h2>
+<h2 id="你的第一条能量链路">你的第一条能量链路</h2>
 <p>起步流程是由四个方块构成的循环。按以下顺序搭建，你就能拥有一套可用的矿石翻倍装置：</p>
 <ul class="concept-list intro-list"><a class="concept-card" style="--c:#fcd12a" href="generators/solar_panel.html"><div class="cc-body"><div class="cc-title">太阳能板</div><div class="cc-desc">白天在露天环境下产出 EU/FE。你的第一个能量来源。</div></div></a><a class="concept-card" style="--c:#fcd12a" href="energy-transfer/copper_cable.html"><div class="cc-body"><div class="cc-title">铜电缆</div><div class="cc-desc">廉价的低压导线，把 EU/FE 从太阳能板输送到你的机器。</div></div></a><a class="concept-card" style="--c:#fcd12a" href="energy-storage/battery_box.html"><div class="cc-body"><div class="cc-title">储能库</div><div class="cc-desc">把 EU/FE 储存到夜间使用，让机器在太阳能板休眠时仍能运行。</div></div></a><a class="concept-card" style="--c:#fcd12a" href="machines/macerator.html"><div class="cc-body"><div class="cc-title">粉碎机</div><div class="cc-desc">把矿石研磨成粉 —— 让金属产量翻倍。第一个真正消耗 EU/FE 的设备。</div></div></a></ul>
 
-<h2>你的第一台发电机</h2>
+<h2 id="你的第一台发电机">你的第一台发电机</h2>
 <p>能量总要有个来源。从最廉价、最简单的发电机起步，再逐步扩张 —— 以下是最早可用的选项：</p>
 <ul class="concept-list intro-list"><a class="concept-card" style="--c:#7bd88f" href="generators/generator.html"><div class="cc-body"><div class="cc-title">发电机（LV）</div><div class="cc-desc">最简单的起步：按需燃烧煤炭产出 EU/FE —— 夜间同样可用。</div></div></a><a class="concept-card" style="--c:#7bd88f" href="generators/solar_panel.html"><div class="cc-body"><div class="cc-title">太阳能板</div><div class="cc-desc">露天白昼下免费产出 EU/FE；夜间会休眠 —— 请搭配储能库使用。</div></div></a><a class="concept-card" style="--c:#7bd88f" href="generators/water_mill.html"><div class="cc-body"><div class="cc-title">水车 / 风车</div><div class="cc-desc">依靠流动的水或风获得被动低压能量 —— 无需燃料。</div></div></a><a class="concept-card" style="--c:#7bd88f" href="generators/geothermal_generator.html"><div class="cc-body"><div class="cc-title">地热发电机</div><div class="cc-desc">更强的低压输出，由岩浆驱动 —— 等你有了稳定来源后是稳妥的下一步。</div></div></a></ul>
 
-<h2>实用提示</h2>
+<h2 id="实用提示">实用提示</h2>
 <ul><li>在太阳能板上方保留开阔天空 —— 任何不透明方块都会让发电完全停止。</li><li>打粉机对矿石方块和粗矿都能翻倍产出（每种各出 2 份粉）。只有成品锭研磨后只得到 1 份粉 —— 这种情况不会翻倍。</li><li>电缆不会因过载而爆炸；它们只会达到自身上限，多余的能量不会被传输。</li><li>在同一条线路上混用了不同等级的电缆？整张网络会按其中最强的电缆运行 —— 既采用它的传输上限，也承担它更高的损耗。一段金电缆就会重新决定整条线路的标准。</li><li>机器的 5 个面都能输入能量；朝向的前面通常对 EU/FE 是惰性的。</li><li>把白天产出的 EU/FE 存进储能箱 —— 没有它，太阳一落山你的机器就会停摆。</li></ul>
 
-<h2>接下来去哪</h2>
+<h2 id="接下来去哪">接下来去哪</h2>
 <p>当你的第一条链路运转起来后，去探索侧边栏中的各个分类 —— 更多发电机、机器和材料加工会随着发展逐步解锁。</p>
   </main>
 </div>

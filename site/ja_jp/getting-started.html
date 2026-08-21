@@ -289,6 +289,7 @@
       <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="assets/platform/github.svg" alt="GitHub"></a>
       <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="assets/platform/discord.svg" alt="Discord"></a>
     </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="ウィキを検索…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="ガイドを検索" autocomplete="off" spellcheck="false" data-index="assets/search-index.json" data-root="" data-l10n="{&quot;list&quot;:&quot;検索結果&quot;,&quot;one&quot;:&quot;ページ&quot;,&quot;few&quot;:&quot;ページ&quot;,&quot;many&quot;:&quot;ページ&quot;,&quot;loading&quot;:&quot;検索インデックスを読み込み中…&quot;,&quot;nothing&quot;:&quot;見つかりません&quot;}"></search>
     <details class="language-menu"><summary aria-label="Language">日本語</summary><div class="language-popover"><span>日本語</span><a href="../en/getting-started.html">EN</a><a href="../ru/getting-started.html">RU</a><a href="../uk/getting-started.html">UA</a><a href="../zh_cn/getting-started.html">中文</a></div></details>
   </div>
 </nav>
@@ -320,7 +321,7 @@
 <div class="group-title">アイテム</div>
 <a class="cat-link" href="upgrades/index.html"><img class="nav-icon" src="assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="components/index.html"><img class="nav-icon" src="assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
-<a class="cat-link" href="items/index.html"><img class="nav-icon" src="assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
+<a class="cat-link" href="items/index.html"><img class="nav-icon" src="assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="21 ページ">21</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="index.html">ホーム</a><span class="sep">/</span><span>はじめに</span></div>
@@ -329,22 +330,22 @@
   <p style="color:var(--muted);margin:8px 0 0">Ala Industrial は、エネルギーと自動化をテーマにした工業テクノロジーMODです。EU/FE（エネルギー単位）ベースのエネルギーシステム、それを生成する発電機、消費するマシン、貯蔵と送電用のケーブルを追加します。このページでは始めるために必要な最小限の知識を紹介します。</p>
 </div></div>
 
-<h2>重要用語</h2>
+<h2 id="重要用語">重要用語</h2>
 <table><thead><tr><th>用語</th><th>意味</th></tr></thead>
 <tbody><tr><td><code>EU/FE</code></td><td>エネルギー単位 — このMODのエネルギー通貨。発電機で生成され、バッファーに蓄えられ、マシンによって消費されます。</td></tr><tr><td><code>ティック</code></td><td>ゲームティック（1秒の1/20）。EU/FE/ティック（EU/FE/t）が標準レート — 発電、消費、送電はすべてEU/tで測ります。</td></tr><tr><td><code>LV / MV / HV</code></td><td>電圧ティア：低圧 LV（32 EU/FE/t）、中圧 MV（128 EU/FE/t）、高圧 HV（512 EU/FE/t）。発電機、ケーブル、マシンはすべていずれかのティアに属し、ティアを安全に組み合わせることが進行の中核です。</td></tr><tr><td><code>バッファー</code></td><td>ブロック（発電機、マシン、バッテリーボックス）内部のEU貯蔵量。ブロックごとに容量が異なります。</td></tr><tr><td><code>ティア</code></td><td>ブロックの電圧ティア。LVマシンは≤32 EU/FE/tしか受け付けません。上位ティアの電源から多く送っても無駄です（上限で頭打ちになります）。</td></tr></tbody></table>
 
-<h2>最初のエネルギーチェーン</h2>
+<h2 id="最初のエネルギーチェーン">最初のエネルギーチェーン</h2>
 <p>スタートアップの進行は4つのブロックのループです。この順番で組めば、鉱石倍増装置が完成します：</p>
 <ul class="concept-list intro-list"><a class="concept-card" style="--c:#fcd12a" href="generators/solar_panel.html"><div class="cc-body"><div class="cc-title">ソーラーパネル</div><div class="cc-desc">昼間、頭上に空がある状態でEUを生成します。最初の電源です。</div></div></a><a class="concept-card" style="--c:#fcd12a" href="energy-transfer/copper_cable.html"><div class="cc-body"><div class="cc-title">銅ケーブル</div><div class="cc-desc">安価なLV電線。パネルからマシンへEUを運びます。</div></div></a><a class="concept-card" style="--c:#fcd12a" href="energy-storage/battery_box.html"><div class="cc-body"><div class="cc-title">バッテリーボックス</div><div class="cc-desc">夜間用にEUを蓄え、パネルが休止中もマシンを動かし続けます。</div></div></a><a class="concept-card" style="--c:#fcd12a" href="machines/macerator.html"><div class="cc-body"><div class="cc-title">粉砕機</div><div class="cc-desc">鉱石を粉に粉砕し — 金属の産出量を倍増させます。初の本格的なEU消費マシンです。</div></div></a></ul>
 
-<h2>最初の発電機</h2>
+<h2 id="最初の発電機">最初の発電機</h2>
 <p>電力はどこかから来なければなりません。最も安価でシンプルな発電機から始め、そこから拡張していきましょう — 以下が最も早く使える選択肢です：</p>
 <ul class="concept-list intro-list"><a class="concept-card" style="--c:#7bd88f" href="generators/generator.html"><div class="cc-body"><div class="cc-title">発電機（LV）</div><div class="cc-desc">最もシンプルな始め方：石炭を燃やしてEUをオンデマンドで生成 — 夜でも稼働します。</div></div></a><a class="concept-card" style="--c:#7bd88f" href="generators/solar_panel.html"><div class="cc-body"><div class="cc-title">ソーラーパネル</div><div class="cc-desc">昼間の露天で無料のEU。夜は休止します — バッテリーボックスと併用してください。</div></div></a><a class="concept-card" style="--c:#7bd88f" href="generators/water_mill.html"><div class="cc-body"><div class="cc-title">水車 / 風車</div><div class="cc-desc">流水や風からの受動的LV電力 — 燃料不要です。</div></div></a><a class="concept-card" style="--c:#7bd88f" href="generators/geothermal_generator.html"><div class="cc-body"><div class="cc-title">地熱発電機</div><div class="cc-desc">溶岩からの強力なLV出力 — 調達できれば確実な次のステップです。</div></div></a></ul>
 
-<h2>ヒント</h2>
+<h2 id="ヒント">ヒント</h2>
 <ul><li>ソーラーパネルの上は開けておきましょう — 不透明なブロックがあると発電が完全に止まります。</li><li>粉砕機は鉱石ブロックと原石のどちらも倍増します（各2粉末）。完成済みのインゴットだけは1粉末に戻るだけで倍増しません。</li><li>ケーブルは過負荷で爆発しません。上限に達するとそれ以上送電されないだけです。</li><li>1本の回線に異なるティアのケーブルを混ぜていませんか？ネットワーク全体が最も強いケーブルに従って動作します — そのスループットも、より高い損失も。金ケーブルが1区間あるだけで回線全体が再設定されます。</li><li>エネルギーはマシンの5面から入力できます。前面（ブロックが向く方向）は通常EUに対して不活性です。</li><li>日中のEUはバッテリーボックスに蓄えましょう — これがないと、日が沈んだ途端にマシンが止まります。</li></ul>
 
-<h2>次はどこへ</h2>
+<h2 id="次はどこへ">次はどこへ</h2>
 <p>最初のチェーンが動き出したら、サイドバーのカテゴリを探検しましょう — より多くの発電機、マシン、素材加工が発展に伴って解放されます。</p>
   </main>
 </div>
