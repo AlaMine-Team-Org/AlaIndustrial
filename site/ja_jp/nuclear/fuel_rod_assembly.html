@@ -363,7 +363,7 @@
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
-<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>原子力</span><span class="cat-count" aria-label="12 ページ">12</span></a>
+<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>原子力</span><span class="cat-count" aria-label="12 ページ">12</span></a>
 <div class="group-title">加工</div>
 <a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>マシン</span><span class="cat-count" aria-label="15 ページ">15</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>液体マシン</span><span class="cat-count" aria-label="2 ページ">2</span></a>
@@ -380,13 +380,13 @@
 <div class="group-title">アイテム</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="21 ページ">21</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="22 ページ">22</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">ホーム</a><span class="sep">/</span><a href="../nuclear/index.html">原子力</a><span class="sep">/</span><span>原子炉カラム</span></div>
 <div class="block-card">
   <div class="card-head">
-    <img class="icon" src="../assets/block/fuel_rod_assembly_top.png" alt="原子炉カラム" width="64" height="64">
+    <img class="icon" src="../assets/item/fuel_rod_assembly_3d.png" alt="原子炉カラム" width="64" height="64">
     <div class="info">
       <h1>原子炉カラム</h1>
       <div class="block-id">alaindustrial:fuel_rod_assembly</div>
@@ -506,6 +506,10 @@
 
 <p>ブロックの硬さはケース（5.0 / 30.0）より意図的に低くしてあります。カラムは守られた部屋の<strong>内側</strong>に あり、自前の装甲は要りません——原子炉を開けるにはどのみち壁を抜く必要があるからです。</p>
 
+<h2 id="音">音</h2>
+
+<p>稼働中の炉心は低く均一にうなります — ループ です。音を出すのは制御装置 ではなく燃料の入った支柱そのもので、だからこそ原子炉室は壁のパネルではなく空間として響きます。同時 に鳴るのはすべての支柱ではなく数本だけです。そうでなければ、支柱を詰め込んだ部屋は音の壁になってし まいます。部屋の中ではうなりが最大の強さで聞こえ、外では外殻がそれを弱め、エアロックが開いていれば そこから外へ漏れ出します。停止した原子炉は無音です — 燃料が残っている支柱も鳴りません。</p>
+
 <h2 id="レシピ">レシピ</h2>
 
 <p>クラフト: 一度に <strong>×2</strong>。</p>
@@ -525,7 +529,7 @@ I G I S = 遮蔽板 ×1</code></pre>
 <p><a href="uranium_fuel_rod.html">燃料棒</a> — これに差すもの。 <a href="empty_fuel_rod.html">燃料被覆管</a> — これが返してくるもの。 <a href="reactor_controller.html">原子炉制御装置</a> — これを燃やし、隣接を数える側。 <a href="reactor_port.html">原子炉入口</a> — 水がどう部屋へ入り、蒸気がどう出ていくか。 <a href="steam_nozzle.html">蒸気ノズル</a> — 蒸気の行き先と、これが無いと沸騰が止まる理由。 <a href="../materials/steam.html">蒸気</a> — カラム上部のタンクに現れるもの。 <a href="reactor_glass.html">原子炉ガラス</a> — レシピの半分であり、「中が見える」という同じ発想。 <a href="reactor_casing.html">原子炉ケース</a> — ラックが立つ壁。</p>
 
 <h2>クラフト</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="原子炉カラム alaindustrial:fuel_rod_assembly" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="鉄インゴット"><img src="../assets/item/iron_ingot_3d.png" alt="鉄インゴット" width="32" height="32"></div> <div class="cell" title="原子炉ガラス"><img src="../assets/block/reactor_glass.png" alt="原子炉ガラス" width="32" height="32"></div> <div class="cell" title="鉄インゴット"><img src="../assets/item/iron_ingot_3d.png" alt="鉄インゴット" width="32" height="32"></div> <div class="cell" title="原子炉ガラス"><img src="../assets/block/reactor_glass.png" alt="原子炉ガラス" width="32" height="32"></div> <div class="cell" title="遮蔽板"><img src="../assets/item/shielding_alloy_plate.png" alt="遮蔽板" width="32" height="32"></div> <div class="cell" title="原子炉ガラス"><img src="../assets/block/reactor_glass.png" alt="原子炉ガラス" width="32" height="32"></div> <div class="cell" title="鉄インゴット"><img src="../assets/item/iron_ingot_3d.png" alt="鉄インゴット" width="32" height="32"></div> <div class="cell" title="原子炉ガラス"><img src="../assets/block/reactor_glass.png" alt="原子炉ガラス" width="32" height="32"></div> <div class="cell" title="鉄インゴット"><img src="../assets/item/iron_ingot_3d.png" alt="鉄インゴット" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="原子炉カラム"><img src="../assets/block/fuel_rod_assembly_top.png" alt="原子炉カラム" width="32" height="32"><span class="count">×2</span></div><div class="result-name">原子炉カラム</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="原子炉カラム alaindustrial:fuel_rod_assembly" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="鉄インゴット"><img src="../assets/item/iron_ingot_3d.png" alt="鉄インゴット" width="32" height="32"></div> <div class="cell" title="原子炉ガラス"><img src="../assets/item/reactor_glass_3d.png" alt="原子炉ガラス" width="32" height="32"></div> <div class="cell" title="鉄インゴット"><img src="../assets/item/iron_ingot_3d.png" alt="鉄インゴット" width="32" height="32"></div> <div class="cell" title="原子炉ガラス"><img src="../assets/item/reactor_glass_3d.png" alt="原子炉ガラス" width="32" height="32"></div> <div class="cell" title="遮蔽板"><img src="../assets/item/shielding_alloy_plate_3d.png" alt="遮蔽板" width="32" height="32"></div> <div class="cell" title="原子炉ガラス"><img src="../assets/item/reactor_glass_3d.png" alt="原子炉ガラス" width="32" height="32"></div> <div class="cell" title="鉄インゴット"><img src="../assets/item/iron_ingot_3d.png" alt="鉄インゴット" width="32" height="32"></div> <div class="cell" title="原子炉ガラス"><img src="../assets/item/reactor_glass_3d.png" alt="原子炉ガラス" width="32" height="32"></div> <div class="cell" title="鉄インゴット"><img src="../assets/item/iron_ingot_3d.png" alt="鉄インゴット" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="原子炉カラム"><img src="../assets/item/fuel_rod_assembly_3d.png" alt="原子炉カラム" width="32" height="32"><span class="count">×2</span></div><div class="result-name">原子炉カラム</div></div></div></div></div>
   </main>
 </div>
 

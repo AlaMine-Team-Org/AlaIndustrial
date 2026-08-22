@@ -363,7 +363,7 @@
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
-<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="12 个页面">12</span></a>
+<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="12 个页面">12</span></a>
 <div class="group-title">加工</div>
 <a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="15 个页面">15</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="2 个页面">2</span></a>
@@ -380,13 +380,13 @@
 <div class="group-title">物品</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="20 个页面">20</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="21 个页面">21</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="22 个页面">22</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">首页</a><span class="sep">/</span><a href="../nuclear/index.html">核能设施</a><span class="sep">/</span><span>反应堆控制器</span></div>
 <div class="block-card" data-hero-alt="Every block and item of the Ala Industrial reactor room in item frames: casing, glass, door, lamp, inlet, outlet, controller, column, fuel rod and its cladding." style="background-image:linear-gradient(180deg,rgba(22,22,26,.55) 0%,rgba(22,22,26,.92) 100%),url(../assets/screenshots/nuclear_reactor_block_set.png);background-size:cover;background-position:center center;background-repeat:no-repeat;">
   <div class="card-head">
-    <img class="icon" src="../assets/block/reactor_controller_top.png" alt="反应堆控制器" width="64" height="64">
+    <img class="icon" src="../assets/item/reactor_controller_3d.png" alt="反应堆控制器" width="64" height="64">
     <div class="info">
       <h1>反应堆控制器</h1>
       <div class="block-id">alaindustrial:reactor_controller</div>
@@ -576,6 +576,14 @@
 
 <p>存下来的只有从世界推不出来的东西：<strong>最后一次认可的盒子边界</strong>、累积的<strong>热量</strong>和<strong>滑块的位置</strong>。 一个在区块卸载时把它们忘掉的反应堆，会白白冷却，还会擅自回到满功率。</p>
 
+<h2 id="声音">声音</h2>
+
+<p>当热量越过警告阈值时，控制器会鸣响一次警报（）。墙壁和关闭的气闸都压不 住它：它能传到房间之外很远的地方，因为它本来就是给不在房间里的人听的。只有在冷却把堆芯带回到明显低 于阈值之后，它才会再次鸣响——每次刻度晃动都要响一次的警报，就不再是警报了。</p>
+
+<p>但刻度顶到上限时是另一回事。只要热量停在百分之百，警报就不会停：它每隔三到五秒不规则地反复鸣响， 直到温度开始下降才停下。在那种时候只响一次是最糟的做法——处于最危险状态的反应堆，反而比只是发热的 反应堆更安静。</p>
+
+<p>反应堆无论因何停机——红石 信号被撤、燃料耗尽、控制棒抬起、外壳被击穿——都会以一段功率流失的下坠音回应 （）。房间组建成功时的短促提示音和外壳破损时的声音写在上面的 「世界中的反馈」一节里。</p>
+
 <h2 id="配方">配方</h2>
 
 <p>合成：每次 <strong>×1</strong>。</p>
@@ -599,7 +607,7 @@ D = 控制棒驱动机构 ×1</code></pre>
 <p><a href="reactor_casing.html">反应堆外壳</a>——它扫描的对象、几何和合成链。 <a href="reactor_door.html">气闸门</a>——房间成形的必要条件。 <a href="reactor_glass.html">反应堆玻璃</a>、<a href="reactor_lamp.html">灯</a>、 <a href="reactor_port.html">入口</a>和<a href="reactor_outlet.html">输出端</a>——其余会被扫描器算作墙的 方块。 <a href="fuel_rod_assembly.html">反应堆柱</a>——它烧的、煮的和整理的对象。 <a href="uranium_fuel_rod.html">燃料棒</a>和<a href="empty_fuel_rod.html">燃料包壳</a>——它消耗的燃料， 以及留下的包壳。 <a href="../materials/steam.html">蒸汽</a>——回路的工质。 <a href="steam_nozzle.html">蒸汽喷口</a>——回路的末端；它不工作时水位条会变黄、热量会上升。 <a href="reactor_button.html">反应堆按钮</a>——这套方块里唯一<strong>不</strong>被扫描器算作墙的一个。 <a href="../components/resonance_chain.html">共鸣链</a>——控制电路里的线圈从哪来。 <a href="../fluid-machines/distillation_column.html">蒸馏塔</a>和<a href="../agriculture/incubator.html">培育舱</a>——模组此前的 两个多方块结构；它们检查的都是固定形状，体积扫描器是在这里第一次写出来的。</p>
 
 <h2>合成</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="反应堆控制器 alaindustrial:reactor_controller" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="屏蔽板"><img src="../assets/item/shielding_alloy_plate.png" alt="屏蔽板" width="32" height="32"></div> <div class="cell" title="反应堆控制电路"><img src="../assets/item/reactor_circuit.png" alt="反应堆控制电路" width="32" height="32"></div> <div class="cell" title="屏蔽板"><img src="../assets/item/shielding_alloy_plate.png" alt="屏蔽板" width="32" height="32"></div> <div class="cell" title="强化屏蔽板"><img src="../assets/item/shielding_alloy_reinforced_plate.png" alt="强化屏蔽板" width="32" height="32"></div> <div class="cell" title="高级机器外壳"><img src="../assets/item/advanced_machine_casing_3d.png" alt="高级机器外壳" width="32" height="32"></div> <div class="cell" title="强化屏蔽板"><img src="../assets/item/shielding_alloy_reinforced_plate.png" alt="强化屏蔽板" width="32" height="32"></div> <div class="cell" title="屏蔽板"><img src="../assets/item/shielding_alloy_plate.png" alt="屏蔽板" width="32" height="32"></div> <div class="cell" title="控制棒驱动机构"><img src="../assets/item/control_rod_drive.png" alt="控制棒驱动机构" width="32" height="32"></div> <div class="cell" title="屏蔽板"><img src="../assets/item/shielding_alloy_plate.png" alt="屏蔽板" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="反应堆控制器"><img src="../assets/block/reactor_controller_top.png" alt="反应堆控制器" width="32" height="32"></div><div class="result-name">反应堆控制器</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="反应堆控制器 alaindustrial:reactor_controller" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="屏蔽板"><img src="../assets/item/shielding_alloy_plate_3d.png" alt="屏蔽板" width="32" height="32"></div> <div class="cell" title="反应堆控制电路"><img src="../assets/item/reactor_circuit_3d.png" alt="反应堆控制电路" width="32" height="32"></div> <div class="cell" title="屏蔽板"><img src="../assets/item/shielding_alloy_plate_3d.png" alt="屏蔽板" width="32" height="32"></div> <div class="cell" title="强化屏蔽板"><img src="../assets/item/shielding_alloy_reinforced_plate_3d.png" alt="强化屏蔽板" width="32" height="32"></div> <div class="cell" title="高级机器外壳"><img src="../assets/item/advanced_machine_casing_3d.png" alt="高级机器外壳" width="32" height="32"></div> <div class="cell" title="强化屏蔽板"><img src="../assets/item/shielding_alloy_reinforced_plate_3d.png" alt="强化屏蔽板" width="32" height="32"></div> <div class="cell" title="屏蔽板"><img src="../assets/item/shielding_alloy_plate_3d.png" alt="屏蔽板" width="32" height="32"></div> <div class="cell" title="控制棒驱动机构"><img src="../assets/item/control_rod_drive_3d.png" alt="控制棒驱动机构" width="32" height="32"></div> <div class="cell" title="屏蔽板"><img src="../assets/item/shielding_alloy_plate_3d.png" alt="屏蔽板" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="反应堆控制器"><img src="../assets/item/reactor_controller_3d.png" alt="反应堆控制器" width="32" height="32"></div><div class="result-name">反应堆控制器</div></div></div></div></div>
   </main>
 </div>
 

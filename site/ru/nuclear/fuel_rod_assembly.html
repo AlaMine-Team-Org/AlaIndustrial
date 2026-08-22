@@ -363,7 +363,7 @@
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="10 страниц">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="4 страницы">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
-<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Ядерная техника</span><span class="cat-count" aria-label="12 страниц">12</span></a>
+<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>Ядерная техника</span><span class="cat-count" aria-label="12 страниц">12</span></a>
 <div class="group-title">Переработка</div>
 <a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="15 страниц">15</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машины для жидкостей</span><span class="cat-count" aria-label="2 страницы">2</span></a>
@@ -380,13 +380,13 @@
 <div class="group-title">Предметы</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="20 страниц">20</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="21 страница">21</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="22 страницы">22</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="../nuclear/index.html">Ядерная техника</a><span class="sep">/</span><span>Реакторная колонна</span></div>
 <div class="block-card">
   <div class="card-head">
-    <img class="icon" src="../assets/block/fuel_rod_assembly_top.png" alt="Реакторная колонна" width="64" height="64">
+    <img class="icon" src="../assets/item/fuel_rod_assembly_3d.png" alt="Реакторная колонна" width="64" height="64">
     <div class="info">
       <h1>Реакторная колонна</h1>
       <div class="block-id">alaindustrial:fuel_rod_assembly</div>
@@ -517,6 +517,10 @@
 
 <p>Прочность блока нарочно ниже, чем у оболочки (5.0 / 30.0): сборка живёт <strong>внутри</strong> защищённой комнаты, и собственной брони ей не нужно — вскрывать реактор всё равно приходится через стену.</p>
 
+<h2 id="звук">Звук</h2>
+
+<p>Работающая активная зона гудит низко и ровно — петля, — и звучит она именно от стоек с топливом, а не от контроллера: реакторный зал слышен как объём, а не как панель на стене. Одновременно гудят не все колонны, а лишь несколько: иначе плотно забитый зал превратился бы в стену звука. Внутри комнаты гул слышен в полную силу, снаружи его приглушает оболочка, а через открытый шлюз он вырывается наружу. Остановленный реактор молчит — молчат и те стойки, в которых топливо осталось.</p>
+
 <h2 id="рецепты">Рецепты</h2>
 
 <p>Крафт — <strong>×2</strong> за раз.</p>
@@ -536,7 +540,7 @@ I G I S = экранирующая пластина ×1</code></pre>
 <p><a href="uranium_fuel_rod.html">ТВЭЛ</a> — то, что в неё вставляют. <a href="empty_fuel_rod.html">Оболочка ТВЭЛ</a> — то, что она отдаёт обратно. <a href="reactor_controller.html">Контроллер реактора</a> — тот, кто её жжёт и считает соседство. <a href="reactor_port.html">Реакторный ввод</a> — как вода попадает в комнату и как пар из неё выходит. <a href="steam_nozzle.html">Паровая насадка</a> — куда девается пар, и почему без неё кипение встаёт. <a href="../materials/steam.html">Пар</a> — что появляется в верхнем баке колонны. <a href="reactor_glass.html">Реакторное стекло</a> — половина рецепта и та же идея «видно, что внутри». <a href="reactor_casing.html">Реакторная обшивка</a> — стены, внутри которых стойка стоит.</p>
 
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="реакторная колонна alaindustrial:fuel_rod_assembly" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Железный слиток" width="32" height="32"></div> <div class="cell" title="Реакторное стекло"><img src="../assets/block/reactor_glass.png" alt="Реакторное стекло" width="32" height="32"></div> <div class="cell" title="Железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Железный слиток" width="32" height="32"></div> <div class="cell" title="Реакторное стекло"><img src="../assets/block/reactor_glass.png" alt="Реакторное стекло" width="32" height="32"></div> <div class="cell" title="Экранирующая пластина"><img src="../assets/item/shielding_alloy_plate.png" alt="Экранирующая пластина" width="32" height="32"></div> <div class="cell" title="Реакторное стекло"><img src="../assets/block/reactor_glass.png" alt="Реакторное стекло" width="32" height="32"></div> <div class="cell" title="Железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Железный слиток" width="32" height="32"></div> <div class="cell" title="Реакторное стекло"><img src="../assets/block/reactor_glass.png" alt="Реакторное стекло" width="32" height="32"></div> <div class="cell" title="Железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Железный слиток" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Реакторная колонна"><img src="../assets/block/fuel_rod_assembly_top.png" alt="Реакторная колонна" width="32" height="32"><span class="count">×2</span></div><div class="result-name">Реакторная колонна</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="реакторная колонна alaindustrial:fuel_rod_assembly" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Железный слиток" width="32" height="32"></div> <div class="cell" title="Реакторное стекло"><img src="../assets/item/reactor_glass_3d.png" alt="Реакторное стекло" width="32" height="32"></div> <div class="cell" title="Железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Железный слиток" width="32" height="32"></div> <div class="cell" title="Реакторное стекло"><img src="../assets/item/reactor_glass_3d.png" alt="Реакторное стекло" width="32" height="32"></div> <div class="cell" title="Экранирующая пластина"><img src="../assets/item/shielding_alloy_plate_3d.png" alt="Экранирующая пластина" width="32" height="32"></div> <div class="cell" title="Реакторное стекло"><img src="../assets/item/reactor_glass_3d.png" alt="Реакторное стекло" width="32" height="32"></div> <div class="cell" title="Железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Железный слиток" width="32" height="32"></div> <div class="cell" title="Реакторное стекло"><img src="../assets/item/reactor_glass_3d.png" alt="Реакторное стекло" width="32" height="32"></div> <div class="cell" title="Железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Железный слиток" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Реакторная колонна"><img src="../assets/item/fuel_rod_assembly_3d.png" alt="Реакторная колонна" width="32" height="32"><span class="count">×2</span></div><div class="result-name">Реакторная колонна</div></div></div></div></div>
   </main>
 </div>
 

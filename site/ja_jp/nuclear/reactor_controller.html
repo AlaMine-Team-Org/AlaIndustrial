@@ -363,7 +363,7 @@
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
-<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>原子力</span><span class="cat-count" aria-label="12 ページ">12</span></a>
+<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>原子力</span><span class="cat-count" aria-label="12 ページ">12</span></a>
 <div class="group-title">加工</div>
 <a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>マシン</span><span class="cat-count" aria-label="15 ページ">15</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>液体マシン</span><span class="cat-count" aria-label="2 ページ">2</span></a>
@@ -380,13 +380,13 @@
 <div class="group-title">アイテム</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="21 ページ">21</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="22 ページ">22</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">ホーム</a><span class="sep">/</span><a href="../nuclear/index.html">原子力</a><span class="sep">/</span><span>原子炉制御装置</span></div>
 <div class="block-card" data-hero-alt="Every block and item of the Ala Industrial reactor room in item frames: casing, glass, door, lamp, inlet, outlet, controller, column, fuel rod and its cladding." style="background-image:linear-gradient(180deg,rgba(22,22,26,.55) 0%,rgba(22,22,26,.92) 100%),url(../assets/screenshots/nuclear_reactor_block_set.png);background-size:cover;background-position:center center;background-repeat:no-repeat;">
   <div class="card-head">
-    <img class="icon" src="../assets/block/reactor_controller_top.png" alt="原子炉制御装置" width="64" height="64">
+    <img class="icon" src="../assets/item/reactor_controller_3d.png" alt="原子炉制御装置" width="64" height="64">
     <div class="info">
       <h1>原子炉制御装置</h1>
       <div class="block-id">alaindustrial:reactor_controller</div>
@@ -576,6 +576,14 @@
 
 <p>保存するのはワールドから導けないものだけです。<strong>最後に認めた箱の範囲</strong>、たまった<strong>熱</strong>、そして <strong>スライダーの位置</strong>。チャンクのアンロードでこれらを忘れる原子炉は、無駄に冷え、勝手に全開へ戻って しまいます。</p>
 
+<h2 id="音">音</h2>
+
+<p>熱が警告のしきい値を超えると、制御装置はサイレン を一度だけ鳴らし ます。壁も閉じたエアロックもこの音を弱めません。部屋にいない者に向けた音だからこそ、部屋のはるか外 まで届きます。二度目に鳴るのは、冷却が炉心をしきい値よりかなり下まで戻したあとだけです — 目盛りが 揺れるたびに鳴る警報は、もはや警報ではありません。</p>
+
+<p>しかし目盛りが上限に張り付いた場合は話が別です。熱が百パーセントにとどまっているあいだ、サイレンは 鳴りやみません。三秒から五秒の不規則な間隔で繰り返し鳴り続け、温度が下がりはじめて初めて止まりま す。そこで一度きりの合図にしてしまえば最悪です — もっとも危険な状態の原子炉が、ただ熱いだけの原子炉 より静かになってしまいます。</p>
+
+<p>原子炉の停止は理由を問わず — レッドストーンが切れ た、燃料が尽きた、制御棒が抜かれた、外殻が破られた — 出力が失われていく下降音 で応えます。部屋が組み上がったときの短い合図と、気密が破れたと きの音は、上の「ワールドでのフィードバック」に記載されています。</p>
+
 <h2 id="レシピ">レシピ</h2>
 
 <p>クラフト: 一度に <strong>×1</strong>。</p>
@@ -599,7 +607,7 @@ D = 制御棒駆動機構 ×1</code></pre>
 <p><a href="reactor_casing.html">原子炉ケース</a> — 何をスキャンするのか、幾何とクラフトの流れ。 <a href="reactor_door.html">エアロックドア</a> — 成形の必須条件。 <a href="reactor_glass.html">原子炉ガラス</a>、<a href="reactor_lamp.html">ランプ</a>、 <a href="reactor_port.html">入口</a>、<a href="reactor_outlet.html">出力端子</a> — スキャナーが壁として 数える残りのブロック。 <a href="fuel_rod_assembly.html">原子炉カラム</a> — 燃やし、沸かし、組み直す対象。 <a href="uranium_fuel_rod.html">燃料棒</a>と<a href="empty_fuel_rod.html">燃料被覆管</a> — 消耗させる燃料と、 あとに残る被覆管。 <a href="../materials/steam.html">蒸気</a> — 回路の作動流体。 <a href="steam_nozzle.html">蒸気ノズル</a> — 回路の終端。これが働かない間は水ゲージが黄色くなり、熱が 上がります。 <a href="reactor_button.html">原子炉ボタン</a> — この一式で唯一、スキャナーが壁として数え<strong>ない</strong>もの。 <a href="../components/resonance_chain.html">共振チェーン</a> — 制御回路のコイルの出どころ。 <a href="../fluid-machines/distillation_column.html">蒸留塔</a>と<a href="../agriculture/incubator.html">インキュベーター</a> — モッドのこれまでのマルチブロック 2 つ。どちらも固定形状の検査で、体積スキャナーはここで初めて 書かれました。</p>
 
 <h2>クラフト</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="原子炉制御装置 alaindustrial:reactor_controller" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="遮蔽板"><img src="../assets/item/shielding_alloy_plate.png" alt="遮蔽板" width="32" height="32"></div> <div class="cell" title="原子炉制御回路"><img src="../assets/item/reactor_circuit.png" alt="原子炉制御回路" width="32" height="32"></div> <div class="cell" title="遮蔽板"><img src="../assets/item/shielding_alloy_plate.png" alt="遮蔽板" width="32" height="32"></div> <div class="cell" title="強化遮蔽板"><img src="../assets/item/shielding_alloy_reinforced_plate.png" alt="強化遮蔽板" width="32" height="32"></div> <div class="cell" title="高度なマシンケース"><img src="../assets/item/advanced_machine_casing_3d.png" alt="高度なマシンケース" width="32" height="32"></div> <div class="cell" title="強化遮蔽板"><img src="../assets/item/shielding_alloy_reinforced_plate.png" alt="強化遮蔽板" width="32" height="32"></div> <div class="cell" title="遮蔽板"><img src="../assets/item/shielding_alloy_plate.png" alt="遮蔽板" width="32" height="32"></div> <div class="cell" title="制御棒駆動装置"><img src="../assets/item/control_rod_drive.png" alt="制御棒駆動装置" width="32" height="32"></div> <div class="cell" title="遮蔽板"><img src="../assets/item/shielding_alloy_plate.png" alt="遮蔽板" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="原子炉制御装置"><img src="../assets/block/reactor_controller_top.png" alt="原子炉制御装置" width="32" height="32"></div><div class="result-name">原子炉制御装置</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="原子炉制御装置 alaindustrial:reactor_controller" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="遮蔽板"><img src="../assets/item/shielding_alloy_plate_3d.png" alt="遮蔽板" width="32" height="32"></div> <div class="cell" title="原子炉制御回路"><img src="../assets/item/reactor_circuit_3d.png" alt="原子炉制御回路" width="32" height="32"></div> <div class="cell" title="遮蔽板"><img src="../assets/item/shielding_alloy_plate_3d.png" alt="遮蔽板" width="32" height="32"></div> <div class="cell" title="強化遮蔽板"><img src="../assets/item/shielding_alloy_reinforced_plate_3d.png" alt="強化遮蔽板" width="32" height="32"></div> <div class="cell" title="高度なマシンケース"><img src="../assets/item/advanced_machine_casing_3d.png" alt="高度なマシンケース" width="32" height="32"></div> <div class="cell" title="強化遮蔽板"><img src="../assets/item/shielding_alloy_reinforced_plate_3d.png" alt="強化遮蔽板" width="32" height="32"></div> <div class="cell" title="遮蔽板"><img src="../assets/item/shielding_alloy_plate_3d.png" alt="遮蔽板" width="32" height="32"></div> <div class="cell" title="制御棒駆動装置"><img src="../assets/item/control_rod_drive_3d.png" alt="制御棒駆動装置" width="32" height="32"></div> <div class="cell" title="遮蔽板"><img src="../assets/item/shielding_alloy_plate_3d.png" alt="遮蔽板" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="原子炉制御装置"><img src="../assets/item/reactor_controller_3d.png" alt="原子炉制御装置" width="32" height="32"></div><div class="result-name">原子炉制御装置</div></div></div></div></div>
   </main>
 </div>
 
