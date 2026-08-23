@@ -3,6 +3,7 @@ package dev.alaindustrial.gametest.neoforge;
 import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.gametest.AssemblerPerfScenarios;
+import dev.alaindustrial.gametest.CreativeEnergySourceScenarios;
 import dev.alaindustrial.gametest.EnergyNetworkPerfScenarios;
 import dev.alaindustrial.gametest.ForeignMaterialScenarios;
 import dev.alaindustrial.gametest.CableFaceParityScenarios;
@@ -227,6 +228,21 @@ public final class NeoForgeGameTests {
 				GeneratorEnergyScenarios::fullNeighbourNoLeak);
 		registerTest(event, "generator_delivers_down_cable", 200, true,
 				CableEnergyScenarios::generatorDeliversDownCable);
+		// MOD-479 — the creative energy source. Every scenario is required on this lane too: a required=false registration counts as not registered at all.
+		registerTest(event, "creative_source_buffer_holds_steady", 200, true,
+				CreativeEnergySourceScenarios::bufferHoldsSteadyWhileDelivering);
+		registerTest(event, "creative_source_delivers_beyond_capacity", 200, true,
+				CreativeEnergySourceScenarios::deliversManyTimesItsOwnCapacity);
+		registerTest(event, "creative_source_switched_off_stops", 100, true,
+				CreativeEnergySourceScenarios::switchedOffStopsDelivering);
+		registerTest(event, "creative_source_zero_output_stops", 100, true,
+				CreativeEnergySourceScenarios::zeroOutputStopsDelivering);
+		registerTest(event, "creative_source_settings_survive_reload", 40, true,
+				CreativeEnergySourceScenarios::settingsSurviveReload);
+		registerTest(event, "creative_source_charge_slot", 100, true,
+				CreativeEnergySourceScenarios::chargeSlotFillsItemAndRefusesAutomation);
+		registerTest(event, "creative_source_has_no_recipe", 40, true,
+				CreativeEnergySourceScenarios::noRecipeYieldsTheBlock);
 		registerTest(event, "return_round_robin_no_leak", 40, true,
 				CableEnergyScenarios::returnRoundRobinNoLeak);
 		// MOD-070 segment-to-segment flow: accumulation in intermediate cables + retention on break.
@@ -277,6 +293,8 @@ public final class NeoForgeGameTests {
 				CableShockScenarios::shockGuardInstallRules);
 		registerTest(event, "mod279_shock_guard_pops_when_down_connection_appears", 80, true,
 				CableShockScenarios::shockGuardPopsWhenDownConnectionAppears);
+		registerTest(event, "mod466_insulated_set_protects_by_the_piece_and_wears_out", 80, true,
+				CableShockScenarios::insulatedSetProtectsByThePieceAndWearsOut);
 		registerTest(event, "in_place_grade_swap_rebuilds_segment", 40, true,
 				CableEnergyScenarios::inPlaceGradeSwapRebuildsSegment);
 		registerTest(event, "mod314_cascade_charges_empty_battery_box_over_cable", 60, true,
@@ -1277,8 +1295,8 @@ public final class NeoForgeGameTests {
 				CanningMachineScenarios::fun02RationsFromDifferentFoodsStack);
 		registerTest(event, "canning_machine_rich_food_yields_more", 1200, true,
 				CanningMachineScenarios::fun03RichFoodYieldsMoreRations);
-		registerTest(event, "canning_machine_no_cans_means_food_untouched", 600, true,
-				CanningMachineScenarios::con01NoCansMeansFoodUntouched);
+		registerTest(event, "canning_machine_absorption_needs_neither_can_nor_power", 600, true,
+				CanningMachineScenarios::fun04AbsorptionNeedsNeitherCanNorPower);
 		registerTest(event, "canning_machine_no_power_no_output", 600, true,
 				CanningMachineScenarios::con02NoPowerNoOutput);
 		registerTest(event, "canning_machine_full_output_jams", 600, true,
@@ -1812,6 +1830,12 @@ public final class NeoForgeGameTests {
 				EnergyCondenserScenarios::condenser_tierFollowsTheBank);
 		registerTest(event, "condenser_taking_spends_the_whole_bank", 40, true,
 				EnergyCondenserScenarios::condenser_takingSpendsTheWholeBank);
+		// MOD-492: the dupe. Every door a player has must charge the bank, and the window must not
+		// swallow a clot of the player's own.
+		registerTest(event, "condenser_every_removal_path_spends_the_bank", 60, true,
+				EnergyCondenserScenarios::condenser_everyRemovalPathSpendsTheBank);
+		registerTest(event, "condenser_window_refuses_a_players_own_clot", 40, true,
+				EnergyCondenserScenarios::condenser_windowRefusesAPlayersOwnClot);
 		registerTest(event, "condenser_faces_are_split_between_power_and_items", 40, true,
 				EnergyCondenserScenarios::condenser_facesAreSplitBetweenPowerAndItems);
 		registerTest(event, "condenser_cannot_compete_with_machines", 40, true,

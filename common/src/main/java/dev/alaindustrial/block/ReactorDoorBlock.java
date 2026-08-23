@@ -2,11 +2,11 @@ package dev.alaindustrial.block;
 
 import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.Config;
+import dev.alaindustrial.registry.ModSounds;
 import java.util.Map;
 import org.jspecify.annotations.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -254,8 +254,17 @@ public class ReactorDoorBlock extends Block {
 		return !level.getEntities((Entity) null, doorway, EntitySelector.NO_SPECTATORS).isEmpty();
 	}
 
+	/**
+	 * The airlock's own voice (MOD-472). It used to borrow vanilla's iron door, which undersold what
+	 * this block is: a pressure seal on a nuclear containment shell, not a hinged panel. The samples are
+	 * a steam seal releasing on the way open and a pneumatic lock engaging on the way shut.
+	 *
+	 * <p>{@code null} as the first argument on purpose — a block entity has no client-side prediction, so
+	 * naming a player there is precisely what stops the nearest one from hearing it.
+	 */
 	private static void playDoorSound(Level level, BlockPos pos, boolean opening) {
-		level.playSound(null, pos, opening ? SoundEvents.IRON_DOOR_OPEN : SoundEvents.IRON_DOOR_CLOSE,
+		level.playSound(null, pos,
+				(opening ? ModSounds.REACTOR_DOOR_OPEN : ModSounds.REACTOR_DOOR_CLOSE).get(),
 				SoundSource.BLOCKS, 1.0f, level.getRandom().nextFloat() * 0.1f + 0.9f);
 	}
 

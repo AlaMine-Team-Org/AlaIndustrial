@@ -38,6 +38,38 @@ class CreativeTabOrderTest {
 	private static final Path SOURCE = Path.of(
 			"src/main/java/dev/alaindustrial/registry/CreativeTabContent.java");
 
+	/**
+	 * The groups a loader fills a tab from — the entry points every other group has to be reachable
+	 * from. Hand-written, and therefore proven against the loaders by {@link #rootsAreCalledBySomeLoader()}
+	 * rather than trusted.
+	 */
+	private static final Set<String> ROOTS = Set.of("main", "ingredients", "buildingBlocks",
+			"naturalBlocks", "functionalBlocks");
+
+	/**
+	 * Where a loader actually fills a creative tab. Relative to {@code common/}, which is this task's
+	 * working directory (Gradle's default for {@code :common:test}) — the same assumption {@link #SOURCE}
+	 * already makes.
+	 */
+	private static final List<Path> LOADER_SOURCES = List.of(
+			Path.of("../fabric/src/main/java/dev/alaindustrial/registry/ModItems.java"),
+			Path.of("../neoforge/src/main/java/dev/alaindustrial/registry/neoforge/"
+					+ "ModCreativeTabEventsNeoForge.java"),
+			Path.of("../neoforge/src/main/java/dev/alaindustrial/registry/neoforge/"
+					+ "ModCreativeTabNeoForge.java"));
+
+	/** {@code CreativeTabContent.groupName} as a loader writes it, in any of the call forms used. */
+	private static final Pattern LOADER_CALL = Pattern.compile("CreativeTabContent\\.(\\w+)\\s*\\(");
+
+	/**
+	 * Comments, stripped before the call scan. A javadoc line that merely MENTIONS a group by name reads
+	 * exactly like a call to a regex, and the resulting failure would accuse the roots list of being
+	 * wrong when nothing was. That is one sentence away, not hypothetical: all three loader sources
+	 * already carry prose about this class. Stripping can only lose a real call, never invent one — and
+	 * a lost call also fails loudly (its root would look uncalled), so the error direction stays safe.
+	 */
+	private static final Pattern JAVA_COMMENT = Pattern.compile("/\\*.*?\\*/|//[^\\n]*", Pattern.DOTALL);
+
 	/** {@code show(out, ModContent.X)} — the current form — and the older {@code out.accept(...)}. */
 	private static final Pattern ENTRY = Pattern.compile(
 			"show\\(out, ModContent\\.(\\w+)\\)|out\\.accept\\(ModContent\\.(\\w+)\\.get\\(\\)\\)");
@@ -127,13 +159,19 @@ class CreativeTabOrderTest {
 	 * Every group declared in the file is actually reachable from a tab. A group that nobody calls is
 	 * content the player cannot see, and it looks exactly like working code — which is why MOD-102
 	 * (two chest tiers listed on one loader only) went unnoticed until a player asked.
+	 *
+	 * <p><b>The roots are the groups a LOADER calls, and nothing else</b> (MOD-477). This list used to
+	 * carry {@code combat} and {@code toolsAndUtilities} as well — two groups no loader had called for
+	 * six weeks. Naming them here made this very test declare them reachable by definition, so the one
+	 * gate that exists to catch an unreachable group was structurally unable to report the two
+	 * unreachable groups in front of it. Adding a name here is therefore not a way to silence this
+	 * test: a name belongs in this set only after a loader calls that group, and
+	 * {@link #rootsAreCalledBySomeLoader()} checks exactly that against the loader sources.
 	 */
 	@Test
 	void everyGroupIsReachableFromSomeTab() throws IOException {
 		Map<String, List<String>> bodies = bodies();
-		Set<String> roots = Set.of("main", "combat", "toolsAndUtilities", "ingredients",
-				"buildingBlocks", "naturalBlocks", "functionalBlocks");
-		Set<String> reached = new LinkedHashSet<>(roots);
+		Set<String> reached = new LinkedHashSet<>(ROOTS);
 		boolean grew = true;
 		while (grew) {
 			grew = false;
@@ -150,6 +188,61 @@ class CreativeTabOrderTest {
 		orphans.removeAll(reached);
 		assertEquals(Set.of(), orphans,
 				"these groups are declared but never shown in any tab: " + orphans);
+	}
+
+	/**
+	 * The roots are what the loaders really call — the check that stops this file from grading itself
+	 * (MOD-477).
+	 *
+	 * <p><b>The hole this closes.</b> {@link #everyGroupIsReachableFromSomeTab()} promises to catch a
+	 * group nobody shows to the player, and it decides "shown" from a list written by hand right above
+	 * it. For six weeks that list named {@code combat} and {@code toolsAndUtilities}, which no loader
+	 * had called since the tempered-gear anchoring change — so the two groups the test existed to find
+	 * were the two it was defined not to see. A whole armour set was added to one of them and nothing
+	 * anywhere went red. A list that grants reachability has to be checked against the thing that
+	 * actually grants it.
+	 *
+	 * <p><b>Both directions matter.</b> A root nobody calls is the six-week bug. A called group missing
+	 * from the roots is the opposite failure: everything reachable only through it looks orphaned, and
+	 * the next person "fixes" that by deleting live content.
+	 *
+	 * <p><b>Why text, and why here.</b> Same reason as the rest of this class — filling a tab needs a
+	 * running game, and the question ("does a loader name this group?") is answerable from the source.
+	 * It lives in this file rather than in a Python validator so the list and its proof cannot drift
+	 * apart: one edit, one place.
+	 */
+	@Test
+	void rootsAreCalledBySomeLoader() throws IOException {
+		Set<String> called = new LinkedHashSet<>();
+		for (Path source : LOADER_SOURCES) {
+			if (!Files.isRegularFile(source)) {
+				fail("loader source not found: " + source.toAbsolutePath().normalize()
+						+ " — it moved or was renamed. Point LOADER_SOURCES at it again; leaving the list "
+						+ "stale would silently make this check pass on nothing.");
+			}
+			String code = JAVA_COMMENT.matcher(Files.readString(source, StandardCharsets.UTF_8))
+					.replaceAll("");
+			Matcher call = LOADER_CALL.matcher(code);
+			while (call.find()) {
+				called.add(call.group(1));
+			}
+		}
+		if (called.isEmpty()) {
+			fail("no CreativeTabContent.<group>(...) call found in any loader source — the call form "
+					+ "changed and this check went blind, which is not the same as the tabs being empty");
+		}
+		Set<String> declaredButUncalled = new LinkedHashSet<>(ROOTS);
+		declaredButUncalled.removeAll(called);
+		Set<String> calledButNotDeclared = new LinkedHashSet<>(called);
+		calledButNotDeclared.removeAll(ROOTS);
+		assertEquals(Set.of(), declaredButUncalled,
+				"these groups are listed as tab roots but no loader calls them — they are dead code, and "
+						+ "listing them here makes everyGroupIsReachableFromSomeTab unable to say so: "
+						+ declaredButUncalled);
+		assertEquals(Set.of(), calledButNotDeclared,
+				"a loader fills a tab from these groups but ROOTS does not list them — everything they "
+						+ "reach will look unreachable to everyGroupIsReachableFromSomeTab: "
+						+ calledButNotDeclared);
 	}
 
 	/**

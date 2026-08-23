@@ -455,7 +455,13 @@ jobs:
   # the mod is live on every platform by the time it runs.
   announce:
     needs: release
-    if: success()
+    # `vars.ANNOUNCE_DISCORD` is the deferral switch. Set the repository variable to `false` and a
+    # release publishes to the marketplaces without announcing — the point being a release that has
+    # to clear manual file review first: announcing "download here" while the file is still queued
+    # sends people to a page that has nothing new on it. Post it afterwards by running announce.yml
+    # by hand (`workflow_dispatch`) with the tag, then set the variable back. Unset or any other
+    # value keeps the default: announce on every successful release.
+    if: success() && vars.ANNOUNCE_DISCORD != 'false'
     uses: ./.github/workflows/announce.yml
     with:
       # From `needs`, not `steps`: a job-level `with:` cannot see another job's steps.

@@ -53,6 +53,7 @@ public final class ModBlocks {
 	public static final Block HIGH_ALTITUDE_WIND_MILL = handle(ContentManifest.HIGH_ALTITUDE_WIND_MILL);
 	public static final Block STORM_WIND_MILL = handle(ContentManifest.STORM_WIND_MILL);
 	public static final Block LIGHTNING_ROD_GENERATOR = handle(ContentManifest.LIGHTNING_ROD_GENERATOR);
+	public static final Block CREATIVE_ENERGY_SOURCE = handle(ContentManifest.CREATIVE_ENERGY_SOURCE);
 	public static final Block PUMP = handle(ContentManifest.PUMP);
 	public static final Block GARDEN_DRONE_STATION = handle(ContentManifest.GARDEN_DRONE_STATION);
 	public static final Block FLUID_TANK = handle(ContentManifest.FLUID_TANK);

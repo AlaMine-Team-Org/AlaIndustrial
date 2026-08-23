@@ -489,6 +489,17 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 			} else {
 				slot.setChanged();
 			}
+			if (index < invStart) {
+				// Tell the slot what actually left it (MOD-492). Vanilla's own quick-move does this —
+				// CraftingMenu and AbstractFurnaceMenu both end with slot.onTake — and ours did not, so a
+				// slot that charges for its product on onTake was free to shift-click past. That is how the
+				// incubator quietly stopped granting its criterion when the result was taken this way.
+				// The count is the difference, because moveItemStackTo may have moved only part of it.
+				ItemStack moved = result.copyWithCount(result.getCount() - stack.getCount());
+				if (!moved.isEmpty()) {
+					slot.onTake(player, moved);
+				}
+			}
 		}
 		return result;
 	}
@@ -544,9 +555,10 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 	 * A machine's result slot: take-only. The machine fills it; nothing goes in by hand. Hopper insertion
 	 * is refused separately by the block entity's {@code canPlaceItem}/{@code isOutputSlot}. One class
 	 * instead of the same three-line anonymous override in every processing menu (MOD-439); a slot that
-	 * also caps its stack or reacts to {@code onTake} keeps its own subclass.
+	 * also caps its stack or reacts to {@code onTake} keeps its own subclass — hence not {@code final}
+	 * (the condenser's window slot caps at one, MOD-492).
 	 */
-	public static final class OutputSlot extends Slot {
+	public static class OutputSlot extends Slot {
 		public OutputSlot(Container container, int index, int x, int y) {
 			super(container, index, x, y);
 		}

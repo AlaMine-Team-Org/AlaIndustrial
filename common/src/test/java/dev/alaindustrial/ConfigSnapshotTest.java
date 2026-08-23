@@ -444,6 +444,8 @@ class ConfigSnapshotTest {
 		SENTINELS.put("shockGuardWoolHitChance", 0.81);
 		SENTINELS.put("shockGuardGlassHitChance", 0.43);
 		SENTINELS.put("shockGuardGraceTicks", 37);
+		SENTINELS.put("bareCableShockInsulationPerPiecePercent", 17);
+		SENTINELS.put("bareCableShockInsulationDamagePerDurability", 7.5f);
 	}
 
 	/**

@@ -65,10 +65,14 @@ public final class ModCreativeTabEventsNeoForge {
 			event.accept(ModContent.ENERGY_PACK.get());
 			event.accept(ModContent.ELECTRIC_DRILL.get());
 			event.accept(ModContent.ELECTRIC_DRILL_DIAMOND_TIP.get());
-			// MOD-374/MOD-378: mirrors the Fabric list, which already accepts both upgrades here. (The
-			// base chainsaw, shovel and hoe are still Fabric-only in this vanilla tab — a pre-existing
-			// asymmetry left alone deliberately; the mod's own tab carries all of them on both loaders.)
+			// MOD-374/MOD-378 added the two diamond-tipped upgrades here and left their base tools
+			// Fabric-only; MOD-478 closed that gap, so this list now matches Fabric item for item and
+			// in the same order. A NeoForge player finds the same powered tools next to the vanilla
+			// ones a Fabric player does.
+			event.accept(ModContent.ELECTRIC_CHAINSAW.get());
 			event.accept(ModContent.ELECTRIC_CHAINSAW_DIAMOND_TIP.get());
+			event.accept(ModContent.ELECTRIC_SHOVEL.get());
+			event.accept(ModContent.ELECTRIC_HOE.get());
 			event.accept(ModContent.ELECTRIC_HOE_DIAMOND_TIP.get());
 			event.accept(ModContent.ELECTROMAGNET.get());
 			event.accept(ModContent.JETPACK.get());

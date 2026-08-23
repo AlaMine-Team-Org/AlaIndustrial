@@ -30,8 +30,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.FarmlandBlock;
 import net.minecraft.world.level.block.WallTorchBlock;
-import net.minecraft.world.level.block.entity.SignBlockEntity;
-import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -131,7 +129,6 @@ public final class DemoStand {
 		buildFarms(level, origin);
 		buildReactorZone(level, origin);
 		buildReactorRoom(level, origin);
-		buildLabels(level, origin);
 	}
 
 	/** Remove the stand: air above, and the floor layer reverts to grass. */
@@ -172,6 +169,15 @@ public final class DemoStand {
 	 * into its battery box by the cable-less direct push (the box sits on an OUT face).
 	 */
 	private static void buildGeneratorRow(ServerLevel level, BlockPos origin) {
+		// MOD-479 — the creative source, at the head of the generator row: the instrument you reach for
+		// when the generator behind it is the thing under test.
+		//
+		// x=0 rather than the obvious x=2, and this is worth stating because the obvious choice failed:
+		// z=3 used to be the label row for this zone and is kept clear of machines: the row reads as
+		// the front of the z=4 line, and a block dropped here would sit in front of what it labels.
+		// x=0 sits before the row proper and outside the water channel (x=15..19).
+		set(level, origin, 0, 1, 3, ModContent.CREATIVE_ENERGY_SOURCE.get());
+
 		set(level, origin, 2, 1, 4, ModContent.GENERATOR.get());
 		fillSlot(level, origin, 2, 1, 4, 0, new ItemStack(Items.COAL, 64));
 		set(level, origin, 2, 1, 5, ModContent.BATTERY_BOX.get());
@@ -589,13 +595,13 @@ public final class DemoStand {
 	// --- helpers ---
 
 	/**
-	 * Zone <b>tiers</b> (MOD-294, row z=1, labels at z=0): one live network per voltage tier so the
+	 * Zone <b>tiers</b> (MOD-294, row z=1, z=0 kept clear): one live network per voltage tier so the
 	 * ladder reads left to right along the stand's north edge. Each storage block faces WEST — the
 	 * single-axis IO rule (front IN, back OUT, MOD-006) then puts its output face east, straight
 	 * into the tier's own cable grade, exactly like the cable-run boxes below.
 	 *
 	 * <p>HV is a stub by design: the electrum cable and its consumer exist, but real HV content is
-	 * roadmap — the label says so rather than pretending otherwise.
+	 * roadmap; the row shows what is built rather than pretending otherwise.
 	 */
 	private static void buildTierZone(ServerLevel level, BlockPos origin) {
 		// LV: battery box (32/32) → tin cable → a macerator actually grinding.
@@ -612,7 +618,7 @@ public final class DemoStand {
 		set(level, origin, 14, 1, 1, ModContent.ASSEMBLER.get());
 		chargeBuffer(level, origin, 14, 1, 1);
 		// HV stub: an LV battery feeding a teleporter over HV wiring is legal (packet ceiling, not
-		// floor) and keeps the row honest — the sign, not a fake HV source, carries the "coming" note.
+		// floor) and keeps the row honest — no fake HV source stands in for content that is not built.
 		level.setBlockAndUpdate(origin.offset(22, 1, 1), ModContent.BATTERY_BOX.get().defaultBlockState()
 				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 		chargeBuffer(level, origin, 22, 1, 1);
@@ -621,12 +627,11 @@ public final class DemoStand {
 	}
 
 	/**
-	 * Zone <b>loss lane</b> (MOD-294, row z=7, distance markers at z=8): a single 36-block copper
-	 * run from a charged battery box into an electric furnace. The bare-vs-insulated comparison at
-	 * 6 blocks already lives in the cable zone; this lane answers the other question — what a LONG
-	 * haul costs. Marker signs count blocks from the box so a reader can stand anywhere along the
-	 * line and compare the furnace GUI's received-EU against the distance sign without counting
-	 * cable by hand.
+	 * Zone <b>loss lane</b> (MOD-294, row z=7, z=8 kept clear): a single 36-block copper run from a
+	 * charged battery box into an electric furnace. The bare-vs-insulated comparison at 6 blocks
+	 * already lives in the cable zone; this lane answers the other question — what a LONG haul
+	 * costs. Read it by walking the line and comparing the furnace GUI's received-EU against the
+	 * distance from the box.
 	 */
 	private static void buildLossLane(ServerLevel level, BlockPos origin) {
 		level.setBlockAndUpdate(origin.offset(2, 1, 7), ModContent.BATTERY_BOX.get().defaultBlockState()
@@ -640,11 +645,11 @@ public final class DemoStand {
 	}
 
 	/**
-	 * Zone <b>farms</b> (MOD-294, chains along z=23, labels at z=22): four working mini-chains, one
+	 * Zone <b>farms</b> (MOD-294, chains along z=23, z=22 kept clear): four working mini-chains, one
 	 * per key progression, each stocked so it runs the moment the stand is built. Rows z=21/24 stay
-	 * walkways; the north neighbour of every chain cell is a label sign or air, never an energy
-	 * block — the z=20 electrum runs above would otherwise tap the farms through any machine placed
-	 * at x=16..32, which is why the chains hug z=23 where z=22 is signs only.
+	 * walkways; the north neighbour of every chain cell is air, never an energy block — the z=20
+	 * electrum runs above would otherwise tap the farms through any machine placed at x=16..32,
+	 * which is why the chains hug z=23 where z=22 stays empty.
 	 */
 	private static void buildFarms(ServerLevel level, BlockPos origin) {
 		// Farm A — LV cycle: solar → copper cable → battery box → cable → macerator, ore chest beside.
@@ -727,76 +732,6 @@ public final class DemoStand {
 		fillSlot(level, origin, 37, 1, 23, 0, new ItemStack(ModContent.MUTATION_CHIP_TRANSFORM.get(), 16));
 		fillSlot(level, origin, 37, 1, 23, 1, new ItemStack(ModContent.MUTATION_CHIP_DUPLICATE.get(), 16));
 		fillSlot(level, origin, 37, 1, 23, 2, new ItemStack(ModContent.MUTATION_CHIP_CREATE.get(), 16));
-	}
-
-	/**
-	 * Zone labels (MOD-294): waxed oak signs carrying the PERFORMANCE.md numbers — EU/t, per-op
-	 * cost, loss per block — so the stand reads without opening a GUI. Waxing keeps a stray click
-	 * from opening the edit buffer; the text is mirrored on both faces so a label reads from either
-	 * side of its row. Signs are non-solid and carry no energy port, so they can hug machines,
-	 * cables and the water channel's walls without perturbing anything.
-	 */
-	private static void buildLabels(ServerLevel level, BlockPos origin) {
-		// Tiers (z=0, in front of the z=1 networks).
-		label(level, origin, 2, 1, 0, "LV TIER", "32 EU packets", "tin+copper wire", "2 EU/t machines");
-		label(level, origin, 12, 1, 0, "MV TIER", "128 EU packets", "gold 48 EU/t", "CESU+assembler");
-		label(level, origin, 22, 1, 0, "HV TIER", "512 EU packets", "electrum 192", "content: roadmap");
-		// Generators and ores (z=3, in front of the z=4 row; the water channel owns x=15..19).
-		label(level, origin, 2, 1, 3, "GENERATOR", "8 EU/t coal", "buf 4000");
-		label(level, origin, 5, 1, 3, "GEOTHERMAL", "16 EU/t lava", "16000 EU/bucket");
-		label(level, origin, 8, 1, 3, "SOLAR T1", "1 EU/t day", "0 rain/thunder");
-		label(level, origin, 11, 1, 3, "DAYLIGHT T2", "4 EU/t day", "buf 8000");
-		label(level, origin, 14, 1, 3, "MOONLIT T2", "3 EU/t night", "buf 8000");
-		label(level, origin, 20, 1, 3, "WIND T1", "0-4 EU/t", "cap 8 storm");
-		label(level, origin, 25, 1, 3, "SKY MILL T2", "0-8 EU/t", "Y 188-192");
-		label(level, origin, 30, 1, 3, "TEMPEST T2", "0-6 -> 21", "cap 24");
-		label(level, origin, 35, 1, 3, "LTN ROD", "strike 20000", "16-24 EU/t bleed");
-		label(level, origin, 38, 1, 3, "MOD ORES", "stone+deepslate", "palladium:", "nether only");
-		// Machines row 1 (z=9) and the misc shelf fronts.
-		label(level, origin, 2, 1, 9, "MACERATOR", "2 EU/t 300/op");
-		label(level, origin, 5, 1, 9, "ELEC FURNACE", "2 EU/t 200/op");
-		label(level, origin, 8, 1, 9, "COMPRESSOR", "2 EU/t 260/op");
-		label(level, origin, 11, 1, 9, "EXTRACTOR", "2 EU/t 240/op");
-		label(level, origin, 14, 1, 9, "IRON FURNACE", "fuel, no EU");
-		label(level, origin, 17, 1, 9, "SAWMILL", "2 EU/t 160/op");
-		label(level, origin, 20, 1, 9, "INCUBATOR", "8 EU/t 2400/op");
-		label(level, origin, 23, 1, 9, "POLYMERIZER", "400/op +oil");
-		label(level, origin, 26, 1, 9, "VULCANIZER", "400/op +heat");
-		label(level, origin, 29, 1, 9, "GALV BATH", "1000/op +water");
-		// Machines row 2 (z=11).
-		label(level, origin, 2, 1, 11, "ASSEMBLER MV", "12 EU/t 480/op");
-		label(level, origin, 5, 1, 11, "ALLOY SMELTER", "8 EU/t 1200/op");
-		label(level, origin, 8, 1, 11, "DISTILLATION", "400/op +oil");
-		label(level, origin, 11, 1, 11, "CANNING", "2 EU/t 200/op");
-		label(level, origin, 14, 1, 11, "REPAIR BENCH", "T1 5000/op");
-		label(level, origin, 17, 1, 11, "TH CENTRIFUGE", "4 EU/t +1 idle");
-		// Misc shelf (z=9, x=28..41 fronts).
-		label(level, origin, 28, 1, 9, "TEMPERED IRON", "material block");
-		label(level, origin, 30, 1, 9, "CHEST TIERS", "iron silver gold", "electrum");
-		label(level, origin, 34, 1, 9, "PUMP+GEO+TANK", "lava loop");
-		label(level, origin, 37, 1, 9, "URAN TORCH", "light 14");
-		label(level, origin, 40, 1, 9, "AGRO + CHARGE", "repellers above");
-		// Cable rows (z=13/15/17/19, one label per grade pair).
-		label(level, origin, 16, 1, 13, "COPPER LV", "12 EU/t", "0.02 loss/bl", "ins: 0.01");
-		label(level, origin, 16, 1, 15, "TIN LV", "8 EU/t", "0.006 loss/bl", "ins: 0.003");
-		label(level, origin, 16, 1, 17, "GOLD MV", "48 EU/t", "0.03 loss/bl", "ins: 0.015");
-		label(level, origin, 16, 1, 19, "ELECTRUM HV", "192 EU/t", "0.005 loss/bl", "ins: 0.0025");
-		// Loss lane (z=8 markers against the z=7 run; blocks counted from the box at x=2).
-		label(level, origin, 2, 1, 8, "LOSS LANE", "copper 0.02/bl", "36 blocks");
-		label(level, origin, 9, 1, 8, "6 BL");
-		label(level, origin, 15, 1, 8, "12 BL");
-		label(level, origin, 21, 1, 8, "18 BL");
-		label(level, origin, 27, 1, 8, "24 BL");
-		label(level, origin, 33, 1, 8, "30 BL");
-		label(level, origin, 39, 1, 8, "36 BL", "read furnace", "GUI: received EU");
-		// Farms (z=22, in front of the z=23 chains).
-		label(level, origin, 2, 1, 22, "LV CYCLE", "solar->cable->box", "->macerator");
-		label(level, origin, 11, 1, 22, "FLUID LINE", "pool->pump->pipe", "->tank 50 mB/t");
-		label(level, origin, 22, 1, 22, "OIL->RUBBER", "poly: raw rubber", "vulc: insulated");
-		label(level, origin, 33, 1, 22, "MUTATION", "incubator+dome", "chip picks mode");
-		// Transport row (z=25, in front of the z=26 pipes).
-		label(level, origin, 16, 1, 25, "ITEM PIPES", "2 items/s");
-		label(level, origin, 25, 1, 25, "FLUID PIPES", "1 bucket/s");
 	}
 
 	/**
@@ -959,7 +894,6 @@ public final class DemoStand {
 			assembly.setTank(true, assembly.waterTank.capacity / 2);
 		}
 
-		label(level, origin, bx + 1, by, bz - 1, "REACTOR ROOM", "5x5x5 shell", "button = airlock", "runs on place");
 	}
 
 	private static void set(ServerLevel level, BlockPos origin, int x, int y, int z, Block block) {
@@ -972,25 +906,6 @@ public final class DemoStand {
 		set(level, origin, x, 1, z, machine);
 		chargeBuffer(level, origin, x, 1, z);
 		fillSlot(level, origin, x, 1, z, 0, input);
-	}
-
-	/**
-	 * Place a waxed oak standing sign with up to four lines, mirrored on both faces (MOD-294).
-	 * {@code setText} marks the block updated itself, so the text reaches clients without extra
-	 * work; waxing keeps a stray click from opening the edit buffer on a stand label.
-	 */
-	private static void label(ServerLevel level, BlockPos origin, int x, int y, int z, String... lines) {
-		BlockPos pos = origin.offset(x, y, z);
-		level.setBlockAndUpdate(pos, Blocks.OAK_SIGN.defaultBlockState());
-		if (level.getBlockEntity(pos) instanceof SignBlockEntity sign) {
-			SignText text = sign.getFrontText();
-			for (int i = 0; i < Math.min(lines.length, SignText.LINES); i++) {
-				text = text.setMessage(i, Component.literal(lines[i]));
-			}
-			sign.setText(text, true);
-			sign.setText(text, false);
-			sign.setWaxed(true);
-		}
 	}
 
 	private static void fillSlot(ServerLevel level, BlockPos origin, int x, int y, int z, int slot, ItemStack stack) {

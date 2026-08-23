@@ -190,6 +190,18 @@ public final class RoomValidator {
 		return null;
 	}
 
+	/**
+	 * Whether this block is part of a shell that currently reads as assembled.
+	 *
+	 * <p>The one place that answers the question, so that a new shell block cannot be added to the
+	 * painter and forgotten by everything else that has to recognise one. The reactor's drone asks it to
+	 * decide whether the containment stands between the listener and a fuel rack (MOD-472).
+	 */
+	public static boolean isFormedShell(BlockState state) {
+		BooleanProperty flag = formedProperty(state);
+		return flag != null && state.getValue(flag);
+	}
+
 	@Nullable
 	private static BooleanProperty formedProperty(BlockState state) {
 		if (state.getBlock() instanceof ReactorShellBlock) {

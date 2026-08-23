@@ -16,6 +16,7 @@ import dev.alaindustrial.core.energy.FaceEnergyPort;
 import dev.alaindustrial.core.neoforge.BufferAsEnergyHandler;
 import dev.alaindustrial.core.neoforge.NeoForgeEnergyPort;
 import dev.alaindustrial.registry.ModContent;
+import dev.alaindustrial.junit.StopEphemeralServerBeforeFmlTeardown;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.MinecraftServer;
@@ -61,6 +62,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * machinery — the part MOD-022 could only compile-check.
  */
 @ExtendWith(EphemeralTestServerProvider.class)
+@ExtendWith(StopEphemeralServerBeforeFmlTeardown.class)
 class NeoForgeEnergyRuntimeTest {
 
 	/** A buffer that both accepts and emits up to {@code rate} per op — the general symmetric case. */

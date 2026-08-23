@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "alaindustrial:block/creative_energy_source"
+    },
+    "lit=true": {
+      "model": "alaindustrial:block/creative_energy_source_on"
+    }
+  }
+}

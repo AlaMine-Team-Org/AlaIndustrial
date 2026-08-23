@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import dev.alaindustrial.junit.StopEphemeralServerBeforeFmlTeardown;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.neoforged.testframework.junit.EphemeralTestServerProvider;
@@ -40,6 +41,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * @implements energy-network line distribution kernel (locality, packet cap, loss, round-robin, no-self-churn)
  */
 @ExtendWith(EphemeralTestServerProvider.class)
+@ExtendWith(StopEphemeralServerBeforeFmlTeardown.class)
 class EnergyLineDistributorTest {
 
 	/**

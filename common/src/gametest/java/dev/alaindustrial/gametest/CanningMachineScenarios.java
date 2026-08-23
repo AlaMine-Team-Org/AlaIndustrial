@@ -39,8 +39,9 @@ import net.minecraft.world.level.storage.TagValueInput;
  * <li><b>It eats its own output.</b> The ration is food, so without an explicit exclusion the machine
  * happily grinds rations back into fewer rations, burning a tin can each pass
  * ({@link #reg02RationRefusedAsInput}).</li>
- * <li><b>Absorption is gated on the press being able to run.</b> Food must never vanish into an
- * invisible buffer on a machine that cannot produce ({@link #con01NoCansMeansFoodUntouched}).</li>
+ * <li><b>Absorption never waits on the press.</b> A player pre-feeding food before the first can, or
+ * power, or output room arrives must see it banked as calories immediately, not sitting untouched in
+ * the slot ({@link #fun04AbsorptionNeedsNeitherCanNorPower}, MOD-488).</li>
  * <li><b>Value in strictly exceeds value out.</b> The one property standing between this machine and
  * a food duplicator ({@link #dup01ValueStrictlyDecreases}).</li>
  * </ul>
@@ -172,29 +173,30 @@ public final class CanningMachineScenarios {
 		helper.succeed();
 	}
 
-	// ── CON: the machine refuses to run ────────────────────────────────────────────────────────────
-
 	/**
-	 * With no empty cans the food is left alone — not swallowed into the buffer.
-	 *
-	 * <p>Absorption is free and invisible, so a machine that absorbed while unable to press would look
-	 * to the player like it ate their food and gave nothing back.
+	 * Food banks into calories even with no can, no power and a full output — only the paid PRESS step
+	 * needs those (MOD-488). Before this, a machine with food but no can yet left it sitting in the
+	 * slot untouched, so a player who fed it early got no head start once the first can arrived.
 	 */
-	public static void con01NoCansMeansFoodUntouched(GameTestHelper helper) {
+	public static void fun04AbsorptionNeedsNeitherCanNorPower(GameTestHelper helper) {
 		CanningMachineBlockEntity be = place(helper);
 		load(be, new ItemStack(Items.COOKED_BEEF, 8), ItemStack.EMPTY);
-		drivePowered(be, helper, pressTicks() * 2);
-		if (be.getItem(CanningMachineBlockEntity.FOOD_SLOT).getCount() != 8) {
-			helper.fail("food was absorbed with no cans present — the slot now holds "
-					+ be.getItem(CanningMachineBlockEntity.FOOD_SLOT).getCount() + " of 8");
+		driveUnpowered(be, helper, pressTicks() * 2);
+		if (be.getItem(CanningMachineBlockEntity.FOOD_SLOT).getCount() == 8) {
+			helper.fail("food was not absorbed with no can and no power present");
 		}
-		if (be.foodBuffer() != 0) {
-			helper.fail("calorie buffer grew to " + be.foodBuffer() + " with no cans present");
+		if (be.foodBuffer() <= 0) {
+			helper.fail("calorie buffer stayed at " + be.foodBuffer() + " with no can and no power present");
+		}
+		if (!out(be).isEmpty()) {
+			helper.fail("a can-less, unpowered machine still pressed a ration");
 		}
 		helper.succeed();
 	}
 
-	/** Unpowered: no ration, no absorbed food, no progress. */
+	// ── CON: the machine refuses to run ────────────────────────────────────────────────────────────
+
+	/** Unpowered: no ration and no progress, even though absorption still banks calories. */
 	public static void con02NoPowerNoOutput(GameTestHelper helper) {
 		CanningMachineBlockEntity be = place(helper);
 		load(be, new ItemStack(Items.COOKED_BEEF, 8), cans(4));
@@ -202,13 +204,13 @@ public final class CanningMachineScenarios {
 		if (!out(be).isEmpty()) {
 			helper.fail("an unpowered machine produced " + out(be).getCount() + " ration(s)");
 		}
-		if (be.getItem(CanningMachineBlockEntity.FOOD_SLOT).getCount() != 8) {
-			helper.fail("an unpowered machine still ate food");
+		if (be.getItem(CanningMachineBlockEntity.CAN_SLOT).getCount() != 4) {
+			helper.fail("an unpowered machine still spent a can");
 		}
 		helper.succeed();
 	}
 
-	/** A full output slot jams the machine instead of overflowing or voiding. */
+	/** A full output slot jams the press, but absorption keeps banking calories regardless. */
 	public static void con03FullOutputJams(GameTestHelper helper) {
 		CanningMachineBlockEntity be = place(helper);
 		load(be, new ItemStack(Items.COOKED_BEEF, 16), cans(8));
@@ -220,6 +222,9 @@ public final class CanningMachineScenarios {
 		}
 		if (be.getItem(CanningMachineBlockEntity.CAN_SLOT).getCount() != 8) {
 			helper.fail("a jammed machine still spent cans");
+		}
+		if (be.getItem(CanningMachineBlockEntity.FOOD_SLOT).getCount() == 16) {
+			helper.fail("food was not absorbed while the output sat jammed");
 		}
 		helper.succeed();
 	}

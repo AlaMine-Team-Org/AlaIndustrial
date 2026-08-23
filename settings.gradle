@@ -25,6 +25,109 @@ plugins {
     id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
 }
 
+// -----------------------------------------------------------------------------------------------
+// One Gradle build per project directory (MOD-484).
+//
+// Gradle does NOT stop two daemons from running tasks in the same project directory at the same
+// time: its locks cover individual cache files, not the `build/` tree. Two builds in one tree
+// happily write the same outputs, and the collision does not surface as "busy" — it surfaces as
+// random damage somewhere else. Reconstructed from the daemon logs
+// (`~/.gradle/daemon/<version>/*.log`) on 2026-08-21; every case was in the MAIN worktree, none in
+// a per-task one:
+//
+//   21:00:24  :neoforge:test -> java.io.EOFException                        (daemon A)
+//   21:01:31  :neoforge:test -> NoSuchFileException in-progress-results-... (daemon B)
+//   21:14:59  :neoforge:test -> java.io.EOFException                        (daemon B)
+//   21:15:38  :neoforge:test -> NoSuchFileException in-progress-results-... (daemon C)
+//   21:16:55  :neoforge:compileGametestJava -> "package ... does not exist" (daemon D, --rerun-tasks)
+//   21:17:25  verifyAll starts in the SAME directory                        (daemon B)
+//
+// The paired "EOFException <-> NoSuchFileException" in DIFFERENT daemons seconds apart is one build
+// wiping `neoforge/build/test-results/test/binary/` while the other writes into it. When the
+// collision lands on compilation instead of tests it reads as
+// `package dev.alaindustrial.registry.neoforge does not exist` — a "build flake", even though
+// neither the classpath nor the task order has anything to do with it (measured: the dependency is
+// declared and the order is correct).
+//
+// Hence an exclusive OS lock on `<directory>/.gradle/alamod-build.lock` for the whole build. A
+// second build in the same directory now fails at once and says so, instead of lying about a
+// non-existent compile error two minutes later. Neighbouring worktrees are unaffected: each has its
+// own `settingsDir` and therefore its own lock file — which is exactly how to work
+// (/alamod-worktree).
+//
+// One-off bypass: `./gradlew ... -PallowConcurrentBuilds`.
+//
+// Implemented as a BuildService rather than `Gradle.buildFinished` (deprecated): Gradle closes the
+// service at the end of the build, failures included. The lock cannot live in a static — the daemon
+// is reused, so the next build in the same directory would block against itself. A killed process
+// releases the lock through the OS.
+// -----------------------------------------------------------------------------------------------
+import java.nio.channels.FileChannel
+import java.nio.channels.FileLock
+import java.nio.channels.OverlappingFileLockException
+import java.nio.file.StandardOpenOption
+import org.gradle.api.services.BuildService
+import org.gradle.api.services.BuildServiceParameters
+
+abstract class SingleBuildPerDirectory implements BuildService<SingleBuildPerDirectory.Params>, AutoCloseable {
+    interface Params extends BuildServiceParameters {
+        /** Lock file in `.gradle/` (gitignored). Its contents do not matter — the lock does. */
+        Property<String> getLockPath()
+        /** Neighbouring "who holds it" file: the LOSER reads it, so it must not be locked. */
+        Property<String> getInfoPath()
+        /** The "who holds it" line: daemon pid plus start time. */
+        Property<String> getOwner()
+    }
+
+    private FileChannel channel
+    private FileLock lock
+
+    SingleBuildPerDirectory() {
+        File lockFile = new File(parameters.lockPath.get())
+        lockFile.parentFile.mkdirs()
+        channel = FileChannel.open(lockFile.toPath(),
+                StandardOpenOption.CREATE, StandardOpenOption.READ, StandardOpenOption.WRITE)
+        try {
+            lock = channel.tryLock()
+        } catch (OverlappingFileLockException ignored) {
+            // THIS JVM already holds the lock — for us that is the same "taken".
+            lock = null
+        }
+        if (lock == null) {
+            channel.close()
+            File info = new File(parameters.infoPath.get())
+            // Read EXPLICITLY as UTF-8: the file is written as UTF-8 (`setText(..., 'UTF-8')`), while
+            // `File.getText()` without an argument takes the platform encoding — on Windows cp1251 —
+            // and would garble the holder line in the very message the guard exists to print.
+            String holder = info.isFile() ? info.getText('UTF-8').trim() : 'unknown'
+            throw new GradleException("""Another Gradle build is already running in this directory.
+  directory: ${lockFile.parentFile.parentFile}
+  held by:   ${holder}
+Two builds in one tree write to the same `build/` and break each other: that is where the random
+`java.io.EOFException` in `:neoforge:test` and the phantom `package ... does not exist` in
+`:neoforge:compileGametestJava` come from (MOD-484).
+Wait for it to finish, or build in your own worktree (see /alamod-worktree).
+One-off bypass, if you are sure: -PallowConcurrentBuilds""")
+        }
+        new File(parameters.infoPath.get()).setText(parameters.owner.get(), 'UTF-8')
+    }
+
+    @Override
+    void close() {
+        try { lock?.release() } catch (Exception ignored) { }
+        try { channel?.close() } catch (Exception ignored) { }
+    }
+}
+
+if (!gradle.startParameter.projectProperties.containsKey('allowConcurrentBuilds')) {
+    File lockDir = new File(settingsDir, '.gradle')
+    gradle.sharedServices.registerIfAbsent('alamodSingleBuildPerDirectory', SingleBuildPerDirectory) {
+        parameters.lockPath.set(new File(lockDir, 'alamod-build.lock').absolutePath)
+        parameters.infoPath.set(new File(lockDir, 'alamod-build.lock.info').absolutePath)
+        parameters.owner.set("Gradle daemon (pid ${ProcessHandle.current().pid()}), started ${new Date().format('yyyy-MM-dd HH:mm:ss')}".toString())
+    }.get()   // .get() — take the lock RIGHT NOW, during settings, before any task runs.
+}
+
 // The git repository is historically named 'AlaSolar'; the mod id is 'alaindustrial'.
 rootProject.name = 'alaindustrial'
 includeBuild('build-logic')

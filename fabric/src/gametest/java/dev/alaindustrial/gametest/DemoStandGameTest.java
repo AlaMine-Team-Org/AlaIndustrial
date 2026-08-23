@@ -19,7 +19,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.level.block.entity.SignBlockEntity;
 
 /**
  * MOD-058 smoke test: builds the {@code /ala demo} stand with the very same
@@ -31,9 +30,9 @@ import net.minecraft.world.level.block.entity.SignBlockEntity;
  *   <li><b>Liveness</b> — after 100 world ticks the fuelled generators have delivered EU into
  *       their battery boxes and the pre-charged macerator is processing (progress or consumed
  *       energy). A stand of dead props would pass a pure block-scan; this catches it.</li>
- *   <li><b>Polygon (MOD-294)</b> — the label signs carry readable text, the 36-cable loss lane
- *       actually delivers EU to its far furnace, and the LV-cycle farm's macerator works. Scenery
- *       that quietly died is the failure mode these three catch.</li>
+ *   <li><b>Polygon (MOD-294)</b> — the 36-cable loss lane actually delivers EU to its far
+ *       furnace and the LV-cycle farm's macerator works. Scenery that quietly died is the
+ *       failure mode these two catch.</li>
  * </ol>
  *
  * <p>Runs in a custom 44×14×28 empty structure ({@code demo_stand_area.snbt}) because the stand
@@ -103,18 +102,6 @@ public class DemoStandGameTest {
 		if (!missing.isEmpty()) {
 			helper.fail("demo stand does not showcase every mod block; missing: " + missing
 					+ " — add them to a DemoStand zone");
-		}
-
-		// --- MOD-294: the polygon's labels are real (waxed signs carrying text, not blank props) ---
-		// A label zone that silently stopped placing signs — or placed them unwritable-empty — would
-		// pass every block-coverage scan above, because oak signs are vanilla. Read the text back.
-		if (!(helper.getLevel().getBlockEntity(origin.offset(2, 1, 8)) instanceof SignBlockEntity lossSign)
-				|| lossSign.getFrontText().getMessage(0, false).getString().isEmpty()) {
-			helper.fail("loss-lane label sign missing or empty at (2, 1, 8)");
-		}
-		if (!(helper.getLevel().getBlockEntity(origin.offset(12, 1, 0)) instanceof SignBlockEntity tierSign)
-				|| tierSign.getFrontText().getMessage(0, false).getString().isEmpty()) {
-			helper.fail("tier-zone label sign missing or empty at (12, 1, 0)");
 		}
 
 		// --- liveness after 100 ticks of normal world ticking ---

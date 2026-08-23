@@ -99,6 +99,14 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    // MOD-484 — the heap is set EXPLICITLY. Without this line Gradle's own default for `Test`
+    // applies (`-Xmx512m`, measured on the live process: neither this file nor the generated
+    // ModDevGradle `build/moddev/junit/vmArgs.txt` sets a heap). For a lane that boots a headless
+    // `MinecraftServer` with every registry and datapack loaded, 512 MB is not a choice but an
+    // oversight: `jcmd GC.heap_info` over 54 samples puts peak used heap at 301 MB, 59 % of that
+    // default. Re-measure after adding test classes — the peak must stay clear of the ceiling, or
+    // GC pressure turns into run-time variance.
+    maxHeapSize = '1g'
 }
 
 // MOD-242 — compile the shared scenario bodies (common/src/gametest/java) into the gametest

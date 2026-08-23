@@ -30,12 +30,12 @@ import net.minecraft.world.level.storage.ValueOutput;
  * out never varies, so there is nothing for a recipe to say. The exchange lives in
  * {@link CanningMath} instead, where the L1 lane can reach it without a game.
  *
- * <p><b>Two steps, and only the second one costs.</b> Absorbing food into the buffer is free and
- * instant; pressing a ration is a timed, paid cycle. Charging per item swallowed instead would make
- * canning five sweet berries cost five times what one steak costs — punishing precisely the
- * scrap-consolidation this machine exists for. Absorption is also gated on the machine being able to
- * work at all, so food never disappears into an invisible buffer on an unpowered or can-less
- * machine; it sits visible in its slot until the machine can actually use it.
+ * <p><b>Two steps, and only the second one costs.</b> Absorbing food into the buffer is free,
+ * instant, and unconditional (MOD-488) — it runs even with no can loaded yet, no power, or a full
+ * output, so a player can pre-feed calories before the machine can press anything. Pressing a
+ * ration is the one timed, paid cycle, and it alone still needs a can, power and output room.
+ * Charging per item swallowed instead would make canning five sweet berries cost five times what one
+ * steak costs — punishing precisely the scrap-consolidation this machine exists for.
  */
 public final class CanningMachineBlockEntity extends MachineBlockEntity
 		implements Overclockable, MenuProvider {
@@ -65,13 +65,15 @@ public final class CanningMachineBlockEntity extends MachineBlockEntity
 		int valuePerRation = Config.canningFoodValuePerCan;
 		maxProgress = effectiveDuration(Config.canningMachineDuration);
 
-		// Everything the press needs apart from the calories themselves. Absorption rides on this so
-		// an idle machine never eats food it cannot turn into anything.
+		// Everything the PRESS needs apart from the calories themselves.
 		boolean pressReady = !items.get(CAN_SLOT).isEmpty()
 				&& canOutput()
 				&& energy.getAmount() >= euPerTick;
 
-		boolean changed = pressReady && absorbFood(valuePerRation);
+		// Absorption is unconditional (MOD-488): a player pre-feeding food before the first empty can
+		// arrives should see it banked as calories right away, not sitting untouched in the slot. Only
+		// the paid PRESS step still needs a can, power and output room.
+		boolean changed = absorbFood(valuePerRation);
 		boolean canWork = pressReady && CanningMath.hasFullRation(foodBuffer, valuePerRation);
 
 		updateLit(canWork);

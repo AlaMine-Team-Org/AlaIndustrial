@@ -17,6 +17,16 @@ public class EnergyCondenserGameTest {
 	}
 
 	@GameTest
+	public void condenser_everyRemovalPathSpendsTheBank(GameTestHelper helper) {
+		EnergyCondenserScenarios.condenser_everyRemovalPathSpendsTheBank(helper);
+	}
+
+	@GameTest
+	public void condenser_windowRefusesAPlayersOwnClot(GameTestHelper helper) {
+		EnergyCondenserScenarios.condenser_windowRefusesAPlayersOwnClot(helper);
+	}
+
+	@GameTest
 	public void condenser_facesAreSplitBetweenPowerAndItems(GameTestHelper helper) {
 		EnergyCondenserScenarios.condenser_facesAreSplitBetweenPowerAndItems(helper);
 	}

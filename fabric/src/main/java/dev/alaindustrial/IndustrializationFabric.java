@@ -322,6 +322,16 @@ public class IndustrializationFabric implements ModInitializer {
 				ModSounds.ENERGY_CONDENSER_HUM_ID, ModSounds.createEnergyCondenserHum());
 		ModSounds.COMPONENT_REPAIR_BENCH_HUM = registerSound(
 				ModSounds.COMPONENT_REPAIR_BENCH_HUM_ID, ModSounds.createComponentRepairBenchHum());
+		ModSounds.REACTOR_HUM = registerSound(
+				ModSounds.REACTOR_HUM_ID, ModSounds.createReactorHum());
+		ModSounds.REACTOR_ALARM = registerSound(
+				ModSounds.REACTOR_ALARM_ID, ModSounds.createReactorAlarm());
+		ModSounds.REACTOR_SPINDOWN = registerSound(
+				ModSounds.REACTOR_SPINDOWN_ID, ModSounds.createReactorSpindown());
+		ModSounds.REACTOR_DOOR_OPEN = registerSound(
+				ModSounds.REACTOR_DOOR_OPEN_ID, ModSounds.createReactorDoorOpen());
+		ModSounds.REACTOR_DOOR_CLOSE = registerSound(
+				ModSounds.REACTOR_DOOR_CLOSE_ID, ModSounds.createReactorDoorClose());
 	}
 
 	/**

@@ -19,8 +19,13 @@ import net.minecraft.world.entity.player.Inventory;
 public final class CanningMachineScreen extends ProgressMachineScreen<CanningMachineMenu> {
 	private static final Identifier TEXTURE =
 			Industrialization.id("textures/gui/container/canning_machine.png");
-	/** Same arrow geometry as the other two-input machines, so the shared atlas strip lines up. */
-	private static final ProgressSpec PROGRESS = new ProgressSpec(176, 48, 25, 9, 79, 31, false);
+	/**
+	 * Fills the flat 31×10 backdrop baked into the frame at (74,33) exactly (MOD-489/490/491): the
+	 * barcode art is 31×10, not the family's usual 25×9 arrow — both dimensions differ, and the edge
+	 * marks sit flush against the art's own left/right border, so a narrower {@code spriteW} silently
+	 * clips them and a centered {@code destX} leaves a gap that shouldn't be there.
+	 */
+	private static final ProgressSpec PROGRESS = new ProgressSpec(176, 48, 31, 10, 74, 33, false);
 	/** Baseline between the machine area and the vanilla inventory label, as in VulcanizerScreen. */
 	private static final int READOUT_Y = 61;
 	/** Left stop — the energy bar occupies x 17..26 down to y=63. */

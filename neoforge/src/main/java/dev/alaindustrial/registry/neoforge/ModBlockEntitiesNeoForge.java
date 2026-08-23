@@ -4,6 +4,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.AssemblerBlockEntity;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.CesuBlockEntity;
+import dev.alaindustrial.block.entity.CreativeEnergySourceBlockEntity;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.ChargePadBlockEntity;
@@ -190,6 +191,9 @@ public final class ModBlockEntitiesNeoForge {
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<LightningRodGeneratorBlockEntity>>
 			LIGHTNING_ROD_GENERATOR = register(ContentManifest.blockEntity("lightning_rod_generator",
 					LightningRodGeneratorBlockEntity.class));
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CreativeEnergySourceBlockEntity>>
+			CREATIVE_ENERGY_SOURCE = register(ContentManifest.blockEntity("creative_energy_source",
+					CreativeEnergySourceBlockEntity.class));
 	// Pure container (no EnergyPort) — no capability binding in IndustrializationNeoForge#registerCapabilities.
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<IronChestBlockEntity>> IRON_CHEST =
 			register(ContentManifest.blockEntity("iron_chest", IronChestBlockEntity.class));

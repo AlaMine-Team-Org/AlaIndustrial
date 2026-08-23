@@ -12,6 +12,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import dev.alaindustrial.junit.StopEphemeralServerBeforeFmlTeardown;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.neoforged.testframework.junit.EphemeralTestServerProvider;
@@ -37,6 +38,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * machine swapped one packet with the junction every tick, freezing the network solid).
  */
 @ExtendWith(EphemeralTestServerProvider.class)
+@ExtendWith(StopEphemeralServerBeforeFmlTeardown.class)
 class Mod413ForkStarvationSimTest {
 
 	private static final Direction[] DIRECTIONS = Direction.values();

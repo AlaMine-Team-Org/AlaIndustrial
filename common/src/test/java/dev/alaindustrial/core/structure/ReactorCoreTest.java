@@ -1,6 +1,7 @@
 package dev.alaindustrial.core.structure;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -243,5 +244,69 @@ class ReactorCoreTest {
 		assertEquals(50, ReactorCore.heatPercent(5000, 10000));
 		assertEquals(100, ReactorCore.heatPercent(50000, 10000));
 		assertEquals(0, ReactorCore.heatPercent(100, 0));
+	}
+
+	@Test
+	void theOverheatAlarmSoundsOnTheWayUpAndNotAgainUntilItCoolsBack() {
+		// The shipped pair: warn at 70, re-arm once the coolant loop has it back to its 60 target.
+		assertFalse(ReactorCore.shouldSoundAlarm(69, 70, 60, false), "below the line, silent");
+		assertTrue(ReactorCore.shouldSoundAlarm(70, 70, 60, false), "crossing the line, sounds");
+		assertFalse(ReactorCore.shouldSoundAlarm(95, 70, 60, true), "already warned, stays quiet");
+		// Between the two lines the alarm is latched: this is the deadband, and it is the whole point.
+		assertTrue(ReactorCore.alarmStaysLatched(65, 70, 60, true), "65 is inside the deadband");
+		assertFalse(ReactorCore.alarmStaysLatched(59, 70, 60, true), "under the target, re-arms");
+		// Both boundaries pinned exactly, or `>=` could quietly become `>` and nothing would notice:
+		// re-arming one point early is a siren that fires twice on a core hovering at its target.
+		assertTrue(ReactorCore.alarmStaysLatched(60, 70, 60, true), "exactly at the rearm floor, still latched");
+		assertTrue(ReactorCore.alarmStaysLatched(70, 70, 60, false), "exactly at the warning line, latches");
+		assertTrue(ReactorCore.shouldSoundAlarm(70, 70, 60, false), "and can sound again afterwards");
+	}
+
+	@Test
+	void aHealthyUnplumbedReactorSittingAt66PercentNeverRetriggers() {
+		// The regression this guard exists for. Two adjacent columns with no water settle at 66 % of the
+		// scale — four points under the warning line — and a plain `heat >= warn` test would fire, clear
+		// and fire again as the temperature wobbles by one unit, several times a second.
+		boolean warned = false;
+		int sounded = 0;
+		// Climb past the line once, then hover around the equilibrium the balance actually produces.
+		for (int percent : new int[] {40, 55, 68, 71, 69, 66, 67, 66, 65, 66, 68, 66, 67, 70, 66}) {
+			if (ReactorCore.shouldSoundAlarm(percent, 70, 60, warned)) {
+				sounded++;
+			}
+			warned = ReactorCore.alarmStaysLatched(percent, 70, 60, warned);
+		}
+		assertEquals(1, sounded, "one excursion must produce exactly one siren, not one per tick");
+	}
+
+	@Test
+	void theTopOfTheScaleIsItsOwnStateAndKeepsSounding() {
+		// The threshold alarm latches, so a core that reached 100 % would otherwise sit in its worst
+		// state in silence — the whole reason the critical state exists separately.
+		assertFalse(ReactorCore.isCritical(99), "99 % is still only a warning");
+		assertTrue(ReactorCore.isCritical(100), "the top of the scale is critical");
+		// heatPercent clamps at 100, but the predicate must not depend on that clamp holding.
+		assertTrue(ReactorCore.isCritical(140), "over the top is still critical");
+		// The re-sound window has two real constraints. Asserting the literals back would only restate
+		// them, so these check the properties that can actually be got wrong.
+		assertTrue(ReactorCore.CRITICAL_ALARM_MIN_TICKS < ReactorCore.CRITICAL_ALARM_MAX_TICKS,
+				"the jitter window must not collapse to a fixed interval — a metronome stops being heard");
+		assertTrue(ReactorCore.CRITICAL_ALARM_MIN_TICKS > 50,
+				"a gap shorter than the 2.48 s alarm sample would stack sirens on top of each other");
+	}
+
+	@Test
+	void aCrossedConfigDegradesToNoDeadbandRatherThanToChaos() {
+		// A file with the rearm floor ABOVE the warning line is nonsense, and the clamp turns it into the
+		// least-bad thing: floor = min(rearm, warn) = warn, i.e. no deadband at all. Worth pinning,
+		// because the honest failure mode is "an alarm that can retrigger", not "an alarm that fires
+		// twice on the same tick" or one that latches forever.
+		assertTrue(ReactorCore.alarmStaysLatched(75, 70, 90, true),
+				"above the warning line it stays latched, whatever the rearm floor claims");
+		assertFalse(ReactorCore.alarmStaysLatched(69, 70, 90, true),
+				"with the floor clamped to the warning line, one point below re-arms");
+		// The consequence, stated rather than hidden: a core wobbling across the line re-sounds.
+		assertTrue(ReactorCore.shouldSoundAlarm(70, 70, 90, false),
+				"and it can therefore fire again — this is why the shipped rearm sits BELOW the warning");
 	}
 }

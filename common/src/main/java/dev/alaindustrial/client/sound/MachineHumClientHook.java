@@ -119,8 +119,14 @@ public final class MachineHumClientHook implements MachineHum.ClientHook {
 			active.values().removeIf(i -> i.isStopped() || !mc.getSoundManager().isActive(i));
 		}
 
-		MachineHumSoundInstance created =
-				new MachineHumSoundInstance(hum.humSound().get(), pos.immutable(), state.getBlock(), hum.humVolume());
+		// Start at the loudness the machine wants RIGHT NOW, not at its nominal one (MOD-472). The
+		// instance re-reads volume every tick, so a wrong first value corrects itself — but not before
+		// the player has heard it, and for a reactor heard from outside its shell that first tick is the
+		// difference between muffled and full blast. Machines that do not override the per-tick variant
+		// get their fixed number here, exactly as before.
+		MachineHumSoundInstance created = new MachineHumSoundInstance(
+				hum.humSound().get(), pos.immutable(), state.getBlock(),
+				hum.humVolume(level, pos, state, mc.player.getEyePosition()));
 		mc.getSoundManager().play(created);
 		active.put(key, created);
 	}

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import dev.alaindustrial.junit.StopEphemeralServerBeforeFmlTeardown;
 import net.minecraft.core.BlockPos;
 import net.neoforged.testframework.junit.EphemeralTestServerProvider;
 import org.junit.jupiter.api.Test;
@@ -43,6 +44,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * an empty method column instead.
  */
 @ExtendWith(EphemeralTestServerProvider.class)
+@ExtendWith(StopEphemeralServerBeforeFmlTeardown.class)
 class NetworkTopologyDeterminismTest {
 
 	/**

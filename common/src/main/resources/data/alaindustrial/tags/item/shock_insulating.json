@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "alaindustrial:insulated_helmet",
+    "alaindustrial:insulated_chestplate",
+    "alaindustrial:insulated_leggings",
+    "alaindustrial:insulated_boots",
+    "alaindustrial:shielding_helmet",
+    "alaindustrial:shielding_chestplate",
+    "alaindustrial:shielding_leggings",
+    "alaindustrial:shielding_boots"
+  ]
+}

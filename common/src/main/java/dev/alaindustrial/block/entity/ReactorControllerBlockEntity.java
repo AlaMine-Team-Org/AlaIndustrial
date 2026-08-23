@@ -1,6 +1,7 @@
 package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.block.FuelRodAssemblyBlock;
 import dev.alaindustrial.block.ReactorControllerBlock;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.structure.ReactorCore;
@@ -8,6 +9,7 @@ import dev.alaindustrial.core.structure.RoomScan;
 import dev.alaindustrial.core.structure.RoomValidator;
 import dev.alaindustrial.menu.ReactorControllerMenu;
 import dev.alaindustrial.registry.ModContent;
+import dev.alaindustrial.registry.ModSounds;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -130,6 +132,53 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 
 	/** Ticks until the next sweep. Zero means "scan on the next server tick". */
 	private int scanCooldown;
+
+	// ── MOD-472: the room's voice ──
+	/**
+	 * How many columns carry the drone at once.
+	 *
+	 * <p>Not "all of them", and the ceiling is the client's, not ours: a Minecraft client has on the
+	 * order of twenty-five static sound channels for the whole game, and a minimum-size room packed
+	 * solid already holds twenty-seven racks. Identical copies of one sample also sum at about +6 dB per
+	 * doubling, so past a handful the room stops sounding bigger and starts sounding louder. Three keeps
+	 * the drone spread across the floor — which is the whole reason it plays from the racks — while
+	 * costing about a tenth of the channel budget.
+	 */
+	private static final int VOICED_COLUMNS = 3;
+
+	/**
+	 * Ticks the drone keeps playing after the last productive tick.
+	 *
+	 * <p><b>Without this the loop would stutter at twenty hertz.</b> A healthy reactor with somewhere to
+	 * put its power alternates between producing and {@code BUFFER_FULL} tick by tick, because the
+	 * sockets are drained and refilled every tick; and between the last rod burning out and the next room
+	 * scan there is a gap of up to {@code reactorScanIntervalTicks}. Both would chop the sound to pieces.
+	 * Two seconds of latch spans either.
+	 */
+	private static final int VOICE_LATCH_TICKS = 40;
+
+	/** Counts down from {@link #VOICE_LATCH_TICKS} after the last tick that actually made power. */
+	private int voiceLatch;
+
+	/** Whether the drone was sounding last tick — the edge that fires the spin-down. */
+	private boolean wasVoiced;
+
+	/**
+	 * Whether the overheat alarm has already sounded and not yet re-armed.
+	 *
+	 * <p>Persisted, because the alternative is an alarm that fires again every time the chunk reloads on
+	 * a core that has been sitting hot and unattended the whole time.
+	 */
+	private boolean overheatWarned;
+
+	/**
+	 * Ticks until the critical alarm sounds again, while the core sits at the top of the scale.
+	 *
+	 * <p>Deliberately NOT persisted: on the tick a chunk reloads this is zero, so a core that is still
+	 * critical announces itself immediately rather than waiting out a countdown nobody heard. There is
+	 * nothing to preserve — the state that matters is the temperature, and that is saved.
+	 */
+	private int criticalAlarmCooldown;
 
 	/**
 	 * The box this controller last sealed, or an empty one if it never has.
@@ -261,6 +310,10 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 				lastOutput = (int) Math.min(Short.MAX_VALUE, output);
 				idleReason = ReactorIdleReason.RUNNING.ordinal();
 			} else {
+				// Cleared, not left over. This branch means the throttle divided the output away to
+				// nothing, and a stale figure here would both mis-report on the panel and — since MOD-472
+				// — keep the room's drone alive on a core producing zero.
+				lastOutput = 0;
 				idleReason = ReactorIdleReason.BUFFER_FULL.ordinal();
 			}
 		} else {
@@ -279,6 +332,175 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		}
 		settleStacks(columns);
 		feedOutlets(level);
+		updateVoice(level, pos, columns);
+		warnOnOverheat(level, pos);
+	}
+
+	/**
+	 * Keeps the room's drone in step with what the reactor is doing (MOD-472).
+	 *
+	 * <p>The signal is {@code lastOutput > 0}, not {@code idleReason}: the idle reason can read
+	 * {@code RUNNING} on a room making nothing at all, because it is derived from {@code rods}, which the
+	 * periodic scan refreshes only every {@code reactorScanIntervalTicks} while output is recomputed
+	 * every tick. A core whose last rod just burnt out would have gone on announcing itself for two
+	 * seconds.
+	 */
+	private void updateVoice(Level level, BlockPos pos, List<FuelRodAssemblyBlockEntity> columns) {
+		if (lastOutput > 0) {
+			voiceLatch = VOICE_LATCH_TICKS;
+		} else if (voiceLatch > 0) {
+			voiceLatch--;
+		}
+		boolean voiced = voiceLatch > 0;
+		paintVoicedColumns(level, columns, voiced);
+		if (wasVoiced && !voiced && level instanceof ServerLevel serverLevel) {
+			// The core going quiet gets its own cue. It covers every way a reactor stops — the lever
+			// pulled, the last rod spent, the throttle wound shut, the shell breached — because all four
+			// arrive here as the same thing: power that was being made a moment ago and is not now.
+			serverLevel.playSound(null, pos, ModSounds.REACTOR_SPINDOWN.get(), SoundSource.BLOCKS, 0.7f, 1.0f);
+		}
+		wasVoiced = voiced;
+	}
+
+	/**
+	 * Takes the drone off every rack in the room this controller last sealed.
+	 *
+	 * <p><b>Sweeps the remembered BOX, not the in-memory list</b>, and that is the whole point of the
+	 * method. {@link #assemblies} is rebuilt by the scan and never saved, so after a chunk round-trip it
+	 * is empty — and a room whose breach is first noticed on that very tick would have had nothing to
+	 * silence. The flag, meanwhile, IS saved: it rides in the chunk like any blockstate. The box is
+	 * likewise persisted for exactly this class of problem, so it is the only handle that survives the
+	 * gap and can still find the racks.
+	 *
+	 * <p>Costs one sweep of the interior, on the transition only — never on a running tick.
+	 */
+	private void silenceColumns(Level level) {
+		paintVoicedColumns(level, collectColumns(level), false);
+		clearActiveInRememberedBox(level);
+		voiceLatch = 0;
+		// wasVoiced is deliberately NOT cleared here. This runs from the scan, which happens BEFORE
+		// runReactor in the same tick, so wiping it would swallow the very edge the spin-down listens
+		// for — and a breach is the loudest of the four cases that cue is meant to cover.
+	}
+
+	/**
+	 * Clears the drone flag across the last sealed interior, block by block.
+	 *
+	 * <p>The recovery path for every case where the list of racks is gone but the flag is not: a room
+	 * reloaded from disk and found broken, an interior partitioned so that some racks fell outside the
+	 * new box, a controller taken out by something that skips the mining hook. Without it those racks
+	 * hum for as long as they stand, and nothing in the world can switch them off.
+	 */
+	private int clearActiveInRememberedBox(Level level) {
+		if (boxMaxX == Integer.MIN_VALUE) {
+			return 0;
+		}
+		int cleared = 0;
+		BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
+		for (int x = boxMinX; x <= boxMaxX; x++) {
+			for (int y = boxMinY; y <= boxMaxY; y++) {
+				for (int z = boxMinZ; z <= boxMaxZ; z++) {
+					cursor.set(x, y, z);
+					BlockState state = level.getBlockState(cursor);
+					if (state.getBlock() instanceof FuelRodAssemblyBlock
+							&& state.getValue(FuelRodAssemblyBlock.ACTIVE)) {
+						level.setBlock(cursor.immutable(),
+								state.setValue(FuelRodAssemblyBlock.ACTIVE, false), 2);
+						cleared++;
+					}
+				}
+			}
+		}
+		return cleared;
+	}
+
+	/**
+	 * Marks the first {@link #VOICED_COLUMNS} racks as the ones that sound, and clears the rest.
+	 *
+	 * <p>Scan order is a stable walk of the room's box, so the same racks keep the voice from one sweep
+	 * to the next and the drone does not wander around the floor. The blockstate is written only when the
+	 * value actually changes — the same discipline the shell's {@code formed} flag uses, and the reason
+	 * painting a room full of columns costs nothing on the ticks in between.
+	 *
+	 * <p>Walks the block entities the tick already resolved rather than {@link #assemblies}, and reads
+	 * each state off its block entity, where it is cached. Re-deriving the list would mean a second
+	 * chunk lookup per rack on every tick of every reactor, for nothing.
+	 */
+	private void paintVoicedColumns(Level level, List<FuelRodAssemblyBlockEntity> columns, boolean voiced) {
+		int painted = 0;
+		for (FuelRodAssemblyBlockEntity column : columns) {
+			BlockState state = column.getBlockState();
+			if (!(state.getBlock() instanceof FuelRodAssemblyBlock)) {
+				continue;
+			}
+			boolean wanted = voiced && painted < VOICED_COLUMNS && column.hasFuel();
+			if (wanted) {
+				painted++;
+			}
+			if (state.getValue(FuelRodAssemblyBlock.ACTIVE) != wanted) {
+				level.setBlock(column.getBlockPos(), state.setValue(FuelRodAssemblyBlock.ACTIVE, wanted), 2);
+			}
+		}
+	}
+
+	/**
+	 * Sounds the overheat siren once per excursion (MOD-472).
+	 *
+	 * <p>Edge, not level, and the reason is in the balance: an unplumbed pair of columns settles at 66 %
+	 * of the heat scale, three points below the 70 % warning line, so a plain threshold test would fire
+	 * and clear several times a second on a reactor that is merely warm. {@link ReactorCore} owns the
+	 * arithmetic — it re-arms only once the coolant loop has pulled the core back to its own target — so
+	 * the rule is covered by a unit test rather than by listening.
+	 *
+	 * <p>Played from the controller with a fixed long range and no muffling of any kind. The drone
+	 * belongs to the room and is held in by the shell; the alarm is the opposite kind of sound — its
+	 * entire job is reaching somebody who is not in the room.
+	 */
+	private void warnOnOverheat(Level level, BlockPos pos) {
+		int percent = ReactorCore.heatPercent(heat, Config.reactorHeatCapacity);
+		if (ReactorCore.shouldSoundAlarm(percent, Config.reactorHeatWarnPercent,
+				Config.reactorCoolantTargetPercent, overheatWarned)
+				&& level instanceof ServerLevel serverLevel) {
+			serverLevel.playSound(null, pos, ModSounds.REACTOR_ALARM.get(), SoundSource.BLOCKS, 0.8f, 1.0f);
+		}
+		boolean latched = ReactorCore.alarmStaysLatched(percent, Config.reactorHeatWarnPercent,
+				Config.reactorCoolantTargetPercent, overheatWarned);
+		if (latched != overheatWarned) {
+			overheatWarned = latched;
+			setChanged();
+		}
+		soundCriticalAlarm(level, pos, percent);
+	}
+
+	/**
+	 * Keeps the siren going while the core is pinned at the top of the scale (MOD-472).
+	 *
+	 * <p>The threshold alarm above is a single blast by design, and that is exactly what leaves a core
+	 * at a hundred percent sitting in silence: it crossed the warning line long ago and latched. A
+	 * reactor in its worst state should not be quieter than one that is merely warm, so here it re-sounds
+	 * every three to five seconds for as long as it stays there.
+	 *
+	 * <p>The gap is re-rolled after every blast rather than fixed. A siren on an exact metronome turns
+	 * into background texture within a minute; an irregular one keeps reading as an alarm. Louder than
+	 * the threshold blast, too — this is the emergency, not the warning.
+	 *
+	 * <p>Coming down off the top clears the countdown, so the next excursion sounds immediately instead
+	 * of finishing a wait left over from the last one.
+	 */
+	private void soundCriticalAlarm(Level level, BlockPos pos, int heatPercent) {
+		if (!ReactorCore.isCritical(heatPercent)) {
+			criticalAlarmCooldown = 0;
+			return;
+		}
+		if (criticalAlarmCooldown > 0) {
+			criticalAlarmCooldown--;
+			return;
+		}
+		if (level instanceof ServerLevel serverLevel) {
+			serverLevel.playSound(null, pos, ModSounds.REACTOR_ALARM.get(), SoundSource.BLOCKS, 1.0f, 1.0f);
+			criticalAlarmCooldown = serverLevel.getRandom().nextIntBetweenInclusive(
+					ReactorCore.CRITICAL_ALARM_MIN_TICKS, ReactorCore.CRITICAL_ALARM_MAX_TICKS);
+		}
 	}
 
 	/**
@@ -594,6 +816,14 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		if (result.formed()) {
 			repainted = RoomValidator.applyFormed(level, result.minX(), result.minY(), result.minZ(),
 					result.maxX(), result.maxY(), result.maxZ(), true);
+			// A room can shrink without ever failing its scan — wall a running interior in two and the
+			// near half is still a valid room. Racks left on the far side drop out of the sweep with the
+			// drone flag still on them and nothing left that would ever take it off, so the OLD box gets
+			// swept before it is forgotten. Racks still inside are repainted in the same tick, so the
+			// clearing is invisible (MOD-472).
+			if (boxChanges(result)) {
+				clearActiveInRememberedBox(level);
+			}
 			rememberBox(result);
 		} else {
 			// Clear the box we last sealed — not the one this scan measured, which is empty. Without
@@ -610,6 +840,10 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		if (result.formed()) {
 			collectAssemblies(level, result);
 		} else {
+			// Silence the racks BEFORE forgetting where they are (MOD-472). The drone is painted onto the
+			// columns and cleared the same way, so a list emptied first would leave the flag set on blocks
+			// nothing owns any more — a breached room that goes on humming for as long as it stands.
+			silenceColumns(level);
 			assemblies.clear();
 			outlets.clear();
 			rods = 0;
@@ -667,6 +901,13 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		// countNeighbourPairs does it per tick from the columns runReactor already has in hand.
 	}
 
+	/** Whether this scan measured a different interior than the one currently remembered. */
+	private boolean boxChanges(RoomScan.Result result) {
+		return boxMaxX != Integer.MIN_VALUE
+				&& (boxMinX != result.minX() || boxMinY != result.minY() || boxMinZ != result.minZ()
+						|| boxMaxX != result.maxX() || boxMaxY != result.maxY() || boxMaxZ != result.maxZ());
+	}
+
 	private void rememberBox(RoomScan.Result result) {
 		boxMinX = result.minX();
 		boxMinY = result.minY();
@@ -701,6 +942,9 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 	 * a cosmetic loose end, and a far better failure than a world that will not save.
 	 */
 	public void unformOnRemoval(Level level) {
+		// Same reason as on a breach: the racks wear the drone flag, and the controller is the only thing
+		// that can take it off them (MOD-472).
+		silenceColumns(level);
 		clearRememberedBox(level);
 	}
 
@@ -727,6 +971,7 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		output.putInt("BoxMaxY", boxMaxY);
 		output.putInt("BoxMaxZ", boxMaxZ);
 		output.putLong("Heat", heat);
+		output.putBoolean("OverheatWarned", overheatWarned);
 		output.putInt("Depth", depthPermille);
 	}
 
@@ -740,6 +985,7 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		boxMaxY = input.getIntOr("BoxMaxY", Integer.MIN_VALUE);
 		boxMaxZ = input.getIntOr("BoxMaxZ", Integer.MIN_VALUE);
 		heat = input.getLongOr("Heat", 0L);
+		overheatWarned = input.getBooleanOr("OverheatWarned", false);
 		depthPermille = input.getIntOr("Depth", ReactorCore.FULL_DEPTH);
 	}
 

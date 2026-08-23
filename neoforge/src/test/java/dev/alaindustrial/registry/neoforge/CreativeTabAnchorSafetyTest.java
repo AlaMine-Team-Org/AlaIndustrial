@@ -10,7 +10,9 @@ import dev.alaindustrial.registry.VanillaCreativeTabs;
 import it.unimi.dsi.fastutil.Hash;
 import java.lang.reflect.Field;
 import java.util.List;
+import dev.alaindustrial.junit.StopEphemeralServerBeforeFmlTeardown;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.CreativeModeTab;
@@ -40,6 +42,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * harness has stopped reproducing the hazard and the other assertions have quietly become decoration.
  */
 @ExtendWith(EphemeralTestServerProvider.class)
+@ExtendWith(StopEphemeralServerBeforeFmlTeardown.class)
 class CreativeTabAnchorSafetyTest {
 
 	/**
@@ -66,6 +69,12 @@ class CreativeTabAnchorSafetyTest {
 	/** An event over a COMBAT tab containing exactly {@code existing} — nothing else. */
 	private static BuildCreativeModeTabContentsEvent combatTabContaining(MinecraftServer server,
 			ItemStack... existing) {
+		return tabContaining(server, VanillaCreativeTabs.COMBAT, existing);
+	}
+
+	/** An event over the vanilla tab {@code tabKey} containing exactly {@code existing} — nothing else. */
+	private static BuildCreativeModeTabContentsEvent tabContaining(MinecraftServer server,
+			ResourceKey<CreativeModeTab> tabKey, ItemStack... existing) {
 		Hash.Strategy<? super ItemStack> strategy = typeAndTagStrategy();
 		InsertableLinkedOpenCustomHashSet<ItemStack> parent = new InsertableLinkedOpenCustomHashSet<>(strategy);
 		InsertableLinkedOpenCustomHashSet<ItemStack> search = new InsertableLinkedOpenCustomHashSet<>(strategy);
@@ -73,10 +82,75 @@ class CreativeTabAnchorSafetyTest {
 			parent.add(stack);
 			search.add(stack);
 		}
-		CreativeModeTab tab = BuiltInRegistries.CREATIVE_MODE_TAB.getValueOrThrow(VanillaCreativeTabs.COMBAT);
+		CreativeModeTab tab = BuiltInRegistries.CREATIVE_MODE_TAB.getValueOrThrow(tabKey);
 		CreativeModeTab.ItemDisplayParameters params =
 				new CreativeModeTab.ItemDisplayParameters(FeatureFlags.VANILLA_SET, false, server.registryAccess());
-		return new BuildCreativeModeTabContentsEvent(tab, VanillaCreativeTabs.COMBAT, params, parent, search);
+		return new BuildCreativeModeTabContentsEvent(tab, tabKey, params, parent, search);
+	}
+
+	/**
+	 * MOD-478 — the powered hand tools reach the vanilla Tools &amp; Utilities tab on NeoForge too.
+	 *
+	 * <p><b>The defect.</b> Fabric put the electric chainsaw, shovel and hoe into that tab; NeoForge put
+	 * only their diamond-tipped upgrades there (MOD-374/MOD-378 added those and left the base tools
+	 * behind). Nothing was unobtainable — the mod's own tab carried all of them on both loaders — but a
+	 * NeoForge player looking for a powered tool beside the vanilla ones did not find it, and the two
+	 * loaders showed different vanilla tabs for the same mod version.
+	 *
+	 * <p><b>What this pins.</b> The full set the listener contributes, not just the three that were
+	 * missing: an assertion naming only the repaired items goes green again the moment some OTHER entry
+	 * is dropped, which is the same class of regression. The list is the vanilla-tab contribution as of
+	 * MOD-478 and is deliberately spelled out — it is the NeoForge half of a parity that no gate checks
+	 * (the two loaders keep these lists by hand; see MOD-477 for why), so it has to be pinned somewhere.
+	 * A deliberate addition updates this list; an accidental deletion trips it.
+	 */
+	@Test
+	void toolsTabCarriesThePoweredToolsOnNeoForge(MinecraftServer server) {
+		// Seeded with the vanilla anchors the listener positions against, so the anchored inserts take
+		// their real path rather than silently falling back to an append.
+		BuildCreativeModeTabContentsEvent event = tabContaining(server, VanillaCreativeTabs.TOOLS_AND_UTILITIES,
+				Items.WOODEN_HOE.getDefaultInstance(), Items.STONE_HOE.getDefaultInstance(),
+				Items.COPPER_HOE.getDefaultInstance(), Items.IRON_HOE.getDefaultInstance(),
+				Items.GOLDEN_HOE.getDefaultInstance(), Items.DIAMOND_HOE.getDefaultInstance(),
+				Items.NETHERITE_HOE.getDefaultInstance(), Items.COMPASS.getDefaultInstance());
+
+		assertDoesNotThrow(() -> ModCreativeTabEventsNeoForge.buildCreativeTabContents(event),
+				"building the vanilla Tools & Utilities tab must not throw");
+
+		for (ItemStack expected : List.of(
+				// The three MOD-478 restored — the reason this test exists.
+				ModContent.ELECTRIC_CHAINSAW.get().getDefaultInstance(),
+				ModContent.ELECTRIC_SHOVEL.get().getDefaultInstance(),
+				ModContent.ELECTRIC_HOE.get().getDefaultInstance(),
+				// Everything else the listener contributes, so a different entry going missing is caught
+				// by this test rather than by a player.
+				ModContent.SCYTHE_WOOD.get().getDefaultInstance(),
+				ModContent.SCYTHE_STONE.get().getDefaultInstance(),
+				ModContent.SCYTHE_COPPER.get().getDefaultInstance(),
+				ModContent.SCYTHE_IRON.get().getDefaultInstance(),
+				ModContent.SCYTHE_TEMPERED_IRON.get().getDefaultInstance(),
+				ModContent.SCYTHE_GOLD.get().getDefaultInstance(),
+				ModContent.SCYTHE_DIAMOND.get().getDefaultInstance(),
+				ModContent.SCYTHE_NETHERITE.get().getDefaultInstance(),
+				ModContent.TEMPERED_IRON_PICKAXE.get().getDefaultInstance(),
+				ModContent.TEMPERED_IRON_AXE.get().getDefaultInstance(),
+				ModContent.TEMPERED_IRON_SHOVEL.get().getDefaultInstance(),
+				ModContent.TEMPERED_IRON_HOE.get().getDefaultInstance(),
+				ModContent.NETWORK_ANALYZER.get().getDefaultInstance(),
+				ModContent.WRENCH.get().getDefaultInstance(),
+				ModContent.BATTERY_POUCH.get().getDefaultInstance(),
+				ModContent.ENERGY_PACK.get().getDefaultInstance(),
+				ModContent.ELECTRIC_DRILL.get().getDefaultInstance(),
+				ModContent.ELECTRIC_DRILL_DIAMOND_TIP.get().getDefaultInstance(),
+				ModContent.ELECTRIC_CHAINSAW_DIAMOND_TIP.get().getDefaultInstance(),
+				ModContent.ELECTRIC_HOE_DIAMOND_TIP.get().getDefaultInstance(),
+				ModContent.ELECTROMAGNET.get().getDefaultInstance(),
+				ModContent.JETPACK.get().getDefaultInstance())) {
+			assertTrue(event.getParentEntries().contains(expected),
+					() -> "missing from the vanilla Tools & Utilities tab on NeoForge: " + expected);
+			assertTrue(event.getSearchEntries().contains(expected),
+					() -> "missing from the search half of Tools & Utilities on NeoForge: " + expected);
+		}
 	}
 
 	private static ItemStack ourSword() {

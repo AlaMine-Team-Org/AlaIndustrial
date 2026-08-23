@@ -18,6 +18,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 /**
  * The Energy Condenser (MOD-393): it banks the grid's SURPLUS and packs it into an energy clot.
@@ -101,6 +103,13 @@ public class EnergyCondenserBlockEntity extends MachineBlockEntity implements Me
 			return DATA_COUNT;
 		}
 	};
+
+	/**
+	 * Tier of the clot currently standing in the window, i.e. the one the bank still owes for; 0 when the
+	 * window is empty. The tick compares the window against this and spends the bank the moment they
+	 * disagree — see {@link #onServerTick}.
+	 */
+	private int issuedTier;
 
 	public EnergyCondenserBlockEntity(BlockPos pos, BlockState state) {
 		// One slot; the bank is the buffer. maxExtract = 0 — the grid must never be able to pull the
@@ -219,45 +228,79 @@ public class EnergyCondenserBlockEntity extends MachineBlockEntity implements Me
 	}
 
 	/**
-	 * Keep the output slot showing what the bank is worth right now — that display IS the mechanic:
-	 * the player decides when to take it, and the slot has to tell the truth about what they would get.
+	 * The bank is spent here, and ONLY here — the moment the clot this block issued is no longer in the
+	 * window. Taking it costs the WHOLE bank, not the tier's price: that is what makes waiting a real
+	 * decision instead of an obvious one — pull out at 950k and the extra 700k goes with it.
+	 *
+	 * <p><b>Why the payment is an invariant of the tick and not a hook on removal (MOD-492).</b> It used
+	 * to live in {@code removeItem}, on the assumption that "a player click, a hopper and the item pipe
+	 * all end up calling it". They do not. A shift-click goes through {@code AbstractContainerMenu}'s
+	 * quick-move, which mutates the stack in place and clears the slot with {@code Container.setItem};
+	 * a hotbar swap (keys 1–9) clears it with {@code Slot.setByPlayer}; and on Fabric the whole Transfer
+	 * API — our own item pipe included — extracts through {@code setItem} as well and never touches
+	 * {@code removeItem} at all. Each of those took the clot for free while the bank stayed full, and
+	 * since the window refills from the bank on the very next tick, that was an unbounded dupe.
+	 *
+	 * <p>Asking "is the clot I issued still there?" is the one question every removal path answers the
+	 * same way, including paths that belong to other mods and paths nobody has written yet. Payment
+	 * happens BEFORE the window is refilled, so a second clot can never be issued against a bank that
+	 * already bought one.
+	 *
+	 * <p>Load-bearing precondition: this block must never sleep, or an unpaid clot would sit in the
+	 * window until something else woke it. That is why the method returns 0 — see the end of it.
 	 */
 	@Override
 	protected int onServerTick(Level level, BlockPos pos, BlockState state) {
-		int tier = tierForBank();
 		ItemStack shown = items.get(OUTPUT_SLOT);
+		if (issuedTier != 0 && !(shown.is(clotFor(issuedTier)) && shown.getCount() == 1)) {
+			// The issued clot left the window — by whatever route. Pay for it.
+			energy.setAmountUntracked(0);
+			issuedTier = 0;
+			setChanged();
+			syncBlockEntityToClient();
+			shown = items.get(OUTPUT_SLOT);
+		}
+
+		// The window shows what the bank is worth right now — that display IS the mechanic: the player
+		// decides when to take it, and the slot has to tell the truth about what they would get.
+		//
+		// Overwriting whatever sits in the window is safe ONLY because nothing else can put an item
+		// there: the slot refuses insertion (canPlaceItem) and caps at one (EnergyCondenserMenu's
+		// window slot), so vanilla's merge pass — which does NOT consult mayPlace — has no room to fold
+		// a player's own clot in. Without that cap this line would destroy it (MOD-492).
+		int tier = tierForBank();
 		if (tier == 0) {
 			if (!shown.isEmpty()) {
 				setItem(OUTPUT_SLOT, ItemStack.EMPTY);
 			}
+			issuedTier = 0;
 		} else {
 			Item want = clotFor(tier);
 			if (!shown.is(want) || shown.getCount() != 1) {
 				setItem(OUTPUT_SLOT, new ItemStack(want));
 			}
+			issuedTier = tier;
 		}
 		updateLit(energy.getAmount() > 0);
-		// Never sleeps: the bank is fed from outside and the shown tier must follow it promptly. The
-		// tick itself is a couple of comparisons.
+		// Never sleeps: the bank is fed from outside, the shown tier must follow it promptly, and the
+		// payment invariant above only holds while this runs every tick. The tick itself is a couple of
+		// comparisons.
 		return 0;
 	}
 
-	/**
-	 * Taking the clot spends the WHOLE bank, not the tier's price. That is what makes waiting a real
-	 * decision instead of an obvious one — pull out at 950k and the extra 700k goes with it.
-	 *
-	 * <p>Both removal paths are covered: {@code removeItem} is what a player click, a hopper and the
-	 * item pipe all end up calling.
-	 */
 	@Override
-	public ItemStack removeItem(int slot, int count) {
-		ItemStack taken = super.removeItem(slot, count);
-		if (slot == OUTPUT_SLOT && !taken.isEmpty()) {
-			energy.setAmountUntracked(0);
-			setChanged();
-			syncBlockEntityToClient();
-		}
-		return taken;
+	protected void saveAdditional(ValueOutput output) {
+		super.saveAdditional(output);
+		// Which clot is standing in the window unpaid. Kept across a reload so the payment invariant
+		// survives it: without this the block would forget it owed anything, and a clot taken before the
+		// first tick after loading would be free.
+		output.putInt("IssuedTier", issuedTier);
+	}
+
+	@Override
+	protected void loadAdditional(ValueInput input) {
+		super.loadAdditional(input);
+		issuedTier = input.getIntOr("IssuedTier", 0);
 	}
 
 	@Override

@@ -8,6 +8,17 @@ import net.minecraft.world.level.ItemLike;
  * <p>This deliberately lists only player-visible MVP content. Registered-hidden entries
  * such as non-copper cables stay out of both the mod tab and the vanilla tabs until their
  * progression path is restored. (The T2 wind mills were restored to the player in MOD-172.)
+ *
+ * <p><b>Why there is no group for vanilla Combat / Tools &amp; Utilities</b> (MOD-477). There used to
+ * be — {@code combat(Sink)} and {@code toolsAndUtilities(Sink)} — and both loaders called them, until
+ * the mod's gear had to sit NEXT TO the matching vanilla gear rather than at the end of the tab. A
+ * {@link Sink} appends; positioning needs an anchor ({@code insertAfter(IRON_SWORD, …)}), which a Sink
+ * cannot express. So the two loaders took those two tabs over and kept them by hand, the groups here
+ * stopped being called, and for six weeks they looked like working code while nothing read them — new
+ * armour sets were added to a method the game never runs. They are gone rather than reconnected: their
+ * contents had long since diverged from what the loaders actually inject, so "just call them again"
+ * would silently change what the player sees. Giving Sink anchors and unifying the two tabs is a
+ * feature of its own, not a cleanup — see MOD-477 for the full comparison.
  */
 public final class CreativeTabContent {
 	private CreativeTabContent() {
@@ -30,9 +41,9 @@ public final class CreativeTabContent {
 	 * gone, with no clue which item caused it. A tab is a display; it must degrade to "one icon fewer",
 	 * never to "no tab".
 	 *
-	 * <p>This is not a way to tolerate missing content: the completeness test in
-	 * {@code CreativeTabContentTest} fails the BUILD when an item stops being listed, so a real gap is
-	 * caught long before a player sees it. What this guard removes is the crash as a failure mode.
+	 * <p>This is not a way to tolerate missing content: {@code registry_check.check_creative_coverage}
+	 * fails the BUILD when a registered item stops being listed, so a real gap is caught long before a
+	 * player sees it. What this guard removes is the crash as a failure mode.
 	 */
 	private static void show(Sink out, java.util.function.Supplier<? extends ItemLike> handle) {
 		ItemLike item;
@@ -98,37 +109,6 @@ public final class CreativeTabContent {
 		blocks(out);
 		// 13 - the armour and weapon lines close the tab, tempered iron then Fluxweave.
 		wearablesAndWeapons(out);
-	}
-
-	public static void combat(Sink out) {
-		show(out, ModContent.TEMPERED_IRON_SWORD);
-		show(out, ModContent.TEMPERED_IRON_HELMET);
-		show(out, ModContent.TEMPERED_IRON_CHESTPLATE);
-		show(out, ModContent.TEMPERED_IRON_LEGGINGS);
-		show(out, ModContent.TEMPERED_IRON_BOOTS);
-		// Fluxweave set (MOD-127) — the EU armour line, listed right after the plain tempered iron set.
-		show(out, ModContent.FLUXWEAVE_HELMET);
-		show(out, ModContent.FLUXWEAVE_CHESTPLATE);
-		show(out, ModContent.FLUXWEAVE_LEGGINGS);
-		show(out, ModContent.FLUXWEAVE_BOOTS);
-		// Shielding suit (MOD-470) - the sealed anti-radiation set, end of the armour line.
-		show(out, ModContent.SHIELDING_HELMET);
-		show(out, ModContent.SHIELDING_CHESTPLATE);
-		show(out, ModContent.SHIELDING_LEGGINGS);
-		show(out, ModContent.SHIELDING_BOOTS);
-	}
-
-	public static void toolsAndUtilities(Sink out) {
-		show(out, ModContent.TEMPERED_IRON_PICKAXE);
-		show(out, ModContent.TEMPERED_IRON_AXE);
-		show(out, ModContent.TEMPERED_IRON_SHOVEL);
-		show(out, ModContent.TEMPERED_IRON_HOE);
-		scythes(out);
-		show(out, ModContent.NETWORK_ANALYZER);
-		show(out, ModContent.WIND_GAUGE);
-		show(out, ModContent.TELEPORTER_REMOTE);
-		show(out, ModContent.WRENCH);
-		show(out, ModContent.FORGE_HAMMER);
 	}
 
 	/** The eight metal plates (MOD-078), in the mod's canonical metal order. */
@@ -567,6 +547,12 @@ public final class CreativeTabContent {
 		show(out, ModContent.TEMPERED_IRON_SHOVEL);
 		show(out, ModContent.TEMPERED_IRON_HOE);
 		show(out, ModContent.TEMPERED_IRON_SWORD);
+		// Rubber set (MOD-466) opens the armour line: it is the cheapest and the earliest of the four,
+		// so the row reads in progression order rather than in the order the sets were written.
+		show(out, ModContent.INSULATED_HELMET);
+		show(out, ModContent.INSULATED_CHESTPLATE);
+		show(out, ModContent.INSULATED_LEGGINGS);
+		show(out, ModContent.INSULATED_BOOTS);
 		show(out, ModContent.TEMPERED_IRON_HELMET);
 		show(out, ModContent.TEMPERED_IRON_CHESTPLATE);
 		show(out, ModContent.TEMPERED_IRON_LEGGINGS);
@@ -609,6 +595,8 @@ public final class CreativeTabContent {
 		show(out, ModContent.HIGH_ALTITUDE_WIND_MILL_ITEM);
 		show(out, ModContent.STORM_WIND_MILL_ITEM);
 		show(out, ModContent.LIGHTNING_ROD_GENERATOR_ITEM);
+		// MOD-479 — a QA instrument with no recipe: the creative tab is the only way to it.
+		show(out, ModContent.CREATIVE_ENERGY_SOURCE_ITEM);
 	}
 
 	/**

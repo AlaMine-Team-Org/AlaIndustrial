@@ -11,6 +11,7 @@ import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.neoforge.ModFluidsNeoForge;
 import dev.alaindustrial.worldgen.OilLakeFilter;
 import java.util.List;
+import dev.alaindustrial.junit.StopEphemeralServerBeforeFmlTeardown;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -50,6 +51,7 @@ import org.junit.jupiter.params.provider.ValueSource;
  * </ul>
  */
 @ExtendWith(EphemeralTestServerProvider.class)
+@ExtendWith(StopEphemeralServerBeforeFmlTeardown.class)
 class NeoForgeOilWorldGenTest {
 
 	private static Identifier id(String path) {

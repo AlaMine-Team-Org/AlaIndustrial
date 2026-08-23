@@ -138,7 +138,12 @@ public class ScreensClientGameTest implements FabricClientGameTest {
             // dome button must survive on EVERY tier, not just the crafted one.
             new Screen("mob_repeller", "mob_repeller", "Mob Repeller"),
             new Screen("mob_repeller_mv", "mob_repeller_mv", "Mob Repeller MV"),
-            new Screen("mob_repeller_hv", "mob_repeller_hv", "Mob Repeller HV"));
+            new Screen("mob_repeller_hv", "mob_repeller_hv", "Mob Repeller HV"),
+            // MOD-479: the creative energy source. Shot in its placed state — switched on at the
+            // default output, slot empty — because that is the state the stand can produce with a
+            // right click and nothing else, and it already carries every control the panel owns:
+            // the switch, the three presets, the readout, the slider and the charge slot.
+            new Screen("creative_energy_source", "creative_energy_source", "Creative Energy Source"));
 
     /**
      * Screens re-shot under a long locale. Russian labels run noticeably longer than English ones, so a

@@ -10,6 +10,7 @@ import dev.alaindustrial.block.CesuBlock;
 import dev.alaindustrial.block.ChargePadBlock;
 import dev.alaindustrial.block.ComponentRepairBenchBlock;
 import dev.alaindustrial.block.CompressorBlock;
+import dev.alaindustrial.block.CreativeEnergySourceBlock;
 import dev.alaindustrial.block.DaylightSolarPanelBlock;
 import dev.alaindustrial.block.DistillationColumnBlock;
 import dev.alaindustrial.block.DistillationColumnMiddleBlock;
@@ -124,6 +125,8 @@ public final class ModBlocksNeoForge {
 			handle(ContentManifest.STORM_WIND_MILL);
 	public static final DeferredBlock<LightningRodGeneratorBlock> LIGHTNING_ROD_GENERATOR =
 			handle(ContentManifest.LIGHTNING_ROD_GENERATOR);
+	public static final DeferredBlock<CreativeEnergySourceBlock> CREATIVE_ENERGY_SOURCE =
+			handle(ContentManifest.CREATIVE_ENERGY_SOURCE);
 	public static final DeferredBlock<PumpBlock> PUMP = handle(ContentManifest.PUMP);
 	public static final DeferredBlock<GardenDroneStationBlock> GARDEN_DRONE_STATION =
 			handle(ContentManifest.GARDEN_DRONE_STATION);

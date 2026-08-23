@@ -9,14 +9,17 @@ import dev.alaindustrial.block.CableBlock;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.GeneratorBlockEntity;
+import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.core.energy.ShockGuardMaterial;
+import dev.alaindustrial.core.energy.ShockInsulation;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDamageTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -330,6 +333,107 @@ public final class CableShockScenarios {
 			return;
 		}
 		helper.succeed();
+	}
+
+	/**
+	 * MOD-466: a worn insulated set protects against a bare cable, by the piece, and pays for it in
+	 * durability — and blocking a shock opens a contact window so the cost is per contact rather than
+	 * per tick.
+	 *
+	 * <p><b>This one can drive the real damage path, unlike its MOD-279 neighbours.</b> A full set
+	 * reduces the hit to zero, so {@link CableBlock#tryShockPlayer} returns before {@code hurtServer} —
+	 * the exact call that needs a {@code connection} a mock player does not have. That makes the
+	 * end-to-end behaviour (wear, grace window) assertable here rather than only its predicate. The
+	 * partial cases stop at {@link CableBlock#insulatedShockDamage}, which is side-effect-free, for the
+	 * same reason the rest of this file does.
+	 *
+	 * <p>The control case is the point of the test, not decoration: without it, a mechanic that
+	 * reduced <em>every</em> shock to zero would pass every remaining assertion.
+	 */
+	public static void insulatedSetProtectsByThePieceAndWearsOut(GameTestHelper helper) {
+		ServerPlayer player = detachedSurvivalPlayer(helper);
+		buildLine(helper, ModContent.COPPER_CABLE.get());
+		energize(helper);
+		CableBlock bare = (CableBlock) ModContent.COPPER_CABLE.get();
+		BlockPos cablePos = helper.absolutePos(CABLE);
+		float raw = CableType.COPPER.shockDamage();
+
+		// The fixture has to be a live hazard, or every "no damage" assertion below is vacuous.
+		snapToCentre(helper, player, CABLE);
+		player.invulnerableTime = 0;
+		if (!bare.shouldShockPlayer(helper.getLevel(), cablePos, player)) {
+			helper.fail("fixture cable was not a hazard; nothing below would prove anything");
+			return;
+		}
+
+		// Control: a bare player takes the full hit, and nothing wears out.
+		if (CableBlock.wornInsulatingPieces(player) != 0) {
+			helper.fail("a naked mock player was counted as wearing insulation");
+			return;
+		}
+		if (CableBlock.insulatedShockDamage(raw, player) != raw) {
+			helper.fail("an unprotected player's shock was reduced; expected " + raw
+					+ " got " + CableBlock.insulatedShockDamage(raw, player));
+			return;
+		}
+
+		wearInsulatedSet(player);
+		if (CableBlock.wornInsulatingPieces(player) != 4) {
+			helper.fail("a full insulated set counted as " + CableBlock.wornInsulatingPieces(player)
+					+ " pieces; is #alaindustrial:shock_insulating populated?");
+			return;
+		}
+		if (CableBlock.insulatedShockDamage(raw, player) != 0.0f) {
+			helper.fail("a full set left " + CableBlock.insulatedShockDamage(raw, player)
+					+ " damage behind; it must stop the hit outright");
+			return;
+		}
+
+		// The real path: no damage lands, the suit is billed, and a contact window opens. Without that
+		// window both hazard paths re-enter next tick and the set is charged twenty times a second.
+		player.invulnerableTime = 0;
+		if (bare.tryShockPlayer(helper.getLevel(), cablePos, player)) {
+			helper.fail("a full set still let the shock land");
+			return;
+		}
+		if (player.invulnerableTime != Config.shockGuardGraceTicks) {
+			helper.fail("an absorbed shock left no contact window; invulnerableTime="
+					+ player.invulnerableTime);
+			return;
+		}
+		int helmetWear = player.getItemBySlot(EquipmentSlot.HEAD).getDamageValue();
+		if (helmetWear != ShockInsulation.wearFor(raw, Config.bareCableShockInsulationDamagePerDurability)) {
+			helper.fail("the set was billed " + helmetWear + " durability for an LV shock; expected "
+					+ ShockInsulation.wearFor(raw, Config.bareCableShockInsulationDamagePerDurability));
+			return;
+		}
+		// Still inside the window: eligibility itself now says no, which is what stops the re-entry.
+		if (bare.shouldShockPlayer(helper.getLevel(), cablePos, player)) {
+			helper.fail("the contact window did not suppress the next tick of contact");
+			return;
+		}
+
+		// Three pieces are worth three quarters of a set, not nothing — the whole point of per-piece.
+		player.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
+		if (CableBlock.wornInsulatingPieces(player) != 3) {
+			helper.fail("removing the helmet did not drop the worn count");
+			return;
+		}
+		float partial = CableBlock.insulatedShockDamage(raw, player);
+		if (partial <= 0.0f || partial >= raw) {
+			helper.fail("a three-piece set gave " + partial + " damage; expected strictly between 0 and "
+					+ raw);
+			return;
+		}
+		helper.succeed();
+	}
+
+	/** Dresses the player in all four parts of the insulated set. */
+	private static void wearInsulatedSet(ServerPlayer player) {
+		player.setItemSlot(EquipmentSlot.HEAD, new ItemStack(ModContent.INSULATED_HELMET.get()));
+		player.setItemSlot(EquipmentSlot.CHEST, new ItemStack(ModContent.INSULATED_CHESTPLATE.get()));
+		player.setItemSlot(EquipmentSlot.LEGS, new ItemStack(ModContent.INSULATED_LEGGINGS.get()));
+		player.setItemSlot(EquipmentSlot.FEET, new ItemStack(ModContent.INSULATED_BOOTS.get()));
 	}
 
 	/** Puts the player on top of the cable, where a stand no longer shields them. */

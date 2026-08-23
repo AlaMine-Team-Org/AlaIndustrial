@@ -60,6 +60,12 @@ final class ItemBuildersNeoForge {
 		return p -> p.humanoidArmor(ModArmorMaterials.SHIELDING, type);
 	}
 
+	// --- Insulated set (MOD-466) ---
+	// Plain armour properties; what makes a piece insulating is the #shock_insulating item tag.
+	static UnaryOperator<Item.Properties> insulatedArmor(ArmorType type) {
+		return p -> p.humanoidArmor(ModArmorMaterials.INSULATED, type);
+	}
+
 	// --- Fluxweave armour (MOD-127) ---
 	// Unlike tempered iron this one also seeds the charge-driven layer: the drained EQUIPPABLE (with
 	// setDamageOnHurt(false)) and the uncharged attribute set. FluxweaveArmorItem swaps both as EU moves.

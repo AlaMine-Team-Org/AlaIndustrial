@@ -15,6 +15,7 @@ import dev.alaindustrial.core.neoforge.NeoForgeEnergyPort;
 import dev.alaindustrial.core.neoforge.NeoForgeFluidPort;
 import dev.alaindustrial.core.neoforge.TankAsResourceHandler;
 import dev.alaindustrial.registry.ModContent;
+import dev.alaindustrial.junit.StopEphemeralServerBeforeFmlTeardown;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.block.Block;
@@ -52,6 +53,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * {@code getAmountAsLong/getCapacityAsLong}, {@code Transaction.openRoot()/commit()/close()}.
  */
 @ExtendWith(EphemeralTestServerProvider.class)
+@ExtendWith(StopEphemeralServerBeforeFmlTeardown.class)
 class NeoForgeFluidRuntimeTest {
 
 	private static final FluidHolder LAVA = FluidHolder.of(Fluids.LAVA);

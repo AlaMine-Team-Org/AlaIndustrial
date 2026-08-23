@@ -33,19 +33,19 @@ public class CanningMachineGameTest {
 		CanningMachineScenarios.fun03RichFoodYieldsMoreRations(helper);
 	}
 
-	/** @implements TC-CAN-001-CON01 — with no cans the food is left alone, not absorbed. */
+	/** @implements TC-CAN-001-FUN04 — absorption banks calories with no can and no power present. */
 	@GameTest(maxTicks = 600)
-	public void tcCan001Con01_noCansMeansFoodUntouched(GameTestHelper helper) {
-		CanningMachineScenarios.con01NoCansMeansFoodUntouched(helper);
+	public void tcCan001Fun04_absorptionNeedsNeitherCanNorPower(GameTestHelper helper) {
+		CanningMachineScenarios.fun04AbsorptionNeedsNeitherCanNorPower(helper);
 	}
 
-	/** @implements TC-CAN-001-CON02 — unpowered: no ration and no food eaten. @covers R-NRG-10 */
+	/** @implements TC-CAN-001-CON02 — unpowered: no ration and no can spent. @covers R-NRG-10 */
 	@GameTest(maxTicks = 600)
 	public void tcCan001Con02_noPowerNoOutput(GameTestHelper helper) {
 		CanningMachineScenarios.con02NoPowerNoOutput(helper);
 	}
 
-	/** @implements TC-CAN-001-CON03 — a full output slot jams rather than overflowing. */
+	/** @implements TC-CAN-001-CON03 — a full output jams the press; absorption still banks calories. */
 	@GameTest(maxTicks = 600)
 	public void tcCan001Con03_fullOutputJams(GameTestHelper helper) {
 		CanningMachineScenarios.con03FullOutputJams(helper);

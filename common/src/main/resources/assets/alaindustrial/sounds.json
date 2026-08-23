@@ -198,5 +198,56 @@
         "preload": true
       }
     ]
+  },
+  "reactor_hum": {
+    "subtitle": "subtitles.alaindustrial.reactor_hum",
+    "sounds": [
+      {
+        "name": "alaindustrial:reactor_hum",
+        "stream": false,
+        "preload": true
+      }
+    ]
+  },
+  "reactor_alarm": {
+    "subtitle": "subtitles.alaindustrial.reactor_alarm",
+    "sounds": [
+      {
+        "name": "alaindustrial:reactor_alarm",
+        "stream": false,
+        "preload": true,
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "reactor_spindown": {
+    "subtitle": "subtitles.alaindustrial.reactor_spindown",
+    "sounds": [
+      {
+        "name": "alaindustrial:reactor_spindown",
+        "stream": false,
+        "preload": true
+      }
+    ]
+  },
+  "reactor_door_open": {
+    "subtitle": "subtitles.alaindustrial.reactor_door_open",
+    "sounds": [
+      {
+        "name": "alaindustrial:reactor_door_open",
+        "stream": false,
+        "preload": true
+      }
+    ]
+  },
+  "reactor_door_close": {
+    "subtitle": "subtitles.alaindustrial.reactor_door_close",
+    "sounds": [
+      {
+        "name": "alaindustrial:reactor_door_close",
+        "stream": false,
+        "preload": true
+      }
+    ]
   }
 }

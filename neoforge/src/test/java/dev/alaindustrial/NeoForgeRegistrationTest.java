@@ -9,6 +9,7 @@ import dev.alaindustrial.registry.ModDataComponents;
 import dev.alaindustrial.registry.ModRecipes;
 import dev.alaindustrial.registry.ModRecipes.Kind;
 import dev.alaindustrial.registry.ModSounds;
+import dev.alaindustrial.junit.StopEphemeralServerBeforeFmlTeardown;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
@@ -33,6 +34,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * future missed NeoForge registration fails CI instead of shipping a silently-dead subsystem.
  */
 @ExtendWith(EphemeralTestServerProvider.class)
+@ExtendWith(StopEphemeralServerBeforeFmlTeardown.class)
 class NeoForgeRegistrationTest {
 
 	private static Identifier id(String path) {

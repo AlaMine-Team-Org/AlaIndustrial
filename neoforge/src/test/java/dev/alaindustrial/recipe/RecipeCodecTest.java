@@ -10,6 +10,7 @@ import com.google.gson.JsonParser;
 import com.mojang.serialization.JsonOps;
 import io.netty.buffer.Unpooled;
 import dev.alaindustrial.registry.ModRecipes;
+import dev.alaindustrial.junit.StopEphemeralServerBeforeFmlTeardown;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.MinecraftServer;
@@ -21,6 +22,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 /** MOD-257 regression coverage for the two expanded processing-recipe schemas. */
 @ExtendWith(EphemeralTestServerProvider.class)
+@ExtendWith(StopEphemeralServerBeforeFmlTeardown.class)
 class RecipeCodecTest {
 
 	private static RegistryOps<JsonElement> ops(MinecraftServer server) {

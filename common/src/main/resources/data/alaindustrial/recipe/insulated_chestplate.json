@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "minecraft:leather_chestplate",
+    "minecraft:slime_ball"
+  ],
+  "result": {
+    "id": "alaindustrial:insulated_chestplate",
+    "count": 1
+  }
+}

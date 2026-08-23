@@ -304,6 +304,100 @@ public final class ModSounds {
 		return SoundEvent.createVariableRangeEvent(COMPONENT_REPAIR_BENCH_HUM_ID);
 	}
 
+	/**
+	 * The registry id for the reactor's core drone (MOD-472) — the deep hum of a running active zone.
+	 *
+	 * <p>Played per <em>voiced column</em> rather than once at the controller: the noise belongs to the
+	 * fuel racks standing on the floor, and a room the player walks around should sound like a hall, not
+	 * like a panel on the wall. The controller picks which columns are voiced (see
+	 * {@code ReactorControllerBlockEntity}) so a packed room cannot stack dozens of copies.
+	 */
+	public static final Identifier REACTOR_HUM_ID = Industrialization.id("reactor_hum");
+
+	/** Bound once per loader before any block plays it; unbound = loud failure, never a silent NPE. */
+	public static Supplier<SoundEvent> REACTOR_HUM = () -> {
+		throw new IllegalStateException("ModSounds.REACTOR_HUM read before its loader bound it");
+	};
+
+	/**
+	 * Build the reactor-hum event instance both loaders register.
+	 *
+	 * <p>Variable range, and the choice is <b>cosmetic</b>: {@link SoundEvent#getRange} is read only by
+	 * {@code ServerLevel.playSeededSound}, which decides who receives the packet. This loop is created
+	 * client-side by {@code MachineHumClientHook}, so no range from here ever reaches it — the audible
+	 * distance comes from {@code attenuation_distance} in {@code sounds.json} (absent, so vanilla's 16)
+	 * and the loudness from the block's {@code humVolume}. A fixed-range event here would look like a
+	 * tuning knob and do nothing.
+	 */
+	public static SoundEvent createReactorHum() {
+		return SoundEvent.createVariableRangeEvent(REACTOR_HUM_ID);
+	}
+
+	/** The registry id for the reactor overheat warning (MOD-472) — one-shot, played by the controller. */
+	public static final Identifier REACTOR_ALARM_ID = Industrialization.id("reactor_alarm");
+
+	/** Bound once per loader before the controller plays it; unbound = loud failure, never a silent NPE. */
+	public static Supplier<SoundEvent> REACTOR_ALARM = () -> {
+		throw new IllegalStateException("ModSounds.REACTOR_ALARM read before its loader bound it");
+	};
+
+	/**
+	 * Build the overheat-alarm event both loaders register.
+	 *
+	 * <p><b>Carrying twice as far as anything else in the mod takes TWO settings, not one.</b> The fixed
+	 * 32 here is only half of it: {@code SoundEvent#getRange} is read by
+	 * {@code ServerLevel.playSeededSound} and decides who gets sent the packet at all. How far the sound
+	 * is then audible is decided on the client by {@code attenuation_distance} in {@code sounds.json} —
+	 * a key that defaults to 16 and that no other entry in this mod sets. Setting one without the other
+	 * gives an alarm that is delivered to players who cannot hear it, which is exactly the bug this
+	 * javadoc used to describe as a feature.
+	 *
+	 * <p>Both are 32, and they have to stay in step: an alarm that only carried as far as a machine hum
+	 * would fail at its one job — telling a player who is somewhere else that the reactor needs them.
+	 */
+	public static SoundEvent createReactorAlarm() {
+		return SoundEvent.createFixedRangeEvent(REACTOR_ALARM_ID, 32.0f);
+	}
+
+	/** The registry id for the reactor spin-down (MOD-472) — one-shot, played when the core stops. */
+	public static final Identifier REACTOR_SPINDOWN_ID = Industrialization.id("reactor_spindown");
+
+	/** Bound once per loader before the controller plays it; unbound = loud failure, never a silent NPE. */
+	public static Supplier<SoundEvent> REACTOR_SPINDOWN = () -> {
+		throw new IllegalStateException("ModSounds.REACTOR_SPINDOWN read before its loader bound it");
+	};
+
+	/** Build the spin-down event both loaders register (variable range — it reports, it does not warn). */
+	public static SoundEvent createReactorSpindown() {
+		return SoundEvent.createVariableRangeEvent(REACTOR_SPINDOWN_ID);
+	}
+
+	/** The registry id for the reactor airlock opening (MOD-472), replacing vanilla {@code IRON_DOOR_OPEN}. */
+	public static final Identifier REACTOR_DOOR_OPEN_ID = Industrialization.id("reactor_door_open");
+
+	/** Bound once per loader before the door plays it; unbound = loud failure, never a silent NPE. */
+	public static Supplier<SoundEvent> REACTOR_DOOR_OPEN = () -> {
+		throw new IllegalStateException("ModSounds.REACTOR_DOOR_OPEN read before its loader bound it");
+	};
+
+	/** Build the airlock-open event both loaders register (variable range, like the chest lids). */
+	public static SoundEvent createReactorDoorOpen() {
+		return SoundEvent.createVariableRangeEvent(REACTOR_DOOR_OPEN_ID);
+	}
+
+	/** The registry id for the reactor airlock sealing (MOD-472), replacing vanilla {@code IRON_DOOR_CLOSE}. */
+	public static final Identifier REACTOR_DOOR_CLOSE_ID = Industrialization.id("reactor_door_close");
+
+	/** Bound once per loader before the door plays it; unbound = loud failure, never a silent NPE. */
+	public static Supplier<SoundEvent> REACTOR_DOOR_CLOSE = () -> {
+		throw new IllegalStateException("ModSounds.REACTOR_DOOR_CLOSE read before its loader bound it");
+	};
+
+	/** Build the airlock-close event both loaders register (variable range, like the chest lids). */
+	public static SoundEvent createReactorDoorClose() {
+		return SoundEvent.createVariableRangeEvent(REACTOR_DOOR_CLOSE_ID);
+	}
+
 	private ModSounds() {
 	}
 }

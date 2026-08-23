@@ -145,6 +145,81 @@ public final class ReactorCore {
 		return water <= 0 || heatPerWater <= 0 ? 0 : water * heatPerWater;
 	}
 
+	/**
+	 * Whether the overheat alarm should sound this tick, given whether it has already sounded (MOD-472).
+	 *
+	 * <p><b>Why this needs a deadband and cannot be a plain {@code heat >= warn} test.</b> A reactor with
+	 * no plumbing settles at its own equilibrium, and for two adjacent columns that equilibrium is 66 %
+	 * of the scale — three points under the 70 % warning line. A level test on a core hovering there
+	 * fires, clears and fires again as the temperature wobbles by a single unit, which is a siren
+	 * stuttering several times a second rather than a warning.
+	 *
+	 * <p>So the alarm is an edge with a rearm floor: it sounds once when the core crosses
+	 * {@code warnPercent} going up, and it cannot sound again until the core has come back down below
+	 * {@code rearmPercent}. Pointing the floor at {@code Config.reactorCoolantTargetPercent} (60) rather
+	 * than inventing a number gives the deadband a meaning the player can act on — the alarm re-arms
+	 * exactly when the coolant loop has done its job, because that target is the temperature the loop
+	 * holds the core at.
+	 *
+	 * @param heatPercent   where the core is now, 0…100
+	 * @param warnPercent   the line that fires the alarm going up
+	 * @param rearmPercent  the line the core must fall below before it can fire again
+	 * @param alreadyWarned whether the alarm is currently latched (the caller's persisted flag)
+	 * @return true only on the rising crossing, i.e. exactly the ticks the siren should play
+	 */
+	public static boolean shouldSoundAlarm(int heatPercent, int warnPercent, int rearmPercent,
+			boolean alreadyWarned) {
+		return !alreadyWarned && heatPercent >= warnPercent;
+	}
+
+	/**
+	 * The latch that goes with {@link #shouldSoundAlarm}: whether the alarm stays armed after this tick.
+	 *
+	 * <p>Kept as its own function rather than folded into the caller so the pair is testable as a pair —
+	 * the failure this guards against is not "does it fire" but "does it fire twice", and that only shows
+	 * up in the sequence.
+	 *
+	 * <p>The rearm floor is clamped to <em>at most</em> the warning line. That stops a nonsensical
+	 * configuration (floor above the line) from unlatching the alarm on the very tick it fired; what it
+	 * does not do is invent a deadband where the file asks for none — cross the two and the gap collapses
+	 * to zero, so a core wobbling across the line will re-sound. The shipped pair puts the floor ten
+	 * points below the line precisely so that cannot happen.
+	 */
+	public static boolean alarmStaysLatched(int heatPercent, int warnPercent, int rearmPercent,
+			boolean alreadyWarned) {
+		int floor = Math.min(rearmPercent, warnPercent);
+		if (alreadyWarned) {
+			return heatPercent >= floor;
+		}
+		return heatPercent >= warnPercent;
+	}
+
+	/** The top of the heat scale, where the warning stops being a warning. */
+	public static final int CRITICAL_PERCENT = 100;
+
+	/** Shortest gap between two blasts of the critical alarm — three seconds. */
+	public static final int CRITICAL_ALARM_MIN_TICKS = 60;
+
+	/** Longest gap between two blasts of the critical alarm — five seconds. */
+	public static final int CRITICAL_ALARM_MAX_TICKS = 100;
+
+	/**
+	 * Whether the core is pinned at the top of the scale (MOD-472).
+	 *
+	 * <p><b>A different state from "warning", and it needs a different sound behaviour.</b> The
+	 * threshold alarm is an edge: it fires once when the core crosses the warning line and then latches,
+	 * which is right for "look at this soon". It is wrong for a core sitting at a hundred percent —
+	 * there the single blast has long since played and the reactor then sits in its worst state in
+	 * silence. So the top of the scale re-sounds the siren on a jittered three-to-five second cycle for
+	 * as long as it stays there, and stops the moment the temperature comes down at all.
+	 *
+	 * <p>The interval is jittered rather than fixed because a perfectly regular repeat reads as a
+	 * background loop and stops being heard; an irregular one keeps announcing itself.
+	 */
+	public static boolean isCritical(int heatPercent) {
+		return heatPercent >= CRITICAL_PERCENT;
+	}
+
 	private static int clampDepth(int depthPermille) {
 		return Math.min(FULL_DEPTH, Math.max(0, depthPermille));
 	}

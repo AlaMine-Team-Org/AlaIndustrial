@@ -23,6 +23,7 @@ import dev.alaindustrial.item.tool.NetworkAnalyzerItem;
 import dev.alaindustrial.item.energy.PouchItem;
 import dev.alaindustrial.item.tool.ScytheItem;
 import dev.alaindustrial.item.teleport.TeleporterRemoteItem;
+import java.util.function.UnaryOperator;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.minecraft.core.Registry;
@@ -177,6 +178,15 @@ public final class ModItems {
 			shieldingArmor("shielding_leggings", ArmorType.LEGGINGS);
 	public static final Item SHIELDING_BOOTS =
 			shieldingArmor("shielding_boots", ArmorType.BOOTS);
+	// Insulated set (MOD-466): ordinary armour items; the insulation lives in the item tag.
+	public static final Item INSULATED_HELMET =
+			insulatedArmor("insulated_helmet", ArmorType.HELMET);
+	public static final Item INSULATED_CHESTPLATE =
+			insulatedArmor("insulated_chestplate", ArmorType.CHESTPLATE);
+	public static final Item INSULATED_LEGGINGS =
+			insulatedArmor("insulated_leggings", ArmorType.LEGGINGS);
+	public static final Item INSULATED_BOOTS =
+			insulatedArmor("insulated_boots", ArmorType.BOOTS);
 	public static final Item IRON_DUST = manifestItem("iron_dust");
 	public static final Item COPPER_DUST = manifestItem("copper_dust");
 	public static final Item GOLD_DUST = manifestItem("gold_dust");
@@ -380,6 +390,9 @@ public final class ModItems {
 	public static final BlockItem STORM_WIND_MILL_ITEM = blockItem("storm_wind_mill", ModBlocks.STORM_WIND_MILL);
 	public static final BlockItem LIGHTNING_ROD_GENERATOR_ITEM =
 			blockItem("lightning_rod_generator", ModBlocks.LIGHTNING_ROD_GENERATOR);
+	public static final BlockItem CREATIVE_ENERGY_SOURCE_ITEM =
+			blockItem("creative_energy_source", ModBlocks.CREATIVE_ENERGY_SOURCE,
+					ContentManifest.CREATIVE_ONLY_ITEM);
 	public static final BlockItem TIN_ORE_ITEM = blockItem("tin_ore", ModBlocks.TIN_ORE);
 	public static final BlockItem DEEPSLATE_TIN_ORE_ITEM = blockItem("deepslate_tin_ore", ModBlocks.DEEPSLATE_TIN_ORE);
 	public static final BlockItem SILVER_ORE_ITEM = blockItem("silver_ore", ModBlocks.SILVER_ORE);
@@ -659,6 +672,15 @@ public final class ModItems {
 				new Item(new Item.Properties().humanoidArmor(ModArmorMaterials.SHIELDING, type).setId(key)));
 	}
 
+	// First parameter must stay `String path`: docs/tools/graph_data.py derives the registration
+	// helpers by that signature, and reordering it would drop all four items out of the showcase and
+	// the recipe graph with no error anywhere.
+	private static Item insulatedArmor(String path, ArmorType type) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		return Registry.register(BuiltInRegistries.ITEM, key,
+				new Item(new Item.Properties().humanoidArmor(ModArmorMaterials.INSULATED, type).setId(key)));
+	}
+
 	private static Item temperedArmor(String path, ArmorType type) {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
 		return Registry.register(BuiltInRegistries.ITEM, key,
@@ -703,8 +725,23 @@ public final class ModItems {
 	}
 
 	private static BlockItem blockItem(String path, Block block) {
+		return blockItem(path, block, UnaryOperator.identity());
+	}
+
+	/**
+	 * {@link #blockItem} with extra properties from the shared catalogue (MOD-479) — rarity, tooltip
+	 * style and anything else both loaders must agree on.
+	 *
+	 * <p>{@code String path} stays the FIRST parameter on purpose: {@code graph_data.py} discovers these
+	 * helpers by matching {@code (String path} in their declaration, and {@code loader_parity_check.py}
+	 * reads an item id as the first string literal after the opening bracket. A third argument is
+	 * invisible to both; moving or renaming the first one would silently drop the item from the item
+	 * catalogue and from the loader-parity comparison.
+	 */
+	private static BlockItem blockItem(String path, Block block, UnaryOperator<Item.Properties> extra) {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
-		BlockItem item = new BlockItem(block, new Item.Properties().useBlockDescriptionPrefix().setId(key));
+		BlockItem item = new BlockItem(block,
+				extra.apply(new Item.Properties().useBlockDescriptionPrefix()).setId(key));
 		return Registry.register(BuiltInRegistries.ITEM, key, item);
 	}
 
@@ -954,6 +991,7 @@ public final class ModItems {
 		ModContent.HIGH_ALTITUDE_WIND_MILL_ITEM = () -> HIGH_ALTITUDE_WIND_MILL_ITEM;
 		ModContent.STORM_WIND_MILL_ITEM = () -> STORM_WIND_MILL_ITEM;
 		ModContent.LIGHTNING_ROD_GENERATOR_ITEM = () -> LIGHTNING_ROD_GENERATOR_ITEM;
+		ModContent.CREATIVE_ENERGY_SOURCE_ITEM = () -> CREATIVE_ENERGY_SOURCE_ITEM;
 		ModContent.SOLAR_PANEL_ITEM = () -> SOLAR_PANEL_ITEM;
 		ModContent.MOONLIT_SOLAR_PANEL_ITEM = () -> MOONLIT_SOLAR_PANEL_ITEM;
 		ModContent.DAYLIGHT_SOLAR_PANEL_ITEM = () -> DAYLIGHT_SOLAR_PANEL_ITEM;
@@ -1030,6 +1068,10 @@ public final class ModItems {
 		ModContent.SHIELDING_CHESTPLATE = () -> SHIELDING_CHESTPLATE;
 		ModContent.SHIELDING_LEGGINGS = () -> SHIELDING_LEGGINGS;
 		ModContent.SHIELDING_BOOTS = () -> SHIELDING_BOOTS;
+		ModContent.INSULATED_HELMET = () -> INSULATED_HELMET;
+		ModContent.INSULATED_CHESTPLATE = () -> INSULATED_CHESTPLATE;
+		ModContent.INSULATED_LEGGINGS = () -> INSULATED_LEGGINGS;
+		ModContent.INSULATED_BOOTS = () -> INSULATED_BOOTS;
 		ModContent.FLUXWEAVE_CHESTPLATE = () -> FLUXWEAVE_CHESTPLATE;
 		ModContent.FLUXWEAVE_LEGGINGS = () -> FLUXWEAVE_LEGGINGS;
 		ModContent.FLUXWEAVE_BOOTS = () -> FLUXWEAVE_BOOTS;

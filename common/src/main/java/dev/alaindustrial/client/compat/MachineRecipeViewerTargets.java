@@ -115,7 +115,7 @@ public final class MachineRecipeViewerTargets {
 
 	/** The canning machine's click target. The rect tracks {@code CanningMachineScreen.PROGRESS}. */
 	public static final List<CanningTarget> CANNING_ALL = List.of(
-			new CanningTarget(CanningMachineScreen.class, new GuiRect(79, 31, 25, 9)));
+			new CanningTarget(CanningMachineScreen.class, new GuiRect(74, 33, 31, 10)));
 
 	/**
 	 * And a fifth list for machines that have no recipe of any kind (MOD-420) — not even a computed one

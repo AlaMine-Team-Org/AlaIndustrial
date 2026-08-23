@@ -6,7 +6,11 @@ import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import dev.alaindustrial.menu.EnergyCondenserMenu;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.ContainerInput;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -60,6 +64,11 @@ public final class EnergyCondenserScenarios {
 	/**
 	 * Taking the clot spends the WHOLE bank, not the tier's price. This is the decision the whole
 	 * mechanic rests on: pulling out early has to hurt, or waiting means nothing.
+	 *
+	 * <p>Covers the automation door specifically — {@code removeItem} is what a hopper and the NeoForge
+	 * item capability call. The payment itself is settled by the next tick rather than inside the
+	 * removal (MOD-492), which is why this drives one tick before reading the bank; the player-facing
+	 * doors are covered by {@link #condenser_everyRemovalPathSpendsTheBank}.
 	 */
 	public static void condenser_takingSpendsTheWholeBank(GameTestHelper helper) {
 		EnergyCondenserBlockEntity be = place(helper);
@@ -72,8 +81,13 @@ public final class EnergyCondenserScenarios {
 		if (!taken.is(ModContent.ENERGY_CLOT_I.get())) {
 			helper.fail("just under tier II must hand out tier I, got " + taken);
 		}
+		AlaGameTestHelper.drive(be, helper, 1);
 		if (be.getEnergyStorage().getAmount() != 0) {
 			helper.fail("taking the clot must empty the bank, " + be.getEnergyStorage().getAmount() + " left");
+		}
+		if (!be.getItem(EnergyCondenserBlockEntity.OUTPUT_SLOT).isEmpty()) {
+			helper.fail("the window refilled after the clot was pulled, with the bank spent — "
+					+ be.getItem(EnergyCondenserBlockEntity.OUTPUT_SLOT));
 		}
 		helper.succeed();
 	}
@@ -125,6 +139,136 @@ public final class EnergyCondenserScenarios {
 				AlaGameTestHelper.place(helper, POS.offset(2, 0, 0), ModContent.MACERATOR.get());
 		if (macerator.isEnergyStorageSink()) {
 			helper.fail("control failed: a macerator must not be a storage sink");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * Regression (MOD-492): EVERY way a player can empty the window spends the bank — and the window
+	 * does not refill afterwards.
+	 *
+	 * <p>A player reported shift-clicking clots out of the condenser for free, and he was right: the
+	 * payment used to hang on {@code Container#removeItem}, which is exactly the method a shift-click
+	 * never calls. Vanilla's quick-move mutates the stack in place and clears the slot with
+	 * {@code setItem}; a hotbar swap clears it with {@code Slot#setByPlayer}. Both walked past the
+	 * charge, and since the tick refills the window from the bank, that was an unbounded dupe.
+	 *
+	 * <p>This drives the REAL door — {@code AbstractContainerMenu#clicked}, the same entry point the
+	 * server uses for a click from a live client — instead of the block entity's own API. The old test
+	 * called {@code be.removeItem} directly, i.e. it asserted the contract of the one path that already
+	 * worked, and could not have failed on this bug.
+	 *
+	 * @implements TC-CONDENSER-001-GUI01 — every route that takes a clot spends the bank
+	 * @covers R-GUI-05, R-GUI-06
+	 */
+	public static void condenser_everyRemovalPathSpendsTheBank(GameTestHelper helper) {
+		EnergyCondenserBlockEntity be = place(helper);
+		ServerPlayer player = AlaGameTestHelper.survivalPlayer(helper);
+		EnergyCondenserMenu menu = new EnergyCondenserMenu(1, player.getInventory(), be,
+				be.getDataAccess(), ContainerLevelAccess.create(helper.getLevel(), be.getBlockPos()));
+		int window = menu.findSlot(be, EnergyCondenserBlockEntity.OUTPUT_SLOT).orElse(-1);
+		if (window < 0) {
+			helper.fail("the menu must bind the condenser's window slot");
+			return;
+		}
+
+		// The four doors a player has. QUICK_MOVE and SWAP are the two that were free.
+		expectPaid(helper, be, menu, player, window, ContainerInput.QUICK_MOVE, 0, "shift-click");
+		expectPaid(helper, be, menu, player, window, ContainerInput.SWAP, 0, "hotbar swap (key 1)");
+		expectPaid(helper, be, menu, player, window, ContainerInput.THROW, 0, "throw (Q)");
+		expectPaid(helper, be, menu, player, window, ContainerInput.PICKUP, 0, "mouse click");
+		helper.succeed();
+	}
+
+	/**
+	 * Take the clot through {@code input} and assert the bank paid for it and the window stayed empty.
+	 *
+	 * <p>The bank is filled to the tier-II threshold every round, so a path that fails to charge leaves
+	 * a visible million behind rather than a rounding error. Three ticks after the click is the part
+	 * that catches the dupe specifically: under the old code the window was full again after one.
+	 */
+	private static void expectPaid(GameTestHelper helper, EnergyCondenserBlockEntity be,
+			EnergyCondenserMenu menu, ServerPlayer player, int window,
+			ContainerInput input, int button, String label) {
+		be.getEnergyStorage().setAmountUntracked(Config.clotThresholdII);
+		player.getInventory().clearContent();
+		menu.setCarried(ItemStack.EMPTY);
+		AlaGameTestHelper.drive(be, helper, 1);
+		if (!be.getItem(EnergyCondenserBlockEntity.OUTPUT_SLOT).is(ModContent.ENERGY_CLOT_II.get())) {
+			helper.fail(label + ": the window must hold a tier-II clot before the click");
+			return;
+		}
+
+		menu.clicked(window, button, input, player);
+		AlaGameTestHelper.drive(be, helper, 3);
+
+		if (be.getEnergyStorage().getAmount() != 0) {
+			helper.fail(label + " took the clot without spending the bank ("
+					+ be.getEnergyStorage().getAmount() + " EU left) — this is the dupe: the window "
+					+ "refills from that bank every tick");
+			return;
+		}
+		if (!be.getItem(EnergyCondenserBlockEntity.OUTPUT_SLOT).isEmpty()) {
+			helper.fail(label + ": the window refilled while the bank was empty — "
+					+ be.getItem(EnergyCondenserBlockEntity.OUTPUT_SLOT));
+			return;
+		}
+		int held = player.getInventory().countItem(ModContent.ENERGY_CLOT_II.get())
+				+ (menu.getCarried().is(ModContent.ENERGY_CLOT_II.get()) ? menu.getCarried().getCount() : 0);
+		// THROW puts the clot on the ground rather than in the player, so one is the ceiling everywhere
+		// and the floor only where the item stays with the player.
+		if (held > 1) {
+			helper.fail(label + " handed out " + held + " clots for one bank");
+		}
+		if (held == 0 && input != ContainerInput.THROW) {
+			helper.fail(label + ": the bank was spent but the player got nothing");
+		}
+	}
+
+	/**
+	 * Regression (MOD-492): a player's own clot cannot be folded into the window — and therefore cannot
+	 * be destroyed by it.
+	 *
+	 * <p>{@code mayPlace} is not enough on its own. Vanilla's {@code moveItemStackTo} consults it only
+	 * while scanning EMPTY slots; the merge pass, which grows a matching stack already in a slot, never
+	 * asks. So a shift-click with the same tier in hand slid straight past the take-only rule, and the
+	 * next tick — which normalises the window back to a single clot — deleted it. The window slot now
+	 * caps at one, which makes the merge arithmetically impossible.
+	 *
+	 * @implements TC-CONDENSER-001-GUI02 — the display slot refuses a player clot instead of eating it
+	 * @covers R-GUI-05, R-GUI-06
+	 */
+	public static void condenser_windowRefusesAPlayersOwnClot(GameTestHelper helper) {
+		EnergyCondenserBlockEntity be = place(helper);
+		ServerPlayer player = AlaGameTestHelper.survivalPlayer(helper);
+		EnergyCondenserMenu menu = new EnergyCondenserMenu(1, player.getInventory(), be,
+				be.getDataAccess(), ContainerLevelAccess.create(helper.getLevel(), be.getBlockPos()));
+
+		be.getEnergyStorage().setAmountUntracked(Config.clotThresholdII);
+		AlaGameTestHelper.drive(be, helper, 1);
+
+		// The player holds a clot of the very tier the window is showing — the only case that merges.
+		player.getInventory().clearContent();
+		player.getInventory().add(new ItemStack(ModContent.ENERGY_CLOT_II.get()));
+		int inventorySlot = menu.findSlot(player.getInventory(),
+				player.getInventory().findSlotMatchingItem(new ItemStack(ModContent.ENERGY_CLOT_II.get())))
+				.orElse(-1);
+		if (inventorySlot < 0) {
+			helper.fail("the player's clot must be bound to a menu slot for this test to mean anything");
+			return;
+		}
+
+		menu.clicked(inventorySlot, 0, ContainerInput.QUICK_MOVE, player);
+		AlaGameTestHelper.drive(be, helper, 3);
+
+		if (player.getInventory().countItem(ModContent.ENERGY_CLOT_II.get()) != 1) {
+			helper.fail("the player's own clot was swallowed by the window and destroyed by the tick");
+			return;
+		}
+		if (be.getItem(EnergyCondenserBlockEntity.OUTPUT_SLOT).getCount() != 1) {
+			helper.fail("the window must still hold exactly one clot, got "
+					+ be.getItem(EnergyCondenserBlockEntity.OUTPUT_SLOT));
+			return;
 		}
 		helper.succeed();
 	}

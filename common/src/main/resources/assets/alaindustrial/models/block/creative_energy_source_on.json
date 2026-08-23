@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "particle": "alaindustrial:block/creative_energy_source_side_on",
+    "bottom": "alaindustrial:block/machine_bottom",
+    "top": "alaindustrial:block/creative_energy_source_top_on",
+    "side": "alaindustrial:block/creative_energy_source_side_on"
+  }
+}

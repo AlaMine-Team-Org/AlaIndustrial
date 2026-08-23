@@ -8,6 +8,7 @@ import dev.alaindustrial.client.tooltip.MachineTooltips;
 import dev.alaindustrial.registry.ModContent;
 import java.util.ArrayList;
 import java.util.List;
+import dev.alaindustrial.junit.StopEphemeralServerBeforeFmlTeardown;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.server.MinecraftServer;
@@ -29,6 +30,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * <p>Boots the ephemeral server so {@code ModContent} item/block handles resolve.
  */
 @ExtendWith(EphemeralTestServerProvider.class)
+@ExtendWith(StopEphemeralServerBeforeFmlTeardown.class)
 class MachineTooltipsTest {
 
 	private static List<String> tooltipKeys(ItemStack stack, boolean shiftDown) {

@@ -794,6 +794,11 @@ public class NetworkGameTest {
 		CableShockScenarios.shockGuardPopsWhenDownConnectionAppears(helper);
 	}
 
+	@GameTest(maxTicks = 80)
+	public void mod466_insulatedSetProtectsByThePieceAndWearsOut(GameTestHelper helper) {
+		CableShockScenarios.insulatedSetProtectsByThePieceAndWearsOut(helper);
+	}
+
 	// ── MOD-070: a storage source never charges another storage sink (no battery↔battery wash) ─────
 
 	// Both boxes FACING WEST: BB_SRC's OUT (east/back) feeds the cable; BB_DST's IN (west/front) draws it.
@@ -1132,5 +1137,49 @@ public class NetworkGameTest {
 	@GameTest(maxTicks = 100)
 	public void perf01_energyNetworkFiftyCableTickCost(GameTestHelper helper) {
 		EnergyNetworkPerfScenarios.perf01FiftyCableLineTickCost(helper);
+	}
+
+	// ── MOD-479: the creative energy source ──────────────────────────────────────────────
+
+	/** @implements IT-479-BUF — the buffer is still at the configured output after a run that charged a consumer. */
+	@GameTest(maxTicks = 200)
+	public void it479_bufferHoldsSteadyWhileDelivering(GameTestHelper helper) {
+		CreativeEnergySourceScenarios.bufferHoldsSteadyWhileDelivering(helper);
+	}
+
+	/** @implements IT-479-DEL — over a run it hands out several times what its own buffer holds. */
+	@GameTest(maxTicks = 200)
+	public void it479_deliversManyTimesItsOwnCapacity(GameTestHelper helper) {
+		CreativeEnergySourceScenarios.deliversManyTimesItsOwnCapacity(helper);
+	}
+
+	/** @implements IT-479-SWI — the switch stops delivery, proven against a run that delivered. */
+	@GameTest(maxTicks = 100)
+	public void it479_switchedOffStopsDelivering(GameTestHelper helper) {
+		CreativeEnergySourceScenarios.switchedOffStopsDelivering(helper);
+	}
+
+	/** @implements IT-479-ZER — an output of zero behaves exactly like the switch being off. */
+	@GameTest(maxTicks = 100)
+	public void it479_zeroOutputStopsDelivering(GameTestHelper helper) {
+		CreativeEnergySourceScenarios.zeroOutputStopsDelivering(helper);
+	}
+
+	/** @implements IT-479-SET — switch and output survive a save/load round trip. */
+	@GameTest(maxTicks = 40)
+	public void it479_settingsSurviveReload(GameTestHelper helper) {
+		CreativeEnergySourceScenarios.settingsSurviveReload(helper);
+	}
+
+	/** @implements IT-479-CHA — the charge slot fills an item and is closed to automation on every face. */
+	@GameTest(maxTicks = 100)
+	public void it479_chargeSlotFillsItemAndRefusesAutomation(GameTestHelper helper) {
+		CreativeEnergySourceScenarios.chargeSlotFillsItemAndRefusesAutomation(helper);
+	}
+
+	/** @implements IT-479-NOR — no loaded recipe yields the block. */
+	@GameTest(maxTicks = 40)
+	public void it479_noRecipeYieldsTheBlock(GameTestHelper helper) {
+		CreativeEnergySourceScenarios.noRecipeYieldsTheBlock(helper);
 	}
 }

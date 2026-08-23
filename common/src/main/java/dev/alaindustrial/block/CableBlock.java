@@ -8,9 +8,11 @@ import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.core.energy.ShockGuardMaterial;
+import dev.alaindustrial.core.energy.ShockInsulation;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModCriteria;
 import dev.alaindustrial.registry.ModDamageTypes;
+import dev.alaindustrial.registry.ModTags;
 import java.util.EnumMap;
 import java.util.Map;
 import net.minecraft.core.BlockPos;
@@ -25,6 +27,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -90,6 +93,14 @@ public class CableBlock extends AbstractMachineBlock {
 
 	/** Collision/outline that matches the model: a 6px core plus an arm toward each connection. */
 	private static final VoxelShape CORE = Block.box(5, 5, 5, 11, 11, 11);
+	/**
+	 * The four worn slots an insulating set can occupy (MOD-466). Listed rather than derived: 26.2 has
+	 * no {@code getArmorSlots()}, and {@code EquipmentSlot.values()} would also sweep the hands and the
+	 * body slot, where a rubber sleeve is not being worn by anyone.
+	 */
+	private static final EquipmentSlot[] ARMOUR_SLOTS = {
+			EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET };
+
 	private static final Map<Direction, VoxelShape> ARMS = new EnumMap<>(Direction.class);
 	static {
 		ARMS.put(Direction.DOWN, Block.box(5, 0, 5, 11, 5, 11));
@@ -237,7 +248,19 @@ public class CableBlock extends AbstractMachineBlock {
 			return false;
 		}
 
-		if (!player.hurtServer(serverLevel, ModDamageTypes.electricShock(level), type.shockDamage())) {
+		float raw = type.shockDamage();
+		float remaining = insulatedShockDamage(raw, player);
+		wearInsulation(player, raw - remaining);
+		if (remaining <= 0.0f) {
+			// No hurtServer means no vanilla invulnerability window either, and both hazard paths run
+			// every tick of contact — without this the set would be charged wear twenty times a second
+			// and a helmet would die in three seconds of standing still. Exactly the trap MOD-279's
+			// stand fell into; here it bites durability instead of the hit chance.
+			player.invulnerableTime = Config.shockGuardGraceTicks;
+			return false;
+		}
+
+		if (!player.hurtServer(serverLevel, ModDamageTypes.electricShock(level), remaining)) {
 			return false;
 		}
 		serverLevel.sendParticles(ParticleTypes.ELECTRIC_SPARK,
@@ -285,6 +308,71 @@ public class CableBlock extends AbstractMachineBlock {
 		}
 		player.invulnerableTime = Config.shockGuardGraceTicks;
 		return false;
+	}
+
+	/**
+	 * Worn pieces of insulating armour on this player, 0..4 (MOD-466).
+	 *
+	 * <p>Membership is an <b>item tag</b> ({@code #alaindustrial:shock_insulating}) rather than a Java
+	 * type, the same choice the shielding suit made for radiation: a pack can add its own insulating
+	 * gear with a datapack and no code, and this block needs no knowledge of what armour exists.
+	 *
+	 * <p>A broken piece cannot be worn at all, so no explicit durability check belongs here — vanilla
+	 * removes a piece that hits zero, which is what makes "a broken piece stops protecting" true for
+	 * free rather than by a rule someone has to remember.
+	 *
+	 * <p>Side-effect-free and public so both loader GameTest lanes can assert it directly, for the
+	 * same reason {@link #shouldShockPlayer} and {@link #passesShockGuard} are: the landing path calls
+	 * {@code hurtServer}, which notifies the player's {@code connection}, and a mock GameTest player
+	 * has none.
+	 */
+	public static int wornInsulatingPieces(ServerPlayer player) {
+		int worn = 0;
+		for (EquipmentSlot slot : ARMOUR_SLOTS) {
+			ItemStack stack = player.getItemBySlot(slot);
+			if (!stack.isEmpty() && stack.is(ModTags.Items.SHOCK_INSULATING)) {
+				worn++;
+			}
+		}
+		return worn;
+	}
+
+	/**
+	 * Shock damage left after the worn insulating set takes its share — {@code 0} when a full set stops
+	 * the hit outright. Side-effect-free, and the predicate both GameTest lanes assert instead of
+	 * health loss.
+	 *
+	 * <p>What survives here still goes through {@code hurtServer}, so ordinary armour points and
+	 * Protection reduce it further. That is not double-dipping: {@code electric_shock} carries no
+	 * {@code bypasses_armor} tag and never did, so plain armour has always blunted a shock, and this
+	 * set is simply the first that can take all of it.
+	 */
+	public static float insulatedShockDamage(float raw, ServerPlayer player) {
+		return ShockInsulation.remaining(raw, wornInsulatingPieces(player),
+				Config.bareCableShockInsulationPerPiecePercent);
+	}
+
+	/**
+	 * Spend one round of durability across the worn insulating pieces for the damage they stopped.
+	 *
+	 * <p>Goes through vanilla {@code hurtAndBreak} rather than a hand-rolled counter, which is what
+	 * makes Unbreiking apply and a creative player pay nothing — a manual {@code setDamageValue} would
+	 * silently do neither (MOD-319). The slot overload is the one to use: it is vanilla's own, unlike
+	 * the {@code (int, ServerLevel, LivingEntity, Consumer)} shape, which exists only as a NeoForge
+	 * patch and would not compile against Fabric.
+	 */
+	private static void wearInsulation(ServerPlayer player, float prevented) {
+		int wear = ShockInsulation.wearFor(prevented,
+				Config.bareCableShockInsulationDamagePerDurability);
+		if (wear <= 0) {
+			return;
+		}
+		for (EquipmentSlot slot : ARMOUR_SLOTS) {
+			ItemStack stack = player.getItemBySlot(slot);
+			if (!stack.isEmpty() && stack.is(ModTags.Items.SHOCK_INSULATING)) {
+				stack.hurtAndBreak(wear, player, slot);
+			}
+		}
 	}
 
 	/** Side-effect-free eligibility check shared with both loader GameTest lanes. */

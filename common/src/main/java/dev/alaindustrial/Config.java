@@ -1423,6 +1423,33 @@ public final class Config {
 	 * the same. That constant is {@code protected} and cannot be referenced from here, hence the literal.
 	 */
 	public static int shockGuardGraceTicks = 20;
+	/**
+	 * Percent of a bare cable's shock one worn piece of insulating armour cuts (MOD-466). Four pieces
+	 * at 25 make a full set immune; three cut 75 % and still take the rest.
+	 *
+	 * <p>Per piece rather than all-or-nothing on purpose: it is the same shape the shielding suit uses
+	 * for radiation, so the mod has one rule for both worn defences, and a half-built set is worth
+	 * something instead of nothing. Values above 25 are clamped to a whole set's 100 % by
+	 * {@link dev.alaindustrial.core.energy.ShockInsulation#cutPercent} — without that ceiling a
+	 * generous operator would push damage past zero and start healing the wearer. {@code 0} disables
+	 * the set's protection without touching the hazard itself.
+	 */
+	public static int bareCableShockInsulationPerPiecePercent = 25;
+	/**
+	 * Absorbed shock damage that costs one point of durability on each worn insulating piece (MOD-466).
+	 *
+	 * <p><b>This knob is a rate, not a price, and the difference is the whole bug it fixes.</b> Contact
+	 * is continuous — both hazard paths re-enter every tick and an absorbed hit opens only a
+	 * {@link #shockGuardGraceTicks} window — so a player standing beside a live wire is shocked once a
+	 * second. At the shipped 1.0 (full absorbed damage per point) an LV line cost 2 durability a second
+	 * and destroyed a helmet in under half a minute of standing still.
+	 *
+	 * <p>At 4.0 the tier ladder survives but the clock is sane: a full set spends 1 point per LV shock,
+	 * 2 per MV, 3 per HV, so a helmet takes roughly 4.5 minutes of unbroken LV contact, 2.5 of MV and
+	 * 1.5 of HV. Raise it to make the set last longer, lower it to make voltage bite sooner; the floor
+	 * of one point per absorbed hit is in the code and cannot be configured away.
+	 */
+	public static float bareCableShockInsulationDamagePerDurability = 4.0f;
 
 	// --- Cable grades: tin (cheap/narrow), gold (MV/wide) and electrum (HV/widest),
 	// see core.energy.CableType (MOD-219, MOD-358) ---
@@ -2222,6 +2249,10 @@ public final class Config {
 				() -> shockGuardGlassHitChance, v -> shockGuardGlassHitChance = v, 0.0, 0.0),
 			new IntField("shockGuardGraceTicks", Section.SAFETY, "Contact ticks a player is spared after an insulating stand absorbs a shock, so the reduced chance is per contact rather than re-rolled every tick.",
 				() -> shockGuardGraceTicks, v -> shockGuardGraceTicks = v, 0),
+			new IntField("bareCableShockInsulationPerPiecePercent", Section.SAFETY, "Percent of a bare cable's shock cut by one worn piece of insulating armour (25 = a full four-piece set is immune; 0 disables the set's protection).",
+				() -> bareCableShockInsulationPerPiecePercent, v -> bareCableShockInsulationPerPiecePercent = v, 0),
+			new FloatField("bareCableShockInsulationDamagePerDurability", Section.SAFETY, "Absorbed shock damage that costs one durability point on each worn insulating piece (higher = the set lasts longer; contact is once per second, so this is a rate).",
+				() -> bareCableShockInsulationDamagePerDurability, v -> bareCableShockInsulationDamagePerDurability = v, 0.0f),
 			new BoolField("radiationEnabled", Section.SAFETY, "When true, uranium and fuelled reactor rods irradiate players. false disables the entire mechanic, including suit wear.",
 				() -> radiationEnabled, v -> radiationEnabled = v),
 			new IntField("radiationDoseCapacity", Section.SAFETY, "Depth of the radiation dose scale in ticks; also the time a player at the top of the scale needs to recover once clear of every source.",

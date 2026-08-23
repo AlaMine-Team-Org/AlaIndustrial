@@ -2,11 +2,17 @@ package dev.alaindustrial.block;
 
 import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
+import dev.alaindustrial.core.structure.RoomValidator;
 import dev.alaindustrial.registry.ModContent;
+import dev.alaindustrial.registry.ModSounds;
+import dev.alaindustrial.sound.MachineHum;
+import java.util.function.Supplier;
+import org.jspecify.annotations.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Containers;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -14,6 +20,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
@@ -21,11 +28,15 @@ import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -48,7 +59,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * pull the last one back out. No menu at all — a container with four identical items in it would be a
  * GUI for nothing.
  */
-public class FuelRodAssemblyBlock extends BaseEntityBlock {
+public class FuelRodAssemblyBlock extends BaseEntityBlock implements MachineHumProvider {
 
 	public static final MapCodec<FuelRodAssemblyBlock> CODEC = simpleCodec(FuelRodAssemblyBlock::new);
 
@@ -91,6 +102,30 @@ public class FuelRodAssemblyBlock extends BaseEntityBlock {
 	public static final BooleanProperty DOWN = BooleanProperty.create("down");
 
 	/**
+	 * Whether this column is one of the room's <em>voiced</em> racks — a running reactor's drone plays
+	 * from it (MOD-472). Set by the controller, never by the column itself.
+	 *
+	 * <p><b>Why the column cannot work this out alone.</b> "The reactor is running" is the conjunction of
+	 * a sealed shell, a redstone signal, a throttle off zero and fuel in the racks; the column knows only
+	 * the last of those, and the first three live on the controller and never reach the client. A rack
+	 * humming because it merely holds fuel would go on humming through a scram, which is the opposite of
+	 * what the sound is for.
+	 *
+	 * <p><b>Why a blockstate and not a synced field.</b> The column is a plain {@code BlockEntity} with no
+	 * update packet at all, and giving it one would ship its whole four-stack inventory to every client
+	 * in range for the sake of one bit. A blockstate is already replicated, already survives a chunk
+	 * round-trip, and is the input the hum system is built to read — the same route {@code lit} takes for
+	 * every other machine. The controller paints it exactly the way it already paints {@code formed}
+	 * across the shell.
+	 *
+	 * <p><b>Why only some columns carry it.</b> A minimum-size room packed solid holds 27 racks and a
+	 * large one holds hundreds; the client has about 25 static sound channels in total, and identical
+	 * copies of one sample sum at roughly +6 dB per doubling. The controller therefore voices at most
+	 * {@code VOICED_COLUMNS} of them and leaves the rest silent.
+	 */
+	public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
+
+	/**
 	 * A rack, not a full cube: 12×14×12, so the room reads as machinery rather than as a filled box.
 	 *
 	 * <p>Three shapes, because a stacked rack is drawn taller than a lone one. The connector pieces fill
@@ -98,6 +133,16 @@ public class FuelRodAssemblyBlock extends BaseEntityBlock {
 	 * 14-high shape the selection box of a stacked assembly would float two pixels below the geometry
 	 * the player can see.
 	 */
+	/**
+	 * Loudness heard through the containment — a quarter of the open-room figure, not silence.
+	 *
+	 * <p>Audible on purpose: a running reactor should be something the player can hear from outside the
+	 * building, or the shell reads as a mute button rather than as shielding. Kept well above the
+	 * engine's zero-volume trap (see {@code MachineHumSoundInstance}) so the loop keeps running quietly
+	 * instead of failing to start over and over.
+	 */
+	private static final float MUFFLED_VOLUME = 0.055f;
+
 	private static final VoxelShape SHAPE = Block.box(2.0, 0.0, 2.0, 14.0, 14.0, 14.0);
 	private static final VoxelShape SHAPE_UP = Block.box(2.0, 0.0, 2.0, 14.0, 16.0, 14.0);
 	private static final VoxelShape SHAPE_DOWN = Block.box(2.0, -0.0, 2.0, 14.0, 14.0, 14.0);
@@ -106,7 +151,7 @@ public class FuelRodAssemblyBlock extends BaseEntityBlock {
 	public FuelRodAssemblyBlock(Properties properties) {
 		super(properties);
 		registerDefaultState(defaultBlockState().setValue(RODS, 0).setValue(FUELLED, 0).setValue(WATER, 0)
-				.setValue(UP, false).setValue(DOWN, false));
+				.setValue(UP, false).setValue(DOWN, false).setValue(ACTIVE, false));
 	}
 
 	@Override
@@ -116,7 +161,7 @@ public class FuelRodAssemblyBlock extends BaseEntityBlock {
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-		builder.add(RODS, FUELLED, WATER, UP, DOWN);
+		builder.add(RODS, FUELLED, WATER, UP, DOWN, ACTIVE);
 	}
 
 	@Override
@@ -138,6 +183,106 @@ public class FuelRodAssemblyBlock extends BaseEntityBlock {
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		return new FuelRodAssemblyBlockEntity(pos, state);
+	}
+
+	/**
+	 * A ticker on the CLIENT only (MOD-472) — the loop manager needs a per-tick call, and nothing else
+	 * here does.
+	 *
+	 * <p>Deliberately not {@code humMachineTicker}: that one hands back a live ticker on the server too,
+	 * and this block entity is built on the promise that it never ticks there
+	 * ({@code FuelRodAssemblyBlockEntity}'s class javadoc — the reactor is one machine, so a room with
+	 * thirty racks costs one block entity's worth of work, not thirty). Returning {@code null} on the
+	 * server keeps that promise exactly while still giving the client its hum.
+	 */
+	@Override
+	@Nullable
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
+			BlockEntityType<T> type) {
+		if (!level.isClientSide()) {
+			return null;
+		}
+		MachineHum.ClientHook hook = MachineHum.CLIENT;
+		return hook == null ? null : (lvl, pos, st, be) -> hook.tick(lvl, pos, st);
+	}
+
+	@Override
+	public Supplier<SoundEvent> humSound() {
+		return ModSounds.REACTOR_HUM;
+	}
+
+	/**
+	 * Quiet per column, because a room speaks with several at once.
+	 *
+	 * <p>0.22 is the mills' figure — the value the mod already uses for a block players line up in rows —
+	 * and it is chosen the same way here. At the controller's cap of voiced columns the copies sum to
+	 * roughly 9-10 dB above one of them, which lands a reactor hall a little above a single working
+	 * machine: loud enough to be the biggest thing in the base, short of a wall of sound.
+	 */
+	@Override
+	public float humVolume() {
+		return 0.22f;
+	}
+
+	/**
+	 * The column drones only when the controller says the room is running, never merely because it holds
+	 * fuel. See {@link #ACTIVE}.
+	 */
+	@Override
+	public boolean isWorking(Level level, BlockPos pos, BlockState state) {
+		return state.getValue(ACTIVE);
+	}
+
+	/**
+	 * Full loudness inside the containment, muffled outside it (MOD-472).
+	 *
+	 * <p><b>The shell is what muffles, and the check asks exactly that.</b> Minecraft's sound engine has
+	 * no occlusion of any kind — every other loop in this mod is heard through a wall as clearly as
+	 * across open ground — so a sealed reactor sounding sealed has to be done here. The test is a single
+	 * collision trace from the listener to this rack: if it stops on a block that belongs to a formed
+	 * reactor shell, the listener is on the far side of the containment.
+	 *
+	 * <p>Reading the shell specifically, rather than "anything solid", is what makes it behave:
+	 * <ul>
+	 *   <li>stood inside, a rack behind another rack is still at full volume — a column is not a wall;</li>
+	 *   <li>stood outside, the casing muffles it, and so does the reactor glass, which has a collision
+	 *       box despite being see-through;</li>
+	 *   <li>with the airlock open the doorway itself is empty, so a trace through it reaches the rack and
+	 *       the room leaks at full volume — through the opening only, which is the behaviour the shell
+	 *       earns by being shut;</li>
+	 *   <li>a reactor built with no room around it is never muffled, because there is no shell to hit.</li>
+	 * </ul>
+	 *
+	 * <p>One trace per voiced column per tick, and only while a loop is actually playing. The result is
+	 * a step of roughly twelve decibels, so the caller eases between the two rather than switching — a
+	 * listener walking past a window would otherwise make the drone stutter tick by tick as the trace
+	 * catches the frame and misses it again.
+	 */
+	@Override
+	public float humVolume(Level level, BlockPos pos, BlockState state, Vec3 listener) {
+		return shellStandsBetween(level, pos, listener) ? MUFFLED_VOLUME : humVolume();
+	}
+
+	/**
+	 * Whether a formed shell block interrupts the straight line from {@code listener} to this rack.
+	 *
+	 * <p>{@code Block.COLLIDER} rather than the visual shape, because that is the difference a player can
+	 * see and reason about: reactor glass is see-through but has a collision box, so it holds the sound
+	 * in, while an open doorway is empty and lets it out. The swung-open door panel still has a collider
+	 * of its own — it is a thin slab turned against the wall — so a trace that clips its edge does count
+	 * as shell. That is why the easing above matters at a doorway rather than only at a window.
+	 */
+	private static boolean shellStandsBetween(Level level, BlockPos pos, Vec3 listener) {
+		Vec3 target = new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+		BlockHitResult hit = level.clip(new ClipContext(listener, target,
+				ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, CollisionContext.empty()));
+		if (hit.getType() != HitResult.Type.BLOCK) {
+			return false;
+		}
+		// RoomValidator owns the definition of "a shell block that is currently assembled" — the same
+		// one its painter uses. Re-deciding it here would mean a second place to update the day a new
+		// shell block is added, with nothing to catch the two drifting apart.
+		return RoomValidator.isFormedShell(level.getBlockState(hit.getBlockPos()));
 	}
 
 	/** Joins up with whatever is already there the moment the rack is placed. */

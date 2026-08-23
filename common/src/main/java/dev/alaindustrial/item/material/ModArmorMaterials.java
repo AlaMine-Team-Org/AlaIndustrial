@@ -135,6 +135,12 @@ public final class ModArmorMaterials {
 	 * shielding that {@code RadiationTicker} reads off the {@code #alaindustrial:radiation_shielding}
 	 * tag — and the durability it spends absorbing dose, which keeps it a consumable.
 	 *
+	 * <p><b>It insulates too (MOD-466).</b> The suit is sealed leather and rubber, so it also carries
+	 * {@code #alaindustrial:shock_insulating} and stops a bare cable's shock exactly like the rubber
+	 * set does. That does not make the insulated set redundant — this one arrives far later and costs a
+	 * palladium-era craft — but a player wearing rubber head to toe and still being electrocuted was
+	 * the material contradicting itself.
+	 *
 	 * <p>Repair tag: {@code alaindustrial:shielding_armor_materials} -> {@code alaindustrial:rubber}.
 	 */
 	public static final ArmorMaterial SHIELDING = new ArmorMaterial(
@@ -146,6 +152,54 @@ public final class ModArmorMaterials {
 			0.0f,
 			tagKey("shielding_armor_materials"),
 			SHIELDING_ASSET);
+
+	/**
+	 * Visual asset key for the insulated set (MOD-466). Ordinary armour layers, not a sealed suit:
+	 * unlike {@link #SHIELDING_ASSET} the textures may leave transparent regions, because insulation is
+	 * about what the wearer touches rather than about closing them off from the world.
+	 */
+	public static final ResourceKey<EquipmentAsset> INSULATED_ASSET =
+			ResourceKey.create(EquipmentAssets.ROOT_ID, Industrialization.id("insulated"));
+
+	/**
+	 * Insulated set (MOD-466) — leather work gear dipped in slime.
+	 *
+	 * <p><b>Slime, and deliberately not the mod's own rubber.</b> The first version was rubber, and it
+	 * was dominated before it shipped: rubber costs an oil well, a polymeriser and a vulcaniser, and
+	 * three of it turns into six insulated cables — so anyone able to craft rubber armour could simply
+	 * insulate the wire instead, permanently, for less. Slime breaks that loop because a slime ball
+	 * cannot be made into cable insulation at all. It is also available from the first swamp, which is
+	 * what finally puts this set in the window it was always meant for: the stretch between a player's
+	 * first bare copper line and their first drop of rubber.
+	 *
+	 * <p>Each worn piece cuts a quarter of a shock ({@code Config.bareCableShockInsulationPerPiecePercent},
+	 * read by {@code CableBlock} off the {@code #alaindustrial:shock_insulating} tag), and the set spends
+	 * durability for what it stopped — a consumable, not a permanent upgrade. The permanent answer is
+	 * still insulated cable; this is what keeps a player alive until they have it.
+	 *
+	 * <p><b>Defense is leather; durability is not.</b> Protection stays at the vanilla leather line
+	 * (1/3/2/1) for the same reason the shielding suit's does — a craft this cheap with real armour
+	 * numbers would replace leather armour outright and be worn for the wrong reason. But the two
+	 * numbers answer different questions, and the durability one is "how long does the coating last",
+	 * not "how much does it stop". At leather's factor 5 the set died in under half a minute of standing
+	 * beside a wire, because contact is once a second rather than once a visit. Factor 25 gives
+	 * 275/400/375/325 across the slots ({@code ArmorType.unitDurability} 11/16/15/13) — roughly four and
+	 * a half minutes of unbroken LV contact out of a helmet, and a whole working session out of the
+	 * chestplate. It still cannot tank anything.
+	 *
+	 * <p>Repair tag: {@code alaindustrial:insulated_armor_materials} -> {@code minecraft:leather}.
+	 * Leather rather than the slime that coats it: an anvil repair is patching the gear, and a player
+	 * who has worn the coating off has leather to hand long before they have another swamp trip.
+	 */
+	public static final ArmorMaterial INSULATED = new ArmorMaterial(
+			25,                                      // durability factor — how long the coating lasts
+			makeDefense(1, 3, 2, 1),                 // leather defense: this set is not armour
+			15,                                      // enchantmentValue (leather 15) — cloth takes it well
+			SoundEvents.ARMOR_EQUIP_LEATHER,         // coated leather, not plate
+			0.0f,                                    // toughness
+			0.0f,                                    // knockbackResistance
+			tagKey("insulated_armor_materials"),
+			INSULATED_ASSET);
 
 	/**
 	 * Build the per-slot defense map the way vanilla {@code ArmorMaterials.makeDefense(...)} does,

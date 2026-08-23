@@ -147,6 +147,20 @@ public final class ModTags {
 		/** Worn pieces that shield against radiation (MOD-470) — the four parts of the shielding suit. */
 		public static final TagKey<Item> RADIATION_SHIELDING = key("radiation_shielding");
 
+		/**
+		 * Worn pieces that insulate against a bare cable's shock (MOD-466) — the insulated set, and the
+		 * shielding suit alongside it.
+		 *
+		 * <p><b>The two suits overlap here on purpose, and only here.</b> The shielding suit is sealed
+		 * leather and the mod's own rubber (it is even repaired with rubber), so a player who has one on
+		 * and still gets electrocuted by a wire is being told the material does not do what the material
+		 * obviously does. The reverse does not hold: the insulated set carries no {@link
+		 * #RADIATION_SHIELDING}, because rubber stops a current and does nothing at all about a gamma
+		 * ray. So the insulated set stays the cheap, early answer to cables, and the shielding suit is the
+		 * later one that happens to also cover them.
+		 */
+		public static final TagKey<Item> SHOCK_INSULATING = key("shock_insulating");
+
 		private static TagKey<Item> key(String path) {
 			return TagKey.create(Registries.ITEM, Industrialization.id(path));
 		}

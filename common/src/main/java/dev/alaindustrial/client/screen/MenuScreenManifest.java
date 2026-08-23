@@ -147,5 +147,7 @@ public final class MenuScreenManifest {
 			// MOD-386 — last, at the same index as its MENUS entry.
 			screen(() -> ModContent.LIGHTNING_ROD_GENERATOR_MENU.get(), LightningRodGeneratorScreen::new),
 			// MOD-468 — last, at the same index as its MENUS entry.
-			screen(() -> ModContent.REACTOR_CONTROLLER_MENU.get(), ReactorControllerScreen::new));
+			screen(() -> ModContent.REACTOR_CONTROLLER_MENU.get(), ReactorControllerScreen::new),
+			// MOD-479 — last, at the same index as its MENUS entry.
+			screen(() -> ModContent.CREATIVE_ENERGY_SOURCE_MENU.get(), CreativeEnergySourceScreen::new));
 }

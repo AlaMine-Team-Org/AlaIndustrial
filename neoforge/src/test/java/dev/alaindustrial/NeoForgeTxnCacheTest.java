@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import dev.alaindustrial.core.neoforge.NeoForgeEnergyPort;
+import dev.alaindustrial.junit.StopEphemeralServerBeforeFmlTeardown;
 import net.minecraft.server.MinecraftServer;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import net.neoforged.testframework.junit.EphemeralTestServerProvider;
@@ -30,6 +31,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * @implements MOD-285 foreign-transaction cache eviction
  */
 @ExtendWith(EphemeralTestServerProvider.class)
+@ExtendWith(StopEphemeralServerBeforeFmlTeardown.class)
 class NeoForgeTxnCacheTest {
 
 	/** Baseline: a foreign transaction that commits at the root must leave the cache as it found it. */

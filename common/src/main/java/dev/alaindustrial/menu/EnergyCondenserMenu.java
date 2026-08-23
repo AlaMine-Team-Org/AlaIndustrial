@@ -62,7 +62,29 @@ public class EnergyCondenserMenu extends MachineMenu {
 	@Override
 	protected void addMachineSlots() {
 		// Take-only: the condenser's product appears here, nothing may be put in.
-		addSlot(new OutputSlot(machine, EnergyCondenserBlockEntity.OUTPUT_SLOT, OUTPUT_SLOT_X, OUTPUT_SLOT_Y));
+		addSlot(new WindowSlot(machine, EnergyCondenserBlockEntity.OUTPUT_SLOT, OUTPUT_SLOT_X, OUTPUT_SLOT_Y));
+	}
+
+	/**
+	 * The window slot: take-only like any {@link OutputSlot}, but capped at ONE item (MOD-492).
+	 *
+	 * <p>The cap is not cosmetic and not about stack sizes — it is what closes the one gap
+	 * {@code mayPlace} cannot. Vanilla's {@code moveItemStackTo} consults {@code mayPlace} only on its
+	 * pass over EMPTY slots; the MERGE pass, which folds a shift-clicked stack into a matching one
+	 * already in a slot, never asks. So a player holding a clot of the same tier could shift-click it
+	 * straight into this window past the take-only rule — and the tick, which normalises the window back
+	 * to a single clot, would then destroy it. At a cap of one the merge is arithmetically impossible:
+	 * the slot is already at its ceiling, so vanilla folds nothing in.
+	 */
+	private static final class WindowSlot extends OutputSlot {
+		private WindowSlot(Container container, int index, int x, int y) {
+			super(container, index, x, y);
+		}
+
+		@Override
+		public int getMaxStackSize() {
+			return 1;
+		}
 	}
 
 	@Override

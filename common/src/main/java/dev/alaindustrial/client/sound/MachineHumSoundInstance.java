@@ -26,6 +26,33 @@ public final class MachineHumSoundInstance extends AbstractTickableSoundInstance
 	/** Beyond this the loop ends (hysteresis vs. the manager's smaller start radius). */
 	private static final double STOP_DISTANCE_SQR = 32.0 * 32.0;
 
+	/**
+	 * Floor for a per-tick volume, and it must be above zero.
+	 *
+	 * <p>{@code SoundEngine.play} rejects an instance whose volume is 0 unless it declares
+	 * {@code canStartSilent()}, which this one does not. A rejected instance never lands in the engine's
+	 * channel map, so the manager's own liveness check drops it and the ticker builds a fresh one on the
+	 * next tick — a loop that is meant to be inaudible instead becomes twenty failed starts a second.
+	 * Worse, the engine notifies its listeners (the subtitle overlay among them) BEFORE it checks the
+	 * volume, so the player sees the subtitle strobe with nothing to hear. Clamping here keeps a
+	 * "muffled to nothing" case genuinely silent-but-alive.
+	 */
+	private static final float MIN_AUDIBLE_VOLUME = 0.02f;
+
+	/**
+	 * How much of the remaining gap to the wanted volume is closed each tick.
+	 *
+	 * <p>A machine whose loudness depends on where the listener stands can flip between two values from
+	 * one tick to the next — the reactor's shell test does exactly that, by up to twelve decibels, as a
+	 * player walks past a doorway and the trace catches the door panel and misses it again. Jumping
+	 * straight to the new value turns that into a stutter. At a fifth of the gap per tick the change
+	 * lands in about a quarter of a second: fast enough to feel immediate, slow enough to be a fade.
+	 *
+	 * <p>Costs nothing for the twenty machines whose volume never changes — the target equals the
+	 * current value and the step is zero.
+	 */
+	private static final float VOLUME_EASING = 0.2f;
+
 	private final BlockPos pos;
 	private final Block block;
 
@@ -66,6 +93,18 @@ public final class MachineHumSoundInstance extends AbstractTickableSoundInstance
 				this.y = moved.y;
 				this.z = moved.z;
 			}
+			// Re-read the loudness too (MOD-472). The engine recomputes a tickable instance's volume from
+			// getVolume() every tick and pushes it to the channel, so writing the field here takes effect
+			// on the next frame — no restart, no gap. Machines that do not override this get the same
+			// fixed number they were constructed with, so nothing changes for them.
+			//
+			// EYE position, not the entity position: the engine builds its listener from camera.position(),
+			// and an entity's position is its feet. The gap is over a block and a half, which is enough to
+			// put the listener on the wrong side of a wall — exactly the question the reactor's override
+			// asks of this argument.
+			float target = Math.max(MIN_AUDIBLE_VOLUME,
+					provider.humVolume(mc.level, pos, state, mc.player.getEyePosition()));
+			this.volume += (target - this.volume) * VOLUME_EASING;
 		}
 		// A mute chip inserted while the loop plays silences the machine at once (MOD-080).
 		boolean muted = mc.level.getBlockEntity(pos)

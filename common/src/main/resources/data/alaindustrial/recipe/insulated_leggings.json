@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "minecraft:leather_leggings",
+    "minecraft:slime_ball"
+  ],
+  "result": {
+    "id": "alaindustrial:insulated_leggings",
+    "count": 1
+  }
+}

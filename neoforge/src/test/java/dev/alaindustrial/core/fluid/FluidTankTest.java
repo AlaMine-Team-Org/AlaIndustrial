@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.alaindustrial.core.neoforge.NeoForgeEnergyPort;
+import dev.alaindustrial.junit.StopEphemeralServerBeforeFmlTeardown;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
@@ -45,6 +46,7 @@ import dev.alaindustrial.core.energy.EnergyPort;
  * {@link FluidHolder#of(net.minecraft.world.level.material.Fluid)}.
  */
 @ExtendWith(EphemeralTestServerProvider.class)
+@ExtendWith(StopEphemeralServerBeforeFmlTeardown.class)
 class FluidTankTest {
 
 	private static final FluidHolder LAVA = FluidHolder.of(Fluids.LAVA);

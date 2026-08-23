@@ -220,6 +220,15 @@ public final class ModItemsNeoForge {
 			ITEMS.registerItem("shielding_leggings", Item::new, ItemBuildersNeoForge.shieldingArmor(ArmorType.LEGGINGS));
 	public static final DeferredItem<Item> SHIELDING_BOOTS =
 			ITEMS.registerItem("shielding_boots", Item::new, ItemBuildersNeoForge.shieldingArmor(ArmorType.BOOTS));
+	// Insulated set (MOD-466): ordinary armour items; the insulation lives in the item tag.
+	public static final DeferredItem<Item> INSULATED_HELMET =
+			ITEMS.registerItem("insulated_helmet", Item::new, ItemBuildersNeoForge.insulatedArmor(ArmorType.HELMET));
+	public static final DeferredItem<Item> INSULATED_CHESTPLATE =
+			ITEMS.registerItem("insulated_chestplate", Item::new, ItemBuildersNeoForge.insulatedArmor(ArmorType.CHESTPLATE));
+	public static final DeferredItem<Item> INSULATED_LEGGINGS =
+			ITEMS.registerItem("insulated_leggings", Item::new, ItemBuildersNeoForge.insulatedArmor(ArmorType.LEGGINGS));
+	public static final DeferredItem<Item> INSULATED_BOOTS =
+			ITEMS.registerItem("insulated_boots", Item::new, ItemBuildersNeoForge.insulatedArmor(ArmorType.BOOTS));
 	public static final DeferredItem<Item> IRON_DUST = manifestItem("iron_dust");
 	public static final DeferredItem<Item> COPPER_DUST = manifestItem("copper_dust");
 	public static final DeferredItem<Item> GOLD_DUST = manifestItem("gold_dust");
@@ -531,6 +540,11 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("storm_wind_mill", ModBlocksNeoForge.STORM_WIND_MILL);
 	public static final DeferredItem<BlockItem> LIGHTNING_ROD_GENERATOR_ITEM =
 			ITEMS.registerSimpleBlockItem("lightning_rod_generator", ModBlocksNeoForge.LIGHTNING_ROD_GENERATOR);
+	// MOD-479 — the only block item with extra properties; they come from the shared catalogue so the
+	// two loaders cannot disagree about them (the parity gate does not compare item properties).
+	public static final DeferredItem<BlockItem> CREATIVE_ENERGY_SOURCE_ITEM =
+			ITEMS.registerSimpleBlockItem("creative_energy_source", ModBlocksNeoForge.CREATIVE_ENERGY_SOURCE,
+					ContentManifest.CREATIVE_ONLY_ITEM);
 	public static final DeferredItem<BlockItem> COPPER_CABLE_ITEM =
 			ITEMS.registerSimpleBlockItem("copper_cable", ModBlocksNeoForge.COPPER_CABLE);
 	public static final DeferredItem<BlockItem> TIN_CABLE_ITEM =
@@ -841,6 +855,10 @@ public final class ModItemsNeoForge {
 		ModContent.SHIELDING_CHESTPLATE = SHIELDING_CHESTPLATE::get;
 		ModContent.SHIELDING_LEGGINGS = SHIELDING_LEGGINGS::get;
 		ModContent.SHIELDING_BOOTS = SHIELDING_BOOTS::get;
+		ModContent.INSULATED_HELMET = INSULATED_HELMET::get;
+		ModContent.INSULATED_CHESTPLATE = INSULATED_CHESTPLATE::get;
+		ModContent.INSULATED_LEGGINGS = INSULATED_LEGGINGS::get;
+		ModContent.INSULATED_BOOTS = INSULATED_BOOTS::get;
 		ModContent.FLUXWEAVE_CHESTPLATE = FLUXWEAVE_CHESTPLATE::get;
 		ModContent.FLUXWEAVE_LEGGINGS = FLUXWEAVE_LEGGINGS::get;
 		ModContent.FLUXWEAVE_BOOTS = FLUXWEAVE_BOOTS::get;
@@ -856,6 +874,7 @@ public final class ModItemsNeoForge {
 		ModContent.HIGH_ALTITUDE_WIND_MILL_ITEM = HIGH_ALTITUDE_WIND_MILL_ITEM;
 		ModContent.STORM_WIND_MILL_ITEM = STORM_WIND_MILL_ITEM;
 		ModContent.LIGHTNING_ROD_GENERATOR_ITEM = LIGHTNING_ROD_GENERATOR_ITEM;
+		ModContent.CREATIVE_ENERGY_SOURCE_ITEM = CREATIVE_ENERGY_SOURCE_ITEM;
 		ModContent.COPPER_CABLE_ITEM = COPPER_CABLE_ITEM;
 		ModContent.TIN_CABLE_ITEM = TIN_CABLE_ITEM;
 		ModContent.GOLD_CABLE_ITEM = GOLD_CABLE_ITEM;

@@ -11,6 +11,7 @@ import dev.alaindustrial.block.CesuBlock;
 import dev.alaindustrial.block.ChargePadBlock;
 import dev.alaindustrial.block.ComponentRepairBenchBlock;
 import dev.alaindustrial.block.CompressorBlock;
+import dev.alaindustrial.block.CreativeEnergySourceBlock;
 import dev.alaindustrial.block.DaylightSolarPanelBlock;
 import dev.alaindustrial.block.DistillationColumnBlock;
 import dev.alaindustrial.block.DistillationColumnMiddleBlock;
@@ -66,6 +67,7 @@ import dev.alaindustrial.block.TrellisBlock;
 import dev.alaindustrial.block.VulcanizerBlock;
 import dev.alaindustrial.block.WaterMillBlock;
 import dev.alaindustrial.block.WindMillBlock;
+import dev.alaindustrial.block.entity.CreativeEnergySourceBlockEntity;
 import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.block.entity.AssemblerBlockEntity;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
@@ -75,9 +77,12 @@ import dev.alaindustrial.block.entity.CanningMachineBlockEntity;
 import dev.alaindustrial.block.entity.ChargePadBlockEntity;
 import dev.alaindustrial.core.food.CanningMath;
 import dev.alaindustrial.menu.CanningMachineMenu;
+import dev.alaindustrial.menu.CreativeEnergySourceMenu;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemUseAnimation;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.component.Consumable;
 import dev.alaindustrial.block.entity.EnergyCondenserBlockEntity;
 import dev.alaindustrial.block.entity.ComponentRepairBenchBlockEntity;
@@ -332,7 +337,10 @@ public final class ContentManifest {
 					s -> ModContent.LIGHTNING_ROD_GENERATOR_MENU = s),
 			// MOD-468 — the reactor controller: a slotless diagnostic readout for the room multiblock.
 			menu("reactor_controller", ReactorControllerMenu::new,
-					s -> ModContent.REACTOR_CONTROLLER_MENU = s));
+					s -> ModContent.REACTOR_CONTROLLER_MENU = s),
+			// MOD-479 — the creative energy source: switch, output presets, fine slider, charge slot.
+			menu("creative_energy_source", CreativeEnergySourceMenu::new,
+					s -> ModContent.CREATIVE_ENERGY_SOURCE_MENU = s));
 
 	// ─────────────────────────────────────────────────────────────────────────────────────────
 	// Blocks — the COMPOSITION, not just the definition (MOD-403)
@@ -400,6 +408,13 @@ public final class ContentManifest {
 	public static final BlockDef<LightningRodGeneratorBlock> LIGHTNING_ROD_GENERATOR =
 			block("lightning_rod_generator", LightningRodGeneratorBlock::new,
 					s -> ModContent.LIGHTNING_ROD_GENERATOR = s);
+	/**
+	 * MOD-479 — a technical block, not survival content: an inexhaustible EU source for test
+	 * stands. Filed with the generators because that is what it is to the energy network.
+	 */
+	public static final BlockDef<CreativeEnergySourceBlock> CREATIVE_ENERGY_SOURCE =
+			block("creative_energy_source", CreativeEnergySourceBlock::new,
+					s -> ModContent.CREATIVE_ENERGY_SOURCE = s);
 	public static final BlockDef<PumpBlock> PUMP =
 			block("pump", PumpBlock::new, s -> ModContent.PUMP = s);
 	public static final BlockDef<GardenDroneStationBlock> GARDEN_DRONE_STATION =
@@ -649,7 +664,9 @@ public final class ContentManifest {
 			REACTOR_CASING, REACTOR_GLASS, REACTOR_PORT, REACTOR_DOOR, REACTOR_CONTROLLER,
 			REACTOR_LAMP, REACTOR_BUTTON, FUEL_ROD_ASSEMBLY, REACTOR_OUTLET,
 			// Stage 3 — the exhaust. Outside the shell, so it is not part of the group above.
-			STEAM_NOZZLE);
+			STEAM_NOZZLE,
+			// MOD-479 — appended at the tail like every block since MOD-403; replay order is load-bearing.
+			CREATIVE_ENERGY_SOURCE);
 
 	/**
 	 * Wraps a machine/ore/material block's {@code strength/sound/…} chain with the shared base every such
@@ -684,6 +701,9 @@ public final class ContentManifest {
 			// MOD-386: not a full cube (casing plate + mast), hence noOcclusion — R-PHY-05.
 			Map.entry("lightning_rod_generator", machine(p -> p.strength(3.0f, 6.0f)
 					.sound(SoundType.METAL).noOcclusion())),
+			// MOD-479: an ordinary machine block — breakable, explodable, drops itself.
+			Map.entry("creative_energy_source",
+					machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("pump", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			// noOcclusion: the dock is a 4px plate, not a full cube — without it the faces below/around
 			// it would be culled as if a solid block sat there.
@@ -895,6 +915,31 @@ public final class ContentManifest {
 	 */
 	public static final Map<String, Function<Item.Properties, ? extends Item>> ITEM_FACTORIES =
 			buildItemFactories();
+
+	/**
+	 * Presentation for a block item a player cannot obtain (MOD-479): the light-purple name vanilla puts
+	 * on the dragon egg, the barrier and the command block — technical blocks, exactly like this one —
+	 * plus this mod's own tooltip frame.
+	 *
+	 * <p>Two things are worth stating, because both are easy to get wrong:
+	 *
+	 * <ul>
+	 *   <li><b>One value, both loaders.</b> {@code loader_parity_check} compares the SETS of item ids,
+	 *       never their properties, so a {@code .rarity(...)} written once per loader would drift the
+	 *       first time somebody edited one of them, with every gate still green. This is why a block
+	 *       item's properties live here even though its factory cannot.</li>
+	 *   <li><b>{@code EPIC} is the ceiling.</b> NeoForge marks {@code Rarity} extensible and Fabric does
+	 *       not, so inventing a "legendary" tier would be an asymmetry by construction.</li>
+	 * </ul>
+	 *
+	 * <p>The tooltip style is an id, not a sprite: {@code TooltipRenderUtil} expands it into
+	 * {@code alaindustrial:tooltip/creative_background} and {@code …_frame}. BOTH must exist — a custom
+	 * style replaces the vanilla background instead of falling back to it, so shipping only the frame
+	 * leaves the text sitting on a missing texture. Nothing in the repo checks that; see the task.
+	 */
+	public static final UnaryOperator<Item.Properties> CREATIVE_ONLY_ITEM = props -> props
+			.rarity(Rarity.EPIC)
+			.component(DataComponents.TOOLTIP_STYLE, Industrialization.id("creative"));
 
 	/** The construction function for item {@code id} (see {@link #ITEM_FACTORIES}); throws if unknown. */
 	public static Function<Item.Properties, ? extends Item> itemFactory(String id) {
@@ -1251,7 +1296,10 @@ public final class ContentManifest {
 					"steam_nozzle"),
 			blockEntity("reactor_outlet", ReactorOutletBlockEntity.class,
 					ReactorOutletBlockEntity::new, s -> ModContent.REACTOR_OUTLET_BE = s,
-					"reactor_outlet"));
+					"reactor_outlet"),
+			blockEntity("creative_energy_source", CreativeEnergySourceBlockEntity.class,
+					CreativeEnergySourceBlockEntity::new, s -> ModContent.CREATIVE_ENERGY_SOURCE_BE = s,
+					"creative_energy_source"));
 
 	/**
 	 * The definition for block-entity {@code id}, checked against the type the caller expects.

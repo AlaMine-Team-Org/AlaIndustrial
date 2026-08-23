@@ -3,6 +3,7 @@ package dev.alaindustrial.registry;
 import dev.alaindustrial.menu.AssemblerMenu;
 import dev.alaindustrial.menu.ComponentRepairBenchMenu;
 import dev.alaindustrial.menu.BatteryBoxMenu;
+import dev.alaindustrial.menu.CreativeEnergySourceMenu;
 import dev.alaindustrial.menu.EnergyCondenserMenu;
 import dev.alaindustrial.menu.MobRepellerHvMenu;
 import dev.alaindustrial.menu.MobRepellerMenu;
@@ -123,6 +124,8 @@ public final class ModContent {
 	public static Supplier<Block> HIGH_ALTITUDE_WIND_MILL = unbound("HIGH_ALTITUDE_WIND_MILL");
 	public static Supplier<Block> STORM_WIND_MILL = unbound("STORM_WIND_MILL");
 	public static Supplier<Block> LIGHTNING_ROD_GENERATOR = unbound("LIGHTNING_ROD_GENERATOR");
+	/** MOD-479 — the creative energy source (a QA instrument, not survival content). */
+	public static Supplier<Block> CREATIVE_ENERGY_SOURCE = unbound("CREATIVE_ENERGY_SOURCE");
 	public static Supplier<Block> PUMP = unbound("PUMP");
 	public static Supplier<Block> GARDEN_DRONE_STATION = unbound("GARDEN_DRONE_STATION");
 	public static Supplier<Block> FLUID_TANK = unbound("FLUID_TANK");
@@ -488,6 +491,13 @@ public final class ModContent {
 	public static Supplier<Item> SHIELDING_CHESTPLATE = unbound("SHIELDING_CHESTPLATE");
 	public static Supplier<Item> SHIELDING_LEGGINGS = unbound("SHIELDING_LEGGINGS");
 	public static Supplier<Item> SHIELDING_BOOTS = unbound("SHIELDING_BOOTS");
+	// Insulated set (MOD-466): leather dipped in slime, the cheap early answer to a bare cable's shock.
+	// Four plain armour items — what makes them insulating is the #alaindustrial:shock_insulating tag,
+	// not a class.
+	public static Supplier<Item> INSULATED_HELMET = unbound("INSULATED_HELMET");
+	public static Supplier<Item> INSULATED_CHESTPLATE = unbound("INSULATED_CHESTPLATE");
+	public static Supplier<Item> INSULATED_LEGGINGS = unbound("INSULATED_LEGGINGS");
+	public static Supplier<Item> INSULATED_BOOTS = unbound("INSULATED_BOOTS");
 
 	// --- Entity types ---
 	// Stock Display Frame (MOD-066) — the mod's first entity: an ItemFrame subclass that counts the
@@ -502,6 +512,8 @@ public final class ModContent {
 	public static Supplier<BlockItem> HIGH_ALTITUDE_WIND_MILL_ITEM = unbound("HIGH_ALTITUDE_WIND_MILL_ITEM");
 	public static Supplier<BlockItem> STORM_WIND_MILL_ITEM = unbound("STORM_WIND_MILL_ITEM");
 	public static Supplier<BlockItem> LIGHTNING_ROD_GENERATOR_ITEM = unbound("LIGHTNING_ROD_GENERATOR_ITEM");
+	public static Supplier<BlockItem> CREATIVE_ENERGY_SOURCE_ITEM =
+			unbound("CREATIVE_ENERGY_SOURCE_ITEM");
 	public static Supplier<BlockItem> SOLAR_PANEL_ITEM = unbound("SOLAR_PANEL_ITEM");
 	public static Supplier<BlockItem> MOONLIT_SOLAR_PANEL_ITEM = unbound("MOONLIT_SOLAR_PANEL_ITEM");
 	public static Supplier<BlockItem> DAYLIGHT_SOLAR_PANEL_ITEM = unbound("DAYLIGHT_SOLAR_PANEL_ITEM");
@@ -596,6 +608,8 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> STORM_WIND_MILL_BE = unbound("STORM_WIND_MILL_BE");
 	public static Supplier<BlockEntityType<?>> LIGHTNING_ROD_GENERATOR_BE =
 			unbound("LIGHTNING_ROD_GENERATOR_BE");
+	public static Supplier<BlockEntityType<?>> CREATIVE_ENERGY_SOURCE_BE =
+			unbound("CREATIVE_ENERGY_SOURCE_BE");
 	public static Supplier<BlockEntityType<?>> SOLAR_PANEL_BE = unbound("SOLAR_PANEL_BE");
 	public static Supplier<BlockEntityType<?>> MOONLIT_SOLAR_PANEL_BE = unbound("MOONLIT_SOLAR_PANEL_BE");
 	public static Supplier<BlockEntityType<?>> DAYLIGHT_SOLAR_PANEL_BE = unbound("DAYLIGHT_SOLAR_PANEL_BE");
@@ -708,6 +722,8 @@ public final class ModContent {
 	public static Supplier<MenuType<StormWindMillMenu>> STORM_WIND_MILL_MENU = unbound("STORM_WIND_MILL_MENU");
 	public static Supplier<MenuType<LightningRodGeneratorMenu>> LIGHTNING_ROD_GENERATOR_MENU =
 			unbound("LIGHTNING_ROD_GENERATOR_MENU");
+	public static Supplier<MenuType<CreativeEnergySourceMenu>> CREATIVE_ENERGY_SOURCE_MENU =
+			unbound("CREATIVE_ENERGY_SOURCE_MENU");
 	public static Supplier<MenuType<IronChestMenu>> IRON_CHEST_MENU = unbound("IRON_CHEST_MENU");
 	// MOD-287 — one menu class, four registered sizes: the client builds its menu from
 	// (syncId, Inventory) alone, so the row count has to travel in the menu type itself.

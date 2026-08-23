@@ -77,6 +77,21 @@ public final class ModSoundsNeoForge {
 	public static final DeferredHolder<SoundEvent, SoundEvent> COMPONENT_REPAIR_BENCH_HUM =
 			SOUNDS.register("component_repair_bench_hum", ModSounds::createComponentRepairBenchHum);
 
+	public static final DeferredHolder<SoundEvent, SoundEvent> REACTOR_HUM =
+			SOUNDS.register("reactor_hum", ModSounds::createReactorHum);
+
+	public static final DeferredHolder<SoundEvent, SoundEvent> REACTOR_ALARM =
+			SOUNDS.register("reactor_alarm", ModSounds::createReactorAlarm);
+
+	public static final DeferredHolder<SoundEvent, SoundEvent> REACTOR_SPINDOWN =
+			SOUNDS.register("reactor_spindown", ModSounds::createReactorSpindown);
+
+	public static final DeferredHolder<SoundEvent, SoundEvent> REACTOR_DOOR_OPEN =
+			SOUNDS.register("reactor_door_open", ModSounds::createReactorDoorOpen);
+
+	public static final DeferredHolder<SoundEvent, SoundEvent> REACTOR_DOOR_CLOSE =
+			SOUNDS.register("reactor_door_close", ModSounds::createReactorDoorClose);
+
 	/** Bind the neutral handles to the deferred holders. Called from the {@code @Mod} ctor after register. */
 	public static void init() {
 		ModSounds.MACERATOR_GRIND = MACERATOR_GRIND;
@@ -99,6 +114,11 @@ public final class ModSoundsNeoForge {
 		ModSounds.CHARGE_PAD_HUM = CHARGE_PAD_HUM;
 		ModSounds.ENERGY_CONDENSER_HUM = ENERGY_CONDENSER_HUM;
 		ModSounds.COMPONENT_REPAIR_BENCH_HUM = COMPONENT_REPAIR_BENCH_HUM;
+		ModSounds.REACTOR_HUM = REACTOR_HUM;
+		ModSounds.REACTOR_ALARM = REACTOR_ALARM;
+		ModSounds.REACTOR_SPINDOWN = REACTOR_SPINDOWN;
+		ModSounds.REACTOR_DOOR_OPEN = REACTOR_DOOR_OPEN;
+		ModSounds.REACTOR_DOOR_CLOSE = REACTOR_DOOR_CLOSE;
 	}
 
 	private ModSoundsNeoForge() {
