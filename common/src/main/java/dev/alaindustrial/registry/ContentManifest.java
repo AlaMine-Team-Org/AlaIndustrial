@@ -124,6 +124,7 @@ import dev.alaindustrial.block.entity.StormWindMillBlockEntity;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
 import dev.alaindustrial.block.entity.ReactorControllerBlockEntity;
+import dev.alaindustrial.block.entity.ReactorDoorBlockEntity;
 import dev.alaindustrial.block.entity.ReactorOutletBlockEntity;
 import dev.alaindustrial.core.structure.FuelRodMath;
 import dev.alaindustrial.block.entity.ReactorPortBlockEntity;
@@ -1297,6 +1298,12 @@ public final class ContentManifest {
 			blockEntity("reactor_outlet", ReactorOutletBlockEntity.class,
 					ReactorOutletBlockEntity::new, s -> ModContent.REACTOR_OUTLET_BE = s,
 					"reactor_outlet"),
+			// MOD-493: the airlock's panel slides rather than swings, and a block state cannot hold a
+			// position between two ticks. This block entity stores no game state at all — it is the
+			// clock the client times that travel by.
+			blockEntity("reactor_door", ReactorDoorBlockEntity.class,
+					ReactorDoorBlockEntity::new, s -> ModContent.REACTOR_DOOR_BE = s,
+					"reactor_door"),
 			blockEntity("creative_energy_source", CreativeEnergySourceBlockEntity.class,
 					CreativeEnergySourceBlockEntity::new, s -> ModContent.CREATIVE_ENERGY_SOURCE_BE = s,
 					"creative_energy_source"));

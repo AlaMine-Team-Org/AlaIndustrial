@@ -25,6 +25,7 @@ import dev.alaindustrial.block.entity.AlloySmelterBlockEntity;
 import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
 import dev.alaindustrial.block.entity.GalvanicBathBlockEntity;
 import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
+import dev.alaindustrial.block.entity.ReactorDoorBlockEntity;
 import dev.alaindustrial.block.entity.ReactorOutletBlockEntity;
 import dev.alaindustrial.block.entity.ReactorPortBlockEntity;
 import dev.alaindustrial.block.entity.SteamNozzleBlockEntity;
@@ -115,6 +116,8 @@ public final class ModBlockEntities {
 	public static BlockEntityType<ReactorPortBlockEntity> REACTOR_PORT;
 	public static BlockEntityType<SteamNozzleBlockEntity> STEAM_NOZZLE;
 	public static BlockEntityType<ReactorOutletBlockEntity> REACTOR_OUTLET;
+	/** MOD-493 — the airlock panel's travel clock; holds no game state. */
+	public static BlockEntityType<ReactorDoorBlockEntity> REACTOR_DOOR;
 	public static BlockEntityType<ElectricHeaterBlockEntity> ELECTRIC_HEATER;
 	public static BlockEntityType<ChargePadBlockEntity> CHARGE_PAD;
 	public static BlockEntityType<EnergyCondenserBlockEntity> ENERGY_CONDENSER;
@@ -178,6 +181,8 @@ public final class ModBlockEntities {
 				register(ContentManifest.blockEntity("steam_nozzle", SteamNozzleBlockEntity.class));
 		REACTOR_OUTLET =
 				register(ContentManifest.blockEntity("reactor_outlet", ReactorOutletBlockEntity.class));
+		REACTOR_DOOR =
+				register(ContentManifest.blockEntity("reactor_door", ReactorDoorBlockEntity.class));
 		ELECTRIC_HEATER = register(ContentManifest.blockEntity("electric_heater", ElectricHeaterBlockEntity.class));
 		CHARGE_PAD = register(ContentManifest.blockEntity("charge_pad", ChargePadBlockEntity.class));
 		ENERGY_CONDENSER = register(ContentManifest.blockEntity("energy_condenser", EnergyCondenserBlockEntity.class));

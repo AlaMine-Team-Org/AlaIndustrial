@@ -787,6 +787,17 @@ public final class Config {
 	 */
 	public static int reactorDoorOccupiedRecheckTicks = 10;
 	/**
+	 * Ticks the panel takes to travel its full two blocks, in either direction (MOD-493). Purely
+	 * cosmetic: the {@code open} block state — and with it collision, pathfinding and the radiation
+	 * trace — still flips in one tick, and this only says how long the client draws the panel on its
+	 * way there.
+	 *
+	 * <p>A fifth of {@link #reactorDoorOpenTicks} on purpose. The travel has to read as machinery
+	 * rather than as a teleport, but it is spent out of the same two seconds the player has to walk
+	 * through: a slow, stately blast door would eat the window it is opening.
+	 */
+	public static int reactorDoorSlideTicks = 8;
+	/**
 	 * How often a controller re-scans its room. {@code neighborChanged} only sees the six blocks
 	 * touching the controller, and a room is up to 14 across — this sweep is the only thing that
 	 * notices a far wall being mined. Two seconds keeps a 1016-cell walk off the hot path while still
@@ -2103,6 +2114,8 @@ public final class Config {
 				() -> reactorDoorOpenTicks, v -> reactorDoorOpenTicks = v, 1),
 			new IntField("reactorDoorOccupiedRecheckTicks", Section.MACHINES, "Ticks the airlock waits before re-testing a doorway that still has someone standing in it.",
 				() -> reactorDoorOccupiedRecheckTicks, v -> reactorDoorOccupiedRecheckTicks = v, 1),
+			new IntField("reactorDoorSlideTicks", Section.MACHINES, "Ticks the airlock panel takes to slide its full two blocks; cosmetic only, the open state still flips in one tick.",
+				() -> reactorDoorSlideTicks, v -> reactorDoorSlideTicks = v, 1),
 			new IntField("reactorScanIntervalTicks", Section.MACHINES, "Ticks between full re-scans of a reactor room by its controller; catches shell changes out of neighbour range.",
 				() -> reactorScanIntervalTicks, v -> reactorScanIntervalTicks = v, 1),
 			new IntField("reactorRoomMinInner", Section.MACHINES, "Smallest interior edge of a reactor room, in blocks.",

@@ -2,6 +2,7 @@ package dev.alaindustrial.block;
 
 import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.Config;
+import dev.alaindustrial.block.entity.ReactorDoorBlockEntity;
 import dev.alaindustrial.registry.ModSounds;
 import java.util.Map;
 import org.jspecify.annotations.Nullable;
@@ -21,8 +22,12 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -66,8 +71,15 @@ import net.minecraft.world.entity.player.Player;
  * <p>{@code POWERED} is stored for exactly one reason — edge detection. Without it every neighbour
  * update while the lever is on reads as "signal present" and would re-open a door the player just
  * watched close.
+ *
+ * <p><b>It sinks, it does not swing (MOD-493).</b> The panel slides down out of the doorway and rises
+ * back into it, the way a pressure bulkhead does. That is drawn entirely by
+ * {@code ReactorDoorBlockEntityRenderer} from a clock the client keeps itself
+ * ({@link ReactorDoorBlockEntity}); the server side of this class is untouched by it. What did change
+ * here is the shape: an open airlock has retracted into the floor, so it leaves the doorway
+ * <em>empty</em> rather than parking a slab across it the way a hinged door does.
  */
-public class ReactorDoorBlock extends Block {
+public class ReactorDoorBlock extends Block implements EntityBlock {
 
 	public static final MapCodec<ReactorDoorBlock> CODEC = simpleCodec(ReactorDoorBlock::new);
 
@@ -107,15 +119,53 @@ public class ReactorDoorBlock extends Block {
 		builder.add(HALF, FACING, OPEN, HINGE, POWERED, FORMED);
 	}
 
+	/**
+	 * The closed panel's slab for this facing — the volume the renderer fills as the door travels, so
+	 * that what the player can walk into and what the player can see are cut from one measurement
+	 * (MOD-493). A renderer with its own copy of these numbers is a renderer that drifts off the
+	 * collision box.
+	 */
+	public static VoxelShape closedSlab(Direction facing) {
+		return SHAPES.get(facing);
+	}
+
+	/**
+	 * Shut, the panel fills the doorway; open, it is in the floor and the doorway is clear.
+	 *
+	 * <p>Empty rather than vanilla's swung-aside slab: there is nothing left in the cell to stand
+	 * against. The two seconds it is open are therefore also two seconds the block cannot be clicked —
+	 * an acceptable trade for a doorway that is honestly a hole, and the same rule the radiation trace
+	 * already reads (it clips against colliders, so an open airlock leaks exactly because it has no
+	 * shape).
+	 */
 	@Override
 	protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-		Direction facing = state.getValue(FACING);
-		boolean open = state.getValue(OPEN);
-		boolean rightHinge = state.getValue(HINGE) == DoorHingeSide.RIGHT;
-		Direction shapeFacing = open
-				? (rightHinge ? facing.getCounterClockWise() : facing.getClockWise())
-				: facing;
-		return SHAPES.get(shapeFacing);
+		return state.getValue(OPEN) ? Shapes.empty() : SHAPES.get(state.getValue(FACING));
+	}
+
+	@Override
+	@Nullable
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return new ReactorDoorBlockEntity(pos, state);
+	}
+
+	/**
+	 * Client only, lower half only. There is nothing for a server to tick — the panel's travel is a
+	 * drawing, not a simulation — and the upper half deliberately keeps no clock of its own
+	 * ({@link ReactorDoorBlockEntity#animationClock()}).
+	 */
+	@Override
+	@Nullable
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
+			BlockEntityType<T> type) {
+		if (!level.isClientSide() || state.getValue(HALF) != DoubleBlockHalf.LOWER) {
+			return null;
+		}
+		return (tickLevel, tickPos, tickState, blockEntity) -> {
+			if (blockEntity instanceof ReactorDoorBlockEntity door) {
+				door.clientTick(tickState, tickLevel.getGameTime());
+			}
+		};
 	}
 
 	/** An open airlock is a corridor; a closed one is a wall. Mobs must path accordingly. */

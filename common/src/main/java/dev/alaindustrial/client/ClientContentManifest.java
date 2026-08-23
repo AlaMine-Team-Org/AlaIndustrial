@@ -9,6 +9,7 @@ import dev.alaindustrial.block.entity.GoldChestBlockEntity;
 import dev.alaindustrial.block.entity.HighAltitudeWindMillBlockEntity;
 import dev.alaindustrial.block.entity.IncubatorBlockEntity;
 import dev.alaindustrial.block.entity.IronChestBlockEntity;
+import dev.alaindustrial.block.entity.ReactorDoorBlockEntity;
 import dev.alaindustrial.block.entity.SilverChestBlockEntity;
 import dev.alaindustrial.block.entity.StormWindMillBlockEntity;
 import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
@@ -22,6 +23,7 @@ import dev.alaindustrial.client.render.FluidTankBlockEntityRenderer;
 import dev.alaindustrial.client.render.GardenDroneBlockEntityRenderer;
 import dev.alaindustrial.client.render.IncubatorBlockEntityRenderer;
 import dev.alaindustrial.client.render.IncubatorDomeTint;
+import dev.alaindustrial.client.render.ReactorDoorBlockEntityRenderer;
 import dev.alaindustrial.client.render.ThermalCentrifugeBlockEntityRenderer;
 import dev.alaindustrial.client.render.WaterMillWheelBlockEntityRenderer;
 import dev.alaindustrial.client.render.WindMillRotorBlockEntityRenderer;
@@ -159,6 +161,10 @@ public final class ClientContentManifest {
 			// way the redstone gate and the 400-tick spin-up are visible from outside the GUI.
 			renderer(ContentManifest.blockEntity("thermal_centrifuge", ThermalCentrifugeBlockEntity.class),
 					ThermalCentrifugeBlockEntityRenderer::new),
+			// Reactor airlock (MOD-493): the panel sliding down out of the doorway. The block model is
+			// empty — everything the player sees of this door is drawn by the renderer.
+			renderer(ContentManifest.blockEntity("reactor_door", ReactorDoorBlockEntity.class),
+					ReactorDoorBlockEntityRenderer::new),
 			// Insulating stand under a bare cable (MOD-279). All cable grades share one BlockEntityType,
 			// so this single registration covers every grade.
 			renderer(ContentManifest.blockEntity("copper_cable", CableBlockEntity.class),

@@ -640,6 +640,8 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> REACTOR_PORT_BE = unbound("REACTOR_PORT_BE");
 	public static Supplier<BlockEntityType<?>> STEAM_NOZZLE_BE = unbound("STEAM_NOZZLE_BE");
 	public static Supplier<BlockEntityType<?>> REACTOR_OUTLET_BE = unbound("REACTOR_OUTLET_BE");
+	/** MOD-493 — the airlock panel's travel clock; holds no game state. */
+	public static Supplier<BlockEntityType<?>> REACTOR_DOOR_BE = unbound("REACTOR_DOOR_BE");
 	public static Supplier<BlockEntityType<?>> ELECTRIC_HEATER_BE = unbound("ELECTRIC_HEATER_BE");
 	public static Supplier<BlockEntityType<?>> CHARGE_PAD_BE = unbound("CHARGE_PAD_BE");
 	public static Supplier<BlockEntityType<?>> ENERGY_CONDENSER_BE = unbound("ENERGY_CONDENSER_BE");

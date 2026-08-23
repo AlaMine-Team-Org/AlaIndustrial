@@ -287,6 +287,7 @@ class ConfigSnapshotTest {
 		SENTINELS.put("thermalCentrifugeSpinupTicks", 343);
 		SENTINELS.put("reactorDoorOpenTicks", 57);
 		SENTINELS.put("reactorDoorOccupiedRecheckTicks", 13);
+		SENTINELS.put("reactorDoorSlideTicks", 11);
 		SENTINELS.put("reactorScanIntervalTicks", 61);
 		SENTINELS.put("reactorRoomMinInner", 4);
 		SENTINELS.put("reactorRoomMaxInner", 9);

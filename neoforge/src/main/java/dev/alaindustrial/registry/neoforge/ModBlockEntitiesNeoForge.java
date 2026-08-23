@@ -25,6 +25,7 @@ import dev.alaindustrial.block.entity.AlloySmelterBlockEntity;
 import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
 import dev.alaindustrial.block.entity.GalvanicBathBlockEntity;
 import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
+import dev.alaindustrial.block.entity.ReactorDoorBlockEntity;
 import dev.alaindustrial.block.entity.ReactorOutletBlockEntity;
 import dev.alaindustrial.block.entity.ReactorPortBlockEntity;
 import dev.alaindustrial.block.entity.SteamNozzleBlockEntity;
@@ -158,6 +159,10 @@ public final class ModBlockEntitiesNeoForge {
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ReactorOutletBlockEntity>>
 			REACTOR_OUTLET =
 					register(ContentManifest.blockEntity("reactor_outlet", ReactorOutletBlockEntity.class));
+	/** MOD-493 — the airlock panel's travel clock; holds no game state. */
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ReactorDoorBlockEntity>>
+			REACTOR_DOOR =
+					register(ContentManifest.blockEntity("reactor_door", ReactorDoorBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ElectricHeaterBlockEntity>> ELECTRIC_HEATER =
 			register(ContentManifest.blockEntity("electric_heater", ElectricHeaterBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ChargePadBlockEntity>> CHARGE_PAD =
