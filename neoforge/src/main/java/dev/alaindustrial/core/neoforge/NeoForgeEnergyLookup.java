@@ -12,7 +12,7 @@ import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 
 /**
  * NeoForge implementation of the neutral {@link EnergyLookup} SPI (MOD-022 Phase 2): resolves the
- * per-face energy port through {@code Capabilities.Energy.BLOCK} (verified against 26.2.0.8-beta:
+ * per-face energy port through {@code Capabilities.Energy.BLOCK} (verified against 26.2.0.67:
  * {@code BlockCapability<EnergyHandler, @Nullable Direction>}) and wraps the result as a neutral
  * {@link EnergyPort}. This is the per-loader capability-lookup seam.
  *

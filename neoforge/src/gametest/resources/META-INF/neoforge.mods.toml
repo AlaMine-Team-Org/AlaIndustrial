@@ -14,15 +14,15 @@
 # (`"replace": false`) applies again — the same way it always has on Fabric, where
 # fabric/src/gametest/resources/fabric.mod.json declares `alaindustrial-gametest`.
 #
-# `lowcodefml`: this mod has no @Mod entrypoint. The gametest CLASSES are still wired through the
-# production entrypoint, which reflectively calls NeoForgeGameTestBootstrap#init on the
-# `alaindustrial` mod bus — that is unchanged and must stay that way, because the registries the
-# bootstrap touches (`alaindustrial:code` instance type) belong to the main mod's namespace.
+# No `modLoader`/`loaderVersion` keys (MOD-495): this mod has no @Mod entrypoint, and since 26.2
+# FML treats both keys as optional and warns that `lowcodefml` is deprecated on every launch. The
+# gametest CLASSES are still wired through the production entrypoint, which reflectively calls
+# NeoForgeGameTestBootstrap#init on the `alaindustrial` mod bus — that is unchanged and must stay
+# that way, because the registries the bootstrap touches (`alaindustrial:code` instance type)
+# belong to the main mod's namespace.
 #
 # Values are literals on purpose: mods.toml interpolation is wired for `processResources` (main),
 # not for `processGametestResources`, so a `${...}` placeholder here would ship unexpanded.
-modLoader = "lowcodefml"
-loaderVersion = "[4,)"
 license = "MIT"
 [[mods]]
 modId = "alaindustrial_gametest"

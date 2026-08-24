@@ -8,11 +8,18 @@ displayName = "Ala Industrial" #mandatory
 credits = "${credits}"
 authors = "${mod_author}"
 description = '''${description}''' #mandatory
-# Icon in the NeoForge mod list (MOD-444). Root-relative jar path, the same asset the Fabric side
-# ships in fabric.mod.json "icon". logoBlur=true: the icon is an anti-aliased render, not pixel
-# art, and the list draws it scaled — linear filtering avoids jagged edges.
-logoFile = "assets/alaindustrial/icon-128.png"
-logoBlur = true
+# Icon in the NeoForge mod list (MOD-444, keys updated in MOD-495). Root-relative jar path, the
+# same asset the Fabric side ships in fabric.mod.json "icon". iconBlur=true: the icon is an
+# anti-aliased render, not pixel art, and the list draws it scaled — linear filtering avoids
+# jagged edges.
+#
+# `iconFile`/`iconBlur`, NOT the pre-26.2 `logoFile`/`logoBlur`: the mod-list rewrite split the two
+# slots, and `logoFile` now feeds the wide BANNER with `iconFile` as the separate square-icon slot
+# (see DefaultModDisplayInfo#banner vs #icon). A square asset left under `logoFile` was therefore
+# being stretched into the banner slot, and LogoFileWarningsHandler warns about the deprecated key
+# on every launch.
+iconFile = "assets/alaindustrial/icon-128.png"
+iconBlur = true
 [[mixins]]
 config = "${mod_id}.mixins.json"
 [[mixins]]

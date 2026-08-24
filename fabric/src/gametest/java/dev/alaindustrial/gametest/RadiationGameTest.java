@@ -82,4 +82,12 @@ public class RadiationGameTest {
 	public void radOpenDoorLeaksRadiation(GameTestHelper helper) {
 		RadiationScenarios.openDoorLeaksRadiation(helper);
 	}
+
+	/**
+	 * @implements R-RAD-10 — uranium radiates through an ordinary chest and not through a shielding one.
+	 */
+	@GameTest
+	public void radShieldingChestStopsWhatAnOrdinaryChestDoesNot(GameTestHelper helper) {
+		RadiationScenarios.shieldingChestStopsWhatAnOrdinaryChestDoesNot(helper);
+	}
 }

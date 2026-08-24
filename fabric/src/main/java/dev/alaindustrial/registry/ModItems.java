@@ -411,6 +411,7 @@ public final class ModItems {
 	public static final BlockItem SILVER_CHEST_ITEM = blockItem("silver_chest", ModBlocks.SILVER_CHEST);
 	public static final BlockItem GOLD_CHEST_ITEM = blockItem("gold_chest", ModBlocks.GOLD_CHEST);
 	public static final BlockItem ELECTRUM_CHEST_ITEM = blockItem("electrum_chest", ModBlocks.ELECTRUM_CHEST);
+	public static final BlockItem SHIELDING_CHEST_ITEM = blockItem("shielding_chest", ModBlocks.SHIELDING_CHEST);
 	public static final BlockItem TEMPERED_IRON_BLOCK_ITEM = blockItem("tempered_iron_block", ModBlocks.TEMPERED_IRON_BLOCK);
 	// MOD-225 block-items.
 	public static final BlockItem MACHINE_CASING_ITEM = blockItem("machine_casing", ModBlocks.MACHINE_CASING);
@@ -1098,6 +1099,7 @@ public final class ModItems {
 		ModContent.SILVER_CHEST_ITEM = () -> SILVER_CHEST_ITEM;
 		ModContent.GOLD_CHEST_ITEM = () -> GOLD_CHEST_ITEM;
 		ModContent.ELECTRUM_CHEST_ITEM = () -> ELECTRUM_CHEST_ITEM;
+		ModContent.SHIELDING_CHEST_ITEM = () -> SHIELDING_CHEST_ITEM;
 		ModContent.TEMPERED_IRON_BLOCK_ITEM = () -> TEMPERED_IRON_BLOCK_ITEM;
 		ModContent.MACHINE_CASING_ITEM = () -> MACHINE_CASING_ITEM;
 		ModContent.ADVANCED_MACHINE_CASING_ITEM = () -> ADVANCED_MACHINE_CASING_ITEM;

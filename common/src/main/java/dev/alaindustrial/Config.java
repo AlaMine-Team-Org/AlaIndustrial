@@ -1005,6 +1005,25 @@ public final class Config {
 	 * shield and the shielding chest pointless.
 	 */
 	public static int radiationContainerDepth = 1;
+	/**
+	 * How many items' worth of radiation ONE container in the world may leak, no matter how much is
+	 * inside it (MOD-474). Multiplied by {@link #radiationDoseHighPerItem}; 0 stops containers
+	 * radiating at all.
+	 *
+	 * <p><b>Without this the feature was a trap, not a hazard.</b> Strength was linear in the count,
+	 * so a chest holding one stack of refined uranium killed an unprotected player in two seconds and
+	 * a full one killed instantly anywhere in the radius — including through the radius, in a world
+	 * that had stored uranium safely the day before the update. That also revives the death loop
+	 * MOD-470 deliberately closed: its arithmetic ("a stack needs about a minute, so there is time to
+	 * run back, grab your things and drink milk") assumed a minute, not a second.
+	 *
+	 * <p>Capping the leak is also the physically honest model: the box walls attenuate, and uranium
+	 * buried in the middle of a pile is shielded by the uranium on top of it. At the shipped value a
+	 * container is felt immediately (nausea within a second at point blank) and lethal only to someone
+	 * who stands next to it for half a minute — a bad decision the player had time to undo, which is
+	 * the rule MOD-470 set for every radiation death.
+	 */
+	public static int radiationContainerMaxItems = 4;
 	/** Ticks between re-applying the visible symptoms (nausea, weakness, hunger). */
 	public static int radiationSymptomIntervalTicks = 40;
 	/** Ticks between hits at dose level II / III / IV. */
@@ -2292,6 +2311,8 @@ public final class Config {
 				() -> radiationGroundRadius, v -> radiationGroundRadius = v, 0),
 			new IntField("radiationContainerDepth", Section.SAFETY, "How deep to look inside carried containers for radioactive contents; 1 = a shulker box of fuel rods irradiates its carrier.",
 				() -> radiationContainerDepth, v -> radiationContainerDepth = v, 0),
+			new IntField("radiationContainerMaxItems", Section.SAFETY, "How many items' worth of radiation one container in the world may leak regardless of how much it holds; 0 stops containers radiating entirely. Without a cap a chest of refined uranium killed instantly across the whole radius.",
+				() -> radiationContainerMaxItems, v -> radiationContainerMaxItems = v, 0),
 			new IntField("radiationSymptomIntervalTicks", Section.SAFETY, "Ticks between re-applying the visible radiation symptoms (nausea, weakness, hunger).",
 				() -> radiationSymptomIntervalTicks, v -> radiationSymptomIntervalTicks = v, 1),
 			new IntField("radiationDamageIntervalLevel2", Section.SAFETY, "Ticks between radiation hits at dose level II.",

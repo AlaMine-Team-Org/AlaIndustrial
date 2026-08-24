@@ -46,6 +46,7 @@ import dev.alaindustrial.block.PolymerizerBlock;
 import dev.alaindustrial.block.PumpBlock;
 import dev.alaindustrial.block.RectificationSectionBlock;
 import dev.alaindustrial.block.SawmillBlock;
+import dev.alaindustrial.block.ShieldingChestBlock;
 import dev.alaindustrial.block.SilverChestBlock;
 import dev.alaindustrial.block.SolarPanelBlock;
 import dev.alaindustrial.block.StorageModuleBlock;
@@ -227,6 +228,7 @@ public final class ModBlocksNeoForge {
 	public static final DeferredBlock<SilverChestBlock> SILVER_CHEST = handle(ContentManifest.SILVER_CHEST);
 	public static final DeferredBlock<GoldChestBlock> GOLD_CHEST = handle(ContentManifest.GOLD_CHEST);
 	public static final DeferredBlock<ElectrumChestBlock> ELECTRUM_CHEST = handle(ContentManifest.ELECTRUM_CHEST);
+	public static final DeferredBlock<ShieldingChestBlock> SHIELDING_CHEST = handle(ContentManifest.SHIELDING_CHEST);
 	public static final DeferredBlock<Block> TEMPERED_IRON_BLOCK = handle(ContentManifest.TEMPERED_IRON_BLOCK);
 	public static final DeferredBlock<Block> MACHINE_CASING = handle(ContentManifest.MACHINE_CASING);
 	public static final DeferredBlock<Block> ADVANCED_MACHINE_CASING =

@@ -106,7 +106,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
  * real chunk-loaded {@code gameTestServer} (see {@code neoforge/build.gradle} {@code runs.gameTests}).
  * This is the coverage the JUnit {@code EphemeralTestServerProvider} could not provide (no ticking world).
  *
- * <p><b>Registration mechanism (verified against 26.2.0.8-beta sources):</b>
+ * <p><b>Registration mechanism (verified against 26.2.0.67 sources):</b>
  * <ul>
  *   <li>{@code RegistryDataLoader.load(..., fromResources=true)} posts a
  *       {@code net.neoforged.neoforge.event.RegisterGameTestsEvent} on the mod bus when
@@ -1240,6 +1240,10 @@ public final class NeoForgeGameTests {
 				OilScenarios::fun03PumpDrainsOilLakeIntoTank);
 		registerTest(event, "oil_gap_never_becomes_source", 220, true,
 				OilScenarios::neg01GapNeverBecomesSource);
+		registerTest(event, "oil_entity_sinks_instead_of_hanging", 80, true,
+				OilScenarios::neg03EntitySinksInsteadOfHanging);
+		registerTest(event, "oil_immersion_damps_fall_in_viscosity_order", 80, true,
+				OilScenarios::fun10ImmersionDampsFallInViscosityOrder);
 		registerTest(event, "oil_burn_gate_on_then_off", 220, true,
 				OilScenarios::fun04BurnGateOnThenOff);
 		registerTest(event, "oil_burn_spreads_across_pool", 160, true,
@@ -2164,6 +2168,9 @@ public final class NeoForgeGameTests {
 				RadiationScenarios::casingBlocksDroppedUranium);
 		registerTest(event, "rad_open_door_leaks_radiation", 40, true,
 				RadiationScenarios::openDoorLeaksRadiation);
+		// MOD-474 — the shielding chest is the only container that stops its own contents.
+		registerTest(event, "rad_shielding_chest_stops_what_an_ordinary_chest_does_not", 40, true,
+				RadiationScenarios::shieldingChestStopsWhatAnOrdinaryChestDoesNot);
 	}
 
 	/** The three NeoForge probes for {@link BlockCapabilityParityScenarios} (MOD-433). */

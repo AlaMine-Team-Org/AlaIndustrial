@@ -10,6 +10,7 @@ import dev.alaindustrial.block.entity.HighAltitudeWindMillBlockEntity;
 import dev.alaindustrial.block.entity.IncubatorBlockEntity;
 import dev.alaindustrial.block.entity.IronChestBlockEntity;
 import dev.alaindustrial.block.entity.ReactorDoorBlockEntity;
+import dev.alaindustrial.block.entity.ShieldingChestBlockEntity;
 import dev.alaindustrial.block.entity.SilverChestBlockEntity;
 import dev.alaindustrial.block.entity.StormWindMillBlockEntity;
 import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
@@ -137,6 +138,9 @@ public final class ClientContentManifest {
 					ChestBlockEntityRenderer::gold),
 			renderer(ContentManifest.blockEntity("electrum_chest", ElectrumChestBlockEntity.class),
 					ChestBlockEntityRenderer::electrum),
+			// MOD-474 — the shielding chest: same chest geometry, its own lead-and-hazard texture.
+			renderer(ContentManifest.blockEntity("shielding_chest", ShieldingChestBlockEntity.class),
+					ChestBlockEntityRenderer::shielding),
 			renderer(ContentManifest.blockEntity("water_mill", WaterMillBlockEntity.class),
 					WaterMillWheelBlockEntityRenderer::new),
 			// MOD-393: the orb inside the condenser frame — its speed and glow are the block's gauge.
@@ -191,6 +195,7 @@ public final class ClientContentManifest {
 			new ModelLayerDef(ChestBlockEntityRenderer.SILVER_CHEST_LAYER, ChestModel::createSingleBodyLayer),
 			new ModelLayerDef(ChestBlockEntityRenderer.GOLD_CHEST_LAYER, ChestModel::createSingleBodyLayer),
 			new ModelLayerDef(ChestBlockEntityRenderer.ELECTRUM_CHEST_LAYER, ChestModel::createSingleBodyLayer),
+			new ModelLayerDef(ChestBlockEntityRenderer.SHIELDING_CHEST_LAYER, ChestModel::createSingleBodyLayer),
 			// …and MOD-391's double-chest halves: the 15-wide vanilla left/right bodies, per tier.
 			new ModelLayerDef(ChestBlockEntityRenderer.IRON_CHEST_LEFT_LAYER, ChestModel::createDoubleBodyLeftLayer),
 			new ModelLayerDef(ChestBlockEntityRenderer.IRON_CHEST_RIGHT_LAYER, ChestModel::createDoubleBodyRightLayer),
@@ -200,6 +205,8 @@ public final class ClientContentManifest {
 			new ModelLayerDef(ChestBlockEntityRenderer.GOLD_CHEST_RIGHT_LAYER, ChestModel::createDoubleBodyRightLayer),
 			new ModelLayerDef(ChestBlockEntityRenderer.ELECTRUM_CHEST_LEFT_LAYER, ChestModel::createDoubleBodyLeftLayer),
 			new ModelLayerDef(ChestBlockEntityRenderer.ELECTRUM_CHEST_RIGHT_LAYER, ChestModel::createDoubleBodyRightLayer),
+			new ModelLayerDef(ChestBlockEntityRenderer.SHIELDING_CHEST_LEFT_LAYER, ChestModel::createDoubleBodyLeftLayer),
+			new ModelLayerDef(ChestBlockEntityRenderer.SHIELDING_CHEST_RIGHT_LAYER, ChestModel::createDoubleBodyRightLayer),
 			new ModelLayerDef(WaterMillWheelBlockEntityRenderer.MODEL_LAYER,
 					WaterMillWheelBlockEntityRenderer::createLayer),
 			new ModelLayerDef(GardenDroneBlockEntityRenderer.MODEL_LAYER,

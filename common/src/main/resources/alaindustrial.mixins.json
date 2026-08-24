@@ -4,7 +4,9 @@
   "package": "dev.alaindustrial.mixin",
   "compatibilityLevel": "JAVA_25",
   "comment": "Only mixins the mod is functionally broken without belong here (required:true). Optional cosmetic/QoL injections (mob spawn gear, furnace fuel) live in alaindustrial.compat-optional.mixins.json so a conflict with a mob/furnace-overhaul mod degrades the feature instead of crashing load — see MOD-176 (worldgen) and MOD-187.",
-  "mixins": [],
+  "mixins": [
+    "LivingEntityModFluidTravelMixin"
+  ],
   "client": [
     "client.AbstractContainerScreenAccessor",
     "client.ItemModelsAccessor",

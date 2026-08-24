@@ -42,6 +42,7 @@ import dev.alaindustrial.block.entity.IronChestBlockEntity;
 import dev.alaindustrial.block.entity.StorageModuleBlockEntity;
 import dev.alaindustrial.block.entity.IronFurnaceBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
+import dev.alaindustrial.block.entity.ShieldingChestBlockEntity;
 import dev.alaindustrial.block.entity.SilverChestBlockEntity;
 import dev.alaindustrial.block.entity.ElectrumChestBlockEntity;
 import dev.alaindustrial.block.entity.GoldChestBlockEntity;
@@ -79,7 +80,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
  * <p><b>Split constraint (verified 26.2 API):</b> the {@code DeferredRegister} object and its
  * {@code register(modBus)} call must live on the {@code neoforge} side.
  *
- * <p><b>Verified 26.2 API (neoforge/minecraft 26.2.0.8-beta):</b> a {@code BlockEntityType} is built with
+ * <p><b>Verified 26.2 API (neoforge/minecraft 26.2.0.67):</b> a {@code BlockEntityType} is built with
  * the varargs constructor {@code new BlockEntityType<>(factory, onlyOpCanSetNbt, validBlocks...)} — no
  * datafixer {@code Type}. The blocks are stored in a {@code Set} and only read at runtime
  * ({@code isValid}), never validated for registry membership at construction — so {@link #register} can
@@ -214,6 +215,8 @@ public final class ModBlockEntitiesNeoForge {
 	// Electrum chest = tier above the gold chest; also a pure container, so also no capability binding.
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ElectrumChestBlockEntity>> ELECTRUM_CHEST =
 			register(ContentManifest.blockEntity("electrum_chest", ElectrumChestBlockEntity.class));
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ShieldingChestBlockEntity>> SHIELDING_CHEST =
+			register(ContentManifest.blockEntity("shielding_chest", ShieldingChestBlockEntity.class));
 
 	private ModBlockEntitiesNeoForge() {
 	}

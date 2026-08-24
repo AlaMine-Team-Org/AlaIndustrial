@@ -326,6 +326,7 @@ class ConfigSnapshotTest {
 		SENTINELS.put("radiationRodShieldCapPercent", 88);
 		SENTINELS.put("radiationGroundRadius", 11);
 		SENTINELS.put("radiationContainerDepth", 2);
+		SENTINELS.put("radiationContainerMaxItems", 9);
 		SENTINELS.put("radiationSymptomIntervalTicks", 33);
 		SENTINELS.put("radiationDamageIntervalLevel2", 91);
 		SENTINELS.put("radiationDamageIntervalLevel3", 51);

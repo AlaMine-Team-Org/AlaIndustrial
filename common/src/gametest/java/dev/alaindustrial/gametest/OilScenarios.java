@@ -4,6 +4,7 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.OilLoggedBlock;
+import dev.alaindustrial.fluid.FluidImmersion;
 import dev.alaindustrial.block.entity.FluidTankBlockEntity;
 import dev.alaindustrial.block.entity.PumpBlockEntity;
 import dev.alaindustrial.core.fluid.FluidAmounts;
@@ -18,6 +19,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.animal.cow.Cow;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
@@ -741,6 +744,163 @@ public final class OilScenarios {
 			if (!isOil(fs) || !fs.isSource()) {
 				helper.fail("an oil-logged torch must report a full oil source to the renderer, got "
 						+ (fs.isEmpty() ? "nothing" : fs.getType() + " source=" + fs.isSource()));
+				return;
+			}
+			helper.succeed();
+		});
+	}
+
+	// ── NEG03: an entity must SINK through oil, never hang in it ─────────────────────────────────
+
+	/**
+	 * Build a sealed 1x1 shaft from rel y=2 up to {@code topY}, walls all round and a stone floor,
+	 * so a fluid poured in cannot escape and an entity inside can only move vertically.
+	 */
+	private static void shaft(GameTestHelper helper, int x, int z, int topY) {
+		helper.setBlock(new BlockPos(x, 1, z), Blocks.STONE);
+		for (int y = 1; y <= topY + 1; y++) {
+			helper.setBlock(new BlockPos(x - 1, y, z), Blocks.STONE);
+			helper.setBlock(new BlockPos(x + 1, y, z), Blocks.STONE);
+			helper.setBlock(new BlockPos(x, y, z - 1), Blocks.STONE);
+			helper.setBlock(new BlockPos(x, y, z + 1), Blocks.STONE);
+		}
+	}
+
+	/**
+	 * @implements TC-OIL-001-NEG03 — an entity inside oil keeps vanilla AIR movement and sinks;
+	 * it must never hang motionless as if oil were a solid block. A water shaft is the control: the
+	 * fix must not strip vanilla fluid physics from vanilla fluids.
+	 *
+	 * <p><b>The regression this exists for (MOD-495).</b> {@code LivingEntity#travel} routes through
+	 * {@code travelInFluid} whenever {@code shouldTravelInFluid} is true, and on NeoForge that
+	 * question is also asked of every registered {@code FluidType} — ours included. Inside
+	 * {@code travelInFluid}, a fluid that is neither water-like nor carrying a custom
+	 * {@code FluidType#move} matches NO branch, so neither input nor gravity is applied: the entity
+	 * freezes in mid-fluid and the deposit reads as an invisible wall. This was dormant while the
+	 * upstream fluid patches were commented out (26.2.0.8-beta) and went live the moment the platform
+	 * was raised to 26.2.0.67 — a player-visible break that every existing oil test passed straight
+	 * through, because they all assert on blocks and fluids, never on an entity moving.
+	 */
+	public static void neg03EntitySinksInsteadOfHanging(GameTestHelper helper) {
+		ServerLevel level = helper.getLevel();
+		final int topY = 7;
+		shaft(helper, 2, 2, topY);
+		shaft(helper, 5, 2, topY);
+		for (int y = 2; y <= topY; y++) {
+			level.setBlockAndUpdate(helper.absolutePos(new BlockPos(2, y, 2)), oilSource());
+			level.setBlockAndUpdate(helper.absolutePos(new BlockPos(5, y, 2)),
+					Blocks.WATER.defaultBlockState());
+		}
+
+		Cow inOil = helper.spawn(EntityTypes.COW, new BlockPos(2, topY, 2));
+		Cow inWater = helper.spawn(EntityTypes.COW, new BlockPos(5, topY, 2));
+		double oilStartY = inOil.getY();
+		double waterStartY = inWater.getY();
+
+		// 40 ticks: oil's own damping (OilFluid#entityInside, vertical x0.72 on top of air drag)
+		// gives a terminal speed near 0.28 blocks/tick, so a working sink covers the shaft easily,
+		// while a hung entity has moved essentially nothing.
+		helper.runAtTickTime(40, () -> {
+			double oilDrop = oilStartY - inOil.getY();
+			if (oilDrop < 1.5D) {
+				helper.fail("an entity in oil must sink, but it dropped only "
+						+ String.format(java.util.Locale.ROOT, "%.3f", oilDrop) + " blocks in 40 ticks"
+						+ " — oil is behaving like a solid block (shouldTravelInFluid routed it into"
+						+ " travelInFluid, where a non-water-like FluidType applies no movement at all)");
+				return;
+			}
+			// Control: vanilla water must still be handled by vanilla. A cow swims, so it stays near
+			// the surface — it must NOT plummet the way it does through oil.
+			double waterDrop = waterStartY - inWater.getY();
+			if (waterDrop >= oilDrop) {
+				helper.fail("water physics were stripped along with the fix: the cow fell "
+						+ String.format(java.util.Locale.ROOT, "%.3f", waterDrop)
+						+ " blocks through water vs " + String.format(java.util.Locale.ROOT, "%.3f", oilDrop)
+						+ " through oil — vanilla fluids must keep vanilla movement");
+				return;
+			}
+			helper.succeed();
+		});
+	}
+
+	// ── FUN10: all three fluids damp the fall, in viscosity order ────────────────────────────────
+
+	/**
+	 * @implements TC-OIL-001-FUN10 — every fluid the mod places in the world damps a falling entity
+	 * and clears its fall distance, and the damping is ordered by viscosity: air &gt; diesel &gt;
+	 * fuel oil &gt; crude oil.
+	 *
+	 * <p><b>The gap this closes (MOD-496).</b> The immersion mechanic was written inside
+	 * {@code OilFluid#entityInside} and reachable only from crude oil, so diesel and fuel oil shipped
+	 * with no physics at all. That was not the "behaves like water" their spec promised — a modded
+	 * fluid is in neither vanilla tag, so it inherits neither swimming nor buoyancy, and an entity
+	 * that dropped into a pool could not climb out. The mechanic now lives in {@link FluidImmersion},
+	 * one profile per fluid, and this test is what keeps the roster honest: a fluid that loses its
+	 * profile stops damping and its column collapses into the air column's result.
+	 *
+	 * <p>Asserted as an ORDER rather than against absolute distances: the ordering is the design
+	 * claim (thinner fluid, freer movement), it follows the viscosities already fixed in the fluid
+	 * types, and it cannot be satisfied by accident the way a single threshold can.
+	 */
+	public static void fun10ImmersionDampsFallInViscosityOrder(GameTestHelper helper) {
+		ServerLevel level = helper.getLevel();
+		final int topY = 16;
+		final int[] columns = {2, 4, 6, 8};
+		for (int x : columns) {
+			shaft(helper, x, 2, topY);
+		}
+		for (int y = 2; y <= topY; y++) {
+			level.setBlockAndUpdate(helper.absolutePos(new BlockPos(4, y, 2)), oilSource());
+			level.setBlockAndUpdate(helper.absolutePos(new BlockPos(6, y, 2)),
+					ModContent.FUEL_OIL_BLOCK.get().defaultBlockState());
+			level.setBlockAndUpdate(helper.absolutePos(new BlockPos(8, y, 2)),
+					ModContent.DIESEL_BLOCK.get().defaultBlockState());
+		}
+		// x=2 stays empty: the air column is the control that proves the fluids damp anything at all.
+
+		Cow inAir = helper.spawn(EntityTypes.COW, new BlockPos(2, topY, 2));
+		Cow inOil = helper.spawn(EntityTypes.COW, new BlockPos(4, topY, 2));
+		Cow inFuelOil = helper.spawn(EntityTypes.COW, new BlockPos(6, topY, 2));
+		Cow inDiesel = helper.spawn(EntityTypes.COW, new BlockPos(8, topY, 2));
+		double startY = inAir.getY();
+
+		// Tick 12: nothing has reached the floor of a 16-deep shaft yet, so every column is still
+		// measuring free travel rather than a landing.
+		helper.runAtTickTime(12, () -> {
+			double air = startY - inAir.getY();
+			double diesel = startY - inDiesel.getY();
+			double fuelOil = startY - inFuelOil.getY();
+			double oil = startY - inOil.getY();
+			String measured = String.format(java.util.Locale.ROOT,
+					"air=%.3f diesel=%.3f fuelOil=%.3f oil=%.3f", air, diesel, fuelOil, oil);
+
+			// A margin, not a bare >: two columns differing by a hair would "pass" on noise.
+			final double margin = 0.2D;
+			if (air - diesel < margin) {
+				helper.fail("diesel must damp a fall relative to air, but " + measured
+						+ " — the fluid has no immersion profile and the entity is falling as if"
+						+ " through air");
+				return;
+			}
+			if (diesel - fuelOil < margin) {
+				helper.fail("fuel oil must damp more than diesel (viscosity 2400 vs 1200): " + measured);
+				return;
+			}
+			if (fuelOil - oil < margin) {
+				helper.fail("crude must damp more than fuel oil (viscosity 3000 vs 2400): " + measured);
+				return;
+			}
+			// Fall damage: every mod fluid clears fall distance every tick, air does not.
+			for (Cow submerged : new Cow[] {inOil, inFuelOil, inDiesel}) {
+				if (submerged.fallDistance > 0.0F) {
+					helper.fail("an entity inside a mod fluid must not accumulate fall distance, got "
+							+ submerged.fallDistance + " — a deep pool would deal fall damage on landing");
+					return;
+				}
+			}
+			if (inAir.fallDistance <= 0.0F) {
+				helper.fail("the air control must accumulate fall distance, got " + inAir.fallDistance
+						+ " — the rig is not measuring what it claims");
 				return;
 			}
 			helper.succeed();

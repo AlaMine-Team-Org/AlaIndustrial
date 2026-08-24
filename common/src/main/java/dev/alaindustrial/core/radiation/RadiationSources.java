@@ -1,7 +1,9 @@
 package dev.alaindustrial.core.radiation;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.block.entity.AbstractChestBlockEntity;
 import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
+import dev.alaindustrial.block.entity.ShieldingChestBlockEntity;
 import dev.alaindustrial.registry.ModTags;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +12,7 @@ import net.minecraft.core.SectionPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -18,7 +21,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.block.entity.BarrelBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -61,6 +66,7 @@ public final class RadiationSources {
 		List<Source> sources = new ArrayList<>();
 		collectRods(level, target.position(), radius, sources);
 		collectGround(level, target.position(), radius, sources);
+		collectContainers(level, target.position(), radius, sources);
 		return doseFrom(level, target, sources, radius);
 	}
 
@@ -138,6 +144,90 @@ public final class RadiationSources {
 				out.add(new Source(item.getBoundingBox().getCenter(), strength));
 			}
 		}
+	}
+
+	/**
+	 * Uranium stored in the containers around this point (MOD-474) — a chest is not a shield.
+	 *
+	 * <p><b>Why this source had to exist before the shielding chest could.</b> Until now nothing ever
+	 * looked inside a block container: rods were read from the chunk, dropped stacks from the entity
+	 * list, and carried stacks from the player's own inventory. So a stack of refined uranium was lethal
+	 * in your pockets, dangerous on the floor — and completely inert the moment it went into any chest at
+	 * all. That made every wooden chest a perfect radiation shield and left the shielding chest with
+	 * nothing to be better than. The rule the design wanted ("store it safely or store it dangerously")
+	 * needs both halves, and this is the half that was missing.
+	 *
+	 * <p><b>The list is closed on purpose.</b> Only the containers a player uses to STORE things count:
+	 * vanilla chests and barrels, and the mod's own chest tiers. Machine buffers, hoppers and pipes hold
+	 * uranium too, but for seconds at a time while a line processes it — making those radiate would turn
+	 * every automated refining setup into a no-go zone nobody asked for, and would punish automation for
+	 * being automation. Same reasoning, and the same shape, as the closed species list in
+	 * {@link RadiationMobs}.
+	 *
+	 * <p><b>And the shielding chest is the hole in it.</b> {@link ShieldingChestBlockEntity} is skipped —
+	 * that single exclusion is the entire mechanic of the block. It is keyed on the block-entity TYPE
+	 * rather than on a tag so that no datapack can hand shielding to a barrel and no future chest tier
+	 * can inherit it by accident.
+	 *
+	 * <p>Cost is the same shape as {@link #collectRods}: block entities come out of the chunks' own maps
+	 * (at most four chunks at the shipped radius), never from a sweep over the cells of a cube.
+	 */
+	public static void collectContainers(ServerLevel level, Vec3 centre, int radius, List<Source> out) {
+		if (Config.radiationGroundRadius <= 0 || Config.radiationContainerMaxItems <= 0) {
+			return;
+		}
+		double reach = Math.min(radius, Config.radiationGroundRadius);
+		int minChunkX = SectionPos.blockToSectionCoord(Math.floor(centre.x) - reach);
+		int maxChunkX = SectionPos.blockToSectionCoord(Math.floor(centre.x) + reach);
+		int minChunkZ = SectionPos.blockToSectionCoord(Math.floor(centre.z) - reach);
+		int maxChunkZ = SectionPos.blockToSectionCoord(Math.floor(centre.z) + reach);
+		for (int cx = minChunkX; cx <= maxChunkX; cx++) {
+			for (int cz = minChunkZ; cz <= maxChunkZ; cz++) {
+				LevelChunk chunk = level.getChunkSource().getChunkNow(cx, cz);
+				if (chunk == null) {
+					continue;
+				}
+				for (var entry : chunk.getBlockEntities().entrySet()) {
+					BlockEntity be = entry.getValue();
+					if (!isExposedStorage(be)) {
+						continue;
+					}
+					Vec3 at = Vec3.atCenterOf(entry.getKey());
+					if (at.distanceTo(centre) > reach) {
+						continue;
+					}
+					// Capped: a container leaks at most a few items' worth however full it is — see
+					// RadiationCore.containerLeak for why an uncapped chest was a trap and not a hazard.
+					int strength = RadiationCore.containerLeak(contentsStrength((Container) be),
+							Config.radiationContainerMaxItems, Config.radiationDoseHighPerItem);
+					if (strength > 0) {
+						out.add(new Source(at, strength));
+					}
+				}
+			}
+		}
+	}
+
+	/** The closed list of containers that do NOT stop radiation — see {@link #collectContainers}. */
+	private static boolean isExposedStorage(BlockEntity be) {
+		if (be instanceof ShieldingChestBlockEntity) {
+			return false;
+		}
+		return be instanceof AbstractChestBlockEntity
+				|| be instanceof ChestBlockEntity
+				|| be instanceof BarrelBlockEntity;
+	}
+
+	/** Dose per sweep the whole contents of a container radiates. */
+	private static int contentsStrength(Container container) {
+		int strength = 0;
+		for (int slot = 0; slot < container.getContainerSize(); slot++) {
+			ItemStack stack = container.getItem(slot);
+			if (!stack.isEmpty()) {
+				strength += strengthOf(stack);
+			}
+		}
+		return strength;
 	}
 
 	/** Dose per sweep a stack radiates, by the tag it belongs to; containers opened to the set depth. */

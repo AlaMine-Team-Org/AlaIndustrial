@@ -15,7 +15,7 @@ import net.minecraft.network.chat.MutableComponent;
  * NeoForge world gametest lane).
  *
  * <p><b>Why not {@code FunctionGameTestInstance}.</b> The vanilla {@code FunctionGameTestInstance}
- * (verified against {@code net.minecraft.gametest.framework.FunctionGameTestInstance}, 26.2.0.8-beta
+ * (verified against {@code net.minecraft.gametest.framework.FunctionGameTestInstance}, 26.2.0.67
  * sources) does NOT hold the test body — it holds a {@code ResourceKey<Consumer<GameTestHelper>>} into
  * {@code Registries.TEST_FUNCTION} and re-resolves the body from the registry at run time. That registry
  * is a {@code BuiltInRegistries} simple registry
@@ -30,7 +30,7 @@ import net.minecraft.network.chat.MutableComponent;
  * <p><b>Why a custom subclass is safe at run time.</b> {@code GameTestServer.evaluateTestsToRun} reads
  * live {@code Holder.Reference<GameTestInstance>} objects straight out of {@code Registries.TEST_INSTANCE}
  * and {@code GameTestInfo} calls {@code this.test.value().run(new GameTestHelper(this))} on the in-memory
- * instance (both verified in the 26.2.0.8-beta sources). No codec round-trip is applied to a registered
+ * instance (both verified in the 26.2.0.67 sources). No codec round-trip is applied to a registered
  * instance, so {@link #codec()} is never invoked on this run path — it exists only to satisfy the abstract
  * contract and would only matter if the instance were serialized to a datapack, which the gametest server
  * never does for programmatically registered tests.

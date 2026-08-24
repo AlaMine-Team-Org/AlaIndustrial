@@ -42,6 +42,7 @@ import dev.alaindustrial.block.entity.IronChestBlockEntity;
 import dev.alaindustrial.block.entity.StorageModuleBlockEntity;
 import dev.alaindustrial.block.entity.IronFurnaceBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
+import dev.alaindustrial.block.entity.ShieldingChestBlockEntity;
 import dev.alaindustrial.block.entity.SilverChestBlockEntity;
 import dev.alaindustrial.block.entity.ElectrumChestBlockEntity;
 import dev.alaindustrial.block.entity.GoldChestBlockEntity;
@@ -142,6 +143,8 @@ public final class ModBlockEntities {
 	// Gold chest is likewise a pure Container (no EnergyPortHost) — no energy capability.
 	public static BlockEntityType<GoldChestBlockEntity> GOLD_CHEST;
 	public static BlockEntityType<ElectrumChestBlockEntity> ELECTRUM_CHEST;
+	// MOD-474 — a pure Container as well; its shielding is a radiation rule, not a capability.
+	public static BlockEntityType<ShieldingChestBlockEntity> SHIELDING_CHEST;
 
 	public static void init() {
 		GENERATOR = register(ContentManifest.blockEntity("generator", GeneratorBlockEntity.class));
@@ -206,6 +209,7 @@ public final class ModBlockEntities {
 		SILVER_CHEST = register(ContentManifest.blockEntity("silver_chest", SilverChestBlockEntity.class));
 		GOLD_CHEST = register(ContentManifest.blockEntity("gold_chest", GoldChestBlockEntity.class));
 		ELECTRUM_CHEST = register(ContentManifest.blockEntity("electrum_chest", ElectrumChestBlockEntity.class));
+		SHIELDING_CHEST = register(ContentManifest.blockEntity("shielding_chest", ShieldingChestBlockEntity.class));
 
 		// MOD-403: the 40 `ModContent.X_BE = () -> X;` lines that used to sit here are gone — each
 		// BLOCK_ENTITIES entry carries its own `bind`, applied by register() below, so a handle can no

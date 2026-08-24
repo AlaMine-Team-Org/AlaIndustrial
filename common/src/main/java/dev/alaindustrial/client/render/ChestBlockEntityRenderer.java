@@ -8,6 +8,7 @@ import dev.alaindustrial.block.entity.AbstractChestBlockEntity;
 import dev.alaindustrial.block.entity.ElectrumChestBlockEntity;
 import dev.alaindustrial.block.entity.GoldChestBlockEntity;
 import dev.alaindustrial.block.entity.IronChestBlockEntity;
+import dev.alaindustrial.block.entity.ShieldingChestBlockEntity;
 import dev.alaindustrial.block.entity.SilverChestBlockEntity;
 import it.unimi.dsi.fastutil.floats.Float2FloatFunction;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -96,11 +97,20 @@ public class ChestBlockEntityRenderer<T extends AbstractChestBlockEntity>
 			new ModelLayerLocation(Industrialization.id("electrum_chest_left"), "main");
 	public static final ModelLayerLocation ELECTRUM_CHEST_RIGHT_LAYER =
 			new ModelLayerLocation(Industrialization.id("electrum_chest_right"), "main");
+	public static final ModelLayerLocation SHIELDING_CHEST_LAYER =
+			new ModelLayerLocation(Industrialization.id("shielding_chest"), "main");
+	public static final ModelLayerLocation SHIELDING_CHEST_LEFT_LAYER =
+			new ModelLayerLocation(Industrialization.id("shielding_chest_left"), "main");
+	public static final ModelLayerLocation SHIELDING_CHEST_RIGHT_LAYER =
+			new ModelLayerLocation(Industrialization.id("shielding_chest_right"), "main");
 
 	private static final MultiblockChestResources<SpriteId> IRON_SPRITES = sprites("iron");
 	private static final MultiblockChestResources<SpriteId> SILVER_SPRITES = sprites("silver");
 	private static final MultiblockChestResources<SpriteId> GOLD_SPRITES = sprites("gold");
 	private static final MultiblockChestResources<SpriteId> ELECTRUM_SPRITES = sprites("electrum");
+	// NOTE the argument is the bare tier name, NOT the block id: it names the PNG under
+	// textures/entity/chest/, while the ModelLayerLocations above carry the "_chest" id.
+	private static final MultiblockChestResources<SpriteId> SHIELDING_SPRITES = sprites("shielding");
 
 	private final MultiblockChestResources<ChestModel> models;
 	private final SpriteGetter spriteGetter;
@@ -144,6 +154,14 @@ public class ChestBlockEntityRenderer<T extends AbstractChestBlockEntity>
 				new MultiblockChestResources<>(ELECTRUM_CHEST_LAYER, ELECTRUM_CHEST_LEFT_LAYER,
 						ELECTRUM_CHEST_RIGHT_LAYER),
 				ELECTRUM_SPRITES);
+	}
+
+	public static ChestBlockEntityRenderer<ShieldingChestBlockEntity> shielding(
+			BlockEntityRendererProvider.Context context) {
+		return new ChestBlockEntityRenderer<>(context,
+				new MultiblockChestResources<>(SHIELDING_CHEST_LAYER, SHIELDING_CHEST_LEFT_LAYER,
+						SHIELDING_CHEST_RIGHT_LAYER),
+				SHIELDING_SPRITES);
 	}
 
 	@Override

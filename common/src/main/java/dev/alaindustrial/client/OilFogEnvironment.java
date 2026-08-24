@@ -1,6 +1,7 @@
 package dev.alaindustrial.client;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.fluid.FluidImmersion;
 import dev.alaindustrial.mixin.client.FogRendererAccessor;
 import java.util.List;
 import net.minecraft.client.Camera;
@@ -35,6 +36,7 @@ public final class OilFogEnvironment extends FogEnvironment {
 	 * Fog colour, ARGB. Not pure black on purpose: an absolutely black fog reads as a broken render
 	 * rather than as a substance, and it leaves nothing for a light source to pick out.
 	 */
+	/** Fallback tint if the profile lookup misses; the live values come from {@link FluidImmersion}. */
 	private static final int COLOR = 0xFF0B0906;
 
 	/**
@@ -89,7 +91,8 @@ public final class OilFogEnvironment extends FogEnvironment {
 
 	@Override
 	public int getBaseColor(ClientLevel level, Camera camera, int renderDistance, float partialTicks) {
-		return COLOR;
+		FluidImmersion profile = FluidImmersion.atEyes(camera.entity());
+		return profile != null ? profile.fogColor() : COLOR;
 	}
 
 	@Override
@@ -99,8 +102,9 @@ public final class OilFogEnvironment extends FogEnvironment {
 			fog.environmentalStart = SPECTATOR_START;
 			fog.environmentalEnd = renderDistance * 0.5F;
 		} else {
-			fog.environmentalStart = START;
-			fog.environmentalEnd = END;
+			FluidImmersion profile = FluidImmersion.atEyes(camera.entity());
+			fog.environmentalStart = profile != null ? profile.fogStart() : START;
+			fog.environmentalEnd = profile != null ? profile.fogEnd() : END;
 		}
 		// Left at their defaults these stay 0 and the sky punches straight through the fog.
 		fog.skyEnd = fog.environmentalEnd;
@@ -109,6 +113,6 @@ public final class OilFogEnvironment extends FogEnvironment {
 
 	@Override
 	public boolean isApplicable(@Nullable FogType fogType, Entity entity) {
-		return OilScreenEffects.isEyeInOil(entity);
+		return FluidImmersion.atEyes(entity) != null;
 	}
 }

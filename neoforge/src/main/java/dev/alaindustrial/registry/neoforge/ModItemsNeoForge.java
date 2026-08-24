@@ -48,7 +48,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
  * {@code register(modBus)} call must live on the {@code neoforge} side. NeoForge 26.2 applies
  * {@code Item.Properties.setId} automatically: {@code registerItem(name, Function&lt;Properties, I&gt;,
  * Supplier&lt;Properties&gt;)} and {@code registerSimpleBlockItem(name, Supplier&lt;Block&gt;)} both
- * derive the id from the deferred key (verified neoforge-26.2.0.8-beta). {@code registerSimpleBlockItem}
+ * derive the id from the deferred key (verified neoforge-26.2.0.67). {@code registerSimpleBlockItem}
  * also applies {@code useBlockDescriptionPrefix()}, matching the Fabric {@code blockItem(...)} helper.
  */
 public final class ModItemsNeoForge {
@@ -602,6 +602,8 @@ public final class ModItemsNeoForge {
 	// Electrum Chest (MOD-409) — the tier above the gold chest: 81 slots (9×9) behind a scrolling window.
 	public static final DeferredItem<BlockItem> ELECTRUM_CHEST_ITEM =
 			ITEMS.registerSimpleBlockItem("electrum_chest", ModBlocksNeoForge.ELECTRUM_CHEST);
+	public static final DeferredItem<BlockItem> SHIELDING_CHEST_ITEM =
+			ITEMS.registerSimpleBlockItem("shielding_chest", ModBlocksNeoForge.SHIELDING_CHEST);
 	public static final DeferredItem<BlockItem> TEMPERED_IRON_BLOCK_ITEM =
 			ITEMS.registerSimpleBlockItem("tempered_iron_block", ModBlocksNeoForge.TEMPERED_IRON_BLOCK);
 	// MOD-225 block-items.
@@ -648,7 +650,7 @@ public final class ModItemsNeoForge {
 	 * Bind each item / block-item {@code DeferredItem} into the loader-neutral {@link ModContent} facade,
 	 * mirroring {@code dev.alaindustrial.registry.ModItems#init()} on the Fabric side. A {@code DeferredItem}
 	 * <b>is</b> a {@code Supplier} ({@code DeferredItem<T> extends DeferredHolder<Item, T> implements
-	 * Supplier<T>}, verified against neoforge-26.2.0.8-beta), so it is assigned directly and resolves lazily
+	 * Supplier<T>}, verified against neoforge-26.2.0.67), so it is assigned directly and resolves lazily
 	 * after this register's {@code RegisterEvent} fires. Called from the {@code @Mod} constructor after
 	 * {@code ITEMS.register(modBus)}.
 	 */
@@ -901,6 +903,7 @@ public final class ModItemsNeoForge {
 		ModContent.SILVER_CHEST_ITEM = SILVER_CHEST_ITEM;
 		ModContent.GOLD_CHEST_ITEM = GOLD_CHEST_ITEM;
 		ModContent.ELECTRUM_CHEST_ITEM = ELECTRUM_CHEST_ITEM;
+		ModContent.SHIELDING_CHEST_ITEM = SHIELDING_CHEST_ITEM;
 		ModContent.TEMPERED_IRON_BLOCK_ITEM = TEMPERED_IRON_BLOCK_ITEM;
 		ModContent.MACHINE_CASING_ITEM = MACHINE_CASING_ITEM;
 		ModContent.ADVANCED_MACHINE_CASING_ITEM = ADVANCED_MACHINE_CASING_ITEM;

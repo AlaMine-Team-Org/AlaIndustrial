@@ -101,6 +101,7 @@ public final class RtlGuiStands {
             new MenuEntry("silver_chest", "block.alaindustrial.silver_chest", dev.alaindustrial.registry.ModContent.SILVER_CHEST_MENU),
             new MenuEntry("gold_chest", "block.alaindustrial.gold_chest", dev.alaindustrial.registry.ModContent.GOLD_CHEST_MENU),
             new MenuEntry("electrum_chest", "block.alaindustrial.electrum_chest", dev.alaindustrial.registry.ModContent.ELECTRUM_CHEST_MENU),
+            new MenuEntry("shielding_chest", "block.alaindustrial.shielding_chest", dev.alaindustrial.registry.ModContent.SHIELDING_CHEST_MENU),
             new MenuEntry("storage_module_3", "block.alaindustrial.storage_module", dev.alaindustrial.registry.ModContent.STORAGE_MODULE_MENU_3),
             new MenuEntry("storage_module_6", "block.alaindustrial.storage_module", dev.alaindustrial.registry.ModContent.STORAGE_MODULE_MENU_6));
 

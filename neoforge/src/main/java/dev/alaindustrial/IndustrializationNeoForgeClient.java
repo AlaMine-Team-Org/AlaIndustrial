@@ -92,8 +92,9 @@ public final class IndustrializationNeoForgeClient {
 	private void registerClientEvents(IEventBus modBus) {
 		modBus.addListener(this::registerMenuScreens);
 		// MOD-248: the submerged-in-oil look (screen overlay + near-black fog). Both halves live in
-		// common/ behind a client mixin, because NeoForge's own IClientFluidTypeExtensions overlay
-		// hooks are declared but never invoked in 26.2.0.8-beta — see OilScreenEffects.
+		// common/ behind a client mixin, because Fabric has no fog/screen-effect API and one
+		// implementation must serve both loaders. NeoForge's IClientFluidTypeExtensions overlay hook
+		// IS invoked since 26.2.0.67 but is deliberately left unregistered — see OilScreenEffects.
 		dev.alaindustrial.client.OilFogEnvironment.install();
 		// MOD-238: oil's fluid model — the vanilla FluidStateModelSet hard-codes water/lava only, so a
 		// custom fluid registers its own FluidModel.Unbaked. NeoForge counterpart to the Fabric
@@ -122,7 +123,7 @@ public final class IndustrializationNeoForgeClient {
 				event.registerSpriteSet(dev.alaindustrial.registry.ModParticles.ENRICHED_URANIUM_FLAME,
 						net.minecraft.client.particle.FlameParticle.Provider::new));
 		// MOD-118: the incubator dome takes the colour of the glass it was built from — the mod's
-		// first block colour provider. Verified pattern (neoforge-26.2.0.8-beta):
+		// first block colour provider. Verified pattern (neoforge-26.2.0.67):
 		// RegisterColorHandlersEvent.BlockTintSources#register(List<BlockTintSource>, Block...), the
 		// same signature as the Fabric BlockColorRegistry call in IndustrializationClient, with the
 		// list index being the model's tintindex. 26.2 dropped BlockColor: a tint layer is a
@@ -215,7 +216,7 @@ public final class IndustrializationNeoForgeClient {
 
 	/**
 	 * Binds each machine {@code MenuType} to its {@code Screen} (MOD-190: from the shared manifest).
-	 * Verified pattern (neoforge-26.2.0.8-beta): {@code event.register(menuType, screen::create)} where
+	 * Verified pattern (neoforge-26.2.0.67): {@code event.register(menuType, screen::create)} where
 	 * the screen constructor matches {@code MenuScreens.ScreenConstructor<M, U>} — i.e.
 	 * {@code (M menu, Inventory, Component)}, exactly the common {@code Screen} constructors. The pair
 	 * stays typed end to end through {@code ScreenRegistrar}, so no cast is involved (MOD-198). This is
@@ -245,7 +246,7 @@ public final class IndustrializationNeoForgeClient {
 	 * most here: NeoForge has no client test lane, and a line missing from this method used to be noticed
 	 * first by a player looking at an unrendered block.
 	 *
-	 * <p>Verified pattern (neoforge 26.2.0.8-beta): {@code event.registerBlockEntityRenderer(type,
+	 * <p>Verified pattern (neoforge 26.2.0.67): {@code event.registerBlockEntityRenderer(type,
 	 * factory)} where {@code factory} is a {@code BlockEntityRendererProvider<T, S>}. The pair stays typed
 	 * end to end through {@code RendererRegistrar}, so no cast is involved.
 	 *

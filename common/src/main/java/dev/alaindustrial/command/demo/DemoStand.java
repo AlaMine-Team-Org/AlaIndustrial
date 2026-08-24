@@ -894,6 +894,14 @@ public final class DemoStand {
 			assembly.setTank(true, assembly.waterTank.capacity / 2);
 		}
 
+		// MOD-474 — the shielding chest, stocked with the fuel it is there to make safe, parked
+		// OUTSIDE the shell at x=8: the room owns x 2..6 and the cable rows start at x=16, so this
+		// gap is free (checking the LOOPS, not the literals — see the note at the top of this method).
+		// Its place in the story is exactly here: the only spot on the stand where refined uranium can
+		// sit in the open without dosing whoever walks past it.
+		set(level, origin, 8, by, bz + 2, ModContent.SHIELDING_CHEST.get());
+		fillSlot(level, origin, 8, by, bz + 2, 0, new ItemStack(ModContent.REFINED_URANIUM.get(), 64));
+		fillSlot(level, origin, 8, by, bz + 2, 1, new ItemStack(ModContent.URANIUM_FUEL_ROD.get()));
 	}
 
 	private static void set(ServerLevel level, BlockPos origin, int x, int y, int z, Block block) {

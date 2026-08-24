@@ -172,10 +172,12 @@ class NeoForgeOilWorldGenTest {
 	/**
 	 * The oil {@link FluidType} declares its entity physics explicitly instead of inheriting
 	 * water-like defaults ({@code canSwim/canDrown/canPushEntity = true}, {@code motionScale 0.014},
-	 * {@code fallDistanceModifier 0.5}). Those defaults are inert in NeoForge 26.2.0.8-beta — the
-	 * whole {@code IEntityExtension} fluid-type integration is commented out — which is exactly why
-	 * this guard exists: the day it is re-enabled, silent defaults would make NeoForge players swim
-	 * and drown in oil while Fabric players fall through it, and nothing else in the build would fail.
+	 * {@code fallDistanceModifier 0.5}). Those defaults were inert on NeoForge 26.2.0.8-beta — the
+	 * whole {@code IEntityExtension} fluid-type integration was commented out — which is exactly why
+	 * this guard was written: the day it is re-enabled, silent defaults would make NeoForge players
+	 * swim and drown in oil while Fabric players fall through it, and nothing else in the build would
+	 * fail. <b>That day was 26.2.0.49-beta, live for us since the 26.2.0.67 upgrade (MOD-495)</b> —
+	 * the call sites run again and this guard is now load-bearing rather than anticipatory.
 	 */
 	@Test
 	void oilFluidTypeDeclaresItsEntityPhysics() {

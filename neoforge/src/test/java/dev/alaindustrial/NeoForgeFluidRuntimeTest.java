@@ -48,7 +48,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * placement + capability-registry round-tripping belongs to the gametest server, not this passive JUnit
  * server. The adapter classes are exercised directly instead, which is exactly the seam this test targets).
  *
- * <p>Every NeoForge/MC symbol here is verified against the decompiled 26.2.0.8-beta sources:
+ * <p>Every NeoForge/MC symbol here is verified against the decompiled 26.2.0.67 sources:
  * {@code ResourceHandler<FluidResource>.insert/extract(int, FluidResource, int, TransactionContext)},
  * {@code getAmountAsLong/getCapacityAsLong}, {@code Transaction.openRoot()/commit()/close()}.
  */

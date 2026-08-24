@@ -51,15 +51,6 @@ public abstract class OilFluid extends FlowingFluid {
 	 */
 	public static final int TICK_DELAY = 40;
 
-	/**
-	 * Per-tick multiplier applied to horizontal motion inside oil — wading, not walking. See
-	 * {@link #entityInside} for why this lives here and not in a loader's fluid-type properties.
-	 */
-	private static final double HORIZONTAL_DRAG = 0.45D;
-
-	/** Per-tick multiplier applied to vertical motion inside oil: a slow sink, and a slow rise. */
-	private static final double VERTICAL_DRAG = 0.72D;
-
 	@Override
 	public Fluid getFlowing() {
 		return ModContent.FLOWING_OIL.get();
@@ -113,58 +104,27 @@ public abstract class OilFluid extends FlowingFluid {
 	}
 
 	/**
-	 * Slows every entity standing in oil (MOD-248). This is the loader-neutral seat for the effect:
-	 * {@code Fluid#entityInside} is called from {@code Entity.checkInsideBlocks} on BOTH sides, so
-	 * client and server damp the motion identically and the local player never fights a server
-	 * correction. The obvious alternative — NeoForge's {@code FluidType.motionScale} — is dead code
-	 * in 26.2.0.8-beta (the whole {@code IEntityExtension} fluid integration is commented out
-	 * upstream, see {@code ModFluidsNeoForge}), and Fabric has no equivalent at all.
+	 * Hands crude oil's immersion physics to the shared implementation (MOD-496).
 	 *
-	 * <p>The guard on {@code blockPosition()} is what makes this idempotent: {@code checkInsideBlocks}
-	 * fires once per intersected block, so an entity spanning three oil cells would otherwise be
-	 * damped three times in one tick and the strength would depend on how deep it happens to be.
-	 * Exactly one cell can be the entity's own block position, on either side.
+	 * <p>{@code Fluid#entityInside} is the loader-neutral, side-neutral seat for the effect:
+	 * {@code Entity.checkInsideBlocks} fires it on BOTH sides, so client and server damp motion
+	 * identically and the local player never fights a server correction. The numbers, the held-jump
+	 * ascent and the idempotence guard all live in {@link FluidImmersion} now, so diesel and fuel oil
+	 * get the same treatment from the same code — before MOD-496 the mechanic was written here and
+	 * reachable only from here, which is exactly why the other two fluids shipped without it.
 	 *
-	 * <p>Falling is damped rather than frozen: the drag gives a terminal speed of roughly
-	 * {@code 0.08 / (1 − VERTICAL_DRAG)} blocks per tick, which is slow enough to read as "sinking
-	 * through crude" and fast enough that descending a geyser shaft is a descent and not a wait.
-	 * {@code resetFallDistance} runs every tick, so oil never deals fall damage however deep the
-	 * drop — the shaft is meant to be climbed down.
+	 * <p>The obvious alternative — NeoForge's {@code FluidType.motionScale} — works again since
+	 * 26.2.0.67 (the {@code IEntityExtension} fluid integration was re-implemented upstream in
+	 * 26.2.0.49-beta; it was dead code on 26.2.0.8-beta, when this was written), but it is
+	 * NeoForge-only and Fabric has no equivalent at all. Using it would make the two loaders damp
+	 * motion differently, so {@code motionScale} stays 0 and the effect stays here — see
+	 * {@code ModFluidsNeoForge} (MOD-495).
 	 */
 	@Override
 	protected void entityInside(Level level, BlockPos pos, Entity entity,
 			InsideBlockEffectApplier effectApplier) {
 		super.entityInside(level, pos, entity, effectApplier);
-		if (!pos.equals(entity.blockPosition())) {
-			return;
-		}
-		Vec3 motion = entity.getDeltaMovement();
-		double ascent = ascentImpulse(entity);
-		entity.setDeltaMovement(motion.x * HORIZONTAL_DRAG, motion.y * VERTICAL_DRAG + ascent,
-				motion.z * HORIZONTAL_DRAG);
-		entity.resetFallDistance();
-	}
-
-	/**
-	 * The upward push an entity gets for holding jump inside oil (MOD-250), or zero.
-	 *
-	 * <p>Playtest found that an entity which reached the bottom of a pool could not get back up: the
-	 * vanilla jump branch in {@code LivingEntity#aiStep} only knows {@code isInWater()} and
-	 * {@code isInLava()}, so in oil a held jump does nothing beyond the one ground jump, which
-	 * {@link #VERTICAL_DRAG} eats within a few ticks. This is the same seat as the drag above — no
-	 * mixin needed, because {@code isJumping()} is public — and it runs identically on both sides, so
-	 * the local player never fights a server correction.
-	 *
-	 * <p>The impulse is added <em>after</em> the drag rather than before, so a held jump is worth its
-	 * full value on the tick it is made instead of being damped twice. {@code isAffectedByFluids} is
-	 * the vanilla gate for "fluids move this entity at all" — false for a creative player in flight,
-	 * who would otherwise be shoved upward while flying through a deposit.
-	 */
-	private static double ascentImpulse(Entity entity) {
-		if (entity instanceof LivingEntity living && living.isJumping() && living.isAffectedByFluids()) {
-			return OilPhysics.ASCENT_IMPULSE;
-		}
-		return 0.0D;
+		FluidImmersion.applyEntityInside(level, pos, entity);
 	}
 
 	@Override

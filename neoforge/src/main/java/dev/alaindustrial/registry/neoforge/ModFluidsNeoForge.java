@@ -44,15 +44,19 @@ public final class ModFluidsNeoForge {
 	 *
 	 * <p><b>Every entity-physics field is set explicitly, and that is the point (MOD-238 audit).</b>
 	 * The defaults are {@code canSwim=true}, {@code canDrown=true}, {@code canPushEntity=true},
-	 * {@code motionScale=0.014}, {@code fallDistanceModifier=0.5F} — i.e. "behaves like water". In
-	 * NeoForge 26.2.0.8-beta the whole {@code IEntityExtension} fluid-type integration
-	 * ({@code isInFluidType}, {@code getFluidTypeHeight}, {@code canStartSwimming} and their
-	 * {@code CommonHooks} call sites) is commented out, so none of those defaults do anything today
-	 * and NeoForge accidentally matches Fabric, where custom fluids have no entity physics at all
-	 * (decision 6 in the task: both loaders — "not water", the player falls straight through). The
-	 * day NeoForge re-enables that code the accident ends: NeoForge players would start swimming and
-	 * drowning in oil while Fabric players fall through it, and nothing in the build would notice.
-	 * Declaring the intent now makes the parity survive that change instead of depending on it.
+	 * {@code motionScale=0.014}, {@code fallDistanceModifier=0.5F} — i.e. "behaves like water".
+	 *
+	 * <p><b>That day has come (MOD-495).</b> When this was written on 26.2.0.8-beta the whole
+	 * {@code IEntityExtension} fluid-type integration was commented out upstream, so none of the
+	 * defaults did anything and NeoForge matched Fabric — where custom fluids have no entity physics
+	 * at all — BY ACCIDENT (decision 6 in the task: both loaders "not water", the player falls
+	 * straight through). NeoForge re-implemented the patches in 26.2.0.49-beta, and on 26.2.0.67 the
+	 * call sites are live: {@code Entity#getFallDistanceModifier}, {@code isInFluidMatching} /
+	 * {@code canSwimInFluidType} and {@code LivingEntity#getFluidTypeHeight} all run again. Had these
+	 * fields been left implicit, NeoForge players would now swim and drown in oil while Fabric players
+	 * fall through it, and nothing in the build would have noticed. They are explicit, so the parity
+	 * survived the change — which is exactly what this block was written for. The guard that proves
+	 * it is {@code NeoForgeOilWorldGenTest#oilFluidTypeDeclaresItsEntityPhysics}.
 	 *
 	 * <p>{@code descriptionId} points at the block's existing key rather than letting NeoForge derive
 	 * {@code fluid_type.alaindustrial.oil}: that derived key has no translation, so any foreign GUI

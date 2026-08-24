@@ -175,4 +175,52 @@ class RadiationCoreTest {
 		assertTrue(RadiationCore.wearInterval(1, perPoint) > 8, "a trace source wears slower still");
 		assertEquals(1, RadiationCore.wearInterval(10, 0), "a broken threshold still spends at most a point");
 	}
+
+	/**
+	 * A container leaks a few items' worth at most, however full it is (MOD-474).
+	 *
+	 * <p>This test exists because the uncapped version shipped a trap: strength was linear in the
+	 * count, a chest holds 36 stacks, and a chest of refined uranium therefore delivered a whole dose
+	 * scale per sweep at every distance inside the radius — instant death instead of a warning, and the
+	 * death loop MOD-470 closed reopened, because its arithmetic assumed the source needed a minute.
+	 *
+	 * <p>Both edges are pinned. The cap must actually bind on a heap (or the trap is back), and it must
+	 * NOT touch a small amount (or a single stray ingot in a chest would radiate as hard as a hoard,
+	 * which is the opposite mistake and just as wrong).
+	 */
+	@Test
+	void aContainerLeaksAtMostItsCapHoweverFullItIs() {
+		int perItem = 80;
+		int cap = 4;
+		int ceiling = cap * perItem;
+		assertEquals(ceiling, RadiationCore.containerLeak(36 * 64 * perItem, cap, perItem),
+				"a chest packed with uranium may not leak more than the cap");
+		assertEquals(ceiling, RadiationCore.containerLeak(64 * perItem, cap, perItem),
+				"a single stack is already over the cap");
+		assertEquals(ceiling, RadiationCore.containerLeak(ceiling, cap, perItem),
+				"exactly the cap passes through untouched");
+		assertEquals(2 * perItem, RadiationCore.containerLeak(2 * perItem, cap, perItem),
+				"below the cap nothing is taken away — a couple of items must stay a couple of items");
+		assertEquals(0, RadiationCore.containerLeak(0, cap, perItem), "an empty container is silent");
+		assertEquals(0, RadiationCore.containerLeak(9999, 0, perItem),
+				"a cap of zero switches containers off entirely");
+	}
+
+	/**
+	 * The cap is what keeps a hoard survivable: past it, more uranium buys the player no extra danger.
+	 *
+	 * <p>Asserted as a RELATION rather than against numbers, so it keeps meaning something after the
+	 * balance is retuned — a stack and a full chest must read the same, and both must read more than a
+	 * single item.
+	 */
+	@Test
+	void pastTheCapMoreUraniumChangesNothing() {
+		int perItem = 80;
+		int cap = 4;
+		int stack = RadiationCore.containerLeak(64 * perItem, cap, perItem);
+		int full = RadiationCore.containerLeak(36 * 64 * perItem, cap, perItem);
+		int single = RadiationCore.containerLeak(perItem, cap, perItem);
+		assertEquals(stack, full, "a full chest is no worse than one stack once both are over the cap");
+		assertTrue(single < stack, "but a single item must still be milder than a heap");
+	}
 }

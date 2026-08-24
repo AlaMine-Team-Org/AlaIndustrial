@@ -47,6 +47,7 @@ import dev.alaindustrial.block.PolymerizerBlock;
 import dev.alaindustrial.block.PumpBlock;
 import dev.alaindustrial.block.RectificationSectionBlock;
 import dev.alaindustrial.block.SawmillBlock;
+import dev.alaindustrial.block.ShieldingChestBlock;
 import dev.alaindustrial.block.SilverChestBlock;
 import dev.alaindustrial.block.SolarPanelBlock;
 import dev.alaindustrial.block.StorageModuleBlock;
@@ -116,6 +117,7 @@ import dev.alaindustrial.block.entity.Overclockable;
 import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
 import dev.alaindustrial.block.entity.PumpBlockEntity;
 import dev.alaindustrial.block.entity.SawmillBlockEntity;
+import dev.alaindustrial.block.entity.ShieldingChestBlockEntity;
 import dev.alaindustrial.block.entity.SilverChestBlockEntity;
 import dev.alaindustrial.block.entity.SolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.StorageModuleBlockEntity;
@@ -172,6 +174,7 @@ import dev.alaindustrial.menu.MobRepellerHvMenu;
 import dev.alaindustrial.menu.MobRepellerMenu;
 import dev.alaindustrial.menu.MobRepellerMvMenu;
 import dev.alaindustrial.menu.SawmillMenu;
+import dev.alaindustrial.menu.ShieldingChestMenu;
 import dev.alaindustrial.menu.SilverChestMenu;
 import dev.alaindustrial.menu.SolarPanelMenu;
 import dev.alaindustrial.menu.LightningRodGeneratorMenu;
@@ -324,6 +327,8 @@ public final class ContentManifest {
 			// MOD-409 — the electrum tier: 81 slots behind the same 6-row scrolling window, so this
 			// is a single chest wearing the warehouse/double-chest machinery rather than a taller panel.
 			menu("electrum_chest", ElectrumChestMenu::new, s -> ModContent.ELECTRUM_CHEST_MENU = s),
+			// MOD-474 — the shielding chest's window: the iron chest's four rows, its own menu type.
+			menu("shielding_chest", ShieldingChestMenu::new, s -> ModContent.SHIELDING_CHEST_MENU = s),
 			// MOD-391 — the double chest's 6-row scrolling window, one type for every tier.
 			menu("double_chest", DoubleChestMenu::new, s -> ModContent.DOUBLE_CHEST_MENU = s),
 			// MOD-278 — the guard field, one menu per tier (same class, tier-specific client factory:
@@ -593,6 +598,11 @@ public final class ContentManifest {
 	// (81 slots) and in the window (six rows + scrollbar instead of a taller panel).
 	public static final BlockDef<ElectrumChestBlock> ELECTRUM_CHEST =
 			block("electrum_chest", ElectrumChestBlock::new, s -> ModContent.ELECTRUM_CHEST = s);
+	// Shielding Chest (MOD-474) — NOT a rung of the storage ladder above: it holds the same 36 slots
+	// as the iron chest and is bought for what it stops, not for what it fits. It is the only place
+	// radioactive material can sit without irradiating everything around it.
+	public static final BlockDef<ShieldingChestBlock> SHIELDING_CHEST =
+			block("shielding_chest", ShieldingChestBlock::new, s -> ModContent.SHIELDING_CHEST = s);
 	// Material / decorative full cubes: cube_all model, one texture per block.
 	public static final BlockDef<Block> TEMPERED_IRON_BLOCK =
 			block("tempered_iron_block", Block::new, s -> ModContent.TEMPERED_IRON_BLOCK = s);
@@ -653,7 +663,7 @@ public final class ContentManifest {
 			INCUBATOR_DOME, TRELLIS, TIN_ORE, DEEPSLATE_TIN_ORE, SILVER_ORE, DEEPSLATE_SILVER_ORE,
 			NICKEL_ORE, DEEPSLATE_NICKEL_ORE, SULFUR_ORE, DEEPSLATE_SULFUR_ORE, URANIUM_ORE,
 			DEEPSLATE_URANIUM_ORE, PALLADIUM_ORE,
-			IRON_CHEST, STORAGE_MODULE, SILVER_CHEST, GOLD_CHEST, ELECTRUM_CHEST,
+			IRON_CHEST, STORAGE_MODULE, SILVER_CHEST, GOLD_CHEST, ELECTRUM_CHEST, SHIELDING_CHEST,
 			TEMPERED_IRON_BLOCK, MACHINE_CASING, ADVANCED_MACHINE_CASING, SILVER_PLATE_BLOCK,
 			TEMPERED_IRON_PLATE_BLOCK, INDUSTRIAL_WORKBENCH, ENRICHED_URANIUM_TORCH,
 			ENRICHED_URANIUM_WALL_TORCH, OIL, DIESEL, FUEL_OIL,
@@ -844,6 +854,8 @@ public final class ContentManifest {
 			Map.entry("silver_chest", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion())),
 			Map.entry("gold_chest", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion())),
 			Map.entry("electrum_chest", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion())),
+			// MOD-474 — same stats as the storage chests: the shielding is a radiation rule, not armour.
+			Map.entry("shielding_chest", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion())),
 			Map.entry("tempered_iron_block", machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL))),
 			// MOD-225: machine casing (crafting base for machines) + two decorative plate blocks.
 			Map.entry("machine_casing", machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL))),
@@ -1274,6 +1286,7 @@ public final class ContentManifest {
 			blockEntity("silver_chest", SilverChestBlockEntity.class, SilverChestBlockEntity::new, s -> ModContent.SILVER_CHEST_BE = s, "silver_chest"),
 			blockEntity("gold_chest", GoldChestBlockEntity.class, GoldChestBlockEntity::new, s -> ModContent.GOLD_CHEST_BE = s, "gold_chest"),
 			blockEntity("electrum_chest", ElectrumChestBlockEntity.class, ElectrumChestBlockEntity::new, s -> ModContent.ELECTRUM_CHEST_BE = s, "electrum_chest"),
+			blockEntity("shielding_chest", ShieldingChestBlockEntity.class, ShieldingChestBlockEntity::new, s -> ModContent.SHIELDING_CHEST_BE = s, "shielding_chest"),
 			blockEntity("mob_repeller", MobRepellerBlockEntity.class, MobRepellerBlockEntity::new, s -> ModContent.MOB_REPELLER_BE = s, "mob_repeller"),
 			blockEntity("mob_repeller_mv", MobRepellerMvBlockEntity.class, MobRepellerMvBlockEntity::new, s -> ModContent.MOB_REPELLER_MV_BE = s, "mob_repeller_mv"),
 			blockEntity("mob_repeller_hv", MobRepellerHvBlockEntity.class, MobRepellerHvBlockEntity::new, s -> ModContent.MOB_REPELLER_HV_BE = s, "mob_repeller_hv"),

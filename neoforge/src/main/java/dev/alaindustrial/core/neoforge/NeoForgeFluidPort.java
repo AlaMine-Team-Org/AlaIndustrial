@@ -11,7 +11,7 @@ import dev.alaindustrial.core.fluid.FluidTank;
 /**
  * NeoForge implementation of the platform-neutral {@link FluidPort} (MOD-028): an adapter over a NeoForge
  * {@code ResourceHandler<FluidResource>} ({@code net.neoforged.neoforge.transfer.fluid} /
- * {@code net.neoforged.neoforge.transfer.ResourceHandler}, verified against 26.2.0.8-beta — NeoForge fluid
+ * {@code net.neoforged.neoforge.transfer.ResourceHandler}, verified against 26.2.0.67 — NeoForge fluid
  * moved to the SAME transfer-rework as energy, not the classic {@code IFluidHandler}). This is the
  * read/insert/extract view of a foreign or self-published {@code ResourceHandler}; the reverse direction
  * (publishing a common {@code FluidTank} as a {@code ResourceHandler} for the capability lookup) lives in
@@ -93,7 +93,7 @@ public final class NeoForgeFluidPort implements FluidPort {
 		// getCapacityAsLong wants a resource to check validity against; the current resource (or, if
 		// empty, any resource this handler would accept) reports the tank's real capacity, mirroring how
 		// FluidStacksResourceHandler#getCapacity ignores the resource argument entirely for a
-		// fixed-capacity tank (verified in the decompiled 26.2.0.8-beta base class).
+		// fixed-capacity tank (verified in the decompiled 26.2.0.67 base class).
 		FluidResource current = delegate.getResource(INDEX);
 		return delegate.getCapacityAsLong(INDEX, current);
 	}

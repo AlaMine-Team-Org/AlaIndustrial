@@ -1,0 +1,15 @@
+{
+  "parent": "alaindustrial:iron_chest",
+  "display": {
+    "icon": { "id": "alaindustrial:shielding_chest" },
+    "title": { "translate": "advancements.alaindustrial.shielding_chest.title" },
+    "description": { "translate": "advancements.alaindustrial.shielding_chest.description" }
+  },
+  "criteria": {
+    "shielding_chest": {
+      "trigger": "minecraft:placed_block",
+      "conditions": { "location": [{ "condition": "minecraft:block_state_property", "block": "alaindustrial:shielding_chest" }] }
+    }
+  },
+  "requirements": [["shielding_chest"]]
+}

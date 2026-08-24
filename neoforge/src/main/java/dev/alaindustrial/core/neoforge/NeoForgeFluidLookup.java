@@ -13,7 +13,7 @@ import dev.alaindustrial.core.energy.EnergyRole;
 
 /**
  * NeoForge implementation of the neutral {@link FluidLookup} SPI (MOD-028): resolves the per-face fluid
- * port through {@code Capabilities.Fluid.BLOCK} (verified against 26.2.0.8-beta:
+ * port through {@code Capabilities.Fluid.BLOCK} (verified against 26.2.0.67:
  * {@code BlockCapability<ResourceHandler<FluidResource>, @Nullable Direction>}) and wraps the result as a
  * neutral {@link FluidPort}. This is the per-loader capability-lookup seam — mirrors
  * {@link NeoForgeEnergyLookup}.

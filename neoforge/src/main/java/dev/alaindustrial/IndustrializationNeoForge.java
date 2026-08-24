@@ -47,7 +47,7 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
  * {@code dev.alaindustrial.IndustrializationFabric} entrypoint; loader-neutral constants live in
  * {@link Industrialization} (common).
  *
- * <p><b>Verified 26.2 wiring (against neoforge-26.2.0.8-beta):</b>
+ * <p><b>Verified 26.2 wiring (against neoforge-26.2.0.67):</b>
  * <ul>
  *   <li>{@code @Mod(MOD_ID)} + a {@code (IEventBus modBus)} constructor — NeoForge injects the mod
  *       event bus.</li>
@@ -387,7 +387,7 @@ public final class IndustrializationNeoForge {
 
 	/**
 	 * Publishes each block entity's per-face capabilities on the REAL {@code BlockEntityType}s. Verified
-	 * pattern (neoforge-26.2.0.8-beta):
+	 * pattern (neoforge-26.2.0.67):
 	 * {@code event.registerBlockEntity(Capabilities.Energy.BLOCK, TYPE, (be, side) -> handler)} where the
 	 * provider is an {@code ICapabilityProvider<BE, Direction, EnergyHandler>}
 	 * ({@code getCapability(BE, Direction)}); fluid and item go through

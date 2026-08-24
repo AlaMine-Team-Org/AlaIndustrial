@@ -112,4 +112,24 @@ public class OilGameTest {
 	public void tcOil001Fun08_firstOilAwardsTheAdvancement(GameTestHelper helper) {
 		OilScenarios.fun09FirstOilAwardsTheAdvancement(helper);
 	}
+
+	/**
+	 * @implements TC-OIL-001-NEG03 — an entity inside oil sinks with vanilla AIR physics and never
+	 * hangs as if oil were a solid block; a water shaft controls that vanilla fluids keep vanilla
+	 * movement. Guards the MOD-495 regression that NeoForge 26.2.0.49-beta made reachable.
+	 */
+	@GameTest(maxTicks = 80)
+	public void tcOil001Neg03_entitySinksInsteadOfHanging(GameTestHelper helper) {
+		OilScenarios.neg03EntitySinksInsteadOfHanging(helper);
+	}
+
+	/**
+	 * @implements TC-OIL-001-FUN10 — all three world-placeable fluids damp a fall and clear fall
+	 * distance, ordered by viscosity (air &gt; diesel &gt; fuel oil &gt; crude). Guards the MOD-496
+	 * roster: a fluid that loses its immersion profile falls like air and the order collapses.
+	 */
+	@GameTest(maxTicks = 80)
+	public void tcOil001Fun10_immersionDampsFallInViscosityOrder(GameTestHelper helper) {
+		OilScenarios.fun10ImmersionDampsFallInViscosityOrder(helper);
+	}
 }

@@ -331,7 +331,7 @@ public class ElectricDrillItem extends Item {
 	 *
 	 * <p>Both loaders run this same body. Unlike the hoe's tillability probe (MOD-389), placement is not a
 	 * spot where NeoForge patches vanilla out: its {@code StandingAndWallBlockItem} and {@code BlockItem}
-	 * carry the same flow (checked against {@code minecraft-patched-26.2.0.8-beta-sources.jar}), so there is
+	 * carry the same flow (checked against {@code minecraft-patched-26.2.0.67-sources.jar}), so there is
 	 * no loader override here — and no reason to add one.
 	 */
 	private static boolean wouldPlaceTorch(BlockPlaceContext placeCtx, BlockItem torchItem) {

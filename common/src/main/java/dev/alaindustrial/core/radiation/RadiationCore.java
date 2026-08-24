@@ -115,6 +115,33 @@ public final class RadiationCore {
 	}
 
 	/**
+	 * What one container in the world actually leaks (MOD-474): its contents, but never more than
+	 * {@code maxItems} items' worth.
+	 *
+	 * <p><b>The cap is the difference between a hazard and a trap.</b> Leak strength used to be linear
+	 * in the count, and a container holds up to 36 stacks: a chest of refined uranium delivered a full
+	 * dose scale per sweep at every distance inside the radius, so it killed instantly rather than
+	 * warning. Worse, it revived the death loop MOD-470 closed by arithmetic — that reasoning ("a stack
+	 * needs about a minute to reach lethal, so there is time to run back and drink milk") only holds
+	 * while the source needs a minute.
+	 *
+	 * <p>It is also the more honest physical model: the box attenuates, and the uranium in the middle
+	 * of a pile is shielded by the uranium above it. Doubling what is already a heap does not double
+	 * what escapes it.
+	 *
+	 * @param raw          dose per sweep the contents would radiate uncapped
+	 * @param maxItems     items' worth allowed out; {@code 0} keeps containers silent entirely
+	 * @param dosePerItem  what one item of the strongest tag is worth
+	 */
+	public static int containerLeak(int raw, int maxItems, int dosePerItem) {
+		if (raw <= 0 || maxItems <= 0 || dosePerItem <= 0) {
+			return 0;
+		}
+		long ceiling = (long) maxItems * dosePerItem;
+		return (int) Math.min(raw, ceiling);
+	}
+
+	/**
 	 * The ceiling a capped source may push a dose to.
 	 *
 	 * <p>Raw ore and dust sit under this: they make a player queasy and never worse, because a player

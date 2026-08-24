@@ -1,6 +1,6 @@
 package dev.alaindustrial.mixin;
 
-import dev.alaindustrial.fluid.OilPhysics;
+import dev.alaindustrial.fluid.FluidImmersion;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.LivingEntity;
@@ -40,7 +40,9 @@ public abstract class LivingEntityOilDrowningMixin {
 			return true;
 		}
 		// Guarded on WATER so that if vanilla ever asks the same question about another tag in this
-		// method, oil does not silently answer for it.
-		return tag == FluidTags.WATER && OilPhysics.isEyeInOil(self);
+		// method, oil does not silently answer for it. The profile decides WHICH of the mod's fluids
+		// drown (MOD-496): crude does, the two distillation fractions are harmless by design.
+		FluidImmersion profile = FluidImmersion.atEyes(self);
+		return tag == FluidTags.WATER && profile != null && profile.drowns();
 	}
 }

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "C": "alaindustrial:iron_chest",
+    "S": "alaindustrial:shielding_alloy_plate"
+  },
+  "pattern": [
+    " S ",
+    "SCS",
+    " S "
+  ],
+  "result": {
+    "id": "alaindustrial:shielding_chest"
+  }
+}

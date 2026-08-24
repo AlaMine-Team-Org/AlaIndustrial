@@ -33,6 +33,7 @@ import dev.alaindustrial.menu.GardenDroneStationMenu;
 import dev.alaindustrial.menu.PumpMenu;
 import dev.alaindustrial.menu.IncubatorMenu;
 import dev.alaindustrial.menu.SawmillMenu;
+import dev.alaindustrial.menu.ShieldingChestMenu;
 import dev.alaindustrial.menu.SilverChestMenu;
 import dev.alaindustrial.menu.SolarPanelMenu;
 import dev.alaindustrial.menu.LightningRodGeneratorMenu;
@@ -219,6 +220,9 @@ public final class ModContent {
 	// BaseContainerBlockEntity spine, no energy. Crafted from a silver chest ringed with gold ingots.
 	public static Supplier<Block> GOLD_CHEST = unbound("GOLD_CHEST");
 	public static Supplier<Block> ELECTRUM_CHEST = unbound("ELECTRUM_CHEST");
+	// Shielding Chest (MOD-474) — 36 slots like the iron chest, and no more: it is bought for the
+	// one thing an inventory cannot show, that radioactive contents stop irradiating the room.
+	public static Supplier<Block> SHIELDING_CHEST = unbound("SHIELDING_CHEST");
 	// Tempered Iron Block — a "block of X" material block (9 ingots ↔ 1 block), like
 	// vanilla iron block. Pure material/decorative block, no BE, single texture on all 6 faces.
 	public static Supplier<Block> TEMPERED_IRON_BLOCK = unbound("TEMPERED_IRON_BLOCK");
@@ -588,6 +592,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> SILVER_CHEST_ITEM = unbound("SILVER_CHEST_ITEM");
 	public static Supplier<BlockItem> GOLD_CHEST_ITEM = unbound("GOLD_CHEST_ITEM");
 	public static Supplier<BlockItem> ELECTRUM_CHEST_ITEM = unbound("ELECTRUM_CHEST_ITEM");
+	public static Supplier<BlockItem> SHIELDING_CHEST_ITEM = unbound("SHIELDING_CHEST_ITEM");
 	public static Supplier<BlockItem> TEMPERED_IRON_BLOCK_ITEM = unbound("TEMPERED_IRON_BLOCK_ITEM");
 	// MOD-225 block-items.
 	public static Supplier<BlockItem> MACHINE_CASING_ITEM = unbound("MACHINE_CASING_ITEM");
@@ -658,6 +663,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> SILVER_CHEST_BE = unbound("SILVER_CHEST_BE");
 	public static Supplier<BlockEntityType<?>> GOLD_CHEST_BE = unbound("GOLD_CHEST_BE");
 	public static Supplier<BlockEntityType<?>> ELECTRUM_CHEST_BE = unbound("ELECTRUM_CHEST_BE");
+	public static Supplier<BlockEntityType<?>> SHIELDING_CHEST_BE = unbound("SHIELDING_CHEST_BE");
 
 	// --- Menu types ---
 	// Each slot carries its concrete menu class (MOD-198), not MenuType<?>. That generic is what ties a
@@ -734,6 +740,7 @@ public final class ModContent {
 	public static Supplier<MenuType<SilverChestMenu>> SILVER_CHEST_MENU = unbound("SILVER_CHEST_MENU");
 	public static Supplier<MenuType<GoldChestMenu>> GOLD_CHEST_MENU = unbound("GOLD_CHEST_MENU");
 	public static Supplier<MenuType<ElectrumChestMenu>> ELECTRUM_CHEST_MENU = unbound("ELECTRUM_CHEST_MENU");
+	public static Supplier<MenuType<ShieldingChestMenu>> SHIELDING_CHEST_MENU = unbound("SHIELDING_CHEST_MENU");
 	// MOD-391 — one double-chest window for all three tiers: the visible size is always 6 rows and
 	// the total row count travels via ContainerData, so nothing tier-specific is left for the type.
 	public static Supplier<MenuType<DoubleChestMenu>> DOUBLE_CHEST_MENU = unbound("DOUBLE_CHEST_MENU");

@@ -4,6 +4,8 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.block.FuelRodAssemblyBlock;
 import dev.alaindustrial.block.ReactorDoorBlock;
 import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
+import dev.alaindustrial.block.entity.IronChestBlockEntity;
+import dev.alaindustrial.block.entity.ShieldingChestBlockEntity;
 import dev.alaindustrial.core.radiation.RadiationMobs;
 import dev.alaindustrial.core.radiation.RadiationSources;
 import dev.alaindustrial.registry.ModContent;
@@ -11,6 +13,7 @@ import dev.alaindustrial.registry.ModEffects;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.world.Container;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
@@ -314,6 +317,60 @@ public final class RadiationScenarios {
 			int opened = RadiationSources.exposureAt(helper.getLevel(), viewer, Config.radiationSourceRadius);
 			if (opened <= 0) {
 				helper.fail("an open doorway must leak radiation; got " + opened);
+			}
+			helper.succeed();
+		});
+	}
+
+	/**
+	 * The shielding chest is the one container that stops what is inside it (MOD-474): the SAME stack of
+	 * refined uranium irradiates through an ordinary chest and not at all through a shielding one.
+	 *
+	 * <p><b>Both halves are measured, and that is the whole point.</b> "The shielding chest reads zero"
+	 * on its own is the classic test that cannot fail — before MOD-474 nothing looked inside block
+	 * containers at all, so EVERY chest read zero and this assertion would have passed against a mod that
+	 * has no shielding chest in it. Measuring the ordinary chest in the same spot with the same stack is
+	 * what makes the zero mean something.
+	 *
+	 * @implements R-RAD-10 — see docs/testing/RULES.md
+	 */
+	public static void shieldingChestStopsWhatAnOrdinaryChestDoesNot(GameTestHelper helper) {
+		withIsolatedField(() -> {
+			ServerLevel level = helper.getLevel();
+			Cow viewer = helper.spawn(EntityTypes.COW, BYSTANDER);
+			ItemStack fuel = new ItemStack(ModContent.REFINED_URANIUM.get(), 16);
+
+			helper.setBlock(RACK, ModContent.IRON_CHEST.get());
+			Container plain = helper.getBlockEntity(RACK, IronChestBlockEntity.class);
+			plain.setItem(0, fuel.copy());
+			int exposed = RadiationSources.exposureAt(level, viewer, Config.radiationSourceRadius);
+			if (exposed <= 0) {
+				helper.fail("uranium in an ordinary chest must irradiate; got " + exposed);
+			}
+
+			// The cap, measured in a world (MOD-474): filling the same chest to the brim must not
+			// raise the exposure at all. Uncapped, a full chest killed instantly at every distance in
+			// the radius — a trap rather than a warning, and the death loop MOD-470 closed reopened.
+			for (int slot = 0; slot < 27; slot++) {
+				plain.setItem(slot, new ItemStack(ModContent.REFINED_URANIUM.get(), 64));
+			}
+			int hoard = RadiationSources.exposureAt(level, viewer, Config.radiationSourceRadius);
+			if (hoard != exposed) {
+				helper.fail("past the cap a fuller chest must not irradiate harder; 16 items gave "
+						+ exposed + ", a packed chest gave " + hoard);
+			}
+
+			// EMPTY it before breaking it, or vanilla spills the stack on the floor and the pile keeps
+			// radiating from there (MOD-470's ground source, working exactly as intended) — the first
+			// draft of this rig measured 458 through the shielding chest for precisely that reason.
+			plain.clearContent();
+			helper.setBlock(RACK, net.minecraft.world.level.block.Blocks.AIR);
+			helper.setBlock(RACK, ModContent.SHIELDING_CHEST.get());
+			Container shielded = helper.getBlockEntity(RACK, ShieldingChestBlockEntity.class);
+			shielded.setItem(0, fuel.copy());
+			int stopped = RadiationSources.exposureAt(level, viewer, Config.radiationSourceRadius);
+			if (stopped != 0) {
+				helper.fail("the same uranium in a shielding chest must not irradiate at all; got " + stopped);
 			}
 			helper.succeed();
 		});

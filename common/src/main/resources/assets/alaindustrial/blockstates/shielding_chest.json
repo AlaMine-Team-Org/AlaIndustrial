@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "alaindustrial:block/shielding_chest"
+    },
+    "facing=south": {
+      "model": "alaindustrial:block/shielding_chest"
+    },
+    "facing=west": {
+      "model": "alaindustrial:block/shielding_chest"
+    },
+    "facing=east": {
+      "model": "alaindustrial:block/shielding_chest"
+    }
+  }
+}

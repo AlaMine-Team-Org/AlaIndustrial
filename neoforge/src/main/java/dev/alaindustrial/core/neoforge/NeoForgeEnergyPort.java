@@ -12,7 +12,7 @@ import dev.alaindustrial.core.energy.EnergyBuffer;
 /**
  * NeoForge implementation of the platform-neutral {@link EnergyPort} (MOD-022 Phase 2): an adapter over
  * a NeoForge {@link EnergyHandler} ({@code net.neoforged.neoforge.transfer.energy.EnergyHandler},
- * verified against 26.2.0.8-beta). This is the read/insert/extract view of a foreign or self-published
+ * verified against 26.2.0.67). This is the read/insert/extract view of a foreign or self-published
  * {@code EnergyHandler}; the reverse direction (publishing a common {@code EnergyBuffer} as an
  * {@code EnergyHandler} for the capability lookup) lives in {@link BufferAsEnergyHandler}.
  *
@@ -102,7 +102,7 @@ public final class NeoForgeEnergyPort implements EnergyPort {
 	 * <p><b>Caller must evict.</b> The wrapped handle is cached per-thread keyed by
 	 * {@link TransactionContext} identity. Unlike Fabric, NeoForge's {@link TransactionContext} is a sealed
 	 * interface exposing only {@code depth()} — it has no close-callback API (verified against
-	 * 26.2.0.8-beta), so this method cannot auto-evict on close. Every caller MUST call
+	 * 26.2.0.67), so this method cannot auto-evict on close. Every caller MUST call
 	 * {@link NeoForgeTxn#evict(TransactionContext)} after the transaction closes, or the thread-local cache
 	 * leaks one entry per transaction. The {@link NeoForgeEnergyTransactions} SPI (the sole owner path) does
 	 * this in a {@code finally} block. For a transaction we do NOT own — a reverse-adapter capability call

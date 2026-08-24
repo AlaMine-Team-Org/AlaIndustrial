@@ -48,7 +48,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
  *       commit/rollback are driven at runtime.</li>
  * </ul>
  *
- * <p>Every NeoForge/MC symbol here is verified against the decompiled 26.2.0.8-beta sources:
+ * <p>Every NeoForge/MC symbol here is verified against the decompiled 26.2.0.67 sources:
  * {@code EnergyHandler.getAmountAsLong()/getCapacityAsLong()/insert(int,TransactionContext)/
  * extract(int,TransactionContext)}, {@code Transaction.openRoot()/commit()/close()} (implements
  * {@code AutoCloseable, TransactionContext}), {@code BufferAsEnergyHandler.of(EnergyPort)}.
