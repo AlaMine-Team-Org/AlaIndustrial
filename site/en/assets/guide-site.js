@@ -457,10 +457,13 @@
     };
 
     /* The longer the range, the coarser the bucket: two years by day would be 700
-       columns one pixel wide. */
+       columns one pixel wide. The day threshold is 90 and not 45, so that the two
+       short range buttons (30 days, 90 days) always draw what their label says:
+       the bucket looks at how much history exists, not at the chosen range. At 90
+       columns a bar is still ~10px wide inside the 936px plot area. */
     const bucket = days => {
-      if (days.length <= 45) return { data: days, unit: L.per_day };
-      const size = days.length <= 200 ? 7 : 30;
+      if (days.length <= 90) return { data: days, unit: L.per_day };
+      const size = days.length <= 400 ? 7 : 30;
       const out = [];
       for (let i = days.length % size; i < days.length; i += size) {
         const slice = days.slice(i, i + size);

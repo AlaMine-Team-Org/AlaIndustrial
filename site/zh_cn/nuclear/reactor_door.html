@@ -360,7 +360,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="10 个页面">10</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="11 个页面">11</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="12 个页面">12</span></a>
@@ -410,9 +410,19 @@
 
 <p>门放下时<strong>永远是关着的</strong>，即使旁边已经有信号：否则新门一放好就是开着的，外壳在建造的当下就不 密封了。</p>
 
-<p>音效沿用原版铁门的开门与关门声。</p>
+<p>音效是气闸自己的，不是原版铁门的——见下面的"声音"一节。</p>
 
 <p><strong>从里面怎么给脉冲。</strong>在外面什么都行——按钮、拉杆、压力板。而在密封房间的内部，信号源也得同样 密封，所以随门一起有了<a href="reactor_button.html">反应堆按钮</a>：同样的屏蔽合金，按下时长 20 刻 （1 秒）——正好是开门时长的一半，脉冲必定落在开启窗口之内。原版按钮也能用，只是它是木头或石头做的。 挂在墙上的按钮不占外壳格，也不破坏密封。</p>
+
+<h2 id="它是怎么动的">它是怎么动的</h2>
+
+<p>这扇门不会向外开——门扇<strong>向下沉入地板</strong>，关闭时再升回原位，就像气闸舱的隔壁一样。单程行程为 （默认 <strong>8 刻 ≈ 0.4 秒</strong>）：只占开启窗口的五分之一，既让动作看得出是机械， 又不会吃掉它本来要给你的那两秒。门扇起步和停止都是平滑的，两端都不会顿一下。</p>
+
+<p>房间下面不需要留出任何空间。门扇只会在门洞范围内绘制，随着下沉自然不再可见——没有地方藏它，也 不需要藏，因为门下面那一格可以是任何东西。</p>
+
+<p>行程是一个<strong>纯视觉</strong>的量。"开启"状态仍然在一刻之内翻转，可通行性、生物寻路和辐射射线追踪都随之 立刻改变。也就是说，门在门扇<strong>起步</strong>的那一瞬就可以穿过了，而不是等它落到底：0.4 秒的"已经能穿过 去"与"它已经让开了"之间的错位，是为了让红石契约保持原样所付的代价。</p>
+
+<p>开启的门在门洞里<strong>什么都不留下</strong>：此时它完全没有碰撞形状。由此有两个后果。有用的那个：敞开的门洞 会如实地把辐射漏到外面（射线追踪撞的是碰撞体，而这里没有）。不便的那个：门开着的时候点不到它， 也挖不掉它；两秒后它会关上，重新成为可选中的目标。</p>
 
 <h2 id="门洞门在什么情况下算作入口">门洞：门在什么情况下算作入口</h2>
 
@@ -430,9 +440,13 @@
 
 <h2 id="方块属性">方块属性</h2>
 
-<table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>形状</td><td>厚 3/16 格、占满整格高与宽的门扇；开启时绕合页转 90°</td></tr><tr><td>尺寸</td><td>1×2（上下两半是同一个对象）</td></tr><tr><td>遮挡</td><td>非完整方块</td></tr><tr><td>硬度</td><td>5.0</td></tr><tr><td>爆炸抗性</td><td>30.0</td></tr><tr><td>工具</td><td>镐（掉落必需）</td></tr><tr><td>声音</td><td>金属</td></tr><tr><td>对活塞的反应</td><td>被破坏</td></tr></tbody></table>
+<table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>形状</td><td>厚 3/16 格、占满整格高与宽的门扇；开启时完全没有形状</td></tr><tr><td>尺寸</td><td>1×2（上下两半是同一个对象）</td></tr><tr><td>遮挡</td><td>非完整方块</td></tr><tr><td>硬度</td><td>5.0</td></tr><tr><td>爆炸抗性</td><td>30.0</td></tr><tr><td>工具</td><td>镐（掉落必需）</td></tr><tr><td>声音</td><td>金属</td></tr><tr><td>对活塞的反应</td><td>被破坏</td></tr></tbody></table>
 
 <p>两半同生共死：打掉任意一半，玩家得到<strong>一扇</strong>门，另一半随之消失。生物寻路只有在门开启时才会穿过。</p>
+
+<p>"合页"这个状态是向外开那一版留下的遗产。滑动门没有合页，这个标记在任何位置都不会影响外观。保留 它是有意为之：把它从状态集合里去掉，就等于改变别人世界里已经造好的门的状态集合，为了退役一个没 用的标记，这个代价太高了。</p>
+
+<p>门扇不是由烘焙模型绘制的，而是由方块渲染器绘制——只有两个姿势的模型，没法表现两者之间的运动。 代价是：这扇门没有环境光遮蔽，挖它的时候也不会画出裂纹贴图。</p>
 
 <p>"已成形"这个标记，门和外壳其余部分一样带着——控制器会把它写进成形房间的每一格（见 <a href="reactor_casing.html">无缝的外观</a>）。不过与外壳和玻璃不同，它目前不改变门的外观：门扇没有 单独的无缝纹理。</p>
 

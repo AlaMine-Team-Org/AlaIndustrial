@@ -360,7 +360,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="10 pages">10</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="11 pages">11</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>Nuclear</span><span class="cat-count" aria-label="12 pages">12</span></a>
@@ -410,9 +410,19 @@
 
 <p>The door is <strong>always placed shut</strong>, even if a signal is already live nearby: otherwise a new door would appear open and the shell would be unsealed at the very moment it was built.</p>
 
-<p>The sounds are the vanilla iron door's, on opening and on closing.</p>
+<p>The airlock has a voice of its own rather than the vanilla iron door's — see "Sound" below.</p>
 
 <p><strong>How to send the pulse from inside.</strong> Outside, anything will do — a button, a lever, a pressure plate. Inside a sealed room the signal source has to be as sealed as the room, which is why the <a href="reactor_button.html">reactor button</a> shipped alongside the door: the same shielding alloy, a press of = 20 ticks (1 s), half of, so the pulse comfortably fits inside the opening window. A vanilla button works too, but it is wood or stone — exactly what stops existing inside an active room in stage 4. A button on the wall occupies no shell cell and breaks no seal.</p>
+
+<h2 id="how-it-moves">How it moves</h2>
+
+<p>The door does not swing — the leaf <strong>sinks into the floor</strong> and rises back out of it, the way an airlock bulkhead does. The travel takes (<strong>8 ticks ≈ 0.4 s</strong> by default) each way: a fifth of the open window, so the movement reads as machinery without eating the two seconds it exists to give you. The leaf sets off and comes to rest smoothly, with no jolt at either end.</p>
+
+<p>Nothing is needed underneath the room for this. The leaf is only ever drawn inside the doorway itself and simply stops being visible as it descends — there is nowhere to hide it and no need to, because the cell under a door may hold anything at all.</p>
+
+<p>The travel is a <strong>purely visual</strong> quantity. The <code>open</code> blockstate still flips in a single tick, and passability, mob pathing and the radiation trace all flip with it. The door therefore becomes walk-through the moment the leaf sets off, not when it arrives: 0.4 s of disagreement between "you can already walk through" and "it has already gone" is the price of leaving the redstone contract exactly as it was.</p>
+
+<p>An open door leaves <strong>nothing</strong> in the doorway — it has no shape at all while open. Two consequences follow. The useful one: an open doorway honestly leaks radiation outward, because the trace stops at collision and there is none. The inconvenient one: while the door is open it cannot be clicked and cannot be mined; two seconds later it shuts and becomes a target again.</p>
 
 <h2 id="the-doorway-where-a-door-counts-as-an-entrance">The doorway: where a door counts as an entrance</h2>
 
@@ -430,9 +440,13 @@
 
 <h2 id="block-properties">Block properties</h2>
 
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>a leaf 3/16 of a block thick, full height and width of the cell; swings 90° to the hinge when open</td></tr><tr><td>Size</td><td>1×2 (lower and upper halves are one object)</td></tr><tr><td>Occlusion</td><td>(not a full cube)</td></tr><tr><td>Hardness</td><td>5.0</td></tr><tr><td>Blast resistance</td><td>30.0</td></tr><tr><td>Tool</td><td>pickaxe (required for drops)</td></tr><tr><td>Sound</td><td>metal</td></tr><tr><td>Piston reaction</td><td>destroyed</td></tr><tr><td>Blockstates</td><td>, <code>half</code>,, <code>open</code>,,</td></tr></tbody></table>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>a leaf 3/16 of a block thick, full height and width of the cell; an open door has no shape at all</td></tr><tr><td>Size</td><td>1×2 (lower and upper halves are one object)</td></tr><tr><td>Occlusion</td><td>(not a full cube)</td></tr><tr><td>Hardness</td><td>5.0</td></tr><tr><td>Blast resistance</td><td>30.0</td></tr><tr><td>Tool</td><td>pickaxe (required for drops)</td></tr><tr><td>Sound</td><td>metal</td></tr><tr><td>Piston reaction</td><td>destroyed</td></tr><tr><td>Blockstates</td><td>, <code>half</code>, <code>open</code>,,, (unused)</td></tr></tbody></table>
 
 <p>The two halves live and die together: break either and the player gets <strong>one</strong> door while the other half disappears. Mobs may path through the door only while it is open.</p>
+
+<p>is a leftover from the swinging version. A sliding door has no hinges and the flag changes nothing about how it looks in any position. It was kept on purpose: dropping it from the set would change the blockstates of doors already built in other people's worlds, and that is too high a price for retiring one unused flag.</p>
+
+<p>The leaf is drawn by a block renderer rather than by a baked model — a model that only has two poses cannot show the movement between them. The cost: the door has no ambient occlusion, and no crack overlay is drawn while it is being mined.</p>
 
 <p>The door carries like the rest of the shell — the controller writes it into every cell of a finished room (see <a href="reactor_casing.html">"The seamless look"</a>). Unlike casing and glass, it does not change how the door looks: the leaf has no seamless texture of its own. The property exists for uniformity — neither the scan nor the flag sweep should have to know which shell block happens to have a cosmetic variant.</p>
 

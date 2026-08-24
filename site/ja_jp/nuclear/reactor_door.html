@@ -360,7 +360,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="10 ページ">10</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="11 ページ">11</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>原子力</span><span class="cat-count" aria-label="12 ページ">12</span></a>
@@ -410,9 +410,19 @@
 
 <p>ドアは、隣で信号がすでに出ていても<strong>必ず閉じた状態で</strong>設置されます。そうでなければ、新しいドアは 置いた瞬間から開いていて、建てているその場でシェルが密閉されていないことになります。</p>
 
-<p>音はバニラの鉄のドアの開閉音です。</p>
+<p>音はバニラの鉄のドアのものではなく、このエアロック専用です——下の「音」の節を参照。</p>
 
 <p><strong>内側からパルスを送る手段。</strong> 外側ならボタンでもレバーでも感圧板でも構いません。密閉された部屋の 内側では、信号源も同じく密閉されたものが必要です。そのためドアと同時に <a href="reactor_button.html">原子炉ボタン</a>が用意されました。同じ遮蔽合金でできており、押されて いる時間は 20 ティック（1 秒）——開いている時間のちょうど半分なので、パルスは必ず開放の窓に収まり ます。バニラのボタンでも動きますが、あちらは木か石です。壁に貼ったボタンはシェルのマスを占めず、 密閉も損ないません。</p>
+
+<h2 id="どう動くのか">どう動くのか</h2>
+
+<p>このドアは回りません。扉は<strong>床の中へ沈み</strong>、閉じるときにまた上がってきます——エアロックの隔壁と 同じ動きです。片道にかかるのは （既定で <strong>8 tick ≒ 0.4 秒</strong>）。開いている 時間の 5 分の 1 です。動きが機械として読み取れるだけの長さがあり、そのために用意された 2 秒を 食いつぶさない長さでもあります。扉は滑らかに動きだし、滑らかに止まります。両端でがくつきません。</p>
+
+<p>このために部屋の下へ空間を用意する必要はありません。扉は通路の内側にしか描かれず、沈むにつれて そのまま見えなくなるだけです。隠す場所は要りませんし、その必要もありません——ドアの下のマスには 何が置かれていても構わないからです。</p>
+
+<p>扉の移動は<strong>見た目だけ</strong>の値です。「開いている」状態はこれまでどおり 1 tick で切り替わり、通行の 可否も、Mob の経路探索も、放射線の判定も、それと同時に切り替わります。つまりドアは扉が<strong>動きだした 瞬間</strong>に通り抜けられるようになり、下まで到着したときではありません。「もう通れる」と「もう退いた」 のあいだにある 0.4 秒のずれは、レッドストーンの取り決めをまったく元のままに保つための代償です。</p>
+
+<p>開いたドアは通路に<strong>何も残しません</strong>。そのあいだ当たり判定そのものが存在しないからです。ここから 2 つの結果が出てきます。役に立つほう——開いた通路は放射線を外へ正直に漏らします（判定は当たり判定 にぶつかって止まるもので、いまそれが無いからです）。不便なほう——開いているあいだドアはクリック できず、壊すこともできません。2 秒後に閉まれば、また狙える対象に戻ります。</p>
 
 <h2 id="通路-ドアが入口とみなされる条件">通路: ドアが入口とみなされる条件</h2>
 
@@ -430,9 +440,13 @@
 
 <h2 id="ブロックの性質">ブロックの性質</h2>
 
-<table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>形状</td><td>厚さ 3/16 ブロック、マスの高さと幅いっぱいの扉。開くと蝶番を軸に 90° 回る</td></tr><tr><td>サイズ</td><td>1×2（上下の半分はひとつの物体）</td></tr><tr><td>遮蔽</td><td>完全な立方体ではない</td></tr><tr><td>硬さ</td><td>5.0</td></tr><tr><td>爆発耐性</td><td>30.0</td></tr><tr><td>道具</td><td>ツルハシ（ドロップに必須）</td></tr><tr><td>音</td><td>金属</td></tr><tr><td>ピストンへの反応</td><td>破壊される</td></tr></tbody></table>
+<table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>形状</td><td>厚さ 3/16 ブロック、マスの高さと幅いっぱいの扉。開いているあいだは形状そのものが無い</td></tr><tr><td>サイズ</td><td>1×2（上下の半分はひとつの物体）</td></tr><tr><td>遮蔽</td><td>完全な立方体ではない</td></tr><tr><td>硬さ</td><td>5.0</td></tr><tr><td>爆発耐性</td><td>30.0</td></tr><tr><td>道具</td><td>ツルハシ（ドロップに必須）</td></tr><tr><td>音</td><td>金属</td></tr><tr><td>ピストンへの反応</td><td>破壊される</td></tr></tbody></table>
 
 <p>上下の半分は運命を共にします。どちらを壊してもプレイヤーが得るのはドア<strong>1 枚</strong>で、もう半分は消え ます。Mob の経路探索がここを通れるのは、開いているときだけです。</p>
+
+<p>「蝶番」の状態は、回るドアだった頃の名残です。スライド式のドアに蝶番はなく、このフラグはどの位置 でも見た目を変えません。あえて残してあります。状態の集合から外すということは、他の人のワールドに すでに建っているドアの状態の集合を変えるということで、使われていないフラグ 1 つを引退させるには 高すぎる代償だからです。</p>
+
+<p>扉を描いているのは焼き込まれたモデルではなく、ブロックのレンダラーです。姿勢を 2 つしか持たない モデルには、その 2 つのあいだの動きは表せません。その代償として、このドアには環境遮蔽がかからず、 壊している最中のひび割れも描かれません。</p>
 
 <p>「成形済み」のフラグは、シェルの他の部分と同じようにドアも持ちます——制御装置は組み上がった部屋の すべてのマスにそれを書き込みます（<a href="reactor_casing.html">継ぎ目のない見た目</a>を参照）。ただし ケースやガラスと違い、いまのところドアの見た目は変わりません。扉に専用の継ぎ目なしテクスチャが ないからです。</p>
 
