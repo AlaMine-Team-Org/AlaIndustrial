@@ -168,7 +168,8 @@ public class DistillationColumnBlockEntity extends MachineBlockEntity implements
 	 */
 	private static boolean isFeedstock(FluidHolder fluid) {
 		return !fluid.isEmpty()
-				&& (fluid.fluid().is(ModTags.Fluids.C_OIL) || fluid.fluid().is(ModTags.Fluids.C_FUEL_OIL))
+				&& (fluid.fluid().defaultFluidState().is(ModTags.Fluids.C_OIL)
+						|| fluid.fluid().defaultFluidState().is(ModTags.Fluids.C_FUEL_OIL))
 				&& PolymerizingRecipe.isSourceFluid(fluid.fluid());
 	}
 
@@ -572,7 +573,13 @@ public class DistillationColumnBlockEntity extends MachineBlockEntity implements
 		if (tank.fluid.isEmpty() || tank.amount <= 0) {
 			return Optional.empty();
 		}
-		return Optional.of(new FluidTankContents(tank.fluid.fluid().builtInRegistryHolder(), tank.amount));
+		// MOD-498 — wrapAsHolder, not the deprecated intrusive Fluid#builtInRegistryHolder(). For a
+		// registered fluid it returns that very Holder.Reference, and FluidTankContents only declares
+		// Holder<Fluid>, so nothing here needed the Holder.Reference subtype the deprecated getter returns.
+		// Precondition: the fluid is REGISTERED — for an unregistered one wrapAsHolder yields Holder.direct,
+		// which the component codec rejects. A live tank only ever holds registered fluids.
+		return Optional.of(new FluidTankContents(
+				BuiltInRegistries.FLUID.wrapAsHolder(tank.fluid.fluid()), tank.amount));
 	}
 
 	private static void applyStored(FluidTank tank, Optional<FluidTankContents> stored) {

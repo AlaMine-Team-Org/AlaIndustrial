@@ -116,13 +116,15 @@ final class CapsuleInteractions {
 
 	static void playFill(Level level, Player player, BlockPos pos, Fluid fluid) {
 		SoundEvent sound = fluid.getPickupSound()
-				.orElse(fluid.is(FluidTags.LAVA) ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_FILL);
+				.orElse(fluid.defaultFluidState().is(FluidTags.LAVA)
+						? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_FILL);
 		level.playSound(player, pos, sound, SoundSource.BLOCKS, 1.0F, 1.0F);
 		level.gameEvent(player, GameEvent.FLUID_PICKUP, pos);
 	}
 
 	static void playEmpty(Level level, Player player, BlockPos pos, Fluid fluid) {
-		SoundEvent sound = fluid.is(FluidTags.LAVA) ? SoundEvents.BUCKET_EMPTY_LAVA : SoundEvents.BUCKET_EMPTY;
+		SoundEvent sound = fluid.defaultFluidState().is(FluidTags.LAVA)
+				? SoundEvents.BUCKET_EMPTY_LAVA : SoundEvents.BUCKET_EMPTY;
 		level.playSound(player, pos, sound, SoundSource.BLOCKS, 1.0F, 1.0F);
 		level.gameEvent(player, GameEvent.FLUID_PLACE, pos);
 	}

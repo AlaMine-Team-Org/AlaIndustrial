@@ -57,6 +57,12 @@ final class RtpTerrain implements RtpSiteFinder.Terrain {
 	 * occupy must be clear of both blocks and fluid, and a short list of surfaces that would hurt on
 	 * arrival is refused outright.
 	 */
+	// MOD-498 — BlockStateBase#blocksMotion() is a soft-deprecated legacy solidity heuristic (it defers to
+	// the equally deprecated isSolid(), backed by the legacySolid field, with hardcoded cobweb and
+	// bamboo-sapling exceptions). Nothing models it: getCollisionShape / isCollisionShapeFullBlock answer
+	// a different question. Vanilla itself reads it from non-deprecated code — Heightmap.MOTION_BLOCKING
+	// and the default isSuffocating predicate — and "can the player stand on this" is exactly that notion.
+	@SuppressWarnings("deprecation")
 	@Override
 	public int safeFeetY(int x, int z) {
 		BlockPos column = new BlockPos(x, level.getSeaLevel(), z);
@@ -84,6 +90,11 @@ final class RtpTerrain implements RtpSiteFinder.Terrain {
 	}
 
 	/** Room for the player: no block in the way and no fluid to arrive inside of. */
+	// MOD-498 — the negative half of the same legacy solidity heuristic used in safeFeetY above:
+	// blocksMotion() is soft-deprecated with no modelled replacement, and vanilla still reads it from
+	// non-deprecated code (Heightmap.MOTION_BLOCKING). It has to be the SAME predicate as the ground
+	// check, or a cell could count as both solid footing and free headroom.
+	@SuppressWarnings("deprecation")
 	private boolean isClear(BlockPos pos) {
 		BlockState state = level.getBlockState(pos);
 		return !state.blocksMotion() && state.getFluidState().isEmpty()

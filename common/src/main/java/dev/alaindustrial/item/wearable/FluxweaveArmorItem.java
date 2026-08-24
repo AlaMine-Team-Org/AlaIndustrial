@@ -341,6 +341,11 @@ public class FluxweaveArmorItem extends Item {
 	 * <p>The assist state is shown only on the trousers that actually carry the flag; repeating it on
 	 * all four pieces would suggest each has its own switch.
 	 */
+	// MOD-498 — Item#appendHoverText is soft-deprecated by vanilla but is the ONLY hook an item has for
+	// its own tooltip lines: ItemStack#addDetailsToTooltip calls it, and vanilla itself overrides it in
+	// DiscFragmentItem, HangingEntityItem and SmithingTemplateItem. Data-component TooltipProviders cover
+	// data-driven components, not text computed per item from the live charge and the armour slot.
+	@SuppressWarnings("deprecation")
 	@Override
 	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
 			Consumer<Component> adder, TooltipFlag flag) {

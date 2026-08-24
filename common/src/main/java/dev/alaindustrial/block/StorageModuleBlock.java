@@ -13,7 +13,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.PipeBlock;
@@ -155,7 +154,7 @@ public class StorageModuleBlock extends AbstractMachineBlock {
 	 * <p>{@code pos} counts as a module whether or not one stands there yet, so this answers both for
 	 * a module being placed and for one already in the world.
 	 */
-	public static BlockState joined(LevelReader level, BlockPos pos, BlockState state) {
+	public static BlockState joined(Level level, BlockPos pos, BlockState state) {
 		boolean oneWarehouse = groupSize(level, pos) <= StorageCluster.MAX_MODULES;
 		for (Map.Entry<Direction, BooleanProperty> entry : PipeBlock.PROPERTY_BY_DIRECTION.entrySet()) {
 			boolean joined = oneWarehouse && isModule(level, pos.relative(entry.getKey()));
@@ -169,7 +168,7 @@ public class StorageModuleBlock extends AbstractMachineBlock {
 	 * past the cap — the caller only ever asks "does it still fit". {@code pos} itself is counted
 	 * without a block check, so a module about to be placed is included.
 	 */
-	public static int groupSize(LevelReader level, BlockPos pos) {
+	public static int groupSize(Level level, BlockPos pos) {
 		int limit = StorageCluster.MAX_MODULES + 1;
 		Set<BlockPos> seen = new HashSet<>();
 		List<BlockPos> frontier = new ArrayList<>();
@@ -234,7 +233,24 @@ public class StorageModuleBlock extends AbstractMachineBlock {
 	 * forced — the same rule {@link StorageCluster#of} follows, so the seams describe the warehouse
 	 * the player would actually get.
 	 */
-	private static boolean isModule(LevelReader level, BlockPos pos) {
-		return level.hasChunkAt(pos) && level.getBlockState(pos).getBlock() instanceof StorageModuleBlock;
+	// MOD-498 — Level#isLoaded, not the deprecated LevelReader#hasChunkAt. The whole hasChunk* family is
+	// deprecated on LevelReader with nothing to replace it there, so the three helpers above take a Level
+	// instead: both entry points already had one (getStateForPlacement passes UseOnContext#getLevel, and
+	// reseat a ServerLevel) and nothing outside this file calls them.
+	//
+	// The two are not the same predicate, and the difference is worth knowing rather than glossing:
+	// on a server level both end at ServerChunkCache#hasChunk and isLoaded merely adds an
+	// isInValidBounds guard, but ClientLevel OVERRIDES hasChunk to return true unconditionally, so on
+	// the client the old guard was inert and the answer came entirely from the state read below.
+	// They can therefore disagree in exactly two position classes, and in both the old code reached
+	// the same verdict through getBlockState rather than through the guard:
+	//   * outside isInValidBounds (past build height, or a chunk coord ChunkPos.isValid rejects) —
+	//     Level#getBlockState short-circuits there and answers VOID_AIR;
+	//   * on the client, a chunk that is not loaded — ClientChunkCache hands back the empty chunk,
+	//     whose getBlockState is VOID_AIR.
+	// Either way the instanceof below rejects it, so isModule cannot change answer. What changes is
+	// that the guard now does real work on the client instead of deferring to the state read.
+	private static boolean isModule(Level level, BlockPos pos) {
+		return level.isLoaded(pos) && level.getBlockState(pos).getBlock() instanceof StorageModuleBlock;
 	}
 }

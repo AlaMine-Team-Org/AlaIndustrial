@@ -72,6 +72,7 @@ public final class ModCreativeTabEventsNeoForge {
 			event.accept(ModContent.ELECTRIC_CHAINSAW.get());
 			event.accept(ModContent.ELECTRIC_CHAINSAW_DIAMOND_TIP.get());
 			event.accept(ModContent.ELECTRIC_SHOVEL.get());
+			event.accept(ModContent.ELECTRIC_SHOVEL_DIAMOND_TIP.get());
 			event.accept(ModContent.ELECTRIC_HOE.get());
 			event.accept(ModContent.ELECTRIC_HOE_DIAMOND_TIP.get());
 			event.accept(ModContent.ELECTROMAGNET.get());

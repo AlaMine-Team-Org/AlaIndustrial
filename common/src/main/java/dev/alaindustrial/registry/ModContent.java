@@ -414,6 +414,9 @@ public final class ModContent {
 	public static Supplier<Item> ELECTRIC_CHAINSAW_DIAMOND_TIP = unbound("ELECTRIC_CHAINSAW_DIAMOND_TIP");
 	// Electric Shovel (MOD-338) — the earth-side member of the same line: an EU shovel for loose ground.
 	public static Supplier<Item> ELECTRIC_SHOVEL = unbound("ELECTRIC_SHOVEL");
+	// Diamond-Tipped Electric Shovel (MOD-481) — the shovel's upgrade tier: faster, and its drops switch
+	// between normal and Silk Touch on the fly. Shares the base shovel's EU buffer and charging behaviour.
+	public static Supplier<Item> ELECTRIC_SHOVEL_DIAMOND_TIP = unbound("ELECTRIC_SHOVEL_DIAMOND_TIP");
 	// Electric Hoe (MOD-342) — the farming member of the same line: an EU hoe that tills for free.
 	public static Supplier<Item> ELECTRIC_HOE = unbound("ELECTRIC_HOE");
 	// Diamond-Tipped Electric Hoe (MOD-378) — the hoe's upgrade tier: faster, and every plot it tills

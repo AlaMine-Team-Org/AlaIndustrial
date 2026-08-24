@@ -383,6 +383,12 @@ public final class OreScenarios {
 	 * @implements TC-ORE-001-PHY04
 	 * @covers R-PHY-06
 	 */
+	// MOD-498 — BlockStateBase#ignitedByLava() is deprecated by NeoForge only; vanilla does not mark it.
+	// The replacement it names, IBlockStateExtension#ignitedByLava(BlockGetter, BlockPos, Direction), is
+	// NeoForge-only API and is absent from the vanilla classes this shared scenario is compiled against
+	// for the Fabric lane. The flag is a plain BLOCK_PROPS value here, so the position-aware overload
+	// could not give a different answer anyway.
+	@SuppressWarnings("deprecation")
 	public static void tcOre001Phy04_nonFlammable(GameTestHelper helper) {
 		for (Block ore : ores()) {
 			BlockState state = ore.defaultBlockState();

@@ -60,6 +60,13 @@ final class AlaProcessingJeiCategory implements IRecipeCategory<RecipeHolder<Ala
 		return icon;
 	}
 
+	// MOD-498 — Ingredient#items() is a VANILLA soft deprecation (not a NeoForge one), kept deliberately.
+	// NeoForge does add a non-deprecated `HolderSet<Item> getValues()`, but it throws
+	// IllegalStateException for an ICustomIngredient, where items() resolves one through
+	// updateCustomIngredientValues(); a recipe viewer walks EVERY recipe in the pack, so that swap turns
+	// one modpack ingredient into a crash. Vanilla's display() route is no better here: it yields count-1
+	// stacks, and the slot below carries the recipe's own count.
+	@SuppressWarnings("deprecation")
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<AlaProcessingRecipe> holder, IFocusGroup focuses) {
 		AlaProcessingRecipe recipe = holder.value();

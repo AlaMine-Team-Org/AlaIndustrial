@@ -41,6 +41,14 @@ public class ReiFluidEntryRenderer implements EntryRenderer<FluidStack> {
 		this.delegate = delegate;
 	}
 
+	// MOD-498 — REI deprecated the whole EntryStack.Settings mechanism, and FLUID_RENDER_RATIO exists
+	// nowhere else: `setting`/`get`/`removeSetting` all still take a `Settings<R>`, and REI 26.2.820
+	// ships no successor API (checked against RoughlyEnoughItems-api-fabric-26.2.820.jar). So there is
+	// nothing to migrate to — the alternative would be dropping the clamp below, i.e. ignoring a
+	// foreign plugin that sets the ratio. Kept, and flagged: unlike Mojang's soft markers, a
+	// deprecated third-party API really does get deleted, so this is the line to revisit when REI
+	// names a replacement or removes Settings.
+	@SuppressWarnings("deprecation")
 	@Override
 	public void render(EntryStack<FluidStack> entry, GuiGraphics graphics, Rectangle bounds, int mouseX,
 			int mouseY, float delta) {

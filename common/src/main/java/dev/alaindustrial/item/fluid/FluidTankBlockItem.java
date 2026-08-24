@@ -15,6 +15,11 @@ public final class FluidTankBlockItem extends BlockItem {
 		super(block, properties);
 	}
 
+	// MOD-498 — soft-deprecated by vanilla, but still the only hook an item has for tooltip lines it
+	// computes itself: ItemStack#addDetailsToTooltip calls it, and vanilla overrides it in DiscFragmentItem,
+	// HangingEntityItem and SmithingTemplateItem. A data-component TooltipProvider covers data-driven
+	// components, not text derived per stack like the carried fluid and its amount below.
+	@SuppressWarnings("deprecation")
 	@Override
 	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
 			Consumer<Component> adder, TooltipFlag flag) {

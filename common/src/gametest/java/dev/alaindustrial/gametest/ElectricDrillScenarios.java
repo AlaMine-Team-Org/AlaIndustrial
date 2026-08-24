@@ -739,6 +739,10 @@ public final class ElectricDrillScenarios {
 		}
 	}
 
+	// MOD-498 — Enchantment#canEnchant is deprecated by NeoForge only (vanilla does not mark it); the
+	// replacement it names, ItemStack#supportsEnchantment(Holder), is NeoForge-only API and does not
+	// exist in the vanilla classes this shared scenario is also compiled against for Fabric.
+	@SuppressWarnings("deprecation")
 	private static void assertCanEnchant(GameTestHelper helper, Holder<Enchantment> enchantment, ItemStack stack, String name) {
 		if (!enchantment.value().canEnchant(stack)) {
 			helper.fail(name + " rejected electric_drill — not in the enchantment's supported_items");

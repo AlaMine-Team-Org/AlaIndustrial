@@ -51,6 +51,11 @@ public class DurableComponentItem extends Item {
 		}
 	}
 
+	// MOD-498 — Item#appendHoverText is soft-deprecated by vanilla but is the ONLY hook an item has for
+	// its own tooltip lines: ItemStack#addDetailsToTooltip calls it, and vanilla itself overrides it in
+	// DiscFragmentItem, HangingEntityItem and SmithingTemplateItem. Data-component TooltipProviders cover
+	// data-driven components, not a line computed per item like this repair counter.
+	@SuppressWarnings("deprecation")
 	@Override
 	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
 			Consumer<Component> adder, TooltipFlag flag) {

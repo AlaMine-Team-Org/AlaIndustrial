@@ -133,7 +133,16 @@ public class ElectricSaberItem extends Item {
 		return props.stacksTo(1)
 				.component(DataComponents.TOOL, new Tool(
 						List.of(
-								Tool.Rule.minesAndDrops(HolderSet.direct(Blocks.COBWEB.builtInRegistryHolder()), 15.0f),
+								// MOD-498 — wrapAsHolder, not the deprecated intrusive Blocks.COBWEB
+							// .builtInRegistryHolder(). Same holder, and it is the route vanilla's own
+							// Block#toString takes; HolderSet.direct takes Holder<Block>, so nothing here
+							// needed the Holder.Reference subtype the deprecated getter returns.
+							// This is the one site that runs at REGISTRATION time, so the precondition is worth
+							// naming: wrapAsHolder yields Holder.direct for a value not yet in the registry, and a
+							// direct holder matches no tag — a silent empty Tool.Rule. Safe here because reading
+							// Blocks.COBWEB forces Blocks.<clinit>, which registers it before the field is non-null.
+							Tool.Rule.minesAndDrops(
+									HolderSet.direct(BuiltInRegistries.BLOCK.wrapAsHolder(Blocks.COBWEB)), 15.0f),
 								Tool.Rule.overrideSpeed(blocks.getOrThrow(BlockTags.SWORD_INSTANTLY_MINES), Float.MAX_VALUE),
 								Tool.Rule.overrideSpeed(blocks.getOrThrow(BlockTags.SWORD_EFFICIENT), 1.5f)),
 						1.0f, /*damagePerBlock*/ 0, /*canDestroyBlocksInCreative*/ false))

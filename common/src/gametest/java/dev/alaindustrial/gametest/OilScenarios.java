@@ -112,7 +112,14 @@ public final class OilScenarios {
 		Player player = helper.makeMockPlayer(GameType.SURVIVAL);
 
 		BucketItem bucket = (BucketItem) ModContent.OIL_BUCKET.get();
-		if (!bucket.emptyContents(player, level, abs, null)) {
+		// MOD-498 — the 4-argument BucketItem#emptyContents is NOT deprecated by vanilla; NeoForge's patch
+		// deprecates it in favour of "the ItemStack sensitive version", a 5-argument overload taking the
+		// container stack that vanilla does not declare at all. This scenario lives in shared gametest code
+		// compiled for Fabric too, so only the 4-argument form exists on both loaders — and the test places
+		// straight from the item with no container stack to pass, which is what the extra argument is for.
+		@SuppressWarnings("deprecation")
+		boolean poured = bucket.emptyContents(player, level, abs, null);
+		if (!poured) {
 			helper.fail("oil bucket emptyContents refused to place into an empty basin cell");
 			return;
 		}

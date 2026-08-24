@@ -8,6 +8,8 @@ import dev.alaindustrial.item.tool.ElectricDrillItem;
 import dev.alaindustrial.item.tool.ElectricHoeDiamondTipItem;
 import dev.alaindustrial.item.tool.neoforge.ElectricHoeDiamondTipItemNeoForge;
 import dev.alaindustrial.item.tool.neoforge.ElectricHoeItemNeoForge;
+import dev.alaindustrial.item.tool.ElectricShovelDiamondTipItem;
+import dev.alaindustrial.item.tool.neoforge.ElectricShovelDiamondTipItemNeoForge;
 import dev.alaindustrial.item.tool.ElectricHoeItem;
 import dev.alaindustrial.item.tool.ElectricSaberItem;
 import dev.alaindustrial.item.tool.ElectricShovelItem;
@@ -322,6 +324,13 @@ public final class ModItemsNeoForge {
 	public static final DeferredItem<ElectricShovelItemNeoForge> ELECTRIC_SHOVEL =
 			ITEMS.registerItem("electric_shovel", ElectricShovelItemNeoForge::new,
 					ElectricShovelItem::electricShovelProperties);
+	// Diamond-Tipped Electric Shovel (MOD-481): the shovel's upgrade tier — faster, and its drops switch
+	// between normal and Silk Touch on the fly. Registered as its own NeoForge subclass for exactly the
+	// reason the base shovel is: the upgrade extends the COMMON class, so it inherits none of the
+	// SHOVEL_FLATTEN/SHOVEL_DOUSE declaration above and would make no dirt paths without its own.
+	public static final DeferredItem<ElectricShovelDiamondTipItemNeoForge> ELECTRIC_SHOVEL_DIAMOND_TIP =
+			ITEMS.registerItem("electric_shovel_diamond_tip", ElectricShovelDiamondTipItemNeoForge::new,
+					ElectricShovelDiamondTipItem::electricShovelDiamondTipProperties);
 	// Electric Hoe (MOD-342): the farming member of the same line — an EU hoe that tills for free.
 	// MOD-378: both hoes are registered as their NeoForge subclasses, which exist only to declare the
 	// HOE_TILL item ability. Without it NeoForge's patched HoeItem.useOn refuses to till at all — a
@@ -748,6 +757,7 @@ public final class ModItemsNeoForge {
 		ModContent.ELECTRIC_CHAINSAW = ELECTRIC_CHAINSAW::get;
 		ModContent.ELECTRIC_CHAINSAW_DIAMOND_TIP = ELECTRIC_CHAINSAW_DIAMOND_TIP::get;
 		ModContent.ELECTRIC_SHOVEL = ELECTRIC_SHOVEL::get;
+		ModContent.ELECTRIC_SHOVEL_DIAMOND_TIP = ELECTRIC_SHOVEL_DIAMOND_TIP::get;
 		ModContent.ELECTRIC_HOE = ELECTRIC_HOE::get;
 		ModContent.ELECTRIC_HOE_DIAMOND_TIP = ELECTRIC_HOE_DIAMOND_TIP::get;
 		ModContent.ELECTRIC_SABER = ELECTRIC_SABER::get;

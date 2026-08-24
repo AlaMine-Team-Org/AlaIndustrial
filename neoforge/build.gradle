@@ -95,6 +95,9 @@ dependencies {
     testImplementation "net.neoforged:testframework:${neoforge_version}"
     testImplementation "org.junit.jupiter:junit-jupiter:${junit_version}"
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    // MOD-497 — the backend-agnostic rendering rule needs a bytecode reader in THIS module too:
+    // ArchUnit only sees the classpath it runs on, and :common's has no NeoForge output.
+    testImplementation libs.archunit.core
 }
 
 test {

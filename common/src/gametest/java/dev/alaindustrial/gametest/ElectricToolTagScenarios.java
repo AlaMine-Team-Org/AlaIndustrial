@@ -234,6 +234,11 @@ public final class ElectricToolTagScenarios {
 	}
 
 	/** Assert {@code enchantment} accepts {@code stack}; fail with a readable message otherwise. */
+	// MOD-498 — Enchantment#canEnchant is deprecated by NeoForge only, not by vanilla. Its replacement,
+	// ItemStack#supportsEnchantment(Holder), is added by the NeoForge patch and does not exist in the
+	// vanilla class this shared scenario is also compiled against for Fabric, so the vanilla method is
+	// the only call that works on both loaders.
+	@SuppressWarnings("deprecation")
 	private static void assertCanEnchant(GameTestHelper helper, Holder<Enchantment> enchantment, ItemStack stack,
 			String enchName, String itemName) {
 		if (!enchantment.value().canEnchant(stack)) {
@@ -244,6 +249,10 @@ public final class ElectricToolTagScenarios {
 	}
 
 	/** Assert {@code enchantment} rejects {@code stack} — the negative half, guarding an over-broad tag. */
+	// MOD-498 — same as the positive half above: NeoForge deprecates canEnchant in favour of its own
+	// ItemStack#supportsEnchantment(Holder), which vanilla has no equivalent of, and this body is
+	// compiled for Fabric too.
+	@SuppressWarnings("deprecation")
 	private static void assertCannotEnchant(GameTestHelper helper, Holder<Enchantment> enchantment, ItemStack stack,
 			String enchName, String itemName, String why) {
 		if (enchantment.value().canEnchant(stack)) {

@@ -14,6 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
@@ -83,8 +84,10 @@ public final class FluidTankScenarios {
 
 	public static void tcFluidTank001Dat01_contentsCodecRoundTrips(GameTestHelper helper) {
 		for (var fluid : new net.minecraft.world.level.material.Fluid[] {Fluids.WATER, Fluids.LAVA}) {
+			// MOD-498 — wrapAsHolder rather than the deprecated Fluid#builtInRegistryHolder(); for a
+			// registered fluid (which both of these are) it is the same Holder.Reference.
 			FluidTankContents original = new FluidTankContents(
-					fluid.builtInRegistryHolder(), FluidAmounts.BUCKET * 3);
+					BuiltInRegistries.FLUID.wrapAsHolder(fluid), FluidAmounts.BUCKET * 3);
 			Tag encoded = FluidTankContents.CODEC.encodeStart(NbtOps.INSTANCE, original)
 					.getOrThrow(message -> new IllegalStateException("encode failed: " + message));
 			FluidTankContents decoded = FluidTankContents.CODEC.parse(NbtOps.INSTANCE, encoded)
@@ -155,7 +158,9 @@ public final class FluidTankScenarios {
 		FluidTankBlockEntity original = place(helper);
 		DataComponentMap overCapacity = DataComponentMap.builder()
 				.set(ModDataComponents.FLUID_TANK_CONTENTS.get(),
-						new FluidTankContents(Fluids.WATER.builtInRegistryHolder(), Config.fluidTankCapacity + 50_000L))
+						// MOD-498 — wrapAsHolder, same Holder.Reference for a registered fluid.
+						new FluidTankContents(BuiltInRegistries.FLUID.wrapAsHolder(Fluids.WATER),
+								Config.fluidTankCapacity + 50_000L))
 				.set(DataComponents.MAX_STACK_SIZE, 1)
 				.build();
 		FluidTankBlockEntity restored = new FluidTankBlockEntity(original.getBlockPos(), original.getBlockState());

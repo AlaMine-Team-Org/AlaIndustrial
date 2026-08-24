@@ -27,6 +27,12 @@ public final class EnrichedUraniumTorchScenarios {
 	 * on purpose to avoid behavioural surprises; the "enriched" identity is the green flame + particles +
 	 * underwater burning, not extra light). A pure state query — no world interaction beyond the harness.
 	 */
+	// MOD-498 — BlockStateBase#getLightEmission() is NOT deprecated by vanilla; only NeoForge's patch
+	// deprecates it, in favour of IBlockStateExtension#getLightEmission(BlockGetter, BlockPos), which is
+	// NeoForge-only API and does not exist on the Fabric side this shared source set also compiles for.
+	// The assertion is a pure state query with no world position to hand anyway — it checks the value
+	// baked into the block's Properties, which is precisely what the no-arg form returns.
+	@SuppressWarnings("deprecation")
 	public static void torchesEmitVanillaTorchLight(GameTestHelper helper) {
 		int standing = ModContent.ENRICHED_URANIUM_TORCH.get().defaultBlockState().getLightEmission();
 		int wall = ModContent.ENRICHED_URANIUM_WALL_TORCH.get().defaultBlockState().getLightEmission();

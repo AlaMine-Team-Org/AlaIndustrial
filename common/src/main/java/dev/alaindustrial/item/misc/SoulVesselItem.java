@@ -58,6 +58,11 @@ public class SoulVesselItem extends Item {
 
 	// --- tooltip: flavor, the counter, and the two jump thresholds ---
 
+	// MOD-498 — Item#appendHoverText carries a vanilla soft-deprecation marker but is still the only hook
+	// an item has for its own tooltip lines: ItemStack#addDetailsToTooltip calls it, and vanilla itself
+	// overrides it (DiscFragmentItem, HangingEntityItem, SmithingTemplateItem). A data-component
+	// TooltipProvider could not produce these lines — they mix the stack's soul count with Config values.
+	@SuppressWarnings("deprecation")
 	@Override
 	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
 			Consumer<Component> adder, TooltipFlag flag) {

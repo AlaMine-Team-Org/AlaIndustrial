@@ -16,6 +16,7 @@ import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.neoforged.neoforge.network.connection.ConnectionType;
 import net.neoforged.testframework.junit.EphemeralTestServerProvider;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -83,7 +84,13 @@ class RecipeCodecTest {
 		assertEquals(recipe, AlaProcessingRecipe.mapCodec(ModRecipes.MACERATION).codec()
 				.parse(ops(server), encoded).getOrThrow());
 
-		RegistryFriendlyByteBuf buffer = new RegistryFriendlyByteBuf(Unpooled.buffer(), server.registryAccess());
+		// MOD-498 — NeoForge deprecated the two-argument constructor for this one ("use overload with
+		// ConnectionType context"). This lane is NeoForge-only, so unlike the shared code in common/ it
+		// can simply take the replacement. `OTHER` is what the deprecated constructor filled in, so the
+		// round trip below keeps behaving exactly as it did; `NEOFORGE` would be a different test, and
+		// widening what these codecs are exercised against is not this task's change to make.
+		RegistryFriendlyByteBuf buffer = new RegistryFriendlyByteBuf(Unpooled.buffer(),
+				server.registryAccess(), ConnectionType.OTHER);
 		AlaProcessingRecipe.streamCodec(ModRecipes.MACERATION).encode(buffer, recipe);
 		assertEquals(recipe, AlaProcessingRecipe.streamCodec(ModRecipes.MACERATION).decode(buffer));
 	}
@@ -141,7 +148,9 @@ class RecipeCodecTest {
 		assertEquals(recipe, FluidOutputRecipe.mapCodec(ModRecipes.DISTILLING).codec()
 				.parse(ops(server), encoded).getOrThrow());
 
-		RegistryFriendlyByteBuf buffer = new RegistryFriendlyByteBuf(Unpooled.buffer(), server.registryAccess());
+		// MOD-498 — ConnectionType overload, same reasoning as the maceration round trip above.
+		RegistryFriendlyByteBuf buffer = new RegistryFriendlyByteBuf(Unpooled.buffer(),
+				server.registryAccess(), ConnectionType.OTHER);
 		FluidOutputRecipe.streamCodec(ModRecipes.DISTILLING).encode(buffer, recipe);
 		assertEquals(recipe, FluidOutputRecipe.streamCodec(ModRecipes.DISTILLING).decode(buffer));
 	}

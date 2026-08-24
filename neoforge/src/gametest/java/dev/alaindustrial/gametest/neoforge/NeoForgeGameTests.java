@@ -966,6 +966,15 @@ public final class NeoForgeGameTests {
 		registerTest(event, "shovel_speed_and_drops", 40, true, ElectricShovelScenarios::fun09SpeedAndDrops);
 		registerTest(event, "shovel_charge_round_trip", 40, true, ElectricShovelScenarios::per01ChargeRoundTrip);
 
+		// MOD-481 (TC-SHOVEL-001-FUN10..13): the shovel's diamond-tipped upgrade digs faster at the same
+		// tier, switches its drops between normal and Silk Touch, keeps path-making on a plain click and
+		// yields the shift-click to the toggle. The base shovel has no such mode.
+		registerTest(event, "shovel_diamond_tip_speed_and_tier", 40, true, ElectricShovelScenarios::fun10DiamondTipSpeedAndTier);
+		registerTest(event, "shovel_diamond_tip_silk_toggle", 40, true, ElectricShovelScenarios::fun11DiamondTipSilkToggle);
+		registerTest(event, "shovel_diamond_tip_sneak_does_not_path", 40, true, ElectricShovelScenarios::fun12DiamondTipSneakDoesNotPath);
+		registerTest(event, "shovel_base_has_no_silk_mode", 40, true, ElectricShovelScenarios::fun13BaseShovelHasNoSilkMode);
+		registerTest(event, "shovel_diamond_tip_charge_in_battery_box", 80, true, ElectricShovelScenarios::fun14DiamondTipChargeInBatteryBox);
+
 		// MOD-132 Electromagnet (suite TC-MAGNET-001) — same neutral bodies as the Fabric MagnetGameTest.
 		registerTest(event, "magnet_pulls_nearby_drop", 40, true, MagnetScenarios::fun01PullsNearbyDrop);
 		registerTest(event, "magnet_flat_inert", 40, true, MagnetScenarios::fun02FlatMagnetInert);

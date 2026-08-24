@@ -9,6 +9,7 @@ import dev.alaindustrial.item.tool.ElectricDrillItem;
 import dev.alaindustrial.item.tool.ElectricHoeDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricHoeItem;
 import dev.alaindustrial.item.tool.ElectricSaberItem;
+import dev.alaindustrial.item.tool.ElectricShovelDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricShovelItem;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
 import dev.alaindustrial.item.wearable.FluxweaveArmorItem;
@@ -254,6 +255,10 @@ public final class ModItems {
 			electricChainsawDiamondTip("electric_chainsaw_diamond_tip");
 	// Electric Shovel (MOD-338): the earth-side member of the same line — an EU shovel for loose ground.
 	public static final Item ELECTRIC_SHOVEL = electricShovel("electric_shovel");
+	// Diamond-Tipped Electric Shovel (MOD-481): the shovel's upgrade tier — faster, and its drops switch
+	// between normal and Silk Touch on the fly.
+	public static final Item ELECTRIC_SHOVEL_DIAMOND_TIP =
+			electricShovelDiamondTip("electric_shovel_diamond_tip");
 	// Electric Hoe (MOD-342): the farming member of the same line — an EU hoe that tills for free.
 	public static final Item ELECTRIC_HOE = electricHoe("electric_hoe");
 	// Diamond-Tipped Electric Hoe (MOD-378): the hoe's upgrade tier — faster, and the plots it tills
@@ -567,6 +572,17 @@ public final class ModItems {
 						ElectricShovelItem.electricShovelProperties(new Item.Properties().setId(key))));
 	}
 
+	// Diamond-Tipped Electric Shovel (MOD-481). Same shape as the base shovel above, with its own
+	// properties factory (higher digging speed); the Silk Touch mode is behaviour in use(), not a
+	// property, and no separate energy wiring exists because ItemEnergy dispatches on the base class.
+	private static Item electricShovelDiamondTip(String path) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		return Registry.register(BuiltInRegistries.ITEM, key,
+				new ElectricShovelDiamondTipItem(
+						ElectricShovelDiamondTipItem.electricShovelDiamondTipProperties(
+								new Item.Properties().setId(key))));
+	}
+
 	// Electric Hoe (MOD-342). Same shape as the three above — a plain-Item subclass whose properties
 	// come from a common static factory (hand-built TOOL component + EU-item bar, no MAX_DAMAGE; see
 	// ElectricHoeItem.electricHoeProperties for why it is not a HoeItem).
@@ -837,6 +853,7 @@ public final class ModItems {
 					output.accept(ModContent.ELECTRIC_CHAINSAW.get());
 					output.accept(ModContent.ELECTRIC_CHAINSAW_DIAMOND_TIP.get());
 					output.accept(ModContent.ELECTRIC_SHOVEL.get());
+					output.accept(ModContent.ELECTRIC_SHOVEL_DIAMOND_TIP.get());
 					output.accept(ModContent.ELECTRIC_HOE.get());
 					output.accept(ModContent.ELECTRIC_HOE_DIAMOND_TIP.get());
 					output.accept(ModContent.ELECTROMAGNET.get());
@@ -947,6 +964,7 @@ public final class ModItems {
 		ModContent.ELECTRIC_CHAINSAW = () -> ELECTRIC_CHAINSAW;
 		ModContent.ELECTRIC_CHAINSAW_DIAMOND_TIP = () -> ELECTRIC_CHAINSAW_DIAMOND_TIP;
 		ModContent.ELECTRIC_SHOVEL = () -> ELECTRIC_SHOVEL;
+		ModContent.ELECTRIC_SHOVEL_DIAMOND_TIP = () -> ELECTRIC_SHOVEL_DIAMOND_TIP;
 		ModContent.ELECTRIC_HOE = () -> ELECTRIC_HOE;
 		ModContent.ELECTRIC_HOE_DIAMOND_TIP = () -> ELECTRIC_HOE_DIAMOND_TIP;
 		ModContent.ELECTRIC_SABER = () -> ELECTRIC_SABER;

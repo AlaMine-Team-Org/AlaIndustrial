@@ -32,6 +32,11 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityOilDrowningMixin {
 
+	// MOD-498 — Entity#isEyeInFluid(TagKey) is deprecated by NeoForge (use the FluidType overload), but the
+	// signature is not a choice here: it IS this @Redirect's target descriptor, because it is the call
+	// vanilla's LivingEntity#baseTick makes, and a redirect cannot target the NeoForge overload instead.
+	// The inner self.isEyeInFluid(tag) re-invokes the very call being redirected, so it matches by design.
+	@SuppressWarnings("deprecation")
 	@Redirect(method = "baseTick",
 			at = @At(value = "INVOKE",
 					target = "Lnet/minecraft/world/entity/LivingEntity;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z"))

@@ -46,12 +46,20 @@ public class GeneratorBlockEntity extends AbstractGeneratorBlockEntity implement
 		}
 		if (burnTime <= 0 && room) {
 			ItemStack fuel = items.get(FUEL_SLOT);
+			// MOD-498 — FuelValues#burnDuration(ItemStack) is deprecated by NeoForge only; vanilla does not
+			// deprecate it. The replacement NeoForge names, ItemStack#getBurnTime, is a NeoForge addition
+			// absent from vanilla, and this class is compiled for Fabric too, so it must use the vanilla form.
+			@SuppressWarnings("deprecation")
 			int duration = level.fuelValues().burnDuration(fuel);
 			if (duration > 0) {
 				burnTime = duration;
 				burnDuration = duration;
 				// Return the fuel's crafting remainder (e.g. empty bucket from a lava bucket).
 				// getCraftingRemainder() is null for fuels with no remainder (coal, planks, ...).
+				// MOD-498 — Item#getCraftingRemainder() is deprecated by NeoForge only, in favour of its own
+				// getCraftingRemainder(ItemStack) overload, which vanilla does not declare. This class is
+				// compiled for Fabric too, where the no-arg form is the only one that exists.
+				@SuppressWarnings("deprecation")
 				net.minecraft.world.item.ItemStackTemplate rem = fuel.getItem().getCraftingRemainder();
 				ItemStack remainder = rem == null ? ItemStack.EMPTY : rem.create();
 				fuel.shrink(1);
@@ -65,6 +73,10 @@ public class GeneratorBlockEntity extends AbstractGeneratorBlockEntity implement
 		return made;
 	}
 
+	// MOD-498 — FuelValues#burnDuration(ItemStack) is deprecated by NeoForge only (vanilla does not
+	// deprecate it); its replacement, ItemStack#getBurnTime, is a NeoForge extension that does not exist
+	// in vanilla, and this class is shared code compiled for Fabric as well.
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean canPlaceItem(int slot, ItemStack stack) {
 		if (slot != FUEL_SLOT) {

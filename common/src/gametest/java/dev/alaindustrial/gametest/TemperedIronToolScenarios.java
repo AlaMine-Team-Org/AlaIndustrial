@@ -91,7 +91,14 @@ public final class TemperedIronToolScenarios {
 		assertCanEnchant(helper, mending,   sword, "mending",   "tempered_iron_sword");
 
 		// Negative: a sword is NOT a mining tool — fortune must reject it (guards over-broad tags).
-		if (fortune.value().canEnchant(sword)) {
+		// MOD-498 — Enchantment#canEnchant(ItemStack) is NOT deprecated by vanilla; NeoForge's patch
+		// deprecates it in favour of ItemStack#supportsEnchantment(Holder), which vanilla does not declare,
+		// so it is unavailable in this shared gametest source set that also compiles for Fabric. This
+		// assertion deliberately probes the enchantment's own supported_items filter — the exact decision
+		// canEnchant answers.
+		@SuppressWarnings("deprecation")
+		boolean fortuneAccepted = fortune.value().canEnchant(sword);
+		if (fortuneAccepted) {
 			helper.fail("fortune accepted tempered_iron_sword — sword must not be in #minecraft:enchantable/mining");
 		}
 		helper.succeed();
@@ -107,6 +114,11 @@ public final class TemperedIronToolScenarios {
 	}
 
 	/** Assert {@code enchantment} accepts {@code stack}; fail with a readable message otherwise. */
+	// MOD-498 — same reason as enchantmentAccepted above: Enchantment#canEnchant(ItemStack) is a
+	// NeoForge-only deprecation (vanilla does not deprecate it) pointing at
+	// ItemStack#supportsEnchantment(Holder), which does not exist in vanilla and therefore not on the
+	// Fabric side this shared source set also compiles for.
+	@SuppressWarnings("deprecation")
 	private static void assertCanEnchant(GameTestHelper helper, Holder<Enchantment> enchantment, ItemStack stack,
 			String enchName, String itemName) {
 		if (!enchantment.value().canEnchant(stack)) {

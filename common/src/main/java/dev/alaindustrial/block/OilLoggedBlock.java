@@ -79,6 +79,11 @@ public interface OilLoggedBlock extends SimpleWaterloggedBlock {
 		return SimpleWaterloggedBlock.super.pickupBlock(user, level, pos, state);
 	}
 
+	// MOD-498 — BucketPickup#getPickupSound() is deprecated by NeoForge only; vanilla does not deprecate
+	// it. The replacement it names is IBucketPickupExtension#getPickupSound(BlockState), a NeoForge-only
+	// interface that Fabric does not have, and this block is shared common/ code. The vanilla method is
+	// also what the NeoForge variant delegates to by default, so overriding it stays correct on both.
+	@SuppressWarnings("deprecation")
 	@Override
 	default Optional<SoundEvent> getPickupSound() {
 		// Both fluids use the vanilla bucket-fill sound (see OilFluid#getPickupSound), so one answer

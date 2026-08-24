@@ -44,6 +44,11 @@ final class VanillaTillables extends HoeItem {
 	 * the {@code Consumer} half of the pair (the part that actually swaps the block and pops the hanging
 	 * root) is deliberately never touched.
 	 */
+	// MOD-498 — HoeItem.TILLABLES is deprecated by NeoForge ("patched out of vanilla code"), not by
+	// vanilla. Reading it is the whole point of this class: see the class javadoc, "Loader scope — this
+	// is the FABRIC answer". On NeoForge the map is genuinely dead, and ElectricHoeItemNeoForge
+	// overrides wouldTill with that loader's own probe instead of calling this.
+	@SuppressWarnings("deprecation")
 	static boolean wouldTill(UseOnContext context) {
 		Pair<Predicate<UseOnContext>, Consumer<UseOnContext>> entry =
 				TILLABLES.get(context.getLevel().getBlockState(context.getClickedPos()).getBlock());

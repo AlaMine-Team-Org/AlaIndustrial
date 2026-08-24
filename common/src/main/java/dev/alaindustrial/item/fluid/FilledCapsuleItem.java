@@ -108,7 +108,7 @@ public class FilledCapsuleItem extends Item {
 		if (!canPlaceFluidInsideBlock) {
 			return hit != null && emptyContents(fluid, player, level, hit.getBlockPos().relative(hit.getDirection()), null);
 		}
-		if (level.environmentAttributes().getValue(EnvironmentAttributes.WATER_EVAPORATES, pos) && fluid.is(FluidTags.WATER)) {
+		if (level.environmentAttributes().getValue(EnvironmentAttributes.WATER_EVAPORATES, pos) && fluid.defaultFluidState().is(FluidTags.WATER)) {
 			int x = pos.getX();
 			int y = pos.getY();
 			int z = pos.getZ();
@@ -126,7 +126,14 @@ public class FilledCapsuleItem extends Item {
 			CapsuleInteractions.playEmpty(level, player, pos, fluid);
 			return true;
 		}
-		if (!level.isClientSide() && mayReplace && !state.liquid()) {
+		// MOD-498 — BlockStateBase#liquid() is a vanilla soft deprecation with no replacement: it is the only
+		// way to ask "is this block state itself a liquid", and vanilla's own BucketItem.emptyContents makes
+		// the identical `mayReplace && !blockState.liquid()` check. This method is a faithful port of that
+		// one, so dropping the call would change behaviour rather than modernise it. Lifting it out of the
+		// && chain changes nothing: liquid() is a plain final-field read on an immutable BlockState.
+		@SuppressWarnings("deprecation")
+		boolean stateIsLiquid = state.liquid();
+		if (!level.isClientSide() && mayReplace && !stateIsLiquid) {
 			level.destroyBlock(pos, true);
 		}
 		if (!level.setBlock(pos, fluid.defaultFluidState().createLegacyBlock(), 11) && !state.getFluidState().isSource()) {
@@ -146,6 +153,11 @@ public class FilledCapsuleItem extends Item {
 				CapsuleInteractions.fluidDisplayName(fluid));
 	}
 
+	// MOD-498 — Item#appendHoverText carries a vanilla soft-deprecation marker but is still the only hook
+	// an item has for its own tooltip lines: ItemStack#addDetailsToTooltip calls it, and vanilla itself
+	// overrides it (DiscFragmentItem, HangingEntityItem, SmithingTemplateItem). Data-component
+	// TooltipProviders cover data-driven components, not a line computed by the item.
+	@SuppressWarnings("deprecation")
 	@Override
 	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
 			Consumer<Component> adder, TooltipFlag flag) {

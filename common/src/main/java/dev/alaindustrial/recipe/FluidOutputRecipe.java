@@ -9,6 +9,7 @@ import java.util.List;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryCodecs;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -74,7 +75,11 @@ public record FluidOutputRecipe(ModRecipes.FluidKind<FluidOutputRecipe> kind,
 	}
 
 	public boolean accepts(Fluid candidate) {
-		return fluid.contains(candidate.builtInRegistryHolder());
+		// MOD-498 — wrapAsHolder, not the deprecated Fluid#builtInRegistryHolder(): for a REGISTERED fluid
+		// it returns that very Holder.Reference, so this tag-backed HolderSet still matches by identity.
+		// Precondition matters — wrapAsHolder falls back to Holder.direct for an unregistered value, and a
+		// direct holder answers false to every tag test, silently. The deprecated getter could not.
+		return fluid.contains(BuiltInRegistries.FLUID.wrapAsHolder(candidate));
 	}
 
 	/** Accepted source fluids suitable for a tank or recipe viewer. */

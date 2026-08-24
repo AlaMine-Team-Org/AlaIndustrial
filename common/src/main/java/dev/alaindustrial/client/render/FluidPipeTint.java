@@ -50,6 +50,11 @@ public final class FluidPipeTint implements BlockTintSource {
 	}
 
 	/** The world-renderer colour for {@code fluid}, or untinted when it declares none. */
+	// MOD-498 — FluidModel#tintSource() is deprecated by NeoForge only, not by vanilla. Its replacement,
+	// fluidTintSource(), returns NeoForge's own FluidTintSource type, which does not exist on Fabric —
+	// and this class is shared common/ code compiled for both. The vanilla BlockTintSource getter is the
+	// only accessor available on both loaders.
+	@SuppressWarnings("deprecation")
 	private static int colorOf(Fluid fluid, BlockAndTintGetter level, BlockPos pos) {
 		var model = Minecraft.getInstance().getModelManager()
 				.getFluidStateModelSet().get(fluid.defaultFluidState());

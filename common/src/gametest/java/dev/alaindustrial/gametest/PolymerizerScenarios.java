@@ -253,7 +253,7 @@ public final class PolymerizerScenarios {
 			return;
 		}
 		// Sanity: the tag itself does accept it, so the guard above is the filter's doing, not a typo.
-		if (!ModContent.FLOWING_OIL.get().is(ModTags.Fluids.C_OIL)) {
+		if (!ModContent.FLOWING_OIL.get().defaultFluidState().is(ModTags.Fluids.C_OIL)) {
 			helper.fail("flowing oil is expected to carry the c:oil tag — this test guards the source-only "
 					+ "filter, and without the tag it would pass for the wrong reason");
 			return;

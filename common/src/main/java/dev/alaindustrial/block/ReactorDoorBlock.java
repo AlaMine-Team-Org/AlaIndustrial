@@ -319,6 +319,11 @@ public class ReactorDoorBlock extends Block implements EntityBlock {
 	}
 
 	/** Prevents the upper half from dropping a second door when the lower one is mined. */
+	// MOD-498 — Player#hasCorrectToolForDrops(BlockState) is deprecated by NeoForge only, in favour of its
+	// position-sensitive hasCorrectToolForDrops(state, level, pos). That overload does not exist in vanilla,
+	// so this shared code — compiled for Fabric as well — cannot call it. The reactor door does not vary its
+	// harvest rule by position, so the two forms cannot disagree here.
+	@SuppressWarnings("deprecation")
 	@Override
 	public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
 		if (!level.isClientSide() && (player.preventsBlockDrops() || !player.hasCorrectToolForDrops(state))
@@ -341,6 +346,11 @@ public class ReactorDoorBlock extends Block implements EntityBlock {
 		return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
 	}
 
+	// MOD-498 — BlockStateBase#rotate(Rotation) is deprecated by NeoForge in favour of
+	// BlockState#rotate(LevelAccessor, BlockPos, Rotation); that overload is a NeoForge extension and does
+	// not exist in vanilla, so this shared code — compiled for Fabric as well — cannot call it. Mirroring
+	// here is a pure state transform anyway: there is no level or position in hand to give it.
+	@SuppressWarnings("deprecation")
 	@Override
 	protected BlockState mirror(BlockState state, Mirror mirror) {
 		return mirror == Mirror.NONE

@@ -128,6 +128,11 @@ public class AssemblyBlueprintItem extends Item {
 	 * generic line only when there is genuinely nothing to name: a blueprint written before the result
 	 * was cached at all.
 	 */
+	// MOD-498 — Item#appendHoverText is soft-deprecated by Mojang ("internal"), but it is the only hook an
+	// item has for its own tooltip lines: ItemStack#addDetailsToTooltip calls it, and vanilla itself
+	// overrides it in DiscFragmentItem, HangingEntityItem and SmithingTemplateItem. Data-component
+	// TooltipProviders cover data-driven components, not text computed per stack like the recorded result.
+	@SuppressWarnings("deprecation")
 	@Override
 	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
 			Consumer<Component> adder, TooltipFlag flag) {

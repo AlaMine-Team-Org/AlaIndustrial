@@ -50,6 +50,13 @@ public class AlloyingDisplay extends BasicDisplay {
 	 * REI's {@code ofIngredients} would build one-item stacks and quietly understate bronze as "1 copper
 	 * + 1 tin" when the recipe eats three copper.
 	 */
+	// MOD-498 — Ingredient#items() is soft-deprecated and kept deliberately. Ingredient.values is private,
+	// so the only non-deprecated route is display() → SlotDisplay#resolveForStacks, and that needs a
+	// ContextMap built from a Level. These displays are filled by AlaReiCommonPlugin — a REICommonPlugin
+	// feeding ServerDisplayRegistry — so they are built on the server side, on a dedicated server too,
+	// where no client Level exists at all. It also yields count-1 stacks rather than holders this code can
+	// restack with the recipe's own counts. Vanilla still calls items(), in RecipeManager#isIngredientEnabled.
+	@SuppressWarnings("deprecation")
 	private static List<EntryIngredient> inputsOf(AlloyingRecipe recipe) {
 		List<EntryIngredient> inputs = new ArrayList<>(recipe.components().size());
 		for (AlloyComponent component : recipe.components()) {

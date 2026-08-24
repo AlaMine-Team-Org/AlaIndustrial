@@ -45,6 +45,13 @@ public class AlaProcessingDisplay extends BasicDisplay {
 	 * stacks, which would understate a recipe that eats four of something — the viewer must show the
 	 * price the machine actually charges. Recipes consuming one of each keep the plain REI path.
 	 */
+	// MOD-498 — Ingredient#items() is soft-deprecated by Mojang and kept deliberately. Ingredient.values is
+	// private, so the only non-deprecated route is display() → SlotDisplay#resolveForStacks, and that needs
+	// a ContextMap built from a Level. These displays are filled by AlaReiCommonPlugin — a REICommonPlugin
+	// feeding ServerDisplayRegistry — so they are built on the server side, on a dedicated server too,
+	// where no client Level exists at all. It also yields count-1 stacks where the code below applies the
+	// recipe's own counts. Vanilla itself still calls items(), in RecipeManager#isIngredientEnabled.
+	@SuppressWarnings("deprecation")
 	private static List<EntryIngredient> inputsOf(AlaProcessingRecipe recipe) {
 		if (recipe.consumesOneEach()) {
 			return EntryIngredients.ofIngredients(recipe.ingredients());

@@ -137,6 +137,12 @@ public final class GeothermalLavaInputScenarios {
 	// ── FUN07: only a LAVA capsule is furnace fuel, at the lava-bucket burn time, remainder = empty capsule ──
 
 	/** Lava capsule is furnace fuel (lava-bucket burn time); water capsule is not. Traced by CAPS FUN04. */
+	// MOD-498 — FuelValues#burnDuration and Item#getCraftingRemainder() are deprecated by NeoForge only;
+	// vanilla marks neither. The replacements it names (ItemStack#getBurnTime(RecipeType, FuelValues) and
+	// the getCraftingRemainder(ItemStack) overload) are NeoForge-only API, and this scenario is shared
+	// code compiled against vanilla for the Fabric lane too. burnDuration is also exactly what the
+	// FuelValuesMixin under test injects into, so the test must call the same method the mod patches.
+	@SuppressWarnings("deprecation")
 	public static void fun04LavaCapsuleIsFurnaceFuel(GameTestHelper helper) {
 		FuelValues fuel = helper.getLevel().fuelValues();
 		int lavaBucketTime = fuel.burnDuration(new ItemStack(Items.LAVA_BUCKET));

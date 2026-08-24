@@ -149,6 +149,11 @@ public final class WrenchItem extends Item {
 	}
 
 	/** One line: shift-click dismantles. The face cycle announces itself in the action bar already. */
+	// MOD-498 — soft-deprecated by vanilla, but still the only hook an item has for tooltip lines it
+	// computes itself: ItemStack#addDetailsToTooltip calls it, and vanilla overrides it in DiscFragmentItem,
+	// HangingEntityItem and SmithingTemplateItem. Data-component TooltipProviders cover data-driven
+	// components, not a fixed hint line the item declares for itself.
+	@SuppressWarnings("deprecation")
 	@Override
 	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
 			java.util.function.Consumer<Component> adder, TooltipFlag flag) {

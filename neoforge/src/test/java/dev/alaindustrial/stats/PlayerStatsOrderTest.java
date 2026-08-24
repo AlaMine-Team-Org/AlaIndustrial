@@ -13,6 +13,7 @@ import dev.alaindustrial.junit.StopEphemeralServerBeforeFmlTeardown;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
+import net.neoforged.neoforge.network.connection.ConnectionType;
 import net.neoforged.testframework.junit.EphemeralTestServerProvider;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -147,8 +148,11 @@ class PlayerStatsOrderTest {
 	@Test
 	void packetRoundTripKeepsTheOrder(MinecraftServer server) {
 		PlayerModStats sent = statsWith(descendingFixture());
-		RegistryFriendlyByteBuf buffer =
-				new RegistryFriendlyByteBuf(Unpooled.buffer(), server.registryAccess());
+		// MOD-498 — NeoForge deprecated the two-argument constructor ("use overload with ConnectionType
+		// context"); this lane is NeoForge-only and can take the replacement. `OTHER` is the value the
+		// deprecated constructor supplied, so the order assertion below tests exactly what it did before.
+		RegistryFriendlyByteBuf buffer = new RegistryFriendlyByteBuf(Unpooled.buffer(),
+				server.registryAccess(), ConnectionType.OTHER);
 		PlayerModStats.STREAM_CODEC.encode(buffer, sent);
 		PlayerModStats received = PlayerModStats.STREAM_CODEC.decode(buffer);
 

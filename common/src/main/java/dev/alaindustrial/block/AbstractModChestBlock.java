@@ -231,6 +231,11 @@ public abstract class AbstractModChestBlock extends HorizontalMachineBlock
 	}
 
 	/** Vanilla's MC-134110 fix: mirroring swaps the half, or the pair tears apart in structures. */
+	// MOD-498 — BlockStateBase#rotate(Rotation) is deprecated by NeoForge in favour of
+	// BlockState#rotate(LevelAccessor, BlockPos, Rotation); that overload is a NeoForge extension and does
+	// not exist in vanilla, so this shared code — compiled for Fabric as well — cannot call it. Mirroring
+	// here is a pure state transform anyway: there is no level or position in hand to give it.
+	@SuppressWarnings("deprecation")
 	@Override
 	protected BlockState mirror(BlockState state, Mirror mirror) {
 		BlockState rotated = state.rotate(mirror.getRotation(state.getValue(FACING)));

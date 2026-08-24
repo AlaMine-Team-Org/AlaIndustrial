@@ -189,6 +189,11 @@ public abstract class AbstractChestBlockEntity extends BaseContainerBlockEntity 
 	 * Mirrors the vanilla NeoForge chest patch through the {@link ChestPairHooks} loader seam
 	 * (no-op on Fabric).
 	 */
+	// MOD-498 — the deprecation targets CALLERS ("the chunk owns this state; change the world through
+	// Level#setBlock"), not overriders. Overriding it to refresh state-derived data is the sanctioned
+	// use — vanilla's own HopperBlockEntity overrides it exactly this way — and the super call inside
+	// such an override is required. Both uses here are that override and its super call.
+	@SuppressWarnings("deprecation")
 	@Override
 	public void setBlockState(BlockState blockState) {
 		BlockState old = getBlockState();

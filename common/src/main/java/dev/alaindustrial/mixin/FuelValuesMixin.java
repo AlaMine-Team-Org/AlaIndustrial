@@ -30,6 +30,11 @@ public abstract class FuelValuesMixin {
 		}
 	}
 
+	// MOD-498 — FuelValues#burnDuration is deprecated by NeoForge only; vanilla does not mark it, and the
+	// replacement NeoForge names (ItemStack#getBurnTime) is loader-only API absent from the vanilla
+	// classes this shared mixin is compiled against for Fabric. It is also the exact method this mixin
+	// injects into, so the re-entrant lookup below must go through the same one to stay datapack-faithful.
+	@SuppressWarnings("deprecation")
 	@Inject(method = "burnDuration", at = @At("HEAD"), cancellable = true)
 	private void alaindustrial$lavaCapsuleBurnDuration(ItemStack stack, CallbackInfoReturnable<Integer> cir) {
 		if (CapsuleFuel.isLavaCapsule(stack)) {

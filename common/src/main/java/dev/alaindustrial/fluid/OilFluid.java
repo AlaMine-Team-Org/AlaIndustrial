@@ -66,6 +66,11 @@ public abstract class OilFluid extends FlowingFluid {
 		return ModContent.OIL_BUCKET.get();
 	}
 
+	// MOD-498 — deprecated by NeoForge only; vanilla does not mark it. NeoForge points at its own
+	// canConvertToSource(FluidState, ServerLevel, BlockPos), but the no-position form stays
+	// protected abstract in both, so it MUST be implemented either way. Oil never forms infinite
+	// sources, so the answer is a constant and the position-aware overload could not differ.
+	@SuppressWarnings("deprecation")
 	@Override
 	protected boolean canConvertToSource(ServerLevel level) {
 		return false;

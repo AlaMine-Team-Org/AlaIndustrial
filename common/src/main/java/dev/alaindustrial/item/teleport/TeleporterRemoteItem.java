@@ -127,6 +127,11 @@ public class TeleporterRemoteItem extends Item {
 				Component.translatable("item.alaindustrial.teleporter_remote")));
 	}
 
+	// MOD-498 — Item#appendHoverText is soft-deprecated by Mojang ("internal"), but it is the only hook an
+	// item has for its own tooltip lines: ItemStack#addDetailsToTooltip calls it, and vanilla itself
+	// overrides it in DiscFragmentItem, HangingEntityItem and SmithingTemplateItem. Data-component
+	// TooltipProviders cover data-driven components, not a line computed from this stack's bound points.
+	@SuppressWarnings("deprecation")
 	@Override
 	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
 			Consumer<Component> adder, TooltipFlag flag) {

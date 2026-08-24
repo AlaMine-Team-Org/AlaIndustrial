@@ -107,7 +107,7 @@ public class PolymerizerBlockEntity extends MachineBlockEntity implements Overcl
 	 * amount of the flowing form could never be topped up by ordinary oil to reach the recipe volume.
 	 */
 	private static boolean isOil(FluidHolder fluid) {
-		return !fluid.isEmpty() && fluid.fluid().is(ModTags.Fluids.C_OIL)
+		return !fluid.isEmpty() && fluid.fluid().defaultFluidState().is(ModTags.Fluids.C_OIL)
 				&& PolymerizingRecipe.isSourceFluid(fluid.fluid());
 	}
 

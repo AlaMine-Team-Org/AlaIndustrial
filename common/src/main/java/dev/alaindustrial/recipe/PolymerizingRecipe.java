@@ -9,6 +9,7 @@ import java.util.List;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryCodecs;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -92,9 +93,14 @@ public record PolymerizingRecipe(ModRecipes.FluidKind<PolymerizingRecipe> kind,
 
 	/** Whether {@code candidate} is one of the fluids this recipe consumes. */
 	public boolean accepts(Fluid candidate) {
-		// builtInRegistryHolder() is how vanilla resolves a Fluid back to its registry holder (the same
-		// call BlockState#is(TagKey) makes for blocks), so a tag-backed HolderSet matches by identity.
-		return fluid.contains(candidate.builtInRegistryHolder());
+		// MOD-498 — wrapAsHolder, not the deprecated intrusive Fluid#builtInRegistryHolder(). For a
+		// registered fluid it returns that very Holder.Reference, so a tag-backed HolderSet still matches
+		// by identity; HolderSet#contains takes Holder<Fluid>, so the Holder.Reference subtype the
+		// deprecated getter returns was never needed here.
+		// Precondition: the value is REGISTERED. wrapAsHolder falls back to Holder.direct for an
+		// unregistered one, and a direct holder answers false to every tag test — silently. The
+		// deprecated getter was immune to registration order; this is not.
+		return fluid.contains(BuiltInRegistries.FLUID.wrapAsHolder(candidate));
 	}
 
 	/**

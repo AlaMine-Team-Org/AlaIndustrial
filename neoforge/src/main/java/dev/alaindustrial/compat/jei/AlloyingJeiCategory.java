@@ -69,6 +69,13 @@ final class AlloyingJeiCategory implements IRecipeCategory<RecipeHolder<Alloying
 		return icon;
 	}
 
+	// MOD-498 — Ingredient#items() is a vanilla soft deprecation, kept deliberately. NeoForge does add a
+	// non-deprecated accessor, `HolderSet<Item> getValues()` — but it throws IllegalStateException
+	// ("Cannot retrieve values from custom ingredient!") for an ICustomIngredient, while items() resolves
+	// one through updateCustomIngredientValues(). A recipe viewer enumerates EVERY recipe in the pack, so
+	// swapping it in would turn one modpack ingredient into a crash. Vanilla's own display() route is no
+	// better here: it yields count-1 stacks, and the slot below carries the recipe's own count.
+	@SuppressWarnings("deprecation")
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<AlloyingRecipe> holder, IFocusGroup focuses) {
 		AlloyingRecipe recipe = holder.value();

@@ -41,6 +41,12 @@ import net.minecraft.world.level.material.FluidState;
  */
 public abstract class DistillateFluid extends FlowingFluid {
 
+	// MOD-498 — canConvertToSource(ServerLevel) is protected abstract on FlowingFluid, so it MUST be
+	// implemented; vanilla does not deprecate it, only NeoForge's patch does, pointing at its own
+	// position-sensitive canConvertToSource(FluidState, ServerLevel, BlockPos). This class is shared code
+	// compiled for Fabric too. The answer is a constant false anyway (the fractions never form infinite
+	// sources — the anti-dup rule shared with crude oil), so position could not change it.
+	@SuppressWarnings("deprecation")
 	@Override
 	protected boolean canConvertToSource(ServerLevel level) {
 		return false;

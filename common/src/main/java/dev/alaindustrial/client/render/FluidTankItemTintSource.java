@@ -27,6 +27,11 @@ public final class FluidTankItemTintSource implements ItemTintSource {
 				.put(Industrialization.id("fluid_tank"), MAP_CODEC);
 	}
 
+	// MOD-498 — FluidModel#tintSource() is deprecated by NeoForge only; in vanilla it is the plain record
+	// accessor. NeoForge's replacement, fluidTintSource(), returns its own FluidTintSource type, which
+	// does not exist in the vanilla classes this shared client code is compiled against for Fabric —
+	// and the calls below (color / colorInWorld) are on vanilla's BlockTintSource.
+	@SuppressWarnings("deprecation")
 	@Override
 	public int calculate(ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity) {
 		FluidTankContents contents = stack.get(ModDataComponents.FLUID_TANK_CONTENTS.get());

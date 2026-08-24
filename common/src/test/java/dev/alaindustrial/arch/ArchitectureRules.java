@@ -119,6 +119,76 @@ public class ArchitectureRules {
 					+ "it from inside a level.isClientSide() guard");
 
 	/**
+	 * The graphics-backend packages no production class may reference (MOD-497).
+	 *
+	 * <p>Kept as a named constant because {@code neoforge/src/test} carries the same list for its own
+	 * zone — ArchUnit can only see the classes on the classpath of the module it runs in, and
+	 * {@code :common}'s test classpath has no NeoForge output. The two lists are the same invariant in
+	 * two places, so each names the other; widen one and widen the other in the same commit.
+	 */
+	static final String[] BACKEND_SPECIFIC_PACKAGES = {
+		"org.lwjgl.opengl..",
+		"org.lwjgl.vulkan..",
+		"com.mojang.blaze3d.opengl..",
+		"com.mojang.blaze3d.vulkan..",
+	};
+
+	/**
+	 * Rendering goes through the Blaze3D abstraction, never through a graphics backend directly
+	 * (MOD-497).
+	 *
+	 * <p><b>Why now.</b> 26.2 ships an experimental Vulkan renderer beside the OpenGL one, and Mojang
+	 * has asked mods to stop calling OpenGL directly because it goes away once Vulkan stabilises. An
+	 * audit on 2026-08-24 found zero direct calls here — the mod draws its GUIs through
+	 * {@code RenderPipelines.GUI_TEXTURED} and the analyzer overlay through vanilla gizmo primitives.
+	 * That is cleanliness by accident, though: nothing stops the next change from adding
+	 * {@code GL11.glEnable(…)}, the compiler is happy either way, and the symptom would surface on the
+	 * day the backend switches — the most expensive day to find it.
+	 *
+	 * <p><b>Both backends, not just OpenGL.</b> The mirror defect is real and would be easy to write
+	 * while "preparing for Vulkan": a direct {@code com.mojang.blaze3d.vulkan..} reference breaks the
+	 * mod for every player still on the OpenGL backend, which is today's default. The invariant is not
+	 * "leave OpenGL" but "depend on no backend at all", so the list forbids both, in both the LWJGL
+	 * bindings and Mojang's own backend implementations.
+	 *
+	 * <p><b>Deliberately NOT forbidden</b>, all verified present in the 26.2 client jar before this
+	 * rule was written (the task's acceptance criterion: never forbid a symbol that does not exist, or
+	 * the rule is a tautology that can never fail):
+	 * <ul>
+	 *   <li>{@code com.mojang.blaze3d.systems.RenderSystem} — the abstraction itself, and it lives in
+	 *       {@code systems}, not in a backend package. {@code GlStateManager} needs no separate entry
+	 *       either: in 26.2 it sits INSIDE {@code com.mojang.blaze3d.opengl}, so the package ban already
+	 *       covers it.</li>
+	 *   <li>{@code com.mojang.blaze3d.vertex..} ({@code PoseStack}, {@code VertexConsumer}) and
+	 *       {@code com.mojang.blaze3d.platform.InputConstants} — the 22 legitimate uses in this mod.
+	 *       Banning {@code com.mojang.blaze3d..} wholesale would take all of them with it.</li>
+	 *   <li>{@code org.lwjgl.glfw..} — window and input bindings, not graphics. {@code ModKeyMappings}
+	 *       uses {@code GLFW}; a ban on {@code org.lwjgl..} would be red on the existing tree.</li>
+	 * </ul>
+	 *
+	 * <p><b>Known blind spot: inlined constants.</b> A {@code static final int} such as
+	 * {@code GL11.GL_BLEND} is folded into the reading class's constant pool by javac, and the
+	 * reference to its owner disappears from the bytecode — no bytecode tool can see it. Reading a
+	 * number is harmless on its own; the CALL that would use it is what this rule catches, and a call
+	 * cannot be inlined away.
+	 *
+	 * <p>A fluent rule, so the {@code satisfied}/{@code violated} inversion trap described on
+	 * {@link #useUnorderedCollections()} does not apply here — and, being fluent, it has no fixture
+	 * pair either. It could not have one: this lane's classpath is Minecraft-free, so a violator
+	 * calling {@code GL11} does not compile here. What the rule needs proven instead is that a package
+	 * ban can still SEE anything from this lane, and that is checked permanently by
+	 * {@code ArchitectureRulesNegativeControl#aBackendPackageBanCanStillSeeBlaze3dFromThisLane}.
+	 */
+	@ArchTest
+	static final ArchRule renderingStaysBackendAgnostic = noClasses()
+			.should().dependOnClassesThat().resideInAnyPackage(BACKEND_SPECIFIC_PACKAGES)
+			.because("a direct graphics-backend call pins the mod to one backend: OpenGL is being "
+					+ "retired in favour of Vulkan, and a direct Vulkan call breaks every player still "
+					+ "on OpenGL. Draw through the Blaze3D abstraction instead — RenderPipelines and a "
+					+ "VertexConsumer from the MultiBufferSource, as the existing screens and block "
+					+ "entity renderers do");
+
+	/**
 	 * The packages whose iteration order is load-bearing. Kept explicit so the rule cannot silently widen.
 	 *
 	 * <p>The first four are the network core of ADR-006, where the order decides who gets energy. The rest

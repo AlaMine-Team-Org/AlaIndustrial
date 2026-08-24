@@ -22,6 +22,11 @@ import org.lwjgl.glfw.GLFW;
 public final class ModKeyMappings {
 
 	/** Mod-owned category in the Controls screen. */
+	// MOD-498 — KeyMapping.Category#register(Identifier) is deprecated by NeoForge only; vanilla leaves it
+	// plain. NeoForge points at RegisterKeyMappingsEvent#registerCategory(Category), which is its own event
+	// API — unavailable here, because this field is declared in common/ precisely so both loaders share one
+	// category instance and each binds the mappings its own way.
+	@SuppressWarnings("deprecation")
 	public static final KeyMapping.Category CATEGORY =
 			KeyMapping.Category.register(Industrialization.id("main"));
 

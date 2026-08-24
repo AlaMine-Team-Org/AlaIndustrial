@@ -5,6 +5,7 @@ import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.registry.ModDataComponents;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
@@ -48,16 +49,20 @@ public final class ItemFluid {
 	}
 
 	/**
-	 * Store {@code fluid} on the stack; {@code null}/{@link Fluids#EMPTY} removes the component. Uses the
-	 * fluid's built-in registry holder ({@code builtInRegistryHolder()} — deprecated but the intended way
-	 * to obtain the stable per-fluid holder for storage) so equal fluids yield an equal component value.
+	 * Store {@code fluid} on the stack; {@code null}/{@link Fluids#EMPTY} removes the component. Stores the
+	 * fluid's stable registry holder, so equal fluids yield an equal component value.
+	 *
+	 * <p>MOD-498 — this used to call the deprecated {@code builtInRegistryHolder()} under a blanket
+	 * suppression that claimed it was "the intended way". It is not: {@code CAPSULE_FLUID} is typed
+	 * {@code Holder<Fluid>}, and for a registered fluid {@code wrapAsHolder} returns the very same
+	 * {@code Holder.Reference} the intrusive getter would ({@code MappedRegistry.register} puts it into
+	 * {@code byValue}), so stored values compare equal exactly as before.
 	 */
-	@SuppressWarnings("deprecation")
 	public static void set(ItemStack stack, Fluid fluid) {
 		if (fluid == null || fluid == Fluids.EMPTY) {
 			stack.remove(ModDataComponents.CAPSULE_FLUID.get());
 		} else {
-			stack.set(ModDataComponents.CAPSULE_FLUID.get(), fluid.builtInRegistryHolder());
+			stack.set(ModDataComponents.CAPSULE_FLUID.get(), BuiltInRegistries.FLUID.wrapAsHolder(fluid));
 		}
 	}
 }

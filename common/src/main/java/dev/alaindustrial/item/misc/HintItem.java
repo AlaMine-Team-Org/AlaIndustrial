@@ -23,6 +23,11 @@ public class HintItem extends Item {
 		this.hintKeys = hintKeys;
 	}
 
+	// MOD-498 — Item#appendHoverText is soft-deprecated by Mojang ("internal"), but it is the only hook an
+	// item has for its own tooltip lines: ItemStack#addDetailsToTooltip calls it, and vanilla itself
+	// overrides it in DiscFragmentItem, HangingEntityItem and SmithingTemplateItem. Data-component
+	// TooltipProviders cover data-driven components, not lines built from this item's own hintKeys.
+	@SuppressWarnings("deprecation")
 	@Override
 	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
 			Consumer<Component> adder, TooltipFlag flag) {

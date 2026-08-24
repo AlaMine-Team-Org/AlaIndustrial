@@ -1083,6 +1083,12 @@ public final class AssemblerScenarios {
 	}
 
 	/** Tooltip line {@code index} of {@code stack}, or {@code null} when it is not a translatable one. */
+	// MOD-498 — Item#appendHoverText is soft-deprecated by vanilla ("internal, go through the stack"),
+	// but it is the only hook that yields an item's OWN tooltip lines, which is exactly what this
+	// assertion reads: ItemStack#addDetailsToTooltip calls it, and vanilla itself overrides it in
+	// DiscFragmentItem / HangingEntityItem / SmithingTemplateItem. Data-component TooltipProviders cover
+	// data-driven components, not text an item computes for itself, so they cannot replace it here.
+	@SuppressWarnings("deprecation")
 	private static TranslatableContents tooltipLine(ItemStack stack, int index) {
 		List<Component> lines = new ArrayList<>();
 		stack.getItem().appendHoverText(stack, Item.TooltipContext.EMPTY, TooltipDisplay.DEFAULT,

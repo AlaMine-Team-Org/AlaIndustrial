@@ -35,6 +35,7 @@ import dev.alaindustrial.item.tool.ElectricDrillItem;
 import dev.alaindustrial.item.tool.ElectricHoeDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricHoeItem;
 import dev.alaindustrial.item.tool.ElectricSaberItem;
+import dev.alaindustrial.item.tool.ElectricShovelDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricShovelItem;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
 import dev.alaindustrial.item.wearable.JetpackItem;
@@ -72,8 +73,13 @@ public final class MachineTooltips {
 		// mod-item branches below (a graded vanilla ingot would never reach them).
 		MutationGrade grade = MutationGrades.get(stack);
 		if (grade.isMarked()) {
-			lines.add(Component.translatable(grade.translationKey())
-					.withStyle(MutationGrades.vanillaRarity(grade).color()));
+			// MOD-498 — Rarity#color() is deprecated by NeoForge only. Vanilla's Rarity has color() and
+			// nothing else; the replacement NeoForge names, getStyleModifier(), is added by its patch and is
+			// absent from the vanilla class this shared body is compiled against for Fabric. color() is the
+			// only accessor that exists on both loaders.
+			@SuppressWarnings("deprecation")
+			ChatFormatting gradeColor = MutationGrades.vanillaRarity(grade).color();
+			lines.add(Component.translatable(grade.translationKey()).withStyle(gradeColor));
 		}
 		boolean detailed = shiftDown || AlaClientConfig.alwaysDetailedTooltips;
 		if (stack.getItem() instanceof NetworkAnalyzerItem) {
@@ -398,6 +404,17 @@ public final class MachineTooltips {
 		} else {
 			lines.add(Component.translatable("tooltip.alaindustrial.electric_shovel.charge", eu, cap)
 					.withStyle(ChatFormatting.GOLD));
+		}
+		// MOD-481: the diamond-tipped upgrade adds its Silk Touch state. Shown in BOTH states on purpose,
+		// exactly like the drill's and the chainsaw's — while the mode is on vanilla already prints
+		// "Silk Touch I" from the real enchantment, but with it off nothing in the UI would say the shovel
+		// has a mode at all, and the control (sneak + right-click) is not discoverable by itself.
+		if (stack.getItem() instanceof ElectricShovelDiamondTipItem) {
+			boolean silk = ElectricShovelDiamondTipItem.isSilkMode(stack);
+			lines.add(Component.translatable(silk
+					? "tooltip.alaindustrial.electric_shovel_diamond_tip.silk_on"
+					: "tooltip.alaindustrial.electric_shovel_diamond_tip.silk_off")
+					.withStyle(silk ? ChatFormatting.AQUA : ChatFormatting.GRAY));
 		}
 	}
 

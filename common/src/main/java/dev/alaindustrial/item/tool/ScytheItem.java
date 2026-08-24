@@ -148,6 +148,11 @@ public class ScytheItem extends Item {
 	 * dedicated server with a different multiplier is not the server's. The mod has no config sync, and
 	 * MOD-326 deliberately did not add one for a cosmetic line.
 	 */
+	// MOD-498 — Item#appendHoverText is soft-deprecated by vanilla but is the ONLY hook an item has for
+	// its own tooltip lines: ItemStack#addDetailsToTooltip calls it, and vanilla itself overrides it in
+	// DiscFragmentItem, HangingEntityItem and SmithingTemplateItem. Data-component TooltipProviders cover
+	// data-driven components, not a chance computed live from the tier profile and the config as here.
+	@SuppressWarnings("deprecation")
 	@Override
 	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
 			Consumer<Component> adder, TooltipFlag flag) {

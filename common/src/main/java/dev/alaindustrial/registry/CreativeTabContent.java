@@ -357,6 +357,7 @@ public final class CreativeTabContent {
 		show(out, ModContent.ELECTRIC_CHAINSAW);
 		show(out, ModContent.ELECTRIC_CHAINSAW_DIAMOND_TIP);
 		show(out, ModContent.ELECTRIC_SHOVEL);
+		show(out, ModContent.ELECTRIC_SHOVEL_DIAMOND_TIP);
 		show(out, ModContent.ELECTRIC_HOE);
 		show(out, ModContent.ELECTRIC_HOE_DIAMOND_TIP);
 		show(out, ModContent.ELECTRIC_SABER);

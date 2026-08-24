@@ -197,6 +197,10 @@ public final class IngredientSubstitution {
 		}
 	}
 
+	// MOD-498 — Ingredient#items() is soft-deprecated by vanilla, but no non-deprecated accessor exposes
+	// the item list this needs: Ingredient.values is private and display() is a different (display-only)
+	// layer. Vanilla itself still calls items() from RecipeManager#isIngredientEnabled.
+	@SuppressWarnings("deprecation")
 	private static void collect(Set<Item> into, Ingredient ingredient) {
 		ingredient.items().map(Holder::value).forEach(into::add);
 	}

@@ -325,6 +325,11 @@ public final class ElectricSaberScenarios {
 		}
 	}
 
+	// MOD-498 — Enchantment#canEnchant(ItemStack) is deprecated by NeoForge only; vanilla leaves it plain.
+	// The replacement NeoForge names, ItemStack#supportsEnchantment(Holder), is a NeoForge extension that
+	// does not exist in vanilla, and this scenario lives in common/ and is replayed by the Fabric lane too,
+	// so it has to ask the vanilla way.
+	@SuppressWarnings("deprecation")
 	private static void assertCanEnchant(GameTestHelper helper, Holder<Enchantment> enchantment,
 			ItemStack stack, String name) {
 		if (!enchantment.value().canEnchant(stack)) {

@@ -106,4 +106,51 @@ public class ElectricShovelGameTest {
 	public void tcShovel001Per01_chargeRoundTrip(GameTestHelper helper) {
 		ElectricShovelScenarios.per01ChargeRoundTrip(helper);
 	}
+
+	/**
+	 * @implements TC-SHOVEL-001-FUN10 — the diamond-tipped upgrade (MOD-481) breaks shovel-mineable
+	 *     blocks at 10.5, strictly faster than the base shovel, keeps the diamond tier and still drops to
+	 *     hand speed when flat.
+	 */
+	@GameTest
+	public void tcShovel001Fun10_diamondTipSpeedAndTier(GameTestHelper helper) {
+		ElectricShovelScenarios.fun10DiamondTipSpeedAndTier(helper);
+	}
+
+	/**
+	 * @implements TC-SHOVEL-001-FUN11 — sneak + right-click toggles the upgrade's Silk Touch mode, and
+	 *     the mode really swaps the drop: grass block in silk mode, dirt in normal mode (MOD-481).
+	 */
+	@GameTest
+	public void tcShovel001Fun11_diamondTipSilkToggle(GameTestHelper helper) {
+		ElectricShovelScenarios.fun11DiamondTipSilkToggle(helper);
+	}
+
+	/**
+	 * @implements TC-SHOVEL-001-FUN12 — a sneaking right-click with the upgrade does NOT make a dirt path
+	 *     (the click has to reach the toggle), while a plain click still does (MOD-481).
+	 */
+	@GameTest
+	public void tcShovel001Fun12_diamondTipSneakDoesNotPath(GameTestHelper helper) {
+		ElectricShovelScenarios.fun12DiamondTipSneakDoesNotPath(helper);
+	}
+
+	/**
+	 * @implements TC-SHOVEL-001-FUN13 — the BASE shovel has no Silk Touch mode, which is what makes FUN11
+	 *     an assertion about the upgrade rather than a restatement of vanilla loot tables (MOD-481).
+	 */
+	@GameTest
+	public void tcShovel001Fun13_baseShovelHasNoSilkMode(GameTestHelper helper) {
+		ElectricShovelScenarios.fun13BaseShovelHasNoSilkMode(helper);
+	}
+
+	/**
+	 * @implements TC-SHOVEL-001-FUN14 — the upgrade is accepted by both Battery Box charge-slot filters
+	 *     and charges at min(LV ceiling, its own intake rate); the inherited energy wiring asserted rather
+	 *     than assumed (MOD-481).
+	 */
+	@GameTest
+	public void tcShovel001Fun14_diamondTipChargeInBatteryBox(GameTestHelper helper) {
+		ElectricShovelScenarios.fun14DiamondTipChargeInBatteryBox(helper);
+	}
 }

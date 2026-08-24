@@ -12,7 +12,6 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
-import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.loader.api.FabricLoader;
@@ -265,10 +264,21 @@ public class IndustrializationClient implements ClientModInitializer {
 					S extends net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState>
 					void register(net.minecraft.world.level.block.entity.BlockEntityType<T> type,
 							net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider<T, S> provider) {
-				// Fabric declares register(BlockEntityType<E>, BlockEntityRendererProvider<? super E,
-				// ? super S>); the witness pins both to this method's own parameters instead of letting
-				// the render-state variable be inferred from a wildcard bound.
-				BlockEntityRendererRegistry.<T, S>register(type, provider);
+				// MOD-498 — vanilla's own registry, not Fabric's BlockEntityRendererRegistry wrapper,
+				// which Fabric has deprecated. `BlockEntityRenderers.register` is private in vanilla;
+				// fabric-transitive-access-wideners-v1 opens it (`transitive-accessible method
+				// net/minecraft/client/renderer/blockentity/BlockEntityRenderers register`, line 42 of
+				// fabric-transitive-access-wideners-v1.classtweaker). Line 45 of that same file widens
+				// EntityRenderers#register, which the entity renderer further down already ships through —
+				// a different entry, so it is strong evidence rather than proof that this one resolves at
+				// runtime; the client gametest lane booting is what actually exercises it.
+				// Not a pure rename: the wrapper buffered registrations in its own map and let a mixin on
+				// BlockEntityRenderers.<clinit> flush them, so calling vanilla directly forces that clinit
+				// here, during client init, instead of later. The resulting provider map — and therefore
+				// what is rendered — is the same either way; what moves is when those classes load.
+				// The witness pins both variables to this method's own parameters rather than letting
+				// the render state be inferred from the `BlockEntityType<? extends T>` bound.
+				net.minecraft.client.renderer.blockentity.BlockEntityRenderers.<T, S>register(type, provider);
 			}
 		};
 		for (ClientContentManifest.BlockEntityRendererDef<?, ?> def

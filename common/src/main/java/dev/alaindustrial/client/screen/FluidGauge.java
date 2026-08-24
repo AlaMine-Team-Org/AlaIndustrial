@@ -45,6 +45,10 @@ public final class FluidGauge {
 	 * distortion reads as a rendering bug. The fill height is rarely a multiple of 16, so tiles are laid
 	 * from the bottom edge upward and the top one is cut off mid-texture by the scissor.
 	 */
+	// MOD-498 — FluidModel#tintSource() is deprecated by NeoForge only, in favour of fluidTintSource(),
+	// which returns NeoForge's own FluidTintSource type. In vanilla tintSource() is the record component
+	// itself and there is no such replacement, so this shared client code cannot use it.
+	@SuppressWarnings("deprecation")
 	public static void draw(GuiGraphicsExtractor graphics, Fluid fluid, int leftX, int topY, int width, int height) {
 		Minecraft minecraft = Minecraft.getInstance();
 		FluidState state = fluid.defaultFluidState();

@@ -33,6 +33,44 @@ if (!publishArtifacts) {
             .configureEach { it.enabled = false }
 }
 
+// MOD-498 — name the deprecated symbols instead of counting them. Without this every build ended
+// with "Some input files use or override a deprecated API. Recompile with -Xlint:deprecation for
+// details": the compiler knew what we were about to lose and we did not. Mojang and the loaders mark
+// a symbol `@Deprecated` a release or two before removing it, so this is free advance notice of the
+// next migration — MOD-495 is what the silence costs, where a removed class (JEI's
+// ContainerScreenEvent$Render$Foreground) only surfaced at runtime, after the upgrade.
+//
+// `tasks.withType(JavaCompile)` and not `compileJava`: the flag has to reach all three subprojects
+// (`common`, `fabric`, `neoforge` all apply this plugin — the loaders through `multiloader-loader`)
+// AND every source set, tests and gametests included. A narrower rule ("main only") would be a
+// hand-kept list that drifts the first time a source set is added; this one cannot.
+//
+// Deliberately NOT `-Werror`. Vanilla symbols are deprecated on Mojang's schedule, not ours, and a
+// build that goes red because of somebody else's release would stop work at a moment we do not
+// choose. The goal here is visibility, not a gate.
+//
+// Note the numbers this prints are warning LINES, not distinct defects: the loaders recompile the
+// shared `common/` sources into their own jars, so one line of common code is reported up to three
+// times — and NeoForge adds deprecations of its own on top of vanilla's, which is why its count is
+// the highest of the three.
+// `options.compilerArgs` and NOT the tidier `options.deprecation = true`, which produces the same
+// javac flag but is annotated `@Console` in Gradle: it is not a task input, so it does not take part
+// in the build-cache key. Measured here — with `options.deprecation = true` this very build came back
+// `FROM-CACHE` for all eight compile tasks and printed NOTHING, reusing entries compiled before the
+// flag existed. For a change whose entire product is console output that is the one failure mode
+// that matters. `compilerArgs` is a real `@Input`: the entries recompile once when this line lands,
+// and from then on a cache hit can only come from a compile that had the flag.
+// `-Xmaxwarns` because javac prints at most 100 warnings per compilation by DEFAULT and then stops
+// naming them — measured on a 150-call probe: it printed 100, replaced the rest with a single
+// "Note: … has additional uses or overrides of a deprecated API", and reported "100 warnings", i.e.
+// the count itself lied. That is precisely the failure this task exists to remove, so leaving the
+// default would put the cap back one version bump from now: the worst lane here already carried 77
+// warnings before this change (48 deprecation + 29 `[removal]`), and MOD-226 (Minecraft 26.3) is the
+// kind of event that deprecates a lot at once. The number just has to be far out of reach.
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs << '-Xlint:deprecation' << '-Xmaxwarns' << '2000'
+}
+
 tasks.withType(Jar).configureEach {
     from(rootProject.file('LICENSE')) {
         rename { "${it}_${mod_name}" }

@@ -136,6 +136,10 @@ public class IronFurnaceBlockEntity extends BaseContainerBlockEntity implements 
 
 		// Light fresh fuel only when there is something to cook and the fire has gone out.
 		if (be.litTime <= 0 && canCook && !fuel.isEmpty()) {
+			// MOD-498 — FuelValues#burnDuration is deprecated only by NeoForge's patch (for
+			// ItemStack#getBurnTime), a NeoForge-side addition that vanilla does not declare. This class is
+			// shared code compiled for Fabric too, so only the deprecated form exists on both loaders.
+			@SuppressWarnings("deprecation")
 			int burn = level.fuelValues().burnDuration(fuel);
 			if (burn > 0) {
 				// Scale burn ticks by the speed ratio (cookTotal/200) so smelts-per-fuel stays vanilla
@@ -149,6 +153,10 @@ public class IronFurnaceBlockEntity extends BaseContainerBlockEntity implements 
 					// Fuels with a remainder (lava bucket → empty bucket) leave it; coal/wood have a NULL
 					// remainder (Item.getCraftingRemainder is @Nullable) → leave the slot empty. Skipping
 					// this null check crashes the server tick on the first coal smelt.
+					// MOD-498 — Item#getCraftingRemainder() is deprecated only by NeoForge's added
+					// getCraftingRemainder(ItemStack) overload, which vanilla does not declare. This shared
+					// class is compiled for Fabric too, where the no-arg form is the only one that exists.
+					@SuppressWarnings("deprecation")
 					ItemStackTemplate remainder = fuelItem.getCraftingRemainder();
 					be.items.set(FUEL_SLOT, remainder != null ? remainder.create() : ItemStack.EMPTY);
 				}

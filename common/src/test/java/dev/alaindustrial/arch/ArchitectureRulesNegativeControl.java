@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
+import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.lang.EvaluationResult;
 import org.junit.jupiter.api.BeforeAll;
@@ -51,11 +52,27 @@ class ArchitectureRulesNegativeControl {
 
 	private static JavaClasses fixtures;
 
+	/**
+	 * The real {@code common/} classes, imported the same way {@link ArchitectureRules} imports them
+	 * (MOD-497) — {@code DoNotIncludeTests} keeps the fixture package out, so this is production only.
+	 */
+	private static JavaClasses productionClasses;
+
 	@BeforeAll
 	static void importFixtures() {
 		fixtures = new ClassFileImporter().importPackages(FIXTURE_PACKAGE);
 		assertTrue(fixtures.contain(FIXTURE_PACKAGE + ".UnorderedCollectionViolator"),
 				"the fixture package must be on the test classpath, or every check below is vacuous");
+
+		productionClasses = new ClassFileImporter()
+				.withImportOption(new ImportOption.DoNotIncludeTests())
+				.importPackages("dev.alaindustrial");
+		// Floor. An empty or test-only import would make the capability probe below pass by finding
+		// nothing to complain about — the exact failure mode it exists to rule out.
+		assertTrue(productionClasses.contain("dev.alaindustrial.client.screen.MachineScreen"),
+				"production classes must be on the test classpath, or the capability probe is vacuous");
+		assertFalse(productionClasses.contain(FIXTURE_PACKAGE + ".UnorderedCollectionViolator"),
+				"DoNotIncludeTests must exclude the fixture package from the production import");
 	}
 
 	private static String evaluateExpectingViolation(ArchRule rule) {
@@ -113,6 +130,45 @@ class ArchitectureRulesNegativeControl {
 		assertNoViolation(noClasses()
 				.that().haveSimpleName("ConstructorSeededMachine")
 				.should(callStaticRateShortcutOutsideConstructor()));
+	}
+
+	/**
+	 * MOD-497: proof that {@code renderingStaysBackendAgnostic} is CAPABLE of failing — established
+	 * without a fixture, because on this lane a fixture cannot exist.
+	 *
+	 * <p><b>Why no violator class.</b> The other controls here import a hand-written violator, and the
+	 * obvious move would be a class calling {@code GL11.glEnable}. It does not compile: {@code :common}'s
+	 * test classpath is deliberately Minecraft-free, so {@code org.lwjgl..} and {@code com.mojang.blaze3d..}
+	 * are absent from it (this was tried first — 17 "package does not exist" errors). Faking them by
+	 * declaring {@code org.lwjgl.opengl.GL11} inside our own test tree is worse than no control at all:
+	 * {@code common/src} is a published path (docs/publishing/sync_paths.txt), so counterfeit LWJGL
+	 * classes would ship to the public repository.
+	 *
+	 * <p><b>Why the rule works anyway, and what this test actually proves.</b> ArchUnit reads the
+	 * PRODUCTION bytecode, where those names sit in the constant pool; it never needs to resolve them,
+	 * which is why the neighbouring {@code clientTypesStayInsideClientPackages} guards
+	 * {@code net.minecraft.client..} from this same Minecraft-free lane and has no fixture either. The
+	 * open question is therefore not "is the rule written correctly" — it is fluent ArchUnit, not a
+	 * custom condition, so the {@code satisfied}/{@code violated} inversion trap cannot apply — but
+	 * "can a package ban of this exact shape still SEE anything from here". This test answers that
+	 * empirically and permanently: it runs the same construction against
+	 * {@code com.mojang.blaze3d.vertex..}, the sibling package the real rule deliberately allows and
+	 * that 22 production classes depend on, and demands a violation.
+	 *
+	 * <p>So if the import ever goes blind — Minecraft dropped from the production classpath, the
+	 * package renamed, ArchUnit changing what {@code dependOnClassesThat} reports — this goes red
+	 * instead of the real rule going quietly, permanently green.
+	 */
+	@Test
+	void aBackendPackageBanCanStillSeeBlaze3dFromThisLane() {
+		EvaluationResult result = noClasses()
+				.should().dependOnClassesThat().resideInAnyPackage("com.mojang.blaze3d.vertex..")
+				.evaluate(productionClasses);
+
+		assertTrue(result.hasViolation(),
+				"a package ban shaped exactly like renderingStaysBackendAgnostic reported nothing "
+						+ "against com.mojang.blaze3d.vertex.., which the renderers demonstrably use — "
+						+ "so the real rule is blind too, and its green means nothing");
 	}
 
 	@Test

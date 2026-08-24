@@ -23,6 +23,11 @@ public class FluidPipeBlockItem extends BlockItem {
 		super(block, properties);
 	}
 
+	// MOD-498 — Item#appendHoverText carries a vanilla soft-deprecation marker but is still the only hook
+	// an item has for its own tooltip lines: ItemStack#addDetailsToTooltip calls it, and vanilla itself
+	// overrides it (DiscFragmentItem, HangingEntityItem, SmithingTemplateItem). A data-component
+	// TooltipProvider could not produce these lines — the rate is read from Config at render time.
+	@SuppressWarnings("deprecation")
 	@Override
 	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
 			Consumer<Component> adder, TooltipFlag flag) {

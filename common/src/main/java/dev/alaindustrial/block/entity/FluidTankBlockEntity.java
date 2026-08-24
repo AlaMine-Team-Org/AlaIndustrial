@@ -92,13 +92,19 @@ public final class FluidTankBlockEntity extends BlockEntity implements FluidPort
 		return fluid == null ? Fluids.EMPTY : fluid;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void collectImplicitComponents(DataComponentMap.Builder builder) {
 		super.collectImplicitComponents(builder);
 		if (!fluidTank.fluid.isEmpty() && fluidTank.amount > 0) {
+			// MOD-498 — wrapAsHolder, not the deprecated builtInRegistryHolder(). FluidTankContents holds a
+			// plain Holder<Fluid>, and for a registered fluid the registry hands back the very same
+			// Holder.Reference the intrusive getter would (MappedRegistry.register stores it into byValue),
+			// so component equality and the codec round trip are unchanged. Precondition: REGISTERED — for an
+			// unregistered fluid wrapAsHolder yields Holder.direct, which that codec rejects outright. A live
+			// tank only ever holds registered fluids.
 			builder.set(ModDataComponents.FLUID_TANK_CONTENTS.get(),
-					new FluidTankContents(fluidTank.fluid.fluid().builtInRegistryHolder(), fluidTank.amount));
+					new FluidTankContents(BuiltInRegistries.FLUID.wrapAsHolder(fluidTank.fluid.fluid()),
+							fluidTank.amount));
 			// Minecraft 26.2 stores stack size as a data component. A filled tank receives an explicit
 			// max of one; a freshly crafted empty tank keeps the BlockItem default and stacks normally.
 			builder.set(DataComponents.MAX_STACK_SIZE, 1);

@@ -28,6 +28,11 @@ public class ItemPipeBlockItem extends BlockItem {
 		super(block, properties);
 	}
 
+	// MOD-498 — soft-deprecated by vanilla, but still the only hook an item has for tooltip lines it
+	// computes itself: ItemStack#addDetailsToTooltip calls it, and vanilla overrides it in DiscFragmentItem,
+	// HangingEntityItem and SmithingTemplateItem. A data-component TooltipProvider cannot produce these
+	// lines — the throughput below is read from the live Config, not from a component on the stack.
+	@SuppressWarnings("deprecation")
 	@Override
 	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
 			Consumer<Component> adder, TooltipFlag flag) {

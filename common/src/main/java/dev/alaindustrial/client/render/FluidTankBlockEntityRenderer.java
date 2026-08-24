@@ -77,6 +77,12 @@ public final class FluidTankBlockEntityRenderer
 		FluidModel model = Minecraft.getInstance().getModelManager().getFluidStateModelSet()
 				.get(fluid.defaultFluidState());
 		state.sprite = model.stillMaterial().sprite();
+		// MOD-498 — FluidModel#tintSource() is not deprecated in vanilla, where it is the record's own
+		// component accessor; NeoForge's patch replaces the component with fluidTintSource() and deprecates
+		// tintSource(). The replacement returns NeoForge's own FluidTintSource type, which does not exist on
+		// the Fabric side this shared renderer also compiles for, so the vanilla accessor is the only form
+		// available to both loaders.
+		@SuppressWarnings("deprecation")
 		var tintSource = model.tintSource();
 		int tint = tintSource == null
 				? -1

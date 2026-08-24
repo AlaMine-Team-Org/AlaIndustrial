@@ -235,6 +235,11 @@ public class MagnetItem extends Item {
 
 	// --- tooltip: short lines — a flavor line, on/off state, the EU charge, and the tariff/range ---
 
+	// MOD-498 — soft-deprecated by vanilla, but still the only hook an item has for tooltip lines it
+	// computes itself: ItemStack#addDetailsToTooltip calls it, and vanilla overrides it in DiscFragmentItem,
+	// HangingEntityItem and SmithingTemplateItem. A data-component TooltipProvider covers data-driven
+	// components, not text assembled from the on/off flag, the live EU charge and the config tariff.
+	@SuppressWarnings("deprecation")
 	@Override
 	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
 			Consumer<Component> adder, TooltipFlag flag) {

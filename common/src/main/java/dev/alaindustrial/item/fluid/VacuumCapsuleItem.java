@@ -1,11 +1,13 @@
 package dev.alaindustrial.item.fluid;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.triggers.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -77,7 +79,12 @@ public class VacuumCapsuleItem extends Item {
 			return InteractionResult.PASS;
 		}
 		player.awardStat(Stats.ITEM_USED.get(this));
-		pickup.getPickupSound().ifPresent(sound -> player.playSound(sound, 1.0F, 1.0F));
+		// MOD-498 — BucketPickup#getPickupSound() is deprecated by NeoForge only ("use the state sensitive
+		// variant"), which is a method NeoForge adds via IBucketPickupExtension; vanilla has only this no-arg
+		// form and no replacement at all. This class lives in common/ and is compiled for Fabric as well.
+		@SuppressWarnings("deprecation")
+		Optional<SoundEvent> pickupSound = pickup.getPickupSound();
+		pickupSound.ifPresent(sound -> player.playSound(sound, 1.0F, 1.0F));
 		level.gameEvent(player, GameEvent.FLUID_PICKUP, pos);
 		ItemStack filled = new ItemStack(dev.alaindustrial.registry.ModContent.FILLED_VACUUM_CAPSULE.get());
 		ItemFluid.set(filled, fluid);
@@ -88,6 +95,11 @@ public class VacuumCapsuleItem extends Item {
 		return InteractionResult.SUCCESS.heldItemTransformedTo(result);
 	}
 
+	// MOD-498 — Item#appendHoverText is soft-deprecated by Mojang ("internal"), but it is the only hook an
+	// item has for its own tooltip lines: ItemStack#addDetailsToTooltip calls it, and vanilla itself
+	// overrides it in DiscFragmentItem, HangingEntityItem and SmithingTemplateItem. Data-component
+	// TooltipProviders cover data-driven components, not a usage hint the item states for itself.
+	@SuppressWarnings("deprecation")
 	@Override
 	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
 			Consumer<Component> adder, TooltipFlag flag) {
