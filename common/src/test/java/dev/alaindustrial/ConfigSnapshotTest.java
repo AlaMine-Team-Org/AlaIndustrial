@@ -215,6 +215,14 @@ class ConfigSnapshotTest {
 		SENTINELS.put("batteryBuffer", 2500);
 		SENTINELS.put("batteryInputRate", 33);
 		SENTINELS.put("batteryTransferPerUse", 600);
+		// MOD-504 — the three EU crystals. Values differ from the shipped defaults and clear each
+		// field's own minimum, or loading would swap them back and the getter lambda would survive.
+		SENTINELS.put("energyCrystalBuffer", 123_000);
+		SENTINELS.put("energyCrystalInputRate", 129);
+		SENTINELS.put("lapotronCrystalBuffer", 1_234_000);
+		SENTINELS.put("lapotronCrystalInputRate", 131);
+		SENTINELS.put("resonantCrystalBuffer", 2_345_000);
+		SENTINELS.put("resonantCrystalInputRate", 133);
 		SENTINELS.put("energyPackBuffer", 22_000);
 		SENTINELS.put("energyPackInputRate", 48);
 		SENTINELS.put("energyPackOutputRate", 49);

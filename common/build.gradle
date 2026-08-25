@@ -158,6 +158,16 @@ pitest {
                      // MOD-248: the oil-deposit blob grid, Minecraft-free for the same reason and
                      // covered by OilLakeShapeTest. Added here with the class, not a release later.
                      'dev.alaindustrial.worldgen.OilLakeShape',
+                     // MOD-265: the geyser's dome/shaft/spout arithmetic. The lake had a Minecraft-free
+                     // core from the start and the geyser did not, so the published size of the mod's
+                     // largest deposit came from a hand-written second copy of these formulas — which
+                     // was wrong on the dome boundary AND forgot the shaft. Covered by
+                     // OilLakeVolumeTest.
+                     'dev.alaindustrial.worldgen.OilGeyserShape',
+                     // MOD-504: the EU-crystal catalogue. Minecraft-free on purpose — it is the one
+                     // place the ladder's ids and its live Config reads are stated, and both loaders
+                     // register from it. Covered by CrystalTierTest.
+                     'dev.alaindustrial.item.energy.CrystalTier',
                      'dev.alaindustrial.item.material.TemperedIronToolStats',
                      'dev.alaindustrial.item.misc.TooltipKeys',
                      // MOD-315: the scythe's bonus-seed chance formula. Lifted out of the (nested,

@@ -69,12 +69,12 @@
             {
               "type": "text",
               "title": "Dónde buscarlo",
-              "text": "El petróleo no se fabrica ni se funde: solo se encuentra, en cualquier parte del Mundo Superior. Los yacimientos vienen en cuatro tamaños:\n\n• Mancha superficial: uno cada 150 chunks, apenas para probar\n• Lago de mina: Y -40..-8, alrededor de uno de cada cinco chunks; tu fuente principal\n• Yacimiento profundo: Y -50..-30, uno cada 20 chunks, tres veces más ancho\n• Veta de petróleo: una cada 600 chunks, visible desde la superficie\n\nEl petróleo nunca se genera dentro de aldeas, minas abandonadas, fortalezas ni la Ciudad Antigua."
+              "text": "El petróleo no se fabrica ni se funde: solo se encuentra, en cualquier parte del Mundo Superior. Los yacimientos vienen en cuatro tamaños:\n\n• Mancha superficial: uno cada 150 chunks, apenas para probar\n• Lago de mina: Y -40..-8, uno cada 50 chunks; tu fuente principal\n• Yacimiento profundo: Y -50..-30, uno cada 40 chunks, tres veces más ancho\n• Veta de petróleo: una cada 600 chunks, visible desde la superficie\n\nEl petróleo nunca se genera dentro de aldeas, minas abandonadas, fortalezas ni la Ciudad Antigua."
             },
             {
               "type": "text",
               "title": "El yacimiento se agota",
-              "text": "Cada bloque de petróleo que recoges desaparece para siempre: a diferencia del agua, el yacimiento no se rellena.\n\nUn lago normal da entre 20 y 60 cubos, un yacimiento profundo bastante más, y la cúpula de una veta varios miles. Cuando vacías uno toca buscar el siguiente, así que marca el sitio en cuanto lo encuentres.\n\nRecogerlo a cubos lleva su tiempo: pon una bomba al lado y ella sola vaciará todo el yacimiento en un tanque."
+              "text": "Cada bloque de petróleo que recoges desaparece para siempre: a diferencia del agua, el yacimiento no se rellena.\n\nUn lago de mina da unos 160 cubos, un yacimiento profundo unos 1300, y la cúpula de una veta casi cuatro mil. Cuando vacías uno toca buscar el siguiente, así que marca el sitio en cuanto lo encuentres.\n\nRecogerlo a cubos lleva su tiempo: pon una bomba al lado y ella sola vaciará todo el yacimiento en un tanque."
             },
             {
               "type": "text",
@@ -407,6 +407,26 @@
               "lines": [
                 "Energía: 4 EU/t (día)",
                 "Búfer: 8000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "creative_energy_source",
+          "title": "Creative Energy Source",
+          "icon": "alaindustrial:creative_energy_source",
+          "block_id": "alaindustrial:creative_energy_source",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Creative Energy Source",
+              "text": "An inexhaustible EU source with adjustable output — a tool for testing setups, not obtainable in survival."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Energy: 32-8192 EU/t"
               ]
             }
           ]
@@ -933,6 +953,44 @@
               ],
               "result_id": "alaindustrial:electrum_cable",
               "result_count": 3
+            }
+          ]
+        },
+        {
+          "id": "shielding_chest",
+          "title": "Shielding Chest",
+          "icon": "alaindustrial:shielding_chest",
+          "block_id": "alaindustrial:shielding_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Shielding Chest",
+              "text": "The only container that stops the radiation of its contents: uranium inside irradiates nobody. Iron-chest capacity (36 slots), needs no energy."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Energía: 36 ranuras"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:iron_chest",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                ""
+              ],
+              "result_id": "alaindustrial:shielding_chest",
+              "result_count": 1
             }
           ]
         },
@@ -3935,6 +3993,44 @@
                 ""
               ],
               "result_id": "alaindustrial:tempered_iron_pickaxe",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "insulated_chestplate",
+          "title": "Insulated Chestplate",
+          "icon": "alaindustrial:insulated_chestplate",
+          "block_id": "alaindustrial:insulated_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Insulated Chestplate",
+              "text": "Leather armour dipped in slime — hood, jacket, trousers and boots that soak up a bare cable's shock and spend durability doing it."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Energía: 4 piezas"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación sin forma",
+              "grid": [
+                "minecraft:leather_chestplate",
+                "minecraft:slime_ball",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:insulated_chestplate",
               "result_count": 1
             }
           ]

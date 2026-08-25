@@ -69,12 +69,12 @@
             {
               "type": "text",
               "title": "कहाँ खोजें",
-              "text": "कच्चा तेल न तो बनाया जा सकता है और न गलाया — इसे केवल ढूँढ़ा जाता है, ओवरवर्ल्ड में कहीं भी। भंडार चार आकारों में मिलते हैं:\n\n• सतही धब्बा — हर 150 चंक में एक, बस झलक भर\n• खदान-स्तर की झील — Y -40..-8, लगभग हर पाँच में से एक चंक: आपका मुख्य स्रोत\n• गहरा भंडार — Y -50..-30, हर 20 चंक में एक, तीन गुना चौड़ा\n• तेल की शिरा — हर 600 चंक में एक, सतह से ही दिख जाती है\n\nकच्चा तेल गाँवों, परित्यक्त खदानों, गढ़ों या प्राचीन नगर के भीतर कभी नहीं बनता।"
+              "text": "कच्चा तेल न तो बनाया जा सकता है और न गलाया — इसे केवल ढूँढ़ा जाता है, ओवरवर्ल्ड में कहीं भी। भंडार चार आकारों में मिलते हैं:\n\n• सतही धब्बा — हर 150 चंक में एक, बस झलक भर\n• खदान-स्तर की झील — Y -40..-8, हर 50 चंक में एक: आपका मुख्य स्रोत\n• गहरा भंडार — Y -50..-30, हर 40 चंक में एक, तीन गुना चौड़ा\n• तेल की शिरा — हर 600 चंक में एक, सतह से ही दिख जाती है\n\nकच्चा तेल गाँवों, परित्यक्त खदानों, गढ़ों या प्राचीन नगर के भीतर कभी नहीं बनता।"
             },
             {
               "type": "text",
               "title": "भंडार सीमित है",
-              "text": "जो तेल का ब्लॉक आपने निकाल लिया, वह हमेशा के लिए चला गया — पानी की तरह भंडार दोबारा नहीं भरता।\n\nएक साधारण झील 20-60 बाल्टी की होती है, गहरा भंडार उससे कहीं ज़्यादा, और शिरा का गुंबद कई हज़ार। एक खाली हुआ तो अगला खोजने निकलना पड़ेगा, इसलिए जो मिले उसकी जगह निशान लगाकर रखें।\n\nबाल्टी से भरने में समय लगता है: पास में एक पंप रख दें, वह पूरा भंडार खुद ही टैंक में खींच लेगा।"
+              "text": "जो तेल का ब्लॉक आपने निकाल लिया, वह हमेशा के लिए चला गया — पानी की तरह भंडार दोबारा नहीं भरता।\n\nखदान-स्तर की झील लगभग 160 बाल्टी की होती है, गहरा भंडार लगभग 1300, और शिरा का गुंबद करीब चार हज़ार। एक खाली हुआ तो अगला खोजने निकलना पड़ेगा, इसलिए जो मिले उसकी जगह निशान लगाकर रखें।\n\nबाल्टी से भरने में समय लगता है: पास में एक पंप रख दें, वह पूरा भंडार खुद ही टैंक में खींच लेगा।"
             },
             {
               "type": "text",
@@ -407,6 +407,26 @@
               "lines": [
                 "ऊर्जा: 4 EU/t (दिन)",
                 "बफ़र: 8000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "creative_energy_source",
+          "title": "Creative Energy Source",
+          "icon": "alaindustrial:creative_energy_source",
+          "block_id": "alaindustrial:creative_energy_source",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Creative Energy Source",
+              "text": "An inexhaustible EU source with adjustable output — a tool for testing setups, not obtainable in survival."
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "Energy: 32-8192 EU/t"
               ]
             }
           ]
@@ -933,6 +953,44 @@
               ],
               "result_id": "alaindustrial:electrum_cable",
               "result_count": 3
+            }
+          ]
+        },
+        {
+          "id": "shielding_chest",
+          "title": "Shielding Chest",
+          "icon": "alaindustrial:shielding_chest",
+          "block_id": "alaindustrial:shielding_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Shielding Chest",
+              "text": "The only container that stops the radiation of its contents: uranium inside irradiates nobody. Iron-chest capacity (36 slots), needs no energy."
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 36 स्लॉट"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:iron_chest",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                ""
+              ],
+              "result_id": "alaindustrial:shielding_chest",
+              "result_count": 1
             }
           ]
         },
@@ -3935,6 +3993,44 @@
                 ""
               ],
               "result_id": "alaindustrial:tempered_iron_pickaxe",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "insulated_chestplate",
+          "title": "Insulated Chestplate",
+          "icon": "alaindustrial:insulated_chestplate",
+          "block_id": "alaindustrial:insulated_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Insulated Chestplate",
+              "text": "Leather armour dipped in slime — hood, jacket, trousers and boots that soak up a bare cable's shock and spend durability doing it."
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 4 पीस"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "बिना आकार की क्राफ्टिंग",
+              "grid": [
+                "minecraft:leather_chestplate",
+                "minecraft:slime_ball",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:insulated_chestplate",
               "result_count": 1
             }
           ]

@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:maceration",
+  "ingredient": "minecraft:granite",
+  "result": {
+    "id": "minecraft:gravel",
+    "count": 1
+  },
+  "energy": 300
+}

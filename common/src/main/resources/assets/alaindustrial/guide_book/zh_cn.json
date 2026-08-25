@@ -69,12 +69,12 @@
             {
               "type": "text",
               "title": "去哪里找",
-              "text": "石油既不能合成也不能冶炼——只能在主世界各处找到它。矿藏共有四种规模：\n\n• 地表油斑——约每 150 区块一处，只够尝个鲜\n• 矿层湖泊——Y -40..-8，约五个区块就有一处：你的主要来源\n• 深层储层——Y -50..-30，约每 20 区块一处，宽度是前者的三倍\n• 石油矿脉——约每 600 区块一处，从地表就能看见\n\n石油绝不会生成在村庄、废弃矿井、要塞或远古城市内部。"
+              "text": "石油既不能合成也不能冶炼——只能在主世界各处找到它。矿藏共有四种规模：\n\n• 地表油斑——约每 150 区块一处，只够尝个鲜\n• 矿层湖泊——Y -40..-8，约每 50 区块一处：你的主要来源\n• 深层储层——Y -50..-30，约每 40 区块一处，宽度是前者的三倍\n• 石油矿脉——约每 600 区块一处，从地表就能看见\n\n石油绝不会生成在村庄、废弃矿井、要塞或远古城市内部。"
             },
             {
               "type": "text",
               "title": "矿藏是有限的",
-              "text": "舀走的每一格石油都永远消失了——与水不同，矿藏不会重新填满。\n\n普通湖泊约有 20-60 桶，深层储层明显更多，矿脉的穹顶则有数千桶。抽干一处就得去找下一处，所以找到时记得标记位置。\n\n用桶一格格舀很费时间：在旁边放一台抽水泵，它会自己把整片矿藏抽进储罐。"
+              "text": "舀走的每一格石油都永远消失了——与水不同，矿藏不会重新填满。\n\n矿层湖泊约有 160 桶，深层储层约有 1300 桶，矿脉的穹顶则接近四千桶。抽干一处就得去找下一处，所以找到时记得标记位置。\n\n用桶一格格舀很费时间：在旁边放一台抽水泵，它会自己把整片矿藏抽进储罐。"
             },
             {
               "type": "text",
@@ -407,6 +407,26 @@
               "lines": [
                 "能量：4 EU/t（白天）",
                 "缓冲：8000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "creative_energy_source",
+          "title": "Creative Energy Source",
+          "icon": "alaindustrial:creative_energy_source",
+          "block_id": "alaindustrial:creative_energy_source",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Creative Energy Source",
+              "text": "An inexhaustible EU source with adjustable output — a tool for testing setups, not obtainable in survival."
+            },
+            {
+              "type": "stats",
+              "title": "属性",
+              "lines": [
+                "Energy: 32-8192 EU/t"
               ]
             }
           ]
@@ -933,6 +953,44 @@
               ],
               "result_id": "alaindustrial:electrum_cable",
               "result_count": 3
+            }
+          ]
+        },
+        {
+          "id": "shielding_chest",
+          "title": "Shielding Chest",
+          "icon": "alaindustrial:shielding_chest",
+          "block_id": "alaindustrial:shielding_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Shielding Chest",
+              "text": "The only container that stops the radiation of its contents: uranium inside irradiates nobody. Iron-chest capacity (36 slots), needs no energy."
+            },
+            {
+              "type": "stats",
+              "title": "属性",
+              "lines": [
+                "能量：36 格"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:iron_chest",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                ""
+              ],
+              "result_id": "alaindustrial:shielding_chest",
+              "result_count": 1
             }
           ]
         },
@@ -3935,6 +3993,44 @@
                 ""
               ],
               "result_id": "alaindustrial:tempered_iron_pickaxe",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "insulated_chestplate",
+          "title": "Insulated Chestplate",
+          "icon": "alaindustrial:insulated_chestplate",
+          "block_id": "alaindustrial:insulated_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Insulated Chestplate",
+              "text": "Leather armour dipped in slime — hood, jacket, trousers and boots that soak up a bare cable's shock and spend durability doing it."
+            },
+            {
+              "type": "stats",
+              "title": "属性",
+              "lines": [
+                "能量：4 件"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "无序合成",
+              "grid": [
+                "minecraft:leather_chestplate",
+                "minecraft:slime_ball",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:insulated_chestplate",
               "result_count": 1
             }
           ]

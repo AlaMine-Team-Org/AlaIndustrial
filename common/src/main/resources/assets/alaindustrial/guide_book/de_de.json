@@ -69,12 +69,12 @@
             {
               "type": "text",
               "title": "Wo du suchen musst",
-              "text": "Öl wird weder hergestellt noch geschmolzen — man findet es nur, überall in der Oberwelt. Vorkommen gibt es in vier Größen:\n\n• Oberflächenlache — eine pro 150 Chunks, nur ein Vorgeschmack\n• Minenschacht-See — Y -40..-8, etwa jeder fünfte Chunk: deine Hauptquelle\n• Tiefes Reservoir — Y -50..-30, eines pro 20 Chunks, dreimal so breit\n• Ölader — eine pro 600 Chunks, von der Oberfläche aus sichtbar\n\nÖl entsteht nie in Dörfern, Minenschächten, Festungen oder der Antiken Stadt."
+              "text": "Öl wird weder hergestellt noch geschmolzen — man findet es nur, überall in der Oberwelt. Vorkommen gibt es in vier Größen:\n\n• Oberflächenlache — eine pro 150 Chunks, nur ein Vorgeschmack\n• Minenschacht-See — Y -40..-8, einer pro 50 Chunks: deine Hauptquelle\n• Tiefes Reservoir — Y -50..-30, eines pro 40 Chunks, dreimal so breit\n• Ölader — eine pro 600 Chunks, von der Oberfläche aus sichtbar\n\nÖl entsteht nie in Dörfern, Minenschächten, Festungen oder der Antiken Stadt."
             },
             {
               "type": "text",
               "title": "Ein Vorkommen ist endlich",
-              "text": "Ein abgeschöpfter Ölblock ist für immer weg — anders als Wasser füllt sich das Vorkommen nicht wieder auf.\n\nEin gewöhnlicher See gibt 20-60 Eimer, ein tiefes Reservoir deutlich mehr, die Kuppel einer Ader mehrere Tausend. Ist eines leer, suchst du das nächste — markiere dir also jeden Fundort.\n\nMit dem Eimer dauert das Abschöpfen: Stell eine Pumpe daneben, und sie leert das ganze Vorkommen von selbst in einen Tank."
+              "text": "Ein abgeschöpfter Ölblock ist für immer weg — anders als Wasser füllt sich das Vorkommen nicht wieder auf.\n\nEin Minenschacht-See gibt etwa 160 Eimer, ein tiefes Reservoir etwa 1300, die Kuppel einer Ader fast viertausend. Ist eines leer, suchst du das nächste — markiere dir also jeden Fundort.\n\nMit dem Eimer dauert das Abschöpfen: Stell eine Pumpe daneben, und sie leert das ganze Vorkommen von selbst in einen Tank."
             },
             {
               "type": "text",
@@ -407,6 +407,26 @@
               "lines": [
                 "Energie: 4 EU/t (Tag)",
                 "Puffer: 8000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "creative_energy_source",
+          "title": "Creative Energy Source",
+          "icon": "alaindustrial:creative_energy_source",
+          "block_id": "alaindustrial:creative_energy_source",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Creative Energy Source",
+              "text": "An inexhaustible EU source with adjustable output — a tool for testing setups, not obtainable in survival."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energy: 32-8192 EU/t"
               ]
             }
           ]
@@ -933,6 +953,44 @@
               ],
               "result_id": "alaindustrial:electrum_cable",
               "result_count": 3
+            }
+          ]
+        },
+        {
+          "id": "shielding_chest",
+          "title": "Shielding Chest",
+          "icon": "alaindustrial:shielding_chest",
+          "block_id": "alaindustrial:shielding_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Shielding Chest",
+              "text": "The only container that stops the radiation of its contents: uranium inside irradiates nobody. Iron-chest capacity (36 slots), needs no energy."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 36 Plätze"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:iron_chest",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                ""
+              ],
+              "result_id": "alaindustrial:shielding_chest",
+              "result_count": 1
             }
           ]
         },
@@ -3935,6 +3993,44 @@
                 ""
               ],
               "result_id": "alaindustrial:tempered_iron_pickaxe",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "insulated_chestplate",
+          "title": "Insulated Chestplate",
+          "icon": "alaindustrial:insulated_chestplate",
+          "block_id": "alaindustrial:insulated_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Insulated Chestplate",
+              "text": "Leather armour dipped in slime — hood, jacket, trousers and boots that soak up a bare cable's shock and spend durability doing it."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 4 Stk."
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Formloses Handwerk",
+              "grid": [
+                "minecraft:leather_chestplate",
+                "minecraft:slime_ball",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:insulated_chestplate",
               "result_count": 1
             }
           ]

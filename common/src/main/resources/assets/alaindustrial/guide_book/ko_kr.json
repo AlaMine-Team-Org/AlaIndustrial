@@ -69,12 +69,12 @@
             {
               "type": "text",
               "title": "어디서 찾을까",
-              "text": "석유는 제작할 수도 제련할 수도 없습니다 — 오버월드 어디에서든 찾아내는 수밖에 없습니다. 매장지는 네 가지 크기로 나뉩니다:\n\n• 지표의 웅덩이 — 150청크당 하나, 맛보기 수준\n• 채굴 깊이의 호수 — Y -40..-8, 다섯 청크 중 하나꼴: 주요 공급원\n• 심층 저류지 — Y -50..-30, 20청크당 하나, 세 배 더 넓습니다\n• 석유 광맥 — 600청크당 하나, 지표에서도 보입니다\n\n석유는 마을, 폐광산, 요새, 고대 도시 안에서는 절대 생성되지 않습니다."
+              "text": "석유는 제작할 수도 제련할 수도 없습니다 — 오버월드 어디에서든 찾아내는 수밖에 없습니다. 매장지는 네 가지 크기로 나뉩니다:\n\n• 지표의 웅덩이 — 150청크당 하나, 맛보기 수준\n• 채굴 깊이의 호수 — Y -40..-8, 50청크당 하나: 주요 공급원\n• 심층 저류지 — Y -50..-30, 40청크당 하나, 세 배 더 넓습니다\n• 석유 광맥 — 600청크당 하나, 지표에서도 보입니다\n\n석유는 마을, 폐광산, 요새, 고대 도시 안에서는 절대 생성되지 않습니다."
             },
             {
               "type": "text",
               "title": "매장지는 유한합니다",
-              "text": "퍼낸 석유 블록은 영영 사라집니다 — 물과 달리 매장지는 다시 차오르지 않습니다.\n\n평범한 호수는 양동이 20-60개, 심층 저류지는 눈에 띄게 더 많고, 광맥의 돔은 수천 개에 이릅니다. 하나를 비우면 다음을 찾아 나서야 하니, 발견하면 그 자리를 표시해 두세요.\n\n양동이로 퍼내면 오래 걸립니다: 옆에 펌프를 놓으면 매장지 전체를 알아서 탱크로 빼냅니다."
+              "text": "퍼낸 석유 블록은 영영 사라집니다 — 물과 달리 매장지는 다시 차오르지 않습니다.\n\n채굴 깊이의 호수는 양동이 약 160개, 심층 저류지는 약 1300개, 광맥의 돔은 4000개에 가깝습니다. 하나를 비우면 다음을 찾아 나서야 하니, 발견하면 그 자리를 표시해 두세요.\n\n양동이로 퍼내면 오래 걸립니다: 옆에 펌프를 놓으면 매장지 전체를 알아서 탱크로 빼냅니다."
             },
             {
               "type": "text",
@@ -407,6 +407,26 @@
               "lines": [
                 "에너지: 4 EU/t (낮)",
                 "버퍼: 8000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "creative_energy_source",
+          "title": "Creative Energy Source",
+          "icon": "alaindustrial:creative_energy_source",
+          "block_id": "alaindustrial:creative_energy_source",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Creative Energy Source",
+              "text": "An inexhaustible EU source with adjustable output — a tool for testing setups, not obtainable in survival."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "Energy: 32-8192 EU/t"
               ]
             }
           ]
@@ -933,6 +953,44 @@
               ],
               "result_id": "alaindustrial:electrum_cable",
               "result_count": 3
+            }
+          ]
+        },
+        {
+          "id": "shielding_chest",
+          "title": "Shielding Chest",
+          "icon": "alaindustrial:shielding_chest",
+          "block_id": "alaindustrial:shielding_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Shielding Chest",
+              "text": "The only container that stops the radiation of its contents: uranium inside irradiates nobody. Iron-chest capacity (36 slots), needs no energy."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 36칸"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:iron_chest",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                ""
+              ],
+              "result_id": "alaindustrial:shielding_chest",
+              "result_count": 1
             }
           ]
         },
@@ -3935,6 +3993,44 @@
                 ""
               ],
               "result_id": "alaindustrial:tempered_iron_pickaxe",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "insulated_chestplate",
+          "title": "Insulated Chestplate",
+          "icon": "alaindustrial:insulated_chestplate",
+          "block_id": "alaindustrial:insulated_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Insulated Chestplate",
+              "text": "Leather armour dipped in slime — hood, jacket, trousers and boots that soak up a bare cable's shock and spend durability doing it."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 4개"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "무정형 제작",
+              "grid": [
+                "minecraft:leather_chestplate",
+                "minecraft:slime_ball",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:insulated_chestplate",
               "result_count": 1
             }
           ]

@@ -472,7 +472,11 @@ public final class IndustrializationNeoForge {
 				ModItemsNeoForge.ELECTROMAGNET.get(),
 				ModItemsNeoForge.JETPACK.get(),
 				ModItemsNeoForge.FLUXWEAVE_HELMET.get(), ModItemsNeoForge.FLUXWEAVE_CHESTPLATE.get(),
-				ModItemsNeoForge.FLUXWEAVE_LEGGINGS.get(), ModItemsNeoForge.FLUXWEAVE_BOOTS.get());
+				ModItemsNeoForge.FLUXWEAVE_LEGGINGS.get(), ModItemsNeoForge.FLUXWEAVE_BOOTS.get(),
+				// EU crystal BLANKS (MOD-504) — only they have a buffer; the finished crystals hold no
+				// energy and must not appear here.
+				ModItemsNeoForge.ENERGY_CRYSTAL_BLANK.get(), ModItemsNeoForge.LAPOTRON_CRYSTAL_BLANK.get(),
+				ModItemsNeoForge.RESONANT_CRYSTAL_BLANK.get());
 
 		// MOD-084/MOD-242: the fake "other mod" energy item (ForeignEnergyItemStandIn) is registered by
 		// NeoForgeGameTestBootstrap via its own RegisterCapabilitiesEvent listener — gametest source

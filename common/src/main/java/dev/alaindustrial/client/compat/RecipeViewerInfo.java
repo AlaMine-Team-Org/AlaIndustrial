@@ -144,7 +144,30 @@ public final class RecipeViewerInfo {
 								() -> Config.condenserInputRate)),
 						new Line("jei.alaindustrial.energy_condenser.line2", List.of(
 								() -> Config.clotThresholdI / 1000)),
-						Line.of("jei.alaindustrial.energy_condenser.line3"))));
+						Line.of("jei.alaindustrial.energy_condenser.line3"))),
+				// MOD-504: the three finished crystals. They have no recipe of any kind — a full blank
+				// simply turns into one — so without this page the R key answers nothing on them, and the
+				// player has no way to learn that charging a blank is what makes them.
+				crystalPage(ModContent.ENERGY_CRYSTAL, "energy_crystal"),
+				crystalPage(ModContent.LAPOTRON_CRYSTAL, "lapotron_crystal"),
+				crystalPage(ModContent.RESONANT_CRYSTAL, "resonant_crystal"));
+	}
+
+	/**
+	 * One "how do I get this crystal" page (MOD-504). All three tiers share the same three lines and
+	 * differ only in the item they hang off, so the wording is written once and cannot drift.
+	 *
+	 * <p><b>Deliberately free of numbers.</b> An earlier draft printed the exact EU price and the
+	 * priming time in seconds. Both are balance values that move, and every move would have meant
+	 * re-translating the line in all twenty shipped locales — expensive, and guaranteed to leave some
+	 * locale quoting a figure the game no longer uses. The page answers "how", the tooltip on the blank
+	 * answers "how much".
+	 */
+	private static Entry crystalPage(Supplier<? extends ItemLike> crystal, String id) {
+		return new Entry(crystal, "item.alaindustrial." + id, List.of(
+				Line.of("jei.alaindustrial.crystal.line1"),
+				Line.of("jei.alaindustrial.crystal.line2"),
+				Line.of("jei.alaindustrial.crystal.line3")));
 	}
 
 	/** A 0..1 share as whole percent — the unit every number on the grade page is written in. */

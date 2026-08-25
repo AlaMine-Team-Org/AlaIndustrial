@@ -3,6 +3,7 @@ package dev.alaindustrial.gametest.neoforge;
 import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.gametest.AssemblerPerfScenarios;
+import dev.alaindustrial.gametest.DemoStandScenarios;
 import dev.alaindustrial.gametest.CreativeEnergySourceScenarios;
 import dev.alaindustrial.gametest.EnergyNetworkPerfScenarios;
 import dev.alaindustrial.gametest.ForeignMaterialScenarios;
@@ -24,6 +25,7 @@ import dev.alaindustrial.gametest.LightningRodScenarios;
 import dev.alaindustrial.gametest.MachineEnergyScenarios;
 import dev.alaindustrial.gametest.ReactorScenarios;
 import dev.alaindustrial.gametest.BatteryScenarios;
+import dev.alaindustrial.gametest.CrystalPrimingScenarios;
 import dev.alaindustrial.gametest.CesuScenarios;
 import dev.alaindustrial.gametest.StorageEnergyScenarios;
 import dev.alaindustrial.gametest.RecipeTagScenarios;
@@ -198,6 +200,14 @@ public final class NeoForgeGameTests {
 		// Battery (MOD-083): the stacking EU carrier. The per-stack arithmetic and the charge-carrying
 		// recipe both run through loader-registered surfaces (item capability, recipe serializer), so
 		// the NeoForge lane has to run the same bodies rather than trust the Fabric suite.
+		// EU crystals (MOD-504): the blank->crystal swap runs at loader-registered charging surfaces, so
+		// this lane has to prove it on NeoForge rather than trust the Fabric suite.
+		registerTest(event, "crystal_full_blank_becomes_crystal", 40, true,
+				CrystalPrimingScenarios::crystal01FullBlankBecomesCrystal);
+		registerTest(event, "crystal_blank_refuses_to_discharge", 40, true,
+				CrystalPrimingScenarios::crystal02BlankRefusesToDischarge);
+		registerTest(event, "crystal_every_tier_finishes_into_its_own", 40, true,
+				CrystalPrimingScenarios::crystal03EveryTierFinishesIntoItsOwn);
 		registerTest(event, "battery_charging_a_stack_costs_per_item", 40, true,
 				BatteryScenarios::battery01ChargingAStackCostsPerItem);
 		registerTest(event, "battery_full_stack_still_charges", 40, true,
@@ -1929,6 +1939,20 @@ public final class NeoForgeGameTests {
 		registerTest(event, "block_capabilities_match_ports", 40, true,
 				helper -> BlockCapabilityParityScenarios.capabilitiesMatchPorts(helper, CAPABILITY_PROBES));
 
+		// MOD-294: the demo stand, mirrored onto this lane — same common bodies the Fabric
+		// DemoStandGameTest wrapper delegates to. The stand is 42×27×9, so these own a dedicated
+		// 44×14×28 envelope instead of the 8³ rig (force-loading, entity ticking and grid spacing
+		// are sized off the structure box — the MOD-335 lesson); sky access keeps the solar-fed
+		// zones honest for the liveness sweep.
+		registerTest(event, "demo_stand_builds_covers_and_runs", 300, true, DEMO_STAND_STRUCTURE, true,
+				DemoStandScenarios::demoStandBuildsCoversAndRuns);
+		registerTest(event, "demo_stand_clear_leaves_no_blocks", 100, true, DEMO_STAND_STRUCTURE, true,
+				DemoStandScenarios::demoStandClearLeavesNoBlocks);
+		registerTest(event, "demo_stand_rebuild_is_idempotent", 100, true, DEMO_STAND_STRUCTURE, true,
+				DemoStandScenarios::demoStandRebuildIsIdempotent);
+		registerTest(event, "demo_stand_showcase_covers_items", 100, true, DEMO_STAND_STRUCTURE, true,
+				DemoStandScenarios::demoStandShowcaseCoversItems);
+
 		// ── MOD-445 — scenarios the lane-parity gate found registered on Fabric only ─────────────
 		// docs/tools/gametest_lane_parity_check.py compares the common scenario set with both lanes;
 		// these 28 bodies had a Fabric @GameTest wrapper and no registerTest here. maxTicks mirror
@@ -2214,6 +2238,15 @@ public final class NeoForgeGameTests {
 	private static final Identifier RIG_STRUCTURE = Industrialization.id("gametest_rig");
 
 	/**
+	 * The MOD-294 demo stand envelope: all-air 44×14×28, shipped in this source set as
+	 * {@code data/alaindustrial/structure/demo_stand_area.nbt} — the binary twin of the fabric
+	 * lane's {@code demo_stand_area.snbt}. The stand is 42×27×9 with a 1-block origin margin, so
+	 * it cannot ride the 8³ rig (see the MOD-335 note above for everything the engine sizes off
+	 * the structure box).
+	 */
+	private static final Identifier DEMO_STAND_STRUCTURE = Industrialization.id("demo_stand_area");
+
+	/**
 	 * Padding around the structure. Widens grid spacing and, importantly, extends
 	 * {@code clearSpaceForStructure} + {@code removeEntities} so a neighbour's leftover drops are
 	 * cleared before this test runs. Matches the Fabric annotation default.
@@ -2234,6 +2267,29 @@ public final class NeoForgeGameTests {
 				1,          // maxAttempts — a retry would only mask a real defect
 				1,          // requiredSuccesses
 				false,      // skyAccess
+				RIG_PADDING);
+		event.registerTest(Industrialization.id(name), new CodeGameTestInstance(body, data));
+	}
+
+	/**
+	 * Register one code-body scenario on a custom structure envelope with explicit sky access —
+	 * for scenarios whose body outgrows the 8³ rig. Everything the engine sizes off the structure
+	 * box (chunk force-load, entity ticking, grid spacing — the MOD-335 list) then covers the
+	 * whole scenario footprint instead of a rig corner.
+	 */
+	private static void registerTest(RegisterGameTestsEvent event, String name, int maxTicks, boolean required,
+			Identifier structure, boolean skyAccess, Consumer<GameTestHelper> body) {
+		TestData<Holder<TestEnvironmentDefinition<?>>> data = new TestData<>(
+				emptyEnv,
+				structure,
+				maxTicks,
+				0,          // setupTicks
+				required,
+				Rotation.NONE,
+				false,      // manualOnly
+				1,          // maxAttempts — a retry would only mask a real defect
+				1,          // requiredSuccesses
+				skyAccess,
 				RIG_PADDING);
 		event.registerTest(Industrialization.id(name), new CodeGameTestInstance(body, data));
 	}

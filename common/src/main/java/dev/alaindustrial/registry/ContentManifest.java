@@ -137,6 +137,8 @@ import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
 import dev.alaindustrial.item.energy.BatteryItem;
+import dev.alaindustrial.item.energy.CrystalBlankItem;
+import dev.alaindustrial.item.energy.CrystalTier;
 import dev.alaindustrial.item.misc.DurableComponentItem;
 import dev.alaindustrial.item.misc.HintItem;
 import dev.alaindustrial.item.misc.MutationChipItem;
@@ -1038,6 +1040,21 @@ public final class ContentManifest {
 		// Battery (MOD-083): the stackable EU carrier. Charge is per item, so the stack size is what
 		// keeps stack transfers exact — see BatteryItem for why 16 and not 64.
 		defs.put("battery", p -> new BatteryItem(p.stacksTo(BatteryItem.MAX_STACK)));
+		// EU crystals (MOD-504). Two items per tier: the blank carries the buffer and is stacksTo(1)
+		// (energy moved into a stack must divide by count, and at these buffer sizes any stack would
+		// start rounding EU away); the finished crystal is an ordinary crafting material that stacks
+		// normally, because it holds no energy at all.
+		//
+		// Written out id by id rather than looped over CrystalTier.values(): arch_check's
+		// `items-registered-through-manifest` rule is a TEXT scan that pairs each manifestItem("x") in
+		// the loader registries against a defs.put("x", ...) literal here. A loop registers correctly at
+		// runtime and is invisible to that scan, which would leave every future item id unguarded.
+		defs.put("energy_crystal_blank", p -> new CrystalBlankItem(p.stacksTo(1), CrystalTier.ENERGY));
+		defs.put("energy_crystal", Item::new);
+		defs.put("lapotron_crystal_blank", p -> new CrystalBlankItem(p.stacksTo(1), CrystalTier.LAPOTRON));
+		defs.put("lapotron_crystal", Item::new);
+		defs.put("resonant_crystal_blank", p -> new CrystalBlankItem(p.stacksTo(1), CrystalTier.RESONANT));
+		defs.put("resonant_crystal", Item::new);
 		// Canned Ration (MOD-383): the mod's first edible item, and the one place its food numbers are
 		// declared. Its nutrition is fixed no matter what went into the machine — that is precisely
 		// what lets every ration stack with every other one, which is the entire point of the machine

@@ -21,22 +21,33 @@ import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
 import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
 import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
 import dev.alaindustrial.registry.ModContent;
+import dev.alaindustrial.Industrialization;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import dev.alaindustrial.block.TrellisBlock;
 import dev.alaindustrial.block.HorizontalMachineBlock;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.decoration.GlowItemFrame;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.FarmlandBlock;
 import net.minecraft.world.level.block.WallTorchBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.Container;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.server.level.ServerLevel;
 
 /**
@@ -74,6 +85,11 @@ public final class DemoStand {
 	/** Floor material — also the datum marker {@link #findOrigin} recognises for idempotent rebuilds. */
 	private static final Block FLOOR = Blocks.SMOOTH_STONE;
 
+	/** Showcase wall (MOD-294): the back-edge row z, columns x=1..40, rows y=2..6 (200 slots). */
+	private static final int SHOWCASE_WALL_Z = 25;
+	private static final int SHOWCASE_COLUMNS = 40;
+	private static final int SHOWCASE_ROWS = 5;
+
 	/** A named camera position for {@code /ala demo tp}, relative to the stand origin. */
 	public record TpPoint(String name, double dx, double dy, double dz, float yaw, float pitch, boolean night) {
 	}
@@ -95,6 +111,7 @@ public final class DemoStand {
 			new TpPoint("ores", 36.0, 2.0, 0.5, 0.0f, 5.0f, false),
 			new TpPoint("misc", 33.0, 3.0, 6.5, 0.0f, 15.0f, false),
 			new TpPoint("reactor", 4.5, 4.0, 11.0, 0.0f, 10.0f, false),
+			new TpPoint("showcase", 21.0, 5.5, 17.0, 0.0f, 15.0f, false),
 			new TpPoint("night", 10.0, 4.0, 0.0, 0.0f, 20.0f, true));
 
 	/**
@@ -114,10 +131,14 @@ public final class DemoStand {
 		return new BlockPos(0, level.getMinY(), 0);
 	}
 
-	/** Clear the stand envelope above the floor, then build the floor and every zone. */
+	/** Clear the stand envelope above the floor, sweep the entities that spilled, then build everything. */
 	public static void buildAll(ServerLevel level, BlockPos origin) {
 		clearAbove(level, origin);
 		buildFloor(level, origin);
+		// The sweep runs after the floor pass, not after clearAbove: the water mill sits AT floor
+		// level with a wheel in its slot, and replacing its block is what spills that wheel — the
+		// y>=1 machines spill during clearAbove, so this one sweep catches both waves.
+		killLooseEntities(level, origin);
 		buildTierZone(level, origin);
 		buildGeneratorRow(level, origin);
 		buildWindMills(level, origin);
@@ -129,9 +150,10 @@ public final class DemoStand {
 		buildFarms(level, origin);
 		buildReactorZone(level, origin);
 		buildReactorRoom(level, origin);
+		buildShowcase(level, origin);
 	}
 
-	/** Remove the stand: air above, and the floor layer reverts to grass. */
+	/** Remove the stand: air above, entities gone, and the floor layer reverts to grass. */
 	public static void clear(ServerLevel level, BlockPos origin) {
 		clearAbove(level, origin);
 		for (int x = 0; x < WIDTH; x++) {
@@ -139,6 +161,9 @@ public final class DemoStand {
 				set(level, origin, x, 0, z, Blocks.GRASS_BLOCK);
 			}
 		}
+		// After the grass pass for the same reason buildAll sweeps after its floor pass: the
+		// floor-level water mill spills its wheel when its block is replaced.
+		killLooseEntities(level, origin);
 	}
 
 	/** Air out everything above the floor layer (also removes sunken water/lava cells' contents). */
@@ -151,6 +176,23 @@ public final class DemoStand {
 					}
 				}
 			}
+		}
+	}
+
+	/**
+	 * Discard every entity in the stand envelope except players. Runs after the floor/grass pass
+	 * of a build or clear: by then the block changes have already unseated the showcase frames,
+	 * spilled the y≥1 machine inventories and replaced the floor-level water mill (whose slot
+	 * holds a wheel) — this sweep is what makes build-after-build leave nothing behind.
+	 * {@code discard()} removes without drops, and a popped frame must not litter the floor with
+	 * itself and its item. The box comes from the generator constants, never from "whatever this
+	 * run built" — rebuilds of any size clean the same fixed volume.
+	 */
+	private static void killLooseEntities(ServerLevel level, BlockPos origin) {
+		AABB box = AABB.encapsulatingFullBlocks(origin.offset(-1, 0, -1),
+				origin.offset(WIDTH + 1, HEIGHT + 2, DEPTH + 1));
+		for (Entity entity : level.getEntitiesOfClass(Entity.class, box, e -> !(e instanceof Player))) {
+			entity.discard();
 		}
 	}
 
@@ -604,13 +646,13 @@ public final class DemoStand {
 	 * roadmap; the row shows what is built rather than pretending otherwise.
 	 */
 	private static void buildTierZone(ServerLevel level, BlockPos origin) {
-		// LV: battery box (32/32) → tin cable → a macerator actually grinding.
+		// LV: battery box, buffer charged full → tin cable → a macerator actually grinding.
 		level.setBlockAndUpdate(origin.offset(2, 1, 1), ModContent.BATTERY_BOX.get().defaultBlockState()
 				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 		chargeBuffer(level, origin, 2, 1, 1);
 		set(level, origin, 3, 1, 1, ModContent.TIN_CABLE.get());
 		placeWorkingMachine(level, origin, 4, 1, ModContent.MACERATOR.get(), new ItemStack(Items.RAW_IRON, 64));
-		// MV: CESU (128/128) → gold cable → the assembler, charged and idle (first MV machine).
+		// MV: CESU, buffer charged full → gold cable → the assembler, charged and idle (first MV machine).
 		level.setBlockAndUpdate(origin.offset(12, 1, 1), ModContent.CESU.get().defaultBlockState()
 				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 		chargeBuffer(level, origin, 12, 1, 1);
@@ -902,6 +944,58 @@ public final class DemoStand {
 		set(level, origin, 8, by, bz + 2, ModContent.SHIELDING_CHEST.get());
 		fillSlot(level, origin, 8, by, bz + 2, 0, new ItemStack(ModContent.REFINED_URANIUM.get(), 64));
 		fillSlot(level, origin, 8, by, bz + 2, 1, new ItemStack(ModContent.URANIUM_FUEL_ROD.get()));
+	}
+
+	/**
+	 * Zone <b>showcase</b> (MOD-294, wall at the back edge z=25): every non-block item of the
+	 * registry in a glow item frame. The frames are generated by looping
+	 * {@code BuiltInRegistries.ITEM}, so the wall refills itself whenever the registry grows — and
+	 * the item-coverage gametest reddens the day the registry outgrows the wall. Rows z=25/26 held
+	 * nothing but the pipe run (x 16..31 at z=26, below the wall's first row), and no camera looks
+	 * at anything through this wall, so the back edge was free space.
+	 *
+	 * <p>Frames are entities: {@link #killLooseEntities} discards them on every rebuild and this
+	 * method places them anew after the wall, which keeps rebuild×2 idempotent. Glow frames render
+	 * their item readable in the dark without emitting light. The wall itself is floor blocks — a
+	 * support that is part of the stand's own block pass, so a frame never hangs on terrain the
+	 * stand does not own.
+	 */
+	private static void buildShowcase(ServerLevel level, BlockPos origin) {
+		for (int row = 0; row < SHOWCASE_ROWS; row++) {
+			for (int x = 1; x <= SHOWCASE_COLUMNS; x++) {
+				set(level, origin, x, 2 + row, SHOWCASE_WALL_Z, FLOOR);
+			}
+		}
+		List<Item> items = showcaseItems();
+		int placed = 0;
+		for (int row = 0; row < SHOWCASE_ROWS && placed < items.size(); row++) {
+			for (int x = 1; x <= SHOWCASE_COLUMNS && placed < items.size(); x++) {
+				GlowItemFrame frame = new GlowItemFrame(level, origin.offset(x, 2 + row, SHOWCASE_WALL_Z - 1),
+						Direction.NORTH);
+				frame.setItem(new ItemStack(items.get(placed++)));
+				level.addFreshEntity(frame);
+			}
+		}
+	}
+
+	/**
+	 * Every non-block item registered in the {@code alaindustrial} namespace, sorted by id — the
+	 * exact population the showcase wall displays and its gametest asserts, in the exact order the
+	 * wall fills. Public for the gametest: one enumeration, no drift between builder and check.
+	 */
+	public static List<Item> showcaseItems() {
+		List<Item> items = new ArrayList<>();
+		for (Identifier id : BuiltInRegistries.ITEM.keySet()) {
+			if (!Industrialization.MOD_ID.equals(id.getNamespace())) {
+				continue;
+			}
+			Item item = BuiltInRegistries.ITEM.getValue(id);
+			if (!(item instanceof BlockItem)) {
+				items.add(item);
+			}
+		}
+		items.sort(Comparator.comparing(item -> BuiltInRegistries.ITEM.getKey(item).toString()));
+		return items;
 	}
 
 	private static void set(ServerLevel level, BlockPos origin, int x, int y, int z, Block block) {

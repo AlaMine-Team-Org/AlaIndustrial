@@ -426,7 +426,17 @@ public final class PlayerEuDistributor {
 			}
 			// stackAdd moves a whole multiple of the count and reports what actually landed, so a budget
 			// that does not divide evenly across a stack under-delivers rather than inventing EU.
-			return ItemEnergy.stackAdd(target, move);
+			long landed = ItemEnergy.stackAdd(target, move);
+			// MOD-504: a blank filled by a Charging Station or a worn Energy Pack becomes its crystal.
+			// NO_SLOT means the caller has no inventory index to write back to (a hand-held path), and
+			// there the blank simply stays full until it reaches a slot that can replace it.
+			if (landed > 0 && slot != NO_SLOT) {
+				ItemStack finished = CrystalBlankItem.promote(target);
+				if (!finished.isEmpty()) {
+					player.getInventory().setItem(slot, finished);
+				}
+			}
+			return landed;
 		}
 		if (slot == NO_SLOT) {
 			return 0L;

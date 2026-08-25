@@ -3,6 +3,7 @@ package dev.alaindustrial.block.entity;
 import dev.alaindustrial.core.energy.DirectAdjacencyDistributor;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.item.energy.CrystalBlankItem;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.menu.CreativeEnergySourceMenu;
 import dev.alaindustrial.registry.ModContent;
@@ -255,6 +256,11 @@ public class CreativeEnergySourceBlockEntity extends MachineBlockEntity implemen
 			return;
 		}
 		if (ItemEnergy.stackAdd(target, budget) > 0) {
+			// MOD-504: the creative source finishes a blank like any other charger.
+			ItemStack finished = CrystalBlankItem.promote(target);
+			if (!finished.isEmpty()) {
+				setItem(CHARGE_SLOT, finished);
+			}
 			setChanged();
 		}
 	}

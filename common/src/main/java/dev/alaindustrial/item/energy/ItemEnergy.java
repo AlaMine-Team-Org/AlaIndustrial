@@ -45,6 +45,9 @@ public final class ItemEnergy {
 	 * energy into or out of a whole stack must go through {@link #stackAdd} and friends.
 	 */
 	public static long capacity(ItemStack stack) {
+		if (stack.getItem() instanceof CrystalBlankItem blank) {
+			return blank.tier().capacity();
+		}
 		if (stack.getItem() instanceof PouchItem) {
 			return Config.lvPouchBuffer;
 		}
@@ -89,6 +92,9 @@ public final class ItemEnergy {
 	 * cannot be force-fed at a big charger's rate. 0 for items without a buffer.
 	 */
 	public static long inputRate(ItemStack stack) {
+		if (stack.getItem() instanceof CrystalBlankItem blank) {
+			return blank.tier().inputRate();
+		}
 		if (stack.getItem() instanceof PouchItem) {
 			return EnergyTier.LV.maxVoltage();
 		}
@@ -163,8 +169,19 @@ public final class ItemEnergy {
 		}
 	}
 
-	/** Adjust stored EU by {@code delta} (may be negative); result is clamped. */
+	/**
+	 * Adjust stored EU by {@code delta} (may be negative); result is clamped.
+	 *
+	 * <p>A negative delta is refused for a crystal blank (MOD-504) — a blank only ever fills up. The
+	 * rule lives here rather
+	 * than in each discharge site because every one of them — the Battery Box slot, the CESU slot,
+	 * {@link #spend} and so the Energy Pack distributor and every tool — ends up in this method. One
+	 * guard covers them all, and a future caller inherits it without knowing about it.
+	 */
 	public static void add(ItemStack stack, long delta) {
+		if (delta < 0 && stack.getItem() instanceof CrystalBlankItem) {
+			return;
+		}
 		set(stack, get(stack) + delta);
 	}
 
@@ -245,6 +262,12 @@ public final class ItemEnergy {
 	public static long stackAdd(ItemStack stack, long eu) {
 		int count = stack.getCount();
 		if (count <= 0 || eu == 0 || capacity(stack) <= 0) {
+			return 0L;
+		}
+		// The unprimed-crystal guard has to be here too, not only in add(): this method REPORTS how much
+		// it moved, and a discharge slot banks that number. Falling through to a refusing add() would
+		// return a non-zero "moved" for energy that never left the item — EU created out of nothing.
+		if (eu < 0 && stack.getItem() instanceof CrystalBlankItem) {
 			return 0L;
 		}
 		long perItem = eu / count;

@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:maceration",
+  "ingredient": "minecraft:diorite",
+  "result": {
+    "id": "minecraft:gravel",
+    "count": 1
+  },
+  "energy": 300
+}

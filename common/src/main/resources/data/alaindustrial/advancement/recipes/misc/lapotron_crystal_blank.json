@@ -1,0 +1,38 @@
+{
+	"parent": "minecraft:recipes/root",
+	"criteria": {
+		"has_energy_crystal": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "alaindustrial:energy_crystal"
+					}
+				]
+			}
+		},
+		"has_clot": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "alaindustrial:energy_clot_ii"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_energy_crystal"
+		],
+		[
+			"has_clot"
+		]
+	],
+	"rewards": {
+		"recipes": [
+			"alaindustrial:lapotron_crystal_blank"
+		]
+	}
+}

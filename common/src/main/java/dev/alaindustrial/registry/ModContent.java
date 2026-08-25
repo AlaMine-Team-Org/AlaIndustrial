@@ -400,6 +400,23 @@ public final class ModContent {
 	// Energy Pack (MOD-065) — worn LV energy buffer (chest slot) that tops up the powered items the
 	// player carries; BATTERY is its crafting component (an inert cell, no charge of its own).
 	public static Supplier<Item> BATTERY = unbound("BATTERY");
+	// EU crystals (MOD-504). Two items per tier: a chargeable blank and the finished crystal it turns
+	// into. The finished half holds no energy — it is a plain crafting material.
+	public static Supplier<Item> ENERGY_CRYSTAL_BLANK = unbound("ENERGY_CRYSTAL_BLANK");
+	public static Supplier<Item> ENERGY_CRYSTAL = unbound("ENERGY_CRYSTAL");
+	public static Supplier<Item> LAPOTRON_CRYSTAL_BLANK = unbound("LAPOTRON_CRYSTAL_BLANK");
+	public static Supplier<Item> LAPOTRON_CRYSTAL = unbound("LAPOTRON_CRYSTAL");
+	public static Supplier<Item> RESONANT_CRYSTAL_BLANK = unbound("RESONANT_CRYSTAL_BLANK");
+	public static Supplier<Item> RESONANT_CRYSTAL = unbound("RESONANT_CRYSTAL");
+
+	/** The finished crystal of {@code tier} — what a full blank of that tier becomes. */
+	public static Supplier<Item> crystal(dev.alaindustrial.item.energy.CrystalTier tier) {
+		return switch (tier) {
+			case ENERGY -> ENERGY_CRYSTAL;
+			case LAPOTRON -> LAPOTRON_CRYSTAL;
+			case RESONANT -> RESONANT_CRYSTAL;
+		};
+	}
 	public static Supplier<Item> ENERGY_PACK = unbound("ENERGY_PACK");
 	// Electric Drill (MOD-079) — the first powered hand tool: a diamond-tier pickaxe that runs on EU.
 	public static Supplier<Item> ELECTRIC_DRILL = unbound("ELECTRIC_DRILL");

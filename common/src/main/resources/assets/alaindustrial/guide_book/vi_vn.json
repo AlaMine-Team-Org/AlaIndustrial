@@ -69,12 +69,12 @@
             {
               "type": "text",
               "title": "Tìm ở đâu",
-              "text": "Dầu mỏ không chế tạo được, cũng không nung ra được — chỉ có thể tìm thấy, ở bất cứ đâu trong Thế Giới Thường. Mỏ dầu có bốn cỡ:\n\n• Vũng trên mặt đất — một vũng mỗi 150 chunk, chỉ đủ nếm thử\n• Hồ trong hầm mỏ — Y -40..-8, khoảng một trong năm chunk: nguồn chính của bạn\n• Bể sâu — Y -50..-30, một bể mỗi 20 chunk, rộng gấp ba\n• Mạch dầu — một mạch mỗi 600 chunk, nhìn thấy được từ trên mặt đất\n\nDầu không bao giờ sinh ra bên trong làng, hầm mỏ, thành trì hay Thành phố Cổ đại."
+              "text": "Dầu mỏ không chế tạo được, cũng không nung ra được — chỉ có thể tìm thấy, ở bất cứ đâu trong Thế Giới Thường. Mỏ dầu có bốn cỡ:\n\n• Vũng trên mặt đất — một vũng mỗi 150 chunk, chỉ đủ nếm thử\n• Hồ trong hầm mỏ — Y -40..-8, một hồ mỗi 50 chunk: nguồn chính của bạn\n• Bể sâu — Y -50..-30, một bể mỗi 40 chunk, rộng gấp ba\n• Mạch dầu — một mạch mỗi 600 chunk, nhìn thấy được từ trên mặt đất\n\nDầu không bao giờ sinh ra bên trong làng, hầm mỏ, thành trì hay Thành phố Cổ đại."
             },
             {
               "type": "text",
               "title": "Mỏ dầu là hữu hạn",
-              "text": "Khối dầu bạn múc lên là mất hẳn — khác với nước, mỏ dầu không tự đầy lại.\n\nMột hồ thường được 20-60 xô, bể sâu nhiều hơn hẳn, còn vòm của mạch dầu thì vài nghìn. Hút cạn một chỗ là phải đi tìm chỗ kế tiếp, nên hãy đánh dấu vị trí ngay khi tìm được.\n\nMúc bằng xô khá lâu: đặt một Máy bơm bên cạnh, nó sẽ tự hút cả mỏ vào bồn."
+              "text": "Khối dầu bạn múc lên là mất hẳn — khác với nước, mỏ dầu không tự đầy lại.\n\nHồ trong hầm mỏ được khoảng 160 xô, bể sâu khoảng 1300, còn vòm của mạch dầu thì gần bốn nghìn. Hút cạn một chỗ là phải đi tìm chỗ kế tiếp, nên hãy đánh dấu vị trí ngay khi tìm được.\n\nMúc bằng xô khá lâu: đặt một Máy bơm bên cạnh, nó sẽ tự hút cả mỏ vào bồn."
             },
             {
               "type": "text",
@@ -407,6 +407,26 @@
               "lines": [
                 "Năng lượng: 4 EU/t (ngày)",
                 "Bộ đệm: 8000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "creative_energy_source",
+          "title": "Creative Energy Source",
+          "icon": "alaindustrial:creative_energy_source",
+          "block_id": "alaindustrial:creative_energy_source",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Creative Energy Source",
+              "text": "An inexhaustible EU source with adjustable output — a tool for testing setups, not obtainable in survival."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Energy: 32-8192 EU/t"
               ]
             }
           ]
@@ -933,6 +953,44 @@
               ],
               "result_id": "alaindustrial:electrum_cable",
               "result_count": 3
+            }
+          ]
+        },
+        {
+          "id": "shielding_chest",
+          "title": "Shielding Chest",
+          "icon": "alaindustrial:shielding_chest",
+          "block_id": "alaindustrial:shielding_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Shielding Chest",
+              "text": "The only container that stops the radiation of its contents: uranium inside irradiates nobody. Iron-chest capacity (36 slots), needs no energy."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 36 ô"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:iron_chest",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                ""
+              ],
+              "result_id": "alaindustrial:shielding_chest",
+              "result_count": 1
             }
           ]
         },
@@ -3935,6 +3993,44 @@
                 ""
               ],
               "result_id": "alaindustrial:tempered_iron_pickaxe",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "insulated_chestplate",
+          "title": "Insulated Chestplate",
+          "icon": "alaindustrial:insulated_chestplate",
+          "block_id": "alaindustrial:insulated_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Insulated Chestplate",
+              "text": "Leather armour dipped in slime — hood, jacket, trousers and boots that soak up a bare cable's shock and spend durability doing it."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 4 món"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo không định hình",
+              "grid": [
+                "minecraft:leather_chestplate",
+                "minecraft:slime_ball",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:insulated_chestplate",
               "result_count": 1
             }
           ]

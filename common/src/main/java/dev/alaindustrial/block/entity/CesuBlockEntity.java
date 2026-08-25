@@ -5,6 +5,7 @@ import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.core.energy.DirectAdjacencyDistributor;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.item.energy.CrystalBlankItem;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.menu.CesuMenu;
 import dev.alaindustrial.registry.ModContent;
@@ -78,6 +79,11 @@ public class CesuBlockEntity extends MachineBlockEntity implements MenuProvider 
 			return;
 		}
 		energy.drainInternal(moved);
+		// MOD-504: same rule as the Battery Box — a full blank turns into its crystal in the slot.
+		ItemStack finished = CrystalBlankItem.promote(target);
+		if (!finished.isEmpty()) {
+			setItem(CHARGE_SLOT, finished);
+		}
 		setChanged();
 	}
 

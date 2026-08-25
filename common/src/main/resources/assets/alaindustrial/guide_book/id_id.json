@@ -69,12 +69,12 @@
             {
               "type": "text",
               "title": "Di mana mencarinya",
-              "text": "Minyak bumi tidak bisa dibuat maupun dilebur — ia hanya bisa ditemukan, di mana saja di Overworld. Deposit hadir dalam empat ukuran:\n\n• Bercak permukaan — satu per 150 chunk, sekadar cicipan\n• Danau lubang tambang — Y -40..-8, sekitar satu dari lima chunk: sumber utamamu\n• Reservoir dalam — Y -50..-30, satu per 20 chunk, tiga kali lebih lebar\n• Urat minyak — satu per 600 chunk, terlihat dari permukaan\n\nMinyak tidak pernah muncul di dalam desa, lubang tambang, benteng, atau Kota Kuno."
+              "text": "Minyak bumi tidak bisa dibuat maupun dilebur — ia hanya bisa ditemukan, di mana saja di Overworld. Deposit hadir dalam empat ukuran:\n\n• Bercak permukaan — satu per 150 chunk, sekadar cicipan\n• Danau lubang tambang — Y -40..-8, satu per 50 chunk: sumber utamamu\n• Reservoir dalam — Y -50..-30, satu per 40 chunk, tiga kali lebih lebar\n• Urat minyak — satu per 600 chunk, terlihat dari permukaan\n\nMinyak tidak pernah muncul di dalam desa, lubang tambang, benteng, atau Kota Kuno."
             },
             {
               "type": "text",
               "title": "Deposit itu terbatas",
-              "text": "Balok minyak yang kamu ciduk hilang selamanya — tidak seperti air, deposit tidak terisi ulang.\n\nDanau biasa berisi 20-60 ember, reservoir dalam jauh lebih banyak, dan kubah sebuah urat beberapa ribu. Habiskan satu, kamu harus mencari yang berikutnya — jadi tandai tempatnya begitu ketemu.\n\nMenciduk dengan ember makan waktu: letakkan Pompa di sebelahnya dan ia akan menguras seluruh deposit ke tangki sendirian."
+              "text": "Balok minyak yang kamu ciduk hilang selamanya — tidak seperti air, deposit tidak terisi ulang.\n\nDanau lubang tambang berisi sekitar 160 ember, reservoir dalam sekitar 1300, dan kubah sebuah urat hampir empat ribu. Habiskan satu, kamu harus mencari yang berikutnya — jadi tandai tempatnya begitu ketemu.\n\nMenciduk dengan ember makan waktu: letakkan Pompa di sebelahnya dan ia akan menguras seluruh deposit ke tangki sendirian."
             },
             {
               "type": "text",
@@ -407,6 +407,26 @@
               "lines": [
                 "Energi: 4 EU/t (siang)",
                 "Bufer: 8000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "creative_energy_source",
+          "title": "Creative Energy Source",
+          "icon": "alaindustrial:creative_energy_source",
+          "block_id": "alaindustrial:creative_energy_source",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Creative Energy Source",
+              "text": "An inexhaustible EU source with adjustable output — a tool for testing setups, not obtainable in survival."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Energy: 32-8192 EU/t"
               ]
             }
           ]
@@ -933,6 +953,44 @@
               ],
               "result_id": "alaindustrial:electrum_cable",
               "result_count": 3
+            }
+          ]
+        },
+        {
+          "id": "shielding_chest",
+          "title": "Shielding Chest",
+          "icon": "alaindustrial:shielding_chest",
+          "block_id": "alaindustrial:shielding_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Shielding Chest",
+              "text": "The only container that stops the radiation of its contents: uranium inside irradiates nobody. Iron-chest capacity (36 slots), needs no energy."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Energi: 36 slot"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:iron_chest",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                ""
+              ],
+              "result_id": "alaindustrial:shielding_chest",
+              "result_count": 1
             }
           ]
         },
@@ -3935,6 +3993,44 @@
                 ""
               ],
               "result_id": "alaindustrial:tempered_iron_pickaxe",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "insulated_chestplate",
+          "title": "Insulated Chestplate",
+          "icon": "alaindustrial:insulated_chestplate",
+          "block_id": "alaindustrial:insulated_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Insulated Chestplate",
+              "text": "Leather armour dipped in slime — hood, jacket, trousers and boots that soak up a bare cable's shock and spend durability doing it."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Energi: 4 buah"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Tanpa Pola",
+              "grid": [
+                "minecraft:leather_chestplate",
+                "minecraft:slime_ball",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:insulated_chestplate",
               "result_count": 1
             }
           ]

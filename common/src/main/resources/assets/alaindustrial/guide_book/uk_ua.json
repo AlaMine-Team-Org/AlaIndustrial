@@ -69,12 +69,12 @@
             {
               "type": "text",
               "title": "Де шукати",
-              "text": "Нафту не крафтять і не плавлять — її лише знаходять, по всьому Звичайному світу. Поклади бувають чотирьох розмірів:\n\n• Пляма на поверхні — одна на 150 чанків, на пробу\n• Озеро в шахті — Y -40..-8, приблизно в кожному п’ятому чанку: ваше основне джерело\n• Глибокий резервуар — Y -50..-30, один на 20 чанків, утричі ширший\n• Нафтова жила — одна на 600 чанків, видно з поверхні\n\nУсередині сіл, шахт, фортець і Стародавнього міста нафта не з’являється."
+              "text": "Нафту не крафтять і не плавлять — її лише знаходять, по всьому Звичайному світу. Поклади бувають чотирьох розмірів:\n\n• Пляма на поверхні — одна на 150 чанків, на пробу\n• Озеро в шахті — Y -40..-8, один на 50 чанків: ваше основне джерело\n• Глибокий резервуар — Y -50..-30, один на 40 чанків, утричі ширший\n• Нафтова жила — одна на 600 чанків, видно з поверхні\n\nУсередині сіл, шахт, фортець і Стародавнього міста нафта не з’являється."
             },
             {
               "type": "text",
               "title": "Поклад скінченний",
-              "text": "Вичерпаний блок нафти зникає назавжди — на відміну від води, поклад не відновлюється.\n\nЗвичайне озеро — це 20-60 відер, глибокий резервуар помітно більше, купол жили — кілька тисяч. Викачали один — шукаєте наступний, тож знайдене місце варто позначити.\n\nЧерпати відром можна довго: поставте поруч Помпу, і вона сама зіллє весь поклад у бак."
+              "text": "Вичерпаний блок нафти зникає назавжди — на відміну від води, поклад не відновлюється.\n\nОзеро в шахті — це близько 160 відер, глибокий резервуар — близько 1300, а купол жили — майже чотири тисячі. Викачали один — шукаєте наступний, тож знайдене місце варто позначити.\n\nЧерпати відром можна довго: поставте поруч Помпу, і вона сама зіллє весь поклад у бак."
             },
             {
               "type": "text",
@@ -407,6 +407,26 @@
               "lines": [
                 "Енергія: 4 EU/t (день)",
                 "Буфер: 8000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "creative_energy_source",
+          "title": "Creative Energy Source",
+          "icon": "alaindustrial:creative_energy_source",
+          "block_id": "alaindustrial:creative_energy_source",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Creative Energy Source",
+              "text": "An inexhaustible EU source with adjustable output — a tool for testing setups, not obtainable in survival."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Energy: 32-8192 EU/t"
               ]
             }
           ]
@@ -933,6 +953,44 @@
               ],
               "result_id": "alaindustrial:electrum_cable",
               "result_count": 3
+            }
+          ]
+        },
+        {
+          "id": "shielding_chest",
+          "title": "Shielding Chest",
+          "icon": "alaindustrial:shielding_chest",
+          "block_id": "alaindustrial:shielding_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Shielding Chest",
+              "text": "The only container that stops the radiation of its contents: uranium inside irradiates nobody. Iron-chest capacity (36 slots), needs no energy."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: 36 слотів"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:iron_chest",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                ""
+              ],
+              "result_id": "alaindustrial:shielding_chest",
+              "result_count": 1
             }
           ]
         },
@@ -3935,6 +3993,44 @@
                 ""
               ],
               "result_id": "alaindustrial:tempered_iron_pickaxe",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "insulated_chestplate",
+          "title": "Insulated Chestplate",
+          "icon": "alaindustrial:insulated_chestplate",
+          "block_id": "alaindustrial:insulated_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Insulated Chestplate",
+              "text": "Leather armour dipped in slime — hood, jacket, trousers and boots that soak up a bare cable's shock and spend durability doing it."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: 4 шт."
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт без форми",
+              "grid": [
+                "minecraft:leather_chestplate",
+                "minecraft:slime_ball",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:insulated_chestplate",
               "result_count": 1
             }
           ]

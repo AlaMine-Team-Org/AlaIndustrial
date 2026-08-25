@@ -367,6 +367,13 @@ public final class CreativeTabContent {
 		show(out, ModContent.BATTERY);
 		show(out, ModContent.BATTERY_POUCH);
 		show(out, ModContent.ENERGY_PACK);
+		// Crystals after the pack, each blank next to what it becomes.
+		show(out, ModContent.ENERGY_CRYSTAL_BLANK);
+		show(out, ModContent.ENERGY_CRYSTAL);
+		show(out, ModContent.LAPOTRON_CRYSTAL_BLANK);
+		show(out, ModContent.LAPOTRON_CRYSTAL);
+		show(out, ModContent.RESONANT_CRYSTAL_BLANK);
+		show(out, ModContent.RESONANT_CRYSTAL);
 	}
 
 	/** 8 - what goes into a machine's upgrade panel, and the chips that evolve a generator. */

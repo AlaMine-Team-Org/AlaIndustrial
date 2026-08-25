@@ -292,6 +292,14 @@ public final class ModItemsNeoForge {
 	// properties (EQUIPPABLE + token armor attribute, no ArmorMaterial) come from the common helper,
 	// so both loaders build the same item; NeoForge supplies the id from the deferred key itself.
 	public static final DeferredItem<Item> BATTERY = manifestItem("battery");
+
+	// EU crystals (MOD-504) — mirror of the Fabric list; the ids come from the same ContentManifest.
+	public static final DeferredItem<Item> ENERGY_CRYSTAL_BLANK = manifestItem("energy_crystal_blank");
+	public static final DeferredItem<Item> ENERGY_CRYSTAL = manifestItem("energy_crystal");
+	public static final DeferredItem<Item> LAPOTRON_CRYSTAL_BLANK = manifestItem("lapotron_crystal_blank");
+	public static final DeferredItem<Item> LAPOTRON_CRYSTAL = manifestItem("lapotron_crystal");
+	public static final DeferredItem<Item> RESONANT_CRYSTAL_BLANK = manifestItem("resonant_crystal_blank");
+	public static final DeferredItem<Item> RESONANT_CRYSTAL = manifestItem("resonant_crystal");
 	public static final DeferredItem<EnergyPackItem> ENERGY_PACK =
 			ITEMS.registerItem("energy_pack", EnergyPackItem::new, EnergyPackItem::equipmentProperties);
 	// Electric Drill (MOD-079): first powered hand tool — a diamond-tier pickaxe that runs on EU. The
@@ -750,6 +758,12 @@ public final class ModItemsNeoForge {
 		// Same invariant-generics story as NETWORK_ANALYZER above.
 		ModContent.BATTERY_POUCH = BATTERY_POUCH::get;
 		ModContent.BATTERY = BATTERY::get;
+		ModContent.ENERGY_CRYSTAL_BLANK = ENERGY_CRYSTAL_BLANK::get;
+		ModContent.ENERGY_CRYSTAL = ENERGY_CRYSTAL::get;
+		ModContent.LAPOTRON_CRYSTAL_BLANK = LAPOTRON_CRYSTAL_BLANK::get;
+		ModContent.LAPOTRON_CRYSTAL = LAPOTRON_CRYSTAL::get;
+		ModContent.RESONANT_CRYSTAL_BLANK = RESONANT_CRYSTAL_BLANK::get;
+		ModContent.RESONANT_CRYSTAL = RESONANT_CRYSTAL::get;
 		ModContent.ENERGY_PACK = ENERGY_PACK::get;
 		// DeferredItem<ElectricDrillItem> into a Supplier<Item> slot — bind via ::get (invariant generics).
 		ModContent.ELECTRIC_DRILL = ELECTRIC_DRILL::get;

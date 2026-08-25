@@ -63,6 +63,16 @@ loom {
             ideConfigGenerated(true)
             runDir('runs/server')
         }
+        // MOD-294 — straight into the demo polygon: quick-plays the existing save "AlaDemo" from
+        // runs/demo/saves. Creates no world: the first entry into AlaDemo is a plain runClient
+        // session, and without that save the client stops on a "Failed to Quick Play" screen.
+        demoClient {
+            client()
+            setConfigName('Fabric Demo Client')
+            ideConfigGenerated(true)
+            runDir('runs/demo')
+            programArgs '--quickPlaySingleplayer', 'AlaDemo'
+        }
         // GUI-only screenshot mode: ./gradlew :fabric:runClientGameTest -Pguionly
         configureEach {
             if (project.findProperty("guionly") != null) {

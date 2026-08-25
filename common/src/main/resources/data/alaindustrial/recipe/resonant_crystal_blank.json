@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"pattern": [
+		"SPS",
+		"PLP",
+		"SKS"
+	],
+	"key": {
+		"S": "alaindustrial:resonant_shard",
+		"P": "alaindustrial:spatial_crystal",
+		"L": "alaindustrial:lapotron_crystal",
+		"K": "alaindustrial:energy_clot_iii"
+	},
+	"result": {
+		"id": "alaindustrial:resonant_crystal_blank",
+		"count": 1
+	}
+}

@@ -242,6 +242,15 @@ public final class ModItems {
 	public static final Item BATTERY_POUCH = pouch("battery_pouch");
 	// Energy Pack (MOD-065): worn LV buffer + the inert battery cell it is crafted from.
 	public static final Item BATTERY = manifestItem("battery");
+
+	// EU crystals (MOD-504): a chargeable blank per tier, and the finished crystal it becomes at 100 %.
+	// Only the blanks have an EU buffer; the finished three are ordinary crafting materials.
+	public static final Item ENERGY_CRYSTAL_BLANK = manifestItem("energy_crystal_blank");
+	public static final Item ENERGY_CRYSTAL = manifestItem("energy_crystal");
+	public static final Item LAPOTRON_CRYSTAL_BLANK = manifestItem("lapotron_crystal_blank");
+	public static final Item LAPOTRON_CRYSTAL = manifestItem("lapotron_crystal");
+	public static final Item RESONANT_CRYSTAL_BLANK = manifestItem("resonant_crystal_blank");
+	public static final Item RESONANT_CRYSTAL = manifestItem("resonant_crystal");
 	public static final Item ENERGY_PACK = energyPack("energy_pack");
 	// Electric Drill (MOD-079): first powered hand tool — a diamond-tier pickaxe that runs on EU.
 	public static final Item ELECTRIC_DRILL = electricDrill("electric_drill");
@@ -958,6 +967,12 @@ public final class ModItems {
 		ModContent.TELEPORTER_REMOTE = () -> TELEPORTER_REMOTE;
 		ModContent.BATTERY_POUCH = () -> BATTERY_POUCH;
 		ModContent.BATTERY = () -> BATTERY;
+		ModContent.ENERGY_CRYSTAL_BLANK = () -> ENERGY_CRYSTAL_BLANK;
+		ModContent.ENERGY_CRYSTAL = () -> ENERGY_CRYSTAL;
+		ModContent.LAPOTRON_CRYSTAL_BLANK = () -> LAPOTRON_CRYSTAL_BLANK;
+		ModContent.LAPOTRON_CRYSTAL = () -> LAPOTRON_CRYSTAL;
+		ModContent.RESONANT_CRYSTAL_BLANK = () -> RESONANT_CRYSTAL_BLANK;
+		ModContent.RESONANT_CRYSTAL = () -> RESONANT_CRYSTAL;
 		ModContent.ENERGY_PACK = () -> ENERGY_PACK;
 		ModContent.ELECTRIC_DRILL = () -> ELECTRIC_DRILL;
 		ModContent.ELECTRIC_DRILL_DIAMOND_TIP = () -> ELECTRIC_DRILL_DIAMOND_TIP;

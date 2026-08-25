@@ -79,7 +79,8 @@ public final class OilGeyserFeature extends Feature<OilGeyserConfiguration> {
 
 		placeDome(level, config, new BlockPos(origin.getX(), domeCenterY, origin.getZ()), domeRadius,
 				fluid, barrier);
-		placeShaft(level, config, origin.getX(), origin.getZ(), domeCenterY + domeRadius - 1, surfaceY - 1,
+		placeShaft(level, config, origin.getX(), origin.getZ(),
+				OilGeyserShape.shaftFromY(domeCenterY, domeRadius), OilGeyserShape.shaftToY(surfaceY),
 				fluid, barrier);
 		placeSpout(level, config, origin, config.spoutHeight().sample(random), fluid);
 		return true;
@@ -110,17 +111,23 @@ public final class OilGeyserFeature extends Feature<OilGeyserConfiguration> {
 		return state != ownFluid && !state.isSolid();
 	}
 
-	/** Sphere of oil with a one-layer seal wherever the shell would otherwise open into a cavity. */
+	/**
+	 * Sphere of oil with a one-layer seal wherever the shell would otherwise open into a cavity.
+	 *
+	 * <p>Which offsets are oil and which are seal is decided by {@link OilGeyserShape} rather than
+	 * here, so that a measurement of the deposit's volume asks the same question this pass answers.
+	 * The previous published figure came from a second copy of these two comparisons and was wrong
+	 * on both — see the class note on {@code OilGeyserShape}.
+	 */
 	private static void placeDome(WorldGenLevel level, OilGeyserConfiguration config, BlockPos center,
 			int radius, BlockState fluid, BlockState barrier) {
-		int inner = radius * radius;
-		int outer = (radius + 1) * (radius + 1);
+		int scan = OilGeyserShape.domeScanRadius(radius);
 		BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
-		for (int dx = -radius - 1; dx <= radius + 1; dx++) {
-			for (int dz = -radius - 1; dz <= radius + 1; dz++) {
-				for (int dy = -radius - 1; dy <= radius + 1; dy++) {
-					int distance = dx * dx + dy * dy + dz * dz;
-					if (distance > outer) {
+		for (int dx = -scan; dx <= scan; dx++) {
+			for (int dz = -scan; dz <= scan; dz++) {
+				for (int dy = -scan; dy <= scan; dy++) {
+					boolean source = OilGeyserShape.isDomeSource(radius, dx, dy, dz);
+					if (!source && !OilGeyserShape.isDomeShell(radius, dx, dy, dz)) {
 						continue;
 					}
 					cursor.set(center.getX() + dx, center.getY() + dy, center.getZ() + dz);
@@ -128,7 +135,7 @@ public final class OilGeyserFeature extends Feature<OilGeyserConfiguration> {
 							|| !config.canReplace().test(level, cursor)) {
 						continue;
 					}
-					if (distance <= inner) {
+					if (source) {
 						level.setBlock(cursor, fluid, Block.UPDATE_CLIENTS);
 					} else if (leaks(level, cursor, fluid)) {
 						level.setBlock(cursor, barrier, Block.UPDATE_CLIENTS);

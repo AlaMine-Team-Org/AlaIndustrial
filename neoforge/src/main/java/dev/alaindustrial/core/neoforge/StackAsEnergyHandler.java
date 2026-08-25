@@ -1,5 +1,6 @@
 package dev.alaindustrial.core.neoforge;
 
+import dev.alaindustrial.item.energy.CrystalBlankItem;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -67,7 +68,11 @@ public final class StackAsEnergyHandler implements EnergyHandler {
 			return 0;
 		}
 		ItemEnergy.set(updated, stored + accepted);
-		if (itemAccess.exchange(ItemResource.of(updated), 1, transaction) != 1) {
+		// MOD-504: a foreign charger finishes a crystal blank exactly like the mod's own slots do —
+		// the stack is being rebuilt here anyway, so the swap costs nothing extra.
+		ItemStack finished = CrystalBlankItem.promote(updated);
+		ItemStack result = finished.isEmpty() ? updated : finished;
+		if (itemAccess.exchange(ItemResource.of(result), 1, transaction) != 1) {
 			return 0;
 		}
 		return (int) accepted;

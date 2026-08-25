@@ -1,0 +1,38 @@
+{
+	"parent": "minecraft:recipes/root",
+	"criteria": {
+		"has_diamond_dust": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "alaindustrial:diamond_dust"
+					}
+				]
+			}
+		},
+		"has_tempered_iron": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "alaindustrial:tempered_iron"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_diamond_dust"
+		],
+		[
+			"has_tempered_iron"
+		]
+	],
+	"rewards": {
+		"recipes": [
+			"alaindustrial:energy_crystal_blank"
+		]
+	}
+}

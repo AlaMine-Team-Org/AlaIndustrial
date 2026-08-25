@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"pattern": [
+		"ACA",
+		"CEC",
+		"AKA"
+	],
+	"key": {
+		"A": "alaindustrial:advanced_circuit",
+		"C": "alaindustrial:resonance_coil",
+		"E": "alaindustrial:energy_crystal",
+		"K": "alaindustrial:energy_clot_ii"
+	},
+	"result": {
+		"id": "alaindustrial:lapotron_crystal_blank",
+		"count": 1
+	}
+}

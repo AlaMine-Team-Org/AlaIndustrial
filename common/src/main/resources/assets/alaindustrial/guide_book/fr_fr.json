@@ -69,12 +69,12 @@
             {
               "type": "text",
               "title": "Où chercher",
-              "text": "Le pétrole ne se fabrique ni ne se cuit — il se trouve, et c'est tout, partout à la Surface. Les gisements existent en quatre tailles :\n\n• Flaque de surface — une tous les 150 chunks, juste un avant-goût\n• Lac de mine — Y -40..-8, environ un chunk sur cinq : votre source principale\n• Réservoir profond — Y -50..-30, un tous les 20 chunks, trois fois plus large\n• Veine de pétrole — une tous les 600 chunks, visible depuis la surface\n\nLe pétrole ne se génère jamais dans les villages, les mines abandonnées, les forteresses ni la cité antique."
+              "text": "Le pétrole ne se fabrique ni ne se cuit — il se trouve, et c'est tout, partout à la Surface. Les gisements existent en quatre tailles :\n\n• Flaque de surface — une tous les 150 chunks, juste un avant-goût\n• Lac de mine — Y -40..-8, un tous les 50 chunks : votre source principale\n• Réservoir profond — Y -50..-30, un tous les 40 chunks, trois fois plus large\n• Veine de pétrole — une tous les 600 chunks, visible depuis la surface\n\nLe pétrole ne se génère jamais dans les villages, les mines abandonnées, les forteresses ni la cité antique."
             },
             {
               "type": "text",
               "title": "Un gisement s'épuise",
-              "text": "Un bloc de pétrole que vous puisez est perdu pour de bon — contrairement à l'eau, le gisement ne se reforme pas.\n\nUn lac ordinaire donne 20-60 seaux, un réservoir profond nettement plus, le dôme d'une veine plusieurs milliers. Une fois l'un vidé, vous partez chercher le suivant : notez donc l'endroit dès que vous en trouvez un.\n\nPuiser au seau prend du temps : posez une Pompe à côté et elle vide tout le gisement dans un réservoir toute seule."
+              "text": "Un bloc de pétrole que vous puisez est perdu pour de bon — contrairement à l'eau, le gisement ne se reforme pas.\n\nUn lac de mine donne environ 160 seaux, un réservoir profond environ 1300, le dôme d'une veine près de quatre mille. Une fois l'un vidé, vous partez chercher le suivant : notez donc l'endroit dès que vous en trouvez un.\n\nPuiser au seau prend du temps : posez une Pompe à côté et elle vide tout le gisement dans un réservoir toute seule."
             },
             {
               "type": "text",
@@ -407,6 +407,26 @@
               "lines": [
                 "Énergie : 4 EU/t (jour)",
                 "Tampon : 8000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "creative_energy_source",
+          "title": "Creative Energy Source",
+          "icon": "alaindustrial:creative_energy_source",
+          "block_id": "alaindustrial:creative_energy_source",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Creative Energy Source",
+              "text": "An inexhaustible EU source with adjustable output — a tool for testing setups, not obtainable in survival."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiques",
+              "lines": [
+                "Energy: 32-8192 EU/t"
               ]
             }
           ]
@@ -933,6 +953,44 @@
               ],
               "result_id": "alaindustrial:electrum_cable",
               "result_count": 3
+            }
+          ]
+        },
+        {
+          "id": "shielding_chest",
+          "title": "Shielding Chest",
+          "icon": "alaindustrial:shielding_chest",
+          "block_id": "alaindustrial:shielding_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Shielding Chest",
+              "text": "The only container that stops the radiation of its contents: uranium inside irradiates nobody. Iron-chest capacity (36 slots), needs no energy."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiques",
+              "lines": [
+                "Énergie : 36 emplacements"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:iron_chest",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                ""
+              ],
+              "result_id": "alaindustrial:shielding_chest",
+              "result_count": 1
             }
           ]
         },
@@ -3935,6 +3993,44 @@
                 ""
               ],
               "result_id": "alaindustrial:tempered_iron_pickaxe",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "insulated_chestplate",
+          "title": "Insulated Chestplate",
+          "icon": "alaindustrial:insulated_chestplate",
+          "block_id": "alaindustrial:insulated_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Insulated Chestplate",
+              "text": "Leather armour dipped in slime — hood, jacket, trousers and boots that soak up a bare cable's shock and spend durability doing it."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiques",
+              "lines": [
+                "Énergie : 4 pièces"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication non façonnée",
+              "grid": [
+                "minecraft:leather_chestplate",
+                "minecraft:slime_ball",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:insulated_chestplate",
               "result_count": 1
             }
           ]

@@ -95,6 +95,12 @@ public class BatteryItem extends Item {
 		if (level instanceof ServerLevel) {
 			ItemEnergy.add(battery, -move);
 			ItemEnergy.add(target, move);
+			// MOD-504: topping a blank off by hand finishes it too, in the hand that holds it.
+			ItemStack finished = CrystalBlankItem.promote(target);
+			if (!finished.isEmpty()) {
+				player.setItemInHand(hand == InteractionHand.MAIN_HAND
+						? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND, finished);
+			}
 		}
 		// A metallic electrical click, the same vocabulary the electromagnet uses for a powered device;
 		// plays as the local player's own prediction.

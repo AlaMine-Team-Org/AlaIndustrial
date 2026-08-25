@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"pattern": [
+		"DRD",
+		"RTR",
+		"DRD"
+	],
+	"key": {
+		"D": "alaindustrial:diamond_dust",
+		"R": "minecraft:redstone",
+		"T": "alaindustrial:tempered_iron"
+	},
+	"result": {
+		"id": "alaindustrial:energy_crystal_blank",
+		"count": 1
+	}
+}

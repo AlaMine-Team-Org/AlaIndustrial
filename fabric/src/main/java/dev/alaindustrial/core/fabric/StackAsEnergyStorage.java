@@ -1,5 +1,6 @@
 package dev.alaindustrial.core.fabric;
 
+import dev.alaindustrial.item.energy.CrystalBlankItem;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.registry.ModItems;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
@@ -75,7 +76,11 @@ public final class StackAsEnergyStorage implements EnergyStorage {
 				ModItems.ELECTROMAGNET,
 				ModItems.JETPACK,
 				ModItems.FLUXWEAVE_HELMET, ModItems.FLUXWEAVE_CHESTPLATE, ModItems.FLUXWEAVE_LEGGINGS,
-				ModItems.FLUXWEAVE_BOOTS);
+				ModItems.FLUXWEAVE_BOOTS,
+				// EU crystal BLANKS (MOD-504) — only they have a buffer; the finished crystals hold no
+				// energy and must not appear here. Insert-only, like everything else in this list.
+				ModItems.ENERGY_CRYSTAL_BLANK, ModItems.LAPOTRON_CRYSTAL_BLANK,
+				ModItems.RESONANT_CRYSTAL_BLANK);
 	}
 
 	@Override
@@ -103,9 +108,13 @@ public final class StackAsEnergyStorage implements EnergyStorage {
 			return 0L;
 		}
 		ItemEnergy.set(updated, current + accepted);
+		// MOD-504: a foreign charger finishes a crystal blank exactly like the mod's own slots do —
+		// the variant is being rebuilt here anyway, so the swap costs nothing extra.
+		ItemStack finished = CrystalBlankItem.promote(updated);
+		ItemStack result = finished.isEmpty() ? updated : finished;
 		try (Transaction nested = transaction.openNested()) {
 			if (context.extract(currentVariant, 1, nested) == 1
-					&& context.insert(ItemVariant.of(updated), 1, nested) == 1) {
+					&& context.insert(ItemVariant.of(result), 1, nested) == 1) {
 				nested.commit();
 				return accepted;
 			}

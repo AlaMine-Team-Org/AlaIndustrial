@@ -5,6 +5,7 @@ import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.core.energy.DirectAdjacencyDistributor;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.item.energy.CrystalBlankItem;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.menu.BatteryBoxMenu;
 import dev.alaindustrial.registry.ModContent;
@@ -84,6 +85,11 @@ public class BatteryBoxBlockEntity extends MachineBlockEntity implements MenuPro
 			return;
 		}
 		energy.drainInternal(moved);
+		// MOD-504: a crystal blank that just filled up becomes the finished crystal, in place.
+		ItemStack finished = CrystalBlankItem.promote(target);
+		if (!finished.isEmpty()) {
+			setItem(CHARGE_SLOT, finished);
+		}
 		setChanged();
 	}
 

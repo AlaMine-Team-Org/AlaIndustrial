@@ -69,12 +69,12 @@
             {
               "type": "text",
               "title": "Where to look",
-              "text": "Oil is neither crafted nor smelted — it is only found, anywhere in the Overworld. Deposits come in four sizes:\n\n• Surface patch — one per 150 chunks, just a taster\n• Mining-depth lake — Y -40..-8, about one chunk in five: your main source\n• Deep reservoir — Y -50..-30, one per 20 chunks, three times wider\n• Oil vein — one per 600 chunks, visible from the surface\n\nOil never generates inside villages, mineshafts, strongholds or the Ancient City."
+              "text": "Oil is neither crafted nor smelted — it is only found, anywhere in the Overworld. Deposits come in four sizes:\n\n• Surface patch — one per 150 chunks, just a taster\n• Mining-depth lake — Y -40..-8, one per 50 chunks: your main source\n• Deep reservoir — Y -50..-30, one per 40 chunks, three times wider\n• Oil vein — one per 600 chunks, visible from the surface\n\nOil never generates inside villages, mineshafts, strongholds or the Ancient City."
             },
             {
               "type": "text",
               "title": "A deposit is finite",
-              "text": "A block of oil you scoop out is gone for good — unlike water, the deposit does not refill.\n\nAn ordinary lake is 20-60 buckets, a deep reservoir noticeably more, a vein's dome several thousand. Drain one and you go looking for the next, so mark the spot when you find one.\n\nScooping by bucket takes a while: put a Pump next to it and it drains the whole deposit into a tank by itself."
+              "text": "A block of oil you scoop out is gone for good — unlike water, the deposit does not refill.\n\nA mining-depth lake is about 160 buckets, a deep reservoir about 1300, and a vein's dome nearly four thousand. Drain one and you go looking for the next, so mark the spot when you find one.\n\nScooping by bucket takes a while: put a Pump next to it and it drains the whole deposit into a tank by itself."
             },
             {
               "type": "text",
@@ -407,6 +407,26 @@
               "lines": [
                 "Energy: 4 EU/t (day)",
                 "Buffer: 8000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "creative_energy_source",
+          "title": "Creative Energy Source",
+          "icon": "alaindustrial:creative_energy_source",
+          "block_id": "alaindustrial:creative_energy_source",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Creative Energy Source",
+              "text": "An inexhaustible EU source with adjustable output — a tool for testing setups, not obtainable in survival."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Energy: 32-8192 EU/t"
               ]
             }
           ]
@@ -933,6 +953,44 @@
               ],
               "result_id": "alaindustrial:electrum_cable",
               "result_count": 3
+            }
+          ]
+        },
+        {
+          "id": "shielding_chest",
+          "title": "Shielding Chest",
+          "icon": "alaindustrial:shielding_chest",
+          "block_id": "alaindustrial:shielding_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Shielding Chest",
+              "text": "The only container that stops the radiation of its contents: uranium inside irradiates nobody. Iron-chest capacity (36 slots), needs no energy."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Energy: 36 slots"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:iron_chest",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                ""
+              ],
+              "result_id": "alaindustrial:shielding_chest",
+              "result_count": 1
             }
           ]
         },
@@ -3935,6 +3993,44 @@
                 ""
               ],
               "result_id": "alaindustrial:tempered_iron_pickaxe",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "insulated_chestplate",
+          "title": "Insulated Chestplate",
+          "icon": "alaindustrial:insulated_chestplate",
+          "block_id": "alaindustrial:insulated_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Insulated Chestplate",
+              "text": "Leather armour dipped in slime — hood, jacket, trousers and boots that soak up a bare cable's shock and spend durability doing it."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Energy: 4 pcs."
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shapeless Crafting",
+              "grid": [
+                "minecraft:leather_chestplate",
+                "minecraft:slime_ball",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:insulated_chestplate",
               "result_count": 1
             }
           ]

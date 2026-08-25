@@ -1,0 +1,38 @@
+{
+	"parent": "minecraft:recipes/root",
+	"criteria": {
+		"has_lapotron_crystal": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "alaindustrial:lapotron_crystal"
+					}
+				]
+			}
+		},
+		"has_clot": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "alaindustrial:energy_clot_iii"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_lapotron_crystal"
+		],
+		[
+			"has_clot"
+		]
+	],
+	"rewards": {
+		"recipes": [
+			"alaindustrial:resonant_crystal_blank"
+		]
+	}
+}

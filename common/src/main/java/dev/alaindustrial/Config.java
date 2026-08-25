@@ -538,6 +538,33 @@ public final class Config {
 	 * into a tool in four clicks, so a manual top-up stays a deliberate act rather than a reflex. */
 	public static int batteryTransferPerUse = 500;
 
+	// --- EU crystals (MOD-504) ---
+	// Only the BLANK of each tier has a buffer; the finished crystal is a plain crafting material with
+	// no energy at all. So these numbers are not storage capacities — they are the EU price of making
+	// one crystal, and the priming time is that price divided by the charge rate.
+	//
+	// Every tier accepts the same 128 EU/t, and that is the ceiling of the hardware rather than a
+	// balance choice: a charge slot moves min(EnergyTier.MV.maxVoltage(), inputRate) — see
+	// CesuBlockEntity#chargeItem — and the Charging Station's own intake is chargePadInputRate = 128.
+	// The mod has no HV item charger, so a bigger number here would be a dead letter.
+	//
+	// The ladder is 100 k / 500 k / 1.5 M rather than the round IC2 100 k / 1 M / 10 M, because each
+	// blank now fills from EMPTY: nothing is carried over from the tier below, since the finished
+	// crystal it is built from holds no charge to carry. At 128 EU/t that gives 39 s / 3 min 15 s /
+	// 9 min 45 s. Ten million would have meant 65 minutes of staring at a slot.
+	/** EU a blank Energy Crystal must absorb before it becomes an Energy Crystal. ~39 s at 128 EU/t. */
+	public static int energyCrystalBuffer = 100_000;
+	/** Max EU/tick an Energy Crystal blank accepts in a charge slot; the MV ceiling, see the note above. */
+	public static int energyCrystalInputRate = 128;
+	/** EU a blank Lapotron Crystal must absorb. ~3 min 15 s at 128 EU/t. */
+	public static int lapotronCrystalBuffer = 500_000;
+	/** Max EU/tick a Lapotron Crystal blank accepts in a charge slot. */
+	public static int lapotronCrystalInputRate = 128;
+	/** EU a blank Resonant Crystal must absorb — the end of the ladder. ~9 min 45 s at 128 EU/t. */
+	public static int resonantCrystalBuffer = 1_500_000;
+	/** Max EU/tick a Resonant Crystal blank accepts in a charge slot. */
+	public static int resonantCrystalInputRate = 128;
+
 	// --- Energy Pack (MOD-065, worn LV buffer) ---
 	/** Energy Pack EU buffer — 10 pouches' worth, the same size as the Battery Box (LV tier). Charging
 	 * it from a Battery Box at the LV ceiling (32 EU/t) takes ~625 ticks (~31 s). */
@@ -1952,6 +1979,18 @@ public final class Config {
 				() -> batteryInputRate, v -> batteryInputRate = v, 1),
 			new IntField("batteryTransferPerUse", Section.TOOLS, "EU one right-click moves from the battery into the item in the other hand.",
 				() -> batteryTransferPerUse, v -> batteryTransferPerUse = v, 1),
+			new IntField("energyCrystalBuffer", Section.TOOLS, "EU a blank Energy Crystal must absorb to become a crystal. Priming time is this divided by the charge rate below.",
+				() -> energyCrystalBuffer, v -> energyCrystalBuffer = v, 1),
+			new IntField("energyCrystalInputRate", Section.TOOLS, "Max EU/t an Energy Crystal accepts in a charge slot. A charge slot caps at 128 regardless, so higher values do nothing until an HV item charger exists.",
+				() -> energyCrystalInputRate, v -> energyCrystalInputRate = v, 1),
+			new IntField("lapotronCrystalBuffer", Section.TOOLS, "EU a blank Lapotron Crystal must absorb. It fills from empty - the finished Energy Crystal it is built from carries no charge.",
+				() -> lapotronCrystalBuffer, v -> lapotronCrystalBuffer = v, 1),
+			new IntField("lapotronCrystalInputRate", Section.TOOLS, "Max EU/t a Lapotron Crystal accepts in a charge slot.",
+				() -> lapotronCrystalInputRate, v -> lapotronCrystalInputRate = v, 1),
+			new IntField("resonantCrystalBuffer", Section.TOOLS, "EU a blank Resonant Crystal must absorb. Sized against the 128 EU/t charge ceiling; raise it only together with an HV item charger.",
+				() -> resonantCrystalBuffer, v -> resonantCrystalBuffer = v, 1),
+			new IntField("resonantCrystalInputRate", Section.TOOLS, "Max EU/t a Resonant Crystal accepts in a charge slot.",
+				() -> resonantCrystalInputRate, v -> resonantCrystalInputRate = v, 1),
 			new IntField("energyPackBuffer", Section.TOOLS, "Energy Pack (worn) EU buffer.",
 				() -> energyPackBuffer, v -> energyPackBuffer = v, 1),
 			new IntField("energyPackInputRate", Section.TOOLS, "Max EU/t the Energy Pack accepts while charging in a slot.",
