@@ -363,7 +363,7 @@
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="11 ページ">11</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
-<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>原子力</span><span class="cat-count" aria-label="12 ページ">12</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>原子力</span><span class="cat-count" aria-label="13 ページ">13</span></a>
 <div class="group-title">加工</div>
 <a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>マシン</span><span class="cat-count" aria-label="15 ページ">15</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>液体マシン</span><span class="cat-count" aria-label="2 ページ">2</span></a>
@@ -396,13 +396,13 @@
 </div>
 <h2 id="概要">概要</h2>
 
-<p><strong>ディーゼル</strong> は石油蒸留の軽質フラクションで、<a href="../fluid-machines/distillation_column.html">蒸留塔</a> の目的生成物です：原油1バケツごとに 700 mB 得られます。ワールドには存在せず、唯一の入手源は蒸留塔です。金色がかった黄色でさらさらしており、石油と違って水のように振る舞います — ワールドで燃えず、移動を妨げず、溺れさせません。</p>
+<p><strong>ディーゼル</strong> は石油蒸留の軽質フラクションで、<a href="../fluid-machines/distillation_column.html">蒸留塔</a> の目的生成物です：原油1バケツごとに 700 mB 得られます。ワールドには存在せず、唯一の入手源は蒸留塔です。金色がかった黄色でさらさらしており、石油と違い、ワールドで燃えず、溺れさせることもありません。こぼれたディーゼルには落ちてしまいます — 三種のなかで最もさらさらしており、沈むのは最も速い一方、<strong>ジャンプを押し続ければ</strong>脱出も最も簡単です。液面下では画面に薄い琥珀色の膜がかかります。</p>
 
 <blockquote><strong>ミニ例：</strong> 塔の頂部に据えたポンプがディーゼルを携帯用タンクへ排出します — あるいは塔のインターフェースのディーゼルスロットに空のバケツを入れてください。</blockquote>
 
 <h2 id="ブロック属性">ブロック属性</h2>
 
-<table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>物理</td><td>水と同様：広がり、燃えず、無害</td></tr><tr><td>再生</td><td>なし — 2つの源から3つ目は生まれない</td></tr><tr><td>採取</td><td>バケツ、カプセル、ポンプ</td></tr><tr><td>タグ</td><td><code>c:diesel</code>（still + flowing）</td></tr></tbody></table>
+<table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>物理</td><td>広がる。燃えず、溺れず、落下ダメージなし</td></tr><tr><td>浸水</td><td>三種で最も抵抗が小さい（粘度 1200）：沈降 約9.6ブロック/秒、ジャンプ長押しで上昇 約2.4ブロック/秒</td></tr><tr><td>液面下</td><td>琥珀色の膜、霧 4 … 22 ブロック</td></tr><tr><td>再生</td><td>なし — 2つの源から3つ目は生まれない</td></tr><tr><td>採取</td><td>バケツ、カプセル、ポンプ</td></tr><tr><td>タグ</td><td><code>c:diesel</code>（still + flowing）</td></tr></tbody></table>
 
 <h2 id="進行">進行</h2>
 

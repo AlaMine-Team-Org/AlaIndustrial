@@ -363,7 +363,7 @@
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="11 ページ">11</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
-<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>原子力</span><span class="cat-count" aria-label="12 ページ">12</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>原子力</span><span class="cat-count" aria-label="13 ページ">13</span></a>
 <div class="group-title">加工</div>
 <a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>マシン</span><span class="cat-count" aria-label="15 ページ">15</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>液体マシン</span><span class="cat-count" aria-label="2 ページ">2</span></a>
@@ -396,13 +396,13 @@
 </div>
 <h2 id="概要">概要</h2>
 
-<p><strong>重油</strong> は蒸留の重質残渣です：石油1バケツごとに 200 mB が <a href="../fluid-machines/distillation_column.html">蒸留塔</a> の下段タンクへ流れ落ちます。粘稠で暗褐色。体積のわりに手間が多く、見返りは少ない — まさに下段フラクションのあるべき姿です。ディーゼルと同様、ワールドでは水のように振る舞います：燃えず、無害です。</p>
+<p><strong>重油</strong> は蒸留の重質残渣です：石油1バケツごとに 200 mB が <a href="../fluid-machines/distillation_column.html">蒸留塔</a> の下段タンクへ流れ落ちます。粘稠で暗褐色。体積のわりに手間が多く、見返りは少ない — まさに下段フラクションのあるべき姿です。ディーゼルと同様、燃えず、溺れさせることもありません。こぼれた重油には落ちてしまいます：ディーゼルより粘く、原油より薄いため、沈むのはより緩やかで、<strong>ジャンプを押し続ければ</strong>脱出できます。液面下では画面に暗褐色の膜がかかります。</p>
 
 <blockquote><strong>ミニ例：</strong> 塔の基部に置いた3台目のポンプが重油を別のタンクへ引き抜きます — あるいはインターフェースの重油スロットに空のバケツを入れてください。</blockquote>
 
 <h2 id="ブロック属性">ブロック属性</h2>
 
-<table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>物理</td><td>水と同様：広がり、燃えず、無害</td></tr><tr><td>再生</td><td>なし</td></tr><tr><td>採取</td><td>バケツ、カプセル、ポンプ</td></tr><tr><td>タグ</td><td><code>c:fuel_oil</code>（still + flowing）</td></tr></tbody></table>
+<table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>物理</td><td>広がる。燃えず、溺れず、落下ダメージなし</td></tr><tr><td>浸水</td><td>ディーゼルと原油の中間（粘度 2400）：沈降 約6.8ブロック/秒、ジャンプ長押しで上昇 約1.7ブロック/秒</td></tr><tr><td>液面下</td><td>暗褐色の膜、霧 2.5 … 14 ブロック</td></tr><tr><td>再生</td><td>なし</td></tr><tr><td>採取</td><td>バケツ、カプセル、ポンプ</td></tr><tr><td>タグ</td><td><code>c:fuel_oil</code>（still + flowing）</td></tr></tbody></table>
 
 <h2 id="進行">進行</h2>
 

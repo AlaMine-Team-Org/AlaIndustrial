@@ -363,7 +363,7 @@
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="11 страниц">11</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="4 страницы">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
-<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>Ядерная техника</span><span class="cat-count" aria-label="12 страниц">12</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>Ядерная техника</span><span class="cat-count" aria-label="13 страниц">13</span></a>
 <div class="group-title">Переработка</div>
 <a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="15 страниц">15</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машины для жидкостей</span><span class="cat-count" aria-label="2 страницы">2</span></a>
@@ -397,13 +397,13 @@
 
 <h2 id="сводка">Сводка</h2>
 
-<p><strong>Мазут</strong> — тяжёлый остаток перегонки: 200 mB с каждого ведра нефти, стекает в нижний бак <a href="../fluid-machines/distillation_column.html">Перегонной колонны</a>. Густой, тёмно-бурый; его больше по объёму мороки и меньше по отдаче — ровно то, чем и должна быть нижняя фракция. Как и дизель, в мире ведёт себя как вода: не горит, не вредит.</p>
+<p><strong>Мазут</strong> — тяжёлый остаток перегонки: 200 mB с каждого ведра нефти, стекает в нижний бак <a href="../fluid-machines/distillation_column.html">Перегонной колонны</a>. Густой, тёмно-бурый; его больше по объёму мороки и меньше по отдаче — ровно то, чем и должна быть нижняя фракция. Как и дизель, в мире не горит и не топит. Провалиться в разлитый мазут можно: он гуще дизеля, но жиже нефти — тонешь медленнее, выбираешься <strong>удерживая прыжок</strong>. Под поверхностью экран затягивает тёмная коричневая плёнка.</p>
 
 <blockquote><strong>Мини-пример:</strong> третий насос у основания башни оттягивает мазут в отдельный бак — или подставьте пустое ведро в слот мазута в интерфейсе.</blockquote>
 
 <h2 id="свойства-блока">Свойства блока</h2>
 
-<table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Физика</td><td>как вода: растекается, не горит, без вреда</td></tr><tr><td>Восполняется</td><td>нет</td></tr><tr><td>Сбор</td><td>ведро, капсула, насос</td></tr><tr><td>Тег</td><td><code>c:fuel_oil</code> (still + flowing)</td></tr></tbody></table>
+<table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Физика</td><td>растекается; не горит, не топит, урона от падения нет</td></tr><tr><td>Погружение</td><td>между дизелем и нефтью (вязкость 2400): ≈6.8 бл/с вниз, ≈1.7 бл/с вверх на удержании прыжка</td></tr><tr><td>Под водой</td><td>тёмно-коричневая плёнка на экране, туман 2.5 … 14 блоков</td></tr><tr><td>Восполняется</td><td>нет</td></tr><tr><td>Сбор</td><td>ведро, капсула, насос</td></tr><tr><td>Тег</td><td><code>c:fuel_oil</code> (still + flowing)</td></tr></tbody></table>
 
 <h2 id="прогрессия">Прогрессия</h2>
 

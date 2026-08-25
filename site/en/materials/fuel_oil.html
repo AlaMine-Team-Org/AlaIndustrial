@@ -363,7 +363,7 @@
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="11 pages">11</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
-<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>Nuclear</span><span class="cat-count" aria-label="12 pages">12</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>Nuclear</span><span class="cat-count" aria-label="13 pages">13</span></a>
 <div class="group-title">Processing</div>
 <a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="15 pages">15</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="2 pages">2</span></a>
@@ -396,13 +396,13 @@
 </div>
 <h2 id="summary">Summary</h2>
 
-<p><strong>Fuel oil</strong> is the heavy residue of distillation: 200 mB out of every bucket of oil, running down into the bottom tank of the <a href="../fluid-machines/distillation_column.html">Distillation Column</a>. Thick and dark-brown; more hassle by volume and less by yield — exactly what a bottom fraction should be. Like diesel, it behaves like water in the world: it does not burn and does no harm.</p>
+<p><strong>Fuel oil</strong> is the heavy residue of distillation: 200 mB out of every bucket of oil, running down into the bottom tank of the <a href="../fluid-machines/distillation_column.html">Distillation Column</a>. Thick and dark-brown; more hassle by volume and less by yield — exactly what a bottom fraction should be. Like diesel it neither burns nor drowns. You can fall into spilled fuel oil: thicker than diesel but thinner than crude — you sink more slowly and climb out by <strong>holding jump</strong>. Below the surface a dark brown film covers the screen.</p>
 
 <blockquote><strong>Mini-example:</strong> a third pump at the base of the tower pulls fuel oil away into a separate tank — or put an empty bucket into the fuel oil slot in the interface.</blockquote>
 
 <h2 id="block-properties">Block Properties</h2>
 
-<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Physics</td><td>like water: spreads, does not burn, harmless</td></tr><tr><td>Regenerates</td><td>no</td></tr><tr><td>Collection</td><td>bucket, capsule, pump</td></tr><tr><td>Tag</td><td><code>c:fuel_oil</code> (still + flowing)</td></tr></tbody></table>
+<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Physics</td><td>spreads; does not burn, does not drown, no fall damage</td></tr><tr><td>Immersion</td><td>between diesel and crude (viscosity 2400): ≈6.8 blocks/s down, ≈1.7 blocks/s up while holding jump</td></tr><tr><td>Submerged</td><td>dark brown film on screen, fog 2.5 … 14 blocks</td></tr><tr><td>Regenerates</td><td>no</td></tr><tr><td>Collection</td><td>bucket, capsule, pump</td></tr><tr><td>Tag</td><td><code>c:fuel_oil</code> (still + flowing)</td></tr></tbody></table>
 
 <h2 id="progression">Progression</h2>
 

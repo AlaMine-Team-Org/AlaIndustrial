@@ -363,7 +363,7 @@
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="11 pages">11</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
-<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>Nuclear</span><span class="cat-count" aria-label="12 pages">12</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>Nuclear</span><span class="cat-count" aria-label="13 pages">13</span></a>
 <div class="group-title">Processing</div>
 <a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="15 pages">15</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="2 pages">2</span></a>
@@ -454,9 +454,21 @@
 
 <p>The macerator grinds ordinary vanilla items too, and gives more than crafting by hand:</p>
 
-<table><thead><tr><th>Input</th><th>By hand</th><th>In the macerator</th><th>Why bother</th></tr></thead><tbody><tr><td>Bone</td><td>3 bone meal</td><td><strong>4</strong></td><td>a third more meal from the same bone</td></tr><tr><td>Bone block</td><td>9 bone meal</td><td><strong>9</strong></td><td>no gain in quantity — its value is as an automated step in a line (see below)</td></tr><tr><td>Cobblestone</td><td>—</td><td><strong>1 sand</strong></td><td><strong>renewable sand</strong> — glass and concrete without strip-mining a desert</td></tr><tr><td>Sandstone</td><td>no reverse recipe</td><td><strong>4 sand</strong></td><td>take sandstone apart, which vanilla cannot</td></tr><tr><td>Blaze rod</td><td>2 powder</td><td><strong>3</strong></td><td>half again as much powder for brewing</td></tr><tr><td>Sugar cane</td><td>1 sugar</td><td><strong>2</strong></td><td>twice the sugar</td></tr><tr><td>Wool (any colour)</td><td>no recipe</td><td><strong>4 string</strong></td><td>wool back into string</td></tr></tbody></table>
+<table><thead><tr><th>Input</th><th>By hand</th><th>In the macerator</th><th>Why bother</th></tr></thead><tbody><tr><td>Bone</td><td>3 bone meal</td><td><strong>4</strong></td><td>a third more meal from the same bone</td></tr><tr><td>Bone block</td><td>9 bone meal</td><td><strong>9</strong></td><td>no gain in quantity — its value is as an automated step in a line (see below)</td></tr><tr><td>Cobblestone</td><td>—</td><td><strong>1 sand</strong></td><td><strong>renewable sand</strong> — glass and concrete without strip-mining a desert</td></tr><tr><td>Sandstone</td><td>no reverse recipe</td><td><strong>4 sand</strong></td><td>take sandstone apart, which vanilla cannot</td></tr><tr><td>Basalt</td><td>no recipe</td><td><strong>1 gravel</strong></td><td><strong>renewable gravel</strong> — completes the chain down to flint</td></tr><tr><td>Blackstone</td><td>no recipe</td><td><strong>1 cobblestone</strong></td><td>cobblestone right there in the Nether, no hauling</td></tr><tr><td>Andesite / diorite / granite</td><td>no recipe</td><td><strong>1 gravel</strong> (each)</td><td>a sink for the stone that piles up by the stack with nowhere to go</td></tr><tr><td>Blaze rod</td><td>2 powder</td><td><strong>3</strong></td><td>half again as much powder for brewing</td></tr><tr><td>Sugar cane</td><td>1 sugar</td><td><strong>2</strong></td><td>twice the sugar</td></tr><tr><td>Wool (any colour)</td><td>no recipe</td><td><strong>4 string</strong></td><td>wool back into string</td></tr></tbody></table>
 
-<p>All seven cost the standard 300 EU/FE. The one that changes how you play is <strong>cobblestone → sand</strong>: any cobble farm becomes a glass and concrete supply.</p>
+<p>All twelve cost the standard 300 EU/FE. The one that changes how you play is <strong>cobblestone → sand</strong>: any cobble farm becomes a glass and concrete supply.</p>
+
+<h4 id="stone-why-five-recipes-for-gravel-and-cobblestone">Stone: why five recipes for gravel and cobblestone</h4>
+
+<p>The five stone recipes came from a player suggestion on Discord, and they close a hole that had been there from the start: gravel appeared in <strong>none</strong> of the macerator's outputs, even though the mod already had a consumer for it — the <a href="extractor.html">Extractor</a> turns gravel into flint. The chain broke at its first link: there was no way to produce gravel by machine, only to dig it.</p>
+
+<p>Now it closes end to end: <strong>basalt → gravel → flint</strong>, without swinging a pickaxe once. And flint is what the macerator itself is crafted from.</p>
+
+<p>Andesite, diorite and granite are here as a <strong>sink</strong> rather than a profit: every mining trip brings them back by the stack and they have almost no uses. Blackstone gives cobblestone because vanilla already treats it as a cobblestone stand-in for furnace and stone-tool recipes — in the Nether that saves you hauling stone along.</p>
+
+<p><strong>Why this doesn't break the balance.</strong> Neither gravel nor cobblestone has a vanilla recipe that compresses it back into the input, so the "macerate, then craft it back" loop is impossible here — the same invariant the bone block, sandstone and wool sit on. The cheapest loophole runs through andesite, which is craftable from cobblestone: vanilla gives <code>2 cobblestone + 2 quartz → 2 diorite</code>, then <code>1 diorite + 1 cobblestone → 2 andesite</code>, so <code>4 cobblestone + 2 quartz → 4 gravel</code>. That works out to <strong>1 cobblestone + 0.5 quartz per gravel</strong> — more expensive than the existing <code>cobblestone → sand</code> (1:1), so the new path never becomes the dominant strategy.</p>
+
+<p>Basalt, the headline input, is not cheap either: unlike cobblestone it does <strong>not</strong> form from lava meeting water. A basalt generator needs lava, blue ice and soul soil — that is, a trip to the Nether.</p>
 
 <h2 id="progression">Progression</h2>
 

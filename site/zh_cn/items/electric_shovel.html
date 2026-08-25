@@ -363,7 +363,7 @@
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="11 个页面">11</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
-<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="12 个页面">12</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="13 个页面">13</span></a>
 <div class="group-title">加工</div>
 <a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="15 个页面">15</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="2 个页面">2</span></a>
@@ -430,6 +430,36 @@
 
 <p><strong>挖掘：</strong> 当电量 ≥ 20 EU/FE 时，铲子以 9.0 的速度挖掘 <code>#minecraft:mineable/shovel</code>（钻石铲为 8.0）。每挖这样一个方块扣 20 EU/FE。 <strong>没电的铲子：</strong> 电量低于 20 EU/FE 时以徒手速度（1.0）挖掘，但采集等级和掉落都保留，且不消耗 EU/FE。此时效率附魔不起作用（原版门槛为 <code>speed &gt; 1.0</code>）。 <strong>造土路与扑灭营火——可用。</strong> 右键点击草、泥土、灰化土、菌丝或缠根泥土会形成土路；右键点击燃烧的营火会扑灭它——与原版铲子完全一致。这是<strong>免费</strong>的：这种动作不消耗电量，因为木铲也能造土路，而整条系列都建立在"没电的工具仍能工作"的规则之上。 <strong>充电：</strong> 储能库的充能槽和穿在身上的能量背包都会自动接受铲子，最高 32 EU/FE/刻。 <strong>攻击：</strong> 像钻石铲一样攻击（伤害 2.5，攻击速度 1.0），但挥击<strong>不消耗 EU/FE</strong>，也不磨损铲子。 <strong>附魔：</strong> 铲子属于 <code>#minecraft:shovels</code>，因此附魔台和铁砧把它当作铲子。耐久和经验修补在不损坏的铲子上毫无用处，但也没有害处。 <strong>指示：</strong> 图标下方的横条显示电量（黄色，LV 颜色）。悬浮提示——"电量：X / 10 000 EU/FE"，归零时显示红色"已放电"。纹理在零电量时切换为"熄灭"样式。 <strong>丢弃/死亡/重新登录：</strong> 电量保存在物品中，会保留。 <strong>创造模式：</strong> 不消耗电量——就像原版铲在创造模式下不掉耐久。</p>
 
+<h2 id="金刚石涂层升级">金刚石涂层（升级）</h2>
+
+<p><strong>金刚石涂层电动铲</strong>（，）是电动铲的第二档，也是本系列继<a href="electric_drill.html">金刚石涂层电钻</a>、<a href="electric_chainsaw.html">金刚石涂层电动链锯</a>和<a href="electric_hoe.html">金刚石涂层电动锄</a>之后的第四个、也是最后一个升级。相对基础电动铲只有两处不同，其余一切原样继承。</p>
+
+<p><strong>1. 挖得更快。</strong> 速度为 <strong>10.5</strong>，基础电动铲为 9.0——与电钻（8.5 -&gt; 10.0）、链锯（9.0 -&gt; 10.5）和锄（9.0 -&gt; 10.5）相同的 +1.5 步进。挖掘等级<strong>不变</strong>：仍是钻石级，升级只是加快作业，并不解锁新方块。</p>
+
+<p><strong>2. 可切换的精准采集。</strong> Shift + 右键切换采集模式：</p>
+
+<p><strong>普通模式</strong>（新鲜合成品的默认模式）——掉落与基础电动铲完全相同； <strong>精准采集模式</strong>——方块掉落自身。</p>
+
+<p>切换本身是<strong>免费</strong>的：不消耗 EU/FE，想切多少次都行，没电的铲子也照样能切。</p>
+
+<p><strong>为什么精准采集给了铲子，却刻意不给锄头。</strong> 对锄头来说它形同虚设：其作用域内的所有方块本来就会掉落自身，既没有可翻倍的，也没有可抑制的。铲子恰恰相反——它的作用域里满是掉落表刻意替换掉落物的方块，而这种替换正是建筑玩家最不想要的：</p>
+
+<p><strong>草方块、灰化土、菌丝</strong>掉落泥土；用精准采集则得到方块本身，这也是搬运成型草坪的唯一办法； <strong>粘土</strong>掉落 4 个粘土球；用精准采集则得到粘土块； <strong>沙砾</strong>有几率掉落燧石（几率随时运提高）；用精准采集则必定得到沙砾； <strong>雪块与雪层</strong>掉落雪球；用精准采集则得到方块本身和雪层本身； <strong>可疑的沙子与可疑的沙砾</strong>在精准采集下按方块本身掉落。</p>
+
+<p><strong>为什么做成可切换，而不是直接附魔。</strong> 基础电动铲本身也能在附魔台上获得精准采集，但原版附魔不可逆，而且在铲子上代价很实在：精准采集与时运互斥，而铲子上的时运正是沙砾产燧石的倍率来源。为精准采集去附魔，就等于永久放弃了燧石产出。切换开关取消了这个取舍：时运保留给燧石，只有需要方块本身时才打开精准采集。</p>
+
+<p>模式状态无需猜测：开启时物品会获得附魔光辉和悬浮提示中的"精准采集 I"字样（模式本身就是真正的原版附魔，而非独立的并行标志），另外悬浮提示中还有一行单独显示状态并提醒 Shift + 右键。切换伴随咔哒声和快捷栏上方的消息。</p>
+
+<p><strong>造土路与扑灭营火仍在普通右键上。</strong> 操作上的唯一差异：<strong>Shift + 右键点击方块会切换模式，并且不会造土路</strong>。不带 Shift 的普通右键依然会铺出土路并扑灭营火——与基础电动铲完全一致，同样免费。</p>
+
+<p><strong>原样继承：</strong> 10 000 EU/FE 缓冲（）、每方块 20 EU/FE（）、32 EU/FE/刻 的输入（）、相同的充电位置、没有耐久度、电量耗尽时以徒手速度（1.0）工作且保留掉落、创造模式行为，以及钻石铲的攻击属性。该升级没有自己的配置项：能量层按基类区分工具，因此这三个数值与基础电动铲共用。</p>
+
+<p><strong>合成：</strong> ——基础电动铲居中，上方一排三个<a href="../components/material_forms.html">金刚石粉</a>（即「涂层」本身），两侧各一块<a href="../materials/cupronickel.html">白铜</a>锭，下方是<a href="../components/material_forms.html">青金石粉</a>。图样与材料同电动锄的升级一致；这两条支线都刻意避开了电钻（因瓦、银齿轮）与链锯（青铜、金齿轮）的材料，以免四条升级支线争夺同一种瓶颈资源。当玩家拥有基础电动铲、金刚石粉或白铜锭时，配方会在配方书中解锁。</p>
+
+<blockquote><strong>升级时电量会保留。</strong> 该配方使用 类型，因此放入的基础电动铲中的 EU/FE 会转移到成品上，而不是烧掉。两者的缓冲相同——都是 10 000 EU/FE——因此转移没有损耗。电钻、链锯和锄的配方也是这样。</blockquote>
+
+<blockquote><strong>配方需要手动摆放。</strong> 配方书的自动填充按钮不会拾取已充电的铲子：原版在物品栏中查找材料时会比较物品组件，而已充电的铲子带有 <code>pouch_energy</code>，展示用的样品却没有。这是原版的限制，四个升级都一样——详见任务 。</blockquote>
+
 <h2 id="进阶">进阶</h2>
 
 <p>本模组第三件电动工具：<a href="electric_drill.html">电钻</a>负责石头，<a href="electric_chainsaw.html">链锯</a>负责木材，铲子负责泥土。LV 系列在三大主要材料上已闭环。 在<a href="../energy-storage/battery_box.html">储能库</a>和电池之后可用：没有 LV 基础设施就无法合成与充电。 LV 等级。其余电动工具（锄/军刀/纳米弓）属于未来工作。</p>
@@ -440,6 +470,8 @@
 
 <h2>合成</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="电动铲 alaindustrial:electric_shovel" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="任意铁锭"><img src="../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铁锭"><img src="../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铁锭"><img src="../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="电池"><img src="../assets/item/battery_3d.png" alt="电池" width="32" height="32"></div> <div class="cell" title="Diamond Shovel"><img src="../assets/item/diamond_shovel_3d.png" alt="Diamond Shovel" width="32" height="32"></div> <div class="cell" title="电池"><img src="../assets/item/battery_3d.png" alt="电池" width="32" height="32"></div> <div class="cell" title="铜线圈"><img src="../assets/item/copper_coil_3d.png" alt="铜线圈" width="32" height="32"></div> <div class="cell" title="电子电路"><img src="../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="铜线圈"><img src="../assets/item/copper_coil_3d.png" alt="铜线圈" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="电动铲"><img src="../assets/item/electric_shovel_3d.png" alt="电动铲" width="32" height="32"></div><div class="result-name">电动铲</div></div></div></div></div>
+<h2>用于</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="金刚石涂层电动铲 alaindustrial:electric_shovel_diamond_tip" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="钻石粉"><img src="../assets/item/diamond_dust_3d.png" alt="钻石粉" width="32" height="32"></div> <div class="cell" title="钻石粉"><img src="../assets/item/diamond_dust_3d.png" alt="钻石粉" width="32" height="32"></div> <div class="cell" title="钻石粉"><img src="../assets/item/diamond_dust_3d.png" alt="钻石粉" width="32" height="32"></div> <div class="cell" title="白铜锭"><img src="../assets/item/cupronickel_ingot_3d.png" alt="白铜锭" width="32" height="32"></div> <div class="cell" title="电动铲"><img src="../assets/item/electric_shovel_3d.png" alt="电动铲" width="32" height="32"></div> <div class="cell" title="白铜锭"><img src="../assets/item/cupronickel_ingot_3d.png" alt="白铜锭" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="青金石粉"><img src="../assets/item/lapis_dust_3d.png" alt="青金石粉" width="32" height="32"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="金刚石涂层电动铲"><img src="../assets/item/electric_shovel_diamond_tip.png" alt="金刚石涂层电动铲" width="32" height="32"></div><div class="result-name">金刚石涂层电动铲</div></div></div></div></div>
   </main>
 </div>
 
