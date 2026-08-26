@@ -1,14 +1,17 @@
 # All 4 machines, each powered by an adjacent generator (north face). Feed inputs, watch process.
+# facing=south is REQUIRED, not cosmetic: a block's FACING face is energy-inert (R-NRG-03,
+# EnergyBlockEntity.facingAwareRole). With the default north the machine's front would look
+# straight at its generator and no EU could enter. MOD-516.
 fill ~1 ~-1 ~-3 ~12 ~4 ~4 minecraft:air replace
 fill ~1 ~-1 ~-3 ~12 ~-1 ~4 minecraft:smooth_stone replace
 setblock ~3 ~ ~-1 alaindustrial:generator
-setblock ~3 ~ ~0 alaindustrial:macerator
+setblock ~3 ~ ~0 alaindustrial:macerator[facing=south]
 setblock ~5 ~ ~-1 alaindustrial:generator
-setblock ~5 ~ ~0 alaindustrial:electric_furnace
+setblock ~5 ~ ~0 alaindustrial:electric_furnace[facing=south]
 setblock ~7 ~ ~-1 alaindustrial:generator
-setblock ~7 ~ ~0 alaindustrial:compressor
+setblock ~7 ~ ~0 alaindustrial:compressor[facing=south]
 setblock ~9 ~ ~-1 alaindustrial:generator
-setblock ~9 ~ ~0 alaindustrial:extractor
+setblock ~9 ~ ~0 alaindustrial:extractor[facing=south]
 give @s minecraft:coal 64
 give @s minecraft:raw_iron 16
 give @s alaindustrial:iron_dust 16

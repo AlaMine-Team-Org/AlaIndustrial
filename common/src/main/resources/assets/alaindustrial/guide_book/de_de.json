@@ -406,25 +406,6 @@
           ]
         },
         {
-          "id": "creative_energy_source",
-          "title": "Kreativ-Energiequelle",
-          "icon": "alaindustrial:creative_energy_source",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Kreativ-Energiequelle",
-              "text": "Eine unerschöpfliche EU-Quelle mit einstellbarer Leistung — ein Werkzeug zum Testen von Aufbauten, im Überlebensmodus nicht erhältlich."
-            },
-            {
-              "type": "stats",
-              "title": "Werte",
-              "lines": [
-                "Energie: 32-8192 EU/t"
-              ]
-            }
-          ]
-        },
-        {
           "id": "moonlit_solar_panel",
           "title": "Mondlicht-Solarpanel",
           "icon": "alaindustrial:moonlit_solar_panel",
@@ -936,43 +917,6 @@
           ]
         },
         {
-          "id": "shielding_chest",
-          "title": "Abschirmtruhe",
-          "icon": "alaindustrial:shielding_chest",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Abschirmtruhe",
-              "text": "Die einzige Kiste, die die Strahlung ihres Inhalts aufhält: Uran darin bestrahlt niemanden. Fassungsvermögen der Eisentruhe (36 Plätze), benötigt keine Energie."
-            },
-            {
-              "type": "stats",
-              "title": "Werte",
-              "lines": [
-                "Kapazität: 36 Plätze"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Rezept",
-              "recipe_type": "Geformtes Handwerk",
-              "grid": [
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:iron_chest",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                ""
-              ],
-              "result_id": "alaindustrial:shielding_chest",
-              "result_count": 1
-            }
-          ]
-        },
-        {
           "id": "reactor_controller",
           "title": "Reaktorsteuerung",
           "icon": "alaindustrial:reactor_controller",
@@ -1070,43 +1014,6 @@
           ]
         },
         {
-          "id": "reactor_button",
-          "title": "Reaktorknopf",
-          "icon": "alaindustrial:reactor_button",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Reaktorknopf",
-              "text": "Ein Knopf aus Abschirmlegierung: die Art, die Schleuse aus einem versiegelten Raum heraus anzusteuern — genau wie ein Vanilla-Knopf gebaut, aber dem gewachsen, wofür der Raum da ist."
-            },
-            {
-              "type": "stats",
-              "title": "Werte",
-              "lines": [
-                "Puffer: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Rezept",
-              "recipe_type": "Formloses Handwerk",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:stone_button",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                ""
-              ],
-              "result_id": "alaindustrial:reactor_button",
-              "result_count": 2
-            }
-          ]
-        },
-        {
           "id": "fuel_rod_assembly",
           "title": "Reaktorsäule",
           "icon": "alaindustrial:fuel_rod_assembly",
@@ -1133,117 +1040,6 @@
               ],
               "result_id": "alaindustrial:fuel_rod_assembly",
               "result_count": 2
-            }
-          ]
-        },
-        {
-          "id": "reactor_lamp",
-          "title": "Reaktorlampe",
-          "icon": "alaindustrial:reactor_lamp",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Reaktorlampe",
-              "text": "Ein Hüllenblock, der erst leuchtet, wenn der Raum steht: die einzige Lichtquelle in einer versiegelten Kiste und zugleich ein von außen sichtbares Zeichen, dass der Bau angenommen wurde."
-            },
-            {
-              "type": "stats",
-              "title": "Werte",
-              "lines": [
-                "Puffer: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Rezept",
-              "recipe_type": "Geformtes Handwerk",
-              "grid": [
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:glowstone",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:iron_ingot"
-              ],
-              "result_id": "alaindustrial:reactor_lamp",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_casing",
-          "title": "Reaktorgehäuse",
-          "icon": "alaindustrial:reactor_casing",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Reaktorgehäuse",
-              "text": "Eine Platte aus Abschirmlegierung — das einzige Material, aus dem die versiegelte Hülle eines Reaktorraums bestehen darf."
-            },
-            {
-              "type": "stats",
-              "title": "Werte",
-              "lines": [
-                "Puffer: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Rezept",
-              "recipe_type": "Geformtes Handwerk",
-              "grid": [
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:machine_casing",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate"
-              ],
-              "result_id": "alaindustrial:reactor_casing",
-              "result_count": 8
-            }
-          ]
-        },
-        {
-          "id": "reactor_glass",
-          "title": "Reaktorglas",
-          "icon": "alaindustrial:reactor_glass",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Reaktorglas",
-              "text": "Eine durchsichtige Hüllenplatte: Sie zählt genau wie Verkleidung als Wand, doch höchstens 30 % einer Hülle dürfen Glas sein — darüber hinaus ist der Raum kein Einschluss mehr, sondern eine Vitrine."
-            },
-            {
-              "type": "stats",
-              "title": "Werte",
-              "lines": [
-                "Puffer: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Rezept",
-              "recipe_type": "Geformtes Handwerk",
-              "grid": [
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass"
-              ],
-              "result_id": "alaindustrial:reactor_glass",
-              "result_count": 8
             }
           ]
         },
@@ -1347,43 +1143,6 @@
                 ""
               ],
               "result_id": "alaindustrial:uranium_fuel_rod",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_door",
-          "title": "Reaktor-Schleusentür",
-          "icon": "alaindustrial:reactor_door",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Reaktor-Schleusentür",
-              "text": "Der einzige Weg in einen Reaktorraum: Sie öffnet allein auf einen Redstone-Impuls, schließt sich zwei Sekunden später von selbst und schließt niemals durch jemanden hindurch, der im Durchgang steht."
-            },
-            {
-              "type": "stats",
-              "title": "Werte",
-              "lines": [
-                "Puffer: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Rezept",
-              "recipe_type": "Geformtes Handwerk",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:reactor_glass",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:insulated_copper_cable",
-                "minecraft:iron_door",
-                "alaindustrial:insulated_copper_cable",
-                "alaindustrial:shielding_alloy_reinforced_plate",
-                "alaindustrial:control_rod_drive",
-                "alaindustrial:shielding_alloy_reinforced_plate"
-              ],
-              "result_id": "alaindustrial:reactor_door",
               "result_count": 1
             }
           ]
@@ -2558,8 +2317,193 @@
     {
       "id": "other",
       "title": "Sonstiges",
-      "icon": "alaindustrial:iron_chest",
+      "icon": "alaindustrial:reactor_button",
       "entries": [
+        {
+          "id": "reactor_button",
+          "title": "Reaktorknopf",
+          "icon": "alaindustrial:reactor_button",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reaktorknopf",
+              "text": "Ein Knopf aus Abschirmlegierung: die Art, die Schleuse aus einem versiegelten Raum heraus anzusteuern — genau wie ein Vanilla-Knopf gebaut, aber dem gewachsen, wofür der Raum da ist."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Puffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Formloses Handwerk",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:stone_button",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_button",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lamp",
+          "title": "Reaktorlampe",
+          "icon": "alaindustrial:reactor_lamp",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reaktorlampe",
+              "text": "Ein Hüllenblock, der erst leuchtet, wenn der Raum steht: die einzige Lichtquelle in einer versiegelten Kiste und zugleich ein von außen sichtbares Zeichen, dass der Bau angenommen wurde."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Puffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:glowstone",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:reactor_lamp",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "reactor_casing",
+          "title": "Reaktorgehäuse",
+          "icon": "alaindustrial:reactor_casing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reaktorgehäuse",
+              "text": "Eine Platte aus Abschirmlegierung — das einzige Material, aus dem die versiegelte Hülle eines Reaktorraums bestehen darf."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Puffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reactor_casing",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_glass",
+          "title": "Reaktorglas",
+          "icon": "alaindustrial:reactor_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reaktorglas",
+              "text": "Eine durchsichtige Hüllenplatte: Sie zählt genau wie Verkleidung als Wand, doch höchstens 30 % einer Hülle dürfen Glas sein — darüber hinaus ist der Raum kein Einschluss mehr, sondern eine Vitrine."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Puffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass"
+              ],
+              "result_id": "alaindustrial:reactor_glass",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_door",
+          "title": "Reaktor-Schleusentür",
+          "icon": "alaindustrial:reactor_door",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reaktor-Schleusentür",
+              "text": "Der einzige Weg in einen Reaktorraum: Sie öffnet allein auf einen Redstone-Impuls, schließt sich zwei Sekunden später von selbst und schließt niemals durch jemanden hindurch, der im Durchgang steht."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Puffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:reactor_glass",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:insulated_copper_cable",
+                "minecraft:iron_door",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:control_rod_drive",
+                "alaindustrial:shielding_alloy_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:reactor_door",
+              "result_count": 1
+            }
+          ]
+        },
         {
           "id": "iron_chest",
           "title": "Eisentruhe",
@@ -2697,6 +2641,43 @@
                 ""
               ],
               "result_id": "alaindustrial:storage_module",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "shielding_chest",
+          "title": "Abschirmtruhe",
+          "icon": "alaindustrial:shielding_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Abschirmtruhe",
+              "text": "Die einzige Kiste, die die Strahlung ihres Inhalts aufhält: Uran darin bestrahlt niemanden. Fassungsvermögen der Eisentruhe (36 Plätze), benötigt keine Energie."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Kapazität: 36 Plätze"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:iron_chest",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                ""
+              ],
+              "result_id": "alaindustrial:shielding_chest",
               "result_count": 1
             }
           ]

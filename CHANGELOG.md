@@ -1,24 +1,21 @@
-## 0.1.118
+## 0.1.119
 
-<p><img alt="Ala Industrial 0.1.118 update preview" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.118/release-media/v0.1.118/changelog.webp" width="720"></p>
+<p><img alt="Palladium ore surviving a TNT blast in the Nether" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.119/release-media/v0.1.119/changelog.webp" width="720"></p>
 
-Overheating a reactor finally has consequences — and a reactor can now run without its room at all.
-
-### New
-
-- **Meltdown.** Let a sealed reactor overheat and it melts its own insides: the floor, the plumbing, anything you left in there. The shell, the controller and the fuel racks survive — that containment is what you paid for.
-- **Bare reactors.** Stand charged fuel racks against a controller with no room around it and it powers cables straight from its own faces. Much weaker, hard-capped, and the racks must actually touch.
-- **The price is the landscape.** While a bare reactor runs, blocks near the racks turn to lava. A full buffer does not stop it — only redstone does. And lava flows, so one melted block becomes a puddle.
-- **You get warned.** Every doomed block flashes and hisses two seconds before it goes, so you can step off it or grab what is on it.
-- **Shielding alloy never melts.** Reactor parts and the shielding chest survive both hazards.
-- **One switch turns all of it off** and keeps every sound and warning.
-
-### Improved
-
-- **The guide book is complete in every language.** 460 strings that used to fall back to English are now translated, Arabic included.
-- **Stats read correctly.** A chest's capacity, an armour set's piece count and a scythe's tiers are no longer labelled "Energy".
+Palladium ore now shrugs off explosions, and the uranium fuel rod finally glows like it means it.
 
 ### Fixed
 
-- **Wiki recipes match the game again.** The reactor door is a 3x3 craft, the compressor lists all 35 of its recipes, and plates exist for five alloys, not four.
-- **Garden drone station.** The docs promised a 9-block radius; it works at 4, and now says so.
+- **Palladium survives blasts.** A creeper, ghast, TNT, bed or respawn anchor going off beside a vein leaves the ore standing while the netherrack around it is gone. Digging is as fast as before — and a wither's charge still breaks it, exactly as it breaks ancient debris.
+- **You can no longer blast your way past the pickaxe.** Explosives used to hand you palladium without the diamond tier; now they don't.
+- **Internal test commands no longer ship.** 29 tooling functions used to travel with every build and showed up in command tab-completion — including one that hands out every item at once.
+
+### Improved
+
+- **The fuel rod breathes.** Its green halo swells and settles about once a second, like a radiation readout, while the flask itself stays still.
+- **Repainted icons.** The tempered iron pickaxe and the palladium ingot, plus a small cleanup of the generator screen while it's running.
+
+### Changes
+
+- **The guide book is sorted by what things do.** Reactor casing, glass, the airlock door, button and lamp moved out of Energy and into Misc — they're the shell, not the power. The shielding chest went with them; the controller and the fuel rod assembly stayed.
+- **One less dead end in the book.** The creative-only energy source is gone from it: survival can't obtain it, so listing it among the generators only misled.

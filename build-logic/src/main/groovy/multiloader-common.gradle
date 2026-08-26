@@ -75,6 +75,30 @@ tasks.withType(Jar).configureEach {
     from(rootProject.file('LICENSE')) {
         rename { "${it}_${mod_name}" }
     }
+
+    // MOD-503 — the QA test stands (`/function alaindustrial:test/*`, docs/testing/IN-GAME-ENV.md)
+    // are internal tooling for `alamod-test` sessions, yet they shipped in every public artifact:
+    // 29 files, verified present in 0.1.109-0.1.118 here and recorded on 0.1.97-0.1.99 by MOD-294.
+    //
+    // They were not inert cargo, which is why this outranks its "packaging tidy-up" framing:
+    // `/function` is open to any operator and tab-completes the whole list, and the set includes
+    // `give_all` (68 `give` commands — the entire mod into the inventory) and `clear`
+    // (`fill ~1 ~-1 ~-3 ~12 ~4 ~4 air`, i.e. 12x6x8 wiped at the player's feet), which every
+    // `setup_*` stand starts with. In a player's own world that is a progression cheat and a
+    // griefing primitive, not a test fixture.
+    //
+    // The filter sits on PACKAGING, not on `processResources`. That distinction is the whole fix:
+    // both dev runs and the jar are fed by the same `main` resource output, so an exclude one step
+    // earlier (in `processResources`, the obvious place) empties `build/resources/main` too and
+    // kills the stands in `runClient` — i.e. `alamod-test` with them. `jar` is downstream of that
+    // directory and is read by nobody but the release, so excluding here takes the files out of the
+    // artifact while the dev classpath keeps them verbatim.
+    //
+    // `tasks.withType(Jar)` rather than `jar`: the rule is "no jar this build produces", which also
+    // covers `sourcesJar` (published to maven under -PpublishArtifacts) and both loaders at once.
+    // Fabric's `remapJar` needs no line of its own — it remaps `jar`'s archive, so it inherits an
+    // input that is already clean.
+    exclude "data/${mod_id}/function/test/**"
 }
 
 jar {

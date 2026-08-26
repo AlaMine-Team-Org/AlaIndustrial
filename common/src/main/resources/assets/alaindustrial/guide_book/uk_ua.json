@@ -406,25 +406,6 @@
           ]
         },
         {
-          "id": "creative_energy_source",
-          "title": "Креативне джерело енергії",
-          "icon": "alaindustrial:creative_energy_source",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Креативне джерело енергії",
-              "text": "Невичерпне джерело EU з регульованою віддачею — інструмент для випробування схем, у режимі виживання не здобувається."
-            },
-            {
-              "type": "stats",
-              "title": "Характеристики",
-              "lines": [
-                "Енергія: 32-8192 EU/t"
-              ]
-            }
-          ]
-        },
-        {
           "id": "moonlit_solar_panel",
           "title": "Місячна сонячна панель",
           "icon": "alaindustrial:moonlit_solar_panel",
@@ -936,43 +917,6 @@
           ]
         },
         {
-          "id": "shielding_chest",
-          "title": "Екрануюча скриня",
-          "icon": "alaindustrial:shielding_chest",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Екрануюча скриня",
-              "text": "Єдина тара, що зупиняє випромінювання свого вмісту: уран усередині нікого не опромінює. Місткість залізної скрині (36 слотів), енергії не потребує."
-            },
-            {
-              "type": "stats",
-              "title": "Характеристики",
-              "lines": [
-                "Місткість: 36 слотів"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Рецепт",
-              "recipe_type": "Крафт за формою",
-              "grid": [
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:iron_chest",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                ""
-              ],
-              "result_id": "alaindustrial:shielding_chest",
-              "result_count": 1
-            }
-          ]
-        },
-        {
           "id": "reactor_controller",
           "title": "Контролер реактора",
           "icon": "alaindustrial:reactor_controller",
@@ -1070,43 +1014,6 @@
           ]
         },
         {
-          "id": "reactor_button",
-          "title": "Реакторна кнопка",
-          "icon": "alaindustrial:reactor_button",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Реакторна кнопка",
-              "text": "Кнопка з екранувального сплаву: спосіб подати імпульс на шлюз зсередини герметичної кімнати. Зроблена точно як ванільна, але витримує те, заради чого ця кімната й існує."
-            },
-            {
-              "type": "stats",
-              "title": "Характеристики",
-              "lines": [
-                "Буфер: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Рецепт",
-              "recipe_type": "Крафт без форми",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:stone_button",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                ""
-              ],
-              "result_id": "alaindustrial:reactor_button",
-              "result_count": 2
-            }
-          ]
-        },
-        {
           "id": "fuel_rod_assembly",
           "title": "Реакторна колона",
           "icon": "alaindustrial:fuel_rod_assembly",
@@ -1133,117 +1040,6 @@
               ],
               "result_id": "alaindustrial:fuel_rod_assembly",
               "result_count": 2
-            }
-          ]
-        },
-        {
-          "id": "reactor_lamp",
-          "title": "Реакторна лампа",
-          "icon": "alaindustrial:reactor_lamp",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Реакторна лампа",
-              "text": "Блок оболонки, який світиться лише тоді, коли кімната зібрана: єдине джерело світла в герметичній коробці й водночас помітний ззовні знак, що споруду прийнято."
-            },
-            {
-              "type": "stats",
-              "title": "Характеристики",
-              "lines": [
-                "Буфер: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Рецепт",
-              "recipe_type": "Крафт за формою",
-              "grid": [
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:glowstone",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:iron_ingot"
-              ],
-              "result_id": "alaindustrial:reactor_lamp",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_casing",
-          "title": "Реакторна обшивка",
-          "icon": "alaindustrial:reactor_casing",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Реакторна обшивка",
-              "text": "Панель з екранувального сплаву — єдиний матеріал, з якого можна скласти герметичну оболонку реакторної кімнати."
-            },
-            {
-              "type": "stats",
-              "title": "Характеристики",
-              "lines": [
-                "Буфер: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Рецепт",
-              "recipe_type": "Крафт за формою",
-              "grid": [
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:machine_casing",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate"
-              ],
-              "result_id": "alaindustrial:reactor_casing",
-              "result_count": 8
-            }
-          ]
-        },
-        {
-          "id": "reactor_glass",
-          "title": "Реакторне скло",
-          "icon": "alaindustrial:reactor_glass",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Реакторне скло",
-              "text": "Прозора панель оболонки: рахується стіною так само, як обшивка, але скла не може бути більше за 30 % оболонки — далі кімната перестає бути захистом і стає вітриною."
-            },
-            {
-              "type": "stats",
-              "title": "Характеристики",
-              "lines": [
-                "Буфер: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Рецепт",
-              "recipe_type": "Крафт за формою",
-              "grid": [
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass"
-              ],
-              "result_id": "alaindustrial:reactor_glass",
-              "result_count": 8
             }
           ]
         },
@@ -1347,43 +1143,6 @@
                 ""
               ],
               "result_id": "alaindustrial:uranium_fuel_rod",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_door",
-          "title": "Шлюзові двері реактора",
-          "icon": "alaindustrial:reactor_door",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Шлюзові двері реактора",
-              "text": "Єдиний шлях до реакторної кімнати: двері відчиняються лише імпульсом редстоуну, самі зачиняються за дві секунди й ніколи не зачиняються крізь того, хто стоїть у проході."
-            },
-            {
-              "type": "stats",
-              "title": "Характеристики",
-              "lines": [
-                "Буфер: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Рецепт",
-              "recipe_type": "Крафт за формою",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:reactor_glass",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:insulated_copper_cable",
-                "minecraft:iron_door",
-                "alaindustrial:insulated_copper_cable",
-                "alaindustrial:shielding_alloy_reinforced_plate",
-                "alaindustrial:control_rod_drive",
-                "alaindustrial:shielding_alloy_reinforced_plate"
-              ],
-              "result_id": "alaindustrial:reactor_door",
               "result_count": 1
             }
           ]
@@ -2558,8 +2317,193 @@
     {
       "id": "other",
       "title": "Інше",
-      "icon": "alaindustrial:iron_chest",
+      "icon": "alaindustrial:reactor_button",
       "entries": [
+        {
+          "id": "reactor_button",
+          "title": "Реакторна кнопка",
+          "icon": "alaindustrial:reactor_button",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Реакторна кнопка",
+              "text": "Кнопка з екранувального сплаву: спосіб подати імпульс на шлюз зсередини герметичної кімнати. Зроблена точно як ванільна, але витримує те, заради чого ця кімната й існує."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Буфер: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт без форми",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:stone_button",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_button",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lamp",
+          "title": "Реакторна лампа",
+          "icon": "alaindustrial:reactor_lamp",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Реакторна лампа",
+              "text": "Блок оболонки, який світиться лише тоді, коли кімната зібрана: єдине джерело світла в герметичній коробці й водночас помітний ззовні знак, що споруду прийнято."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Буфер: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:glowstone",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:reactor_lamp",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "reactor_casing",
+          "title": "Реакторна обшивка",
+          "icon": "alaindustrial:reactor_casing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Реакторна обшивка",
+              "text": "Панель з екранувального сплаву — єдиний матеріал, з якого можна скласти герметичну оболонку реакторної кімнати."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Буфер: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reactor_casing",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_glass",
+          "title": "Реакторне скло",
+          "icon": "alaindustrial:reactor_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Реакторне скло",
+              "text": "Прозора панель оболонки: рахується стіною так само, як обшивка, але скла не може бути більше за 30 % оболонки — далі кімната перестає бути захистом і стає вітриною."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Буфер: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass"
+              ],
+              "result_id": "alaindustrial:reactor_glass",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_door",
+          "title": "Шлюзові двері реактора",
+          "icon": "alaindustrial:reactor_door",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Шлюзові двері реактора",
+              "text": "Єдиний шлях до реакторної кімнати: двері відчиняються лише імпульсом редстоуну, самі зачиняються за дві секунди й ніколи не зачиняються крізь того, хто стоїть у проході."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Буфер: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:reactor_glass",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:insulated_copper_cable",
+                "minecraft:iron_door",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:control_rod_drive",
+                "alaindustrial:shielding_alloy_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:reactor_door",
+              "result_count": 1
+            }
+          ]
+        },
         {
           "id": "iron_chest",
           "title": "Залізна скриня",
@@ -2697,6 +2641,43 @@
                 ""
               ],
               "result_id": "alaindustrial:storage_module",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "shielding_chest",
+          "title": "Екрануюча скриня",
+          "icon": "alaindustrial:shielding_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Екрануюча скриня",
+              "text": "Єдина тара, що зупиняє випромінювання свого вмісту: уран усередині нікого не опромінює. Місткість залізної скрині (36 слотів), енергії не потребує."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Місткість: 36 слотів"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:iron_chest",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                ""
+              ],
+              "result_id": "alaindustrial:shielding_chest",
               "result_count": 1
             }
           ]

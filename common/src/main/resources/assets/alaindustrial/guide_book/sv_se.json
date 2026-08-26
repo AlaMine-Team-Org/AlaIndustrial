@@ -406,25 +406,6 @@
           ]
         },
         {
-          "id": "creative_energy_source",
-          "title": "Kreativ energikälla",
-          "icon": "alaindustrial:creative_energy_source",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Kreativ energikälla",
-              "text": "En outtömlig EU-källa med justerbar effekt — ett verktyg för att testa uppställningar, går inte att få tag på i överlevnad."
-            },
-            {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Energi: 32-8192 EU/t"
-              ]
-            }
-          ]
-        },
-        {
           "id": "moonlit_solar_panel",
           "title": "Månbelyst solpanel",
           "icon": "alaindustrial:moonlit_solar_panel",
@@ -936,43 +917,6 @@
           ]
         },
         {
-          "id": "shielding_chest",
-          "title": "Skärmande kista",
-          "icon": "alaindustrial:shielding_chest",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Skärmande kista",
-              "text": "Den enda behållaren som stoppar strålningen från sitt innehåll: uran därinne bestrålar ingen. Rymmer lika mycket som järnkistan (36 platser) och kräver ingen energi."
-            },
-            {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Kapacitet: 36 platser"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Recept",
-              "recipe_type": "Formad tillverkning",
-              "grid": [
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:iron_chest",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                ""
-              ],
-              "result_id": "alaindustrial:shielding_chest",
-              "result_count": 1
-            }
-          ]
-        },
-        {
           "id": "reactor_controller",
           "title": "Reaktorstyrenhet",
           "icon": "alaindustrial:reactor_controller",
@@ -1070,43 +1014,6 @@
           ]
         },
         {
-          "id": "reactor_button",
-          "title": "Reaktorknapp",
-          "icon": "alaindustrial:reactor_button",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Reaktorknapp",
-              "text": "En knapp av skärmlegering: sättet att skicka en puls till slussen inifrån ett förseglat rum, byggd precis som en vanilla-knapp men tålig nog för det rummet är till för."
-            },
-            {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Buffert: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Recept",
-              "recipe_type": "Formlös tillverkning",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:stone_button",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                ""
-              ],
-              "result_id": "alaindustrial:reactor_button",
-              "result_count": 2
-            }
-          ]
-        },
-        {
           "id": "fuel_rod_assembly",
           "title": "Reaktorpelare",
           "icon": "alaindustrial:fuel_rod_assembly",
@@ -1133,117 +1040,6 @@
               ],
               "result_id": "alaindustrial:fuel_rod_assembly",
               "result_count": 2
-            }
-          ]
-        },
-        {
-          "id": "reactor_lamp",
-          "title": "Reaktorlampa",
-          "icon": "alaindustrial:reactor_lamp",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Reaktorlampa",
-              "text": "Ett skalblock som tänds först när rummet är format: den enda ljuskällan inuti en förseglad låda och samtidigt ett utifrån synligt tecken på att bygget godkänts."
-            },
-            {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Buffert: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Recept",
-              "recipe_type": "Formad tillverkning",
-              "grid": [
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:glowstone",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:iron_ingot"
-              ],
-              "result_id": "alaindustrial:reactor_lamp",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_casing",
-          "title": "Reaktorhölje",
-          "icon": "alaindustrial:reactor_casing",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Reaktorhölje",
-              "text": "En panel av skärmlegering — det enda material som reaktorrummets förseglade skal får byggas av."
-            },
-            {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Buffert: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Recept",
-              "recipe_type": "Formad tillverkning",
-              "grid": [
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:machine_casing",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate"
-              ],
-              "result_id": "alaindustrial:reactor_casing",
-              "result_count": 8
-            }
-          ]
-        },
-        {
-          "id": "reactor_glass",
-          "title": "Reaktorglas",
-          "icon": "alaindustrial:reactor_glass",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Reaktorglas",
-              "text": "En genomskinlig skalpanel: den räknas som vägg precis som beklädnaden, men högst 30 % av ett skal får vara glas — därutöver upphör rummet att vara inneslutning och blir ett skyltskåp."
-            },
-            {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Buffert: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Recept",
-              "recipe_type": "Formad tillverkning",
-              "grid": [
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass"
-              ],
-              "result_id": "alaindustrial:reactor_glass",
-              "result_count": 8
             }
           ]
         },
@@ -1347,43 +1143,6 @@
                 ""
               ],
               "result_id": "alaindustrial:uranium_fuel_rod",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_door",
-          "title": "Reaktorslussdörr",
-          "icon": "alaindustrial:reactor_door",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Reaktorslussdörr",
-              "text": "Enda vägen in i ett reaktorrum: den öppnas bara av en redstonepuls, stänger sig själv två sekunder senare och stängs aldrig genom den som står i dörröppningen."
-            },
-            {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Buffert: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Recept",
-              "recipe_type": "Formad tillverkning",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:reactor_glass",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:insulated_copper_cable",
-                "minecraft:iron_door",
-                "alaindustrial:insulated_copper_cable",
-                "alaindustrial:shielding_alloy_reinforced_plate",
-                "alaindustrial:control_rod_drive",
-                "alaindustrial:shielding_alloy_reinforced_plate"
-              ],
-              "result_id": "alaindustrial:reactor_door",
               "result_count": 1
             }
           ]
@@ -2558,8 +2317,193 @@
     {
       "id": "other",
       "title": "Övrigt",
-      "icon": "alaindustrial:iron_chest",
+      "icon": "alaindustrial:reactor_button",
       "entries": [
+        {
+          "id": "reactor_button",
+          "title": "Reaktorknapp",
+          "icon": "alaindustrial:reactor_button",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reaktorknapp",
+              "text": "En knapp av skärmlegering: sättet att skicka en puls till slussen inifrån ett förseglat rum, byggd precis som en vanilla-knapp men tålig nog för det rummet är till för."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Buffert: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formlös tillverkning",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:stone_button",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_button",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lamp",
+          "title": "Reaktorlampa",
+          "icon": "alaindustrial:reactor_lamp",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reaktorlampa",
+              "text": "Ett skalblock som tänds först när rummet är format: den enda ljuskällan inuti en förseglad låda och samtidigt ett utifrån synligt tecken på att bygget godkänts."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Buffert: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:glowstone",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:reactor_lamp",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "reactor_casing",
+          "title": "Reaktorhölje",
+          "icon": "alaindustrial:reactor_casing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reaktorhölje",
+              "text": "En panel av skärmlegering — det enda material som reaktorrummets förseglade skal får byggas av."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Buffert: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reactor_casing",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_glass",
+          "title": "Reaktorglas",
+          "icon": "alaindustrial:reactor_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reaktorglas",
+              "text": "En genomskinlig skalpanel: den räknas som vägg precis som beklädnaden, men högst 30 % av ett skal får vara glas — därutöver upphör rummet att vara inneslutning och blir ett skyltskåp."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Buffert: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass"
+              ],
+              "result_id": "alaindustrial:reactor_glass",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_door",
+          "title": "Reaktorslussdörr",
+          "icon": "alaindustrial:reactor_door",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reaktorslussdörr",
+              "text": "Enda vägen in i ett reaktorrum: den öppnas bara av en redstonepuls, stänger sig själv två sekunder senare och stängs aldrig genom den som står i dörröppningen."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Buffert: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:reactor_glass",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:insulated_copper_cable",
+                "minecraft:iron_door",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:control_rod_drive",
+                "alaindustrial:shielding_alloy_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:reactor_door",
+              "result_count": 1
+            }
+          ]
+        },
         {
           "id": "iron_chest",
           "title": "Järnkista",
@@ -2697,6 +2641,43 @@
                 ""
               ],
               "result_id": "alaindustrial:storage_module",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "shielding_chest",
+          "title": "Skärmande kista",
+          "icon": "alaindustrial:shielding_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Skärmande kista",
+              "text": "Den enda behållaren som stoppar strålningen från sitt innehåll: uran därinne bestrålar ingen. Rymmer lika mycket som järnkistan (36 platser) och kräver ingen energi."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Kapacitet: 36 platser"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:iron_chest",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                ""
+              ],
+              "result_id": "alaindustrial:shielding_chest",
               "result_count": 1
             }
           ]

@@ -847,9 +847,20 @@ public final class ContentManifest {
 			Map.entry("deepslate_sulfur_ore", machine(p -> p.strength(4.5f, 3.0f).sound(SoundType.DEEPSLATE))),
 			Map.entry("uranium_ore", machine(p -> p.strength(3.0f, 3.0f).sound(SoundType.STONE))),
 			Map.entry("deepslate_uranium_ore", machine(p -> p.strength(4.5f, 3.0f).sound(SoundType.DEEPSLATE))),
-			// MOD-423 — Nether ore. Tougher than the overworld ores (4.5 like the deepslate variants),
-			// but nowhere near ancient debris' 30.0/1200.0: palladium is meant to be mined, not besieged.
-			Map.entry("palladium_ore", machine(p -> p.strength(4.5f, 3.0f).sound(SoundType.NETHER_ORE))),
+			// MOD-423/MOD-511 — Nether ore. The two halves of strength() are set from different
+			// arguments and must not be read as one "toughness" number.
+			// destroyTime 4.5 — same as the deepslate variants: a diamond pickaxe clears a vein in
+			// seconds. Ancient debris' 30.0 is deliberately NOT copied; digging speed is not the point.
+			// explosionResistance 1200.0 — copied from ancient debris exactly (MOD-511). Palladium is
+			// the mod's only Nether ore and sits in the layer where creepers, ghasts, beds and respawn
+			// anchors go off by accident; at the old 3.0 a stray blast erased the vein along with the
+			// netherrack around it. ServerExplosion drains (resistance + 0.3) * 0.3 per 0.3-block step,
+			// so 1200.0 burns ~360 power per step and stops every vanilla blast (TNT 4, creeper 3/6,
+			// ghast 1, bed/anchor 5, wither skull 1, wither spawn 7) at the first block it touches.
+			// This buys immunity to EXPLOSIONS only: a wither's body-charge destruction is gated by
+			// #minecraft:wither_immune, not by resistance, so it still breaks palladium — exactly as
+			// it breaks ancient debris. Behavioural parity with debris is the goal, not invulnerability.
+			Map.entry("palladium_ore", machine(p -> p.strength(4.5f, 1200.0f).sound(SoundType.NETHER_ORE))),
 			Map.entry("iron_chest", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion())),
 			// MOD-287 — plain full cube, no noOcclusion(): unlike the chests it has no 3D renderer.
 			Map.entry("storage_module", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),

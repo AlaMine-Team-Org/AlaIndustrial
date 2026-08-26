@@ -7,7 +7,7 @@ setblock ~4 ~ ~0 alaindustrial:copper_cable
 setblock ~5 ~ ~0 minecraft:air
 setblock ~6 ~ ~0 alaindustrial:copper_cable
 setblock ~7 ~ ~0 alaindustrial:macerator
-setblock ~7 ~ ~1 alaindustrial:generator
+setblock ~7 ~ ~1 alaindustrial:generator[facing=south]
 give @s minecraft:coal 64
 give @s minecraft:iron_ore 16
 tellraw @s {"text":"[cable_neg] gap at ~5: left gen cannot reach macerator (R-CON-07).","color":"green"}

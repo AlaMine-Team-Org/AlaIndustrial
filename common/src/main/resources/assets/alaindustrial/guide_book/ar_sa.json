@@ -406,25 +406,6 @@
           ]
         },
         {
-          "id": "creative_energy_source",
-          "title": "مصدر طاقة إبداعي",
-          "icon": "alaindustrial:creative_energy_source",
-          "pages": [
-            {
-              "type": "text",
-              "title": "مصدر طاقة إبداعي",
-              "text": "مصدر EU لا ينضب بإنتاج قابل للضبط — أداة لاختبار التركيبات، ولا يمكن الحصول عليه في وضع البقاء."
-            },
-            {
-              "type": "stats",
-              "title": "المواصفات",
-              "lines": [
-                "الطاقة: 32-8192 EU/t"
-              ]
-            }
-          ]
-        },
-        {
           "id": "moonlit_solar_panel",
           "title": "لوحة شمسية قمرية",
           "icon": "alaindustrial:moonlit_solar_panel",
@@ -936,43 +917,6 @@
           ]
         },
         {
-          "id": "shielding_chest",
-          "title": "صندوق واقٍ من الإشعاع",
-          "icon": "alaindustrial:shielding_chest",
-          "pages": [
-            {
-              "type": "text",
-              "title": "صندوق واقٍ من الإشعاع",
-              "text": "الصندوق الوحيد الذي يوقف إشعاع محتواه: فاليورانيوم داخله لا يشع على أحد. سعته كسعة الصندوق الحديدي (36 خانة)، ولا يحتاج إلى طاقة."
-            },
-            {
-              "type": "stats",
-              "title": "المواصفات",
-              "lines": [
-                "السعة: 36 خانة"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "الوصفة",
-              "recipe_type": "تصنيع مرتب",
-              "grid": [
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:iron_chest",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                ""
-              ],
-              "result_id": "alaindustrial:shielding_chest",
-              "result_count": 1
-            }
-          ]
-        },
-        {
           "id": "reactor_controller",
           "title": "وحدة تحكم المفاعل",
           "icon": "alaindustrial:reactor_controller",
@@ -1070,43 +1014,6 @@
           ]
         },
         {
-          "id": "reactor_button",
-          "title": "زر مفاعل",
-          "icon": "alaindustrial:reactor_button",
-          "pages": [
-            {
-              "type": "text",
-              "title": "زر مفاعل",
-              "text": "زر من سبيكة التدريع: وسيلتك لإرسال نبضة إلى باب معادلة الضغط من داخل غرفة محكمة، يصنع تماما كزر اللعبة الأصلية لكنه يحتمل ما بنيت الغرفة من أجله."
-            },
-            {
-              "type": "stats",
-              "title": "المواصفات",
-              "lines": [
-                "الاحتياطي: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "الوصفة",
-              "recipe_type": "تصنيع غير مرتب",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:stone_button",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                ""
-              ],
-              "result_id": "alaindustrial:reactor_button",
-              "result_count": 2
-            }
-          ]
-        },
-        {
           "id": "fuel_rod_assembly",
           "title": "عمود المفاعل",
           "icon": "alaindustrial:fuel_rod_assembly",
@@ -1133,117 +1040,6 @@
               ],
               "result_id": "alaindustrial:fuel_rod_assembly",
               "result_count": 2
-            }
-          ]
-        },
-        {
-          "id": "reactor_lamp",
-          "title": "مصباح مفاعل",
-          "icon": "alaindustrial:reactor_lamp",
-          "pages": [
-            {
-              "type": "text",
-              "title": "مصباح مفاعل",
-              "text": "كتلة من الغلاف لا تضيء إلا بعد اكتمال الغرفة: مصدر الضوء الوحيد داخل صندوق محكم، وفي الوقت نفسه علامة ظاهرة من الخارج على قبول البناء."
-            },
-            {
-              "type": "stats",
-              "title": "المواصفات",
-              "lines": [
-                "الاحتياطي: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "الوصفة",
-              "recipe_type": "تصنيع مرتب",
-              "grid": [
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:glowstone",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:iron_ingot"
-              ],
-              "result_id": "alaindustrial:reactor_lamp",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_casing",
-          "title": "هيكل مفاعل",
-          "icon": "alaindustrial:reactor_casing",
-          "pages": [
-            {
-              "type": "text",
-              "title": "هيكل مفاعل",
-              "text": "لوح من سبيكة التدريع — المادة الوحيدة التي يجوز أن يبنى منها غلاف غرفة المفاعل المحكم."
-            },
-            {
-              "type": "stats",
-              "title": "المواصفات",
-              "lines": [
-                "الاحتياطي: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "الوصفة",
-              "recipe_type": "تصنيع مرتب",
-              "grid": [
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:machine_casing",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate"
-              ],
-              "result_id": "alaindustrial:reactor_casing",
-              "result_count": 8
-            }
-          ]
-        },
-        {
-          "id": "reactor_glass",
-          "title": "زجاج مفاعل",
-          "icon": "alaindustrial:reactor_glass",
-          "pages": [
-            {
-              "type": "text",
-              "title": "زجاج مفاعل",
-              "text": "لوح غلاف شفاف: يحسب جدارا تماما كالهيكل، لكن لا يجوز أن يتجاوز الزجاج 30 % من الغلاف — وبعد ذلك تكف الغرفة عن كونها احتواء وتصير خزانة عرض."
-            },
-            {
-              "type": "stats",
-              "title": "المواصفات",
-              "lines": [
-                "الاحتياطي: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "الوصفة",
-              "recipe_type": "تصنيع مرتب",
-              "grid": [
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass"
-              ],
-              "result_id": "alaindustrial:reactor_glass",
-              "result_count": 8
             }
           ]
         },
@@ -1347,43 +1143,6 @@
                 ""
               ],
               "result_id": "alaindustrial:uranium_fuel_rod",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_door",
-          "title": "باب معادلة ضغط المفاعل",
-          "icon": "alaindustrial:reactor_door",
-          "pages": [
-            {
-              "type": "text",
-              "title": "باب معادلة ضغط المفاعل",
-              "text": "المدخل الوحيد إلى غرفة المفاعل: لا يفتح إلا بنبضة ريدستون، ويغلق نفسه بعد ثانيتين، ولا ينغلق أبدا على من يقف في فتحته."
-            },
-            {
-              "type": "stats",
-              "title": "المواصفات",
-              "lines": [
-                "الاحتياطي: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "الوصفة",
-              "recipe_type": "تصنيع مرتب",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:reactor_glass",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:insulated_copper_cable",
-                "minecraft:iron_door",
-                "alaindustrial:insulated_copper_cable",
-                "alaindustrial:shielding_alloy_reinforced_plate",
-                "alaindustrial:control_rod_drive",
-                "alaindustrial:shielding_alloy_reinforced_plate"
-              ],
-              "result_id": "alaindustrial:reactor_door",
               "result_count": 1
             }
           ]
@@ -2558,8 +2317,193 @@
     {
       "id": "other",
       "title": "أخرى",
-      "icon": "alaindustrial:iron_chest",
+      "icon": "alaindustrial:reactor_button",
       "entries": [
+        {
+          "id": "reactor_button",
+          "title": "زر مفاعل",
+          "icon": "alaindustrial:reactor_button",
+          "pages": [
+            {
+              "type": "text",
+              "title": "زر مفاعل",
+              "text": "زر من سبيكة التدريع: وسيلتك لإرسال نبضة إلى باب معادلة الضغط من داخل غرفة محكمة، يصنع تماما كزر اللعبة الأصلية لكنه يحتمل ما بنيت الغرفة من أجله."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "الاحتياطي: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع غير مرتب",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:stone_button",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_button",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lamp",
+          "title": "مصباح مفاعل",
+          "icon": "alaindustrial:reactor_lamp",
+          "pages": [
+            {
+              "type": "text",
+              "title": "مصباح مفاعل",
+              "text": "كتلة من الغلاف لا تضيء إلا بعد اكتمال الغرفة: مصدر الضوء الوحيد داخل صندوق محكم، وفي الوقت نفسه علامة ظاهرة من الخارج على قبول البناء."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "الاحتياطي: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:glowstone",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:reactor_lamp",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "reactor_casing",
+          "title": "هيكل مفاعل",
+          "icon": "alaindustrial:reactor_casing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "هيكل مفاعل",
+              "text": "لوح من سبيكة التدريع — المادة الوحيدة التي يجوز أن يبنى منها غلاف غرفة المفاعل المحكم."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "الاحتياطي: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reactor_casing",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_glass",
+          "title": "زجاج مفاعل",
+          "icon": "alaindustrial:reactor_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "زجاج مفاعل",
+              "text": "لوح غلاف شفاف: يحسب جدارا تماما كالهيكل، لكن لا يجوز أن يتجاوز الزجاج 30 % من الغلاف — وبعد ذلك تكف الغرفة عن كونها احتواء وتصير خزانة عرض."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "الاحتياطي: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass"
+              ],
+              "result_id": "alaindustrial:reactor_glass",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_door",
+          "title": "باب معادلة ضغط المفاعل",
+          "icon": "alaindustrial:reactor_door",
+          "pages": [
+            {
+              "type": "text",
+              "title": "باب معادلة ضغط المفاعل",
+              "text": "المدخل الوحيد إلى غرفة المفاعل: لا يفتح إلا بنبضة ريدستون، ويغلق نفسه بعد ثانيتين، ولا ينغلق أبدا على من يقف في فتحته."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "الاحتياطي: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:reactor_glass",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:insulated_copper_cable",
+                "minecraft:iron_door",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:control_rod_drive",
+                "alaindustrial:shielding_alloy_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:reactor_door",
+              "result_count": 1
+            }
+          ]
+        },
         {
           "id": "iron_chest",
           "title": "صندوق حديدي",
@@ -2697,6 +2641,43 @@
                 ""
               ],
               "result_id": "alaindustrial:storage_module",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "shielding_chest",
+          "title": "صندوق واقٍ من الإشعاع",
+          "icon": "alaindustrial:shielding_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "صندوق واقٍ من الإشعاع",
+              "text": "الصندوق الوحيد الذي يوقف إشعاع محتواه: فاليورانيوم داخله لا يشع على أحد. سعته كسعة الصندوق الحديدي (36 خانة)، ولا يحتاج إلى طاقة."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "السعة: 36 خانة"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:iron_chest",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                ""
+              ],
+              "result_id": "alaindustrial:shielding_chest",
               "result_count": 1
             }
           ]

@@ -406,25 +406,6 @@
           ]
         },
         {
-          "id": "creative_energy_source",
-          "title": "Source d'énergie créative",
-          "icon": "alaindustrial:creative_energy_source",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Source d'énergie créative",
-              "text": "Une source d'EU inépuisable à débit réglable — un outil pour tester des installations, impossible à obtenir en survie."
-            },
-            {
-              "type": "stats",
-              "title": "Statistiques",
-              "lines": [
-                "Énergie : 32-8192 EU/t"
-              ]
-            }
-          ]
-        },
-        {
           "id": "moonlit_solar_panel",
           "title": "Panneau solaire lunaire",
           "icon": "alaindustrial:moonlit_solar_panel",
@@ -936,43 +917,6 @@
           ]
         },
         {
-          "id": "shielding_chest",
-          "title": "Coffre de protection",
-          "icon": "alaindustrial:shielding_chest",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Coffre de protection",
-              "text": "Le seul conteneur qui arrête le rayonnement de son contenu : l'uranium à l'intérieur n'irradie personne. Capacité du coffre de fer (36 emplacements), ne nécessite aucune énergie."
-            },
-            {
-              "type": "stats",
-              "title": "Statistiques",
-              "lines": [
-                "Capacité : 36 emplacements"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Recette",
-              "recipe_type": "Fabrication façonnée",
-              "grid": [
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:iron_chest",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                ""
-              ],
-              "result_id": "alaindustrial:shielding_chest",
-              "result_count": 1
-            }
-          ]
-        },
-        {
           "id": "reactor_controller",
           "title": "Contrôleur de réacteur",
           "icon": "alaindustrial:reactor_controller",
@@ -1070,43 +1014,6 @@
           ]
         },
         {
-          "id": "reactor_button",
-          "title": "Bouton de réacteur",
-          "icon": "alaindustrial:reactor_button",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Bouton de réacteur",
-              "text": "Un bouton en alliage de blindage : le moyen d'envoyer une impulsion au sas depuis l'intérieur d'une salle scellée, construit exactement comme un bouton vanilla mais capable de survivre à ce pour quoi la salle existe."
-            },
-            {
-              "type": "stats",
-              "title": "Statistiques",
-              "lines": [
-                "Tampon : 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Recette",
-              "recipe_type": "Fabrication non façonnée",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:stone_button",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                ""
-              ],
-              "result_id": "alaindustrial:reactor_button",
-              "result_count": 2
-            }
-          ]
-        },
-        {
           "id": "fuel_rod_assembly",
           "title": "Colonne de réacteur",
           "icon": "alaindustrial:fuel_rod_assembly",
@@ -1133,117 +1040,6 @@
               ],
               "result_id": "alaindustrial:fuel_rod_assembly",
               "result_count": 2
-            }
-          ]
-        },
-        {
-          "id": "reactor_lamp",
-          "title": "Lampe de réacteur",
-          "icon": "alaindustrial:reactor_lamp",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Lampe de réacteur",
-              "text": "Un bloc d'enveloppe qui ne s'allume qu'une fois la salle formée : la seule source de lumière dans une boîte scellée et, en même temps, un signe visible de l'extérieur que la construction a été acceptée."
-            },
-            {
-              "type": "stats",
-              "title": "Statistiques",
-              "lines": [
-                "Tampon : 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Recette",
-              "recipe_type": "Fabrication façonnée",
-              "grid": [
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:glowstone",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:iron_ingot"
-              ],
-              "result_id": "alaindustrial:reactor_lamp",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_casing",
-          "title": "Châssis de réacteur",
-          "icon": "alaindustrial:reactor_casing",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Châssis de réacteur",
-              "text": "Un panneau en alliage de blindage — le seul matériau dont l'enveloppe scellée d'une salle de réacteur puisse être bâtie."
-            },
-            {
-              "type": "stats",
-              "title": "Statistiques",
-              "lines": [
-                "Tampon : 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Recette",
-              "recipe_type": "Fabrication façonnée",
-              "grid": [
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:machine_casing",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate"
-              ],
-              "result_id": "alaindustrial:reactor_casing",
-              "result_count": 8
-            }
-          ]
-        },
-        {
-          "id": "reactor_glass",
-          "title": "Verre de réacteur",
-          "icon": "alaindustrial:reactor_glass",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Verre de réacteur",
-              "text": "Un panneau d'enveloppe transparent : il compte comme mur exactement comme le blindage, mais 30 % au plus d'une enveloppe peuvent être en verre — au-delà, la salle cesse d'être un confinement pour devenir une vitrine."
-            },
-            {
-              "type": "stats",
-              "title": "Statistiques",
-              "lines": [
-                "Tampon : 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Recette",
-              "recipe_type": "Fabrication façonnée",
-              "grid": [
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass"
-              ],
-              "result_id": "alaindustrial:reactor_glass",
-              "result_count": 8
             }
           ]
         },
@@ -1347,43 +1143,6 @@
                 ""
               ],
               "result_id": "alaindustrial:uranium_fuel_rod",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_door",
-          "title": "Porte de sas du réacteur",
-          "icon": "alaindustrial:reactor_door",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Porte de sas du réacteur",
-              "text": "Le seul accès à une salle de réacteur : elle s'ouvre uniquement sur une impulsion de redstone, se referme deux secondes plus tard et ne se referme jamais sur qui se tient dans l'embrasure."
-            },
-            {
-              "type": "stats",
-              "title": "Statistiques",
-              "lines": [
-                "Tampon : 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Recette",
-              "recipe_type": "Fabrication façonnée",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:reactor_glass",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:insulated_copper_cable",
-                "minecraft:iron_door",
-                "alaindustrial:insulated_copper_cable",
-                "alaindustrial:shielding_alloy_reinforced_plate",
-                "alaindustrial:control_rod_drive",
-                "alaindustrial:shielding_alloy_reinforced_plate"
-              ],
-              "result_id": "alaindustrial:reactor_door",
               "result_count": 1
             }
           ]
@@ -2558,8 +2317,193 @@
     {
       "id": "other",
       "title": "Autre",
-      "icon": "alaindustrial:iron_chest",
+      "icon": "alaindustrial:reactor_button",
       "entries": [
+        {
+          "id": "reactor_button",
+          "title": "Bouton de réacteur",
+          "icon": "alaindustrial:reactor_button",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Bouton de réacteur",
+              "text": "Un bouton en alliage de blindage : le moyen d'envoyer une impulsion au sas depuis l'intérieur d'une salle scellée, construit exactement comme un bouton vanilla mais capable de survivre à ce pour quoi la salle existe."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiques",
+              "lines": [
+                "Tampon : 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication non façonnée",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:stone_button",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_button",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lamp",
+          "title": "Lampe de réacteur",
+          "icon": "alaindustrial:reactor_lamp",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lampe de réacteur",
+              "text": "Un bloc d'enveloppe qui ne s'allume qu'une fois la salle formée : la seule source de lumière dans une boîte scellée et, en même temps, un signe visible de l'extérieur que la construction a été acceptée."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiques",
+              "lines": [
+                "Tampon : 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:glowstone",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:reactor_lamp",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "reactor_casing",
+          "title": "Châssis de réacteur",
+          "icon": "alaindustrial:reactor_casing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Châssis de réacteur",
+              "text": "Un panneau en alliage de blindage — le seul matériau dont l'enveloppe scellée d'une salle de réacteur puisse être bâtie."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiques",
+              "lines": [
+                "Tampon : 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reactor_casing",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_glass",
+          "title": "Verre de réacteur",
+          "icon": "alaindustrial:reactor_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Verre de réacteur",
+              "text": "Un panneau d'enveloppe transparent : il compte comme mur exactement comme le blindage, mais 30 % au plus d'une enveloppe peuvent être en verre — au-delà, la salle cesse d'être un confinement pour devenir une vitrine."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiques",
+              "lines": [
+                "Tampon : 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass"
+              ],
+              "result_id": "alaindustrial:reactor_glass",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_door",
+          "title": "Porte de sas du réacteur",
+          "icon": "alaindustrial:reactor_door",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Porte de sas du réacteur",
+              "text": "Le seul accès à une salle de réacteur : elle s'ouvre uniquement sur une impulsion de redstone, se referme deux secondes plus tard et ne se referme jamais sur qui se tient dans l'embrasure."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiques",
+              "lines": [
+                "Tampon : 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:reactor_glass",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:insulated_copper_cable",
+                "minecraft:iron_door",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:control_rod_drive",
+                "alaindustrial:shielding_alloy_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:reactor_door",
+              "result_count": 1
+            }
+          ]
+        },
         {
           "id": "iron_chest",
           "title": "Coffre en fer",
@@ -2697,6 +2641,43 @@
                 ""
               ],
               "result_id": "alaindustrial:storage_module",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "shielding_chest",
+          "title": "Coffre de protection",
+          "icon": "alaindustrial:shielding_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Coffre de protection",
+              "text": "Le seul conteneur qui arrête le rayonnement de son contenu : l'uranium à l'intérieur n'irradie personne. Capacité du coffre de fer (36 emplacements), ne nécessite aucune énergie."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiques",
+              "lines": [
+                "Capacité : 36 emplacements"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:iron_chest",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                ""
+              ],
+              "result_id": "alaindustrial:shielding_chest",
               "result_count": 1
             }
           ]

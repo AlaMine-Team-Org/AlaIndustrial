@@ -406,25 +406,6 @@
           ]
         },
         {
-          "id": "creative_energy_source",
-          "title": "क्रिएटिव ऊर्जा स्रोत",
-          "icon": "alaindustrial:creative_energy_source",
-          "pages": [
-            {
-              "type": "text",
-              "title": "क्रिएटिव ऊर्जा स्रोत",
-              "text": "समायोज्य निर्गम वाला अक्षय EU स्रोत — सेटअप जाँचने का औज़ार, सर्वाइवल में नहीं मिलता।"
-            },
-            {
-              "type": "stats",
-              "title": "आँकड़े",
-              "lines": [
-                "ऊर्जा: 32-8192 EU/t"
-              ]
-            }
-          ]
-        },
-        {
           "id": "moonlit_solar_panel",
           "title": "चंद्र सौर पैनल",
           "icon": "alaindustrial:moonlit_solar_panel",
@@ -936,43 +917,6 @@
           ]
         },
         {
-          "id": "shielding_chest",
-          "title": "परिरक्षण चेस्ट",
-          "icon": "alaindustrial:shielding_chest",
-          "pages": [
-            {
-              "type": "text",
-              "title": "परिरक्षण चेस्ट",
-              "text": "एकमात्र पात्र जो अपने भीतर रखी चीज़ों का विकिरण रोकता है: भीतर रखा यूरेनियम किसी को विकिरण नहीं देता। आयरन संदूक जितनी क्षमता (36 स्लॉट), कोई ऊर्जा नहीं चाहिए।"
-            },
-            {
-              "type": "stats",
-              "title": "आँकड़े",
-              "lines": [
-                "क्षमता: 36 स्लॉट"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "रेसिपी",
-              "recipe_type": "आकारित क्राफ्टिंग",
-              "grid": [
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:iron_chest",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                ""
-              ],
-              "result_id": "alaindustrial:shielding_chest",
-              "result_count": 1
-            }
-          ]
-        },
-        {
           "id": "reactor_controller",
           "title": "रिएक्टर नियंत्रक",
           "icon": "alaindustrial:reactor_controller",
@@ -1070,43 +1014,6 @@
           ]
         },
         {
-          "id": "reactor_button",
-          "title": "रिएक्टर बटन",
-          "icon": "alaindustrial:reactor_button",
-          "pages": [
-            {
-              "type": "text",
-              "title": "रिएक्टर बटन",
-              "text": "परिरक्षण मिश्रधातु से बना बटन: बंद कक्ष के भीतर से एयरलॉक को पल्स भेजने का तरीका; बनावट में बिलकुल वैनिला बटन जैसा, पर उस चीज़ को झेलने लायक जिसके लिए यह कक्ष बना है।"
-            },
-            {
-              "type": "stats",
-              "title": "आँकड़े",
-              "lines": [
-                "बफ़र: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "रेसिपी",
-              "recipe_type": "बिना आकार की क्राफ्टिंग",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:stone_button",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                ""
-              ],
-              "result_id": "alaindustrial:reactor_button",
-              "result_count": 2
-            }
-          ]
-        },
-        {
           "id": "fuel_rod_assembly",
           "title": "रिएक्टर स्तंभ",
           "icon": "alaindustrial:fuel_rod_assembly",
@@ -1133,117 +1040,6 @@
               ],
               "result_id": "alaindustrial:fuel_rod_assembly",
               "result_count": 2
-            }
-          ]
-        },
-        {
-          "id": "reactor_lamp",
-          "title": "रिएक्टर लैंप",
-          "icon": "alaindustrial:reactor_lamp",
-          "pages": [
-            {
-              "type": "text",
-              "title": "रिएक्टर लैंप",
-              "text": "खोल का वह ब्लॉक जो कक्ष बन जाने पर ही जलता है: बंद डिब्बे के भीतर प्रकाश का इकलौता स्रोत और साथ ही बाहर से दिखने वाला संकेत कि निर्माण स्वीकार हो गया।"
-            },
-            {
-              "type": "stats",
-              "title": "आँकड़े",
-              "lines": [
-                "बफ़र: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "रेसिपी",
-              "recipe_type": "आकारित क्राफ्टिंग",
-              "grid": [
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:glowstone",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:iron_ingot"
-              ],
-              "result_id": "alaindustrial:reactor_lamp",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_casing",
-          "title": "रिएक्टर केसिंग",
-          "icon": "alaindustrial:reactor_casing",
-          "pages": [
-            {
-              "type": "text",
-              "title": "रिएक्टर केसिंग",
-              "text": "परिरक्षण मिश्रधातु की पट्टी — रिएक्टर कक्ष का बंद खोल केवल इसी सामग्री से बन सकता है।"
-            },
-            {
-              "type": "stats",
-              "title": "आँकड़े",
-              "lines": [
-                "बफ़र: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "रेसिपी",
-              "recipe_type": "आकारित क्राफ्टिंग",
-              "grid": [
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:machine_casing",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate"
-              ],
-              "result_id": "alaindustrial:reactor_casing",
-              "result_count": 8
-            }
-          ]
-        },
-        {
-          "id": "reactor_glass",
-          "title": "रिएक्टर का काँच",
-          "icon": "alaindustrial:reactor_glass",
-          "pages": [
-            {
-              "type": "text",
-              "title": "रिएक्टर का काँच",
-              "text": "पारदर्शी खोल-पट्टी: यह आवरण की तरह ही दीवार गिनी जाती है, पर खोल का 30 % से अधिक हिस्सा काँच नहीं हो सकता — उससे आगे कक्ष रोकथाम नहीं, प्रदर्शनी बन जाता है।"
-            },
-            {
-              "type": "stats",
-              "title": "आँकड़े",
-              "lines": [
-                "बफ़र: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "रेसिपी",
-              "recipe_type": "आकारित क्राफ्टिंग",
-              "grid": [
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass"
-              ],
-              "result_id": "alaindustrial:reactor_glass",
-              "result_count": 8
             }
           ]
         },
@@ -1347,43 +1143,6 @@
                 ""
               ],
               "result_id": "alaindustrial:uranium_fuel_rod",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_door",
-          "title": "रिएक्टर का एयरलॉक दरवाज़ा",
-          "icon": "alaindustrial:reactor_door",
-          "pages": [
-            {
-              "type": "text",
-              "title": "रिएक्टर का एयरलॉक दरवाज़ा",
-              "text": "रिएक्टर कक्ष में जाने का इकलौता रास्ता: यह केवल रेडस्टोन पल्स से खुलता है, दो सेकंड बाद खुद बंद हो जाता है, और द्वार में खड़े किसी व्यक्ति पर कभी बंद नहीं होता।"
-            },
-            {
-              "type": "stats",
-              "title": "आँकड़े",
-              "lines": [
-                "बफ़र: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "रेसिपी",
-              "recipe_type": "आकारित क्राफ्टिंग",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:reactor_glass",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:insulated_copper_cable",
-                "minecraft:iron_door",
-                "alaindustrial:insulated_copper_cable",
-                "alaindustrial:shielding_alloy_reinforced_plate",
-                "alaindustrial:control_rod_drive",
-                "alaindustrial:shielding_alloy_reinforced_plate"
-              ],
-              "result_id": "alaindustrial:reactor_door",
               "result_count": 1
             }
           ]
@@ -2558,8 +2317,193 @@
     {
       "id": "other",
       "title": "अन्य",
-      "icon": "alaindustrial:iron_chest",
+      "icon": "alaindustrial:reactor_button",
       "entries": [
+        {
+          "id": "reactor_button",
+          "title": "रिएक्टर बटन",
+          "icon": "alaindustrial:reactor_button",
+          "pages": [
+            {
+              "type": "text",
+              "title": "रिएक्टर बटन",
+              "text": "परिरक्षण मिश्रधातु से बना बटन: बंद कक्ष के भीतर से एयरलॉक को पल्स भेजने का तरीका; बनावट में बिलकुल वैनिला बटन जैसा, पर उस चीज़ को झेलने लायक जिसके लिए यह कक्ष बना है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "बफ़र: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "बिना आकार की क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:stone_button",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_button",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lamp",
+          "title": "रिएक्टर लैंप",
+          "icon": "alaindustrial:reactor_lamp",
+          "pages": [
+            {
+              "type": "text",
+              "title": "रिएक्टर लैंप",
+              "text": "खोल का वह ब्लॉक जो कक्ष बन जाने पर ही जलता है: बंद डिब्बे के भीतर प्रकाश का इकलौता स्रोत और साथ ही बाहर से दिखने वाला संकेत कि निर्माण स्वीकार हो गया।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "बफ़र: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:glowstone",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:reactor_lamp",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "reactor_casing",
+          "title": "रिएक्टर केसिंग",
+          "icon": "alaindustrial:reactor_casing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "रिएक्टर केसिंग",
+              "text": "परिरक्षण मिश्रधातु की पट्टी — रिएक्टर कक्ष का बंद खोल केवल इसी सामग्री से बन सकता है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "बफ़र: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reactor_casing",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_glass",
+          "title": "रिएक्टर का काँच",
+          "icon": "alaindustrial:reactor_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "रिएक्टर का काँच",
+              "text": "पारदर्शी खोल-पट्टी: यह आवरण की तरह ही दीवार गिनी जाती है, पर खोल का 30 % से अधिक हिस्सा काँच नहीं हो सकता — उससे आगे कक्ष रोकथाम नहीं, प्रदर्शनी बन जाता है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "बफ़र: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass"
+              ],
+              "result_id": "alaindustrial:reactor_glass",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_door",
+          "title": "रिएक्टर का एयरलॉक दरवाज़ा",
+          "icon": "alaindustrial:reactor_door",
+          "pages": [
+            {
+              "type": "text",
+              "title": "रिएक्टर का एयरलॉक दरवाज़ा",
+              "text": "रिएक्टर कक्ष में जाने का इकलौता रास्ता: यह केवल रेडस्टोन पल्स से खुलता है, दो सेकंड बाद खुद बंद हो जाता है, और द्वार में खड़े किसी व्यक्ति पर कभी बंद नहीं होता।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "बफ़र: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:reactor_glass",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:insulated_copper_cable",
+                "minecraft:iron_door",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:control_rod_drive",
+                "alaindustrial:shielding_alloy_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:reactor_door",
+              "result_count": 1
+            }
+          ]
+        },
         {
           "id": "iron_chest",
           "title": "आयरन चेस्ट",
@@ -2697,6 +2641,43 @@
                 ""
               ],
               "result_id": "alaindustrial:storage_module",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "shielding_chest",
+          "title": "परिरक्षण चेस्ट",
+          "icon": "alaindustrial:shielding_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "परिरक्षण चेस्ट",
+              "text": "एकमात्र पात्र जो अपने भीतर रखी चीज़ों का विकिरण रोकता है: भीतर रखा यूरेनियम किसी को विकिरण नहीं देता। आयरन संदूक जितनी क्षमता (36 स्लॉट), कोई ऊर्जा नहीं चाहिए।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "क्षमता: 36 स्लॉट"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:iron_chest",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                ""
+              ],
+              "result_id": "alaindustrial:shielding_chest",
               "result_count": 1
             }
           ]

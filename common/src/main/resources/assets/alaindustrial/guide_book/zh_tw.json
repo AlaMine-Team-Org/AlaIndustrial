@@ -406,25 +406,6 @@
           ]
         },
         {
-          "id": "creative_energy_source",
-          "title": "創造能量源",
-          "icon": "alaindustrial:creative_energy_source",
-          "pages": [
-            {
-              "type": "text",
-              "title": "創造能量源",
-              "text": "輸出可調的無盡 EU 源——用來測試佈置的工具，生存模式中無法取得。"
-            },
-            {
-              "type": "stats",
-              "title": "數據",
-              "lines": [
-                "能量：32-8192 EU/t"
-              ]
-            }
-          ]
-        },
-        {
           "id": "moonlit_solar_panel",
           "title": "月光太陽能板",
           "icon": "alaindustrial:moonlit_solar_panel",
@@ -936,43 +917,6 @@
           ]
         },
         {
-          "id": "shielding_chest",
-          "title": "屏蔽箱子",
-          "icon": "alaindustrial:shielding_chest",
-          "pages": [
-            {
-              "type": "text",
-              "title": "屏蔽箱子",
-              "text": "唯一能擋住內容物輻射的容器：裡面放鈾也不會輻射到任何人。容量與鐵箱子相同（36 格），不需要能量。"
-            },
-            {
-              "type": "stats",
-              "title": "數據",
-              "lines": [
-                "容量：36 格"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "配方",
-              "recipe_type": "有序合成",
-              "grid": [
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:iron_chest",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                ""
-              ],
-              "result_id": "alaindustrial:shielding_chest",
-              "result_count": 1
-            }
-          ]
-        },
-        {
           "id": "reactor_controller",
           "title": "反應爐控制器",
           "icon": "alaindustrial:reactor_controller",
@@ -1070,43 +1014,6 @@
           ]
         },
         {
-          "id": "reactor_button",
-          "title": "反應爐按鈕",
-          "icon": "alaindustrial:reactor_button",
-          "pages": [
-            {
-              "type": "text",
-              "title": "反應爐按鈕",
-              "text": "用屏蔽合金做的按鈕：在密封房間內部給氣閘門發脈衝的方法。它與原版按鈕的構造完全相同，卻經得起這個房間存在的理由。"
-            },
-            {
-              "type": "stats",
-              "title": "數據",
-              "lines": [
-                "緩衝：0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "配方",
-              "recipe_type": "無序合成",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:stone_button",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                ""
-              ],
-              "result_id": "alaindustrial:reactor_button",
-              "result_count": 2
-            }
-          ]
-        },
-        {
           "id": "fuel_rod_assembly",
           "title": "反應爐柱",
           "icon": "alaindustrial:fuel_rod_assembly",
@@ -1133,117 +1040,6 @@
               ],
               "result_id": "alaindustrial:fuel_rod_assembly",
               "result_count": 2
-            }
-          ]
-        },
-        {
-          "id": "reactor_lamp",
-          "title": "反應爐燈",
-          "icon": "alaindustrial:reactor_lamp",
-          "pages": [
-            {
-              "type": "text",
-              "title": "反應爐燈",
-              "text": "只有房間成形後才會亮起的外殼方塊：密封盒子裡唯一的光源，同時也是從外面就能看見的「建築已獲認可」標誌。"
-            },
-            {
-              "type": "stats",
-              "title": "數據",
-              "lines": [
-                "緩衝：0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "配方",
-              "recipe_type": "有序合成",
-              "grid": [
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:glowstone",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:iron_ingot"
-              ],
-              "result_id": "alaindustrial:reactor_lamp",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_casing",
-          "title": "反應爐外殼",
-          "icon": "alaindustrial:reactor_casing",
-          "pages": [
-            {
-              "type": "text",
-              "title": "反應爐外殼",
-              "text": "一塊屏蔽合金板——反應爐房間的密封外殼唯一可用的材料。"
-            },
-            {
-              "type": "stats",
-              "title": "數據",
-              "lines": [
-                "緩衝：0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "配方",
-              "recipe_type": "有序合成",
-              "grid": [
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:machine_casing",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate"
-              ],
-              "result_id": "alaindustrial:reactor_casing",
-              "result_count": 8
-            }
-          ]
-        },
-        {
-          "id": "reactor_glass",
-          "title": "反應爐玻璃",
-          "icon": "alaindustrial:reactor_glass",
-          "pages": [
-            {
-              "type": "text",
-              "title": "反應爐玻璃",
-              "text": "透明的外殼板：它和外殼一樣算作牆，但玻璃最多只能占外殼的 30%——超過之後，房間就不再是圍阻體，而成了陳列櫃。"
-            },
-            {
-              "type": "stats",
-              "title": "數據",
-              "lines": [
-                "緩衝：0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "配方",
-              "recipe_type": "有序合成",
-              "grid": [
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass"
-              ],
-              "result_id": "alaindustrial:reactor_glass",
-              "result_count": 8
             }
           ]
         },
@@ -1347,43 +1143,6 @@
                 ""
               ],
               "result_id": "alaindustrial:uranium_fuel_rod",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_door",
-          "title": "反應爐氣閘門",
-          "icon": "alaindustrial:reactor_door",
-          "pages": [
-            {
-              "type": "text",
-              "title": "反應爐氣閘門",
-              "text": "進入反應爐房間的唯一通道：它只由紅石脈衝開啟，兩秒後自行關閉，而且絕不會夾住站在門洞裡的人。"
-            },
-            {
-              "type": "stats",
-              "title": "數據",
-              "lines": [
-                "緩衝：0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "配方",
-              "recipe_type": "有序合成",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:reactor_glass",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:insulated_copper_cable",
-                "minecraft:iron_door",
-                "alaindustrial:insulated_copper_cable",
-                "alaindustrial:shielding_alloy_reinforced_plate",
-                "alaindustrial:control_rod_drive",
-                "alaindustrial:shielding_alloy_reinforced_plate"
-              ],
-              "result_id": "alaindustrial:reactor_door",
               "result_count": 1
             }
           ]
@@ -2558,8 +2317,193 @@
     {
       "id": "other",
       "title": "其他",
-      "icon": "alaindustrial:iron_chest",
+      "icon": "alaindustrial:reactor_button",
       "entries": [
+        {
+          "id": "reactor_button",
+          "title": "反應爐按鈕",
+          "icon": "alaindustrial:reactor_button",
+          "pages": [
+            {
+              "type": "text",
+              "title": "反應爐按鈕",
+              "text": "用屏蔽合金做的按鈕：在密封房間內部給氣閘門發脈衝的方法。它與原版按鈕的構造完全相同，卻經得起這個房間存在的理由。"
+            },
+            {
+              "type": "stats",
+              "title": "數據",
+              "lines": [
+                "緩衝：0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "無序合成",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:stone_button",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_button",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lamp",
+          "title": "反應爐燈",
+          "icon": "alaindustrial:reactor_lamp",
+          "pages": [
+            {
+              "type": "text",
+              "title": "反應爐燈",
+              "text": "只有房間成形後才會亮起的外殼方塊：密封盒子裡唯一的光源，同時也是從外面就能看見的「建築已獲認可」標誌。"
+            },
+            {
+              "type": "stats",
+              "title": "數據",
+              "lines": [
+                "緩衝：0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:glowstone",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:reactor_lamp",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "reactor_casing",
+          "title": "反應爐外殼",
+          "icon": "alaindustrial:reactor_casing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "反應爐外殼",
+              "text": "一塊屏蔽合金板——反應爐房間的密封外殼唯一可用的材料。"
+            },
+            {
+              "type": "stats",
+              "title": "數據",
+              "lines": [
+                "緩衝：0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reactor_casing",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_glass",
+          "title": "反應爐玻璃",
+          "icon": "alaindustrial:reactor_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "反應爐玻璃",
+              "text": "透明的外殼板：它和外殼一樣算作牆，但玻璃最多只能占外殼的 30%——超過之後，房間就不再是圍阻體，而成了陳列櫃。"
+            },
+            {
+              "type": "stats",
+              "title": "數據",
+              "lines": [
+                "緩衝：0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass"
+              ],
+              "result_id": "alaindustrial:reactor_glass",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_door",
+          "title": "反應爐氣閘門",
+          "icon": "alaindustrial:reactor_door",
+          "pages": [
+            {
+              "type": "text",
+              "title": "反應爐氣閘門",
+              "text": "進入反應爐房間的唯一通道：它只由紅石脈衝開啟，兩秒後自行關閉，而且絕不會夾住站在門洞裡的人。"
+            },
+            {
+              "type": "stats",
+              "title": "數據",
+              "lines": [
+                "緩衝：0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:reactor_glass",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:insulated_copper_cable",
+                "minecraft:iron_door",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:control_rod_drive",
+                "alaindustrial:shielding_alloy_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:reactor_door",
+              "result_count": 1
+            }
+          ]
+        },
         {
           "id": "iron_chest",
           "title": "鐵箱子",
@@ -2697,6 +2641,43 @@
                 ""
               ],
               "result_id": "alaindustrial:storage_module",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "shielding_chest",
+          "title": "屏蔽箱子",
+          "icon": "alaindustrial:shielding_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "屏蔽箱子",
+              "text": "唯一能擋住內容物輻射的容器：裡面放鈾也不會輻射到任何人。容量與鐵箱子相同（36 格），不需要能量。"
+            },
+            {
+              "type": "stats",
+              "title": "數據",
+              "lines": [
+                "容量：36 格"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:iron_chest",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                ""
+              ],
+              "result_id": "alaindustrial:shielding_chest",
               "result_count": 1
             }
           ]

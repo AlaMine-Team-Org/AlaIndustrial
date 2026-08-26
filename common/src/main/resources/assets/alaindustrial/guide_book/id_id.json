@@ -406,25 +406,6 @@
           ]
         },
         {
-          "id": "creative_energy_source",
-          "title": "Sumber Energi Kreatif",
-          "icon": "alaindustrial:creative_energy_source",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Sumber Energi Kreatif",
-              "text": "Sumber EU tak habis-habis dengan keluaran yang bisa diatur — alat untuk menguji rakitan, tidak bisa didapat di mode bertahan hidup."
-            },
-            {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Energi: 32-8192 EU/t"
-              ]
-            }
-          ]
-        },
-        {
           "id": "moonlit_solar_panel",
           "title": "Panel Surya Cahaya Bulan",
           "icon": "alaindustrial:moonlit_solar_panel",
@@ -936,43 +917,6 @@
           ]
         },
         {
-          "id": "shielding_chest",
-          "title": "Peti Pelindung Radiasi",
-          "icon": "alaindustrial:shielding_chest",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Peti Pelindung Radiasi",
-              "text": "Satu-satunya wadah yang menahan radiasi isinya: uranium di dalamnya tidak menyinari siapa pun. Kapasitas peti besi (36 slot), tidak butuh energi."
-            },
-            {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Kapasitas: 36 slot"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
-              "grid": [
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:iron_chest",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                ""
-              ],
-              "result_id": "alaindustrial:shielding_chest",
-              "result_count": 1
-            }
-          ]
-        },
-        {
           "id": "reactor_controller",
           "title": "Pengendali Reaktor",
           "icon": "alaindustrial:reactor_controller",
@@ -1070,43 +1014,6 @@
           ]
         },
         {
-          "id": "reactor_button",
-          "title": "Tombol Reaktor",
-          "icon": "alaindustrial:reactor_button",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Tombol Reaktor",
-              "text": "Tombol dari paduan pelindung: cara mengirim pulsa ke pintu kedap dari dalam ruang tertutup, dibuat persis seperti tombol vanilla tetapi sanggup bertahan terhadap alasan keberadaan ruang itu."
-            },
-            {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Bufer: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Tanpa Pola",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:stone_button",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                ""
-              ],
-              "result_id": "alaindustrial:reactor_button",
-              "result_count": 2
-            }
-          ]
-        },
-        {
           "id": "fuel_rod_assembly",
           "title": "Kolom Reaktor",
           "icon": "alaindustrial:fuel_rod_assembly",
@@ -1133,117 +1040,6 @@
               ],
               "result_id": "alaindustrial:fuel_rod_assembly",
               "result_count": 2
-            }
-          ]
-        },
-        {
-          "id": "reactor_lamp",
-          "title": "Lampu Reaktor",
-          "icon": "alaindustrial:reactor_lamp",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Lampu Reaktor",
-              "text": "Blok cangkang yang menyala hanya setelah ruangan terbentuk: satu-satunya sumber cahaya di dalam kotak tertutup sekaligus tanda yang terlihat dari luar bahwa bangunan telah diterima."
-            },
-            {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Bufer: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
-              "grid": [
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:glowstone",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:iron_ingot"
-              ],
-              "result_id": "alaindustrial:reactor_lamp",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_casing",
-          "title": "Rangka Reaktor",
-          "icon": "alaindustrial:reactor_casing",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Rangka Reaktor",
-              "text": "Panel paduan pelindung — satu-satunya bahan yang boleh dipakai membangun cangkang kedap ruang reaktor."
-            },
-            {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Bufer: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
-              "grid": [
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:machine_casing",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate"
-              ],
-              "result_id": "alaindustrial:reactor_casing",
-              "result_count": 8
-            }
-          ]
-        },
-        {
-          "id": "reactor_glass",
-          "title": "Kaca Reaktor",
-          "icon": "alaindustrial:reactor_glass",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Kaca Reaktor",
-              "text": "Panel cangkang transparan: ia dihitung sebagai dinding persis seperti pelapis, tetapi kaca tidak boleh lebih dari 30 % cangkang — lewat batas itu ruangan berhenti menjadi penahan dan berubah jadi lemari pajang."
-            },
-            {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Bufer: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
-              "grid": [
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass"
-              ],
-              "result_id": "alaindustrial:reactor_glass",
-              "result_count": 8
             }
           ]
         },
@@ -1347,43 +1143,6 @@
                 ""
               ],
               "result_id": "alaindustrial:uranium_fuel_rod",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_door",
-          "title": "Pintu Kedap Reaktor",
-          "icon": "alaindustrial:reactor_door",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Pintu Kedap Reaktor",
-              "text": "Satu-satunya jalan masuk ke ruang reaktor: pintu hanya terbuka oleh pulsa redstone, menutup sendiri dua detik kemudian, dan tidak pernah menutup menimpa siapa pun yang berdiri di ambangnya."
-            },
-            {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Bufer: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:reactor_glass",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:insulated_copper_cable",
-                "minecraft:iron_door",
-                "alaindustrial:insulated_copper_cable",
-                "alaindustrial:shielding_alloy_reinforced_plate",
-                "alaindustrial:control_rod_drive",
-                "alaindustrial:shielding_alloy_reinforced_plate"
-              ],
-              "result_id": "alaindustrial:reactor_door",
               "result_count": 1
             }
           ]
@@ -2558,8 +2317,193 @@
     {
       "id": "other",
       "title": "Lainnya",
-      "icon": "alaindustrial:iron_chest",
+      "icon": "alaindustrial:reactor_button",
       "entries": [
+        {
+          "id": "reactor_button",
+          "title": "Tombol Reaktor",
+          "icon": "alaindustrial:reactor_button",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tombol Reaktor",
+              "text": "Tombol dari paduan pelindung: cara mengirim pulsa ke pintu kedap dari dalam ruang tertutup, dibuat persis seperti tombol vanilla tetapi sanggup bertahan terhadap alasan keberadaan ruang itu."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Bufer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Tanpa Pola",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:stone_button",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_button",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lamp",
+          "title": "Lampu Reaktor",
+          "icon": "alaindustrial:reactor_lamp",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lampu Reaktor",
+              "text": "Blok cangkang yang menyala hanya setelah ruangan terbentuk: satu-satunya sumber cahaya di dalam kotak tertutup sekaligus tanda yang terlihat dari luar bahwa bangunan telah diterima."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Bufer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:glowstone",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:reactor_lamp",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "reactor_casing",
+          "title": "Rangka Reaktor",
+          "icon": "alaindustrial:reactor_casing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Rangka Reaktor",
+              "text": "Panel paduan pelindung — satu-satunya bahan yang boleh dipakai membangun cangkang kedap ruang reaktor."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Bufer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reactor_casing",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_glass",
+          "title": "Kaca Reaktor",
+          "icon": "alaindustrial:reactor_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kaca Reaktor",
+              "text": "Panel cangkang transparan: ia dihitung sebagai dinding persis seperti pelapis, tetapi kaca tidak boleh lebih dari 30 % cangkang — lewat batas itu ruangan berhenti menjadi penahan dan berubah jadi lemari pajang."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Bufer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass"
+              ],
+              "result_id": "alaindustrial:reactor_glass",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_door",
+          "title": "Pintu Kedap Reaktor",
+          "icon": "alaindustrial:reactor_door",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Pintu Kedap Reaktor",
+              "text": "Satu-satunya jalan masuk ke ruang reaktor: pintu hanya terbuka oleh pulsa redstone, menutup sendiri dua detik kemudian, dan tidak pernah menutup menimpa siapa pun yang berdiri di ambangnya."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Bufer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:reactor_glass",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:insulated_copper_cable",
+                "minecraft:iron_door",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:control_rod_drive",
+                "alaindustrial:shielding_alloy_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:reactor_door",
+              "result_count": 1
+            }
+          ]
+        },
         {
           "id": "iron_chest",
           "title": "Peti Besi",
@@ -2697,6 +2641,43 @@
                 ""
               ],
               "result_id": "alaindustrial:storage_module",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "shielding_chest",
+          "title": "Peti Pelindung Radiasi",
+          "icon": "alaindustrial:shielding_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Peti Pelindung Radiasi",
+              "text": "Satu-satunya wadah yang menahan radiasi isinya: uranium di dalamnya tidak menyinari siapa pun. Kapasitas peti besi (36 slot), tidak butuh energi."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Kapasitas: 36 slot"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:iron_chest",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                ""
+              ],
+              "result_id": "alaindustrial:shielding_chest",
               "result_count": 1
             }
           ]

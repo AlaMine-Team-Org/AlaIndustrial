@@ -2,7 +2,7 @@
 fill ~1 ~-1 ~-3 ~12 ~4 ~4 minecraft:air replace
 fill ~1 ~-1 ~-3 ~12 ~-1 ~4 minecraft:smooth_stone replace
 setblock ~3 ~ ~0 minecraft:lava
-setblock ~4 ~ ~0 alaindustrial:pump
+setblock ~4 ~ ~0 alaindustrial:pump[facing=west]
 setblock ~5 ~ ~0 alaindustrial:geothermal_generator
 setblock ~4 ~ ~-1 alaindustrial:generator
 give @s minecraft:coal 64

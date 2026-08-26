@@ -406,25 +406,6 @@
           ]
         },
         {
-          "id": "creative_energy_source",
-          "title": "Fonte di energia creativa",
-          "icon": "alaindustrial:creative_energy_source",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Fonte di energia creativa",
-              "text": "Una fonte di EU inesauribile con uscita regolabile: uno strumento per provare gli impianti, non ottenibile in sopravvivenza."
-            },
-            {
-              "type": "stats",
-              "title": "Statistiche",
-              "lines": [
-                "Energia: 32-8192 EU/t"
-              ]
-            }
-          ]
-        },
-        {
           "id": "moonlit_solar_panel",
           "title": "Pannello solare al chiaro di luna",
           "icon": "alaindustrial:moonlit_solar_panel",
@@ -936,43 +917,6 @@
           ]
         },
         {
-          "id": "shielding_chest",
-          "title": "Baule schermante",
-          "icon": "alaindustrial:shielding_chest",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Baule schermante",
-              "text": "L'unico contenitore che ferma le radiazioni del suo contenuto: l'uranio all'interno non irradia nessuno. Capacità del baule di ferro (36 slot), non richiede energia."
-            },
-            {
-              "type": "stats",
-              "title": "Statistiche",
-              "lines": [
-                "Capacità: 36 slot"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Ricetta",
-              "recipe_type": "Fabbricazione sagomata",
-              "grid": [
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:iron_chest",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                ""
-              ],
-              "result_id": "alaindustrial:shielding_chest",
-              "result_count": 1
-            }
-          ]
-        },
-        {
           "id": "reactor_controller",
           "title": "Controllore del reattore",
           "icon": "alaindustrial:reactor_controller",
@@ -1070,43 +1014,6 @@
           ]
         },
         {
-          "id": "reactor_button",
-          "title": "Pulsante del reattore",
-          "icon": "alaindustrial:reactor_button",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Pulsante del reattore",
-              "text": "Un pulsante in lega schermante: il modo di inviare un impulso alla camera stagna dall'interno di una sala sigillata, costruito esattamente come un pulsante vanilla ma capace di reggere ciò per cui la sala esiste."
-            },
-            {
-              "type": "stats",
-              "title": "Statistiche",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Ricetta",
-              "recipe_type": "Fabbricazione non sagomata",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:stone_button",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                ""
-              ],
-              "result_id": "alaindustrial:reactor_button",
-              "result_count": 2
-            }
-          ]
-        },
-        {
           "id": "fuel_rod_assembly",
           "title": "Colonna del reattore",
           "icon": "alaindustrial:fuel_rod_assembly",
@@ -1133,117 +1040,6 @@
               ],
               "result_id": "alaindustrial:fuel_rod_assembly",
               "result_count": 2
-            }
-          ]
-        },
-        {
-          "id": "reactor_lamp",
-          "title": "Lampada del reattore",
-          "icon": "alaindustrial:reactor_lamp",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Lampada del reattore",
-              "text": "Un blocco del guscio che si accende solo quando la sala è formata: l'unica fonte di luce dentro una scatola sigillata e, allo stesso tempo, un segnale visibile dall'esterno che la costruzione è stata accettata."
-            },
-            {
-              "type": "stats",
-              "title": "Statistiche",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Ricetta",
-              "recipe_type": "Fabbricazione sagomata",
-              "grid": [
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:glowstone",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:iron_ingot"
-              ],
-              "result_id": "alaindustrial:reactor_lamp",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_casing",
-          "title": "Telaio del reattore",
-          "icon": "alaindustrial:reactor_casing",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Telaio del reattore",
-              "text": "Un pannello in lega schermante: l'unico materiale con cui si può costruire il guscio sigillato di una sala reattore."
-            },
-            {
-              "type": "stats",
-              "title": "Statistiche",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Ricetta",
-              "recipe_type": "Fabbricazione sagomata",
-              "grid": [
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:machine_casing",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate"
-              ],
-              "result_id": "alaindustrial:reactor_casing",
-              "result_count": 8
-            }
-          ]
-        },
-        {
-          "id": "reactor_glass",
-          "title": "Vetro del reattore",
-          "icon": "alaindustrial:reactor_glass",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Vetro del reattore",
-              "text": "Un pannello trasparente del guscio: conta come parete esattamente come il rivestimento, ma non più del 30 % di un guscio può essere vetro — oltre quella soglia la sala smette di essere un contenimento e diventa una vetrina."
-            },
-            {
-              "type": "stats",
-              "title": "Statistiche",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Ricetta",
-              "recipe_type": "Fabbricazione sagomata",
-              "grid": [
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass"
-              ],
-              "result_id": "alaindustrial:reactor_glass",
-              "result_count": 8
             }
           ]
         },
@@ -1347,43 +1143,6 @@
                 ""
               ],
               "result_id": "alaindustrial:uranium_fuel_rod",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_door",
-          "title": "Porta stagna del reattore",
-          "icon": "alaindustrial:reactor_door",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Porta stagna del reattore",
-              "text": "L'unico ingresso a una sala reattore: si apre solo con un impulso di redstone, si richiude da sola due secondi dopo e non si chiude mai addosso a chi sta nel vano."
-            },
-            {
-              "type": "stats",
-              "title": "Statistiche",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Ricetta",
-              "recipe_type": "Fabbricazione sagomata",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:reactor_glass",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:insulated_copper_cable",
-                "minecraft:iron_door",
-                "alaindustrial:insulated_copper_cable",
-                "alaindustrial:shielding_alloy_reinforced_plate",
-                "alaindustrial:control_rod_drive",
-                "alaindustrial:shielding_alloy_reinforced_plate"
-              ],
-              "result_id": "alaindustrial:reactor_door",
               "result_count": 1
             }
           ]
@@ -2558,8 +2317,193 @@
     {
       "id": "other",
       "title": "Altro",
-      "icon": "alaindustrial:iron_chest",
+      "icon": "alaindustrial:reactor_button",
       "entries": [
+        {
+          "id": "reactor_button",
+          "title": "Pulsante del reattore",
+          "icon": "alaindustrial:reactor_button",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Pulsante del reattore",
+              "text": "Un pulsante in lega schermante: il modo di inviare un impulso alla camera stagna dall'interno di una sala sigillata, costruito esattamente come un pulsante vanilla ma capace di reggere ciò per cui la sala esiste."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiche",
+              "lines": [
+                "Buffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione non sagomata",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:stone_button",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_button",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lamp",
+          "title": "Lampada del reattore",
+          "icon": "alaindustrial:reactor_lamp",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lampada del reattore",
+              "text": "Un blocco del guscio che si accende solo quando la sala è formata: l'unica fonte di luce dentro una scatola sigillata e, allo stesso tempo, un segnale visibile dall'esterno che la costruzione è stata accettata."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiche",
+              "lines": [
+                "Buffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:glowstone",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:reactor_lamp",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "reactor_casing",
+          "title": "Telaio del reattore",
+          "icon": "alaindustrial:reactor_casing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Telaio del reattore",
+              "text": "Un pannello in lega schermante: l'unico materiale con cui si può costruire il guscio sigillato di una sala reattore."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiche",
+              "lines": [
+                "Buffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reactor_casing",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_glass",
+          "title": "Vetro del reattore",
+          "icon": "alaindustrial:reactor_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Vetro del reattore",
+              "text": "Un pannello trasparente del guscio: conta come parete esattamente come il rivestimento, ma non più del 30 % di un guscio può essere vetro — oltre quella soglia la sala smette di essere un contenimento e diventa una vetrina."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiche",
+              "lines": [
+                "Buffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass"
+              ],
+              "result_id": "alaindustrial:reactor_glass",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_door",
+          "title": "Porta stagna del reattore",
+          "icon": "alaindustrial:reactor_door",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Porta stagna del reattore",
+              "text": "L'unico ingresso a una sala reattore: si apre solo con un impulso di redstone, si richiude da sola due secondi dopo e non si chiude mai addosso a chi sta nel vano."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiche",
+              "lines": [
+                "Buffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:reactor_glass",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:insulated_copper_cable",
+                "minecraft:iron_door",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:control_rod_drive",
+                "alaindustrial:shielding_alloy_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:reactor_door",
+              "result_count": 1
+            }
+          ]
+        },
         {
           "id": "iron_chest",
           "title": "Baule di ferro",
@@ -2697,6 +2641,43 @@
                 ""
               ],
               "result_id": "alaindustrial:storage_module",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "shielding_chest",
+          "title": "Baule schermante",
+          "icon": "alaindustrial:shielding_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Baule schermante",
+              "text": "L'unico contenitore che ferma le radiazioni del suo contenuto: l'uranio all'interno non irradia nessuno. Capacità del baule di ferro (36 slot), non richiede energia."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiche",
+              "lines": [
+                "Capacità: 36 slot"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:iron_chest",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                ""
+              ],
+              "result_id": "alaindustrial:shielding_chest",
               "result_count": 1
             }
           ]

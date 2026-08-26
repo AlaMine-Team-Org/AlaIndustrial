@@ -406,25 +406,6 @@
           ]
         },
         {
-          "id": "creative_energy_source",
-          "title": "Yaratıcı enerji kaynağı",
-          "icon": "alaindustrial:creative_energy_source",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Yaratıcı enerji kaynağı",
-              "text": "Çıkışı ayarlanabilen tükenmez bir EU kaynağı — düzenekleri denemek için bir araç, hayatta kalma modunda elde edilemez."
-            },
-            {
-              "type": "stats",
-              "title": "İstatistikler",
-              "lines": [
-                "Enerji: 32-8192 EU/t"
-              ]
-            }
-          ]
-        },
-        {
           "id": "moonlit_solar_panel",
           "title": "Ay Işığı Güneş Paneli",
           "icon": "alaindustrial:moonlit_solar_panel",
@@ -936,43 +917,6 @@
           ]
         },
         {
-          "id": "shielding_chest",
-          "title": "Koruyucu Sandık",
-          "icon": "alaindustrial:shielding_chest",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Koruyucu Sandık",
-              "text": "İçindekilerin ışımasını durduran tek kap: içindeki uranyum kimseyi ışınlamaz. Demir sandık kapasitesi (36 yuva), enerji gerektirmez."
-            },
-            {
-              "type": "stats",
-              "title": "İstatistikler",
-              "lines": [
-                "Kapasite: 36 yuva"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Tarif",
-              "recipe_type": "Şekilli Üretim",
-              "grid": [
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:iron_chest",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                ""
-              ],
-              "result_id": "alaindustrial:shielding_chest",
-              "result_count": 1
-            }
-          ]
-        },
-        {
           "id": "reactor_controller",
           "title": "Reaktör Kontrol Ünitesi",
           "icon": "alaindustrial:reactor_controller",
@@ -1070,43 +1014,6 @@
           ]
         },
         {
-          "id": "reactor_button",
-          "title": "Reaktör Düğmesi",
-          "icon": "alaindustrial:reactor_button",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Reaktör Düğmesi",
-              "text": "Zırh alaşımından bir düğme: mühürlü bir odanın içinden hava kilidine darbe göndermenin yolu; tıpkı bir vanilla düğmesi gibi yapılmıştır ama odanın var oluş nedenine dayanabilir."
-            },
-            {
-              "type": "stats",
-              "title": "İstatistikler",
-              "lines": [
-                "Tampon: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Tarif",
-              "recipe_type": "Şekilsiz Üretim",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:stone_button",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                ""
-              ],
-              "result_id": "alaindustrial:reactor_button",
-              "result_count": 2
-            }
-          ]
-        },
-        {
           "id": "fuel_rod_assembly",
           "title": "Reaktör Kolonu",
           "icon": "alaindustrial:fuel_rod_assembly",
@@ -1133,117 +1040,6 @@
               ],
               "result_id": "alaindustrial:fuel_rod_assembly",
               "result_count": 2
-            }
-          ]
-        },
-        {
-          "id": "reactor_lamp",
-          "title": "Reaktör Lambası",
-          "icon": "alaindustrial:reactor_lamp",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Reaktör Lambası",
-              "text": "Yalnızca oda kurulduğunda yanan bir kabuk bloğu: mühürlü bir kutunun içindeki tek ışık kaynağı ve aynı zamanda yapının kabul edildiğini dışarıdan gösteren bir işaret."
-            },
-            {
-              "type": "stats",
-              "title": "İstatistikler",
-              "lines": [
-                "Tampon: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Tarif",
-              "recipe_type": "Şekilli Üretim",
-              "grid": [
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:glowstone",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:iron_ingot"
-              ],
-              "result_id": "alaindustrial:reactor_lamp",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_casing",
-          "title": "Reaktör Gövdesi",
-          "icon": "alaindustrial:reactor_casing",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Reaktör Gövdesi",
-              "text": "Zırh alaşımından bir panel — bir reaktör odasının mühürlü kabuğunun yapılabileceği tek malzeme."
-            },
-            {
-              "type": "stats",
-              "title": "İstatistikler",
-              "lines": [
-                "Tampon: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Tarif",
-              "recipe_type": "Şekilli Üretim",
-              "grid": [
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:machine_casing",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate"
-              ],
-              "result_id": "alaindustrial:reactor_casing",
-              "result_count": 8
-            }
-          ]
-        },
-        {
-          "id": "reactor_glass",
-          "title": "Reaktör Camı",
-          "icon": "alaindustrial:reactor_glass",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Reaktör Camı",
-              "text": "Şeffaf bir kabuk paneli: tıpkı kaplama gibi duvar sayılır, ancak bir kabuğun en fazla %30'u cam olabilir — bunun ötesinde oda bir muhafaza olmaktan çıkıp vitrine döner."
-            },
-            {
-              "type": "stats",
-              "title": "İstatistikler",
-              "lines": [
-                "Tampon: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Tarif",
-              "recipe_type": "Şekilli Üretim",
-              "grid": [
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass"
-              ],
-              "result_id": "alaindustrial:reactor_glass",
-              "result_count": 8
             }
           ]
         },
@@ -1347,43 +1143,6 @@
                 ""
               ],
               "result_id": "alaindustrial:uranium_fuel_rod",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_door",
-          "title": "Reaktör Hava Kilidi Kapısı",
-          "icon": "alaindustrial:reactor_door",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Reaktör Hava Kilidi Kapısı",
-              "text": "Bir reaktör odasına giden tek yol: yalnızca bir redstone darbesiyle açılır, iki saniye sonra kendiliğinden kapanır ve kapı boşluğunda duranın üzerine asla kapanmaz."
-            },
-            {
-              "type": "stats",
-              "title": "İstatistikler",
-              "lines": [
-                "Tampon: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Tarif",
-              "recipe_type": "Şekilli Üretim",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:reactor_glass",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:insulated_copper_cable",
-                "minecraft:iron_door",
-                "alaindustrial:insulated_copper_cable",
-                "alaindustrial:shielding_alloy_reinforced_plate",
-                "alaindustrial:control_rod_drive",
-                "alaindustrial:shielding_alloy_reinforced_plate"
-              ],
-              "result_id": "alaindustrial:reactor_door",
               "result_count": 1
             }
           ]
@@ -2558,8 +2317,193 @@
     {
       "id": "other",
       "title": "Diğer",
-      "icon": "alaindustrial:iron_chest",
+      "icon": "alaindustrial:reactor_button",
       "entries": [
+        {
+          "id": "reactor_button",
+          "title": "Reaktör Düğmesi",
+          "icon": "alaindustrial:reactor_button",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reaktör Düğmesi",
+              "text": "Zırh alaşımından bir düğme: mühürlü bir odanın içinden hava kilidine darbe göndermenin yolu; tıpkı bir vanilla düğmesi gibi yapılmıştır ama odanın var oluş nedenine dayanabilir."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Tampon: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilsiz Üretim",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:stone_button",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_button",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lamp",
+          "title": "Reaktör Lambası",
+          "icon": "alaindustrial:reactor_lamp",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reaktör Lambası",
+              "text": "Yalnızca oda kurulduğunda yanan bir kabuk bloğu: mühürlü bir kutunun içindeki tek ışık kaynağı ve aynı zamanda yapının kabul edildiğini dışarıdan gösteren bir işaret."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Tampon: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:glowstone",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:reactor_lamp",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "reactor_casing",
+          "title": "Reaktör Gövdesi",
+          "icon": "alaindustrial:reactor_casing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reaktör Gövdesi",
+              "text": "Zırh alaşımından bir panel — bir reaktör odasının mühürlü kabuğunun yapılabileceği tek malzeme."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Tampon: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reactor_casing",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_glass",
+          "title": "Reaktör Camı",
+          "icon": "alaindustrial:reactor_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reaktör Camı",
+              "text": "Şeffaf bir kabuk paneli: tıpkı kaplama gibi duvar sayılır, ancak bir kabuğun en fazla %30'u cam olabilir — bunun ötesinde oda bir muhafaza olmaktan çıkıp vitrine döner."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Tampon: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass"
+              ],
+              "result_id": "alaindustrial:reactor_glass",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_door",
+          "title": "Reaktör Hava Kilidi Kapısı",
+          "icon": "alaindustrial:reactor_door",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reaktör Hava Kilidi Kapısı",
+              "text": "Bir reaktör odasına giden tek yol: yalnızca bir redstone darbesiyle açılır, iki saniye sonra kendiliğinden kapanır ve kapı boşluğunda duranın üzerine asla kapanmaz."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Tampon: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:reactor_glass",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:insulated_copper_cable",
+                "minecraft:iron_door",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:control_rod_drive",
+                "alaindustrial:shielding_alloy_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:reactor_door",
+              "result_count": 1
+            }
+          ]
+        },
         {
           "id": "iron_chest",
           "title": "Demir Sandık",
@@ -2697,6 +2641,43 @@
                 ""
               ],
               "result_id": "alaindustrial:storage_module",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "shielding_chest",
+          "title": "Koruyucu Sandık",
+          "icon": "alaindustrial:shielding_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Koruyucu Sandık",
+              "text": "İçindekilerin ışımasını durduran tek kap: içindeki uranyum kimseyi ışınlamaz. Demir sandık kapasitesi (36 yuva), enerji gerektirmez."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Kapasite: 36 yuva"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:iron_chest",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                ""
+              ],
+              "result_id": "alaindustrial:shielding_chest",
               "result_count": 1
             }
           ]

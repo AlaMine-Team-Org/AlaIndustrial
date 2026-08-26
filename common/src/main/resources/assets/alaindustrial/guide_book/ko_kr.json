@@ -406,25 +406,6 @@
           ]
         },
         {
-          "id": "creative_energy_source",
-          "title": "크리에이티브 에너지원",
-          "icon": "alaindustrial:creative_energy_source",
-          "pages": [
-            {
-              "type": "text",
-              "title": "크리에이티브 에너지원",
-              "text": "출력을 조절할 수 있는 무한 EU 공급원입니다. 설비를 시험하기 위한 도구이며, 서바이벌에서는 얻을 수 없습니다."
-            },
-            {
-              "type": "stats",
-              "title": "정보",
-              "lines": [
-                "에너지: 32-8192 EU/t"
-              ]
-            }
-          ]
-        },
-        {
           "id": "moonlit_solar_panel",
           "title": "달빛 태양광 패널",
           "icon": "alaindustrial:moonlit_solar_panel",
@@ -936,43 +917,6 @@
           ]
         },
         {
-          "id": "shielding_chest",
-          "title": "차폐 상자",
-          "icon": "alaindustrial:shielding_chest",
-          "pages": [
-            {
-              "type": "text",
-              "title": "차폐 상자",
-              "text": "내용물의 방사선을 막아 주는 유일한 상자입니다. 안에 우라늄을 넣어도 아무도 피폭되지 않습니다. 용량은 철 상자와 같은 36칸이며 에너지가 필요 없습니다."
-            },
-            {
-              "type": "stats",
-              "title": "정보",
-              "lines": [
-                "용량: 36칸"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "레시피",
-              "recipe_type": "정형 제작",
-              "grid": [
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:iron_chest",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                ""
-              ],
-              "result_id": "alaindustrial:shielding_chest",
-              "result_count": 1
-            }
-          ]
-        },
-        {
           "id": "reactor_controller",
           "title": "원자로 제어기",
           "icon": "alaindustrial:reactor_controller",
@@ -1070,43 +1014,6 @@
           ]
         },
         {
-          "id": "reactor_button",
-          "title": "원자로 버튼",
-          "icon": "alaindustrial:reactor_button",
-          "pages": [
-            {
-              "type": "text",
-              "title": "원자로 버튼",
-              "text": "차폐 합금으로 만든 버튼입니다. 밀폐된 방 안에서 에어록에 펄스를 보내는 수단이며, 바닐라 버튼과 똑같이 만들어졌지만 이 방이 존재하는 이유를 견뎌 냅니다."
-            },
-            {
-              "type": "stats",
-              "title": "정보",
-              "lines": [
-                "버퍼: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "레시피",
-              "recipe_type": "무정형 제작",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:stone_button",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                ""
-              ],
-              "result_id": "alaindustrial:reactor_button",
-              "result_count": 2
-            }
-          ]
-        },
-        {
           "id": "fuel_rod_assembly",
           "title": "원자로 기둥",
           "icon": "alaindustrial:fuel_rod_assembly",
@@ -1133,117 +1040,6 @@
               ],
               "result_id": "alaindustrial:fuel_rod_assembly",
               "result_count": 2
-            }
-          ]
-        },
-        {
-          "id": "reactor_lamp",
-          "title": "원자로 조명",
-          "icon": "alaindustrial:reactor_lamp",
-          "pages": [
-            {
-              "type": "text",
-              "title": "원자로 조명",
-              "text": "방이 완성되었을 때만 켜지는 외벽 블록입니다. 밀폐된 상자 안의 유일한 광원이자, 건물이 인정받았다는 것을 밖에서도 알 수 있는 표시입니다."
-            },
-            {
-              "type": "stats",
-              "title": "정보",
-              "lines": [
-                "버퍼: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "레시피",
-              "recipe_type": "정형 제작",
-              "grid": [
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:glowstone",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:iron_ingot"
-              ],
-              "result_id": "alaindustrial:reactor_lamp",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_casing",
-          "title": "원자로 케이스",
-          "icon": "alaindustrial:reactor_casing",
-          "pages": [
-            {
-              "type": "text",
-              "title": "원자로 케이스",
-              "text": "차폐 합금 판 — 원자로실의 밀폐 외벽을 쌓을 수 있는 유일한 재료입니다."
-            },
-            {
-              "type": "stats",
-              "title": "정보",
-              "lines": [
-                "버퍼: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "레시피",
-              "recipe_type": "정형 제작",
-              "grid": [
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:machine_casing",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate"
-              ],
-              "result_id": "alaindustrial:reactor_casing",
-              "result_count": 8
-            }
-          ]
-        },
-        {
-          "id": "reactor_glass",
-          "title": "원자로 유리",
-          "icon": "alaindustrial:reactor_glass",
-          "pages": [
-            {
-              "type": "text",
-              "title": "원자로 유리",
-              "text": "투명한 외벽 판입니다. 외장과 똑같이 벽으로 계산되지만, 유리는 외벽의 30 %를 넘을 수 없습니다. 그 이상이면 방은 격납이 아니라 진열장이 됩니다."
-            },
-            {
-              "type": "stats",
-              "title": "정보",
-              "lines": [
-                "버퍼: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "레시피",
-              "recipe_type": "정형 제작",
-              "grid": [
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass"
-              ],
-              "result_id": "alaindustrial:reactor_glass",
-              "result_count": 8
             }
           ]
         },
@@ -1347,43 +1143,6 @@
                 ""
               ],
               "result_id": "alaindustrial:uranium_fuel_rod",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_door",
-          "title": "원자로 에어록 문",
-          "icon": "alaindustrial:reactor_door",
-          "pages": [
-            {
-              "type": "text",
-              "title": "원자로 에어록 문",
-              "text": "원자로실로 들어가는 유일한 통로입니다. 레드스톤 펄스로만 열리고 2초 뒤 스스로 닫히며, 문간에 서 있는 사람을 향해 닫히는 일은 결코 없습니다."
-            },
-            {
-              "type": "stats",
-              "title": "정보",
-              "lines": [
-                "버퍼: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "레시피",
-              "recipe_type": "정형 제작",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:reactor_glass",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:insulated_copper_cable",
-                "minecraft:iron_door",
-                "alaindustrial:insulated_copper_cable",
-                "alaindustrial:shielding_alloy_reinforced_plate",
-                "alaindustrial:control_rod_drive",
-                "alaindustrial:shielding_alloy_reinforced_plate"
-              ],
-              "result_id": "alaindustrial:reactor_door",
               "result_count": 1
             }
           ]
@@ -2558,8 +2317,193 @@
     {
       "id": "other",
       "title": "기타",
-      "icon": "alaindustrial:iron_chest",
+      "icon": "alaindustrial:reactor_button",
       "entries": [
+        {
+          "id": "reactor_button",
+          "title": "원자로 버튼",
+          "icon": "alaindustrial:reactor_button",
+          "pages": [
+            {
+              "type": "text",
+              "title": "원자로 버튼",
+              "text": "차폐 합금으로 만든 버튼입니다. 밀폐된 방 안에서 에어록에 펄스를 보내는 수단이며, 바닐라 버튼과 똑같이 만들어졌지만 이 방이 존재하는 이유를 견뎌 냅니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "버퍼: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "무정형 제작",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:stone_button",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_button",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lamp",
+          "title": "원자로 조명",
+          "icon": "alaindustrial:reactor_lamp",
+          "pages": [
+            {
+              "type": "text",
+              "title": "원자로 조명",
+              "text": "방이 완성되었을 때만 켜지는 외벽 블록입니다. 밀폐된 상자 안의 유일한 광원이자, 건물이 인정받았다는 것을 밖에서도 알 수 있는 표시입니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "버퍼: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:glowstone",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:reactor_lamp",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "reactor_casing",
+          "title": "원자로 케이스",
+          "icon": "alaindustrial:reactor_casing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "원자로 케이스",
+              "text": "차폐 합금 판 — 원자로실의 밀폐 외벽을 쌓을 수 있는 유일한 재료입니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "버퍼: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reactor_casing",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_glass",
+          "title": "원자로 유리",
+          "icon": "alaindustrial:reactor_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "원자로 유리",
+              "text": "투명한 외벽 판입니다. 외장과 똑같이 벽으로 계산되지만, 유리는 외벽의 30 %를 넘을 수 없습니다. 그 이상이면 방은 격납이 아니라 진열장이 됩니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "버퍼: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass"
+              ],
+              "result_id": "alaindustrial:reactor_glass",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_door",
+          "title": "원자로 에어록 문",
+          "icon": "alaindustrial:reactor_door",
+          "pages": [
+            {
+              "type": "text",
+              "title": "원자로 에어록 문",
+              "text": "원자로실로 들어가는 유일한 통로입니다. 레드스톤 펄스로만 열리고 2초 뒤 스스로 닫히며, 문간에 서 있는 사람을 향해 닫히는 일은 결코 없습니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "버퍼: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:reactor_glass",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:insulated_copper_cable",
+                "minecraft:iron_door",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:control_rod_drive",
+                "alaindustrial:shielding_alloy_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:reactor_door",
+              "result_count": 1
+            }
+          ]
+        },
         {
           "id": "iron_chest",
           "title": "철 상자",
@@ -2697,6 +2641,43 @@
                 ""
               ],
               "result_id": "alaindustrial:storage_module",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "shielding_chest",
+          "title": "차폐 상자",
+          "icon": "alaindustrial:shielding_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "차폐 상자",
+              "text": "내용물의 방사선을 막아 주는 유일한 상자입니다. 안에 우라늄을 넣어도 아무도 피폭되지 않습니다. 용량은 철 상자와 같은 36칸이며 에너지가 필요 없습니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "용량: 36칸"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:iron_chest",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                ""
+              ],
+              "result_id": "alaindustrial:shielding_chest",
               "result_count": 1
             }
           ]

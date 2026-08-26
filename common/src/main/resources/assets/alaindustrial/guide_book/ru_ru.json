@@ -406,25 +406,6 @@
           ]
         },
         {
-          "id": "creative_energy_source",
-          "title": "Креативный источник энергии",
-          "icon": "alaindustrial:creative_energy_source",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Креативный источник энергии",
-              "text": "Неисчерпаемый источник EU с настраиваемой отдачей — инструмент для проверки схем, недоступный в выживании."
-            },
-            {
-              "type": "stats",
-              "title": "Характеристики",
-              "lines": [
-                "Энергия: 32-8192 EU/t"
-              ]
-            }
-          ]
-        },
-        {
           "id": "moonlit_solar_panel",
           "title": "Лунная солнечная панель",
           "icon": "alaindustrial:moonlit_solar_panel",
@@ -936,43 +917,6 @@
           ]
         },
         {
-          "id": "shielding_chest",
-          "title": "Экранирующий сундук",
-          "icon": "alaindustrial:shielding_chest",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Экранирующий сундук",
-              "text": "Единственный контейнер, который гасит излучение своего содержимого: уран внутри не облучает ни игрока, ни мобов. Вместимость железного сундука — 36 слотов, энергии не требует."
-            },
-            {
-              "type": "stats",
-              "title": "Характеристики",
-              "lines": [
-                "Вместимость: 36 слотов"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Рецепт",
-              "recipe_type": "Крафт на верстаке",
-              "grid": [
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:iron_chest",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                ""
-              ],
-              "result_id": "alaindustrial:shielding_chest",
-              "result_count": 1
-            }
-          ]
-        },
-        {
           "id": "reactor_controller",
           "title": "Контроллер реактора",
           "icon": "alaindustrial:reactor_controller",
@@ -1070,43 +1014,6 @@
           ]
         },
         {
-          "id": "reactor_button",
-          "title": "Реакторная кнопка",
-          "icon": "alaindustrial:reactor_button",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Реакторная кнопка",
-              "text": "Кнопка из экранирующего сплава: единственный способ подать импульс на шлюзовую дверь изнутри герметичной комнаты, устроенный так же, как ванильная кнопка, но переживающий то, ради чего комната и строится."
-            },
-            {
-              "type": "stats",
-              "title": "Характеристики",
-              "lines": [
-                "Буфер: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Рецепт",
-              "recipe_type": "Бесформенный крафт",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:stone_button",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                ""
-              ],
-              "result_id": "alaindustrial:reactor_button",
-              "result_count": 2
-            }
-          ]
-        },
-        {
           "id": "fuel_rod_assembly",
           "title": "Реакторная колонна",
           "icon": "alaindustrial:fuel_rod_assembly",
@@ -1133,117 +1040,6 @@
               ],
               "result_id": "alaindustrial:fuel_rod_assembly",
               "result_count": 2
-            }
-          ]
-        },
-        {
-          "id": "reactor_lamp",
-          "title": "Реакторная лампа",
-          "icon": "alaindustrial:reactor_lamp",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Реакторная лампа",
-              "text": "Блок оболочки, который загорается только у собранной комнаты: единственный источник света внутри герметичной коробки и заодно видимый снаружи признак того, что постройка принята."
-            },
-            {
-              "type": "stats",
-              "title": "Характеристики",
-              "lines": [
-                "Буфер: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Рецепт",
-              "recipe_type": "Крафт на верстаке",
-              "grid": [
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:glowstone",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:iron_ingot"
-              ],
-              "result_id": "alaindustrial:reactor_lamp",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_casing",
-          "title": "Реакторная обшивка",
-          "icon": "alaindustrial:reactor_casing",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Реакторная обшивка",
-              "text": "Панель из экранирующего сплава — единственный материал, из которого собирается герметичная оболочка реакторной комнаты."
-            },
-            {
-              "type": "stats",
-              "title": "Характеристики",
-              "lines": [
-                "Буфер: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Рецепт",
-              "recipe_type": "Крафт на верстаке",
-              "grid": [
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:machine_casing",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate"
-              ],
-              "result_id": "alaindustrial:reactor_casing",
-              "result_count": 8
-            }
-          ]
-        },
-        {
-          "id": "reactor_glass",
-          "title": "Реакторное стекло",
-          "icon": "alaindustrial:reactor_glass",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Реакторное стекло",
-              "text": "Прозрачная панель оболочки: считается стеной наравне с обшивкой, но стеклом разрешено закрыть не больше 30 % оболочки — иначе комната перестаёт быть комнатой и становится витриной."
-            },
-            {
-              "type": "stats",
-              "title": "Характеристики",
-              "lines": [
-                "Буфер: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Рецепт",
-              "recipe_type": "Крафт на верстаке",
-              "grid": [
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass"
-              ],
-              "result_id": "alaindustrial:reactor_glass",
-              "result_count": 8
             }
           ]
         },
@@ -1347,43 +1143,6 @@
                 ""
               ],
               "result_id": "alaindustrial:uranium_fuel_rod",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_door",
-          "title": "Шлюзовая дверь реактора",
-          "icon": "alaindustrial:reactor_door",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Шлюзовая дверь реактора",
-              "text": "Единственный вход в реакторную комнату: открывается только импульсом редстоуна, закрывается сама через две секунды и никогда не закрывается сквозь того, кто стоит в проёме."
-            },
-            {
-              "type": "stats",
-              "title": "Характеристики",
-              "lines": [
-                "Буфер: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Рецепт",
-              "recipe_type": "Крафт на верстаке",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:reactor_glass",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:insulated_copper_cable",
-                "minecraft:iron_door",
-                "alaindustrial:insulated_copper_cable",
-                "alaindustrial:shielding_alloy_reinforced_plate",
-                "alaindustrial:control_rod_drive",
-                "alaindustrial:shielding_alloy_reinforced_plate"
-              ],
-              "result_id": "alaindustrial:reactor_door",
               "result_count": 1
             }
           ]
@@ -2558,8 +2317,193 @@
     {
       "id": "other",
       "title": "Прочее",
-      "icon": "alaindustrial:iron_chest",
+      "icon": "alaindustrial:reactor_button",
       "entries": [
+        {
+          "id": "reactor_button",
+          "title": "Реакторная кнопка",
+          "icon": "alaindustrial:reactor_button",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Реакторная кнопка",
+              "text": "Кнопка из экранирующего сплава: единственный способ подать импульс на шлюзовую дверь изнутри герметичной комнаты, устроенный так же, как ванильная кнопка, но переживающий то, ради чего комната и строится."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Буфер: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Бесформенный крафт",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:stone_button",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_button",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lamp",
+          "title": "Реакторная лампа",
+          "icon": "alaindustrial:reactor_lamp",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Реакторная лампа",
+              "text": "Блок оболочки, который загорается только у собранной комнаты: единственный источник света внутри герметичной коробки и заодно видимый снаружи признак того, что постройка принята."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Буфер: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:glowstone",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:reactor_lamp",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "reactor_casing",
+          "title": "Реакторная обшивка",
+          "icon": "alaindustrial:reactor_casing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Реакторная обшивка",
+              "text": "Панель из экранирующего сплава — единственный материал, из которого собирается герметичная оболочка реакторной комнаты."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Буфер: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reactor_casing",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_glass",
+          "title": "Реакторное стекло",
+          "icon": "alaindustrial:reactor_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Реакторное стекло",
+              "text": "Прозрачная панель оболочки: считается стеной наравне с обшивкой, но стеклом разрешено закрыть не больше 30 % оболочки — иначе комната перестаёт быть комнатой и становится витриной."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Буфер: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass"
+              ],
+              "result_id": "alaindustrial:reactor_glass",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_door",
+          "title": "Шлюзовая дверь реактора",
+          "icon": "alaindustrial:reactor_door",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Шлюзовая дверь реактора",
+              "text": "Единственный вход в реакторную комнату: открывается только импульсом редстоуна, закрывается сама через две секунды и никогда не закрывается сквозь того, кто стоит в проёме."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Буфер: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:reactor_glass",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:insulated_copper_cable",
+                "minecraft:iron_door",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:control_rod_drive",
+                "alaindustrial:shielding_alloy_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:reactor_door",
+              "result_count": 1
+            }
+          ]
+        },
         {
           "id": "iron_chest",
           "title": "Железный сундук",
@@ -2697,6 +2641,43 @@
                 ""
               ],
               "result_id": "alaindustrial:storage_module",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "shielding_chest",
+          "title": "Экранирующий сундук",
+          "icon": "alaindustrial:shielding_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Экранирующий сундук",
+              "text": "Единственный контейнер, который гасит излучение своего содержимого: уран внутри не облучает ни игрока, ни мобов. Вместимость железного сундука — 36 слотов, энергии не требует."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Вместимость: 36 слотов"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:iron_chest",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                ""
+              ],
+              "result_id": "alaindustrial:shielding_chest",
               "result_count": 1
             }
           ]

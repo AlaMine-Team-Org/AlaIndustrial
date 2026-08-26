@@ -406,25 +406,6 @@
           ]
         },
         {
-          "id": "creative_energy_source",
-          "title": "ক্রিয়েটিভ এনার্জি সোর্স",
-          "icon": "alaindustrial:creative_energy_source",
-          "pages": [
-            {
-              "type": "text",
-              "title": "ক্রিয়েটিভ এনার্জি সোর্স",
-              "text": "অফুরন্ত EU-এর উৎস, নির্গমন সমন্বয়যোগ্য — সেটআপ পরীক্ষার সরঞ্জাম, সারভাইভালে পাওয়া যায় না।"
-            },
-            {
-              "type": "stats",
-              "title": "পরিসংখ্যান",
-              "lines": [
-                "শক্তি: 32-8192 EU/t"
-              ]
-            }
-          ]
-        },
-        {
           "id": "moonlit_solar_panel",
           "title": "চাঁদনি সোলার প্যানেল",
           "icon": "alaindustrial:moonlit_solar_panel",
@@ -936,43 +917,6 @@
           ]
         },
         {
-          "id": "shielding_chest",
-          "title": "শিল্ডিং চেস্ট",
-          "icon": "alaindustrial:shielding_chest",
-          "pages": [
-            {
-              "type": "text",
-              "title": "শিল্ডিং চেস্ট",
-              "text": "একমাত্র পাত্র যা ভেতরের জিনিসের বিকিরণ আটকায়: ভেতরে ইউরেনিয়াম থাকলেও কাউকে বিকিরণ ছোঁয় না। আয়রন চেস্টের ধারণক্ষমতা (36 স্লট), কোনো শক্তির দরকার নেই।"
-            },
-            {
-              "type": "stats",
-              "title": "পরিসংখ্যান",
-              "lines": [
-                "ধারণক্ষমতা: 36 স্লট"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "রেসিপি",
-              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
-              "grid": [
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:iron_chest",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                ""
-              ],
-              "result_id": "alaindustrial:shielding_chest",
-              "result_count": 1
-            }
-          ]
-        },
-        {
           "id": "reactor_controller",
           "title": "রিঅ্যাক্টর নিয়ন্ত্রক",
           "icon": "alaindustrial:reactor_controller",
@@ -1070,43 +1014,6 @@
           ]
         },
         {
-          "id": "reactor_button",
-          "title": "রিঅ্যাক্টর বোতাম",
-          "icon": "alaindustrial:reactor_button",
-          "pages": [
-            {
-              "type": "text",
-              "title": "রিঅ্যাক্টর বোতাম",
-              "text": "রক্ষাকারী সংকর ধাতুর বোতাম: সিল করা কক্ষের ভেতর থেকে এয়ারলকে পালস পাঠানোর উপায়; গড়নে হুবহু ভ্যানিলা বোতামের মতো, তবে এই কক্ষ যে কারণে বানানো তা সহ্য করার ক্ষমতা রাখে।"
-            },
-            {
-              "type": "stats",
-              "title": "পরিসংখ্যান",
-              "lines": [
-                "বাফার: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "রেসিপি",
-              "recipe_type": "আকৃতিহীন ক্রাফটিং",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:stone_button",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                ""
-              ],
-              "result_id": "alaindustrial:reactor_button",
-              "result_count": 2
-            }
-          ]
-        },
-        {
           "id": "fuel_rod_assembly",
           "title": "রিঅ্যাক্টর স্তম্ভ",
           "icon": "alaindustrial:fuel_rod_assembly",
@@ -1133,117 +1040,6 @@
               ],
               "result_id": "alaindustrial:fuel_rod_assembly",
               "result_count": 2
-            }
-          ]
-        },
-        {
-          "id": "reactor_lamp",
-          "title": "রিঅ্যাক্টর বাতি",
-          "icon": "alaindustrial:reactor_lamp",
-          "pages": [
-            {
-              "type": "text",
-              "title": "রিঅ্যাক্টর বাতি",
-              "text": "খোলসের যে ব্লক কেবল কক্ষ তৈরি হলেই জ্বলে ওঠে: সিল করা বাক্সের ভেতরে একমাত্র আলোর উৎস এবং একই সঙ্গে বাইরে থেকে দৃশ্যমান সংকেত যে নির্মাণ গৃহীত হয়েছে।"
-            },
-            {
-              "type": "stats",
-              "title": "পরিসংখ্যান",
-              "lines": [
-                "বাফার: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "রেসিপি",
-              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
-              "grid": [
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:glowstone",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:iron_ingot"
-              ],
-              "result_id": "alaindustrial:reactor_lamp",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_casing",
-          "title": "রিঅ্যাক্টর কেসিং",
-          "icon": "alaindustrial:reactor_casing",
-          "pages": [
-            {
-              "type": "text",
-              "title": "রিঅ্যাক্টর কেসিং",
-              "text": "রক্ষাকারী সংকর ধাতুর প্যানেল — চুল্লিকক্ষের সিল করা খোলস কেবল এই উপাদান দিয়েই গড়া যায়।"
-            },
-            {
-              "type": "stats",
-              "title": "পরিসংখ্যান",
-              "lines": [
-                "বাফার: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "রেসিপি",
-              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
-              "grid": [
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:machine_casing",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate"
-              ],
-              "result_id": "alaindustrial:reactor_casing",
-              "result_count": 8
-            }
-          ]
-        },
-        {
-          "id": "reactor_glass",
-          "title": "রিঅ্যাক্টরের কাচ",
-          "icon": "alaindustrial:reactor_glass",
-          "pages": [
-            {
-              "type": "text",
-              "title": "রিঅ্যাক্টরের কাচ",
-              "text": "স্বচ্ছ খোলস-প্যানেল: আবরণের মতোই এটি দেয়াল হিসেবে গোনা হয়, তবে খোলসের 30 %-এর বেশি কাচ হতে পারে না — তার বেশি হলে কক্ষ আর ধারণপাত্র থাকে না, প্রদর্শনী বাক্স হয়ে যায়।"
-            },
-            {
-              "type": "stats",
-              "title": "পরিসংখ্যান",
-              "lines": [
-                "বাফার: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "রেসিপি",
-              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
-              "grid": [
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass"
-              ],
-              "result_id": "alaindustrial:reactor_glass",
-              "result_count": 8
             }
           ]
         },
@@ -1347,43 +1143,6 @@
                 ""
               ],
               "result_id": "alaindustrial:uranium_fuel_rod",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_door",
-          "title": "রিঅ্যাক্টরের এয়ারলক দরজা",
-          "icon": "alaindustrial:reactor_door",
-          "pages": [
-            {
-              "type": "text",
-              "title": "রিঅ্যাক্টরের এয়ারলক দরজা",
-              "text": "চুল্লিকক্ষে ঢোকার একমাত্র পথ: এটি কেবল রেডস্টোন পালসেই খোলে, দুই সেকেন্ড পর নিজেই বন্ধ হয়, আর দরজায় দাঁড়ানো কারও ওপর কখনও বন্ধ হয় না।"
-            },
-            {
-              "type": "stats",
-              "title": "পরিসংখ্যান",
-              "lines": [
-                "বাফার: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "রেসিপি",
-              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:reactor_glass",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:insulated_copper_cable",
-                "minecraft:iron_door",
-                "alaindustrial:insulated_copper_cable",
-                "alaindustrial:shielding_alloy_reinforced_plate",
-                "alaindustrial:control_rod_drive",
-                "alaindustrial:shielding_alloy_reinforced_plate"
-              ],
-              "result_id": "alaindustrial:reactor_door",
               "result_count": 1
             }
           ]
@@ -2558,8 +2317,193 @@
     {
       "id": "other",
       "title": "অন্যান্য",
-      "icon": "alaindustrial:iron_chest",
+      "icon": "alaindustrial:reactor_button",
       "entries": [
+        {
+          "id": "reactor_button",
+          "title": "রিঅ্যাক্টর বোতাম",
+          "icon": "alaindustrial:reactor_button",
+          "pages": [
+            {
+              "type": "text",
+              "title": "রিঅ্যাক্টর বোতাম",
+              "text": "রক্ষাকারী সংকর ধাতুর বোতাম: সিল করা কক্ষের ভেতর থেকে এয়ারলকে পালস পাঠানোর উপায়; গড়নে হুবহু ভ্যানিলা বোতামের মতো, তবে এই কক্ষ যে কারণে বানানো তা সহ্য করার ক্ষমতা রাখে।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "বাফার: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিহীন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:stone_button",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_button",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lamp",
+          "title": "রিঅ্যাক্টর বাতি",
+          "icon": "alaindustrial:reactor_lamp",
+          "pages": [
+            {
+              "type": "text",
+              "title": "রিঅ্যাক্টর বাতি",
+              "text": "খোলসের যে ব্লক কেবল কক্ষ তৈরি হলেই জ্বলে ওঠে: সিল করা বাক্সের ভেতরে একমাত্র আলোর উৎস এবং একই সঙ্গে বাইরে থেকে দৃশ্যমান সংকেত যে নির্মাণ গৃহীত হয়েছে।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "বাফার: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:glowstone",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:reactor_lamp",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "reactor_casing",
+          "title": "রিঅ্যাক্টর কেসিং",
+          "icon": "alaindustrial:reactor_casing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "রিঅ্যাক্টর কেসিং",
+              "text": "রক্ষাকারী সংকর ধাতুর প্যানেল — চুল্লিকক্ষের সিল করা খোলস কেবল এই উপাদান দিয়েই গড়া যায়।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "বাফার: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reactor_casing",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_glass",
+          "title": "রিঅ্যাক্টরের কাচ",
+          "icon": "alaindustrial:reactor_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "রিঅ্যাক্টরের কাচ",
+              "text": "স্বচ্ছ খোলস-প্যানেল: আবরণের মতোই এটি দেয়াল হিসেবে গোনা হয়, তবে খোলসের 30 %-এর বেশি কাচ হতে পারে না — তার বেশি হলে কক্ষ আর ধারণপাত্র থাকে না, প্রদর্শনী বাক্স হয়ে যায়।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "বাফার: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass"
+              ],
+              "result_id": "alaindustrial:reactor_glass",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_door",
+          "title": "রিঅ্যাক্টরের এয়ারলক দরজা",
+          "icon": "alaindustrial:reactor_door",
+          "pages": [
+            {
+              "type": "text",
+              "title": "রিঅ্যাক্টরের এয়ারলক দরজা",
+              "text": "চুল্লিকক্ষে ঢোকার একমাত্র পথ: এটি কেবল রেডস্টোন পালসেই খোলে, দুই সেকেন্ড পর নিজেই বন্ধ হয়, আর দরজায় দাঁড়ানো কারও ওপর কখনও বন্ধ হয় না।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "বাফার: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:reactor_glass",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:insulated_copper_cable",
+                "minecraft:iron_door",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:control_rod_drive",
+                "alaindustrial:shielding_alloy_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:reactor_door",
+              "result_count": 1
+            }
+          ]
+        },
         {
           "id": "iron_chest",
           "title": "আয়রন চেস্ট",
@@ -2697,6 +2641,43 @@
                 ""
               ],
               "result_id": "alaindustrial:storage_module",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "shielding_chest",
+          "title": "শিল্ডিং চেস্ট",
+          "icon": "alaindustrial:shielding_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "শিল্ডিং চেস্ট",
+              "text": "একমাত্র পাত্র যা ভেতরের জিনিসের বিকিরণ আটকায়: ভেতরে ইউরেনিয়াম থাকলেও কাউকে বিকিরণ ছোঁয় না। আয়রন চেস্টের ধারণক্ষমতা (36 স্লট), কোনো শক্তির দরকার নেই।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "ধারণক্ষমতা: 36 স্লট"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:iron_chest",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                ""
+              ],
+              "result_id": "alaindustrial:shielding_chest",
               "result_count": 1
             }
           ]

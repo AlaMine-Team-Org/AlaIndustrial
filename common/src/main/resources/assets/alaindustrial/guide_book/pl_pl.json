@@ -406,25 +406,6 @@
           ]
         },
         {
-          "id": "creative_energy_source",
-          "title": "Kreatywne źródło energii",
-          "icon": "alaindustrial:creative_energy_source",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Kreatywne źródło energii",
-              "text": "Niewyczerpane źródło EU z regulowaną mocą — narzędzie do testowania układów, nie do zdobycia w trybie przetrwania."
-            },
-            {
-              "type": "stats",
-              "title": "Statystyki",
-              "lines": [
-                "Energia: 32-8192 EU/t"
-              ]
-            }
-          ]
-        },
-        {
           "id": "moonlit_solar_panel",
           "title": "Księżycowy panel słoneczny",
           "icon": "alaindustrial:moonlit_solar_panel",
@@ -936,43 +917,6 @@
           ]
         },
         {
-          "id": "shielding_chest",
-          "title": "Skrzynia ekranująca",
-          "icon": "alaindustrial:shielding_chest",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Skrzynia ekranująca",
-              "text": "Jedyny pojemnik, który zatrzymuje promieniowanie swojej zawartości: uran w środku nikogo nie napromienia. Pojemność żelaznej skrzyni (36 slotów), nie wymaga energii."
-            },
-            {
-              "type": "stats",
-              "title": "Statystyki",
-              "lines": [
-                "Pojemność: 36 slotów"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Przepis",
-              "recipe_type": "Wytwarzanie wg wzoru",
-              "grid": [
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:iron_chest",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                ""
-              ],
-              "result_id": "alaindustrial:shielding_chest",
-              "result_count": 1
-            }
-          ]
-        },
-        {
           "id": "reactor_controller",
           "title": "Sterownik reaktora",
           "icon": "alaindustrial:reactor_controller",
@@ -1070,43 +1014,6 @@
           ]
         },
         {
-          "id": "reactor_button",
-          "title": "Przycisk reaktora",
-          "icon": "alaindustrial:reactor_button",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Przycisk reaktora",
-              "text": "Przycisk ze stopu osłonowego: sposób na podanie impulsu do śluzy z wnętrza zamkniętego pomieszczenia; zbudowany dokładnie jak przycisk z podstawki, ale odporny na to, do czego to pomieszczenie służy."
-            },
-            {
-              "type": "stats",
-              "title": "Statystyki",
-              "lines": [
-                "Bufor: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Przepis",
-              "recipe_type": "Wytwarzanie bez wzoru",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:stone_button",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                ""
-              ],
-              "result_id": "alaindustrial:reactor_button",
-              "result_count": 2
-            }
-          ]
-        },
-        {
           "id": "fuel_rod_assembly",
           "title": "Kolumna reaktora",
           "icon": "alaindustrial:fuel_rod_assembly",
@@ -1133,117 +1040,6 @@
               ],
               "result_id": "alaindustrial:fuel_rod_assembly",
               "result_count": 2
-            }
-          ]
-        },
-        {
-          "id": "reactor_lamp",
-          "title": "Lampa reaktora",
-          "icon": "alaindustrial:reactor_lamp",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Lampa reaktora",
-              "text": "Blok powłoki, który zapala się dopiero wtedy, gdy pomieszczenie jest złożone: jedyne źródło światła w zamkniętej skrzyni, a zarazem widoczny z zewnątrz znak, że budowla została przyjęta."
-            },
-            {
-              "type": "stats",
-              "title": "Statystyki",
-              "lines": [
-                "Bufor: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Przepis",
-              "recipe_type": "Wytwarzanie wg wzoru",
-              "grid": [
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:glowstone",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:iron_ingot"
-              ],
-              "result_id": "alaindustrial:reactor_lamp",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_casing",
-          "title": "Obudowa reaktora",
-          "icon": "alaindustrial:reactor_casing",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Obudowa reaktora",
-              "text": "Płyta ze stopu osłonowego — jedyny materiał, z którego wolno zbudować szczelną powłokę pomieszczenia reaktora."
-            },
-            {
-              "type": "stats",
-              "title": "Statystyki",
-              "lines": [
-                "Bufor: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Przepis",
-              "recipe_type": "Wytwarzanie wg wzoru",
-              "grid": [
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:machine_casing",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate"
-              ],
-              "result_id": "alaindustrial:reactor_casing",
-              "result_count": 8
-            }
-          ]
-        },
-        {
-          "id": "reactor_glass",
-          "title": "Szkło reaktora",
-          "icon": "alaindustrial:reactor_glass",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Szkło reaktora",
-              "text": "Przezroczysta płyta powłoki: liczy się jako ściana dokładnie tak jak poszycie, ale szkło może zająć najwyżej 30 % powłoki — powyżej tego pomieszczenie przestaje być osłoną, a staje się gablotą."
-            },
-            {
-              "type": "stats",
-              "title": "Statystyki",
-              "lines": [
-                "Bufor: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Przepis",
-              "recipe_type": "Wytwarzanie wg wzoru",
-              "grid": [
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass"
-              ],
-              "result_id": "alaindustrial:reactor_glass",
-              "result_count": 8
             }
           ]
         },
@@ -1347,43 +1143,6 @@
                 ""
               ],
               "result_id": "alaindustrial:uranium_fuel_rod",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_door",
-          "title": "Drzwi śluzy reaktora",
-          "icon": "alaindustrial:reactor_door",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Drzwi śluzy reaktora",
-              "text": "Jedyne wejście do pomieszczenia reaktora: otwierają się wyłącznie na impuls czerwonego kamienia, same zamykają po dwóch sekundach i nigdy nie zamkną się na kimś, kto stoi w przejściu."
-            },
-            {
-              "type": "stats",
-              "title": "Statystyki",
-              "lines": [
-                "Bufor: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Przepis",
-              "recipe_type": "Wytwarzanie wg wzoru",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:reactor_glass",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:insulated_copper_cable",
-                "minecraft:iron_door",
-                "alaindustrial:insulated_copper_cable",
-                "alaindustrial:shielding_alloy_reinforced_plate",
-                "alaindustrial:control_rod_drive",
-                "alaindustrial:shielding_alloy_reinforced_plate"
-              ],
-              "result_id": "alaindustrial:reactor_door",
               "result_count": 1
             }
           ]
@@ -2558,8 +2317,193 @@
     {
       "id": "other",
       "title": "Inne",
-      "icon": "alaindustrial:iron_chest",
+      "icon": "alaindustrial:reactor_button",
       "entries": [
+        {
+          "id": "reactor_button",
+          "title": "Przycisk reaktora",
+          "icon": "alaindustrial:reactor_button",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Przycisk reaktora",
+              "text": "Przycisk ze stopu osłonowego: sposób na podanie impulsu do śluzy z wnętrza zamkniętego pomieszczenia; zbudowany dokładnie jak przycisk z podstawki, ale odporny na to, do czego to pomieszczenie służy."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Bufor: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie bez wzoru",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:stone_button",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_button",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lamp",
+          "title": "Lampa reaktora",
+          "icon": "alaindustrial:reactor_lamp",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lampa reaktora",
+              "text": "Blok powłoki, który zapala się dopiero wtedy, gdy pomieszczenie jest złożone: jedyne źródło światła w zamkniętej skrzyni, a zarazem widoczny z zewnątrz znak, że budowla została przyjęta."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Bufor: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:glowstone",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:reactor_lamp",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "reactor_casing",
+          "title": "Obudowa reaktora",
+          "icon": "alaindustrial:reactor_casing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Obudowa reaktora",
+              "text": "Płyta ze stopu osłonowego — jedyny materiał, z którego wolno zbudować szczelną powłokę pomieszczenia reaktora."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Bufor: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reactor_casing",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_glass",
+          "title": "Szkło reaktora",
+          "icon": "alaindustrial:reactor_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Szkło reaktora",
+              "text": "Przezroczysta płyta powłoki: liczy się jako ściana dokładnie tak jak poszycie, ale szkło może zająć najwyżej 30 % powłoki — powyżej tego pomieszczenie przestaje być osłoną, a staje się gablotą."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Bufor: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass"
+              ],
+              "result_id": "alaindustrial:reactor_glass",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_door",
+          "title": "Drzwi śluzy reaktora",
+          "icon": "alaindustrial:reactor_door",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Drzwi śluzy reaktora",
+              "text": "Jedyne wejście do pomieszczenia reaktora: otwierają się wyłącznie na impuls czerwonego kamienia, same zamykają po dwóch sekundach i nigdy nie zamkną się na kimś, kto stoi w przejściu."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Bufor: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:reactor_glass",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:insulated_copper_cable",
+                "minecraft:iron_door",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:control_rod_drive",
+                "alaindustrial:shielding_alloy_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:reactor_door",
+              "result_count": 1
+            }
+          ]
+        },
         {
           "id": "iron_chest",
           "title": "Żelazna skrzynia",
@@ -2697,6 +2641,43 @@
                 ""
               ],
               "result_id": "alaindustrial:storage_module",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "shielding_chest",
+          "title": "Skrzynia ekranująca",
+          "icon": "alaindustrial:shielding_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Skrzynia ekranująca",
+              "text": "Jedyny pojemnik, który zatrzymuje promieniowanie swojej zawartości: uran w środku nikogo nie napromienia. Pojemność żelaznej skrzyni (36 slotów), nie wymaga energii."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Pojemność: 36 slotów"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:iron_chest",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                ""
+              ],
+              "result_id": "alaindustrial:shielding_chest",
               "result_count": 1
             }
           ]

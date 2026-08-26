@@ -406,25 +406,6 @@
           ]
         },
         {
-          "id": "creative_energy_source",
-          "title": "Nguồn năng lượng sáng tạo",
-          "icon": "alaindustrial:creative_energy_source",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Nguồn năng lượng sáng tạo",
-              "text": "Nguồn EU vô tận với mức xuất điều chỉnh được — công cụ để thử nghiệm bố trí, không lấy được trong chế độ sinh tồn."
-            },
-            {
-              "type": "stats",
-              "title": "Thông số",
-              "lines": [
-                "Năng lượng: 32-8192 EU/t"
-              ]
-            }
-          ]
-        },
-        {
           "id": "moonlit_solar_panel",
           "title": "Tấm năng lượng ánh trăng",
           "icon": "alaindustrial:moonlit_solar_panel",
@@ -936,43 +917,6 @@
           ]
         },
         {
-          "id": "shielding_chest",
-          "title": "Rương Chắn Phóng Xạ",
-          "icon": "alaindustrial:shielding_chest",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Rương Chắn Phóng Xạ",
-              "text": "Vật chứa duy nhất chặn được phóng xạ của thứ để bên trong: urani nằm trong đó không chiếu xạ ai cả. Sức chứa bằng rương sắt (36 ô), không cần năng lượng."
-            },
-            {
-              "type": "stats",
-              "title": "Thông số",
-              "lines": [
-                "Sức chứa: 36 ô"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Công thức",
-              "recipe_type": "Chế tạo định hình",
-              "grid": [
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:iron_chest",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                ""
-              ],
-              "result_id": "alaindustrial:shielding_chest",
-              "result_count": 1
-            }
-          ]
-        },
-        {
           "id": "reactor_controller",
           "title": "Bộ Điều Khiển Lò Phản Ứng",
           "icon": "alaindustrial:reactor_controller",
@@ -1070,43 +1014,6 @@
           ]
         },
         {
-          "id": "reactor_button",
-          "title": "Nút Lò Phản Ứng",
-          "icon": "alaindustrial:reactor_button",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Nút Lò Phản Ứng",
-              "text": "Nút bấm làm bằng hợp kim che chắn: cách phát xung tới cửa khí từ bên trong một căn phòng kín; được dựng y hệt nút bấm nguyên bản nhưng chịu được đúng thứ mà căn phòng này sinh ra để chứa."
-            },
-            {
-              "type": "stats",
-              "title": "Thông số",
-              "lines": [
-                "Bộ đệm: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Công thức",
-              "recipe_type": "Chế tạo không định hình",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:stone_button",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                ""
-              ],
-              "result_id": "alaindustrial:reactor_button",
-              "result_count": 2
-            }
-          ]
-        },
-        {
           "id": "fuel_rod_assembly",
           "title": "Cột Lò Phản Ứng",
           "icon": "alaindustrial:fuel_rod_assembly",
@@ -1133,117 +1040,6 @@
               ],
               "result_id": "alaindustrial:fuel_rod_assembly",
               "result_count": 2
-            }
-          ]
-        },
-        {
-          "id": "reactor_lamp",
-          "title": "Đèn Lò Phản Ứng",
-          "icon": "alaindustrial:reactor_lamp",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Đèn Lò Phản Ứng",
-              "text": "Khối vỏ chỉ sáng lên khi căn phòng đã thành hình: nguồn sáng duy nhất bên trong một chiếc hộp kín, đồng thời là dấu hiệu nhìn từ ngoài cho biết công trình đã được chấp nhận."
-            },
-            {
-              "type": "stats",
-              "title": "Thông số",
-              "lines": [
-                "Bộ đệm: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Công thức",
-              "recipe_type": "Chế tạo định hình",
-              "grid": [
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:glowstone",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:iron_ingot"
-              ],
-              "result_id": "alaindustrial:reactor_lamp",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_casing",
-          "title": "Khung Lò Phản Ứng",
-          "icon": "alaindustrial:reactor_casing",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Khung Lò Phản Ứng",
-              "text": "Tấm hợp kim che chắn — vật liệu duy nhất được phép dùng để dựng lớp vỏ kín của phòng lò."
-            },
-            {
-              "type": "stats",
-              "title": "Thông số",
-              "lines": [
-                "Bộ đệm: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Công thức",
-              "recipe_type": "Chế tạo định hình",
-              "grid": [
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:machine_casing",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate"
-              ],
-              "result_id": "alaindustrial:reactor_casing",
-              "result_count": 8
-            }
-          ]
-        },
-        {
-          "id": "reactor_glass",
-          "title": "Kính Lò Phản Ứng",
-          "icon": "alaindustrial:reactor_glass",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Kính Lò Phản Ứng",
-              "text": "Tấm vỏ trong suốt: nó được tính là tường y như vỏ thường, nhưng kính không được vượt quá 30 % lớp vỏ — quá mức đó, căn phòng thôi là lớp bao chứa mà thành tủ trưng bày."
-            },
-            {
-              "type": "stats",
-              "title": "Thông số",
-              "lines": [
-                "Bộ đệm: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Công thức",
-              "recipe_type": "Chế tạo định hình",
-              "grid": [
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass"
-              ],
-              "result_id": "alaindustrial:reactor_glass",
-              "result_count": 8
             }
           ]
         },
@@ -1347,43 +1143,6 @@
                 ""
               ],
               "result_id": "alaindustrial:uranium_fuel_rod",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_door",
-          "title": "Cửa Kín Khí Lò Phản Ứng",
-          "icon": "alaindustrial:reactor_door",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Cửa Kín Khí Lò Phản Ứng",
-              "text": "Lối duy nhất vào phòng lò: cửa chỉ mở bằng một xung đá đỏ, tự đóng lại sau hai giây, và không bao giờ đóng vào người đang đứng ở ngưỡng cửa."
-            },
-            {
-              "type": "stats",
-              "title": "Thông số",
-              "lines": [
-                "Bộ đệm: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Công thức",
-              "recipe_type": "Chế tạo định hình",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:reactor_glass",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:insulated_copper_cable",
-                "minecraft:iron_door",
-                "alaindustrial:insulated_copper_cable",
-                "alaindustrial:shielding_alloy_reinforced_plate",
-                "alaindustrial:control_rod_drive",
-                "alaindustrial:shielding_alloy_reinforced_plate"
-              ],
-              "result_id": "alaindustrial:reactor_door",
               "result_count": 1
             }
           ]
@@ -2558,8 +2317,193 @@
     {
       "id": "other",
       "title": "Khác",
-      "icon": "alaindustrial:iron_chest",
+      "icon": "alaindustrial:reactor_button",
       "entries": [
+        {
+          "id": "reactor_button",
+          "title": "Nút Lò Phản Ứng",
+          "icon": "alaindustrial:reactor_button",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Nút Lò Phản Ứng",
+              "text": "Nút bấm làm bằng hợp kim che chắn: cách phát xung tới cửa khí từ bên trong một căn phòng kín; được dựng y hệt nút bấm nguyên bản nhưng chịu được đúng thứ mà căn phòng này sinh ra để chứa."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Bộ đệm: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo không định hình",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:stone_button",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_button",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lamp",
+          "title": "Đèn Lò Phản Ứng",
+          "icon": "alaindustrial:reactor_lamp",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Đèn Lò Phản Ứng",
+              "text": "Khối vỏ chỉ sáng lên khi căn phòng đã thành hình: nguồn sáng duy nhất bên trong một chiếc hộp kín, đồng thời là dấu hiệu nhìn từ ngoài cho biết công trình đã được chấp nhận."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Bộ đệm: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:glowstone",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:reactor_lamp",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "reactor_casing",
+          "title": "Khung Lò Phản Ứng",
+          "icon": "alaindustrial:reactor_casing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Khung Lò Phản Ứng",
+              "text": "Tấm hợp kim che chắn — vật liệu duy nhất được phép dùng để dựng lớp vỏ kín của phòng lò."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Bộ đệm: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reactor_casing",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_glass",
+          "title": "Kính Lò Phản Ứng",
+          "icon": "alaindustrial:reactor_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kính Lò Phản Ứng",
+              "text": "Tấm vỏ trong suốt: nó được tính là tường y như vỏ thường, nhưng kính không được vượt quá 30 % lớp vỏ — quá mức đó, căn phòng thôi là lớp bao chứa mà thành tủ trưng bày."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Bộ đệm: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass"
+              ],
+              "result_id": "alaindustrial:reactor_glass",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_door",
+          "title": "Cửa Kín Khí Lò Phản Ứng",
+          "icon": "alaindustrial:reactor_door",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cửa Kín Khí Lò Phản Ứng",
+              "text": "Lối duy nhất vào phòng lò: cửa chỉ mở bằng một xung đá đỏ, tự đóng lại sau hai giây, và không bao giờ đóng vào người đang đứng ở ngưỡng cửa."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Bộ đệm: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:reactor_glass",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:insulated_copper_cable",
+                "minecraft:iron_door",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:control_rod_drive",
+                "alaindustrial:shielding_alloy_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:reactor_door",
+              "result_count": 1
+            }
+          ]
+        },
         {
           "id": "iron_chest",
           "title": "Rương Sắt",
@@ -2697,6 +2641,43 @@
                 ""
               ],
               "result_id": "alaindustrial:storage_module",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "shielding_chest",
+          "title": "Rương Chắn Phóng Xạ",
+          "icon": "alaindustrial:shielding_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Rương Chắn Phóng Xạ",
+              "text": "Vật chứa duy nhất chặn được phóng xạ của thứ để bên trong: urani nằm trong đó không chiếu xạ ai cả. Sức chứa bằng rương sắt (36 ô), không cần năng lượng."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Sức chứa: 36 ô"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:iron_chest",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                ""
+              ],
+              "result_id": "alaindustrial:shielding_chest",
               "result_count": 1
             }
           ]

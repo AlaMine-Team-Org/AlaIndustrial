@@ -406,25 +406,6 @@
           ]
         },
         {
-          "id": "creative_energy_source",
-          "title": "Creatieve energiebron",
-          "icon": "alaindustrial:creative_energy_source",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Creatieve energiebron",
-              "text": "Een onuitputtelijke EU-bron met instelbaar vermogen — gereedschap om opstellingen te testen, niet te verkrijgen in overleven."
-            },
-            {
-              "type": "stats",
-              "title": "Statistieken",
-              "lines": [
-                "Energie: 32-8192 EU/t"
-              ]
-            }
-          ]
-        },
-        {
           "id": "moonlit_solar_panel",
           "title": "Maanverlicht zonnepaneel",
           "icon": "alaindustrial:moonlit_solar_panel",
@@ -936,43 +917,6 @@
           ]
         },
         {
-          "id": "shielding_chest",
-          "title": "Afschermende kist",
-          "icon": "alaindustrial:shielding_chest",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Afschermende kist",
-              "text": "De enige kist die de straling van haar inhoud tegenhoudt: uranium erin bestraalt niemand. Capaciteit van een ijzeren kist (36 sleuven), heeft geen energie nodig."
-            },
-            {
-              "type": "stats",
-              "title": "Statistieken",
-              "lines": [
-                "Capaciteit: 36 sleuven"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Recept",
-              "recipe_type": "Gevormd vervaardigen",
-              "grid": [
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:iron_chest",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                ""
-              ],
-              "result_id": "alaindustrial:shielding_chest",
-              "result_count": 1
-            }
-          ]
-        },
-        {
           "id": "reactor_controller",
           "title": "Reactorbesturing",
           "icon": "alaindustrial:reactor_controller",
@@ -1070,43 +1014,6 @@
           ]
         },
         {
-          "id": "reactor_button",
-          "title": "Reactorknop",
-          "icon": "alaindustrial:reactor_button",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Reactorknop",
-              "text": "Een knop van afschermlegering: de manier om vanuit een verzegelde ruimte een puls naar de sluis te sturen, precies gebouwd als een vanilla-knop maar bestand tegen datgene waarvoor de ruimte bedoeld is."
-            },
-            {
-              "type": "stats",
-              "title": "Statistieken",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Recept",
-              "recipe_type": "Vormloos vervaardigen",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:stone_button",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                ""
-              ],
-              "result_id": "alaindustrial:reactor_button",
-              "result_count": 2
-            }
-          ]
-        },
-        {
           "id": "fuel_rod_assembly",
           "title": "Reactorkolom",
           "icon": "alaindustrial:fuel_rod_assembly",
@@ -1133,117 +1040,6 @@
               ],
               "result_id": "alaindustrial:fuel_rod_assembly",
               "result_count": 2
-            }
-          ]
-        },
-        {
-          "id": "reactor_lamp",
-          "title": "Reactorlamp",
-          "icon": "alaindustrial:reactor_lamp",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Reactorlamp",
-              "text": "Een schilblok dat pas oplicht als de ruimte gevormd is: de enige lichtbron binnen een verzegelde doos en tegelijk een van buiten zichtbaar teken dat het bouwwerk is geaccepteerd."
-            },
-            {
-              "type": "stats",
-              "title": "Statistieken",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Recept",
-              "recipe_type": "Gevormd vervaardigen",
-              "grid": [
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:glowstone",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:iron_ingot"
-              ],
-              "result_id": "alaindustrial:reactor_lamp",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_casing",
-          "title": "Reactorbehuizing",
-          "icon": "alaindustrial:reactor_casing",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Reactorbehuizing",
-              "text": "Een paneel van afschermlegering — het enige materiaal waaruit de verzegelde schil van een reactorruimte gebouwd mag worden."
-            },
-            {
-              "type": "stats",
-              "title": "Statistieken",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Recept",
-              "recipe_type": "Gevormd vervaardigen",
-              "grid": [
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:machine_casing",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate"
-              ],
-              "result_id": "alaindustrial:reactor_casing",
-              "result_count": 8
-            }
-          ]
-        },
-        {
-          "id": "reactor_glass",
-          "title": "Reactorglas",
-          "icon": "alaindustrial:reactor_glass",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Reactorglas",
-              "text": "Een doorzichtig schilpaneel: het telt precies als muur, net als bekleding, maar hoogstens 30 % van een schil mag glas zijn — daarboven is de ruimte geen insluiting meer maar een vitrine."
-            },
-            {
-              "type": "stats",
-              "title": "Statistieken",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Recept",
-              "recipe_type": "Gevormd vervaardigen",
-              "grid": [
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass"
-              ],
-              "result_id": "alaindustrial:reactor_glass",
-              "result_count": 8
             }
           ]
         },
@@ -1347,43 +1143,6 @@
                 ""
               ],
               "result_id": "alaindustrial:uranium_fuel_rod",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_door",
-          "title": "Reactorsluisdeur",
-          "icon": "alaindustrial:reactor_door",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Reactorsluisdeur",
-              "text": "De enige toegang tot een reactorruimte: hij gaat alleen open op een redstonepuls, sluit zichzelf twee seconden later en gaat nooit dicht door wie er in de doorgang staat."
-            },
-            {
-              "type": "stats",
-              "title": "Statistieken",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Recept",
-              "recipe_type": "Gevormd vervaardigen",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:reactor_glass",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:insulated_copper_cable",
-                "minecraft:iron_door",
-                "alaindustrial:insulated_copper_cable",
-                "alaindustrial:shielding_alloy_reinforced_plate",
-                "alaindustrial:control_rod_drive",
-                "alaindustrial:shielding_alloy_reinforced_plate"
-              ],
-              "result_id": "alaindustrial:reactor_door",
               "result_count": 1
             }
           ]
@@ -2558,8 +2317,193 @@
     {
       "id": "other",
       "title": "Overig",
-      "icon": "alaindustrial:iron_chest",
+      "icon": "alaindustrial:reactor_button",
       "entries": [
+        {
+          "id": "reactor_button",
+          "title": "Reactorknop",
+          "icon": "alaindustrial:reactor_button",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reactorknop",
+              "text": "Een knop van afschermlegering: de manier om vanuit een verzegelde ruimte een puls naar de sluis te sturen, precies gebouwd als een vanilla-knop maar bestand tegen datgene waarvoor de ruimte bedoeld is."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Buffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Vormloos vervaardigen",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:stone_button",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_button",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lamp",
+          "title": "Reactorlamp",
+          "icon": "alaindustrial:reactor_lamp",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reactorlamp",
+              "text": "Een schilblok dat pas oplicht als de ruimte gevormd is: de enige lichtbron binnen een verzegelde doos en tegelijk een van buiten zichtbaar teken dat het bouwwerk is geaccepteerd."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Buffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:glowstone",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:reactor_lamp",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "reactor_casing",
+          "title": "Reactorbehuizing",
+          "icon": "alaindustrial:reactor_casing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reactorbehuizing",
+              "text": "Een paneel van afschermlegering — het enige materiaal waaruit de verzegelde schil van een reactorruimte gebouwd mag worden."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Buffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reactor_casing",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_glass",
+          "title": "Reactorglas",
+          "icon": "alaindustrial:reactor_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reactorglas",
+              "text": "Een doorzichtig schilpaneel: het telt precies als muur, net als bekleding, maar hoogstens 30 % van een schil mag glas zijn — daarboven is de ruimte geen insluiting meer maar een vitrine."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Buffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass"
+              ],
+              "result_id": "alaindustrial:reactor_glass",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_door",
+          "title": "Reactorsluisdeur",
+          "icon": "alaindustrial:reactor_door",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reactorsluisdeur",
+              "text": "De enige toegang tot een reactorruimte: hij gaat alleen open op een redstonepuls, sluit zichzelf twee seconden later en gaat nooit dicht door wie er in de doorgang staat."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Buffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:reactor_glass",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:insulated_copper_cable",
+                "minecraft:iron_door",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:control_rod_drive",
+                "alaindustrial:shielding_alloy_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:reactor_door",
+              "result_count": 1
+            }
+          ]
+        },
         {
           "id": "iron_chest",
           "title": "IJzeren kist",
@@ -2697,6 +2641,43 @@
                 ""
               ],
               "result_id": "alaindustrial:storage_module",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "shielding_chest",
+          "title": "Afschermende kist",
+          "icon": "alaindustrial:shielding_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Afschermende kist",
+              "text": "De enige kist die de straling van haar inhoud tegenhoudt: uranium erin bestraalt niemand. Capaciteit van een ijzeren kist (36 sleuven), heeft geen energie nodig."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Capaciteit: 36 sleuven"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:iron_chest",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                ""
+              ],
+              "result_id": "alaindustrial:shielding_chest",
               "result_count": 1
             }
           ]

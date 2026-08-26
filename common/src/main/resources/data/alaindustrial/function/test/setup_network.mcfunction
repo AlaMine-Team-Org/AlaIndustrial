@@ -4,12 +4,12 @@ fill ~1 ~-1 ~-3 ~12 ~-1 ~4 minecraft:smooth_stone replace
 # Rig A (priority): generator -> cable -> macerator + battery_box on the same net.
 setblock ~3 ~ ~0 alaindustrial:generator
 setblock ~4 ~ ~0 alaindustrial:copper_cable
-setblock ~4 ~ ~1 alaindustrial:macerator
+setblock ~4 ~ ~1 alaindustrial:macerator[facing=south]
 setblock ~4 ~ ~-1 alaindustrial:battery_box[facing=south]
 # Rig B (split): generator -> cable -> two equal macerators.
 setblock ~7 ~ ~0 alaindustrial:generator
 setblock ~8 ~ ~0 alaindustrial:copper_cable
-setblock ~8 ~ ~1 alaindustrial:macerator
+setblock ~8 ~ ~1 alaindustrial:macerator[facing=south]
 setblock ~8 ~ ~-1 alaindustrial:macerator
 give @s minecraft:coal 64
 give @s minecraft:raw_iron 32

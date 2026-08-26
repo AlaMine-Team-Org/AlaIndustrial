@@ -406,25 +406,6 @@
           ]
         },
         {
-          "id": "creative_energy_source",
-          "title": "Fuente de energía creativa",
-          "icon": "alaindustrial:creative_energy_source",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Fuente de energía creativa",
-              "text": "Una fuente de EU inagotable con salida ajustable: una herramienta para probar montajes, no obtenible en supervivencia."
-            },
-            {
-              "type": "stats",
-              "title": "Estadísticas",
-              "lines": [
-                "Energía: 32-8192 EU/t"
-              ]
-            }
-          ]
-        },
-        {
           "id": "moonlit_solar_panel",
           "title": "Panel solar lunar",
           "icon": "alaindustrial:moonlit_solar_panel",
@@ -936,43 +917,6 @@
           ]
         },
         {
-          "id": "shielding_chest",
-          "title": "Cofre de blindaje",
-          "icon": "alaindustrial:shielding_chest",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Cofre de blindaje",
-              "text": "El único contenedor que detiene la radiación de su contenido: el uranio que hay dentro no irradia a nadie. Capacidad de cofre de hierro (36 ranuras), no necesita energía."
-            },
-            {
-              "type": "stats",
-              "title": "Estadísticas",
-              "lines": [
-                "Capacidad: 36 ranuras"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Receta",
-              "recipe_type": "Fabricación con forma",
-              "grid": [
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:iron_chest",
-                "alaindustrial:shielding_alloy_plate",
-                "",
-                "alaindustrial:shielding_alloy_plate",
-                ""
-              ],
-              "result_id": "alaindustrial:shielding_chest",
-              "result_count": 1
-            }
-          ]
-        },
-        {
           "id": "reactor_controller",
           "title": "Controlador de reactor",
           "icon": "alaindustrial:reactor_controller",
@@ -1070,43 +1014,6 @@
           ]
         },
         {
-          "id": "reactor_button",
-          "title": "Botón de reactor",
-          "icon": "alaindustrial:reactor_button",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Botón de reactor",
-              "text": "Un botón de aleación de blindaje: la forma de enviar un pulso a la esclusa desde dentro de una sala sellada, construido igual que un botón vanilla pero capaz de sobrevivir a aquello para lo que existe la sala."
-            },
-            {
-              "type": "stats",
-              "title": "Estadísticas",
-              "lines": [
-                "Búfer: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Receta",
-              "recipe_type": "Fabricación sin forma",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:stone_button",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                ""
-              ],
-              "result_id": "alaindustrial:reactor_button",
-              "result_count": 2
-            }
-          ]
-        },
-        {
           "id": "fuel_rod_assembly",
           "title": "Columna del reactor",
           "icon": "alaindustrial:fuel_rod_assembly",
@@ -1133,117 +1040,6 @@
               ],
               "result_id": "alaindustrial:fuel_rod_assembly",
               "result_count": 2
-            }
-          ]
-        },
-        {
-          "id": "reactor_lamp",
-          "title": "Lámpara de reactor",
-          "icon": "alaindustrial:reactor_lamp",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Lámpara de reactor",
-              "text": "Un bloque de carcasa que solo se enciende cuando la sala está formada: la única fuente de luz dentro de una caja sellada y, a la vez, una señal visible desde fuera de que la construcción ha sido aceptada."
-            },
-            {
-              "type": "stats",
-              "title": "Estadísticas",
-              "lines": [
-                "Búfer: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Receta",
-              "recipe_type": "Fabricación con forma",
-              "grid": [
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "minecraft:glass",
-                "minecraft:glowstone",
-                "minecraft:glass",
-                "minecraft:iron_ingot",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:iron_ingot"
-              ],
-              "result_id": "alaindustrial:reactor_lamp",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_casing",
-          "title": "Carcasa de reactor",
-          "icon": "alaindustrial:reactor_casing",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Carcasa de reactor",
-              "text": "Un panel de aleación de blindaje: el único material con el que puede levantarse la carcasa sellada de una sala de reactor."
-            },
-            {
-              "type": "stats",
-              "title": "Estadísticas",
-              "lines": [
-                "Búfer: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Receta",
-              "recipe_type": "Fabricación con forma",
-              "grid": [
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:machine_casing",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate",
-                "alaindustrial:tempered_iron_plate"
-              ],
-              "result_id": "alaindustrial:reactor_casing",
-              "result_count": 8
-            }
-          ]
-        },
-        {
-          "id": "reactor_glass",
-          "title": "Vidrio de reactor",
-          "icon": "alaindustrial:reactor_glass",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Vidrio de reactor",
-              "text": "Un panel de carcasa transparente: cuenta como pared igual que el blindaje, pero no más del 30 % de una carcasa puede ser cristal; pasado ese punto la sala deja de ser contención y se convierte en vitrina."
-            },
-            {
-              "type": "stats",
-              "title": "Estadísticas",
-              "lines": [
-                "Búfer: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Receta",
-              "recipe_type": "Fabricación con forma",
-              "grid": [
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "alaindustrial:shielding_alloy_plate",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass",
-                "minecraft:glass"
-              ],
-              "result_id": "alaindustrial:reactor_glass",
-              "result_count": 8
             }
           ]
         },
@@ -1347,43 +1143,6 @@
                 ""
               ],
               "result_id": "alaindustrial:uranium_fuel_rod",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "reactor_door",
-          "title": "Puerta de esclusa del reactor",
-          "icon": "alaindustrial:reactor_door",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Puerta de esclusa del reactor",
-              "text": "La única entrada a una sala de reactor: se abre solo con un pulso de redstone, se cierra sola dos segundos después y nunca se cierra sobre quien esté en el vano."
-            },
-            {
-              "type": "stats",
-              "title": "Estadísticas",
-              "lines": [
-                "Búfer: 0 EU"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "Receta",
-              "recipe_type": "Fabricación con forma",
-              "grid": [
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:reactor_glass",
-                "alaindustrial:shielding_alloy_plate",
-                "alaindustrial:insulated_copper_cable",
-                "minecraft:iron_door",
-                "alaindustrial:insulated_copper_cable",
-                "alaindustrial:shielding_alloy_reinforced_plate",
-                "alaindustrial:control_rod_drive",
-                "alaindustrial:shielding_alloy_reinforced_plate"
-              ],
-              "result_id": "alaindustrial:reactor_door",
               "result_count": 1
             }
           ]
@@ -2558,8 +2317,193 @@
     {
       "id": "other",
       "title": "Otros",
-      "icon": "alaindustrial:iron_chest",
+      "icon": "alaindustrial:reactor_button",
       "entries": [
+        {
+          "id": "reactor_button",
+          "title": "Botón de reactor",
+          "icon": "alaindustrial:reactor_button",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Botón de reactor",
+              "text": "Un botón de aleación de blindaje: la forma de enviar un pulso a la esclusa desde dentro de una sala sellada, construido igual que un botón vanilla pero capaz de sobrevivir a aquello para lo que existe la sala."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Búfer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación sin forma",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:stone_button",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_button",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lamp",
+          "title": "Lámpara de reactor",
+          "icon": "alaindustrial:reactor_lamp",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lámpara de reactor",
+              "text": "Un bloque de carcasa que solo se enciende cuando la sala está formada: la única fuente de luz dentro de una caja sellada y, a la vez, una señal visible desde fuera de que la construcción ha sido aceptada."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Búfer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:glowstone",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:reactor_lamp",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "reactor_casing",
+          "title": "Carcasa de reactor",
+          "icon": "alaindustrial:reactor_casing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Carcasa de reactor",
+              "text": "Un panel de aleación de blindaje: el único material con el que puede levantarse la carcasa sellada de una sala de reactor."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Búfer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reactor_casing",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_glass",
+          "title": "Vidrio de reactor",
+          "icon": "alaindustrial:reactor_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Vidrio de reactor",
+              "text": "Un panel de carcasa transparente: cuenta como pared igual que el blindaje, pero no más del 30 % de una carcasa puede ser cristal; pasado ese punto la sala deja de ser contención y se convierte en vitrina."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Búfer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass"
+              ],
+              "result_id": "alaindustrial:reactor_glass",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_door",
+          "title": "Puerta de esclusa del reactor",
+          "icon": "alaindustrial:reactor_door",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Puerta de esclusa del reactor",
+              "text": "La única entrada a una sala de reactor: se abre solo con un pulso de redstone, se cierra sola dos segundos después y nunca se cierra sobre quien esté en el vano."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Búfer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:reactor_glass",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:insulated_copper_cable",
+                "minecraft:iron_door",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:control_rod_drive",
+                "alaindustrial:shielding_alloy_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:reactor_door",
+              "result_count": 1
+            }
+          ]
+        },
         {
           "id": "iron_chest",
           "title": "Cofre de hierro",
@@ -2697,6 +2641,43 @@
                 ""
               ],
               "result_id": "alaindustrial:storage_module",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "shielding_chest",
+          "title": "Cofre de blindaje",
+          "icon": "alaindustrial:shielding_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cofre de blindaje",
+              "text": "El único contenedor que detiene la radiación de su contenido: el uranio que hay dentro no irradia a nadie. Capacidad de cofre de hierro (36 ranuras), no necesita energía."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Capacidad: 36 ranuras"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:iron_chest",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                ""
+              ],
+              "result_id": "alaindustrial:shielding_chest",
               "result_count": 1
             }
           ]
