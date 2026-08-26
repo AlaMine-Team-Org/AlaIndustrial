@@ -372,14 +372,14 @@
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="17 pages">17</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="18 pages">18</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="23 pages">23</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="22 pages">22</span></a>
   </aside>
   <main class="content" id="main-content">
@@ -396,7 +396,7 @@
 </div>
 <h2 id="summary">Summary</h2>
 
-<p>The <strong>Reactor Airlock Door</strong> is a two-block-tall shell block and the only way into the room. A room without one does not form: the controller reports "No door" and refuses to call the build finished. That is not a formality — a sealed box you cannot enter would be a bug rather than a building, and it is better said while you are still laying blocks than afterwards.</p>
+<p>The <strong>Reactor Airlock Door</strong> is a two-block-tall shell block and the intended way into the room. The door itself is optional: walling yourself in and mining back out is a legitimate way to run a reactor, and all the shell has to be is sealed. But a door that IS there has to form a real doorway — one lying in the floor is a mistake rather than a choice, and the controller says so while you are still laying blocks rather than afterwards.</p>
 
 <p>The door deliberately does not behave like a vanilla iron door. It cannot be opened by hand and cannot be left open: it opens on a redstone <strong>pulse</strong> alone and shuts itself. There is no "open forever" state.</p>
 
@@ -428,7 +428,7 @@
 
 <p>It is not enough for the controller that a door merely exists in the shell. It needs a <strong>doorway</strong> — two door cells stacked, with the lower one at the room's interior floor level. Anything else is a window, not a way in.</p>
 
-<table><thead><tr><th>Situation</th><th>Controller status</th></tr></thead><tbody><tr><td>No door anywhere in the shell</td><td><code>NO_DOOR</code> — "No door"</td></tr><tr><td>A door exists but no doorway (lying in the floor or ceiling, standing above floor level)</td><td><code>NO_DOORWAY</code> — "No doorway"</td></tr><tr><td>At least one doorway</td><td>condition satisfied</td></tr></tbody></table>
+<table><thead><tr><th>Situation</th><th>Controller status</th></tr></thead><tbody><tr><td>No door anywhere in the shell</td><td>condition met — the door is optional</td></tr><tr><td>A door exists but no doorway (lying in the floor or ceiling, standing above floor level)</td><td><code>NO_DOORWAY</code> — "No doorway"</td></tr><tr><td>At least one doorway</td><td>condition satisfied</td></tr></tbody></table>
 
 <p>There may be any number of doors: two — an entrance and an exit — is an ordinary layout. The requirement is exactly one: at least one real doorway.</p>
 
@@ -458,20 +458,22 @@
 
 <h2 id="recipes">Recipes</h2>
 
-<p>Craft — <strong>×1</strong> at a time, on a 2×3 grid.</p>
+<p>Craft — <strong>×1</strong> at a time, on a full 3×3 grid.</p>
 
-<pre><code class="lang-">R D R = reinforced shielding plate ×2
-P V D = iron door ×2
-R D P = shielding plate ×1
+<pre><code class="lang-">P G P P = shielding plate ×2
+W D W G = reactor glass ×1
+R V R W = insulated copper cable ×2
+D = iron door ×1
+R = reinforced shielding plate ×2
 V = control rod drive ×1</code></pre>
 
-<p>The recipe reads as the block's construction: two vanilla iron leaves — one for each of its two cells of height — dressed in shielding alloy, with a drive in the middle turning a pair of leaves into an airlock.</p>
+<p>The recipe reads as the block's construction: a vanilla iron leaf in the middle, dressed in shielding alloy — plain plates across the top, reinforced ones across the bottom — with reactor glass becoming the round porthole of the upper half, two insulated copper cables bringing power in, and the drive in the bottom row turning the leaf into an airlock.</p>
 
 <p>The drive is a separate item: 3 shielding plates, 2 iron ingots, an electronic circuit, 2 tempered iron plates and a piston</p>
 
 <h2 id="progression">Progression</h2>
 
-<p>Tier: none. Requires: one shielding plate, two reinforced shielding plates (see <a href="reactor_casing.html">casing</a> — the full chain is described there), two vanilla iron doors and a control rod drive. Unlocks: the ability to complete a room — without a door the controller will not accept it.</p>
+<p>Tier: none. Requires: two shielding plates, two reinforced shielding plates (see <a href="reactor_casing.html">casing</a> — the full chain is described there), one piece of <a href="reactor_glass.html">reactor glass</a>, two insulated copper cables, one vanilla iron door and a control rod drive. Unlocks: a proper way into a formed room — the only way in and out that does not take the shell apart.</p>
 
 <p>The drive appears here for the first time but not the last: it is also part of the <a href="reactor_controller.html">controller</a>, and in stage 2 it gets its real meaning — regulating how deep the fuel rods sit.</p>
 

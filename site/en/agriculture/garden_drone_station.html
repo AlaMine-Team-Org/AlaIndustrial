@@ -372,14 +372,14 @@
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="17 pages">17</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="18 pages">18</span></a>
 <a class="cat-link active" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="20 pages">20</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="23 pages">23</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="22 pages">22</span></a>
   </aside>
   <main class="content" id="main-content">
@@ -428,7 +428,7 @@
 
 <p>Once the work is done the drone <strong>stands on the tile for 6 ticks</strong> before it heads home. Without that beat the action and the return leg began on the same tick: the drone touched the plot and lifted off inside a single frame, which read as a bounce rather than as a machine doing a job. The pause is only at the far end — on the pad it would shift the tick the action lands on, and that tick is what every test scenario counts to.</p>
 
-<p><strong>Scan zone.</strong> A 4-block radius around the station — this is the <strong>tier-1</strong> drone, and a machine that tends a 9x9 field straight out of the crafting table leaves nothing for a later tier to improve. Radius 4 is a comfortable plot around the dock. The target list for the zone is <strong>cached</strong> and invalidated by block updates inside the radius; a full cache rebuild happens no more often than once every = <strong>20</strong> ticks. Touching any zone position requires an <code>level.isLoaded</code> check first — the station never forces a synchronous chunk load.</p>
+<p><strong>Scan zone.</strong> A 4-block radius around the station is exactly one standard 9×9 plot (2 × 4 + 1): the dock sits at its centre and reaches every corner. This is the <strong>tier-1</strong> drone and it tends one such plot — later tiers still have room to grow, into several plots at once or into a zone wider than one. The target list for the zone is <strong>cached</strong> and invalidated by block updates inside the radius; a full cache rebuild happens no more often than once every = <strong>20</strong> ticks. Touching any zone position requires an <code>level.isLoaded</code> check first — the station never forces a synchronous chunk load.</p>
 
 <p><strong>Crop maturity</strong> is decided by a shared predicate reused from the <a href="../items/scythe.html">Scythe</a> (the same class that already decides whether a crop is ready to cut — pumpkin/melon stems, cactus/sugar cane base-only, berry bushes, and vanilla <code>CropBlock</code>s are all handled identically in both places, with no risk of the edge cases drifting apart).</p>
 

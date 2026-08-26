@@ -372,14 +372,14 @@
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логистика жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Хранение жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Мир и автоматизация</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="17 страниц">17</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="18 страниц">18</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сельское хозяйство</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Хай-тек машины</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Прочее</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="14 страниц">14</span></a>
 <div class="group-title">Предметы</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="3 страницы">3</span></a>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="20 страниц">20</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="23 страницы">23</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="22 страницы">22</span></a>
   </aside>
   <main class="content" id="main-content">
@@ -397,7 +397,7 @@
 
 <h2 id="сводка">Сводка</h2>
 
-<p><strong>Шлюзовая дверь реактора</strong> — блок оболочки высотой в две клетки и единственный способ попасть внутрь комнаты. Комната без двери не формируется: контроллер сообщает «Нет двери» и отказывается считать постройку готовой. Это не формальность — герметичная коробка, в которую нельзя войти, была бы багом, а не постройкой, и лучше сказать об этом при сборке, чем после.</p>
+<p><strong>Шлюзовая дверь реактора</strong> — блок оболочки высотой в две клетки и штатный способ попасть внутрь комнаты. Сама дверь необязательна: замуроваться и прокопаться обратно — законный способ держать реактор, от оболочки требуется только герметичность. Но если дверь в ней стоит, она обязана образовать настоящий проём: дверь, лежащая в полу, — это ошибка, а не выбор, и контроллер скажет об этом при сборке, а не после.</p>
 
 <p>Дверь намеренно не ведёт себя как ванильная железная. Её нельзя открыть рукой и нельзя «оставить открытой»: она открывается <strong>только</strong> по импульсу редстоуна и закрывается сама. Состояния «открыта навсегда» не существует.</p>
 
@@ -429,7 +429,7 @@
 
 <p>Для контроллера мало, чтобы дверь просто была в оболочке. Нужен <strong>проём</strong> — две клетки двери одна над другой, причём нижняя на уровне внутреннего пола комнаты. Иначе это окно, а не вход.</p>
 
-<table><thead><tr><th>Ситуация</th><th>Статус контроллера</th></tr></thead><tbody><tr><td>Двери в оболочке нет вообще</td><td><code>NO_DOOR</code> — «Нет двери»</td></tr><tr><td>Дверь есть, но проёма нет (лежит в полу/потолке, стоит выше уровня пола)</td><td><code>NO_DOORWAY</code> — «Нет проёма»</td></tr><tr><td>Есть хотя бы один проём</td><td>условие выполнено</td></tr></tbody></table>
+<table><thead><tr><th>Ситуация</th><th>Статус контроллера</th></tr></thead><tbody><tr><td>Двери в оболочке нет вообще</td><td>условие выполнено — дверь необязательна</td></tr><tr><td>Дверь есть, но проёма нет (лежит в полу/потолке, стоит выше уровня пола)</td><td><code>NO_DOORWAY</code> — «Нет проёма»</td></tr><tr><td>Есть хотя бы один проём</td><td>условие выполнено</td></tr></tbody></table>
 
 <p>Дверей может быть сколько угодно: две — «вход» и «выход» — нормальная планировка. Требование ровно одно: минимум один настоящий проём.</p>
 
@@ -459,20 +459,22 @@
 
 <h2 id="рецепты">Рецепты</h2>
 
-<p>Крафт — <strong>×1</strong> за раз, сетка 2×3.</p>
+<p>Крафт — <strong>×1</strong> за раз, полная сетка 3×3.</p>
 
-<pre><code class="lang-">R D R = укреплённая экранирующая пластина ×2
-P V D = железная дверь ×2
-R D P = экранирующая пластина ×1
+<pre><code class="lang-">P G P P = экранирующая пластина ×2
+W D W G = реакторное стекло ×1
+R V R W = изолированный медный кабель ×2
+D = железная дверь ×1
+R = укреплённая экранирующая пластина ×2
 V = привод управляющих стержней ×1</code></pre>
 
-<p>Рецепт читается как устройство блока: два ванильных железных полотна — по одному на каждую из двух клеток высоты — одеваются в экранирующий сплав, а привод посередине превращает пару створок в шлюз.</p>
+<p>Рецепт читается как устройство блока: ванильное железное полотно в середине одевается в экранирующий сплав — обычные пластины поверху, укреплённые понизу, — реакторное стекло становится круглым иллюминатором верхней половины, два изолированных медных кабеля подводят питание, а привод в нижнем ряду превращает створку в шлюз.</p>
 
 <p>Привод — отдельный предмет: 3 экранирующие пластины, 2 железных слитка, электронная схема, 2 пластины закалённого железа и поршень</p>
 
 <h2 id="прогрессия">Прогрессия</h2>
 
-<p>Тир: нет. Требует: экранирующую пластину, две укреплённые экранирующие пластины (см. <a href="reactor_casing.html">обшивку</a> — вся цепочка описана там), две ванильные железные двери и привод управляющих стержней. Открывает: возможность собрать комнату — без двери контроллер её не примет.</p>
+<p>Тир: нет. Требует: две экранирующие пластины, две укреплённые экранирующие пластины (см. <a href="reactor_casing.html">обшивку</a> — вся цепочка описана там), <a href="reactor_glass.html">реакторное стекло</a>, два изолированных медных кабеля, ванильную железную дверь и привод управляющих стержней. Открывает: штатный вход в собранную комнату — единственный способ входить и выходить, не разбирая оболочку.</p>
 
 <p>Привод здесь появляется впервые, но не в последний раз: он же входит в <a href="reactor_controller.html">контроллер</a>, а на этапе 2 получает свой настоящий смысл — регулировку глубины погружения стержней.</p>
 

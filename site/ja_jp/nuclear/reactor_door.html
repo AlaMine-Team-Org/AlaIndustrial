@@ -372,14 +372,14 @@
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>液体輸送</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>液体貯蔵</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <div class="group-title">世界と自動化</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>素材</span><span class="cat-count" aria-label="17 ページ">17</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>素材</span><span class="cat-count" aria-label="18 ページ">18</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>農業</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>高度なマシン</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="23 ページ">23</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="22 ページ">22</span></a>
   </aside>
   <main class="content" id="main-content">
@@ -396,7 +396,7 @@
 </div>
 <h2 id="概要">概要</h2>
 
-<p><strong>原子炉エアロックドア</strong>は高さ 2 マスのシェルのブロックであり、部屋に入る唯一の手段です。ドアの 無い部屋は成立しません。制御装置は「ドアがない」と告げ、その建物を完成とは認めません。形式的な 話ではありません。入れない密閉容器は建物ではなくバグであり、それを後から気づくより、組んでいる 最中に伝えるほうがましだからです。</p>
+<p><strong>原子炉エアロックドア</strong>は高さ 2 マスのシェルのブロックであり、部屋に入る本来の手段です。ドア 自体は必須ではありません。自分を塗り込めて掘り戻すのも原子炉の正当な運用であり、シェルに求め られるのは密閉だけです。ただしドアが置かれているなら、本物の通路を形成しなければなりません。 床に寝ているドアは選択ではなく間違いであり、制御装置はそれを後からではなく、組んでいる最中に 伝えます。</p>
 
 <p>このドアはバニラの鉄のドアと同じようには振る舞いません。手では開けられず、「開けっぱなしにする」 こともできません。開くのはレッドストーンのパルス<strong>だけ</strong>で、閉まるのは自分からです。「ずっと開いて いる」という状態は存在しません。</p>
 
@@ -428,7 +428,7 @@
 
 <p>制御装置にとって、ドアがシェルにあるだけでは足りません。<strong>通路</strong>——上下に並んだ 2 マスのドアで、 下のマスが部屋の内側の床と同じ高さにあるもの——が必要です。そうでなければ、それは入口ではなく窓 です。</p>
 
-<table><thead><tr><th>状況</th><th>制御装置の状態</th></tr></thead><tbody><tr><td>シェルにドアがまったくない</td><td>「ドアがない」</td></tr><tr><td>ドアはあるが通路がない（床や天井にある、床より高い位置にある）</td><td>「通路がない」</td></tr><tr><td>通路が少なくともひとつある</td><td>条件を満たす</td></tr></tbody></table>
+<table><thead><tr><th>状況</th><th>制御装置の状態</th></tr></thead><tbody><tr><td>シェルにドアがまったくない</td><td>条件を満たす — ドアは必須ではない</td></tr><tr><td>ドアはあるが通路がない（床や天井にある、床より高い位置にある）</td><td>「通路がない」</td></tr><tr><td>通路が少なくともひとつある</td><td>条件を満たす</td></tr></tbody></table>
 
 <p>ドアはいくつあっても構いません。入口と出口で 2 枚、というのはごく普通の設計です。要求はただ ひとつ、本物の通路が最低ひとつあることだけです。</p>
 
@@ -458,20 +458,22 @@
 
 <h2 id="レシピ">レシピ</h2>
 
-<p>クラフト: 一度に <strong>×1</strong>、2×3 のグリッド。</p>
+<p>クラフト: 一度に <strong>×1</strong>、3×3 のフルグリッド。</p>
 
-<pre><code class="lang-">R D R = 強化遮蔽板 ×2
-P V D = 鉄のドア ×2
-R D P = 遮蔽板 ×1
+<pre><code class="lang-">P G P P = 遮蔽板 ×2
+W D W G = 原子炉ガラス ×1
+R V R W = 絶縁銅ケーブル ×2
+D = 鉄のドア ×1
+R = 強化遮蔽板 ×2
 V = 制御棒駆動機構 ×1</code></pre>
 
-<p>レシピはそのままこのブロックの構造です。バニラの鉄の扉 2 枚——高さ 2 マスにそれぞれ 1 枚ずつ——を 遮蔽合金でくるみ、中央の駆動機構が 2 枚の扉をエアロックに変えます。</p>
+<p>レシピはそのままこのブロックの構造です。中央のバニラの鉄の扉を遮蔽合金でくるみ——上段は通常の 遮蔽板、下段は強化遮蔽板——原子炉ガラスが上半分の丸窓になり、2 本の絶縁銅ケーブルが電力を引き、 下段の駆動機構が扉をエアロックに変えます。</p>
 
 <p>駆動機構は独立したアイテムです。遮蔽板 3 枚、鉄インゴット 2 個、電子回路 1 個、焼き入れ鉄板 2 枚、 ピストン 1 個。</p>
 
 <h2 id="進行">進行</h2>
 
-<p>ティア: なし。 必要: 遮蔽板 1 枚、強化遮蔽板 2 枚（材料の流れは<a href="reactor_casing.html">原子炉ケース</a>に）、 バニラの鉄のドア 2 枚、制御棒駆動機構 1 個。 解放: 部屋を組み上げられること — ドアが無ければ制御装置は認めません。</p>
+<p>ティア: なし。 必要: 遮蔽板 2 枚、強化遮蔽板 2 枚（材料の流れは<a href="reactor_casing.html">原子炉ケース</a>に）、 <a href="reactor_glass.html">原子炉ガラス</a> 1 個、絶縁銅ケーブル 2 本、バニラの鉄のドア 1 枚、 制御棒駆動機構 1 個。 解放: 成形された部屋への本来の入口 — シェルを崩さずに出入りできる唯一の方法。</p>
 
 <p>駆動機構はここで初めて登場しますが、最後ではありません。<a href="reactor_controller.html">制御装置</a> にも入っており、そちらでこそ本来の意味——燃料棒の挿入深さの調整——を持ちます。</p>
 

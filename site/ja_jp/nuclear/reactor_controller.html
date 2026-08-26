@@ -372,14 +372,14 @@
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>液体輸送</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>液体貯蔵</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <div class="group-title">世界と自動化</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>素材</span><span class="cat-count" aria-label="17 ページ">17</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>素材</span><span class="cat-count" aria-label="18 ページ">18</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>農業</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>高度なマシン</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="20 ページ">20</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="23 ページ">23</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="22 ページ">22</span></a>
   </aside>
   <main class="content" id="main-content">
@@ -423,7 +423,7 @@
 
 <p>検査の順序も、コードではなく使い勝手の判断です。</p>
 
-<ol><li>制御装置の位置（正面の前に開いたマスがあるか）；</li><li>境界 — 6 本のレイ；</li><li>寸法（小さすぎ、次に大きすぎ）；</li><li>密閉 — 巡回で最初に見つかった非シェルのマス（そこで巡回を打ち切る）；</li><li>制御装置自身が稜ではなく壁のマスとして見つかること；</li><li>2 台目の制御装置；</li><li>ドア、次に通路；</li><li>ガラスの割合。</li></ol>
+<ol><li>制御装置の位置（正面の前に開いたマスがあるか）；</li><li>境界 — 6 本のレイ；</li><li>寸法（小さすぎ、次に大きすぎ）；</li><li>密閉 — 巡回で最初に見つかった非シェルのマス（そこで巡回を打ち切る）；</li><li>制御装置自身が稜ではなく壁のマスとして見つかること；</li><li>2 台目の制御装置；</li><li>通路；</li><li>ガラスの割合。</li></ol>
 
 <p>どの答えも単独で直せるので、プレイヤーは一覧を渡されるのではなく、一度にひとつずつ直します。 ガラスの上限が最後なのは意図的です。これだけが「柔らかい」問題で、その状態でも建物は密閉されて いて正しく、ただ防護的とは見なされないだけだからです。</p>
 
@@ -433,9 +433,9 @@
 
 <h2 id="状態">状態</h2>
 
-<p>状態は 10 種類。うち 9 つは解くべき課題で、10 個目が「完了」です。</p>
+<p>状態は 9 種類。うち 8 つは解くべき課題で、9 個目が「完了」です。</p>
 
-<table><thead><tr><th>状態</th><th>意味</th><th>場所を示す</th><th>寸法を示す</th></tr></thead><tbody><tr><td>部屋が成形された</td><td>密閉、寸法内、入口あり</td><td>—</td><td>はい</td></tr><tr><td>制御装置が壁にない</td><td>床/天井、稜、埋め込み、向き違い</td><td>はい</td><td>—</td></tr><tr><td>部屋に境界がない</td><td>レイが上限を越えても壁を見つけられなかった</td><td>—</td><td>—</td></tr><tr><td>部屋が小さすぎる</td><td>いずれかの軸で内寸が下限未満</td><td>—</td><td>はい</td></tr><tr><td>部屋が大きすぎる</td><td>いずれかの軸で内寸が上限超過</td><td>—</td><td>はい</td></tr><tr><td>シェルに破れがある</td><td>周のマスがシェルのブロックではない</td><td>はい</td><td>—</td></tr><tr><td>エアロックドアがない</td><td>密閉されているが、ドアが無い</td><td>—</td><td>—</td></tr><tr><td>通路がない</td><td>ドアはあるが通路が無い</td><td>—</td><td>—</td></tr><tr><td>部屋に 2 台目の制御装置</td><td>同じシェルにもう 1 台立っている</td><td>はい</td><td>—</td></tr><tr><td>ガラスが多すぎる</td><td>ガラスがシェルのマスの 30 % を超えた</td><td>はい</td><td>—</td></tr></tbody></table>
+<table><thead><tr><th>状態</th><th>意味</th><th>場所を示す</th><th>寸法を示す</th></tr></thead><tbody><tr><td>部屋が成形された</td><td>密閉かつ寸法内</td><td>—</td><td>はい</td></tr><tr><td>制御装置が壁にない</td><td>床/天井、稜、埋め込み、向き違い</td><td>はい</td><td>—</td></tr><tr><td>部屋に境界がない</td><td>レイが上限を越えても壁を見つけられなかった</td><td>—</td><td>—</td></tr><tr><td>部屋が小さすぎる</td><td>いずれかの軸で内寸が下限未満</td><td>—</td><td>はい</td></tr><tr><td>部屋が大きすぎる</td><td>いずれかの軸で内寸が上限超過</td><td>—</td><td>はい</td></tr><tr><td>シェルに破れがある</td><td>周のマスがシェルのブロックではない</td><td>はい</td><td>—</td></tr><tr><td>通路がない</td><td>ドアはあるが通路が無い</td><td>—</td><td>—</td></tr><tr><td>部屋に 2 台目の制御装置</td><td>同じシェルにもう 1 台立っている</td><td>はい</td><td>—</td></tr><tr><td>ガラスが多すぎる</td><td>ガラスがシェルのマスの 30 % を超えた</td><td>はい</td><td>—</td></tr></tbody></table>
 
 <p>「ガラスが多すぎる」が指す場所は「悪い」マスではなく（悪いのは割合で、ブロックではありません）、 巡回順で最初のガラスのマスです。煙がプレイヤーをシェルのガラス部分へ導くために要ります。</p>
 
@@ -604,7 +604,7 @@ D = 制御棒駆動機構 ×1</code></pre>
 
 <h2 id="関連項目">関連項目</h2>
 
-<p><a href="reactor_casing.html">原子炉ケース</a> — 何をスキャンするのか、幾何とクラフトの流れ。 <a href="reactor_door.html">エアロックドア</a> — 成形の必須条件。 <a href="reactor_glass.html">原子炉ガラス</a>、<a href="reactor_lamp.html">ランプ</a>、 <a href="reactor_port.html">入口</a>、<a href="reactor_outlet.html">出力端子</a> — スキャナーが壁として 数える残りのブロック。 <a href="fuel_rod_assembly.html">原子炉カラム</a> — 燃やし、沸かし、組み直す対象。 <a href="uranium_fuel_rod.html">燃料棒</a>と<a href="empty_fuel_rod.html">燃料被覆管</a> — 消耗させる燃料と、 あとに残る被覆管。 <a href="../materials/steam.html">蒸気</a> — 回路の作動流体。 <a href="steam_nozzle.html">蒸気ノズル</a> — 回路の終端。これが働かない間は水ゲージが黄色くなり、熱が 上がります。 <a href="reactor_button.html">原子炉ボタン</a> — この一式で唯一、スキャナーが壁として数え<strong>ない</strong>もの。 <a href="../components/resonance_chain.html">共振チェーン</a> — 制御回路のコイルの出どころ。 <a href="../fluid-machines/distillation_column.html">蒸留塔</a>と<a href="../agriculture/incubator.html">インキュベーター</a> — モッドのこれまでのマルチブロック 2 つ。どちらも固定形状の検査で、体積スキャナーはここで初めて 書かれました。</p>
+<p><a href="reactor_casing.html">原子炉ケース</a> — 何をスキャンするのか、幾何とクラフトの流れ。 <a href="reactor_door.html">エアロックドア</a> — 部屋への本来の入口。シェルに置くなら、 本物の通路を形成しなければなりません。 <a href="reactor_glass.html">原子炉ガラス</a>、<a href="reactor_lamp.html">ランプ</a>、 <a href="reactor_port.html">入口</a>、<a href="reactor_outlet.html">出力端子</a> — スキャナーが壁として 数える残りのブロック。 <a href="fuel_rod_assembly.html">原子炉カラム</a> — 燃やし、沸かし、組み直す対象。 <a href="uranium_fuel_rod.html">燃料棒</a>と<a href="empty_fuel_rod.html">燃料被覆管</a> — 消耗させる燃料と、 あとに残る被覆管。 <a href="../materials/steam.html">蒸気</a> — 回路の作動流体。 <a href="steam_nozzle.html">蒸気ノズル</a> — 回路の終端。これが働かない間は水ゲージが黄色くなり、熱が 上がります。 <a href="reactor_button.html">原子炉ボタン</a> — この一式で唯一、スキャナーが壁として数え<strong>ない</strong>もの。 <a href="../components/resonance_chain.html">共振チェーン</a> — 制御回路のコイルの出どころ。 <a href="../fluid-machines/distillation_column.html">蒸留塔</a>と<a href="../agriculture/incubator.html">インキュベーター</a> — モッドのこれまでのマルチブロック 2 つ。どちらも固定形状の検査で、体積スキャナーはここで初めて 書かれました。</p>
 
 <h2>クラフト</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="原子炉制御装置 alaindustrial:reactor_controller" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="遮蔽板"><img src="../assets/item/shielding_alloy_plate_3d.png" alt="遮蔽板" width="32" height="32"></div> <div class="cell" title="原子炉制御回路"><img src="../assets/item/reactor_circuit_3d.png" alt="原子炉制御回路" width="32" height="32"></div> <div class="cell" title="遮蔽板"><img src="../assets/item/shielding_alloy_plate_3d.png" alt="遮蔽板" width="32" height="32"></div> <div class="cell" title="強化遮蔽板"><img src="../assets/item/shielding_alloy_reinforced_plate_3d.png" alt="強化遮蔽板" width="32" height="32"></div> <div class="cell" title="高度なマシンケース"><img src="../assets/item/advanced_machine_casing_3d.png" alt="高度なマシンケース" width="32" height="32"></div> <div class="cell" title="強化遮蔽板"><img src="../assets/item/shielding_alloy_reinforced_plate_3d.png" alt="強化遮蔽板" width="32" height="32"></div> <div class="cell" title="遮蔽板"><img src="../assets/item/shielding_alloy_plate_3d.png" alt="遮蔽板" width="32" height="32"></div> <div class="cell" title="制御棒駆動装置"><img src="../assets/item/control_rod_drive_3d.png" alt="制御棒駆動装置" width="32" height="32"></div> <div class="cell" title="遮蔽板"><img src="../assets/item/shielding_alloy_plate_3d.png" alt="遮蔽板" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="原子炉制御装置"><img src="../assets/item/reactor_controller_3d.png" alt="原子炉制御装置" width="32" height="32"></div><div class="result-name">原子炉制御装置</div></div></div></div></div>

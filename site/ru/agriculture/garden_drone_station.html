@@ -372,14 +372,14 @@
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логистика жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Хранение жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Мир и автоматизация</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="17 страниц">17</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="18 страниц">18</span></a>
 <a class="cat-link active" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сельское хозяйство</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Хай-тек машины</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Прочее</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="14 страниц">14</span></a>
 <div class="group-title">Предметы</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="3 страницы">3</span></a>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="20 страниц">20</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="23 страницы">23</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="22 страницы">22</span></a>
   </aside>
   <main class="content" id="main-content">
@@ -431,7 +431,7 @@
 
 <p>Выполнив работу, дрон <strong>стоит на клетке 6 тиков</strong> и только потом уходит обратно. Без этой паузы действие и обратное плечо начинались в один и тот же тик: дрон касался грядки и отрывался от неё внутри одного кадра, и это читалось как отскок, а не как машина, делающая работу. Пауза есть только на дальнем конце — на доке она сдвинула бы тик, на котором наступает действие, а именно его считают все сценарии тестов.</p>
 
-<p><strong>Зона сканирования.</strong> Радиус 4 блока вокруг станции — это дрон <strong>первого тира</strong>: машина, обслуживающая поле 9×9 сразу после крафта, не оставила бы следующему тиру что улучшать. Зона радиусом 4 — удобная грядка вокруг дока. Список целей в зоне <strong>кэшируется</strong> и инвалидируется по блок-апдейту внутри радиуса; полная пересборка кэша происходит не чаще раза в = <strong>20</strong> тиков. Перед касанием любой позиции зоны обязательна проверка <code>level.isLoaded</code> — станция не форсирует синхронную загрузку невыгруженных чанков.</p>
+<p><strong>Зона сканирования.</strong> Радиус 4 блока вокруг станции — это ровно стандартная грядка 9×9 (2 × 4 + 1) целиком: док стоит в её центре и достаёт до любого угла. Дрон <strong>первого тира</strong> обслуживает одну такую грядку — следующим тирам есть куда расти: несколько грядок разом или зона шире одной. Список целей в зоне <strong>кэшируется</strong> и инвалидируется по блок-апдейту внутри радиуса; полная пересборка кэша происходит не чаще раза в = <strong>20</strong> тиков. Перед касанием любой позиции зоны обязательна проверка <code>level.isLoaded</code> — станция не форсирует синхронную загрузку невыгруженных чанков.</p>
 
 <p><strong>Зрелость культуры</strong> определяется общим предикатом, переиспользуемым из <a href="../items/scythe.html">Косы</a> (тот же класс, что решает, готов ли урожай к сбору — стебли тыквы/дыни, основание кактуса/тростника, ягодный куст и ванильные <code>CropBlock</code> обрабатываются одинаково в обоих местах, без риска разъехавшихся edge-кейсов).</p>
 
