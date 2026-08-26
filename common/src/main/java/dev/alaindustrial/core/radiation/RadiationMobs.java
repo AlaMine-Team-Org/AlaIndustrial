@@ -2,7 +2,6 @@ package dev.alaindustrial.core.radiation;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.registry.ModDamageTypes;
-import dev.alaindustrial.registry.ModEffects;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;

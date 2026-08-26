@@ -848,32 +848,63 @@ public final class OilScenarios {
 	 * <p>Asserted as an ORDER rather than against absolute distances: the ordering is the design
 	 * claim (thinner fluid, freer movement), it follows the viscosities already fixed in the fluid
 	 * types, and it cannot be satisfied by accident the way a single threshold can.
+	 *
+	 * <p><b>Why the four columns are a 2x2 block and not a row (MOD-507).</b> The row put them at
+	 * x = 2/4/6/8, and the diesel one at x=8 (walls at 7 and 9) hung outside the 8x8x8 rig template.
+	 * That matters because {@code TestInstanceBlockEntity#forceLoadChunks} force-loads exactly the
+	 * chunks intersecting the STRUCTURE box — not the padded test box, and not whatever the body
+	 * happens to write. When the random world origin landed on {@code originX % 16 == 8}, rel x=8 was
+	 * the first block of the NEXT chunk, which this lane never forces: a chunk one step below
+	 * entity-ticking still takes blocks and still holds an entity, it just never ticks it. The cow
+	 * there read {@code diesel=0.000} — not slow, not stuck, simply never moved — and the test blamed
+	 * the fluid. 1 origin in 16, hence "green on the immediate re-run". Same class of bug as MOD-335.
+	 * Keeping every column and its walls inside rel x,z 0..7 removes the dependency on the origin;
+	 * the shaft may still run past y=7, because chunks are columns and height does not enter into it.
 	 */
 	public static void fun10ImmersionDampsFallInViscosityOrder(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
 		final int topY = 16;
-		final int[] columns = {2, 4, 6, 8};
-		for (int x : columns) {
-			shaft(helper, x, 2, topY);
+		// A 1-wide shaft claims x-1..x+1 and z-1..z+1, so four of them fit inside the 8x8 rig
+		// footprint only as a 2x2 block: walls land on x,z in {1,3,4,6}, all inside 0..7 (MOD-507).
+		final BlockPos airColumn = new BlockPos(2, topY, 2);
+		final BlockPos oilColumn = new BlockPos(5, topY, 2);
+		final BlockPos fuelOilColumn = new BlockPos(2, topY, 5);
+		final BlockPos dieselColumn = new BlockPos(5, topY, 5);
+		for (BlockPos column : new BlockPos[] {airColumn, oilColumn, fuelOilColumn, dieselColumn}) {
+			shaft(helper, column.getX(), column.getZ(), topY);
 		}
 		for (int y = 2; y <= topY; y++) {
-			level.setBlockAndUpdate(helper.absolutePos(new BlockPos(4, y, 2)), oilSource());
-			level.setBlockAndUpdate(helper.absolutePos(new BlockPos(6, y, 2)),
+			level.setBlockAndUpdate(helper.absolutePos(oilColumn.atY(y)), oilSource());
+			level.setBlockAndUpdate(helper.absolutePos(fuelOilColumn.atY(y)),
 					ModContent.FUEL_OIL_BLOCK.get().defaultBlockState());
-			level.setBlockAndUpdate(helper.absolutePos(new BlockPos(8, y, 2)),
+			level.setBlockAndUpdate(helper.absolutePos(dieselColumn.atY(y)),
 					ModContent.DIESEL_BLOCK.get().defaultBlockState());
 		}
-		// x=2 stays empty: the air column is the control that proves the fluids damp anything at all.
+		// The air column stays empty: it is the control that proves the fluids damp anything at all.
 
-		Cow inAir = helper.spawn(EntityTypes.COW, new BlockPos(2, topY, 2));
-		Cow inOil = helper.spawn(EntityTypes.COW, new BlockPos(4, topY, 2));
-		Cow inFuelOil = helper.spawn(EntityTypes.COW, new BlockPos(6, topY, 2));
-		Cow inDiesel = helper.spawn(EntityTypes.COW, new BlockPos(8, topY, 2));
+		Cow inAir = helper.spawn(EntityTypes.COW, airColumn);
+		Cow inOil = helper.spawn(EntityTypes.COW, oilColumn);
+		Cow inFuelOil = helper.spawn(EntityTypes.COW, fuelOilColumn);
+		Cow inDiesel = helper.spawn(EntityTypes.COW, dieselColumn);
 		double startY = inAir.getY();
 
 		// Tick 12: nothing has reached the floor of a 16-deep shaft yet, so every column is still
 		// measuring free travel rather than a landing.
 		helper.runAtTickTime(12, () -> {
+			// Before reading a single distance: a cow whose chunk is not entity-ticking does not move
+			// AT ALL, and "did not move" is indistinguishable from "the fluid froze it". Say which one
+			// it is here, or the next rig that drifts out of the envelope gets blamed on the physics
+			// again (MOD-507).
+			Cow[] cows = {inAir, inOil, inFuelOil, inDiesel};
+			String[] columnNames = {"air", "crude oil", "fuel oil", "diesel"};
+			for (int i = 0; i < cows.length; i++) {
+				if (!level.isPositionEntityTicking(cows[i].blockPosition())) {
+					helper.fail("the " + columnNames[i] + " column sits outside the chunks this lane"
+							+ " force-loads, so its entity never ticks and every distance measured here"
+							+ " is a lie — the rig has grown past the 8x8 structure footprint (MOD-507)");
+					return;
+				}
+			}
 			double air = startY - inAir.getY();
 			double diesel = startY - inDiesel.getY();
 			double fuelOil = startY - inFuelOil.getY();

@@ -1,27 +1,27 @@
 {
-  "locale": "id_id",
+  "locale": "ar_sa",
   "version": 1,
   "generated_from": "OKF docs/blocks",
   "tabs": [
     {
       "id": "getting_started",
-      "title": "Memulai",
+      "title": "البداية",
       "icon": "alaindustrial:guide_book",
       "entries": [
         {
           "id": "welcome",
-          "title": "Selamat Datang",
+          "title": "أهلا بك",
           "icon": "alaindustrial:guide_book",
           "pages": [
             {
               "type": "text",
-              "title": "Selamat Datang",
-              "text": "Ini panduan Ala Industrial — energi EU, generator, mesin, dan kabel.\n\nPilih bagian di kiri, balik halaman dengan panah. Tombol \"Buka wiki\" di atas membuka situs panduan lengkap."
+              "title": "أهلا بك",
+              "text": "هذا دليل Ala Industrial — طاقة EU والمولدات والآلات والكابلات.\n\nاختر قسما من اليسار، وقلب الصفحات بالأسهم. زر «افتح الويكي» في الأعلى يفتح موقع الدليل الكامل."
             },
             {
               "type": "text",
-              "title": "Langkah Pertama",
-              "text": "1. Tambang bijih mod ini — mulai dari timah.\n2. Letakkan Panel Surya — generator paling sederhana.\n3. Sambungkan kabel tembaga ke sana.\n4. Pasang mesin pertamamu — Penggiling.\n\nDetail ada di bagian Energi dan Pemrosesan."
+              "title": "الخطوات الأولى",
+              "text": "1. نقب عن خامات المود — ابدأ بالقصدير.\n2. ضع لوحة شمسية — أبسط مولد.\n3. مد إليها كابل نحاس.\n4. وصل أول آلة لديك — الساحق.\n\nالتفاصيل في قسمي الطاقة والمعالجة."
             }
           ]
         }
@@ -29,28 +29,28 @@
     },
     {
       "id": "energy_basics",
-      "title": "Dasar-Dasar Energi",
+      "title": "أساسيات الطاقة",
       "icon": "alaindustrial:copper_cable",
       "entries": [
         {
           "id": "eu_basics",
-          "title": "Apa itu EU",
+          "title": "ما هي EU",
           "icon": "alaindustrial:copper_cable",
           "pages": [
             {
               "type": "text",
-              "title": "Energi EU",
-              "text": "EU (Energy Unit) adalah satuan energi mod ini. Generator menghasilkan EU, kabel menyalurkannya, penyimpanan menyimpannya, mesin memakainya. Ini sistem yang terpisah dari redstone vanila."
+              "title": "طاقة EU",
+              "text": "EU (وحدة الطاقة) هي وحدة الطاقة في هذا المود. المولدات تنتج EU، والكابلات تنقلها، والمخازن تحفظها، والآلات تستهلكها. وهي نظام منفصل عن ريدستون اللعبة الأصلية."
             },
             {
               "type": "text",
-              "title": "Tingkat Tegangan",
-              "text": "Energi mengalir dalam paket yang dibatasi tegangan per tik:\n• LV — hingga 32 EU/tik (blok dasar)\n• MV — hingga 128 EU/tik\n• HV — hingga 512 EU/tik\n\nBatas suatu tingkat adalah throughput per tik, bukan ambang kerusakan: blok tidak hancur oleh 'kelebihan tegangan'."
+              "title": "مستويات الجهد",
+              "text": "تنتقل الطاقة على شكل رزم يحدها جهد لكل نبضة:\n• LV — حتى 32 EU/نبضة (الكتل الأساسية)\n• MV — حتى 128 EU/نبضة\n• HV — حتى 512 EU/نبضة\n\nحد المستوى هو معدل التدفق في النبضة، لا عتبة تعطل: فالكتل لا تتلف بسبب «فرط الجهد»."
             },
             {
               "type": "text",
-              "title": "Kabel",
-              "text": "Kabel menghubungkan blok menjadi jaringan listrik dan mengalirkan EU. Setiap kabel kehilangan energi seiring jarak — makin panjang jalurnya, makin besar kehilangannya.\n\nAda tiga jenis, dan semuanya berbeda:\n• Timah — sempit (8 EU/t) tetapi nyaris tanpa rugi: untuk ladang surya\n• Tembaga — andalan serbaguna (12 EU/t)\n• Emas — paling lebar (48 EU/t), dengan kerugian lebih tinggi\n\nJangan campur jenis dalam satu jalur: seluruh jaringan mengikuti kabel terkuat di dalamnya, termasuk kerugiannya."
+              "title": "الكابلات",
+              "text": "تربط الكابلات الكتل في شبكة طاقة واحدة وتنقل EU. وكل كابل يفقد جزءا من الطاقة مع المسافة — فكلما طال الخط زاد الفاقد.\n\nهناك ثلاث درجات، وهي تختلف فيما بينها:\n• القصدير — ضيق (8 EU/t) لكنه شبه عديم الفاقد: لمزارع الألواح الشمسية\n• النحاس — الخيار العام لكل الاستخدامات (12 EU/t)\n• الذهب — الأوسع (48 EU/t)، لكن بفاقد أعلى\n\nلا تخلط الدرجات في خط واحد: فالشبكة كلها تعمل بأقوى كابل فيها، بما في ذلك فاقده."
             }
           ]
         }
@@ -58,38 +58,38 @@
     },
     {
       "id": "oil_basics",
-      "title": "Minyak bumi",
+      "title": "النفط",
       "icon": "alaindustrial:oil_bucket",
       "entries": [
         {
           "id": "oil_basics",
-          "title": "Minyak bumi dari nol",
+          "title": "النفط من الصفر",
           "icon": "alaindustrial:oil_bucket",
           "pages": [
             {
               "type": "text",
-              "title": "Di mana mencarinya",
-              "text": "Minyak bumi tidak bisa dibuat maupun dilebur — ia hanya bisa ditemukan, di mana saja di Overworld. Deposit hadir dalam empat ukuran:\n\n• Bercak permukaan — satu per 150 chunk, sekadar cicipan\n• Danau lubang tambang — Y -40..-8, satu per 50 chunk: sumber utamamu\n• Reservoir dalam — Y -50..-30, satu per 40 chunk, tiga kali lebih lebar\n• Urat minyak — satu per 600 chunk, terlihat dari permukaan\n\nMinyak tidak pernah muncul di dalam desa, lubang tambang, benteng, atau Kota Kuno."
+              "title": "أين تبحث",
+              "text": "النفط لا يصنع ولا يصهر — إنما يعثر عليه فقط، في أي مكان من العالم العادي. وللمكامن أربعة أحجام:\n\n• بقعة سطحية — واحدة لكل 150 قطعة، مجرد عينة\n• بحيرة على عمق التعدين — Y -40..-8، واحدة لكل 50 قطعة: مصدرك الرئيسي\n• خزان عميق — Y -50..-30، واحد لكل 40 قطعة، وأوسع بثلاثة أضعاف\n• عرق نفطي — واحد لكل 600 قطعة، ويرى من السطح\n\nولا يتولد النفط أبدا داخل القرى أو مهاوي المناجم أو القلاع أو المدينة القديمة."
             },
             {
               "type": "text",
-              "title": "Deposit itu terbatas",
-              "text": "Balok minyak yang kamu ciduk hilang selamanya — tidak seperti air, deposit tidak terisi ulang.\n\nDanau lubang tambang berisi sekitar 160 ember, reservoir dalam sekitar 1300, dan kubah sebuah urat hampir empat ribu. Habiskan satu, kamu harus mencari yang berikutnya — jadi tandai tempatnya begitu ketemu.\n\nMenciduk dengan ember makan waktu: letakkan Pompa di sebelahnya dan ia akan menguras seluruh deposit ke tangki sendirian."
+              "title": "المكمن محدود",
+              "text": "كل كتلة نفط تغرفها تختفي إلى الأبد — فالمكمن، بخلاف الماء، لا يمتلئ من جديد.\n\nبحيرة عمق التعدين نحو 160 دلوا، والخزان العميق نحو 1300، وقبة العرق قرابة أربعة آلاف. وإذا استنزفت واحدا مضيت تبحث عن التالي، فعلم موضع أي مكمن تجده.\n\nوالغرف بالدلو يستغرق وقتا: ضع مضخة بجواره فتستنزف المكمن كله إلى خزان وحدها."
             },
             {
               "type": "text",
-              "title": "Di dalam minyak",
-              "text": "Minyak itu kental — kamu terbenam di dalamnya alih-alih berenang, dan gerakan melambat drastis.\n\n• Tahan tombol lompat untuk naik, sekitar satu balok per detik — lebih lambat daripada air, bahkan daripada lava\n• Kamu tidak bisa bernapas: dengan kepala terendam, udara habis seperti di dalam air, lalu kerusakan menyusul\n• Kerusakan jatuh dibatalkan sepenuhnya selama kamu berada di dalam minyak\n• Penglihatan terganggu: lapisan gelap di layar, lewat sembilan balok tidak ada yang terlihat\n\nRencanakan turunmu ke poros sebuah urat berdasarkan sisa udara, bukan berdasarkan kedalamannya."
+              "title": "داخل النفط",
+              "text": "النفط لزج — أنت تخوض فيه لا تسبح، وتتباطأ الحركة كثيرا.\n\n• استمر بالضغط على القفز لتصعد نحو كتلة في الثانية — أبطأ من الماء بل ومن الحمم\n• لا يمكنك التنفس: إذا غاص رأسك نفد الهواء كما تحت الماء، ثم يبدأ الضرر\n• يلغى ضرر السقوط تماما ما دمت داخل النفط\n• والرؤية تسوء: طبقة داكنة على الشاشة، ولا يرى شيء بعد تسع كتل\n\nفخطط لنزولك في بئر العرق بحسب مخزون هوائك، لا بحسب عمقه."
             },
             {
               "type": "text",
-              "title": "Ia terbakar",
-              "text": "Minyak menyala dengan mudah: api cukup berada di dekatnya — bahkan menyerong di bawahnya. Dari situ nyala berjalan menyusuri genangan balok demi balok sampai habis semua, termasuk balok sumbernya. Pemantik Api menyulut deposit seketika, selalu.\n\nLava TIDAK menyalakan minyak — itu disengaja: danau bawah tanah sering muncul persis bersebelahan dengan danau lava.\n\nApi tidak akan melewati dinding padat setebal satu balok. Dan kalau kamu butuh minyak berdiri aman di sebelah pabrik, matikan pengaturan oilBurns milik mod ini dan minyak menjadi benar-benar lembam."
+              "title": "وهو يشتعل",
+              "text": "يشتعل النفط بسهولة: يكفي أن تكون النار قريبة منه — ولو قطريا من الأسفل. ومن هناك يمشي اللهب في البركة كتلة كتلة حتى تفنى كلها، بما فيها كتل المصدر. أما حديد وصوان فيشعل المكمن فورا، في كل مرة.\n\nوالحمم لا تشعل النفط — وهذا مقصود: فالبحيرات الجوفية كثيرا ما تتولد ملاصقة لبحيرات الحمم.\n\nولا يعبر اللهب جدارا صلبا بسمك كتلة واحدة. وإن أردت أن يجاور النفط مصنعك بأمان، فأطفئ إعداد oilBurns في المود ليصبح خاملا تماما."
             },
             {
               "type": "text",
-              "title": "Menjadi apa",
-              "text": "Minyak bumi adalah awal rantai karet.\n\n1. Kumpulkan — dengan ember, Kapsul Vakum, atau Pompa\n2. Polimerisator: 1000 mB minyak dan 400 EU menghasilkan karet mentah\n3. Vulkanisator: karet mentah + debu belerang + 400 EU\n4. Letakkan api unggun (×1), lava/magma (×2), atau Pemanas Listrik (×3) di bawahnya\n\nPanas yang lebih baik menghemat bahan: setiap proses selalu memakai satu karet mentah dan empat debu belerang."
+              "title": "ما الذي يصير إليه",
+              "text": "النفط هو بداية سلسلة المطاط.\n\n1. اجمعه — بالدلو أو كبسولة التفريغ أو المضخة\n2. المبلمر: 1000 mB من النفط و400 EU تعطي مطاطا خاما\n3. آلة الفلكنة: مطاط خام + مسحوق كبريت + 400 EU\n4. ضع تحتها موقدا (×1) أو حمما/كتلة الصهارة (×2) أو سخانا كهربائيا (×3)\n\nوالحرارة الأفضل توفر المواد: فكل عملية تستهلك دائما مطاطا خاما واحدا وأربعة مساحيق كبريت."
             }
           ]
         }
@@ -97,94 +97,94 @@
     },
     {
       "id": "nuclear_basics",
-      "title": "Tenaga Nuklir",
+      "title": "الطاقة النووية",
       "icon": "alaindustrial:reactor_controller",
       "entries": [
         {
           "id": "reactor_room",
-          "title": "Ruang Reaktor",
+          "title": "غرفة المفاعل",
           "icon": "alaindustrial:reactor_casing",
           "pages": [
             {
               "type": "text",
-              "title": "Apa ini",
-              "text": "Reaktor nuklir bukan sebuah blok — ini ruangan yang kamu bangun sendiri. Sebuah kotak kosong dari rangka reaktor dengan kolom bahan bakar berdiri di dalamnya.\n\nCangkangnya bukan hiasan: itulah yang menahan apa pun yang terjadi di dalam."
+              "title": "ما هي",
+              "text": "المفاعل النووي ليس كتلة — بل غرفة تبنيها. صندوق أجوف من هيكل المفاعل تقف داخله أعمدة الوقود.\n\nوالغلاف ليس زينة: فهو ما يحتوي كل ما يجري في الداخل."
             },
             {
               "type": "text",
-              "title": "Cara membangunnya",
-              "text": "1. Susun kotak rapat dari rangka reaktor. Bagian dalam: dari 3x3x3 sampai 12x12x12.\n2. Pasang pengendali di dinding, menghadap ke luar.\n3. Jangan sisakan satu lubang pun — pengendali akan memberitahu di mana bocornya.\n\nPintu itu opsional: kamu boleh menembok diri di dalam lalu menggali keluar."
+              "title": "كيف تبنيها",
+              "text": "1. ابن صندوقا محكما من هيكل المفاعل. الداخل: من 3x3x3 حتى 12x12x12.\n2. ركب وحدة التحكم في أحد الجدران بحيث تتجه إلى الخارج.\n3. لا ثقوب في أي موضع — ووحدة التحكم تدلك على مكان الخرق.\n\nوالباب اختياري: يمكنك أن تسد على نفسك الجدار ثم تحفر للخروج."
             },
             {
               "type": "text",
-              "title": "Bagian cangkang",
-              "text": "- Kaca Reaktor: jendela, tapi tidak lebih dari sepertiga dinding\n- Pintu Kedap Reaktor: ruang kedap, terbuka oleh redstone dan menutup sendiri\n- Saluran Masuk Reaktor: di sini pipa air menembus dinding\n- Keluaran Reaktor: di sini kabel ditancapkan\n- Lampu Reaktor: menerangi ruangan saja, tidak pernah ke luar"
+              "title": "أجزاء الغلاف",
+              "text": "- زجاج مفاعل: نافذة، لكن بما لا يزيد على ثلث الجدران\n- باب معادلة ضغط المفاعل: يفتح بإشارة ريدستون ويغلق نفسه\n- مدخل المفاعل: حيث يعبر أنبوب الماء الجدار\n- مخرج المفاعل: حيث يوصل الكابل\n- مصباح مفاعل: يضيء الغرفة وحدها، ولا يضيء الخارج أبدا"
             }
           ]
         },
         {
           "id": "reactor_fuel",
-          "title": "Bahan Bakar",
+          "title": "الوقود",
           "icon": "alaindustrial:uranium_fuel_rod",
           "pages": [
             {
               "type": "text",
-              "title": "Rantai uranium",
-              "text": "Bijih uranium -> penghancur -> sentrifugal termal -> kompresor.\n\nSentrifugal menghasilkan konsentrat uranium; kompresor menekan dua konsentrat menjadi satu uranium diperkaya (U-235).\n\nLalu buat selongsong batang bahan bakar dan masukkan satu uranium diperkaya ke dalamnya."
+              "title": "سلسلة اليورانيوم",
+              "text": "خام اليورانيوم ← الساحق ← الطرد المركزي الحراري ← الضاغط.\n\nيعطي الطرد المركزي مركّز اليورانيوم، ويضغط الضاغط اثنين منه ليصيرا يورانيوما مخصبا (U-235) واحدا.\n\nثم اصنع غلاف قضيب الوقود وضع فيه قطعة واحدة من اليورانيوم المخصب."
             },
             {
               "type": "text",
-              "title": "Kolom reaktor",
-              "text": "Taruh kolom di dalam ruangan dan klik kanan untuk memasukkan batang, sampai empat buah. Semuanya terlihat lewat kaca.\n\nKolom bisa ditumpuk: satu menara kolom bekerja sebagai satu bejana."
+              "title": "عمود المفاعل",
+              "text": "ضع عمودا داخل الغرفة وركب فيه القضبان بالنقر بالزر الأيمن، حتى أربعة. وهي مرئية عبر الزجاج.\n\nوالأعمدة تتراكم: برج منها يعمل كوعاء واحد."
             },
             {
               "type": "text",
-              "title": "Batang bisa habis",
-              "text": "Durabilitas sebuah batang ADALAH sisa muatannya. Semua batang dalam satu kolom aus bersama-sama, secara merata.\n\nBatang yang habis berubah menjadi selongsong kosong dan tetap berdiri di rak. Ambil dengan tangan lalu isi ulang dengan satu uranium diperkaya — tidak perlu membuat batang baru."
+              "title": "القضبان تنفد",
+              "text": "متانة القضيب هي نفسها شحنته المتبقية. وكل قضبان العمود تستهلك معا بالتساوي.\n\nوالقضيب المستنفد يصير غلافا فارغا ويبقى في مكانه. أخرجه بيدك وأعد ملأه بقطعة واحدة من اليورانيوم المخصب — دون حاجة إلى صنع قضيب جديد."
             }
           ]
         },
         {
           "id": "reactor_run",
-          "title": "Menyalakan",
+          "title": "التشغيل",
           "icon": "alaindustrial:reactor_controller",
           "pages": [
             {
               "type": "text",
-              "title": "Lima langkah",
-              "text": "1. Ruangan sudah rapat\n2. Ada batang di dalam kolom\n3. Ada kabel di keluaran reaktor\n4. Sinyal redstone sampai ke pengendali\n5. Kedalaman tidak di angka nol: pengendali punya lima tombol — 0%, 25%, 50%, 75%, 100%"
+              "title": "خمس خطوات",
+              "text": "1. الغرفة محكمة الإغلاق\n2. في الأعمدة قضبان\n3. على مخرج المفاعل كابل\n4. تصل إشارة ريدستون إلى وحدة التحكم\n5. العمق ليس على الصفر: في وحدة التحكم خمسة أزرار — 0%، 25%، 50%، 75%، 100%"
             },
             {
               "type": "text",
-              "title": "Kalau tidak terjadi apa-apa",
-              "text": "Buka pengendali: baris keluaran akan menyebut sendiri apa yang kurang — tidak ada batang, tidak ada sinyal, batang terangkat, atau bufer penuh.\n\nHilangnya sinyal adalah tombol henti darurat. Turunkan tuas dan reaktor berhenti."
+              "title": "إذا لم يحدث شيء",
+              "text": "افتح وحدة التحكم: يذكر سطر الإنتاج ما الناقص — لا قضبان، أو لا إشارة، أو القضبان مسحوبة، أو المخزن ممتلئ.\n\nوانقطاع الإشارة هو الإيقاف الطارئ. اسحب المقبض فيتوقف المفاعل."
             },
             {
               "type": "text",
-              "title": "Daya",
-              "text": "Satu kolom memberi 24 EU/t. Lebih banyak batang dan kolom yang dirapatkan memberi lebih: kolom bertetangga saling menguatkan.\n\nBatas atasnya 512 EU/t. Tombol kedalaman yang dipilih membagi daya, panas, dan pemakaian bahan bakar sama rata."
+              "title": "القدرة",
+              "text": "العمود الواحد يعطي 24 EU/t. وزيادة القضبان وتقارب الأعمدة يعطيان أكثر: فالأعمدة المتجاورة يعزز بعضها بعضا.\n\nوالسقف 512 EU/t. وزر العمق المختار يقسم القدرة والحرارة واستهلاك الوقود بالقدر نفسه."
             }
           ]
         },
         {
           "id": "reactor_cooling",
-          "title": "Pendinginan",
+          "title": "التبريد",
           "icon": "alaindustrial:reactor_port",
           "pages": [
             {
               "type": "text",
-              "title": "Panas",
-              "text": "Reaktor memanas dan ruangan membuang panas dengan sendirinya — makin panas, makin cepat. Karena itu setiap reaktor menemukan suhunya sendiri lalu bertahan di situ.\n\nSatu kolom berhenti di sekitar 15%. Dua berdampingan mencapai dua pertiga. Tiga atau lebih tidak sanggup ditahan ruangan sendirian."
+              "title": "الحرارة",
+              "text": "يسخن المفاعل، والغرفة تطرح الحرارة من تلقاء نفسها — وكلما ارتفعت الحرارة أسرعت في طرحها. لذلك يستقر كل مفاعل عند حرارته الخاصة ويبقى عندها.\n\nالعمود الواحد يستقر قرب 15%. وعمودان متجاوران يبلغان الثلثين. وثلاثة فأكثر لا تحتملها الغرفة وحدها."
             },
             {
               "type": "text",
-              "title": "Sirkuit air",
-              "text": "Air bukan radiator, melainkan sistem keselamatan: ia bekerja begitu penunjuk mendekati tanda kuning dan menahan reaktor di bawahnya. Jadi warna kuning berarti pendinginan mulai kewalahan.\n\nPompa -> pipa -> saluran masuk reaktor -> kolom. Atur sisi pipa di saluran masuk dengan kunci pas: di luar menarik, di dalam memasukkan. Kolom dan nosel tidak butuh kunci pas — kolom hanya menerima air dan hanya mengeluarkan uap."
+              "title": "دورة الماء",
+              "text": "الماء ليس مشعاعا بل نظام أمان: يعمل حين يقترب المؤشر من العلامة الكهرمانية ويبقي المفاعل تحتها، فالكهرماني يعني أن التبريد بدأ يتراجع.\n\nمضخة ← أنبوب ← مدخل المفاعل ← العمود. اضبط وجهي الأنبوب عند المدخل بمفتاح الربط: سحب من الخارج، ودفع إلى الداخل. أما العمود والفوهة فلا يحتاجان إلى مفتاح — فالعمود يأخذ الماء دخولا فقط ويعطي البخار خروجا فقط."
             },
             {
               "type": "text",
-              "title": "Uap",
-              "text": "Air yang mendidih menjadi uap dan menumpuk di dalam kolom. Uap itu harus dikeluarkan: pipa dari sisi atas kolom → saluran masuk reaktor → nosel uap di luar.\n\nNosel harus menghadap udara terbuka. Kalau tertanam di dinding, ia tidak membuang apa pun dan sirkuit di belakangnya macet."
+              "title": "بخار",
+              "text": "يغلي الماء فيصير بخارا ويتجمع في العمود. ولا بد له أن يخرج: أنبوب من وجه العمود العلوي ← مدخل المفاعل ← فوهة بخار في الخارج.\n\nويجب أن تطل الفوهة على هواء مكشوف. فإن دفنت في جدار لم تصرف شيئا، وتوقفت الدورة خلفها."
             }
           ]
         }
@@ -192,31 +192,31 @@
     },
     {
       "id": "energy",
-      "title": "Energi",
+      "title": "الطاقة",
       "icon": "alaindustrial:wind_mill",
       "entries": [
         {
           "id": "wind_mill",
-          "title": "Kincir Angin",
+          "title": "عنفة رياح",
           "icon": "alaindustrial:wind_mill",
           "pages": [
             {
               "type": "text",
-              "title": "Kincir Angin",
-              "text": "Kincir angin LV dasar — menghasilkan EU dari angin tanpa bahan bakar; bangun lebih tinggi dan saat cuaca buruk untuk daya lebih besar."
+              "title": "عنفة رياح",
+              "text": "عنفة رياح أساسية من مستوى LV — تولد EU من الرياح دون وقود؛ ابنها أعلى وفي الطقس السيئ لتحصل على قدرة أكبر."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 0–8 EU/t",
-                "Bufer: 4000 EU"
+                "الطاقة: 0–8 EU/t",
+                "الاحتياطي: 4000 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:copper_ingot",
                 "minecraft:oak_planks",
@@ -235,26 +235,26 @@
         },
         {
           "id": "water_mill",
-          "title": "Kincir Air",
+          "title": "طاحونة ماء",
           "icon": "alaindustrial:water_mill",
           "pages": [
             {
               "type": "text",
-              "title": "Kincir Air",
-              "text": "Generator LV pasif — menghasilkan EU dari air mengalir (arus) di sebelahnya, tanpa bahan bakar atau tangki."
+              "title": "طاحونة ماء",
+              "text": "مولد سلبي من مستوى LV — ينتج EU من الماء الجاري (تيار) المجاور له، دون وقود أو خزانات."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 0–4 EU/t",
-                "Bufer: 4000 EU"
+                "الطاقة: 0–4 EU/t",
+                "الاحتياطي: 4000 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:oak_planks",
                 "minecraft:copper_ingot",
@@ -273,26 +273,26 @@
         },
         {
           "id": "generator",
-          "title": "Generator",
+          "title": "مولد",
           "icon": "alaindustrial:generator",
           "pages": [
             {
               "type": "text",
-              "title": "Generator",
-              "text": "Generator sederhana berbahan batu bara dan bahan bakar padat — sumber EU LV awal untuk mesin pertamamu."
+              "title": "مولد",
+              "text": "مولد بسيط يعمل بالفحم والوقود الصلب — مصدر EU الابتدائي من مستوى LV لأول آلاتك."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 8 EU/t",
-                "Bufer: 4000 EU"
+                "الطاقة: 8 EU/t",
+                "الاحتياطي: 4000 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:cobblestone",
                 "minecraft:cobblestone",
@@ -311,26 +311,26 @@
         },
         {
           "id": "geothermal_generator",
-          "title": "Generator Geotermal",
+          "title": "مولد حراري أرضي",
           "icon": "alaindustrial:geothermal_generator",
           "pages": [
             {
               "type": "text",
-              "title": "Generator Geotermal",
-              "text": "Menghasilkan EU dari lava — lebih kuat dari generator batu bara dan jauh lebih jarang perlu diisi ulang."
+              "title": "مولد حراري أرضي",
+              "text": "يولد EU من الحمم — أقوى من مولد الفحم ويحتاج إلى إعادة تعبئة أقل بكثير."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 16 EU/t",
-                "Bufer: 4000 EU"
+                "الطاقة: 16 EU/t",
+                "الاحتياطي: 4000 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:smooth_stone",
                 "minecraft:smooth_stone",
@@ -349,26 +349,26 @@
         },
         {
           "id": "lightning_rod_generator",
-          "title": "Generator penangkal petir",
+          "title": "مولد مانعة الصواعق",
           "icon": "alaindustrial:lightning_rod_generator",
           "pages": [
             {
               "type": "text",
-              "title": "Generator penangkal petir",
-              "text": "Menangkap sambaran petir dan menyimpannya di ujung konduktornya — jatah energi yang jarang tapi besar; kalau cadangannya masih penuh, sambaran itu terbuang."
+              "title": "مولد مانعة الصواعق",
+              "text": "يلتقط ضربة صاعقة ويخزنها في طرفه الموصل — دفعة قدرة نادرة لكنها كبيرة؛ وإن كان المخزون ما زال ممتلئا ضاعت الضربة."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 16–24 EU/t saat dilepas",
-                "Bufer: 4000 EU"
+                "الطاقة: 16–24 EU/t عند التفريغ",
+                "الاحتياطي: 4000 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "",
                 "minecraft:lightning_rod",
@@ -387,85 +387,85 @@
         },
         {
           "id": "daylight_solar_panel",
-          "title": "Panel Surya Cahaya Siang",
+          "title": "لوحة شمسية نهارية",
           "icon": "alaindustrial:daylight_solar_panel",
           "pages": [
             {
               "type": "text",
-              "title": "Panel Surya Cahaya Siang",
-              "text": "Panel siang T2 — empat kali lebih kuat dari panel dasar, bekerja pada siang hari di bawah langit terbuka; hanya didapat melalui evolusi."
+              "title": "لوحة شمسية نهارية",
+              "text": "لوحة النهار من الفئة T2 — أقوى بأربع مرات من الأساسية، وتعمل نهارا تحت سماء مكشوفة؛ ولا تنال إلا بالتطور."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 4 EU/t (siang)",
-                "Bufer: 8000 EU"
+                "الطاقة: 4 EU/t (نهار)",
+                "الاحتياطي: 8000 EU"
               ]
             }
           ]
         },
         {
           "id": "creative_energy_source",
-          "title": "Sumber Energi Kreatif",
+          "title": "مصدر طاقة إبداعي",
           "icon": "alaindustrial:creative_energy_source",
           "pages": [
             {
               "type": "text",
-              "title": "Sumber Energi Kreatif",
-              "text": "Sumber EU tak habis-habis dengan keluaran yang bisa diatur — alat untuk menguji rakitan, tidak bisa didapat di mode bertahan hidup."
+              "title": "مصدر طاقة إبداعي",
+              "text": "مصدر EU لا ينضب بإنتاج قابل للضبط — أداة لاختبار التركيبات، ولا يمكن الحصول عليه في وضع البقاء."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 32-8192 EU/t"
+                "الطاقة: 32-8192 EU/t"
               ]
             }
           ]
         },
         {
           "id": "moonlit_solar_panel",
-          "title": "Panel Surya Cahaya Bulan",
+          "title": "لوحة شمسية قمرية",
           "icon": "alaindustrial:moonlit_solar_panel",
           "pages": [
             {
               "type": "text",
-              "title": "Panel Surya Cahaya Bulan",
-              "text": "Panel malam T2 — menghasilkan EU pada malam hari di bawah langit terbuka dan bahkan sedikit saat cuaca buruk; hanya didapat melalui evolusi."
+              "title": "لوحة شمسية قمرية",
+              "text": "لوحة الليل من الفئة T2 — تولد EU ليلا تحت سماء مكشوفة، بل وتعطي قليلا في الطقس السيئ؛ ولا تنال إلا بالتطور."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 3 EU/t (malam)",
-                "Bufer: 8000 EU"
+                "الطاقة: 3 EU/t (ليل)",
+                "الاحتياطي: 8000 EU"
               ]
             }
           ]
         },
         {
           "id": "solar_panel",
-          "title": "Panel Surya",
+          "title": "لوحة شمسية",
           "icon": "alaindustrial:solar_panel",
           "pages": [
             {
               "type": "text",
-              "title": "Panel Surya",
-              "text": "Sumber daya pertama mod ini — menghasilkan EU pada siang hari di bawah langit terbuka; tempat seluruh rantai energi dimulai."
+              "title": "لوحة شمسية",
+              "text": "أول مصدر قدرة في المود — يولد EU نهارا تحت سماء مكشوفة؛ ومنه تبدأ سلسلة الطاقة كلها."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 1 EU/t (siang)",
-                "Bufer: 8000 EU"
+                "الطاقة: 1 EU/t (نهار)",
+                "الاحتياطي: 8000 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:glass",
                 "minecraft:glass",
@@ -484,26 +484,26 @@
         },
         {
           "id": "charge_pad",
-          "title": "Stasiun Pengisian Daya",
+          "title": "محطة شحن",
           "icon": "alaindustrial:charge_pad",
           "pages": [
             {
               "type": "text",
-              "title": "Stasiun Pengisian Daya",
-              "text": "Pelat yang mengisi daya semua perlengkapan bertenaga pada pemain yang berdiri di atasnya — inventaris, tangan kiri, dan perlengkapan yang dikenakan — tanpa satu klik pun."
+              "title": "محطة شحن",
+              "text": "لوح يشحن كل ما يعمل بالطاقة لدى اللاعب الواقف عليه — في الحقيبة واليد الثانية والعتاد الملبوس على السواء — دون الحاجة إلى نقرة واحدة."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 20 000 EU",
-                "Bufer: 20 000 EU"
+                "الطاقة: 20 000 EU",
+                "الاحتياطي: 20 000 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:copper_cable",
                 "alaindustrial:copper_cable",
@@ -522,25 +522,25 @@
         },
         {
           "id": "energy_condenser",
-          "title": "Kondensor Energi",
+          "title": "مكثف طاقة",
           "icon": "alaindustrial:energy_condenser",
           "pages": [
             {
               "type": "text",
-              "title": "Kondensor Energi",
-              "text": "Menangkap kelebihan jaringan dan memadatkannya jadi gumpalan energi; tingkat yang kamu dapat ditentukan oleh kapan kamu mengambilnya."
+              "title": "مكثف طاقة",
+              "text": "يلتقط فائض الشبكة ويضغطه في خثة طاقة؛ ودرجة الخثة التي تحصل عليها تحددها لحظة أخذها."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 128 EU/t asupan"
+                "الطاقة: 128 EU/t استقبالا"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:iron_plate",
                 "minecraft:gold_ingot",
@@ -559,25 +559,25 @@
         },
         {
           "id": "cesu",
-          "title": "Kotak Baterai Diperkuat",
+          "title": "مخزن طاقة مقوى",
           "icon": "alaindustrial:cesu",
           "pages": [
             {
               "type": "text",
-              "title": "Kotak Baterai Diperkuat",
-              "text": "Blok penyimpanan MV — menampung 100 000 EU, lima kali bufer awal, dan memindahkannya empat kali lebih cepat pada 128 EU/tik."
+              "title": "مخزن طاقة مقوى",
+              "text": "كتلة تخزين من مستوى MV — تحمل 100 000 EU، أي خمسة أضعاف المخزن الابتدائي، وتنقلها أسرع بأربع مرات عند 128 EU/نبضة."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 100 000 EU"
+                "الطاقة: 100 000 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:electrum_ingot",
                 "alaindustrial:advanced_circuit",
@@ -596,25 +596,25 @@
         },
         {
           "id": "battery_box",
-          "title": "Kotak Baterai",
+          "title": "صندوق بطاريات",
           "icon": "alaindustrial:battery_box",
           "pages": [
             {
               "type": "text",
-              "title": "Kotak Baterai",
-              "text": "Blok penyimpanan LV awal — menampung 20 000 EU, menabung kelebihan dari generator dan memasoknya ke mesin pada 32 EU/tik."
+              "title": "صندوق بطاريات",
+              "text": "كتلة التخزين الابتدائية من مستوى LV — تحمل 20 000 EU، تخزن فائض المولد وتغذي به الآلات بمعدل 32 EU/نبضة."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 20 000 EU"
+                "الطاقة: 20 000 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:oak_planks",
                 "alaindustrial:battery",
@@ -633,26 +633,26 @@
         },
         {
           "id": "gold_cable",
-          "title": "Kabel Emas",
+          "title": "كابل ذهب",
           "icon": "alaindustrial:gold_cable",
           "pages": [
             {
               "type": "text",
-              "title": "Kabel Emas",
-              "text": "Kabel MV lebar tanpa insulasi dengan kehilangan tinggi; selama energi benar-benar mengalir, sentuhannya menyetrum dengan keras."
+              "title": "كابل ذهب",
+              "text": "كابل ذهب عارٍ وواسع من مستوى MV، فاقده مرتفع ويصعق بشدة عند اللمس ما دامت الطاقة تجري فيه فعلا."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: ≤128 EU/paket",
-                "Bufer: 48 EU"
+                "الطاقة: ≤128 EU/رزمة",
+                "الاحتياطي: 48 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:gold_ingot",
                 "minecraft:gold_ingot",
@@ -671,26 +671,26 @@
         },
         {
           "id": "insulated_gold_cable",
-          "title": "Kabel Emas Berinsulasi",
+          "title": "كابل ذهب معزول",
           "icon": "alaindustrial:insulated_gold_cable",
           "pages": [
             {
               "type": "text",
-              "title": "Kabel Emas Berinsulasi",
-              "text": "Kabel emas MV berselubung karet — kehilangannya separuh dan sepenuhnya kebal terhadap sengatan saat disentuh."
+              "title": "كابل ذهب معزول",
+              "text": "كابل ذهب من مستوى MV بغلاف مطاطي، فاقده النصف وهو آمن تماما من الصعق باللمس."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: ≤128 EU/paket",
-                "Bufer: 48 EU"
+                "الطاقة: ≤128 EU/رزمة",
+                "الاحتياطي: 48 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:gold_cable",
                 "alaindustrial:gold_cable",
@@ -709,26 +709,26 @@
         },
         {
           "id": "insulated_copper_cable",
-          "title": "Kabel Tembaga Berinsulasi",
+          "title": "كابل نحاس معزول",
           "icon": "alaindustrial:insulated_copper_cable",
           "pages": [
             {
               "type": "text",
-              "title": "Kabel Tembaga Berinsulasi",
-              "text": "Kabel tembaga LV berselubung karet — kehilangannya separuh dan sepenuhnya kebal terhadap sengatan saat disentuh."
+              "title": "كابل نحاس معزول",
+              "text": "كابل نحاس من مستوى LV بغلاف مطاطي، فاقده النصف وهو آمن تماما من الصعق باللمس."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: ≤32 EU/paket",
-                "Bufer: 12 EU"
+                "الطاقة: ≤32 EU/رزمة",
+                "الاحتياطي: 12 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:copper_cable",
                 "alaindustrial:copper_cable",
@@ -747,26 +747,26 @@
         },
         {
           "id": "insulated_tin_cable",
-          "title": "Kabel Timah Berinsulasi",
+          "title": "كابل قصدير معزول",
           "icon": "alaindustrial:insulated_tin_cable",
           "pages": [
             {
               "type": "text",
-              "title": "Kabel Timah Berinsulasi",
-              "text": "Kabel timah LV berselubung karet — kehilangannya minimal dan sepenuhnya kebal terhadap sengatan saat disentuh."
+              "title": "كابل قصدير معزول",
+              "text": "كابل قصدير من مستوى LV بغلاف مطاطي، فاقده ضئيل وهو آمن تماما من الصعق باللمس."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: ≤8 EU/paket",
-                "Bufer: 8 EU"
+                "الطاقة: ≤8 EU/رزمة",
+                "الاحتياطي: 8 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:tin_cable",
                 "alaindustrial:tin_cable",
@@ -785,26 +785,26 @@
         },
         {
           "id": "insulated_electrum_cable",
-          "title": "Kabel Elektrum Berinsulasi",
+          "title": "كابل إلكتروم معزول",
           "icon": "alaindustrial:insulated_electrum_cable",
           "pages": [
             {
               "type": "text",
-              "title": "Kabel Elektrum Berinsulasi",
-              "text": "Kabel elektrum HV berselubung karet: kerugian terendah di mod ini dan kekebalan penuh terhadap sengatan sentuh."
+              "title": "كابل إلكتروم معزول",
+              "text": "كابل إلكتروم من مستوى HV بغلاف مطاطي: أقل فاقد في المود، وأمان تام من الصعق باللمس."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: ≤512 EU/paket",
-                "Bufer: 192 EU"
+                "الطاقة: ≤512 EU/رزمة",
+                "الاحتياطي: 192 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:electrum_cable",
                 "alaindustrial:electrum_cable",
@@ -823,26 +823,26 @@
         },
         {
           "id": "copper_cable",
-          "title": "Kabel Tembaga",
+          "title": "كابل نحاس",
           "icon": "alaindustrial:copper_cable",
           "pages": [
             {
               "type": "text",
-              "title": "Kabel Tembaga",
-              "text": "Kabel LV murah dan andal; kawat telanjangnya menyetrum pemain selama masih bertegangan karena tersambung ke jaringan yang dialiri daya."
+              "title": "كابل نحاس",
+              "text": "كابل رخيص لكل الاستخدامات من مستوى LV؛ وسلكه العاري يصعق اللاعبين ما دام موصولا بشبكة مغذاة."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: ≤32 EU/paket",
-                "Bufer: 12 EU"
+                "الطاقة: ≤32 EU/رزمة",
+                "الاحتياطي: 12 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:copper_ingot",
                 "minecraft:copper_ingot",
@@ -861,26 +861,26 @@
         },
         {
           "id": "tin_cable",
-          "title": "Kabel Timah",
+          "title": "كابل قصدير",
           "icon": "alaindustrial:tin_cable",
           "pages": [
             {
               "type": "text",
-              "title": "Kabel Timah",
-              "text": "Kabel LV termurah dan nyaris tanpa kehilangan; selama energi benar-benar mengalir, kawat telanjangnya menyetrum pemain yang menyentuhnya."
+              "title": "كابل قصدير",
+              "text": "أرخص كابل LV شبه عديم الفاقد؛ وما دامت الطاقة تجري فيه فعلا فإن سلكه العاري يصعق اللاعبين عند اللمس."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: ≤8 EU/paket",
-                "Bufer: 8 EU"
+                "الطاقة: ≤8 EU/رزمة",
+                "الاحتياطي: 8 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:tin_ingot",
                 "alaindustrial:tin_ingot",
@@ -899,26 +899,26 @@
         },
         {
           "id": "electrum_cable",
-          "title": "Kabel Elektrum",
+          "title": "كابل إلكتروم",
           "icon": "alaindustrial:electrum_cable",
           "pages": [
             {
               "type": "text",
-              "title": "Kabel Elektrum",
-              "text": "Kabel HV telanjang dari batangan elektrum dengan inti debu berlian — kabel terlebar pada tangga dan dengan kerugian terendah, dengan harga resep yang mahal."
+              "title": "كابل إلكتروم",
+              "text": "كابل HV عارٍ من سبائك الإلكتروم بلب من مسحوق الألماس — أوسع أسلاك السلسلة وأقلها فاقدا، بثمن صناعة باهظة."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: ≤512 EU/paket",
-                "Bufer: 192 EU"
+                "الطاقة: ≤512 EU/رزمة",
+                "الاحتياطي: 192 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:electrum_ingot",
                 "alaindustrial:diamond_dust",
@@ -937,25 +937,25 @@
         },
         {
           "id": "shielding_chest",
-          "title": "Peti Pelindung Radiasi",
+          "title": "صندوق واقٍ من الإشعاع",
           "icon": "alaindustrial:shielding_chest",
           "pages": [
             {
               "type": "text",
-              "title": "Peti Pelindung Radiasi",
-              "text": "Satu-satunya wadah yang menahan radiasi isinya: uranium di dalamnya tidak menyinari siapa pun. Kapasitas peti besi (36 slot), tidak butuh energi."
+              "title": "صندوق واقٍ من الإشعاع",
+              "text": "الصندوق الوحيد الذي يوقف إشعاع محتواه: فاليورانيوم داخله لا يشع على أحد. سعته كسعة الصندوق الحديدي (36 خانة)، ولا يحتاج إلى طاقة."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Kapasitas: 36 slot"
+                "السعة: 36 خانة"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "",
                 "alaindustrial:shielding_alloy_plate",
@@ -974,25 +974,25 @@
         },
         {
           "id": "reactor_controller",
-          "title": "Pengendali Reaktor",
+          "title": "وحدة تحكم المفاعل",
           "icon": "alaindustrial:reactor_controller",
           "pages": [
             {
               "type": "text",
-              "title": "Pengendali Reaktor",
-              "text": "Otak sebuah reaktor: ia memindai cangkang, menyebut apa yang salah dan tepat di mana, menjalankan reaksi, dan memberi EU. Ruangnya opsional — tanpa ruang ia bekerja lebih lemah dan melelehkan sekitarnya."
+              "title": "وحدة تحكم المفاعل",
+              "text": "عقل المفاعل: يفحص الغلاف، ويخبرك بما فيه من خلل وأين موضعه بالضبط، ويدير التفاعل ويعطي EU. والغرفة اختيارية — بدونها يعمل أضعف ويصهر ما حوله."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Bufer: 200 000 EU"
+                "الاحتياطي: 200 000 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:shielding_alloy_plate",
                 "alaindustrial:reactor_circuit",
@@ -1011,18 +1011,18 @@
         },
         {
           "id": "empty_fuel_rod",
-          "title": "Selongsong Batang",
+          "title": "غلاف قضيب الوقود",
           "icon": "alaindustrial:empty_fuel_rod",
           "pages": [
             {
               "type": "text",
-              "title": "Selongsong Batang",
-              "text": "Selongsong batang bahan bakar tanpa uranium: dibuat 3x3, diisi satu uranium diperkaya, dan dikembalikan oleh kolom begitu batangnya habis."
+              "title": "غلاف قضيب الوقود",
+              "text": "غلاف قضيب الوقود دون يورانيوم بداخله: يصنع في شبكة 3x3، ويملأ بقطعة واحدة من اليورانيوم المخصب، ويعيده العمود إليك متى نفد القضيب."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:iron_nugget",
                 "minecraft:iron_ingot",
@@ -1041,18 +1041,18 @@
         },
         {
           "id": "steam_nozzle",
-          "title": "Nosel Uap",
+          "title": "فوهة البخار",
           "icon": "alaindustrial:steam_nozzle",
           "pages": [
             {
               "type": "text",
-              "title": "Nosel Uap",
-              "text": "Ujung terjauh dari sirkuit pendingin: ia mengambil uap dari pipa, melepasnya ke udara sebagai kepulan, dan memusnahkannya — 100 mB/t per nosel."
+              "title": "فوهة البخار",
+              "text": "الطرف البعيد من دورة التبريد: يأخذ البخار من الأنبوب ويطلقه في الهواء عمودا ثم يفنيه — 100 mB/t لكل فوهة."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "",
                 "minecraft:iron_ingot",
@@ -1071,25 +1071,25 @@
         },
         {
           "id": "reactor_button",
-          "title": "Tombol Reaktor",
+          "title": "زر مفاعل",
           "icon": "alaindustrial:reactor_button",
           "pages": [
             {
               "type": "text",
-              "title": "Tombol Reaktor",
-              "text": "Tombol dari paduan pelindung: cara mengirim pulsa ke pintu kedap dari dalam ruang tertutup, dibuat persis seperti tombol vanilla tetapi sanggup bertahan terhadap alasan keberadaan ruang itu."
+              "title": "زر مفاعل",
+              "text": "زر من سبيكة التدريع: وسيلتك لإرسال نبضة إلى باب معادلة الضغط من داخل غرفة محكمة، يصنع تماما كزر اللعبة الأصلية لكنه يحتمل ما بنيت الغرفة من أجله."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Bufer: 0 EU"
+                "الاحتياطي: 0 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Tanpa Pola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع غير مرتب",
               "grid": [
                 "alaindustrial:shielding_alloy_plate",
                 "minecraft:stone_button",
@@ -1108,18 +1108,18 @@
         },
         {
           "id": "fuel_rod_assembly",
-          "title": "Kolom Reaktor",
+          "title": "عمود المفاعل",
           "icon": "alaindustrial:fuel_rod_assembly",
           "pages": [
             {
               "type": "text",
-              "title": "Kolom Reaktor",
-              "text": "Rak transparan untuk empat batang dengan dua tangki — air dan uap: diisi dengan klik kanan, mengauskan semua batang berisi sekaligus, dan baik tinggi bahan bakar maupun pendingin terbaca dari seberang ruangan, tanpa menu sama sekali."
+              "title": "عمود المفاعل",
+              "text": "حامل شفاف لأربعة قضبان مع خزانين — ماء وبخار: يملأ بالنقر بالزر الأيمن، ويستهلك كل قضبانه المعبأة معا، ويقرأ منه مستوى الوقود والمبرد من أقصى الغرفة دون فتح أي واجهة."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:iron_ingot",
                 "alaindustrial:reactor_glass",
@@ -1138,25 +1138,25 @@
         },
         {
           "id": "reactor_lamp",
-          "title": "Lampu Reaktor",
+          "title": "مصباح مفاعل",
           "icon": "alaindustrial:reactor_lamp",
           "pages": [
             {
               "type": "text",
-              "title": "Lampu Reaktor",
-              "text": "Blok cangkang yang menyala hanya setelah ruangan terbentuk: satu-satunya sumber cahaya di dalam kotak tertutup sekaligus tanda yang terlihat dari luar bahwa bangunan telah diterima."
+              "title": "مصباح مفاعل",
+              "text": "كتلة من الغلاف لا تضيء إلا بعد اكتمال الغرفة: مصدر الضوء الوحيد داخل صندوق محكم، وفي الوقت نفسه علامة ظاهرة من الخارج على قبول البناء."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Bufer: 0 EU"
+                "الاحتياطي: 0 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:iron_ingot",
                 "minecraft:glass",
@@ -1175,25 +1175,25 @@
         },
         {
           "id": "reactor_casing",
-          "title": "Rangka Reaktor",
+          "title": "هيكل مفاعل",
           "icon": "alaindustrial:reactor_casing",
           "pages": [
             {
               "type": "text",
-              "title": "Rangka Reaktor",
-              "text": "Panel paduan pelindung — satu-satunya bahan yang boleh dipakai membangun cangkang kedap ruang reaktor."
+              "title": "هيكل مفاعل",
+              "text": "لوح من سبيكة التدريع — المادة الوحيدة التي يجوز أن يبنى منها غلاف غرفة المفاعل المحكم."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Bufer: 0 EU"
+                "الاحتياطي: 0 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:tempered_iron_plate",
                 "alaindustrial:tempered_iron_plate",
@@ -1212,25 +1212,25 @@
         },
         {
           "id": "reactor_glass",
-          "title": "Kaca Reaktor",
+          "title": "زجاج مفاعل",
           "icon": "alaindustrial:reactor_glass",
           "pages": [
             {
               "type": "text",
-              "title": "Kaca Reaktor",
-              "text": "Panel cangkang transparan: ia dihitung sebagai dinding persis seperti pelapis, tetapi kaca tidak boleh lebih dari 30 % cangkang — lewat batas itu ruangan berhenti menjadi penahan dan berubah jadi lemari pajang."
+              "title": "زجاج مفاعل",
+              "text": "لوح غلاف شفاف: يحسب جدارا تماما كالهيكل، لكن لا يجوز أن يتجاوز الزجاج 30 % من الغلاف — وبعد ذلك تكف الغرفة عن كونها احتواء وتصير خزانة عرض."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Bufer: 0 EU"
+                "الاحتياطي: 0 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:glass",
                 "minecraft:glass",
@@ -1249,25 +1249,25 @@
         },
         {
           "id": "reactor_port",
-          "title": "Saluran Masuk Reaktor",
+          "title": "مدخل المفاعل",
           "icon": "alaindustrial:reactor_port",
           "pages": [
             {
               "type": "text",
-              "title": "Saluran Masuk Reaktor",
-              "text": "Satu-satunya tempat fluida boleh menembus cangkang kedap: lintasan 50 mB/t yang bekerja dua arah — air masuk, uap keluar — dan tetap merupakan sepotong dinding utuh."
+              "title": "مدخل المفاعل",
+              "text": "الموضع الوحيد الذي يجوز أن يعبر منه السائل غلافا محكما: معبر بسعة 50 mB/t يعمل في الاتجاهين — ماء إلى الداخل وبخار إلى الخارج — ويظل مع ذلك قطعة جدار كاملة."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Bufer: 0 EU"
+                "الاحتياطي: 0 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:rubber",
                 "alaindustrial:fluid_pipe",
@@ -1286,25 +1286,25 @@
         },
         {
           "id": "reactor_outlet",
-          "title": "Keluaran Reaktor",
+          "title": "مخرج المفاعل",
           "icon": "alaindustrial:reactor_outlet",
           "pages": [
             {
               "type": "text",
-              "title": "Keluaran Reaktor",
-              "text": "Soket yang tertanam pada cangkang ruang reaktor: pengendali tertutup tembok dan tidak punya sisi yang bisa dijangkau kabel, jadi listrik keluar lewat sepotong dinding yang dibuat khusus — penyangga 512 EU yang memberi dari setiap sisi dan diisi ulang oleh pengendali."
+              "title": "مخرج المفاعل",
+              "text": "مقبس مركب في غلاف غرفة المفاعل: فوحدة التحكم مبنية داخل الجدار ولا وجه لها يصل إليه كابل، لذلك تخرج القدرة عبر قطعة جدار مخصصة لذلك — احتياطي 512 EU يعطي من كل وجه وتملؤه وحدة التحكم."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Bufer: 512 EU"
+                "الاحتياطي: 512 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:rubber",
                 "alaindustrial:copper_cable",
@@ -1323,18 +1323,18 @@
         },
         {
           "id": "uranium_fuel_rod",
-          "title": "Batang Bahan Bakar",
+          "title": "قضيب وقود",
           "icon": "alaindustrial:uranium_fuel_rod",
           "pages": [
             {
               "type": "text",
-              "title": "Batang Bahan Bakar",
-              "text": "Bahan bakar reaktor: uranium diperkaya dalam selongsong besi di atas dudukan pelindung. Ia menyimpan 144.000 EU, menampilkan sisanya sebagai durabilitas, dan meninggalkan selongsong kosong saat habis terbakar."
+              "title": "قضيب وقود",
+              "text": "وقود المفاعل: يورانيوم مخصب في كم حديدي على قاعدة تدريع. يحمل 144,000 EU، ويعرض ما تبقى منه على هيئة متانة، ويخلف غلافا فارغا حين ينفد."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Tanpa Pola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع غير مرتب",
               "grid": [
                 "alaindustrial:empty_fuel_rod",
                 "alaindustrial:refined_uranium",
@@ -1353,25 +1353,25 @@
         },
         {
           "id": "reactor_door",
-          "title": "Pintu Kedap Reaktor",
+          "title": "باب معادلة ضغط المفاعل",
           "icon": "alaindustrial:reactor_door",
           "pages": [
             {
               "type": "text",
-              "title": "Pintu Kedap Reaktor",
-              "text": "Satu-satunya jalan masuk ke ruang reaktor: pintu hanya terbuka oleh pulsa redstone, menutup sendiri dua detik kemudian, dan tidak pernah menutup menimpa siapa pun yang berdiri di ambangnya."
+              "title": "باب معادلة ضغط المفاعل",
+              "text": "المدخل الوحيد إلى غرفة المفاعل: لا يفتح إلا بنبضة ريدستون، ويغلق نفسه بعد ثانيتين، ولا ينغلق أبدا على من يقف في فتحته."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Bufer: 0 EU"
+                "الاحتياطي: 0 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:shielding_alloy_plate",
                 "alaindustrial:reactor_glass",
@@ -1392,31 +1392,31 @@
     },
     {
       "id": "processing",
-      "title": "Pemrosesan",
+      "title": "المعالجة",
       "icon": "alaindustrial:vulcanizer",
       "entries": [
         {
           "id": "vulcanizer",
-          "title": "Vulkanisator",
+          "title": "آلة فلكنة",
           "icon": "alaindustrial:vulcanizer",
           "pages": [
             {
               "type": "text",
-              "title": "Vulkanisator",
-              "text": "Mesin LV yang menggabungkan karet mentah dengan debu belerang untuk membuat karet. Mesin ini memerlukan EU dan panas dari bawah; sumber panas yang lebih kuat meningkatkan hasil."
+              "title": "آلة فلكنة",
+              "text": "آلة من مستوى LV تجمع المطاط الخام مع مسحوق الكبريت لصنع المطاط. تحتاج إلى EU وإلى حرارة من الأسفل؛ وكلما قوي مصدر الحرارة زاد الناتج."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 400 EU/op",
-                "Bufer: 800 EU"
+                "الطاقة: 400 EU/عملية",
+                "الاحتياطي: 800 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:sulfur_dust",
                 "minecraft:iron_ingot",
@@ -1435,26 +1435,26 @@
         },
         {
           "id": "macerator",
-          "title": "Penggiling",
+          "title": "ساحق",
           "icon": "alaindustrial:macerator",
           "pages": [
             {
               "type": "text",
-              "title": "Penggiling",
-              "text": "Menghancurkan bijih (baik blok maupun bijih mentah) menjadi dua bubuk, memakai EU pada tingkat LV."
+              "title": "ساحق",
+              "text": "يسحق الخام (سواء الكتل أو الخام المستخرج) إلى مسحوقين، مستهلكا EU عند مستوى LV."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 300 EU/op",
-                "Bufer: 800 EU"
+                "الطاقة: 300 EU/عملية",
+                "الاحتياطي: 800 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:flint",
                 "minecraft:flint",
@@ -1473,18 +1473,18 @@
         },
         {
           "id": "iron_furnace",
-          "title": "Tungku Besi",
+          "title": "فرن حديدي",
           "icon": "alaindustrial:iron_furnace",
           "pages": [
             {
               "type": "text",
-              "title": "Tungku Besi",
-              "text": "Tungku bahan bakar yang ditingkatkan antara vanila dan Tungku Listrik — lebih cepat dari vanila, tetap berbahan bakar, tanpa EU."
+              "title": "فرن حديدي",
+              "text": "فرن وقود مطور يقع بين فرن اللعبة الأصلية والفرن الكهربائي — أسرع من الأصلي، وما زال يعمل بالوقود، دون EU."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:iron_ingot",
                 "minecraft:iron_ingot",
@@ -1503,26 +1503,26 @@
         },
         {
           "id": "compressor",
-          "title": "Kompresor",
+          "title": "ضاغط",
           "icon": "alaindustrial:compressor",
           "pages": [
             {
               "type": "text",
-              "title": "Kompresor",
-              "text": "Memampatkan bahan mentah menjadi bentuk yang lebih padat — bubuk logam menjadi batangan, bubuk batu bara/permata kembali menjadi barang, es menjadi es padat/biru, tebu menjadi kertas. Menutup siklus penggandaan untuk non-logam."
+              "title": "ضاغط",
+              "text": "يضغط المواد الخام إلى صور أكثف — مسحوق المعادن إلى سبائك، ومسحوق الفحم والأحجار الكريمة إلى عناصرها، والجليد إلى جليد معبأ/أزرق، وقصب السكر إلى ورق. ويغلق دورة المضاعفة لغير المعادن."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 260 EU/op",
-                "Bufer: 800 EU"
+                "الطاقة: 260 EU/عملية",
+                "الاحتياطي: 800 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:piston",
                 "minecraft:iron_ingot",
@@ -1541,26 +1541,26 @@
         },
         {
           "id": "canning_machine",
-          "title": "Mesin Pengalengan",
+          "title": "آلة تعليب",
           "icon": "alaindustrial:canning_machine",
           "pages": [
             {
               "type": "text",
-              "title": "Mesin Pengalengan",
-              "text": "Mesin LV yang mengolah makanan apa pun menjadi ransum yang seragam. Ransum menumpuk tanpa peduli asalnya, jadi selusin slot sisa makanan menyusut jadi satu."
+              "title": "آلة تعليب",
+              "text": "آلة من مستوى LV تحول أي طعام إلى حصص متماثلة. والحصص تتكدس معا مهما كان أصلها، فتنكمش عشرات الخانات من الفتات المتفرق إلى خانة واحدة."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 200 EU/ransum",
-                "Bufer: 800 EU"
+                "الطاقة: 200 EU/حصة",
+                "الاحتياطي: 800 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:tin_plate",
                 "minecraft:piston",
@@ -1579,26 +1579,26 @@
         },
         {
           "id": "sawmill",
-          "title": "Penggergaji Kayu",
+          "title": "منشرة",
           "icon": "alaindustrial:sawmill",
           "pages": [
             {
               "type": "text",
-              "title": "Penggergaji Kayu",
-              "text": "Menggergaji kayu apa pun menjadi papan, batang kayu, lempeng, atau tangga dengan hasil lebih banyak daripada pembuatan manual. Empat mode yang bisa diganti, berjalan dengan EU."
+              "title": "منشرة",
+              "text": "تنشر أي خشب إلى ألواح أو عصي أو بلاطات أو درجات بناتج أعلى من الصنع اليدوي. أربعة أوضاع قابلة للتبديل، وتعمل بـ EU."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 160 EU/op",
-                "Bufer: 800 EU"
+                "الطاقة: 160 EU/عملية",
+                "الاحتياطي: 800 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:iron_ingot",
                 "minecraft:iron_ingot",
@@ -1617,26 +1617,26 @@
         },
         {
           "id": "polymerizer",
-          "title": "Polimerisator",
+          "title": "مبلمر",
           "icon": "alaindustrial:polymerizer",
           "pages": [
             {
               "type": "text",
-              "title": "Polimerisator",
-              "text": "Mendidihkan minyak bumi menjadi karet mentah — tangki 10 ember, satu ember per proses. Karet lalu digabungkan dengan belerang di Vulkanisator."
+              "title": "مبلمر",
+              "text": "يغلي النفط ليصير مطاطا خاما — خزان بعشرة دلاء، ودلو واحد لكل تشغيلة. ثم يجمع المطاط مع الكبريت في آلة الفلكنة."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 400 EU/op",
-                "Bufer: 800 EU"
+                "الطاقة: 400 EU/عملية",
+                "الاحتياطي: 800 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:iron_ingot",
                 "minecraft:bucket",
@@ -1655,26 +1655,26 @@
         },
         {
           "id": "component_repair_bench",
-          "title": "Meja Perbaikan Komponen",
+          "title": "طاولة إصلاح المكونات",
           "icon": "alaindustrial:component_repair_bench",
           "pages": [
             {
               "type": "text",
-              "title": "Meja Perbaikan Komponen",
-              "text": "Memulihkan rotor kincir angin atau roda air yang aus dengan satu barang dan sedikit EU — tapi setiap perbaikan menurunkan batas ketahanan bagian itu secara permanen."
+              "title": "طاولة إصلاح المكونات",
+              "text": "تعيد دوار عنفة الرياح أو عجلة طاحونة الماء المهترئة إلى العمل مقابل عنصر واحد وبعض EU — لكن كل إصلاح يخفض سقف متانة القطعة خفضا دائما."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 9600–28800 EU/op",
-                "Bufer: 800 EU"
+                "الطاقة: 9600–28800 EU/عملية",
+                "الاحتياطي: 800 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:iron_plate",
                 "alaindustrial:iron_plate",
@@ -1693,26 +1693,26 @@
         },
         {
           "id": "assembler",
-          "title": "Perakit",
+          "title": "آلة تجميع",
           "icon": "alaindustrial:assembler",
           "pages": [
             {
               "type": "text",
-              "title": "Perakit",
-              "text": "Mencetak resep meja kerajinan dari cetak biru secara terus-menerus dengan EU, mengambil bahan dari gudang modularnya sendiri. Menyimpan antrean tiga cetak biru."
+              "title": "آلة تجميع",
+              "text": "تنتج وصفات طاولة النجارة باستمرار انطلاقا من المخططات مقابل EU، وتسحب المواد من وحدات تخزينها الخاصة. وتحتفظ بطابور من ثلاثة مخططات."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 480 EU/op",
-                "Bufer: 12000 EU"
+                "الطاقة: 480 EU/عملية",
+                "الاحتياطي: 12000 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:iron_gear",
                 "minecraft:crafting_table",
@@ -1731,26 +1731,26 @@
         },
         {
           "id": "alloy_smelter",
-          "title": "Tungku Paduan",
+          "title": "فرن سبائك",
           "icon": "alaindustrial:alloy_smelter",
           "pages": [
             {
               "type": "text",
-              "title": "Tungku Paduan",
-              "text": "Mesin LV dengan tiga slot masukan yang bisa dipertukarkan; mesin ini melebur beberapa logam menjadi satu paduan. Urutan pengisian tidak berpengaruh; tembaga, timah, besi, nikel, emas, dan perak menjadi perunggu, invar, kupronikel, dan elektrum."
+              "title": "فرن سبائك",
+              "text": "آلة من مستوى LV بثلاث خانات إدخال متكافئة تصهر عدة معادن في سبيكة واحدة. وترتيب التحميل لا يهم؛ فالنحاس والقصدير والحديد والنيكل والذهب والفضة تصير برونزا وإنفار ونحاس نيكل وإلكتروم."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 1200 EU/op",
-                "Bufer: 800 EU"
+                "الطاقة: 1200 EU/عملية",
+                "الاحتياطي: 800 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:brick",
                 "minecraft:brick",
@@ -1769,26 +1769,26 @@
         },
         {
           "id": "thermal_centrifuge",
-          "title": "Sentrifus Termal",
+          "title": "طرد مركزي حراري",
           "icon": "alaindustrial:thermal_centrifuge",
           "pages": [
             {
               "type": "text",
-              "title": "Sentrifus Termal",
-              "text": "Mesin LV yang butuh putaran awal: sinyal redstone menaikkan putaran rotor, dan pemanas panas di bawahnya membuatnya sanggup membelah bubuk uranium jadi dua — penggandaan bijih kedua setelah penggiling."
+              "title": "طرد مركزي حراري",
+              "text": "آلة من مستوى LV تحتاج إلى إقلاع: إشارة ريدستون ترفع دوارها إلى سرعته، وسخان ساخن تحتها يمكنها من شطر مسحوق اليورانيوم إلى نصفين — وهي المضاعفة الثانية للخام بعد الساحق."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 800 EU/op",
-                "Bufer: 800 EU"
+                "الطاقة: 800 EU/عملية",
+                "الاحتياطي: 800 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:tempered_iron",
                 "minecraft:iron_ingot",
@@ -1807,26 +1807,26 @@
         },
         {
           "id": "extractor",
-          "title": "Ekstraktor",
+          "title": "مستخلص",
           "icon": "alaindustrial:extractor",
           "pages": [
             {
               "type": "text",
-              "title": "Ekstraktor",
-              "text": "Menarik bahan berguna dari masukan mentah — ×2 pewarna dari bunga, lebih banyak biji dari labu/semangka, bubuk blaze dari batang, batu api dari kerikil. Berguna untuk ladang otomatis bertenaga hopper."
+              "title": "مستخلص",
+              "text": "يستخرج المادة المفيدة من المدخلات الخام — ضعف الصبغة من الأزهار، وبذورا أكثر من اليقطين والبطيخ، وبودرة اللهب من عصي اللهب، والصوان من الحصى. مفيد للمزارع الآلية المغذاة بالهوبر."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 240 EU/op",
-                "Bufer: 800 EU"
+                "الطاقة: 240 EU/عملية",
+                "الاحتياطي: 800 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:hopper",
                 "minecraft:iron_ingot",
@@ -1845,25 +1845,25 @@
         },
         {
           "id": "galvanic_bath",
-          "title": "Bak galvanik",
+          "title": "حمام جلفنة",
           "icon": "alaindustrial:galvanic_bath",
           "pages": [
             {
               "type": "text",
-              "title": "Bak galvanik",
-              "text": "Mesin pelapisan galvanik LV: mengubah serat dan bubuk perak menjadi benang fluks dalam bak air — pintu masuk ke jalur kain fluks dan zirah EU."
+              "title": "حمام جلفنة",
+              "text": "آلة طلاء كهربائي من مستوى LV: تحول الألياف ومسحوق الفضة إلى خيط تدفق في حمام مائي — وهي المدخل إلى خط نسيج التدفق ودروع EU."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Bufer: 800 EU"
+                "الاحتياطي: 800 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:silver_plate",
                 "alaindustrial:copper_coil",
@@ -1882,26 +1882,26 @@
         },
         {
           "id": "electric_heater",
-          "title": "Pemanas Listrik",
+          "title": "سخان كهربائي",
           "icon": "alaindustrial:electric_heater",
           "pages": [
             {
               "type": "text",
-              "title": "Pemanas Listrik",
-              "text": "Blok pendukung LV yang duduk di bawah vulkanisator. Ia harus panas dulu; setelah panas ia memberi panas maksimum x3. Selagi dingin ia sama sekali bukan sumber panas."
+              "title": "سخان كهربائي",
+              "text": "كتلة مساندة من مستوى LV توضع تحت آلة الفلكنة. عليها أن تسخن أولا؛ ومتى سخنت أعطت الحرارة القصوى x3. أما وهي باردة فليست مصدر حرارة إطلاقا."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 6 EU/t",
-                "Bufer: 2400 EU"
+                "الطاقة: 6 EU/t",
+                "الاحتياطي: 2400 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:redstone",
                 "minecraft:gold_ingot",
@@ -1920,26 +1920,26 @@
         },
         {
           "id": "electric_furnace",
-          "title": "Tungku Listrik",
+          "title": "فرن كهربائي",
           "icon": "alaindustrial:electric_furnace",
           "pages": [
             {
               "type": "text",
-              "title": "Tungku Listrik",
-              "text": "Melebur semua yang bisa dilebur tungku vanila, ditambah bubuk mod ini menjadi batangan. Berjalan dengan EU alih-alih bahan bakar."
+              "title": "فرن كهربائي",
+              "text": "يصهر كل ما يصهره فرن اللعبة الأصلية، ويضيف صهر مساحيق المود إلى سبائك. ويعمل بـ EU بدل الوقود."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 200 EU/op",
-                "Bufer: 800 EU"
+                "الطاقة: 200 EU/عملية",
+                "الاحتياطي: 800 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:silver_ingot",
                 "alaindustrial:silver_ingot",
@@ -1958,25 +1958,25 @@
         },
         {
           "id": "pump",
-          "title": "Pompa",
+          "title": "مضخة",
           "icon": "alaindustrial:pump",
           "pages": [
             {
               "type": "text",
-              "title": "Pompa",
-              "text": "Pompa LV yang menyedot fluida dari dunia atau tangki di sebelahnya ke tangki internal 10-embernya dan mendorongnya ke penerima; menukar fluida dengan kapsul dan wadah mod lain."
+              "title": "مضخة",
+              "text": "مضخة من مستوى LV تسحب السائل من العالم أو من الخزانات المجاورة إلى خزانها الداخلي بسعة 10 دلاء ثم تدفعه إلى المستقبلات؛ وتتبادل السوائل مع الكبسولات ومع حاويات المودات الأخرى."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Bufer: 4000 EU"
+                "الاحتياطي: 4000 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:iron_ingot",
                 "minecraft:bucket",
@@ -1995,26 +1995,26 @@
         },
         {
           "id": "distillation_column",
-          "title": "Kolom Distilasi",
+          "title": "عمود تقطير",
           "icon": "alaindustrial:distillation_column",
           "pages": [
             {
               "type": "text",
-              "title": "Kolom Distilasi",
-              "text": "Menara 1×1×3 yang memfraksinasi minyak mentah menjadi diesel dan minyak bakar. Multiblok pertama mod ini — dirakit manual dari tiga segmen; fraksi ringan keluar di atas, yang berat di bawah, dan dasarnya menyimpan cairan saat dibongkar."
+              "title": "عمود تقطير",
+              "text": "برج بمقاس 1×1×3 يجزئ النفط الخام إلى ديزل وزيت وقود. وهو أول بناء متعدد الكتل في المود — يركب يدويا من ثلاثة أقسام؛ يخرج الجزء الخفيف من الأعلى والثقيل من الأسفل، وتحتفظ القاعدة بسوائلها حتى بعد التفكيك."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 400 EU/op",
-                "Bufer: 800 EU"
+                "الطاقة: 400 EU/عملية",
+                "الاحتياطي: 800 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:iron_plate",
                 "alaindustrial:machine_casing",
@@ -2035,23 +2035,23 @@
     },
     {
       "id": "logistics",
-      "title": "Logistik",
+      "title": "اللوجستيات",
       "icon": "alaindustrial:item_pipe",
       "entries": [
         {
           "id": "item_pipe",
-          "title": "Pipa item",
+          "title": "أنبوب عناصر",
           "icon": "alaindustrial:item_pipe",
           "pages": [
             {
               "type": "text",
-              "title": "Pipa item",
-              "text": "Pipa multipart pasif yang memindahkan item antar inventaris."
+              "title": "أنبوب عناصر",
+              "text": "أنبوب سلبي متعدد الأجزاء ينقل العناصر بين الحاويات."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:silver_ingot",
                 "",
@@ -2070,18 +2070,18 @@
         },
         {
           "id": "fluid_pipe",
-          "title": "Pipa Fluida",
+          "title": "أنبوب سوائل",
           "icon": "alaindustrial:fluid_pipe",
           "pages": [
             {
               "type": "text",
-              "title": "Pipa Fluida",
-              "text": "Pipa multibagian pasif yang mengangkut fluida antara tangki dan mesin."
+              "title": "أنبوب سوائل",
+              "text": "أنبوب سلبي متعدد الأجزاء ينقل السوائل بين الخزانات والآلات."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:silver_ingot",
                 "",
@@ -2100,25 +2100,25 @@
         },
         {
           "id": "fluid_tank",
-          "title": "Tangki Fluida Portabel",
+          "title": "خزان سوائل محمول",
           "icon": "alaindustrial:fluid_tank",
           "pages": [
             {
               "type": "text",
-              "title": "Tangki Fluida Portabel",
-              "text": "Tangki pasif 8 ember dengan level fluida yang terlihat, akses fluida dari enam sisi, dan isi yang tetap tersimpan saat dipindahkan."
+              "title": "خزان سوائل محمول",
+              "text": "خزان سلبي بسعة 8 دلاء، مستوى سائله ظاهر، ويتبادل السوائل من أوجهه الستة، ويحتفظ بمحتواه عند نقله."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Kapasitas: 8 ember"
+                "السعة: 8 دلاء"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:tin_ingot",
                 "minecraft:glass_pane",
@@ -2139,23 +2139,23 @@
     },
     {
       "id": "world_automation",
-      "title": "Dunia & Otomatisasi",
+      "title": "العالم والأتمتة",
       "icon": "alaindustrial:tempered_iron_block",
       "entries": [
         {
           "id": "tempered_iron_block",
-          "title": "Blok Besi Temper",
+          "title": "مكعب حديد مقسى",
           "icon": "alaindustrial:tempered_iron_block",
           "pages": [
             {
               "type": "text",
-              "title": "Blok Besi Temper",
-              "text": "Blok padat dari 9 batangan besi temper — menyimpan logam dalam satu slot dan dibuat atau diurai di meja kerja tanpa kehilangan."
+              "title": "مكعب حديد مقسى",
+              "text": "كتلة مضغوطة من 9 سبائك حديد مقسى — تخزن المعدن في خانة واحدة، وتصنع وتفك على طاولة النجارة دون فاقد."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:tempered_iron",
                 "alaindustrial:tempered_iron",
@@ -2174,102 +2174,102 @@
         },
         {
           "id": "bronze_ingot",
-          "title": "Batangan Perunggu",
+          "title": "سبيكة برونز",
           "icon": "alaindustrial:bronze_ingot",
           "pages": [
             {
               "type": "text",
-              "title": "Batangan Perunggu",
-              "text": "Paduan tembaga-timah untuk produksi massal — tiga batangan tembaga ditambah satu batangan timah menghasilkan dua batangan perunggu di tungku paduan."
+              "title": "سبيكة برونز",
+              "text": "سبيكة النحاس والقصدير للاستخدام الوفير — ثلاث سبائك نحاس مع سبيكة قصدير تعطي سبيكتي برونز في فرن السبائك."
             }
           ]
         },
         {
           "id": "diesel",
-          "title": "Diesel",
+          "title": "ديزل",
           "icon": "alaindustrial:diesel_bucket",
           "pages": [
             {
               "type": "text",
-              "title": "Diesel",
-              "text": "Fraksi ringan hasil distilasi minyak — cairan kuning keemasan, produk utama kolom. Bahan bakar masa depan generator bahan bakar cair (12 EU/t)."
+              "title": "ديزل",
+              "text": "الجزء الخفيف من تقطير النفط — سائل أصفر ذهبي، وهو الناتج المقصود من العمود. ووقود مولد الوقود السائل مستقبلا (12 EU/t)."
             }
           ]
         },
         {
           "id": "invar_ingot",
-          "title": "Batangan Invar",
+          "title": "سبيكة إنفار",
           "icon": "alaindustrial:invar_ingot",
           "pages": [
             {
               "type": "text",
-              "title": "Batangan Invar",
-              "text": "Paduan besi-nikel yang dibuat satu per satu — dua batangan besi ditambah satu batangan nikel menghasilkan satu batangan invar saja di tungku paduan."
+              "title": "سبيكة إنفار",
+              "text": "سبيكة حديد ونيكل تنتج واحدة في كل مرة — سبيكتا حديد مع سبيكة نيكل تعطيان سبيكة إنفار واحدة في فرن السبائك."
             }
           ]
         },
         {
           "id": "cupronickel_ingot",
-          "title": "Batangan Kupronikel",
+          "title": "سبيكة نحاس نيكل",
           "icon": "alaindustrial:cupronickel_ingot",
           "pages": [
             {
               "type": "text",
-              "title": "Batangan Kupronikel",
-              "text": "Paduan tembaga-nikel satu banding satu yang dibuat sebatang demi sebatang — cara termurah, dari sisi bahan, untuk memanfaatkan nikel."
+              "title": "سبيكة نحاس نيكل",
+              "text": "سبيكة نحاس ونيكل بنسبة واحد إلى واحد تنتج سبيكة واحدة في كل مرة — وهي أرخص طريقة، من حيث المواد، لتشغيل النيكل."
             }
           ]
         },
         {
           "id": "fuel_oil",
-          "title": "Minyak Bakar",
+          "title": "زيت وقود",
           "icon": "alaindustrial:fuel_oil_bucket",
           "pages": [
             {
               "type": "text",
-              "title": "Minyak Bakar",
-              "text": "Residu berat hasil distilasi minyak — cairan kental cokelat tua. Bahan bakar yang lebih lemah daripada diesel (6 EU/t), tetapi tak ada yang terbuang — semuanya habis terbakar."
+              "title": "زيت وقود",
+              "text": "المخلف الثقيل من تقطير النفط — سائل كثيف بني داكن. وقود أضعف من الديزل (6 EU/t)، لكن لا شيء يضيع — فكله يحترق."
             }
           ]
         },
         {
           "id": "oil",
-          "title": "Minyak bumi",
+          "title": "النفط",
           "icon": "alaindustrial:oil_bucket",
           "pages": [
             {
               "type": "text",
-              "title": "Minyak bumi",
-              "text": "Sumber daya fosil cair — danau terbatas di dunia, dikumpulkan dengan ember, kapsul, atau pompa; kental, mudah terbakar, dan awal dari rantai karet."
+              "title": "النفط",
+              "text": "مورد أحفوري سائل — بحيرات محدودة في العالم، تجمع بالدلو أو الكبسولة أو المضخة؛ لزج وقابل للاشتعال، ومنه تبدأ سلسلة المطاط."
             }
           ]
         },
         {
           "id": "nickel_ore",
-          "title": "Bijih Nikel",
+          "title": "خام النيكل",
           "icon": "alaindustrial:nickel_ore",
           "pages": [
             {
               "type": "text",
-              "title": "Bijih Nikel",
-              "text": "Logam paling langka dari mod ini — bijih di dunia serta rantai mentah → bubuk → batangan; bahan untuk paduan MV dan casing mesin."
+              "title": "خام النيكل",
+              "text": "أندر معادن المود — خام في العالم وسلسلة الخام ← المسحوق ← السبيكة؛ ومادة سبائك MV وهياكل الآلات."
             }
           ]
         },
         {
           "id": "tempered_iron_plate_block",
-          "title": "Pelapis Besi Temper",
+          "title": "صفائح حديد مقسى",
           "icon": "alaindustrial:tempered_iron_plate_block",
           "pages": [
             {
               "type": "text",
-              "title": "Pelapis Besi Temper",
-              "text": "Blok dekoratif dari 4 pelat besi temper — panel teknologi dengan layar dan garis; dibuat dan dibongkar di meja kerja tanpa kehilangan."
+              "title": "صفائح حديد مقسى",
+              "text": "كتلة زخرفية من 4 صفائح حديد مقسى — لوح تقني بشاشة وخطوط؛ يصنع ويفك على طاولة النجارة دون فاقد."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:tempered_iron_plate",
                 "alaindustrial:tempered_iron_plate",
@@ -2288,54 +2288,54 @@
         },
         {
           "id": "tin_ore",
-          "title": "Bijih Timah",
+          "title": "خام القصدير",
           "icon": "alaindustrial:tin_ore",
           "pages": [
             {
               "type": "text",
-              "title": "Bijih Timah",
-              "text": "Logam mod tahap awal — bijih di dunia serta rantai mentah → bubuk → batangan; bahan dasar untuk kawat dan sirkuit LV."
+              "title": "خام القصدير",
+              "text": "معدن مبكر في المود — خام في العالم وسلسلة الخام ← المسحوق ← السبيكة؛ والمادة الأساس لأسلاك ودوائر LV."
             }
           ]
         },
         {
           "id": "palladium_ore",
-          "title": "Bijih Paladium",
+          "title": "خام البالاديوم",
           "icon": "alaindustrial:palladium_ore",
           "pages": [
             {
               "type": "text",
-              "title": "Bijih Paladium",
-              "text": "Satu-satunya bijih Nether di mod ini — tersembunyi di netherrack, basal, dan batu hitam, butuh beliung berlian, dan diolah jadi bubuk, batangan, dan pelat."
+              "title": "خام البالاديوم",
+              "text": "خام المود الوحيد في النذر — مخبأ في صخر النذر والبازلت والحجر الأسود، ويحتاج إلى معول ألماس، ويعالج إلى مسحوق وسبيكة وصفيحة."
             }
           ]
         },
         {
           "id": "steam",
-          "title": "Uap",
+          "title": "بخار",
           "icon": "alaindustrial:steam_nozzle",
           "pages": [
             {
               "type": "text",
-              "title": "Uap",
-              "text": "Fluida kerja ruang reaktor. Satu-satunya fluida mod ini yang sama sekali tidak berwujud di dunia: tidak ada genangan, tidak ada blok, tidak ada ember — uap hanya ada di dalam tangki dan pipa."
+              "title": "بخار",
+              "text": "السائل العامل في غرفة المفاعل. وهو سائل المود الوحيد الذي لا صورة له في العالم إطلاقا: لا بركة ولا كتلة ولا دلو — فالبخار لا يوجد إلا داخل الخزانات والأنابيب."
             }
           ]
         },
         {
           "id": "silver_plate_block",
-          "title": "Pelapis Perak",
+          "title": "طلاء فضي",
           "icon": "alaindustrial:silver_plate_block",
           "pages": [
             {
               "type": "text",
-              "title": "Pelapis Perak",
-              "text": "Blok dekoratif dari 4 pelat perak — ubin logam berbaut 2×2; dibuat dan dibongkar di meja kerja tanpa kehilangan."
+              "title": "طلاء فضي",
+              "text": "كتلة زخرفية من 4 صفائح فضة — بلاطة معدنية 2x2 مثبتة بالبراغي؛ تصنع وتفك على طاولة النجارة دون فاقد."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:silver_plate",
                 "alaindustrial:silver_plate",
@@ -2354,78 +2354,78 @@
         },
         {
           "id": "silver_ore",
-          "title": "Bijih Perak",
+          "title": "خام الفضة",
           "icon": "alaindustrial:silver_ore",
           "pages": [
             {
               "type": "text",
-              "title": "Bijih Perak",
-              "text": "Logam bijih mod yang langka — blok bijih serta rantai mentah → bubuk → batangan; bahan untuk sirkuit dan komponen tingkat menengah."
+              "title": "خام الفضة",
+              "text": "معدن خام نادر في المود — كتلة خام وسلسلة الخام ← المسحوق ← السبيكة؛ ومادة الدوائر والمكونات المتوسطة."
             }
           ]
         },
         {
           "id": "sulfur_ore",
-          "title": "Bijih Belerang",
+          "title": "خام الكبريت",
           "icon": "alaindustrial:sulfur_ore",
           "pages": [
             {
               "type": "text",
-              "title": "Bijih Belerang",
-              "text": "Belerang alami — bahan nonlogam yang dapat ditambang dan diproses menjadi debu untuk vulkanisasi karet."
+              "title": "خام الكبريت",
+              "text": "كبريت طبيعي — لافلز يعدن ويعالج إلى مسحوق لفلكنة المطاط."
             }
           ]
         },
         {
           "id": "uranium_ore",
-          "title": "Bijih Uranium",
+          "title": "خام اليورانيوم",
           "icon": "alaindustrial:uranium_ore",
           "pages": [
             {
               "type": "text",
-              "title": "Bijih Uranium",
-              "text": "Bijih paling langka dalam mod — ditambang dengan beliung besi dan diproses menjadi debu serta ingot; sudah digunakan pada obor, teleporter, dan inkubator, lalu kelak pada mesin nuklir."
+              "title": "خام اليورانيوم",
+              "text": "أندر خامات المود — يعدن بمعول حديد، ويعالج إلى مسحوق وسبيكة؛ ويدخل بالفعل في الشعلة والناقل والحاضنة، ولاحقا في الآلات النووية."
             }
           ]
         },
         {
           "id": "shielding_alloy_ingot",
-          "title": "Batangan Paduan Perisai",
+          "title": "سبيكة تدريع",
           "icon": "alaindustrial:shielding_alloy_ingot",
           "pages": [
             {
               "type": "text",
-              "title": "Batangan Paduan Perisai",
-              "text": "Paduan paladium dan besi temper — satu-satunya bahan untuk membangun ruang reaktor: batangannya, pelat perisai, dan pelat perisai diperkuat yang juga meminta uranium terkuras."
+              "title": "سبيكة تدريع",
+              "text": "سبيكة من البالاديوم والحديد المقسى — المادة الوحيدة التي تبنى منها غرفة المفاعل: السبيكة، وصفيحة التدريع، والصفيحة المقواة التي تتطلب أيضا يورانيوما منضبا."
             }
           ]
         },
         {
           "id": "electrum_ingot",
-          "title": "Batangan Elektrum",
+          "title": "سبيكة إلكتروم",
           "icon": "alaindustrial:electrum_ingot",
           "pages": [
             {
               "type": "text",
-              "title": "Batangan Elektrum",
-              "text": "Paduan termahal di mod ini dari sisi bahan — satu batangan emas dan satu batangan perak menghasilkan satu batangan elektrum saja di tungku paduan."
+              "title": "سبيكة إلكتروم",
+              "text": "أغلى سبائك المود من حيث المواد — سبيكة ذهب واحدة وسبيكة فضة واحدة تعطيان سبيكة إلكتروم واحدة في فرن السبائك."
             }
           ]
         },
         {
           "id": "trellis",
-          "title": "Rambatan",
+          "title": "تعريشة",
           "icon": "alaindustrial:trellis",
           "pages": [
             {
               "type": "text",
-              "title": "Rambatan",
-              "text": "Penopang setinggi dua blok untuk tanaman merambat — saat ini kapas tumbuh di atasnya. Dipasang di tanah garapan yang lembap dan ditanami dengan klik kanan. Tanaman berakar perlahan sekali saja, lalu berbuah dalam siklus tanpa akhir: memanennya tidak pernah merusaknya."
+              "title": "تعريشة",
+              "text": "دعامة بارتفاع كتلتين للنباتات المتسلقة — وينمو عليها القطن اليوم. توضع على أرض زراعية رطبة، وتبذر بالنقر بالزر الأيمن. يتجذر النبات ببطء مرة واحدة، ثم يثمر في دورة لا تنتهي: فالحصاد لا يتلفه أبدا."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:stick",
                 "minecraft:string",
@@ -2444,25 +2444,25 @@
         },
         {
           "id": "incubator",
-          "title": "Inkubator",
+          "title": "حاضنة",
           "icon": "alaindustrial:incubator",
           "pages": [
             {
               "type": "text",
-              "title": "Inkubator",
-              "text": "Multiblok 1×2 — basis mekanis ditambah kubah kaca. Memutasi benda dengan iradiasi uranium dan EU: menggandakannya, mengubahnya, atau menciptakan yang baru. Mode ditentukan oleh cip, hasilnya bersifat peluang dengan empat tingkat kelangkaan."
+              "title": "حاضنة",
+              "text": "بناء متعدد الكتل بمقاس 1×2 — قاعدة ميكانيكية فوقها قبة زجاجية. تطفر العناصر بتشعيع اليورانيوم وبـ EU: فتضاعفها أو تحولها أو تكون عناصر جديدة. ويضبط الوضع برقاقة، والنتيجة احتمالية بأربع درجات ندرة."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Bufer: 8000 EU"
+                "الاحتياطي: 8000 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:glass",
                 "minecraft:glass",
@@ -2481,25 +2481,25 @@
         },
         {
           "id": "garden_drone_station",
-          "title": "Stasiun Drone Kebun",
+          "title": "محطة درون الحديقة",
           "icon": "alaindustrial:garden_drone_station",
           "pages": [
             {
               "type": "text",
-              "title": "Stasiun Drone Kebun",
-              "text": "Stasiun LV dengan bufer EU tempat drone animasi lepas landas dan berpatroli di lahan pertanian dalam radius 4 blok — mencangkul tanah kosong, menanam benih, memupuk tanaman yang belum matang, dan mengangkut panen yang sudah masak kembali ke stasiun."
+              "title": "محطة درون الحديقة",
+              "text": "محطة من مستوى LV باحتياطي EU ينطلق منها درون ويجوب الأرض الزراعية في نصف قطر 4 كتل — يحرث التراب الخالي، ويزرع البذور، ويسمد المحاصيل غير الناضجة، ويحمل الحصاد الناضج عائدا إلى المحطة."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Bufer: 4000 EU"
+                "الاحتياطي: 4000 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:copper_ingot",
                 "minecraft:iron_ingot",
@@ -2518,25 +2518,25 @@
         },
         {
           "id": "teleporter",
-          "title": "Teleporter",
+          "title": "ناقل",
           "icon": "alaindustrial:teleporter",
           "pages": [
             {
               "type": "text",
-              "title": "Teleporter",
-              "text": "Stasiun jangkar HV dan remote genggam — diikat lewat shift+klik kanan, meneleportasi pemain ke stasiun dengan biaya EU besar disertai pemanasan, pendaratan aman, dan perlindungan privasi."
+              "title": "ناقل",
+              "text": "محطة ارتكاز من مستوى HV مع جهاز تحكم محمول — يرتبطان بالنقر بالزر الأيمن مع Shift، فينقلان اللاعب إلى المحطة مقابل تكلفة EU كبيرة، مع فترة تحضير وهبوط آمن وحماية للخصوصية."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Bufer: 500 000 EU"
+                "الاحتياطي: 500 000 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:electronic_circuit",
                 "minecraft:ender_eye",
@@ -2557,30 +2557,30 @@
     },
     {
       "id": "other",
-      "title": "Lainnya",
+      "title": "أخرى",
       "icon": "alaindustrial:iron_chest",
       "entries": [
         {
           "id": "iron_chest",
-          "title": "Peti Besi",
+          "title": "صندوق حديدي",
           "icon": "alaindustrial:iron_chest",
           "pages": [
             {
               "type": "text",
-              "title": "Peti Besi",
-              "text": "Peti 36 slot — satu baris lebih banyak dari vanila, dengan model 3D, tutup beranimasi, dan suaranya sendiri. Tidak butuh energi."
+              "title": "صندوق حديدي",
+              "text": "صندوق بـ 36 خانة — صف أكثر من صندوق اللعبة الأصلية، بمجسم ثلاثي الأبعاد وغطاء متحرك وصوت خاص به. ولا يحتاج إلى طاقة."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Kapasitas: 36 slot"
+                "السعة: 36 خانة"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:iron_ingot",
                 "minecraft:iron_ingot",
@@ -2599,25 +2599,25 @@
         },
         {
           "id": "silver_chest",
-          "title": "Peti Perak",
+          "title": "صندوق فضي",
           "icon": "alaindustrial:silver_chest",
           "pages": [
             {
               "type": "text",
-              "title": "Peti Perak",
-              "text": "Peti 45 slot — tingkat di atas besi (satu baris lebih banyak), dengan model 3D dan tutup beranimasi. Tidak butuh energi."
+              "title": "صندوق فضي",
+              "text": "صندوق بـ 45 خانة — الدرجة التي تعلو الحديدي (صف إضافي)، بمجسم ثلاثي الأبعاد وغطاء متحرك. ولا يحتاج إلى طاقة."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Kapasitas: 45 slot"
+                "السعة: 45 خانة"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:silver_ingot",
                 "alaindustrial:silver_ingot",
@@ -2636,18 +2636,18 @@
         },
         {
           "id": "gold_chest",
-          "title": "Peti Emas",
+          "title": "صندوق ذهبي",
           "icon": "alaindustrial:gold_chest",
           "pages": [
             {
               "type": "text",
-              "title": "Peti Emas",
-              "text": "Peti 54 slot — tingkat di atas perak (satu baris lebih banyak), dengan model 3D dan tutup beranimasi. Tidak butuh energi."
+              "title": "صندوق ذهبي",
+              "text": "صندوق بـ 54 خانة — الدرجة التي تعلو الفضي (صف إضافي)، بمجسم ثلاثي الأبعاد وغطاء متحرك. ولا يحتاج إلى طاقة."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:gold_ingot",
                 "minecraft:gold_ingot",
@@ -2666,25 +2666,25 @@
         },
         {
           "id": "storage_module",
-          "title": "Modul Penyimpanan",
+          "title": "وحدة تخزين",
           "icon": "alaindustrial:storage_module",
           "pages": [
             {
               "type": "text",
-              "title": "Modul Penyimpanan",
-              "text": "Blok penyimpanan 27 slot: modul yang dipasang saling menempel bekerja sebagai satu gudang hingga 108 slot di balik satu jendela."
+              "title": "وحدة تخزين",
+              "text": "كتلة تخزين بـ 27 خانة: والوحدات الملاصقة لبعضها تعمل كمستودع واحد يصل إلى 108 خانات خلف نافذة واحدة."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Bufer: 0 EU"
+                "الاحتياطي: 0 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "",
                 "alaindustrial:iron_plate",
@@ -2703,38 +2703,38 @@
         },
         {
           "id": "mob_repeller_hv",
-          "title": "Pengusir Monster Besar",
+          "title": "طارد وحوش كبير",
           "icon": "alaindustrial:mob_repeller_hv",
           "pages": [
             {
               "type": "text",
-              "title": "Pengusir Monster Besar",
-              "text": "Tingkat tertinggi medan penjaga — radius 24 blok pada 64 EU/t; ditumbuhkan dari yang sedang dengan bejana jiwa."
+              "title": "طارد وحوش كبير",
+              "text": "أعلى درجات حقل الحراسة — نصف قطر 24 كتلة عند 64 EU/t؛ ينمى من المتوسط بوعاء أرواح."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 64 EU/t (medan)",
-                "Bufer: 32000 EU"
+                "الطاقة: 64 EU/t (الحقل)",
+                "الاحتياطي: 32000 EU"
               ]
             }
           ]
         },
         {
           "id": "industrial_workbench",
-          "title": "Meja Kerja Industri",
+          "title": "طاولة عمل صناعية",
           "icon": "alaindustrial:industrial_workbench",
           "pages": [
             {
               "type": "text",
-              "title": "Meja Kerja Industri",
-              "text": "Blok tempat kerja penduduk Industrialis — membeli sumber daya mod dengan bayaran zamrud. Letakkan di dekat penduduk yang belum bekerja, dan ia akan mengambil profesi itu."
+              "title": "طاولة عمل صناعية",
+              "text": "كتلة موقع عمل قروي «الصناعي» — يشتري موارد المود مقابل الزمرد. ضعها قرب قروي بلا مهنة فيتخذ المهنة."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:tin_ingot",
                 "alaindustrial:tin_ingot",
@@ -2753,18 +2753,18 @@
         },
         {
           "id": "guide_book",
-          "title": "Buku Panduan",
+          "title": "كتاب دليل",
           "icon": "alaindustrial:guide_book",
           "pages": [
             {
               "type": "text",
-              "title": "Buku Panduan",
-              "text": "Buku panduan dalam gim yang membahas seluruh mekanika mod — diberikan otomatis saat pemain pertama kali masuk dan dibuka dengan klik kanan; tab, halaman, tautan. Tanpa energi."
+              "title": "كتاب دليل",
+              "text": "كتاب تعليمي داخل اللعبة يغطي كل آليات المود — يعطى تلقائيا عند دخول اللاعب أول مرة، ويفتح بالنقر بالزر الأيمن؛ فيه تبويبات وصفحات وروابط. ولا يحتاج إلى طاقة."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Tanpa Pola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع غير مرتب",
               "grid": [
                 "minecraft:book",
                 "alaindustrial:wooden_gear",
@@ -2783,45 +2783,45 @@
         },
         {
           "id": "player_profile",
-          "title": "Profil Pemain",
+          "title": "ملف اللاعب",
           "icon": "minecraft:player_head",
           "pages": [
             {
               "type": "text",
-              "title": "Profil Pemain",
-              "text": "Layar profil berisi statistik karier di mod ini dan progres keahlian (40 level, 8 pangkat) yang naik dari kerja mesin dan, jauh lebih lambat, dari hasil generator."
+              "title": "ملف اللاعب",
+              "text": "شاشة ملف فيها إحصاءات مسيرتك في المود وتقدم إتقان (40 مستوى، 8 رتب) يرتفع بعمل الآلات، وببطء أشد بكثير من إنتاج المولدات."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 1 000 EU kerja mesin = 1 poin keahlian"
+                "الطاقة: 1 000 EU من عمل الآلات = نقطة إتقان واحدة"
               ]
             }
           ]
         },
         {
           "id": "mob_repeller",
-          "title": "Pengusir Monster Kecil",
+          "title": "طارد وحوش صغير",
           "icon": "alaindustrial:mob_repeller",
           "pages": [
             {
               "type": "text",
-              "title": "Pengusir Monster Kecil",
-              "text": "Medan penjaga bertenaga EU — selama dialiri listrik, monster kabur dari radius 8 blok dan tidak bisa mendekat. Tumbuh ke tingkat sedang dan besar lewat bejana jiwa."
+              "title": "طارد وحوش صغير",
+              "text": "حقل حراسة يعمل بـ EU — ما دام مغذى بالطاقة تهرب الوحوش العدوانية من نصف قطر 8 كتل ولا تستطيع الاقتراب. وينمى إلى الدرجتين المتوسطة والكبيرة بوعاء الأرواح."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 8 EU/t (medan)",
-                "Bufer: 2000 EU"
+                "الطاقة: 8 EU/t (الحقل)",
+                "الاحتياطي: 2000 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:silver_plate",
                 "minecraft:soul_lantern",
@@ -2840,18 +2840,18 @@
         },
         {
           "id": "enriched_uranium_torch",
-          "title": "Obor Uranium Diperkaya",
+          "title": "شعلة يورانيوم مخصب",
           "icon": "alaindustrial:enriched_uranium_torch",
           "pages": [
             {
               "type": "text",
-              "title": "Obor Uranium Diperkaya",
-              "text": "Obor dekoratif dengan api hijau dan tingkat cahaya 14 — bahkan menyala di dalam air. Tidak butuh energi."
+              "title": "شعلة يورانيوم مخصب",
+              "text": "شعلة زخرفية بلهب أخضر ومستوى إضاءة 14 — وتشتعل حتى تحت الماء. ولا تحتاج إلى طاقة."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:uranium_dust",
                 "",
@@ -2878,7 +2878,7 @@
                     "",
                     ""
                   ],
-                  "recipe_type": "Pembuatan Berpola",
+                  "recipe_type": "تصنيع مرتب",
                   "result_id": "alaindustrial:enriched_uranium_torch",
                   "result_count": 4
                 },
@@ -2894,7 +2894,7 @@
                     "",
                     ""
                   ],
-                  "recipe_type": "Pembuatan Tanpa Pola",
+                  "recipe_type": "تصنيع غير مرتب",
                   "result_id": "alaindustrial:enriched_uranium_torch",
                   "result_count": 1
                 }
@@ -2904,18 +2904,18 @@
         },
         {
           "id": "stock_display_frame",
-          "title": "Bingkai Indikator Stok",
+          "title": "إطار عرض المخزون",
           "icon": "alaindustrial:stock_display_frame",
           "pages": [
             {
               "type": "text",
-              "title": "Bingkai Indikator Stok",
-              "text": "Bingkai yang kamu gantung pada peti — menampilkan jumlah item di dalamnya, langsung di bingkai. Tidak butuh energi; angka hanya terlihat jika item filter dipasang di bingkai."
+              "title": "إطار عرض المخزون",
+              "text": "إطار تعلقه على صندوق — يعرض عدد العناصر في داخله على الإطار نفسه. ولا يحتاج إلى طاقة؛ والرقم لا يظهر إلا بوضع عنصر مرشح في الإطار."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:gold_dust",
                 "alaindustrial:wooden_gear",
@@ -2934,45 +2934,45 @@
         },
         {
           "id": "mob_repeller_mv",
-          "title": "Pengusir Monster Sedang",
+          "title": "طارد وحوش متوسط",
           "icon": "alaindustrial:mob_repeller_mv",
           "pages": [
             {
               "type": "text",
-              "title": "Pengusir Monster Sedang",
-              "text": "Tingkat kedua medan penjaga — radius 16 blok pada 32 EU/t; ditumbuhkan dari yang kecil dengan bejana jiwa."
+              "title": "طارد وحوش متوسط",
+              "text": "الدرجة الثانية من حقل الحراسة — نصف قطر 16 كتلة عند 32 EU/t؛ ينمى من الصغير بوعاء أرواح."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 32 EU/t (medan)",
-                "Bufer: 8000 EU"
+                "الطاقة: 32 EU/t (الحقل)",
+                "الاحتياطي: 8000 EU"
               ]
             }
           ]
         },
         {
           "id": "electrum_chest",
-          "title": "Peti Elektrum",
+          "title": "صندوق إلكتروم",
           "icon": "alaindustrial:electrum_chest",
           "pages": [
             {
               "type": "text",
-              "title": "Peti Elektrum",
-              "text": "Peti 81 slot — satu tingkat di atas emas. Sembilan baris di balik jendela enam baris, lengkap dengan bilah gulir. Tidak butuh energi."
+              "title": "صندوق إلكتروم",
+              "text": "صندوق بـ 81 خانة — الدرجة التي تعلو الذهبي. تسعة صفوف خلف نافذة من ستة صفوف مع شريط تمرير. ولا يحتاج إلى طاقة."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Kapasitas: 81 slot"
+                "السعة: 81 خانة"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:electrum_ingot",
                 "alaindustrial:electrum_ingot",
@@ -2993,23 +2993,23 @@
     },
     {
       "id": "items",
-      "title": "Barang",
+      "title": "العناصر",
       "icon": "alaindustrial:overclocker_chip_i",
       "entries": [
         {
           "id": "overclocker_chip_i",
-          "title": "Chip Percepatan I",
+          "title": "رقاقة تسريع I",
           "icon": "alaindustrial:overclocker_chip_i",
           "pages": [
             {
               "type": "text",
-              "title": "Chip Percepatan I",
-              "text": "Peningkatan tiga tingkat: tiap tingkat memperpendek operasi dan melipatduakan tarikan energinya. Dibuat dari gumpalan energi."
+              "title": "رقاقة تسريع I",
+              "text": "ترقية من ثلاث درجات: كل درجة تقصر زمن العملية وتضاعف سحب الطاقة. وتصنع من خثات الطاقة."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "",
                 "alaindustrial:energy_clot_i",
@@ -3028,18 +3028,18 @@
         },
         {
           "id": "stats_chip",
-          "title": "Chip statistik",
+          "title": "رقاقة إحصاءات",
           "icon": "alaindustrial:stats_chip",
           "pages": [
             {
               "type": "text",
-              "title": "Chip statistik",
-              "text": "Peningkatan yang membuat mesin mencatat kerjanya sendiri — waktu, energi, dan barang yang diproses."
+              "title": "رقاقة إحصاءات",
+              "text": "ترقية تجعل الآلة تحتفظ بسجل أعمالها — الزمن والطاقة والعناصر المعالجة."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "",
                 "alaindustrial:copper_coil",
@@ -3058,18 +3058,18 @@
         },
         {
           "id": "mute_chip",
-          "title": "Chip Peredam",
+          "title": "رقاقة كتم",
           "icon": "alaindustrial:mute_chip",
           "pages": [
             {
               "type": "text",
-              "title": "Chip Peredam",
-              "text": "Peningkatan yang sepenuhnya membisukan mesin — dimasukkan ke slot peningkatan."
+              "title": "رقاقة كتم",
+              "text": "ترقية تكتم صوت الآلة تماما — توضع في خانة الترقيات."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:white_wool",
                 "minecraft:white_wool",
@@ -3088,25 +3088,25 @@
         },
         {
           "id": "battery",
-          "title": "Baterai",
+          "title": "بطارية",
           "icon": "alaindustrial:battery",
           "pages": [
             {
               "type": "text",
-              "title": "Baterai",
-              "text": "Pembawa EU pertama — baterai isi ulang 2 000 EU yang menumpuk menurut tingkat dayanya dan mengembalikan energinya ke jaringan atau ke benda lain."
+              "title": "بطارية",
+              "text": "أول حامل لـ EU — بطارية قابلة للشحن سعتها 2 000 EU، تتكدس بحسب مستوى الشحن وتعيد طاقتها إلى الشبكة أو إلى عنصر آخر."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 2 000 EU"
+                "الطاقة: 2 000 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "",
                 "alaindustrial:copper_cable",
@@ -3125,18 +3125,18 @@
         },
         {
           "id": "tempered_iron",
-          "title": "Besi Temper",
+          "title": "حديد مقسى",
           "icon": "alaindustrial:tempered_iron",
           "pages": [
             {
               "type": "text",
-              "title": "Besi Temper",
-              "text": "Batangan yang dilebur dari batangan besi vanila — bahan dasar untuk perkakas, zirah, dan blok mod ini."
+              "title": "حديد مقسى",
+              "text": "سبيكة تصهر من سبيكة الحديد الأصلية — المادة الأساس لأدوات المود ودروعه وكتلته."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Tanpa Pola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع غير مرتب",
               "grid": [
                 "alaindustrial:tempered_iron_block",
                 "",
@@ -3155,18 +3155,18 @@
         },
         {
           "id": "water_mill_wheel",
-          "title": "Roda air",
+          "title": "عجلة ماء",
           "icon": "alaindustrial:water_mill_wheel",
           "pages": [
             {
               "type": "text",
-              "title": "Roda air",
-              "text": "Roda kincir air — dipasang di slot roda kincir air; tanpanya tidak ada produksi. Tiga tingkat: roda yang lebih baik menghasilkan lebih banyak EU dan jauh lebih awet. Aus selama menghasilkan energi."
+              "title": "عجلة ماء",
+              "text": "عجلة طاحونة الماء — توضع في خانة العجلة في الطاحونة؛ ودونها لا يوجد توليد. وثلاث درجات لها: العجلة الأفضل تعطي EU أكثر وتدوم أطول بكثير. وهي تهترئ أثناء التوليد."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:oak_planks",
                 "minecraft:copper_ingot",
@@ -3185,18 +3185,18 @@
         },
         {
           "id": "lapotron_crystal",
-          "title": "Kristal Lapotron",
+          "title": "بلورة لابوترون",
           "icon": "alaindustrial:lapotron_crystal",
           "pages": [
             {
               "type": "text",
-              "title": "Kristal Lapotron",
-              "text": "Bahan kerajinan yang tidak pernah dibuat langsung: bakalannya menyerap 500.000 EU di slot pengisian lalu berubah menjadi kristal jadi yang tidak menyimpan muatan sendiri."
+              "title": "بلورة لابوترون",
+              "text": "مادة صناعة لا تصنع مباشرة أبدا: يمتص قالبها 500 000 EU في خانة شحن فيتحول إلى البلورة الجاهزة، وهي لا تحمل شحنة خاصة بها."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:advanced_circuit",
                 "alaindustrial:resonance_coil",
@@ -3215,18 +3215,18 @@
         },
         {
           "id": "machine_casing",
-          "title": "Rangka Mesin",
+          "title": "هيكل آلة",
           "icon": "alaindustrial:machine_casing",
           "pages": [
             {
               "type": "text",
-              "title": "Rangka Mesin",
-              "text": "Blok dasar kubus penuh untuk membangun mesin — dari 8 pelat besi. Mesin LV (penggiling, ekstraktor, kompresor) dibuat di atasnya."
+              "title": "هيكل آلة",
+              "text": "كتلة أساس كاملة المكعب لبناء الآلات — من 8 صفائح حديد. وعليها تصنع آلات LV (الساحق والمستخلص والضاغط)."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:iron_plate",
                 "alaindustrial:iron_plate",
@@ -3245,18 +3245,18 @@
         },
         {
           "id": "copper_coil",
-          "title": "Kumparan Tembaga",
+          "title": "ملف نحاس",
           "icon": "alaindustrial:copper_coil",
           "pages": [
             {
               "type": "text",
-              "title": "Kumparan Tembaga",
-              "text": "Komponen pembuatan — kabel tembaga yang dililit pada inti timah; syarat untuk Bor Listrik."
+              "title": "ملف نحاس",
+              "text": "مكون صناعة — كابل نحاس ملفوف على لب من القصدير؛ وهو شرط صنع المثقاب الكهربائي."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:copper_cable",
                 "alaindustrial:tin_ingot",
@@ -3275,18 +3275,18 @@
         },
         {
           "id": "iron_gear",
-          "title": "Roda Gigi Besi",
+          "title": "ترس حديدي",
           "icon": "alaindustrial:iron_gear",
           "pages": [
             {
               "type": "text",
-              "title": "Roda Gigi Besi",
-              "text": "Keluarga roda gigi — batu, besi, emas, dan perak; komponen pembuatan untuk mesin yang akan datang."
+              "title": "ترس حديدي",
+              "text": "عائلة التروس — حجري وحديدي وذهبي وفضي؛ مكونات صناعة لآلات لم تأت بعد."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "",
                 "minecraft:iron_ingot",
@@ -3305,18 +3305,18 @@
         },
         {
           "id": "mutation_chip_duplicate",
-          "title": "Cip Duplikasi",
+          "title": "رقاقة مضاعفة",
           "icon": "alaindustrial:mutation_chip_duplicate",
           "pages": [
             {
               "type": "text",
-              "title": "Cip Duplikasi",
-              "text": "Tiga chip menentukan mode inkubator — menggandakan, mengubah, atau menciptakan. Chip tidak pernah habis, tapi tanpa salah satunya mesin tidak mau jalan."
+              "title": "رقاقة مضاعفة",
+              "text": "ثلاث رقاقات تضبط وضع الحاضنة — مضاعفة أو تحويل أو تكوين. ولا تستهلك أبدا، لكن الآلة لا تعمل من دون واحدة منها."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:amethyst_shard",
                 "alaindustrial:empty_chip",
@@ -3335,18 +3335,18 @@
         },
         {
           "id": "advanced_circuit",
-          "title": "Sirkuit Canggih",
+          "title": "دائرة متقدمة",
           "icon": "alaindustrial:advanced_circuit",
           "pages": [
             {
               "type": "text",
-              "title": "Sirkuit Canggih",
-              "text": "Tingkat MV dari sirkuit — papan dasar yang dikabeli ulang dengan emas dan disegel dalam karet."
+              "title": "دائرة متقدمة",
+              "text": "درجة MV من الدائرة — اللوحة الأساسية معاد توصيلها بالذهب ومختومة بالمطاط."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:rubber",
                 "alaindustrial:gold_plate",
@@ -3365,18 +3365,18 @@
         },
         {
           "id": "advanced_machine_casing",
-          "title": "Rangka Mesin Canggih",
+          "title": "هيكل آلة متقدم",
           "icon": "alaindustrial:advanced_machine_casing",
           "pages": [
             {
               "type": "text",
-              "title": "Rangka Mesin Canggih",
-              "text": "Blok dasar kubus penuh untuk mesin MV — selubung polos dengan dua sirkuit canggih, dilapisi 6 pelat besi temper."
+              "title": "هيكل آلة متقدم",
+              "text": "كتلة أساس كاملة المكعب لآلات MV — هيكل عادي مع دائرتين متقدمتين، مكسو بـ 6 صفائح حديد مقسى."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:tempered_iron_plate",
                 "alaindustrial:tempered_iron_plate",
@@ -3395,30 +3395,30 @@
         },
         {
           "id": "resonant_shard",
-          "title": "Pecahan Resonan",
+          "title": "شظية رنين",
           "icon": "alaindustrial:resonant_shard",
           "pages": [
             {
               "type": "text",
-              "title": "Pecahan Resonan",
-              "text": "Bahan yang hanya keluar dari inkubator: empat anak tangga pertama pada tangga evolusi, ditambah uranium terkuras dan terak teradiasi."
+              "title": "شظية رنين",
+              "text": "مواد لا تنتجها إلا الحاضنة: أول أربع درجات في سلالم التطور، ومعها اليورانيوم المنضب والخبث المشع."
             }
           ]
         },
         {
           "id": "empty_chip",
-          "title": "Chip Kosong",
+          "title": "رقاقة فارغة",
           "icon": "alaindustrial:empty_chip",
           "pages": [
             {
               "type": "text",
-              "title": "Chip Kosong",
-              "text": "Bahan dasar kosong untuk chip peningkatan mesin; tidak berefek dengan sendirinya."
+              "title": "رقاقة فارغة",
+              "text": "القاعدة الفارغة لرقاقات ترقية الآلات؛ ولا أثر لها بذاتها."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:glass",
                 "minecraft:glass",
@@ -3437,30 +3437,30 @@
         },
         {
           "id": "rubber",
-          "title": "Karet",
+          "title": "مطاط",
           "icon": "alaindustrial:rubber",
           "pages": [
             {
               "type": "text",
-              "title": "Karet",
-              "text": "Bahan dari minyak bumi dan belerang — Polimerisator membuat karet mentah, lalu Vulkanisator yang dipanaskan mengubahnya menjadi karet."
+              "title": "مطاط",
+              "text": "مادة تصنع من النفط والكبريت — يصنع المبلمر المطاط الخام، ثم تحوله آلة فلكنة ساخنة إلى مطاط."
             }
           ]
         },
         {
           "id": "rtp_chip",
-          "title": "Chip lompatan acak",
+          "title": "رقاقة قفز عشوائي",
           "icon": "alaindustrial:rtp_chip",
           "pages": [
             {
               "type": "text",
-              "title": "Chip lompatan acak",
-              "text": "Kristal spasial, kumparan resonansi, dan chip lompatan acak — tiga langkah yang membuka lompatan acak teleporter."
+              "title": "رقاقة قفز عشوائي",
+              "text": "البلورة الفضائية وملف الرنين ورقاقة القفز العشوائي — ثلاث خطوات تفتح القفزة العشوائية للناقل."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "",
                 "minecraft:chorus_fruit",
@@ -3479,18 +3479,18 @@
         },
         {
           "id": "resonant_crystal",
-          "title": "Kristal Resonan",
+          "title": "بلورة رنانة",
           "icon": "alaindustrial:resonant_crystal",
           "pages": [
             {
               "type": "text",
-              "title": "Kristal Resonan",
-              "text": "Bahan kerajinan yang tidak pernah dibuat langsung: bakalannya menyerap 1.500.000 EU di slot pengisian lalu berubah menjadi kristal jadi yang tidak menyimpan muatan sendiri."
+              "title": "بلورة رنانة",
+              "text": "مادة صناعة لا تصنع مباشرة أبدا: يمتص قالبها 1 500 000 EU في خانة شحن فيتحول إلى البلورة الجاهزة، وهي لا تحمل شحنة خاصة بها."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:resonant_shard",
                 "alaindustrial:spatial_crystal",
@@ -3509,18 +3509,18 @@
         },
         {
           "id": "windmill_rotor",
-          "title": "Rotor Kayu",
+          "title": "دوار خشبي",
           "icon": "alaindustrial:windmill_rotor",
           "pages": [
             {
               "type": "text",
-              "title": "Rotor Kayu",
-              "text": "Bilah turbin angin — dipasang di slot rotor kincir angin T1/T2 mana pun; tanpanya tidak ada produksi. Tiga tingkat: rotor yang lebih baik menghasilkan lebih banyak EU dan jauh lebih awet. Aus selama menghasilkan energi."
+              "title": "دوار خشبي",
+              "text": "ريش عنفة الرياح — توضع في خانة الدوار في أي عنفة من الفئة T1/T2؛ ودونها لا يوجد توليد. وثلاث درجات لها: الدوار الأفضل يعطي EU أكثر ويدوم أطول بكثير. وهو يهترئ أثناء التوليد."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:oak_planks",
                 "minecraft:iron_ingot",
@@ -3539,30 +3539,30 @@
         },
         {
           "id": "energy_clot_i",
-          "title": "Gumpalan Energi I",
+          "title": "خثة طاقة I",
           "icon": "alaindustrial:energy_clot_i",
           "pages": [
             {
               "type": "text",
-              "title": "Gumpalan Energi I",
-              "text": "Tiga tingkat gumpalan — kelebihan jaringan yang dibekukan oleh kondensor energi. Satu-satunya bahan pembuat chip percepatan."
+              "title": "خثة طاقة I",
+              "text": "ثلاث درجات من الخثات — فائض الشبكة يجمده مكثف الطاقة. وهي المكون الوحيد الذي تصنع منه رقاقات التسريع."
             }
           ]
         },
         {
           "id": "network_analyzer",
-          "title": "Penganalisis Jaringan",
+          "title": "محلل شبكة",
           "icon": "alaindustrial:network_analyzer",
           "pages": [
             {
               "type": "text",
-              "title": "Penganalisis Jaringan",
-              "text": "Alat diagnostik genggam — klik kanan pada kabel untuk melihat statistik jaringan listrik itu dan menyorotnya di dunia."
+              "title": "محلل شبكة",
+              "text": "أداة تشخيص محمولة — انقر بالزر الأيمن على كابل لعرض إحصاءات شبكة الطاقة تلك وإبرازها في العالم."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:tin_ingot",
                 "alaindustrial:tin_ingot",
@@ -3581,18 +3581,18 @@
         },
         {
           "id": "fluxweave_cloth",
-          "title": "Kain fluks",
+          "title": "قماش تدفق",
           "icon": "alaindustrial:fluxweave_cloth",
           "pages": [
             {
               "type": "text",
-              "title": "Kain fluks",
-              "text": "Bahan antara zirah EU: benang dilapisi di bak galvanik, empat benang jadi satu lembar kain fluks — dan kain itulah yang memperbaiki set yang sudah jadi."
+              "title": "قماش تدفق",
+              "text": "المواد الوسيطة لدرع EU: يطلى الخيط في حمام الجلفنة، وأربعة خيوط تعطي قطعة قماش واحدة — والقماش هو ما يصلح الطقم الجاهز."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:flux_thread",
                 "alaindustrial:flux_thread",
@@ -3611,30 +3611,30 @@
         },
         {
           "id": "iron_dust",
-          "title": "Bubuk Besi",
+          "title": "مسحوق حديد",
           "icon": "alaindustrial:iron_dust",
           "pages": [
             {
               "type": "text",
-              "title": "Bubuk Besi",
-              "text": "Bubuk dan produk antara terkait (pelat, billet) — hasil olahan bijih oleh Penggiling dan mesin lain."
+              "title": "مسحوق حديد",
+              "text": "المسحوق وما يتصل به من وسائط (صفيحة، سبيكة أولية) — وهو ما يحول الساحق وغيره من الآلات الخامات إليه."
             }
           ]
         },
         {
           "id": "alignment_chip_day",
-          "title": "Chip Evolusi Surya",
+          "title": "رقاقة تطور شمسي",
           "icon": "alaindustrial:alignment_chip_day",
           "pages": [
             {
               "type": "text",
-              "title": "Chip Evolusi Surya",
-              "text": "Sepasang chip evolusi — surya (siang) dan bulan (malam) — yang mengevolusikan panel surya dan kincir angin T1 dasar menjadi T2 melalui evolusi, membawa serta energi NBT yang telah terkumpul."
+              "title": "رقاقة تطور شمسي",
+              "text": "زوج من رقاقات التطور — شمسية (نهار) وقمرية (ليل) — تطوران الألواح الشمسية وعنفات الرياح الأساسية من الفئة T1 إلى الفئة T2، مع نقل الطاقة المتراكمة فيها."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:nickel_ingot",
                 "minecraft:glowstone",
@@ -3653,18 +3653,18 @@
         },
         {
           "id": "electronic_circuit",
-          "title": "Sirkuit Elektronik",
+          "title": "دائرة إلكترونية",
           "icon": "alaindustrial:electronic_circuit",
           "pages": [
             {
               "type": "text",
-              "title": "Sirkuit Elektronik",
-              "text": "Komponen pembuatan dasar — 'otak' dari hampir setiap mesin dan blok penyimpanan LV."
+              "title": "دائرة إلكترونية",
+              "text": "مكون الصناعة الأساسي — «عقل» كل آلة أو كتلة تخزين من مستوى LV تقريبا."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:silver_ingot",
                 "alaindustrial:nickel_ingot",
@@ -3683,18 +3683,18 @@
         },
         {
           "id": "energy_crystal",
-          "title": "Kristal Energi",
+          "title": "بلورة الطاقة",
           "icon": "alaindustrial:energy_crystal",
           "pages": [
             {
               "type": "text",
-              "title": "Kristal Energi",
-              "text": "Bahan kerajinan yang tidak pernah dibuat langsung: bakalannya menyerap 100.000 EU di slot pengisian lalu berubah menjadi kristal jadi yang tidak menyimpan muatan sendiri."
+              "title": "بلورة الطاقة",
+              "text": "مادة صناعة لا تصنع مباشرة أبدا: يمتص قالبها 100 000 EU في خانة شحن فيتحول إلى البلورة الجاهزة، وهي لا تحمل شحنة خاصة بها."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:diamond_dust",
                 "minecraft:redstone",
@@ -3713,18 +3713,18 @@
         },
         {
           "id": "wind_gauge",
-          "title": "Pengukur Angin",
+          "title": "مقياس الرياح",
           "icon": "alaindustrial:wind_gauge",
           "pages": [
             {
               "type": "text",
-              "title": "Pengukur Angin",
-              "text": "Mengukur kecepatan angin di tempat pemain berdiri, untuk memilih ketinggian kincir angin."
+              "title": "مقياس الرياح",
+              "text": "يقيس سرعة الرياح حيث يقف اللاعب، لاختيار ارتفاع عنفة الرياح."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:stick",
                 "minecraft:glass_pane",
@@ -3743,25 +3743,25 @@
         },
         {
           "id": "battery_pouch",
-          "title": "Kantong baterai",
+          "title": "كيس بطاريات",
           "icon": "alaindustrial:battery_pouch",
           "pages": [
             {
               "type": "text",
-              "title": "Kantong baterai",
-              "text": "Kantong barang yang dapat diisi daya — menampung 128 bobot, berjalan dengan baterai bawaan 2000 EU dan terkunci saat dayanya habis."
+              "title": "كيس بطاريات",
+              "text": "كيس عناصر قابل للشحن — يحمل 128 وحدة وزن، ويعمل ببطارية مدمجة سعتها 2000 EU، ويقفل إذا نفدت شحنته."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 2 000 EU"
+                "الطاقة: 2 000 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:leather",
                 "alaindustrial:tin_ingot",
@@ -3780,26 +3780,26 @@
         },
         {
           "id": "fluxweave_chestplate",
-          "title": "Zirah fluks",
+          "title": "صفيحة صدر تدفقية",
           "icon": "alaindustrial:fluxweave_chestplate",
           "pages": [
             {
               "type": "text",
-              "title": "Zirah fluks",
-              "text": "Set zirah EU lengkap pertama di mod ini — helm, zirah, celana, dan sepatu dari kain fluks; muatan menyalakan fitur bantu tanpa pernah mematikan perlindungan."
+              "title": "صفيحة صدر تدفقية",
+              "text": "أول طقم درع كامل يعمل بـ EU في المود — خوذة وصفيحة صدر وسروال وحذاء من نسيج التدفق؛ والشحنة تشغل مجموعة قدرات مساعدة دون أن تطفئ الحماية أبدا."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 15 000 EU",
-                "Penyangga: 15 000 EU"
+                "الطاقة: 15 000 EU",
+                "الاحتياطي: 15 000 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:fluxweave_cloth",
                 "",
@@ -3818,25 +3818,25 @@
         },
         {
           "id": "tempered_iron_chestplate",
-          "title": "Tempered Iron Chestplate",
+          "title": "صفيحة صدر حديد مقسى",
           "icon": "alaindustrial:tempered_iron_chestplate",
           "pages": [
             {
               "type": "text",
-              "title": "Tempered Iron Chestplate",
-              "text": "Set zirah besi temper lengkap — helm, zirah dada, celana, dan sepatu bot; lebih tangguh dari besi, diperbaiki dengan besi temper."
+              "title": "صفيحة صدر حديد مقسى",
+              "text": "طقم درع كامل من الحديد المقسى — خوذة وصفيحة صدر وسروال وحذاء؛ أمتن من الحديد، ويصلح بالحديد المقسى."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Bagian: 4 buah"
+                "العدد: 4 قطع"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:tempered_iron",
                 "",
@@ -3855,18 +3855,18 @@
         },
         {
           "id": "vacuum_capsule",
-          "title": "Kapsul Vakum",
+          "title": "كبسولة تفريغ",
           "icon": "alaindustrial:vacuum_capsule",
           "pages": [
             {
               "type": "text",
-              "title": "Kapsul Vakum",
-              "text": "Wadah fluida satu ember yang dapat ditumpuk — hingga 16 kapsul dari satu fluida per tumpukan, diisi dari dunia atau tangki mod ini."
+              "title": "كبسولة تفريغ",
+              "text": "حاوية سوائل بسعة دلو واحد قابلة للتكديس — حتى 16 كبسولة من سائل واحد في الكدسة، تملأ من العالم أو من خزانات المود."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:tin_ingot",
                 "minecraft:glass_pane",
@@ -3885,18 +3885,18 @@
         },
         {
           "id": "wrench",
-          "title": "Kunci Pas",
+          "title": "مفتاح ربط",
           "icon": "alaindustrial:wrench",
           "pages": [
             {
               "type": "text",
-              "title": "Kunci Pas",
-              "text": "Mengatur sisi Pipa item dan membongkar blok mod ini."
+              "title": "مفتاح ربط",
+              "text": "يضبط أوجه أنبوب العناصر ويفكك كتل المود."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "",
                 "minecraft:iron_ingot",
@@ -3915,25 +3915,25 @@
         },
         {
           "id": "jetpack",
-          "title": "Jetpack",
+          "title": "حقيبة نفاثة",
           "icon": "alaindustrial:jetpack",
           "pages": [
             {
               "type": "text",
-              "title": "Jetpack",
-              "text": "Perangkat terbang EU untuk slot dada — daya dorong selama tombol lompat ditahan, meluncur halus tanpa tenaga saat kehabisan daya."
+              "title": "حقيبة نفاثة",
+              "text": "جهاز طيران يعمل بـ EU يوضع في خانة الصدر — دفع ما دام زر القفز مضغوطا، وانزلاق هادئ بلا طاقة عند نفادها."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Bufer: 30 000 EU"
+                "الاحتياطي: 30 000 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:iron_ingot",
                 "alaindustrial:electronic_circuit",
@@ -3952,18 +3952,18 @@
         },
         {
           "id": "tempered_iron_pickaxe",
-          "title": "Beliung Besi Temper",
+          "title": "معول حديد مقسى",
           "icon": "alaindustrial:tempered_iron_pickaxe",
           "pages": [
             {
               "type": "text",
-              "title": "Beliung Besi Temper",
-              "text": "Beliung besi temper genggam — sedikit lebih baik dari besi vanila di setiap statistik, tetapi tidak bisa menambang blok setingkat berlian."
+              "title": "معول حديد مقسى",
+              "text": "معول يدوي من الحديد المقسى — أفضل قليلا من الحديد الأصلي في كل خاصية، لكنه لا يعدن كتل مستوى الألماس."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:tempered_iron",
                 "alaindustrial:tempered_iron",
@@ -3982,25 +3982,25 @@
         },
         {
           "id": "insulated_chestplate",
-          "title": "Zirah Isolasi",
+          "title": "درع صدر عازل",
           "icon": "alaindustrial:insulated_chestplate",
           "pages": [
             {
               "type": "text",
-              "title": "Zirah Isolasi",
-              "text": "Zirah kulit yang dicelup lendir — tudung, jaket, celana, dan sepatu bot yang meredam sengatan kabel telanjang dan menghabiskan daya tahan untuk itu."
+              "title": "درع صدر عازل",
+              "text": "درع جلدي مغموس في اللزج — قلنسوة وسترة وسروال وحذاء تمتص صعقة الكابل العاري وتستهلك متانتها في ذلك."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Bagian: 4 buah"
+                "العدد: 4 قطع"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Tanpa Pola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع غير مرتب",
               "grid": [
                 "minecraft:leather_chestplate",
                 "minecraft:slime_ball",
@@ -4019,25 +4019,25 @@
         },
         {
           "id": "tempered_iron_tools",
-          "title": "Perkakas Besi Temper",
+          "title": "أدوات حديد مقسى",
           "icon": "alaindustrial:tempered_iron_axe",
           "pages": [
             {
               "type": "text",
-              "title": "Perkakas Besi Temper",
-              "text": "Satu set lima perkakas tangan dari besi temper — beliung, kapak, cangkul, sekop, dan pedang; sedikit lebih baik dari besi vanila, tetapi tidak bisa menambang blok setingkat berlian."
+              "title": "أدوات حديد مقسى",
+              "text": "طقم من خمس أدوات يدوية من الحديد المقسى — معول وفأس ومعزقة ومجرفة وسيف؛ أفضل قليلا من الحديد الأصلي، لكنها لا تعدن كتل مستوى الألماس."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Bagian: 5 buah"
+                "العدد: 5 قطع"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:tempered_iron",
                 "alaindustrial:tempered_iron",
@@ -4064,7 +4064,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Pembuatan Berpola",
+                  "recipe_type": "تصنيع مرتب",
                   "result_id": "alaindustrial:tempered_iron_pickaxe",
                   "result_count": 1
                 },
@@ -4080,7 +4080,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Pembuatan Berpola",
+                  "recipe_type": "تصنيع مرتب",
                   "result_id": "alaindustrial:tempered_iron_axe",
                   "result_count": 1
                 },
@@ -4096,7 +4096,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Pembuatan Berpola",
+                  "recipe_type": "تصنيع مرتب",
                   "result_id": "alaindustrial:tempered_iron_hoe",
                   "result_count": 1
                 },
@@ -4112,7 +4112,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Pembuatan Berpola",
+                  "recipe_type": "تصنيع مرتب",
                   "result_id": "alaindustrial:tempered_iron_shovel",
                   "result_count": 1
                 },
@@ -4128,7 +4128,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Pembuatan Berpola",
+                  "recipe_type": "تصنيع مرتب",
                   "result_id": "alaindustrial:tempered_iron_sword",
                   "result_count": 1
                 }
@@ -4138,25 +4138,25 @@
         },
         {
           "id": "scythe",
-          "title": "Sabit Besar",
+          "title": "منجل",
           "icon": "alaindustrial:scythe_iron",
           "pages": [
             {
               "type": "text",
-              "title": "Sabit Besar",
-              "text": "Perkakas AOE yang membabat daun, rumput, bunga, dan dedaunan dekoratif lain dalam satu ayunan, dan dengan Shift ditahan — sabit AOE yang memanen tanaman yang sudah matang. Delapan tingkat bahan dari kayu hingga netherite. Saat memanen ada peluang mendapat benih tambahan, dan peluang itu meningkat seiring tingkat sabit."
+              "title": "منجل",
+              "text": "أداة ذات أثر واسع تزيل الأوراق والعشب والأزهار وسائر النباتات الزخرفية بضربة واحدة، ومع الضغط على Shift تصير منجل حصاد واسع الأثر يجني المحاصيل الناضجة. وللحصاد فرصة في إعطاء بذرة إضافية، وتزداد هذه الفرصة بارتفاع درجة المنجل. وله ثماني درجات من المواد، من الخشب إلى النذرايت."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Tingkat: 8 tingkat"
+                "الدرجات: 8 درجات"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:oak_planks",
                 "minecraft:oak_planks",
@@ -4183,7 +4183,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Pembuatan Berpola",
+                  "recipe_type": "تصنيع مرتب",
                   "result_id": "alaindustrial:scythe_wood",
                   "result_count": 1
                 },
@@ -4199,7 +4199,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Pembuatan Berpola",
+                  "recipe_type": "تصنيع مرتب",
                   "result_id": "alaindustrial:scythe_stone",
                   "result_count": 1
                 },
@@ -4215,7 +4215,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Pembuatan Berpola",
+                  "recipe_type": "تصنيع مرتب",
                   "result_id": "alaindustrial:scythe_copper",
                   "result_count": 1
                 },
@@ -4231,7 +4231,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Pembuatan Berpola",
+                  "recipe_type": "تصنيع مرتب",
                   "result_id": "alaindustrial:scythe_iron",
                   "result_count": 1
                 },
@@ -4247,7 +4247,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Pembuatan Berpola",
+                  "recipe_type": "تصنيع مرتب",
                   "result_id": "alaindustrial:scythe_gold",
                   "result_count": 1
                 },
@@ -4263,7 +4263,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Pembuatan Berpola",
+                  "recipe_type": "تصنيع مرتب",
                   "result_id": "alaindustrial:scythe_tempered_iron",
                   "result_count": 1
                 },
@@ -4279,7 +4279,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Pembuatan Berpola",
+                  "recipe_type": "تصنيع مرتب",
                   "result_id": "alaindustrial:scythe_diamond",
                   "result_count": 1
                 },
@@ -4295,7 +4295,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Pembuatan Berpola",
+                  "recipe_type": "تصنيع مرتب",
                   "result_id": "alaindustrial:scythe_netherite",
                   "result_count": 1
                 }
@@ -4305,18 +4305,18 @@
         },
         {
           "id": "forge_hammer",
-          "title": "Palu Tempa",
+          "title": "مطرقة حداد",
           "icon": "alaindustrial:forge_hammer",
           "pages": [
             {
               "type": "text",
-              "title": "Palu Tempa",
-              "text": "Alat tangan pra-mesin: letakkan palu dan satu batangan di kisi pembuatan untuk mendapatkan pelat logam. Palu tetap di kisi dan kehilangan 1 daya tahan per pelat."
+              "title": "مطرقة حداد",
+              "text": "أداة يدوية لما قبل الآلات: ضع المطرقة مع سبيكة في شبكة الصنع لتحصل على صفيحة معدنية. وتبقى المطرقة في الشبكة وتفقد نقطة متانة واحدة عن كل صفيحة."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:iron_ingot",
                 "minecraft:iron_ingot",
@@ -4335,18 +4335,18 @@
         },
         {
           "id": "teleporter_remote",
-          "title": "Remote teleporter",
+          "title": "جهاز تحكم بالناقل",
           "icon": "alaindustrial:teleporter_remote",
           "pages": [
             {
               "type": "text",
-              "title": "Remote teleporter",
-              "text": "Remote-suar genggam — terikat ke stasiun teleporter lewat shift+klik kanan dan memicu lompatan ke sana dengan EU yang dibayar oleh stasiun."
+              "title": "جهاز تحكم بالناقل",
+              "text": "جهاز تحكم محمول يعمل كمنارة — يرتبط بمحطة ناقل بالنقر بالزر الأيمن مع Shift، ويطلق قفزة إليها مقابل EU تدفعها المحطة."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "",
                 "minecraft:ender_pearl",
@@ -4365,18 +4365,18 @@
         },
         {
           "id": "soul_vessel",
-          "title": "Bejana Jiwa",
+          "title": "وعاء أرواح",
           "icon": "alaindustrial:soul_vessel",
           "pages": [
             {
               "type": "text",
-              "title": "Bejana Jiwa",
-              "text": "Wadah jiwa yang meningkatkan pengusir monster — hanya terisi oleh monster yang dibunuh pemain sendiri; bejana penuh dipakai habis untuk mengembangkan bloknya."
+              "title": "وعاء أرواح",
+              "text": "خزان أرواح يرقي طارد الوحوش — لا يملأ إلا بما يقتله اللاعب بنفسه من الوحوش العدوانية؛ ويستهلك الوعاء الممتلئ لتطوير الكتلة."
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:silver_plate",
                 "minecraft:glass",
@@ -4395,25 +4395,25 @@
         },
         {
           "id": "shielding_chestplate",
-          "title": "Zirah pelindung radiasi",
+          "title": "درع صدر واقٍ من الإشعاع",
           "icon": "alaindustrial:shielding_chestplate",
           "pages": [
             {
               "type": "text",
-              "title": "Zirah pelindung radiasi",
-              "text": "Setelan anti-radiasi — tudung, jaket, celana, dan sepatu bot dari kulit, karet, dan pewarna kuning; ia menekan dosisnya, menghabiskan daya tahan untuk itu, dan menutup pemakainya sepenuhnya."
+              "title": "درع صدر واقٍ من الإشعاع",
+              "text": "الطقم المضاد للإشعاع — قلنسوة وسترة وسروال وحذاء من الجلد والمطاط والصبغة الصفراء؛ يخفض الجرعة ويستهلك متانته في ذلك، ويعزل مرتديه عزلا تاما."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Bagian: 4 buah"
+                "العدد: 4 قطع"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:leather",
                 "minecraft:yellow_dye",
@@ -4432,25 +4432,25 @@
         },
         {
           "id": "electric_drill",
-          "title": "Bor Listrik",
+          "title": "مثقاب كهربائي",
           "icon": "alaindustrial:electric_drill",
           "pages": [
             {
               "type": "text",
-              "title": "Bor Listrik",
-              "text": "Beliung setingkat berlian yang dapat diisi ulang dan berjalan dengan EU — menambang seperti berlian selagi terisi daya, memakai EU per blok, tak pernah rusak."
+              "title": "مثقاب كهربائي",
+              "text": "معول من درجة الألماس قابل للشحن يعمل بـ EU — يعدن كالألماس ما دام مشحونا، ويستهلك EU عن كل كتلة، ولا ينكسر أبدا."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Bufer: 10 000 EU"
+                "الاحتياطي: 10 000 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:iron_ingot",
                 "minecraft:iron_ingot",
@@ -4469,25 +4469,25 @@
         },
         {
           "id": "electric_shovel",
-          "title": "Sekop Listrik",
+          "title": "مجرفة كهربائية",
           "icon": "alaindustrial:electric_shovel",
           "pages": [
             {
               "type": "text",
-              "title": "Sekop Listrik",
-              "text": "Sekop bertenaga EU yang bisa diisi ulang — menggali tanah, pasir, dan kerikil selama masih ada daya, memakai EU per blok, dan tidak pernah rusak."
+              "title": "مجرفة كهربائية",
+              "text": "مجرفة قابلة للشحن تعمل بـ EU — تحفر التراب والرمل والحصى ما دامت مشحونة، وتستهلك EU عن كل كتلة، ولا تنكسر أبدا."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Bufer: 10 000 EU"
+                "الاحتياطي: 10 000 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:iron_ingot",
                 "minecraft:iron_ingot",
@@ -4506,26 +4506,26 @@
         },
         {
           "id": "electromagnet",
-          "title": "Elektromagnet",
+          "title": "مغناطيس كهربائي",
           "icon": "alaindustrial:electromagnet",
           "pages": [
             {
               "type": "text",
-              "title": "Elektromagnet",
-              "text": "Barang yang dapat diisi ulang dengan EU di slot inventaris mana pun, yang menarik barang jatuh di sekitar ke arah pemain sambil menghabiskan EU per barang."
+              "title": "مغناطيس كهربائي",
+              "text": "عنصر قابل للشحن بـ EU يعمل من أي خانة في الحقيبة، يجذب العناصر المتساقطة القريبة نحو اللاعب مستهلكا EU عن كل عنصر."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Bufer: 5 000 EU",
-                "Radius: 5 blok"
+                "الاحتياطي: 5 000 EU",
+                "نصف القطر: 5 كتل"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:redstone",
                 "",
@@ -4544,25 +4544,25 @@
         },
         {
           "id": "electric_hoe",
-          "title": "Cangkul Listrik",
+          "title": "معزقة كهربائية",
           "icon": "alaindustrial:electric_hoe",
           "pages": [
             {
               "type": "text",
-              "title": "Cangkul Listrik",
-              "text": "Cangkul bertenaga EU yang bisa diisi ulang — mencangkul lahan pertanian dan memecah jerami, daun, dan lumut lebih cepat daripada cangkul berlian, memakai 50 EU per penggunaan, dan tidak pernah rusak."
+              "title": "معزقة كهربائية",
+              "text": "معزقة قابلة للشحن تعمل بـ EU — تحرث الأرض الزراعية وتكسر القش والأوراق والطحلب أسرع من المعزقة الألماسية، مستهلكة 50 EU في كل استعمال؛ ولا تنكسر أبدا."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Bufer: 10 000 EU"
+                "الاحتياطي: 10 000 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:iron_ingot",
                 "minecraft:iron_ingot",
@@ -4581,25 +4581,25 @@
         },
         {
           "id": "electric_chainsaw",
-          "title": "Gergaji Mesin Listrik",
+          "title": "منشار كهربائي",
           "icon": "alaindustrial:electric_chainsaw",
           "pages": [
             {
               "type": "text",
-              "title": "Gergaji Mesin Listrik",
-              "text": "Kapak isi ulang bertenaga EU — menebang kayu dan daun selama terisi, memakai EU per blok, dan tidak pernah rusak."
+              "title": "منشار كهربائي",
+              "text": "فأس قابل للشحن يعمل بـ EU — يقطع الخشب والأوراق ما دام مشحونا، ويستهلك EU عن كل كتلة، ولا ينكسر أبدا."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Bufer: 10 000 EU"
+                "الاحتياطي: 10 000 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:iron_ingot",
                 "minecraft:iron_ingot",
@@ -4618,25 +4618,25 @@
         },
         {
           "id": "electric_saber",
-          "title": "Pedang Listrik",
+          "title": "سيف كهربائي",
           "icon": "alaindustrial:electric_saber",
           "pages": [
             {
               "type": "text",
-              "title": "Pedang Listrik",
-              "text": "Senjata jarak dekat EU yang dapat diisi ulang — 12 damage dan satu blok jangkauan ekstra selama bilah menyala; 100 EU per pukulan, dan sengatannya memperlambat target. Shift + klik kanan mematikannya; tidak pernah rusak."
+              "title": "سيف كهربائي",
+              "text": "سلاح تلاحم قابل للشحن يعمل بـ EU — 12 نقطة ضرر وكتلة إضافية من المدى ما دام النصل مشتعلا؛ 100 EU لكل ضربة، والتفريغ يزعزع الهدف. والنقر بالزر الأيمن مع Shift يطفئه؛ وهو لا ينكسر أبدا."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Bufer: 10 000 EU"
+                "الاحتياطي: 10 000 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:iron_ingot",
                 "minecraft:iron_ingot",
@@ -4655,25 +4655,25 @@
         },
         {
           "id": "energy_pack",
-          "title": "Ransel Energi",
+          "title": "حزمة طاقة",
           "icon": "alaindustrial:energy_pack",
           "pages": [
             {
               "type": "text",
-              "title": "Ransel Energi",
-              "text": "Bufer EU yang dikenakan di slot dada — 20 000 EU yang menjaga barang elektrik di inventarismu tetap terisi."
+              "title": "حزمة طاقة",
+              "text": "احتياطي EU يلبس في خانة الصدر — 20 000 EU تبقي العناصر التي تعمل بالطاقة في حقيبتك مشحونة."
             },
             {
               "type": "stats",
-              "title": "Statistik",
+              "title": "المواصفات",
               "lines": [
-                "Energi: 20 000 EU"
+                "الطاقة: 20 000 EU"
               ]
             },
             {
               "type": "recipe",
-              "title": "Resep",
-              "recipe_type": "Pembuatan Berpola",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
               "grid": [
                 "minecraft:leather",
                 "alaindustrial:electronic_circuit",

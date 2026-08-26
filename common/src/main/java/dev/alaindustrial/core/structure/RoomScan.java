@@ -79,7 +79,7 @@ public final class RoomScan {
 	 * {@link Result} so the controller can name it and spawn particles there.
 	 */
 	public enum Status {
-		/** The room is a sealed box within the size limits, with a controller and at least one door. */
+		/** The room is a sealed box within the size limits, with a controller; a door is optional. */
 		FORMED,
 		/**
 		 * The block behind the controller's face is itself a shell block, so the controller is not
@@ -94,14 +94,6 @@ public final class RoomScan {
 		TOO_LARGE,
 		/** A perimeter cell is not a shell block — the hole is at the reported position. */
 		BREACH,
-		/**
-		 * No longer produced: a room without a door is legal since 2026-08-20 — see the scan.
-		 *
-		 * <p>Kept in the enum so a world saved while the old rule was in force still loads: the status
-		 * is persisted by ordinal, and deleting a constant would shift every one after it.
-		 */
-		@Deprecated
-		NO_DOOR,
 		/**
 		 * A door exists but no doorway does: no wall column carries door cells at both the floor level
 		 * and the level above it. A door lying in the floor or ceiling lands here too.

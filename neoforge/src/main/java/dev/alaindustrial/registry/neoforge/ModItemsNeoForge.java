@@ -31,7 +31,6 @@ import dev.alaindustrial.registry.ModContent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.world.item.equipment.ArmorType;
 import dev.alaindustrial.item.assembler.AssemblyBlueprintItem;
 import net.neoforged.neoforge.registries.DeferredItem;

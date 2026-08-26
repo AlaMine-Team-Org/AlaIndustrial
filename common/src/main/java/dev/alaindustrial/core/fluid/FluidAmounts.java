@@ -20,9 +20,6 @@ public final class FluidAmounts {
 	/** 1 bucket, in the internal unit (millibuckets). */
 	public static final long BUCKET = 1000L;
 
-	/** 1 millibucket — the internal unit itself, named for readability at call sites. */
-	public static final long MILLIBUCKET = 1L;
-
 	/** Droplets per millibucket on Fabric (81000 droplets/bucket ÷ 1000 mB/bucket), exact with no remainder. */
 	public static final long FABRIC_DROPLETS_PER_MB = 81L;
 

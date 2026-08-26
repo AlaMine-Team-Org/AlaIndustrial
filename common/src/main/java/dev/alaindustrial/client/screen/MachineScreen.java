@@ -82,11 +82,6 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 		this.statsPanel = new StatsPanelController(this.menu, this.leftPos, this.topPos, this.width, this.height);
 	}
 
-	/** The controller (null before {@link #init()}). Used by subclasses only in rare override cases. */
-	protected UpgradePanelController panelController() {
-		return panel;
-	}
-
 	// --- Rendering: subclass frame in the background, upgrade panel as a top overlay ---
 
 	@Override

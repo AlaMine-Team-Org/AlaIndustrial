@@ -120,6 +120,27 @@ test {
     maxHeapSize = '1g'
 }
 
+// MOD-506 — same mechanism as the Fabric lane, see fabric/build.gradle: the game-test world is
+// disposable, but nothing ever deleted it, so every run piled another world on top of the last one.
+// Wiped BEFORE the run (`dependsOn`, not `finalizedBy`) for the same reason: the world of a run that
+// just FAILED is the post-mortem and is worth keeping until the next run starts.
+//
+// The path is spelled out rather than derived from the run's `gameDirectory`: `runs/gameTests` above
+// is the game dir, and the `gameTestServer` run type puts its world one level deeper, under
+// `gametestserver/`.
+def cleanNeoForgeGameTestWorld = tasks.register('cleanNeoForgeGameTestWorld', Delete) {
+    group = 'build'
+    description = 'Delete the leftover NeoForge game-test world ' +
+        '(runs/gameTests/gametestserver/gametestworld) before the next run.'
+    delete project.layout.projectDirectory.dir('runs/gameTests/gametestserver/gametestworld')
+}
+
+// Matched by name rather than named('...'): the run tasks are created from the `runs` block above by
+// ModDevGradle, so they do not exist while this file is being evaluated.
+tasks.matching { it.name == 'runGameTests' }.configureEach {
+    dependsOn(cleanNeoForgeGameTestWorld)
+}
+
 // MOD-242 — compile the shared scenario bodies (common/src/gametest/java) into the gametest
 // source set, mirroring the fabric side. Same source-dir-artifact mechanism as commonJava in
 // multiloader-loader.gradle, but scoped so the scenarios never reach `main`/the shipped jar.

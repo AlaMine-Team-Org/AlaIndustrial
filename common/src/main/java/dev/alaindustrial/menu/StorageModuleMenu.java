@@ -1,6 +1,5 @@
 package dev.alaindustrial.menu;
 
-import dev.alaindustrial.block.entity.StorageModuleBlockEntity;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.storage.StorageCluster;
 import dev.alaindustrial.storage.StorageWindow;
@@ -34,9 +33,6 @@ import net.minecraft.world.inventory.SimpleContainerData;
  * module's spec.
  */
 public abstract class StorageModuleMenu extends AbstractScrollingChestMenu {
-	/** Slots one module contributes; the cluster and the menu must not disagree on this. */
-	public static final int SLOTS_PER_MODULE = StorageModuleBlockEntity.CONTAINER_SIZE;
-
 	/** Client side — a dummy container of the right size and a blank data block, both filled by sync. */
 	protected StorageModuleMenu(MenuType<?> type, int syncId, Inventory playerInventory, Container storage,
 			int rows) {

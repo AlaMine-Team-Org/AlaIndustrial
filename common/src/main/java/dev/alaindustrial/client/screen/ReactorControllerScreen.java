@@ -17,8 +17,8 @@ import net.minecraft.world.entity.player.Inventory;
  * Screen for the Reactor Controller (MOD-468) — the room's build assistant while it is being put
  * together, its control desk once it runs.
  *
- * <p><b>The panel shows one of two layouts, never both.</b> The usable strip is 54 pixels tall —
- * y 16…70, because the player's inventory label sits at 72 — and the first version tried to fit a
+ * <p><b>The panel shows one of two layouts, never both.</b> The usable strip ends where the art's
+ * boxes end (see {@link #CONTENT_BOTTOM}), and the first version tried to fit a
  * status line, four data rows, a heat gauge and five throttle buttons into it. They overlapped into
  * an unreadable mess. They also answer different questions at different times: while the shell is
  * open the player needs to know what is missing and where, and none of the reactor's numbers exist
@@ -40,18 +40,21 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 	private static final Identifier TEXTURE =
 			Industrialization.id("textures/gui/container/reactor_controller.png");
 
-	/**
-	 * Layout metrics. Public because the L3 text-row gate measures this strip and must read the
-	 * coordinates from here rather than from a copy that would drift the first time the layout moves.
+	/*
+	 * Layout metrics. Public for symmetry with the rest of the screen family; the reactor has no
+	 * text-row stand of its own, so nothing outside this class reads these numbers today. Should one be
+	 * added, it must measure the strip from here rather than from a copy that would drift the first time
+	 * the layout moves.
 	 *
-	 * <p>The hard bound is {@link #CONTENT_BOTTOM}: the vanilla inventory label is drawn at y=72, so
-	 * anything below 70 collides with it. Every constant here is checked against that.
+	 * The hard bound is CONTENT_BOTTOM, and it comes from the art rather than from the inventory
+	 * label: vanilla draws that label at {@code imageHeight - 94}, which on this 228-tall panel is
+	 * y=134 — far below anything here. Every constant is checked against the frame lines instead.
 	 */
-	public static final int CONTENT_TOP = 16;
+
 	/**
 	 * The art now draws TWO framed boxes, and the numbers below are read off it rather than chosen:
-	 * the readout box runs to its border at y=87, the throttle has a box of its own from y=96, and
-	 * the inventory label sits at 116. Elements are placed inside those borders, not merely above the
+	 * the readout box runs to its border at y=87 and the throttle has a box of its own from y=96.
+	 * Elements are placed inside those borders, not merely above the
 	 * inventory — the previous version fitted the space and still looked wrong, because the coolant
 	 * row was sitting on top of a frame line.
 	 */
@@ -82,8 +85,10 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 	public static final int BAR_W = 70;
 	public static final int BAR_H = 6;
 
-	/** Throttle strip along the bottom of the content area: five stops, 28 px each. */
-	/** Inside the throttle's own frame (y 96…113), centred in it rather than aligned to the text. */
+	/**
+	 * Throttle strip along the bottom of the content area: five stops, 28 px each. Inside the throttle's
+	 * own frame (y 96…113), centred in it rather than aligned to the text.
+	 */
 	public static final int THROTTLE_Y = 98;
 	public static final int THROTTLE_X = 16;
 	public static final int THROTTLE_W = 28;
@@ -124,13 +129,48 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 		if (status == ReactorRoomStatus.FORMED) {
 			drawRunningLayout(graphics);
 		} else {
-			drawBuildingLayout(graphics, status);
+			// The building diagnostics come FIRST and are never replaced (MOD-469). Bare mode fires on
+			// exactly the same condition as an unfinished shell — "not FORMED" — so a layout that swapped
+			// one for the other would take the size, the fault and the direction-to-the-hole away from the
+			// player who is genuinely still building, in order to serve the player who never intended to.
+			// The bare readout is added BELOW that, and only once racks have actually been found.
+			int row = drawBuildingLayout(graphics, status);
+			if (this.menu.isBare()) {
+				drawBareLayout(graphics, row);
+			}
 			drawStoredEnergy(graphics);
 		}
 	}
 
-	/** The verdict, centred at the top of the panel — the one thing shown in both layouts. */
+	/**
+	 * The verdict, centred at the top of the panel — the one thing shown in every layout.
+	 *
+	 * <p>A room melting its own contents says so HERE rather than in a row of its own, and overrides the
+	 * geometric verdict while it does. A shell that is still perfectly sealed is telling the truth when
+	 * it reports itself assembled, and it is the least useful true thing the panel could be saying at
+	 * that moment.
+	 */
 	private void drawStatusHeadline(GuiGraphicsExtractor graphics, ReactorRoomStatus status) {
+		if (this.menu.isMeltingDown()) {
+			drawFittedStatus(graphics,
+					Component.translatable("gui.alaindustrial.reactor_controller.status.meltdown")
+							.withStyle(ChatFormatting.DARK_RED),
+					STATUS_Y, STATUS_ROW_LEFT, STATUS_ROW_RIGHT, 0xFF7A2020);
+			return;
+		}
+		if (this.menu.isBare()) {
+			// Amber, not red, and it replaces the geometric verdict rather than sitting under it. A bare
+			// reactor standing in open ground reports CONTROLLER_NOT_IN_WALL, which is perfectly true and
+			// reads as a fault the player is expected to fix — when in fact they chose this. Saying BARE
+			// MODE instead names the state as a state. It also buys the row the readout needs: the panel's
+			// content band ends at y=86, and status headline + two building rows + three bare rows would
+			// have run the last line past the frame.
+			drawFittedStatus(graphics,
+					Component.translatable("gui.alaindustrial.reactor_controller.mode.bare")
+							.withStyle(ChatFormatting.GOLD),
+					STATUS_Y, STATUS_ROW_LEFT, STATUS_ROW_RIGHT, 0xFF7A5A20);
+			return;
+		}
 		Component headline = Component.translatable(status.translationKey())
 				.withStyle(status.needsAttention() ? ChatFormatting.DARK_RED : ChatFormatting.DARK_GREEN);
 		drawFittedStatus(graphics, headline, STATUS_Y, STATUS_ROW_LEFT, STATUS_ROW_RIGHT,
@@ -138,11 +178,38 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 	}
 
 	/**
+	 * The bare reactor's readout: what it found and what it is making (MOD-469).
+	 *
+	 * <p>No heat gauge, no coolant gauge, no throttle — a bare core tracks no temperature, has nothing
+	 * plumbed to it and ignores the control rods entirely. Drawing those as zeroes would be worse than
+	 * leaving them out: a temperature bar sitting at nothing reads as a cold reactor rather than as a
+	 * reactor with no thermometer, and it would invite a player to plumb a loop that can never engage.
+	 *
+	 * <p>Two rows, not three: the mode itself is announced by the headline, which both frees the row
+	 * that would have pushed the last line out of the content band and puts the word where a player
+	 * looks first.
+	 *
+	 * @param row the first free row under whatever the building diagnostics printed
+	 */
+	private void drawBareLayout(GuiGraphicsExtractor graphics, int row) {
+		drawRow(graphics, row++,
+				Component.translatable("gui.alaindustrial.reactor_controller.label.rods"),
+				Component.literal(Integer.toString(this.menu.getRods())));
+		drawRow(graphics, row,
+				Component.translatable("gui.alaindustrial.reactor_controller.label.output"),
+				this.menu.getOutput() > 0
+						? Component.translatable("gui.alaindustrial.reactor_controller.eu_per_tick",
+								this.menu.getOutput())
+						: Component.translatable(this.menu.getIdleReason().translationKey())
+								.withStyle(ChatFormatting.DARK_RED));
+	}
+
+	/**
 	 * While the shell is unfinished: what was measured and where the problem is. The reactor's own
 	 * numbers are deliberately absent — there is no reactor yet, and printing zeroes for it would read
 	 * as measurement rather than as absence.
 	 */
-	private void drawBuildingLayout(GuiGraphicsExtractor graphics, ReactorRoomStatus status) {
+	private int drawBuildingLayout(GuiGraphicsExtractor graphics, ReactorRoomStatus status) {
 		int row = 0;
 		drawRow(graphics, row++,
 				Component.translatable("gui.alaindustrial.reactor_controller.label.room"),
@@ -155,6 +222,7 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 					Component.translatable("gui.alaindustrial.reactor_controller.label.where"),
 					describeOffset());
 		}
+		return row;
 	}
 
 	/** Once it runs: what it is doing, and the throttle to change it. */

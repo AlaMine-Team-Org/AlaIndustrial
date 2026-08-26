@@ -249,19 +249,6 @@ public final class RadiationSources {
 		return count;
 	}
 
-	/** Items of a tag lying within the ground radius of this entity. */
-	public static int countGround(ServerLevel level, Entity entity, TagKey<Item> tag) {
-		if (Config.radiationGroundRadius <= 0) {
-			return 0;
-		}
-		AABB box = entity.getBoundingBox().inflate(Config.radiationGroundRadius);
-		int count = 0;
-		for (ItemEntity item : level.getEntitiesOfClass(ItemEntity.class, box)) {
-			count += countTagged(item.getItem(), tag, Config.radiationContainerDepth);
-		}
-		return count;
-	}
-
 	private static boolean hasLineOfSight(ServerLevel level, Entity viewer, Vec3 from, Vec3 to) {
 		BlockHitResult hit = level.clip(new ClipContext(from, to, ClipContext.Block.COLLIDER,
 				ClipContext.Fluid.NONE, viewer));

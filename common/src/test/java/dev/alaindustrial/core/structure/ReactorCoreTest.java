@@ -309,4 +309,56 @@ class ReactorCoreTest {
 		assertTrue(ReactorCore.shouldSoundAlarm(70, 70, 90, false),
 				"and it can therefore fire again — this is why the shipped rearm sits BELOW the warning");
 	}
+
+	// ── MOD-469: the bare reactor and the meltdown ──
+
+	@Test
+	void aBareCoreKeepsAShareOfTheRoomFigure() {
+		assertEquals(40, ReactorCore.bareOutput(100, 40, 1000),
+				"a bare core keeps its configured share of what the same rods would give in a room");
+		assertEquals(0, ReactorCore.bareOutput(0, 40, 1000), "no room output, nothing to take a share of");
+		assertEquals(0, ReactorCore.bareOutput(100, 0, 1000),
+				"a zero share switches the bare reactor off rather than dividing by nothing");
+	}
+
+	@Test
+	void theBareCeilingIsWhatStopsAHeapOfRodsOutEarningARoom() {
+		// The whole point of the cap: past it, MORE rods buy nothing at all. Without this a player could
+		// answer the 40% share by simply piling on 2.5x the fuel and never building a shell.
+		assertEquals(128, ReactorCore.bareOutput(1_000, 40, 128), "the cap bites once the share clears it");
+		assertEquals(128, ReactorCore.bareOutput(100_000, 40, 128),
+				"and it keeps biting however large the cluster grows — that is the design decision");
+		assertEquals(40, ReactorCore.bareOutput(100, 40, 128),
+				"below the cap the share is what is paid, so a small bare core is not punished twice");
+	}
+
+	@Test
+	void meltingSpeedsUpWithTheClusterAndThenStopsSpeedingUp() {
+		assertEquals(600, ReactorCore.meltInterval(1, 600, 40), "one rod is a slow nuisance");
+		assertEquals(150, ReactorCore.meltInterval(4, 600, 40), "a full rack is four times as dangerous");
+		assertEquals(40, ReactorCore.meltInterval(100, 600, 40),
+				"and the floor holds, or a big enough cluster would melt faster than the server ticks");
+		// Total on nonsense input rather than a division by zero: a controller that has just lost its
+		// last rod still calls this on the tick before the sweep notices. It answers the SLOWEST interval,
+		// not the fastest — erring towards the safe end, which is the right way round for a hazard.
+		assertEquals(600, ReactorCore.meltInterval(0, 600, 40),
+				"no rods answers the slowest legal interval rather than dividing by zero");
+	}
+
+	@Test
+	void theMeltdownLineSitsBetweenTheWarningAndTheTop() {
+		assertFalse(ReactorCore.isMeltingDown(84, 85), "one point under the line melts nothing");
+		assertTrue(ReactorCore.isMeltingDown(85, 85), "at the line it starts");
+		assertTrue(ReactorCore.isMeltingDown(100, 85), "and it does not stop at the top — MOD-471 adds to this");
+		assertFalse(ReactorCore.isMeltingDown(100, 0),
+				"a zero threshold switches the hazard off rather than melting at any temperature");
+	}
+
+	@Test
+	void everyMeltedBlockCoolsTheRoomAndTheHeatFloorHolds() {
+		assertEquals(600, ReactorCore.heatAfterMelt(1_000, 400),
+				"a melted block carries heat out with it — this is what makes a meltdown self-limiting");
+		assertEquals(0, ReactorCore.heatAfterMelt(100, 400),
+				"relief larger than the remaining heat floors at zero rather than going negative");
+	}
 }

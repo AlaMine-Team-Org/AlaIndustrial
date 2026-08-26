@@ -2,7 +2,6 @@ package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.FuelRodAssemblyBlock;
-import dev.alaindustrial.block.ReactorControllerBlock;
 import dev.alaindustrial.block.SteamNozzleBlock;
 import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
 import dev.alaindustrial.block.entity.ReactorControllerBlockEntity;
@@ -23,7 +22,6 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * World scenarios for the nuclear reactor (MOD-468).
@@ -136,6 +134,10 @@ public final class ReactorScenarios {
 		}
 		helper.setBlock(CONTROLLER.west(), Blocks.REDSTONE_BLOCK.defaultBlockState());
 
+		// Still a full 1000 dry ticks against a full gauge. That survived MOD-469 only because the fuel
+		// racks are exempt from melting everywhere: a runaway room eats its floor and its plumbing, never
+		// the columns making the heat, so a long dry run still ends pinned at the top instead of melting
+		// its way back down. An interim version of the meltdown DID eat them, and this assertion caught it.
 		driveUnderLoad(helper, brain, 1000);
 		if (brain.getHeat() < Config.reactorHeatCapacity) {
 			helper.fail("three loaded columns should run away dry, stopped at " + brain.getHeat());
@@ -331,6 +333,394 @@ public final class ReactorScenarios {
 		helper.succeed();
 	}
 
+	// --- MOD-469: the bare reactor and the meltdown ---
+
+	/**
+	 * Where the bare-mode rig stands, well inside the 8-block test structure.
+	 *
+	 * <p><b>Every radius in these scenarios is turned right down, and that is not tidiness.</b> The
+	 * gametest grid puts neighbouring structures roughly thirteen blocks apart but only guarantees one
+	 * block of cleared padding around each, so a scan that reaches out at the shipped radius of 8 would
+	 * be reading — and melting — inside somebody else's test. The lesson is
+	 * {@code wide-radius-scan-gametest-crosses-into-neighbours}, and it has bitten this repo before.
+	 */
+	private static final BlockPos BARE_CONTROLLER = new BlockPos(3, 2, 3);
+	private static final BlockPos BARE_RACK = new BlockPos(3, 3, 3);
+	private static final BlockPos BARE_SIGNAL = new BlockPos(3, 1, 3);
+
+	/**
+	 * A wire on the controller's own east face.
+	 *
+	 * <p>A bare reactor has no shell, so it has no {@code reactor_outlet} either — its power leaves
+	 * through the controller's own faces, every one of which publishes {@code OUT} except the screen.
+	 * That claim is the whole "bare mode is a real generator" promise and it is worth a wire rather than
+	 * a comment: MOD-468 shipped a reactor that produced, showed a figure, filled a buffer and could not
+	 * be plugged into anything.
+	 */
+	private static final BlockPos BARE_CABLE = new BlockPos(4, 2, 3);
+
+	/** Melt reach used by the bare scenarios: one block, so the hazard cannot leave the rig. */
+	private static final int TEST_MELT_RADIUS = 1;
+
+	/**
+	 * A reactor with no room around it makes power, obeys the switch, and eats the scenery.
+	 *
+	 * <p><b>All three in ONE scenario, and that is a correctness requirement rather than tidiness.</b>
+	 * {@code Config} is process-global and gametests in a batch run CONCURRENTLY, so a second scenario
+	 * that turned {@code reactorMeltdownMeltsBlocks} off would be turning it off for every other reactor
+	 * ticking at that moment. Keeping the switch's two positions inside a single test means exactly one
+	 * scenario ever writes it, and the window it is off for is this test's own.
+	 *
+	 * <p>Phase one proves the switch protects the WORLD and not the reactor: output must survive it. A
+	 * version that quietly stopped producing would pass a weaker test while breaking the promise made to
+	 * the operator who set the flag.
+	 *
+	 * <p>Phase two proves the hazard is real, and that rule 7 holds — the reactor never melts itself.
+	 * Without that, "a bare station can run indefinitely in a wasteland" is not a strategy the player can
+	 * choose, it is a fuse.
+	 */
+	public static void bareReactorProducesMeltsAndObeysTheSwitch(GameTestHelper helper) {
+		boolean meltsBefore = Config.reactorMeltdownMeltsBlocks;
+		int searchBefore = Config.reactorBareSearchRadius;
+		int meltBefore = Config.reactorBareMeltRadius;
+		int intervalBefore = Config.reactorBareMeltIntervalTicks;
+		int minIntervalBefore = Config.reactorBareMeltMinIntervalTicks;
+		int warnBefore = Config.reactorMeltWarnTicks;
+		try {
+			Config.reactorBareSearchRadius = 2;
+			Config.reactorBareMeltRadius = TEST_MELT_RADIUS;
+			Config.reactorBareMeltIntervalTicks = 4;
+			Config.reactorBareMeltMinIntervalTicks = 1;
+			Config.reactorMeltWarnTicks = 2;
+
+			ReactorControllerBlockEntity brain = buildBareRig(helper);
+
+			// ── phase one: the switch is off ──
+			Config.reactorMeltdownMeltsBlocks = false;
+			driveAt(helper, brain, BARE_CONTROLLER, 160);
+
+			if (!brain.isBare()) {
+				helper.fail("a controller with racks in reach and no room did not enter bare mode");
+			}
+			if (brain.getLastOutput() <= 0) {
+				helper.fail("bare reactor produced nothing — the whole point is that it is a generator");
+			}
+			// Scaled and capped: never as much as the same rods would give inside a sealed shell.
+			long room = (long) FuelRodAssemblyBlock.MAX_RODS * Config.reactorEuPerRod;
+			if (brain.getLastOutput() >= room) {
+				helper.fail("bare output " + brain.getLastOutput() + " was not below the room figure " + room);
+			}
+			if (countLava(helper) != 0) {
+				helper.fail("reactorMeltdownMeltsBlocks=false still melted " + countLava(helper) + " block(s)");
+			}
+			// Delivery, not merely production — checked HERE, in the phase where nothing melts, so the
+			// wire is still standing. The cable and the network both have to tick to enrol in the graph;
+			// driving the manager alone leaves them invisible to it.
+			CableBlockEntity wireTick = helper.getBlockEntity(BARE_CABLE, CableBlockEntity.class);
+			for (int i = 0; i < 60; i++) {
+				driveAt(helper, brain, BARE_CONTROLLER, 1);
+				if (wireTick != null) {
+					wireTick.serverTick(helper.getLevel(), helper.absolutePos(BARE_CABLE),
+							helper.getBlockState(BARE_CABLE));
+				}
+				NetworkManager.tickAll(helper.getLevel());
+			}
+			CableBlockEntity wire = helper.getBlockEntity(BARE_CABLE, CableBlockEntity.class);
+			if (wire == null) {
+				helper.fail("the cable on the bare reactor has no block entity");
+				return;
+			}
+			if (wire.getEnergyStorage().getAmount() <= 0) {
+				helper.fail("a cable on a bare reactor received nothing — bare power cannot be plugged in");
+			}
+
+			// ── phase two: the switch is on ──
+			Config.reactorMeltdownMeltsBlocks = true;
+			driveAt(helper, brain, BARE_CONTROLLER, 160);
+
+			if (countLava(helper) == 0) {
+				helper.fail("a working bare reactor melted nothing within " + TEST_MELT_RADIUS + " block(s)");
+			}
+			// Rule 7: the reactor's own blocks survive its own hazard, or "run it forever" is a lie.
+			if (!helper.getBlockState(BARE_CONTROLLER).is(ModContent.REACTOR_CONTROLLER.get())) {
+				helper.fail("the bare reactor melted its own controller");
+			}
+			if (!helper.getBlockState(BARE_RACK).is(ModContent.FUEL_ROD_ASSEMBLY.get())) {
+				helper.fail("the bare reactor melted its own fuel rack");
+			}
+			helper.succeed();
+		} finally {
+			Config.reactorMeltdownMeltsBlocks = meltsBefore;
+			Config.reactorBareSearchRadius = searchBefore;
+			Config.reactorBareMeltRadius = meltBefore;
+			Config.reactorBareMeltIntervalTicks = intervalBefore;
+			Config.reactorBareMeltMinIntervalTicks = minIntervalBefore;
+			Config.reactorMeltWarnTicks = warnBefore;
+		}
+	}
+
+	/**
+	 * A wall broken on a RUNNING reactor drops it softly into bare mode instead of stopping it.
+	 *
+	 * <p>The design asks for no separate emergency path: a breach is the same transition as "never built
+	 * a room", just with a different history. What makes that possible is that the shielding-alloy shell
+	 * CONDUCTS — the bare-mode walk reaches the columns through the walls that are still standing, so a
+	 * room with a hole in it keeps driving its own racks at reduced power rather than going dark.
+	 *
+	 * <p>Worth a scenario because the two halves are easy to get separately right and jointly wrong: a
+	 * connectivity walk that only stepped through racks would leave every breached room dead, and the
+	 * player would read a deliberate design decision as the feature breaking.
+	 */
+	public static void breachingAWallDropsTheReactorIntoBareMode(GameTestHelper helper) {
+		boolean meltsBefore = Config.reactorMeltdownMeltsBlocks;
+		try {
+			// The rig is 8 blocks wide and this room fills five of them; lava here would eat the very
+			// walls whose conduction the scenario is measuring.
+			Config.reactorMeltdownMeltsBlocks = false;
+
+			buildRoom(helper);
+			ReactorControllerBlockEntity brain = controller(helper);
+			FuelRodAssemblyBlockEntity column = placeColumn(helper);
+			for (int i = 0; i < FuelRodAssemblyBlock.MAX_RODS; i++) {
+				column.insertRod(new ItemStack(ModContent.URANIUM_FUEL_ROD.get()));
+			}
+			helper.setBlock(CONTROLLER.west(), Blocks.REDSTONE_BLOCK.defaultBlockState());
+
+			driveUnderLoad(helper, brain, 120);
+			if (brain.getStatus() != ReactorRoomStatus.FORMED) {
+				helper.fail("room did not seal, so a breach cannot be under test: " + brain.getStatus());
+			}
+			int sealedOutput = brain.getLastOutput();
+			if (sealedOutput <= 0) {
+				helper.fail("sealed reactor produced nothing, so the fall to bare mode proves nothing");
+			}
+
+			// A hole in the ceiling, far from the controller and not in the floor the column stands on.
+			helper.setBlock(new BlockPos(2, SHELL_MAX, 2), Blocks.AIR.defaultBlockState());
+			driveUnderLoad(helper, brain, 120);
+
+			if (brain.getStatus() == ReactorRoomStatus.FORMED) {
+				helper.fail("a hole in the shell left the room reporting itself sealed");
+			}
+			if (!brain.isBare()) {
+				helper.fail("a breached room did not fall into bare mode — the shell stopped conducting");
+			}
+			if (brain.getLastOutput() <= 0) {
+				helper.fail("a breached reactor went dark instead of degrading; the fall must be SOFT");
+			}
+			if (brain.getLastOutput() >= sealedOutput) {
+				helper.fail("bare output " + brain.getLastOutput() + " was not below the sealed "
+						+ sealedOutput + " — the breach cost the player nothing");
+			}
+			helper.succeed();
+		} finally {
+			Config.reactorMeltdownMeltsBlocks = meltsBefore;
+		}
+	}
+
+	/**
+	 * Two controllers touching one stack of racks: exactly ONE of them burns it.
+	 *
+	 * <p><b>The test that should have existed from the start.</b> The acceptance criteria named this
+	 * rule and the code implemented it, but nothing exercised it — and the player promptly asked the
+	 * right question: what stops someone studding a shell with controllers and collecting the same rods
+	 * with each? The answer has to be a scenario, not a paragraph.
+	 *
+	 * <p>Also pins the tie-break. The two controllers here are deliberately EQUIDISTANT from the rack,
+	 * so distance alone cannot decide and the coordinate ordering has to. A rule that resolved a tie
+	 * differently on each side would hand the rack to both — which is precisely the free energy the rule
+	 * exists to prevent.
+	 */
+	public static void onlyOneControllerBurnsASharedRack(GameTestHelper helper) {
+		int searchBefore = Config.reactorBareSearchRadius;
+		boolean meltsBefore = Config.reactorMeltdownMeltsBlocks;
+		try {
+			Config.reactorBareSearchRadius = 4;
+			// Nothing may melt here: a lava source in the middle of this rig would rewrite the very
+			// adjacency the scenario is measuring.
+			Config.reactorMeltdownMeltsBlocks = false;
+
+			BlockPos rack = new BlockPos(3, 2, 3);
+			BlockPos west = rack.west();
+			BlockPos east = rack.east();
+			helper.setBlock(rack, ModContent.FUEL_ROD_ASSEMBLY.get().defaultBlockState());
+			FuelRodAssemblyBlockEntity fuel =
+					helper.getBlockEntity(rack, FuelRodAssemblyBlockEntity.class);
+			if (fuel == null) {
+				helper.fail("shared rack has no block entity");
+				return;
+			}
+			for (int i = 0; i < FuelRodAssemblyBlock.MAX_RODS; i++) {
+				fuel.insertRod(new ItemStack(ModContent.URANIUM_FUEL_ROD.get()));
+			}
+			// Both touch the rack, so both are legitimately connected to it — the arbitration cannot be
+			// dodged by one of them simply being out of reach.
+			for (BlockPos at : new BlockPos[] {west, east}) {
+				helper.setBlock(at, ModContent.REACTOR_CONTROLLER.get().defaultBlockState()
+						.setValue(HorizontalDirectionalBlock.FACING, Direction.WEST));
+				helper.setBlock(at.below(), Blocks.REDSTONE_BLOCK.defaultBlockState());
+			}
+			ReactorControllerBlockEntity a = helper.getBlockEntity(west, ReactorControllerBlockEntity.class);
+			ReactorControllerBlockEntity b = helper.getBlockEntity(east, ReactorControllerBlockEntity.class);
+			if (a == null || b == null) {
+				helper.fail("one of the two controllers has no block entity");
+				return;
+			}
+			// Interleaved, because that is how the server ticks them: alternating exposes any rule whose
+			// verdict depends on which machine looked first.
+			for (int i = 0; i < 120; i++) {
+				driveAt(helper, a, west, 1);
+				driveAt(helper, b, east, 1);
+			}
+
+			int producing = (a.getLastOutput() > 0 ? 1 : 0) + (b.getLastOutput() > 0 ? 1 : 0);
+			if (producing == 2) {
+				helper.fail("both controllers burnt the same rack — " + a.getLastOutput() + " and "
+						+ b.getLastOutput() + " EU/t out of one stack of rods");
+			}
+			if (producing == 0) {
+				helper.fail("neither controller took the rack they are both touching");
+			}
+			int counted = a.getRods() + b.getRods();
+			if (counted != FuelRodAssemblyBlock.MAX_RODS) {
+				helper.fail("one stack of " + FuelRodAssemblyBlock.MAX_RODS + " rods was counted as "
+						+ counted + " across the two controllers");
+			}
+			helper.succeed();
+		} finally {
+			Config.reactorBareSearchRadius = searchBefore;
+			Config.reactorMeltdownMeltsBlocks = meltsBefore;
+		}
+	}
+
+	/**
+	 * An overheating room melts its CONTENTS and keeps its SHELL — the containment earning its cost.
+	 *
+	 * <p>The ordinary fluid pipe is chosen as the victim deterministically (it is the first thing the
+	 * picker looks for), which is what makes this scenario an assertion rather than a coin toss. It also
+	 * happens to be the criterion the design asked for by name: the pipe a player already had lying
+	 * around is the first thing the room takes, because it is the failure that best explains itself.
+	 */
+	public static void anOverheatingRoomMeltsItsContentsAndKeepsItsShell(GameTestHelper helper) {
+		// NOT ONE CONFIG VALUE IS TOUCHED, and that is the point of building five packed racks instead of
+		// one: turning reactorMeltdownStartPercent down would have been quicker to write and would have
+		// applied to every reactor ticking concurrently in the same batch. It did, when this scenario was
+		// first written — the neighbouring coolant runaway test started melting its own columns and
+		// stopped at 67% instead of running away, which read as a regression in code that had not
+		// changed. A core that genuinely pins the gauge needs no global to be bent.
+		buildRoom(helper);
+		ReactorControllerBlockEntity brain = controller(helper);
+		// Five racks packed on the floor: adjacency multiplies heat harder than output (that is the whole
+		// density trade), so this core sits at the top of the scale within a few dozen ticks.
+		BlockPos[] racks = {
+			new BlockPos(1, 1, 1), new BlockPos(2, 1, 1), new BlockPos(3, 1, 1),
+			new BlockPos(1, 1, 2), new BlockPos(2, 1, 2),
+		};
+		for (BlockPos at : racks) {
+			FuelRodAssemblyBlockEntity column = placeColumnAt(helper, at);
+			for (int i = 0; i < FuelRodAssemblyBlock.MAX_RODS; i++) {
+				column.insertRod(new ItemStack(ModContent.URANIUM_FUEL_ROD.get()));
+			}
+		}
+		// The one meltable thing in the whole interior: the racks are exempt everywhere (they are built
+		// around a shielding plate) and the shell is not in the box, so a runaway room eats the plumbing
+		// and whatever else was carried in — which is exactly what this asserts.
+		BlockPos pipe = new BlockPos(3, 1, 3);
+		helper.setBlock(pipe, ModContent.FLUID_PIPE.get().defaultBlockState());
+		BlockPos floor = new BlockPos(2, 0, 2);
+		helper.setBlock(CONTROLLER.west(), Blocks.REDSTONE_BLOCK.defaultBlockState());
+
+		// The flag is checked EARLY and the damage LATE, because the two can be true at different times.
+		// A meltdown sheds heat with every block it takes, so a room with a lot to eat cools itself back
+		// under the line as it works; asserting both at the end once failed on exactly that.
+		driveUnderLoad(helper, brain, 60);
+		if (!brain.isMeltingDown()) {
+			helper.fail("a room at " + ReactorCore.heatPercent(brain.getHeat(), Config.reactorHeatCapacity)
+					+ "% of the heat scale did not report melting down");
+		}
+
+		driveUnderLoad(helper, brain, 340);
+		if (!helper.getBlockState(pipe).is(Blocks.LAVA)) {
+			helper.fail("the ordinary fluid pipe inside an overheating room did not melt first, it was "
+					+ helper.getBlockState(pipe));
+		}
+		// The shell is the whole reason the room was built. If it goes, so does the feature.
+		if (!helper.getBlockState(floor).is(ModContent.REACTOR_CASING.get())) {
+			helper.fail("the meltdown ate the shell — the containment failed to contain");
+		}
+		if (!helper.getBlockState(CONTROLLER).is(ModContent.REACTOR_CONTROLLER.get())) {
+			helper.fail("the meltdown ate its own controller");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * A controller, a rack, a signal and a solid block of scenery to eat — no room anywhere.
+	 *
+	 * <p>The melt cube is packed with stone rather than left mostly empty so the picker cannot spend all
+	 * of its attempts on air. A rig where the hazard only <em>usually</em> fires is a flaky test, and this
+	 * repo has paid for those before.
+	 */
+	private static ReactorControllerBlockEntity buildBareRig(GameTestHelper helper) {
+		// Packed around the RACK, because that is what the hazard now radiates from (MOD-469). The
+		// controller and the cable sit inside this cube deliberately — the controller to prove it is
+		// exempt, the cable to prove the player's wiring is not. The redstone block is one block BELOW
+		// the cube on purpose: it powers the reactor and must not be eaten mid-test.
+		forEachMeltCell(helper, (x, y, z) ->
+				helper.setBlock(new BlockPos(x, y, z), Blocks.STONE.defaultBlockState()));
+		// No shell of any kind: the controller stands in the open, which is precisely the state the
+		// scan must recognise. Facing is irrelevant here — bare mode never walks a wall.
+		helper.setBlock(BARE_CONTROLLER, ModContent.REACTOR_CONTROLLER.get().defaultBlockState()
+				.setValue(HorizontalDirectionalBlock.FACING, Direction.WEST));
+		helper.setBlock(BARE_RACK, ModContent.FUEL_ROD_ASSEMBLY.get().defaultBlockState());
+		helper.setBlock(BARE_SIGNAL, Blocks.REDSTONE_BLOCK.defaultBlockState());
+		helper.setBlock(BARE_CABLE, ModContent.COPPER_CABLE.get().defaultBlockState());
+
+		FuelRodAssemblyBlockEntity rack =
+				helper.getBlockEntity(BARE_RACK, FuelRodAssemblyBlockEntity.class);
+		if (rack == null) {
+			helper.fail("bare fuel rack has no block entity");
+			throw new IllegalStateException("unreachable");
+		}
+		for (int i = 0; i < FuelRodAssemblyBlock.MAX_RODS; i++) {
+			rack.insertRod(new ItemStack(ModContent.URANIUM_FUEL_ROD.get()));
+		}
+		ReactorControllerBlockEntity brain =
+				helper.getBlockEntity(BARE_CONTROLLER, ReactorControllerBlockEntity.class);
+		if (brain == null) {
+			helper.fail("bare reactor controller has no block entity");
+			throw new IllegalStateException("unreachable");
+		}
+		return brain;
+	}
+
+	/** Lava inside the bare rig's melt cube — counted rather than sampled, so nothing is missed. */
+	private static int countLava(GameTestHelper helper) {
+		int[] lava = {0};
+		forEachMeltCell(helper, (x, y, z) -> {
+			if (helper.getBlockState(new BlockPos(x, y, z)).is(Blocks.LAVA)) {
+				lava[0]++;
+			}
+		});
+		return lava[0];
+	}
+
+	/** Every cell the bare hazard can reach in this rig — the cube around the RACK, not the controller. */
+	private static void forEachMeltCell(GameTestHelper helper, CellAction action) {
+		for (int x = BARE_RACK.getX() - TEST_MELT_RADIUS; x <= BARE_RACK.getX() + TEST_MELT_RADIUS; x++) {
+			for (int y = BARE_RACK.getY() - TEST_MELT_RADIUS; y <= BARE_RACK.getY() + TEST_MELT_RADIUS; y++) {
+				for (int z = BARE_RACK.getZ() - TEST_MELT_RADIUS; z <= BARE_RACK.getZ() + TEST_MELT_RADIUS; z++) {
+					action.at(x, y, z);
+				}
+			}
+		}
+	}
+
+	@FunctionalInterface
+	private interface CellAction {
+		void at(int x, int y, int z);
+	}
+
 	// --- rig ---
 
 	/** The smallest room the scan accepts, with the controller in the middle of the west wall. */
@@ -401,9 +791,22 @@ public final class ReactorScenarios {
 	}
 
 	private static void drive(GameTestHelper helper, ReactorControllerBlockEntity brain, int ticks) {
-		BlockPos absolute = helper.absolutePos(CONTROLLER);
+		driveAt(helper, brain, CONTROLLER, ticks);
+	}
+
+	/**
+	 * Drives a controller standing somewhere OTHER than the room rig's own wall slot.
+	 *
+	 * <p>The position has to be passed rather than assumed. {@link #drive} used to read the block state
+	 * at {@link #CONTROLLER} unconditionally, so a bare-mode rig — which puts its controller in open
+	 * ground, nowhere near that cell — handed the tick a state of {@code minecraft:air} and the scan
+	 * died asking air which way it was facing.
+	 */
+	private static void driveAt(GameTestHelper helper, ReactorControllerBlockEntity brain, BlockPos at,
+			int ticks) {
+		BlockPos absolute = helper.absolutePos(at);
 		for (int i = 0; i < ticks; i++) {
-			brain.serverTick(helper.getLevel(), absolute, helper.getBlockState(CONTROLLER));
+			brain.serverTick(helper.getLevel(), absolute, helper.getBlockState(at));
 		}
 	}
 }

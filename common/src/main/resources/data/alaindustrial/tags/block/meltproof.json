@@ -1,0 +1,15 @@
+{
+	"replace": false,
+	"values": [
+		"alaindustrial:reactor_casing",
+		"alaindustrial:reactor_glass",
+		"alaindustrial:reactor_lamp",
+		"alaindustrial:reactor_door",
+		"alaindustrial:reactor_port",
+		"alaindustrial:reactor_outlet",
+		"alaindustrial:reactor_controller",
+		"alaindustrial:reactor_button",
+		"alaindustrial:fuel_rod_assembly",
+		"alaindustrial:shielding_chest"
+	]
+}

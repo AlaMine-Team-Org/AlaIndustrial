@@ -124,6 +124,28 @@ fabricApi {
     }
 }
 
+// MOD-506 — the game-test world is disposable, but nothing ever deleted it, so every run piled another world
+// on top of the last one. Measured 2026-08-25 on this checkout: build/run/gameTest/world alone had
+// accumulated 241k files / 13.4 GB.
+//
+// Deliberately BEFORE the run (`dependsOn`), not after it (`finalizedBy`): the world of a run that
+// just FAILED is the one worth keeping — it is the post-mortem. Wiping on the way in gives every run
+// a clean world AND leaves the last failure's world on disk to inspect.
+//
+// The path is spelled out instead of being read from the run task's `workingDir`: loom assigns that
+// inside the run's own exec(), so at configuration time it is not there to read.
+def cleanGameTestWorld = tasks.register('cleanGameTestWorld', Delete) {
+    group = 'build'
+    description = 'Delete the leftover Fabric game-test world (build/run/gameTest/world) before the next run.'
+    delete project.layout.buildDirectory.dir('run/gameTest/world')
+}
+
+// Matched by name rather than named('...'): the run task is created by loom's configureTests above,
+// and it exists only once that extension has run — same reason as the run-config loop in `loom`.
+tasks.matching { it.name == 'runGameTest' }.configureEach {
+    dependsOn(cleanGameTestWorld)
+}
+
 // MOD-242 — pull the shared scenario bodies (common/src/gametest/java) into the loom-created
 // `gametest` source set instead of `main`. Same mechanism as commonJava in multiloader-loader.gradle,
 // but scoped to compileGametestJava only: the release jar packs `main`, so the scenarios no longer

@@ -176,4 +176,23 @@ public class ReactorControllerMenu extends MachineMenu {
 	public int getSteamPercent() {
 		return data.get(ReactorControllerBlockEntity.DATA_STEAM_PERCENT);
 	}
+
+	/** Whether the room is melting its own contents right now (MOD-469). */
+	public boolean isMeltingDown() {
+		return data.get(ReactorControllerBlockEntity.DATA_MELTDOWN) != 0;
+	}
+
+	/**
+	 * Whether this controller is running on racks it found in the open (MOD-469).
+	 *
+	 * <p><b>Derived rather than carried on a channel of its own.</b> The server sets the rod count from
+	 * the bare sweep exactly when it is running bare, and from the room sweep exactly when it is not, so
+	 * "not sealed and yet counting rods" already means bare and nothing else can. A second channel
+	 * saying the same thing would be one more index to keep in step for no new information — and the
+	 * distinction the panel actually needs is between a shell being BUILT (no racks in reach) and a
+	 * reactor being RUN without one, which this answers exactly.
+	 */
+	public boolean isBare() {
+		return getStatus() != dev.alaindustrial.block.entity.ReactorRoomStatus.FORMED && getRods() > 0;
+	}
 }

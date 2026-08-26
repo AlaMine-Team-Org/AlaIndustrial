@@ -544,11 +544,6 @@ public abstract class MachineBlockEntity extends EnergyBlockEntity implements Wo
 		return items.size() > baseSlots;
 	}
 
-	/** Whether {@code slot} is one of the appended upgrade slots. */
-	public boolean isUpgradeSlot(int slot) {
-		return slot >= baseSlots && slot < items.size();
-	}
-
 	/** The stack in upgrade-block index {@code i} (0-based), or empty when there are no upgrade slots. */
 	public ItemStack getUpgradeStack(int i) {
 		int idx = baseSlots + i;

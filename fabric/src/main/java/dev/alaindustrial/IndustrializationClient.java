@@ -2,12 +2,9 @@ package dev.alaindustrial;
 
 import dev.alaindustrial.client.AlaClientConfig;
 import dev.alaindustrial.client.ClientContentManifest;
-import dev.alaindustrial.client.screen.CompressorScreen;
-import dev.alaindustrial.client.screen.ElectricFurnaceScreen;
 import dev.alaindustrial.client.hud.EnergyPackHud;
 import dev.alaindustrial.client.tooltip.MachineTooltips;
 import dev.alaindustrial.client.ModKeyMappings;
-import dev.alaindustrial.client.screen.SolarPanelScreen;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;

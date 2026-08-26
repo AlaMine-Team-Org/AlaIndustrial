@@ -274,6 +274,14 @@ pitest {
             // Minecraft-free and stays IN the run, covered by RoomScanTest; this half is covered by the
             // L2 room scenarios instead.
             'dev.alaindustrial.core.structure.RoomValidator',
+            // MOD-469: the two halves of the meltdown that touch the world. BareReactorScan reads the
+            // chunks' block-entity maps to find racks and rival controllers; ReactorMeltdown reads
+            // BlockState/FluidState to choose a victim and writes lava. The arithmetic they delegate to
+            // (ReactorCore.bareOutput / meltInterval / isMeltingDown / heatAfterMelt) is deliberately
+            // Minecraft-free and stays IN the run, covered by ReactorCoreTest; these halves are covered
+            // by the L2 reactor scenarios on both loaders instead.
+            'dev.alaindustrial.core.structure.BareReactorScan',
+            'dev.alaindustrial.core.structure.ReactorMeltdown',
             // MOD-470: the three radiation classes that touch the world — they read Level, BlockPos,
             // ItemStack and entities to ask "what is irradiating whoever stands here" and to write the
             // effect. The arithmetic they delegate to (RadiationCore) is deliberately Minecraft-free and

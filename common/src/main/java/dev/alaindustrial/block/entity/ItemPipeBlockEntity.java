@@ -1,6 +1,5 @@
 package dev.alaindustrial.block.entity;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.block.ItemPipeBlock;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.item.ItemNetworkManager;

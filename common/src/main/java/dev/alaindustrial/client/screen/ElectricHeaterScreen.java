@@ -33,9 +33,9 @@ public class ElectricHeaterScreen extends MachineScreen<ElectricHeaterMenu> {
 	 * constant shared with one atlas sprite, while this well is the same width but two pixels taller.
 	 * Reusing those constants here would look tidy and quietly misalign the moment either changed.
 	 *
-	 * <p>Public for the same reason the Charging Station's text metrics are: the L3 text-row gate
-	 * measures this strip against a known state and must read the coordinates from here rather than from
-	 * a copy that would drift the first time the layout moves.
+	 * <p>Public for the same reason the Charging Station's text metrics are: symmetry with the rest of
+	 * the screen family. No text-row stand measures this strip today; should one be added, it must read
+	 * the coordinates from here rather than from a copy that would drift the first time the layout moves.
 	 */
 	public static final int THERMO_X = 146;
 	public static final int THERMO_BOTTOM = 65;

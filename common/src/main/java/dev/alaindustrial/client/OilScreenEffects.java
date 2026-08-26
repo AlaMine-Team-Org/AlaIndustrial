@@ -1,11 +1,9 @@
 package dev.alaindustrial.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.fluid.FluidImmersion;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.Entity;
 
@@ -34,21 +32,6 @@ import net.minecraft.world.entity.Entity;
  * than refuse to launch the game.
  */
 public final class OilScreenEffects {
-
-	/** Full-screen overlay drawn while the camera is inside oil. */
-	public static final Identifier OVERLAY_TEXTURE =
-			Industrialization.id("textures/misc/oil_overlay.png");
-
-	/**
-	 * Master opacity of the overlay, on top of the per-pixel alpha the texture already carries.
-	 *
-	 * <p>The first version was 0.94 over a fully opaque texture, which in game meant the screen went
-	 * black the instant the player's head went under: no horizon, no light, no way to tell which way
-	 * to swim. "Being submerged is unpleasant" is the intent; "the player cannot play" is not. The
-	 * film is now something to see through — dark, streaked, with opaque beads scattered over it —
-	 * and the {@code OilFogEnvironment} distances were opened up to match.
-	 */
-	private static final float OVERLAY_ALPHA = 0.85F;
 
 	/** How far the texture is tiled across the screen; matches vanilla's underwater overlay. */
 	private static final float UV_SIZE = 4.0F;

@@ -1,14 +1,24 @@
-## 0.1.117
+## 0.1.118
 
-<p><img alt="Ala Industrial 0.1.117 - the EU crystal ladder" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.117/release-media/v0.1.117/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial 0.1.118 update preview" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.118/release-media/v0.1.118/changelog.webp" width="720"></p>
 
-Crystals are the headline: you no longer craft them, you charge them into being.
+Overheating a reactor finally has consequences — and a reactor can now run without its room at all.
 
 ### New
 
-- **EU crystals — charge a blank, get a crystal.** Craft the blank, drop it into any charge slot, and once it fills up it becomes the finished crystal: an ordinary crafting material with no charge of its own. Three tiers, each built around the one below it.
-- **The Macerator grinds stone.** Basalt, andesite, diorite and granite give gravel; blackstone gives cobblestone. Gravel finally has a machine source — and with it, a path to flint.
+- **Meltdown.** Let a sealed reactor overheat and it melts its own insides: the floor, the plumbing, anything you left in there. The shell, the controller and the fuel racks survive — that containment is what you paid for.
+- **Bare reactors.** Stand charged fuel racks against a controller with no room around it and it powers cables straight from its own faces. Much weaker, hard-capped, and the racks must actually touch.
+- **The price is the landscape.** While a bare reactor runs, blocks near the racks turn to lava. A full buffer does not stop it — only redstone does. And lava flows, so one melted block becomes a puddle.
+- **You get warned.** Every doomed block flashes and hisses two seconds before it goes, so you can step off it or grab what is on it.
+- **Shielding alloy never melts.** Reactor parts and the shielding chest survive both hazards.
+- **One switch turns all of it off** and keeps every sound and warning.
+
+### Improved
+
+- **The guide book is complete in every language.** 460 strings that used to fall back to English are now translated, Arabic included.
+- **Stats read correctly.** A chest's capacity, an armour set's piece count and a scythe's tiers are no longer labelled "Energy".
 
 ### Fixed
 
-- Oil deposit sizes in the guide now match what you actually find underground.
+- **Wiki recipes match the game again.** The reactor door is a 3x3 craft, the compressor lists all 35 of its recipes, and plates exist for five alloys, not four.
+- **Garden drone station.** The docs promised a 9-block radius; it works at 4, and now says so.

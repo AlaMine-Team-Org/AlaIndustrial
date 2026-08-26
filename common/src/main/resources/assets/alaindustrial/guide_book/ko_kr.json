@@ -152,7 +152,7 @@
             {
               "type": "text",
               "title": "다섯 단계",
-              "text": "1. 방이 밀폐되어 있다\n2. 기둥에 연료봉이 들어 있다\n3. 원자로 출력 단자에 케이블이 붙어 있다\n4. 레드스톤 신호가 제어기에 닿는다\n5. 심도 슬라이더가 0이 아니다"
+              "text": "1. 방이 밀폐되어 있다\n2. 기둥에 연료봉이 들어 있다\n3. 원자로 출력 단자에 케이블이 붙어 있다\n4. 레드스톤 신호가 제어기에 닿는다\n5. 심도가 0이 아니다: 제어기에는 0%, 25%, 50%, 75%, 100% 다섯 개의 버튼이 있다"
             },
             {
               "type": "text",
@@ -162,7 +162,7 @@
             {
               "type": "text",
               "title": "출력",
-              "text": "기둥 하나가 24 EU/t를 냅니다. 연료봉이 많고 기둥을 촘촘히 세울수록 더 나옵니다. 이웃한 기둥끼리 서로를 끌어올립니다.\n\n상한은 512 EU/t입니다. 심도 슬라이더는 출력과 발열, 연료 소모를 같은 비율로 나눕니다."
+              "text": "기둥 하나가 24 EU/t를 냅니다. 연료봉이 많고 기둥을 촘촘히 세울수록 더 나옵니다. 이웃한 기둥끼리 서로를 끌어올립니다.\n\n상한은 512 EU/t입니다. 선택한 심도 버튼은 출력과 발열, 연료 소모를 같은 비율로 나눕니다."
             }
           ]
         },
@@ -199,7 +199,6 @@
           "id": "wind_mill",
           "title": "풍력 터빈",
           "icon": "alaindustrial:wind_mill",
-          "block_id": "alaindustrial:wind_mill",
           "pages": [
             {
               "type": "text",
@@ -238,7 +237,6 @@
           "id": "water_mill",
           "title": "물레방아",
           "icon": "alaindustrial:water_mill",
-          "block_id": "alaindustrial:water_mill",
           "pages": [
             {
               "type": "text",
@@ -277,7 +275,6 @@
           "id": "generator",
           "title": "발전기",
           "icon": "alaindustrial:generator",
-          "block_id": "alaindustrial:generator",
           "pages": [
             {
               "type": "text",
@@ -316,7 +313,6 @@
           "id": "geothermal_generator",
           "title": "지열 발전기",
           "icon": "alaindustrial:geothermal_generator",
-          "block_id": "alaindustrial:geothermal_generator",
           "pages": [
             {
               "type": "text",
@@ -355,7 +351,6 @@
           "id": "lightning_rod_generator",
           "title": "피뢰침 발전기",
           "icon": "alaindustrial:lightning_rod_generator",
-          "block_id": "alaindustrial:lightning_rod_generator",
           "pages": [
             {
               "type": "text",
@@ -366,7 +361,7 @@
               "type": "stats",
               "title": "정보",
               "lines": [
-                "Energy: 16–24 EU/t on discharge",
+                "에너지: 방전 시 16–24 EU/t",
                 "버퍼: 4000 EU"
               ]
             },
@@ -394,7 +389,6 @@
           "id": "daylight_solar_panel",
           "title": "햇빛 태양광 패널",
           "icon": "alaindustrial:daylight_solar_panel",
-          "block_id": "alaindustrial:daylight_solar_panel",
           "pages": [
             {
               "type": "text",
@@ -413,20 +407,19 @@
         },
         {
           "id": "creative_energy_source",
-          "title": "Creative Energy Source",
+          "title": "크리에이티브 에너지원",
           "icon": "alaindustrial:creative_energy_source",
-          "block_id": "alaindustrial:creative_energy_source",
           "pages": [
             {
               "type": "text",
-              "title": "Creative Energy Source",
-              "text": "An inexhaustible EU source with adjustable output — a tool for testing setups, not obtainable in survival."
+              "title": "크리에이티브 에너지원",
+              "text": "출력을 조절할 수 있는 무한 EU 공급원입니다. 설비를 시험하기 위한 도구이며, 서바이벌에서는 얻을 수 없습니다."
             },
             {
               "type": "stats",
               "title": "정보",
               "lines": [
-                "Energy: 32-8192 EU/t"
+                "에너지: 32-8192 EU/t"
               ]
             }
           ]
@@ -435,7 +428,6 @@
           "id": "moonlit_solar_panel",
           "title": "달빛 태양광 패널",
           "icon": "alaindustrial:moonlit_solar_panel",
-          "block_id": "alaindustrial:moonlit_solar_panel",
           "pages": [
             {
               "type": "text",
@@ -456,7 +448,6 @@
           "id": "solar_panel",
           "title": "태양광 패널",
           "icon": "alaindustrial:solar_panel",
-          "block_id": "alaindustrial:solar_panel",
           "pages": [
             {
               "type": "text",
@@ -495,7 +486,6 @@
           "id": "charge_pad",
           "title": "충전소",
           "icon": "alaindustrial:charge_pad",
-          "block_id": "alaindustrial:charge_pad",
           "pages": [
             {
               "type": "text",
@@ -534,7 +524,6 @@
           "id": "energy_condenser",
           "title": "에너지 응축기",
           "icon": "alaindustrial:energy_condenser",
-          "block_id": "alaindustrial:energy_condenser",
           "pages": [
             {
               "type": "text",
@@ -545,7 +534,7 @@
               "type": "stats",
               "title": "정보",
               "lines": [
-                "Energy: 128 EU/t intake"
+                "에너지: 128 EU/t 수용"
               ]
             },
             {
@@ -572,7 +561,6 @@
           "id": "cesu",
           "title": "강화 배터리 박스",
           "icon": "alaindustrial:cesu",
-          "block_id": "alaindustrial:cesu",
           "pages": [
             {
               "type": "text",
@@ -610,7 +598,6 @@
           "id": "battery_box",
           "title": "배터리 박스",
           "icon": "alaindustrial:battery_box",
-          "block_id": "alaindustrial:battery_box",
           "pages": [
             {
               "type": "text",
@@ -648,7 +635,6 @@
           "id": "gold_cable",
           "title": "금 케이블",
           "icon": "alaindustrial:gold_cable",
-          "block_id": "alaindustrial:gold_cable",
           "pages": [
             {
               "type": "text",
@@ -687,7 +673,6 @@
           "id": "insulated_gold_cable",
           "title": "절연 금 케이블",
           "icon": "alaindustrial:insulated_gold_cable",
-          "block_id": "alaindustrial:insulated_gold_cable",
           "pages": [
             {
               "type": "text",
@@ -726,7 +711,6 @@
           "id": "insulated_copper_cable",
           "title": "절연 구리 케이블",
           "icon": "alaindustrial:insulated_copper_cable",
-          "block_id": "alaindustrial:insulated_copper_cable",
           "pages": [
             {
               "type": "text",
@@ -765,7 +749,6 @@
           "id": "insulated_tin_cable",
           "title": "절연 주석 케이블",
           "icon": "alaindustrial:insulated_tin_cable",
-          "block_id": "alaindustrial:insulated_tin_cable",
           "pages": [
             {
               "type": "text",
@@ -804,7 +787,6 @@
           "id": "insulated_electrum_cable",
           "title": "절연 호박금 케이블",
           "icon": "alaindustrial:insulated_electrum_cable",
-          "block_id": "alaindustrial:insulated_electrum_cable",
           "pages": [
             {
               "type": "text",
@@ -843,7 +825,6 @@
           "id": "copper_cable",
           "title": "구리 케이블",
           "icon": "alaindustrial:copper_cable",
-          "block_id": "alaindustrial:copper_cable",
           "pages": [
             {
               "type": "text",
@@ -882,7 +863,6 @@
           "id": "tin_cable",
           "title": "주석 케이블",
           "icon": "alaindustrial:tin_cable",
-          "block_id": "alaindustrial:tin_cable",
           "pages": [
             {
               "type": "text",
@@ -921,7 +901,6 @@
           "id": "electrum_cable",
           "title": "호박금 케이블",
           "icon": "alaindustrial:electrum_cable",
-          "block_id": "alaindustrial:electrum_cable",
           "pages": [
             {
               "type": "text",
@@ -958,20 +937,19 @@
         },
         {
           "id": "shielding_chest",
-          "title": "Shielding Chest",
+          "title": "차폐 상자",
           "icon": "alaindustrial:shielding_chest",
-          "block_id": "alaindustrial:shielding_chest",
           "pages": [
             {
               "type": "text",
-              "title": "Shielding Chest",
-              "text": "The only container that stops the radiation of its contents: uranium inside irradiates nobody. Iron-chest capacity (36 slots), needs no energy."
+              "title": "차폐 상자",
+              "text": "내용물의 방사선을 막아 주는 유일한 상자입니다. 안에 우라늄을 넣어도 아무도 피폭되지 않습니다. 용량은 철 상자와 같은 36칸이며 에너지가 필요 없습니다."
             },
             {
               "type": "stats",
               "title": "정보",
               "lines": [
-                "에너지: 36칸"
+                "용량: 36칸"
               ]
             },
             {
@@ -998,12 +976,11 @@
           "id": "reactor_controller",
           "title": "원자로 제어기",
           "icon": "alaindustrial:reactor_controller",
-          "block_id": "alaindustrial:reactor_controller",
           "pages": [
             {
               "type": "text",
               "title": "원자로 제어기",
-              "text": "원자로실의 두뇌입니다. 외벽을 훑어 무엇이 잘못됐는지 알려 주고, 그 자리를 정확히 보여 줍니다 — 상태 한 줄과 결함 지점에서 피어오르는 연기로."
+              "text": "원자로의 두뇌입니다. 외벽을 훑어 무엇이 잘못됐는지, 정확히 어디인지 알려 주고, 반응을 이끌어 EU를 내보냅니다. 원자로실은 선택입니다 — 없으면 더 약하게 돌아가고 주변을 녹입니다."
             },
             {
               "type": "stats",
@@ -1036,7 +1013,6 @@
           "id": "empty_fuel_rod",
           "title": "연료봉 피복관",
           "icon": "alaindustrial:empty_fuel_rod",
-          "block_id": "alaindustrial:empty_fuel_rod",
           "pages": [
             {
               "type": "text",
@@ -1067,7 +1043,6 @@
           "id": "steam_nozzle",
           "title": "증기 노즐",
           "icon": "alaindustrial:steam_nozzle",
-          "block_id": "alaindustrial:steam_nozzle",
           "pages": [
             {
               "type": "text",
@@ -1098,7 +1073,6 @@
           "id": "reactor_button",
           "title": "원자로 버튼",
           "icon": "alaindustrial:reactor_button",
-          "block_id": "alaindustrial:reactor_button",
           "pages": [
             {
               "type": "text",
@@ -1136,7 +1110,6 @@
           "id": "fuel_rod_assembly",
           "title": "원자로 기둥",
           "icon": "alaindustrial:fuel_rod_assembly",
-          "block_id": "alaindustrial:fuel_rod_assembly",
           "pages": [
             {
               "type": "text",
@@ -1167,7 +1140,6 @@
           "id": "reactor_lamp",
           "title": "원자로 조명",
           "icon": "alaindustrial:reactor_lamp",
-          "block_id": "alaindustrial:reactor_lamp",
           "pages": [
             {
               "type": "text",
@@ -1205,7 +1177,6 @@
           "id": "reactor_casing",
           "title": "원자로 케이스",
           "icon": "alaindustrial:reactor_casing",
-          "block_id": "alaindustrial:reactor_casing",
           "pages": [
             {
               "type": "text",
@@ -1243,7 +1214,6 @@
           "id": "reactor_glass",
           "title": "원자로 유리",
           "icon": "alaindustrial:reactor_glass",
-          "block_id": "alaindustrial:reactor_glass",
           "pages": [
             {
               "type": "text",
@@ -1281,7 +1251,6 @@
           "id": "reactor_port",
           "title": "원자로 입구",
           "icon": "alaindustrial:reactor_port",
-          "block_id": "alaindustrial:reactor_port",
           "pages": [
             {
               "type": "text",
@@ -1319,7 +1288,6 @@
           "id": "reactor_outlet",
           "title": "원자로 출력 단자",
           "icon": "alaindustrial:reactor_outlet",
-          "block_id": "alaindustrial:reactor_outlet",
           "pages": [
             {
               "type": "text",
@@ -1357,7 +1325,6 @@
           "id": "uranium_fuel_rod",
           "title": "연료봉",
           "icon": "alaindustrial:uranium_fuel_rod",
-          "block_id": "alaindustrial:uranium_fuel_rod",
           "pages": [
             {
               "type": "text",
@@ -1388,7 +1355,6 @@
           "id": "reactor_door",
           "title": "원자로 에어록 문",
           "icon": "alaindustrial:reactor_door",
-          "block_id": "alaindustrial:reactor_door",
           "pages": [
             {
               "type": "text",
@@ -1433,7 +1399,6 @@
           "id": "vulcanizer",
           "title": "가황기",
           "icon": "alaindustrial:vulcanizer",
-          "block_id": "alaindustrial:vulcanizer",
           "pages": [
             {
               "type": "text",
@@ -1472,7 +1437,6 @@
           "id": "macerator",
           "title": "분쇄기",
           "icon": "alaindustrial:macerator",
-          "block_id": "alaindustrial:macerator",
           "pages": [
             {
               "type": "text",
@@ -1511,7 +1475,6 @@
           "id": "iron_furnace",
           "title": "철 화로",
           "icon": "alaindustrial:iron_furnace",
-          "block_id": "alaindustrial:iron_furnace",
           "pages": [
             {
               "type": "text",
@@ -1542,7 +1505,6 @@
           "id": "compressor",
           "title": "압축기",
           "icon": "alaindustrial:compressor",
-          "block_id": "alaindustrial:compressor",
           "pages": [
             {
               "type": "text",
@@ -1581,7 +1543,6 @@
           "id": "canning_machine",
           "title": "통조림 기계",
           "icon": "alaindustrial:canning_machine",
-          "block_id": "alaindustrial:canning_machine",
           "pages": [
             {
               "type": "text",
@@ -1592,7 +1553,7 @@
               "type": "stats",
               "title": "정보",
               "lines": [
-                "Energy: 200 EU/ration",
+                "에너지: 200 EU/배급식",
                 "버퍼: 800 EU"
               ]
             },
@@ -1620,7 +1581,6 @@
           "id": "sawmill",
           "title": "제재기",
           "icon": "alaindustrial:sawmill",
-          "block_id": "alaindustrial:sawmill",
           "pages": [
             {
               "type": "text",
@@ -1659,7 +1619,6 @@
           "id": "polymerizer",
           "title": "중합기",
           "icon": "alaindustrial:polymerizer",
-          "block_id": "alaindustrial:polymerizer",
           "pages": [
             {
               "type": "text",
@@ -1698,7 +1657,6 @@
           "id": "component_repair_bench",
           "title": "부품 수리대",
           "icon": "alaindustrial:component_repair_bench",
-          "block_id": "alaindustrial:component_repair_bench",
           "pages": [
             {
               "type": "text",
@@ -1737,7 +1695,6 @@
           "id": "assembler",
           "title": "조립기",
           "icon": "alaindustrial:assembler",
-          "block_id": "alaindustrial:assembler",
           "pages": [
             {
               "type": "text",
@@ -1776,7 +1733,6 @@
           "id": "alloy_smelter",
           "title": "합금 제련기",
           "icon": "alaindustrial:alloy_smelter",
-          "block_id": "alaindustrial:alloy_smelter",
           "pages": [
             {
               "type": "text",
@@ -1815,7 +1771,6 @@
           "id": "thermal_centrifuge",
           "title": "열 원심분리기",
           "icon": "alaindustrial:thermal_centrifuge",
-          "block_id": "alaindustrial:thermal_centrifuge",
           "pages": [
             {
               "type": "text",
@@ -1854,7 +1809,6 @@
           "id": "extractor",
           "title": "추출기",
           "icon": "alaindustrial:extractor",
-          "block_id": "alaindustrial:extractor",
           "pages": [
             {
               "type": "text",
@@ -1893,7 +1847,6 @@
           "id": "galvanic_bath",
           "title": "전해조",
           "icon": "alaindustrial:galvanic_bath",
-          "block_id": "alaindustrial:galvanic_bath",
           "pages": [
             {
               "type": "text",
@@ -1931,7 +1884,6 @@
           "id": "electric_heater",
           "title": "전기 히터",
           "icon": "alaindustrial:electric_heater",
-          "block_id": "alaindustrial:electric_heater",
           "pages": [
             {
               "type": "text",
@@ -1970,7 +1922,6 @@
           "id": "electric_furnace",
           "title": "전기 화로",
           "icon": "alaindustrial:electric_furnace",
-          "block_id": "alaindustrial:electric_furnace",
           "pages": [
             {
               "type": "text",
@@ -2009,7 +1960,6 @@
           "id": "pump",
           "title": "펌프",
           "icon": "alaindustrial:pump",
-          "block_id": "alaindustrial:pump",
           "pages": [
             {
               "type": "text",
@@ -2047,7 +1997,6 @@
           "id": "distillation_column",
           "title": "증류탑",
           "icon": "alaindustrial:distillation_column",
-          "block_id": "alaindustrial:distillation_column",
           "pages": [
             {
               "type": "text",
@@ -2093,7 +2042,6 @@
           "id": "item_pipe",
           "title": "아이템 파이프",
           "icon": "alaindustrial:item_pipe",
-          "block_id": "alaindustrial:item_pipe",
           "pages": [
             {
               "type": "text",
@@ -2124,7 +2072,6 @@
           "id": "fluid_pipe",
           "title": "액체 파이프",
           "icon": "alaindustrial:fluid_pipe",
-          "block_id": "alaindustrial:fluid_pipe",
           "pages": [
             {
               "type": "text",
@@ -2155,7 +2102,6 @@
           "id": "fluid_tank",
           "title": "휴대용 유체 탱크",
           "icon": "alaindustrial:fluid_tank",
-          "block_id": "alaindustrial:fluid_tank",
           "pages": [
             {
               "type": "text",
@@ -2166,7 +2112,7 @@
               "type": "stats",
               "title": "정보",
               "lines": [
-                "에너지: 양동이 8개"
+                "용량: 양동이 8개"
               ]
             },
             {
@@ -2200,7 +2146,6 @@
           "id": "tempered_iron_block",
           "title": "담금질된 철 블록",
           "icon": "alaindustrial:tempered_iron_block",
-          "block_id": "alaindustrial:tempered_iron_block",
           "pages": [
             {
               "type": "text",
@@ -2231,7 +2176,6 @@
           "id": "bronze_ingot",
           "title": "청동 주괴",
           "icon": "alaindustrial:bronze_ingot",
-          "block_id": "alaindustrial:bronze_ingot",
           "pages": [
             {
               "type": "text",
@@ -2244,7 +2188,6 @@
           "id": "diesel",
           "title": "디젤",
           "icon": "alaindustrial:diesel_bucket",
-          "block_id": "alaindustrial:diesel",
           "pages": [
             {
               "type": "text",
@@ -2257,7 +2200,6 @@
           "id": "invar_ingot",
           "title": "인바 주괴",
           "icon": "alaindustrial:invar_ingot",
-          "block_id": "alaindustrial:invar_ingot",
           "pages": [
             {
               "type": "text",
@@ -2270,7 +2212,6 @@
           "id": "cupronickel_ingot",
           "title": "백동 주괴",
           "icon": "alaindustrial:cupronickel_ingot",
-          "block_id": "alaindustrial:cupronickel_ingot",
           "pages": [
             {
               "type": "text",
@@ -2283,7 +2224,6 @@
           "id": "fuel_oil",
           "title": "중유",
           "icon": "alaindustrial:fuel_oil_bucket",
-          "block_id": "alaindustrial:fuel_oil",
           "pages": [
             {
               "type": "text",
@@ -2296,7 +2236,6 @@
           "id": "oil",
           "title": "석유",
           "icon": "alaindustrial:oil_bucket",
-          "block_id": "alaindustrial:oil",
           "pages": [
             {
               "type": "text",
@@ -2309,7 +2248,6 @@
           "id": "nickel_ore",
           "title": "니켈 광석",
           "icon": "alaindustrial:nickel_ore",
-          "block_id": "alaindustrial:nickel_ore",
           "pages": [
             {
               "type": "text",
@@ -2322,7 +2260,6 @@
           "id": "tempered_iron_plate_block",
           "title": "담금질된 철 판 블록",
           "icon": "alaindustrial:tempered_iron_plate_block",
-          "block_id": "alaindustrial:tempered_iron_plate_block",
           "pages": [
             {
               "type": "text",
@@ -2353,7 +2290,6 @@
           "id": "tin_ore",
           "title": "주석 광석",
           "icon": "alaindustrial:tin_ore",
-          "block_id": "alaindustrial:tin_ore",
           "pages": [
             {
               "type": "text",
@@ -2366,7 +2302,6 @@
           "id": "palladium_ore",
           "title": "팔라듐 광석",
           "icon": "alaindustrial:palladium_ore",
-          "block_id": "alaindustrial:palladium_ore",
           "pages": [
             {
               "type": "text",
@@ -2378,8 +2313,7 @@
         {
           "id": "steam",
           "title": "증기",
-          "icon": "alaindustrial:steam",
-          "block_id": "alaindustrial:steam",
+          "icon": "alaindustrial:steam_nozzle",
           "pages": [
             {
               "type": "text",
@@ -2392,7 +2326,6 @@
           "id": "silver_plate_block",
           "title": "은 판 블록",
           "icon": "alaindustrial:silver_plate_block",
-          "block_id": "alaindustrial:silver_plate_block",
           "pages": [
             {
               "type": "text",
@@ -2423,7 +2356,6 @@
           "id": "silver_ore",
           "title": "은 광석",
           "icon": "alaindustrial:silver_ore",
-          "block_id": "alaindustrial:silver_ore",
           "pages": [
             {
               "type": "text",
@@ -2436,7 +2368,6 @@
           "id": "sulfur_ore",
           "title": "황 광석",
           "icon": "alaindustrial:sulfur_ore",
-          "block_id": "alaindustrial:sulfur_ore",
           "pages": [
             {
               "type": "text",
@@ -2449,7 +2380,6 @@
           "id": "uranium_ore",
           "title": "우라늄 광석",
           "icon": "alaindustrial:uranium_ore",
-          "block_id": "alaindustrial:uranium_ore",
           "pages": [
             {
               "type": "text",
@@ -2459,10 +2389,21 @@
           ]
         },
         {
+          "id": "shielding_alloy_ingot",
+          "title": "차폐 합금 주괴",
+          "icon": "alaindustrial:shielding_alloy_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "차폐 합금 주괴",
+              "text": "팔라듐과 담금질된 철의 합금으로, 원자로실을 짓는 유일한 재료입니다 — 주괴, 차폐판, 그리고 열화 우라늄까지 요구하는 강화 차폐판."
+            }
+          ]
+        },
+        {
           "id": "electrum_ingot",
           "title": "호박금 주괴",
           "icon": "alaindustrial:electrum_ingot",
-          "block_id": "alaindustrial:electrum_ingot",
           "pages": [
             {
               "type": "text",
@@ -2475,7 +2416,6 @@
           "id": "trellis",
           "title": "지지대",
           "icon": "alaindustrial:trellis",
-          "block_id": "alaindustrial:trellis",
           "pages": [
             {
               "type": "text",
@@ -2506,7 +2446,6 @@
           "id": "incubator",
           "title": "인큐베이터",
           "icon": "alaindustrial:incubator",
-          "block_id": "alaindustrial:incubator",
           "pages": [
             {
               "type": "text",
@@ -2544,12 +2483,11 @@
           "id": "garden_drone_station",
           "title": "정원 드론 스테이션",
           "icon": "alaindustrial:garden_drone_station",
-          "block_id": "alaindustrial:garden_drone_station",
           "pages": [
             {
               "type": "text",
               "title": "정원 드론 스테이션",
-              "text": "EU 버퍼를 갖춘 LV 스테이션으로, 여기서 애니메이션 드론이 이륙해 반경 9블록의 농지를 순찰합니다 — 빈 흙을 갈고, 씨앗을 심고, 덜 자란 작물에 비료를 주고, 익은 수확물을 스테이션으로 가져옵니다."
+              "text": "EU 버퍼를 갖춘 LV 스테이션으로, 여기서 애니메이션 드론이 이륙해 반경 4블록의 농지를 순찰합니다 — 빈 흙을 갈고, 씨앗을 심고, 덜 자란 작물에 비료를 주고, 익은 수확물을 스테이션으로 가져옵니다."
             },
             {
               "type": "stats",
@@ -2582,7 +2520,6 @@
           "id": "teleporter",
           "title": "텔레포터",
           "icon": "alaindustrial:teleporter",
-          "block_id": "alaindustrial:teleporter",
           "pages": [
             {
               "type": "text",
@@ -2627,7 +2564,6 @@
           "id": "iron_chest",
           "title": "철 상자",
           "icon": "alaindustrial:iron_chest",
-          "block_id": "alaindustrial:iron_chest",
           "pages": [
             {
               "type": "text",
@@ -2638,7 +2574,7 @@
               "type": "stats",
               "title": "정보",
               "lines": [
-                "에너지: 36칸"
+                "용량: 36칸"
               ]
             },
             {
@@ -2665,7 +2601,6 @@
           "id": "silver_chest",
           "title": "은 상자",
           "icon": "alaindustrial:silver_chest",
-          "block_id": "alaindustrial:silver_chest",
           "pages": [
             {
               "type": "text",
@@ -2676,7 +2611,7 @@
               "type": "stats",
               "title": "정보",
               "lines": [
-                "에너지: 45칸"
+                "용량: 45칸"
               ]
             },
             {
@@ -2703,7 +2638,6 @@
           "id": "gold_chest",
           "title": "금 상자",
           "icon": "alaindustrial:gold_chest",
-          "block_id": "alaindustrial:gold_chest",
           "pages": [
             {
               "type": "text",
@@ -2734,7 +2668,6 @@
           "id": "storage_module",
           "title": "저장 모듈",
           "icon": "alaindustrial:storage_module",
-          "block_id": "alaindustrial:storage_module",
           "pages": [
             {
               "type": "text",
@@ -2772,7 +2705,6 @@
           "id": "mob_repeller_hv",
           "title": "대형 몹 퇴치기",
           "icon": "alaindustrial:mob_repeller_hv",
-          "block_id": "alaindustrial:mob_repeller_hv",
           "pages": [
             {
               "type": "text",
@@ -2783,7 +2715,7 @@
               "type": "stats",
               "title": "정보",
               "lines": [
-                "Energy: 64 EU/t (field)",
+                "에너지: 64 EU/t (필드)",
                 "버퍼: 32000 EU"
               ]
             }
@@ -2793,7 +2725,6 @@
           "id": "industrial_workbench",
           "title": "산업 작업대",
           "icon": "alaindustrial:industrial_workbench",
-          "block_id": "alaindustrial:industrial_workbench",
           "pages": [
             {
               "type": "text",
@@ -2824,7 +2755,6 @@
           "id": "guide_book",
           "title": "가이드북",
           "icon": "alaindustrial:guide_book",
-          "block_id": "alaindustrial:guide_book",
           "pages": [
             {
               "type": "text",
@@ -2855,7 +2785,6 @@
           "id": "player_profile",
           "title": "플레이어 프로필",
           "icon": "minecraft:player_head",
-          "block_id": "alaindustrial:player_profile",
           "pages": [
             {
               "type": "text",
@@ -2875,7 +2804,6 @@
           "id": "mob_repeller",
           "title": "소형 몹 퇴치기",
           "icon": "alaindustrial:mob_repeller",
-          "block_id": "alaindustrial:mob_repeller",
           "pages": [
             {
               "type": "text",
@@ -2886,7 +2814,7 @@
               "type": "stats",
               "title": "정보",
               "lines": [
-                "Energy: 8 EU/t (field)",
+                "에너지: 8 EU/t (필드)",
                 "버퍼: 2000 EU"
               ]
             },
@@ -2914,7 +2842,6 @@
           "id": "enriched_uranium_torch",
           "title": "농축 우라늄 횃불",
           "icon": "alaindustrial:enriched_uranium_torch",
-          "block_id": "alaindustrial:enriched_uranium_torch",
           "pages": [
             {
               "type": "text",
@@ -2951,7 +2878,7 @@
                     "",
                     ""
                   ],
-                  "recipe_type": "Shaped Crafting",
+                  "recipe_type": "정형 제작",
                   "result_id": "alaindustrial:enriched_uranium_torch",
                   "result_count": 4
                 },
@@ -2967,7 +2894,7 @@
                     "",
                     ""
                   ],
-                  "recipe_type": "Shapeless Crafting",
+                  "recipe_type": "무정형 제작",
                   "result_id": "alaindustrial:enriched_uranium_torch",
                   "result_count": 1
                 }
@@ -2979,7 +2906,6 @@
           "id": "stock_display_frame",
           "title": "재고 표시 액자",
           "icon": "alaindustrial:stock_display_frame",
-          "block_id": "alaindustrial:stock_display_frame",
           "pages": [
             {
               "type": "text",
@@ -3010,7 +2936,6 @@
           "id": "mob_repeller_mv",
           "title": "중형 몹 퇴치기",
           "icon": "alaindustrial:mob_repeller_mv",
-          "block_id": "alaindustrial:mob_repeller_mv",
           "pages": [
             {
               "type": "text",
@@ -3021,7 +2946,7 @@
               "type": "stats",
               "title": "정보",
               "lines": [
-                "Energy: 32 EU/t (field)",
+                "에너지: 32 EU/t (필드)",
                 "버퍼: 8000 EU"
               ]
             }
@@ -3031,7 +2956,6 @@
           "id": "electrum_chest",
           "title": "호박금 상자",
           "icon": "alaindustrial:electrum_chest",
-          "block_id": "alaindustrial:electrum_chest",
           "pages": [
             {
               "type": "text",
@@ -3042,7 +2966,7 @@
               "type": "stats",
               "title": "정보",
               "lines": [
-                "에너지: 81칸"
+                "용량: 81칸"
               ]
             },
             {
@@ -3076,7 +3000,6 @@
           "id": "overclocker_chip_i",
           "title": "오버클럭 칩 I",
           "icon": "alaindustrial:overclocker_chip_i",
-          "block_id": "alaindustrial:overclocker_chip_i",
           "pages": [
             {
               "type": "text",
@@ -3107,7 +3030,6 @@
           "id": "stats_chip",
           "title": "통계 칩",
           "icon": "alaindustrial:stats_chip",
-          "block_id": "alaindustrial:stats_chip",
           "pages": [
             {
               "type": "text",
@@ -3138,7 +3060,6 @@
           "id": "mute_chip",
           "title": "소음 차단 칩",
           "icon": "alaindustrial:mute_chip",
-          "block_id": "alaindustrial:mute_chip",
           "pages": [
             {
               "type": "text",
@@ -3169,7 +3090,6 @@
           "id": "battery",
           "title": "배터리",
           "icon": "alaindustrial:battery",
-          "block_id": "alaindustrial:battery",
           "pages": [
             {
               "type": "text",
@@ -3207,7 +3127,6 @@
           "id": "tempered_iron",
           "title": "담금질된 철",
           "icon": "alaindustrial:tempered_iron",
-          "block_id": "alaindustrial:tempered_iron",
           "pages": [
             {
               "type": "text",
@@ -3238,7 +3157,6 @@
           "id": "water_mill_wheel",
           "title": "물레방아",
           "icon": "alaindustrial:water_mill_wheel",
-          "block_id": "alaindustrial:water_mill_wheel",
           "pages": [
             {
               "type": "text",
@@ -3266,10 +3184,39 @@
           ]
         },
         {
+          "id": "lapotron_crystal",
+          "title": "라포트론 크리스털",
+          "icon": "alaindustrial:lapotron_crystal",
+          "pages": [
+            {
+              "type": "text",
+              "title": "라포트론 크리스털",
+              "text": "직접 제작할 수 없는 제작 재료입니다. 소재가 충전 칸에서 500,000 EU를 흡수하면 자체 충전량이 없는 완성된 크리스털로 바뀝니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:energy_crystal",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:energy_clot_ii",
+                "alaindustrial:advanced_circuit"
+              ],
+              "result_id": "alaindustrial:lapotron_crystal_blank",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "machine_casing",
           "title": "기계 케이스",
           "icon": "alaindustrial:machine_casing",
-          "block_id": "alaindustrial:machine_casing",
           "pages": [
             {
               "type": "text",
@@ -3300,7 +3247,6 @@
           "id": "copper_coil",
           "title": "구리 코일",
           "icon": "alaindustrial:copper_coil",
-          "block_id": "alaindustrial:copper_coil",
           "pages": [
             {
               "type": "text",
@@ -3331,7 +3277,6 @@
           "id": "iron_gear",
           "title": "철 톱니바퀴",
           "icon": "alaindustrial:iron_gear",
-          "block_id": "alaindustrial:iron_gear",
           "pages": [
             {
               "type": "text",
@@ -3362,7 +3307,6 @@
           "id": "mutation_chip_duplicate",
           "title": "복제 칩",
           "icon": "alaindustrial:mutation_chip_duplicate",
-          "block_id": "alaindustrial:mutation_chip_duplicate",
           "pages": [
             {
               "type": "text",
@@ -3393,7 +3337,6 @@
           "id": "advanced_circuit",
           "title": "고급 회로",
           "icon": "alaindustrial:advanced_circuit",
-          "block_id": "alaindustrial:advanced_circuit",
           "pages": [
             {
               "type": "text",
@@ -3424,7 +3367,6 @@
           "id": "advanced_machine_casing",
           "title": "고급 기계 케이스",
           "icon": "alaindustrial:advanced_machine_casing",
-          "block_id": "alaindustrial:advanced_machine_casing",
           "pages": [
             {
               "type": "text",
@@ -3455,7 +3397,6 @@
           "id": "resonant_shard",
           "title": "공명 파편",
           "icon": "alaindustrial:resonant_shard",
-          "block_id": "alaindustrial:resonant_shard",
           "pages": [
             {
               "type": "text",
@@ -3468,7 +3409,6 @@
           "id": "empty_chip",
           "title": "빈 칩",
           "icon": "alaindustrial:empty_chip",
-          "block_id": "alaindustrial:empty_chip",
           "pages": [
             {
               "type": "text",
@@ -3499,7 +3439,6 @@
           "id": "rubber",
           "title": "고무",
           "icon": "alaindustrial:rubber",
-          "block_id": "alaindustrial:rubber",
           "pages": [
             {
               "type": "text",
@@ -3512,7 +3451,6 @@
           "id": "rtp_chip",
           "title": "무작위 도약 칩",
           "icon": "alaindustrial:rtp_chip",
-          "block_id": "alaindustrial:rtp_chip",
           "pages": [
             {
               "type": "text",
@@ -3540,10 +3478,39 @@
           ]
         },
         {
+          "id": "resonant_crystal",
+          "title": "공명 크리스털",
+          "icon": "alaindustrial:resonant_crystal",
+          "pages": [
+            {
+              "type": "text",
+              "title": "공명 크리스털",
+              "text": "직접 제작할 수 없는 제작 재료입니다. 소재가 충전 칸에서 1,500,000 EU를 흡수하면 자체 충전량이 없는 완성된 크리스털로 바뀝니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:resonant_shard",
+                "alaindustrial:spatial_crystal",
+                "alaindustrial:resonant_shard",
+                "alaindustrial:spatial_crystal",
+                "alaindustrial:lapotron_crystal",
+                "alaindustrial:spatial_crystal",
+                "alaindustrial:resonant_shard",
+                "alaindustrial:energy_clot_iii",
+                "alaindustrial:resonant_shard"
+              ],
+              "result_id": "alaindustrial:resonant_crystal_blank",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "windmill_rotor",
           "title": "나무 회전날",
           "icon": "alaindustrial:windmill_rotor",
-          "block_id": "alaindustrial:windmill_rotor",
           "pages": [
             {
               "type": "text",
@@ -3574,7 +3541,6 @@
           "id": "energy_clot_i",
           "title": "에너지 응결체 I",
           "icon": "alaindustrial:energy_clot_i",
-          "block_id": "alaindustrial:energy_clot_i",
           "pages": [
             {
               "type": "text",
@@ -3587,7 +3553,6 @@
           "id": "network_analyzer",
           "title": "네트워크 분석기",
           "icon": "alaindustrial:network_analyzer",
-          "block_id": "alaindustrial:network_analyzer",
           "pages": [
             {
               "type": "text",
@@ -3618,7 +3583,6 @@
           "id": "fluxweave_cloth",
           "title": "플럭스 천",
           "icon": "alaindustrial:fluxweave_cloth",
-          "block_id": "alaindustrial:fluxweave_cloth",
           "pages": [
             {
               "type": "text",
@@ -3649,7 +3613,6 @@
           "id": "iron_dust",
           "title": "철 가루",
           "icon": "alaindustrial:iron_dust",
-          "block_id": "alaindustrial:iron_dust",
           "pages": [
             {
               "type": "text",
@@ -3662,7 +3625,6 @@
           "id": "alignment_chip_day",
           "title": "태양광 진화 칩",
           "icon": "alaindustrial:alignment_chip_day",
-          "block_id": "alaindustrial:alignment_chip_day",
           "pages": [
             {
               "type": "text",
@@ -3693,7 +3655,6 @@
           "id": "electronic_circuit",
           "title": "전자 회로",
           "icon": "alaindustrial:electronic_circuit",
-          "block_id": "alaindustrial:electronic_circuit",
           "pages": [
             {
               "type": "text",
@@ -3721,10 +3682,39 @@
           ]
         },
         {
+          "id": "energy_crystal",
+          "title": "에너지 크리스털",
+          "icon": "alaindustrial:energy_crystal",
+          "pages": [
+            {
+              "type": "text",
+              "title": "에너지 크리스털",
+              "text": "직접 제작할 수 없는 제작 재료입니다. 소재가 충전 칸에서 100,000 EU를 흡수하면 자체 충전량이 없는 완성된 크리스털로 바뀝니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:diamond_dust",
+                "minecraft:redstone",
+                "alaindustrial:diamond_dust",
+                "minecraft:redstone",
+                "alaindustrial:tempered_iron",
+                "minecraft:redstone",
+                "alaindustrial:diamond_dust",
+                "minecraft:redstone",
+                "alaindustrial:diamond_dust"
+              ],
+              "result_id": "alaindustrial:energy_crystal_blank",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "wind_gauge",
           "title": "풍속계",
           "icon": "alaindustrial:wind_gauge",
-          "block_id": "alaindustrial:wind_gauge",
           "pages": [
             {
               "type": "text",
@@ -3755,7 +3745,6 @@
           "id": "battery_pouch",
           "title": "배터리 주머니",
           "icon": "alaindustrial:battery_pouch",
-          "block_id": "alaindustrial:battery_pouch",
           "pages": [
             {
               "type": "text",
@@ -3793,7 +3782,6 @@
           "id": "fluxweave_chestplate",
           "title": "플럭스 흉갑",
           "icon": "alaindustrial:fluxweave_chestplate",
-          "block_id": "alaindustrial:fluxweave_chestplate",
           "pages": [
             {
               "type": "text",
@@ -3804,7 +3792,7 @@
               "type": "stats",
               "title": "정보",
               "lines": [
-                "에너지: 15000",
+                "에너지: 15 000 EU",
                 "버퍼: 15 000 EU"
               ]
             },
@@ -3832,7 +3820,6 @@
           "id": "tempered_iron_chestplate",
           "title": "담금질 철 흉갑",
           "icon": "alaindustrial:tempered_iron_chestplate",
-          "block_id": "alaindustrial:tempered_iron_chestplate",
           "pages": [
             {
               "type": "text",
@@ -3843,7 +3830,7 @@
               "type": "stats",
               "title": "정보",
               "lines": [
-                "에너지: 4개"
+                "개수: 4개"
               ]
             },
             {
@@ -3870,7 +3857,6 @@
           "id": "vacuum_capsule",
           "title": "진공 캡슐",
           "icon": "alaindustrial:vacuum_capsule",
-          "block_id": "alaindustrial:vacuum_capsule",
           "pages": [
             {
               "type": "text",
@@ -3901,7 +3887,6 @@
           "id": "wrench",
           "title": "렌치",
           "icon": "alaindustrial:wrench",
-          "block_id": "alaindustrial:wrench",
           "pages": [
             {
               "type": "text",
@@ -3932,7 +3917,6 @@
           "id": "jetpack",
           "title": "제트팩",
           "icon": "alaindustrial:jetpack",
-          "block_id": "alaindustrial:jetpack",
           "pages": [
             {
               "type": "text",
@@ -3970,7 +3954,6 @@
           "id": "tempered_iron_pickaxe",
           "title": "담금질 철 곡괭이",
           "icon": "alaindustrial:tempered_iron_pickaxe",
-          "block_id": "alaindustrial:tempered_iron_pickaxe",
           "pages": [
             {
               "type": "text",
@@ -3999,20 +3982,19 @@
         },
         {
           "id": "insulated_chestplate",
-          "title": "Insulated Chestplate",
+          "title": "절연 흉갑",
           "icon": "alaindustrial:insulated_chestplate",
-          "block_id": "alaindustrial:insulated_chestplate",
           "pages": [
             {
               "type": "text",
-              "title": "Insulated Chestplate",
-              "text": "Leather armour dipped in slime — hood, jacket, trousers and boots that soak up a bare cable's shock and spend durability doing it."
+              "title": "절연 흉갑",
+              "text": "슬라임에 담근 가죽 방어구 — 두건, 재킷, 바지, 부츠. 피복 없는 케이블의 감전을 대신 받아 내며 그만큼 내구도를 씁니다."
             },
             {
               "type": "stats",
               "title": "정보",
               "lines": [
-                "에너지: 4개"
+                "개수: 4개"
               ]
             },
             {
@@ -4039,7 +4021,6 @@
           "id": "tempered_iron_tools",
           "title": "담금질 철 도구",
           "icon": "alaindustrial:tempered_iron_axe",
-          "block_id": "alaindustrial:tempered_iron_tools",
           "pages": [
             {
               "type": "text",
@@ -4050,7 +4031,7 @@
               "type": "stats",
               "title": "정보",
               "lines": [
-                "에너지: 5개"
+                "개수: 5개"
               ]
             },
             {
@@ -4083,7 +4064,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Shaped Crafting",
+                  "recipe_type": "정형 제작",
                   "result_id": "alaindustrial:tempered_iron_pickaxe",
                   "result_count": 1
                 },
@@ -4099,7 +4080,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Shaped Crafting",
+                  "recipe_type": "정형 제작",
                   "result_id": "alaindustrial:tempered_iron_axe",
                   "result_count": 1
                 },
@@ -4115,7 +4096,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Shaped Crafting",
+                  "recipe_type": "정형 제작",
                   "result_id": "alaindustrial:tempered_iron_hoe",
                   "result_count": 1
                 },
@@ -4131,7 +4112,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Shaped Crafting",
+                  "recipe_type": "정형 제작",
                   "result_id": "alaindustrial:tempered_iron_shovel",
                   "result_count": 1
                 },
@@ -4147,7 +4128,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Shaped Crafting",
+                  "recipe_type": "정형 제작",
                   "result_id": "alaindustrial:tempered_iron_sword",
                   "result_count": 1
                 }
@@ -4159,7 +4140,6 @@
           "id": "scythe",
           "title": "큰낫",
           "icon": "alaindustrial:scythe_iron",
-          "block_id": "alaindustrial:scythe",
           "pages": [
             {
               "type": "text",
@@ -4170,7 +4150,7 @@
               "type": "stats",
               "title": "정보",
               "lines": [
-                "에너지: 8등급"
+                "등급: 8등급"
               ]
             },
             {
@@ -4203,7 +4183,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Shaped Crafting",
+                  "recipe_type": "정형 제작",
                   "result_id": "alaindustrial:scythe_wood",
                   "result_count": 1
                 },
@@ -4219,7 +4199,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Shaped Crafting",
+                  "recipe_type": "정형 제작",
                   "result_id": "alaindustrial:scythe_stone",
                   "result_count": 1
                 },
@@ -4235,7 +4215,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Shaped Crafting",
+                  "recipe_type": "정형 제작",
                   "result_id": "alaindustrial:scythe_copper",
                   "result_count": 1
                 },
@@ -4251,7 +4231,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Shaped Crafting",
+                  "recipe_type": "정형 제작",
                   "result_id": "alaindustrial:scythe_iron",
                   "result_count": 1
                 },
@@ -4267,7 +4247,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Shaped Crafting",
+                  "recipe_type": "정형 제작",
                   "result_id": "alaindustrial:scythe_gold",
                   "result_count": 1
                 },
@@ -4283,7 +4263,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Shaped Crafting",
+                  "recipe_type": "정형 제작",
                   "result_id": "alaindustrial:scythe_tempered_iron",
                   "result_count": 1
                 },
@@ -4299,7 +4279,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Shaped Crafting",
+                  "recipe_type": "정형 제작",
                   "result_id": "alaindustrial:scythe_diamond",
                   "result_count": 1
                 },
@@ -4315,7 +4295,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Shaped Crafting",
+                  "recipe_type": "정형 제작",
                   "result_id": "alaindustrial:scythe_netherite",
                   "result_count": 1
                 }
@@ -4327,7 +4307,6 @@
           "id": "forge_hammer",
           "title": "대장장이 망치",
           "icon": "alaindustrial:forge_hammer",
-          "block_id": "alaindustrial:forge_hammer",
           "pages": [
             {
               "type": "text",
@@ -4358,7 +4337,6 @@
           "id": "teleporter_remote",
           "title": "텔레포터 리모컨",
           "icon": "alaindustrial:teleporter_remote",
-          "block_id": "alaindustrial:teleporter_remote",
           "pages": [
             {
               "type": "text",
@@ -4389,7 +4367,6 @@
           "id": "soul_vessel",
           "title": "영혼 그릇",
           "icon": "alaindustrial:soul_vessel",
-          "block_id": "alaindustrial:soul_vessel",
           "pages": [
             {
               "type": "text",
@@ -4418,20 +4395,19 @@
         },
         {
           "id": "shielding_chestplate",
-          "title": "Shielding Chestplate",
+          "title": "차폐 흉갑",
           "icon": "alaindustrial:shielding_chestplate",
-          "block_id": "alaindustrial:shielding_chestplate",
           "pages": [
             {
               "type": "text",
-              "title": "Shielding Chestplate",
-              "text": "The anti-radiation set — hood, jacket, trousers and boots of leather, rubber and yellow dye; it cuts the dose, spends durability doing it, and seals the wearer completely."
+              "title": "차폐 흉갑",
+              "text": "방사선 차폐 세트 — 가죽과 고무, 노란 염료로 만든 두건과 재킷, 바지, 부츠. 피폭량을 줄이고 그만큼 내구도를 쓰며, 착용자를 완전히 감쌉니다."
             },
             {
               "type": "stats",
               "title": "정보",
               "lines": [
-                "에너지: 4개"
+                "개수: 4개"
               ]
             },
             {
@@ -4458,7 +4434,6 @@
           "id": "electric_drill",
           "title": "전동 드릴",
           "icon": "alaindustrial:electric_drill",
-          "block_id": "alaindustrial:electric_drill",
           "pages": [
             {
               "type": "text",
@@ -4496,7 +4471,6 @@
           "id": "electric_shovel",
           "title": "전기 삽",
           "icon": "alaindustrial:electric_shovel",
-          "block_id": "alaindustrial:electric_shovel",
           "pages": [
             {
               "type": "text",
@@ -4534,7 +4508,6 @@
           "id": "electromagnet",
           "title": "전자석",
           "icon": "alaindustrial:electromagnet",
-          "block_id": "alaindustrial:electromagnet",
           "pages": [
             {
               "type": "text",
@@ -4573,7 +4546,6 @@
           "id": "electric_hoe",
           "title": "전기 괭이",
           "icon": "alaindustrial:electric_hoe",
-          "block_id": "alaindustrial:electric_hoe",
           "pages": [
             {
               "type": "text",
@@ -4611,7 +4583,6 @@
           "id": "electric_chainsaw",
           "title": "전기톱",
           "icon": "alaindustrial:electric_chainsaw",
-          "block_id": "alaindustrial:electric_chainsaw",
           "pages": [
             {
               "type": "text",
@@ -4649,7 +4620,6 @@
           "id": "electric_saber",
           "title": "전기 사브르",
           "icon": "alaindustrial:electric_saber",
-          "block_id": "alaindustrial:electric_saber",
           "pages": [
             {
               "type": "text",
@@ -4687,7 +4657,6 @@
           "id": "energy_pack",
           "title": "에너지 팩",
           "icon": "alaindustrial:energy_pack",
-          "block_id": "alaindustrial:energy_pack",
           "pages": [
             {
               "type": "text",

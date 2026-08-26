@@ -2,7 +2,6 @@ package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.block.entity.CreativeEnergySourceBlockEntity;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
-import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;

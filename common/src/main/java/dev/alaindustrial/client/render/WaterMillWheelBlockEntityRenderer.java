@@ -62,7 +62,8 @@ public final class WaterMillWheelBlockEntityRenderer<T extends WaterMillBlockEnt
 	 * a dedicated dark circuit-board texture with gold traces for the advanced one, matching its item
 	 * icon. Vanilla {@code emerald_block} was tried first and rejected on sight: it is one of the most
 	 * saturated greens in the game and read as "a wheel made of emeralds" rather than as electronics.
-	 * Its own {@code water_mill_wheel_3d.png} plays no part here — that file is a documentation render.
+	 * Its own {@code water_mill_wheel_3d.png} plays no part here — that file is a documentation render,
+	 * and since MOD-506 it lives in {@code tools/renders_refs/} rather than in the shipped assets.
 	 */
 	private static final SpriteId REINFORCED_BODY =
 			Sheets.BLOCKS_MAPPER.apply(Industrialization.id("tempered_iron_block"));

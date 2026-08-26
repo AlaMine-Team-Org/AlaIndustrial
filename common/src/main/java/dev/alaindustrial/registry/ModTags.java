@@ -44,6 +44,20 @@ public final class ModTags {
 		 */
 		public static final TagKey<Block> SCYTHE_CROPS = key("scythe_crops");
 
+		/**
+		 * Blocks a reactor's lava cannot take (MOD-469).
+		 *
+		 * <p><b>Membership is "built out of shielding alloy", not "belongs to the reactor".</b> The rule
+		 * started as a list of reactor classes and a playtest immediately found the hole: a shielding
+		 * chest standing beside a bare core melted, though it is crafted from the very plate the reactor
+		 * room is built from. A player who has paid for shielding expects it to shield, and which mod
+		 * class the block happens to extend is not something they can see.
+		 *
+		 * <p>A tag rather than an {@code instanceof} chain so a datapack can extend it, and so adding a
+		 * shielded block later is one JSON line instead of an edit to the hazard.
+		 */
+		public static final TagKey<Block> MELTPROOF = key("meltproof");
+
 		private static TagKey<Block> key(String path) {
 			return TagKey.create(Registries.BLOCK, Industrialization.id(path));
 		}
@@ -68,9 +82,6 @@ public final class ModTags {
 
 		/** What the incubator accepts as irradiation fuel (MOD-118) — uranium ingots today. */
 		public static final TagKey<Item> INCUBATOR_FUEL = key("incubator_fuel");
-
-		/** The three mutation chips that select the incubator's mode (MOD-118). */
-		public static final TagKey<Item> MUTATION_CHIP = key("mutation_chip");
 
 		/**
 		 * Everything a machine's upgrade panel accepts anywhere (MOD-392). A tag rather than a hardcoded
@@ -180,20 +191,8 @@ public final class ModTags {
 		public static final TagKey<Fluid> C_OIL =
 				TagKey.create(Registries.FLUID, Identifier.fromNamespaceAndPath("c", "oil"));
 
-		/** Diesel (MOD-251) — {@code c:diesel}, still + flowing, same convention as {@link #C_OIL}. */
-		public static final TagKey<Fluid> C_DIESEL =
-				TagKey.create(Registries.FLUID, Identifier.fromNamespaceAndPath("c", "diesel"));
-
-		/** Fuel oil (MOD-251) — {@code c:fuel_oil}, still + flowing. */
+		/** Fuel oil (MOD-251) — {@code c:fuel_oil}, still + flowing, same convention as {@link #C_OIL}. */
 		public static final TagKey<Fluid> C_FUEL_OIL =
 				TagKey.create(Registries.FLUID, Identifier.fromNamespaceAndPath("c", "fuel_oil"));
-
-		/**
-		 * Every fluid the liquid fuel generator burns (MOD-251 ships the tag, MOD-261 reads it):
-		 * diesel + fuel oil + vanilla lava. Lava is the one member the mod does not own — it is in the
-		 * tag so one filter covers the whole family.
-		 */
-		public static final TagKey<Fluid> C_COMBUSTION_FUELS =
-				TagKey.create(Registries.FLUID, Identifier.fromNamespaceAndPath("c", "combustion_fuels"));
 	}
 }

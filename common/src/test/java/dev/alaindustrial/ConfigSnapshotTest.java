@@ -319,6 +319,17 @@ class ConfigSnapshotTest {
 		SENTINELS.put("reactorHeatCapacity", 8123);
 		SENTINELS.put("reactorHeatWarnPercent", 63);
 		SENTINELS.put("reactorBuffer", 123456);
+		// MOD-469 — the meltdown and the bare reactor.
+		SENTINELS.put("reactorBareSearchRadius", 11);
+		SENTINELS.put("reactorBareMeltRadius", 9);
+		SENTINELS.put("reactorBarePowerPercent", 63);
+		SENTINELS.put("reactorBarePowerCap", 211);
+		SENTINELS.put("reactorBareMeltIntervalTicks", 733);
+		SENTINELS.put("reactorBareMeltMinIntervalTicks", 57);
+		SENTINELS.put("reactorMeltWarnTicks", 29);
+		SENTINELS.put("reactorMeltdownStartPercent", 91);
+		SENTINELS.put("reactorMeltdownIntervalTicks", 77);
+		SENTINELS.put("reactorMeltdownHeatRelief", 517);
 		SENTINELS.put("thermalCentrifugeIdleEuPerTick", 344);
 		// Radiation (MOD-470). Every value differs from the shipped default, is non-zero and clears the
 		// field's own minimum, or the load would rewrite it and the sentinel would prove nothing.
@@ -463,7 +474,8 @@ class ConfigSnapshotTest {
 	 * as a named set so the completeness guard can tell "covered elsewhere" from "forgotten".
 	 */
 	private static final Set<String> BOOLEAN_TUNABLES =
-			Set.of("bonusChestEnabled", "oilBurns", "bareCableShockEnabled", "radiationEnabled", "radiationMobsEnabled");
+			Set.of("bonusChestEnabled", "oilBurns", "bareCableShockEnabled", "radiationEnabled",
+					"radiationMobsEnabled", "reactorMeltdownMeltsBlocks");
 
 	/**
 	 * Every key in {@link Config}'s own {@code FIELDS} registry is covered by this suite — either by a
@@ -602,6 +614,7 @@ class ConfigSnapshotTest {
 		Config.class.getDeclaredField("bonusChestEnabled").setBoolean(null, true);
 		Config.class.getDeclaredField("oilBurns").setBoolean(null, true);
 		Config.class.getDeclaredField("bareCableShockEnabled").setBoolean(null, true);
+		Config.class.getDeclaredField("reactorMeltdownMeltsBlocks").setBoolean(null, true);
 
 		Path f = dir.resolve("alaindustrial.json");
 		Files.writeString(f, "{}");
@@ -612,6 +625,8 @@ class ConfigSnapshotTest {
 				"absent boolean key 'oilBurns' keeps its live TRUE via the getter, not false");
 		assertEquals(true, Config.bareCableShockEnabled,
 				"absent boolean key 'bareCableShockEnabled' keeps its live TRUE via the getter, not false");
+		assertEquals(true, Config.reactorMeltdownMeltsBlocks,
+				"absent boolean key 'reactorMeltdownMeltsBlocks' keeps its live TRUE via the getter, not false");
 	}
 
 	@Test
@@ -623,6 +638,7 @@ class ConfigSnapshotTest {
 		Config.class.getDeclaredField("bonusChestEnabled").setBoolean(null, false);
 		Config.class.getDeclaredField("oilBurns").setBoolean(null, false);
 		Config.class.getDeclaredField("bareCableShockEnabled").setBoolean(null, false);
+		Config.class.getDeclaredField("reactorMeltdownMeltsBlocks").setBoolean(null, false);
 
 		Path f = dir.resolve("alaindustrial.json");
 		Files.writeString(f, "{}");
@@ -633,6 +649,8 @@ class ConfigSnapshotTest {
 				"absent boolean key 'oilBurns' keeps its live FALSE via the getter, not true");
 		assertEquals(false, Config.bareCableShockEnabled,
 				"absent boolean key 'bareCableShockEnabled' keeps its live FALSE via the getter, not true");
+		assertEquals(false, Config.reactorMeltdownMeltsBlocks,
+				"absent boolean key 'reactorMeltdownMeltsBlocks' keeps its live FALSE via the getter, not true");
 	}
 
 	/**

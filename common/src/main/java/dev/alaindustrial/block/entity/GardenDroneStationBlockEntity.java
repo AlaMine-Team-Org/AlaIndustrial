@@ -57,7 +57,7 @@ import org.jetbrains.annotations.Nullable;
  * <li><b>The harvest never spawns an {@code ItemEntity}.</b> Drops are computed server-side and
  *     inserted straight into the output slots; the crop block is only removed once every stack has
  *     landed. A full output means the crop simply stays in the ground.</li>
- * <li><b>The zone is cached.</b> A full re-scan of a radius-9 zone is ~1000 positions; doing that
+ * <li><b>The zone is cached.</b> A full re-scan of a radius-4 zone is ~240 positions; doing that
  *     every tick on a large farm is exactly the kind of thing that eats a server. The cache holds
  *     the tiles worth looking at and is rebuilt on an interval (player edits) or invalidated in
  *     place when the station itself changes a tile.</li>
@@ -558,7 +558,7 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 	/**
 	 * Rebuilds {@link #zoneCache} with every tile in range that could ever need work: a crop, bare
 	 * farmland, or tillable ground. Filtering here (rather than walking the raw cube every tick) is the
-	 * whole point of the cache — a radius-9 cube is ~1000 positions, while the farm inside it is a few
+	 * whole point of the cache — a radius-4 zone (9×9×3) is ~240 positions, while the farm inside it is a few
 	 * dozen tiles.
 	 */
 	private void rebuildZoneCache(ServerLevel level, BlockPos stationPos) {

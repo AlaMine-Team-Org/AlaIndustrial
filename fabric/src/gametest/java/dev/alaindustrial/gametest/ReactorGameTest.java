@@ -40,4 +40,24 @@ public class ReactorGameTest {
 	public void nozzleVentsIntoAirAndStallsAgainstAWall(GameTestHelper helper) {
 		ReactorScenarios.nozzleVentsIntoAirAndStallsAgainstAWall(helper);
 	}
+
+	@GameTest(maxTicks = 400)
+	public void bareReactorProducesMeltsAndObeysTheSwitch(GameTestHelper helper) {
+		ReactorScenarios.bareReactorProducesMeltsAndObeysTheSwitch(helper);
+	}
+
+	@GameTest(maxTicks = 400)
+	public void breachingAWallDropsTheReactorIntoBareMode(GameTestHelper helper) {
+		ReactorScenarios.breachingAWallDropsTheReactorIntoBareMode(helper);
+	}
+
+	@GameTest(maxTicks = 400)
+	public void onlyOneControllerBurnsASharedRack(GameTestHelper helper) {
+		ReactorScenarios.onlyOneControllerBurnsASharedRack(helper);
+	}
+
+	@GameTest(maxTicks = 400)
+	public void anOverheatingRoomMeltsItsContentsAndKeepsItsShell(GameTestHelper helper) {
+		ReactorScenarios.anOverheatingRoomMeltsItsContentsAndKeepsItsShell(helper);
+	}
 }

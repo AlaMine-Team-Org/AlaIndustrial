@@ -54,7 +54,7 @@ public final class GardenDroneScenarios {
 	 * Runs {@code body} with the scan radius pinned to 1 block, then restores the configured value.
 	 *
 	 * <p><b>Why this exists.</b> Gametests share one world, and the shipped radius
-	 * ({@link Config#gardenDroneRange} = 9) reaches well past this test's own structure into whatever
+	 * ({@link Config#gardenDroneRange} = 4) reaches well past this test's own structure into whatever
 	 * scenario is running next door. The station would then dutifully till a neighbour's dirt or plant
 	 * into a neighbour's farmland, and the assertions here would fail — or, far worse, pass for the
 	 * wrong reason — depending on how the shared server happened to lay the structures out. That is the

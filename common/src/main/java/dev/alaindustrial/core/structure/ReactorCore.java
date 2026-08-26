@@ -220,6 +220,76 @@ public final class ReactorCore {
 		return heatPercent >= CRITICAL_PERCENT;
 	}
 
+	/**
+	 * EU per tick a reactor makes with no sealed room around it (MOD-469).
+	 *
+	 * <p><b>A share of the room figure, then a flat ceiling — in that order, and both are load-bearing.</b>
+	 * The share is what makes a bare core weaker than the same rods properly housed; the ceiling is what
+	 * stops a player from answering that by simply piling on more rods. Without the ceiling the share
+	 * alone would leave a bare cluster scaling for ever, which turns the dangerous shortcut into the
+	 * cheapest power in the game — no walls to build, no coolant to plumb, no shell to craft.
+	 *
+	 * <p>{@code cap <= 0} means no ceiling. That is not a supported balance, only a configuration the
+	 * arithmetic must not divide by.
+	 *
+	 * @param roomOutput what {@link #output} gives for these rods in a sealed room, before the tier cap
+	 * @param percent    share the bare core keeps, in percent
+	 * @param cap        hard ceiling in EU/t, independent of how big the cluster grows
+	 */
+	public static long bareOutput(long roomOutput, int percent, int cap) {
+		if (roomOutput <= 0 || percent <= 0) {
+			return 0;
+		}
+		long scaled = roomOutput * percent / 100;
+		return cap <= 0 ? scaled : Math.min(scaled, cap);
+	}
+
+	/**
+	 * Ticks between two blocks melting under a working bare reactor (MOD-469).
+	 *
+	 * <p>The gap shrinks as the cluster grows, so one rod forgotten in an open rack is a nuisance and a
+	 * serious bare station is genuinely frightening — the design's own words. It is a division rather
+	 * than a subtraction so the danger keeps rising with every rod instead of bottoming out at some
+	 * cluster size and staying there; {@code minTicks} is the floor that keeps a huge cluster from
+	 * melting the world faster than the server can tick it.
+	 */
+	public static int meltInterval(int rods, int baseTicks, int minTicks) {
+		int floor = Math.max(1, minTicks);
+		if (baseTicks <= 0) {
+			return floor;
+		}
+		return Math.max(floor, baseTicks / Math.max(1, rods));
+	}
+
+	/**
+	 * Whether a sealed room is hot enough for its own contents to start melting (MOD-469).
+	 *
+	 * <p>Deliberately a plain level test with no deadband, unlike {@link #shouldSoundAlarm}. The alarm
+	 * needed one because it is an EDGE — firing twice is the failure. Melting is a rate: it already runs
+	 * on its own interval, and every melted block sheds heat, so a core wobbling across the line simply
+	 * melts a little more slowly. There is nothing here for a deadband to protect.
+	 *
+	 * <p>The threshold sits between the warning line and the top of the scale on purpose: the warning is
+	 * "look at this", the meltdown is "you are losing the room's contents", and a hundred percent belongs
+	 * to MOD-471's explosion.
+	 */
+	public static boolean isMeltingDown(int heatPercent, int startPercent) {
+		return startPercent > 0 && heatPercent >= startPercent;
+	}
+
+	/**
+	 * Heat left after a block of the room's contents has melted (MOD-469).
+	 *
+	 * <p><b>This is what stops a meltdown being a one-way trip.</b> Each melted block carries heat away
+	 * with it, so a room that overheats eats its own guts and cools down as it does — the player loses
+	 * the columns and the plumbing, keeps the shell, and gets a reactor they can rebuild. Without the
+	 * relief the core would sit above the line for ever and melt the interior to the last cell, which is
+	 * indistinguishable from the explosion MOD-471 owns.
+	 */
+	public static long heatAfterMelt(long heat, int relief) {
+		return Math.max(0, heat - Math.max(0, relief));
+	}
+
 	private static int clampDepth(int depthPermille) {
 		return Math.min(FULL_DEPTH, Math.max(0, depthPermille));
 	}

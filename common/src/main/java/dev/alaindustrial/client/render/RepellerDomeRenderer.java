@@ -14,7 +14,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 
 /**
  * Personal radius dome for the Mob Repeller (MOD-278): a translucent cube with a bright wireframe
@@ -64,11 +63,6 @@ public final class RepellerDomeRenderer {
 		if (payload.toggle() && DOMES.remove(pos) == null) {
 			DOMES.put(pos, payload.radius());
 		}
-	}
-
-	/** Whether this client currently shows a dome for {@code pos} — the screen's button state. */
-	public static boolean isShown(BlockPos pos) {
-		return DOMES.containsKey(pos);
 	}
 
 	/** Whether the dome of the repeller whose screen is open is currently shown. */
@@ -123,10 +117,5 @@ public final class RepellerDomeRenderer {
 		// zone — no cosmetic fudge, or the boundary would lie about where mobs are allowed.
 		AABB zone = new AABB(pos).inflate(radius);
 		OverlayGeometry.addBoxOutline(gizmos, zone, FILL_COLOR, EDGE_COLOR, EDGE_WIDTH);
-	}
-
-	/** The dome's centre in world space — exposed for tests/debug overlays. */
-	public static Vec3 centerOf(BlockPos pos) {
-		return Vec3.atCenterOf(pos);
 	}
 }

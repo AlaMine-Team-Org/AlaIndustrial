@@ -72,7 +72,7 @@ class ReactorRoomStatusTest {
 
 	/**
 	 * A status advertises a position only when walking there helps. Pinning the exact set is the point:
-	 * marking, say, {@code NO_DOOR} as located would send the player to a spot that means nothing.
+	 * marking, say, {@code NO_DOORWAY} as located would send the player to a spot that means nothing.
 	 */
 	@Test
 	void onlyPositionalStatusesAdvertiseALocation() {

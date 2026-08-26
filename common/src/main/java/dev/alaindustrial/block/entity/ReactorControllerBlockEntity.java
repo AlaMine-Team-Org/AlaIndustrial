@@ -4,7 +4,9 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.block.FuelRodAssemblyBlock;
 import dev.alaindustrial.block.ReactorControllerBlock;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.structure.BareReactorScan;
 import dev.alaindustrial.core.structure.ReactorCore;
+import dev.alaindustrial.core.structure.ReactorMeltdown;
 import dev.alaindustrial.core.structure.RoomScan;
 import dev.alaindustrial.core.structure.RoomValidator;
 import dev.alaindustrial.menu.ReactorControllerMenu;
@@ -47,15 +49,18 @@ import net.minecraft.world.level.block.state.BlockState;
  * fits with room to spare — and the screen phrases it as a direction ("4 blocks east, 2 up"). That is
  * also the more useful sentence: the player is standing at the controller when they read it.
  *
- * <p><b>Stage 1 has no energy.</b> The buffer is zero and the block is on
- * {@link dev.alaindustrial.registry.BlockCapabilityRoster#NO_ENERGY_CAPABILITY}, so nothing can wire
- * itself to a controller that cannot yet produce. It is still a {@link MachineBlockEntity} because the
- * menu-width sweep requires every machine menu to be backed by one.
+ * <p><b>Power leaves through the controller's own faces</b> — every one of them except the screen,
+ * which R-NRG-03 keeps energy-inert so a cable never draws an arm across the interface. Inside a
+ * sealed room those faces are buried in the wall and the {@code reactor_outlet} carries the power out
+ * instead; a controller running in the open (MOD-469) has them exposed, and a cable plugs straight
+ * into it. (An earlier note here said stage 1 had no energy at all and sat on
+ * {@link dev.alaindustrial.registry.BlockCapabilityRoster#NO_ENERGY_CAPABILITY}. Both halves stopped
+ * being true in stage 2, when the buffer and the HV tier arrived.)
  */
 public class ReactorControllerBlockEntity extends MachineBlockEntity implements MenuProvider {
 
 	/** Base four channels plus: status, breach offset (3), interior size (3), heat/rods/depth/output (4). */
-	public static final int DATA_COUNT = MachineBlockEntity.DATA_COUNT + 17;
+	public static final int DATA_COUNT = MachineBlockEntity.DATA_COUNT + 18;
 	public static final int DATA_STATUS = 4;
 	public static final int DATA_BREACH_DX = 5;
 	public static final int DATA_BREACH_DY = 6;
@@ -92,6 +97,16 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 	 * far below anything a player can read off a bar anyway.
 	 */
 	public static final int DATA_ENERGY_HUNDREDS = 20;
+	/**
+	 * 1 while the sealed room is melting its own contents (MOD-469).
+	 *
+	 * <p><b>Its own channel, and deliberately not a {@link ReactorRoomStatus} value.</b> That enum is
+	 * recomputed from the shell's geometry by every sweep, so a "meltdown" written into it would be
+	 * overwritten by the next scan — at most {@code reactorScanIntervalTicks} later — on a room that is
+	 * still melting. The status answers "what shape is the shell in"; this answers "what is happening
+	 * inside it", and the two have different lifetimes.
+	 */
+	public static final int DATA_MELTDOWN = 21;
 
 	/** Coolant boiled on the last tick, in mB. Zero while the reactor is cold or idle. */
 	private int lastWater;
@@ -121,7 +136,6 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 	private int depthPermille = ReactorCore.FULL_DEPTH;
 	/** Rods burning across the room, refreshed each scan. */
 	private int rods;
-	/** Adjacent loaded-assembly pairs, refreshed each scan — the neighbour bonus. */
 	/** What the last tick actually produced, for the readout. */
 	private int lastOutput;
 	/** Assemblies found inside the sealed room, refreshed on every scan. */
@@ -129,6 +143,54 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 
 	/** Sockets set into this room's shell. Refreshed by the same sweep that finds the columns. */
 	private final List<BlockPos> outlets = new ArrayList<>();
+
+	// ── MOD-469: the bare reactor and the meltdown ──
+	/**
+	 * Racks a controller with no sealed room drives, refreshed by the same sweep as {@link #assemblies}
+	 * and empty whenever the room is formed. The two lists are never both populated: a controller is
+	 * either running a room or running in the open.
+	 */
+	private final List<BlockPos> bareRacks = new ArrayList<>();
+
+	/**
+	 * Whether this controller is running without a room around it.
+	 *
+	 * <p>Decided by the scan, not by the status alone: <em>every</em> status but {@code FORMED} could be
+	 * a player halfway through building their shell, and those two cases want different things from the
+	 * panel. A controller only counts as bare once the sweep has actually found racks to burn.
+	 */
+	private boolean bare;
+
+	/** Whether the room is melting its own contents right now — the panel's "Meltdown" line. */
+	private boolean meltingDown;
+
+	/**
+	 * Whether the core is enabled and fuelled this tick, whether or not anybody wanted the power.
+	 *
+	 * <p><b>Not the same thing as producing, and the difference is the whole of finding 1.</b> Fuel is
+	 * only spent when the energy is wanted (MOD-468's rule, and a good one), so a bare reactor with a
+	 * full buffer reports zero output — but the rods are still racked, still unshielded and still
+	 * dangerous. Hanging the hazard on output meant a player could silence it by simply not consuming,
+	 * which is neither physical nor consistent with radiation, which has never cared about the buffer.
+	 * The scram — pulling the redstone — remains the one way to make a bare core safe.
+	 */
+	private boolean reacting;
+
+	/**
+	 * The block marked to melt and the ticks left before it does.
+	 *
+	 * <p><b>Not persisted, on purpose.</b> A pending melt is at most two seconds of intent; carrying it
+	 * through a chunk round-trip would mean writing a position to NBT so that a block the player never
+	 * saw marked could melt on a world they have just loaded. Forgetting it and picking again is both
+	 * cheaper and fairer.
+	 */
+	@org.jspecify.annotations.Nullable
+	private BlockPos meltTarget;
+
+	private int meltCountdown;
+
+	/** Ticks until the next victim is chosen. Zero means "pick on the next tick that qualifies". */
+	private int meltCooldown;
 
 	/** Ticks until the next sweep. Zero means "scan on the next server tick". */
 	private int scanCooldown;
@@ -225,19 +287,6 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		return status;
 	}
 
-	/** Test seam: the interior box measured by the last scan, in blocks. */
-	public int getInteriorSizeX() {
-		return sizeX;
-	}
-
-	public int getInteriorSizeY() {
-		return sizeY;
-	}
-
-	public int getInteriorSizeZ() {
-		return sizeZ;
-	}
-
 	@Override
 	protected int onServerTick(Level level, BlockPos pos, BlockState state) {
 		if (scanCooldown > 0) {
@@ -263,7 +312,11 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 	private void runReactor(Level level, BlockPos pos) {
 		boolean sealed = status == ReactorRoomStatus.FORMED;
 		// No signal is the scram: a lever by the door stops the reaction without dismantling anything.
-		boolean allowed = sealed && level.hasNeighborSignal(pos) && depthPermille > 0;
+		// It is the ONE control a bare reactor still answers to. The throttle is deliberately not asked:
+		// the bare panel has no room to show it, and a hidden control that silently holds a reactor at
+		// zero is the worst kind — a player whose breached room stops producing would have no way to
+		// learn that the slider they left at 0% is why. Bare rods are always fully lowered.
+		boolean allowed = (sealed ? depthPermille > 0 : bare) && level.hasNeighborSignal(pos);
 		long produced = 0;
 		// Resolved ONCE per tick and handed to all three passes. Burning, boiling and levelling each
 		// used to walk `assemblies` and call getBlockEntity themselves, which in a room packed to the
@@ -283,6 +336,12 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		// ones went on being paid a neighbour bonus for a rack that was no longer there — free EU, and
 		// exactly the kind that is invisible because it is small and brief.
 		int pairs = countNeighbourPairs(columns);
+		// Recorded before the buffer is consulted: this is "the reaction is running", not "we sold power".
+		boolean nowReacting = allowed && liveRods > 0;
+		if (nowReacting != reacting) {
+			reacting = nowReacting;
+			setChanged();
+		}
 
 		if (allowed && liveRods > 0 && energy.getAmount() < energy.getCapacity()) {
 			// What this core could give with the rods all the way down. The tier ceiling is applied to
@@ -295,16 +354,29 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 			// Two ceilings: the tier's voltage (a reactor is an HV machine, and nothing in the mod could
 			// carry tens of thousands of EU/t anyway) and whatever room is left in the buffer.
 			long ceiling = Math.min(full, EnergyTier.HV.maxVoltage());
-			long output = Math.min(ceiling * depthPermille / ReactorCore.FULL_DEPTH,
-					energy.getCapacity() - energy.getAmount());
+			// A bare core is scaled and capped instead of throttled. Both ceilings still apply above it,
+			// so the bare cap can only ever make the figure smaller — it is a floor on how bad the
+			// shortcut is, never a way around the tier.
+			long wanted = bare
+					? ReactorCore.bareOutput(ceiling, Config.reactorBarePowerPercent,
+							Config.reactorBarePowerCap)
+					: ceiling * depthPermille / ReactorCore.FULL_DEPTH;
+			long output = Math.min(wanted, energy.getCapacity() - energy.getAmount());
 			if (output > 0) {
 				energy.setAmountUntracked(energy.getAmount() + output);
 				// Heat and fuel are both charged against the ENERGY produced, so neither can be knocked
 				// out of range by a core that has left its own potential far behind. Heat is one
 				// division against the potential at full depth; because both terms carry the same rods
 				// and the same adjacencies, the ratio converges as the room grows instead of diverging.
-				long heatFull = ReactorCore.heatProduced(liveRods, pairs, Config.reactorHeatPerRod,
-						Config.reactorHeatNeighbourBonusPercent, ReactorCore.FULL_DEPTH);
+				//
+				// A bare core makes NO heat at all. There is no shell to hold it, no gauge to show it and
+				// no coolant loop to answer it — the danger of running without a room is what it does to
+				// the world outside, not a temperature nobody could read. Fuel is still charged per EU, so
+				// a bare core is slower rather than more wasteful: a rod is an amount of energy wherever
+				// it burns, and bending that here would break the one invariant the fuel cycle rests on.
+				long heatFull = bare ? 0 : ReactorCore.heatProduced(liveRods, pairs,
+						Config.reactorHeatPerRod, Config.reactorHeatNeighbourBonusPercent,
+						ReactorCore.FULL_DEPTH);
 				produced = ReactorCore.heatForOutput(heatFull, output, full);
 				burnFuel(columns, output);
 				lastOutput = (int) Math.min(Short.MAX_VALUE, output);
@@ -323,17 +395,127 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 
 		long cooling = ReactorCore.naturalCooling(heat, Config.reactorPassiveCooling,
 				Config.reactorHeatLossPermille);
-		produced = coolWithWater(columns, produced, cooling);
+		if (bare) {
+			// The coolant loop and the stack settling are the ROOM's plumbing. A bare rack has no shell
+			// to plumb and makes no heat to answer, and running them anyway would quietly boil away water
+			// a player had poured into a column for the room they are still building around it.
+			lastWater = 0;
+		} else {
+			produced = coolWithWater(columns, produced, cooling);
+		}
 
 		long settled = ReactorCore.settleHeat(heat, produced, cooling, Config.reactorHeatCapacity);
 		if (settled != heat || produced > 0) {
 			heat = settled;
 			setChanged();
 		}
-		settleStacks(columns);
+		if (!bare) {
+			settleStacks(columns);
+		}
 		feedOutlets(level);
-		updateVoice(level, pos, columns);
+		// Empty when bare, and that is the whole point (MOD-469 audit). The drone is painted ONTO the
+		// racks and taken off them only inside the box this controller last sealed — a bare rack switched
+		// on here would stand humming for as long as it existed, with nothing left in the world able to
+		// switch it off. The latch and the spin-down edge still run, so a room that breaks with no racks
+		// nearby still announces that it stopped.
+		updateVoice(level, pos, bare ? List.of() : columns);
 		warnOnOverheat(level, pos);
+		runHazards(level, pos);
+	}
+
+	/**
+	 * One tick of whatever this reactor is currently destroying (MOD-469).
+	 *
+	 * <p>Two hazards, one schedule, because they can never be running at once: a sealed room melts its
+	 * own contents when it is allowed to overheat, and a reactor with no room melts the scenery around
+	 * it. A controller is one or the other.
+	 *
+	 * <p><b>The warning is issued even when the switch is off.</b> An operator who has turned the block
+	 * damage off should still be shown that their reactor has reached the state where it would have
+	 * melted something — a hazard that goes completely silent teaches nobody anything, and the switch is
+	 * meant to protect the world, not to hide the reactor's condition.
+	 */
+	private void runHazards(Level level, BlockPos pos) {
+		if (!(level instanceof ServerLevel serverLevel)) {
+			return;
+		}
+		// Melting the contents requires the room to still BE a room. A breached shell that is merely
+		// still warm melts nothing: there is no containment left, so there is nothing being contained,
+		// and its leftover heat simply bleeds away.
+		boolean melting = status == ReactorRoomStatus.FORMED
+				&& ReactorCore.isMeltingDown(ReactorCore.heatPercent(heat, Config.reactorHeatCapacity),
+						Config.reactorMeltdownStartPercent);
+		if (melting != meltingDown) {
+			meltingDown = melting;
+			setChanged();
+		}
+		// The scenery hazard runs on the REACTION, not on this tick's output. A core whose buffer is full
+		// has stopped selling power and has not stopped being a reactor — hanging the danger on output let
+		// a player switch it off by unplugging their machines (playtest finding 1). The redstone scram is
+		// still a real safety measure, and still the only one: no signal, no reaction, no melting.
+		boolean scenery = bare && reacting;
+		if (!melting && !scenery) {
+			meltTarget = null;
+			meltCountdown = 0;
+			return;
+		}
+		if (meltTarget != null) {
+			if (meltCountdown > 0) {
+				meltCountdown--;
+				return;
+			}
+			BlockPos victim = meltTarget;
+			meltTarget = null;
+			if (Config.reactorMeltdownMeltsBlocks && ReactorMeltdown.melt(serverLevel, victim) && melting) {
+				// Every melted block carries heat out with it, which is what stops a meltdown being a
+				// one-way trip: the room eats its own contents and cools as it does, and the player is
+				// left with a wrecked interior inside a shell they can refit.
+				heat = ReactorCore.heatAfterMelt(heat, Config.reactorMeltdownHeatRelief);
+				setChanged();
+			}
+			return;
+		}
+		if (meltCooldown > 0) {
+			meltCooldown--;
+			return;
+		}
+		meltCooldown = melting
+				? Math.max(1, Config.reactorMeltdownIntervalTicks)
+				: ReactorCore.meltInterval(rods, Config.reactorBareMeltIntervalTicks,
+						Config.reactorBareMeltMinIntervalTicks);
+		BlockPos victim = melting
+				? ReactorMeltdown.pickContentsVictim(serverLevel, boxMinX, boxMinY, boxMinZ,
+						boxMaxX, boxMaxY, boxMaxZ, serverLevel.getRandom())
+				: ReactorMeltdown.pickSceneryVictim(serverLevel, hazardSource(serverLevel, pos),
+						Config.reactorBareMeltRadius, serverLevel.getRandom());
+		if (victim == null) {
+			return;
+		}
+		ReactorMeltdown.telegraph(serverLevel, victim);
+		meltTarget = victim;
+		meltCountdown = Math.max(0, Config.reactorMeltWarnTicks);
+	}
+
+	/**
+	 * Where this round's damage radiates from: one of the racks, chosen fresh each time (MOD-469).
+	 *
+	 * <p><b>The racks, not the controller, and the difference is visible from across the room.</b> A
+	 * controller stands in a wall — in a half-built shell it is in ITS wall — so a sphere centred on it
+	 * has the reactor's own body filling one half, where everything is either air or an exempt reactor
+	 * block. The first playtest showed exactly that: a deliberately leaky reactor with holes on every
+	 * side put lava only in front of the controller and left the ground behind it untouched. Rolling a
+	 * rack per round instead puts the danger where the fuel is, spreads it evenly around the cluster,
+	 * and makes turning the controller round change nothing. It is also the model radiation already
+	 * uses, so the two hazards finally answer "how far is it dangerous" the same way.
+	 *
+	 * <p>Falls back to the controller only when the rack list is momentarily empty, which cannot happen
+	 * while the scenery hazard is armed (it needs output, which needs rods) but keeps the method total.
+	 */
+	private BlockPos hazardSource(ServerLevel level, BlockPos pos) {
+		if (bareRacks.isEmpty()) {
+			return pos;
+		}
+		return bareRacks.get(level.getRandom().nextInt(bareRacks.size()));
 	}
 
 	/**
@@ -539,17 +721,44 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 	}
 
 	/**
+	 * Looks for racks to burn with no room to walk (MOD-469).
+	 *
+	 * <p>Runs on the same timer as the room sweep and for the same reason: a radius scan every tick would
+	 * be absurd, and a rack racked by hand counting from the next sweep is at most two seconds of delay
+	 * against a rod that burns for minutes.
+	 *
+	 * <p><b>A controller is bare only once it has actually found something.</b> An empty-handed sweep
+	 * leaves {@code bare} false, so a player halfway through building a shell keeps the whole building
+	 * layout on their panel instead of being told they are running a reactor they have not started.
+	 */
+	private void rescanBare(Level level, BlockPos pos) {
+		bareRacks.clear();
+		if (!(level instanceof ServerLevel serverLevel)) {
+			bare = false;
+			return;
+		}
+		BareReactorScan.Result found = BareReactorScan.scan(serverLevel, pos,
+				Config.reactorBareSearchRadius);
+		bareRacks.addAll(found.racks());
+		rods = found.rods();
+		bare = !found.isEmpty();
+	}
+
+	/**
 	 * The live block entities behind {@link #assemblies}, in scan order.
 	 *
 	 * <p>Entries whose block entity has gone are simply absent: the list is rebuilt every tick, so a
 	 * column mined mid-tick drops out immediately rather than waiting for the next room scan.
 	 */
 	private List<FuelRodAssemblyBlockEntity> collectColumns(Level level) {
-		if (assemblies.isEmpty()) {
+		// Whichever list this controller is actually driving. The two are never both populated, so this
+		// is a switch rather than a merge — see rescanBare.
+		List<BlockPos> racked = bare ? bareRacks : assemblies;
+		if (racked.isEmpty()) {
 			return List.of();
 		}
-		List<FuelRodAssemblyBlockEntity> columns = new ArrayList<>(assemblies.size());
-		for (BlockPos rack : assemblies) {
+		List<FuelRodAssemblyBlockEntity> columns = new ArrayList<>(racked.size());
+		for (BlockPos rack : racked) {
 			if (level.getBlockEntity(rack) instanceof FuelRodAssemblyBlockEntity column) {
 				columns.add(column);
 			}
@@ -741,13 +950,18 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 
 	/** Reads the state once and names the first thing standing between the reactor and running. */
 	private ReactorIdleReason idleReasonFor(Level level, BlockPos pos, boolean sealed) {
-		if (!sealed) {
+		// "Shell open" is the right answer only while there is nothing else going on. A bare reactor with
+		// racks in reach is not waiting for a shell — it is a running machine, and telling its owner to
+		// close a shell they never intended to build would send them to fix the wrong thing.
+		if (!sealed && !bare) {
 			return ReactorIdleReason.NOT_SEALED;
 		}
 		if (rods <= 0) {
 			return ReactorIdleReason.NO_FUEL;
 		}
-		if (depthPermille <= 0) {
+		// The throttle is a room control; a bare core ignores it (see runReactor), so naming it here would
+		// point at a slider that changes nothing.
+		if (sealed && depthPermille <= 0) {
 			return ReactorIdleReason.RODS_WITHDRAWN;
 		}
 		if (!level.hasNeighborSignal(pos)) {
@@ -838,15 +1052,22 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 			syncBlockEntityToClient();
 		}
 		if (result.formed()) {
+			bare = false;
+			bareRacks.clear();
 			collectAssemblies(level, result);
 		} else {
 			// Silence the racks BEFORE forgetting where they are (MOD-472). The drone is painted onto the
 			// columns and cleared the same way, so a list emptied first would leave the flag set on blocks
 			// nothing owns any more — a breached room that goes on humming for as long as it stands.
+			//
+			// Order matters twice over: silenceColumns resolves the columns through collectColumns, which
+			// answers with the BARE list once the flag is set, so the bare sweep has to come after the room
+			// list has been silenced and cleared. Otherwise a breach would silence the wrong racks.
 			silenceColumns(level);
 			assemblies.clear();
 			outlets.clear();
 			rods = 0;
+			rescanBare(level, pos);
 		}
 
 		if (level instanceof ServerLevel serverLevel) {
@@ -918,9 +1139,9 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		setChanged();
 	}
 
-	/** Switches the last sealed shell back to its unbuilt look and puts its lights out. */
 	/**
-	 * Hands the shell back its ordinary look when the controller is mined.
+	 * Hands the last sealed shell back its ordinary unbuilt look when the controller is mined, and puts
+	 * its lights out.
 	 *
 	 * <p>Without this a room stayed visually sealed forever: the seamless art, the interior light and
 	 * the {@code formed} flag are painted by the controller, so removing the one block that maintains
@@ -1042,6 +1263,7 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 				case DATA_ENERGY_PERCENT -> energy.getCapacity() <= 0 ? 0
 						: (int) Math.min(100, energy.getAmount() * 100 / energy.getCapacity());
 				case DATA_ENERGY_HUNDREDS -> (int) Math.min(Short.MAX_VALUE, energy.getAmount() / 100);
+				case DATA_MELTDOWN -> meltingDown ? 1 : 0;
 				default -> ReactorControllerBlockEntity.this.dataAccess.get(index);
 			};
 		}
@@ -1106,11 +1328,6 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 				: dev.alaindustrial.core.energy.EnergyRole.OUT;
 	}
 
-	/** Control-rod depth, 0…1000. */
-	public int getDepthPermille() {
-		return depthPermille;
-	}
-
 	/** Moves the throttle. Called from the menu's button handler, clamped here rather than there. */
 	public void setDepthPermille(int value) {
 		int clamped = Math.min(ReactorCore.FULL_DEPTH, Math.max(0, value));
@@ -1141,7 +1358,42 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		return heat;
 	}
 
-	public int getRodCount() {
-		return rods;
+	// ── MOD-469 ──
+
+	/** Whether this controller is running on racks it found in the open, with no room around it. */
+	public boolean isBare() {
+		return bare;
+	}
+
+	/** Whether the room is melting its own contents right now. */
+	public boolean isMeltingDown() {
+		return meltingDown;
+	}
+
+	/**
+	 * Whether this controller currently holds a sealed room.
+	 *
+	 * <p>Asked by {@link BareReactorScan} on behalf of a NEIGHBOURING controller: a rack inside a working
+	 * room belongs to that room and to nothing else, and this is how a bare machine finds that out
+	 * without reaching into another block entity's internals.
+	 */
+	public boolean isRoomSealed() {
+		return status == ReactorRoomStatus.FORMED;
+	}
+
+	/**
+	 * Whether a position lies inside the interior this controller last sealed.
+	 *
+	 * <p>The INTERIOR, not the shell: the question being asked is "is this rack part of a working
+	 * reactor", and a rack is only ever inside the room. An empty box answers no to everything, which is
+	 * the right answer for a controller that has never sealed anything.
+	 */
+	public boolean sealedBoxContains(BlockPos at) {
+		if (boxMaxX == Integer.MIN_VALUE) {
+			return false;
+		}
+		return at.getX() >= boxMinX && at.getX() <= boxMaxX
+				&& at.getY() >= boxMinY && at.getY() <= boxMaxY
+				&& at.getZ() >= boxMinZ && at.getZ() <= boxMaxZ;
 	}
 }

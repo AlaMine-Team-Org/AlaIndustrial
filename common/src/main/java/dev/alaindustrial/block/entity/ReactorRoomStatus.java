@@ -13,6 +13,10 @@ import java.util.Locale;
  *
  * <p><b>The order of the constants is the wire format</b> (the ordinal travels to the screen on a
  * sync channel), so new states must be appended, never inserted.
+ *
+ * <p>That wire is <em>session-local</em>: the status is never written to disk (the controller's
+ * {@code saveAdditional} stores the box, the heat and the throttle — not this), so a renumbering is
+ * visible only to a client talking to a server built from other code, and never to a saved world.
  */
 public enum ReactorRoomStatus {
 	/** The room is sealed, sized and has a way in. Stage 1's definition of success. */
@@ -27,8 +31,6 @@ public enum ReactorRoomStatus {
 	TOO_LARGE,
 	/** A hole in the shell — the one status whose position the player really needs. */
 	BREACH,
-	/** Sealed, sized, and impossible to enter. */
-	NO_DOOR,
 	/** There is a door, but no two-high doorway standing on the floor. */
 	NO_DOORWAY,
 	/** Two controllers share one shell. */
@@ -79,7 +81,6 @@ public enum ReactorRoomStatus {
 			case TOO_SMALL -> TOO_SMALL;
 			case TOO_LARGE -> TOO_LARGE;
 			case BREACH -> BREACH;
-			case NO_DOOR -> NO_DOOR;
 			case NO_DOORWAY -> NO_DOORWAY;
 			case SECOND_CONTROLLER -> SECOND_CONTROLLER;
 			case TOO_MUCH_GLASS -> TOO_MUCH_GLASS;

@@ -423,11 +423,6 @@ public class FuelRodAssemblyBlockEntity extends BlockEntity implements FluidPort
 		onTankChanged();
 	}
 
-	/** How much this column could boil right now — limited by its water AND by room for the steam. */
-	public long boilable() {
-		return Math.min(waterTank.amount, steamTank.capacity - steamTank.amount);
-	}
-
 	private void onTankChanged() {
 		setChanged();
 		syncWaterLevel();

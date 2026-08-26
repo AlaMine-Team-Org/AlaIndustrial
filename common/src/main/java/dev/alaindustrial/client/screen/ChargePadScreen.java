@@ -25,9 +25,10 @@ public class ChargePadScreen extends MachineScreen<ChargePadMenu> {
 	/**
 	 * Text column and rows, left of nothing and right of the bar (which occupies x 17..27, y 20..63).
 	 *
-	 * <p>Public because the L3 text-row gate measures this strip against the idle frame and must read the
-	 * coordinates from here. A copy in the test would drift the first time the layout moves, and the gate
-	 * would keep passing while measuring a blank strip.
+	 * <p>Public for symmetry with the rest of the screen family; the charging station has no text-row
+	 * stand of its own, so no gate reads these numbers today. Should one be added, it must measure the
+	 * strip from here rather than from a copy that would drift the first time the layout moves — a
+	 * drifted copy keeps passing while measuring a blank strip.
 	 */
 	public static final int TEXT_X = 34;
 	public static final int TEXT_ROW_TOP = 22;

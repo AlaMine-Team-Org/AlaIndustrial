@@ -4,7 +4,6 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.core.radiation.RadiationCore;
 import dev.alaindustrial.core.radiation.RadiationDose;
 import dev.alaindustrial.registry.ModDamageTypes;
-import dev.alaindustrial.registry.ModEffects;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;

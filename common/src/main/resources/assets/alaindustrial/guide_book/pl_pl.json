@@ -152,7 +152,7 @@
             {
               "type": "text",
               "title": "Pięć kroków",
-              "text": "1. Komora jest szczelna\n2. W kolumnach są pręty\n3. Na wyjściu reaktora jest kabel\n4. Sygnał redstone dochodzi do sterownika\n5. Suwak głębokości nie stoi na zerze"
+              "text": "1. Komora jest szczelna\n2. W kolumnach są pręty\n3. Na wyjściu reaktora jest kabel\n4. Sygnał redstone dochodzi do sterownika\n5. Głębokość nie stoi na zerze: sterownik ma pięć przycisków — 0%, 25%, 50%, 75%, 100%"
             },
             {
               "type": "text",
@@ -162,7 +162,7 @@
             {
               "type": "text",
               "title": "Moc",
-              "text": "Jedna kolumna daje 24 EU/t. Więcej prętów i ciaśniej ustawione kolumny dają więcej: sąsiednie kolumny wzmacniają się nawzajem.\n\nSufit to 512 EU/t. Suwak głębokości dzieli po równo moc, ciepło i zużycie paliwa."
+              "text": "Jedna kolumna daje 24 EU/t. Więcej prętów i ciaśniej ustawione kolumny dają więcej: sąsiednie kolumny wzmacniają się nawzajem.\n\nSufit to 512 EU/t. Wybrany przycisk głębokości dzieli po równo moc, ciepło i zużycie paliwa."
             }
           ]
         },
@@ -199,7 +199,6 @@
           "id": "wind_mill",
           "title": "Wiatrak",
           "icon": "alaindustrial:wind_mill",
-          "block_id": "alaindustrial:wind_mill",
           "pages": [
             {
               "type": "text",
@@ -238,7 +237,6 @@
           "id": "water_mill",
           "title": "Młyn wodny",
           "icon": "alaindustrial:water_mill",
-          "block_id": "alaindustrial:water_mill",
           "pages": [
             {
               "type": "text",
@@ -277,7 +275,6 @@
           "id": "generator",
           "title": "Generator",
           "icon": "alaindustrial:generator",
-          "block_id": "alaindustrial:generator",
           "pages": [
             {
               "type": "text",
@@ -316,7 +313,6 @@
           "id": "geothermal_generator",
           "title": "Generator geotermalny",
           "icon": "alaindustrial:geothermal_generator",
-          "block_id": "alaindustrial:geothermal_generator",
           "pages": [
             {
               "type": "text",
@@ -355,7 +351,6 @@
           "id": "lightning_rod_generator",
           "title": "Generator piorunochronowy",
           "icon": "alaindustrial:lightning_rod_generator",
-          "block_id": "alaindustrial:lightning_rod_generator",
           "pages": [
             {
               "type": "text",
@@ -366,7 +361,7 @@
               "type": "stats",
               "title": "Statystyki",
               "lines": [
-                "Energy: 16–24 EU/t on discharge",
+                "Energia: 16–24 EU/t przy rozładowaniu",
                 "Bufor: 4000 EU"
               ]
             },
@@ -394,7 +389,6 @@
           "id": "daylight_solar_panel",
           "title": "Dzienny panel słoneczny",
           "icon": "alaindustrial:daylight_solar_panel",
-          "block_id": "alaindustrial:daylight_solar_panel",
           "pages": [
             {
               "type": "text",
@@ -413,20 +407,19 @@
         },
         {
           "id": "creative_energy_source",
-          "title": "Creative Energy Source",
+          "title": "Kreatywne źródło energii",
           "icon": "alaindustrial:creative_energy_source",
-          "block_id": "alaindustrial:creative_energy_source",
           "pages": [
             {
               "type": "text",
-              "title": "Creative Energy Source",
-              "text": "An inexhaustible EU source with adjustable output — a tool for testing setups, not obtainable in survival."
+              "title": "Kreatywne źródło energii",
+              "text": "Niewyczerpane źródło EU z regulowaną mocą — narzędzie do testowania układów, nie do zdobycia w trybie przetrwania."
             },
             {
               "type": "stats",
               "title": "Statystyki",
               "lines": [
-                "Energy: 32-8192 EU/t"
+                "Energia: 32-8192 EU/t"
               ]
             }
           ]
@@ -435,7 +428,6 @@
           "id": "moonlit_solar_panel",
           "title": "Księżycowy panel słoneczny",
           "icon": "alaindustrial:moonlit_solar_panel",
-          "block_id": "alaindustrial:moonlit_solar_panel",
           "pages": [
             {
               "type": "text",
@@ -456,7 +448,6 @@
           "id": "solar_panel",
           "title": "Panel słoneczny",
           "icon": "alaindustrial:solar_panel",
-          "block_id": "alaindustrial:solar_panel",
           "pages": [
             {
               "type": "text",
@@ -495,7 +486,6 @@
           "id": "charge_pad",
           "title": "Stacja ładowania",
           "icon": "alaindustrial:charge_pad",
-          "block_id": "alaindustrial:charge_pad",
           "pages": [
             {
               "type": "text",
@@ -534,7 +524,6 @@
           "id": "energy_condenser",
           "title": "Kondensator energii",
           "icon": "alaindustrial:energy_condenser",
-          "block_id": "alaindustrial:energy_condenser",
           "pages": [
             {
               "type": "text",
@@ -545,7 +534,7 @@
               "type": "stats",
               "title": "Statystyki",
               "lines": [
-                "Energy: 128 EU/t intake"
+                "Energia: 128 EU/t poboru"
               ]
             },
             {
@@ -572,7 +561,6 @@
           "id": "cesu",
           "title": "Wzmocniony magazyn energii",
           "icon": "alaindustrial:cesu",
-          "block_id": "alaindustrial:cesu",
           "pages": [
             {
               "type": "text",
@@ -610,7 +598,6 @@
           "id": "battery_box",
           "title": "Magazyn energii",
           "icon": "alaindustrial:battery_box",
-          "block_id": "alaindustrial:battery_box",
           "pages": [
             {
               "type": "text",
@@ -648,7 +635,6 @@
           "id": "gold_cable",
           "title": "Kabel złoty",
           "icon": "alaindustrial:gold_cable",
-          "block_id": "alaindustrial:gold_cable",
           "pages": [
             {
               "type": "text",
@@ -687,7 +673,6 @@
           "id": "insulated_gold_cable",
           "title": "Izolowany kabel złoty",
           "icon": "alaindustrial:insulated_gold_cable",
-          "block_id": "alaindustrial:insulated_gold_cable",
           "pages": [
             {
               "type": "text",
@@ -726,7 +711,6 @@
           "id": "insulated_copper_cable",
           "title": "Izolowany kabel miedziany",
           "icon": "alaindustrial:insulated_copper_cable",
-          "block_id": "alaindustrial:insulated_copper_cable",
           "pages": [
             {
               "type": "text",
@@ -765,7 +749,6 @@
           "id": "insulated_tin_cable",
           "title": "Izolowany kabel cynowy",
           "icon": "alaindustrial:insulated_tin_cable",
-          "block_id": "alaindustrial:insulated_tin_cable",
           "pages": [
             {
               "type": "text",
@@ -804,7 +787,6 @@
           "id": "insulated_electrum_cable",
           "title": "Izolowany kabel elektrumowy",
           "icon": "alaindustrial:insulated_electrum_cable",
-          "block_id": "alaindustrial:insulated_electrum_cable",
           "pages": [
             {
               "type": "text",
@@ -843,7 +825,6 @@
           "id": "copper_cable",
           "title": "Kabel miedziany",
           "icon": "alaindustrial:copper_cable",
-          "block_id": "alaindustrial:copper_cable",
           "pages": [
             {
               "type": "text",
@@ -882,7 +863,6 @@
           "id": "tin_cable",
           "title": "Kabel cynowy",
           "icon": "alaindustrial:tin_cable",
-          "block_id": "alaindustrial:tin_cable",
           "pages": [
             {
               "type": "text",
@@ -921,7 +901,6 @@
           "id": "electrum_cable",
           "title": "Kabel elektrumowy",
           "icon": "alaindustrial:electrum_cable",
-          "block_id": "alaindustrial:electrum_cable",
           "pages": [
             {
               "type": "text",
@@ -958,20 +937,19 @@
         },
         {
           "id": "shielding_chest",
-          "title": "Shielding Chest",
+          "title": "Skrzynia ekranująca",
           "icon": "alaindustrial:shielding_chest",
-          "block_id": "alaindustrial:shielding_chest",
           "pages": [
             {
               "type": "text",
-              "title": "Shielding Chest",
-              "text": "The only container that stops the radiation of its contents: uranium inside irradiates nobody. Iron-chest capacity (36 slots), needs no energy."
+              "title": "Skrzynia ekranująca",
+              "text": "Jedyny pojemnik, który zatrzymuje promieniowanie swojej zawartości: uran w środku nikogo nie napromienia. Pojemność żelaznej skrzyni (36 slotów), nie wymaga energii."
             },
             {
               "type": "stats",
               "title": "Statystyki",
               "lines": [
-                "Energia: 36 slotów"
+                "Pojemność: 36 slotów"
               ]
             },
             {
@@ -998,12 +976,11 @@
           "id": "reactor_controller",
           "title": "Sterownik reaktora",
           "icon": "alaindustrial:reactor_controller",
-          "block_id": "alaindustrial:reactor_controller",
           "pages": [
             {
               "type": "text",
               "title": "Sterownik reaktora",
-              "text": "Mózg pomieszczenia reaktora: skanuje powłokę, mówi, co jest z nią nie tak, i pokazuje dokładnie gdzie — wierszem stanu i obłoczkiem dymu w miejscu usterki."
+              "text": "Mózg reaktora: skanuje powłokę, mówi, co jest nie tak i gdzie dokładnie, prowadzi reakcję i oddaje EU. Pomieszczenie jest opcjonalne — bez niego pracuje słabiej i topi wszystko wokół."
             },
             {
               "type": "stats",
@@ -1036,7 +1013,6 @@
           "id": "empty_fuel_rod",
           "title": "Koszulka pręta",
           "icon": "alaindustrial:empty_fuel_rod",
-          "block_id": "alaindustrial:empty_fuel_rod",
           "pages": [
             {
               "type": "text",
@@ -1067,7 +1043,6 @@
           "id": "steam_nozzle",
           "title": "Dysza parowa",
           "icon": "alaindustrial:steam_nozzle",
-          "block_id": "alaindustrial:steam_nozzle",
           "pages": [
             {
               "type": "text",
@@ -1098,7 +1073,6 @@
           "id": "reactor_button",
           "title": "Przycisk reaktora",
           "icon": "alaindustrial:reactor_button",
-          "block_id": "alaindustrial:reactor_button",
           "pages": [
             {
               "type": "text",
@@ -1136,7 +1110,6 @@
           "id": "fuel_rod_assembly",
           "title": "Kolumna reaktora",
           "icon": "alaindustrial:fuel_rod_assembly",
-          "block_id": "alaindustrial:fuel_rod_assembly",
           "pages": [
             {
               "type": "text",
@@ -1167,7 +1140,6 @@
           "id": "reactor_lamp",
           "title": "Lampa reaktora",
           "icon": "alaindustrial:reactor_lamp",
-          "block_id": "alaindustrial:reactor_lamp",
           "pages": [
             {
               "type": "text",
@@ -1205,7 +1177,6 @@
           "id": "reactor_casing",
           "title": "Obudowa reaktora",
           "icon": "alaindustrial:reactor_casing",
-          "block_id": "alaindustrial:reactor_casing",
           "pages": [
             {
               "type": "text",
@@ -1243,7 +1214,6 @@
           "id": "reactor_glass",
           "title": "Szkło reaktora",
           "icon": "alaindustrial:reactor_glass",
-          "block_id": "alaindustrial:reactor_glass",
           "pages": [
             {
               "type": "text",
@@ -1281,7 +1251,6 @@
           "id": "reactor_port",
           "title": "Wlot reaktora",
           "icon": "alaindustrial:reactor_port",
-          "block_id": "alaindustrial:reactor_port",
           "pages": [
             {
               "type": "text",
@@ -1319,7 +1288,6 @@
           "id": "reactor_outlet",
           "title": "Wyjście reaktora",
           "icon": "alaindustrial:reactor_outlet",
-          "block_id": "alaindustrial:reactor_outlet",
           "pages": [
             {
               "type": "text",
@@ -1357,7 +1325,6 @@
           "id": "uranium_fuel_rod",
           "title": "Pręt paliwowy",
           "icon": "alaindustrial:uranium_fuel_rod",
-          "block_id": "alaindustrial:uranium_fuel_rod",
           "pages": [
             {
               "type": "text",
@@ -1388,7 +1355,6 @@
           "id": "reactor_door",
           "title": "Drzwi śluzy reaktora",
           "icon": "alaindustrial:reactor_door",
-          "block_id": "alaindustrial:reactor_door",
           "pages": [
             {
               "type": "text",
@@ -1433,7 +1399,6 @@
           "id": "vulcanizer",
           "title": "Wulkanizator",
           "icon": "alaindustrial:vulcanizer",
-          "block_id": "alaindustrial:vulcanizer",
           "pages": [
             {
               "type": "text",
@@ -1472,7 +1437,6 @@
           "id": "macerator",
           "title": "Rozdrabniacz",
           "icon": "alaindustrial:macerator",
-          "block_id": "alaindustrial:macerator",
           "pages": [
             {
               "type": "text",
@@ -1511,7 +1475,6 @@
           "id": "iron_furnace",
           "title": "Żelazny piec",
           "icon": "alaindustrial:iron_furnace",
-          "block_id": "alaindustrial:iron_furnace",
           "pages": [
             {
               "type": "text",
@@ -1542,7 +1505,6 @@
           "id": "compressor",
           "title": "Kompresor",
           "icon": "alaindustrial:compressor",
-          "block_id": "alaindustrial:compressor",
           "pages": [
             {
               "type": "text",
@@ -1581,7 +1543,6 @@
           "id": "canning_machine",
           "title": "Puszkarka",
           "icon": "alaindustrial:canning_machine",
-          "block_id": "alaindustrial:canning_machine",
           "pages": [
             {
               "type": "text",
@@ -1592,7 +1553,7 @@
               "type": "stats",
               "title": "Statystyki",
               "lines": [
-                "Energy: 200 EU/ration",
+                "Energia: 200 EU/rację",
                 "Bufor: 800 EU"
               ]
             },
@@ -1620,7 +1581,6 @@
           "id": "sawmill",
           "title": "Tartak",
           "icon": "alaindustrial:sawmill",
-          "block_id": "alaindustrial:sawmill",
           "pages": [
             {
               "type": "text",
@@ -1659,7 +1619,6 @@
           "id": "polymerizer",
           "title": "Polimeryzator",
           "icon": "alaindustrial:polymerizer",
-          "block_id": "alaindustrial:polymerizer",
           "pages": [
             {
               "type": "text",
@@ -1698,7 +1657,6 @@
           "id": "component_repair_bench",
           "title": "Warsztat naprawy podzespołów",
           "icon": "alaindustrial:component_repair_bench",
-          "block_id": "alaindustrial:component_repair_bench",
           "pages": [
             {
               "type": "text",
@@ -1737,7 +1695,6 @@
           "id": "assembler",
           "title": "Montownia",
           "icon": "alaindustrial:assembler",
-          "block_id": "alaindustrial:assembler",
           "pages": [
             {
               "type": "text",
@@ -1776,7 +1733,6 @@
           "id": "alloy_smelter",
           "title": "Piec stopowy",
           "icon": "alaindustrial:alloy_smelter",
-          "block_id": "alaindustrial:alloy_smelter",
           "pages": [
             {
               "type": "text",
@@ -1815,7 +1771,6 @@
           "id": "thermal_centrifuge",
           "title": "Wirówka termiczna",
           "icon": "alaindustrial:thermal_centrifuge",
-          "block_id": "alaindustrial:thermal_centrifuge",
           "pages": [
             {
               "type": "text",
@@ -1854,7 +1809,6 @@
           "id": "extractor",
           "title": "Ekstraktor",
           "icon": "alaindustrial:extractor",
-          "block_id": "alaindustrial:extractor",
           "pages": [
             {
               "type": "text",
@@ -1893,7 +1847,6 @@
           "id": "galvanic_bath",
           "title": "Kąpiel galwaniczna",
           "icon": "alaindustrial:galvanic_bath",
-          "block_id": "alaindustrial:galvanic_bath",
           "pages": [
             {
               "type": "text",
@@ -1931,7 +1884,6 @@
           "id": "electric_heater",
           "title": "Grzałka elektryczna",
           "icon": "alaindustrial:electric_heater",
-          "block_id": "alaindustrial:electric_heater",
           "pages": [
             {
               "type": "text",
@@ -1970,7 +1922,6 @@
           "id": "electric_furnace",
           "title": "Piec elektryczny",
           "icon": "alaindustrial:electric_furnace",
-          "block_id": "alaindustrial:electric_furnace",
           "pages": [
             {
               "type": "text",
@@ -2009,7 +1960,6 @@
           "id": "pump",
           "title": "Pompa",
           "icon": "alaindustrial:pump",
-          "block_id": "alaindustrial:pump",
           "pages": [
             {
               "type": "text",
@@ -2047,7 +1997,6 @@
           "id": "distillation_column",
           "title": "Kolumna destylacyjna",
           "icon": "alaindustrial:distillation_column",
-          "block_id": "alaindustrial:distillation_column",
           "pages": [
             {
               "type": "text",
@@ -2093,7 +2042,6 @@
           "id": "item_pipe",
           "title": "Rura przedmiotów",
           "icon": "alaindustrial:item_pipe",
-          "block_id": "alaindustrial:item_pipe",
           "pages": [
             {
               "type": "text",
@@ -2124,7 +2072,6 @@
           "id": "fluid_pipe",
           "title": "Rura na płyny",
           "icon": "alaindustrial:fluid_pipe",
-          "block_id": "alaindustrial:fluid_pipe",
           "pages": [
             {
               "type": "text",
@@ -2155,7 +2102,6 @@
           "id": "fluid_tank",
           "title": "Przenośny zbiornik na płyny",
           "icon": "alaindustrial:fluid_tank",
-          "block_id": "alaindustrial:fluid_tank",
           "pages": [
             {
               "type": "text",
@@ -2166,7 +2112,7 @@
               "type": "stats",
               "title": "Statystyki",
               "lines": [
-                "Energia: 8 wiader"
+                "Pojemność: 8 wiader"
               ]
             },
             {
@@ -2200,7 +2146,6 @@
           "id": "tempered_iron_block",
           "title": "Blok hartowanego żelaza",
           "icon": "alaindustrial:tempered_iron_block",
-          "block_id": "alaindustrial:tempered_iron_block",
           "pages": [
             {
               "type": "text",
@@ -2231,7 +2176,6 @@
           "id": "bronze_ingot",
           "title": "Sztabka brązu",
           "icon": "alaindustrial:bronze_ingot",
-          "block_id": "alaindustrial:bronze_ingot",
           "pages": [
             {
               "type": "text",
@@ -2244,7 +2188,6 @@
           "id": "diesel",
           "title": "Olej napędowy",
           "icon": "alaindustrial:diesel_bucket",
-          "block_id": "alaindustrial:diesel",
           "pages": [
             {
               "type": "text",
@@ -2257,7 +2200,6 @@
           "id": "invar_ingot",
           "title": "Sztabka inwaru",
           "icon": "alaindustrial:invar_ingot",
-          "block_id": "alaindustrial:invar_ingot",
           "pages": [
             {
               "type": "text",
@@ -2270,7 +2212,6 @@
           "id": "cupronickel_ingot",
           "title": "Sztabka miedzioniklu",
           "icon": "alaindustrial:cupronickel_ingot",
-          "block_id": "alaindustrial:cupronickel_ingot",
           "pages": [
             {
               "type": "text",
@@ -2283,7 +2224,6 @@
           "id": "fuel_oil",
           "title": "Mazut",
           "icon": "alaindustrial:fuel_oil_bucket",
-          "block_id": "alaindustrial:fuel_oil",
           "pages": [
             {
               "type": "text",
@@ -2296,7 +2236,6 @@
           "id": "oil",
           "title": "Ropa naftowa",
           "icon": "alaindustrial:oil_bucket",
-          "block_id": "alaindustrial:oil",
           "pages": [
             {
               "type": "text",
@@ -2309,7 +2248,6 @@
           "id": "nickel_ore",
           "title": "Złoże niklu",
           "icon": "alaindustrial:nickel_ore",
-          "block_id": "alaindustrial:nickel_ore",
           "pages": [
             {
               "type": "text",
@@ -2322,7 +2260,6 @@
           "id": "tempered_iron_plate_block",
           "title": "Poszycie z hartowanego żelaza",
           "icon": "alaindustrial:tempered_iron_plate_block",
-          "block_id": "alaindustrial:tempered_iron_plate_block",
           "pages": [
             {
               "type": "text",
@@ -2353,7 +2290,6 @@
           "id": "tin_ore",
           "title": "Złoże cyny",
           "icon": "alaindustrial:tin_ore",
-          "block_id": "alaindustrial:tin_ore",
           "pages": [
             {
               "type": "text",
@@ -2366,7 +2302,6 @@
           "id": "palladium_ore",
           "title": "Złoże palladu",
           "icon": "alaindustrial:palladium_ore",
-          "block_id": "alaindustrial:palladium_ore",
           "pages": [
             {
               "type": "text",
@@ -2378,8 +2313,7 @@
         {
           "id": "steam",
           "title": "Para",
-          "icon": "alaindustrial:steam",
-          "block_id": "alaindustrial:steam",
+          "icon": "alaindustrial:steam_nozzle",
           "pages": [
             {
               "type": "text",
@@ -2392,7 +2326,6 @@
           "id": "silver_plate_block",
           "title": "Poszycie ze srebra",
           "icon": "alaindustrial:silver_plate_block",
-          "block_id": "alaindustrial:silver_plate_block",
           "pages": [
             {
               "type": "text",
@@ -2423,7 +2356,6 @@
           "id": "silver_ore",
           "title": "Złoże srebra",
           "icon": "alaindustrial:silver_ore",
-          "block_id": "alaindustrial:silver_ore",
           "pages": [
             {
               "type": "text",
@@ -2436,7 +2368,6 @@
           "id": "sulfur_ore",
           "title": "Ruda siarki",
           "icon": "alaindustrial:sulfur_ore",
-          "block_id": "alaindustrial:sulfur_ore",
           "pages": [
             {
               "type": "text",
@@ -2449,7 +2380,6 @@
           "id": "uranium_ore",
           "title": "Złoże uranu",
           "icon": "alaindustrial:uranium_ore",
-          "block_id": "alaindustrial:uranium_ore",
           "pages": [
             {
               "type": "text",
@@ -2459,10 +2389,21 @@
           ]
         },
         {
+          "id": "shielding_alloy_ingot",
+          "title": "Sztabka stopu ekranującego",
+          "icon": "alaindustrial:shielding_alloy_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Sztabka stopu ekranującego",
+              "text": "Stop palladu i hartowanego żelaza — jedyny materiał, z którego buduje się pomieszczenie reaktora: sztabka, płyta ekranująca i wzmocniona płyta ekranująca, która wymaga dodatkowo zubożonego uranu."
+            }
+          ]
+        },
+        {
           "id": "electrum_ingot",
           "title": "Sztabka elektrum",
           "icon": "alaindustrial:electrum_ingot",
-          "block_id": "alaindustrial:electrum_ingot",
           "pages": [
             {
               "type": "text",
@@ -2475,7 +2416,6 @@
           "id": "trellis",
           "title": "Krata",
           "icon": "alaindustrial:trellis",
-          "block_id": "alaindustrial:trellis",
           "pages": [
             {
               "type": "text",
@@ -2506,7 +2446,6 @@
           "id": "incubator",
           "title": "Inkubator",
           "icon": "alaindustrial:incubator",
-          "block_id": "alaindustrial:incubator",
           "pages": [
             {
               "type": "text",
@@ -2544,12 +2483,11 @@
           "id": "garden_drone_station",
           "title": "Stacja drona ogrodnika",
           "icon": "alaindustrial:garden_drone_station",
-          "block_id": "alaindustrial:garden_drone_station",
           "pages": [
             {
               "type": "text",
               "title": "Stacja drona ogrodnika",
-              "text": "Stacja LV z buforem EU, z której startuje animowany dron patrolujący pola uprawne w promieniu 9 bloków — orze wolną ziemię, sadzi nasiona, nawozi niedojrzałe uprawy i znosi dojrzałe plony z powrotem do stacji."
+              "text": "Stacja LV z buforem EU, z której startuje animowany dron patrolujący pola uprawne w promieniu 4 bloków — orze wolną ziemię, sadzi nasiona, nawozi niedojrzałe uprawy i znosi dojrzałe plony z powrotem do stacji."
             },
             {
               "type": "stats",
@@ -2582,7 +2520,6 @@
           "id": "teleporter",
           "title": "Teleporter",
           "icon": "alaindustrial:teleporter",
-          "block_id": "alaindustrial:teleporter",
           "pages": [
             {
               "type": "text",
@@ -2627,7 +2564,6 @@
           "id": "iron_chest",
           "title": "Żelazna skrzynia",
           "icon": "alaindustrial:iron_chest",
-          "block_id": "alaindustrial:iron_chest",
           "pages": [
             {
               "type": "text",
@@ -2638,7 +2574,7 @@
               "type": "stats",
               "title": "Statystyki",
               "lines": [
-                "Energia: 36 slotów"
+                "Pojemność: 36 slotów"
               ]
             },
             {
@@ -2665,7 +2601,6 @@
           "id": "silver_chest",
           "title": "Srebrna skrzynia",
           "icon": "alaindustrial:silver_chest",
-          "block_id": "alaindustrial:silver_chest",
           "pages": [
             {
               "type": "text",
@@ -2676,7 +2611,7 @@
               "type": "stats",
               "title": "Statystyki",
               "lines": [
-                "Energia: 45 slotów"
+                "Pojemność: 45 slotów"
               ]
             },
             {
@@ -2703,7 +2638,6 @@
           "id": "gold_chest",
           "title": "Złota skrzynia",
           "icon": "alaindustrial:gold_chest",
-          "block_id": "alaindustrial:gold_chest",
           "pages": [
             {
               "type": "text",
@@ -2734,7 +2668,6 @@
           "id": "storage_module",
           "title": "Moduł magazynowy",
           "icon": "alaindustrial:storage_module",
-          "block_id": "alaindustrial:storage_module",
           "pages": [
             {
               "type": "text",
@@ -2772,7 +2705,6 @@
           "id": "mob_repeller_hv",
           "title": "Duży odstraszacz",
           "icon": "alaindustrial:mob_repeller_hv",
-          "block_id": "alaindustrial:mob_repeller_hv",
           "pages": [
             {
               "type": "text",
@@ -2783,7 +2715,7 @@
               "type": "stats",
               "title": "Statystyki",
               "lines": [
-                "Energy: 64 EU/t (field)",
+                "Energia: 64 EU/t (pole)",
                 "Bufor: 32000 EU"
               ]
             }
@@ -2793,7 +2725,6 @@
           "id": "industrial_workbench",
           "title": "Warsztat przemysłowy",
           "icon": "alaindustrial:industrial_workbench",
-          "block_id": "alaindustrial:industrial_workbench",
           "pages": [
             {
               "type": "text",
@@ -2824,7 +2755,6 @@
           "id": "guide_book",
           "title": "Przewodnik",
           "icon": "alaindustrial:guide_book",
-          "block_id": "alaindustrial:guide_book",
           "pages": [
             {
               "type": "text",
@@ -2855,7 +2785,6 @@
           "id": "player_profile",
           "title": "Profil gracza",
           "icon": "minecraft:player_head",
-          "block_id": "alaindustrial:player_profile",
           "pages": [
             {
               "type": "text",
@@ -2875,7 +2804,6 @@
           "id": "mob_repeller",
           "title": "Mały odstraszacz",
           "icon": "alaindustrial:mob_repeller",
-          "block_id": "alaindustrial:mob_repeller",
           "pages": [
             {
               "type": "text",
@@ -2886,7 +2814,7 @@
               "type": "stats",
               "title": "Statystyki",
               "lines": [
-                "Energy: 8 EU/t (field)",
+                "Energia: 8 EU/t (pole)",
                 "Bufor: 2000 EU"
               ]
             },
@@ -2914,7 +2842,6 @@
           "id": "enriched_uranium_torch",
           "title": "Pochodnia ze wzbogaconego uranu",
           "icon": "alaindustrial:enriched_uranium_torch",
-          "block_id": "alaindustrial:enriched_uranium_torch",
           "pages": [
             {
               "type": "text",
@@ -2951,7 +2878,7 @@
                     "",
                     ""
                   ],
-                  "recipe_type": "Shaped Crafting",
+                  "recipe_type": "Wytwarzanie wg wzoru",
                   "result_id": "alaindustrial:enriched_uranium_torch",
                   "result_count": 4
                 },
@@ -2967,7 +2894,7 @@
                     "",
                     ""
                   ],
-                  "recipe_type": "Shapeless Crafting",
+                  "recipe_type": "Wytwarzanie bez wzoru",
                   "result_id": "alaindustrial:enriched_uranium_torch",
                   "result_count": 1
                 }
@@ -2979,7 +2906,6 @@
           "id": "stock_display_frame",
           "title": "Ramka wskaźnika zapasów",
           "icon": "alaindustrial:stock_display_frame",
-          "block_id": "alaindustrial:stock_display_frame",
           "pages": [
             {
               "type": "text",
@@ -3010,7 +2936,6 @@
           "id": "mob_repeller_mv",
           "title": "Średni odstraszacz",
           "icon": "alaindustrial:mob_repeller_mv",
-          "block_id": "alaindustrial:mob_repeller_mv",
           "pages": [
             {
               "type": "text",
@@ -3021,7 +2946,7 @@
               "type": "stats",
               "title": "Statystyki",
               "lines": [
-                "Energy: 32 EU/t (field)",
+                "Energia: 32 EU/t (pole)",
                 "Bufor: 8000 EU"
               ]
             }
@@ -3031,7 +2956,6 @@
           "id": "electrum_chest",
           "title": "Elektrumowa skrzynia",
           "icon": "alaindustrial:electrum_chest",
-          "block_id": "alaindustrial:electrum_chest",
           "pages": [
             {
               "type": "text",
@@ -3042,7 +2966,7 @@
               "type": "stats",
               "title": "Statystyki",
               "lines": [
-                "Energia: 81 slotów"
+                "Pojemność: 81 slotów"
               ]
             },
             {
@@ -3076,7 +3000,6 @@
           "id": "overclocker_chip_i",
           "title": "Układ przyspieszający I",
           "icon": "alaindustrial:overclocker_chip_i",
-          "block_id": "alaindustrial:overclocker_chip_i",
           "pages": [
             {
               "type": "text",
@@ -3107,7 +3030,6 @@
           "id": "stats_chip",
           "title": "Chip statystyk",
           "icon": "alaindustrial:stats_chip",
-          "block_id": "alaindustrial:stats_chip",
           "pages": [
             {
               "type": "text",
@@ -3138,7 +3060,6 @@
           "id": "mute_chip",
           "title": "Układ wyciszający",
           "icon": "alaindustrial:mute_chip",
-          "block_id": "alaindustrial:mute_chip",
           "pages": [
             {
               "type": "text",
@@ -3169,7 +3090,6 @@
           "id": "battery",
           "title": "Bateria",
           "icon": "alaindustrial:battery",
-          "block_id": "alaindustrial:battery",
           "pages": [
             {
               "type": "text",
@@ -3207,7 +3127,6 @@
           "id": "tempered_iron",
           "title": "Hartowane żelazo",
           "icon": "alaindustrial:tempered_iron",
-          "block_id": "alaindustrial:tempered_iron",
           "pages": [
             {
               "type": "text",
@@ -3238,7 +3157,6 @@
           "id": "water_mill_wheel",
           "title": "Koło wodne",
           "icon": "alaindustrial:water_mill_wheel",
-          "block_id": "alaindustrial:water_mill_wheel",
           "pages": [
             {
               "type": "text",
@@ -3266,10 +3184,39 @@
           ]
         },
         {
+          "id": "lapotron_crystal",
+          "title": "Kryształ lapotronowy",
+          "icon": "alaindustrial:lapotron_crystal",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kryształ lapotronowy",
+              "text": "Materiał do wytwarzania, którego nigdy nie robi się wprost: jego wypraska pochłania w gnieździe ładowania 500 000 EU i zmienia się w gotowy kryształ, który sam nie trzyma ładunku."
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:energy_crystal",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:energy_clot_ii",
+                "alaindustrial:advanced_circuit"
+              ],
+              "result_id": "alaindustrial:lapotron_crystal_blank",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "machine_casing",
           "title": "Obudowa maszyny",
           "icon": "alaindustrial:machine_casing",
-          "block_id": "alaindustrial:machine_casing",
           "pages": [
             {
               "type": "text",
@@ -3300,7 +3247,6 @@
           "id": "copper_coil",
           "title": "Cewka miedziana",
           "icon": "alaindustrial:copper_coil",
-          "block_id": "alaindustrial:copper_coil",
           "pages": [
             {
               "type": "text",
@@ -3331,7 +3277,6 @@
           "id": "iron_gear",
           "title": "Żelazne koło zębate",
           "icon": "alaindustrial:iron_gear",
-          "block_id": "alaindustrial:iron_gear",
           "pages": [
             {
               "type": "text",
@@ -3362,7 +3307,6 @@
           "id": "mutation_chip_duplicate",
           "title": "Chip duplikacji",
           "icon": "alaindustrial:mutation_chip_duplicate",
-          "block_id": "alaindustrial:mutation_chip_duplicate",
           "pages": [
             {
               "type": "text",
@@ -3393,7 +3337,6 @@
           "id": "advanced_circuit",
           "title": "Zaawansowany obwód",
           "icon": "alaindustrial:advanced_circuit",
-          "block_id": "alaindustrial:advanced_circuit",
           "pages": [
             {
               "type": "text",
@@ -3424,7 +3367,6 @@
           "id": "advanced_machine_casing",
           "title": "Zaawansowana obudowa maszyny",
           "icon": "alaindustrial:advanced_machine_casing",
-          "block_id": "alaindustrial:advanced_machine_casing",
           "pages": [
             {
               "type": "text",
@@ -3455,7 +3397,6 @@
           "id": "resonant_shard",
           "title": "Rezonujący odłamek",
           "icon": "alaindustrial:resonant_shard",
-          "block_id": "alaindustrial:resonant_shard",
           "pages": [
             {
               "type": "text",
@@ -3468,7 +3409,6 @@
           "id": "empty_chip",
           "title": "Pusty układ",
           "icon": "alaindustrial:empty_chip",
-          "block_id": "alaindustrial:empty_chip",
           "pages": [
             {
               "type": "text",
@@ -3499,7 +3439,6 @@
           "id": "rubber",
           "title": "Guma",
           "icon": "alaindustrial:rubber",
-          "block_id": "alaindustrial:rubber",
           "pages": [
             {
               "type": "text",
@@ -3512,7 +3451,6 @@
           "id": "rtp_chip",
           "title": "Chip losowego skoku",
           "icon": "alaindustrial:rtp_chip",
-          "block_id": "alaindustrial:rtp_chip",
           "pages": [
             {
               "type": "text",
@@ -3540,10 +3478,39 @@
           ]
         },
         {
+          "id": "resonant_crystal",
+          "title": "Kryształ rezonansowy",
+          "icon": "alaindustrial:resonant_crystal",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kryształ rezonansowy",
+              "text": "Materiał do wytwarzania, którego nigdy nie robi się wprost: jego wypraska pochłania w gnieździe ładowania 1 500 000 EU i zmienia się w gotowy kryształ, który sam nie trzyma ładunku."
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "alaindustrial:resonant_shard",
+                "alaindustrial:spatial_crystal",
+                "alaindustrial:resonant_shard",
+                "alaindustrial:spatial_crystal",
+                "alaindustrial:lapotron_crystal",
+                "alaindustrial:spatial_crystal",
+                "alaindustrial:resonant_shard",
+                "alaindustrial:energy_clot_iii",
+                "alaindustrial:resonant_shard"
+              ],
+              "result_id": "alaindustrial:resonant_crystal_blank",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "windmill_rotor",
           "title": "Wirnik wiatraka",
           "icon": "alaindustrial:windmill_rotor",
-          "block_id": "alaindustrial:windmill_rotor",
           "pages": [
             {
               "type": "text",
@@ -3574,7 +3541,6 @@
           "id": "energy_clot_i",
           "title": "Skrzep energii I",
           "icon": "alaindustrial:energy_clot_i",
-          "block_id": "alaindustrial:energy_clot_i",
           "pages": [
             {
               "type": "text",
@@ -3587,7 +3553,6 @@
           "id": "network_analyzer",
           "title": "Analizator sieci",
           "icon": "alaindustrial:network_analyzer",
-          "block_id": "alaindustrial:network_analyzer",
           "pages": [
             {
               "type": "text",
@@ -3618,7 +3583,6 @@
           "id": "fluxweave_cloth",
           "title": "Tkanina fluksowa",
           "icon": "alaindustrial:fluxweave_cloth",
-          "block_id": "alaindustrial:fluxweave_cloth",
           "pages": [
             {
               "type": "text",
@@ -3649,7 +3613,6 @@
           "id": "iron_dust",
           "title": "Pył żelaza",
           "icon": "alaindustrial:iron_dust",
-          "block_id": "alaindustrial:iron_dust",
           "pages": [
             {
               "type": "text",
@@ -3662,7 +3625,6 @@
           "id": "alignment_chip_day",
           "title": "Chip ewolucji solarnej",
           "icon": "alaindustrial:alignment_chip_day",
-          "block_id": "alaindustrial:alignment_chip_day",
           "pages": [
             {
               "type": "text",
@@ -3693,7 +3655,6 @@
           "id": "electronic_circuit",
           "title": "Obwód elektroniczny",
           "icon": "alaindustrial:electronic_circuit",
-          "block_id": "alaindustrial:electronic_circuit",
           "pages": [
             {
               "type": "text",
@@ -3721,10 +3682,39 @@
           ]
         },
         {
+          "id": "energy_crystal",
+          "title": "Kryształ energii",
+          "icon": "alaindustrial:energy_crystal",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kryształ energii",
+              "text": "Materiał do wytwarzania, którego nigdy nie robi się wprost: jego wypraska pochłania w gnieździe ładowania 100 000 EU i zmienia się w gotowy kryształ, który sam nie trzyma ładunku."
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "alaindustrial:diamond_dust",
+                "minecraft:redstone",
+                "alaindustrial:diamond_dust",
+                "minecraft:redstone",
+                "alaindustrial:tempered_iron",
+                "minecraft:redstone",
+                "alaindustrial:diamond_dust",
+                "minecraft:redstone",
+                "alaindustrial:diamond_dust"
+              ],
+              "result_id": "alaindustrial:energy_crystal_blank",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "wind_gauge",
           "title": "Wiatromierz",
           "icon": "alaindustrial:wind_gauge",
-          "block_id": "alaindustrial:wind_gauge",
           "pages": [
             {
               "type": "text",
@@ -3755,7 +3745,6 @@
           "id": "battery_pouch",
           "title": "Sakwa bateryjna",
           "icon": "alaindustrial:battery_pouch",
-          "block_id": "alaindustrial:battery_pouch",
           "pages": [
             {
               "type": "text",
@@ -3793,7 +3782,6 @@
           "id": "fluxweave_chestplate",
           "title": "Napierśnik fluksowy",
           "icon": "alaindustrial:fluxweave_chestplate",
-          "block_id": "alaindustrial:fluxweave_chestplate",
           "pages": [
             {
               "type": "text",
@@ -3804,7 +3792,7 @@
               "type": "stats",
               "title": "Statystyki",
               "lines": [
-                "Energia: 15000",
+                "Energia: 15 000 EU",
                 "Bufor: 15 000 EU"
               ]
             },
@@ -3832,7 +3820,6 @@
           "id": "tempered_iron_chestplate",
           "title": "Tempered Iron Chestplate",
           "icon": "alaindustrial:tempered_iron_chestplate",
-          "block_id": "alaindustrial:tempered_iron_chestplate",
           "pages": [
             {
               "type": "text",
@@ -3843,7 +3830,7 @@
               "type": "stats",
               "title": "Statystyki",
               "lines": [
-                "Energia: 4 szt."
+                "Sztuki: 4 szt."
               ]
             },
             {
@@ -3870,7 +3857,6 @@
           "id": "vacuum_capsule",
           "title": "Kapsuła próżniowa",
           "icon": "alaindustrial:vacuum_capsule",
-          "block_id": "alaindustrial:vacuum_capsule",
           "pages": [
             {
               "type": "text",
@@ -3901,7 +3887,6 @@
           "id": "wrench",
           "title": "Klucz",
           "icon": "alaindustrial:wrench",
-          "block_id": "alaindustrial:wrench",
           "pages": [
             {
               "type": "text",
@@ -3932,7 +3917,6 @@
           "id": "jetpack",
           "title": "Plecak odrzutowy",
           "icon": "alaindustrial:jetpack",
-          "block_id": "alaindustrial:jetpack",
           "pages": [
             {
               "type": "text",
@@ -3970,7 +3954,6 @@
           "id": "tempered_iron_pickaxe",
           "title": "Kilof z utwardzonego żelaza",
           "icon": "alaindustrial:tempered_iron_pickaxe",
-          "block_id": "alaindustrial:tempered_iron_pickaxe",
           "pages": [
             {
               "type": "text",
@@ -3999,20 +3982,19 @@
         },
         {
           "id": "insulated_chestplate",
-          "title": "Insulated Chestplate",
+          "title": "Napierśnik izolacyjny",
           "icon": "alaindustrial:insulated_chestplate",
-          "block_id": "alaindustrial:insulated_chestplate",
           "pages": [
             {
               "type": "text",
-              "title": "Insulated Chestplate",
-              "text": "Leather armour dipped in slime — hood, jacket, trousers and boots that soak up a bare cable's shock and spend durability doing it."
+              "title": "Napierśnik izolacyjny",
+              "text": "Skórzana zbroja zanurzona w szlamie — kaptur, kurtka, spodnie i buty, które przyjmują porażenie z gołego kabla i tracą przy tym wytrzymałość."
             },
             {
               "type": "stats",
               "title": "Statystyki",
               "lines": [
-                "Energia: 4 szt."
+                "Sztuki: 4 szt."
               ]
             },
             {
@@ -4039,7 +4021,6 @@
           "id": "tempered_iron_tools",
           "title": "Narzędzia z utwardzonego żelaza",
           "icon": "alaindustrial:tempered_iron_axe",
-          "block_id": "alaindustrial:tempered_iron_tools",
           "pages": [
             {
               "type": "text",
@@ -4050,7 +4031,7 @@
               "type": "stats",
               "title": "Statystyki",
               "lines": [
-                "Energia: 5 szt."
+                "Sztuki: 5 szt."
               ]
             },
             {
@@ -4083,7 +4064,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Shaped Crafting",
+                  "recipe_type": "Wytwarzanie wg wzoru",
                   "result_id": "alaindustrial:tempered_iron_pickaxe",
                   "result_count": 1
                 },
@@ -4099,7 +4080,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Shaped Crafting",
+                  "recipe_type": "Wytwarzanie wg wzoru",
                   "result_id": "alaindustrial:tempered_iron_axe",
                   "result_count": 1
                 },
@@ -4115,7 +4096,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Shaped Crafting",
+                  "recipe_type": "Wytwarzanie wg wzoru",
                   "result_id": "alaindustrial:tempered_iron_hoe",
                   "result_count": 1
                 },
@@ -4131,7 +4112,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Shaped Crafting",
+                  "recipe_type": "Wytwarzanie wg wzoru",
                   "result_id": "alaindustrial:tempered_iron_shovel",
                   "result_count": 1
                 },
@@ -4147,7 +4128,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Shaped Crafting",
+                  "recipe_type": "Wytwarzanie wg wzoru",
                   "result_id": "alaindustrial:tempered_iron_sword",
                   "result_count": 1
                 }
@@ -4159,7 +4140,6 @@
           "id": "scythe",
           "title": "Kosa",
           "icon": "alaindustrial:scythe_iron",
-          "block_id": "alaindustrial:scythe",
           "pages": [
             {
               "type": "text",
@@ -4170,7 +4150,7 @@
               "type": "stats",
               "title": "Statystyki",
               "lines": [
-                "Energia: 8 poziomów"
+                "Poziomy: 8 poziomów"
               ]
             },
             {
@@ -4203,7 +4183,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Shaped Crafting",
+                  "recipe_type": "Wytwarzanie wg wzoru",
                   "result_id": "alaindustrial:scythe_wood",
                   "result_count": 1
                 },
@@ -4219,7 +4199,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Shaped Crafting",
+                  "recipe_type": "Wytwarzanie wg wzoru",
                   "result_id": "alaindustrial:scythe_stone",
                   "result_count": 1
                 },
@@ -4235,7 +4215,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Shaped Crafting",
+                  "recipe_type": "Wytwarzanie wg wzoru",
                   "result_id": "alaindustrial:scythe_copper",
                   "result_count": 1
                 },
@@ -4251,7 +4231,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Shaped Crafting",
+                  "recipe_type": "Wytwarzanie wg wzoru",
                   "result_id": "alaindustrial:scythe_iron",
                   "result_count": 1
                 },
@@ -4267,7 +4247,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Shaped Crafting",
+                  "recipe_type": "Wytwarzanie wg wzoru",
                   "result_id": "alaindustrial:scythe_gold",
                   "result_count": 1
                 },
@@ -4283,7 +4263,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Shaped Crafting",
+                  "recipe_type": "Wytwarzanie wg wzoru",
                   "result_id": "alaindustrial:scythe_tempered_iron",
                   "result_count": 1
                 },
@@ -4299,7 +4279,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Shaped Crafting",
+                  "recipe_type": "Wytwarzanie wg wzoru",
                   "result_id": "alaindustrial:scythe_diamond",
                   "result_count": 1
                 },
@@ -4315,7 +4295,7 @@
                     "minecraft:stick",
                     ""
                   ],
-                  "recipe_type": "Shaped Crafting",
+                  "recipe_type": "Wytwarzanie wg wzoru",
                   "result_id": "alaindustrial:scythe_netherite",
                   "result_count": 1
                 }
@@ -4327,7 +4307,6 @@
           "id": "forge_hammer",
           "title": "Młot kowalski",
           "icon": "alaindustrial:forge_hammer",
-          "block_id": "alaindustrial:forge_hammer",
           "pages": [
             {
               "type": "text",
@@ -4358,7 +4337,6 @@
           "id": "teleporter_remote",
           "title": "Pilot teleportu",
           "icon": "alaindustrial:teleporter_remote",
-          "block_id": "alaindustrial:teleporter_remote",
           "pages": [
             {
               "type": "text",
@@ -4389,7 +4367,6 @@
           "id": "soul_vessel",
           "title": "Naczynie dusz",
           "icon": "alaindustrial:soul_vessel",
-          "block_id": "alaindustrial:soul_vessel",
           "pages": [
             {
               "type": "text",
@@ -4418,20 +4395,19 @@
         },
         {
           "id": "shielding_chestplate",
-          "title": "Shielding Chestplate",
+          "title": "Napierśnik ekranujący",
           "icon": "alaindustrial:shielding_chestplate",
-          "block_id": "alaindustrial:shielding_chestplate",
           "pages": [
             {
               "type": "text",
-              "title": "Shielding Chestplate",
-              "text": "The anti-radiation set — hood, jacket, trousers and boots of leather, rubber and yellow dye; it cuts the dose, spends durability doing it, and seals the wearer completely."
+              "title": "Napierśnik ekranujący",
+              "text": "Komplet przeciwradiacyjny — kaptur, kurtka, spodnie i buty ze skóry, gumy i żółtego barwnika; obniża dawkę, traci przy tym wytrzymałość i całkowicie zamyka noszącego."
             },
             {
               "type": "stats",
               "title": "Statystyki",
               "lines": [
-                "Energia: 4 szt."
+                "Sztuki: 4 szt."
               ]
             },
             {
@@ -4458,7 +4434,6 @@
           "id": "electric_drill",
           "title": "Wiertło elektryczne",
           "icon": "alaindustrial:electric_drill",
-          "block_id": "alaindustrial:electric_drill",
           "pages": [
             {
               "type": "text",
@@ -4496,7 +4471,6 @@
           "id": "electric_shovel",
           "title": "Łopata elektryczna",
           "icon": "alaindustrial:electric_shovel",
-          "block_id": "alaindustrial:electric_shovel",
           "pages": [
             {
               "type": "text",
@@ -4534,7 +4508,6 @@
           "id": "electromagnet",
           "title": "Elektromagnes",
           "icon": "alaindustrial:electromagnet",
-          "block_id": "alaindustrial:electromagnet",
           "pages": [
             {
               "type": "text",
@@ -4573,7 +4546,6 @@
           "id": "electric_hoe",
           "title": "Motyka elektryczna",
           "icon": "alaindustrial:electric_hoe",
-          "block_id": "alaindustrial:electric_hoe",
           "pages": [
             {
               "type": "text",
@@ -4611,7 +4583,6 @@
           "id": "electric_chainsaw",
           "title": "Piła elektryczna",
           "icon": "alaindustrial:electric_chainsaw",
-          "block_id": "alaindustrial:electric_chainsaw",
           "pages": [
             {
               "type": "text",
@@ -4649,7 +4620,6 @@
           "id": "electric_saber",
           "title": "Szabla elektryczna",
           "icon": "alaindustrial:electric_saber",
-          "block_id": "alaindustrial:electric_saber",
           "pages": [
             {
               "type": "text",
@@ -4687,7 +4657,6 @@
           "id": "energy_pack",
           "title": "Plecak energetyczny",
           "icon": "alaindustrial:energy_pack",
-          "block_id": "alaindustrial:energy_pack",
           "pages": [
             {
               "type": "text",

@@ -2,7 +2,6 @@ package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.ElectricHeaterBlockEntity;
-import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
 import dev.alaindustrial.block.entity.ThermalCentrifugeStatus;
 import dev.alaindustrial.registry.ModContent;

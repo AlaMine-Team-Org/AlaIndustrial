@@ -91,23 +91,4 @@ public class WindMillMenu extends MachineMenu {
 		return data.get(5);
 	}
 
-	/**
-	 * Visual regression test helper — injects all seven ContainerData fields without a server-side
-	 * block entity. Only call this from client-game-test code.
-	 *
-	 * <p>{@code production} lands on both rate channels: channel 2 (mechanical — what a rotor renderer
-	 * would spin from) and {@link WindMillBlockEntity#RATE_CHANNEL} (effective — what the screen prints).
-	 * A shot taken through this helper therefore stands for a server at the default multiplier, where the
-	 * two are equal; pass the post-multiplier number if you need to photograph a retuned one.
-	 */
-	public void injectWindMillTestData(int energy, int capacity, int production, int mode,
-			int evolveProgress, int evolveMax) {
-		data.set(0, energy);
-		data.set(1, capacity);
-		data.set(2, production);
-		data.set(3, mode);
-		data.set(4, evolveProgress);
-		data.set(5, evolveMax);
-		data.set(WindMillBlockEntity.RATE_CHANNEL, production);
-	}
 }

@@ -184,6 +184,15 @@ public final class NeoForgeGameTests {
 				ReactorScenarios::nozzleVentsIntoAirAndStallsAgainstAWall);
 		registerTest(event, "reactor_feeds_cable_outside_shell", 400, true,
 				ReactorScenarios::poweredReactorFeedsACableOutsideTheShell);
+		// MOD-469 — the price of running without a room, and the price of letting one overheat.
+		registerTest(event, "reactor_bare_produces_melts_and_obeys_switch", 400, true,
+				ReactorScenarios::bareReactorProducesMeltsAndObeysTheSwitch);
+		registerTest(event, "reactor_breach_drops_into_bare_mode", 400, true,
+				ReactorScenarios::breachingAWallDropsTheReactorIntoBareMode);
+		registerTest(event, "reactor_one_controller_per_shared_rack", 400, true,
+				ReactorScenarios::onlyOneControllerBurnsASharedRack);
+		registerTest(event, "reactor_meltdown_spares_the_shell", 400, true,
+				ReactorScenarios::anOverheatingRoomMeltsItsContentsAndKeepsItsShell);
 		// MOD-022 data-component seam: a charged battery box carries STORED_ENERGY on drop (frozen-registry
 		// fix — ModDataComponentsNeoForge). Fabric covers this via BatteryBoxGameTest; NeoForge world lane's first.
 		registerTest(event, "battery_box_drop_carries_energy", 40, true,

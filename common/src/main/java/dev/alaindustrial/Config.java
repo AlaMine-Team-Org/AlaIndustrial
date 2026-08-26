@@ -910,12 +910,12 @@ public final class Config {
 	 * purpose the tightest one: the pipe itself carries {@link #fluidPipeSegmentBuffer}.
 	 */
 	public static int reactorPortThroughput = 50;
-	/** Steam a nozzle releases per tick, in mB. Above one inlet's throughput, so the pipe is the limit. */
 	/**
 	 * EU a single reactor outlet holds. One tick of HV: a socket, not a battery — the reactor's own
 	 * buffer is where energy waits, and a big one here would just be storage the player did not build.
 	 */
 	public static int reactorOutletBuffer = 512;
+	/** Steam a nozzle releases per tick, in mB. Above one inlet's throughput, so the pipe is the limit. */
 	public static int reactorNozzleVentRate = 100;
 	/** Steam a nozzle holds. A few ticks of slack, far too little to be used as storage. */
 	public static int reactorNozzleBuffer = 500;
@@ -955,6 +955,93 @@ public final class Config {
 	public static int reactorCoolantTargetPercent = 60;
 	/** EU the controller can bank. Sized to a few seconds of full output so the grid can lag behind. */
 	public static int reactorBuffer = 200000;
+
+	// ── MOD-469: the meltdown and the bare reactor ────────────────────────────────────────────────
+	/**
+	 * Master switch for every block this feature turns into lava — the room's contents on an overheat
+	 * AND the scenery around a bare core.
+	 *
+	 * <p>Neither hazard ever takes the reactor's own parts — shell, racks, controller, button. The racks
+	 * are exempt even inside a meltdown: they are crafted around a shielding plate, and a part built to
+	 * survive a reactor survives this one (player's call, 2026-08-26). A runaway room therefore eats its
+	 * floor, its plumbing and whatever was carried inside.
+	 *
+	 * <p>Off, both hazards keep their sound, their particles and their status readout and change not a
+	 * single block. Deliberately NOT tied to the vanilla {@code mobGriefing} rule: that rule describes
+	 * mobs, and a machine quietly obeying it is a surprise to the operator who set it for creepers. One
+	 * switch, one meaning.
+	 */
+	public static boolean reactorMeltdownMeltsBlocks = true;
+	/**
+	 * How far the bare-mode search may WALK from the controller before it gives up.
+	 *
+	 * <p><b>A bound on a connectivity walk, not a sphere.</b> The search steps outwards through blocks
+	 * that can carry a reaction — fuel racks and the shielding-alloy shell — so a controller only ever
+	 * drives racks it is physically joined to. It started life as a radius, and a playtest killed that
+	 * immediately: a controller on bare earth lit up from a column standing three blocks away across
+	 * open ground, which reads exactly like power teleporting.
+	 *
+	 * <p>Still WIDER than {@link #reactorBareMeltRadius} on purpose: a long cluster should work end to
+	 * end without setting fire to everything that far away in every direction.
+	 */
+	public static int reactorBareSearchRadius = 8;
+	/**
+	 * Blocks around EACH charged rack within which the scenery melts. Tighter than the rack search.
+	 *
+	 * <p>Measured from the racks, not from the controller. A controller stands in a wall, so a sphere
+	 * centred on it has the reactor's own (exempt) body filling half of it — a leaky reactor put every
+	 * melt on the one side its controller faced and left the ground behind it untouched. The fuel is
+	 * what is dangerous, which is also how radiation already models it.
+	 */
+	public static int reactorBareMeltRadius = 5;
+	/**
+	 * Share of the sealed-room figure a bare core keeps, in percent.
+	 *
+	 * <p>The bare reactor is a real early generator, not a punishment — but it has to be clearly worse
+	 * than the room, or nobody would ever build the room.
+	 */
+	public static int reactorBarePowerPercent = 40;
+	/**
+	 * Hard ceiling on a bare core's output, in EU/t, however many rods are piled into it.
+	 *
+	 * <p>A quarter of the HV ceiling a sealed room can reach. Without it the percentage alone would let
+	 * a big enough heap of rods out-earn a properly built reactor, which would make the shell, the
+	 * coolant loop and the airlock decoration.
+	 */
+	public static int reactorBarePowerCap = 128;
+	/**
+	 * Ticks between melts under a bare core carrying ONE rod. Divided by the rod count, floored by
+	 * {@link #reactorBareMeltMinIntervalTicks} — a forgotten rod is a nuisance, a bare station is not.
+	 */
+	public static int reactorBareMeltIntervalTicks = 600;
+	/** Shortest gap between two melts however large the cluster grows. Two seconds. */
+	public static int reactorBareMeltMinIntervalTicks = 40;
+	/**
+	 * Ticks between a block being marked for melting and actually turning to lava.
+	 *
+	 * <p>The warning is POINTED — particles and a hiss at the doomed block itself, not a general mood
+	 * over the whole reactor. Two seconds is enough to step off it or to grab what is on it, which is
+	 * the entire difference between a hazard and a punishment.
+	 */
+	public static int reactorMeltWarnTicks = 40;
+	/**
+	 * Percentage of the heat scale at which a sealed room starts melting its own contents.
+	 *
+	 * <p>Between {@link #reactorHeatWarnPercent} (70, "look at this") and the top of the scale, which
+	 * belongs to MOD-471's explosion. The room is meant to lose its columns and its plumbing here and
+	 * keep its shell — that containment is what the walls were built for.
+	 */
+	public static int reactorMeltdownStartPercent = 85;
+	/** Ticks between two blocks of the room's contents melting while the core is over the line. */
+	public static int reactorMeltdownIntervalTicks = 60;
+	/**
+	 * Heat carried away by one melted block of the room's contents.
+	 *
+	 * <p>What makes a meltdown self-limiting: the room eats its own guts and cools as it does, so the
+	 * player is left with a wrecked interior inside an intact shell rather than a core pinned at the top
+	 * of the scale for ever.
+	 */
+	public static int reactorMeltdownHeatRelief = 400;
 
 	// ── MOD-470: radiation, dose and the shielding suit ───────────────────────────────────────────
 	/**
@@ -1557,7 +1644,7 @@ public final class Config {
 	 * <p><b>The "no battery from wires" invariant does not scale here</b> and is not meant to: that
 	 * ceiling ({@link #cableBuffer} × 1000 &lt; {@link #batteryBoxBuffer}) is a copper-scale rule about
 	 * the wire players run by the thousand. A 1000-segment electrum grid would bank 192 000 EU, but it
-	 * costs ~2 667 electrum ingots and ~1 333 diamonds to build — the craft, not the buffer, is what
+	 * costs ~1 667 electrum ingots and ~1 333 diamond dust to build — the craft, not the buffer, is what
 	 * keeps it out of reach. Gold already sits the same way (48 000 EU per 1000 segments).
 	 */
 	public static int electrumCableBuffer = 192;
@@ -2220,6 +2307,28 @@ public final class Config {
 				() -> reactorHeatWarnPercent, v -> reactorHeatWarnPercent = v, 1),
 			new IntField("reactorBuffer", Section.MACHINES, "EU buffer of the reactor controller.",
 				() -> reactorBuffer, v -> reactorBuffer = v, 1),
+			new BoolField("reactorMeltdownMeltsBlocks", Section.MACHINES, "When true, an overheating sealed room melts its own contents and a working bare reactor melts the scenery around it. false keeps every cue and changes no block.",
+				() -> reactorMeltdownMeltsBlocks, v -> reactorMeltdownMeltsBlocks = v),
+			new IntField("reactorBareSearchRadius", Section.MACHINES, "Blocks a controller with no sealed room reaches when looking for fuel racks; wider than the melt radius.",
+				() -> reactorBareSearchRadius, v -> reactorBareSearchRadius = v, 0),
+			new IntField("reactorBareMeltRadius", Section.MACHINES, "Blocks around a working bare reactor within which the scenery melts.",
+				() -> reactorBareMeltRadius, v -> reactorBareMeltRadius = v, 0),
+			new IntField("reactorBarePowerPercent", Section.MACHINES, "Share of the sealed-room output a bare reactor keeps, in percent.",
+				() -> reactorBarePowerPercent, v -> reactorBarePowerPercent = v, 0),
+			new IntField("reactorBarePowerCap", Section.MACHINES, "Hard ceiling on a bare reactor's output in EU/t, however many rods are piled into it.",
+				() -> reactorBarePowerCap, v -> reactorBarePowerCap = v, 0),
+			new IntField("reactorBareMeltIntervalTicks", Section.MACHINES, "Ticks between melts under a bare reactor carrying one rod; divided by the rod count.",
+				() -> reactorBareMeltIntervalTicks, v -> reactorBareMeltIntervalTicks = v, 1),
+			new IntField("reactorBareMeltMinIntervalTicks", Section.MACHINES, "Shortest gap between two melts under a bare reactor however large the cluster grows.",
+				() -> reactorBareMeltMinIntervalTicks, v -> reactorBareMeltMinIntervalTicks = v, 1),
+			new IntField("reactorMeltWarnTicks", Section.MACHINES, "Ticks between a block being marked for melting and turning to lava; the pointed warning the player can act on.",
+				() -> reactorMeltWarnTicks, v -> reactorMeltWarnTicks = v, 0),
+			new IntField("reactorMeltdownStartPercent", Section.MACHINES, "Percentage of the heat scale at which a sealed room starts melting its own contents; between the warning line and the top.",
+				() -> reactorMeltdownStartPercent, v -> reactorMeltdownStartPercent = v, 1),
+			new IntField("reactorMeltdownIntervalTicks", Section.MACHINES, "Ticks between two blocks of the room's contents melting while the core is over the meltdown line.",
+				() -> reactorMeltdownIntervalTicks, v -> reactorMeltdownIntervalTicks = v, 1),
+			new IntField("reactorMeltdownHeatRelief", Section.MACHINES, "Heat carried away by one melted block of the room's contents; what makes a meltdown self-limiting.",
+				() -> reactorMeltdownHeatRelief, v -> reactorMeltdownHeatRelief = v, 0),
 			new IntField("thermalCentrifugeIdleEuPerTick", Section.MACHINES, "EU/t a spun-up thermal centrifuge spends holding revolutions with nothing to process.",
 				() -> thermalCentrifugeIdleEuPerTick, v -> thermalCentrifugeIdleEuPerTick = v, 1),
 			new IntField("canningMachineDuration", Section.MACHINES, "Ticks the canning machine takes per ration at 1.0 speed; x machineEuPerTick 2 = 200 EU per ration.",

@@ -40,16 +40,6 @@ public final class GuiStyle {
 		g.fill(x + 1, y + 1, x + 17, y + 17, SLOT);
 	}
 
-	/** Vertical energy bar with border + sheen, filled by stored/capacity. */
-	public static void energyBar(GuiGraphicsExtractor g, int x, int y, int w, int h, int stored, int capacity) {
-		g.fill(x - 1, y - 1, x + w + 1, y + h + 1, TRACK);
-		int filled = capacity > 0 ? (int) ((long) stored * h / capacity) : 0;
-		g.fill(x, y + h - filled, x + w, y + h, ENERGY);
-		if (filled > 0) {
-			g.fill(x, y + h - filled, x + 1, y + h, ENERGY_HI);
-		}
-	}
-
 	/** Horizontal progress arrow track + fill (progress/maxProgress). */
 	public static void progress(GuiGraphicsExtractor g, int x, int y, int w, int progress, int maxProgress) {
 		g.fill(x, y, x + w, y + 6, TRACK);

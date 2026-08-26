@@ -1,6 +1,9 @@
 package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.block.DistillationColumnBlock;
+import dev.alaindustrial.block.FuelRodAssemblyBlock;
+import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
+import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.gametest.visual.MenuState;
 import dev.alaindustrial.visual.ShotGroup;
 import dev.alaindustrial.gametest.visual.ShotRecorder;
@@ -19,6 +22,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.locale.Language;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector2i;
@@ -293,6 +297,37 @@ public class ScreensClientGameTest implements FabricClientGameTest {
         }
         server.runCommand("setblock " + x + " " + BLOCK_Y + " " + RIG_Z
                 + " alaindustrial:" + screen.blockId());
+        if (screen.blockId().equals("reactor_controller")) {
+            standUpBareReactor(server, x);
+        }
+    }
+
+    /**
+     * Gives the reactor controller a loaded rack to find, so its panel shows the BARE-MODE layout
+     * (MOD-469).
+     *
+     * <p><b>Built in the world rather than injected into the client's menu.</b> The bare readout is
+     * driven by the rod count, which the server recomputes and re-sends on its own timer — an injected
+     * value would be overwritten before the shutter opened, and the frame would quietly be a picture of
+     * the ordinary building layout under a bare-mode name. A real rack makes the server itself report
+     * the state, so what is photographed is what a player would see.
+     *
+     * <p><b>And deliberately no redstone.</b> A bare reactor that is actually RUNNING melts the scenery
+     * around it, and the scenery here is the neighbouring screens' rigs. With no signal the controller
+     * enters bare mode, counts its rods and reports "no redstone signal" as its output — which is the
+     * layout this frame exists to show, with none of the hazard.
+     */
+    private static void standUpBareReactor(TestServerContext server, int x) {
+        server.runCommand("setblock " + (x + 1) + " " + BLOCK_Y + " " + RIG_Z
+                + " alaindustrial:fuel_rod_assembly");
+        server.runOnServer(mc -> {
+            BlockPos rackAt = new BlockPos(x + 1, BLOCK_Y, RIG_Z);
+            if (mc.overworld().getBlockEntity(rackAt) instanceof FuelRodAssemblyBlockEntity rack) {
+                for (int i = 0; i < FuelRodAssemblyBlock.MAX_RODS; i++) {
+                    rack.insertRod(new ItemStack(ModContent.URANIUM_FUEL_ROD.get()));
+                }
+            }
+        });
     }
 
     /**
@@ -310,6 +345,14 @@ public class ScreensClientGameTest implements FabricClientGameTest {
             server.runCommand("tp @p " + xOf(i) + ".5 " + BLOCK_Y + " " + STAND_Z + ".5 180 0");
             singleplayer.getClientLevel().waitForChunksRender();
             VisualWorld.awaitBlockOnClient(context, pos, "alaindustrial:" + screen.blockId());
+
+            if (screen.blockId().equals("reactor_controller")) {
+                // The controller sweeps for racks on its own timer (reactorScanIntervalTicks, 40), so the
+                // bare readout does not exist until one sweep has run. Opening the screen before that
+                // photographs the ordinary building layout and files it as proof of a layout it never
+                // showed. One interval plus a little slack.
+                context.waitTicks(50);
+            }
 
             openByRightClick(context, pos, screen);
 

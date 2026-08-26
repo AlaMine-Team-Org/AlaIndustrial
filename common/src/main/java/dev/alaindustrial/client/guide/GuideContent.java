@@ -36,8 +36,6 @@ public final class GuideContent {
 		public String id = "";
 		public String title = "";
 		public String icon = "";
-		@SerializedName("block_id")
-		public String blockId = "";
 		public List<Page> pages = List.of();
 	}
 

@@ -57,15 +57,6 @@ public enum IncubatorMode {
 	}
 
 
-	/** The chip item that selects this mode. */
-	public ItemStack chipStack() {
-		return switch (this) {
-			case TRANSFORM -> new ItemStack(ModContent.MUTATION_CHIP_TRANSFORM.get());
-			case DUPLICATE -> new ItemStack(ModContent.MUTATION_CHIP_DUPLICATE.get());
-			case CREATE -> new ItemStack(ModContent.MUTATION_CHIP_CREATE.get());
-		};
-	}
-
 	/** The mode the given chip selects, or {@code null} when the stack is not a mutation chip. */
 	@Nullable
 	public static IncubatorMode forChip(ItemStack chip) {
