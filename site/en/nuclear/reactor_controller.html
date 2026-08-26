@@ -400,7 +400,9 @@
 
 <p>The controller goes <strong>in place of one casing block in a vertical wall</strong>, facing outwards: the front face carries the screen the player reads, and the redstone goes to the same side. The cable goes on any other face. A room with two controllers does not form — a room has exactly one brain.</p>
 
-<blockquote><strong>What the reactor does not have yet.</strong> The heat gauge is computed and shown, but 100% has no consequences: the reactor neither melts down nor explodes. There is no radiation around a running core either. Both are separate work; for now overheating only costs you the output.</blockquote>
+<p>The controller <strong>does not need a room in order to work</strong>. Without one it drops into bare mode: it finds the racks around itself with a radius scan, delivers a markedly cut-down output, and pays for it by melting blocks around the racks themselves at regular intervals. That is a choice the player makes, not a breakage — the details are under <a href="#bare-mode-a-reactor-with-no-room">"Bare mode"</a>.</p>
+
+<blockquote><strong>What the reactor does not have yet.</strong> The heat gauge climbs to 100 % and stops there: past the mark the room starts melting its own contents, but there is still no <strong>explosion</strong> at the very top of the scale — that is separate work. Radiation around a running core already exists and lives apart from the meltdown.</blockquote>
 
 <h2 id="where-it-has-to-stand">Where it has to stand</h2>
 
@@ -477,7 +479,7 @@
 
 <blockquote><strong>A big room buys autonomy, not power.</strong> Everything past 512 EU/FE/t delivers the same 512 EU/FE/t; what grows is the time between refuellings, because the same stream is divided among more rods. The room's appetite is <strong>identical</strong> for every layout that reaches the ceiling: 256 rods = 128 uranium ore an hour. The per-layout figures are in</blockquote>
 
-<p>Heat is settled <strong>every tick</strong>, even with the reactor shut down: cooling has to work, or "scram and wait" would not be a way out. A full scale drains to zero in <strong>395 ticks (19.8 s)</strong>. A full scale still has no consequence — that is and.</p>
+<p>Heat is settled <strong>every tick</strong>, even with the reactor shut down: cooling has to work, or "scram and wait" would not be a way out. A full scale drains to zero in <strong>395 ticks (19.8 s)</strong>. Past the mark the room starts melting its own contents — see <a href="#meltdown-the-price-of-overheating">"Meltdown"</a>; the very top of the scale still has no consequence of its own, that is.</p>
 
 <h3 id="controls-redstone-and-depth">Controls: redstone and depth</h3>
 
@@ -529,13 +531,76 @@ removed = boiled x 2</code></pre>
 
 <blockquote>⚠️ <strong>Columns standing side by side are not connected.</strong> The controller used to even the tanks out across the whole room, and one pipe watered the entire hall. That was convenient and untrue: coolant appearing inside a rack nothing is plumbed to reads as a bug however useful it is. Plumb the columns you want cooled — the easiest way is to build them in stacks.</blockquote>
 
+<h3 id="bare-mode-a-reactor-with-no-room">Bare mode: a reactor with no room</h3>
+
+<p>A controller whose room never came together <strong>does not sit idle</strong>. If loaded racks physically adjoin it, it takes to running them directly. This is a second full working mode, not a failure state.</p>
+
+<p><strong>The link has to be physical.</strong> The controller steps outwards from itself through touching <strong>racks</strong> and <strong>shielding-alloy blocks</strong> — through a half-built shell, then, as well. Open ground does not conduct the reaction: a column standing three blocks away across a gap is not part of the reactor, however much of it there is. is a bound on the length of that walk, not a search radius.</p>
+
+<blockquote>The rule came out of a playtest: the search used to go by radius, and a controller on bare earth lit up from a column across a gap. It looked like power being handed over through thin air. Touching works, and that is exactly the feeling it should have.</blockquote>
+
+<p><strong>A full buffer does not switch the danger off.</strong> Fuel is only spent when the energy is wanted (and that is right), but the reaction runs whether or not anybody is buying the current. So the block damage hangs on "the reactor is not scrammed and it has fuel in it" rather than on this tick's output — otherwise it could be switched off by simply unplugging the consumers. Radiation behaves the same way, and always has.</p>
+
+<table><thead><tr><th></th><th>Sealed room</th><th>Bare mode</th></tr></thead><tbody><tr><td>How it finds the racks</td><td>the wall walk; the room sets the bounds</td><td>a walk across touching racks and shielding-alloy blocks</td></tr><tr><td>Output</td><td>full, and it grows with the room</td><td>of what the same layout would make, and never above</td></tr><tr><td>Heat and water</td><td>the full thermal model, the cooling loop</td><td>neither: a bare reactor has nothing to cool, and its panel carries no heat or coolant gauge</td></tr><tr><td>Depth throttle</td><td>works</td><td>ignored — the rods are always all the way down</td></tr><tr><td>Where the EU/FE goes</td><td>out through the <code>reactor_outlet</code> sockets in the wall</td><td><strong>straight out of the controller's own faces</strong> — the outlet is dead in bare mode</td></tr><tr><td>The danger</td><td>the contents melt past the overheat mark</td><td>it melts the scenery for as long as it runs</td></tr><tr><td>Radiation</td><td>the walls hold it in</td><td>it hits the surroundings unimpeded</td></tr></tbody></table>
+
+<p>The only control a bare reactor listens to is <strong>redstone</strong>. Cutting the signal shuts it down completely, and that is a working tactic: to finish the shell around a live core in peace, flick the lever.</p>
+
+<p><strong>The depth throttle is deliberately neither shown nor honoured.</strong> A throttle working out of sight would be a trap: a room with its rods withdrawn that then lost a wall would fall silent and say nothing at all about why.</p>
+
+<p><strong>The output is cut twice — by a share and by a cap — and both limits are needed.</strong> The share makes a bare reactor weaker than a built one; the cap stops the player answering that by simply piling on more rods. Without the cap a large enough heap would out-produce a room, and the shell with its cooling loop would turn into decoration.</p>
+
+<h4 id="whose-racks-are-whose">Whose racks are whose</h4>
+
+<p>Two controllers next to the same heap of racks would each count the whole heap — energy out of thin air. There are two rules, and one scan settles both without any bookkeeping on disk:</p>
+
+<p><strong>Racks inside somebody else's sealed room are invisible from outside.</strong> A bare controller planted next to a working reactor cannot feed off it. <strong>Between two bare controllers a rack goes to the nearer one.</strong> A tie is broken on coordinates rather than on distance alone: a rule each side works out for itself would hand the same rack to both.</p>
+
+<blockquote>A known gap: a controller in an unloaded chunk is invisible, so a rack out at the far edge of a chunk boundary can briefly be counted twice. That is a few EU/FE a tick until the neighbour loads; closing it by force-loading chunks would be a cure worse than the disease.</blockquote>
+
+<h3 id="meltdown-the-price-of-overheating">Meltdown: the price of overheating</h3>
+
+<p>Past the mark a sealed room starts <strong>melting its own contents</strong>: the floor, ordinary pipes and everything the player carried inside. The first to go is always an ordinary fluid pipe, wherever it stands: it is the part assembled out of whatever was already to hand, and so it is the one that explains best what went wrong.</p>
+
+<p><strong>The shell itself stays whole.</strong> The casing, the glass, the door, the inlet, the outlet and the controller all stand on the ring outside the interior and never enter the selection at all. That is exactly what the room was built for: the accident stays inside.</p>
+
+<p><strong>The fuel racks come through whole as well.</strong> They are assembled around a shielding plate, and a part crafted to survive the reactor survives its accident too. The uranium inside is not lost — a meltdown takes the player's fittings and time, not their stock of fuel.</p>
+
+<p>Every melted block carries heat away with it, so a meltdown is <strong>self-limiting</strong> — the room eats its own insides and cools down as it goes. The player loses the contents and the fuel inside them, but is left with a shell that can be refitted rather than with a crater.</p>
+
+<p>While this is going on the panel headline reads <strong>"Meltdown"</strong> instead of the geometric verdict: a perfectly intact shell is telling the truth at that moment, and it is the least useful truth available.</p>
+
+<h3 id="melting-blocks-what-it-looks-like">Melting blocks: what it looks like</h3>
+
+<p>Both modes destroy blocks the same way, and both always warn first — <strong>pointedly, at the block itself</strong>.</p>
+
+<ol><li>A block is picked. Flame and smoke break out on it, and there is a hiss.</li><li>pass (two seconds). Getting clear in time, or taking away whatever stands on</li></ol>
+<p>it, is exactly the difference between a danger and a punishment.</p>
+<ol><li>The block becomes a lava <strong>source</strong>. The pick prefers cells with <strong>air above them</strong>: the sphere</li></ol>
+<p>around a rack goes half underground, and without this rule most of the damage silently hollowed out the rock underfoot while the visible scar looked half the stated radius. If the player mined it in the meantime, nothing happens: the choice is re-checked rather than carried out blind.</p>
+
+<p>What <strong>never</strong> melts in either mode: air, anything with a fluid inside it (waterlogged blocks included — water stops lava everywhere, and flooding the place is a fair tactic), and anything indestructible — tested against the block's own property rather than against a list of names, so another mod's own bedrock is respected for free.</p>
+
+<p>What <strong>does not</strong> melt anywhere, ever: everything made of <strong>shielding alloy</strong>. That is the reactor's own blocks — the casing, the glass, the door, the inlet, the outlet, the lamp, the button, the racks and the controller — <strong>and the Shielding Chest</strong>. The rule is exactly that: "made of shielding alloy does not melt", not "belongs to the reactor". The list lives in the block tag , and a datapack can extend it. Without that, "a bare station as a long-term strategy" would not be a choice but a fuse. Everything else within the radius — the player's cables, their pipes, chests and the ground underfoot — is a legitimate target, and that is precisely the price of the corner that was cut.</p>
+
+<p><strong>In bare mode the radius is measured from each loaded rack, not from the controller.</strong> The controller is the brain; it is the fuel that is dangerous, and radiation already counts it that way, so both mechanics answer "how far out is it dangerous" the same way. Measuring from the controller was a mistake you can see from the far side of the reactor: it stands in a wall, half the sphere is taken up by the reactor's own untouchable body, and all the damage landed on the side it faces.</p>
+
+<blockquote>⚠️ <strong>Lava flows.</strong> A melted block becomes a lava source, and lava spreads by vanilla rules — up to three blocks sideways and downwards without limit. One melted block is not one loss but a puddle, and through the holes in an unfinished shell it pours inside. The harshness is deliberate, but building a bare station right up against anything you would miss is a bad idea.</blockquote>
+
+<blockquote>⚠️ <strong>The block under a player or a mob is not protected.</strong> The harshness is deliberate: dying through inattention in the middle of an accident already under way is possible, and no position is skipped for safety's sake.</blockquote>
+
+<p>The whole thing is switched off by. Switched off it leaves <strong>every</strong> warning in place — the sound, the particles, the status — but changes not one block: the key protects the world, it does not hide the reactor's state.</p>
+
 <h2 id="interface">Interface</h2>
 
 <p>Type: a screen with no slots at all — the controller is read, not loaded. The lack of inventory is deliberate: empty slots would invite hoppers into a block with nothing to hold. No upgrade panel: the controller is not a processing machine, and four hidden upgrade slots would promise what it cannot do. No progress arrow: the reactor has no operation that "runs".</p>
 
 <p><strong>There are two layouts, and they are never shown together.</strong> The controller's panel is much taller than the family default (176x228 instead of 176x166): the art draws two framed boxes — the readout down to y = 87 and the throttle's own frame from y = 96 — with the inventory label at y = 116. A status line, the data rows, two gauges and five throttle buttons fit inside those; together with the shell diagnostics they do not fit at all. They also answer different questions at different times: while the shell is open the reactor has no numbers at all, and once it is closed the fault line has nothing to say.</p>
 
-<table><thead><tr><th>Layout</th><th>When</th><th>Rows</th></tr></thead><tbody><tr><td><strong>Building</strong></td><td>any status but <code>FORMED</code></td><td>the status; "Room" — the interior size <code>X × Y × Z</code>; "Problem" — the direction to the offending cell (only for the states that point at one); the <strong>charge gauge</strong></td></tr><tr><td><strong>Running</strong></td><td><code>FORMED</code></td><td>the status; "Rods"; "Output" in EU/FE/t; a <strong>heat gauge</strong>; a <strong>coolant gauge</strong> carrying the boil rate in its label; the depth throttle as five buttons; the <strong>charge gauge</strong></td></tr></tbody></table>
+<table><thead><tr><th>Layout</th><th>When</th><th>Rows</th></tr></thead><tbody><tr><td><strong>Building</strong></td><td>any status but <code>FORMED</code></td><td>the status; "Room" — the interior size <code>X × Y × Z</code>; "Problem" — the direction to the offending cell (only for the states that point at one); the <strong>charge gauge</strong></td></tr><tr><td><strong>Bare mode</strong></td><td>not <code>FORMED</code> <strong>and</strong> the scan found racks</td><td>everything above <strong>plus</strong> three rows: "Mode" — "BARE MODE"; "Rods"; "Output" in EU/FE/t</td></tr><tr><td><strong>Running</strong></td><td><code>FORMED</code></td><td>the status; "Rods"; "Output" in EU/FE/t; a <strong>heat gauge</strong>; a <strong>coolant gauge</strong> carrying the boil rate in its label; the depth throttle as five buttons; the <strong>charge gauge</strong></td></tr></tbody></table>
+
+<p><strong>Bare mode does not replace the building diagnostics, it is appended below them.</strong> That is a matter of principle: both states fire on the very same "not <code>FORMED</code>", and a layout that swapped one for the other would take the size, the fault and the direction to the hole away from the player who really is building a room — for the sake of the player who never meant to build one. The bare-mode rows appear only once the scan has actually found racks; until it has, the panel stays exactly as it was.</p>
+
+<p>There are deliberately no heat and coolant gauges in bare mode. Drawing them as zeros would be worse than not drawing them: an empty temperature bar reads as "the reactor is cold" rather than as "there is no thermometer", and it invites the player to plumb a loop that will never engage.</p>
 
 <p>The running layout, top to bottom: the status headline (<code>STATUS_Y</code> = 21), two text rows (<code>ROW_TOP</code> = 35, step 12), two gauges (<code>GAUGE_TOP</code> = 61, step 13), the throttle strip (<code>THROTTLE_Y</code> = 98, five 28-px buttons) and the charge gauge (<code>ENERGY_Y</code> = 116).</p>
 
