@@ -30,6 +30,11 @@ import sys
 import urllib.error
 import urllib.request
 
+# Hour (UTC) up to which a run may still rewrite yesterday's row. Both scheduled
+# slots — 00:37 and the 06:43 catch-up — sit below it; a manual run later in the day
+# needs --force, so it cannot silently mix today's downloads into yesterday.
+REWRITE_WINDOW_HOUR = 8
+
 MODRINTH_ID = "ACLWFBlU"
 CURSEFORGE_ID = 1597723
 UA = "Ma3auka/AlaIndustrial-stats (+https://github.com/AlaMine-Team-Org/AlaIndustrial)"
@@ -79,12 +84,20 @@ def fetch_modrinth_history() -> dict:
     }
 
 
-def backfill(series: list, history: dict) -> list:
+def backfill(series: list, history: dict, today: str) -> list:
     """Prepend days recovered from Modrinth analytics to the snapshot series.
 
     CurseForge has no public history, so those days carry None in its slot: the site
     counts Modrinth alone for them and marks the figure as partial. Inventing a
     CurseForge number would look precise and be wrong.
+
+    Days from `today` onwards are skipped. Modrinth analytics already has a bucket
+    for the current day, holding the handful of downloads it has collected so far,
+    and restoring it would append a row that is not a closed day. On a normal
+    morning the next run overwrites that stub and nobody sees it — but when GitHub
+    drops a scheduled run (2026-08-27: neither Stats nor Stats report fired), the
+    stub becomes "yesterday" and the chart draws a crash to 1 download instead of
+    simply ending a day earlier, which is the honest symptom.
     """
     if not history:
         return series
@@ -92,7 +105,7 @@ def backfill(series: list, history: dict) -> list:
     restored, running = [], 0
     for date in sorted(history):
         running += history[date]
-        if date not in known:
+        if date not in known and date < today:
             restored.append([date, running, None])
     return sorted(series + restored, key=lambda row: row[0])
 
@@ -124,6 +137,13 @@ def dump(payload: dict) -> str:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--out", default="data/stats.json")
+    parser.add_argument("--force", action="store_true",
+                        help="rewrite yesterday's row even outside the early-morning "
+                             "window (use when the row is known to be wrong)")
+    parser.add_argument("--skip-if-current", action="store_true",
+                        help="do nothing when yesterday is already recorded in full "
+                             "(the catch-up run: it only has to act when the nightly "
+                             "one never happened)")
     args = parser.parse_args()
 
     out = pathlib.Path(args.out)
@@ -132,6 +152,29 @@ def main() -> int:
         previous = json.loads(out.read_text(encoding="utf-8"))
     series: list[list] = list(previous.get("series", []))
     last = series[-1] if series else None
+
+    # The counters read right now describe everything up to this moment, so the day
+    # they close is YESTERDAY — the run is scheduled just after midnight UTC. Dating
+    # the row with the current day would label it with a day that has not happened
+    # yet: the site draws a bar as the difference between two neighbouring snapshots
+    # and puts it under the later date.
+    now = datetime.datetime.now(datetime.timezone.utc)
+    day = (now.date() - datetime.timedelta(days=1)).isoformat()
+
+    # The catch-up run exists only for the morning after GitHub dropped the nightly
+    # schedule. On every other morning yesterday is already there in full, and
+    # collecting again would pour hours of TODAY into yesterday's row — so bail out
+    # before touching the network: no request, no commit, no deploy.
+    #
+    # Yesterday is looked up BY DATE, not taken as series[-1]: a row for today can
+    # sit at the end (an older backfill left one, or a manual run wrote one), and
+    # then a "last row is not yesterday" test would send the catch-up collecting on
+    # a morning that needs nothing. A row with no CurseForge figure is not "in
+    # full" — that is a restored day, not a collected one.
+    recorded = next((row for row in reversed(series) if row[0] == day), None)
+    if args.skip_if_current and recorded is not None and recorded[2] is not None:
+        print(f"OK    {day} already recorded in full — nothing to do")
+        return 0
 
     modrinth, cf_total, failures = None, None, []
     try:
@@ -157,15 +200,21 @@ def main() -> int:
     mr_total = modrinth["downloads"] if modrinth else last[1]
     cf_total = cf_total if cf_total is not None else last[2]
 
-    # The counters read right now describe everything up to this moment, so the day
-    # they close is YESTERDAY — the run is scheduled just after midnight UTC. Dating
-    # the row with the current day would label it with a day that has not happened
-    # yet: the site draws a bar as the difference between two neighbouring snapshots
-    # and puts it under the later date.
-    day = (datetime.datetime.now(datetime.timezone.utc).date()
-           - datetime.timedelta(days=1)).isoformat()
     if series and series[-1][0] == day:
-        series[-1] = [day, mr_total, cf_total]   # re-run for the same day
+        # Rewriting yesterday means replacing counters that closed at midnight with
+        # counters read right now — fine for a re-run an hour after midnight, wrong
+        # for a curious click at 15:00, which would pour three quarters of TODAY into
+        # yesterday's bar and starve today's. So the rewrite is allowed only inside
+        # the early-morning window that the two scheduled slots live in (00:37 and
+        # the 06:43 catch-up), or when the row is not complete yet, or on --force.
+        # Until MOD-520 an accident guarded this: backfill() left a row dated TODAY
+        # at the end of the file, so a midday run took the branch below instead.
+        stale = series[-1][2] is None
+        if args.force or stale or now.hour < REWRITE_WINDOW_HOUR:
+            series[-1] = [day, mr_total, cf_total]   # re-run for the same day
+        else:
+            print(f"NOTE  {day} was recorded before {REWRITE_WINDOW_HOUR:02d}:00 UTC — "
+                  f"series left untouched (pass --force to overwrite it)")
     elif series and series[-1][0] > day:
         # A manual run in the middle of a day: the day it would write is already
         # closed, and overwriting it would pour part of today into it. Leave the
@@ -177,7 +226,7 @@ def main() -> int:
     # Restore the days that predate the first snapshot (once — later runs find them
     # already present and change nothing).
     try:
-        series = backfill(series, fetch_modrinth_history())
+        series = backfill(series, fetch_modrinth_history(), now.date().isoformat())
     except (urllib.error.URLError, KeyError, ValueError) as exc:
         print(f"WARN  backfill skipped: {exc}", file=sys.stderr)
 
@@ -198,8 +247,13 @@ def main() -> int:
     }
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(dump(payload), encoding="utf-8")
-    print(f"OK    series reaches {series[-1][0]}: modrinth={mr_total} curseforge={cf_total} "
-          f"total={mr_total + cf_total} points={len(series)}")
+    # Report what the FILE ends with, not what was fetched: the two differ whenever a
+    # run declines to touch the history (a midday run, a day already recorded), and a
+    # log line quoting the fetched numbers would read as if they had been written.
+    tail = series[-1]
+    tail_cf = tail[2] if tail[2] is not None else 0
+    print(f"OK    series reaches {tail[0]}: modrinth={tail[1]} curseforge={tail[2]} "
+          f"total={tail[1] + tail_cf} points={len(series)}")
     return 0
 
 
