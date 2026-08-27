@@ -8,6 +8,7 @@ import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.structure.CrystalFarmRoom;
 import dev.alaindustrial.core.structure.RoomFill;
 import dev.alaindustrial.registry.ModContent;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -486,22 +487,48 @@ public class CrystalFarmControllerBlockEntity extends EnergyBlockEntity {
 	 * What the panel says when the player clicks it: either the room's size and what is in it, or
 	 * what is wrong and <em>where</em>. Coordinates are absolute, because hunting a one-block hole in
 	 * a 14³ shell by eye is frustration rather than gameplay.
+	 *
+	 * <p><b>Colour carries the verdict, the words carry the detail (MOD-522).</b> Green means the room
+	 * is closed and red means it is not, so the answer arrives before the sentence is read; the
+	 * numbers and coordinates are lifted out of the running text in white because they are what the
+	 * player actually goes looking for. Nothing here is a new string — every colour is applied to an
+	 * argument of the same lang keys, so the twenty translations keep working untouched. The
+	 * {@code [Ala Industrial]} tag is added by the sender, not here: this component also goes to a
+	 * gametest, and a tag belongs to the surface rather than to the report.
 	 */
 	public Component describeStatus(BlockPos pos) {
 		if (status == RoomFill.Status.SEALED) {
 			return Component.translatable("message.alaindustrial.crystal_farm.formed",
-					volume, seedbeds.size(),
+					value(volume), value(seedbeds.size()),
 					Component.translatable(hasWater
 							? "message.alaindustrial.crystal_farm.water_yes"
-							: "message.alaindustrial.crystal_farm.water_no"));
+							: "message.alaindustrial.crystal_farm.water_no")
+							// Water is the free half of the growth bonus, so its absence is the one thing on a
+							// perfectly good greenhouse worth flagging — yellow, the palette's "look here".
+							.withStyle(hasWater ? ChatFormatting.AQUA : ChatFormatting.YELLOW))
+					.withStyle(ChatFormatting.GREEN);
 		}
 		if (!knowsFault) {
 			// No coordinates rather than wrong ones. A player told to look at a spot with nothing wrong
 			// with it searches it anyway, and then distrusts the panel for the rest of the build.
-			return Component.translatable("message.alaindustrial.crystal_farm." + statusKey() + ".vague");
+			return Component.translatable("message.alaindustrial.crystal_farm." + statusKey() + ".vague")
+					.withStyle(ChatFormatting.RED);
 		}
 		return Component.translatable("message.alaindustrial.crystal_farm." + statusKey(),
-				pos.getX() + faultDx, pos.getY() + faultDy, pos.getZ() + faultDz);
+				value(pos.getX() + faultDx), value(pos.getY() + faultDy), value(pos.getZ() + faultDz))
+				.withStyle(ChatFormatting.RED);
+	}
+
+	/**
+	 * A number the player will act on — a size to compare, a coordinate to fly to — in white against
+	 * the sentence around it.
+	 *
+	 * <p>Passing a styled component rather than the bare {@code int} is what keeps the colour on the
+	 * number instead of on the whole line: vanilla wraps a plain argument in an unstyled literal that
+	 * inherits the parent's colour.
+	 */
+	private static Component value(int number) {
+		return Component.literal(String.valueOf(number)).withStyle(ChatFormatting.WHITE);
 	}
 
 	private String statusKey() {

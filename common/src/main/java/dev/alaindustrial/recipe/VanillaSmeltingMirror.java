@@ -28,13 +28,24 @@ import net.minecraft.world.item.crafting.SmeltingRecipe;
  * {@link net.minecraft.world.item.crafting.RecipeManager}. The machine keeps using the live vanilla
  * recipe at runtime, so behaviour and shown numbers come from the same place.
  *
- * <p><b>Single source of truth (Mekanism-style).</b> The mod ships no {@code alaindustrial:smelting}
- * recipe that a vanilla {@code minecraft:smelting} recipe already covers with the same input and
- * output (e.g. cobblestone → stone, sand → glass, raw copper/gold/iron → ingot). Those smelts live
- * entirely in the vanilla fallback, and the mirrors below surface them in the electric furnace
- * category once. Writing a mod-side duplicate would either double-list it here, or pin a static EU
- * cost that drifts from the runtime once {@code globalMachineSpeedMultiplier} rounds its factors
- * separately (see {@link Config#electricFurnaceVanillaSmeltEu}); the fallback avoids both.
+ * <p><b>Single source of truth (Mekanism-style) — with one known exception.</b> The mod ships no
+ * {@code alaindustrial:smelting} recipe that a vanilla {@code minecraft:smelting} recipe already
+ * covers with the same input and output for reasons unrelated to the mod (e.g. cobblestone → stone,
+ * sand → glass, raw copper/gold/iron → ingot). Those smelts live entirely in the vanilla fallback, and
+ * the mirrors below surface them in the electric furnace category once. Writing a mod-side duplicate
+ * would either double-list it here, or pin a static EU cost that drifts from the runtime once
+ * {@code globalMachineSpeedMultiplier} rounds its factors separately (see
+ * {@link Config#electricFurnaceVanillaSmeltEu}); the fallback avoids both.
+ *
+ * <p><b>Exception:</b> copper/gold/iron/nickel/silver/tin dust each have BOTH an
+ * {@code alaindustrial:smelting} recipe and a {@code minecraft:smelting} duplicate on the same input
+ * item — the duplicate exists so the Iron Furnace (which only reads vanilla {@code RecipeType.SMELTING}
+ * and never {@code alaindustrial:smelting}) can smelt that dust too (MOD-455; copper/gold/iron shipped
+ * this way since the mod's original import). This is intentional and must not be "fixed" by deleting
+ * the duplicate JSON — doing so would silently break dust smelting in the Iron Furnace and the plain
+ * vanilla furnace. Its known side effect is that {@link #mirrorAll} currently double-lists these six
+ * smelts in this category (once as the mod recipe, once as the mirrored duplicate) — see MOD-523.
+ * Uranium and palladium dust deliberately have no such duplicate and are electric-furnace-exclusive.
  */
 public final class VanillaSmeltingMirror {
 	/**

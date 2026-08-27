@@ -4,6 +4,7 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.AbstractChestBlockEntity;
 import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
 import dev.alaindustrial.block.entity.ShieldingChestBlockEntity;
+import dev.alaindustrial.loot.PendingLoot;
 import dev.alaindustrial.registry.ModTags;
 import java.util.ArrayList;
 import java.util.List;
@@ -190,6 +191,13 @@ public final class RadiationSources {
 				for (var entry : chunk.getBlockEntities().entrySet()) {
 					BlockEntity be = entry.getValue();
 					if (!isExposedStorage(be)) {
+						continue;
+					}
+					// A chest whose loot has not been generated yet holds nothing to irradiate, and
+					// READING it is what would generate it: getItem unpacks the table with no player
+					// in context, which empties another mod's loot chest for good (MOD-524). Skip it
+					// and let the player be the one who opens it.
+					if (PendingLoot.isPending(be)) {
 						continue;
 					}
 					Vec3 at = Vec3.atCenterOf(entry.getKey());

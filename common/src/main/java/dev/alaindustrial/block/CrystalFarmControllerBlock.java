@@ -2,6 +2,7 @@ package dev.alaindustrial.block;
 
 import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.CrystalFarmControllerBlockEntity;
+import dev.alaindustrial.chat.ModChat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
@@ -84,8 +85,9 @@ public class CrystalFarmControllerBlock extends HorizontalMachineBlock {
 		if (!level.isClientSide() && player instanceof ServerPlayer serverPlayer
 				&& level.getBlockEntity(pos) instanceof CrystalFarmControllerBlockEntity brain) {
 			// Chat rather than the action bar: the failure lines carry coordinates, which the action
-			// bar truncates on a narrow window.
-			serverPlayer.sendSystemMessage(brain.describeStatus(pos), false);
+			// bar truncates on a narrow window. Being a chat line is also what earns it the mod's tag —
+			// the report shares that column with the server and every other mod (MOD-522).
+			serverPlayer.sendSystemMessage(ModChat.line(brain.describeStatus(pos)), false);
 		}
 		return InteractionResult.SUCCESS;
 	}

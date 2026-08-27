@@ -1,5 +1,6 @@
 package dev.alaindustrial.menu;
 
+import dev.alaindustrial.chat.ModChat;
 import dev.alaindustrial.item.teleport.TeleportPoint;
 import dev.alaindustrial.item.teleport.TeleportPoints;
 import dev.alaindustrial.item.teleport.TeleporterRemoteItem;
@@ -160,8 +161,10 @@ public class TeleporterRemoteMenu extends AbstractContainerMenu {
 			return;
 		}
 		TeleportWarmupManager.start(serverPlayer, point);
-		serverPlayer.sendSystemMessage(Component.translatable("alaindustrial.teleporter.warmup_started",
-				point.displayName(), TeleportEngine.computeCost(serverPlayer, point)).withStyle(ChatFormatting.GRAY), false);
+		serverPlayer.sendSystemMessage(ModChat.line(
+				Component.translatable("alaindustrial.teleporter.warmup_started",
+						point.displayName(), TeleportEngine.computeCost(serverPlayer, point))
+						.withStyle(ChatFormatting.GRAY)), false);
 		// The countdown happens in the world, not behind a screen the player is staring at.
 		serverPlayer.closeContainer();
 	}
@@ -196,8 +199,9 @@ public class TeleporterRemoteMenu extends AbstractContainerMenu {
 			return;
 		}
 		TeleportWarmupManager.startRtp(serverPlayer, payingStation, target);
-		serverPlayer.sendSystemMessage(Component.translatable("alaindustrial.teleporter.rtp_warmup_started",
-				TeleportEngine.rtpCost()).withStyle(ChatFormatting.GRAY), false);
+		serverPlayer.sendSystemMessage(ModChat.line(
+				Component.translatable("alaindustrial.teleporter.rtp_warmup_started",
+						TeleportEngine.rtpCost()).withStyle(ChatFormatting.GRAY)), false);
 		serverPlayer.closeContainer();
 	}
 

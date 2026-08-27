@@ -3,6 +3,7 @@ package dev.alaindustrial.core.item;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.ItemPipeBlock;
 import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
+import dev.alaindustrial.loot.PendingLoot;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
@@ -13,6 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 /** One connected component of item-pipe segments, ticked once by {@link ItemNetworkManager}. */
 public final class ItemNetwork {
@@ -195,7 +197,17 @@ public final class ItemNetwork {
 	 * so a machine added later gets the right answer without the pipe knowing about it.
 	 */
 	private boolean sortsSlotsByFace(BlockPos pos, Direction outSide, Direction inSide) {
-		if (!(level.getBlockEntity(pos) instanceof WorldlyContainer sided)) {
+		BlockEntity endpoint = level.getBlockEntity(pos);
+		if (!(endpoint instanceof WorldlyContainer sided)) {
+			return false;
+		}
+		// This is a PREDICATE — it runs before anything moves, and it runs even when the transfer is
+		// then refused. Reading the slots of a container whose loot is still pending would generate
+		// that loot with no player in context and empty another mod's chest for good (MOD-524): a
+		// loot shulker box reaches here, because it is a WorldlyContainer. "Does not sort by face" is
+		// both the safe answer and the true one — a loot chest is a chest, not a machine. An actual
+		// extraction through the pipe still unpacks it, exactly as a vanilla hopper would.
+		if (PendingLoot.isPending(endpoint)) {
 			return false;
 		}
 		for (int slot : sided.getSlotsForFace(outSide)) {

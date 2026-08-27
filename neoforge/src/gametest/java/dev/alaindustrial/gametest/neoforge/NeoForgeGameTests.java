@@ -2222,11 +2222,17 @@ public final class NeoForgeGameTests {
 		// MOD-474 — the shielding chest is the only container that stops its own contents.
 		registerTest(event, "rad_shielding_chest_stops_what_an_ordinary_chest_does_not", 40, true,
 				RadiationScenarios::shieldingChestStopsWhatAnOrdinaryChestDoesNot);
+		// MOD-524 — the sweep must not open a foreign chest whose loot is still ungenerated.
+		registerTest(event, "rad_sweep_leaves_ungenerated_loot_alone", 40, true,
+				RadiationScenarios::sweepLeavesUngeneratedLootAlone);
 		registerTest(event, "crystal_farm_fun01_sealed_room_forms", 200, true, CrystalFarmScenarios::fun01SealedRoomForms);
 		registerTest(event, "crystal_farm_fun02_breach_unforms_and_repaints", 200, true, CrystalFarmScenarios::fun02BreachUnformsAndRepaints);
 		registerTest(event, "crystal_farm_fun03_breach_is_reported_at_the_hole", 200, true, CrystalFarmScenarios::fun03BreachIsReportedAtTheHole);
 		registerTest(event, "crystal_farm_fun04_seedbed_knows_it_is_tended", 200, true, CrystalFarmScenarios::fun04SeedbedKnowsItIsTended);
 		registerTest(event, "crystal_farm_fun05_controller_removed_any_way_clears_up", 200, true, CrystalFarmScenarios::fun05ControllerRemovedAnyWayClearsUp);
+		registerTest(event, "crystal_farm_fun06_door_closes_after_hand_open", 200, true, CrystalFarmScenarios::fun06DoorClosesAfterHandOpen);
+		registerTest(event, "crystal_farm_fun07_door_closes_under_redstone", 200, true, CrystalFarmScenarios::fun07DoorClosesUnderRedstone);
+		registerTest(event, "crystal_farm_fun08_door_waits_for_the_doorway_to_clear", 200, true, CrystalFarmScenarios::fun08DoorWaitsForTheDoorwayToClear);
 	}
 
 	/** The three NeoForge probes for {@link BlockCapabilityParityScenarios} (MOD-433). */

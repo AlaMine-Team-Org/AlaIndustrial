@@ -1,6 +1,7 @@
 package dev.alaindustrial.teleporter;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.chat.ModChat;
 import dev.alaindustrial.core.net.LevelStateHolder;
 import dev.alaindustrial.core.net.LevelStateRegistry;
 import dev.alaindustrial.item.teleport.TeleportPoint;
@@ -242,9 +243,10 @@ public final class TeleportWarmupManager {
 		// The coordinates go in the message because a random jump is the one case where the player has
 		// no idea where they ended up, and the line lands in chat (not the action bar) precisely so it
 		// stays scrollable: this is the only record of the spot until they get their bearings.
-		player.sendSystemMessage(Component.translatable("alaindustrial.teleporter.rtp_jumped",
-						target.getX(), target.getY(), target.getZ(), cost)
-				.withStyle(ChatFormatting.GREEN), false);
+		player.sendSystemMessage(ModChat.line(
+				Component.translatable("alaindustrial.teleporter.rtp_jumped",
+								target.getX(), target.getY(), target.getZ(), cost)
+						.withStyle(ChatFormatting.GREEN)), false);
 	}
 
 	/** The authoritative re-check plus the jump itself. */

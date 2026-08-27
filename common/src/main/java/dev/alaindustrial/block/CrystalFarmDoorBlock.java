@@ -5,6 +5,8 @@ import dev.alaindustrial.Config;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DoorBlock;
@@ -12,6 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 
 /**
  * The way into a greenhouse (MOD-505) — a glazed door that shuts itself again.
@@ -32,13 +35,19 @@ import net.minecraft.world.phys.AABB;
  * is a convenience and a piece of theatre, not a safety interlock, and it is worth saying so plainly
  * rather than inventing a mechanism for it.
  *
- * <p><b>Redstone holds it open; a hand does not.</b> A door being driven by a signal is being held
- * open deliberately — an automated loading bay, a lever somebody threw — and slamming it in the
- * player's face would break that. Only a hand-opened door times out.
+ * <p><b>Nothing holds it open, redstone included (MOD-522).</b> The earlier rule — "a signal means
+ * somebody is holding this door open deliberately, so leave it alone" — was dropped by an explicit
+ * decision: a greenhouse is meant to be shut, full stop, and a door wired to a lever nobody throws
+ * back is exactly the case that leaves one standing open for a whole session. The cost is named
+ * rather than hidden: under a signal that stays up the door opens once, closes after its delay, and
+ * will not open again until the signal is toggled, because the close deliberately leaves
+ * {@code POWERED} alone (see {@link #tick}). A bay driven by a button pulse is unaffected; one
+ * driven by a lever left up is.
  *
  * <p><b>It will not close on somebody standing in it.</b> The occupancy check re-arms the timer
  * instead, so a player waiting in the doorway is never shoved; the same courtesy the reactor's
- * airlock extends, for the same reason.
+ * airlock extends, for the same reason. Since redstone stopped holding the door, this check is the
+ * only thing between the timer and a door shut in somebody's face.
  *
  * <p>Everything else is vanilla {@link DoorBlock}: hinges, the two halves, opening by hand and by
  * redstone. The reactor's airlock is a different animal — it slides, it has its own block entity to
@@ -70,12 +79,31 @@ public class CrystalFarmDoorBlock extends DoorBlock {
 	}
 
 	/**
-	 * Every deliberate opening funnels through here, so this is where the timer is armed.
+	 * A hand on the door — and <b>the path that was missing</b> (MOD-522).
 	 *
-	 * <p>An earlier version armed it from {@code useWithoutItem} instead, and an audit found the hole:
-	 * a villager or a zombie opens a copper door without going through that method at all, so a door
-	 * opened by a passing mob stayed open forever. Overriding the method vanilla itself funnels every
-	 * open through covers hands, mobs and other mods at once.
+	 * <p>Vanilla's {@link DoorBlock#useWithoutItem} does not call {@link #setOpen}: it cycles
+	 * {@code OPEN} and writes the block itself. So a door that armed its timer only from
+	 * {@code setOpen} armed it for mobs and for redstone and never once for the player — and every
+	 * greenhouse anybody walked into stood open for the rest of the session.
+	 *
+	 * <p>Both hooks are needed, and neither covers the other: this one is the hand, {@code setOpen} is
+	 * everything that is not a hand. An earlier round had exactly one of them at a time and was wrong
+	 * in each direction in turn.
+	 */
+	@Override
+	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos,
+			Player player, BlockHitResult hit) {
+		InteractionResult result = super.useWithoutItem(state, level, pos, player, hit);
+		if (!level.isClientSide() && opened(level, pos)) {
+			armClose(level, pos);
+		}
+		return result;
+	}
+
+	/**
+	 * Everything that opens a door without being a hand: a villager, a zombie on a copper door, a
+	 * wind charge, another mod. Vanilla funnels all of those through here — {@code DoorInteractGoal}
+	 * and {@code onExplosionHit} call it by name.
 	 */
 	@Override
 	public void setOpen(net.minecraft.world.entity.Entity opener, Level level, BlockState state,
@@ -94,9 +122,15 @@ public class CrystalFarmDoorBlock extends DoorBlock {
 	protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock,
 			net.minecraft.world.level.redstone.Orientation orientation, boolean movedByPiston) {
 		super.neighborChanged(state, level, pos, neighborBlock, orientation, movedByPiston);
-		if (!level.isClientSide() && isOpen(level.getBlockState(pos))) {
+		if (!level.isClientSide() && opened(level, pos)) {
 			armClose(level, pos);
 		}
+	}
+
+	/** Whether {@code pos} still holds one of our doors, and that door is open. */
+	private boolean opened(Level level, BlockPos pos) {
+		BlockState state = level.getBlockState(pos);
+		return state.is(this) && isOpen(state);
 	}
 
 	/**
@@ -124,15 +158,14 @@ public class CrystalFarmDoorBlock extends DoorBlock {
 		if (!state.is(this) || !isOpen(state)) {
 			return;
 		}
-		// Held open on purpose: leave it alone and do not re-arm. When the signal drops, vanilla's own
-		// neighbour handling closes the door, so nothing is lost by bowing out here.
-		if (state.getValue(POWERED)) {
-			return;
-		}
 		if (isOccupied(level, pos)) {
 			level.scheduleTick(pos, this, occupiedRecheckTicks());
 			return;
 		}
+		// POWERED is left exactly as it is, on purpose (MOD-522). Clearing it would make vanilla's own
+		// neighbourChanged see `signal != POWERED` on the very next neighbour update and open the door
+		// straight back up — an open/close loop for as long as the lever is up. Left set, the state
+		// reads "shut, and still wired to a live signal", and the next toggle opens it again.
 		setOpen(null, level, state, pos, false);
 	}
 

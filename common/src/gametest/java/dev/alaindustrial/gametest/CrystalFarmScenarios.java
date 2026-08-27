@@ -1,5 +1,6 @@
 package dev.alaindustrial.gametest;
 
+import dev.alaindustrial.Config;
 import dev.alaindustrial.block.CrystalFarmControllerBlock;
 import dev.alaindustrial.block.CrystalFarmShellBlock;
 import dev.alaindustrial.block.CrystalSeedbedBlock;
@@ -8,8 +9,14 @@ import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 
 /**
  * Loader-neutral gametest bodies for the crystal greenhouse (MOD-505).
@@ -220,5 +227,130 @@ public final class CrystalFarmScenarios {
 			helper.fail("a seedbed stayed marked as tended after its greenhouse was opened");
 		}
 		helper.succeed();
+	}
+
+	// --- the door (MOD-522) ---------------------------------------------------------------------
+
+	/**
+	 * Where the test door stands: footing one below, upper half one above, all of it well inside the
+	 * 8³ rig.
+	 *
+	 * <p><b>No greenhouse is built for the three door cases.</b> The spring has nothing to do with the
+	 * room — an open door does not even breach it — and making a door scenario depend on a sealed
+	 * shell would let a break in either half hide behind the other.
+	 */
+	private static final BlockPos DOOR = new BlockPos(2, 1, 2);
+
+	/** Beside the door's lower half: where the redstone block goes. */
+	private static final BlockPos SIGNAL = new BlockPos(3, 1, 2);
+
+	private static void placeDoor(GameTestHelper helper) {
+		helper.setBlock(DOOR.below(), Blocks.STONE);
+		BlockState lower = ModContent.CRYSTAL_FARM_DOOR.get().defaultBlockState()
+				.setValue(DoorBlock.FACING, Direction.NORTH)
+				.setValue(DoorBlock.HALF, DoubleBlockHalf.LOWER);
+		// Lower half first — the order vanilla's own setPlacedBy uses, and the only one that works: an
+		// upper half whose shape update finds no door underneath replaces itself with air.
+		helper.setBlock(DOOR, lower);
+		helper.setBlock(DOOR.above(), lower.setValue(DoorBlock.HALF, DoubleBlockHalf.UPPER));
+	}
+
+	private static boolean doorOpen(GameTestHelper helper) {
+		return helper.getBlockState(DOOR).getValue(DoorBlock.OPEN);
+	}
+
+	/**
+	 * The configured delay plus a margin for the scheduled tick to land. Read from {@link Config} so
+	 * the scenarios follow a retuned delay instead of a number copied out of it; the wrappers'
+	 * {@code maxTicks} are sized for the shipped default.
+	 */
+	private static int afterAutoClose() {
+		return Math.max(1, Config.crystalFarmDoorAutoCloseTicks) + 20;
+	}
+
+	/**
+	 * FUN06 — a door opened BY HAND closes itself again.
+	 *
+	 * <p>This is the regression MOD-522 fixed and the reason it survived a release: 26.2's
+	 * {@code DoorBlock} opens by hand without ever calling {@code setOpen}, so a timer armed only from
+	 * there covered mobs and redstone and never once the player. {@code useBlock} is the hand — it
+	 * walks the same {@code useItemOn → useWithoutItem} path the server runs for a right-click — so
+	 * against the pre-fix code the door here simply stays open and this goes red.
+	 *
+	 * @implements TC-FARM-001-FUN06 — a hand-opened greenhouse door shuts itself again
+	 */
+	public static void fun06DoorClosesAfterHandOpen(GameTestHelper helper) {
+		placeDoor(helper);
+		helper.useBlock(DOOR, helper.makeMockPlayer(GameType.SURVIVAL));
+		if (!doorOpen(helper)) {
+			helper.fail("the right-click did not open the door, so this test would prove nothing");
+		}
+		helper.runAfterDelay(afterAutoClose(), () -> {
+			if (doorOpen(helper)) {
+				helper.fail("a hand-opened greenhouse door was still open " + afterAutoClose()
+						+ " ticks later");
+			}
+			helper.succeed();
+		});
+	}
+
+	/**
+	 * FUN07 — a live redstone signal no longer buys an open greenhouse.
+	 *
+	 * <p>The second assertion is the one that is easy to leave out and expensive to lose: the close
+	 * must NOT clear {@code POWERED}. Cleared, vanilla's own {@code neighborChanged} sees
+	 * {@code signal != POWERED} on the very next neighbour update and opens the door straight back
+	 * up — a door flapping every few ticks for as long as the lever is up.
+	 *
+	 * @implements TC-FARM-001-FUN07 — a door under a live signal still closes, and stays closed
+	 */
+	public static void fun07DoorClosesUnderRedstone(GameTestHelper helper) {
+		placeDoor(helper);
+		helper.setBlock(SIGNAL, Blocks.REDSTONE_BLOCK);
+		if (!doorOpen(helper) || !helper.getBlockState(DOOR).getValue(DoorBlock.POWERED)) {
+			helper.fail("the redstone block did not power the door open, so this test would prove nothing");
+		}
+		helper.runAfterDelay(afterAutoClose(), () -> {
+			if (doorOpen(helper)) {
+				helper.fail("a greenhouse door under a live redstone signal never closed");
+			}
+			if (!helper.getBlockState(DOOR).getValue(DoorBlock.POWERED)) {
+				helper.fail("closing the door cleared POWERED, so vanilla will open it again on the "
+						+ "next neighbour update");
+			}
+			helper.succeed();
+		});
+	}
+
+	/**
+	 * FUN08 — the door waits for whoever is standing in it, and closes once they are gone.
+	 *
+	 * <p>Worth its own case since MOD-522: with redstone no longer holding the door, this check is
+	 * the only thing left between the timer and a door shut in somebody's face. A pig with no free
+	 * will stands in for the player because it holds its ground; a mock player does not, being no
+	 * member of the level at all.
+	 *
+	 * @implements TC-FARM-001-FUN08 — an occupied doorway re-arms the timer, a cleared one closes
+	 */
+	public static void fun08DoorWaitsForTheDoorwayToClear(GameTestHelper helper) {
+		placeDoor(helper);
+		helper.useBlock(DOOR, helper.makeMockPlayer(GameType.SURVIVAL));
+		if (!doorOpen(helper)) {
+			helper.fail("the right-click did not open the door, so this test would prove nothing");
+		}
+		Mob standing = helper.spawnWithNoFreeWill(EntityTypes.PIG, DOOR);
+		helper.runAfterDelay(afterAutoClose(), () -> {
+			if (!doorOpen(helper)) {
+				helper.fail("the door shut on somebody standing in the doorway");
+			}
+			standing.discard();
+		});
+		helper.runAfterDelay(afterAutoClose() + Math.max(1, Config.crystalFarmDoorOccupiedRecheckTicks) + 20,
+				() -> {
+					if (doorOpen(helper)) {
+						helper.fail("the door never closed after the doorway cleared");
+					}
+					helper.succeed();
+				});
 	}
 }

@@ -24,8 +24,11 @@ import net.minecraft.world.entity.monster.zombie.ZombieVillager;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BarrelBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.phys.Vec3;
 
 /**
@@ -371,6 +374,57 @@ public final class RadiationScenarios {
 			int stopped = RadiationSources.exposureAt(level, viewer, Config.radiationSourceRadius);
 			if (stopped != 0) {
 				helper.fail("the same uranium in a shielding chest must not irradiate at all; got " + stopped);
+			}
+			helper.succeed();
+		});
+	}
+
+	/**
+	 * The sweep must not open a chest whose loot has not been generated yet (MOD-524).
+	 *
+	 * <p>On a vanilla chest or barrel {@code Container.getItem} is not a read: it unpacks the pending
+	 * loot table with no player in the loot context and clears the tag. A once-per-second sweep around
+	 * every player therefore opened every unopened loot chest it passed, and a table that sizes itself
+	 * from the player's score then rolled nothing — Mine Treasure's chests came out empty for good.
+	 * Shipped in 0.1.115, reported from a live world.
+	 *
+	 * <p><b>The positive control is what makes the assertion mean something.</b> "The loot table is
+	 * still there" passes trivially if the sweep never reached that block at all — so the same barrel
+	 * in the same spot is first loaded with real uranium and must irradiate. Only then does the
+	 * untouched tag prove a decision rather than an absence.
+	 *
+	 * <p><b>Do not assert on {@code isEmpty()} here.</b> It unpacks too, so an emptiness check would
+	 * destroy the very thing under test and the assertion would pass against the broken code. The tag
+	 * is the only safe witness; {@code getLootTable} is a plain field read.
+	 *
+	 * @implements R-RAD-11 — see docs/testing/RULES.md
+	 */
+	public static void sweepLeavesUngeneratedLootAlone(GameTestHelper helper) {
+		withIsolatedField(() -> {
+			ServerLevel level = helper.getLevel();
+			Cow viewer = helper.spawn(EntityTypes.COW, BYSTANDER);
+
+			// Positive control: a vanilla barrel in this spot IS reached and read by the sweep.
+			helper.setBlock(RACK, Blocks.BARREL);
+			BarrelBlockEntity loaded = helper.getBlockEntity(RACK, BarrelBlockEntity.class);
+			loaded.setItem(0, new ItemStack(ModContent.REFINED_URANIUM.get(), 16));
+			int reached = RadiationSources.exposureAt(level, viewer, Config.radiationSourceRadius);
+			if (reached <= 0) {
+				helper.fail("rig is wrong: uranium in a vanilla barrel here must irradiate, otherwise the "
+						+ "loot-table assertion below proves nothing; got " + reached);
+			}
+			// Empty it before replacing the block, or the stack spills and keeps radiating from the floor.
+			loaded.clearContent();
+
+			// The regression: the same barrel, now owing its contents to a loot table.
+			helper.setBlock(RACK, Blocks.AIR);
+			helper.setBlock(RACK, Blocks.BARREL);
+			BarrelBlockEntity pending = helper.getBlockEntity(RACK, BarrelBlockEntity.class);
+			pending.setLootTable(BuiltInLootTables.SIMPLE_DUNGEON);
+			RadiationSources.exposureAt(level, viewer, Config.radiationSourceRadius);
+			if (pending.getLootTable() == null) {
+				helper.fail("the sweep generated a foreign chest's loot: the pending loot table is gone, "
+						+ "which leaves another mod's chest empty for good (MOD-524)");
 			}
 			helper.succeed();
 		});

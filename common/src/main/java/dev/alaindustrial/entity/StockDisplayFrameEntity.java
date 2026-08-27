@@ -1,6 +1,7 @@
 package dev.alaindustrial.entity;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.loot.PendingLoot;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -119,9 +120,19 @@ public class StockDisplayFrameEntity extends ItemFrame {
 	 * {@code combinedContainer}, so a double chest of either family is counted as one combined
 	 * container from either half; everything else (barrel, shulker box, third-party containers) is
 	 * matched by its block entity implementing {@link Container}.
+	 *
+	 * <p>A container whose loot has not been generated yet reads as "no container" — see
+	 * {@link PendingLoot}. Both callers only ever LOOK (the scan sums the stock, the comparator asks
+	 * how full it is), and looking is what would generate it: every read path here ends in
+	 * {@code Container.getItem}, which unpacks the table with no player in context and empties
+	 * another mod's loot chest for good (MOD-524). The frame reports NO_CONTAINER until the player
+	 * opens the chest, which is also the honest answer — until then it holds nothing to count.
 	 */
 	private static @Nullable Container resolveContainer(ServerLevel level, BlockPos target) {
 		BlockState state = level.getBlockState(target);
+		if (PendingLoot.isPendingAt(level, target, state)) {
+			return null;
+		}
 		if (state.getBlock() instanceof ChestBlock chest) {
 			return ChestBlock.getContainer(chest, state, level, target, false);
 		}

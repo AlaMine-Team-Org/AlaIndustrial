@@ -90,4 +90,12 @@ public class RadiationGameTest {
 	public void radShieldingChestStopsWhatAnOrdinaryChestDoesNot(GameTestHelper helper) {
 		RadiationScenarios.shieldingChestStopsWhatAnOrdinaryChestDoesNot(helper);
 	}
+
+	/**
+	 * @implements R-RAD-11 — the sweep leaves a chest whose loot is not generated yet untouched.
+	 */
+	@GameTest
+	public void radSweepLeavesUngeneratedLootAlone(GameTestHelper helper) {
+		RadiationScenarios.sweepLeavesUngeneratedLootAlone(helper);
+	}
 }

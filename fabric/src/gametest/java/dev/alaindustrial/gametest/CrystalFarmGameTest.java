@@ -40,4 +40,25 @@ public class CrystalFarmGameTest {
 	public void tcFarm001Fun04_seedbedKnowsItIsTended(GameTestHelper helper) {
 		CrystalFarmScenarios.fun04SeedbedKnowsItIsTended(helper);
 	}
+
+	/**
+	 * @implements TC-FARM-001-FUN06 — a hand-opened greenhouse door shuts itself again.
+	 *     {@code maxTicks} covers the shipped 100-tick delay plus the scenario's own margin.
+	 */
+	@GameTest(maxTicks = 200)
+	public void tcFarm001Fun06_doorClosesAfterHandOpen(GameTestHelper helper) {
+		CrystalFarmScenarios.fun06DoorClosesAfterHandOpen(helper);
+	}
+
+	/** @implements TC-FARM-001-FUN07 — a door under a live signal still closes, and stays closed. */
+	@GameTest(maxTicks = 200)
+	public void tcFarm001Fun07_doorClosesUnderRedstone(GameTestHelper helper) {
+		CrystalFarmScenarios.fun07DoorClosesUnderRedstone(helper);
+	}
+
+	/** @implements TC-FARM-001-FUN08 — an occupied doorway re-arms the timer, a cleared one closes. */
+	@GameTest(maxTicks = 200)
+	public void tcFarm001Fun08_doorWaitsForTheDoorwayToClear(GameTestHelper helper) {
+		CrystalFarmScenarios.fun08DoorWaitsForTheDoorwayToClear(helper);
+	}
 }
