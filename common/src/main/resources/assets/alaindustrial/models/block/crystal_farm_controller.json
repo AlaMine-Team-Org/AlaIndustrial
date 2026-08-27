@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "top": "alaindustrial:block/crystal_farm_controller_top",
+    "front": "alaindustrial:block/crystal_farm_controller_front",
+    "side": "alaindustrial:block/crystal_farm_controller_side"
+  }
+}

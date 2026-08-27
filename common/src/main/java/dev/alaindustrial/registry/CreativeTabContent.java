@@ -257,6 +257,12 @@ public final class CreativeTabContent {
 		show(out, ModContent.DEEPSLATE_URANIUM_ORE_ITEM);
 		show(out, ModContent.PALLADIUM_ORE_ITEM);
 		show(out, ModContent.TRELLIS_ITEM);
+		// MOD-505 — the greenhouse, next to the mod's other agriculture blocks.
+		show(out, ModContent.CRYSTAL_FARM_FLOOR_ITEM);
+		show(out, ModContent.CRYSTAL_FARM_GLASS_ITEM);
+		show(out, ModContent.CRYSTAL_FARM_DOOR_ITEM);
+		show(out, ModContent.CRYSTAL_FARM_CONTROLLER_ITEM);
+		show(out, ModContent.CRYSTAL_SEEDBED_ITEM);
 		show(out, ModContent.COTTON_SEEDS);
 	}
 

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": "alaindustrial:crystal_farm_glass",
+    "T": "#c:plates/tempered_iron"
+  },
+  "pattern": [
+    "GG",
+    "GG",
+    "TT"
+  ],
+  "result": {
+    "id": "alaindustrial:crystal_farm_door",
+    "count": 2
+  }
+}

@@ -393,6 +393,17 @@ public final class ModItems {
 	public static final BlockItem MOB_REPELLER_HV_ITEM = blockItem("mob_repeller_hv", ModBlocks.MOB_REPELLER_HV);
 	public static final BlockItem INCUBATOR_ITEM = blockItem("incubator", ModBlocks.INCUBATOR);
 	public static final BlockItem TRELLIS_ITEM = blockItem("trellis", ModBlocks.TRELLIS);
+	// MOD-505 — the greenhouse. The bud has no item: it is grown, never placed.
+	public static final BlockItem CRYSTAL_FARM_FLOOR_ITEM =
+			blockItem("crystal_farm_floor", ModBlocks.CRYSTAL_FARM_FLOOR);
+	public static final BlockItem CRYSTAL_FARM_GLASS_ITEM =
+			blockItem("crystal_farm_glass", ModBlocks.CRYSTAL_FARM_GLASS);
+	public static final BlockItem CRYSTAL_FARM_DOOR_ITEM =
+			blockItem("crystal_farm_door", ModBlocks.CRYSTAL_FARM_DOOR);
+	public static final BlockItem CRYSTAL_FARM_CONTROLLER_ITEM =
+			blockItem("crystal_farm_controller", ModBlocks.CRYSTAL_FARM_CONTROLLER);
+	public static final BlockItem CRYSTAL_SEEDBED_ITEM =
+			blockItem("crystal_seedbed", ModBlocks.CRYSTAL_SEEDBED);
 	public static final BlockItem PUMP_ITEM = blockItem("pump", ModBlocks.PUMP);
 	public static final BlockItem GARDEN_DRONE_STATION_ITEM =
 			blockItem("garden_drone_station", ModBlocks.GARDEN_DRONE_STATION);
@@ -1084,6 +1095,11 @@ public final class ModItems {
 		ModContent.SOUL_VESSEL = () -> SOUL_VESSEL;
 		ModContent.INCUBATOR_ITEM = () -> INCUBATOR_ITEM;
 		ModContent.TRELLIS_ITEM = () -> TRELLIS_ITEM;
+		ModContent.CRYSTAL_FARM_FLOOR_ITEM = () -> CRYSTAL_FARM_FLOOR_ITEM;
+		ModContent.CRYSTAL_FARM_GLASS_ITEM = () -> CRYSTAL_FARM_GLASS_ITEM;
+		ModContent.CRYSTAL_FARM_DOOR_ITEM = () -> CRYSTAL_FARM_DOOR_ITEM;
+		ModContent.CRYSTAL_FARM_CONTROLLER_ITEM = () -> CRYSTAL_FARM_CONTROLLER_ITEM;
+		ModContent.CRYSTAL_SEEDBED_ITEM = () -> CRYSTAL_SEEDBED_ITEM;
 		ModContent.MUTATION_CHIP_TRANSFORM = () -> MUTATION_CHIP_TRANSFORM;
 		ModContent.MUTATION_CHIP_DUPLICATE = () -> MUTATION_CHIP_DUPLICATE;
 		ModContent.MUTATION_CHIP_CREATE = () -> MUTATION_CHIP_CREATE;

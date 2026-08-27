@@ -63,6 +63,10 @@ import dev.alaindustrial.block.ReactorShellBlock;
 import dev.alaindustrial.block.SteamNozzleBlock;
 import dev.alaindustrial.block.ReactorControllerBlock;
 import dev.alaindustrial.block.ThermalCentrifugeBlock;
+import dev.alaindustrial.block.CrystalFarmControllerBlock;
+import dev.alaindustrial.block.CrystalFarmDoorBlock;
+import dev.alaindustrial.block.CrystalFarmShellBlock;
+import dev.alaindustrial.block.CrystalSeedbedBlock;
 import dev.alaindustrial.block.TrellisBlock;
 import dev.alaindustrial.block.VulcanizerBlock;
 import dev.alaindustrial.block.WaterMillBlock;
@@ -211,6 +215,17 @@ public final class ModBlocksNeoForge {
 	public static final DeferredBlock<IncubatorBlock> INCUBATOR = handle(ContentManifest.INCUBATOR);
 	public static final DeferredBlock<IncubatorDomeBlock> INCUBATOR_DOME = handle(ContentManifest.INCUBATOR_DOME);
 	public static final DeferredBlock<TrellisBlock> TRELLIS = handle(ContentManifest.TRELLIS);
+	// MOD-505 — the crystal greenhouse.
+	public static final DeferredBlock<CrystalFarmShellBlock> CRYSTAL_FARM_FLOOR =
+			handle(ContentManifest.CRYSTAL_FARM_FLOOR);
+	public static final DeferredBlock<CrystalFarmShellBlock> CRYSTAL_FARM_GLASS =
+			handle(ContentManifest.CRYSTAL_FARM_GLASS);
+	public static final DeferredBlock<CrystalFarmDoorBlock> CRYSTAL_FARM_DOOR =
+			handle(ContentManifest.CRYSTAL_FARM_DOOR);
+	public static final DeferredBlock<CrystalFarmControllerBlock> CRYSTAL_FARM_CONTROLLER =
+			handle(ContentManifest.CRYSTAL_FARM_CONTROLLER);
+	public static final DeferredBlock<CrystalSeedbedBlock> CRYSTAL_SEEDBED =
+			handle(ContentManifest.CRYSTAL_SEEDBED);
 	public static final DeferredBlock<Block> TIN_ORE = handle(ContentManifest.TIN_ORE);
 	public static final DeferredBlock<Block> DEEPSLATE_TIN_ORE = handle(ContentManifest.DEEPSLATE_TIN_ORE);
 	public static final DeferredBlock<Block> SILVER_ORE = handle(ContentManifest.SILVER_ORE);

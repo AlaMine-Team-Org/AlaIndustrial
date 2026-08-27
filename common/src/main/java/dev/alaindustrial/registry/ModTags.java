@@ -35,6 +35,20 @@ public final class ModTags {
 		public static final TagKey<Block> INCUBATOR_DOME_GLASS = key("incubator_dome_glass");
 
 		/**
+		 * Glass a crystal greenhouse may be walled with (MOD-505). Its own tag rather than a share of
+		 * {@link #INCUBATOR_DOME_GLASS}: the two structures have no reason to move together, and a pack
+		 * that widens one should not silently widen the other.
+		 */
+		public static final TagKey<Block> CRYSTAL_FARM_GLASS = key("crystal_farm_glass");
+
+		/**
+		 * Doors a greenhouse shell accepts (MOD-505). Vanilla doors, so the player can walk into the
+		 * room with something they already have — the shell only has to be sealed, and a themed farm
+		 * door can join this tag later without touching the scanner.
+		 */
+		public static final TagKey<Block> CRYSTAL_FARM_DOOR = key("crystal_farm_door");
+
+		/**
 		 * Crops the scythe (MOD-068) harvests in its <b>crop</b> mode (shift + right-click, MOD-098):
 		 * {@code #minecraft:crops} plus {@code sweet_berry_bush}, {@code cactus} and {@code sugar_cane}
 		 * — none of those three is in the vanilla {@code #minecraft:crops} tag, so the mod keeps the

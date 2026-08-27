@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": "minecraft:amethyst_block",
+    "Q": "#c:gems/quartz",
+    "S": "minecraft:smooth_basalt"
+  },
+  "pattern": [
+    "QSQ",
+    "SAS",
+    "QSQ"
+  ],
+  "result": {
+    "id": "alaindustrial:crystal_seedbed"
+  }
+}

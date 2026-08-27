@@ -300,6 +300,21 @@ class ConfigSnapshotTest {
 		SENTINELS.put("reactorRoomMinInner", 4);
 		SENTINELS.put("reactorRoomMaxInner", 9);
 		SENTINELS.put("reactorRoomMaxGlassPercent", 44);
+		// MOD-505 — the crystal greenhouse. Sentinels differ from the shipped defaults and from
+		// each other, so a getter/setter wired to the wrong field shows up as a mismatch.
+		SENTINELS.put("crystalFarmScanIntervalTicks", 37);
+		SENTINELS.put("crystalFarmRoomMinCells", 19);
+		SENTINELS.put("crystalFarmRoomMaxCells", 2222);
+		SENTINELS.put("crystalFarmRoomMaxSpan", 21);
+		SENTINELS.put("crystalFarmGrowthIntervalTicks", 83);
+		SENTINELS.put("crystalFarmGrowthChanceDivisor", 311);
+		SENTINELS.put("crystalFarmWaterSpeedup", 7);
+		SENTINELS.put("crystalFarmPowerSpeedup", 5);
+		SENTINELS.put("crystalFarmEuPerGrowth", 97);
+		SENTINELS.put("crystalFarmBuffer", 5300);
+		SENTINELS.put("crystalFarmDoorAutoCloseTicks", 73);
+		SENTINELS.put("crystalFarmDoorOccupiedRecheckTicks", 17);
+		SENTINELS.put("crystalSeedbedChargesPerShard", 5);
 		SENTINELS.put("reactorButtonPressTicks", 27);
 		SENTINELS.put("reactorEuPerRod", 19);
 		SENTINELS.put("reactorNeighbourBonusPercent", 37);

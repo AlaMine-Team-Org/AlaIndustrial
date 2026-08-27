@@ -256,9 +256,12 @@ public final class AlaCommonScenarios {
 			// below cannot express it. "Occlusion == full collision cube" holds for opaque blocks; glass
 			// is a full cube that must NOT occlude, or the room's interior would be culled away behind
 			// it and the window would show nothing. Vanilla's own glass is built exactly this way
-			// (full cube + noOcclusion). Waived for the same reason liquids are, and only for this one
-			// block — anything else claiming the exemption has to earn its own line here.
-			if (id.getPath().equals("reactor_glass")) {
+			// (full cube + noOcclusion). Waived for the same reason liquids are, and only for the blocks
+			// named here — anything else claiming the exemption has to earn its own line.
+			//
+			// MOD-505 adds the greenhouse's glazing on identical grounds: a farm walled in glass that
+			// occluded would cull away the very crystals it exists to show.
+			if (id.getPath().equals("reactor_glass") || id.getPath().equals("crystal_farm_glass")) {
 				continue;
 			}
 			Block block = BuiltInRegistries.BLOCK.getValue(id);

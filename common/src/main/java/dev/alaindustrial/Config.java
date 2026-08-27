@@ -846,6 +846,81 @@ public final class Config {
 	 * while the structure still reads as containment.
 	 */
 	public static int reactorRoomMaxGlassPercent = 30;
+
+	// ── MOD-505: the crystal greenhouse. Shares the reactor's room scanner, nothing else. ──
+	/**
+	 * How often a crystal-farm controller re-scans its greenhouse. Same reasoning as
+	 * {@link #reactorScanIntervalTicks}: {@code neighborChanged} only sees the six neighbouring
+	 * blocks, so this sweep is the only thing that notices a far wall being mined. It also refreshes
+	 * the seedbed list and the water check, which is why growth reads them rather than re-walking.
+	 */
+	public static int crystalFarmScanIntervalTicks = 40;
+	/**
+	 * Smallest interior volume that counts as a greenhouse, in blocks. A volume rather than an edge
+	 * length, because the room is flood-filled and may be any shape at all (MOD-505, playtest four):
+	 * "3 blocks across" means nothing to a dome.
+	 */
+	public static int crystalFarmRoomMinCells = 27;
+	/**
+	 * Largest interior volume, in blocks. This is the fill's budget: past it the room is reported as
+	 * unsealed, because a fill that has run this far is either leaking or enclosing more than one
+	 * greenhouse's worth of air. 4096 is a 16x16x16 hall — generous for any shape worth building.
+	 */
+	public static int crystalFarmRoomMaxCells = 4096;
+	/**
+	 * How far from the controller the fill may reach, in blocks. A second, harder limit than the cell
+	 * budget: it is what keeps a leaking room from reading blocks chunks away, which is both slow and
+	 * a way to touch terrain that is not loaded.
+	 */
+	public static int crystalFarmRoomMaxSpan = 24;
+	/**
+	 * Ticks between growth attempts. Deliberately far slower than the scan: a crystal takes over an
+	 * hour unaided, so rolling for one more than a few times a minute would be wasted work on every
+	 * seedbed in the room.
+	 */
+	public static int crystalFarmGrowthIntervalTicks = 100;
+	/**
+	 * The 1-in-this chance that one seedbed advances on one attempt, with no water and no power.
+	 *
+	 * <p>Sized against the design target of "an hour or two per crystal, unhelped": a crystal costs
+	 * {@link dev.alaindustrial.core.crystal.CrystalGrowth#EVENTS_PER_CRYSTAL} events, so
+	 * 4 x 270 x 100 ticks is about 90 minutes. <b>Lower this to a single digit to watch the farm work
+	 * during a test</b> — at the shipped value nothing visible happens for many minutes.
+	 */
+	public static int crystalFarmGrowthChanceDivisor = 270;
+	/** How much water in the room cuts the growth divisor by. Free to supply, so the smaller bonus. */
+	public static int crystalFarmWaterSpeedup = 3;
+	/** How much a powered attempt cuts the growth divisor by, on top of water. */
+	public static int crystalFarmPowerSpeedup = 2;
+	/**
+	 * EU one boosted growth event costs. Charged on delivery, not per roll: energy buys crystals, not
+	 * dice. Zero makes the power bonus free, which is a legitimate way to switch it off as a cost.
+	 */
+	public static int crystalFarmEuPerGrowth = 64;
+	/** Buffer of a farm controller, in EU. Power is optional here, so this only smooths the boost. */
+	public static int crystalFarmBuffer = 4000;
+	/**
+	 * Ticks a hand-opened greenhouse door stays open before it seals itself. The room only grows
+	 * while it is closed, so a door left ajar is a silent way to switch the farm off — five seconds
+	 * is long enough to walk through and short enough that nobody forgets. A door held open by
+	 * redstone ignores this entirely.
+	 */
+	public static int crystalFarmDoorAutoCloseTicks = 100;
+	/** Ticks the door waits before re-testing a doorway that still has somebody standing in it. */
+	public static int crystalFarmDoorOccupiedRecheckTicks = 10;
+	/**
+	 * Buds one amethyst shard buys when fed to a seedbed. Shards go in ONE per click (playtest three),
+	 * so this is the whole exchange rate of the feature.
+	 *
+	 * <p><b>One, so the trade reads itself: a shard in, a crystal out.</b> The profit is not this
+	 * number — it is what the crystal drops, which vanilla puts at
+	 * {@link dev.alaindustrial.core.crystal.CrystalGrowth#SHARDS_PER_RIPE_CRYSTAL} to a pickaxe. So a
+	 * shard fed comes back fourfold, paid for by roughly ninety minutes of standing there. It briefly
+	 * shipped at 3 (a twelvefold return) for no reason other than that nobody had multiplied it out.
+	 *
+	 * <p>An amethyst block counts as four shards, because that is what vanilla crafts it from.
+	 */
+	public static int crystalSeedbedChargesPerShard = 1;
 	/**
 	 * Ticks the reactor button stays pressed. Vanilla's stone button is 20; this matches it, which is
 	 * comfortably longer than the airlock needs to see the rising edge even through a run of dust.
@@ -2269,6 +2344,32 @@ public final class Config {
 				() -> reactorRoomMaxInner, v -> reactorRoomMaxInner = v, 1),
 			new IntField("reactorRoomMaxGlassPercent", Section.MACHINES, "Largest share of a reactor shell that may be glass, in percent; above it the room reports a weak structure.",
 				() -> reactorRoomMaxGlassPercent, v -> reactorRoomMaxGlassPercent = v, 0),
+			new IntField("crystalFarmScanIntervalTicks", Section.MACHINES, "Ticks between full re-scans of a crystal greenhouse by its controller; also refreshes its seedbed list and water check.",
+				() -> crystalFarmScanIntervalTicks, v -> crystalFarmScanIntervalTicks = v, 1),
+			new IntField("crystalFarmRoomMinCells", Section.MACHINES, "Smallest interior volume of a crystal greenhouse, in blocks; the room may be any shape, so this is a volume rather than an edge length.",
+				() -> crystalFarmRoomMinCells, v -> crystalFarmRoomMinCells = v, 1),
+			new IntField("crystalFarmRoomMaxCells", Section.MACHINES, "Largest interior volume of a crystal greenhouse, in blocks; past it the room reads as unsealed.",
+				() -> crystalFarmRoomMaxCells, v -> crystalFarmRoomMaxCells = v, 1),
+			new IntField("crystalFarmRoomMaxSpan", Section.MACHINES, "How far from its controller a greenhouse fill may reach, in blocks; keeps a leaking room from scanning into unloaded terrain.",
+				() -> crystalFarmRoomMaxSpan, v -> crystalFarmRoomMaxSpan = v, 1),
+			new IntField("crystalFarmGrowthIntervalTicks", Section.MACHINES, "Ticks between growth attempts on every seedbed in a greenhouse.",
+				() -> crystalFarmGrowthIntervalTicks, v -> crystalFarmGrowthIntervalTicks = v, 1),
+			new IntField("crystalFarmGrowthChanceDivisor", Section.MACHINES, "1-in-this chance a seedbed advances on one attempt with no water and no power; lower it to single digits to watch a farm work during a test.",
+				() -> crystalFarmGrowthChanceDivisor, v -> crystalFarmGrowthChanceDivisor = v, 1),
+			new IntField("crystalFarmWaterSpeedup", Section.MACHINES, "Factor water in the room cuts the crystal growth divisor by.",
+				() -> crystalFarmWaterSpeedup, v -> crystalFarmWaterSpeedup = v, 1),
+			new IntField("crystalFarmPowerSpeedup", Section.MACHINES, "Factor a powered attempt cuts the crystal growth divisor by, on top of water.",
+				() -> crystalFarmPowerSpeedup, v -> crystalFarmPowerSpeedup = v, 1),
+			new IntField("crystalFarmEuPerGrowth", Section.MACHINES, "EU one boosted growth event costs; charged only when the event actually happens.",
+				() -> crystalFarmEuPerGrowth, v -> crystalFarmEuPerGrowth = v, 0),
+			new IntField("crystalFarmBuffer", Section.MACHINES, "Energy buffer of a crystal farm controller, in EU.",
+				() -> crystalFarmBuffer, v -> crystalFarmBuffer = v, 0),
+			new IntField("crystalFarmDoorAutoCloseTicks", Section.MACHINES, "Ticks a hand-opened greenhouse door stays open before sealing itself; a door held open by redstone ignores this.",
+				() -> crystalFarmDoorAutoCloseTicks, v -> crystalFarmDoorAutoCloseTicks = v, 1),
+			new IntField("crystalFarmDoorOccupiedRecheckTicks", Section.MACHINES, "Ticks the greenhouse door waits before re-testing a doorway that still has someone standing in it.",
+				() -> crystalFarmDoorOccupiedRecheckTicks, v -> crystalFarmDoorOccupiedRecheckTicks = v, 1),
+			new IntField("crystalSeedbedChargesPerShard", Section.MACHINES, "Buds one amethyst shard buys when fed to a seedbed; shards go in one per click, so this is the exchange rate of the whole farm.",
+				() -> crystalSeedbedChargesPerShard, v -> crystalSeedbedChargesPerShard = v, 1),
 			new IntField("reactorButtonPressTicks", Section.MACHINES, "Ticks the reactor button stays pressed before releasing itself.",
 				() -> reactorButtonPressTicks, v -> reactorButtonPressTicks = v, 1),
 			new IntField("reactorEuPerRod", Section.MACHINES, "EU/t one fully lowered uranium rod contributes, before neighbour bonuses.",

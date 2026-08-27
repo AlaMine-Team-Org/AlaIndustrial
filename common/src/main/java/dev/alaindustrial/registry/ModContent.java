@@ -195,6 +195,17 @@ public final class ModContent {
 	public static Supplier<Block> INCUBATOR_DOME = unbound("INCUBATOR_DOME");
 	/** Cotton trellis (MOD-280) — the mod's first crop: a two-block support carrying a perennial plant. */
 	public static Supplier<Block> TRELLIS = unbound("TRELLIS");
+	// ── MOD-505: the crystal greenhouse. Shell, brain, and the two blocks that do the growing. ──
+	/** The deck a greenhouse stands on. */
+	public static Supplier<Block> CRYSTAL_FARM_FLOOR = unbound("CRYSTAL_FARM_FLOOR");
+	/** The glazing above the deck; seals into one sheet with it. */
+	public static Supplier<Block> CRYSTAL_FARM_GLASS = unbound("CRYSTAL_FARM_GLASS");
+	/** The greenhouse door — a glazed panel in the same frame. */
+	public static Supplier<Block> CRYSTAL_FARM_DOOR = unbound("CRYSTAL_FARM_DOOR");
+	/** The greenhouse's brain: seals the room and grows every seedbed inside it. */
+	public static Supplier<Block> CRYSTAL_FARM_CONTROLLER = unbound("CRYSTAL_FARM_CONTROLLER");
+	/** Dead until fed amethyst, then buds real vanilla clusters until its charge runs out. */
+	public static Supplier<Block> CRYSTAL_SEEDBED = unbound("CRYSTAL_SEEDBED");
 	public static Supplier<Block> TIN_ORE = unbound("TIN_ORE");
 	public static Supplier<Block> DEEPSLATE_TIN_ORE = unbound("DEEPSLATE_TIN_ORE");
 	public static Supplier<Block> SILVER_ORE = unbound("SILVER_ORE");
@@ -590,6 +601,11 @@ public final class ModContent {
 	public static Supplier<BlockItem> MOB_REPELLER_HV_ITEM = unbound("MOB_REPELLER_HV_ITEM");
 	public static Supplier<BlockItem> INCUBATOR_ITEM = unbound("INCUBATOR_ITEM");
 	public static Supplier<BlockItem> TRELLIS_ITEM = unbound("TRELLIS_ITEM");
+	public static Supplier<BlockItem> CRYSTAL_FARM_FLOOR_ITEM = unbound("CRYSTAL_FARM_FLOOR_ITEM");
+	public static Supplier<BlockItem> CRYSTAL_FARM_GLASS_ITEM = unbound("CRYSTAL_FARM_GLASS_ITEM");
+	public static Supplier<BlockItem> CRYSTAL_FARM_DOOR_ITEM = unbound("CRYSTAL_FARM_DOOR_ITEM");
+	public static Supplier<BlockItem> CRYSTAL_FARM_CONTROLLER_ITEM = unbound("CRYSTAL_FARM_CONTROLLER_ITEM");
+	public static Supplier<BlockItem> CRYSTAL_SEEDBED_ITEM = unbound("CRYSTAL_SEEDBED_ITEM");
 	public static Supplier<BlockItem> PUMP_ITEM = unbound("PUMP_ITEM");
 	public static Supplier<BlockItem> GARDEN_DRONE_STATION_ITEM = unbound("GARDEN_DRONE_STATION_ITEM");
 	/** The drone itself — an item that lives in the station's dock slot (MOD-277). */
@@ -667,6 +683,8 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> REACTOR_OUTLET_BE = unbound("REACTOR_OUTLET_BE");
 	/** MOD-493 — the airlock panel's travel clock; holds no game state. */
 	public static Supplier<BlockEntityType<?>> REACTOR_DOOR_BE = unbound("REACTOR_DOOR_BE");
+	/** MOD-505 — the only ticking object in a greenhouse; the seedbeds and buds have none. */
+	public static Supplier<BlockEntityType<?>> CRYSTAL_FARM_CONTROLLER_BE = unbound("CRYSTAL_FARM_CONTROLLER_BE");
 	public static Supplier<BlockEntityType<?>> ELECTRIC_HEATER_BE = unbound("ELECTRIC_HEATER_BE");
 	public static Supplier<BlockEntityType<?>> CHARGE_PAD_BE = unbound("CHARGE_PAD_BE");
 	public static Supplier<BlockEntityType<?>> ENERGY_CONDENSER_BE = unbound("ENERGY_CONDENSER_BE");

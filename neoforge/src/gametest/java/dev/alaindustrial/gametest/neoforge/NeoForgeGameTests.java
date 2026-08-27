@@ -2,6 +2,7 @@ package dev.alaindustrial.gametest.neoforge;
 
 import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.gametest.CrystalFarmScenarios;
 import dev.alaindustrial.gametest.AssemblerPerfScenarios;
 import dev.alaindustrial.gametest.DemoStandScenarios;
 import dev.alaindustrial.gametest.CreativeEnergySourceScenarios;
@@ -2221,6 +2222,11 @@ public final class NeoForgeGameTests {
 		// MOD-474 — the shielding chest is the only container that stops its own contents.
 		registerTest(event, "rad_shielding_chest_stops_what_an_ordinary_chest_does_not", 40, true,
 				RadiationScenarios::shieldingChestStopsWhatAnOrdinaryChestDoesNot);
+		registerTest(event, "crystal_farm_fun01_sealed_room_forms", 200, true, CrystalFarmScenarios::fun01SealedRoomForms);
+		registerTest(event, "crystal_farm_fun02_breach_unforms_and_repaints", 200, true, CrystalFarmScenarios::fun02BreachUnformsAndRepaints);
+		registerTest(event, "crystal_farm_fun03_breach_is_reported_at_the_hole", 200, true, CrystalFarmScenarios::fun03BreachIsReportedAtTheHole);
+		registerTest(event, "crystal_farm_fun04_seedbed_knows_it_is_tended", 200, true, CrystalFarmScenarios::fun04SeedbedKnowsItIsTended);
+		registerTest(event, "crystal_farm_fun05_controller_removed_any_way_clears_up", 200, true, CrystalFarmScenarios::fun05ControllerRemovedAnyWayClearsUp);
 	}
 
 	/** The three NeoForge probes for {@link BlockCapabilityParityScenarios} (MOD-433). */

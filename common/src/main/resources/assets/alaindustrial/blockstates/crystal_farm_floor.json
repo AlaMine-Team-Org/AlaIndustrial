@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "formed=false,edge=false": {
+      "model": "alaindustrial:block/crystal_farm_floor"
+    },
+    "formed=false,edge=true": {
+      "model": "alaindustrial:block/crystal_farm_floor"
+    },
+    "formed=true,edge=false": {
+      "model": "alaindustrial:block/crystal_farm_floor_formed"
+    },
+    "formed=true,edge=true": {
+      "model": "alaindustrial:block/crystal_farm_floor_edge"
+    }
+  }
+}

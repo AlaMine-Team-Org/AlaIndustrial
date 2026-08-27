@@ -20,6 +20,9 @@ import dev.alaindustrial.block.entity.GalvanicBathBlockEntity;
 import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
 import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
 import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
+import dev.alaindustrial.block.CrystalSeedbedBlock;
+import net.minecraft.world.level.block.AmethystClusterBlock;
+import net.minecraft.world.level.block.DoorBlock;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.Industrialization;
 import java.util.ArrayList;
@@ -149,6 +152,7 @@ public final class DemoStand {
 		buildLossLane(level, origin);
 		buildFarms(level, origin);
 		buildReactorZone(level, origin);
+		buildCrystalGreenhouse(level, origin);
 		buildReactorRoom(level, origin);
 		buildShowcase(level, origin);
 	}
@@ -787,6 +791,79 @@ public final class DemoStand {
 	 * <p>Nothing here is wired: the reactor only runs inside a sealed room, and a controller reporting
 	 * "not formed" on the stand is the honest state for a block sitting in the open.
 	 */
+	/**
+	 * Zone <b>crystal greenhouse</b> (MOD-505): a real, sealed greenhouse standing beside the reactor
+	 * room, not a row of loose blocks.
+	 *
+	 * <p>A row is how this started, and it was the wrong shape for this feature. The reactor zone can
+	 * be a row because its parts read on their own; a greenhouse's whole point is the moment it closes
+	 * — the shell drops its seams, the panel lights, the beds start budding — and none of that happens
+	 * to a block lying on a shelf. So the stand builds one that actually seals, and the controller's
+	 * own scan turns it on a second or two after {@code /ala demo build} finishes.
+	 *
+	 * <p>Placed at x 8..12, z 15..19, immediately east of the reactor room's 5×5×5 at x 2..6 with one
+	 * block of air between them: two multiblocks side by side, which is the comparison worth showing.
+	 * As the reactor room's own comment warns, moving this means re-reading the LOOPS of every other
+	 * zone rather than the literal coordinates — the stand's coverage gametest is what catches a
+	 * collision, by reporting whichever block got overwritten.
+	 */
+	private static void buildCrystalGreenhouse(ServerLevel level, BlockPos origin) {
+		final int bx = 8;
+		final int by = 1;
+		final int bz = 15;
+		final int edge = 5;
+
+		// Deck underfoot and overhead, glass everywhere else: the interior 3×3×3 is exactly
+		// crystalFarmRoomMinCells, so this is the smallest greenhouse the scan will accept.
+		for (int lx = 0; lx < edge; lx++) {
+			for (int ly = 0; ly < edge; ly++) {
+				for (int lz = 0; lz < edge; lz++) {
+					boolean perimeter = lx == 0 || lx == edge - 1 || ly == 0 || ly == edge - 1
+							|| lz == 0 || lz == edge - 1;
+					if (!perimeter) {
+						continue;
+					}
+					boolean deck = ly == 0 || ly == edge - 1;
+					set(level, origin, bx + lx, by + ly, bz + lz,
+							deck ? ModContent.CRYSTAL_FARM_FLOOR.get()
+									: ModContent.CRYSTAL_FARM_GLASS.get());
+				}
+			}
+		}
+
+		// Controller in the north wall, panel outward — FACING names the way it looks OUT, and the
+		// scan walks inward along the opposite.
+		level.setBlockAndUpdate(origin.offset(bx + 1, by + 1, bz),
+				ModContent.CRYSTAL_FARM_CONTROLLER.get().defaultBlockState()
+						.setValue(HorizontalDirectionalBlock.FACING, Direction.NORTH));
+
+		// Door in the same wall, both halves by hand: setPlacedBy, which normally raises the upper
+		// leaf, does not run for a programmatic setBlock.
+		BlockState door = ModContent.CRYSTAL_FARM_DOOR.get().defaultBlockState()
+				.setValue(DoorBlock.FACING, Direction.SOUTH);
+		level.setBlockAndUpdate(origin.offset(bx + 3, by + 1, bz), door);
+		level.setBlockAndUpdate(origin.offset(bx + 3, by + 2, bz),
+				door.setValue(DoorBlock.HALF, DoubleBlockHalf.UPPER));
+
+		// Water in the corner: the free half of the growth bonus, and the panel reports it.
+		level.setBlockAndUpdate(origin.offset(bx + 3, by + 1, bz + 3),
+				Blocks.WATER.defaultBlockState());
+
+		// Three beds on the floor: one dead as crafted, two awake and carrying vanilla amethyst at
+		// different stages, so the stand shows the whole life of the block at once.
+		set(level, origin, bx + 1, by + 1, bz + 1, ModContent.CRYSTAL_SEEDBED.get());
+		Block[] stages = { Blocks.MEDIUM_AMETHYST_BUD, Blocks.AMETHYST_CLUSTER };
+		int lx = 2;
+		for (Block stage : stages) {
+			BlockPos bed = origin.offset(bx + lx, by + 1, bz + 2);
+			level.setBlockAndUpdate(bed, ModContent.CRYSTAL_SEEDBED.get().defaultBlockState()
+					.setValue(CrystalSeedbedBlock.CHARGES, CrystalSeedbedBlock.MAX_CHARGES));
+			level.setBlockAndUpdate(bed.above(), stage.defaultBlockState()
+					.setValue(AmethystClusterBlock.FACING, Direction.UP));
+			lx++;
+		}
+	}
+
 	private static void buildReactorZone(ServerLevel level, BlockPos origin) {
 		int z = 21;
 		set(level, origin, 2, 1, z, ModContent.REACTOR_CASING.get());

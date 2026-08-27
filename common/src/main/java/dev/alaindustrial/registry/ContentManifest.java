@@ -54,6 +54,10 @@ import dev.alaindustrial.block.StorageModuleBlock;
 import dev.alaindustrial.block.LightningRodGeneratorBlock;
 import dev.alaindustrial.block.StormWindMillBlock;
 import dev.alaindustrial.block.TeleporterBlock;
+import dev.alaindustrial.block.CrystalFarmControllerBlock;
+import dev.alaindustrial.block.CrystalFarmDoorBlock;
+import dev.alaindustrial.block.CrystalFarmShellBlock;
+import dev.alaindustrial.block.CrystalSeedbedBlock;
 import dev.alaindustrial.block.ReactorShellBlock;
 import dev.alaindustrial.block.SteamNozzleBlock;
 import dev.alaindustrial.block.ReactorOutletBlock;
@@ -125,6 +129,7 @@ import dev.alaindustrial.block.entity.LightningRodGeneratorBlockEntity;
 import dev.alaindustrial.block.entity.StormWindMillBlockEntity;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
+import dev.alaindustrial.block.entity.CrystalFarmControllerBlockEntity;
 import dev.alaindustrial.block.entity.ReactorControllerBlockEntity;
 import dev.alaindustrial.block.entity.ReactorDoorBlockEntity;
 import dev.alaindustrial.block.entity.ReactorOutletBlockEntity;
@@ -561,6 +566,28 @@ public final class ContentManifest {
 	// Cotton trellis (MOD-280) — the mod's first crop; a two-block plant support, not a machine.
 	public static final BlockDef<TrellisBlock> TRELLIS =
 			block("trellis", TrellisBlock::new, s -> ModContent.TRELLIS = s);
+
+	// ── MOD-505: the crystal greenhouse. Glass and door come from tags, and what grows is vanilla
+	// amethyst, so the mod adds only the deck, the brain and the bed. ──
+	/** The deck a greenhouse stands on; wears the sealed look once the room passes its scan. */
+	public static final BlockDef<CrystalFarmShellBlock> CRYSTAL_FARM_FLOOR =
+			block("crystal_farm_floor", CrystalFarmShellBlock::new,
+					s -> ModContent.CRYSTAL_FARM_FLOOR = s);
+	/** The glazing above it — same class, same sealed look, so the dome closes with the floor. */
+	public static final BlockDef<CrystalFarmShellBlock> CRYSTAL_FARM_GLASS =
+			block("crystal_farm_glass", CrystalFarmShellBlock::new,
+					s -> ModContent.CRYSTAL_FARM_GLASS = s);
+	/** The way in: a glazed door in the same frame, so the shell is not broken by a wooden one. */
+	public static final BlockDef<CrystalFarmDoorBlock> CRYSTAL_FARM_DOOR =
+			block("crystal_farm_door", CrystalFarmDoorBlock::new,
+					s -> ModContent.CRYSTAL_FARM_DOOR = s);
+	/** The room's brain: seals the greenhouse, then grows every seedbed inside it. */
+	public static final BlockDef<CrystalFarmControllerBlock> CRYSTAL_FARM_CONTROLLER =
+			block("crystal_farm_controller", CrystalFarmControllerBlock::new,
+					s -> ModContent.CRYSTAL_FARM_CONTROLLER = s);
+	/** Dead until fed amethyst, then buds real vanilla clusters until its charge runs out. */
+	public static final BlockDef<CrystalSeedbedBlock> CRYSTAL_SEEDBED =
+			block("crystal_seedbed", CrystalSeedbedBlock::new, s -> ModContent.CRYSTAL_SEEDBED = s);
 	// Ores: plain Block, harvest tier is tag-driven.
 	public static final BlockDef<Block> TIN_ORE =
 			block("tin_ore", Block::new, s -> ModContent.TIN_ORE = s);
@@ -679,7 +706,10 @@ public final class ContentManifest {
 			// Stage 3 — the exhaust. Outside the shell, so it is not part of the group above.
 			STEAM_NOZZLE,
 			// MOD-479 — appended at the tail like every block since MOD-403; replay order is load-bearing.
-			CREATIVE_ENERGY_SOURCE);
+			CREATIVE_ENERGY_SOURCE,
+			// MOD-505 — the crystal greenhouse, appended as one group for the same reason.
+			CRYSTAL_FARM_FLOOR, CRYSTAL_FARM_GLASS, CRYSTAL_FARM_DOOR, CRYSTAL_FARM_CONTROLLER,
+			CRYSTAL_SEEDBED);
 
 	/**
 	 * Wraps a machine/ore/material block's {@code strength/sound/…} chain with the shared base every such
@@ -837,6 +867,29 @@ public final class ContentManifest {
 			// plant away from its other half.
 			Map.entry("trellis", p -> p.strength(0.2f).sound(SoundType.GRASS)
 					.noOcclusion().randomTicks().pushReaction(PushReaction.DESTROY)),
+			// ── MOD-505: the crystal greenhouse. Ordinary machine-grade blocks — the room contains
+			// nothing more dangerous than a growing crystal, so none of the reactor's toughness.
+			// Deliberately NO randomTicks() anywhere here: growth is driven by the controller's tick,
+			// so a random tick would be work the farm never reads.
+			// pushReaction BLOCK on all three: they carry the sealed look (and the seedbed its "tended"
+			// flag), and a piston shoving one clear of the room's footprint would strand it wearing a
+			// state nothing owns any more — the sweep only reaches the box it remembers (found by audit).
+			// The incubator's dome is pinned for the same class of reason.
+			Map.entry("crystal_farm_floor", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
+					.pushReaction(PushReaction.BLOCK))),
+			// noOcclusion is mandatory on the glazing: a transparent full cube that occludes would cull
+			// the room away behind it and the greenhouse would show nothing (the reactor glass note).
+			Map.entry("crystal_farm_glass", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.GLASS)
+					.noOcclusion().pushReaction(PushReaction.BLOCK))),
+			// A door is never a full cube, so noOcclusion is mandatory; pushReaction DESTROY keeps a
+			// piston from tearing one half of a two-block door away from the other.
+			Map.entry("crystal_farm_door", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.COPPER)
+					.noOcclusion().pushReaction(PushReaction.DESTROY))),
+			Map.entry("crystal_farm_controller", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
+			// The bed is a block of amethyst that happens to be machinery, so it sounds like the stone
+			// it is made of rather than like metal — the cue that it is the thing crystals come out of.
+			Map.entry("crystal_seedbed", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.AMETHYST)
+					.pushReaction(PushReaction.BLOCK))),
 			Map.entry("tin_ore", machine(p -> p.strength(3.0f, 3.0f).sound(SoundType.STONE))),
 			Map.entry("deepslate_tin_ore", machine(p -> p.strength(4.5f, 3.0f).sound(SoundType.DEEPSLATE))),
 			Map.entry("silver_ore", machine(p -> p.strength(3.0f, 3.0f).sound(SoundType.STONE))),
@@ -1347,7 +1400,12 @@ public final class ContentManifest {
 					"reactor_door"),
 			blockEntity("creative_energy_source", CreativeEnergySourceBlockEntity.class,
 					CreativeEnergySourceBlockEntity::new, s -> ModContent.CREATIVE_ENERGY_SOURCE_BE = s,
-					"creative_energy_source"));
+					"creative_energy_source"),
+			// MOD-505: the greenhouse's only ticking object. The seedbeds and buds it drives have none,
+			// which is what lets one room hold a hundred of them without a hundred tickers.
+			blockEntity("crystal_farm_controller", CrystalFarmControllerBlockEntity.class,
+					CrystalFarmControllerBlockEntity::new, s -> ModContent.CRYSTAL_FARM_CONTROLLER_BE = s,
+					"crystal_farm_controller"));
 
 	/**
 	 * The definition for block-entity {@code id}, checked against the type the caller expects.

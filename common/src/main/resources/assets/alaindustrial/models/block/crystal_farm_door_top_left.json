@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_top_left",
+  "textures": {
+    "bottom": "alaindustrial:block/crystal_farm_door_bottom",
+    "top": "alaindustrial:block/crystal_farm_door_top"
+  }
+}

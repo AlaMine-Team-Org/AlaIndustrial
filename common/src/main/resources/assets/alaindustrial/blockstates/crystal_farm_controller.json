@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,formed=false": {
+      "model": "alaindustrial:block/crystal_farm_controller"
+    },
+    "facing=north,formed=true": {
+      "model": "alaindustrial:block/crystal_farm_controller_formed"
+    },
+    "facing=east,formed=false": {
+      "model": "alaindustrial:block/crystal_farm_controller",
+      "y": 90
+    },
+    "facing=east,formed=true": {
+      "model": "alaindustrial:block/crystal_farm_controller_formed",
+      "y": 90
+    },
+    "facing=south,formed=false": {
+      "model": "alaindustrial:block/crystal_farm_controller",
+      "y": 180
+    },
+    "facing=south,formed=true": {
+      "model": "alaindustrial:block/crystal_farm_controller_formed",
+      "y": 180
+    },
+    "facing=west,formed=false": {
+      "model": "alaindustrial:block/crystal_farm_controller",
+      "y": 270
+    },
+    "facing=west,formed=true": {
+      "model": "alaindustrial:block/crystal_farm_controller_formed",
+      "y": 270
+    }
+  }
+}

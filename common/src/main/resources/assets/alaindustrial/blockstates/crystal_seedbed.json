@@ -1,0 +1,106 @@
+{
+  "variants": {
+    "charges=0,tended=false": {
+      "model": "alaindustrial:block/crystal_seedbed"
+    },
+    "charges=1,tended=false": {
+      "model": "alaindustrial:block/crystal_seedbed_live"
+    },
+    "charges=2,tended=false": {
+      "model": "alaindustrial:block/crystal_seedbed_live"
+    },
+    "charges=3,tended=false": {
+      "model": "alaindustrial:block/crystal_seedbed_live"
+    },
+    "charges=4,tended=false": {
+      "model": "alaindustrial:block/crystal_seedbed_live"
+    },
+    "charges=5,tended=false": {
+      "model": "alaindustrial:block/crystal_seedbed_live"
+    },
+    "charges=6,tended=false": {
+      "model": "alaindustrial:block/crystal_seedbed_live"
+    },
+    "charges=7,tended=false": {
+      "model": "alaindustrial:block/crystal_seedbed_live"
+    },
+    "charges=8,tended=false": {
+      "model": "alaindustrial:block/crystal_seedbed_live"
+    },
+    "charges=9,tended=false": {
+      "model": "alaindustrial:block/crystal_seedbed_live"
+    },
+    "charges=10,tended=false": {
+      "model": "alaindustrial:block/crystal_seedbed_live"
+    },
+    "charges=11,tended=false": {
+      "model": "alaindustrial:block/crystal_seedbed_live"
+    },
+    "charges=12,tended=false": {
+      "model": "alaindustrial:block/crystal_seedbed_live"
+    },
+    "charges=13,tended=false": {
+      "model": "alaindustrial:block/crystal_seedbed_live"
+    },
+    "charges=14,tended=false": {
+      "model": "alaindustrial:block/crystal_seedbed_live"
+    },
+    "charges=15,tended=false": {
+      "model": "alaindustrial:block/crystal_seedbed_live"
+    },
+    "charges=16,tended=false": {
+      "model": "alaindustrial:block/crystal_seedbed_live"
+    },
+    "charges=0,tended=true": {
+      "model": "alaindustrial:block/crystal_seedbed"
+    },
+    "charges=1,tended=true": {
+      "model": "alaindustrial:block/crystal_seedbed_live"
+    },
+    "charges=2,tended=true": {
+      "model": "alaindustrial:block/crystal_seedbed_live"
+    },
+    "charges=3,tended=true": {
+      "model": "alaindustrial:block/crystal_seedbed_live"
+    },
+    "charges=4,tended=true": {
+      "model": "alaindustrial:block/crystal_seedbed_live"
+    },
+    "charges=5,tended=true": {
+      "model": "alaindustrial:block/crystal_seedbed_live"
+    },
+    "charges=6,tended=true": {
+      "model": "alaindustrial:block/crystal_seedbed_live"
+    },
+    "charges=7,tended=true": {
+      "model": "alaindustrial:block/crystal_seedbed_live"
+    },
+    "charges=8,tended=true": {
+      "model": "alaindustrial:block/crystal_seedbed_live"
+    },
+    "charges=9,tended=true": {
+      "model": "alaindustrial:block/crystal_seedbed_live"
+    },
+    "charges=10,tended=true": {
+      "model": "alaindustrial:block/crystal_seedbed_live"
+    },
+    "charges=11,tended=true": {
+      "model": "alaindustrial:block/crystal_seedbed_live"
+    },
+    "charges=12,tended=true": {
+      "model": "alaindustrial:block/crystal_seedbed_live"
+    },
+    "charges=13,tended=true": {
+      "model": "alaindustrial:block/crystal_seedbed_live"
+    },
+    "charges=14,tended=true": {
+      "model": "alaindustrial:block/crystal_seedbed_live"
+    },
+    "charges=15,tended=true": {
+      "model": "alaindustrial:block/crystal_seedbed_live"
+    },
+    "charges=16,tended=true": {
+      "model": "alaindustrial:block/crystal_seedbed_live"
+    }
+  }
+}

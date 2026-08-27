@@ -274,6 +274,11 @@ pitest {
             // Minecraft-free and stays IN the run, covered by RoomScanTest; this half is covered by the
             // L2 room scenarios instead.
             'dev.alaindustrial.core.structure.RoomValidator',
+            // MOD-505: the greenhouse's world adapter, the reactor's RoomValidator one shelf over —
+            // it resolves BlockState/tags to ask "what shell block stands here". The geometry it
+            // delegates to is the same Minecraft-free RoomScan, which stays IN the run; this half is
+            // covered by the L2 room scenarios instead.
+            'dev.alaindustrial.core.structure.CrystalFarmRoom',
             // MOD-469: the two halves of the meltdown that touch the world. BareReactorScan reads the
             // chunks' block-entity maps to find racks and rival controllers; ReactorMeltdown reads
             // BlockState/FluidState to choose a victim and writes lava. The arithmetic they delegate to

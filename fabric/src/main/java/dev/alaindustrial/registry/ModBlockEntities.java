@@ -29,6 +29,7 @@ import dev.alaindustrial.block.entity.ReactorDoorBlockEntity;
 import dev.alaindustrial.block.entity.ReactorOutletBlockEntity;
 import dev.alaindustrial.block.entity.ReactorPortBlockEntity;
 import dev.alaindustrial.block.entity.SteamNozzleBlockEntity;
+import dev.alaindustrial.block.entity.CrystalFarmControllerBlockEntity;
 import dev.alaindustrial.block.entity.ReactorControllerBlockEntity;
 import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
 import dev.alaindustrial.block.entity.ElectricHeaterBlockEntity;
@@ -113,6 +114,8 @@ public final class ModBlockEntities {
 	public static BlockEntityType<ThermalCentrifugeBlockEntity> THERMAL_CENTRIFUGE;
 	/** MOD-468, stage 1 — the reactor room's brain. */
 	public static BlockEntityType<ReactorControllerBlockEntity> REACTOR_CONTROLLER;
+	/** MOD-505 — the crystal greenhouse's brain, and the only ticker a farm has. */
+	public static BlockEntityType<CrystalFarmControllerBlockEntity> CRYSTAL_FARM_CONTROLLER;
 	public static BlockEntityType<FuelRodAssemblyBlockEntity> FUEL_ROD_ASSEMBLY;
 	public static BlockEntityType<ReactorPortBlockEntity> REACTOR_PORT;
 	public static BlockEntityType<SteamNozzleBlockEntity> STEAM_NOZZLE;
@@ -176,6 +179,8 @@ public final class ModBlockEntities {
 		THERMAL_CENTRIFUGE = register(ContentManifest.blockEntity("thermal_centrifuge", ThermalCentrifugeBlockEntity.class));
 		REACTOR_CONTROLLER =
 				register(ContentManifest.blockEntity("reactor_controller", ReactorControllerBlockEntity.class));
+		CRYSTAL_FARM_CONTROLLER = register(
+				ContentManifest.blockEntity("crystal_farm_controller", CrystalFarmControllerBlockEntity.class));
 		FUEL_ROD_ASSEMBLY =
 				register(ContentManifest.blockEntity("fuel_rod_assembly", FuelRodAssemblyBlockEntity.class));
 		REACTOR_PORT =

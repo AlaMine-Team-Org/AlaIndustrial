@@ -29,6 +29,7 @@ import dev.alaindustrial.block.entity.ReactorDoorBlockEntity;
 import dev.alaindustrial.block.entity.ReactorOutletBlockEntity;
 import dev.alaindustrial.block.entity.ReactorPortBlockEntity;
 import dev.alaindustrial.block.entity.SteamNozzleBlockEntity;
+import dev.alaindustrial.block.entity.CrystalFarmControllerBlockEntity;
 import dev.alaindustrial.block.entity.ReactorControllerBlockEntity;
 import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
 import dev.alaindustrial.block.entity.ElectricHeaterBlockEntity;
@@ -148,6 +149,10 @@ public final class ModBlockEntitiesNeoForge {
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ReactorControllerBlockEntity>>
 			REACTOR_CONTROLLER =
 					register(ContentManifest.blockEntity("reactor_controller", ReactorControllerBlockEntity.class));
+	/** MOD-505 — the crystal greenhouse's brain, and the only ticker a farm has. */
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CrystalFarmControllerBlockEntity>>
+			CRYSTAL_FARM_CONTROLLER = register(
+					ContentManifest.blockEntity("crystal_farm_controller", CrystalFarmControllerBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FuelRodAssemblyBlockEntity>>
 			FUEL_ROD_ASSEMBLY =
 					register(ContentManifest.blockEntity("fuel_rod_assembly", FuelRodAssemblyBlockEntity.class));

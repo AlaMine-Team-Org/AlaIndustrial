@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "K": "alaindustrial:crystal_farm_floor",
+    "C": "alaindustrial:electronic_circuit",
+    "M": "alaindustrial:machine_casing",
+    "A": "minecraft:amethyst_shard"
+  },
+  "pattern": [
+    "KAK",
+    "CMC",
+    "KKK"
+  ],
+  "result": {
+    "id": "alaindustrial:crystal_farm_controller"
+  }
+}

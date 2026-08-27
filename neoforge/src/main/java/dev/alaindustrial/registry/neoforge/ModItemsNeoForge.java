@@ -536,6 +536,17 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("incubator", ModBlocksNeoForge.INCUBATOR);
 	public static final DeferredItem<BlockItem> TRELLIS_ITEM =
 			ITEMS.registerSimpleBlockItem("trellis", ModBlocksNeoForge.TRELLIS);
+	// MOD-505 — the greenhouse. The bud has no item: it is grown, never placed.
+	public static final DeferredItem<BlockItem> CRYSTAL_FARM_FLOOR_ITEM =
+			ITEMS.registerSimpleBlockItem("crystal_farm_floor", ModBlocksNeoForge.CRYSTAL_FARM_FLOOR);
+	public static final DeferredItem<BlockItem> CRYSTAL_FARM_GLASS_ITEM =
+			ITEMS.registerSimpleBlockItem("crystal_farm_glass", ModBlocksNeoForge.CRYSTAL_FARM_GLASS);
+	public static final DeferredItem<BlockItem> CRYSTAL_FARM_DOOR_ITEM =
+			ITEMS.registerSimpleBlockItem("crystal_farm_door", ModBlocksNeoForge.CRYSTAL_FARM_DOOR);
+	public static final DeferredItem<BlockItem> CRYSTAL_FARM_CONTROLLER_ITEM =
+			ITEMS.registerSimpleBlockItem("crystal_farm_controller", ModBlocksNeoForge.CRYSTAL_FARM_CONTROLLER);
+	public static final DeferredItem<BlockItem> CRYSTAL_SEEDBED_ITEM =
+			ITEMS.registerSimpleBlockItem("crystal_seedbed", ModBlocksNeoForge.CRYSTAL_SEEDBED);
 	public static final DeferredItem<BlockItem> GEOTHERMAL_GENERATOR_ITEM =
 			ITEMS.registerSimpleBlockItem("geothermal_generator", ModBlocksNeoForge.GEOTHERMAL_GENERATOR);
 	public static final DeferredItem<BlockItem> PUMP_ITEM =
@@ -862,6 +873,11 @@ public final class ModItemsNeoForge {
 		ModContent.SOUL_VESSEL = SOUL_VESSEL;
 		ModContent.INCUBATOR_ITEM = INCUBATOR_ITEM;
 		ModContent.TRELLIS_ITEM = TRELLIS_ITEM;
+		ModContent.CRYSTAL_FARM_FLOOR_ITEM = CRYSTAL_FARM_FLOOR_ITEM;
+		ModContent.CRYSTAL_FARM_GLASS_ITEM = CRYSTAL_FARM_GLASS_ITEM;
+		ModContent.CRYSTAL_FARM_DOOR_ITEM = CRYSTAL_FARM_DOOR_ITEM;
+		ModContent.CRYSTAL_FARM_CONTROLLER_ITEM = CRYSTAL_FARM_CONTROLLER_ITEM;
+		ModContent.CRYSTAL_SEEDBED_ITEM = CRYSTAL_SEEDBED_ITEM;
 		ModContent.MUTATION_CHIP_TRANSFORM = MUTATION_CHIP_TRANSFORM;
 		ModContent.MUTATION_CHIP_DUPLICATE = MUTATION_CHIP_DUPLICATE;
 		ModContent.MUTATION_CHIP_CREATE = MUTATION_CHIP_CREATE;
