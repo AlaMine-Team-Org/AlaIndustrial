@@ -408,7 +408,7 @@
 
 <p>混合模型：来自网络（LV）的 EU/FE <strong>加上</strong>作为辐照燃料的铀。铀不消失——变成 <code>depleted_uranium</code>，为未来核能阶段做准备。</p>
 
-<table><thead><tr><th>什么</th><th>数值</th></tr></thead><tbody><tr><td>EU/FE 缓存</td><td>8000——能完整容纳最贵的操作（）</td></tr><tr><td>最大输入</td><td>32 EU/FE/刻（LV）</td></tr><tr><td>消耗</td><td><strong>8 EU/FE/刻</strong> 工作时——是标准机器的四倍</td></tr><tr><td>燃料</td><td>1 个 <code>uranium_ingot</code> = 3 次尝试 → 灰渣槽中 1 个 <code>depleted_uranium</code></td></tr></tbody></table>
+<table><thead><tr><th>什么</th><th>数值</th></tr></thead><tbody><tr><td>EU/FE 缓存</td><td>8000——能完整容纳最贵的操作（<code>create</code>）</td></tr><tr><td>最大输入</td><td>32 EU/FE/刻（LV）</td></tr><tr><td>消耗</td><td><strong>8 EU/FE/刻</strong> 工作时——是标准机器的四倍</td></tr><tr><td>燃料</td><td>1 个 <code>uranium_ingot</code> = 3 次尝试 → 灰渣槽中 1 个 <code>depleted_uranium</code></td></tr></tbody></table>
 
 <p>燃料槽没有铀时操作不启动；EU/FE 仅在循环期间消耗。</p>
 
@@ -450,15 +450,15 @@
 
 <h2 id="配方">配方</h2>
 
-<p><strong>配方类型</strong>——三种独立类型，每种模式一个：<code>mutation_transform</code>、<code>mutation_duplicate</code>、 <code>mutation_create</code>。每个 JSON 描述一个输入 → 一个输出，带可选的 （覆盖）。配方中 不提及燃料——铀是机器的电荷，而非配料。</p>
+<p><strong>配方类型</strong>——三种独立类型，每种模式一个：<code>mutation_transform</code>、<code>mutation_duplicate</code>、 <code>mutation_create</code>。每个 JSON 描述一个输入 → 一个输出，带可选的 <code>chance</code>（覆盖）。配方中 不提及燃料——铀是机器的电荷，而非配料。</p>
 
 <h3 id="复制4-个价值等级">复制——4 个价值等级</h3>
 
 <p>每次尝试的价格固定（⅓ 锭 + 4000 EU/FE + 25 秒），因此平衡杠杆只有一个——<strong>成功率：物品越 贵，成功率越低。</strong></p>
 
-<table><thead><tr><th>等级</th><th>几率</th><th>物品</th></tr></thead><tbody><tr><td>宝石和贵重锭</td><td>0.45</td><td>、、<code>amethyst_shard</code>、<code>gold_ingot</code>、<code>silver_ingot</code>、<code>nickel_ingot</code></td></tr><tr><td>矿物和普通锭</td><td>0.55</td><td><code>coal</code>、、<code>lapis_lazuli</code>、、<code>glowstone_dust</code>、<code>iron_ingot</code>、<code>copper_ingot</code>、<code>tin_ingot</code>、<code>raw_rubber</code>、</td></tr><tr><td>稀有有机物</td><td>0.60</td><td><code>nether_wart</code>、<code>cocoa_beans</code>、<code>glow_berries</code>、<code>torchflower_seeds</code>、<code>pitcher_pod</code></td></tr><tr><td>基础农业</td><td>0.85</td><td><code>wheat_seeds</code>、<code>beetroot_seeds</code>、<code>melon_seeds</code>、<code>pumpkin_seeds</code>、、</td></tr></tbody></table>
+<table><thead><tr><th>等级</th><th>几率</th><th>物品</th></tr></thead><tbody><tr><td>宝石和贵重锭</td><td>0.45</td><td><code>diamond</code>、<code>emerald</code>、<code>amethyst_shard</code>、<code>gold_ingot</code>、<code>silver_ingot</code>、<code>nickel_ingot</code></td></tr><tr><td>矿物和普通锭</td><td>0.55</td><td><code>coal</code>、<code>redstone</code>、<code>lapis_lazuli</code>、<code>quartz</code>、<code>glowstone_dust</code>、<code>iron_ingot</code>、<code>copper_ingot</code>、<code>tin_ingot</code>、<code>raw_rubber</code>、<code>rubber</code></td></tr><tr><td>稀有有机物</td><td>0.60</td><td><code>nether_wart</code>、<code>cocoa_beans</code>、<code>glow_berries</code>、<code>torchflower_seeds</code>、<code>pitcher_pod</code></td></tr><tr><td>基础农业</td><td>0.85</td><td><code>wheat_seeds</code>、<code>beetroot_seeds</code>、<code>melon_seeds</code>、<code>pumpkin_seeds</code>、<code>carrot</code>、<code>potato</code></td></tr></tbody></table>
 
-<p><strong>锭——可以，加工件——不可以。</strong> 原版和模组的<strong>锭</strong>（<code>iron</code>、、<code>gold</code>、<code>tin</code>、 、）可复制——这是基础原料。所有<strong>加工品</strong>（粉、板、外壳、电路、芯片、电缆、 矿石和矿石块）不可复制——否则会贬低合成链。铀不可复制（无配方）。</p>
+<p><strong>锭——可以，加工件——不可以。</strong> 原版和模组的<strong>锭</strong>（<code>iron</code>、<code>copper</code>、<code>gold</code>、<code>tin</code>、 <code>silver</code>、<code>nickel</code>）可复制——这是基础原料。所有<strong>加工品</strong>（粉、板、外壳、电路、芯片、电缆、 矿石和矿石块）不可复制——否则会贬低合成链。铀不可复制（无配方）。</p>
 
 <p><strong>橡胶是约定的例外（）。</strong> 严格来说它是机器产品，按上述规则不应被复制。但石油是 <strong>有限</strong>资源：湖泊不补充，也没有办法把水变成石油，因此没有培育舱的话世界中的橡胶储量被 找到的油田数量硬性限制。复制提供了一条昂贵的可再生路径，而非免费：每次尝试花 4000 EU/FE 和 ⅓ 铀锭，几率 0.55，而从新鲜石油获得同样的橡胶只需 400 EU/FE。还有石油时——开采划算十倍； 培育舱在无油可采时才启用。</p>
 
@@ -466,23 +466,23 @@
 
 <p><strong>等价换等价。</strong> 按价值的升级（铁 → 金）被禁止。全部 27 个配方——几率 0.75、300 刻、 2400 EU/FE。对多物品家族（树苗、花、土壤）采用<strong>环</strong>：每件物品按圆环变为下一个，直到落出所需 的。</p>
 
-<table><thead><tr><th>类别</th><th>配方</th><th>环</th></tr></thead><tbody><tr><td>矿物</td><td>3</td><td><code>lapis_lazuli</code> ↔ 、 ↔ <code>glowstone_dust</code>、<code>coal</code> ↔ （全部 1:1）</td></tr><tr><td>树苗</td><td>8</td><td>橡树 → 白桦 → 云杉 → 丛林 → 金合欢 → 深色橡树 → 樱花 → 红树 → 橡树</td></tr><tr><td>花</td><td>8</td><td>蒲公英 → 虞美人 → 兰花 → 茜草花 → 蓝花美耳草 → 矢车菊 → 铃兰 → 雏菊 → 蒲公英</td></tr><tr><td>土壤</td><td>5</td><td>草方块 → 灰化土 → 菌丝 → 草方块；沙子 ↔ 红沙</td></tr></tbody></table>
+<table><thead><tr><th>类别</th><th>配方</th><th>环</th></tr></thead><tbody><tr><td>矿物</td><td>3</td><td><code>lapis_lazuli</code> ↔ <code>redstone</code>、<code>quartz</code> ↔ <code>glowstone_dust</code>、<code>coal</code> ↔ <code>charcoal</code>（全部 1:1）</td></tr><tr><td>树苗</td><td>8</td><td>橡树 → 白桦 → 云杉 → 丛林 → 金合欢 → 深色橡树 → 樱花 → 红树 → 橡树</td></tr><tr><td>花</td><td>8</td><td>蒲公英 → 虞美人 → 兰花 → 茜草花 → 蓝花美耳草 → 矢车菊 → 铃兰 → 雏菊 → 蒲公英</td></tr><tr><td>土壤</td><td>5</td><td>草方块 → 灰化土 → 菌丝 → 草方块；沙子 ↔ 红沙</td></tr></tbody></table>
 
 <h3 id="创造进化阶梯">创造——进化阶梯</h3>
 
 <p>普通物品<strong>进化</strong>为模组的独特材料，沿三级阶梯。阶级越高，几率越低、操作越贵。在 2–3 阶 失败<strong>完整返还输入</strong>（仅电荷和 EU/FE 燃尽）——否则没人会冒险上到第一阶以上。</p>
 
-<table><thead><tr><th>分支</th><th>阶 1</th><th>阶 2</th><th>阶 3</th></tr></thead><tbody><tr><td>钻石——能量密度</td><td>→ 辐照钻石</td><td>→ 钻石矩阵</td><td>→ 奇点核心</td></tr><tr><td>水晶——光学</td><td><code>amethyst_shard</code> → 共鸣碎片</td><td>→ 聚焦透镜</td><td>→ 棱镜核心</td></tr><tr><td>生物——农业</td><td><code>lapis_lazuli</code> → 诱变剂粉末</td><td>→ 活诱变剂</td><td>→ 基因矩阵</td></tr><tr><td>核——燃料</td><td><code>depleted_uranium</code> → 不稳定同位素</td><td>→ 浓缩核心</td><td>→ 同位素浓缩物</td></tr></tbody></table>
+<table><thead><tr><th>分支</th><th>阶 1</th><th>阶 2</th><th>阶 3</th></tr></thead><tbody><tr><td>钻石——能量密度</td><td><code>diamond</code> → 辐照钻石</td><td>→ 钻石矩阵</td><td>→ 奇点核心</td></tr><tr><td>水晶——光学</td><td><code>amethyst_shard</code> → 共鸣碎片</td><td>→ 聚焦透镜</td><td>→ 棱镜核心</td></tr><tr><td>生物——农业</td><td><code>lapis_lazuli</code> → 诱变剂粉末</td><td>→ 活诱变剂</td><td>→ 基因矩阵</td></tr><tr><td>核——燃料</td><td><code>depleted_uranium</code> → 不稳定同位素</td><td>→ 浓缩核心</td><td>→ 同位素浓缩物</td></tr></tbody></table>
 
 <table><thead><tr><th>阶</th><th>几率</th><th>刻</th><th>EU/FE</th><th>失败时</th></tr></thead><tbody><tr><td>1（原版 → 模组材料）</td><td>0.25</td><td>1000</td><td>8000</td><td>输入损失</td></tr><tr><td>2</td><td>0.15</td><td>1500</td><td>12000</td><td><strong>输入完整返还</strong></td></tr><tr><td>3</td><td>0.08</td><td>2000</td><td>16000</td><td><strong>输入完整返还</strong></td></tr></tbody></table>
 
 <p>核分支从培育舱自己的灰渣开始——耗尽的铀成为链的输入，而非垃圾。</p>
 
-<p>当前版本仅包含 4 个阶 1 配方（每分支一个）： → <code>irradiated_diamond</code>、 <code>amethyst_shard</code> → <code>resonant_shard</code>、<code>lapis_lazuli</code> → <code>mutagen_dust</code>、<code>depleted_uranium</code> → <code>unstable_isotope</code>。阶 2–3 和来自上层材料的升级芯片——下一个版本。</p>
+<p>当前版本仅包含 4 个阶 1 配方（每分支一个）：<code>diamond</code> → <code>irradiated_diamond</code>、 <code>amethyst_shard</code> → <code>resonant_shard</code>、<code>lapis_lazuli</code> → <code>mutagen_dust</code>、<code>depleted_uranium</code> → <code>unstable_isotope</code>。阶 2–3 和来自上层材料的升级芯片——下一个版本。</p>
 
 <h2 id="进阶">进阶</h2>
 
-<p>等级：LV。在最初的机器（macerator/extractor）之后建造，那时有稳定的铀矿脉和 EU/FE 网络。 引入 7 个新物品：<code>depleted_uranium</code>、<code>irradiated_diamond</code>、<code>mutagen_dust</code>、 <code>resonant_shard</code>、<code>unstable_isotope</code>、<code>irradiated_slag</code>（5 % 尝试的副产物——本版本无消费者， 为未来铺垫）+ 三种模式芯片。 <strong>材料上的「基因」等级</strong>给再次突变的成功率加成（+5/+10/+15 pp）——消费者将出现在未来的 农业/核能阶段。 突变成就：「有什么变了」（任何突变物品）、「无中生有」（ 模式材料）、「五十分之一」 （传说结果）。</p>
+<p>等级：LV。在最初的机器（macerator/extractor）之后建造，那时有稳定的铀矿脉和 EU/FE 网络。 引入 7 个新物品：<code>depleted_uranium</code>、<code>irradiated_diamond</code>、<code>mutagen_dust</code>、 <code>resonant_shard</code>、<code>unstable_isotope</code>、<code>irradiated_slag</code>（5 % 尝试的副产物——本版本无消费者， 为未来铺垫）+ 三种模式芯片。 <strong>材料上的「基因」等级</strong>给再次突变的成功率加成（+5/+10/+15 pp）——消费者将出现在未来的 农业/核能阶段。 突变成就：「有什么变了」（任何突变物品）、「无中生有」（<code>create</code> 模式材料）、「五十分之一」 （传说结果）。</p>
 
 <h2 id="相关内容">相关内容</h2>
 

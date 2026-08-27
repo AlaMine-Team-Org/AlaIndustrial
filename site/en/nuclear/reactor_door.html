@@ -440,17 +440,17 @@
 
 <h2 id="block-properties">Block properties</h2>
 
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>a leaf 3/16 of a block thick, full height and width of the cell; an open door has no shape at all</td></tr><tr><td>Size</td><td>1×2 (lower and upper halves are one object)</td></tr><tr><td>Occlusion</td><td>(not a full cube)</td></tr><tr><td>Hardness</td><td>5.0</td></tr><tr><td>Blast resistance</td><td>30.0</td></tr><tr><td>Tool</td><td>pickaxe (required for drops)</td></tr><tr><td>Sound</td><td>metal</td></tr><tr><td>Piston reaction</td><td>destroyed</td></tr><tr><td>Blockstates</td><td>, <code>half</code>, <code>open</code>,,, (unused)</td></tr></tbody></table>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>a leaf 3/16 of a block thick, full height and width of the cell; an open door has no shape at all</td></tr><tr><td>Size</td><td>1×2 (lower and upper halves are one object)</td></tr><tr><td>Occlusion</td><td>(not a full cube)</td></tr><tr><td>Hardness</td><td>5.0</td></tr><tr><td>Blast resistance</td><td>30.0</td></tr><tr><td>Tool</td><td>pickaxe (required for drops)</td></tr><tr><td>Sound</td><td>metal</td></tr><tr><td>Piston reaction</td><td>destroyed</td></tr><tr><td>Blockstates</td><td><code>facing</code>, <code>half</code>, <code>open</code>, <code>powered</code>, <code>formed</code>, <code>hinge</code> (unused)</td></tr></tbody></table>
 
 <p>The two halves live and die together: break either and the player gets <strong>one</strong> door while the other half disappears. Mobs may path through the door only while it is open.</p>
 
-<p>is a leftover from the swinging version. A sliding door has no hinges and the flag changes nothing about how it looks in any position. It was kept on purpose: dropping it from the set would change the blockstates of doors already built in other people's worlds, and that is too high a price for retiring one unused flag.</p>
+<p><code>hinge</code> is a leftover from the swinging version. A sliding door has no hinges and the flag changes nothing about how it looks in any position. It was kept on purpose: dropping it from the set would change the blockstates of doors already built in other people's worlds, and that is too high a price for retiring one unused flag.</p>
 
 <p>The leaf is drawn by a block renderer rather than by a baked model — a model that only has two poses cannot show the movement between them. The cost: the door has no ambient occlusion, and no crack overlay is drawn while it is being mined.</p>
 
-<p>The door carries like the rest of the shell — the controller writes it into every cell of a finished room (see <a href="reactor_casing.html">"The seamless look"</a>). Unlike casing and glass, it does not change how the door looks: the leaf has no seamless texture of its own. The property exists for uniformity — neither the scan nor the flag sweep should have to know which shell block happens to have a cosmetic variant.</p>
+<p>The door carries <code>formed</code> like the rest of the shell — the controller writes it into every cell of a finished room (see <a href="reactor_casing.html">"The seamless look"</a>). Unlike casing and glass, it does not change how the door looks: the leaf has no seamless texture of its own. The property exists for uniformity — neither the scan nor the flag sweep should have to know which shell block happens to have a cosmetic variant.</p>
 
-<p>is stored for exactly one purpose — telling a rising edge from "the signal is still on". Without it, every neighbour update with the lever on would read as a fresh pulse, and the door would re-open the instant the player watched it close.</p>
+<p><code>powered</code> is stored for exactly one purpose — telling a rising edge from "the signal is still on". Without it, every neighbour update with the lever on would read as a fresh pulse, and the door would re-open the instant the player watched it close.</p>
 
 <h2 id="sound">Sound</h2>
 

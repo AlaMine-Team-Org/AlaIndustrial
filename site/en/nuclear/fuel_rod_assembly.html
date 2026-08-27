@@ -440,7 +440,7 @@
 
 <p>The blockstate carries <strong>two</strong> counters, not one:</p>
 
-<table><thead><tr><th>Property</th><th>What it means</th><th>How it is drawn</th></tr></thead><tbody><tr><td><code>rods</code> = 0…4</td><td>how many rods stand in it <strong>at all</strong>, casings included</td><td>occupied slots</td></tr><tr><td>= 0…4</td><td>how many of those <strong>carry uranium</strong></td><td>lit rods; the rest are dark casings</td></tr></tbody></table>
+<table><thead><tr><th>Property</th><th>What it means</th><th>How it is drawn</th></tr></thead><tbody><tr><td><code>rods</code> = 0…4</td><td>how many rods stand in it <strong>at all</strong>, casings included</td><td>occupied slots</td></tr><tr><td><code>fuelled</code> = 0…4</td><td>how many of those <strong>carry uranium</strong></td><td>lit rods; the rest are dark casings</td></tr></tbody></table>
 
 <p>Two properties are needed not because it looks nicer. With a single counter that counted fuel alone, a worked-out column reported zero — and the casings in it became not only invisible but <strong>unreachable</strong>: the interaction code read the blockstate to decide whether there was anything to take out. Such a rack could be neither emptied nor refilled, only broken.</p>
 
@@ -490,7 +490,7 @@
 
 <h3 id="the-water-level-is-visible-from-outside">The water level is visible from outside</h3>
 
-<p>The blockstate carries = 0…4 — quarters of the tank, a separate part of the multipart model. The rounding rule is special: <strong>anything above zero shows at least one quarter.</strong> A column with a mouthful of water left must not look the same as a dry one — the reactions those two states call for are completely different.</p>
+<p>The blockstate carries <code>water</code> = 0…4 — quarters of the tank, a separate part of the multipart model. The rounding rule is special: <strong>anything above zero shows at least one quarter.</strong> A column with a mouthful of water left must not look the same as a dry one — the reactions those two states call for are completely different.</p>
 
 <h2 id="it-does-not-tick">It does not tick</h2>
 
@@ -510,7 +510,7 @@
 
 <h2 id="block-properties">Block properties</h2>
 
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>a rack 12x14x12 (lone), 12x16x12 (joined above) — <strong>not</strong> a full cube</td></tr><tr><td>Occlusion</td><td>— the casing is transparent and the rods inside have to be drawn</td></tr><tr><td>Hardness</td><td>3.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Sound</td><td>metal</td></tr><tr><td>Blockstates</td><td><code>rods</code> = 0…4, = 0…4, = 0…4, <code>up</code>, <code>down</code></td></tr><tr><td>BlockEntity</td><td>yes, <strong>with no tick of its own</strong></td></tr><tr><td>NBT</td><td>the rack contents as items, <code>CarriedEu</code> (draw not yet charged), <code>Water</code>, <code>Steam</code> (tank contents, mB)</td></tr></tbody></table>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>a rack 12x14x12 (lone), 12x16x12 (joined above) — <strong>not</strong> a full cube</td></tr><tr><td>Occlusion</td><td>— the casing is transparent and the rods inside have to be drawn</td></tr><tr><td>Hardness</td><td>3.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Sound</td><td>metal</td></tr><tr><td>Blockstates</td><td><code>rods</code> = 0…4, <code>fuelled</code> = 0…4, <code>water</code> = 0…4, <code>up</code>, <code>down</code></td></tr><tr><td>BlockEntity</td><td>yes, <strong>with no tick of its own</strong></td></tr><tr><td>NBT</td><td>the rack contents as items, <code>CarriedEu</code> (draw not yet charged), <code>Water</code>, <code>Steam</code> (tank contents, mB)</td></tr></tbody></table>
 
 <p>Rod durability lives <strong>on the items themselves</strong>, so the rack's NBT has no field for it — and there can be no disagreement between "how much is left" and "what is standing there". Only <strong>amounts</strong> are saved from the tanks: each tank holds exactly one fluid by construction, and a "which one" field could only ever disagree with the code.</p>
 

@@ -438,9 +438,9 @@
 
 <p>它能熔炼的内容：</p>
 
-<table><thead><tr><th>输入</th><th>输出</th><th>备注</th></tr></thead><tbody><tr><td>金属粉（铜、铁、金、镍、银、锡、铀、<strong>钯</strong>）</td><td>锭</td><td>模组配方，闭合翻倍循环</td></tr><tr><td>粗矿（raw_nickel、raw_silver、raw_tin、raw_uranium、<strong>raw_palladium</strong>）</td><td>锭</td><td>模组配方</td></tr><tr><td>铁锭</td><td>回火铁</td><td>模组配方，200 EU/FE</td></tr><tr><td>原版熔炉能熔炼的其他一切（矿石、食物、沙子 → 玻璃、圆石 → 石头、raw_copper/gold/iron → 锭……）</td><td>与原版一致</td><td>原版熔炼，约 5 秒</td></tr></tbody></table>
+<table><thead><tr><th>输入</th><th>输出</th><th>备注</th></tr></thead><tbody><tr><td>金属粉（铜、铁、金、镍、银、锡）</td><td>锭</td><td>模组配方，闭合翻倍循环；在 <a href="iron_furnace.html">铁熔炉</a>/原版熔炉中也能同样熔炼</td></tr><tr><td>金属粉（铀、<strong>钯</strong>）</td><td>锭</td><td>模组配方——仅此一处，没有原版/铁熔炉通路</td></tr><tr><td>粗矿（raw_nickel、raw_silver、raw_tin、raw_uranium、<strong>raw_palladium</strong>）</td><td>锭</td><td>模组配方</td></tr><tr><td>铁锭</td><td>回火铁</td><td>模组配方，200 EU/FE</td></tr><tr><td>原版熔炉能熔炼的其他一切（矿石、食物、沙子 → 玻璃、圆石 → 石头、raw_copper/gold/iron → 锭……）</td><td>与原版一致</td><td>原版熔炼，约 5 秒</td></tr></tbody></table>
 
-<p>模组配方（共 14 个，每个 200 EU/FE）只覆盖 <strong>原版熔炉做不到的事</strong>：模组粉 → 锭、特定的模组矿石（镍/银/锡/铀/钯）以及铁的回火处理。钯粉只能在这里熔炼——和其他粉不同，它连原版配方通路都没有（参见 <a href="iron_furnace.html">iron_furnace.md</a>）。所有与原版熔炼数值完全相同的内容（圆石 → 石头、沙子 → 玻璃、raw_copper/gold/iron → 锭）都走统一的原版路径，不重复配方。非金属粉（煤炭、钻石、绿宝石、青金石）在此 <strong>不</strong> 会被熔炼，它们由 <a href="compressor.html">压缩机</a> 处理。</p>
+<p>模组配方（共 14 个，每个 200 EU/FE）是模组粉 → 锭（8 种金属）、特定的模组矿石（镍/银/锡/铀/钯）以及铁的回火处理。八种粉里的 <strong>六种</strong>——铜、铁、金、镍、银、锡——还并行存在一个输入输出相同的普通熔炉配方。这并不违反下文的规则，而是为了让 <a href="iron_furnace.html">铁熔炉</a> 和普通的原版熔炉也能熔炼这种粉，而不只是电力熔炉。电力熔炉本身始终优先解析 <strong>自己的</strong> 模组配方（见上文「加工」），所以不会出现一份粉出两个锭的情况——但在 JEI/REI 分类里，这种熔炼因为这个重复配方目前会显示两次（这是配方查看器的一个已知小问题，不影响游戏本身）。铀粉和钯粉 <strong>只能</strong> 在这里熔炼——和其余六种不同，它们没有这样的并行配方：这是刻意的设计，参见 <a href="iron_furnace.html">iron_furnace.md</a> 和 <a href="../components/material_forms.html">material_forms.md</a>。抛开这一对金属重复配方不谈——所有与原版熔炼数值完全相同、且与模组无关的内容（圆石 → 石头、沙子 → 玻璃、raw_copper/gold/iron → 锭）都走统一的原版路径，完全没有重复配方。非金属粉（煤炭、钻石、绿宝石、青金石）在此 <strong>不</strong> 会被熔炼，它们由 <a href="compressor.html">压缩机</a> 处理。</p>
 
 <h3 id="在配方查看器中">在配方查看器中</h3>
 
@@ -448,7 +448,9 @@
 
 <p>原版配方作为 <strong>镜像</strong> 进入本类别：它们仅为展示而构建，不会被加入游戏配方注册表，机器实际工作时执行的仍是鲜活的原版配方。因此界面中的数值与实际行为绝不会出现分歧。</p>
 
-<p>每次熔炼 <strong>仅显示一次</strong>。对于原版熔炉已能用相同输入输出完成的内容（圆石 → 石头、沙子 → 玻璃、raw_copper/gold/iron → 锭），模组不会用自己的配方重复一遍：这些熔炼只存在于原版熔炼中，并以唯一的镜像形式进入本类别。Mekanism Energized Smelter 和 Modern Industrialization 也都采用这种做法，为那些数值上与原版完全相同的熔炼保留单一事实来源（包括 200 EU/FE · 5 秒的定价，镜像与机器取自同一项设置）。在本类别的原版物品集中约有 100 个配方； 之后，生橡胶不再纳入 smelting。</p>
+<p>按设计，每次熔炼 <strong>仅显示一次</strong>：对于原版熔炉已能用相同输入输出完成的内容（圆石 → 石头、沙子 → 玻璃、raw_copper/gold/iron → 锭），模组不会用自己的配方重复一遍——这些熔炼只存在于原版熔炼中，并以唯一的镜像形式进入本类别。Mekanism Energized Smelter 和 Modern Industrialization 也都采用这种做法，为那些数值上与原版完全相同的熔炼保留单一事实来源（包括 200 EU/FE · 5 秒的定价，镜像与机器取自同一项设置）。</p>
+
+<p><strong>已知例外：</strong> 对铜、金、铁、镍、银、锡这六种金属来说，这条规则目前被打破了——它们的重复配方是与模组配方分开镜像的，所以「粉 → 锭」这次熔炼会显示两次（见上文）。这不影响游戏玩法，只影响查看器里显示的内容。在本类别的原版物品集中约有 100 个配方； 之后，生橡胶不再纳入 smelting。</p>
 
 <h2 id="进阶">进阶</h2>
 

@@ -410,7 +410,7 @@
 
 <h2 id="where-to-put-it">Where to put it</h2>
 
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Part of the shell</td><td><strong>no</strong></td></tr><tr><td>Occupies a shell cell</td><td>no — it hangs on the face of a block that is already there</td></tr><tr><td>If placed where a shell block belongs</td><td>that cell becomes a breach: the scanner knows six shell blocks, and a button is not one of them</td></tr><tr><td>What it attaches to</td><td>wall, floor or ceiling (<code>facewall</code> / /), like a vanilla one</td></tr></tbody></table>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Part of the shell</td><td><strong>no</strong></td></tr><tr><td>Occupies a shell cell</td><td>no — it hangs on the face of a block that is already there</td></tr><tr><td>If placed where a shell block belongs</td><td>that cell becomes a breach: the scanner knows six shell blocks, and a button is not one of them</td></tr><tr><td>What it attaches to</td><td>wall, floor or ceiling (<code>facewall</code> / <code>floor</code> / <code>ceiling</code>), like a vanilla one</td></tr></tbody></table>
 
 <p>That is the key distinction of the whole set: six blocks make up the shell, and the button <strong>hangs</strong> on it. Inside the room it goes on the casing next to the doorway; outside, wherever is convenient. It spends no cell, so the same wall can be both sealed and fitted with a button.</p>
 
@@ -424,7 +424,7 @@
 
 <h2 id="block-properties">Block properties</h2>
 
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>the vanilla button overlay on a block face; it sinks in when pressed</td></tr><tr><td>Collision</td><td><strong>none</strong> — you walk through it exactly as through a vanilla one</td></tr><tr><td>Hardness</td><td>0.5</td></tr><tr><td>Blast resistance</td><td>0.5</td></tr><tr><td>Tool</td><td>none required (it drops however it is broken)</td></tr><tr><td>Sound</td><td>metal</td></tr><tr><td>Piston reaction</td><td>destroyed</td></tr><tr><td>Blockstates</td><td><code>face</code>,,</td></tr><tr><td>blockstate</td><td><strong>none</strong> — the button is not shell, and the flag sweep does not touch it</td></tr></tbody></table>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>the vanilla button overlay on a block face; it sinks in when pressed</td></tr><tr><td>Collision</td><td><strong>none</strong> — you walk through it exactly as through a vanilla one</td></tr><tr><td>Hardness</td><td>0.5</td></tr><tr><td>Blast resistance</td><td>0.5</td></tr><tr><td>Tool</td><td>none required (it drops however it is broken)</td></tr><tr><td>Sound</td><td>metal</td></tr><tr><td>Piston reaction</td><td>destroyed</td></tr><tr><td>Blockstates</td><td><code>face</code>, <code>facing</code>, <code>powered</code></td></tr><tr><td><code>formed</code> blockstate</td><td><strong>none</strong> — the button is not shell, and the flag sweep does not touch it</td></tr></tbody></table>
 
 <p>Hardness and blast resistance are deliberately <strong>not</strong> the shell's 5.0 / 30.0 even though the material is the same. The button must not outlive the explosion that took the wall: a surviving button on the site of a blown-out wall is debris pretending to be a working control. Let it go with whatever it was attached to.</p>
 

@@ -425,7 +425,7 @@
 
 <h2 id="the-room-stays-sealed">The room stays sealed</h2>
 
-<p>The scanner sees an inlet as casing — it is a shell block, after all. Everything the wall around it has, it has too: the and <code>edge</code> states, the seamless art of a finished room, shared-face culling. The one thing it does not do is count as glass; it is outside the limit.</p>
+<p>The scanner sees an inlet as casing — it is a shell block, after all. Everything the wall around it has, it has too: the <code>formed</code> and <code>edge</code> states, the seamless art of a finished room, shared-face culling. The one thing it does not do is count as glass; it is outside the limit.</p>
 
 <p>So <strong>any number of inlets may be placed</strong>, and the shell loses nothing by it — neither toughness nor scanner standing. Only the price limits you.</p>
 
@@ -439,7 +439,7 @@
 
 <h2 id="block-properties">Block properties</h2>
 
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full cube 16³ (occluder)</td></tr><tr><td>Hardness</td><td>5.0</td></tr><tr><td>Blast resistance</td><td>30.0</td></tr><tr><td>Tool</td><td>pickaxe (required for drops)</td></tr><tr><td>Sound</td><td>metal</td></tr><tr><td>Blockstates</td><td>, <code>edge</code> — cosmetic: a face of a formed shell loses its bezel, an edge keeps it</td></tr><tr><td>Block entity</td><td>yes — a tank and nothing else, no tick</td></tr><tr><td>NBT</td><td><code>PortMb</code> (how much is held), <code>PortFluid</code> (which fluid)</td></tr></tbody></table>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full cube 16³ (occluder)</td></tr><tr><td>Hardness</td><td>5.0</td></tr><tr><td>Blast resistance</td><td>30.0</td></tr><tr><td>Tool</td><td>pickaxe (required for drops)</td></tr><tr><td>Sound</td><td>metal</td></tr><tr><td>Blockstates</td><td><code>formed</code>, <code>edge</code> — cosmetic: a face of a formed shell loses its bezel, an edge keeps it</td></tr><tr><td>Block entity</td><td>yes — a tank and nothing else, no tick</td></tr><tr><td>NBT</td><td><code>PortMb</code> (how much is held), <code>PortFluid</code> (which fluid)</td></tr></tbody></table>
 
 <p>The numbers match the rest of the shell: the inlet must not be the spot where the shell is easiest to open.</p>
 

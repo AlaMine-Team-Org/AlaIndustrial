@@ -420,9 +420,9 @@
 
 <h2 id="the-seamless-look">The seamless look</h2>
 
-<p>Casing, glass, reactor inlet, lamp, door and controller all carry a blockstate, and the first four carry an <code>edge</code> one as well. While the room is unfinished they are drawn with a bright bezel along the edge, so every individual block is visible. The moment the <a href="reactor_controller.html">controller</a> accepts the shell, it repaints <strong>all</strong> of it, and the wall starts reading as one surface rather than a stack of crates.</p>
+<p>Casing, glass, reactor inlet, lamp, door and controller all carry a <code>formed</code> blockstate, and the first four carry an <code>edge</code> one as well. While the room is unfinished they are drawn with a bright bezel along the edge, so every individual block is visible. The moment the <a href="reactor_controller.html">controller</a> accepts the shell, it repaints <strong>all</strong> of it, and the wall starts reading as one surface rather than a stack of crates.</p>
 
-<table><thead><tr><th>Cell of a formed shell</th><th></th><th><code>edge</code></th><th>How it looks</th></tr></thead><tbody><tr><td>A face (one coordinate outside the box)</td><td>yes</td><td>no</td><td>bezel-less — a continuous panel</td></tr><tr><td>An edge or corner (two or three outside)</td><td>yes</td><td><strong>yes</strong></td><td>the bezel stays</td></tr><tr><td>Any cell of an unformed shell</td><td>no</td><td>no</td><td>bezel on every block</td></tr></tbody></table>
+<table><thead><tr><th>Cell of a formed shell</th><th><code>formed</code></th><th><code>edge</code></th><th>How it looks</th></tr></thead><tbody><tr><td>A face (one coordinate outside the box)</td><td>yes</td><td>no</td><td>bezel-less — a continuous panel</td></tr><tr><td>An edge or corner (two or three outside)</td><td>yes</td><td><strong>yes</strong></td><td>the bezel stays</td></tr><tr><td>Any cell of an unformed shell</td><td>no</td><td>no</td><td>bezel on every block</td></tr></tbody></table>
 
 <p>Edges keeping their bezel are not an exception but the other half of the idea. A 14×14 wall without a single seam turns into a featureless slab; the bezel along the edges draws the <strong>outline</strong> of the build, and the room reads as one object with defined corners rather than as a blur.</p>
 
@@ -432,7 +432,7 @@
 
 <p><strong>Why the box is remembered.</strong> A failed scan measures nothing, so a sweep driven by the current scan result can only ever switch the flag ON: punch a hole in a finished room and it stays seamless and lit. That is exactly what the first play session found. The controller keeps the last box it accepted (and writes it to NBT so it survives a chunk unload) and, when a scan fails, clears precisely that box.</p>
 
-<p>The point is wider than cosmetics: is also an outdoor indicator. A finished room is visible from across the base without opening a screen, and on the same flag the <a href="reactor_lamp.html">lamp</a> turns the light on inside. The door carries the flag too (the controller writes it into every shell cell) but its model does not change with it, and neither the door nor the controller has <code>edge</code> at all the seamless effect covers four blocks: casing, glass, reactor inlet and lamp.</p>
+<p>The point is wider than cosmetics: <code>formed</code> is also an outdoor indicator. A finished room is visible from across the base without opening a screen, and on the same flag the <a href="reactor_lamp.html">lamp</a> turns the light on inside. The door carries the flag too (the controller writes it into every shell cell) but its model does not change with it, and neither the door nor the controller has <code>edge</code> at all the seamless effect covers four blocks: casing, glass, reactor inlet and lamp.</p>
 
 <h2 id="energy">Energy</h2>
 
@@ -444,7 +444,7 @@
 
 <p>A full cube and an occluder: a wall hundreds of blocks wide must not make the client draw its inner faces.</p>
 
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full cube 16³ (occluder)</td></tr><tr><td>Hardness</td><td>5.0</td></tr><tr><td>Blast resistance</td><td>30.0</td></tr><tr><td>Tool</td><td>pickaxe (required for drops)</td></tr><tr><td>Sound</td><td>metal</td></tr><tr><td>Blockstates</td><td>, <code>edge</code> — both cosmetic, see "The seamless look"</td></tr></tbody></table>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full cube 16³ (occluder)</td></tr><tr><td>Hardness</td><td>5.0</td></tr><tr><td>Blast resistance</td><td>30.0</td></tr><tr><td>Tool</td><td>pickaxe (required for drops)</td></tr><tr><td>Sound</td><td>metal</td></tr><tr><td>Blockstates</td><td><code>formed</code>, <code>edge</code> — both cosmetic, see "The seamless look"</td></tr></tbody></table>
 
 <p>The blast resistance of 30.0 is deliberately far above the machine family's 6.0. The room is the thing standing between a meltdown and the rest of the world; if a creeper under the wall could open the shell, the whole sealing mechanic would rest on luck.</p>
 

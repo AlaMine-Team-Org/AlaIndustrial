@@ -420,7 +420,7 @@
 
 <p>The pump doesn't use the recipe system: it doesn't process items, it moves fluid. Each working tick runs three steps.</p>
 
-<table><thead><tr><th>Step</th><th>Action</th><th>Condition</th></tr></thead><tbody><tr><td>0. Buckets</td><td>empty a fluid bucket from the input slot into the tank</td><td>the input slot has a lava/water bucket, the tank can accept, the output slot is free for the empty bucket</td></tr><tr><td>1. Intake</td><td>take 1 bucket of fluid into the tank</td><td><code>energy.amount ≥ AND the tank has room for a bucket AND </code>scanCooldown ≤ 0`</td></tr><tr><td>2. Push</td><td>push fluid from the tank into neighbouring receivers</td><td>the tank has fluid</td></tr></tbody></table>
+<table><thead><tr><th>Step</th><th>Action</th><th>Condition</th></tr></thead><tbody><tr><td>0. Buckets</td><td>empty a fluid bucket from the input slot into the tank</td><td>the input slot has a lava/water bucket, the tank can accept, the output slot is free for the empty bucket</td></tr><tr><td>1. Intake</td><td>take 1 bucket of fluid into the tank</td><td><code>energy.amount ≥ </code> AND the tank has room for a bucket AND <code>scanCooldown ≤ 0</code></td></tr><tr><td>2. Push</td><td>push fluid from the tank into neighbouring receivers</td><td>the tank has fluid</td></tr></tbody></table>
 
 <p><strong>Intake.</strong> The pump looks for fluid starting at the block directly in front of it (the face it points at the player). If that block is lava/water itself, or a connected flowing puddle of it, the pump follows the flow to the nearest source. If there's no fluid in the world there, it tries to draw a bucket from a neighbouring tank. Limits on the world source search:</p>
 
@@ -448,7 +448,7 @@
 
 <h2 id="internal-tank">Internal tank</h2>
 
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Implementation</td><td>neutral (in, works on Fabric and NeoForge)</td></tr><tr><td>Capacity</td><td><strong>10 buckets</strong> (10 buckets = 10000 mB)</td></tr><tr><td>Accepts</td><td>any non-empty fluid, not just lava/water (→)</td></tr><tr><td>Mixing</td><td><strong>forbidden</strong> — the tank is single-variant: while it holds one fluid, the other is rejected (guaranteed by the core's <code>.insert</code>)</td></tr><tr><td>Extraction</td><td>allowed from any side (→ true)</td></tr><tr><td>Access</td><td>per face; pipes and tanks of other mods connect to it on both loaders</td></tr></tbody></table>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Implementation</td><td>neutral (in <code>common</code>, works on Fabric and NeoForge)</td></tr><tr><td>Capacity</td><td><strong>10 buckets</strong> (10 buckets = 10000 mB)</td></tr><tr><td>Accepts</td><td>any non-empty fluid, not just lava/water (→)</td></tr><tr><td>Mixing</td><td><strong>forbidden</strong> — the tank is single-variant: while it holds one fluid, the other is rejected (guaranteed by the core's <code>.insert</code>)</td></tr><tr><td>Extraction</td><td>allowed from any side (→ true)</td></tr><tr><td>Access</td><td>per face; pipes and tanks of other mods connect to it on both loaders</td></tr></tbody></table>
 
 <p><strong>Single-variant guarantee.</strong> The tank holds at most one fluid at a time. If empty, it accepts any from the allowlist; if it already holds lava, water is rejected (and vice versa) until it empties. Mixing fluids by accident is impossible — it's built into the tank itself.</p>
 

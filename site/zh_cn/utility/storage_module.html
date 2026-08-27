@@ -460,7 +460,7 @@
 
 <p>破坏紧邻仓库的<a href="../machines/assembler.html">组装机</a>本身只会把其自身内容——蓝图队列和输出区—— 返还给玩家，而不动模块（<code>TC-ASM-026</code> 按精确数字计算掉落物，因此损失和双重掉落都可见）。 拆解仓库时的容量计数器会降到零，不会变成负数（<code>TC-STOR-010</code>——[Functional Storage] (https://github.com/AllTheMods/ATM-10/issues/2271) 的负计数器以崩溃告终）。</p>
 
-<p><strong>管道的填充和抽取由转移加固，而非端口的存在。</strong> <code>TC-STOR-012</code> 让十六个锭在 箱子 → 管道 → 仓库之间往返，并单独验证「干跑」（）不移动任何东西，且承诺的数量恰好等于实际 操作随后转移的数量——这两个数字的差异就是经典的复制（<a href="https://github.com/McJtyMods/XNet/issues/173">XNet #173</a>）。</p>
+<p><strong>管道的填充和抽取由转移加固，而非端口的存在。</strong> <code>TC-STOR-012</code> 让十六个锭在 箱子 → 管道 → 仓库之间往返，并单独验证「干跑」（<code>simulate</code>）不移动任何东西，且承诺的数量恰好等于实际 操作随后转移的数量——这两个数字的差异就是经典的复制（<a href="https://github.com/McJtyMods/XNet/issues/173">XNet #173</a>）。</p>
 
 <p><strong>内容经受得住重启。</strong> <code>TC-STOR-013</code> 让模块经过 NBT（与区块保存和加载相同的路径），并检查 槽位不会错位：两个占用槽位之间故意留出的空槽必须保持为空。</p>
 

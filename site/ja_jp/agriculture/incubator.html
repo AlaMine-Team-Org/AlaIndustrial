@@ -408,7 +408,7 @@
 
 <p>ハイブリッドモデル：ネットワークからの EU/FE（LV）<strong>プラス</strong> 燃料としてのウラン。ウランは消えず — <code>depleted_uranium</code> に変わり、将来の核フェーズ用の素材になります。</p>
 
-<table><thead><tr><th>何</th><th>値</th></tr></thead><tbody><tr><td>EU/FE バッファ</td><td>8000 — 最も高価な操作（）を完全に保持</td></tr><tr><td>最大入力</td><td>32 EU/FE/ティック（LV）</td></tr><tr><td>消費</td><td>稼働中 <strong>8 EU/FE/ティック</strong> — 機械標準の 4 倍</td></tr><tr><td>燃料</td><td>1 <code>uranium_ingot</code> = 3 試行 → 1 <code>depleted_uranium</code> を灰箱へ</td></tr></tbody></table>
+<table><thead><tr><th>何</th><th>値</th></tr></thead><tbody><tr><td>EU/FE バッファ</td><td>8000 — 最も高価な操作（<code>create</code>）を完全に保持</td></tr><tr><td>最大入力</td><td>32 EU/FE/ティック（LV）</td></tr><tr><td>消費</td><td>稼働中 <strong>8 EU/FE/ティック</strong> — 機械標準の 4 倍</td></tr><tr><td>燃料</td><td>1 <code>uranium_ingot</code> = 3 試行 → 1 <code>depleted_uranium</code> を灰箱へ</td></tr></tbody></table>
 
 <p>燃料スロットにウランがなければ操作は開始しません。EU/FE はサイクル中のみ消費されます。</p>
 
@@ -450,15 +450,15 @@
 
 <h2 id="レシピ">レシピ</h2>
 
-<p><strong>レシピタイプ</strong> — 3 つの別々のタイプで、モードごとに 1 つ：<code>mutation_transform</code>、<code>mutation_duplicate</code>、 <code>mutation_create</code>。各 JSON は 1 入力 → 1 出力を、任意の （オーバーライド）付きで記述します。 レシピに燃料は言及されません — ウランは機械のチャージであって、材料ではありません。</p>
+<p><strong>レシピタイプ</strong> — 3 つの別々のタイプで、モードごとに 1 つ：<code>mutation_transform</code>、<code>mutation_duplicate</code>、 <code>mutation_create</code>。各 JSON は 1 入力 → 1 出力を、任意の <code>chance</code>（オーバーライド）付きで記述します。 レシピに燃料は言及されません — ウランは機械のチャージであって、材料ではありません。</p>
 
 <h3 id="複製-4-つの価値クラス">複製 — 4 つの価値クラス</h3>
 
 <p>試行コストは固定（⅓ インゴット + 4000 EU/FE + 25 秒）なので、バランスのレバーは 1 つ — <strong>成功率： 価値あるアイテムほど確率が低い。</strong></p>
 
-<table><thead><tr><th>クラス</th><th>確率</th><th>アイテム</th></tr></thead><tbody><tr><td>宝石と貴金属インゴット</td><td>0.45</td><td>、、<code>amethyst_shard</code>、<code>gold_ingot</code>、<code>silver_ingot</code>、<code>nickel_ingot</code></td></tr><tr><td>鉱物と並インゴット</td><td>0.55</td><td><code>coal</code>、、<code>lapis_lazuli</code>、、<code>glowstone_dust</code>、<code>iron_ingot</code>、<code>copper_ingot</code>、<code>tin_ingot</code>、<code>raw_rubber</code>、</td></tr><tr><td>レアな有機物</td><td>0.60</td><td><code>nether_wart</code>、<code>cocoa_beans</code>、<code>glow_berries</code>、<code>torchflower_seeds</code>、<code>pitcher_pod</code></td></tr><tr><td>基本農産物</td><td>0.85</td><td><code>wheat_seeds</code>、<code>beetroot_seeds</code>、<code>melon_seeds</code>、<code>pumpkin_seeds</code>、、</td></tr></tbody></table>
+<table><thead><tr><th>クラス</th><th>確率</th><th>アイテム</th></tr></thead><tbody><tr><td>宝石と貴金属インゴット</td><td>0.45</td><td><code>diamond</code>、<code>emerald</code>、<code>amethyst_shard</code>、<code>gold_ingot</code>、<code>silver_ingot</code>、<code>nickel_ingot</code></td></tr><tr><td>鉱物と並インゴット</td><td>0.55</td><td><code>coal</code>、<code>redstone</code>、<code>lapis_lazuli</code>、<code>quartz</code>、<code>glowstone_dust</code>、<code>iron_ingot</code>、<code>copper_ingot</code>、<code>tin_ingot</code>、<code>raw_rubber</code>、<code>rubber</code></td></tr><tr><td>レアな有機物</td><td>0.60</td><td><code>nether_wart</code>、<code>cocoa_beans</code>、<code>glow_berries</code>、<code>torchflower_seeds</code>、<code>pitcher_pod</code></td></tr><tr><td>基本農産物</td><td>0.85</td><td><code>wheat_seeds</code>、<code>beetroot_seeds</code>、<code>melon_seeds</code>、<code>pumpkin_seeds</code>、<code>carrot</code>、<code>potato</code></td></tr></tbody></table>
 
-<p><strong>インゴットは可、加工部品は不可。</strong> バニラとモッドの <strong>インゴット</strong>（<code>iron</code>、、<code>gold</code>、<code>tin</code>、 、）は複製されます — これは基本原料です。すべての <strong>加工品</strong>（粉類、板、筐体、回路、 チップ、ケーブル、鉱石、鉱石ブロック）は複製されません — さもなければクラフト連鎖が価値を失います。 ウランは複製されません（レシピがありません）。</p>
+<p><strong>インゴットは可、加工部品は不可。</strong> バニラとモッドの <strong>インゴット</strong>（<code>iron</code>、<code>copper</code>、<code>gold</code>、<code>tin</code>、 <code>silver</code>、<code>nickel</code>）は複製されます — これは基本原料です。すべての <strong>加工品</strong>（粉類、板、筐体、回路、 チップ、ケーブル、鉱石、鉱石ブロック）は複製されません — さもなければクラフト連鎖が価値を失います。 ウランは複製されません（レシピがありません）。</p>
 
 <p><strong>ゴムと生ゴムは例外的な除外（）。</strong> 形式的には機械の生成物で、上のルールでは複製されるべきでは ありません。しかし石油は <strong>有限</strong> 資源です：溜まりは再生せず、水を石油に変える手段もないため、 インキュベーターなしでは世界のゴムの備蓄は見つかった鉱床の数で厳しく上限付きになります。複製は ただの配給でなく高価な再生可能経路を与えます：試行は 4000 EU/FE と ⅓ ウランインゴットで確率 0.55、 一方、新石油からの同じゴムは 400 EU/FE です。石油がある限り — 掘る方が 10 倍お得。インキュベーターは もう掘るものがない時に発動します。</p>
 
@@ -466,23 +466,23 @@
 
 <p><strong>等価を等価と交換します。</strong> 価値のアップグレード（鉄 → 金）は禁止です。全 27 レシピは — 確率 0.75、 300 ティック、2400 EU/FE。多くのアイテムからなる系列（苗木、花、土類）には <strong>リング</strong> が適用されます： 各アイテムは求めるものが出るまで円順に次へ変わります。</p>
 
-<table><thead><tr><th>カテゴリー</th><th>レシピ</th><th>リング</th></tr></thead><tbody><tr><td>鉱物</td><td>3</td><td><code>lapis_lazuli</code> ↔ 、 ↔ <code>glowstone_dust</code>、<code>coal</code> ↔ （すべて 1:1）</td></tr><tr><td>苗木</td><td>8</td><td>オーク → シラカバ → トウヒ → ジャングル → アカシア → ダークオーク → サクラ → マングローブ → オーク</td></tr><tr><td>花</td><td>8</td><td>タンポポ → ポピー → 青いラン → ヒナソウ → 藍の花苞 → コーンフラワー → スズラン → ヒナギク → タンポポ</td></tr><tr><td>土類</td><td>5</td><td>土 → ポドゾル → 菌糸 → 土。砂 ↔ 赤い砂</td></tr></tbody></table>
+<table><thead><tr><th>カテゴリー</th><th>レシピ</th><th>リング</th></tr></thead><tbody><tr><td>鉱物</td><td>3</td><td><code>lapis_lazuli</code> ↔ <code>redstone</code>、<code>quartz</code> ↔ <code>glowstone_dust</code>、<code>coal</code> ↔ <code>charcoal</code>（すべて 1:1）</td></tr><tr><td>苗木</td><td>8</td><td>オーク → シラカバ → トウヒ → ジャングル → アカシア → ダークオーク → サクラ → マングローブ → オーク</td></tr><tr><td>花</td><td>8</td><td>タンポポ → ポピー → 青いラン → ヒナソウ → 藍の花苞 → コーンフラワー → スズラン → ヒナギク → タンポポ</td></tr><tr><td>土類</td><td>5</td><td>土 → ポドゾル → 菌糸 → 土。砂 ↔ 赤い砂</td></tr></tbody></table>
 
 <h3 id="生成-進化の梯子">生成 — 進化の梯子</h3>
 
 <p>通常アイテムが 3 段階の梯子でモッド固有の材料に <strong>進化</strong> します。段が上がるほど確率は下がり、操作は高価に。 段 2–3 では失敗は <strong>入力を無傷で返します</strong>（チャージと EU/FE のみ燃える） — さもなければ第 1 段より上に 昇るリスクを取る人はいないでしょう。</p>
 
-<table><thead><tr><th>系統</th><th>段階 1</th><th>段階 2</th><th>段階 3</th></tr></thead><tbody><tr><td>ダイヤモンド系 — エネルギー密度</td><td>→ 照射ダイヤモンド</td><td>→ ダイヤモンドマトリックス</td><td>→ 特異点コア</td></tr><tr><td>クリスタル系 — 光学</td><td><code>amethyst_shard</code> → 共鳴の欠片</td><td>→ 集光レンズ</td><td>→ プリズムコア</td></tr><tr><td>生物系 — 農業</td><td><code>lapis_lazuli</code> → 変異原の粉</td><td>→ 生きた変異原</td><td>→ 遺伝マトリックス</td></tr><tr><td>核系 — 燃料</td><td><code>depleted_uranium</code> → 不安定同位体</td><td>→ 濃縮コア</td><td>→ 同位体濃縮物</td></tr></tbody></table>
+<table><thead><tr><th>系統</th><th>段階 1</th><th>段階 2</th><th>段階 3</th></tr></thead><tbody><tr><td>ダイヤモンド系 — エネルギー密度</td><td><code>diamond</code> → 照射ダイヤモンド</td><td>→ ダイヤモンドマトリックス</td><td>→ 特異点コア</td></tr><tr><td>クリスタル系 — 光学</td><td><code>amethyst_shard</code> → 共鳴の欠片</td><td>→ 集光レンズ</td><td>→ プリズムコア</td></tr><tr><td>生物系 — 農業</td><td><code>lapis_lazuli</code> → 変異原の粉</td><td>→ 生きた変異原</td><td>→ 遺伝マトリックス</td></tr><tr><td>核系 — 燃料</td><td><code>depleted_uranium</code> → 不安定同位体</td><td>→ 濃縮コア</td><td>→ 同位体濃縮物</td></tr></tbody></table>
 
 <table><thead><tr><th>段階</th><th>確率</th><th>ティック</th><th>EU/FE</th><th>失敗時</th></tr></thead><tbody><tr><td>1（バニラ → モッド材料）</td><td>0.25</td><td>1000</td><td>8000</td><td>入力喪失</td></tr><tr><td>2</td><td>0.15</td><td>1500</td><td>12000</td><td><strong>入力が無傷で戻る</strong></td></tr><tr><td>3</td><td>0.08</td><td>2000</td><td>16000</td><td><strong>入力が無傷で戻る</strong></td></tr></tbody></table>
 
 <p>核系統はインキュベーター自身の灰から始まります — 使い終わったウランが連鎖の入力になり、ゴミでなく なります。</p>
 
-<p>現在のリリースでは段階 1 のレシピ 4 つのみ（系統ごとに 1 つ）： → <code>irradiated_diamond</code>、 <code>amethyst_shard</code> → <code>resonant_shard</code>、<code>lapis_lazuli</code> → <code>mutagen_dust</code>、<code>depleted_uranium</code> → <code>unstable_isotope</code>。段階 2–3 と上位材料からのアップグレードチップは — 次のリリース。</p>
+<p>現在のリリースでは段階 1 のレシピ 4 つのみ（系統ごとに 1 つ）：<code>diamond</code> → <code>irradiated_diamond</code>、 <code>amethyst_shard</code> → <code>resonant_shard</code>、<code>lapis_lazuli</code> → <code>mutagen_dust</code>、<code>depleted_uranium</code> → <code>unstable_isotope</code>。段階 2–3 と上位材料からのアップグレードチップは — 次のリリース。</p>
 
 <h2 id="進行">進行</h2>
 
-<p>ティア：LV。最初の機械（macerator/extractor）の後、安定したウラン鉱脈と EU/FE ネットワークがある時に 建てます。 7 個の新アイテムを導入：<code>depleted_uranium</code>、<code>irradiated_diamond</code>、<code>mutagen_dust</code>、<code>resonant_shard</code>、 <code>unstable_isotope</code>、<code>irradiated_slag</code>（試行の 5 % の副産物 — このリリースでは消費者なし、将来の布石） + 3 つのモードチップ。 材料上の <strong>グレード「遺伝」</strong> は再変異の確率にボーナスを与えます（+5/+10/+15 ポイント） — 消費者は 将来の農業/核フェーズで登場します。 変異の進捗：「何かが変わった」（任意の変異したアイテム）、「無から」（ モードの材料）、 「50 人に 1 人」（レジェンダリー結果）。</p>
+<p>ティア：LV。最初の機械（macerator/extractor）の後、安定したウラン鉱脈と EU/FE ネットワークがある時に 建てます。 7 個の新アイテムを導入：<code>depleted_uranium</code>、<code>irradiated_diamond</code>、<code>mutagen_dust</code>、<code>resonant_shard</code>、 <code>unstable_isotope</code>、<code>irradiated_slag</code>（試行の 5 % の副産物 — このリリースでは消費者なし、将来の布石） + 3 つのモードチップ。 材料上の <strong>グレード「遺伝」</strong> は再変異の確率にボーナスを与えます（+5/+10/+15 ポイント） — 消費者は 将来の農業/核フェーズで登場します。 変異の進捗：「何かが変わった」（任意の変異したアイテム）、「無から」（<code>create</code> モードの材料）、 「50 人に 1 人」（レジェンダリー結果）。</p>
 
 <h2 id="関連項目">関連項目</h2>
 
