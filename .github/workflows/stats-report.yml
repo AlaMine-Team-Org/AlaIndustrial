@@ -16,6 +16,13 @@ on:
     # worth hearing about — no workflow_run event is raised either, and the
     # watchdog would stay silent about the silence. It has to wake up by itself.
     - cron: '7 1 * * *'
+    # Second slot, half an hour after the catch-up collector (06:43). A schedule of
+    # its own is not enough on its own: on 2026-08-27 GitHub dropped this workflow
+    # and the collector together — the two slots sat half an hour apart and went
+    # missing in the same incident, so the silence went unreported until a human
+    # noticed the chart. This one runs with --only-if-problems: it says nothing
+    # when the pipeline is healthy, so a normal day still gets exactly one message.
+    - cron: '13 7 * * *'
   workflow_dispatch:
   push:
     # `branches` is not optional here: a `paths` filter is NOT applied to tag
@@ -48,10 +55,18 @@ jobs:
           persist-credentials: false
 
       - name: Send report
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         # The site check waits up to five minutes for Pages to catch up, so a
         # healthy day is not reported as a failed deploy just because the deploy
         # was a minute behind.
-        run: python .github/scripts/report-stats.py --site-wait 300
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          # Which slot woke us up. Through env, never interpolated into `run:` —
+          # a ${{ }} there becomes source code before bash sees the script.
+          QUIET_SLOT: ${{ github.event.schedule == '13 7 * * *' }}
+        run: |
+          if [ "$QUIET_SLOT" = "true" ]; then
+            python .github/scripts/report-stats.py --site-wait 300 --only-if-problems
+          else
+            python .github/scripts/report-stats.py --site-wait 300
+          fi

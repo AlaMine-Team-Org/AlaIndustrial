@@ -490,13 +490,17 @@ def parse_args(argv):
     parser.add_argument("--site-wait", type=int, default=300,
                         help="seconds to wait for the deploy to catch up (default: 300)")
     parser.add_argument("--site-poll", type=int, default=20, help="seconds between site probes")
+    parser.add_argument("--only-if-problems", action="store_true",
+                        help="stay silent when every check passes (the second daily "
+                             "slot: it is there to shout about a dropped schedule, "
+                             "not to post the figures twice)")
     parser.add_argument("--today", default=None,
                         help="pin today's UTC date (YYYY-MM-DD); for testing only")
     return parser.parse_args(argv)
 
 
 def collect(args):
-    """Build the message lines. Raises on anything it cannot handle."""
+    """Build the message lines and the problem list. Raises on what it cannot handle."""
     # Resolve "today" ONCE. The site check below may wait minutes for a deploy,
     # and a process that starts before midnight and finishes after it would pick
     # the day for the figures and the day for the freshness check from two
@@ -524,13 +528,18 @@ def collect(args):
         lines.append("")
         lines.append("⚠️ <b>Checks: %d issue(s)</b>" % len(problems))
         lines.extend("• %s" % esc(problem) for problem in problems)
-    return lines
+    return lines, problems
 
 
 def main(argv=None):
     args = parse_args(argv or sys.argv[1:])
+    silent_ok = False
     try:
-        lines = collect(args)
+        lines, problems = collect(args)
+        # The second slot of the day reports by exception: a healthy pipeline has
+        # nothing to add to the report that already went out at 01:07, and a second
+        # identical message every morning would train the eye to ignore both.
+        silent_ok = args.only_if_problems and not problems
     except Exception as exc:                       # noqa: BLE001 - see below
         # A broken or unreadable data file is the single most important thing to
         # hear about, and it is exactly the case where an uncaught exception
@@ -542,6 +551,12 @@ def main(argv=None):
                  "The report could not be built: <b>%s</b>" % esc(type(exc).__name__),
                  "Data file: %s" % esc(clip(args.stats, 120)),
                  "Check the Stats workflow and data/stats.json."]
+
+    if silent_ok:
+        # A failure to BUILD the report is never silent: silent_ok stays false when
+        # collect() raised, so the alarm below still goes out.
+        print("OK    every check passed — nothing to report")
+        return 0
 
     if args.dry_run:
         # The report is full of emoji, and a Windows console on a legacy code page
