@@ -20,6 +20,13 @@ on:
     # top of the hour. Drift here is harmless: it moves away from midnight, so
     # the row still lands on the same day either way.
     - cron: '37 0 * * *'
+    # Catch-up. GitHub drops scheduled runs when it is busy, and on 2026-08-27 it
+    # dropped BOTH this workflow and the watchdog that is meant to notice — the
+    # site then served day-old figures until a human spotted them. A second slot,
+    # six hours away from the first, is the cheapest independent attempt: when
+    # yesterday is already recorded in full the script exits before its first HTTP
+    # request, so a healthy morning costs one runner start and no commit.
+    - cron: '43 6 * * *'
   workflow_dispatch:
 
 permissions:
@@ -37,6 +44,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Self-test the collector
+        # A second of mocked runs before the real one. The rules it checks are the
+        # ones that quietly broke the chart on 2026-08-27 and were invisible on any
+        # green day: a stub row for the current day, a catch-up run overwriting a
+        # good one, a midday run pulling today's downloads into yesterday. Failing
+        # here stops the snapshot on purpose — writing a wrong row is worse than
+        # writing none, and the watchdog reports a missing row six hours later.
+        run: python .github/scripts/test-stats.py
+
       - name: Collect snapshot
         env:
           # Optional. Without it the script falls back to the keyless cfwidget
@@ -46,7 +62,19 @@ jobs:
           # Modrinth analytics endpoint. Without it the series simply starts
           # with yesterday.
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-        run: python .github/scripts/fetch-stats.py --out data/stats.json
+          # Which slot woke us up. Passed through env and never interpolated into
+          # the script body: a ${{ }} inside `run:` becomes source code before bash
+          # ever sees it.
+          CATCH_UP_SLOT: ${{ github.event.schedule == '43 6 * * *' }}
+        run: |
+          # The catch-up slot must not collect when the night run already did:
+          # reading the counters now would pour hours of TODAY into yesterday's row.
+          # A manual dispatch never skips — that is the button for fixing data.
+          if [ "$CATCH_UP_SLOT" = "true" ]; then
+            python .github/scripts/fetch-stats.py --out data/stats.json --skip-if-current
+          else
+            python .github/scripts/fetch-stats.py --out data/stats.json
+          fi
 
       - name: Commit if changed
         id: commit
