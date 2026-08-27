@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="zh_cn" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>温室控制器 — Ala Industrial — 指南</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="打开菜单" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../assets/item/guide_book_3d.png" alt="">全部内容</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="搜索维基…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="搜索指南" autocomplete="off" spellcheck="false" data-index="../assets/search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;搜索结果&quot;,&quot;one&quot;:&quot;个页面&quot;,&quot;few&quot;:&quot;个页面&quot;,&quot;many&quot;:&quot;个页面&quot;,&quot;loading&quot;:&quot;正在加载搜索索引…&quot;,&quot;nothing&quot;:&quot;未找到结果&quot;}"></search>
+    <details class="language-menu"><summary aria-label="Language">中文</summary><div class="language-popover"><span>中文</span><a href="../../en/agriculture/crystal_farm.html">EN</a><a href="../../ru/agriculture/crystal_farm.html">RU</a><a href="../../uk/agriculture/crystal_farm.html">UA</a><a href="../../ja_jp/agriculture/crystal_farm.html">日本語</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">浏览</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../assets/item/tempered_iron_pickaxe.png" alt=""><span>新手入门</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
+<div class="group-title">能源</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="11 个页面">11</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="13 个页面">13</span></a>
+<div class="group-title">加工</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="15 个页面">15</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<div class="group-title">物流</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>物品物流</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<div class="group-title">世界与自动化</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="18 个页面">18</span></a>
+<a class="cat-link active" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="4 个页面">4</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<div class="group-title">其他</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
+<div class="group-title">物品</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="23 个页面">23</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="22 个页面">22</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">首页</a><span class="sep">/</span><a href="../agriculture/index.html">农业</a><span class="sep">/</span><span>温室控制器</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../assets/block/crystal_farm_controller_top.png" alt="温室控制器" width="64" height="64">
+    <div class="info">
+      <h1>温室控制器</h1>
+      <div class="block-id">alaindustrial:crystal_farm_controller</div>
+      <div class="tags"><span class="tag cat" style="background:#22c55e">农业</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">已实现</span><span class="tag">agriculture</span><span class="tag">crystal</span><span class="tag">amethyst</span><span class="tag">multiblock</span><span class="tag">greenhouse</span><span class="tag">farming</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="概览">概览</h2>
+
+<p><strong>水晶温室</strong>让紫水晶变成可再生资源，却没有取消去晶洞的那一趟——它把你找到的<strong>一个</strong>晶洞变成了 一处源头。在它出现之前，本模组整条水晶支线都卡在原版的紫水晶碎片上：共振碎片和空间晶体都由它做成， 而这两者再往下喂养共振线圈、传送芯片、兰波顿水晶和共振水晶。碎片除了去晶洞里敲，别无出处。</p>
+
+<p>温室是一座建筑，不是一台机器。玩家自己盖起密封的房间，在里面摆上<strong>水晶苗床</strong>，喂给它们碎片—— 它们便开始结出<strong>真正的原版紫水晶簇</strong>。不是长得像，而是同一种方块：外观一样、声音一样、破坏方式一样， 对时运的反应也一样，因为掉落由原版战利品表决定。</p>
+
+<p><strong>它与培养箱的区别。</strong>培养箱讲的是概率和即时结果：放进去，用铀和 EU/FE 付账，取出来。温室讲的是等待与 观察：结果是确定的，代价是时间。这是两种不同类型的机器，它们有意互不重叠。</p>
+
+<h2 id="房间的搭建">房间的搭建</h2>
+
+<p>温室由五种方块组成，其中必需的只有两种——<strong>温室地板</strong>和<strong>温室控制器</strong>：</p>
+
+<table><thead><tr><th>方块</th><th>作用</th></tr></thead><tbody><tr><td>温室地板</td><td>外壳：铺面、墙壁、天花板——一切不是玻璃的部分</td></tr><tr><td>温室玻璃</td><td>外壳：玻璃面，成形时会融为一整块</td></tr><tr><td>温室门</td><td>入口；会自己在玩家身后关上</td></tr><tr><td>温室控制器</td><td>大脑：扫描房间、推进生长、报告错误</td></tr><tr><td>水晶苗床</td><td>放在里面；紫水晶簇长在它上面</td></tr></tbody></table>
+
+<p>控制器要<strong>嵌进墙里</strong>，面板朝外——房间的内部位于它所朝方向的另一侧。放在地板或天花板上的控制器不 合格：它是一块给人读的面板。</p>
+
+<h3 id="形状任意封闭形状">形状——任意封闭形状</h3>
+
+<p>房间<strong>不必是个盒子</strong>。控制器会把内部的空气整体填充一遍，凡是这团空气被围住的形状它都接受：穹顶、 阶梯金字塔、L 形侧翼、中间留有通口的两层温室。限制只在体积上：</p>
+
+<table><thead><tr><th>参数</th><th>数值</th><th>配置键</th></tr></thead><tbody><tr><td>最小体积</td><td>27 格</td><td></td></tr><tr><td>最大体积</td><td>4096 格</td><td></td></tr><tr><td>距控制器的最远距离</td><td>24 格</td><td></td></tr><tr><td>重新扫描间隔</td><td>40 刻（2 秒）</td><td></td></tr></tbody></table>
+
+<p>是体积，不是棱长：「横过来三格」对一座穹顶毫无意义。</p>
+
+<p><strong>最远距离</strong>是比体积上限更硬的第二道保险。它不是为了平衡性：否则不密封的房间会把填充引到几十格 以外，去读取那些可能尚未加载的区块。</p>
+
+<p>玻璃用<strong>任何一种</strong>都行——原版的、染色的、通过 <code>#c:glass_blocks</code> 引入的其他模组的玻璃。彩色温室是 自然而然的结果，并没有为此单写代码。门也接受任何原版门，不限于本模组自己的那扇。</p>
+
+<h3 id="搭建时玩家看到什么">搭建时玩家看到什么</h3>
+
+<p>扫描是看不见的，所以成形会同时以三种方式呈现：</p>
+
+<ul><li><strong>外壳失去接缝</strong>——地板和玻璃各有一套没有边框的第二贴图，成形的房间读起来是一整个面，而不是一</li></ul>
+<p>摞箱子；沿着轮廓边框仍然保留，勾出剪影；</p>
+<ul><li><strong>声音</strong>——闭合那一刻的一声和弦，只在状态切换时响；</li><li><strong>粒子</strong>——沿地板接缝的一次闪光。</li></ul>
+
+<p>拆掉一面墙，外壳立刻变回零散的模样。</p>
+
+<h3 id="房间无法封闭时">房间无法封闭时</h3>
+
+<p>右键控制器，它会在聊天栏报告哪里不对。如果这座温室以前成形过，消息里还会带上<strong>缺失方块</strong>的坐标， 并且每两秒从那里冒出一缕烟。</p>
+
+<table><thead><tr><th>状态</th><th>报告内容</th></tr></thead><tbody><tr><td>已成形</td><td>体积、苗床数量、有没有水</td></tr><tr><td>未封闭</td><td>缺失方块的坐标（若能判定）；否则只说「未封闭」</td></tr><tr><td>太小</td><td>不给坐标</td></tr><tr><td>控制器不在墙上</td><td>控制器的坐标</td></tr><tr><td>有第二个控制器</td><td>另一个控制器的坐标</td></tr></tbody></table>
+
+<p><strong>坐标并非总会显示，这是有意为之。</strong>填充说不出自己漏在哪里：它从窟窿里溜出去，一直走到撞上距离 上限为止。所以窟窿不是靠填充找的，而是靠上一次成功成形时记下的外壳格子清单——缺失方块就是其中那个 不再是外壳方块的格子。从未成形过的温室没有可比对的东西，这时坐标<strong>完全不显示</strong>：让玩家跑去看错 地方，比老实说一句「未封闭」更糟。</p>
+
+<h2 id="苗床">苗床</h2>
+
+<p>它合成出来是<strong>死的</strong>——和原版紫水晶母岩同样的水晶石头，只是颜色从中褪去了。喂它一块紫水晶碎片 （右键），它就会重新充满颜色并开始结果。</p>
+
+<ul><li><strong>一次点击喂一块碎片。</strong>充能量显示在快捷栏上方的那行字里，随着填满，音效的音高也逐渐升高。</li><li><strong>紫水晶块</strong>按四块碎片计算——正好是原版合成它时所用的数量。</li><li><strong>随时都可以补充</strong>，不必等充能耗尽。</li><li>上限是队列里的 <strong>16 个芽</strong>。快满的苗床<strong>不接受</strong>紫水晶块：它一次给四个芽，为了一个空位而放进去，</li></ul>
+<p>等于悄悄烧掉四分之三的稀缺物品。用碎片补充则永远可行。</p>
+
+<p>紫水晶簇长在苗床空着的面上，走的是原版的阶段：<code>小型芽 → 中型 → 大型 → 晶簇</code>。长成的晶簇用<strong>镐</strong> 敲下，给 <strong>4 块碎片</strong>（原版表格，时运有效）。未成熟的芽什么也不给——和原版一样。</p>
+
+<p><strong>温室之外的苗床会老实说明这一点。</strong>在哪儿都能给它充能，计数也会照常增长——但什么都不会长出来。 因此，当你喂的这块方块没有任何一座成形温室在照看时，回给你的不是计数，而是一条警告。</p>
+
+<h2 id="能量">能量</h2>
+
+<table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>角色</td><td>带缓存的消耗方，<strong>非必需</strong></td></tr><tr><td>缓存（EU/FE）</td><td>4000（）</td></tr><tr><td>最大输入（EU/FE/刻）</td><td>32（LV）</td></tr><tr><td>每次生长事件的 EU/FE</td><td>64（）</td></tr></tbody></table>
+
+<p>这里的能量是加速器，不是条件。一根电缆都没接的温室照样工作，只是慢。EU/FE <strong>只为真正发生了的生长 事件</strong>扣除：能量买的是水晶，不是掷骰子。</p>
+
+<h2 id="生长与产出">生长与产出</h2>
+
+<p>生长是概率性的，和原版紫水晶一样：每 刻，每张苗床各掷一次骰子。 每张苗床有自己的骰子——共用一次掷点会让整座温室齐步生长，那读起来就像机器，而不像活物。</p>
+
+<p>一块水晶要花<strong>四次事件</strong>：芽先要出现，再长大三次。</p>
+
+<table><thead><tr><th>条件</th><th>除数</th><th>现实时间</th><th>游戏日</th></tr></thead><tbody><tr><td>什么都没有</td><td>270</td><td>≈ 1 小时 30 分</td><td>4.5</td></tr><tr><td>仅通电</td><td>135</td><td>≈ 45 分钟</td><td>2.25</td></tr><tr><td>仅有水</td><td>90</td><td>≈ 30 分钟</td><td>1.5</td></tr><tr><td>有水且通电</td><td>45</td><td>≈ 15 分钟</td><td>0.75</td></tr></tbody></table>
+
+<p>一个游戏日为 20 分钟现实时间，末列即按此换算。</p>
+
+<p><strong>这是单个苗床的时间，而不是整座温室的。</strong> 苗床各自独立并行生长，因此 25 个苗床的大厅即使既无水 也无电缆，也约每 3.6 分钟产出一颗晶簇；两项加速齐备时约每半分钟一颗。在这里，规模比加速器更有 用：温室本就该向外扩张。</p>
+
+<table><thead><tr><th>参数</th><th>数值</th><th>配置键</th></tr></thead><tbody><tr><td>生长尝试间隔</td><td>100 刻（5 秒）</td><td></td></tr><tr><td>基础除数</td><td>270</td><td></td></tr><tr><td>水带来的加速</td><td>÷3</td><td></td></tr><tr><td>供电带来的加速</td><td>÷2</td><td></td></tr><tr><td>每块碎片给的芽数</td><td>1</td><td></td></tr></tbody></table>
+
+<p><strong>经济账。</strong>一块碎片进去——一块水晶出来——四块碎片回来。回报是<strong>四倍</strong>，用一个半小时买单。给苗床 充满（16 个芽）要花 16 块碎片，在区块保持加载的情况下，大约一天回给你 64 块。</p>
+
+<p>这些数字由 L1 测试 <code>CrystalGrowthTest</code> 把关：它既检查碎片回来时比投进去的更值钱，也检查回报没有 飞上天——一座印紫水晶的农场，对这条支线的破坏力和一座吃紫水晶的农场一样可靠。</p>
+
+<h2 id="门">门</h2>
+
+<p>机制上是一扇普通的原版门——合页、上下两半、红石——只多了一条：<strong>它会自己关上</strong>。</p>
+
+<table><thead><tr><th>参数</th><th>数值</th><th>配置键</th></tr></thead><tbody><tr><td>自动关门延迟</td><td>100 刻（5 秒）</td><td></td></tr><tr><td>门洞被占用时的重查间隔</td><td>10 刻</td><td></td></tr></tbody></table>
+
+<p><strong>开着的门不会让温室失去密封。</strong>扫描器看的是这块方块「是什么」，而不是它有没有敞着——和反应堆 的气闸完全一样——所以门大敞着的温室照样生长。这里以前写的是相反的说法；审查发现那从来就不是真的。</p>
+
+<p>「开着的门破坏密封」这个方案考虑过并被否决了：它很诚实，但那样每进去一趟就会熄灭整片外壳，五秒后 再刷回来——一座大厅那么大的温室每次造访要闪两下，而这是两个方向上各成千上万次的方块更新。</p>
+
+<p>所以门会关上，不是为了机制，而是因为大敞着的温室不好看，也因为房间在其他地方都是封闭的——生物进来 走的正是那扇没关的门。</p>
+
+<ul><li><strong>红石让门保持开着</strong>——有信号就意味着它是被有意撑开的。</li><li><strong>有人站在门洞里时门不会关</strong>——检查覆盖上下两半，并且只算活着的生物：丢在脚下的一块碎片挡不住门。</li></ul>
+
+<h2 id="方块属性">方块属性</h2>
+
+<table><thead><tr><th>方块</th><th>硬度</th><th>爆炸抗性</th><th>工具</th><th>备注</th></tr></thead><tbody><tr><td>温室地板</td><td>3.0</td><td>6.0</td><td>镐</td><td>/<code>edge</code> 属性</td></tr><tr><td>温室玻璃</td><td>3.0</td><td>6.0</td><td>镐</td><td>，/<code>edge</code> 属性</td></tr><tr><td>温室门</td><td>3.0</td><td>6.0</td><td>镐</td><td>，会被活塞破坏</td></tr><tr><td>控制器</td><td>3.0</td><td>6.0</td><td>镐</td><td>属性，水平</td></tr><tr><td>苗床</td><td>3.0</td><td>6.0</td><td>镐</td><td>紫水晶音效，/ 属性</td></tr></tbody></table>
+
+<p>苗床<strong>永远以死态回到你手里</strong>：充能是花掉的时间，把一张正在工作的苗床装进兜里是不行的。</p>
+
+<h2 id="配方">配方</h2>
+
+<table><thead><tr><th>什么</th><th>图样</th><th>产出</th></tr></thead><tbody><tr><td>温室地板</td><td><code>TGT</code> / <code>GTG</code> / <code>TGT</code> —— T：回火铁板，G：玻璃</td><td>4</td></tr><tr><td>温室玻璃</td><td><code>GGG</code> / <code>GTG</code> / <code>GGG</code></td><td>8</td></tr><tr><td>温室门</td><td><code>GG</code> / <code>GG</code> / <code>TT</code> —— G：温室玻璃</td><td>2</td></tr><tr><td>控制器</td><td><code>KAK</code> / <code>CMC</code> / <code>KKK</code> —— K：温室地板，A：紫水晶碎片，C：电子电路，M：机器外壳</td><td>1</td></tr><tr><td>苗床</td><td><code>QSQ</code> / <code>SAS</code> / <code>QSQ</code> —— Q：石英，S：平滑玄武岩，A：<strong>紫水晶块</strong></td><td>1</td></tr></tbody></table>
+
+<p>苗床是<strong>围着一块紫水晶块</strong>搭起来的——正如原版的紫水晶母岩本身就是紫水晶。同时，温室的任何一条配方 都不索取它赖以存在的那样东西：碎片用来喂养，不用来建造，否则这座农场就得用它所修补的那种短缺来 付账。</p>
+
+<h2 id="进阶">进阶</h2>
+
+<ul><li>档位：LV，而且还是可选的。</li><li>盘活整条支线：<code>resonant_shard</code>、<code>spatial_crystal</code>，并经由它们盘活共振线圈、传送芯片、兰波顿水晶</li></ul>
+<p>和共振水晶。</p>
+<ul><li>开局需要先找到晶洞——最初的碎片从那里来。温室让这处源头变得可再生，但不会凭空造出它。</li></ul>
+
+<h2 id="性能">性能</h2>
+
+<p>温室里唯一需要每刻更新的对象是<strong>控制器</strong>。苗床以及长在它们上面的紫水晶簇既没有方块实体，也没有 随机刻：一座上百张苗床的农场只给世界增加一个需要每刻更新的对象。这也让「只在成形的房间里生长」 这条规则在构造上即为真，而不是靠一次可能被忘掉的检查。</p>
+
+<h2 id="相关内容">相关内容</h2>
+
+<ul><li><a href="incubator.html">培养箱</a> —— 相邻的类型：概率性的即时突变，对比确定性的、随时间推进的生长。</li><li><a href="trellis.html">棚架</a> —— 无方块实体的多年生生长先例。</li><li><a href="../nuclear/reactor_controller.html">反应堆控制器</a> —— 相邻的多方块结构；与它共通的只有外壳的几何</li></ul>
+<p>形状，扫描器并不相同（盒子对比体积填充）。</p>
+
+<h2>合成</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="温室控制器 alaindustrial:crystal_farm_controller" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="温室地板"><img src="../assets/block/crystal_farm_floor.png" alt="温室地板" width="32" height="32"></div> <div class="cell" title="Amethyst Shard"><img src="../assets/item/amethyst_shard_3d.png" alt="Amethyst Shard" width="32" height="32"></div> <div class="cell" title="温室地板"><img src="../assets/block/crystal_farm_floor.png" alt="温室地板" width="32" height="32"></div> <div class="cell" title="电子电路"><img src="../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="机器外壳"><img src="../assets/item/machine_casing_3d.png" alt="机器外壳" width="32" height="32"></div> <div class="cell" title="电子电路"><img src="../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="温室地板"><img src="../assets/block/crystal_farm_floor.png" alt="温室地板" width="32" height="32"></div> <div class="cell" title="温室地板"><img src="../assets/block/crystal_farm_floor.png" alt="温室地板" width="32" height="32"></div> <div class="cell" title="温室地板"><img src="../assets/block/crystal_farm_floor.png" alt="温室地板" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="温室控制器"><img src="../assets/block/crystal_farm_controller_top.png" alt="温室控制器" width="32" height="32"></div><div class="result-name">温室控制器</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

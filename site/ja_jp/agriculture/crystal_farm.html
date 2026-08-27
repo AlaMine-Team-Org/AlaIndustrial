@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="ja_jp" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>温室制御装置 — Ala Industrial — ガイド</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="メニューを開く" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../assets/item/guide_book_3d.png" alt="">すべてのコンテンツ</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="ウィキを検索…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="ガイドを検索" autocomplete="off" spellcheck="false" data-index="../assets/search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;検索結果&quot;,&quot;one&quot;:&quot;ページ&quot;,&quot;few&quot;:&quot;ページ&quot;,&quot;many&quot;:&quot;ページ&quot;,&quot;loading&quot;:&quot;検索インデックスを読み込み中…&quot;,&quot;nothing&quot;:&quot;見つかりません&quot;}"></search>
+    <details class="language-menu"><summary aria-label="Language">日本語</summary><div class="language-popover"><span>日本語</span><a href="../../en/agriculture/crystal_farm.html">EN</a><a href="../../ru/agriculture/crystal_farm.html">RU</a><a href="../../uk/agriculture/crystal_farm.html">UA</a><a href="../../zh_cn/agriculture/crystal_farm.html">中文</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">ブラウズ</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../assets/item/tempered_iron_pickaxe.png" alt=""><span>はじめに</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
+<div class="group-title">エネルギー</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="11 ページ">11</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>原子力</span><span class="cat-count" aria-label="13 ページ">13</span></a>
+<div class="group-title">加工</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>マシン</span><span class="cat-count" aria-label="15 ページ">15</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>液体マシン</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<div class="group-title">物流</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>アイテム輸送</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>液体輸送</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>液体貯蔵</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<div class="group-title">世界と自動化</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>素材</span><span class="cat-count" aria-label="18 ページ">18</span></a>
+<a class="cat-link active" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>農業</span><span class="cat-count" aria-label="4 ページ">4</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>高度なマシン</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<div class="group-title">その他</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
+<div class="group-title">アイテム</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="23 ページ">23</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="22 ページ">22</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">ホーム</a><span class="sep">/</span><a href="../agriculture/index.html">農業</a><span class="sep">/</span><span>温室制御装置</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../assets/block/crystal_farm_controller_top.png" alt="温室制御装置" width="64" height="64">
+    <div class="info">
+      <h1>温室制御装置</h1>
+      <div class="block-id">alaindustrial:crystal_farm_controller</div>
+      <div class="tags"><span class="tag cat" style="background:#22c55e">農業</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">実装済み</span><span class="tag">agriculture</span><span class="tag">crystal</span><span class="tag">amethyst</span><span class="tag">multiblock</span><span class="tag">greenhouse</span><span class="tag">farming</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="概要">概要</h2>
+
+<p><strong>クリスタル温室</strong>は、ジオードへ行く道のりを帳消しにすることなくアメジストを再生可能にします—— 見つけた<strong>ひとつの</strong>ジオードを供給源に変えるのです。これが来るまで、このモッドのクリスタル系統は すべてバニラのアメジストの欠片で行き止まりでした。共鳴の欠片も空間結晶もそこから作られ、その先で 共鳴コイル、テレポートチップ、ラポトロンクリスタル、共振クリスタルを養います。欠片はジオードで 掘り出す以外に入手先がありませんでした。</p>
+
+<p>温室は機械ではなく建築物です。プレイヤー自身が密閉された部屋を建て、中に<strong>クリスタル苗床</strong>を置き、 欠片を与える——すると苗床は<strong>本物のバニラのアメジストの塊</strong>を実らせ始めます。似たものではなく、 同じブロックそのものです。見た目も、音も、壊れ方も、幸運への反応も同じ——ドロップを決めるのが バニラのルートテーブルだからです。</p>
+
+<p><strong>インキュベーターとの違い。</strong>インキュベーターは確率と即座の結果の話です。入れて、ウランと EU/FE で 支払い、受け取る。温室は待つことと眺めることの話です。結果は決定的で、代価は時間です。この 2 つは 別ジャンルの機械であり、意図的に重なりません。</p>
+
+<h2 id="部屋の建造">部屋の建造</h2>
+
+<p>温室は 5 種類のブロックからなりますが、必須なのはそのうち 2 つ——<strong>温室の床</strong>と<strong>温室制御装置</strong> です。</p>
+
+<table><thead><tr><th>ブロック</th><th>役割</th></tr></thead><tbody><tr><td>温室の床</td><td>シェル：床、壁、天井——ガラスでない部分すべて</td></tr><tr><td>温室のガラス</td><td>シェル：成形時に一枚板へ溶け合うガラス面</td></tr><tr><td>温室のドア</td><td>出入口。プレイヤーの後ろで自分から閉まる</td></tr><tr><td>温室制御装置</td><td>頭脳：部屋を走査し、成長を進め、不備を報告する</td></tr><tr><td>クリスタル苗床</td><td>内部に置く。この上に塊が育つ</td></tr></tbody></table>
+
+<p>制御装置は<strong>壁に埋め込み</strong>、パネルを外へ向けます——部屋の内部は、それが向いている面の反対側に あります。床や天井の制御装置では役に立ちません。これは読むためのパネルだからです。</p>
+
+<h3 id="形状は閉じてさえいれば自由">形状は閉じてさえいれば自由</h3>
+
+<p>部屋は<strong>箱である必要がありません</strong>。制御装置は内部の空気を塗りつぶし、その空気を閉じ込められる形 ならすべて受け付けます。ドーム、階段状のピラミッド、L 字の張り出し、階のあいだに吹き抜けのある 2 階建ての温室。制限は体積にだけあります。</p>
+
+<table><thead><tr><th>項目</th><th>値</th><th>設定キー</th></tr></thead><tbody><tr><td>最小体積</td><td>27 ブロック</td><td></td></tr><tr><td>最大体積</td><td>4096 ブロック</td><td></td></tr><tr><td>制御装置からの最大距離</td><td>24 ブロック</td><td></td></tr><tr><td>再走査の間隔</td><td>40 ティック（2 秒）</td><td></td></tr></tbody></table>
+
+<p>長さではなく体積です。「差し渡し 3 ブロック」はドームには何の意味もありません。</p>
+
+<p><strong>最大距離</strong>は体積の上限より厳しい、2 つめの安全装置です。バランス調整のためではありません。 そうしないと、密閉されていない部屋では塗りつぶしが数十ブロック脇へ流れ出し、読み込まれていない かもしれないチャンクを読みに行ってしまいます。</p>
+
+<p>ガラスは<strong>どれでも</strong>構いません——バニラのもの、色付きのもの、<code>#c:glass_blocks</code> 経由で他モッドの ものも。色付きの温室はひとりでに実現するもので、そのための専用コードはありません。ドアもバニラの ものならどれでも受け付けます。自前のものだけではありません。</p>
+
+<h3 id="建造中にプレイヤーが見るもの">建造中にプレイヤーが見るもの</h3>
+
+<p>走査は目に見えないので、成形は 3 つの方法で同時に示されます。</p>
+
+<ul><li><strong>シェルが継ぎ目を失う</strong>——床とガラスには枠のない第 2 のテクスチャがあり、成形した部屋は箱の山</li></ul>
+<p>ではなくひと続きの面として読めます。輪郭に沿った枠は残り、シルエットを縁取ります。</p>
+<ul><li><strong>音</strong>——閉じたその瞬間の和音がひとつ。遷移のときだけ鳴ります。</li><li><strong>パーティクル</strong>——床の継ぎ目に沿った閃光。</li></ul>
+
+<p>壁をひとつ崩せば、シェルは即座にばらばらな見た目へ戻ります。</p>
+
+<h3 id="部屋が閉じないとき">部屋が閉じないとき</h3>
+
+<p>制御装置を右クリックすると、何が問題かをチャットへ報告します。その温室が以前に成形したことがあれ ば、メッセージには<strong>欠けたブロック</strong>の座標も添えられ、そこから 2 秒ごとに煙が上がります。</p>
+
+<table><thead><tr><th>状態</th><th>報告される内容</th></tr></thead><tbody><tr><td>成形済み</td><td>体積、苗床の数、水の有無</td></tr><tr><td>閉じていない</td><td>欠けたブロックの座標（特定できる場合）。できなければ単に「閉じていない」</td></tr><tr><td>小さすぎる</td><td>座標なし</td></tr><tr><td>制御装置が壁にない</td><td>制御装置の座標</td></tr><tr><td>制御装置が 2 つある</td><td>もう一方の制御装置の座標</td></tr></tbody></table>
+
+<p><strong>座標はいつも出るわけではなく、それは意図的です。</strong>塗りつぶしは自分がどこから漏れているか言えま せん。穴から外へ出て、距離の上限にぶつかるまで進み続けるだけです。ですから穴は塗りつぶしからでは なく、前回うまく成形したときに覚えておいたシェルのマス一覧から探します——欠けたブロックとは、その 中でシェルのブロックでなくなったマスのことです。一度も成形したことのない温室には比べる相手が ありません。そのときは座標を<strong>まったく出しません</strong>。見当違いの場所を見に行かせるくらいなら、 「閉じていない」と正直に言うほうがましだからです。</p>
+
+<h2 id="苗床">苗床</h2>
+
+<p>クラフトした時点では<strong>死んでいます</strong>——バニラの芽生えたアメジストと同じ結晶質の石から、色だけが 抜けたものです。アメジストの欠片を与える（右クリック）と色が満ち、実り始めます。</p>
+
+<ul><li><strong>1 クリックにつき欠片 1 個。</strong>充填量はホットバーの上の行に表示され、満ちるにつれて音の高さが</li></ul>
+<p>上がります。</p>
+<ul><li><strong>アメジストブロック</strong>は欠片 4 個として扱われます——バニラがそのクラフトに入れているのと同じ数</li></ul>
+<p>です。</p>
+<ul><li><strong>いつでも継ぎ足せます。</strong>充填が尽きるのを待つ必要はありません。</li><li>上限は待ち行列の<strong>芽 16 個</strong>です。ほぼ満杯の苗床はアメジストブロックを<strong>受け付けません</strong>。</li></ul>
+<p>ブロックは一度に芽 4 個ぶんを与えるので、空き 1 つのために入れると、希少なアイテムの 4 分の 3 を 黙って燃やすことになります。欠片での継ぎ足しならいつでもできます。</p>
+
+<p>塊は苗床の空いた面に育ち、バニラの段階 <code>小さな芽 → 中くらい → 大きい → 塊</code> をたどります。育ち きった塊は<strong>ツルハシ</strong>で落とすと<strong>欠片 4 個</strong>になります（バニラのテーブル。幸運も効きます）。 熟していない芽は何も落としません——バニラと同じです。</p>
+
+<p><strong>温室の外にある苗床は、そのことを正直に告げます。</strong>充填はどこでもでき、カウンターもまったく同じ ように増えます——それでも何も育ちません。ですから、成形済みの温室がひとつも見ていないブロックに 与えたときは、カウンターの代わりに警告が返ります。</p>
+
+<h2 id="エネルギー">エネルギー</h2>
+
+<table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>役割</td><td>バッファ付きの消費側。<strong>必須ではない</strong></td></tr><tr><td>バッファ（EU/FE）</td><td>4000（）</td></tr><tr><td>最大入力（EU/FE/ティック）</td><td>32（LV）</td></tr><tr><td>成長イベント 1 回あたりの EU/FE</td><td>64（）</td></tr></tbody></table>
+
+<p>ここでのエネルギーは条件ではなく加速装置です。ケーブルが 1 本もない温室でも動きます。ただ遅いだけ です。EU/FE は<strong>実際に起きた成長イベントに対してのみ</strong>引かれます。エネルギーが買うのはクリスタルで あって、サイコロの目ではありません。</p>
+
+<h2 id="成長と収支">成長と収支</h2>
+
+<p>成長はバニラのアメジストと同じく確率的です。 ティックごとに、 苗床それぞれがサイコロを振ります。サイコロは苗床ごとに別です——共通の 1 回で振ってしまうと温室 全体が足並みをそろえて育ち、生き物ではなく機械のように読めてしまいます。</p>
+
+<p>クリスタル 1 個には<strong>イベント 4 回</strong>かかります。芽が現れ、さらに 3 回育つ必要があるからです。</p>
+
+<table><thead><tr><th>条件</th><th>除数</th><th>現実時間</th><th>ゲーム内日数</th></tr></thead><tbody><tr><td>何もなし</td><td>270</td><td>約 1 時間 30 分</td><td>4.5</td></tr><tr><td>電力のみ</td><td>135</td><td>約 45 分</td><td>2.25</td></tr><tr><td>水のみ</td><td>90</td><td>約 30 分</td><td>1.5</td></tr><tr><td>水と電力</td><td>45</td><td>約 15 分</td><td>0.75</td></tr></tbody></table>
+
+<p>ゲーム内の 1 日は現実の 20 分です。最後の列はこの換算によります。</p>
+
+<p><strong>これは苗床 1 台あたりの時間であって、温室全体の時間ではありません。</strong> 苗床はそれぞれ独立した サイコロで並行して育つため、25 台の大部屋なら水もケーブルもなしで約 3.6 分に 1 つ、両方そろえば 約 30 秒に 1 つの晶塊を出します。ここでは加速装置よりも規模のほうが効きます——温室は横へ広がる ものだからです。</p>
+
+<table><thead><tr><th>項目</th><th>値</th><th>設定キー</th></tr></thead><tbody><tr><td>成長判定の間隔</td><td>100 ティック（5 秒）</td><td></td></tr><tr><td>基本の除数</td><td>270</td><td></td></tr><tr><td>水による加速</td><td>÷3</td><td></td></tr><tr><td>電力による加速</td><td>÷2</td><td></td></tr><tr><td>欠片 1 個あたりの芽</td><td>1</td><td></td></tr></tbody></table>
+
+<p><strong>採算。</strong>欠片が入る——クリスタルが出る——欠片が 4 個戻る。見返りは<strong>4 倍</strong>で、1 時間半で支払い ます。苗床を満たす（芽 16 個）には欠片 16 個かかり、チャンクが読み込まれたままなら約 1 日で 64 個 返ってきます。</p>
+
+<p>数字を守っているのは L1 テスト <code>CrystalGrowthTest</code> です。欠片が自分より高く戻ってくることも、 見返りが上へ飛んでいないことも検査します——アメジストを刷る農場は、アメジストを食う農場と同じ くらい確実にこの系統を壊すからです。</p>
+
+<h2 id="ドア">ドア</h2>
+
+<p>機構としてはごく普通のバニラのドアです——蝶番、上下 2 つの半分、レッドストーン——ただし 1 つだけ 足されています。<strong>自分で閉まる</strong>のです。</p>
+
+<table><thead><tr><th>項目</th><th>値</th><th>設定キー</th></tr></thead><tbody><tr><td>自動で閉まるまでの遅延</td><td>100 ティック（5 秒）</td><td></td></tr><tr><td>出入口がふさがっているときの再確認</td><td>10 ティック</td><td></td></tr></tbody></table>
+
+<p><strong>開いたドアは温室の密閉を壊しません。</strong>走査はブロックが「何であるか」を見るのであって、それが 開いているかどうかは見ません——原子炉のエアロックとまったく同じです——ですからドアを開け放った 温室もそのまま育ち続けます。以前ここには逆のことが書かれていました。それが一度も事実でなかったと 監査が突き止めたのです。</p>
+
+<p>「開いたドアは密閉を壊す」という案は検討のうえ却下されました。誠実ではありますが、そうすると中へ 入るたびにシェル全体が消灯し、5 秒後に塗り直されます——ホールほどの温室なら 1 回の訪問で 2 度 またたくことになり、それは両方向それぞれ数千回のブロック更新です。</p>
+
+<p>つまりドアが閉まるのは機構のためではなく、開け放たれた温室が見た目に悪いからであり、そして部屋が それ以外は閉じているからです——モブが入ってくるのは、まさに閉まっていないドアからです。</p>
+
+<ul><li><strong>レッドストーンはドアを開いたままにします</strong>——信号は「意図して開けてある」という意味です。</li><li><strong>出入口に立っている者がいればドアは閉まりません</strong>——判定は上下両方の半分を見て、生き物だけを</li></ul>
+<p>数えます。足元に落とした欠片ではドアは止まりません。</p>
+
+<h2 id="ブロックの性質">ブロックの性質</h2>
+
+<table><thead><tr><th>ブロック</th><th>硬度</th><th>爆発耐性</th><th>ツール</th><th>備考</th></tr></thead><tbody><tr><td>温室の床</td><td>3.0</td><td>6.0</td><td>ツルハシ</td><td>/<code>edge</code> プロパティ</td></tr><tr><td>温室のガラス</td><td>3.0</td><td>6.0</td><td>ツルハシ</td><td>、/<code>edge</code> プロパティ</td></tr><tr><td>温室のドア</td><td>3.0</td><td>6.0</td><td>ツルハシ</td><td>、ピストンで壊れる</td></tr><tr><td>制御装置</td><td>3.0</td><td>6.0</td><td>ツルハシ</td><td>プロパティ、水平の</td></tr><tr><td>苗床</td><td>3.0</td><td>6.0</td><td>ツルハシ</td><td>アメジストの音、/ プロパティ</td></tr></tbody></table>
+
+<p>苗床は<strong>必ず死んだ状態で戻ります</strong>。充填とは費やした時間であり、働いている苗床をポケットに入れて 持ち去らせるわけにはいきません。</p>
+
+<h2 id="レシピ">レシピ</h2>
+
+<table><thead><tr><th>何</th><th>配置</th><th>産出</th></tr></thead><tbody><tr><td>温室の床</td><td><code>TGT</code> / <code>GTG</code> / <code>TGT</code> — T：焼き入れ鉄板、G：ガラス</td><td>4</td></tr><tr><td>温室のガラス</td><td><code>GGG</code> / <code>GTG</code> / <code>GGG</code></td><td>8</td></tr><tr><td>温室のドア</td><td><code>GG</code> / <code>GG</code> / <code>TT</code> — G：温室のガラス</td><td>2</td></tr><tr><td>制御装置</td><td><code>KAK</code> / <code>CMC</code> / <code>KKK</code> — K：温室の床、A：アメジストの欠片、C：電子回路、M：マシンケース</td><td>1</td></tr><tr><td>苗床</td><td><code>QSQ</code> / <code>SAS</code> / <code>QSQ</code> — Q：クォーツ、S：滑らかな玄武岩、A：<strong>アメジストブロック</strong></td><td>1</td></tr></tbody></table>
+
+<p>苗床は<strong>アメジストブロックを囲んで</strong>組み上げます——バニラの芽生えたアメジストがアメジストである のと同じです。そのうえで、温室のどのレシピも、温室が存在する理由そのものを要求しません。欠片は 与えるために要るのであって建てるために要るのではない——さもなければ、この農場が直そうとしている まさにその欠乏で農場の代金を払うことになります。</p>
+
+<h2 id="進行">進行</h2>
+
+<ul><li>ティア：LV。しかもそれすら任意です。</li><li>系統をよみがえらせます：<code>resonant_shard</code>、<code>spatial_crystal</code>、そしてそれらを通じて共鳴コイル、</li></ul>
+<p>テレポートチップ、ラポトロンクリスタル、共振クリスタル。</p>
+<ul><li>出発点としてジオードを見つけている必要があります——最初の欠片はそこで手に入ります。温室は供給源</li></ul>
+<p>を再生可能にしますが、無からそれを生み出しはしません。</p>
+
+<h2 id="パフォーマンス">パフォーマンス</h2>
+
+<p>温室でティックする唯一のオブジェクトは<strong>制御装置</strong>です。苗床にも、その上で育つ塊にも、ブロック エンティティもランダムティックもありません。苗床 100 台の農場がワールドに足すティック対象は 1 つ だけです。同じことが「成形した部屋の中でしか育たない」という規則を、忘れうる検査ではなく構造上の 真として成り立たせています。</p>
+
+<h2 id="関連項目">関連項目</h2>
+
+<ul><li><a href="incubator.html">インキュベーター</a> — 隣のジャンル：確率的で即座の突然変異に対する、決定的で時間を</li></ul>
+<p>かけた成長。</p>
+<ul><li><a href="trellis.html">支柱</a> — ブロックエンティティなしの多年生の成長という先例。</li><li><a href="../nuclear/reactor_controller.html">原子炉制御装置</a> — 隣のマルチブロック。共通なのはシェルの</li></ul>
+<p>幾何だけで、走査器は別物です（箱と体積の塗りつぶし）。</p>
+
+<h2>クラフト</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="温室制御装置 alaindustrial:crystal_farm_controller" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="温室の床"><img src="../assets/block/crystal_farm_floor.png" alt="温室の床" width="32" height="32"></div> <div class="cell" title="Amethyst Shard"><img src="../assets/item/amethyst_shard_3d.png" alt="Amethyst Shard" width="32" height="32"></div> <div class="cell" title="温室の床"><img src="../assets/block/crystal_farm_floor.png" alt="温室の床" width="32" height="32"></div> <div class="cell" title="電子回路"><img src="../assets/item/electronic_circuit_3d.png" alt="電子回路" width="32" height="32"></div> <div class="cell" title="マシンケース"><img src="../assets/item/machine_casing_3d.png" alt="マシンケース" width="32" height="32"></div> <div class="cell" title="電子回路"><img src="../assets/item/electronic_circuit_3d.png" alt="電子回路" width="32" height="32"></div> <div class="cell" title="温室の床"><img src="../assets/block/crystal_farm_floor.png" alt="温室の床" width="32" height="32"></div> <div class="cell" title="温室の床"><img src="../assets/block/crystal_farm_floor.png" alt="温室の床" width="32" height="32"></div> <div class="cell" title="温室の床"><img src="../assets/block/crystal_farm_floor.png" alt="温室の床" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="温室制御装置"><img src="../assets/block/crystal_farm_controller_top.png" alt="温室制御装置" width="32" height="32"></div><div class="result-name">温室制御装置</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

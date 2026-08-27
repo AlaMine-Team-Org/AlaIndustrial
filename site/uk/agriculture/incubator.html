@@ -373,7 +373,7 @@
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Зберігання рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Світ та автоматизація</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="18 сторінок">18</span></a>
-<a class="cat-link active" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сільське господарство</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
+<a class="cat-link active" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сільське господарство</span><span class="cat-count" aria-label="4 сторінки">4</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Високотехнологічні машини</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Інше</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилітарні блоки</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
@@ -466,15 +466,27 @@
 
 <p><strong>Міняємо рівноцінне на рівноцінне.</strong> Апгрейд за цінністю (залізо → золото) заборонений. Усі 27 рецептів — шанс 0.75, 300 тиків, 2400 EU/FE. Для родин із багатьох предметів (саджанці, квіти, ґрунти) застосовується <strong>кільце</strong>: кожен предмет перетворюється на наступний по колу, доки не випаде потрібний.</p>
 
-<h3 id="створення">Створення</h3>
+<table><thead><tr><th>Категорія</th><th>Рецепти</th><th>Кільце</th></tr></thead><tbody><tr><td>Мінерали</td><td>3</td><td>лазурит ↔ редстоун, кварц ↔ світлокам'яний пил, вугілля ↔ деревне вугілля (усі 1:1)</td></tr><tr><td>Саджанці</td><td>8</td><td>дуб → береза → ялина → тропічний → акація → темний дуб → вишня → мангровий → дуб</td></tr><tr><td>Квіти</td><td>8</td><td>кульбаба → мак → синя орхідея → лугова квітка → блакитна пелюстка → волошка → конвалія → ромашка → кульбаба</td></tr><tr><td>Ґрунти</td><td>5</td><td>земля → підзол → міцелій → земля; пісок ↔ червоний пісок</td></tr></tbody></table>
 
-<p>Найдорожчий режим (8000 EU/FE, 50 секунд, шанс 0.25) — він робить із ванільної сировини матеріали самого моду, яких у світі інакше не дістати.</p>
+<h3 id="створення-еволюційні-сходи">Створення — еволюційні сходи</h3>
+
+<p>Звичайний предмет <strong>еволюціонує</strong> в унікальний матеріал моду по трисходинковій драбині. Що вища сходинка, то нижчий шанс і дорожча операція. На сходинках 2–3 провал <strong>повертає вхід цілим</strong> (згорають лише заряд і EU/FE) — інакше ніхто б не ризикував підійматися вище першої.</p>
+
+<table><thead><tr><th>Гілка</th><th>Сходинка 1</th><th>Сходинка 2</th><th>Сходинка 3</th></tr></thead><tbody><tr><td>Алмазна — енергощільність</td><td>алмаз → опромінений алмаз</td><td>→ алмазна матриця</td><td>→ ядро сингулярності</td></tr><tr><td>Кристалічна — оптика</td><td>осколок аметиста → резонуючий осколок</td><td>→ фокусувальна лінза</td><td>→ призматичне ядро</td></tr><tr><td>Біологічна — агро</td><td>лазурит → пил мутагену</td><td>→ живий мутаген</td><td>→ генна матриця</td></tr><tr><td>Ядерна — паливо</td><td>збіднений уран → нестабільний ізотоп</td><td>→ збагачене ядро</td><td>→ ізотопний концентрат</td></tr></tbody></table>
+
+<table><thead><tr><th>Сходинка</th><th>Шанс</th><th>Тіки</th><th>EU/FE</th><th>При провалі</th></tr></thead><tbody><tr><td>1 (ваніль → матеріал моду)</td><td>0.25</td><td>1000</td><td>8000</td><td>вхід втрачається</td></tr><tr><td>2</td><td>0.15</td><td>1500</td><td>12000</td><td><strong>вхід повертається цілим</strong></td></tr><tr><td>3</td><td>0.08</td><td>2000</td><td>16000</td><td><strong>вхід повертається цілим</strong></td></tr></tbody></table>
+
+<p>Ядерна гілка стартує із золи самого інкубатора — відпрацьований уран стає входом у ланцюжок, а не сміттям.</p>
+
+<p>У поточному релізі є лише 4 рецепти сходинки 1 (по одному на гілку): → <code>irradiated_diamond</code>, <code>amethyst_shard</code> → <code>resonant_shard</code>, <code>lapis_lazuli</code> → <code>mutagen_dust</code>, <code>depleted_uranium</code> → <code>unstable_isotope</code>. Сходинки 2–3 й апгрейд-чипи з верхніх матеріалів — наступний реліз.</p>
 
 <h2 id="прогресія">Прогресія</h2>
 
-<p>Тир: LV — але найенергоємніша LV-машина моду: 8 EU/FE/такт і мінімум 2400 EU/FE за операцію. Гейт тримається на <strong>урані</strong>: без нього немає заряду опромінення, а уран лежить біля самого дна світу й вимагає залізного кайла. Збирається на базі <a href="../components/machine_casing.html">корпусу машини</a> з <a href="../components/electronic_circuit.html">електронною схемою</a>.</p>
+<p>Тир: LV. Будувати після перших машин (мацератор/екстрактор), коли є стабільна уранова жила й EU/FE-мережа. Вводить 7 нових предметів: <code>depleted_uranium</code>, <code>irradiated_diamond</code>, <code>mutagen_dust</code>, <code>resonant_shard</code>, <code>unstable_isotope</code>, <code>irradiated_slag</code> (побічний продукт 5 % спроб — без споживачів у цьому релізі, заділ на майбутнє) + три чипи режимів. <strong>Грейди-«гени»</strong> на матеріалах дають бонус до шансу повторної мутації (+5/+10/+15 в.п.) — споживачі з'являться в майбутніх агро/ядерних фазах. Досягнення мутацій: «Щось змінилося» (будь-який мутований предмет), «З нічого» (матеріал режиму), «Один із п'ятдесяти» (легендарний результат).</p>
 
 <h2 id="повязане">Пов'язане</h2>
+
+<p><a href="../materials/uranium.html">Уран</a> — паливний зливок. Ядерна тема — куди піде <code>depleted_uranium</code>. <a href="../advanced-machines/teleporter.html">Телепорт-мультиблок</a> — споріднене завдання на структуру. <a href="../machines/sawmill.html">Лісопилка</a> — зразок машини з перемикними режимами. <a href="../generators/solar_panel.html">Сонячна панель</a> — зразок слота чипа, що задає режим.</p>
 
 <p><a href="../materials/uranium.html">Уран</a> — паливо опромінення. <a href="trellis.html">Жердинка</a> · <a href="garden_drone_station.html">Станція дрона-садівника</a> — решта садової гілки. <a href="../components/rubber.html">Гума</a> — обумовлений виняток у дублюванні. <a href="../components/machine_casing.html">Корпус машини</a> — база крафта.</p>
 

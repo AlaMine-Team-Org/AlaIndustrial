@@ -373,7 +373,7 @@
 <a class="cat-link active" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="18 pages">18</span></a>
-<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="3 pages">3</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
@@ -405,6 +405,10 @@
 <table><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody><tr><td>Capacity</td><td>8000 mB (8 buckets)</td></tr><tr><td>Fluids at once</td><td>1</td></tr><tr><td>Input / output</td><td>all 6 faces</td></tr><tr><td>Automatic output</td><td>none</td></tr></tbody></table>
 
 <p>Different fluids never mix. A comparator outputs 0 while empty and 1–15 according to fullness.</p>
+
+<h2 id="interaction">Interaction</h2>
+
+<p>A bucket of water or lava transfers exactly 1000 mB into the tank, if there's room. An empty bucket takes 1000 mB out, but only if the tank holds a full bucket's worth of water or lava. The <a href="../items/vacuum_capsule.html">Vacuum Capsule</a> fills and empties the tank. Pipes and other mods' containers can insert and extract fluid through any face. A comparator outputs 0 for an empty tank and 1–15 proportional to how full it is.</p>
 
 <h2 id="block-properties">Block properties</h2>
 

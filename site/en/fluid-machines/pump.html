@@ -373,7 +373,7 @@
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="18 pages">18</span></a>
-<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="3 pages">3</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
@@ -398,9 +398,9 @@
 
 <blockquote><strong>Status:</strong> a public block — present in the creative tab, has a crafting recipe, GUI, and is visible in JEI/REI. It's one of the most energy-hungry machines in the mod (1000 EU/FE per bucket).</blockquote>
 
-<p>The <strong>Pump</strong> is an EU/FE-powered LV machine that moves fluids. It finds a lava or water source in the world (starting at the block in front of it and following the flow outward), or draws fluid from an adjacent tank, banks it in an internal <strong>10-bucket</strong> tank, and pushes it on into any neighbouring receiver tank.</p>
+<p>The <strong>Pump</strong> is an EU/FE-powered LV machine that moves fluids. It finds any fluid source in the world (starting at the block in front of it and following the flow outward), or draws fluid from an adjacent tank, banks it in an internal <strong>10-bucket</strong> tank, and pushes it on into any neighbouring receiver tank. The tank accepts <strong>any</strong> fluid (not just lava/water), so modded fluids can go in too — via a capsule or a foreign container.</p>
 
-<p>The tank holds only one fluid at a time: if it already contains lava it won't accept water (and vice versa) until it empties. Mixing is ruled out on purpose — you can't accidentally dump two fluids into one pipe.</p>
+<p>The tank holds only one fluid at a time: while it's holding one kind, another is rejected until it empties. Mixing is ruled out on purpose — you can't accidentally dump two fluids into one pipe.</p>
 
 <p>The main use case is feeding the <a href="../generators/geothermal_generator.html">Geothermal Generator</a> with lava through a pipe instead of hauling buckets by hand; the pump also moves water for future fluid chains.</p>
 
@@ -434,15 +434,21 @@
 
 <h2 id="inventory">Inventory</h2>
 
-<p>Two slots for buckets — for manually pouring fluid into the tank. This isn't the pump's main way of working, just a handy convenience.</p>
+<p>Four slots in a 2×2 grid — for manually filling and draining fluid. This isn't the pump's main way of working, just a handy convenience.</p>
 
-<table><thead><tr><th>Slot</th><th>Accepts</th><th>Count</th></tr></thead><tbody><tr><td>Input (0)</td><td>lava bucket / water bucket (a lava bucket, a water bucket)</td><td>1</td></tr><tr><td>Output (1)</td><td>empty bucket (an empty bucket, extraction only)</td><td>up to a stack</td></tr></tbody></table>
+<table><thead><tr><th>Slot</th><th>Row</th><th>Accepts</th><th>Count</th></tr></thead><tbody><tr><td>Fill input (0)</td><td>top</td><td>any <strong>full</strong> fluid container</td><td>up to a stack</td></tr><tr><td>Fill output (1)</td><td>top</td><td>the emptied container (extraction only)</td><td>up to a stack</td></tr><tr><td>Drain input (2)</td><td>bottom</td><td>any <strong>empty</strong> fluid container</td><td>up to a stack</td></tr><tr><td>Drain output (3)</td><td>bottom</td><td>the filled container (extraction only)</td><td>up to a stack</td></tr></tbody></table>
 
-<p>Filling via buckets: a bucket from the input slot is emptied into the tank (1 bucket = 1000 mB), the empty bucket drops into the output slot — same as the Geothermal Generator. This <strong>costs no EU/FE</strong> (manual fill, not the pump). Hoppers can take empty buckets out of the output slot and put fresh fluid buckets into the input slot.</p>
+<p><strong>Any container, not just a bucket.</strong> The slots accept anything that can carry fluid: vanilla lava and water buckets, this mod's <a href="../items/vacuum_capsule.html">Vacuum Capsule</a> with any fluid, and other mods' containers (their cells, canisters, capsules). The pump does not keep a list of known items — it asks the item itself through the loader's standard fluid interface, so foreign containers work on their own, with no work needed on our side.</p>
+
+<p>Exchange happens <strong>strictly one bucket at a time</strong>, all-or-nothing: if the tank can't accept a whole bucket (no room, or it holds a different fluid) or there's nowhere to put the container, nothing happens at all — the fluid and the container stay put. This <strong>costs no EU/FE</strong> (manual fill, not the pump).</p>
+
+<p>The Vacuum Capsule is the only manual route for <strong>modded</strong> fluids — there's no vanilla bucket for them, and the capsule accepts any fluid.</p>
+
+<p>Hoppers and pipes only insert into the <strong>input</strong> slots (0 and 2) and only extract from the <strong>output</strong> slots (1 and 3) — the machine itself fills the outputs.</p>
 
 <h2 id="internal-tank">Internal tank</h2>
 
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Implementation</td><td>neutral (in, works on Fabric and NeoForge)</td></tr><tr><td>Capacity</td><td><strong>10 buckets</strong> (10 buckets = 10000 mB)</td></tr><tr><td>Accepts</td><td>allowlist: lava + water (→)</td></tr><tr><td>Mixing</td><td><strong>forbidden</strong> — the tank is single-variant: while it holds one fluid, the other is rejected (guaranteed by the core's <code>.insert</code>)</td></tr><tr><td>Extraction</td><td>allowed from any side (→ true)</td></tr><tr><td>Access</td><td>per face; pipes and tanks of other mods connect to it on both loaders</td></tr></tbody></table>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Implementation</td><td>neutral (in, works on Fabric and NeoForge)</td></tr><tr><td>Capacity</td><td><strong>10 buckets</strong> (10 buckets = 10000 mB)</td></tr><tr><td>Accepts</td><td>any non-empty fluid, not just lava/water (→)</td></tr><tr><td>Mixing</td><td><strong>forbidden</strong> — the tank is single-variant: while it holds one fluid, the other is rejected (guaranteed by the core's <code>.insert</code>)</td></tr><tr><td>Extraction</td><td>allowed from any side (→ true)</td></tr><tr><td>Access</td><td>per face; pipes and tanks of other mods connect to it on both loaders</td></tr></tbody></table>
 
 <p><strong>Single-variant guarantee.</strong> The tank holds at most one fluid at a time. If empty, it accepts any from the allowlist; if it already holds lava, water is rejected (and vice versa) until it empties. Mixing fluids by accident is impossible — it's built into the tank itself.</p>
 

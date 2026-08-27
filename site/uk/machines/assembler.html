@@ -373,7 +373,7 @@
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Зберігання рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Світ та автоматизація</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="18 сторінок">18</span></a>
-<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сільське господарство</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сільське господарство</span><span class="cat-count" aria-label="4 сторінки">4</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Високотехнологічні машини</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Інше</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилітарні блоки</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
@@ -510,13 +510,31 @@
 
 <h2 id="властивості-блока">Властивості блока</h2>
 
-<p>Звичайний суцільний блок, ламається кайлом. При зламі випадає сам блок і вміст інвентаря; EU/FE-буфер не зберігається.</p>
+<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Форма</td><td>суцільний куб 16³</td></tr><tr><td>Міцність</td><td>3.0</td></tr><tr><td>Вибухостійкість</td><td>6.0</td></tr><tr><td>Інструмент</td><td>кайло</td></tr><tr><td>Дроп з NBT енергії</td><td>ні</td></tr></tbody></table>
 
-<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Інструмент</td><td>кайло</td></tr><tr><td>Зберігає заряд при зламі</td><td>ні</td></tr></tbody></table>
+<p>При зруйнуванні автомата випадають схеми зі слотів і вміст вихідної зони. Вміст складу <strong>залишається в модулях</strong> — втрачається лише зв'язність, і модулі простоюють до встановлення нового автомата. Закріплено <code>TC-ASM-026</code>: те, що випадає, вважається точним числом, тож видно й втрату схеми (її не скрафтити назад), і подвійний дроп вихідної зони.</p>
+
+<p>Черга схем, прогрес і позиція кола (курсора) переживають перезавантаження — <code>TC-ASM-027</code> проганяє машину через NBT, тим самим шляхом, що збереження й завантаження чанку. Курсор у цьому списку — єдине поле без видимого симптому: загубись він, коло мовчки почало б знову з першої схеми, і чесність черги, заради якої він і існує, тихо перестала б працювати.</p>
+
+<p>Передня грань позначена і, як у решти машин моду, виключена з автоматизації: труба, приткнута до лицьової сторони, не побачить слотів.</p>
 
 <h2 id="рецепти">Рецепти</h2>
 
 <p>Автомат збирається на базі <a href="../components/advanced_machine_casing.html">просунутого корпусу машини</a> — це його вхідний квиток у MV. Власних рецептів переробки він не має: він виконує звичайні верстакові рецепти, записані на схему.</p>
+
+<p>Рецептів переробки немає — машина використовує ванільний <code>minecraft:crafting</code></p>
+
+<p>Склад за зразком жанру — корпус тиру + дві схеми + «ідентичність» + «зберігання», а чотири кути зайняті механікою, яка ці деталі рухає:</p>
+
+<pre><code class="lang-">G T G A — [Просунутий корпус машини] — серце й тир машини
+C A C C — [Електронна схема] ×2 — логіка, що читає схему складання
+G S G T — верстак — те, що робить машина
+S — [Модуль зберігання] — звідки вона бере деталі
+G — [Залізна шестерня] ×4 — «руки», що подають деталь у сітку</code></pre>
+
+<p>Посилання: <a href="../components/advanced_machine_casing.html">Просунутий корпус машини</a>, <a href="../components/electronic_circuit.html">Електронна схема</a>, <a href="../utility/storage_module.html">Модуль зберігання</a>, <a href="../components/metal_gears.html">Залізна шестерня</a>.</p>
+
+<p>Кути — саме шестерні, а не ще пластини: автомат — перша машина моду, яка сама перекладає деталі, і шестерня — та деталь, яку мод уже витрачає рівно на це (<a href="../fluid-storage/fluid_tank.html">Бак</a>, <a href="../item-transport/item_pipe.html">Предметна труба</a> читаються так само). Заповнені дев'ять клітинок заразом ставлять крафт в один ряд з рештою машин моду, де порожній кут — виняток.</p>
 
 <h2 id="прогресія">Прогресія</h2>
 
