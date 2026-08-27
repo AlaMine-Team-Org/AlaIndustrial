@@ -218,7 +218,7 @@ public final class TeleporterGuiScenarios {
 		station.setOwner(STRANGER, "Someone");
 		station.setPrivate(true);
 
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
 		if (station.isOwner(player.getUUID())) {
 			helper.fail("a stranger must not read as the owner");
 		}
@@ -233,7 +233,7 @@ public final class TeleporterGuiScenarios {
 	 *     the screen lists is whatever the player is actually holding.
 	 */
 	public static void tcTele003Fun04_menuReadsTheHeldRemote(GameTestHelper helper) {
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
 		ItemStack remote = new ItemStack(ModContent.TELEPORTER_REMOTE.get());
 		remote.set(ModDataComponents.TELEPORTER_POINTS.get(),
 				new TeleportPoints(List.of(point(helper, 5, "home"))));

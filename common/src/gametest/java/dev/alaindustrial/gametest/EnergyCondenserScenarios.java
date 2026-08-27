@@ -286,7 +286,7 @@ public final class EnergyCondenserScenarios {
 	 */
 	public static void condenser_menuSlotsStayInsideTheContainer(GameTestHelper helper) {
 		EnergyCondenserBlockEntity be = place(helper);
-		net.minecraft.server.level.ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		net.minecraft.server.level.ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
 		dev.alaindustrial.menu.EnergyCondenserMenu menu = new dev.alaindustrial.menu.EnergyCondenserMenu(
 				1, player.getInventory(), be, be.getDataAccess(),
 				net.minecraft.world.inventory.ContainerLevelAccess.create(helper.getLevel(), be.getBlockPos()));

@@ -27,7 +27,7 @@ public final class GuideBookGiverScenarios {
 	 * carries this mock UUID from an earlier test in the same run.
 	 */
 	public static void giveOnce(GameTestHelper helper) {
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
 		// The mock defaults to CREATIVE; pin SURVIVAL so give/count behaviour is explicit and stable.
 		player.setGameMode(GameType.SURVIVAL);
 		UUID id = player.getUUID();

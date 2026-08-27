@@ -66,7 +66,7 @@ public final class MenuDataWidthScenarios {
 	 * Traced by {@code AlaCommonGameTest} TC-CMN-001-REG02.
 	 */
 	public static void reg02ClientMenuWidthMatchesBlockEntity(GameTestHelper helper) {
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
 		List<String> problems = new ArrayList<>();
 		int checked = 0;
 

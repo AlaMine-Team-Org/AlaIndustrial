@@ -65,7 +65,7 @@ class OilLakeVolumeTest {
 	@ParameterizedTest(name = "{0} lake layer holds the pinned amount of oil")
 	@CsvSource({
 			//        h_min  h_max  v_min  v_max  b_min  b_max    min  median   max        sum  empty
-			"small,       3,     5,     2,     3,     2,     4,     0,      2,    45,    16265,  995",
+			"small,       3,     5,     3,     4,     2,     4,     0,     18,    85,    45619,   15",
 			"medium,      6,     9,     3,     5,     4,     7,    13,    136,   477,   317674,    0",
 			"large,      10,    14,     6,     9,     6,    10,   364,   1239,  2953,  2592464,    0",
 	})
@@ -96,23 +96,26 @@ class OilLakeVolumeTest {
 	}
 
 	/**
-	 * Half of every surface deposit in the game contains no oil whatsoever, and that is arithmetic
-	 * rather than luck.
+	 * A deposit two cells tall cannot hold oil at all — arithmetic, not luck, and the reason no
+	 * configured feature may roll a vertical radius below 3 (MOD-502).
 	 *
 	 * <p>Oil occupies levels {@code 0 <= y < verticalRadius}. Level 0 is the grid shell, which
 	 * {@link OilLakeShape} never fills. Level 1 cannot be filled either, for any deposit at all: a
 	 * blob's centre is drawn from {@code [radiusY + 1, …)}, so {@code |1 - centreY| >= radiusY},
 	 * so the normalised distance is at least 1 and the strictly-less-than test can never pass. That
-	 * leaves {@code verticalRadius - 2} usable levels — and {@code oil_lake_small} rolls a vertical
-	 * radius of 2 or 3 with equal odds.
+	 * leaves {@code verticalRadius - 2} usable levels, so a radius of 2 leaves none.
 	 *
-	 * <p>So a player who finds a surface deposit finds, half the time, a hole of cave air in the
-	 * ground with nothing in it. This test pins the defect rather than the intent: whoever changes
-	 * the ranges or the fluid split to fix it will see this go red, which is the point.
+	 * <p>{@code oil_lake_small} used to roll 2 or 3 with equal odds, which is how half of every
+	 * surface deposit in the game came to be an empty pit of cave air — 995 of 2001 samples. The
+	 * fix moved that range to 3–4; this test keeps the underlying arithmetic pinned, because the
+	 * range is data and could be lowered again by anyone editing the JSON. What guards the shipped
+	 * ranges themselves is {@code docs/tools/oil_volume_check.py}, which reads the configured
+	 * features for real and refuses a minimum below 3 — a check this Minecraft-free lane cannot
+	 * make, having no codec to read them with.
 	 */
-	@ParameterizedTest(name = "a vertical radius of 2 holds no oil at all (seed {0})")
+	@ParameterizedTest(name = "a vertical radius of 2 cannot hold oil at all (seed {0})")
 	@CsvSource({ "1", "42", "265", "-99", "1234567" })
-	void aVerticalRadiusOfTwoHoldsNoOilAtAll(long seed) {
+	void aVerticalRadiusOfTwoCannotHoldOilAtAll(long seed) {
 		Random random = new Random(seed);
 		for (int horizontalRadius = 3; horizontalRadius <= 5; horizontalRadius++) {
 			for (int blobs = 2; blobs <= 4; blobs++) {

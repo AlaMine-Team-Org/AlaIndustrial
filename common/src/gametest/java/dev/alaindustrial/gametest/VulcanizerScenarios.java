@@ -589,7 +589,7 @@ public final class VulcanizerScenarios {
 		drive(be, helper, operationTicks());
 		assertOutput(helper, be, 1);
 
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
 		player.setGameMode(GameType.SURVIVAL);
 		AdvancementHolder advancement = helper.getLevel().getServer().getAdvancements()
 				.get(Industrialization.id("rubber_production"));

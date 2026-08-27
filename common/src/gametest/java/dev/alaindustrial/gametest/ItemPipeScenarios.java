@@ -609,7 +609,7 @@ public final class ItemPipeScenarios {
 	public static void wrenchDismantlesOwnBlocks(GameTestHelper helper) {
 		helper.setBlock(PIPE_A, ModContent.ITEM_PIPE.get());
 		helper.setBlock(PIPE_B, net.minecraft.world.level.block.Blocks.STONE);
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
 		ItemStack wrench = new ItemStack(ModContent.WRENCH.get());
 
 		boolean ourBlock = dev.alaindustrial.item.tool.WrenchDismantle.dismantle(

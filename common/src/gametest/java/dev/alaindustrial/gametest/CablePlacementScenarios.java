@@ -38,8 +38,8 @@ import net.minecraft.world.phys.Vec3;
  * {@code context.getItemInHand()} — AIR — and places nothing. The bug was invisible until this
  * body started running on both loaders.
  *
- * <p>All players are created with {@link GameTestHelper#makeMockServerPlayerInLevel()} because the
- * machine test triggers {@code player.openMenu(...)}, which needs a real network handler.
+ * <p>All players are created with {@link AlaGameTestHelper#mockPlayerInLevel} because the machine
+ * test triggers {@code player.openMenu(...)}, which needs a real network handler.
  */
 public final class CablePlacementScenarios {
 
@@ -59,7 +59,7 @@ public final class CablePlacementScenarios {
 	public static void mod039_cableUseReturnsPass(GameTestHelper helper) {
 		helper.setBlock(CABLE, ModContent.COPPER_CABLE.get());
 		BlockState state = helper.getLevel().getBlockState(helper.absolutePos(CABLE));
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
 		BlockHitResult hit = hitOnCable(helper);
 		InteractionResult result = state.useWithoutItem(helper.getLevel(), player, hit);
 		if (result != InteractionResult.PASS) {
@@ -79,8 +79,8 @@ public final class CablePlacementScenarios {
 	public static void mod039_machineUseReturnsSuccess(GameTestHelper helper) {
 		helper.setBlock(CABLE, ModContent.BATTERY_BOX.get());
 		BlockState state = helper.getLevel().getBlockState(helper.absolutePos(CABLE));
-		// makeMockServerPlayerInLevel(): openMenu needs a real ServerPlayer with a network handler.
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		// In-level mock: openMenu needs a real ServerPlayer with a network handler.
+		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
 		BlockHitResult hit = hitOnCable(helper);
 		InteractionResult result = state.useWithoutItem(helper.getLevel(), player, hit);
 		if (result != InteractionResult.SUCCESS) {
@@ -113,7 +113,7 @@ public final class CablePlacementScenarios {
 		// which dispatches on context.getItemInHand() — i.e. on AIR — and places nothing. Driving
 		// the click through gameMode.useItemOn also covers the useWithoutItem → PASS → place chain
 		// that MOD-039 was actually about, instead of only its tail.
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
 		player.setItemInHand(InteractionHand.MAIN_HAND,
 				new ItemStack(ModContent.COPPER_CABLE_ITEM.get()));
 		BlockHitResult hit = hitOnCable(helper);

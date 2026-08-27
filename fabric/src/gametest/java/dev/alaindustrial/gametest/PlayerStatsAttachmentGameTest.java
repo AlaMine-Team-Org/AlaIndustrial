@@ -12,8 +12,8 @@ import net.minecraft.gametest.framework.GameTestHelper;
  * <p><b>Why this exists.</b> The task's risk register names exactly one failure mode for this feature —
  * "forgotten {@code .copyOnDeath()} on Fabric → progress lost on death" — and prescribed an L2 death
  * test as the mitigation. A literal death test is not writable here: the copy happens inside
- * {@code PlayerList.respawn}, which needs a real network connection, and {@code makeMockServerPlayerInLevel}
- * has none. What IS both writable and sufficient is pinning the declaration itself, because on Fabric the
+ * {@code PlayerList.respawn}, which needs a real network connection, and the in-level mock
+ * ({@code AlaGameTestHelper.mockPlayerInLevel}) has none. What IS both writable and sufficient is pinning the declaration itself, because on Fabric the
  * copy is driven entirely by {@link net.fabricmc.fabric.api.attachment.v1.AttachmentType#copyOnDeath()}
  * (read by {@code AttachmentTargetImpl}, which skips a type on death unless the flag is set). Drop the
  * flag from the builder — the exact refactor accident the risk register worried about — and this fails.

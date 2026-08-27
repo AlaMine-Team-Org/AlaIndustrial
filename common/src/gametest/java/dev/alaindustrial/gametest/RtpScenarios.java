@@ -60,7 +60,7 @@ public final class RtpScenarios {
 
 	/** Survival on purpose: {@code ItemStack#consume} leaves a creative player's stack alone. */
 	private static ServerPlayer playerNearStation(GameTestHelper helper) {
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
 		player.setGameMode(GameType.SURVIVAL);
 		BlockPos near = helper.absolutePos(STATION.offset(3, 0, 0));
 		player.snapTo(near.getX() + 0.5, near.getY(), near.getZ() + 0.5);

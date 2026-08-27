@@ -215,7 +215,7 @@ public final class ItemEnergy {
 	 * check reads — and not as {@code isCreative()}. For a real player the two agree by construction
 	 * ({@code GameType.updatePlayerAbilities} sets {@code instabuild} for and only for CREATIVE), but
 	 * the ability is the thing this rule is actually about, and it is the half a gametest can control:
-	 * {@code makeMockServerPlayerInLevel} hardcodes {@code gameMode()} to CREATIVE with an override that
+	 * the in-level mock hardcodes {@code gameMode()} to CREATIVE with an override that
 	 * {@code setGameMode} cannot undo, so a game-mode check would call every mock creative and quietly
 	 * disable the drill's EU assertions. Spectator needs its own check regardless — vanilla clears
 	 * {@code instabuild} for it.

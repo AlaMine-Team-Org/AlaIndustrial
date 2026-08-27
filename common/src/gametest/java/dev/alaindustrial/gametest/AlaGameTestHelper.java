@@ -77,10 +77,38 @@ public final class AlaGameTestHelper {
 	}
 
 	/**
+	 * The vanilla in-level mock player — and the ONLY call to it left in this repository (MOD-500).
+	 *
+	 * <p>{@code GameTestHelper#makeMockServerPlayerInLevel()} carries a bare
+	 * {@code @Deprecated(forRemoval = true)} in 26.2: no javadoc, no {@code @since}, no named
+	 * successor. There is nothing to migrate <em>to</em>. The neighbouring
+	 * {@code makeMockServerPlayer(GameType)} builds a DETACHED player — no {@code Connection}, never
+	 * placed in the player list — so menus, packet sends and entity lookups all fail on it; that one
+	 * is wrapped separately as {@link #detachedSurvivalPlayer}, whose javadoc lists what throws.
+	 * Every suite that opens a GUI needs the in-level variant, so the deprecation is absorbed here
+	 * deliberately rather than worked around badly.
+	 *
+	 * <p><b>Why funnel it, then.</b> The day the method actually goes — 26.3 is the first candidate,
+	 * see MOD-226 — this body is the single place to rewrite, most likely by inlining vanilla's four
+	 * lines (cookie, anonymous {@code ServerPlayer}, {@code EmbeddedChannel}, {@code placeNewPlayer}).
+	 * Before MOD-500 the same call sat in 28 more places across 16 files, and each of them would have
+	 * had to be found and fixed by hand.
+	 *
+	 * <p><b>What the caller gets.</b> A player whose {@code gameMode()} is an unconditional
+	 * {@code CREATIVE} override that {@code setGameMode} cannot undo, so {@code Player#isCreative()}
+	 * is permanently true — while {@code Abilities} stay writable. Anything that needs survival
+	 * semantics must go through {@link #survivalPlayer}: EU spend, tool wear and block drops read
+	 * {@code abilities.instabuild}, not {@code isCreative()}.
+	 */
+	@SuppressWarnings("removal")
+	public static ServerPlayer mockPlayerInLevel(GameTestHelper helper) {
+		return helper.makeMockServerPlayerInLevel();
+	}
+
+	/**
 	 * A survival mock player that is a real member of the level: added to the player list with a
 	 * live (embedded-channel) connection, so it can open menus, be sent packets, be found by entity
-	 * queries and go through {@code setGameMode}. Wraps the vanilla
-	 * {@code GameTestHelper#makeMockServerPlayerInLevel()}.
+	 * queries and go through {@code setGameMode}. Built on {@link #mockPlayerInLevel}.
 	 *
 	 * <p>Why the two extra lines are load-bearing (MOD-081, verified against the 26.2 sources): the
 	 * vanilla mock overrides {@code gameMode()} to return {@code CREATIVE} unconditionally, and
@@ -98,7 +126,7 @@ public final class AlaGameTestHelper {
 	 * touch the connection (packets, {@code setGameMode}, {@code snapTo}) — those would NPE on it.
 	 */
 	public static ServerPlayer survivalPlayer(GameTestHelper helper) {
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		ServerPlayer player = mockPlayerInLevel(helper);
 		player.setGameMode(GameType.SURVIVAL);
 		player.getAbilities().instabuild = false;
 		return player;

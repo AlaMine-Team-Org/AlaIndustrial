@@ -45,8 +45,8 @@
     },
     "vertical_radius": {
       "type": "minecraft:uniform",
-      "min_inclusive": 2,
-      "max_inclusive": 3
+      "min_inclusive": 3,
+      "max_inclusive": 4
     }
   }
 }

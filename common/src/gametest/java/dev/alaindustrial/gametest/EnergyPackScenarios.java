@@ -421,7 +421,7 @@ public final class EnergyPackScenarios {
 		// InventoryMenu.slotsChanged → CraftingMenu.slotChangedCraftingGrid, which casts the owner to
 		// ServerPlayer to send it the recipe result. Its gameMode() is hardcoded CREATIVE, so instabuild
 		// is forced off to keep this a survival case — the same trick ElectricDrillScenarios uses.
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
 		player.getAbilities().instabuild = false;
 		ItemStack pack = pack(Config.energyPackBuffer);
 		// The cursor is served first, so it is given room for only a quarter of the batch — otherwise it

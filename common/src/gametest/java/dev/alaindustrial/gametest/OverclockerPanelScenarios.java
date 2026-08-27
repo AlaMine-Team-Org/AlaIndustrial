@@ -40,7 +40,7 @@ public final class OverclockerPanelScenarios {
 	 * they are supposed to take.
 	 */
 	public static void overclocker_generatorRefusesTheChip(GameTestHelper helper) {
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
 		ItemStack chip = new ItemStack(dev.alaindustrial.registry.ModContent.OVERCLOCKER_CHIP_I.get());
 		ItemStack mute = new ItemStack(dev.alaindustrial.registry.ModContent.MUTE_CHIP.get());
 
@@ -78,7 +78,7 @@ public final class OverclockerPanelScenarios {
 	 * panel and then quietly changed behaviour. So the refusal is re-checked on the rebuilt slot.
 	 */
 	public static void overclocker_refusalSurvivesAPanelDrag(GameTestHelper helper) {
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
 		MachineBlockEntity panel =
 				AlaGameTestHelper.place(helper, POS, dev.alaindustrial.registry.ModContent.SOLAR_PANEL.get());
 		MachineMenu menu = new dev.alaindustrial.menu.SolarPanelMenu(1, player.getInventory(), panel,

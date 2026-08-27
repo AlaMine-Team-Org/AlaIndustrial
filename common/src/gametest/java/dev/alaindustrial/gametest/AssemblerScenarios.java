@@ -831,7 +831,7 @@ public final class AssemblerScenarios {
 	 */
 	public static void tab01HiddenTabSlotsAreUnreachable(GameTestHelper helper) {
 		AssemblerBlockEntity be = assembler(helper, ASM);
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
 		AssemblerMenu menu = new AssemblerMenu(1, player.getInventory(), be, ContainerLevelAccess.NULL);
 
 		int queue = menu.findSlot(be, AssemblerBlockEntity.BLUEPRINT_SLOT_START).orElse(-1);
@@ -970,7 +970,7 @@ public final class AssemblerScenarios {
 	 */
 	public static void tab03WriteBelongsToTheRecordTab(GameTestHelper helper) {
 		AssemblerBlockEntity be = assembler(helper, ASM);
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
 		AssemblerMenu menu = new AssemblerMenu(1, player.getInventory(), be, ContainerLevelAccess.NULL);
 
 		// A blank in the queue is NOT what Write consumes any more: the Record tab has its own slot.
@@ -1407,7 +1407,7 @@ public final class AssemblerScenarios {
 	 */
 	public static void sub05ButtonChannelRoutesToSubstitution(GameTestHelper helper) {
 		AssemblerBlockEntity be = assembler(helper, ASM);
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
 		AssemblerMenu menu = new AssemblerMenu(1, player.getInventory(), be, ContainerLevelAccess.NULL);
 		for (int slot = 0; slot < AssemblerBlockEntity.BLUEPRINT_SLOT_COUNT; slot++) {
 			be.setItem(AssemblerBlockEntity.BLUEPRINT_SLOT_START + slot, oakStickBlueprint(helper, be));

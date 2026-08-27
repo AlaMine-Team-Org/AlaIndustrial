@@ -177,7 +177,7 @@ public final class IncubatorScenarios {
 
 	/** A creative break drops nothing, as everywhere in vanilla. */
 	public static void neg03CreativeBreakDropsNoGlass(GameTestHelper helper) {
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
 		player.setGameMode(GameType.CREATIVE);
 		player.getAbilities().instabuild = true;
 		place(helper);
@@ -194,7 +194,7 @@ public final class IncubatorScenarios {
 	public static void fun08ClickingTheDomeOpensTheMenu(GameTestHelper helper) {
 		place(helper);
 		helper.setBlock(POS.above(), Blocks.GLASS);
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
 		player.setGameMode(GameType.SURVIVAL);
 
 		BlockPos abs = helper.absolutePos(POS.above());
@@ -328,7 +328,7 @@ public final class IncubatorScenarios {
 	 * throws here instead of in front of the player.
 	 */
 	public static void reg07ClientMenuCoversEveryDataChannel(GameTestHelper helper) {
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
 		IncubatorMenu menu = new IncubatorMenu(1, player.getInventory());
 		// Reading the top channel is the actual regression: it is the one the old width omitted.
 		menu.getStatus();
@@ -702,7 +702,7 @@ public final class IncubatorScenarios {
 	public static void fun09TakingTheResultAwardsTheAdvancements(GameTestHelper helper) {
 		IncubatorBlockEntity be = place(helper);
 		helper.setBlock(POS.above(), Blocks.GLASS);
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
 		player.setGameMode(GameType.SURVIVAL);
 
 		ItemStack prize = new ItemStack(ModContent.IRRADIATED_DIAMOND.get());

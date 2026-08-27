@@ -242,7 +242,7 @@ public final class ElectricSaberScenarios {
 
 	/** FUN06: a creative attacker spends nothing — EU is tool wear, and creative does not wear tools (MOD-081). */
 	public static void fun06CreativeSpendsNothing(GameTestHelper helper) {
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
 		player.getAbilities().instabuild = true;
 		LivingEntity target = spawnTarget(helper);
 		ItemStack saber = saber(Config.electricSaberBuffer);

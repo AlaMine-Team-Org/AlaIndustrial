@@ -44,13 +44,13 @@ public final class TeleporterJumpScenarios {
 	/**
 	 * A mock player standing a few blocks from the station.
 	 *
-	 * <p>{@code makeMockServerPlayerInLevel} drops the player at the world origin, which for a test
+	 * <p>{@link AlaGameTestHelper#mockPlayerInLevel} drops the player at the world origin, which for a test
 	 * structure generated millions of blocks out means a jump priced in the tens of millions of EU —
 	 * every station would refuse it for lack of power and the test would prove nothing. Snapping the
 	 * player next to the station is what makes the distance realistic.
 	 */
 	private static ServerPlayer playerNearStation(GameTestHelper helper) {
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
 		BlockPos near = helper.absolutePos(STATION.offset(3, 0, 0));
 		player.snapTo(near.getX() + 0.5, near.getY(), near.getZ() + 0.5);
 		player.getInventory().clearContent();
@@ -302,7 +302,7 @@ public final class TeleporterJumpScenarios {
 	 *     out of a stolen one.
 	 */
 	public static void tcTele002Sec02_remoteBindsToOwner(GameTestHelper helper) {
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
 		ItemStack remote = new ItemStack(ModContent.TELEPORTER_REMOTE.get());
 
 		remote.set(ModDataComponents.TELEPORTER_OWNER.get(), STRANGER);
@@ -322,7 +322,7 @@ public final class TeleporterJumpScenarios {
 	 */
 	public static void tcTele002Sta01_warmupStateStartsClean(GameTestHelper helper) {
 		TeleportWarmupManager.clearAll();
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
 		if (TeleportWarmupManager.isWarming(player)) {
 			helper.fail("a fresh player must not be mid-warmup");
 		}

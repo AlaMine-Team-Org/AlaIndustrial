@@ -238,7 +238,7 @@ public final class MuteChipScenarios {
 	 */
 	public static void muteChip_menuSlotFilterAndQuickMove(GameTestHelper helper) {
 		MachineBlockEntity be = AlaGameTestHelper.place(helper, POS, ModContent.MACERATOR.get());
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
 		MaceratorMenu menu = new MaceratorMenu(1, player.getInventory(), be,
 				ContainerLevelAccess.create(helper.getLevel(), be.getBlockPos()));
 

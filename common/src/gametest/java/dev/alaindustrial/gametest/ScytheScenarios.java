@@ -34,7 +34,8 @@ import net.minecraft.world.phys.Vec3;
  * runs from the clicked block along {@code +z} (depth) and {@code ±x} (width). Every scenario lays a
  * dirt platform at {@code y = FLOOR} and plants foliage at {@code y = FLOOR + 1}, then right-clicks the
  * centre plant. {@link #makeSurvivalPlayer} forces SURVIVAL so drops and durability behave like a real
- * player (the raw {@code makeMockServerPlayerInLevel} mock reports CREATIVE, which suppresses both).
+ * player (the raw {@link AlaGameTestHelper#mockPlayerInLevel} mock reports CREATIVE, which suppresses
+ * both).
  *
  * <p><b>Two modes (MOD-098).</b> Plain right-click runs <b>decor</b> mode (clears
  * {@code scythe_harvestable} foliage, protects crops); shift + right-click runs <b>crop</b> mode

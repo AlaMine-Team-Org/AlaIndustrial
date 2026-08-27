@@ -77,7 +77,7 @@ public final class PlayerStatsScenarios {
 
 	private static ServerPlayer survivalOwner(GameTestHelper helper) {
 		PlayerStatsTracker.get().clear(); // isolate from any prior scenario's pending deltas
-		ServerPlayer player = helper.makeMockServerPlayerInLevel(); // defaults to CREATIVE — pin the mode
+		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper); // defaults to CREATIVE — pin the mode
 		player.setGameMode(GameType.SURVIVAL);
 		return player;
 	}
@@ -121,7 +121,7 @@ public final class PlayerStatsScenarios {
 	/** A creative owner earns nothing — creative EU is free and must not convert to career XP. */
 	public static void noXpForCreativeOwner(GameTestHelper helper) {
 		PlayerStatsTracker.get().clear();
-		ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
 		player.setGameMode(GameType.CREATIVE); // the mock already defaults to creative; make it explicit
 		MaceratorBlockEntity mac = placeMacerator(helper, player.getUUID());
 		drive(helper, mac, 400);

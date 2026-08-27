@@ -55,6 +55,7 @@ import dev.alaindustrial.gametest.MenuDataWidthScenarios;
 import dev.alaindustrial.gametest.EnergyPackScenarios;
 import dev.alaindustrial.gametest.JetpackScenarios;
 import dev.alaindustrial.gametest.GuideBookGiverScenarios;
+import dev.alaindustrial.gametest.MockPlayerScenarios;
 import dev.alaindustrial.gametest.PouchScenarios;
 import dev.alaindustrial.gametest.HammerScenarios;
 import dev.alaindustrial.gametest.TrellisScenarios;
@@ -746,6 +747,13 @@ public final class NeoForgeGameTests {
 		// Guide Book (MOD-067, TC-GUIDE-001) — auto-give ledger; same body as the Fabric GuideBookGameTest.
 		registerTest(event, "guide_book_give_once", 40, true, GuideBookGiverScenarios::giveOnce);
 
+		// Mock players (MOD-500) — the two properties ~100 other scenarios stand on: the in-level mock
+		// really is in the level, and a survival mock is billed for EU despite reporting CREATIVE.
+		registerTest(event, "mock_player_in_level_wiring", 40, true,
+				MockPlayerScenarios::inLevelMockIsWiredIntoTheLevel);
+		registerTest(event, "mock_player_survival_is_billed", 40, true,
+				MockPlayerScenarios::survivalMockIsBilledDespiteReportingCreative);
+
 		// Double chest (MOD-391, TC-CHEST-001) — same loader-neutral bodies as the Fabric suite.
 		registerTest(event, "double_chest_pair_forms_and_joins", 40, true, DoubleChestScenarios::fun01PairFormsAndJoins);
 		// MOD-409 — the electrum tier: a SINGLE chest taller than its window (suite TC-CHEST-002).
@@ -1009,7 +1017,7 @@ public final class NeoForgeGameTests {
 		registerTest(event, "capsule_fill_from_tank", 40, true, CapsuleScenarios::fun02FillFromTank);
 		registerTest(event, "capsule_empty_into_tank", 40, true, CapsuleScenarios::fun03EmptyIntoTank);
 		// MOD-099: capsule ↔ pump through the REAL ServerPlayerGameMode routing (GUI-eats-click guard).
-		// Longer timeout: makeMockServerPlayerInLevel + openMenu path is heavier than a mock player.
+		// Longer timeout: the in-level mock + openMenu path is heavier than a detached mock player.
 		registerTest(event, "capsule_use_routing_fill", 100, true, CapsuleScenarios::fun05UseRoutingFill);
 		registerTest(event, "capsule_use_routing_empty", 100, true, CapsuleScenarios::fun06UseRoutingEmpty);
 		registerTest(event, "capsule_use_routing_offhand", 100, true, CapsuleScenarios::fun07UseRoutingOffHand);
