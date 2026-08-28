@@ -55,14 +55,16 @@ public final class CrystalGrowth {
 	 * {@code 0} there would divide by zero outright, and a negative one would silently invert the
 	 * boost into a penalty.
 	 *
-	 * @param baseDivisor  the unboosted 1-in-N chance
-	 * @param water        whether the room holds water
-	 * @param powered      whether the controller could pay the energy cost this attempt
-	 * @param waterSpeedup factor the divisor is cut by when the room holds water
-	 * @param powerSpeedup factor the divisor is cut by when the attempt was powered
+	 * @param baseDivisor      the unboosted 1-in-N chance
+	 * @param water            whether the room holds water
+	 * @param powered          whether the controller could pay the energy cost this attempt
+	 * @param sprinkled        whether a sprinkler in the room could pay the solution cost (MOD-525)
+	 * @param waterSpeedup     factor the divisor is cut by when the room holds water
+	 * @param powerSpeedup     factor the divisor is cut by when the attempt was powered
+	 * @param sprinklerSpeedup factor the divisor is cut by when a sprinkler served the attempt
 	 */
 	public static int effectiveChanceDivisor(int baseDivisor, boolean water, boolean powered,
-			int waterSpeedup, int powerSpeedup) {
+			boolean sprinkled, int waterSpeedup, int powerSpeedup, int sprinklerSpeedup) {
 		int divisor = Math.max(1, baseDivisor);
 		if (water) {
 			divisor /= Math.max(1, waterSpeedup);
@@ -70,7 +72,21 @@ public final class CrystalGrowth {
 		if (powered) {
 			divisor /= Math.max(1, powerSpeedup);
 		}
+		if (sprinkled) {
+			divisor /= Math.max(1, sprinklerSpeedup);
+		}
 		return Math.max(1, divisor);
+	}
+
+	/**
+	 * The two-axis form, kept for the callers and tests that predate the sprinkler (MOD-525).
+	 *
+	 * <p>Delegates rather than duplicating the arithmetic: two copies of "boosts divide" would be two
+	 * places to get the clamping wrong.
+	 */
+	public static int effectiveChanceDivisor(int baseDivisor, boolean water, boolean powered,
+			int waterSpeedup, int powerSpeedup) {
+		return effectiveChanceDivisor(baseDivisor, water, powered, false, waterSpeedup, powerSpeedup, 1);
 	}
 
 	/**

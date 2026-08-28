@@ -3,6 +3,7 @@ package dev.alaindustrial.gametest.neoforge;
 import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.gametest.CrystalFarmScenarios;
+import dev.alaindustrial.gametest.FermenterScenarios;
 import dev.alaindustrial.gametest.AssemblerPerfScenarios;
 import dev.alaindustrial.gametest.DemoStandScenarios;
 import dev.alaindustrial.gametest.CreativeEnergySourceScenarios;
@@ -1307,6 +1308,16 @@ public final class NeoForgeGameTests {
 		// GalvanicBathGameTest suite. Two rules here are invisible to the recipe system: the fibre tag
 		// (string OR cotton must both work) and the water gate (water is not a recipe ingredient, so a
 		// dropped check would let the bath run on an empty tank).
+		// MOD-146: the fermenter. Same four bodies the Fabric lane runs — the price tiers and the two
+		// gates the recipe system cannot enforce.
+		registerTest(event, "fermenter_brews_biofuel_and_spends_water", 500, true,
+				FermenterScenarios::fun01BrewsBiofuelAndSpendsWater);
+		registerTest(event, "fermenter_rich_tier_brews_more_than_poor", 900, true,
+				FermenterScenarios::fun02RichTierBrewsMoreThanPoor);
+		registerTest(event, "fermenter_dry_tank_blocks_work", 500, true,
+				FermenterScenarios::con01DryTankBlocksWork);
+		registerTest(event, "fermenter_full_biofuel_tank_stalls", 500, true,
+				FermenterScenarios::con02FullBiofuelTankStalls);
 		registerTest(event, "galvanic_bath_string_becomes_flux_thread", 700, true,
 				GalvanicBathScenarios::fun01StringBecomesFluxThread);
 		registerTest(event, "galvanic_bath_cotton_becomes_flux_thread", 700, true,

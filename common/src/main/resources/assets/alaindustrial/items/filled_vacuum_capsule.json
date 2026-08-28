@@ -8,7 +8,9 @@
 			{ "when": "minecraft:lava", "model": { "type": "minecraft:model", "model": "alaindustrial:item/vacuum_capsule_lava" } },
 			{ "when": "alaindustrial:oil", "model": { "type": "minecraft:model", "model": "alaindustrial:item/vacuum_capsule_oil" } },
 			{ "when": "alaindustrial:diesel", "model": { "type": "minecraft:model", "model": "alaindustrial:item/vacuum_capsule_diesel" } },
-			{ "when": "alaindustrial:fuel_oil", "model": { "type": "minecraft:model", "model": "alaindustrial:item/vacuum_capsule_fuel_oil" } }
+			{ "when": "alaindustrial:fuel_oil", "model": { "type": "minecraft:model", "model": "alaindustrial:item/vacuum_capsule_fuel_oil" } },
+			{ "when": "alaindustrial:biofuel", "model": { "type": "minecraft:model", "model": "alaindustrial:item/vacuum_capsule_biofuel" } },
+			{ "when": "alaindustrial:nutrient_solution", "model": { "type": "minecraft:model", "model": "alaindustrial:item/vacuum_capsule_nutrient_solution" } }
 		],
 		"fallback": { "type": "minecraft:model", "model": "alaindustrial:item/vacuum_capsule_filled" }
 	}

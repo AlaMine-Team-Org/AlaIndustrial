@@ -27,6 +27,8 @@ import dev.alaindustrial.block.ExtractorBlock;
 import dev.alaindustrial.block.FluidPipeBlock;
 import dev.alaindustrial.block.FluidTankBlock;
 import dev.alaindustrial.block.GalvanicBathBlock;
+import dev.alaindustrial.block.FermenterBlock;
+import dev.alaindustrial.block.SprinklerBlock;
 import dev.alaindustrial.block.GardenDroneStationBlock;
 import dev.alaindustrial.block.GeneratorBlock;
 import dev.alaindustrial.block.GeothermalGeneratorBlock;
@@ -176,6 +178,8 @@ public final class ModBlocksNeoForge {
 	public static final DeferredBlock<AlloySmelterBlock> ALLOY_SMELTER = handle(ContentManifest.ALLOY_SMELTER);
 	public static final DeferredBlock<VulcanizerBlock> VULCANIZER = handle(ContentManifest.VULCANIZER);
 	public static final DeferredBlock<GalvanicBathBlock> GALVANIC_BATH = handle(ContentManifest.GALVANIC_BATH);
+	public static final DeferredBlock<FermenterBlock> FERMENTER = handle(ContentManifest.FERMENTER);
+	public static final DeferredBlock<SprinklerBlock> SPRINKLER = handle(ContentManifest.SPRINKLER);
 	public static final DeferredBlock<ThermalCentrifugeBlock> THERMAL_CENTRIFUGE =
 			handle(ContentManifest.THERMAL_CENTRIFUGE);
 
@@ -258,6 +262,10 @@ public final class ModBlocksNeoForge {
 	public static final DeferredBlock<OilLiquidBlock> OIL = handle(ContentManifest.OIL);
 	public static final DeferredBlock<ModLiquidBlock> DIESEL = handle(ContentManifest.DIESEL);
 	public static final DeferredBlock<ModLiquidBlock> FUEL_OIL = handle(ContentManifest.FUEL_OIL);
+	// The organic chain (MOD-146/MOD-525).
+	public static final DeferredBlock<ModLiquidBlock> BIOFUEL = handle(ContentManifest.BIOFUEL);
+	public static final DeferredBlock<ModLiquidBlock> NUTRIENT_SOLUTION =
+			handle(ContentManifest.NUTRIENT_SOLUTION);
 
 	private ModBlocksNeoForge() {
 	}

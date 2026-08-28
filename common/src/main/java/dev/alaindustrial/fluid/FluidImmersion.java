@@ -76,7 +76,27 @@ public enum FluidImmersion {
 	DIESEL(() -> ModContent.DIESEL.get(), () -> ModContent.FLOWING_DIESEL.get(),
 			0.80D, 0.85D, false,
 			0xFF3A2A0C, 4.0F, 22.0F,
-			Industrialization.id("textures/misc/diesel_overlay.png"), 0.55F);
+			Industrialization.id("textures/misc/diesel_overlay.png"), 0.55F),
+
+	/**
+	 * Biofuel (MOD-146) — brewed rather than refined, and thinner than any oil fraction: the easiest
+	 * of the mod's liquids to climb out of, with a murky olive film.
+	 */
+	BIOFUEL(() -> ModContent.BIOFUEL.get(), () -> ModContent.FLOWING_BIOFUEL.get(),
+			0.85D, 0.88D, false,
+			0xFF2A3310, 4.5F, 24.0F,
+			Industrialization.id("textures/misc/biofuel_overlay.png"), 0.50F),
+
+	/**
+	 * Nutrient solution (MOD-525) — the thinnest thing the mod makes, near enough to water to swim
+	 * in. Its film is the faintest of the five: this is the one liquid a player is meant to stand in
+	 * while working a field.
+	 */
+	NUTRIENT_SOLUTION(() -> ModContent.NUTRIENT_SOLUTION.get(),
+			() -> ModContent.FLOWING_NUTRIENT_SOLUTION.get(),
+			0.90D, 0.90D, false,
+			0xFF16301F, 6.0F, 28.0F,
+			Industrialization.id("textures/misc/nutrient_solution_overlay.png"), 0.40F);
 
 	/**
 	 * Upward impulse added per tick while an entity holds jump inside any of these fluids (MOD-250,

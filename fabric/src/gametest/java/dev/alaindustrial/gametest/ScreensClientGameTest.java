@@ -99,6 +99,13 @@ public class ScreensClientGameTest implements FabricClientGameTest {
             new Screen("canning_machine", "canning_machine", "Canning Machine"),
             new Screen("alloy_smelter", "alloy_smelter", "Alloy Smelter"),
             new Screen("galvanic_bath", "galvanic_bath", "Galvanic Bath"),
+            // MOD-146: the fermenter, the mod's only screen with a gauge on each side — water going in
+            // on the left, biofuel coming out on the right. The pair is the state worth guarding: a
+            // regression that wired both gauges to one tank would still look plausible in isolation.
+            new Screen("fermenter", "fermenter", "Fermenter"),
+            // MOD-525: the sprinkler, the smallest machine screen in the mod. No energy bar at all —
+            // this block takes no EU, and a bar creeping back in would read as a fault to a player.
+            new Screen("sprinkler", "sprinkler", "Sprinkler"),
             new Screen("cesu", "cesu", "CESU"),
             // MOD-416: the charging station, the mod's only slotless screen. The stand opens it from
             // BESIDE the plate, so the frame captures the idle state — the three lower rows drawn as a

@@ -162,14 +162,16 @@ public class DistillationColumnBlockEntity extends MachineBlockEntity implements
 	}
 
 	/**
-	 * The intake filter: a source fluid tagged {@code c:oil} (fractionation) or {@code c:fuel_oil}
-	 * (cracking, round 2). The source-only rule is the polymerizer's: a tank holding a flowing
+	 * The intake filter: a source fluid tagged {@code c:oil} (fractionation), {@code c:fuel_oil}
+	 * (cracking, round 2) or {@code c:biofuel} (MOD-525 — the organic chain's second crack, into
+	 * nutrient solution). The source-only rule is the polymerizer's: a tank holding a flowing
 	 * variant could never be topped up to a recipe volume.
 	 */
 	private static boolean isFeedstock(FluidHolder fluid) {
 		return !fluid.isEmpty()
 				&& (fluid.fluid().defaultFluidState().is(ModTags.Fluids.C_OIL)
-						|| fluid.fluid().defaultFluidState().is(ModTags.Fluids.C_FUEL_OIL))
+						|| fluid.fluid().defaultFluidState().is(ModTags.Fluids.C_FUEL_OIL)
+						|| fluid.fluid().defaultFluidState().is(ModTags.Fluids.C_BIOFUEL))
 				&& PolymerizingRecipe.isSourceFluid(fluid.fluid());
 	}
 

@@ -25,6 +25,10 @@ public final class ModParticlesNeoForge {
 	public static final DeferredHolder<ParticleType<?>, SimpleParticleType> ENRICHED_URANIUM_FLAME =
 			PARTICLES.register("enriched_uranium_flame", () -> ModParticles.ENRICHED_URANIUM_FLAME);
 
+	/** The Sprinkler's spray (MOD-525), bound to the same eager common instance. */
+	public static final DeferredHolder<ParticleType<?>, SimpleParticleType> NUTRIENT_SPRAY =
+			PARTICLES.register("nutrient_spray", () -> ModParticles.NUTRIENT_SPRAY);
+
 	private ModParticlesNeoForge() {
 	}
 }

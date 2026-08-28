@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": {
+		"P": "alaindustrial:iron_plate",
+		"C": "alaindustrial:copper_plate",
+		"M": "alaindustrial:machine_casing",
+		"E": "alaindustrial:electronic_circuit",
+		"B": "minecraft:bucket"
+	},
+	"pattern": [
+		"PBP",
+		"CMC",
+		"PEP"
+	],
+	"result": {
+		"id": "alaindustrial:fermenter"
+	}
+}

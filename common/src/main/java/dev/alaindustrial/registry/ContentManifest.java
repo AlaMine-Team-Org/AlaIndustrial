@@ -24,6 +24,7 @@ import dev.alaindustrial.block.EnrichedUraniumWallTorchBlock;
 import dev.alaindustrial.block.ExtractorBlock;
 import dev.alaindustrial.block.FluidPipeBlock;
 import dev.alaindustrial.block.FluidTankBlock;
+import dev.alaindustrial.block.FermenterBlock;
 import dev.alaindustrial.block.GalvanicBathBlock;
 import dev.alaindustrial.block.GardenDroneStationBlock;
 import dev.alaindustrial.block.GeneratorBlock;
@@ -68,6 +69,7 @@ import dev.alaindustrial.block.ReactorButtonBlock;
 import dev.alaindustrial.block.ReactorControllerBlock;
 import dev.alaindustrial.block.ReactorDoorBlock;
 import dev.alaindustrial.block.ThermalCentrifugeBlock;
+import dev.alaindustrial.block.SprinklerBlock;
 import dev.alaindustrial.block.TrellisBlock;
 import dev.alaindustrial.block.VulcanizerBlock;
 import dev.alaindustrial.block.WaterMillBlock;
@@ -100,6 +102,8 @@ import dev.alaindustrial.block.entity.ElectricHeaterBlockEntity;
 import dev.alaindustrial.block.entity.ExtractorBlockEntity;
 import dev.alaindustrial.block.entity.FluidPipeBlockEntity;
 import dev.alaindustrial.block.entity.FluidTankBlockEntity;
+import dev.alaindustrial.block.entity.FermenterBlockEntity;
+import dev.alaindustrial.block.entity.SprinklerBlockEntity;
 import dev.alaindustrial.block.entity.GalvanicBathBlockEntity;
 import dev.alaindustrial.block.entity.GardenDroneStationBlockEntity;
 import dev.alaindustrial.block.entity.GeneratorBlockEntity;
@@ -194,6 +198,8 @@ import dev.alaindustrial.menu.WaterMillMenu;
 import dev.alaindustrial.menu.WindMillMenu;
 import dev.alaindustrial.menu.AlloySmelterMenu;
 import dev.alaindustrial.menu.VulcanizerMenu;
+import dev.alaindustrial.menu.FermenterMenu;
+import dev.alaindustrial.menu.SprinklerMenu;
 import dev.alaindustrial.menu.GalvanicBathMenu;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -308,6 +314,10 @@ public final class ContentManifest {
 			// MOD-064 — the alloy smelter: three interchangeable component slots, one result slot.
 			menu("alloy_smelter", AlloySmelterMenu::new, s -> ModContent.ALLOY_SMELTER_MENU = s),
 			menu("galvanic_bath", GalvanicBathMenu::new, s -> ModContent.GALVANIC_BATH_MENU = s),
+			// MOD-146 — the fermenter: one input slot, two tank gauges, two container pairs.
+			menu("fermenter", FermenterMenu::new, s -> ModContent.FERMENTER_MENU = s),
+			// MOD-525 — the sprinkler: one gauge and a container pair, the mod's smallest machine menu.
+			menu("sprinkler", SprinklerMenu::new, s -> ModContent.SPRINKLER_MENU = s),
 			menu("battery_box", BatteryBoxMenu::new, s -> ModContent.BATTERY_BOX_MENU = s),
 			menu("energy_condenser", EnergyCondenserMenu::new, s -> ModContent.ENERGY_CONDENSER_MENU = s),
 			menu("cesu", CesuMenu::new, s -> ModContent.CESU_MENU = s),
@@ -671,6 +681,19 @@ public final class ContentManifest {
 	public static final BlockDef<ModLiquidBlock> FUEL_OIL =
 			block("fuel_oil", p -> new ModLiquidBlock(ModContent.FUEL_OIL.get(), p),
 					s -> ModContent.FUEL_OIL_BLOCK = s);
+	// The organic chain (MOD-146/MOD-525): the machine that brews waste into biofuel, and the block
+	// that sprays what the column cracks out of it.
+	public static final BlockDef<FermenterBlock> FERMENTER =
+			block("fermenter", FermenterBlock::new, s -> ModContent.FERMENTER = s);
+	public static final BlockDef<SprinklerBlock> SPRINKLER =
+			block("sprinkler", SprinklerBlock::new, s -> ModContent.SPRINKLER = s);
+	// The two fluids' liquid blocks. Same treatment as the fractions above — pourable, never held.
+	public static final BlockDef<ModLiquidBlock> BIOFUEL =
+			block("biofuel", p -> new ModLiquidBlock(ModContent.BIOFUEL.get(), p),
+					s -> ModContent.BIOFUEL_BLOCK = s);
+	public static final BlockDef<ModLiquidBlock> NUTRIENT_SOLUTION =
+			block("nutrient_solution", p -> new ModLiquidBlock(ModContent.NUTRIENT_SOLUTION.get(), p),
+					s -> ModContent.NUTRIENT_SOLUTION_BLOCK = s);
 
 	/**
 	 * Every block, in one shared registration order — the single source of the mod's block composition
@@ -709,7 +732,10 @@ public final class ContentManifest {
 			CREATIVE_ENERGY_SOURCE,
 			// MOD-505 — the crystal greenhouse, appended as one group for the same reason.
 			CRYSTAL_FARM_FLOOR, CRYSTAL_FARM_GLASS, CRYSTAL_FARM_DOOR, CRYSTAL_FARM_CONTROLLER,
-			CRYSTAL_SEEDBED);
+			CRYSTAL_SEEDBED,
+			// MOD-146/MOD-525 — the organic chain: the fermenter that brews waste into biofuel, the
+			// sprinkler that sprays the solution cracked from it, and the two liquid blocks.
+			FERMENTER, SPRINKLER, BIOFUEL, NUTRIENT_SOLUTION);
 
 	/**
 	 * Wraps a machine/ore/material block's {@code strength/sound/…} chain with the shared base every such
@@ -796,6 +822,12 @@ public final class ContentManifest {
 			Map.entry("rectification_section", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
 					.noOcclusion().lightLevel(ModBlockProperties::litLight))),
 			Map.entry("galvanic_bath", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
+			// MOD-146: an ordinary machine cube, lit while a batch brews.
+			Map.entry("fermenter", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
+					.lightLevel(ModBlockProperties::litLight))),
+			// MOD-525: base plus mast, so the shape is far from a full cube — noOcclusion is mandatory
+			// or it would cull its neighbours' faces as if a solid block stood there (R-PHY-05).
+			Map.entry("sprinkler", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion())),
 			Map.entry("vulcanizer", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
 					.lightLevel(ModBlockProperties::litLight))),
 			// MOD-424 — the centrifuge housing is an open frame around the rotor, so its getShape is inset
@@ -943,6 +975,14 @@ public final class ContentManifest {
 			Map.entry("fuel_oil", p -> p.mapColor(MapColor.TERRACOTTA_BROWN).replaceable().noCollision()
 					.strength(100.0F).pushReaction(PushReaction.DESTROY).noLootTable().liquid()
 					.sound(SoundType.EMPTY)),
+			// The organic chain's two fluids (MOD-146/MOD-525): same vanilla liquid-block chain, their
+			// own map colours — biofuel olive, nutrient solution a brighter green.
+			Map.entry("biofuel", p -> p.mapColor(MapColor.COLOR_GREEN).replaceable().noCollision()
+					.strength(100.0F).pushReaction(PushReaction.DESTROY).noLootTable().liquid()
+					.sound(SoundType.EMPTY)),
+			Map.entry("nutrient_solution", p -> p.mapColor(MapColor.EMERALD).replaceable().noCollision()
+					.strength(100.0F).pushReaction(PushReaction.DESTROY).noLootTable().liquid()
+					.sound(SoundType.EMPTY)),
 			// Oil (MOD-238): the vanilla liquid-block chain (see Blocks.WATER in 26.2), dark map colour.
 			// Not machine(...) - a liquid needs no tool and has no drops.
 			Map.entry("oil", p -> p.mapColor(MapColor.COLOR_BLACK).replaceable().noCollision()
@@ -1072,6 +1112,8 @@ public final class ContentManifest {
 				"bronze_plate", "bronze_reinforced_plate", "cupronickel_plate",
 				"cupronickel_reinforced_plate", "electrum_plate", "electrum_reinforced_plate",
 				"invar_plate", "invar_reinforced_plate",
+				// MOD-146: the fermenter's solid leftover — a plain item with no behaviour of its own.
+				"biomass",
 				"coal_dust", "copper_coil", "copper_dust", "copper_plate", "cotton_fiber",
 				"cotton_seeds", "depleted_uranium", "diamond_dust", "electronic_circuit",
 				"emerald_dust", "empty_can", "flux_thread", "fluxweave_cloth", "garden_drone", "gold_dust",
@@ -1405,7 +1447,12 @@ public final class ContentManifest {
 			// which is what lets one room hold a hundred of them without a hundred tickers.
 			blockEntity("crystal_farm_controller", CrystalFarmControllerBlockEntity.class,
 					CrystalFarmControllerBlockEntity::new, s -> ModContent.CRYSTAL_FARM_CONTROLLER_BE = s,
-					"crystal_farm_controller"));
+					"crystal_farm_controller"),
+			// MOD-146/MOD-525: the organic chain's two ticking blocks.
+			blockEntity("fermenter", FermenterBlockEntity.class, FermenterBlockEntity::new,
+					s -> ModContent.FERMENTER_BE = s, "fermenter"),
+			blockEntity("sprinkler", SprinklerBlockEntity.class, SprinklerBlockEntity::new,
+					s -> ModContent.SPRINKLER_BE = s, "sprinkler"));
 
 	/**
 	 * The definition for block-entity {@code id}, checked against the type the caller expects.

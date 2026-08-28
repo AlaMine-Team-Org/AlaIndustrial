@@ -32,6 +32,8 @@ public final class FluidTankVisuals {
 	private static final int OIL = 0x14100E;
 	private static final int DIESEL = 0xB78515;
 	private static final int FUEL_OIL = 0x362614;
+	private static final int BIOFUEL = 0x6B8E23;
+	private static final int NUTRIENT_SOLUTION = 0x3FA36B;
 
 	/**
 	 * Steam (MOD-468) — the average colour of {@code block/steam_still}, like the three above. It has to
@@ -62,6 +64,12 @@ public final class FluidTankVisuals {
 		}
 		if (ModContent.FUEL_OIL.get().isSame(fluid)) {
 			return FUEL_OIL;
+		}
+		if (ModContent.BIOFUEL.get().isSame(fluid)) {
+			return BIOFUEL;
+		}
+		if (ModContent.NUTRIENT_SOLUTION.get().isSame(fluid)) {
+			return NUTRIENT_SOLUTION;
 		}
 		if (ModContent.STEAM.get().isSame(fluid)) {
 			return STEAM;

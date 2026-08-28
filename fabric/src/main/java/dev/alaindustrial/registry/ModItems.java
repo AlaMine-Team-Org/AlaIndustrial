@@ -88,6 +88,8 @@ public final class ModItems {
 	public static final Item MUTAGEN_DUST = manifestItem("mutagen_dust");
 	// Oil → rubber chain: the polymerizer's product and the vulcanizer's cured output.
 	public static final Item RAW_RUBBER = manifestItem("raw_rubber");
+	// Organic chain (MOD-146): the fermenter's solid leftover, stock for a later task.
+	public static final Item BIOMASS = manifestItem("biomass");
 	public static final Item RUBBER = manifestItem("rubber");
 
 	// Cotton (MOD-280): the seed is planted onto a trellis by right-click (the block handles it, so this
@@ -329,6 +331,10 @@ public final class ModItems {
 	// Distillation fraction buckets (MOD-251) — same pattern, filled by the column's output tanks.
 	public static final Item DIESEL_BUCKET = fluidBucket("diesel_bucket", ModFluids.DIESEL);
 	public static final Item FUEL_OIL_BUCKET = fluidBucket("fuel_oil_bucket", ModFluids.FUEL_OIL);
+	// The organic chain (MOD-146/MOD-525) — same vanilla BucketItem pattern.
+	public static final Item BIOFUEL_BUCKET = fluidBucket("biofuel_bucket", ModFluids.BIOFUEL);
+	public static final Item NUTRIENT_SOLUTION_BUCKET =
+			fluidBucket("nutrient_solution_bucket", ModFluids.NUTRIENT_SOLUTION);
 
 	// Block items.
 	public static final BlockItem GENERATOR_ITEM = blockItem("generator", ModBlocks.GENERATOR);
@@ -371,6 +377,9 @@ public final class ModItems {
 			blockItem("alloy_smelter", ModBlocks.ALLOY_SMELTER);
 	public static final BlockItem GALVANIC_BATH_ITEM =
 			blockItem("galvanic_bath", ModBlocks.GALVANIC_BATH);
+	// The organic chain (MOD-146/MOD-525).
+	public static final BlockItem FERMENTER_ITEM = blockItem("fermenter", ModBlocks.FERMENTER);
+	public static final BlockItem SPRINKLER_ITEM = blockItem("sprinkler", ModBlocks.SPRINKLER);
 	public static final BlockItem THERMAL_CENTRIFUGE_ITEM =
 			blockItem("thermal_centrifuge", ModBlocks.THERMAL_CENTRIFUGE);
 
@@ -1028,6 +1037,8 @@ public final class ModItems {
 		ModContent.OIL_BUCKET = () -> OIL_BUCKET;
 		ModContent.DIESEL_BUCKET = () -> DIESEL_BUCKET;
 		ModContent.FUEL_OIL_BUCKET = () -> FUEL_OIL_BUCKET;
+		ModContent.BIOFUEL_BUCKET = () -> BIOFUEL_BUCKET;
+		ModContent.NUTRIENT_SOLUTION_BUCKET = () -> NUTRIENT_SOLUTION_BUCKET;
 
 		ModContent.GENERATOR_ITEM = () -> GENERATOR_ITEM;
 		ModContent.GEOTHERMAL_GENERATOR_ITEM = () -> GEOTHERMAL_GENERATOR_ITEM;
@@ -1067,6 +1078,8 @@ public final class ModItems {
 		ModContent.VULCANIZER_ITEM = () -> VULCANIZER_ITEM;
 		ModContent.ALLOY_SMELTER_ITEM = () -> ALLOY_SMELTER_ITEM;
 		ModContent.GALVANIC_BATH_ITEM = () -> GALVANIC_BATH_ITEM;
+		ModContent.FERMENTER_ITEM = () -> FERMENTER_ITEM;
+		ModContent.SPRINKLER_ITEM = () -> SPRINKLER_ITEM;
 		ModContent.THERMAL_CENTRIFUGE_ITEM = () -> THERMAL_CENTRIFUGE_ITEM;
 		// MOD-468, stage 1.
 		ModContent.SHIELDING_ALLOY_INGOT = () -> SHIELDING_ALLOY_INGOT;
@@ -1109,6 +1122,7 @@ public final class ModItems {
 		ModContent.RESONANT_SHARD = () -> RESONANT_SHARD;
 		ModContent.MUTAGEN_DUST = () -> MUTAGEN_DUST;
 		ModContent.RAW_RUBBER = () -> RAW_RUBBER;
+		ModContent.BIOMASS = () -> BIOMASS;
 		ModContent.COTTON_SEEDS = () -> COTTON_SEEDS;
 		ModContent.COTTON_FIBER = () -> COTTON_FIBER;
 		ModContent.FLUX_THREAD = () -> FLUX_THREAD;

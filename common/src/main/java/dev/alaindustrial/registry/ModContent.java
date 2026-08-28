@@ -46,7 +46,9 @@ import dev.alaindustrial.menu.WaterMillMenu;
 import dev.alaindustrial.menu.WindMillMenu;
 import dev.alaindustrial.menu.AlloySmelterMenu;
 import dev.alaindustrial.menu.VulcanizerMenu;
+import dev.alaindustrial.menu.FermenterMenu;
 import dev.alaindustrial.menu.GalvanicBathMenu;
+import dev.alaindustrial.menu.SprinklerMenu;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -167,6 +169,9 @@ public final class ModContent {
 	/** Alloy Smelter (MOD-064) — three interchangeable component slots melt into one alloy. */
 	public static Supplier<Block> ALLOY_SMELTER = unbound("ALLOY_SMELTER");
 	public static Supplier<Block> GALVANIC_BATH = unbound("GALVANIC_BATH");
+	// The organic chain (MOD-146/MOD-525): the fermenter that brews it and the sprinkler that ends it.
+	public static Supplier<Block> FERMENTER = unbound("FERMENTER");
+	public static Supplier<Block> SPRINKLER = unbound("SPRINKLER");
 	/** Thermal Centrifuge (MOD-424) — redstone-started, heated from below; doubles a dust a second time. */
 	public static Supplier<Block> THERMAL_CENTRIFUGE = unbound("THERMAL_CENTRIFUGE");
 
@@ -253,6 +258,9 @@ public final class ModContent {
 	// Distillation fractions (MOD-251): the in-world liquid blocks. No block items either.
 	public static Supplier<Block> DIESEL_BLOCK = unbound("DIESEL_BLOCK");
 	public static Supplier<Block> FUEL_OIL_BLOCK = unbound("FUEL_OIL_BLOCK");
+	// Organic chain (MOD-146/MOD-525): brewed fuel and the growth solution cracked out of it.
+	public static Supplier<Block> BIOFUEL_BLOCK = unbound("BIOFUEL_BLOCK");
+	public static Supplier<Block> NUTRIENT_SOLUTION_BLOCK = unbound("NUTRIENT_SOLUTION_BLOCK");
 
 	// --- Fluids ---
 	// Oil (MOD-238): still + flowing. OilFluid (common) reads these at runtime for its
@@ -271,6 +279,12 @@ public final class ModContent {
 	public static Supplier<FlowingFluid> FLOWING_DIESEL = unbound("FLOWING_DIESEL");
 	public static Supplier<FlowingFluid> FUEL_OIL = unbound("FUEL_OIL");
 	public static Supplier<FlowingFluid> FLOWING_FUEL_OIL = unbound("FLOWING_FUEL_OIL");
+	// Organic chain (MOD-146): the fermenter's fuel, brewed from waste rather than pumped.
+	public static Supplier<FlowingFluid> BIOFUEL = unbound("BIOFUEL");
+	public static Supplier<FlowingFluid> FLOWING_BIOFUEL = unbound("FLOWING_BIOFUEL");
+	// MOD-525: biofuel cracked a second time — the sprinkler's only feedstock, and no fuel at all.
+	public static Supplier<FlowingFluid> NUTRIENT_SOLUTION = unbound("NUTRIENT_SOLUTION");
+	public static Supplier<FlowingFluid> FLOWING_NUTRIENT_SOLUTION = unbound("FLOWING_NUTRIENT_SOLUTION");
 
 	// --- Items (crafting components + tools) ---
 	public static Supplier<Item> ELECTRONIC_CIRCUIT = unbound("ELECTRONIC_CIRCUIT");
@@ -504,8 +518,16 @@ public final class ModContent {
 	// Distillation fraction buckets (MOD-251) — same vanilla WATER_BUCKET pattern as the oil bucket.
 	public static Supplier<Item> DIESEL_BUCKET = unbound("DIESEL_BUCKET");
 	public static Supplier<Item> FUEL_OIL_BUCKET = unbound("FUEL_OIL_BUCKET");
+	// Organic chain buckets (MOD-146/MOD-525) — same pattern again.
+	public static Supplier<Item> BIOFUEL_BUCKET = unbound("BIOFUEL_BUCKET");
+	public static Supplier<Item> NUTRIENT_SOLUTION_BUCKET = unbound("NUTRIENT_SOLUTION_BUCKET");
 	// Oil → rubber chain: the polymerizer makes raw rubber; the vulcanizer cures it with sulfur and heat.
 	public static Supplier<Item> RAW_RUBBER = unbound("RAW_RUBBER");
+	/**
+	 * Biomass (MOD-146) — the fermenter's solid leftover. It has no use yet, on purpose: it is
+	 * stock for a later task, the same way the recycler's matter scrap is.
+	 */
+	public static Supplier<Item> BIOMASS = unbound("BIOMASS");
 	public static Supplier<Item> RUBBER = unbound("RUBBER");
 	/** Cotton seed (MOD-280) — right-clicked onto a bare trellis to plant it. */
 	public static Supplier<Item> COTTON_SEEDS = unbound("COTTON_SEEDS");
@@ -580,6 +602,8 @@ public final class ModContent {
 	public static Supplier<BlockItem> VULCANIZER_ITEM = unbound("VULCANIZER_ITEM");
 	public static Supplier<BlockItem> ALLOY_SMELTER_ITEM = unbound("ALLOY_SMELTER_ITEM");
 	public static Supplier<BlockItem> GALVANIC_BATH_ITEM = unbound("GALVANIC_BATH_ITEM");
+	public static Supplier<BlockItem> FERMENTER_ITEM = unbound("FERMENTER_ITEM");
+	public static Supplier<BlockItem> SPRINKLER_ITEM = unbound("SPRINKLER_ITEM");
 	public static Supplier<BlockItem> THERMAL_CENTRIFUGE_ITEM = unbound("THERMAL_CENTRIFUGE_ITEM");
 
 	// MOD-468, stage 1 — block items for the reactor shell.
@@ -675,6 +699,8 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> VULCANIZER_BE = unbound("VULCANIZER_BE");
 	public static Supplier<BlockEntityType<?>> ALLOY_SMELTER_BE = unbound("ALLOY_SMELTER_BE");
 	public static Supplier<BlockEntityType<?>> GALVANIC_BATH_BE = unbound("GALVANIC_BATH_BE");
+	public static Supplier<BlockEntityType<?>> FERMENTER_BE = unbound("FERMENTER_BE");
+	public static Supplier<BlockEntityType<?>> SPRINKLER_BE = unbound("SPRINKLER_BE");
 	public static Supplier<BlockEntityType<?>> THERMAL_CENTRIFUGE_BE = unbound("THERMAL_CENTRIFUGE_BE");
 	public static Supplier<BlockEntityType<?>> REACTOR_CONTROLLER_BE = unbound("REACTOR_CONTROLLER_BE");
 	public static Supplier<BlockEntityType<?>> FUEL_ROD_ASSEMBLY_BE = unbound("FUEL_ROD_ASSEMBLY_BE");
@@ -731,6 +757,8 @@ public final class ModContent {
 	public static Supplier<MenuType<ElectricHeaterMenu>> ELECTRIC_HEATER_MENU = unbound("ELECTRIC_HEATER_MENU");
 	public static Supplier<MenuType<AlloySmelterMenu>> ALLOY_SMELTER_MENU = unbound("ALLOY_SMELTER_MENU");
 	public static Supplier<MenuType<GalvanicBathMenu>> GALVANIC_BATH_MENU = unbound("GALVANIC_BATH_MENU");
+	public static Supplier<MenuType<FermenterMenu>> FERMENTER_MENU = unbound("FERMENTER_MENU");
+	public static Supplier<MenuType<SprinklerMenu>> SPRINKLER_MENU = unbound("SPRINKLER_MENU");
 	/** Thermal Centrifuge readout (MOD-424): rotor spin-up gauge + the status line for its three gates. */
 	public static Supplier<MenuType<ThermalCentrifugeMenu>> THERMAL_CENTRIFUGE_MENU =
 			unbound("THERMAL_CENTRIFUGE_MENU");

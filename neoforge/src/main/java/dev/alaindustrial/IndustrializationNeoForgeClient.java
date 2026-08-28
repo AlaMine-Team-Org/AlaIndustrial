@@ -97,6 +97,13 @@ public final class IndustrializationNeoForgeClient {
 			event.register(fluidModel("fuel_oil"),
 					dev.alaindustrial.registry.neoforge.ModFluidsNeoForge.FUEL_OIL,
 					dev.alaindustrial.registry.neoforge.ModFluidsNeoForge.FLOWING_FUEL_OIL);
+			// MOD-146/MOD-525: the organic chain's two fluids, same registration shape.
+			event.register(fluidModel("biofuel"),
+					dev.alaindustrial.registry.neoforge.ModFluidsNeoForge.BIOFUEL,
+					dev.alaindustrial.registry.neoforge.ModFluidsNeoForge.FLOWING_BIOFUEL);
+			event.register(fluidModel("nutrient_solution"),
+					dev.alaindustrial.registry.neoforge.ModFluidsNeoForge.NUTRIENT_SOLUTION,
+					dev.alaindustrial.registry.neoforge.ModFluidsNeoForge.FLOWING_NUTRIENT_SOLUTION);
 			// MOD-468: steam, through the single-fluid overload — it has no flowing form, and with no
 			// model every tank and pipe holding it would draw the missing-texture sprite.
 			event.register(fluidModel("steam"),
@@ -105,9 +112,12 @@ public final class IndustrializationNeoForgeClient {
 		// MOD-085: green flame particle provider for the Enriched Uranium Torch. registerSpriteSet =
 		// json-backed particle (assets/alaindustrial/particles/enriched_uranium_flame.json); reuses the
 		// vanilla FlameParticle provider (like soul_fire_flame), colour comes from the particle texture.
-		modBus.addListener((net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent event) ->
-				event.registerSpriteSet(dev.alaindustrial.registry.ModParticles.ENRICHED_URANIUM_FLAME,
-						net.minecraft.client.particle.FlameParticle.Provider::new));
+		modBus.addListener((net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent event) -> {
+			event.registerSpriteSet(dev.alaindustrial.registry.ModParticles.ENRICHED_URANIUM_FLAME,
+					net.minecraft.client.particle.FlameParticle.Provider::new);
+			event.registerSpriteSet(dev.alaindustrial.registry.ModParticles.NUTRIENT_SPRAY,
+					dev.alaindustrial.client.particle.NutrientSprayParticle.Provider::new);
+		});
 		// MOD-118: the incubator dome takes the colour of the glass it was built from — the mod's
 		// first block colour provider. Verified pattern (neoforge-26.2.0.67):
 		// RegisterColorHandlersEvent.BlockTintSources#register(List<BlockTintSource>, Block...), the

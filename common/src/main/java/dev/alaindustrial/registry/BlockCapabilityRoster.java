@@ -30,7 +30,7 @@ import net.minecraft.world.Container;
  * {@code BlockEntityType} through {@code def.registeredType()} at its own registration moment, which
  * throws rather than guesses if it is asked too early.
  *
- * <p><b>The one hand-maintained exception.</b> {@link #NO_ENERGY_CAPABILITY}: the item pipe and the
+ * <p><b>The hand-maintained exceptions.</b> {@link #NO_ENERGY_CAPABILITY}: the item pipe and the
  * fluid pipe extend {@code EnergyBlockEntity} for its tick/persistence scaffolding and therefore
  * implement {@link EnergyPortHost} with a zero-capacity buffer and the default {@code BOTH} face
  * role. Neither loader ever registered them for energy, and exposing them would change gameplay on
@@ -40,6 +40,11 @@ import net.minecraft.world.Container;
  * ports — a pre-existing asymmetry, logged in MOD-433, deliberately not touched here.) The exclusion
  * is pinned by the both-loader gametest sweep {@code BlockCapabilityParityScenarios}, which asserts
  * independently — by id, not through this constant — that the two pipes expose no energy.
+ *
+ * <p>The sprinkler (MOD-525) is the third, for a different reason: it extends {@code EnergyBlockEntity}
+ * for the same tick/persistence scaffolding but draws no EU at all — a zero-capacity buffer and
+ * {@code NONE} on every face — so advertising an energy store would offer the network an endpoint that
+ * can never take or give anything. It is paid in nutrient solution instead, through its fluid port.
  *
  * <p>Chests are ordinary {@link Container}s here; how a loader wraps them (the MOD-391 combined
  * double-chest view) is that loader's choice at replay time.
@@ -53,7 +58,7 @@ public final class BlockCapabilityRoster {
 	 * See the class doc for why these two, and why the list is closed by a gametest rather than by
 	 * convention.
 	 */
-	public static final Set<String> NO_ENERGY_CAPABILITY = Set.of("item_pipe", "fluid_pipe");
+	public static final Set<String> NO_ENERGY_CAPABILITY = Set.of("item_pipe", "fluid_pipe", "sprinkler");
 
 	/** Every manifest entry whose block entity is an {@link EnergyPortHost}, minus {@link #NO_ENERGY_CAPABILITY}. */
 	public static List<ContentManifest.BlockEntityDef<?>> energyHosts() {

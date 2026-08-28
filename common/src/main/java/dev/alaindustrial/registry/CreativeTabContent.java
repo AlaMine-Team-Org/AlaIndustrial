@@ -316,6 +316,8 @@ public final class CreativeTabContent {
 		show(out, ModContent.POLYMERIZER_ITEM);
 		show(out, ModContent.VULCANIZER_ITEM);
 		show(out, ModContent.GALVANIC_BATH_ITEM);
+		// MOD-146: the head of the organic chain, beside the other fluid-fed machines.
+		show(out, ModContent.FERMENTER_ITEM);
 	}
 
 	/**
@@ -327,6 +329,8 @@ public final class CreativeTabContent {
 		show(out, ModContent.OIL_BUCKET);
 		show(out, ModContent.DIESEL_BUCKET);
 		show(out, ModContent.FUEL_OIL_BUCKET);
+		show(out, ModContent.BIOFUEL_BUCKET);
+		show(out, ModContent.NUTRIENT_SOLUTION_BUCKET);
 	}
 
 	/** 6 - item logistics: the pipe first, then what it moves things between. */
@@ -433,6 +437,7 @@ public final class CreativeTabContent {
 		show(out, ModContent.SILVER_GEAR);
 		// The rubber and cloth chains, each from raw to finished.
 		show(out, ModContent.RAW_RUBBER);
+		show(out, ModContent.BIOMASS);
 		show(out, ModContent.RUBBER);
 		show(out, ModContent.COTTON_FIBER);
 		show(out, ModContent.FLUX_THREAD);
@@ -639,6 +644,9 @@ public final class CreativeTabContent {
 		show(out, ModContent.INCUBATOR_ITEM);
 		show(out, ModContent.GARDEN_DRONE_STATION_ITEM);
 		show(out, ModContent.GARDEN_DRONE);
+		// MOD-525: the sprinkler belongs with the farm blocks, not with the machines — it takes
+		// no cable and its whole job is the plot around it.
+		show(out, ModContent.SPRINKLER_ITEM);
 		// MOD-275 - the first MV machine, last in the list because it sits a tier above the rest.
 		show(out, ModContent.ASSEMBLER_ITEM);
 	}

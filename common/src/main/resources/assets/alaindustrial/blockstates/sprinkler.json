@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "hanging=false,spraying=false": { "model": "alaindustrial:block/sprinkler" },
+    "hanging=false,spraying=true": { "model": "alaindustrial:block/sprinkler" },
+    "hanging=true,spraying=false": { "model": "alaindustrial:block/sprinkler", "x": 180 },
+    "hanging=true,spraying=true": { "model": "alaindustrial:block/sprinkler", "x": 180 }
+  }
+}

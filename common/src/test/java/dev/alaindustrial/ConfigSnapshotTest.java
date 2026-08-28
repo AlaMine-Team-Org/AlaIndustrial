@@ -311,6 +311,19 @@ class ConfigSnapshotTest {
 		SENTINELS.put("crystalFarmWaterSpeedup", 7);
 		SENTINELS.put("crystalFarmPowerSpeedup", 5);
 		SENTINELS.put("crystalFarmEuPerGrowth", 97);
+		// MOD-146/MOD-525 — the organic chain. Each value is distinct from its default, from 0, and
+		// above the field's own minimum, so the getter lambda cannot survive being mutated.
+		SENTINELS.put("crystalFarmSprinklerSpeedup", 7);
+		SENTINELS.put("crystalFarmSolutionPerGrowthMb", 123);
+		SENTINELS.put("fermenterDuration", 777);
+		SENTINELS.put("fermenterWaterPerOp", 321);
+		SENTINELS.put("fermenterBiofuelPoor", 213);
+		SENTINELS.put("fermenterBiofuelCommon", 419);
+		SENTINELS.put("fermenterBiofuelRich", 733);
+		SENTINELS.put("sprinklerRange", 9);
+		SENTINELS.put("sprinklerIntervalTicks", 137);
+		SENTINELS.put("sprinklerSolutionPerActionMb", 71);
+		SENTINELS.put("sprinklerTankMb", 5555);
 		SENTINELS.put("crystalFarmBuffer", 5300);
 		SENTINELS.put("crystalFarmDoorAutoCloseTicks", 73);
 		SENTINELS.put("crystalFarmDoorOccupiedRecheckTicks", 17);

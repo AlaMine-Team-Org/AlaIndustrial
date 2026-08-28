@@ -16,6 +16,8 @@ import dev.alaindustrial.block.entity.CanningMachineBlockEntity;
 import dev.alaindustrial.block.entity.ComponentRepairBenchBlockEntity;
 import dev.alaindustrial.block.entity.IncubatorBlockEntity;
 import dev.alaindustrial.block.entity.AlloySmelterBlockEntity;
+import dev.alaindustrial.block.entity.FermenterBlockEntity;
+import dev.alaindustrial.block.entity.SprinklerBlockEntity;
 import dev.alaindustrial.block.entity.GalvanicBathBlockEntity;
 import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
 import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
@@ -406,6 +408,30 @@ public final class DemoStand {
 			bath.setChangedQuietly();
 			bath.wake();
 		}
+		// Fermenter (MOD-146): the head of the organic chain. Stocked like the bath — the tank filled
+		// directly, the input slot loaded — so the stand shows it brewing rather than waiting.
+		// Row z=10 is full from x=2 to x=41, so this sits in the second machines row like the
+		// assembler does; a second `set` on one cell silently drops the first machine's inventory.
+		set(level, origin, 20, 1, 12, ModContent.FERMENTER.get());
+		chargeBuffer(level, origin, 20, 1, 12);
+		fillSlot(level, origin, 20, 1, 12, FermenterBlockEntity.ORGANIC_SLOT,
+				new ItemStack(Items.POISONOUS_POTATO, 64));
+		if (level.getBlockEntity(origin.offset(20, 1, 12)) instanceof FermenterBlockEntity fermenter) {
+			fermenter.waterTank.fluid = FluidHolder.of(net.minecraft.world.level.material.Fluids.WATER);
+			fermenter.waterTank.amount = FermenterBlockEntity.TANK_CAPACITY;
+			fermenter.setChangedQuietly();
+			fermenter.wake();
+		}
+		// Sprinkler (MOD-525): the tail of the same chain, and the one block here that takes no cable —
+		// so it is shown charged with solution instead, beside the farm plot rather than in the machine
+		// row. Its head only turns when the tank can pay, which is the whole readout it has.
+		set(level, origin, 39, 1, 12, ModContent.SPRINKLER.get());
+		if (level.getBlockEntity(origin.offset(39, 1, 12)) instanceof SprinklerBlockEntity sprinkler) {
+			sprinkler.tank.fluid = FluidHolder.of(ModContent.NUTRIENT_SOLUTION.get());
+			sprinkler.tank.amount = sprinkler.tank.capacity;
+			sprinkler.setChangedQuietly();
+			sprinkler.wake();
+		}
 		// Assembler (MOD-275): the first MV machine. Row z=10 is full from x=2 to x=41 (machines then
 		// the misc zone), so it opens a second machines row one block further south, in front of the
 		// macerator. Charged but idle by design — this slice registers the block and its inventory; the
@@ -574,6 +600,12 @@ public final class DemoStand {
 		set(level, origin, 36, 0, 12, ModContent.DIESEL_BLOCK.get());
 		set(level, origin, 38, -1, 12, FLOOR);
 		set(level, origin, 38, 0, 12, ModContent.FUEL_OIL_BLOCK.get());
+		// The organic chain's two fluids (MOD-146/MOD-525), same sunken-basin pattern. Biofuel takes
+		// the next slot in this row; the solution goes further west so the two never share an edge.
+		set(level, origin, 40, -1, 12, FLOOR);
+		set(level, origin, 40, 0, 12, ModContent.BIOFUEL_BLOCK.get());
+		set(level, origin, 22, -1, 12, FLOOR);
+		set(level, origin, 22, 0, 12, ModContent.NUTRIENT_SOLUTION_BLOCK.get());
 		set(level, origin, 34, 1, 10, ModContent.PUMP.get());
 		chargeBuffer(level, origin, 34, 1, 10);
 		set(level, origin, 35, 1, 10, ModContent.GEOTHERMAL_GENERATOR.get());

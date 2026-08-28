@@ -148,9 +148,15 @@ public final class ModRecipes {
 	public static final Kind MUTATION_CREATE =
 			new Kind("mutation_create", 8000, () -> Config.incubatorEuPerTick);
 
+	// Fermenter (MOD-146): organic waste → biomass. The water it drinks and the biofuel it brews are
+	// fixed config costs rather than recipe fields — the mod has no recipe family that mixes items and
+	// fluids on one side, and the Galvanic Bath already set this precedent rather than inventing one.
+	// 1200 = fermenterDuration (600) × machineEuPerTick (2); every shipped fermenting JSON says so.
+	public static final Kind FERMENTING = new Kind("fermenting", 1200);
+
 	private static final Kind[] ALL = {MACERATION, SMELTING, COMPRESSING, EXTRACTING, VULCANIZING,
 			GALVANIC_BATH, CENTRIFUGING, SAWING_PLANKS, SAWING_STICKS, SAWING_SLABS, SAWING_STAIRS,
-			MUTATION_TRANSFORM, MUTATION_DUPLICATE, MUTATION_CREATE};
+			MUTATION_TRANSFORM, MUTATION_DUPLICATE, MUTATION_CREATE, FERMENTING};
 
 	/** All recipe families, in registration order (used by both loaders' registration). */
 	public static Kind[] kinds() {

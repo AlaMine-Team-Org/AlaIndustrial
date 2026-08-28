@@ -1,0 +1,12 @@
+{
+	"type": "alaindustrial:fermenting",
+	"ingredient": "#alaindustrial:fermenter_input_poor",
+	"input_counts": [
+		4
+	],
+	"result": {
+		"id": "alaindustrial:biomass"
+	},
+	"energy": 600,
+	"chance": 0.06
+}

@@ -6,6 +6,8 @@
     "alaindustrial:fuel_oil",
     "alaindustrial:flowing_fuel_oil",
     "minecraft:lava",
-    "minecraft:flowing_lava"
+    "minecraft:flowing_lava",
+    "alaindustrial:biofuel",
+    "alaindustrial:flowing_biofuel"
   ]
 }

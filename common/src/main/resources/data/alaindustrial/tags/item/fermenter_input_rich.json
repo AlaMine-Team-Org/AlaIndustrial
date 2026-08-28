@@ -1,0 +1,33 @@
+{
+	"replace": false,
+	"values": [
+		"minecraft:hay_block",
+		"minecraft:melon",
+		"minecraft:dried_kelp_block",
+		"minecraft:honey_block",
+		"minecraft:honeycomb_block",
+		"minecraft:golden_carrot",
+		"minecraft:golden_apple",
+		"minecraft:enchanted_golden_apple",
+		"minecraft:cooked_beef",
+		"minecraft:cooked_porkchop",
+		"minecraft:cooked_chicken",
+		"minecraft:cooked_mutton",
+		"minecraft:cooked_rabbit",
+		"minecraft:cooked_cod",
+		"minecraft:cooked_salmon",
+		"minecraft:baked_potato",
+		"minecraft:cake",
+		"minecraft:pumpkin_pie",
+		"minecraft:cookie",
+		"minecraft:mushroom_stew",
+		"minecraft:rabbit_stew",
+		"minecraft:beetroot_soup",
+		"minecraft:suspicious_stew",
+		"minecraft:honey_bottle",
+		"minecraft:honeycomb",
+		"minecraft:fermented_spider_eye",
+		"minecraft:glistering_melon_slice",
+		"minecraft:sugar"
+	]
+}

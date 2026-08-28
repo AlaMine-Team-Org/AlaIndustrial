@@ -893,6 +893,19 @@ public final class Config {
 	/** How much a powered attempt cuts the growth divisor by, on top of water. */
 	public static int crystalFarmPowerSpeedup = 2;
 	/**
+	 * How much a sprinkler standing in the room cuts the growth divisor by, on top of the other two
+	 * (MOD-525). The third and last axis: water is free, power is a cable, and this one is a whole
+	 * production chain — fermented waste, distilled twice. Sized like the power bonus rather than the
+	 * water one, so the full stack is 270 / 3 / 2 / 2 = 22 and a fully-served bed beats a bare one by
+	 * roughly twelvefold, not by an order of magnitude.
+	 */
+	public static int crystalFarmSprinklerSpeedup = 2;
+	/**
+	 * mB of nutrient solution one boosted growth event in a greenhouse costs. Charged on delivery like
+	 * {@link #crystalFarmEuPerGrowth}: solution buys crystals, not dice rolls.
+	 */
+	public static int crystalFarmSolutionPerGrowthMb = 50;
+	/**
 	 * EU one boosted growth event costs. Charged on delivery, not per roll: energy buys crystals, not
 	 * dice. Zero makes the power bonus free, which is a legitimate way to switch it off as a cost.
 	 */
@@ -1283,6 +1296,50 @@ public final class Config {
 	 * the slowest of the LV processing family, because plating silver onto fibre is the gate into the
 	 * Fluxweave line and its armour. */
 	public static int galvanicBathDuration = 500;
+
+	// --- The organic chain (MOD-146 / MOD-525): fermenter → biofuel → nutrient solution → sprinkler. ---
+	/**
+	 * Fermenter (MOD-146): fallback ticks per batch at 1.0 speed. The shipped recipes cost 600 EU, so
+	 * at the ordinary-machine rate of 2 EU/t one batch takes 300 ticks (15 s). Slow for an LV machine,
+	 * but not so slow that a bucket of biofuel out of garden waste becomes an evening's project: at
+	 * the poor tier that is 50 batches, and a batch has to be watchable to be worth watching.
+	 */
+	public static int fermenterDuration = 300;
+	/**
+	 * mB of water one fermenter batch drinks. Not a recipe field: no recipe family in this mod mixes
+	 * items and fluids on one side, so — exactly like {@link #galvanicBathWaterPerOp} — the water is a
+	 * fixed cost of the machine. A bucket therefore covers ten batches.
+	 */
+	public static int fermenterWaterPerOp = 100;
+	/**
+	 * mB of biofuel one batch of the CHEAPEST organic tier brews — seeds, grass, leaves, rot. The
+	 * fluid output is the machine's, not the recipe's, for the same reason the water cost is (no
+	 * recipe family here mixes items and fluids), so the tier is read from the input's tag.
+	 *
+	 * <p><b>The three tiers are the whole economy of the machine.</b> Every batch costs the same 600
+	 * EU and the same 15 seconds, so what a player feeds it is the only lever they have: four pieces
+	 * of waste for 20 mB, or one golden carrot for 150. Deliberately in tens rather than hundreds —
+	 * a bucket is 1000 mB, and the cheap tier should take a while to fill one.
+	 */
+	public static int fermenterBiofuelPoor = 20;
+	/** mB per batch of ordinary harvest — wheat, carrots, melon slices, raw meat. */
+	public static int fermenterBiofuelCommon = 60;
+	/** mB per batch of processed or dense feedstock — golden carrots, cooked food, hay blocks. */
+	public static int fermenterBiofuelRich = 150;
+	/**
+	 * Sprinkler (MOD-525): radius in blocks it sprays. Four, matching {@link #gardenDroneRange} — the
+	 * two blocks are meant to sit on the same 9×9 plot, one tending it and one speeding it up.
+	 */
+	public static int sprinklerRange = 4;
+	/**
+	 * Ticks between sprinkler attempts. Matches {@link #crystalFarmGrowthIntervalTicks} so a greenhouse
+	 * and a field are watered at the same visible cadence.
+	 */
+	public static int sprinklerIntervalTicks = 100;
+	/** mB of nutrient solution one successful spray on a vanilla crop costs. A bucket is 20 sprays. */
+	public static int sprinklerSolutionPerActionMb = 50;
+	/** Sprinkler tank size, in mB. Also its intake rate ceiling — a FluidTank has no separate rate. */
+	public static int sprinklerTankMb = 4000;
 
 	// --- Overclocker chip (MOD-392): the per-chip speed/energy trade, applied per machine. ---
 	/**
@@ -2360,6 +2417,10 @@ public final class Config {
 				() -> crystalFarmWaterSpeedup, v -> crystalFarmWaterSpeedup = v, 1),
 			new IntField("crystalFarmPowerSpeedup", Section.MACHINES, "Factor a powered attempt cuts the crystal growth divisor by, on top of water.",
 				() -> crystalFarmPowerSpeedup, v -> crystalFarmPowerSpeedup = v, 1),
+			new IntField("crystalFarmSprinklerSpeedup", Section.MACHINES, "Factor a sprinkler in the room cuts the crystal growth divisor by, on top of water and power.",
+				() -> crystalFarmSprinklerSpeedup, v -> crystalFarmSprinklerSpeedup = v, 1),
+			new IntField("crystalFarmSolutionPerGrowthMb", Section.MACHINES, "mB of nutrient solution one sprinkler-boosted growth event costs; charged only when the event happens.",
+				() -> crystalFarmSolutionPerGrowthMb, v -> crystalFarmSolutionPerGrowthMb = v, 0),
 			new IntField("crystalFarmEuPerGrowth", Section.MACHINES, "EU one boosted growth event costs; charged only when the event actually happens.",
 				() -> crystalFarmEuPerGrowth, v -> crystalFarmEuPerGrowth = v, 0),
 			new IntField("crystalFarmBuffer", Section.MACHINES, "Energy buffer of a crystal farm controller, in EU.",
@@ -2480,6 +2541,24 @@ public final class Config {
 				() -> assemblerBuffer, v -> assemblerBuffer = v, 1),
 			new IntField("galvanicBathWaterPerOp", Section.MACHINES, "mB of water a galvanic bath consumes per completed operation (not part of the recipe JSON).",
 				() -> galvanicBathWaterPerOp, v -> galvanicBathWaterPerOp = v, 1),
+			new IntField("fermenterDuration", Section.MACHINES, "Fallback ticks one fermenter batch takes at 1.0 speed; shipped recipe energy 600 / machineEuPerTick 2 = 300.",
+				() -> fermenterDuration, v -> fermenterDuration = v, 1),
+			new IntField("fermenterWaterPerOp", Section.MACHINES, "mB of water a fermenter batch consumes (not part of the recipe JSON).",
+				() -> fermenterWaterPerOp, v -> fermenterWaterPerOp = v, 1),
+			new IntField("fermenterBiofuelPoor", Section.MACHINES, "mB of biofuel a batch of the cheapest organic tier brews (seeds, grass, leaves, rot).",
+				() -> fermenterBiofuelPoor, v -> fermenterBiofuelPoor = v, 1),
+			new IntField("fermenterBiofuelCommon", Section.MACHINES, "mB of biofuel a batch of ordinary harvest brews (wheat, carrots, melon slices, raw meat).",
+				() -> fermenterBiofuelCommon, v -> fermenterBiofuelCommon = v, 1),
+			new IntField("fermenterBiofuelRich", Section.MACHINES, "mB of biofuel a batch of processed or dense feedstock brews (golden carrots, cooked food, hay blocks).",
+				() -> fermenterBiofuelRich, v -> fermenterBiofuelRich = v, 1),
+			new IntField("sprinklerRange", Section.MACHINES, "Sprinkler spray radius in blocks around the block.",
+				() -> sprinklerRange, v -> sprinklerRange = v, 1),
+			new IntField("sprinklerIntervalTicks", Section.MACHINES, "Ticks between sprinkler spray attempts.",
+				() -> sprinklerIntervalTicks, v -> sprinklerIntervalTicks = v, 1),
+			new IntField("sprinklerSolutionPerActionMb", Section.MACHINES, "mB of nutrient solution one successful spray on a vanilla crop costs.",
+				() -> sprinklerSolutionPerActionMb, v -> sprinklerSolutionPerActionMb = v, 1),
+			new IntField("sprinklerTankMb", Section.MACHINES, "Sprinkler tank size in mB; also caps how fast a pipe can fill it.",
+				() -> sprinklerTankMb, v -> sprinklerTankMb = v, 1),
 			new IntField("electricHeaterEuPerTick", Section.MACHINES, "EU/t an Electric Heater spends while the Vulcanizer directly above it advances; idle heater draws nothing.",
 				() -> electricHeaterEuPerTick, v -> electricHeaterEuPerTick = v, 1),
 			new IntField("electricHeaterWarmupTicks", Section.MACHINES, "MOD-418: paid heat ticks a cold Electric Heater needs before it supplies tier-3 heat (x3 output); until then it supplies tier 2 (x2). Cooling is twice as slow.",

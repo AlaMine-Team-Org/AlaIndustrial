@@ -31,6 +31,12 @@ public final class ModParticles {
 	public static final SimpleParticleType ENRICHED_URANIUM_FLAME = new SimpleParticleType(false) {
 	};
 
+	/** The Sprinkler's spray (MOD-525) — see {@code NutrientSprayParticle} for why it is not vanilla's. */
+	public static final Identifier NUTRIENT_SPRAY_ID = Industrialization.id("nutrient_spray");
+
+	public static final SimpleParticleType NUTRIENT_SPRAY = new SimpleParticleType(false) {
+	};
+
 	private ModParticles() {
 	}
 }

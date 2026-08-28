@@ -1,0 +1,12 @@
+{
+	"type": "alaindustrial:distilling",
+	"fluid": "#c:biofuel",
+	"amount": 1000,
+	"fluid_results": [
+		{
+			"fluid": "alaindustrial:nutrient_solution",
+			"amount": 900
+		}
+	],
+	"energy": 400
+}

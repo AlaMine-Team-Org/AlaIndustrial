@@ -90,6 +90,11 @@ public class IndustrializationClient implements ClientModInitializer {
 				dev.alaindustrial.registry.ModFluids.FLOWING_DIESEL, "diesel");
 		registerFluidModel(dev.alaindustrial.registry.ModFluids.FUEL_OIL,
 				dev.alaindustrial.registry.ModFluids.FLOWING_FUEL_OIL, "fuel_oil");
+		// MOD-146/MOD-525: the organic chain's two fluids, same registration shape.
+		registerFluidModel(dev.alaindustrial.registry.ModFluids.BIOFUEL,
+				dev.alaindustrial.registry.ModFluids.FLOWING_BIOFUEL, "biofuel");
+		registerFluidModel(dev.alaindustrial.registry.ModFluids.NUTRIENT_SOLUTION,
+				dev.alaindustrial.registry.ModFluids.FLOWING_NUTRIENT_SOLUTION, "nutrient_solution");
 		// MOD-468: steam. Registered through the single-fluid overload — it has no flowing form, and
 		// without a model here every tank and pipe holding it would draw the missing-texture sprite.
 		registerFluidModel(dev.alaindustrial.registry.ModFluids.STEAM, "steam");
@@ -207,6 +212,9 @@ public class IndustrializationClient implements ClientModInitializer {
 		net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry.getInstance().register(
 				dev.alaindustrial.registry.ModParticles.ENRICHED_URANIUM_FLAME,
 				net.minecraft.client.particle.FlameParticle.Provider::new);
+		net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry.getInstance().register(
+				dev.alaindustrial.registry.ModParticles.NUTRIENT_SPRAY,
+				dev.alaindustrial.client.particle.NutrientSprayParticle.Provider::new);
 	}
 
 	/**

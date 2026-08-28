@@ -2,7 +2,9 @@ package dev.alaindustrial.registry.neoforge;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.fluid.DieselFluid;
+import dev.alaindustrial.fluid.BiofuelFluid;
 import dev.alaindustrial.fluid.FuelOilFluid;
+import dev.alaindustrial.fluid.NutrientSolutionFluid;
 import dev.alaindustrial.fluid.OilFluid;
 import dev.alaindustrial.fluid.SteamFluid;
 import dev.alaindustrial.registry.ModContent;
@@ -100,6 +102,19 @@ public final class ModFluidsNeoForge {
 			FLUID_TYPES.register("fuel_oil", () -> new FluidType(distillateTypeProperties(
 					"block.alaindustrial.fuel_oil", 950, 2400)));
 
+	/**
+	 * Biofuel's {@link FluidType} (MOD-146): thinner than either oil fraction — it is brewed and
+	 * watery, not refined out of crude.
+	 */
+	public static final DeferredHolder<FluidType, FluidType> BIOFUEL_TYPE =
+			FLUID_TYPES.register("biofuel", () -> new FluidType(distillateTypeProperties(
+					"block.alaindustrial.biofuel", 900, 1000)));
+
+	/** Nutrient solution's {@link FluidType} (MOD-525): the thinnest thing the mod makes. */
+	public static final DeferredHolder<FluidType, FluidType> NUTRIENT_SOLUTION_TYPE =
+			FLUID_TYPES.register("nutrient_solution", () -> new FluidType(distillateTypeProperties(
+					"block.alaindustrial.nutrient_solution", 1000, 900)));
+
 	/** Shared water-like-but-inert property chain for the two fractions (see {@link #DIESEL_TYPE}). */
 	public static FluidType.Properties distillateTypeProperties(String descriptionId, int density,
 			int viscosity) {
@@ -124,6 +139,14 @@ public final class ModFluidsNeoForge {
 			FLUIDS.register("fuel_oil", FuelOilStill::new);
 	public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_FUEL_OIL =
 			FLUIDS.register("flowing_fuel_oil", FuelOilFlowing::new);
+	public static final DeferredHolder<Fluid, FlowingFluid> BIOFUEL =
+			FLUIDS.register("biofuel", BiofuelStill::new);
+	public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_BIOFUEL =
+			FLUIDS.register("flowing_biofuel", BiofuelFlowing::new);
+	public static final DeferredHolder<Fluid, FlowingFluid> NUTRIENT_SOLUTION =
+			FLUIDS.register("nutrient_solution", NutrientSolutionStill::new);
+	public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_NUTRIENT_SOLUTION =
+			FLUIDS.register("flowing_nutrient_solution", NutrientSolutionFlowing::new);
 
 	// --- Steam (MOD-468) ---
 
@@ -199,6 +222,38 @@ public final class ModFluidsNeoForge {
 		}
 	}
 
+	/** Still biofuel with NeoForge's mandatory {@code getFluidType()} attached. */
+	public static final class BiofuelStill extends BiofuelFluid.Source {
+		@Override
+		public FluidType getFluidType() {
+			return BIOFUEL_TYPE.get();
+		}
+	}
+
+	/** Flowing biofuel with NeoForge's mandatory {@code getFluidType()} attached. */
+	public static final class BiofuelFlowing extends BiofuelFluid.Flowing {
+		@Override
+		public FluidType getFluidType() {
+			return BIOFUEL_TYPE.get();
+		}
+	}
+
+	/** Still nutrient solution with NeoForge's mandatory {@code getFluidType()} attached. */
+	public static final class NutrientSolutionStill extends NutrientSolutionFluid.Source {
+		@Override
+		public FluidType getFluidType() {
+			return NUTRIENT_SOLUTION_TYPE.get();
+		}
+	}
+
+	/** Flowing nutrient solution with NeoForge's mandatory {@code getFluidType()} attached. */
+	public static final class NutrientSolutionFlowing extends NutrientSolutionFluid.Flowing {
+		@Override
+		public FluidType getFluidType() {
+			return NUTRIENT_SOLUTION_TYPE.get();
+		}
+	}
+
 	/** Still fuel oil with NeoForge's mandatory {@code getFluidType()} attached. */
 	public static final class FuelOilStill extends FuelOilFluid.Source {
 		@Override
@@ -235,6 +290,10 @@ public final class ModFluidsNeoForge {
 		ModContent.FLOWING_DIESEL = FLOWING_DIESEL::get;
 		ModContent.FUEL_OIL = FUEL_OIL::get;
 		ModContent.FLOWING_FUEL_OIL = FLOWING_FUEL_OIL::get;
+		ModContent.BIOFUEL = BIOFUEL::get;
+		ModContent.FLOWING_BIOFUEL = FLOWING_BIOFUEL::get;
+		ModContent.NUTRIENT_SOLUTION = NUTRIENT_SOLUTION::get;
+		ModContent.FLOWING_NUTRIENT_SOLUTION = FLOWING_NUTRIENT_SOLUTION::get;
 		ModContent.STEAM = STEAM::get;
 	}
 }

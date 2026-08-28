@@ -24,6 +24,8 @@ import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
 import dev.alaindustrial.block.entity.AlloySmelterBlockEntity;
 import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
 import dev.alaindustrial.block.entity.GalvanicBathBlockEntity;
+import dev.alaindustrial.block.entity.FermenterBlockEntity;
+import dev.alaindustrial.block.entity.SprinklerBlockEntity;
 import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
 import dev.alaindustrial.block.entity.ReactorDoorBlockEntity;
 import dev.alaindustrial.block.entity.ReactorOutletBlockEntity;
@@ -111,6 +113,8 @@ public final class ModBlockEntities {
 	public static BlockEntityType<VulcanizerBlockEntity> VULCANIZER;
 	public static BlockEntityType<AlloySmelterBlockEntity> ALLOY_SMELTER;
 	public static BlockEntityType<GalvanicBathBlockEntity> GALVANIC_BATH;
+	public static BlockEntityType<FermenterBlockEntity> FERMENTER;
+	public static BlockEntityType<SprinklerBlockEntity> SPRINKLER;
 	public static BlockEntityType<ThermalCentrifugeBlockEntity> THERMAL_CENTRIFUGE;
 	/** MOD-468, stage 1 — the reactor room's brain. */
 	public static BlockEntityType<ReactorControllerBlockEntity> REACTOR_CONTROLLER;
@@ -176,6 +180,8 @@ public final class ModBlockEntities {
 		VULCANIZER = register(ContentManifest.blockEntity("vulcanizer", VulcanizerBlockEntity.class));
 		ALLOY_SMELTER = register(ContentManifest.blockEntity("alloy_smelter", AlloySmelterBlockEntity.class));
 		GALVANIC_BATH = register(ContentManifest.blockEntity("galvanic_bath", GalvanicBathBlockEntity.class));
+		FERMENTER = register(ContentManifest.blockEntity("fermenter", FermenterBlockEntity.class));
+		SPRINKLER = register(ContentManifest.blockEntity("sprinkler", SprinklerBlockEntity.class));
 		THERMAL_CENTRIFUGE = register(ContentManifest.blockEntity("thermal_centrifuge", ThermalCentrifugeBlockEntity.class));
 		REACTOR_CONTROLLER =
 				register(ContentManifest.blockEntity("reactor_controller", ReactorControllerBlockEntity.class));

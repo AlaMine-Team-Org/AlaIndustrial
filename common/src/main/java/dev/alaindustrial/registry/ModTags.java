@@ -122,6 +122,25 @@ public final class ModTags {
 		 * player picks whichever playstyle they already have. Backed by
 		 * {@code data/alaindustrial/tags/item/fiber.json}.
 		 */
+		/**
+		 * What the Fermenter accepts at all (MOD-146) — the union of the three price tiers below.
+		 * Used for the slot filter; the recipes match the tiers themselves.
+		 */
+		public static final TagKey<Item> FERMENTER_INPUT =
+				TagKey.create(Registries.ITEM, Industrialization.id("fermenter_input"));
+
+		/** Cheapest organic tier: seeds, grass, leaves, saplings, flowers, rot. */
+		public static final TagKey<Item> FERMENTER_INPUT_POOR =
+				TagKey.create(Registries.ITEM, Industrialization.id("fermenter_input_poor"));
+
+		/** Ordinary harvest: wheat, carrots, melon slices, raw meat, eggs. */
+		public static final TagKey<Item> FERMENTER_INPUT_COMMON =
+				TagKey.create(Registries.ITEM, Industrialization.id("fermenter_input_common"));
+
+		/** Processed or dense feedstock: golden carrots, cooked food, hay blocks, honey. */
+		public static final TagKey<Item> FERMENTER_INPUT_RICH =
+				TagKey.create(Registries.ITEM, Industrialization.id("fermenter_input_rich"));
+
 		public static final TagKey<Item> FIBER = key("fiber");
 
 		/**
@@ -208,5 +227,9 @@ public final class ModTags {
 		/** Fuel oil (MOD-251) — {@code c:fuel_oil}, still + flowing, same convention as {@link #C_OIL}. */
 		public static final TagKey<Fluid> C_FUEL_OIL =
 				TagKey.create(Registries.FLUID, Identifier.fromNamespaceAndPath("c", "fuel_oil"));
+
+		/** Biofuel (MOD-146) — {@code c:biofuel}, still + flowing, same convention as {@link #C_OIL}. */
+		public static final TagKey<Fluid> C_BIOFUEL =
+				TagKey.create(Registries.FLUID, Identifier.fromNamespaceAndPath("c", "biofuel"));
 	}
 }

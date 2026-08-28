@@ -18,6 +18,7 @@ import dev.alaindustrial.block.MaceratorBlock;
 import dev.alaindustrial.block.MoonlitSolarPanelBlock;
 import dev.alaindustrial.block.GardenDroneStationBlock;
 import dev.alaindustrial.block.PumpBlock;
+import dev.alaindustrial.block.FermenterBlock;
 import dev.alaindustrial.block.GalvanicBathBlock;
 import dev.alaindustrial.block.PolymerizerBlock;
 import dev.alaindustrial.block.ThermalCentrifugeBlock;
@@ -508,6 +509,7 @@ public final class MachineTooltips {
 				|| block instanceof PumpBlock
 				|| block instanceof PolymerizerBlock
 				|| block instanceof GalvanicBathBlock
+				|| block instanceof FermenterBlock
 				|| block instanceof VulcanizerBlock
 				|| block instanceof ThermalCentrifugeBlock
 				|| block instanceof ElectricHeaterBlock
@@ -558,6 +560,9 @@ public final class MachineTooltips {
 		} else if (block instanceof GalvanicBathBlock) {
 			lines.add(tt("energy_input", Config.machineEuPerTickEffective()));
 			lines.add(tt("duration_ticks", Config.scaledDuration(Config.galvanicBathDuration)));
+		} else if (block instanceof FermenterBlock) {
+			lines.add(tt("energy_input", Config.machineEuPerTickEffective()));
+			lines.add(tt("duration_ticks", Config.scaledDuration(Config.fermenterDuration)));
 		} else if (block instanceof VulcanizerBlock) {
 			lines.add(tt("energy_input", Config.machineEuPerTickEffective()));
 			lines.add(tt("duration_ticks", Config.scaledDuration(Config.vulcanizerDuration)));
@@ -648,6 +653,11 @@ public final class MachineTooltips {
 			lines.add(tt("buffer", Config.machineBuffer));
 			lines.add(tt("energy_per_op",
 					Config.machineEuPerTickEffective() * Config.scaledDuration(Config.galvanicBathDuration)));
+		} else if (block instanceof FermenterBlock) {
+			lines.add(tier());
+			lines.add(tt("buffer", Config.machineBuffer));
+			lines.add(tt("energy_per_op",
+					Config.machineEuPerTickEffective() * Config.scaledDuration(Config.fermenterDuration)));
 		} else if (block instanceof VulcanizerBlock) {
 			lines.add(tier());
 			lines.add(tt("buffer", Config.machineBuffer));

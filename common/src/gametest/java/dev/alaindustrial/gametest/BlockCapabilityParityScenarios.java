@@ -41,7 +41,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
  *
  * <p><b>Two oracles for the exclusion, on purpose.</b> The expected energy answer is derived from
  * {@link EnergyPortHost} minus {@link BlockCapabilityRoster#NO_ENERGY_CAPABILITY} — the same rule the
- * loaders replay, so on its own it could never notice that constant being edited. {@link #PIPES_NEVER_ENERGY}
+ * loaders replay, so on its own it could never notice that constant being edited. {@link #BLOCKS_NEVER_ENERGY}
  * therefore restates the exclusion by id, here, and is checked independently in both directions:
  * dropping a pipe from the roster's exclusion set makes the loader expose it and this sweep go red,
  * instead of the item pipe silently becoming a 0-EU endpoint of the Fabric energy network; and adding
@@ -79,10 +79,15 @@ public final class BlockCapabilityParityScenarios {
 
 	/**
 	 * Restated by id, deliberately NOT read from {@link BlockCapabilityRoster#NO_ENERGY_CAPABILITY}
-	 * (see the class doc). Both extend {@code EnergyBlockEntity} with a zero-capacity buffer, so their
-	 * {@code energyPort} is non-null on every face — the interface rule alone would expose them.
+	 * (see the class doc). All three extend {@code EnergyBlockEntity} with a zero-capacity buffer, so
+	 * their {@code energyPort} is non-null on every face — the interface rule alone would expose them.
+	 *
+	 * <p>The two pipes carry energy scaffolding they never use; the sprinkler (MOD-525) is paid in
+	 * nutrient solution and reports {@code NONE} on every face, so an energy capability there would
+	 * offer the network an endpoint that can neither take nor give.
 	 */
-	private static final List<String> PIPES_NEVER_ENERGY = List.of("item_pipe", "fluid_pipe");
+	private static final List<String> BLOCKS_NEVER_ENERGY =
+			List.of("item_pipe", "fluid_pipe", "sprinkler");
 
 	/**
 	 * For every manifest block entity and every face: energy capability present ⇔ the block entity is
@@ -99,9 +104,9 @@ public final class BlockCapabilityParityScenarios {
 		// roster's set SHRINKING (a pipe dropped -> the loader exposes it -> red). If the set GREW — say
 		// "cesu" added to NO_ENERGY_CAPABILITY — expected and actual would both flip to ABSENT on both
 		// loaders and the sweep would stay green while re-creating the very defect it guards against.
-		if (!Set.copyOf(PIPES_NEVER_ENERGY).equals(BlockCapabilityRoster.NO_ENERGY_CAPABILITY)) {
+		if (!Set.copyOf(BLOCKS_NEVER_ENERGY).equals(BlockCapabilityRoster.NO_ENERGY_CAPABILITY)) {
 			helper.fail("MOD-433: BlockCapabilityRoster.NO_ENERGY_CAPABILITY is " + BlockCapabilityRoster.NO_ENERGY_CAPABILITY
-					+ " but the sweep's independent restatement is " + PIPES_NEVER_ENERGY
+					+ " but the sweep's independent restatement is " + BLOCKS_NEVER_ENERGY
 					+ " — the exclusion set is closed: only the two pipes may implement EnergyPortHost without"
 					+ " publishing an energy capability; TC-CAP-PARITY");
 			return;
@@ -126,7 +131,7 @@ public final class BlockCapabilityParityScenarios {
 			}
 			checked++;
 
-			boolean excludedPipe = PIPES_NEVER_ENERGY.contains(def.id());
+			boolean excludedPipe = BLOCKS_NEVER_ENERGY.contains(def.id());
 			// Accumulated over the six faces; the side-less lookup below must agree with them (MOD-448).
 			boolean anyFaceEnergy = false;
 			boolean anyFaceFluid = false;

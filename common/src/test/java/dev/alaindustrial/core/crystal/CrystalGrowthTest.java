@@ -28,6 +28,30 @@ class CrystalGrowthTest {
 	}
 
 	@Test
+	void theSprinklerIsAThirdIndependentAxis() {
+		// MOD-525. Each axis alone, then the full stack: the point of the third one is that it composes
+		// with the other two rather than replacing either, so 240 / 3 / 2 / 2 = 20.
+		assertEquals(120, CrystalGrowth.effectiveChanceDivisor(240, false, false, true, 3, 2, 2));
+		assertEquals(40, CrystalGrowth.effectiveChanceDivisor(240, true, false, true, 3, 2, 2));
+		assertEquals(20, CrystalGrowth.effectiveChanceDivisor(240, true, true, true, 3, 2, 2));
+		// And it is genuinely optional: absent, the answer is exactly what the two-axis form gives.
+		assertEquals(CrystalGrowth.effectiveChanceDivisor(240, true, true, 3, 2),
+				CrystalGrowth.effectiveChanceDivisor(240, true, true, false, 3, 2, 2));
+	}
+
+	@Test
+	void theTwoAxisFormIgnoresTheSprinkler() {
+		// The old signature is kept for its callers and must stay a pure delegation: if it ever started
+		// applying a sprinkler bonus of its own, every pre-MOD-525 expectation above would shift.
+		for (boolean water : new boolean[] {false, true}) {
+			for (boolean powered : new boolean[] {false, true}) {
+				assertEquals(CrystalGrowth.effectiveChanceDivisor(240, water, powered, false, 3, 2, 99),
+						CrystalGrowth.effectiveChanceDivisor(240, water, powered, 3, 2));
+			}
+		}
+	}
+
+	@Test
 	void divisorNeverReachesZero() {
 		// A config holding 0 — or boosts large enough to divide the divisor away — must still leave a
 		// legal argument for nextInt, which throws on anything below 1.

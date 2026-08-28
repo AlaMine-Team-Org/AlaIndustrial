@@ -114,6 +114,9 @@ public final class ModItemsNeoForge {
 	// Oil → rubber chain: the polymerizer's product and the vulcanizer's cured output.
 	public static final DeferredItem<Item> RAW_RUBBER =
 			manifestItem("raw_rubber");
+	// Organic chain (MOD-146): the fermenter's solid leftover, stock for a later task.
+	public static final DeferredItem<Item> BIOMASS =
+			manifestItem("biomass");
 	public static final DeferredItem<Item> RUBBER =
 			manifestItem("rubber");
 	// Cotton (MOD-280): the seed is planted onto a trellis by right-click (the block handles it, so this
@@ -448,6 +451,15 @@ public final class ModItemsNeoForge {
 			ITEMS.registerItem("fuel_oil_bucket",
 					p -> new net.minecraft.world.item.BucketItem(ModFluidsNeoForge.FUEL_OIL.get(), p),
 					p -> p.craftRemainder(Items.BUCKET).stacksTo(1));
+	// The organic chain (MOD-146/MOD-525) — same pattern again.
+	public static final DeferredItem<Item> BIOFUEL_BUCKET =
+			ITEMS.registerItem("biofuel_bucket",
+					p -> new net.minecraft.world.item.BucketItem(ModFluidsNeoForge.BIOFUEL.get(), p),
+					p -> p.craftRemainder(Items.BUCKET).stacksTo(1));
+	public static final DeferredItem<Item> NUTRIENT_SOLUTION_BUCKET =
+			ITEMS.registerItem("nutrient_solution_bucket",
+					p -> new net.minecraft.world.item.BucketItem(ModFluidsNeoForge.NUTRIENT_SOLUTION.get(), p),
+					p -> p.craftRemainder(Items.BUCKET).stacksTo(1));
 
 	// --- Block items ---
 	public static final DeferredItem<BlockItem> GENERATOR_ITEM =
@@ -496,6 +508,10 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("vulcanizer", ModBlocksNeoForge.VULCANIZER);
 	public static final DeferredItem<BlockItem> GALVANIC_BATH_ITEM =
 			ITEMS.registerSimpleBlockItem("galvanic_bath", ModBlocksNeoForge.GALVANIC_BATH);
+	public static final DeferredItem<BlockItem> FERMENTER_ITEM =
+			ITEMS.registerSimpleBlockItem("fermenter", ModBlocksNeoForge.FERMENTER);
+	public static final DeferredItem<BlockItem> SPRINKLER_ITEM =
+			ITEMS.registerSimpleBlockItem("sprinkler", ModBlocksNeoForge.SPRINKLER);
 	public static final DeferredItem<BlockItem> THERMAL_CENTRIFUGE_ITEM =
 			ITEMS.registerSimpleBlockItem("thermal_centrifuge", ModBlocksNeoForge.THERMAL_CENTRIFUGE);
 
@@ -822,6 +838,8 @@ public final class ModItemsNeoForge {
 		ModContent.OIL_BUCKET = OIL_BUCKET::get;
 		ModContent.DIESEL_BUCKET = DIESEL_BUCKET::get;
 		ModContent.FUEL_OIL_BUCKET = FUEL_OIL_BUCKET::get;
+		ModContent.BIOFUEL_BUCKET = BIOFUEL_BUCKET::get;
+		ModContent.NUTRIENT_SOLUTION_BUCKET = NUTRIENT_SOLUTION_BUCKET::get;
 
 		ModContent.GENERATOR_ITEM = GENERATOR_ITEM;
 		ModContent.SOLAR_PANEL_ITEM = SOLAR_PANEL_ITEM;
@@ -845,6 +863,8 @@ public final class ModItemsNeoForge {
 		ModContent.VULCANIZER_ITEM = VULCANIZER_ITEM;
 		ModContent.ALLOY_SMELTER_ITEM = ALLOY_SMELTER_ITEM;
 		ModContent.GALVANIC_BATH_ITEM = GALVANIC_BATH_ITEM;
+		ModContent.FERMENTER_ITEM = FERMENTER_ITEM;
+		ModContent.SPRINKLER_ITEM = SPRINKLER_ITEM;
 		ModContent.THERMAL_CENTRIFUGE_ITEM = THERMAL_CENTRIFUGE_ITEM;
 		// MOD-468, stage 1.
 		ModContent.SHIELDING_ALLOY_INGOT = SHIELDING_ALLOY_INGOT;
@@ -887,6 +907,7 @@ public final class ModItemsNeoForge {
 		ModContent.RESONANT_SHARD = RESONANT_SHARD;
 		ModContent.MUTAGEN_DUST = MUTAGEN_DUST;
 		ModContent.RAW_RUBBER = RAW_RUBBER::get;
+		ModContent.BIOMASS = BIOMASS::get;
 		ModContent.COTTON_SEEDS = COTTON_SEEDS::get;
 		ModContent.COTTON_FIBER = COTTON_FIBER::get;
 		ModContent.FLUX_THREAD = FLUX_THREAD::get;

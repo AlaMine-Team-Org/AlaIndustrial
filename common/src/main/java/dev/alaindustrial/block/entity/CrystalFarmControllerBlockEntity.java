@@ -3,6 +3,7 @@ package dev.alaindustrial.block.entity;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.CrystalFarmControllerBlock;
 import dev.alaindustrial.block.CrystalSeedbedBlock;
+import dev.alaindustrial.block.SprinklerBlock;
 import dev.alaindustrial.core.crystal.CrystalGrowth;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.structure.CrystalFarmRoom;
@@ -71,6 +72,8 @@ public class CrystalFarmControllerBlockEntity extends EnergyBlockEntity {
 
 	/** Whether the last scan found water inside the room — the free half of the growth bonus. */
 	private boolean hasWater;
+	/** Sprinklers standing in the interior (MOD-525) — the third growth axis. */
+	private final List<BlockPos> sprinklers = new ArrayList<>();
 
 	/** Whether {@link #faultDx} and friends point at a real block, rather than at nothing in particular. */
 	private boolean knowsFault;
@@ -154,6 +157,7 @@ public class CrystalFarmControllerBlockEntity extends EnergyBlockEntity {
 		volume = formed ? result.volume() : 0;
 
 		seedbeds.clear();
+		sprinklers.clear();
 		hasWater = false;
 		// Found BEFORE anything is repainted, and while the last sealed footprint is still known: it is
 		// the only thing that can say where the hole is (see faultPosition).
@@ -279,6 +283,11 @@ public class CrystalFarmControllerBlockEntity extends EnergyBlockEntity {
 				if (!state.getValue(CrystalSeedbedBlock.TENDED)) {
 					level.setBlock(bed, state.setValue(CrystalSeedbedBlock.TENDED, true), 2);
 				}
+			} else if (state.getBlock() instanceof SprinklerBlock) {
+				// MOD-525: a sprinkler indoors is the room's third speed-up. Its own aura cannot reach
+				// the beds — they are not bonemealable and have no block entity — so the controller
+				// drives it instead, charging solution per delivered crystal.
+				sprinklers.add(cursor.immutable());
 			} else if (!hasWater && state.getFluidState().is(FluidTags.WATER)) {
 				// Fluid state rather than block identity, so a waterlogged block counts too — the
 				// requirement is "water somewhere in the room", not a particular block.
@@ -367,20 +376,46 @@ public class CrystalFarmControllerBlockEntity extends EnergyBlockEntity {
 			// because drainInternal quietly clamps to whatever is left. A farm running on fumes ran as
 			// if fully powered.
 			boolean powered = energy.getAmount() >= euPerGrowth();
+			// Asked per bed for the same reason `powered` is: one charged sprinkler must not hand the
+			// whole room a boost it can only pay for once.
+			SprinklerBlockEntity sprinkler = readySprinkler(level);
 			int divisor = CrystalGrowth.effectiveChanceDivisor(Config.crystalFarmGrowthChanceDivisor,
-					hasWater, powered, Config.crystalFarmWaterSpeedup, Config.crystalFarmPowerSpeedup);
+					hasWater, powered, sprinkler != null, Config.crystalFarmWaterSpeedup,
+					Config.crystalFarmPowerSpeedup, Config.crystalFarmSprinklerSpeedup);
 			if (random.nextInt(divisor) != 0) {
 				continue;
 			}
-			if (tryGrow(level, bed, random) && powered) {
-				// Paid for on delivery, not per attempt: energy buys crystals, not dice rolls.
-				energy.drainInternal(euPerGrowth());
+			if (tryGrow(level, bed, random)) {
+				// Paid for on delivery, not per attempt: energy and solution buy crystals, not dice rolls.
+				if (powered) {
+					energy.drainInternal(euPerGrowth());
+				}
+				if (sprinkler != null) {
+					sprinkler.drawForGrowth();
+				}
 			}
 		}
 	}
 
 	private long euPerGrowth() {
 		return Math.max(0, Config.crystalFarmEuPerGrowth);
+	}
+
+	/**
+	 * The first sprinkler in the room that could pay for one growth event, or {@code null}.
+	 *
+	 * <p>Re-read from the world rather than cached: the list is rebuilt only on the scan cadence, and
+	 * in between a player may have mined one or drained it. A stale block entity here would hand out a
+	 * boost nobody paid for.
+	 */
+	private SprinklerBlockEntity readySprinkler(Level level) {
+		for (BlockPos pos : sprinklers) {
+			if (level.getBlockEntity(pos) instanceof SprinklerBlockEntity sprinkler
+					&& sprinkler.canServeGrowth()) {
+				return sprinkler;
+			}
+		}
+		return null;
 	}
 
 	/**

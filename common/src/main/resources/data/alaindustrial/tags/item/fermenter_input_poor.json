@@ -1,0 +1,62 @@
+{
+	"replace": false,
+	"values": [
+		"minecraft:wheat_seeds",
+		"minecraft:beetroot_seeds",
+		"minecraft:melon_seeds",
+		"minecraft:pumpkin_seeds",
+		"minecraft:torchflower_seeds",
+		"minecraft:pitcher_pod",
+		"minecraft:short_grass",
+		"minecraft:tall_grass",
+		"minecraft:fern",
+		"minecraft:large_fern",
+		"minecraft:dead_bush",
+		"minecraft:seagrass",
+		"minecraft:vine",
+		"minecraft:glow_lichen",
+		"minecraft:hanging_roots",
+		"minecraft:moss_block",
+		"minecraft:moss_carpet",
+		"minecraft:pale_moss_block",
+		"minecraft:pale_moss_carpet",
+		"minecraft:pale_hanging_moss",
+		"minecraft:azalea",
+		"minecraft:flowering_azalea",
+		"minecraft:big_dripleaf",
+		"minecraft:small_dripleaf",
+		"minecraft:spore_blossom",
+		"minecraft:pink_petals",
+		"minecraft:lily_pad",
+		"minecraft:sea_pickle",
+		"minecraft:sugar_cane",
+		"minecraft:bamboo",
+		"minecraft:cactus",
+		"minecraft:kelp",
+		"minecraft:dried_kelp",
+		"minecraft:crimson_fungus",
+		"minecraft:warped_fungus",
+		"minecraft:crimson_roots",
+		"minecraft:warped_roots",
+		"minecraft:nether_sprouts",
+		"minecraft:twisting_vines",
+		"minecraft:weeping_vines",
+		"minecraft:brown_mushroom",
+		"minecraft:red_mushroom",
+		"minecraft:rotten_flesh",
+		"minecraft:poisonous_potato",
+		"minecraft:spider_eye",
+		{
+			"id": "#minecraft:leaves",
+			"required": false
+		},
+		{
+			"id": "#minecraft:saplings",
+			"required": false
+		},
+		{
+			"id": "#minecraft:flowers",
+			"required": false
+		}
+	]
+}

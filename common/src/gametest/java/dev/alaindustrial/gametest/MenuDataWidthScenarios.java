@@ -56,7 +56,7 @@ public final class MenuDataWidthScenarios {
 		// 35 -> 36 (MOD-468): the Reactor Controller's room readout - eleven channels, the last seven
 	// being status, the breach offset and the measured interior box.
 	// 36 -> 37 (MOD-479): the creative energy source.
-	private static final int EXPECTED_MACHINE_MENUS = 37;
+	private static final int EXPECTED_MACHINE_MENUS = 39;
 
 	/** Reused single cell inside the test region; each machine is placed here, read, then cleared. */
 	private static final BlockPos PROBE = new BlockPos(1, 2, 1);

@@ -143,6 +143,11 @@ public final class ModBlocks {
 	public static final Block OIL = handle(ContentManifest.OIL);
 	public static final Block DIESEL = handle(ContentManifest.DIESEL);
 	public static final Block FUEL_OIL = handle(ContentManifest.FUEL_OIL);
+	// The organic chain (MOD-146/MOD-525).
+	public static final Block BIOFUEL = handle(ContentManifest.BIOFUEL);
+	public static final Block NUTRIENT_SOLUTION = handle(ContentManifest.NUTRIENT_SOLUTION);
+	public static final Block FERMENTER = handle(ContentManifest.FERMENTER);
+	public static final Block SPRINKLER = handle(ContentManifest.SPRINKLER);
 
 	/**
 	 * Registers every {@link ContentManifest#BLOCKS} entry, in list order, and binds each one into

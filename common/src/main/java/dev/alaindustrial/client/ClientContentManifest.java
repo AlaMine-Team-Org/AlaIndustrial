@@ -13,6 +13,7 @@ import dev.alaindustrial.block.entity.ReactorDoorBlockEntity;
 import dev.alaindustrial.block.entity.ShieldingChestBlockEntity;
 import dev.alaindustrial.block.entity.SilverChestBlockEntity;
 import dev.alaindustrial.block.entity.StormWindMillBlockEntity;
+import dev.alaindustrial.block.entity.SprinklerBlockEntity;
 import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
@@ -25,6 +26,7 @@ import dev.alaindustrial.client.render.GardenDroneBlockEntityRenderer;
 import dev.alaindustrial.client.render.IncubatorBlockEntityRenderer;
 import dev.alaindustrial.client.render.IncubatorDomeTint;
 import dev.alaindustrial.client.render.ReactorDoorBlockEntityRenderer;
+import dev.alaindustrial.client.render.SprinklerHeadBlockEntityRenderer;
 import dev.alaindustrial.client.render.ThermalCentrifugeBlockEntityRenderer;
 import dev.alaindustrial.client.render.WaterMillWheelBlockEntityRenderer;
 import dev.alaindustrial.client.render.WindMillRotorBlockEntityRenderer;
@@ -165,6 +167,10 @@ public final class ClientContentManifest {
 			// way the redstone gate and the 400-tick spin-up are visible from outside the GUI.
 			renderer(ContentManifest.blockEntity("thermal_centrifuge", ThermalCentrifugeBlockEntity.class),
 					ThermalCentrifugeBlockEntityRenderer::new),
+			// Sprinkler (MOD-525): the head is the block's only readout — it turns when there is
+			// solution to spray — so it is geometry this renderer places above the mast.
+			renderer(ContentManifest.blockEntity("sprinkler", SprinklerBlockEntity.class),
+					SprinklerHeadBlockEntityRenderer::new),
 			// Reactor airlock (MOD-493): the panel sliding down out of the doorway. The block model is
 			// empty — everything the player sees of this door is drawn by the renderer.
 			renderer(ContentManifest.blockEntity("reactor_door", ReactorDoorBlockEntity.class),
@@ -212,7 +218,9 @@ public final class ClientContentManifest {
 			new ModelLayerDef(GardenDroneBlockEntityRenderer.MODEL_LAYER,
 					GardenDroneBlockEntityRenderer::createLayer),
 			new ModelLayerDef(ThermalCentrifugeBlockEntityRenderer.MODEL_LAYER,
-					ThermalCentrifugeBlockEntityRenderer::createLayer));
+					ThermalCentrifugeBlockEntityRenderer::createLayer),
+			new ModelLayerDef(SprinklerHeadBlockEntityRenderer.MODEL_LAYER,
+					SprinklerHeadBlockEntityRenderer::createLayer));
 
 	// ─────────────────────────────────────────────────────────────────────────────────────────
 	// Block tint sources

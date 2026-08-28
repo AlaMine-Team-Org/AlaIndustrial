@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "alaindustrial:block/fermenter_side",
+    "down": "alaindustrial:block/machine_bottom",
+    "up": "alaindustrial:block/fermenter_top",
+    "north": "alaindustrial:block/fermenter_front",
+    "east": "alaindustrial:block/fermenter_side",
+    "south": "alaindustrial:block/machine_back",
+    "west": "alaindustrial:block/fermenter_side"
+  }
+}
