@@ -1332,10 +1332,17 @@ public final class Config {
 	 */
 	public static int sprinklerRange = 4;
 	/**
-	 * Ticks between sprinkler attempts. Matches {@link #crystalFarmGrowthIntervalTicks} so a greenhouse
-	 * and a field are watered at the same visible cadence.
+	 * Ticks between sprinkler attempts. Matches {@link #gardenDroneScanIntervalTicks} — the two blocks
+	 * work the same plot, and a field block that acts five times more slowly than its neighbour reads
+	 * as broken rather than as balanced.
+	 *
+	 * <p>It deliberately does NOT match {@link #crystalFarmGrowthIntervalTicks} any more. It once did,
+	 * on the reasoning that a greenhouse and a field should be watered at one visible cadence — but a
+	 * greenhouse never used this number at all: indoors the controller runs the growth roll on its own
+	 * timer and only asks the sprinkler to pay. So the tie bought nothing and cost the field a 5×
+	 * slower crop, which is exactly how it played.
 	 */
-	public static int sprinklerIntervalTicks = 100;
+	public static int sprinklerIntervalTicks = 20;
 	/** mB of nutrient solution one successful spray on a vanilla crop costs. A bucket is 20 sprays. */
 	public static int sprinklerSolutionPerActionMb = 50;
 	/** Sprinkler tank size, in mB. Also its intake rate ceiling — a FluidTank has no separate rate. */

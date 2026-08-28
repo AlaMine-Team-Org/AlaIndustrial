@@ -25,17 +25,32 @@ import net.minecraft.util.RandomSource;
 public class NutrientSprayParticle extends SingleQuadParticle {
 
 	/**
-	 * Downward pull per tick. Well under vanilla's falling-dust (0.06 against 0.1): the droplets are
-	 * fine mist thrown by a spinning head, so they should hang long enough to be seen crossing the
-	 * plot before they land.
+	 * Downward pull per tick.
+	 *
+	 * <p>Above vanilla's falling-dust (0.13 against 0.1), and deliberately so. Vanilla scales this by
+	 * 0.04 per tick and then applies {@link #SPRAY_FRICTION} to the vertical speed too, so the two
+	 * settle at a terminal fall of {@code 0.627 × gravity} blocks per tick: at the 0.06 this started
+	 * with, that is 0.75 blocks a second — slower than the droplets expired, so the whole spray died
+	 * in mid-air at head height and never reached the crop. At 0.13 it falls ~1.6 blocks a second and
+	 * lands inside its own flight, which is the entire point of a sprinkler.
 	 */
-	private static final float SPRAY_GRAVITY = 0.06F;
+	private static final float SPRAY_GRAVITY = 0.13F;
 
 	/**
 	 * Air drag per tick. High enough that the outward fling decays into a fall within a second or so,
 	 * which is what turns a straight line into an arc.
 	 */
 	private static final float SPRAY_FRICTION = 0.94F;
+
+	/** Opacity while in flight; the fade below takes it down from here. */
+	private static final float PEAK_ALPHA = 0.9F;
+
+	/**
+	 * Ticks of fade at the end of life. A droplet lands well before its lifetime is up and then lies
+	 * on the ground — which is what makes the plot read as fertilised rather than as rained on — so
+	 * without a fade the settled mist would blink out all at once.
+	 */
+	private static final int FADE_TICKS = 20;
 
 	protected NutrientSprayParticle(ClientLevel level, double x, double y, double z,
 			double xd, double yd, double zd, SpriteSet sprites, RandomSource random) {
@@ -49,8 +64,10 @@ public class NutrientSprayParticle extends SingleQuadParticle {
 		this.xd = xd;
 		this.yd = yd;
 		this.zd = zd;
-		// Varied lifetimes so a burst breaks up instead of vanishing as one block of motes.
-		this.lifetime = 24 + random.nextInt(16);
+		// Varied lifetimes so a burst breaks up instead of vanishing as one block of motes. Long enough
+		// to outlive the flight by a wide margin: a droplet reaches the ground around tick 30, and the
+		// second or two it then spends lying there is what a player reads as fertiliser settling.
+		this.lifetime = 55 + random.nextInt(25);
 		this.quadSize = 0.09F + random.nextFloat() * 0.05F;
 		// Tint the whole spray toward the solution's own green, with a little spread so the mist has
 		// depth rather than reading as one flat colour.
@@ -58,7 +75,22 @@ public class NutrientSprayParticle extends SingleQuadParticle {
 		this.rCol = 0.35F * shade;
 		this.gCol = 0.85F * shade;
 		this.bCol = 0.48F * shade;
-		this.alpha = 0.9F;
+		this.alpha = PEAK_ALPHA;
+	}
+
+	/**
+	 * Vanilla's physics, plus a fade at the end.
+	 *
+	 * <p>The movement itself is still entirely the base class's — this override adds no motion of its
+	 * own, only opacity, so the "do not reimplement move-and-collide" note above still holds.
+	 */
+	@Override
+	public void tick() {
+		super.tick();
+		int remaining = this.lifetime - this.age;
+		if (remaining < FADE_TICKS) {
+			setAlpha(PEAK_ALPHA * Math.max(0.0F, (float) remaining / FADE_TICKS));
+		}
 	}
 
 	/**

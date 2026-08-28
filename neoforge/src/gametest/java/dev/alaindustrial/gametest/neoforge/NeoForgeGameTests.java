@@ -84,6 +84,7 @@ import dev.alaindustrial.gametest.EnergyCondenserScenarios;
 import dev.alaindustrial.gametest.OverclockerEffectScenarios;
 import dev.alaindustrial.gametest.OverclockerPanelScenarios;
 import dev.alaindustrial.gametest.MuteChipScenarios;
+import dev.alaindustrial.gametest.SprinklerScenarios;
 import dev.alaindustrial.gametest.StatsChipScenarios;
 import dev.alaindustrial.gametest.FluidTankScenarios;
 import dev.alaindustrial.gametest.AlaCommonScenarios;
@@ -1318,6 +1319,16 @@ public final class NeoForgeGameTests {
 				FermenterScenarios::con01DryTankBlocksWork);
 		registerTest(event, "fermenter_full_biofuel_tank_stalls", 500, true,
 				FermenterScenarios::con02FullBiofuelTankStalls);
+		// MOD-525: the sprinkler. Real-tick scenarios — the machine schedules itself against the game
+		// clock and decides its own sleep, so a drive()-based body could not see either.
+		registerTest(event, "sprinkler_sprays_once_per_interval_and_pays", 400, true,
+				SprinklerScenarios::fun01SpraysOncePerIntervalAndPays);
+		registerTest(event, "sprinkler_hanging_reaches_the_field_below", 300, true,
+				SprinklerScenarios::fun02HangingReachesTheFieldBelow);
+		registerTest(event, "sprinkler_dry_tank_grows_nothing", 300, true,
+				SprinklerScenarios::con01DryTankGrowsNothing);
+		registerTest(event, "sprinkler_nothing_to_water_costs_nothing", 300, true,
+				SprinklerScenarios::con02NothingToWaterCostsNothing);
 		registerTest(event, "galvanic_bath_string_becomes_flux_thread", 700, true,
 				GalvanicBathScenarios::fun01StringBecomesFluxThread);
 		registerTest(event, "galvanic_bath_cotton_becomes_flux_thread", 700, true,

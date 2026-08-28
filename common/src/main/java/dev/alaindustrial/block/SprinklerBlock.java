@@ -210,8 +210,11 @@ public class SprinklerBlock extends AbstractMachineBlock {
 			double spread = (random.nextDouble() - 0.5) * 0.35;
 			double cos = Math.cos(angle + spread);
 			double sin = Math.sin(angle + spread);
-			// Launch speed scaled to the radius: a wider zone needs a harder throw to cover it.
-			double speed = (0.09 + random.nextDouble() * 0.05) * radius * 0.5;
+			// Launch speed scaled to the radius: a wider zone needs a harder throw to cover it. Raised
+			// alongside the droplet's gravity — a heavier drop lands sooner, so the same throw covered
+			// noticeably less ground, and what the player saw watered would have shrunk inside the zone
+			// the block actually serves.
+			double speed = (0.12 + random.nextDouble() * 0.06) * radius * 0.5;
 			level.addParticle(ModParticles.NUTRIENT_SPRAY,
 					pos.getX() + 0.5 + cos * NOZZLE_REACH,
 					pos.getY() + headY,

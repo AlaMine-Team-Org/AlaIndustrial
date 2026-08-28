@@ -67,6 +67,26 @@ public class SprinklerBlockEntity extends MachineBlockEntity implements FluidPor
 	private static final int SCAN_Y_BELOW = 1;
 	private static final int SCAN_Y_ABOVE = 1;
 
+	/**
+	 * How far DOWN a ceiling-mounted sprinkler reaches, and how far up: it sprays at a field under it.
+	 *
+	 * <p>The symmetric ±1 box is right for one standing among the crops and wrong for one hanging over
+	 * them — a roof is rarely one block above the soil, so at ±1 a hung sprinkler watered the ceiling
+	 * it was screwed to and nothing else. Three below covers the usual head-height room; nothing above,
+	 * because there is a ceiling there.
+	 */
+	private static final int SCAN_Y_BELOW_HANGING = 3;
+	private static final int SCAN_Y_ABOVE_HANGING = 0;
+
+	/**
+	 * Ticks between rebuilds of the target list — its own cadence, not the spray one.
+	 *
+	 * <p>The two were one number until the spray rate was raised to the drone's; keeping them tied
+	 * would have re-read a few hundred block states every second to notice a change that happens when
+	 * a player plants something. The zone is scenery, the spray is the machine.
+	 */
+	private static final int ZONE_RESCAN_TICKS = 100;
+
 	/** A filled container placed here is emptied into the tank. */
 	public static final int FILL_INPUT_SLOT = 0;
 	/** The emptied container drops here. */
@@ -94,8 +114,19 @@ public class SprinklerBlockEntity extends MachineBlockEntity implements FluidPor
 	/** Positions in range that could ever take a spray; rebuilt on a timer, like the drone's. */
 	private final List<BlockPos> zoneCache = new ArrayList<>();
 
-	private int rescanCountdown;
-	private int sprayCountdown;
+	/**
+	 * Absolute game times of the next rescan and the next spray — a schedule, not countdowns.
+	 *
+	 * <p>Countdowns were the bug. {@code onServerTick} runs only when the block is awake, and the
+	 * value it returns is how many ticks the base class then SKIPS it for; a tick that merely
+	 * decremented a counter still returned {@link #IDLE_SLEEP_TICKS}, so the counter advanced once
+	 * every 41 world ticks. The configured interval was therefore multiplied by 41 behind the
+	 * player's back: 100 ticks played as 4100, one spray every 3½ minutes, and a tank that looked
+	 * like it never drained. Absolute times cannot drift that way — however long the block sleeps,
+	 * the next action still lands when it was due.
+	 */
+	private long nextRescanTick;
+	private long nextSprayTick;
 
 	public SprinklerBlockEntity(BlockPos pos, BlockState state) {
 		// Zero buffer, zero throughput: this block is not on the energy network at all. The base class
@@ -181,25 +212,27 @@ public class SprinklerBlockEntity extends MachineBlockEntity implements FluidPor
 		boolean bucketWork = ItemFluidBridge.get().drainSlotIntoTank(this,
 				FILL_INPUT_SLOT, FILL_OUTPUT_SLOT, tank, FluidAmounts.BUCKET) > 0;
 
-		if (rescanCountdown > 0) {
-			rescanCountdown--;
-		} else {
-			rebuildZoneCache(server, pos);
-			rescanCountdown = Math.max(1, Config.sprinklerIntervalTicks);
+		long now = server.getGameTime();
+		if (now >= nextRescanTick) {
+			rebuildZoneCache(server, pos, state);
+			nextRescanTick = now + ZONE_RESCAN_TICKS;
 		}
-
-		boolean sprayed = false;
-		if (sprayCountdown > 0) {
-			sprayCountdown--;
-		} else {
-			sprayCountdown = Math.max(1, Config.sprinklerIntervalTicks);
-			sprayed = trySpray(server);
+		if (now >= nextSprayTick) {
+			nextSprayTick = now + Math.max(1, Config.sprinklerIntervalTicks);
+			trySpray(server);
 		}
 
 		// The head spins whenever there is solution to spray, not only on the tick it lands one:
 		// a sprinkler that twitched once every five seconds would read as broken.
 		updateSpraying(server, pos, state, tank.amount >= solutionPerSpray());
-		return sprayed || bucketWork ? 0 : IDLE_SLEEP_TICKS;
+
+		if (bucketWork) {
+			return 0; // a container mid-exchange has more to do on the very next tick
+		}
+		// Sleep exactly up to whichever is due first, capped so that an outside change the machine
+		// does not get woken for (a neighbour growing into range) is noticed within two seconds.
+		long untilDue = Math.min(nextRescanTick, nextSprayTick) - now;
+		return Math.clamp(untilDue, 0, IDLE_SLEEP_TICKS);
 	}
 
 	/** Reflect "has something to spray" in the blockstate, which is what the renderer spins on. */
@@ -249,13 +282,17 @@ public class SprinklerBlockEntity extends MachineBlockEntity implements FluidPor
 	 * every attempt is the point of the cache — the zone is a few hundred positions and the crops in
 	 * it are a few dozen.
 	 */
-	private void rebuildZoneCache(ServerLevel level, BlockPos origin) {
+	private void rebuildZoneCache(ServerLevel level, BlockPos origin, BlockState own) {
 		zoneCache.clear();
 		int radius = Math.max(1, Config.sprinklerRange);
+		// Which way the block faces decides how tall its zone is, and in which direction.
+		boolean hanging = own.hasProperty(SprinklerBlock.HANGING) && own.getValue(SprinklerBlock.HANGING);
+		int below = hanging ? SCAN_Y_BELOW_HANGING : SCAN_Y_BELOW;
+		int above = hanging ? SCAN_Y_ABOVE_HANGING : SCAN_Y_ABOVE;
 		BlockPos.MutableBlockPos probe = new BlockPos.MutableBlockPos();
 		for (int dx = -radius; dx <= radius; dx++) {
 			for (int dz = -radius; dz <= radius; dz++) {
-				for (int dy = -SCAN_Y_BELOW; dy <= SCAN_Y_ABOVE; dy++) {
+				for (int dy = -below; dy <= above; dy++) {
 					probe.set(origin.getX() + dx, origin.getY() + dy, origin.getZ() + dz);
 					if (probe.equals(origin) || !level.isLoaded(probe)) {
 						continue;
