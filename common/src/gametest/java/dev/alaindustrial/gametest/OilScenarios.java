@@ -10,10 +10,17 @@ import dev.alaindustrial.block.entity.PumpBlockEntity;
 import dev.alaindustrial.core.fluid.FluidAmounts;
 import dev.alaindustrial.item.fluid.ItemFluid;
 import dev.alaindustrial.registry.ModContent;
+import dev.alaindustrial.worldgen.OilLakeConfiguration;
+import dev.alaindustrial.worldgen.OilLakeFeature;
+import dev.alaindustrial.worldgen.OilLakeShape;
+import java.util.EnumSet;
+import java.util.Optional;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.util.RandomSource;
+import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
@@ -31,6 +38,10 @@ import net.minecraft.world.level.block.BucketPickup;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.entity.DispenserBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
@@ -943,5 +954,135 @@ public final class OilScenarios {
 			}
 			helper.succeed();
 		});
+	}
+
+	// ── NEG04 (MOD-526): a basin that would hang in a cavity is refused ──────────────────────────
+
+	/**
+	 * The rig is one solid 8 × 8 × 8 block of stone, and the deposit is the smallest the codec
+	 * allows — radius 3 by 3, which writes a 6 × 6 × 6 box and nothing outside it (the barrier pass
+	 * walks the same grid). That is what keeps every write inside the force-loaded structure; a
+	 * shipped tier would reach past it and its blocks would land in a chunk the lane never loads.
+	 */
+	private static final int RIG_SPAN = 7;
+
+	/** Centre of the deposit in rig coordinates: the 6 × 6 × 6 box then spans rel 0…5 / 1…6 / 0…5. */
+	private static final BlockPos DEPOSIT_CENTRE = new BlockPos(3, 4, 3);
+
+	/**
+	 * One cell of the deposit's floor. With {@link #RIG_SEED} the blob fills grid level 2 at
+	 * x, z 2…4, so the cell straight below its middle is a boundary cell of the fluid half — the
+	 * one-block "cave" of the middle case.
+	 */
+	private static final BlockPos FLOOR_GAP = new BlockPos(3, 2, 3);
+
+	/** Fixed draw for the blob shape, so all three cases below place the SAME deposit. */
+	private static final long RIG_SEED = 1L;
+
+	private static OilLakeConfiguration smallestDeposit() {
+		return new OilLakeConfiguration(
+				BlockStateProvider.simple(oilSource()),
+				BlockStateProvider.simple(Blocks.STONE),
+				ConstantInt.of(3), ConstantInt.of(3), ConstantInt.of(3),
+				BlockPredicate.alwaysTrue(), BlockPredicate.alwaysTrue(), BlockPredicate.alwaysTrue());
+	}
+
+	/** Refill the whole rig with stone — every case starts from solid rock. */
+	private static void fillWithRock(GameTestHelper helper) {
+		for (int x = 0; x <= RIG_SPAN; x++) {
+			for (int y = 0; y <= RIG_SPAN; y++) {
+				for (int z = 0; z <= RIG_SPAN; z++) {
+					helper.setBlock(new BlockPos(x, y, z), Blocks.STONE);
+				}
+			}
+		}
+	}
+
+	/** Hollow the rig out from {@code fromY} to {@code toY} — the cave the deposit falls into. */
+	private static void hollowOut(GameTestHelper helper, int fromY, int toY) {
+		for (int x = 0; x <= RIG_SPAN; x++) {
+			for (int y = fromY; y <= toY; y++) {
+				for (int z = 0; z <= RIG_SPAN; z++) {
+					helper.setBlock(new BlockPos(x, y, z), Blocks.CAVE_AIR);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Run the real feature at the rig centre.
+	 *
+	 * <p>The worldgen heightmaps are primed first, and that is not a formality: {@code OilLakeFeature}
+	 * asks {@code OCEAN_FLOOR_WG} whether a gap is a cave or the open sky, and a LIVE chunk stops
+	 * updating the {@code _WG} maps once generation is over ({@code LevelChunk.setBlockState} touches
+	 * only the four that survive worldgen). Without the priming the rig reads as "everything is above
+	 * the terrain", every gap counts as sky, and the site is refused for a reason this test is not
+	 * about.
+	 */
+	private static boolean placeDeposit(GameTestHelper helper) {
+		ServerLevel level = helper.getLevel();
+		EnumSet<Heightmap.Types> worldgen =
+				EnumSet.of(Heightmap.Types.OCEAN_FLOOR_WG, Heightmap.Types.WORLD_SURFACE_WG);
+		for (int x = 0; x <= RIG_SPAN; x += RIG_SPAN) {
+			for (int z = 0; z <= RIG_SPAN; z += RIG_SPAN) {
+				Heightmap.primeHeightmaps(level.getChunk(helper.absolutePos(new BlockPos(x, 0, z))),
+						worldgen);
+			}
+		}
+		return OilLakeFeature.INSTANCE.place(new FeaturePlaceContext<>(Optional.empty(), level,
+				level.getChunkSource().getGenerator(), RandomSource.create(RIG_SEED),
+				helper.absolutePos(DEPOSIT_CENTRE), smallestDeposit()));
+	}
+
+	/** Oil sources anywhere in the rig. */
+	private static int oilCells(GameTestHelper helper) {
+		int count = 0;
+		for (int x = 0; x <= RIG_SPAN; x++) {
+			for (int y = 0; y <= RIG_SPAN; y++) {
+				for (int z = 0; z <= RIG_SPAN; z++) {
+					if (isOil(helper.getBlockState(new BlockPos(x, y, z)).getFluidState())) {
+						count++;
+					}
+				}
+			}
+		}
+		return count;
+	}
+
+	/**
+	 * MOD-526 — the same deposit, the same seed, three surroundings: solid rock, rock with one cell
+	 * of cave in the basin, and a hall the basin's whole floor falls into.
+	 *
+	 * <p>Placed / placed / refused. The middle case is the point of the whole test: the mod
+	 * deliberately does NOT follow vanilla's "refuse on any gap below the fluid line" — a deposit
+	 * that clips a cave is sealed by the barrier pass instead, or the deep tier would never generate.
+	 * What MOD-526 added is a LIMIT on that concession
+	 * ({@link OilLakeShape#MAX_OPEN_BASIN_PERCENT}), because sealing a whole hall left the deposit
+	 * hanging in it as a one-block stone bowl. Assert only the third case and the test would stay
+	 * green under "refuse everything"; assert only the first two and it would stay green under the
+	 * bug it exists to catch.
+	 */
+	public static void neg04HangingBasinIsRefused(GameTestHelper helper) {
+		fillWithRock(helper);
+		helper.assertTrue(placeDeposit(helper), "a deposit buried in solid rock must be placed");
+		int inRock = oilCells(helper);
+		helper.assertTrue(inRock > 0, "the deposit was placed but left no oil — the rig proves nothing");
+
+		fillWithRock(helper);
+		helper.setBlock(FLOOR_GAP, Blocks.CAVE_AIR);
+		helper.assertTrue(placeDeposit(helper),
+				"one cell of cave in the basin must still be sealed rather than refused");
+		helper.assertTrue(oilCells(helper) == inRock,
+				"the same deposit next to a one-cell gap must hold the same oil");
+		helper.assertTrue(helper.getBlockState(FLOOR_GAP).is(Blocks.STONE),
+				"the barrier pass must have sealed the one-cell gap with stone");
+
+		fillWithRock(helper);
+		hollowOut(helper, 0, DEPOSIT_CENTRE.getY() - 2);
+		helper.assertFalse(placeDeposit(helper),
+				"a deposit whose whole basin floor is a cave must be refused, not sealed into a bowl");
+		helper.assertTrue(oilCells(helper) == 0,
+				"a refused site must not have written a single block");
+		helper.succeed();
 	}
 }

@@ -33,11 +33,13 @@ public class SprinklerGameTest {
 	}
 
 	/**
-	 * @implements TC-SPRINK-001-CON01 — a dry tank grows nothing.
+	 * @implements TC-SPRINK-001-CON01 — a tank one millibucket short of a spray never fires. Asserted
+	 * on the tank rather than on a crop: vanilla grows wheat on its own random tick, so "the crop did
+	 * not grow" was a coin flip that went red in CI minutes after passing here.
 	 */
 	@GameTest(maxTicks = 300)
-	public void tcSprink001Con01_dryTankGrowsNothing(GameTestHelper helper) {
-		SprinklerScenarios.con01DryTankGrowsNothing(helper);
+	public void tcSprink001Con01_tankBelowPriceNeverFires(GameTestHelper helper) {
+		SprinklerScenarios.con01TankBelowPriceNeverFires(helper);
 	}
 
 	/**

@@ -1271,6 +1271,9 @@ public final class NeoForgeGameTests {
 		// DeferredRegister FluidType subclass, so bucket/capsule/pump exchange, the
 		// no-source-conversion rule, the oilBurns gate and the viscous spread profile must be
 		// proven against that registration path too, not just Fabric's eager one.
+		// MOD-526 — the size limit on the cave concession, on both loaders.
+		registerTest(event, "oil_hanging_basin_refused", 40, true,
+				OilScenarios::neg04HangingBasinIsRefused);
 		registerTest(event, "oil_bucket_place_and_pickup", 60, true,
 				OilScenarios::fun01BucketPlaceAndPickup);
 		registerTest(event, "oil_capsule_pickup_and_place", 100, true,
@@ -1325,8 +1328,8 @@ public final class NeoForgeGameTests {
 				SprinklerScenarios::fun01SpraysOncePerIntervalAndPays);
 		registerTest(event, "sprinkler_hanging_reaches_the_field_below", 300, true,
 				SprinklerScenarios::fun02HangingReachesTheFieldBelow);
-		registerTest(event, "sprinkler_dry_tank_grows_nothing", 300, true,
-				SprinklerScenarios::con01DryTankGrowsNothing);
+		registerTest(event, "sprinkler_tank_below_price_never_fires", 300, true,
+				SprinklerScenarios::con01TankBelowPriceNeverFires);
 		registerTest(event, "sprinkler_nothing_to_water_costs_nothing", 300, true,
 				SprinklerScenarios::con02NothingToWaterCostsNothing);
 		registerTest(event, "galvanic_bath_string_becomes_flux_thread", 700, true,

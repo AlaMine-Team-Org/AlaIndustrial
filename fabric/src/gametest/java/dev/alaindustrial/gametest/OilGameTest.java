@@ -132,4 +132,13 @@ public class OilGameTest {
 	public void tcOil001Fun10_immersionDampsFallInViscosityOrder(GameTestHelper helper) {
 		OilScenarios.fun10ImmersionDampsFallInViscosityOrder(helper);
 	}
+
+	/**
+	 * @implements TC-OIL-001-NEG04 — a deposit whose basin floor is a cave hall is refused, while the
+	 * same deposit in rock — and in rock with one cell of cave — is placed and sealed (MOD-526).
+	 */
+	@GameTest
+	public void tcOil001Neg04_hangingBasinIsRefused(GameTestHelper helper) {
+		OilScenarios.neg04HangingBasinIsRefused(helper);
+	}
 }

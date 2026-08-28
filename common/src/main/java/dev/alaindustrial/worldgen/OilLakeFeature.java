@@ -2,7 +2,6 @@ package dev.alaindustrial.worldgen;
 
 import dev.alaindustrial.Industrialization;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
@@ -136,7 +135,8 @@ public final class OilLakeFeature extends Feature<OilLakeConfiguration> {
 			for (int z = 0; z < width; z++) {
 				for (int y = 0; y < height; y++) {
 					if (filled[OilLakeShape.index(horizontalRadius, verticalRadius, x, y, z)]
-							|| !bordersHollow(filled, horizontalRadius, verticalRadius, width, height, x, y, z)) {
+							|| !OilLakeShape.bordersHollow(filled, horizontalRadius, verticalRadius,
+									width, height, x, y, z)) {
 						continue;
 					}
 					cursor.set(base.getX() + x, base.getY() + y, base.getZ() + z);
@@ -184,23 +184,35 @@ public final class OilLakeFeature extends Feature<OilLakeConfiguration> {
 	 * <p>Air above ground is neither of those, so an ordinary surface puddle passes and simply gets
 	 * no barrier over it — an open pool, the way a lava lake looks.
 	 *
-	 * <p><b>One deliberate deviation from vanilla.</b> {@code LakeFeature} refuses the site for ANY
-	 * non-solid cell below the fluid line, cave included. That is affordable for a fixed 16 × 8 × 16
-	 * box; the deep reservoir tier here reaches a radius of 14, where the boundary is roughly four
-	 * times the area and clipping a cave somewhere is close to certain — the whole 1/20 layer would
-	 * quietly never generate. So an underground gap is allowed through and sealed by the barrier pass
-	 * instead. The sky check is what keeps that from reintroducing the beach dome: below ground a
-	 * "leak" is a cave and stone is correct, above ground it is the sky and stone is a boulder.
+	 * <p><b>One deliberate deviation from vanilla — and the size limit on it.</b>
+	 * {@code LakeFeature} refuses the site for ANY non-solid cell below the fluid line, cave
+	 * included. That is affordable for a fixed 16 × 8 × 16 box; the deep reservoir tier here reaches
+	 * a radius of 14, where the boundary is roughly four times the area and clipping a cave
+	 * somewhere is close to certain — the whole 1/20 layer would quietly never generate. So an
+	 * underground gap is allowed through and sealed by the barrier pass instead. The sky check is
+	 * what keeps that from reintroducing the beach dome: below ground a "leak" is a cave and stone is
+	 * correct, above ground it is the sky and stone is a boulder.
+	 *
+	 * <p>What the concession lacked until MOD-526 was a bound on HOW MUCH of the basin may be that
+	 * cave. Sealing a corridor leaves a pocket in the rock; sealing a hall leaves a one-block stone
+	 * bowl with oil in it hanging in mid-air, which is what a player photographed. The walk therefore
+	 * counts the basin's boundary and how much of it is open, and hands the verdict to
+	 * {@link OilLakeShape#basinHangsInTheOpen}. The share is measured, not guessed: over 601 accepted
+	 * sites of a real world an ordinary deposit keeps it under a tenth, and the deposits past a
+	 * quarter are the ones sitting inside a cavity rather than in the rock beside it.
 	 */
 	@SuppressWarnings("deprecation") // BlockStateBase#isSolid — see the note on place(...)
 	private static boolean siteHoldsTheLake(WorldGenLevel level, OilLakeConfiguration config,
 			boolean[] filled, int horizontalRadius, int verticalRadius, int width, int height,
 			BlockPos base, BlockState fluid, BlockPos.MutableBlockPos cursor) {
+		int basinBoundary = 0;
+		int basinOpen = 0;
 		for (int x = 0; x < width; x++) {
 			for (int z = 0; z < width; z++) {
 				for (int y = 0; y < height; y++) {
 					if (filled[OilLakeShape.index(horizontalRadius, verticalRadius, x, y, z)]
-							|| !bordersHollow(filled, horizontalRadius, verticalRadius, width, height, x, y, z)) {
+							|| !OilLakeShape.bordersHollow(filled, horizontalRadius, verticalRadius,
+									width, height, x, y, z)) {
 						continue;
 					}
 					cursor.set(base.getX() + x, base.getY() + y, base.getZ() + z);
@@ -208,6 +220,10 @@ public final class OilLakeFeature extends Feature<OilLakeConfiguration> {
 						return false;
 					}
 					BlockState state = level.getBlockState(cursor);
+					boolean belowFluidLine = OilLakeShape.isFluidLevel(verticalRadius, y);
+					if (belowFluidLine) {
+						basinBoundary++;
+					}
 					if (state != fluid) {
 						// Somebody else's liquid anywhere on the boundary — an ocean, a river, a lava
 						// lake. Refuse whichever half it touches: below the fluid line it cannot hold
@@ -219,10 +235,12 @@ public final class OilLakeFeature extends Feature<OilLakeConfiguration> {
 						// underground, where it is a cave the barrier pass can seal; at or above the
 						// terrain it is open sky or a cliff face, and walling that off is what turns a
 						// beach puddle into a stone boulder.
-						if (OilLakeShape.isFluidLevel(verticalRadius, y) && !state.isSolid()
-								&& cursor.getY() >= level.getHeight(Heightmap.Types.OCEAN_FLOOR_WG,
-										cursor.getX(), cursor.getZ())) {
-							return false;
+						if (belowFluidLine && !state.isSolid()) {
+							basinOpen++;
+							if (cursor.getY() >= level.getHeight(Heightmap.Types.OCEAN_FLOOR_WG,
+									cursor.getX(), cursor.getZ())) {
+								return false;
+							}
 						}
 					}
 					if (!config.canPlaceFeature().test(level, cursor)) {
@@ -231,27 +249,8 @@ public final class OilLakeFeature extends Feature<OilLakeConfiguration> {
 				}
 			}
 		}
-		return true;
-	}
-
-	/**
-	 * Whether an empty grid cell touches a hollow one. {@link OilLakeShape} guarantees the outermost
-	 * layer of the grid is never filled, so a hollow cell always has all six neighbours in range and
-	 * this scan needs no bounds check beyond the grid edges it walks itself.
-	 */
-	private static boolean bordersHollow(boolean[] filled, int horizontalRadius, int verticalRadius,
-			int width, int height, int x, int y, int z) {
-		for (Direction direction : Direction.values()) {
-			int nx = x + direction.getStepX();
-			int ny = y + direction.getStepY();
-			int nz = z + direction.getStepZ();
-			if (nx < 0 || nx >= width || nz < 0 || nz >= width || ny < 0 || ny >= height) {
-				continue;
-			}
-			if (filled[OilLakeShape.index(horizontalRadius, verticalRadius, nx, ny, nz)]) {
-				return true;
-			}
-		}
-		return false;
+		// How much of the basin was allowed to be a cave is the whole of MOD-526: sealing a corridor
+		// gives a pocket in the rock, sealing a hall gives a stone bowl hanging in mid-air.
+		return !OilLakeShape.basinHangsInTheOpen(basinOpen, basinBoundary);
 	}
 }

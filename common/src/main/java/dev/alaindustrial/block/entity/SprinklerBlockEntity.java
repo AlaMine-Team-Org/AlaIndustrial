@@ -229,8 +229,22 @@ public class SprinklerBlockEntity extends MachineBlockEntity implements FluidPor
 		if (bucketWork) {
 			return 0; // a container mid-exchange has more to do on the very next tick
 		}
-		// Sleep exactly up to whichever is due first, capped so that an outside change the machine
-		// does not get woken for (a neighbour growing into range) is noticed within two seconds.
+		// A machine that CAN work wakes exactly when its next action is due; one that cannot backs off
+		// to the shared idle interval, the same split the Garden Drone Station keeps in setStatus.
+		//
+		// The distinction is worth making because waking costs more than nothing: every executed tick
+		// re-reads the fill slot through the item↔fluid bridge. A sprinkler standing over a
+		// grown-out field has neither a target nor a reason to look, and pacing it by the spray
+		// interval would poll twice as often as the old code did — a regression hidden inside a fix.
+		//
+		// Backing off cannot make an action late by more than the idle interval, and it cannot make
+		// one drift: the schedule is absolute game time, so an overslept due time simply fires on the
+		// next wake instead of sliding forward. Solution arriving by pipe or bucket calls wake()
+		// through the tank's own listener, so the common case does not even wait that long.
+		boolean canWork = tank.amount >= solutionPerSpray() && !zoneCache.isEmpty();
+		if (!canWork) {
+			return IDLE_SLEEP_TICKS;
+		}
 		long untilDue = Math.min(nextRescanTick, nextSprayTick) - now;
 		return Math.clamp(untilDue, 0, IDLE_SLEEP_TICKS);
 	}

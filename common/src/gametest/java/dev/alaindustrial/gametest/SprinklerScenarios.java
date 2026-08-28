@@ -8,9 +8,6 @@ import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.CropBlock;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 /**
  * Loader-neutral gametest bodies for the Sprinkler (MOD-525, suite TC-SPRINK-001). Wrapped by the
@@ -61,7 +58,15 @@ public final class SprinklerScenarios {
 	 * same reason as {@code GardenDroneScenarios.withIsolatedZone}.
 	 *
 	 * <p>The restore has to happen INSIDE the sequence: a {@code finally} around the sequence
-	 * <em>builder</em> would put the radius back before a single tick had run.
+	 * <em>builder</em> would put the radius back before a single tick had run. It is therefore the
+	 * FIRST statement of each scenario's closing step, so an assertion that fails still restores.
+	 *
+	 * <p><b>Known gap, deliberately not engineered around:</b> a scenario that never reaches its
+	 * closing step — a timeout — leaves the radius at 1 for the rest of the run. That is survivable
+	 * here and only here: nothing outside this suite reads {@code sprinklerRange}, and every scenario
+	 * in it sets the same value, so the worst case is that other sprinkler scenarios keep running
+	 * isolated. A key with readers elsewhere would need the two-phase treatment instead (one writer,
+	 * both positions inside one scenario).
 	 */
 	private static int pinRadius() {
 		int configured = Config.sprinklerRange;
@@ -89,20 +94,6 @@ public final class SprinklerScenarios {
 	private static void plantWheat(GameTestHelper helper, BlockPos cropPos) {
 		helper.setBlock(cropPos.below(), Blocks.FARMLAND);
 		helper.setBlock(cropPos, Blocks.WHEAT);
-	}
-
-	/**
-	 * The wheat's AGE, or -1 if the block is no longer wheat.
-	 *
-	 * <p>Read through {@link BlockStateProperties#AGE_7} rather than {@code CropBlock.getAgeProperty},
-	 * which is protected — wheat's own property is that one, and these scenarios plant nothing else.
-	 */
-	private static int age(GameTestHelper helper, BlockPos cropPos) {
-		BlockState state = helper.getLevel().getBlockState(helper.absolutePos(cropPos));
-		if (!(state.getBlock() instanceof CropBlock) || !state.hasProperty(BlockStateProperties.AGE_7)) {
-			return -1;
-		}
-		return state.getValue(BlockStateProperties.AGE_7);
 	}
 
 	private static long pricePerSpray() {
@@ -170,6 +161,11 @@ public final class SprinklerScenarios {
 	 * was screwed to and nothing else. The second is what keeps the fix honest: without it, making the
 	 * box a symmetric ±3 would pass just as well, and the asymmetry that ties the zone to how the
 	 * block is mounted would quietly disappear.
+	 *
+	 * <p><b>Measured on the tanks, not on the crops</b> — see {@link #con01TankBelowPriceNeverFires}.
+	 * A spray is the only thing that can move a tank, so "the hung one paid and the standing one did
+	 * not" is exactly the zone question and nothing else; "the crop grew" would also be answered by
+	 * vanilla's own random tick.
 	 */
 	public static void fun02HangingReachesTheFieldBelow(GameTestHelper helper) {
 		int configuredRadius = pinRadius();
@@ -179,21 +175,22 @@ public final class SprinklerScenarios {
 		fill(stood, Config.sprinklerTankMb);
 		plantWheat(helper, HANGING_CROP);
 		plantWheat(helper, STANDING_CROP);
-		int hungBefore = age(helper, HANGING_CROP);
-		int stoodBefore = age(helper, STANDING_CROP);
+		long hungBefore = hung.tank.amount;
+		long stoodBefore = stood.tank.amount;
 
 		helper.startSequence()
 				.thenExecuteFor(Math.max(1, Config.sprinklerIntervalTicks) * 2, () -> {
 				})
 				.thenExecute(() -> {
 					Config.sprinklerRange = configuredRadius;
-					if (age(helper, HANGING_CROP) <= hungBefore) {
-						helper.fail("a hanging sprinkler did not reach the crop three blocks below it — "
-								+ "ceiling mounting waters the ceiling again");
+					if (hung.tank.amount >= hungBefore) {
+						helper.fail("a hanging sprinkler spent nothing on the crop three blocks below it — "
+								+ "it did not reach, so ceiling mounting waters the ceiling again");
 					}
-					if (age(helper, STANDING_CROP) != stoodBefore) {
-						helper.fail("a floor-standing sprinkler reached three blocks down; its zone is "
-								+ "supposed to be ±1, and the deeper reach belongs to the hanging one only");
+					if (stood.tank.amount != stoodBefore) {
+						helper.fail("a floor-standing sprinkler paid " + (stoodBefore - stood.tank.amount)
+								+ " mB for something three blocks down; its zone is supposed to be ±1, and "
+								+ "the deeper reach belongs to the hanging one only");
 					}
 				})
 				.thenSucceed();
@@ -201,21 +198,36 @@ public final class SprinklerScenarios {
 
 	// ── CON01/CON02: the two ways it must cost nothing ─────────────────────────────────────────────
 
-	/** An empty tank grows nothing: solution is the only currency this machine has. */
-	public static void con01DryTankGrowsNothing(GameTestHelper helper) {
+	/**
+	 * A tank holding one millibucket less than a spray costs never fires: solution is the only
+	 * currency this machine has, and it does not run on credit.
+	 *
+	 * <p><b>Why the tank and not the crop.</b> The first version planted wheat, ran the clock and
+	 * asserted the crop had not grown — and it failed in CI on a machine that had passed it minutes
+	 * before, because <em>vanilla</em> grows wheat on its own random tick. The assertion was a coin
+	 * flip on the game's dice, not a statement about the sprinkler: green while the block worked,
+	 * green while it was broken, red when the weather in the rig happened to change. A tank moves
+	 * only when this machine spends, so measuring it asks the question and nothing else.
+	 *
+	 * <p>{@code price − 1} rather than zero on purpose: an empty tank cannot lose anything, so
+	 * "unchanged" would be true no matter what the code did. One millibucket short is the smallest
+	 * amount that makes the refusal a real decision.
+	 */
+	public static void con01TankBelowPriceNeverFires(GameTestHelper helper) {
 		int configuredRadius = pinRadius();
-		place(helper, SPRINKLER, false);
-		BlockPos crop = SPRINKLER.offset(1, 0, 0);
-		plantWheat(helper, crop);
-		int before = age(helper, crop);
+		SprinklerBlockEntity be = place(helper, SPRINKLER, false);
+		long stocked = pricePerSpray() - 1;
+		fill(be, stocked);
+		plantWheat(helper, SPRINKLER.offset(1, 0, 0));
 
 		helper.startSequence()
 				.thenExecuteFor(Math.max(1, Config.sprinklerIntervalTicks) * 2, () -> {
 				})
 				.thenExecute(() -> {
 					Config.sprinklerRange = configuredRadius;
-					if (age(helper, crop) != before) {
-						helper.fail("a sprinkler with a dry tank grew a crop anyway — the spray is free");
+					if (be.tank.amount != stocked) {
+						helper.fail("a sprinkler one millibucket short of a spray spent "
+								+ (stocked - be.tank.amount) + " mB anyway — the price is not a gate");
 					}
 				})
 				.thenSucceed();
