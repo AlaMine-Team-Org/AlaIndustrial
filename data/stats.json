@@ -1,13 +1,13 @@
 {
- "generated": "2026-08-27T10:11:24Z",
+ "generated": "2026-08-28T12:05:07Z",
  "totals": {
-  "modrinth": 4736,
-  "curseforge": 4230,
-  "followers": 8,
-  "version": "0.1.119",
+  "modrinth": 4831,
+  "curseforge": 4326,
+  "followers": 9,
+  "version": "0.1.122",
   "loaders": {
-   "fabric": 2450,
-   "neoforge": 2284
+   "fabric": 2520,
+   "neoforge": 2309
   }
  },
  "series": [
@@ -61,6 +61,6 @@
   ["2026-08-24", 4491, 4067],
   ["2026-08-25", 4568, 4146],
   ["2026-08-26", 4725, 4229],
-  ["2026-08-27", 4725, null]
+  ["2026-08-27", 4811, 4312]
  ]
 }
