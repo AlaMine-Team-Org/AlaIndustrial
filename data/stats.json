@@ -1,13 +1,13 @@
 {
- "generated": "2026-08-28T07:19:32Z",
+ "generated": "2026-08-28T12:05:07Z",
  "totals": {
-  "modrinth": 4811,
-  "curseforge": 4312,
+  "modrinth": 4831,
+  "curseforge": 4326,
   "followers": 9,
   "version": "0.1.122",
   "loaders": {
-   "fabric": 2508,
-   "neoforge": 2302
+   "fabric": 2520,
+   "neoforge": 2309
   }
  },
  "series": [
