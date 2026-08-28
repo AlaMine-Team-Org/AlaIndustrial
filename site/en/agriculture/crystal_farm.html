@@ -366,14 +366,14 @@
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>Nuclear</span><span class="cat-count" aria-label="13 pages">13</span></a>
 <div class="group-title">Processing</div>
 <a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="15 pages">15</span></a>
-<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <div class="group-title">Logistics</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="18 pages">18</span></a>
-<a class="cat-link active" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="4 pages">4</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="21 pages">21</span></a>
+<a class="cat-link active" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="5 pages">5</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
@@ -436,6 +436,8 @@
 
 <p>Right-click the controller and it reports into chat what is wrong. If the greenhouse has formed before, the message also carries the coordinates of the <strong>missing block</strong>, and smoke rises from it every two seconds.</p>
 
+<p>The line is signed <code>[Ala Industrial]</code>: chat is one column shared with the server and every other mod, and unsigned it is anybody's guess who is talking. The verdict arrives before the sentence has been read — green for closed, red for not — and the numbers and coordinates are lifted out of the running text in white, because those are what the player goes looking for.</p>
+
 <table><thead><tr><th>State</th><th>What is reported</th></tr></thead><tbody><tr><td>Formed</td><td>volume, seedbed count, whether there is water</td></tr><tr><td>Not closed</td><td>coordinates of the missing block if it can be worked out; otherwise just "not closed"</td></tr><tr><td>Too small</td><td>no coordinates</td></tr><tr><td>Controller not in a wall</td><td>the controller's coordinates</td></tr><tr><td>Second controller</td><td>the other controller's coordinates</td></tr></tbody></table>
 
 <p><strong>Coordinates are not always shown, and that is deliberate.</strong> The flood fill cannot say where it leaks: it goes out through the hole and keeps going until it hits the distance limit. So the hole is found not from the fill but from the list of shell cells remembered from the last successful forming the missing block is the one of them that stopped being a shell block. A greenhouse that has never formed has nothing to compare against, and then coordinates are <strong>not shown at all</strong>: sending the player to look in the wrong place is worse than honestly saying "not closed".</p>
@@ -465,13 +467,17 @@
 
 <p>One crystal costs <strong>four events</strong>: the bud has to appear and then grow three times.</p>
 
-<table><thead><tr><th>Conditions</th><th>Divisor</th><th>Real time</th><th>Minecraft days</th></tr></thead><tbody><tr><td>Nothing</td><td>270</td><td>≈ 1 h 30 min</td><td>4.5</td></tr><tr><td>Power only</td><td>135</td><td>≈ 45 min</td><td>2.25</td></tr><tr><td>Water only</td><td>90</td><td>≈ 30 min</td><td>1.5</td></tr><tr><td>Water and power</td><td>45</td><td>≈ 15 min</td><td>0.75</td></tr></tbody></table>
+<p>There are <strong>three</strong> accelerators and they multiply: water, power and the sprinkler. None of them is required.</p>
 
-<p>A Minecraft day is 20 real minutes; the last column is converted at that rate.</p>
+<table><thead><tr><th>Conditions</th><th>Divisor</th><th>Real time</th><th>Minecraft days</th></tr></thead><tbody><tr><td>Nothing</td><td>270</td><td>≈ 1 h 30 min</td><td>4.5</td></tr><tr><td>Power only</td><td>135</td><td>≈ 45 min</td><td>2.25</td></tr><tr><td>Sprinkler only</td><td>135</td><td>≈ 45 min</td><td>2.25</td></tr><tr><td>Water only</td><td>90</td><td>≈ 30 min</td><td>1.5</td></tr><tr><td>Water and power</td><td>45</td><td>≈ 15 min</td><td>0.75</td></tr><tr><td>Water and sprinkler</td><td>45</td><td>≈ 15 min</td><td>0.75</td></tr><tr><td>Power and sprinkler</td><td>67</td><td>≈ 22 min</td><td>1.1</td></tr><tr><td>All three</td><td>22</td><td>≈ 7 min</td><td>0.37</td></tr></tbody></table>
 
-<p><strong>That is the time for ONE bed, not for the greenhouse.</strong> Beds grow in parallel, each on its own die, so a hall of 25 gives up a crystal about every 3.6 minutes with no water and no cable at all, and about every half minute with both. Scale buys more here than the accelerators do: a greenhouse is meant to grow outwards.</p>
+<p>A Minecraft day is 20 real minutes; the last column is converted at that rate. The division is integer, which is why the full set gives 22 and not 22.5.</p>
 
-<table><thead><tr><th>Parameter</th><th>Value</th><th>config key</th></tr></thead><tbody><tr><td>Growth attempt interval</td><td>100 ticks (5 s)</td><td></td></tr><tr><td>Base divisor</td><td>270</td><td></td></tr><tr><td>Speed-up from water</td><td>÷3</td><td></td></tr><tr><td>Speed-up from power</td><td>÷2</td><td></td></tr><tr><td>Buds per shard</td><td>1</td><td></td></tr></tbody></table>
+<p><strong>That is the time for ONE bed, not for the greenhouse.</strong> Beds grow in parallel, each on its own die, so a hall of 25 gives up a crystal about every 3.6 minutes with not a single accelerator, and about every 18 seconds with the full set. Scale buys more here than the accelerators do: a greenhouse is meant to grow outwards.</p>
+
+<p><strong>The third accelerator is the <a href="sprinkler.html">sprinkler</a></strong>. Put one inside an assembled room with nutrient solution in its tank and the controller will find it by itself on the next scan. The sprinkler's own aura has nothing to do with it: seedbeds do not react to bone meal and do not tick on their own, so what works here is the controller's axis. The solution is charged <strong>per crystal actually produced</strong>, not per attempt — exactly like EU/FE.</p>
+
+<table><thead><tr><th>Parameter</th><th>Value</th><th>config key</th></tr></thead><tbody><tr><td>Growth attempt interval</td><td>100 ticks (5 s)</td><td></td></tr><tr><td>Base divisor</td><td>270</td><td></td></tr><tr><td>Speed-up from water</td><td>÷3</td><td></td></tr><tr><td>Speed-up from power</td><td>÷2</td><td></td></tr><tr><td>Speed-up from the sprinkler</td><td>÷2</td><td></td></tr><tr><td>Solution per growth event</td><td>50 mB</td><td></td></tr><tr><td>Buds per shard</td><td>1</td><td></td></tr></tbody></table>
 
 <p><strong>The economy.</strong> A shard goes in — a crystal comes out — four shards come back. The return is <strong>fourfold</strong>, paid for with an hour and a half. A full seedbed charge (16 buds) costs 16 shards and hands back 64 over roughly a day of a loaded chunk.</p>
 
@@ -489,8 +495,10 @@
 
 <p>So the door closes not for the mechanics, but because a greenhouse standing wide open looks bad, and because the room is otherwise sealed — a door left open is exactly the way mobs walk in.</p>
 
-<ul><li><strong>Redstone holds the door open</strong> — a signal means it is being held open on purpose.</li><li><strong>The door will not close on anyone standing in the doorway</strong> — the check covers both halves and</li></ul>
-<p>counts living creatures only: a shard dropped underfoot does not hold the door.</p>
+<ul><li><strong>Nothing holds the door open, redstone included.</strong> A signal used to mean "this one is being held</li></ul>
+<p>open on purpose" and the timer stood down; the greenhouse is now shut unconditionally. The cost is named rather than hidden: under a lever left up the door opens once, closes after five seconds, and will not open again until the signal is toggled — the close deliberately does not clear <code>POWERED</code>, or vanilla would open the door on the very next neighbour update and it would flap for as long as the lever is up. A bay driven by a button pulse is unaffected.</p>
+<ul><li><strong>The door will not close on anyone standing in the doorway</strong> — the check covers both halves and</li></ul>
+<p>counts living creatures only: a shard dropped underfoot does not hold the door. Since redstone stopped holding it, this is the only thing between the timer and a door shut in someone's face.</p>
 
 <h2 id="block-properties">Block properties</h2>
 

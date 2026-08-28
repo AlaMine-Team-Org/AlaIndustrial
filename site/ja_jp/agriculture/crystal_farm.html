@@ -366,14 +366,14 @@
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>原子力</span><span class="cat-count" aria-label="13 ページ">13</span></a>
 <div class="group-title">加工</div>
 <a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>マシン</span><span class="cat-count" aria-label="15 ページ">15</span></a>
-<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>液体マシン</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>液体マシン</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <div class="group-title">物流</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>アイテム輸送</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>液体輸送</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>液体貯蔵</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <div class="group-title">世界と自動化</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>素材</span><span class="cat-count" aria-label="18 ページ">18</span></a>
-<a class="cat-link active" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>農業</span><span class="cat-count" aria-label="4 ページ">4</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>素材</span><span class="cat-count" aria-label="21 ページ">21</span></a>
+<a class="cat-link active" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>農業</span><span class="cat-count" aria-label="5 ページ">5</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>高度なマシン</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
@@ -436,6 +436,8 @@
 
 <p>制御装置を右クリックすると、何が問題かをチャットへ報告します。その温室が以前に成形したことがあれ ば、メッセージには<strong>欠けたブロック</strong>の座標も添えられ、そこから 2 秒ごとに煙が上がります。</p>
 
+<p>この行には <code>[Ala Industrial]</code> のタグが付きます。チャットはサーバーや他のすべての Mod と共有する 1 本の列で、署名がなければ誰が話しているのか分かりません。判定は文を読み終える前に届き——緑なら 密閉、赤ならそうではない——数値と座標は白で本文から抜き出してあります。プレイヤーが探しに行くのは まさにそれだからです。</p>
+
 <table><thead><tr><th>状態</th><th>報告される内容</th></tr></thead><tbody><tr><td>成形済み</td><td>体積、苗床の数、水の有無</td></tr><tr><td>閉じていない</td><td>欠けたブロックの座標（特定できる場合）。できなければ単に「閉じていない」</td></tr><tr><td>小さすぎる</td><td>座標なし</td></tr><tr><td>制御装置が壁にない</td><td>制御装置の座標</td></tr><tr><td>制御装置が 2 つある</td><td>もう一方の制御装置の座標</td></tr></tbody></table>
 
 <p><strong>座標はいつも出るわけではなく、それは意図的です。</strong>塗りつぶしは自分がどこから漏れているか言えま せん。穴から外へ出て、距離の上限にぶつかるまで進み続けるだけです。ですから穴は塗りつぶしからでは なく、前回うまく成形したときに覚えておいたシェルのマス一覧から探します——欠けたブロックとは、その 中でシェルのブロックでなくなったマスのことです。一度も成形したことのない温室には比べる相手が ありません。そのときは座標を<strong>まったく出しません</strong>。見当違いの場所を見に行かせるくらいなら、 「閉じていない」と正直に言うほうがましだからです。</p>
@@ -467,13 +469,17 @@
 
 <p>クリスタル 1 個には<strong>イベント 4 回</strong>かかります。芽が現れ、さらに 3 回育つ必要があるからです。</p>
 
-<table><thead><tr><th>条件</th><th>除数</th><th>現実時間</th><th>ゲーム内日数</th></tr></thead><tbody><tr><td>何もなし</td><td>270</td><td>約 1 時間 30 分</td><td>4.5</td></tr><tr><td>電力のみ</td><td>135</td><td>約 45 分</td><td>2.25</td></tr><tr><td>水のみ</td><td>90</td><td>約 30 分</td><td>1.5</td></tr><tr><td>水と電力</td><td>45</td><td>約 15 分</td><td>0.75</td></tr></tbody></table>
+<p>加速の要素は<strong>3 つ</strong>あり、互いに掛け算になります：水、電力、スプリンクラー。どれも必須では ありません。</p>
 
-<p>ゲーム内の 1 日は現実の 20 分です。最後の列はこの換算によります。</p>
+<table><thead><tr><th>条件</th><th>除数</th><th>現実時間</th><th>ゲーム内日数</th></tr></thead><tbody><tr><td>何もなし</td><td>270</td><td>約 1 時間 30 分</td><td>4.5</td></tr><tr><td>電力のみ</td><td>135</td><td>約 45 分</td><td>2.25</td></tr><tr><td>スプリンクラーのみ</td><td>135</td><td>約 45 分</td><td>2.25</td></tr><tr><td>水のみ</td><td>90</td><td>約 30 分</td><td>1.5</td></tr><tr><td>水と電力</td><td>45</td><td>約 15 分</td><td>0.75</td></tr><tr><td>水とスプリンクラー</td><td>45</td><td>約 15 分</td><td>0.75</td></tr><tr><td>電力とスプリンクラー</td><td>67</td><td>約 22 分</td><td>1.1</td></tr><tr><td>3 つすべて</td><td>22</td><td>約 7 分</td><td>0.37</td></tr></tbody></table>
 
-<p><strong>これは苗床 1 台あたりの時間であって、温室全体の時間ではありません。</strong> 苗床はそれぞれ独立した サイコロで並行して育つため、25 台の大部屋なら水もケーブルもなしで約 3.6 分に 1 つ、両方そろえば 約 30 秒に 1 つの晶塊を出します。ここでは加速装置よりも規模のほうが効きます——温室は横へ広がる ものだからです。</p>
+<p>ゲーム内の 1 日は現実の 20 分です。最後の列はこの換算によります。除算は整数で行うため、すべて そろえた場合は 22.5 ではなく 22 になります。</p>
 
-<table><thead><tr><th>項目</th><th>値</th><th>設定キー</th></tr></thead><tbody><tr><td>成長判定の間隔</td><td>100 ティック（5 秒）</td><td></td></tr><tr><td>基本の除数</td><td>270</td><td></td></tr><tr><td>水による加速</td><td>÷3</td><td></td></tr><tr><td>電力による加速</td><td>÷2</td><td></td></tr><tr><td>欠片 1 個あたりの芽</td><td>1</td><td></td></tr></tbody></table>
+<p><strong>これは苗床 1 台あたりの時間であって、温室全体の時間ではありません。</strong> 苗床はそれぞれ独立した サイコロで並行して育つため、25 台の大部屋なら加速要素がひとつもなくても約 3.6 分に 1 つ、すべて そろえば約 18 秒に 1 つの晶塊を出します。ここでは加速装置よりも規模のほうが効きます——温室は横へ 広がるものだからです。</p>
+
+<p><strong>3 つ目の加速要素は <a href="sprinkler.html">スプリンクラー</a></strong> です（）。組み上がった部屋の中に、 タンクへ養液を入れたスプリンクラーを置けば、制御装置が次の走査で自分から見つけます。スプリン クラー自身の散水範囲はここでは無関係です：苗床は骨粉に反応せず、自分でティックもしないため、 効いているのは制御装置側の軸です。養液は試行ごとではなく、<strong>実際に得られたクリスタルに対して</strong> 引かれます — EU/FE とまったく同じです。</p>
+
+<table><thead><tr><th>項目</th><th>値</th><th>設定キー</th></tr></thead><tbody><tr><td>成長判定の間隔</td><td>100 ティック（5 秒）</td><td></td></tr><tr><td>基本の除数</td><td>270</td><td></td></tr><tr><td>水による加速</td><td>÷3</td><td></td></tr><tr><td>電力による加速</td><td>÷2</td><td></td></tr><tr><td>スプリンクラーによる加速</td><td>÷2</td><td></td></tr><tr><td>成長イベント 1 回あたりの養液</td><td>50 mB</td><td></td></tr><tr><td>欠片 1 個あたりの芽</td><td>1</td><td></td></tr></tbody></table>
 
 <p><strong>採算。</strong>欠片が入る——クリスタルが出る——欠片が 4 個戻る。見返りは<strong>4 倍</strong>で、1 時間半で支払い ます。苗床を満たす（芽 16 個）には欠片 16 個かかり、チャンクが読み込まれたままなら約 1 日で 64 個 返ってきます。</p>
 
@@ -491,8 +497,10 @@
 
 <p>つまりドアが閉まるのは機構のためではなく、開け放たれた温室が見た目に悪いからであり、そして部屋が それ以外は閉じているからです——モブが入ってくるのは、まさに閉まっていないドアからです。</p>
 
-<ul><li><strong>レッドストーンはドアを開いたままにします</strong>——信号は「意図して開けてある」という意味です。</li><li><strong>出入口に立っている者がいればドアは閉まりません</strong>——判定は上下両方の半分を見て、生き物だけを</li></ul>
-<p>数えます。足元に落とした欠片ではドアは止まりません。</p>
+<ul><li><strong>ドアを開いたままにできるものは何もありません。レッドストーンも同じです。</strong>以前は信号が</li></ul>
+<p>「意図して開けてある」という意味を持ち、タイマーは引き下がっていました。いまの温室は無条件に 閉じます。代償は隠さず示します——レバーを上げたままにすると、ドアは一度だけ開き、5 秒後に閉じ、 信号を切り替えるまで二度と開きません。閉じるときに <code>POWERED</code> をあえて消さないためです。消せば バニラが次の隣接更新でドアを開け直し、レバーが上がっている間じゅうドアはばたつきます。ボタンの パルスで動く搬入口には影響しません。</p>
+<ul><li><strong>出入口に立っている者がいればドアは閉まりません</strong>——判定は上下両方の半分を見て、生き物だけを</li></ul>
+<p>数えます。足元に落とした欠片ではドアは止まりません。レッドストーンがドアを支えなくなった以上、 これがタイマーと「目の前で閉まるドア」の間に残る唯一の歯止めです。</p>
 
 <h2 id="ブロックの性質">ブロックの性質</h2>
 
