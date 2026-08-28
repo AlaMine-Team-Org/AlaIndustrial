@@ -185,6 +185,7 @@ public final class ModContent {
 	public static Supplier<Block> STEAM_NOZZLE = unbound("STEAM_NOZZLE");
 	public static Supplier<Block> REACTOR_OUTLET = unbound("REACTOR_OUTLET");
 	public static Supplier<Block> REACTOR_BUTTON = unbound("REACTOR_BUTTON");
+	public static Supplier<Block> REACTOR_LEVER = unbound("REACTOR_LEVER");
 	public static Supplier<Block> FUEL_ROD_ASSEMBLY = unbound("FUEL_ROD_ASSEMBLY");
 	public static Supplier<Block> ELECTRIC_HEATER = unbound("ELECTRIC_HEATER");
 	/** Charging Station (MOD-274) — the plate that tops up the gear of whoever stands on it. */
@@ -616,6 +617,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> STEAM_NOZZLE_ITEM = unbound("STEAM_NOZZLE_ITEM");
 	public static Supplier<BlockItem> REACTOR_OUTLET_ITEM = unbound("REACTOR_OUTLET_ITEM");
 	public static Supplier<BlockItem> REACTOR_BUTTON_ITEM = unbound("REACTOR_BUTTON_ITEM");
+	public static Supplier<BlockItem> REACTOR_LEVER_ITEM = unbound("REACTOR_LEVER_ITEM");
 	public static Supplier<BlockItem> FUEL_ROD_ASSEMBLY_ITEM = unbound("FUEL_ROD_ASSEMBLY_ITEM");
 	public static Supplier<BlockItem> ELECTRIC_HEATER_ITEM = unbound("ELECTRIC_HEATER_ITEM");
 	public static Supplier<BlockItem> CHARGE_PAD_ITEM = unbound("CHARGE_PAD_ITEM");

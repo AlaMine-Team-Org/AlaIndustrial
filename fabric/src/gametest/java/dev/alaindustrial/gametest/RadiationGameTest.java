@@ -84,6 +84,14 @@ public class RadiationGameTest {
 	}
 
 	/**
+	 * @implements R-RAD-12 — a lever bolted to the shell leaves the room's radiation picture alone.
+	 */
+	@GameTest
+	public void radShieldedLeverOnTheWallDoesNotLeak(GameTestHelper helper) {
+		RadiationScenarios.shieldedLeverOnTheWallDoesNotLeakRadiation(helper);
+	}
+
+	/**
 	 * @implements R-RAD-10 — uranium radiates through an ordinary chest and not through a shielding one.
 	 */
 	@GameTest

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/lever",
+  "textures": {
+    "particle": "alaindustrial:block/reactor_lever_base",
+    "base": "alaindustrial:block/reactor_lever_base",
+    "lever": "alaindustrial:block/reactor_lever"
+  }
+}

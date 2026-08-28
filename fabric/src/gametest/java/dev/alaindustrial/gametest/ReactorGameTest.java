@@ -60,4 +60,9 @@ public class ReactorGameTest {
 	public void anOverheatingRoomMeltsItsContentsAndKeepsItsShell(GameTestHelper helper) {
 		ReactorScenarios.anOverheatingRoomMeltsItsContentsAndKeepsItsShell(helper);
 	}
+
+	@GameTest(maxTicks = 400)
+	public void aShieldedLeverInsideTheRoomSealsAndScrams(GameTestHelper helper) {
+		ReactorScenarios.aShieldedLeverInsideTheRoomSealsAndScrams(helper);
+	}
 }

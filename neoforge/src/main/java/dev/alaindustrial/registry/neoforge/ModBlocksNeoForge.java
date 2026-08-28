@@ -57,6 +57,7 @@ import dev.alaindustrial.block.StormWindMillBlock;
 import dev.alaindustrial.block.TeleporterBlock;
 import dev.alaindustrial.block.ReactorDoorBlock;
 import dev.alaindustrial.block.ReactorLampBlock;
+import dev.alaindustrial.block.ReactorLeverBlock;
 import dev.alaindustrial.block.ReactorOutletBlock;
 import dev.alaindustrial.block.ReactorPortBlock;
 import dev.alaindustrial.block.FuelRodAssemblyBlock;
@@ -202,6 +203,8 @@ public final class ModBlocksNeoForge {
 			handle(ContentManifest.REACTOR_OUTLET);
 	public static final DeferredBlock<ReactorButtonBlock> REACTOR_BUTTON =
 			handle(ContentManifest.REACTOR_BUTTON);
+	public static final DeferredBlock<ReactorLeverBlock> REACTOR_LEVER =
+			handle(ContentManifest.REACTOR_LEVER);
 	public static final DeferredBlock<FuelRodAssemblyBlock> FUEL_ROD_ASSEMBLY =
 			handle(ContentManifest.FUEL_ROD_ASSEMBLY);
 	public static final DeferredBlock<ElectricHeaterBlock> ELECTRIC_HEATER =

@@ -197,6 +197,9 @@ public final class NeoForgeGameTests {
 				ReactorScenarios::onlyOneControllerBurnsASharedRack);
 		registerTest(event, "reactor_meltdown_spares_the_shell", 400, true,
 				ReactorScenarios::anOverheatingRoomMeltsItsContentsAndKeepsItsShell);
+		// MOD-514 — the held-signal switch: it seals with the room, scrams it, and outlives a meltdown.
+		registerTest(event, "reactor_lever_seals_and_scrams", 400, true,
+				ReactorScenarios::aShieldedLeverInsideTheRoomSealsAndScrams);
 		// MOD-022 data-component seam: a charged battery box carries STORED_ENERGY on drop (frozen-registry
 		// fix — ModDataComponentsNeoForge). Fabric covers this via BatteryBoxGameTest; NeoForge world lane's first.
 		registerTest(event, "battery_box_drop_carries_energy", 40, true,
@@ -2244,6 +2247,9 @@ public final class NeoForgeGameTests {
 				RadiationScenarios::casingBlocksDroppedUranium);
 		registerTest(event, "rad_open_door_leaks_radiation", 40, true,
 				RadiationScenarios::openDoorLeaksRadiation);
+		// MOD-514 — a lever on the shell is not a hole in it.
+		registerTest(event, "rad_shielded_lever_on_the_wall_does_not_leak", 40, true,
+				RadiationScenarios::shieldedLeverOnTheWallDoesNotLeakRadiation);
 		// MOD-474 — the shielding chest is the only container that stops its own contents.
 		registerTest(event, "rad_shielding_chest_stops_what_an_ordinary_chest_does_not", 40, true,
 				RadiationScenarios::shieldingChestStopsWhatAnOrdinaryChestDoesNot);

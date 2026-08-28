@@ -539,6 +539,7 @@ public final class CreativeTabContent {
 		show(out, ModContent.REACTOR_OUTLET_ITEM);
 		show(out, ModContent.STEAM_NOZZLE_ITEM);
 		show(out, ModContent.REACTOR_BUTTON_ITEM);
+		show(out, ModContent.REACTOR_LEVER_ITEM);
 		show(out, ModContent.FUEL_ROD_ASSEMBLY_ITEM);
 		show(out, ModContent.DEPLETED_URANIUM);
 		show(out, ModContent.EMPTY_FUEL_ROD);

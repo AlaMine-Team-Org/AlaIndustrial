@@ -911,6 +911,14 @@ public final class DemoStand {
 						.setValue(FaceAttachedHorizontalDirectionalBlock.FACE, AttachFace.FLOOR)
 						.setValue(HorizontalDirectionalBlock.FACING, Direction.SOUTH));
 
+		// The lever (MOD-514) stands beside the button it twins, on its own casing block, so the two
+		// control blocks can be told apart at a glance: one pulses, one latches.
+		set(level, origin, 8, 1, z, ModContent.REACTOR_CASING.get());
+		level.setBlockAndUpdate(origin.offset(8, 2, z),
+				ModContent.REACTOR_LEVER.get().defaultBlockState()
+						.setValue(FaceAttachedHorizontalDirectionalBlock.FACE, AttachFace.FLOOR)
+						.setValue(HorizontalDirectionalBlock.FACING, Direction.SOUTH));
+
 		// The airlock is two blocks: the stand places both halves by hand, because setPlacedBy (which
 		// normally raises the upper half) does not run for a programmatic setBlock.
 		BlockState door = ModContent.REACTOR_DOOR.get().defaultBlockState()

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "alaindustrial:shielding_alloy_plate",
+    "minecraft:lever"
+  ],
+  "result": {
+    "id": "alaindustrial:reactor_lever",
+    "count": 2
+  }
+}

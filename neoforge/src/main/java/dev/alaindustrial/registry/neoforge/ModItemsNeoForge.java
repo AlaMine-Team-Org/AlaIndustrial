@@ -534,6 +534,8 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("reactor_outlet", ModBlocksNeoForge.REACTOR_OUTLET);
 	public static final DeferredItem<BlockItem> REACTOR_BUTTON_ITEM =
 			ITEMS.registerSimpleBlockItem("reactor_button", ModBlocksNeoForge.REACTOR_BUTTON);
+	public static final DeferredItem<BlockItem> REACTOR_LEVER_ITEM =
+			ITEMS.registerSimpleBlockItem("reactor_lever", ModBlocksNeoForge.REACTOR_LEVER);
 	public static final DeferredItem<BlockItem> FUEL_ROD_ASSEMBLY_ITEM =
 			ITEMS.registerSimpleBlockItem("fuel_rod_assembly", ModBlocksNeoForge.FUEL_ROD_ASSEMBLY);
 	public static final DeferredItem<BlockItem> ELECTRIC_HEATER_ITEM =
@@ -881,6 +883,7 @@ public final class ModItemsNeoForge {
 		ModContent.STEAM_NOZZLE_ITEM = STEAM_NOZZLE_ITEM;
 		ModContent.REACTOR_OUTLET_ITEM = REACTOR_OUTLET_ITEM;
 		ModContent.REACTOR_BUTTON_ITEM = REACTOR_BUTTON_ITEM;
+		ModContent.REACTOR_LEVER_ITEM = REACTOR_LEVER_ITEM;
 		ModContent.FUEL_ROD_ASSEMBLY_ITEM = FUEL_ROD_ASSEMBLY_ITEM;
 		ModContent.URANIUM_FUEL_ROD = URANIUM_FUEL_ROD;
 		ModContent.EMPTY_FUEL_ROD = EMPTY_FUEL_ROD;

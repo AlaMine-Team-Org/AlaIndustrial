@@ -13,6 +13,7 @@ import dev.alaindustrial.block.entity.ReactorOutletBlockEntity;
 import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.core.structure.ReactorCore;
+import dev.alaindustrial.core.structure.ReactorMeltdown;
 import dev.alaindustrial.registry.ModContent;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,10 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
+import net.minecraft.world.level.block.LeverBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.AttachFace;
 
 /**
  * World scenarios for the nuclear reactor (MOD-468).
@@ -48,6 +53,9 @@ public final class ReactorScenarios {
 
 	/** Interior floor, in the middle. */
 	private static final BlockPos COLUMN = new BlockPos(2, 1, 2);
+
+	/** Interior cell in front of the controller — where a lever hangs on the wall from the inside. */
+	private static final BlockPos LEVER = new BlockPos(1, 2, 2);
 
 	/**
 	 * Builds the shell, racks four rods, applies a signal — and asserts the reactor actually produces.
@@ -627,6 +635,12 @@ public final class ReactorScenarios {
 		// and whatever else was carried in — which is exactly what this asserts.
 		BlockPos pipe = new BlockPos(3, 1, 3);
 		helper.setBlock(pipe, ModContent.FLUID_PIPE.get().defaultBlockState());
+		// MOD-514: the emergency stop lives inside the room it stops, so it has to outlast the room's
+		// worst state. The pipe two cells away is the control — same interior, same rounds of melting,
+		// no meltproof tag — which is what makes the lever's survival below mean something.
+		helper.setBlock(LEVER, ModContent.REACTOR_LEVER.get().defaultBlockState()
+				.setValue(FaceAttachedHorizontalDirectionalBlock.FACE, AttachFace.WALL)
+				.setValue(HorizontalDirectionalBlock.FACING, Direction.EAST));
 		BlockPos floor = new BlockPos(2, 0, 2);
 		helper.setBlock(CONTROLLER.west(), Blocks.REDSTONE_BLOCK.defaultBlockState());
 
@@ -644,12 +658,78 @@ public final class ReactorScenarios {
 			helper.fail("the ordinary fluid pipe inside an overheating room did not melt first, it was "
 					+ helper.getBlockState(pipe));
 		}
+		if (!helper.getBlockState(LEVER).is(ModContent.REACTOR_LEVER.get())) {
+			helper.fail("the meltdown ate the shielded lever that stops it, leaving "
+					+ helper.getBlockState(LEVER));
+		}
 		// The shell is the whole reason the room was built. If it goes, so does the feature.
 		if (!helper.getBlockState(floor).is(ModContent.REACTOR_CASING.get())) {
 			helper.fail("the meltdown ate the shell — the containment failed to contain");
 		}
 		if (!helper.getBlockState(CONTROLLER).is(ModContent.REACTOR_CONTROLLER.get())) {
 			helper.fail("the meltdown ate its own controller");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * A shielded lever hung on the shell from the inside runs the reactor and stops it — and the room
+	 * still seals around it.
+	 *
+	 * <p><b>Both halves matter and neither is the obvious one.</b> The room half answers the question the
+	 * block exists for: a lever hangs on a face rather than filling a cell, so the scanner must keep
+	 * seeing a sealed shell with one bolted to the controller from the inside. The signal half is what
+	 * separates it from the {@link dev.alaindustrial.block.ReactorButtonBlock button} standing beside it
+	 * in the same room: the controller reads a HELD signal, so a scram switch has to latch. Flicking the
+	 * lever off and watching the reactor report {@code NO_SIGNAL} is the emergency stop the design
+	 * promised, measured rather than assumed.
+	 *
+	 * <p>The meltproof pair at the end is deliberately asserted against the VANILLA lever too. "Ours is
+	 * in the tag" alone would pass just as happily against a tag that swallowed every lever in the game,
+	 * which would quietly hand the player a wooden switch that survives a meltdown.
+	 */
+	public static void aShieldedLeverInsideTheRoomSealsAndScrams(GameTestHelper helper) {
+		buildRoom(helper);
+		ReactorControllerBlockEntity brain = controller(helper);
+		FuelRodAssemblyBlockEntity column = placeColumn(helper);
+		column.insertRod(new ItemStack(ModContent.URANIUM_FUEL_ROD.get()));
+
+		// FACING is the direction the lever looks; it attaches to the block on the OPPOSITE side, so
+		// EAST bolts it to the controller standing in the west wall.
+		BlockState lever = ModContent.REACTOR_LEVER.get().defaultBlockState()
+				.setValue(FaceAttachedHorizontalDirectionalBlock.FACE, AttachFace.WALL)
+				.setValue(HorizontalDirectionalBlock.FACING, Direction.EAST);
+		helper.setBlock(LEVER, lever.setValue(LeverBlock.POWERED, true));
+		drive(helper, brain, 120);
+
+		if (brain.getStatus() != ReactorRoomStatus.FORMED) {
+			helper.fail("a lever hanging on the shell from the inside broke the room: " + brain.getStatus());
+		}
+		if (brain.getIdleReason() != ReactorIdleReason.RUNNING) {
+			helper.fail("the reactor did not accept the lever's held signal: " + brain.getIdleReason());
+		}
+		if (brain.getLastOutput() <= 0) {
+			helper.fail("a reactor switched on by the lever produced nothing");
+		}
+
+		// The scram: the lever latches off, and the reaction stops. A button cannot express this.
+		helper.setBlock(LEVER, lever.setValue(LeverBlock.POWERED, false));
+		drive(helper, brain, 5);
+		if (brain.getLastOutput() != 0) {
+			helper.fail("the reactor kept producing " + brain.getLastOutput() + " EU/t after the scram");
+		}
+		if (brain.getIdleReason() != ReactorIdleReason.NO_SIGNAL) {
+			helper.fail("expected NO_SIGNAL after pulling the lever, got " + brain.getIdleReason());
+		}
+		if (brain.getStatus() != ReactorRoomStatus.FORMED) {
+			helper.fail("the room stopped being sealed once the lever was off: " + brain.getStatus());
+		}
+
+		if (!ReactorMeltdown.isMeltproof(helper.getBlockState(LEVER))) {
+			helper.fail("the reactor lever is not meltproof — a meltdown would eat the emergency stop");
+		}
+		if (ReactorMeltdown.isMeltproof(Blocks.LEVER.defaultBlockState())) {
+			helper.fail("a VANILLA lever counts as meltproof — the tag is too wide to mean anything");
 		}
 		helper.succeed();
 	}

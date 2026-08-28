@@ -99,6 +99,7 @@ public final class ModBlocks {
 	public static final Block STEAM_NOZZLE = handle(ContentManifest.STEAM_NOZZLE);
 	public static final Block REACTOR_OUTLET = handle(ContentManifest.REACTOR_OUTLET);
 	public static final Block REACTOR_BUTTON = handle(ContentManifest.REACTOR_BUTTON);
+	public static final Block REACTOR_LEVER = handle(ContentManifest.REACTOR_LEVER);
 	public static final Block FUEL_ROD_ASSEMBLY = handle(ContentManifest.FUEL_ROD_ASSEMBLY);
 	public static final Block ELECTRIC_HEATER = handle(ContentManifest.ELECTRIC_HEATER);
 	public static final Block CHARGE_PAD = handle(ContentManifest.CHARGE_PAD);

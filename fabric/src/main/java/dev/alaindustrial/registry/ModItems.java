@@ -393,6 +393,7 @@ public final class ModItems {
 	public static final BlockItem STEAM_NOZZLE_ITEM = blockItem("steam_nozzle", ModBlocks.STEAM_NOZZLE);
 	public static final BlockItem REACTOR_OUTLET_ITEM = blockItem("reactor_outlet", ModBlocks.REACTOR_OUTLET);
 	public static final BlockItem REACTOR_BUTTON_ITEM = blockItem("reactor_button", ModBlocks.REACTOR_BUTTON);
+	public static final BlockItem REACTOR_LEVER_ITEM = blockItem("reactor_lever", ModBlocks.REACTOR_LEVER);
 	public static final BlockItem FUEL_ROD_ASSEMBLY_ITEM = blockItem("fuel_rod_assembly", ModBlocks.FUEL_ROD_ASSEMBLY);
 	public static final BlockItem ELECTRIC_HEATER_ITEM = blockItem("electric_heater", ModBlocks.ELECTRIC_HEATER);
 	public static final BlockItem CHARGE_PAD_ITEM = blockItem("charge_pad", ModBlocks.CHARGE_PAD);
@@ -1096,6 +1097,7 @@ public final class ModItems {
 		ModContent.STEAM_NOZZLE_ITEM = () -> STEAM_NOZZLE_ITEM;
 		ModContent.REACTOR_OUTLET_ITEM = () -> REACTOR_OUTLET_ITEM;
 		ModContent.REACTOR_BUTTON_ITEM = () -> REACTOR_BUTTON_ITEM;
+		ModContent.REACTOR_LEVER_ITEM = () -> REACTOR_LEVER_ITEM;
 		ModContent.FUEL_ROD_ASSEMBLY_ITEM = () -> FUEL_ROD_ASSEMBLY_ITEM;
 		ModContent.URANIUM_FUEL_ROD = () -> URANIUM_FUEL_ROD;
 		ModContent.EMPTY_FUEL_ROD = () -> EMPTY_FUEL_ROD;

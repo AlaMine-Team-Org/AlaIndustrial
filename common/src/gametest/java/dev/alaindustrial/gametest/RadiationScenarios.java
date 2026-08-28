@@ -25,6 +25,9 @@ import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.entity.BarrelBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
@@ -320,6 +323,48 @@ public final class RadiationScenarios {
 			int opened = RadiationSources.exposureAt(helper.getLevel(), viewer, Config.radiationSourceRadius);
 			if (opened <= 0) {
 				helper.fail("an open doorway must leak radiation; got " + opened);
+			}
+			helper.succeed();
+		});
+	}
+
+	/**
+	 * A shielded lever bolted to the shell does not open a hole in it (MOD-514).
+	 *
+	 * <p>This is the promise in the task's own title — "does not affect the room's radiation" — and it
+	 * is not free: radiation is stopped by COLLISION, and a lever has none. What saves it is that a
+	 * lever hangs on a face instead of filling a cell, so the wall behind it is untouched. The failure
+	 * this guards against is the opposite build: a player replacing a casing block WITH the lever, which
+	 * would leave a lever-shaped hole in the containment that looks solid from the inside.
+	 *
+	 * <p>All three measurements are taken with the same rack and the same cow, in this order: wall plus
+	 * lever reads zero, then the wall goes and the LEVER ALONE reads full. The last one is the control —
+	 * without it the zero above would also be produced by a rig where the rod never reached the cow, and
+	 * by a lever that (wrongly) shielded on its own.
+	 *
+	 * @implements R-RAD-12 — see docs/testing/RULES.md
+	 */
+	public static void shieldedLeverOnTheWallDoesNotLeakRadiation(GameTestHelper helper) {
+		withIsolatedField(() -> {
+			placeFuelledRack(helper);
+			helper.setBlock(WALL, ModContent.REACTOR_CASING.get());
+			// Hung on the wall's far face, in the cell the bystander stands in: FACING is where the
+			// lever looks, and it attaches on the opposite side — SOUTH bolts it to the casing.
+			helper.setBlock(BYSTANDER, ModContent.REACTOR_LEVER.get().defaultBlockState()
+					.setValue(FaceAttachedHorizontalDirectionalBlock.FACE, AttachFace.WALL)
+					.setValue(HorizontalDirectionalBlock.FACING, Direction.SOUTH));
+			Cow viewer = helper.spawn(EntityTypes.COW, BYSTANDER);
+			int hung = RadiationSources.exposureAt(helper.getLevel(), viewer, Config.radiationSourceRadius);
+			if (hung != 0) {
+				helper.fail("a lever hanging on the casing let " + hung + " through a wall that must stop it");
+			}
+			// Take the wall away and leave the lever exactly where it was: the dose must come back, or
+			// the zero above proved nothing about the lever.
+			helper.setBlock(WALL, Blocks.AIR);
+			int bare = RadiationSources.exposureAt(helper.getLevel(), viewer, Config.radiationSourceRadius);
+			if (bare <= 0) {
+				helper.fail("with the casing gone the lever alone stopped the rod (got " + bare
+						+ ") — it is not a wall and must not act like one");
 			}
 			helper.succeed();
 		});

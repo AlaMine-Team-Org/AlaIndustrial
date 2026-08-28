@@ -61,6 +61,7 @@ import dev.alaindustrial.block.CrystalFarmShellBlock;
 import dev.alaindustrial.block.CrystalSeedbedBlock;
 import dev.alaindustrial.block.ReactorShellBlock;
 import dev.alaindustrial.block.SteamNozzleBlock;
+import dev.alaindustrial.block.ReactorLeverBlock;
 import dev.alaindustrial.block.ReactorOutletBlock;
 import dev.alaindustrial.block.ReactorPortBlock;
 import dev.alaindustrial.block.ReactorLampBlock;
@@ -544,6 +545,9 @@ public final class ContentManifest {
 	/** The way out: a shielded button that survives what the room is built to contain. */
 	public static final BlockDef<ReactorButtonBlock> REACTOR_BUTTON =
 			block("reactor_button", ReactorButtonBlock::new, s -> ModContent.REACTOR_BUTTON = s);
+	/** The button's twin for a signal that stays on: scram switch, throttle, any held redstone. */
+	public static final BlockDef<ReactorLeverBlock> REACTOR_LEVER =
+			block("reactor_lever", ReactorLeverBlock::new, s -> ModContent.REACTOR_LEVER = s);
 
 	public static final BlockDef<SteamNozzleBlock> STEAM_NOZZLE =
 			block("steam_nozzle", SteamNozzleBlock::new, s -> ModContent.STEAM_NOZZLE = s);
@@ -735,7 +739,10 @@ public final class ContentManifest {
 			CRYSTAL_SEEDBED,
 			// MOD-146/MOD-525 — the organic chain: the fermenter that brews waste into biofuel, the
 			// sprinkler that sprays the solution cracked from it, and the two liquid blocks.
-			FERMENTER, SPRINKLER, BIOFUEL, NUTRIENT_SOLUTION);
+			FERMENTER, SPRINKLER, BIOFUEL, NUTRIENT_SOLUTION,
+			// MOD-514 — the reactor room's held-signal switch, appended at the tail like everything
+			// since MOD-403 rather than filed with the MOD-468 group above.
+			REACTOR_LEVER);
 
 	/**
 	 * Wraps a machine/ore/material block's {@code strength/sound/…} chain with the shared base every such
@@ -853,6 +860,11 @@ public final class ContentManifest {
 			// A button is not a wall: no tool requirement, no collision, and it must not resist an
 			// explosion the way the shell does, or it would survive a blast that took the wall with it.
 			Map.entry("reactor_button", p -> p.strength(0.5f).sound(SoundType.METAL).noCollision()
+					.pushReaction(PushReaction.DESTROY)),
+			// The lever is the button's twin down to the numbers: vanilla's own lever is
+			// noCollision + strength 0.5 + PushReaction.DESTROY, and ours differs only in the sound
+			// family. It must not out-live the wall it hangs on either.
+			Map.entry("reactor_lever", p -> p.strength(0.5f).sound(SoundType.METAL).noCollision()
 					.pushReaction(PushReaction.DESTROY)),
 			// Bolted to the outside of the shell: the shell's toughness, none of its bulk.
 			Map.entry("steam_nozzle", machine(p -> p.strength(4.0f, 20.0f).sound(SoundType.METAL)
