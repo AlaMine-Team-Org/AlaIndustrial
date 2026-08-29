@@ -3,8 +3,11 @@ package dev.alaindustrial.registry;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.advancement.MutationCompletedTrigger;
 import dev.alaindustrial.advancement.NetworkEnergizedTrigger;
+import dev.alaindustrial.advancement.ReactorMilestone;
+import dev.alaindustrial.advancement.ReactorMilestoneTrigger;
 import dev.alaindustrial.core.energy.EnergyNetwork;
 import dev.alaindustrial.core.energy.NetworkManager;
+import java.util.UUID;
 import java.util.function.Supplier;
 import net.minecraft.advancements.triggers.CriterionTrigger;
 import net.minecraft.core.BlockPos;
@@ -16,6 +19,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Central registration for Industrialization's custom advancement criteria (see task MOD-015).
@@ -53,6 +57,41 @@ public final class ModCriteria {
 		return new MutationCompletedTrigger();
 	}
 
+	/** The registry id of the reactor branch's criterion (MOD-473), shared by both loaders. */
+	public static final Identifier REACTOR_MILESTONE_ID = Industrialization.id("reactor_milestone");
+
+	/** Bound once per loader before first fire; unbound = loud failure, never a silent NPE. */
+	public static Supplier<ReactorMilestoneTrigger> REACTOR_MILESTONE = () -> {
+		throw new IllegalStateException("ModCriteria.REACTOR_MILESTONE read before its loader bound it");
+	};
+
+	public static ReactorMilestoneTrigger createReactorMilestone() {
+		return new ReactorMilestoneTrigger();
+	}
+
+	/**
+	 * Credits {@code owner} with a reactor milestone, if they are online (MOD-473).
+	 *
+	 * <p>A reactor seals, produces and boils on its own tick, with no player in the event. The
+	 * controller records its placer, so that is who the branch is written for — the alternative,
+	 * awarding the nearest entity, hands somebody else's reactor to a passer-by.
+	 *
+	 * <p>An offline owner simply misses it: an advancement can only be granted to a loaded player, and
+	 * queueing them up would mean persisting a list of pending awards per machine. Every step here is
+	 * repeatable — the room is rescanned, the reactor runs again, the loop boils again — so the miss
+	 * costs the player the next tick their reactor works while they are watching, not the advancement.
+	 */
+	public static void fireReactorMilestone(ServerLevel level, @Nullable UUID owner,
+			ReactorMilestone milestone) {
+		if (owner == null) {
+			return;
+		}
+		ServerPlayer player = level.getServer().getPlayerList().getPlayer(owner);
+		if (player != null) {
+			REACTOR_MILESTONE.get().trigger(player, milestone);
+		}
+	}
+
 	/**
 	 * Fabric registration: the {@code TRIGGER_TYPES} registry stays writable during init, so register the
 	 * trigger eagerly and bind it to a constant supplier. NeoForge instead uses a {@code DeferredRegister}
@@ -69,6 +108,12 @@ public final class ModCriteria {
 		MutationCompletedTrigger mutation =
 				Registry.register(BuiltInRegistries.TRIGGER_TYPES, mutationKey, createMutationCompleted());
 		MUTATION_COMPLETED = () -> mutation;
+
+		ResourceKey<CriterionTrigger<?>> reactorKey =
+				ResourceKey.create(Registries.TRIGGER_TYPE, REACTOR_MILESTONE_ID);
+		ReactorMilestoneTrigger reactor =
+				Registry.register(BuiltInRegistries.TRIGGER_TYPES, reactorKey, createReactorMilestone());
+		REACTOR_MILESTONE = () -> reactor;
 	}
 
 	/**

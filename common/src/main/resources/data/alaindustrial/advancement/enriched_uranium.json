@@ -1,0 +1,15 @@
+{
+  "parent": "alaindustrial:root",
+  "display": {
+    "icon": { "id": "alaindustrial:refined_uranium" },
+    "title": { "translate": "advancements.alaindustrial.enriched_uranium.title" },
+    "description": { "translate": "advancements.alaindustrial.enriched_uranium.description" }
+  },
+  "criteria": {
+    "refined_uranium": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:refined_uranium" }] }
+    }
+  },
+  "requirements": [["refined_uranium"]]
+}

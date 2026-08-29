@@ -1,0 +1,15 @@
+{
+  "parent": "alaindustrial:enriched_uranium",
+  "display": {
+    "icon": { "id": "alaindustrial:shielding_alloy_ingot" },
+    "title": { "translate": "advancements.alaindustrial.shielding_alloy.title" },
+    "description": { "translate": "advancements.alaindustrial.shielding_alloy.description" }
+  },
+  "criteria": {
+    "shielding_alloy": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:shielding_alloy_ingot" }] }
+    }
+  },
+  "requirements": [["shielding_alloy"]]
+}

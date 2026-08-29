@@ -1,0 +1,16 @@
+{
+  "parent": "alaindustrial:shielding_alloy",
+  "display": {
+    "icon": { "id": "alaindustrial:reactor_controller" },
+    "title": { "translate": "advancements.alaindustrial.reactor_room.title" },
+    "description": { "translate": "advancements.alaindustrial.reactor_room.description" },
+    "frame": "goal"
+  },
+  "criteria": {
+    "sealed": {
+      "trigger": "alaindustrial:reactor_milestone",
+      "conditions": { "milestone": "room_sealed" }
+    }
+  },
+  "requirements": [["sealed"]]
+}

@@ -1,0 +1,15 @@
+{
+  "parent": "alaindustrial:reactor_room",
+  "display": {
+    "icon": { "id": "alaindustrial:reactor_outlet" },
+    "title": { "translate": "advancements.alaindustrial.reactor_power.title" },
+    "description": { "translate": "advancements.alaindustrial.reactor_power.description" }
+  },
+  "criteria": {
+    "power": {
+      "trigger": "alaindustrial:reactor_milestone",
+      "conditions": { "milestone": "power" }
+    }
+  },
+  "requirements": [["power"]]
+}

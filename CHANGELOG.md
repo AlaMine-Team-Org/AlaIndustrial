@@ -1,15 +1,15 @@
-## 0.1.126
+## 0.1.127
 
-<p><img alt="Four Ala Industrial machines running with animated front faces" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.126/release-media/v0.1.126/changelog.webp" width="720"></p>
+<p><img alt="Four Ala Industrial machines running with animated front faces" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.127/release-media/v0.1.127/changelog.webp" width="720"></p>
 
-Machines now look alive while they work, and the reactor room gets a control that survives a meltdown.
+Nuclear power gets its own advancement branch, and four more machines look alive while they work.
 
 ### New
 
-- **Reactor lever.** Holds a signal where the reactor button only pulses — for the controller, the centrifuge and any redstone in the room. Unlike a vanilla lever, it stays intact through a meltdown. Shapeless craft: shielding alloy plate + vanilla lever = 2.
+- **Advancements for nuclear power.** Five steps that follow how a station is actually built: first enriched uranium, first shielding alloy, a sealed reactor room, first power from the reactor, and a working coolant loop.
+- The last three are awarded from the reactor itself, so they go to whoever placed the controller, and only while that player is online. They repeat, so a missed one comes back.
 
 ### Improved
 
-- **The generator's fire moves.** Flames flicker and tongues dance instead of one frozen picture, and the fire now fills the whole firebox.
-- **Three more faces came alive.** Lava flows and bubbles in the geothermal generator, fire dances in the iron furnace, and the electric furnace glows with heat.
+- **The macerator, the extractor, the polymerizer and the compressor came alive.** Material settles into the drum, product travels the pipe, feedstock walks the coil — and the compressor presses: its plate rides down onto the billet and squeezes hot metal out to the sides.
 - Idle machines look exactly as before.

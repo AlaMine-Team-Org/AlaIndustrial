@@ -1,0 +1,16 @@
+{
+  "parent": "alaindustrial:reactor_power",
+  "display": {
+    "icon": { "id": "alaindustrial:steam_nozzle" },
+    "title": { "translate": "advancements.alaindustrial.reactor_steam.title" },
+    "description": { "translate": "advancements.alaindustrial.reactor_steam.description" },
+    "frame": "challenge"
+  },
+  "criteria": {
+    "steam": {
+      "trigger": "alaindustrial:reactor_milestone",
+      "conditions": { "milestone": "steam" }
+    }
+  },
+  "requirements": [["steam"]]
+}

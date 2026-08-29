@@ -3,6 +3,7 @@ package dev.alaindustrial.registry.neoforge;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.advancement.MutationCompletedTrigger;
 import dev.alaindustrial.advancement.NetworkEnergizedTrigger;
+import dev.alaindustrial.advancement.ReactorMilestoneTrigger;
 import dev.alaindustrial.registry.ModCriteria;
 import net.minecraft.advancements.triggers.CriterionTrigger;
 import net.minecraft.core.registries.Registries;
@@ -25,10 +26,14 @@ public final class ModCriteriaNeoForge {
 	public static final DeferredHolder<CriterionTrigger<?>, MutationCompletedTrigger> MUTATION_COMPLETED =
 			TRIGGERS.register("mutation_completed", ModCriteria::createMutationCompleted);
 
+	public static final DeferredHolder<CriterionTrigger<?>, ReactorMilestoneTrigger> REACTOR_MILESTONE =
+			TRIGGERS.register("reactor_milestone", ModCriteria::createReactorMilestone);
+
 	/** Bind the neutral handles to the deferred holders. Called from the {@code @Mod} ctor after register. */
 	public static void init() {
 		ModCriteria.NETWORK_ENERGIZED = NETWORK_ENERGIZED::get;
 		ModCriteria.MUTATION_COMPLETED = MUTATION_COMPLETED::get;
+		ModCriteria.REACTOR_MILESTONE = REACTOR_MILESTONE::get;
 	}
 
 	private ModCriteriaNeoForge() {

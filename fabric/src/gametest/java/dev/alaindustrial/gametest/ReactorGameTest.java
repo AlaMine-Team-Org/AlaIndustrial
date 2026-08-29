@@ -65,4 +65,14 @@ public class ReactorGameTest {
 	public void aShieldedLeverInsideTheRoomSealsAndScrams(GameTestHelper helper) {
 		ReactorScenarios.aShieldedLeverInsideTheRoomSealsAndScrams(helper);
 	}
+
+	@GameTest(maxTicks = 400)
+	public void reactorMilestonesReachTheControllersOwner(GameTestHelper helper) {
+		ReactorScenarios.reactorMilestonesReachTheControllersOwner(helper);
+	}
+
+	@GameTest(maxTicks = 400)
+	public void anUnownedReactorAwardsNobody(GameTestHelper helper) {
+		ReactorScenarios.anUnownedReactorAwardsNobody(helper);
+	}
 }

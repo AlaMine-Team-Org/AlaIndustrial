@@ -200,6 +200,12 @@ public final class NeoForgeGameTests {
 		// MOD-514 — the held-signal switch: it seals with the room, scrams it, and outlives a meltdown.
 		registerTest(event, "reactor_lever_seals_and_scrams", 400, true,
 				ReactorScenarios::aShieldedLeverInsideTheRoomSealsAndScrams);
+		// MOD-473 — the advancement branch: the three steps that fire from the controller's own tick go
+		// to its owner, and an unowned reactor awards nobody without throwing.
+		registerTest(event, "reactor_milestones_reach_the_owner", 400, true,
+				ReactorScenarios::reactorMilestonesReachTheControllersOwner);
+		registerTest(event, "reactor_unowned_awards_nobody", 400, true,
+				ReactorScenarios::anUnownedReactorAwardsNobody);
 		// MOD-022 data-component seam: a charged battery box carries STORED_ENERGY on drop (frozen-registry
 		// fix — ModDataComponentsNeoForge). Fabric covers this via BatteryBoxGameTest; NeoForge world lane's first.
 		registerTest(event, "battery_box_drop_carries_energy", 40, true,

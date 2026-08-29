@@ -192,6 +192,10 @@ pitest {
                      // MOD-468 stage 3: the reason a reactor is idle. Same shape and same reason as
                      // the enum above — MC-free so the panel's diagnostics can be exercised by L1.
                      'dev.alaindustrial.block.entity.ReactorIdleReason',
+                     // MOD-473: the datapack names of the reactor advancement steps. MC-free so the
+                     // name<->constant mapping the JSON depends on can be asserted on the L1 lane
+                     // (ReactorMilestoneTest); added here WITH the class, not a release later.
+                     'dev.alaindustrial.advancement.ReactorMilestone',
                      // MOD-146: the fermenter's idle diagnosis — MC-free by the same design as the
                      // status enums above, and added here WITH its L1 suite (FermenterStatusTest),
                      // not a release later.

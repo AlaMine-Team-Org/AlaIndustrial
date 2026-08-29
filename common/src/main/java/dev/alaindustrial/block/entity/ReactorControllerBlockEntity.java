@@ -1,6 +1,7 @@
 package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.advancement.ReactorMilestone;
 import dev.alaindustrial.block.FuelRodAssemblyBlock;
 import dev.alaindustrial.block.ReactorControllerBlock;
 import dev.alaindustrial.core.energy.EnergyTier;
@@ -11,6 +12,7 @@ import dev.alaindustrial.core.structure.RoomScan;
 import dev.alaindustrial.core.structure.RoomValidator;
 import dev.alaindustrial.menu.ReactorControllerMenu;
 import dev.alaindustrial.registry.ModContent;
+import dev.alaindustrial.registry.ModCriteria;
 import dev.alaindustrial.registry.ModSounds;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -242,6 +244,20 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 	 */
 	private int criticalAlarmCooldown;
 
+	// ── MOD-473: the advancement branch ──
+	/**
+	 * Whether this controller has already offered its owner the "made power" and "boiled steam" steps.
+	 *
+	 * <p><b>Deliberately not persisted.</b> These are latches against firing a criterion sixty times a
+	 * second, not a record of what the player has earned — the advancement system already remembers
+	 * that, per player, and it is the only place that can. Persisting them would put a per-player fact
+	 * into a block that anyone can operate, and losing them on a chunk reload costs one extra trigger
+	 * call for a reactor that is running anyway.
+	 */
+	private boolean powerMilestoneOffered;
+
+	private boolean steamMilestoneOffered;
+
 	/**
 	 * The box this controller last sealed, or an empty one if it never has.
 	 *
@@ -381,6 +397,13 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 				burnFuel(columns, output);
 				lastOutput = (int) Math.min(Short.MAX_VALUE, output);
 				idleReason = ReactorIdleReason.RUNNING.ordinal();
+				// MOD-473: the first EU this core ever made. Fired here rather than on the outlet, because
+				// this is the tick the reaction actually paid out — a socket only ever hands on what it was
+				// already given, and a room with no cable run yet would never reach one.
+				if (!powerMilestoneOffered) {
+					powerMilestoneOffered = true;
+					awardMilestone(level, ReactorMilestone.POWER);
+				}
 			} else {
 				// Cleared, not left over. This branch means the throttle divided the output away to
 				// nothing, and a stale figure here would both mis-report on the panel and — since MOD-472
@@ -839,6 +862,13 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 			boiled += column.boil(wanted - boiled);
 		}
 		lastWater = (int) Math.min(Short.MAX_VALUE, boiled);
+		// MOD-473: the coolant loop did work for the first time. The step is "this room boiled water",
+		// not "steam left through the nozzle": the exhaust is a plain block entity with no owner and no
+		// way back to the reactor that filled it, so crediting a player there is not possible at all.
+		if (boiled > 0 && !steamMilestoneOffered) {
+			steamMilestoneOffered = true;
+			awardMilestone(level, ReactorMilestone.STEAM);
+		}
 		// May go NEGATIVE, and must: the recovery term deliberately boils more than this tick's heat so a
 		// core that ran away comes back down. Clamping the result at zero threw that surplus away — the
 		// loop drank the water, the temperature did not move, and the coolant looked useless at exactly
@@ -1073,6 +1103,9 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		if (level instanceof ServerLevel serverLevel) {
 			if (result.formed() && !wasFormed) {
 				announceAssembled(serverLevel, pos, repainted);
+				// MOD-473: the same edge the room announces itself on — the scan that turned a shell into
+				// a sealed room. No latch needed: this branch is an edge by construction.
+				ModCriteria.fireReactorMilestone(serverLevel, getOwner(), ReactorMilestone.ROOM_SEALED);
 			} else if (!result.formed() && scanned.hasLocation()) {
 				markProblem(serverLevel, new BlockPos(result.x(), result.y(), result.z()), wasFormed);
 			}
@@ -1215,6 +1248,17 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 	 * wondering whether it did, so the completion gets its own cue — the same anvil-land the
 	 * distillation column uses when its tower forms, plus a ring of sparkle over the shell.
 	 */
+	/**
+	 * Hands a milestone to this controller's owner, if the reactor is on a server and they are online
+	 * (MOD-473). A no-op off-server and for an unowned controller — the {@code /ala demo} stand runs a
+	 * reactor nobody placed.
+	 */
+	private void awardMilestone(Level level, ReactorMilestone milestone) {
+		if (level instanceof ServerLevel serverLevel) {
+			ModCriteria.fireReactorMilestone(serverLevel, getOwner(), milestone);
+		}
+	}
+
 	private void announceAssembled(ServerLevel level, BlockPos pos, int repainted) {
 		level.playSound(null, pos, SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 0.6f, 1.6f);
 		level.sendParticles(ParticleTypes.END_ROD, pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5,
