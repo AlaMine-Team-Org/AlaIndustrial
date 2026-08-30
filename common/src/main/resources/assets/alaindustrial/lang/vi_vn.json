@@ -959,5 +959,9 @@
   "gui.alaindustrial.creative_energy_source.preset.hv": "HV",
   "gui.alaindustrial.creative_energy_source.output": "Đầu ra: %s EU/t",
   "gui.alaindustrial.creative_energy_source.output.tip": "Kéo để đặt đầu ra",
-  "gui.alaindustrial.creative_energy_source.cable_warning": "Tối đa %s EU/t mỗi bộ nhận"
+  "gui.alaindustrial.creative_energy_source.cable_warning": "Tối đa %s EU/t mỗi bộ nhận",
+  "gui.alaindustrial.reactor_controller.status.blast": "SẮP NỔ LÒ",
+  "gui.alaindustrial.reactor_controller.label.instability": "Độ bất ổn",
+  "gui.alaindustrial.reactor_controller.percent": "%s%%",
+  "block.alaindustrial.irradiated_soil": "Đất nhiễm xạ"
 }

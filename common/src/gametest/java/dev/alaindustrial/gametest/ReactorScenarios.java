@@ -24,6 +24,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
@@ -31,6 +32,7 @@ import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
 import net.minecraft.world.level.block.LeverBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
+import net.minecraft.world.phys.AABB;
 
 /**
  * World scenarios for the nuclear reactor (MOD-468).
@@ -911,6 +913,611 @@ public final class ReactorScenarios {
 	private interface CellAction {
 		void at(int x, int y, int z);
 	}
+
+	// ── MOD-471: the accident at the top of the scale ──
+
+	/**
+	 * A room left at the top of its scale counts down, can be talked out of it, and finally blows up
+	 * inside its own shell.
+	 *
+	 * <p><b>All three phases in ONE scenario, and that is a correctness requirement rather than
+	 * tidiness.</b> {@code Config} is process-global and gametests in a batch run CONCURRENTLY, so a
+	 * second scenario toggling {@code reactorBlastEnabled} would be toggling it for every other reactor
+	 * ticking at that moment. One scenario means exactly one writer.
+	 *
+	 * <p><b>The countdown length is never touched.</b> Two neighbouring scenarios deliberately pin their
+	 * cores at a hundred percent — {@code coolantCatchesACoreTheShellCannotHold} runs a thousand dry
+	 * ticks against a full gauge — and they survive only because the shipped countdown is longer than
+	 * their run. Shortening it here would blow up THEIR rigs, and the failure would be reported against
+	 * their file. Instead this scenario drives past the real countdown, which costs nothing: the ticks
+	 * are driven by hand, not waited for.
+	 *
+	 * <p><b>Why this can be tested at all:</b> five racks give a blast power of about 14, and a reactor
+	 * wall absorbs 28–37 power per cell, so the shell contains it completely. The rig is 8x8x8 and the
+	 * room fills five of that; an explosion that could leave the shell would be destroying the
+	 * neighbouring tests' structures instead. Anyone raising the power constants must re-read this
+	 * paragraph before assuming the test still isolates.
+	 */
+	public static void aCoreAtFullScaleCountsDownAndBlowsItsRoomApart(GameTestHelper helper) {
+		boolean blastBefore = Config.reactorBlastEnabled;
+		boolean fireBefore = Config.reactorBlastFire;
+		int lavaBefore = Config.reactorBlastLavaCells;
+		try {
+			// Fire and lava are muted for the run, and this is the ONE mutation the concurrency rule
+			// allows: no other rig in the batch has an exploding reactor, so no other rig reads these two
+			// keys. They have to go, because both spread FURTHER than the blast — lava flows and fire
+			// jumps — and the shell is full of holes by the time they appear.
+			Config.reactorBlastFire = false;
+			Config.reactorBlastLavaCells = 0;
+			Config.reactorBlastEnabled = false;
+
+			buildRoom(helper);
+			ReactorControllerBlockEntity brain = controller(helper);
+			for (BlockPos at : HOT_CORE) {
+				FuelRodAssemblyBlockEntity column = placeColumnAt(helper, at);
+				for (int i = 0; i < FuelRodAssemblyBlock.MAX_RODS; i++) {
+					column.insertRod(new ItemStack(ModContent.URANIUM_FUEL_ROD.get()));
+				}
+			}
+			helper.setBlock(CONTROLLER.west(), Blocks.REDSTONE_BLOCK.defaultBlockState());
+			guardCountdownFitsThisRig(helper);
+
+			// Phase one: the switch is off. The core still pins, still counts down, and still arrives at
+			// zero — and the world is untouched. An operator who turned the damage off is entitled to see
+			// their reactor's condition, not to have the whole mechanic go silent.
+			driveUnderLoad(helper, brain, 200);
+			if (brain.getBlastCountdown() <= 0) {
+				helper.fail("a core at " + ReactorCore.heatPercent(brain.getHeat(), Config.reactorHeatCapacity)
+						+ "% of the heat scale never armed the countdown");
+			}
+			int rolled = brain.getBlastCountdownTotal();
+			if (rolled < Config.reactorBlastCountdownMinTicks
+					|| rolled > Config.reactorBlastCountdownMaxTicks) {
+				helper.fail("the countdown rolled " + rolled + ", outside its own configured range");
+			}
+			driveUnderLoad(helper, brain, rolled + 20);
+			if (!helper.getBlockState(CONTROLLER).is(ModContent.REACTOR_CONTROLLER.get())) {
+				helper.fail("the blast switch was off and the reactor exploded anyway");
+			}
+
+			// Phase two: pull the lever. The gauge comes off a hundred and the countdown must clear — this
+			// is the promise that there is no point of no return.
+			helper.setBlock(CONTROLLER.west(), Blocks.AIR.defaultBlockState());
+			// Long enough to clear the release window, plus margin. Cancelling deliberately costs a few
+			// seconds of genuinely cooler core — that is what stops a redstone clock resetting the timer —
+			// so a scram followed by a couple of ticks proves nothing any more.
+			drive(helper, brain, Config.reactorBlastReleaseTicks + 40);
+			if (brain.getBlastCountdown() != 0) {
+				helper.fail("scramming the reactor and holding it cool for "
+						+ (Config.reactorBlastReleaseTicks + 40) + " ticks left the countdown running at "
+						+ brain.getBlastCountdown());
+			}
+
+			// Phase three: switch the damage back on, re-arm, and let it finish.
+			//
+			// Refuelled first, and that is not tidiness. Phase one deliberately sits through a WHOLE
+			// countdown to prove the switch protects the world, and a second full countdown after it puts
+			// the run past seven thousand ticks of full-power operation — while twenty rods are good for
+			// about five and a half thousand. The core ran dry mid-phase-three, cooled to 17 %, and the
+			// release window quite correctly called the accident off; the scenario then reported it as
+			// "the controller survived its own explosion", which is a true sentence about the wrong thing.
+			refuelHotCore(helper);
+			Config.reactorBlastEnabled = true;
+			helper.setBlock(CONTROLLER.west(), Blocks.REDSTONE_BLOCK.defaultBlockState());
+			driveUnderLoad(helper, brain, 200);
+			if (brain.getBlastCountdown() <= 0) {
+				helper.fail("the reactor did not re-arm after the signal came back");
+			}
+			driveUntilItBlows(helper, brain, brain.getBlastCountdown() + 5);
+
+			if (helper.getBlockState(CONTROLLER).is(ModContent.REACTOR_CONTROLLER.get())) {
+				helper.fail("the countdown ran out and the controller survived its own explosion. heat="
+						+ ReactorCore.heatPercent(brain.getHeat(), Config.reactorHeatCapacity) + "% countdown="
+						+ brain.getBlastCountdown() + "/" + brain.getBlastCountdownTotal()
+						+ " meltdown=" + brain.isMeltingDown() + " melts=" + brain.getMeltsScheduled());
+			}
+			// The containment is the whole reason the room costs what it costs. The far wall is four
+			// blocks from the epicentre through solid shell; if that has gone, the blast is not being
+			// contained and the neighbouring tests are next.
+			BlockPos farWall = new BlockPos(SHELL_MAX, 2, 2);
+			if (!helper.getBlockState(farWall).is(ModContent.REACTOR_CASING.get())) {
+				helper.fail("the blast blew through the far wall — containment failed, and in a live world "
+						+ "this rig's neighbours would be gone too");
+			}
+			// And the racks the drone was painted onto must not be left humming: the controller is gone,
+			// so nothing in the world could ever switch them off again (the reason unformOnRemoval runs
+			// before the blast rather than from a removal hook that never fires for an explosion).
+			for (BlockPos at : HOT_CORE) {
+				BlockState state = helper.getBlockState(at);
+				if (state.getBlock() instanceof FuelRodAssemblyBlock
+						&& state.getValue(FuelRodAssemblyBlock.ACTIVE)) {
+					helper.fail("a rack at " + at + " survived the blast still marked ACTIVE, and with the "
+							+ "controller gone nothing can ever silence it");
+				}
+			}
+			helper.succeed();
+		} finally {
+			Config.reactorBlastEnabled = blastBefore;
+			Config.reactorBlastFire = fireBefore;
+			Config.reactorBlastLavaCells = lavaBefore;
+		}
+	}
+
+	/**
+	 * A full buffer does not stop the reactor cooking itself.
+	 *
+	 * <p><b>Straight from a playtest screenshot.</b> The player built a sealed room, racked twelve rods,
+	 * powered it, plumbed no coolant — and the panel read "Room sealed / Rods: 12 / Output: buffer full /
+	 * Heat 0%". Nobody had switched the reactor off. It had simply run out of somewhere to put the
+	 * energy, and with heat charged against the energy actually banked, that made the temperature fall to
+	 * zero and stay there. A reactor that goes cold the moment its warehouse fills is not a reactor.
+	 *
+	 * <p>So this drives a core with a DELIBERATELY full buffer and nothing drawing from it, and demands
+	 * that the gauge climbs anyway. It is the third time this mod has had to learn that a hazard must key
+	 * on the reaction rather than on the sale — MOD-469 learned it for the bare core's melting, MOD-471
+	 * for the bare core's instability, and now for the room's own heat. A test rather than a comment,
+	 * because the tidy-up that would undo it ("charge heat against what was produced") looks like a
+	 * simplification from every angle except this one.
+	 *
+	 * <p>Fuel is asserted NOT to burn in the same breath. The two rules are deliberately different — a
+	 * rod is an amount of energy, so uranium is spent only on energy delivered — and pinning them
+	 * together is what stops a future change from "fixing" the asymmetry by moving the wrong one.
+	 */
+	public static void aFullBufferStillCooksTheCore(GameTestHelper helper) {
+		buildRoom(helper);
+		ReactorControllerBlockEntity brain = controller(helper);
+		List<FuelRodAssemblyBlockEntity> row = new ArrayList<>();
+		for (int x = 1; x <= 3; x++) {
+			FuelRodAssemblyBlockEntity column = placeColumnAt(helper, new BlockPos(x, 1, 2));
+			for (int i = 0; i < FuelRodAssemblyBlock.MAX_RODS; i++) {
+				column.insertRod(new ItemStack(ModContent.URANIUM_FUEL_ROD.get()));
+			}
+			row.add(column);
+		}
+		helper.setBlock(CONTROLLER.west(), Blocks.REDSTONE_BLOCK.defaultBlockState());
+
+		// Filled to the brim and topped back up every tick: this is "the grid is full and nothing is
+		// drawing", the exact state of the screenshot.
+		int wearBefore = 0;
+		for (FuelRodAssemblyBlockEntity column : row) {
+			wearBefore += totalDamage(column.contents());
+		}
+		BlockPos absolute = helper.absolutePos(CONTROLLER);
+		for (int tick = 0; tick < 400; tick++) {
+			brain.getEnergyStorage().setAmountUntracked(brain.getEnergyStorage().getCapacity());
+			brain.serverTick(helper.getLevel(), absolute, helper.getBlockState(CONTROLLER));
+		}
+
+		if (brain.getIdleReason() != ReactorIdleReason.BUFFER_FULL) {
+			helper.fail("expected the panel to report BUFFER_FULL, got " + brain.getIdleReason()
+					+ " — the scenario is not in the state it means to test");
+		}
+		int heat = ReactorCore.heatPercent(brain.getHeat(), Config.reactorHeatCapacity);
+		if (heat <= 0) {
+			helper.fail("a sealed, fuelled, powered reactor with a full buffer sat at " + heat
+					+ "% heat. Nobody switched it off — a full warehouse is not a scram, and a core with "
+					+ "no coolant has to cook itself whether or not anyone is buying the power.");
+		}
+		if (brain.getBlastCountdown() <= 0) {
+			helper.fail("a dry core ran 400 ticks against a full buffer and reached only " + heat
+					+ "% — it must still reach the top of the scale and arm the accident");
+		}
+		int wearAfter = 0;
+		for (FuelRodAssemblyBlockEntity column : row) {
+			wearAfter += totalDamage(column.contents());
+		}
+		if (wearAfter != wearBefore) {
+			helper.fail("uranium was spent while nothing drew a single EU: wear moved from " + wearBefore
+					+ " to " + wearAfter + ". Heat follows the reaction, fuel follows the sale — moving "
+					+ "the second one breaks the rod-is-an-amount-of-energy invariant the fuel cycle "
+					+ "rests on.");
+		}
+		// Left safe: an armed countdown in a shared world is how a test grows a blast radius nobody
+		// asked for.
+		helper.setBlock(CONTROLLER.west(), Blocks.AIR.defaultBlockState());
+		drive(helper, brain, 40);
+		helper.succeed();
+	}
+
+	/**
+	 * A redstone clock on the controller does not save the reactor.
+	 *
+	 * <p><b>The player's own exploit, turned into a test.</b> Heat is clamped at the top of the scale,
+	 * so a single tick without a signal is enough to read 99 % — and while the countdown was cleared on
+	 * that reading, cutting the redstone for one tick in twenty reset a three-minute timer while the
+	 * reactor went on running at ninety-five percent duty. Free power, no consequence, one repeater.
+	 *
+	 * <p>This drives exactly that pattern and demands the reactor still dies. Its partner is
+	 * {@link #aCoreAtFullScaleCountsDownAndBlowsItsRoomApart}, which proves the honest scram still works
+	 * — the two together are the whole rule: cancelling costs seconds of genuinely cooler core, and a
+	 * blink buys nothing.
+	 */
+	public static void aRedstoneClockDoesNotSaveTheReactor(GameTestHelper helper) {
+		boolean fireBefore = Config.reactorBlastFire;
+		int lavaBefore = Config.reactorBlastLavaCells;
+		try {
+			Config.reactorBlastFire = false;
+			Config.reactorBlastLavaCells = 0;
+
+			buildRoom(helper);
+			ReactorControllerBlockEntity brain = controller(helper);
+			for (BlockPos at : HOT_CORE) {
+				FuelRodAssemblyBlockEntity column = placeColumnAt(helper, at);
+				for (int i = 0; i < FuelRodAssemblyBlock.MAX_RODS; i++) {
+					column.insertRod(new ItemStack(ModContent.URANIUM_FUEL_ROD.get()));
+				}
+			}
+			BlockPos signal = CONTROLLER.west();
+			helper.setBlock(signal, Blocks.REDSTONE_BLOCK.defaultBlockState());
+			guardCountdownFitsThisRig(helper);
+			driveUnderLoad(helper, brain, 200);
+			if (brain.getBlastCountdown() <= 0) {
+				helper.fail("the core never armed, so the clock has nothing to defeat");
+			}
+
+			// Nineteen ticks on, one tick off, over and over — the cheapest repeater loop a player can
+			// build, and the one that used to make a reactor immortal.
+			int limit = Config.reactorBlastCountdownMaxTicks * 30;
+			for (int tick = 0; tick < limit; tick++) {
+				boolean on = tick % 20 != 19;
+				helper.setBlock(signal, on ? Blocks.REDSTONE_BLOCK.defaultBlockState()
+						: Blocks.AIR.defaultBlockState());
+				driveUnderLoad(helper, brain, 1);
+				if (!helper.getBlockState(CONTROLLER).is(ModContent.REACTOR_CONTROLLER.get())) {
+					helper.succeed();
+					return;
+				}
+			}
+			helper.fail("a 95 %-duty redstone clock kept the reactor alive for " + limit + " ticks — "
+					+ "more than thirty times its own countdown. Blinking the signal must not buy "
+					+ "immunity; only holding the core under the line for reactorBlastReleaseTicks may.");
+		} finally {
+			Config.reactorBlastFire = fireBefore;
+			Config.reactorBlastLavaCells = lavaBefore;
+		}
+	}
+
+	/**
+	 * A bare cluster settles below the ceiling while it is small, and runs away once it is not.
+	 *
+	 * <p><b>Deliberately stops at the armed countdown and never lets the blast happen.</b> A bare core
+	 * has no shell, so the same power that a room swallows whole would throw debris about sixteen blocks
+	 * — twice the rig — straight into the neighbouring tests. What needs proving here is the SCALE and
+	 * the arming; the blast itself is proven next door, inside a shell that can hold it.
+	 *
+	 * <p>This is the lava farm's contract, written as a test. Players build a bare reactor over a
+	 * cobblestone platform and pump the lava it melts; the small-cluster half of this scenario is the
+	 * promise that such a farm keeps working for ever, and the large-cluster half is the promise that it
+	 * has a limit they can see coming.
+	 */
+	public static void aBareClusterSettlesUntilItIsTooBig(GameTestHelper helper) {
+		ReactorControllerBlockEntity brain = buildBareRig(helper);
+		powerBareRigWithAMeltproofLever(helper);
+		driveAt(helper, brain, BARE_CONTROLLER, 600);
+		if (!brain.isBare()) {
+			helper.fail("the bare rig did not enter bare mode, so nothing below is under test");
+		}
+		int settled = ReactorCore.heatPercent(brain.getInstability(), Config.reactorBareInstabilityCapacity);
+		if (settled >= 100) {
+			helper.fail("a single rack reached " + settled + "% instability — the lava farm players "
+					+ "already built would explode, which is exactly what this feature promised not to do");
+		}
+		if (brain.getBlastCountdown() != 0) {
+			helper.fail("a single rack armed the countdown at " + settled + "% instability");
+		}
+		if (settled <= 0) {
+			helper.fail("a working bare reactor showed no instability at all — the scale is not running");
+		}
+		// Now make the pile too big. Three more racks stacked on the first, still inside the melt cube
+		// so nothing new leaves the rig.
+		for (BlockPos at : BARE_EXTRA_RACKS) {
+			helper.setBlock(at, ModContent.FUEL_ROD_ASSEMBLY.get().defaultBlockState());
+			FuelRodAssemblyBlockEntity rack = helper.getBlockEntity(at, FuelRodAssemblyBlockEntity.class);
+			if (rack == null) {
+				helper.fail("extra bare rack has no block entity at " + at);
+				return;
+			}
+			for (int i = 0; i < FuelRodAssemblyBlock.MAX_RODS; i++) {
+				rack.insertRod(new ItemStack(ModContent.URANIUM_FUEL_ROD.get()));
+			}
+		}
+		driveAt(helper, brain, BARE_CONTROLLER, 900);
+		if (brain.getBlastCountdown() <= 0) {
+			helper.fail("four racks in the open reached only "
+					+ ReactorCore.heatPercent(brain.getInstability(), Config.reactorBareInstabilityCapacity)
+					+ "% instability on " + brain.getRods() + " rods and never armed — a bare pile would "
+					+ "have no limit at all. A figure BELOW the one-rack settle means the reactor was "
+					+ "switched off for part of the run, not that the scale is mistuned.");
+		}
+		// Wound back down before the scenario ends: the countdown is armed, and leaving a live one in a
+		// shared world is how a test grows a blast radius nobody asked for.
+		scramBareRig(helper);
+		driveAt(helper, brain, BARE_CONTROLLER, Config.reactorBlastReleaseTicks + 200);
+		if (brain.getBlastCountdown() != 0) {
+			helper.fail("scramming a bare pile and holding it down left the countdown running at "
+					+ brain.getBlastCountdown());
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * The lava farm costs no fuel, and this test exists to keep it that way.
+	 *
+	 * <p><b>A pin on a feature, not on a bug.</b> Melting hangs on the reaction rather than on the sale
+	 * (MOD-469's own playtest finding), while fuel is spent only when energy is actually produced. Put
+	 * together, a bare core with a full buffer melts the scenery for ever and burns nothing — and players
+	 * turned that into lava farms, which the design has now blessed.
+	 *
+	 * <p>That makes it fragile in a specific way: it is not written down in any single place, it emerges
+	 * from two decisions in different files, and the obvious tidy-up ("everything dangerous should cost
+	 * something") would silently delete it. This scenario is what turns that from a comment into a red
+	 * build.
+	 */
+	public static void aLavaFarmBurnsNoFuel(GameTestHelper helper) {
+		ReactorControllerBlockEntity brain = buildBareRig(helper);
+		powerBareRigWithAMeltproofLever(helper);
+		buryBareRigInStone(helper);
+		FuelRodAssemblyBlockEntity rack =
+				helper.getBlockEntity(BARE_RACK, FuelRodAssemblyBlockEntity.class);
+		if (rack == null) {
+			helper.fail("bare rack has no block entity");
+			return;
+		}
+		// The buffer is filled and left full: nothing is drawing, so nothing is produced, so — by the
+		// fuel rule — nothing is burnt. The hazard is supposed to carry on regardless.
+		brain.getEnergyStorage().setAmountUntracked(brain.getEnergyStorage().getCapacity());
+		List<ItemStack> before = rack.contents();
+		int wearBefore = totalDamage(before);
+		driveAt(helper, brain, BARE_CONTROLLER, 600);
+		brain.getEnergyStorage().setAmountUntracked(brain.getEnergyStorage().getCapacity());
+		driveAt(helper, brain, BARE_CONTROLLER, 600);
+
+		// Asked of the reactor, not of the world. The melt reaches five blocks from the rack, the rig is
+		// eight across, and where the victims land differs between the loaders — a version of this that
+		// counted lava passed on Fabric and failed on NeoForge with nothing between them but structure
+		// layout. Shrinking reactorBareMeltRadius to make it countable is not available either: the
+		// neighbouring bare scenario already writes that key, and Config is process-global.
+		if (brain.getMeltsScheduled() <= 0) {
+			helper.fail("a bare reactor with a full buffer melted nothing — the lava farm players built "
+					+ "on this mechanic has stopped working. bare=" + brain.isBare() + " rods="
+					+ brain.getRods() + " output=" + brain.getLastOutput());
+		}
+		int wearAfter = totalDamage(rack.contents());
+		if (wearAfter != wearBefore) {
+			helper.fail("the lava farm started costing fuel: rod wear moved from " + wearBefore + " to "
+					+ wearAfter + ". That is a deliberate feature being deleted, not a bug being fixed — "
+					+ "see MOD-471 and the design note on the bare reactor.");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * With the blast switched off there is no crater — and therefore no lava, no fire and no fallout
+	 * either.
+	 *
+	 * <p><b>This is the land-claim rule, tested through the only lever a gametest has.</b> The aftermath
+	 * is placed exclusively in cells the explosion actually emptied, so if anything refuses the blast —
+	 * a protection mod on a server, or this config key here — the diff is empty and nothing is left
+	 * behind. Without that rule the lava would pour into a neighbour's claim through an explosion that
+	 * mod had just blocked, which is a griefing tool rather than a hazard.
+	 */
+	public static void aBlockedExplosionLeavesNoAftermath(GameTestHelper helper) {
+		boolean blastBefore = Config.reactorBlastEnabled;
+		try {
+			Config.reactorBlastEnabled = false;
+			buildRoom(helper);
+			ReactorControllerBlockEntity brain = controller(helper);
+			for (BlockPos at : HOT_CORE) {
+				FuelRodAssemblyBlockEntity column = placeColumnAt(helper, at);
+				for (int i = 0; i < FuelRodAssemblyBlock.MAX_RODS; i++) {
+					column.insertRod(new ItemStack(ModContent.URANIUM_FUEL_ROD.get()));
+				}
+			}
+			helper.setBlock(CONTROLLER.west(), Blocks.REDSTONE_BLOCK.defaultBlockState());
+			guardCountdownFitsThisRig(helper);
+			driveUnderLoad(helper, brain, 200);
+			driveUnderLoad(helper, brain, brain.getBlastCountdown() + 5);
+
+			for (int x = 0; x <= SHELL_MAX; x++) {
+				for (int y = 0; y <= SHELL_MAX; y++) {
+					for (int z = 0; z <= SHELL_MAX; z++) {
+						BlockState state = helper.getBlockState(new BlockPos(x, y, z));
+						if (state.is(ModContent.IRRADIATED_SOIL.get())) {
+							helper.fail("fallout appeared at " + x + "," + y + "," + z + " through a blast "
+									+ "that never happened — the aftermath is not keyed to the damage");
+						}
+					}
+				}
+			}
+			helper.succeed();
+		} finally {
+			Config.reactorBlastEnabled = blastBefore;
+		}
+	}
+
+	/**
+	 * A rack broken while it still holds fuel gives the rods back.
+	 *
+	 * <p><b>Written because reading the code said it could not work.</b> The rack hands its contents
+	 * back from {@code affectNeighborsAfterRemoval}, and in 26.2 {@code LevelChunk.setBlockState}
+	 * detaches the block entity BEFORE calling that hook — so {@code getBlockEntity} inside it should
+	 * come back null and the uranium should vanish on every break, by a player or by an explosion. The
+	 * repository already knows the ordering (it is documented on the incubator, which uses
+	 * {@code preRemoveSideEffects} for exactly this reason), the loot table returns only the rack, and
+	 * no scenario had ever broken a loaded one.
+	 *
+	 * <p>It also guards something MOD-471 depends on: an accident is supposed to scatter the core's
+	 * uranium across the crater, where MOD-470 makes it radioactive. If the rods never drop, that
+	 * aftermath silently does not exist.
+	 */
+	public static void aBrokenRackGivesItsRodsBack(GameTestHelper helper) {
+		BlockPos at = new BlockPos(3, 1, 3);
+		helper.setBlock(at.below(), Blocks.STONE.defaultBlockState());
+		helper.setBlock(at, ModContent.FUEL_ROD_ASSEMBLY.get().defaultBlockState());
+		FuelRodAssemblyBlockEntity rack = helper.getBlockEntity(at, FuelRodAssemblyBlockEntity.class);
+		if (rack == null) {
+			helper.fail("fuel rack has no block entity");
+			return;
+		}
+		for (int i = 0; i < FuelRodAssemblyBlock.MAX_RODS; i++) {
+			rack.insertRod(new ItemStack(ModContent.URANIUM_FUEL_ROD.get()));
+		}
+		helper.setBlock(at, Blocks.AIR.defaultBlockState());
+		// Two blocks of slack, not six: the rigs sit about six apart and a wider box would count the
+		// neighbour's drops as ours (MOD-280's lesson, in the direction that produces false passes).
+		AABB box = new AABB(helper.absolutePos(at)).inflate(2.0);
+		int rods = 0;
+		for (ItemEntity item : helper.getLevel().getEntitiesOfClass(ItemEntity.class, box)) {
+			if (item.getItem().is(ModContent.URANIUM_FUEL_ROD.get())) {
+				rods += item.getItem().getCount();
+			}
+		}
+		if (rods < FuelRodAssemblyBlock.MAX_RODS) {
+			helper.fail("breaking a loaded rack returned " + rods + " of " + FuelRodAssemblyBlock.MAX_RODS
+					+ " rods. The uranium a player racked is being destroyed, and the crater MOD-471 is "
+					+ "meant to scatter it across would come out clean.");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * Fails loudly if the shipped countdown is ever shortened below what the 100 %-pinning scenarios
+	 * need.
+	 *
+	 * <p>Three scenarios in this file deliberately hold a core at the top of its scale, two of them for
+	 * hundreds of ticks. They are safe only because the countdown outlasts them. If somebody lowers it,
+	 * the failure would otherwise surface as an unexplained explosion in a NEIGHBOURING test's rig — the
+	 * exact shape of debugging this repository has already paid for once with a config mutation.
+	 */
+	private static void guardCountdownFitsThisRig(GameTestHelper helper) {
+		if (Config.reactorBlastCountdownMinTicks < PINNED_RUN_TICKS) {
+			helper.fail("reactorBlastCountdownMinTicks is " + Config.reactorBlastCountdownMinTicks
+					+ ", shorter than the " + PINNED_RUN_TICKS + " ticks the scenarios that pin a core at "
+					+ "100 % run for. Raise it or shorten them — do NOT mutate it per scenario: the "
+					+ "neighbours in this batch read the same global and would explode instead.");
+		}
+	}
+
+	/**
+	 * Drives the reactor until it explodes, and then stops.
+	 *
+	 * <p><b>Stopping matters.</b> A gametest holds the block entity by reference, so it can go on
+	 * ticking one the world has already removed — and a controller ticked after its own death happily
+	 * re-paints the drone flag onto the racks that survived, which is precisely the state this scenario
+	 * asserts must never be left behind. In a real world the block entity is detached and never ticks
+	 * again; the loop has to model that rather than out-tick reality.
+	 */
+	private static void driveUntilItBlows(GameTestHelper helper, ReactorControllerBlockEntity brain,
+			int limit) {
+		for (int i = 0; i < limit; i++) {
+			driveUnderLoad(helper, brain, 1);
+			if (!helper.getBlockState(CONTROLLER).is(ModContent.REACTOR_CONTROLLER.get())) {
+				return;
+			}
+		}
+	}
+
+	/**
+	 * Powers the bare rig with a MELTPROOF lever instead of the redstone block the rig ships with.
+	 *
+	 * <p><b>Written after the NeoForge lane failed and the Fabric lane passed on the same code.</b> The
+	 * bare hazard melts within {@code reactorBareMeltRadius} — five blocks, the shipped value — of any
+	 * charged rack, and in an 8x8x8 rig that sphere covers everything, the rig's own redstone block
+	 * included. Once it melts, the reactor scrams, the instability decays, and the scenario measures a
+	 * switched-off reactor while reporting it as a design failure: the run that caught this said "four
+	 * racks reached only 12 %", which is BELOW where one rack settles.
+	 *
+	 * <p>The neighbouring bare scenario solves it by shrinking the melt radius through {@code Config},
+	 * which is not available here: {@code Config} is process-global and gametests run concurrently, so a
+	 * second writer of the same key would be corrupting that scenario's run (the MOD-469 lesson, from
+	 * the other side). A reactor lever is made of shielding alloy and carries the {@code meltproof} tag,
+	 * so it powers the reactor without anything being able to take it away — no mutation, no race.
+	 */
+	private static void powerBareRigWithAMeltproofLever(GameTestHelper helper) {
+		helper.setBlock(BARE_SIGNAL, Blocks.AIR.defaultBlockState());
+		// Hangs on the controller's west face: FACING is the way the lever LOOKS, so it attaches to the
+		// block on the opposite side — the controller itself, which is meltproof too.
+		helper.setBlock(BARE_LEVER, ModContent.REACTOR_LEVER.get().defaultBlockState()
+				.setValue(FaceAttachedHorizontalDirectionalBlock.FACE, AttachFace.WALL)
+				.setValue(HorizontalDirectionalBlock.FACING, Direction.WEST)
+				.setValue(LeverBlock.POWERED, true));
+	}
+
+	/** Flips that lever off — the scram, without giving the hazard anything to destroy. */
+	private static void scramBareRig(GameTestHelper helper) {
+		BlockState lever = helper.getBlockState(BARE_LEVER);
+		if (lever.getBlock() instanceof LeverBlock) {
+			helper.setBlock(BARE_LEVER, lever.setValue(LeverBlock.POWERED, false));
+		}
+	}
+
+	/**
+	 * Packs every empty cell of the rig with stone, so the hazard cannot miss.
+	 *
+	 * <p><b>Determinism, not scenery.</b> The melt draws sixteen random positions from a sphere of
+	 * {@code reactorBareMeltRadius} — five blocks, the shipped value — and gives up if none of them
+	 * holds anything meltable. The bare rig is mostly air, so a round hits its little 3x3x3 stone cube
+	 * about a quarter of the time and the scenario passes or fails on the dice. Shrinking the radius is
+	 * how the neighbouring bare scenario solves it, and that door is closed here: {@code Config} is
+	 * process-global and the two would race. Filling the rig instead makes every round land, without
+	 * touching a shared key.
+	 */
+	private static void buryBareRigInStone(GameTestHelper helper) {
+		for (int x = 0; x <= 7; x++) {
+			for (int y = 0; y <= 7; y++) {
+				for (int z = 0; z <= 7; z++) {
+					BlockPos at = new BlockPos(x, y, z);
+					if (helper.getBlockState(at).isAir()) {
+						helper.setBlock(at, Blocks.STONE.defaultBlockState());
+					}
+				}
+			}
+		}
+	}
+
+	/** The controller's west face, where the meltproof lever hangs. Inside the melt cube on purpose. */
+	private static final BlockPos BARE_LEVER = new BlockPos(2, 2, 3);
+
+	/**
+	 * Puts fresh rods back in the packed core, so a long scenario does not quietly run out of fuel.
+	 *
+	 * <p>Clears the cell to air FIRST. A burnt-out rack keeps the spent casings, so
+	 * {@code insertRod} on it refuses and quietly changes nothing; and re-placing the same block state
+	 * over itself is a no-op, so the old block entity — with its four empty casings — survives. The
+	 * first version of this helper did exactly that and the core stayed dry.
+	 */
+	private static void refuelHotCore(GameTestHelper helper) {
+		for (BlockPos at : HOT_CORE) {
+			helper.setBlock(at, Blocks.AIR.defaultBlockState());
+			FuelRodAssemblyBlockEntity column = placeColumnAt(helper, at);
+			for (int i = 0; i < FuelRodAssemblyBlock.MAX_RODS; i++) {
+				column.insertRod(new ItemStack(ModContent.URANIUM_FUEL_ROD.get()));
+			}
+		}
+	}
+
+	/** Total durability spent across a rack's rods — the ledger the lava-farm pin watches. */
+	private static int totalDamage(List<ItemStack> stacks) {
+		int damage = 0;
+		for (ItemStack stack : stacks) {
+			damage += stack.getDamageValue();
+		}
+		return damage;
+	}
+
+	/** Five racks packed on the floor: enough adjacency to pin the gauge within a couple of hundred ticks. */
+	private static final BlockPos[] HOT_CORE = {
+		new BlockPos(1, 1, 1), new BlockPos(2, 1, 1), new BlockPos(3, 1, 1),
+		new BlockPos(1, 1, 2), new BlockPos(2, 1, 2),
+	};
+
+	/** Three more racks stacked on the bare rig's own, taking the pile past its equilibrium. */
+	private static final BlockPos[] BARE_EXTRA_RACKS = {
+		new BlockPos(3, 4, 3), new BlockPos(2, 3, 3), new BlockPos(4, 3, 3),
+	};
+
+	/** The longest a scenario here holds a pinned core; the countdown must outlast it. */
+	private static final int PINNED_RUN_TICKS = 1400;
 
 	// --- rig ---
 

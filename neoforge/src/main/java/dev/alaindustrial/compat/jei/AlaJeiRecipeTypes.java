@@ -34,6 +34,15 @@ final class AlaJeiRecipeTypes {
 			IRecipeHolderType.create(Industrialization.id(ModRecipes.SAWING_SLABS.id()));
 	static final IRecipeHolderType<AlaProcessingRecipe> SAWING_STAIRS =
 			IRecipeHolderType.create(Industrialization.id(ModRecipes.SAWING_STAIRS.id()));
+	/**
+	 * The Fermenter (MOD-146). Added late and forgotten here, which took the WHOLE plugin down: the
+	 * machine table is a static field, {@code machine()} resolves its type through {@link #byKind}, and
+	 * an unmapped kind threw out of the class initialiser — so JEI reported "Failed to load
+	 * AlaJeiPlugin" and NeoForge players got no Ala Industrial recipe cards at all, for any machine.
+	 * A missing line in a lookup table cost the whole integration on one loader.
+	 */
+	static final IRecipeHolderType<AlaProcessingRecipe> FERMENTING =
+			IRecipeHolderType.create(Industrialization.id(ModRecipes.FERMENTING.id()));
 	static final IRecipeHolderType<AlaProcessingRecipe> MUTATION_TRANSFORM =
 			IRecipeHolderType.create(Industrialization.id(ModRecipes.MUTATION_TRANSFORM.id()));
 	static final IRecipeHolderType<AlaProcessingRecipe> MUTATION_DUPLICATE =
@@ -107,6 +116,9 @@ final class AlaJeiRecipeTypes {
 		}
 		if (kind == ModRecipes.CENTRIFUGING) {
 			return CENTRIFUGING;
+		}
+		if (kind == ModRecipes.FERMENTING) {
+			return FERMENTING;
 		}
 		if (kind == ModRecipes.SAWING_PLANKS) {
 			return SAWING_PLANKS;

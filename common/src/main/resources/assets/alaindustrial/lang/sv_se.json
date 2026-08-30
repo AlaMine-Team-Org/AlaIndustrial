@@ -959,5 +959,9 @@
   "gui.alaindustrial.creative_energy_source.preset.hv": "HV",
   "gui.alaindustrial.creative_energy_source.output": "Uteffekt: %s EU/t",
   "gui.alaindustrial.creative_energy_source.output.tip": "Dra för att ställa in uteffekten",
-  "gui.alaindustrial.creative_energy_source.cable_warning": "Max %s EU/t per mottagare"
+  "gui.alaindustrial.creative_energy_source.cable_warning": "Max %s EU/t per mottagare",
+  "gui.alaindustrial.reactor_controller.status.blast": "HÄRDSMÄLTA NÄRA",
+  "gui.alaindustrial.reactor_controller.label.instability": "Instabilitet",
+  "gui.alaindustrial.reactor_controller.percent": "%s%%",
+  "block.alaindustrial.irradiated_soil": "Bestrålad jord"
 }

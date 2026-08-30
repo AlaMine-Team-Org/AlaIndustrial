@@ -177,6 +177,21 @@ public class ReactorControllerMenu extends MachineMenu {
 		return data.get(ReactorControllerBlockEntity.DATA_STEAM_PERCENT);
 	}
 
+	/**
+	 * How much of the accident countdown is left, 0…100; zero when none is running (MOD-471).
+	 *
+	 * <p>A share rather than the seconds on purpose — see the channel's own note. The panel draws a bar
+	 * from this, and a bar is exactly as much as the player is meant to know.
+	 */
+	public int getBlastPercent() {
+		return data.get(ReactorControllerBlockEntity.DATA_BLAST_PERCENT);
+	}
+
+	/** A bare core's instability, 0…100. Zero for a sealed room, which runs on heat instead. */
+	public int getInstabilityPercent() {
+		return data.get(ReactorControllerBlockEntity.DATA_INSTABILITY);
+	}
+
 	/** Whether the room is melting its own contents right now (MOD-469). */
 	public boolean isMeltingDown() {
 		return data.get(ReactorControllerBlockEntity.DATA_MELTDOWN) != 0;

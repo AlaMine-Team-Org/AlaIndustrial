@@ -518,6 +518,8 @@ public final class ModItemsNeoForge {
 	// MOD-468, stage 1 — block items for the reactor shell.
 	public static final DeferredItem<BlockItem> REACTOR_CASING_ITEM =
 			ITEMS.registerSimpleBlockItem("reactor_casing", ModBlocksNeoForge.REACTOR_CASING);
+	public static final DeferredItem<BlockItem> IRRADIATED_SOIL_ITEM =
+			ITEMS.registerSimpleBlockItem("irradiated_soil", ModBlocksNeoForge.IRRADIATED_SOIL);
 	public static final DeferredItem<BlockItem> REACTOR_GLASS_ITEM =
 			ITEMS.registerSimpleBlockItem("reactor_glass", ModBlocksNeoForge.REACTOR_GLASS);
 	public static final DeferredItem<BlockItem> REACTOR_PORT_ITEM =
@@ -875,6 +877,7 @@ public final class ModItemsNeoForge {
 		ModContent.REACTOR_CIRCUIT = REACTOR_CIRCUIT;
 		ModContent.CONTROL_ROD_DRIVE = CONTROL_ROD_DRIVE;
 		ModContent.REACTOR_CASING_ITEM = REACTOR_CASING_ITEM;
+		ModContent.IRRADIATED_SOIL_ITEM = IRRADIATED_SOIL_ITEM;
 		ModContent.REACTOR_GLASS_ITEM = REACTOR_GLASS_ITEM;
 		ModContent.REACTOR_PORT_ITEM = REACTOR_PORT_ITEM;
 		ModContent.REACTOR_DOOR_ITEM = REACTOR_DOOR_ITEM;

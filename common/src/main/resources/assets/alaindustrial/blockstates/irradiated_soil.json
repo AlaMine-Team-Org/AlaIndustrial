@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "intensity=0": {
+      "model": "alaindustrial:block/irradiated_soil_0"
+    },
+    "intensity=1": {
+      "model": "alaindustrial:block/irradiated_soil_1"
+    },
+    "intensity=2": {
+      "model": "alaindustrial:block/irradiated_soil_2"
+    },
+    "intensity=3": {
+      "model": "alaindustrial:block/irradiated_soil_3"
+    }
+  }
+}

@@ -959,5 +959,9 @@
   "gui.alaindustrial.creative_energy_source.preset.hv": "HV",
   "gui.alaindustrial.creative_energy_source.output": "Ausgabe: %s EU/t",
   "gui.alaindustrial.creative_energy_source.output.tip": "Ziehen, um die Ausgabe einzustellen",
-  "gui.alaindustrial.creative_energy_source.cable_warning": "Max. %s EU/t pro Empfänger"
+  "gui.alaindustrial.creative_energy_source.cable_warning": "Max. %s EU/t pro Empfänger",
+  "gui.alaindustrial.reactor_controller.status.blast": "KERNSCHMELZE DROHT",
+  "gui.alaindustrial.reactor_controller.label.instability": "Instabilität",
+  "gui.alaindustrial.reactor_controller.percent": "%s%%",
+  "block.alaindustrial.irradiated_soil": "Verstrahlte Erde"
 }

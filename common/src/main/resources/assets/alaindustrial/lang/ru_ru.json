@@ -959,5 +959,9 @@
   "tooltip.alaindustrial.tier_hv": "Тир: HV",
   "tooltip.alaindustrial.tier_lv": "Тир: LV",
   "tooltip.alaindustrial.tier_mv": "Тир: MV",
-  "tooltip.alaindustrial.wind_gauge.usage": "Shift + ПКМ: замерить ветер здесь"
+  "tooltip.alaindustrial.wind_gauge.usage": "Shift + ПКМ: замерить ветер здесь",
+  "gui.alaindustrial.reactor_controller.status.blast": "АВАРИЯ",
+  "gui.alaindustrial.reactor_controller.label.instability": "Нестабильность",
+  "gui.alaindustrial.reactor_controller.percent": "%s%%",
+  "block.alaindustrial.irradiated_soil": "Заражённая земля"
 }

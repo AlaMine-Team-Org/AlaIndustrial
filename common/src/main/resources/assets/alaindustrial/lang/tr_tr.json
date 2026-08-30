@@ -959,5 +959,9 @@
   "gui.alaindustrial.creative_energy_source.preset.hv": "HV",
   "gui.alaindustrial.creative_energy_source.output": "Çıkış: %s EU/t",
   "gui.alaindustrial.creative_energy_source.output.tip": "Çıkışı ayarlamak için sürükleyin",
-  "gui.alaindustrial.creative_energy_source.cable_warning": "Alıcı başına en fazla %s EU/t"
+  "gui.alaindustrial.creative_energy_source.cable_warning": "Alıcı başına en fazla %s EU/t",
+  "gui.alaindustrial.reactor_controller.status.blast": "ERİME YAKIN",
+  "gui.alaindustrial.reactor_controller.label.instability": "Kararsızlık",
+  "gui.alaindustrial.reactor_controller.percent": "%s%%",
+  "block.alaindustrial.irradiated_soil": "Işınlanmış Toprak"
 }

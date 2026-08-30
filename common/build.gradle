@@ -295,6 +295,12 @@ pitest {
             // by the L2 reactor scenarios on both loaders instead.
             'dev.alaindustrial.core.structure.BareReactorScan',
             'dev.alaindustrial.core.structure.ReactorMeltdown',
+            // MOD-471: the accident. ReactorBlast snapshots block states, calls level.explode and writes
+            // lava and fallout — every line of it is Minecraft-coupled by construction. The arithmetic
+            // it delegates to (ReactorCore.blastPower / blastCountdown / instabilityGain /
+            // instabilityDecay / falloutDose) is Minecraft-free and stays IN the run, covered by
+            // ReactorCoreTest; the world half is covered by the L2 reactor scenarios on both loaders.
+            'dev.alaindustrial.core.structure.ReactorBlast',
             // MOD-470: the three radiation classes that touch the world — they read Level, BlockPos,
             // ItemStack and entities to ask "what is irradiating whoever stands here" and to write the
             // effect. The arithmetic they delegate to (RadiationCore) is deliberately Minecraft-free and

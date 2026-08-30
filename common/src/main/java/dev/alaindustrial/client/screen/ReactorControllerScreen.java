@@ -67,6 +67,15 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 
 	/** The status headline, first thing on the panel in both layouts. */
 	public static final int STATUS_Y = 21;
+	/**
+	 * The accident countdown bar, in the gap the headline leaves above the first data row.
+	 *
+	 * <p>Three pixels tall and full width: it has to be visible from the corner of the eye while the
+	 * player is reading the rows below it, and it carries no text, so it needs no more height than that.
+	 */
+	public static final int COUNTDOWN_Y = 31;
+	public static final int COUNTDOWN_H = 3;
+
 	/** Where the data rows begin, below the headline. */
 	public static final int ROW_TOP = 35;
 	public static final int ROW_STEP = 12;
@@ -126,6 +135,7 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 
 		ReactorRoomStatus status = this.menu.getStatus();
 		drawStatusHeadline(graphics, status);
+		drawCountdown(graphics);
 		if (status == ReactorRoomStatus.FORMED) {
 			drawRunningLayout(graphics);
 		} else {
@@ -151,6 +161,16 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 	 * that moment.
 	 */
 	private void drawStatusHeadline(GuiGraphicsExtractor graphics, ReactorRoomStatus status) {
+		if (this.menu.getBlastPercent() > 0) {
+			// Above the meltdown line, and above everything else. A room that is melting its contents is
+			// in trouble; a room counting down has minutes to live, and nothing else on the panel is worth
+			// reading first.
+			drawFittedStatus(graphics,
+					Component.translatable("gui.alaindustrial.reactor_controller.status.blast")
+							.withStyle(ChatFormatting.DARK_RED),
+					STATUS_Y, STATUS_ROW_LEFT, STATUS_ROW_RIGHT, 0xFF8A1010);
+			return;
+		}
 		if (this.menu.isMeltingDown()) {
 			drawFittedStatus(graphics,
 					Component.translatable("gui.alaindustrial.reactor_controller.status.meltdown")
@@ -195,13 +215,51 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 		drawRow(graphics, row++,
 				Component.translatable("gui.alaindustrial.reactor_controller.label.rods"),
 				Component.literal(Integer.toString(this.menu.getRods())));
-		drawRow(graphics, row,
+		drawRow(graphics, row++,
 				Component.translatable("gui.alaindustrial.reactor_controller.label.output"),
 				this.menu.getOutput() > 0
 						? Component.translatable("gui.alaindustrial.reactor_controller.eu_per_tick",
 								this.menu.getOutput())
 						: Component.translatable(this.menu.getIdleReason().translationKey())
 								.withStyle(ChatFormatting.DARK_RED));
+		// MOD-471. MOD-469 deliberately gave the bare layout no gauges, because a bare core tracked no
+		// temperature and a bar sitting at zero would have read as a cold reactor rather than as a
+		// reactor with no thermometer. That reasoning inverts the moment a scale exists: a hidden scale
+		// that kills you is exactly what MOD-469 refused to do with the throttle. So the pile's
+		// instability is shown, and the four-rack cliff becomes something the player can see coming.
+		int instability = Math.min(100, Math.max(0, this.menu.getInstabilityPercent()));
+		drawRow(graphics, row,
+				Component.translatable("gui.alaindustrial.reactor_controller.label.instability"),
+				Component.translatable("gui.alaindustrial.reactor_controller.percent", instability)
+						.withStyle(instability >= 100 ? ChatFormatting.DARK_RED
+								: instability >= 80 ? ChatFormatting.GOLD : ChatFormatting.DARK_GREEN));
+	}
+
+	/**
+	 * The accident countdown: a bar that empties, with no figure on it.
+	 *
+	 * <p><b>The missing number is the feature.</b> Every accident rolls its own length between two and
+	 * three minutes, so that a player cannot learn "half a minute" once and stop reading the panel.
+	 * Printing the seconds would hand that knowledge straight back and make the roll pointless. A
+	 * draining bar says "you are running out of time" — which is the true and useful part — without
+	 * saying how much is left.
+	 *
+	 * <p>Drawn in every layout, because the accident does not care which one is up: a breached room
+	 * running bare can be counting down just as a sealed one can.
+	 */
+	private void drawCountdown(GuiGraphicsExtractor graphics) {
+		int percent = this.menu.getBlastPercent();
+		if (percent <= 0) {
+			return;
+		}
+		int left = this.leftPos + LABEL_X;
+		int top = this.topPos + COUNTDOWN_Y;
+		int width = VALUE_RIGHT - LABEL_X;
+		graphics.fill(left, top, left + width, top + COUNTDOWN_H, 0xFF2A2D33);
+		int filled = width * Math.min(100, percent) / 100;
+		if (filled > 0) {
+			graphics.fill(left, top, left + filled, top + COUNTDOWN_H, 0xFFD63A2A);
+		}
 	}
 
 	/**

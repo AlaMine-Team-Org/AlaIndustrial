@@ -200,6 +200,21 @@ public final class NeoForgeGameTests {
 		// MOD-514 — the held-signal switch: it seals with the room, scrams it, and outlives a meltdown.
 		registerTest(event, "reactor_lever_seals_and_scrams", 400, true,
 				ReactorScenarios::aShieldedLeverInsideTheRoomSealsAndScrams);
+		// MOD-471 — the accident at the top of the scale, and the lava farm it now has a limit for.
+		registerTest(event, "reactor_blast_countdown_and_explosion", 400, true,
+				ReactorScenarios::aCoreAtFullScaleCountsDownAndBlowsItsRoomApart);
+		registerTest(event, "reactor_redstone_clock_does_not_save_it", 400, true,
+				ReactorScenarios::aRedstoneClockDoesNotSaveTheReactor);
+		registerTest(event, "reactor_full_buffer_still_cooks", 400, true,
+				ReactorScenarios::aFullBufferStillCooksTheCore);
+		registerTest(event, "reactor_bare_instability_limit", 400, true,
+				ReactorScenarios::aBareClusterSettlesUntilItIsTooBig);
+		registerTest(event, "reactor_lava_farm_burns_no_fuel", 400, true,
+				ReactorScenarios::aLavaFarmBurnsNoFuel);
+		registerTest(event, "reactor_blocked_blast_leaves_no_aftermath", 400, true,
+				ReactorScenarios::aBlockedExplosionLeavesNoAftermath);
+		registerTest(event, "reactor_broken_rack_returns_rods", 400, true,
+				ReactorScenarios::aBrokenRackGivesItsRodsBack);
 		// MOD-473 — the advancement branch: the three steps that fire from the controller's own tick go
 		// to its owner, and an unowned reactor awards nobody without throwing.
 		registerTest(event, "reactor_milestones_reach_the_owner", 400, true,

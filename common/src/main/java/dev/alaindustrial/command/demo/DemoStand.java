@@ -1,6 +1,7 @@
 package dev.alaindustrial.command.demo;
 
 import dev.alaindustrial.block.FuelRodAssemblyBlock;
+import dev.alaindustrial.block.IrradiatedSoilBlock;
 import dev.alaindustrial.block.SteamNozzleBlock;
 import dev.alaindustrial.block.ReactorDoorBlock;
 import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
@@ -1061,6 +1062,15 @@ public final class DemoStand {
 		set(level, origin, 8, by, bz + 2, ModContent.SHIELDING_CHEST.get());
 		fillSlot(level, origin, 8, by, bz + 2, 0, new ItemStack(ModContent.REFINED_URANIUM.get(), 64));
 		fillSlot(level, origin, 8, by, bz + 2, 1, new ItemStack(ModContent.URANIUM_FUEL_ROD.get()));
+		// MOD-471 — the scar an accident leaves. Shown as the four decay stages side by side, because
+		// the whole point of the intensity is that a player can read how clean a patch is at a glance,
+		// and a single sample would show them one colour with nothing to compare it against. Placed on
+		// the far side of the chest, still clear of the cable rows that start at x=16.
+		for (int stage = 0; stage <= IrradiatedSoilBlock.MAX_INTENSITY; stage++) {
+			level.setBlockAndUpdate(origin.offset(8, by, bz + 4 + stage),
+					ModContent.IRRADIATED_SOIL.get().defaultBlockState()
+							.setValue(IrradiatedSoilBlock.INTENSITY, stage));
+		}
 	}
 
 	/**

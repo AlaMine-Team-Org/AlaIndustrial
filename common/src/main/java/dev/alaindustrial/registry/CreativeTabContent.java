@@ -531,6 +531,7 @@ public final class CreativeTabContent {
 		// building blocks: these are reactor parts that happen to be cubes, and a player hunting for
 		// them will look here.
 		show(out, ModContent.REACTOR_CASING_ITEM);
+		show(out, ModContent.IRRADIATED_SOIL_ITEM);
 		show(out, ModContent.REACTOR_GLASS_ITEM);
 		show(out, ModContent.REACTOR_PORT_ITEM);
 		show(out, ModContent.REACTOR_DOOR_ITEM);

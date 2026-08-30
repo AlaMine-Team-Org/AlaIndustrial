@@ -959,5 +959,9 @@
   "gui.alaindustrial.creative_energy_source.preset.hv": "HV",
   "gui.alaindustrial.creative_energy_source.output": "Віддача: %s EU/t",
   "gui.alaindustrial.creative_energy_source.output.tip": "Потягніть, щоб задати віддачу",
-  "gui.alaindustrial.creative_energy_source.cable_warning": "Не більше %s EU/t на один приймач"
+  "gui.alaindustrial.creative_energy_source.cable_warning": "Не більше %s EU/t на один приймач",
+  "gui.alaindustrial.reactor_controller.status.blast": "АВАРІЯ",
+  "gui.alaindustrial.reactor_controller.label.instability": "Нестабільність",
+  "gui.alaindustrial.reactor_controller.percent": "%s%%",
+  "block.alaindustrial.irradiated_soil": "Заражена земля"
 }

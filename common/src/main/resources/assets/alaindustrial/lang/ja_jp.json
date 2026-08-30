@@ -959,5 +959,9 @@
   "gui.alaindustrial.creative_energy_source.preset.hv": "HV",
   "gui.alaindustrial.creative_energy_source.output": "出力: %s EU/t",
   "gui.alaindustrial.creative_energy_source.output.tip": "ドラッグして出力を設定",
-  "gui.alaindustrial.creative_energy_source.cable_warning": "受け手ごとに最大 %s EU/t"
+  "gui.alaindustrial.creative_energy_source.cable_warning": "受け手ごとに最大 %s EU/t",
+  "gui.alaindustrial.reactor_controller.status.blast": "メルトダウン間近",
+  "gui.alaindustrial.reactor_controller.label.instability": "不安定度",
+  "gui.alaindustrial.reactor_controller.percent": "%s%%",
+  "block.alaindustrial.irradiated_soil": "汚染された土"
 }

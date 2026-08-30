@@ -290,6 +290,171 @@ public final class ReactorCore {
 		return Math.max(0, heat - Math.max(0, relief));
 	}
 
+	// ── MOD-471: the accident at the top of the scale ──
+
+	/**
+	 * How hard a reactor blows up, given the rods it was carrying.
+	 *
+	 * <p><b>The ceiling is the whole balance, and it is a number with a physical meaning.</b> A reactor
+	 * shell has an explosion resistance of 30, and vanilla drains {@code (resistance + 0.3) x 0.3} per
+	 * 0.3-block step — so one cell of wall eats 28 to 37 power. Anything under about 24 is therefore
+	 * held completely by a sealed room: the interior is gutted, the wall is holed, and not one block
+	 * outside changes. Past that the containment starts to leak, and at the shipped ceiling a station
+	 * throws debris twenty-odd blocks past its own wall. That progression is the point — a small
+	 * reactor errs cheaply, a large one catastrophically — and it is why the cap is not merely a
+	 * safety valve.
+	 *
+	 * <p>Below roughly 8 the blast cannot even scratch the shell: a ray must have power left AFTER the
+	 * resistance is subtracted for the block to break at all. So the smallest possible accident wrecks
+	 * what is inside the room and leaves the room standing.
+	 *
+	 * <p>Carried per TEN rods so the configuration stays integer; the caller divides once, here.
+	 *
+	 * @param rods        rods burning when the countdown ran out
+	 * @param base        power of an empty core
+	 * @param perTenRods  added power per ten rods
+	 * @param cap         hard ceiling; {@code <= 0} means none
+	 */
+	public static float blastPower(int rods, int base, int perTenRods, int cap) {
+		float raw = Math.max(0, base) + Math.max(0, perTenRods) * Math.max(0, rods) / 10.0f;
+		return cap <= 0 ? raw : Math.min(raw, cap);
+	}
+
+	/**
+	 * How long this particular accident takes to arrive, in ticks.
+	 *
+	 * <p><b>Rolled per accident rather than fixed, and that is a design requirement rather than
+	 * flavour.</b> A constant delay becomes a memorised norm within a week — players learn "half a
+	 * minute" and treat the countdown as a chore with a known length. A spread keeps the edge blurred:
+	 * every alarm is a real question about how much time is left.
+	 *
+	 * <p>Takes the raw sample rather than a random source so the whole rule stays testable on the
+	 * Minecraft-free lane. A reversed pair is clamped rather than rejected — a configuration where
+	 * max &lt; min should still produce a working reactor, just an unsurprising one.
+	 */
+	public static int blastCountdown(int minTicks, int maxTicks, int sample) {
+		int lo = Math.max(1, minTicks);
+		int hi = Math.max(lo, maxTicks);
+		return lo + Math.floorMod(sample, hi - lo + 1);
+	}
+
+	/**
+	 * The accident timer: how long is left, what it started from, and how long the core has been back
+	 * under the line.
+	 *
+	 * @param remaining   ticks to the explosion; 0 means no accident is under way
+	 * @param total       what {@code remaining} started from, so a panel can draw a share
+	 * @param belowTicks  consecutive ticks the scale has spent under a hundred percent
+	 */
+	public record BlastTimer(int remaining, int total, int belowTicks) {
+
+		public static final BlastTimer IDLE = new BlastTimer(0, 0, 0);
+
+		public boolean armed() {
+			return remaining > 0;
+		}
+	}
+
+	/**
+	 * One tick of the accident timer (MOD-471).
+	 *
+	 * <p><b>Cancelling costs time, not a blink — and that is the whole reason this is a state machine
+	 * rather than a level test.</b> The first version cleared the countdown the moment the gauge left a
+	 * hundred percent, which sounded like the promise the design made ("it can be cancelled up to the
+	 * last tick") and was in fact an exploit a player found within an hour: cutting the redstone for a
+	 * SINGLE tick drops the gauge — the heat is clamped at the top, so one tick of cooling is enough to
+	 * read 99 % — and a fresh countdown is rolled the tick after. A repeater clock with one tick off in
+	 * twenty therefore ran the reactor at ninety-five percent duty and made it permanently immune.
+	 *
+	 * <p>So the rule is now: the countdown <em>pauses</em> while the core is under the line and only
+	 * clears once it has STAYED under it for {@code releaseTicks}. Every honest way out still works —
+	 * water, the scram lever, a breached wall all hold the core down for far longer than that — and
+	 * every dishonest one stops working, because a duty cycle short enough to keep the gauge pinned is
+	 * by definition too short to ever finish the release window.
+	 *
+	 * <p>Pausing rather than continuing to drain is what keeps the promise honest in the other
+	 * direction: a player who fixes the coolant with two seconds left does not get punished for the two
+	 * seconds it takes the temperature to fall.
+	 *
+	 * @param rolledDuration the duration to use if this tick ARMS the timer; ignored otherwise
+	 */
+	public static BlastTimer tickBlast(BlastTimer timer, boolean critical, int releaseTicks,
+			int rolledDuration) {
+		if (critical) {
+			if (!timer.armed()) {
+				int duration = Math.max(1, rolledDuration);
+				return new BlastTimer(duration, duration, 0);
+			}
+			// Back at the line: whatever release the player had banked is gone, and the clock runs again.
+			return new BlastTimer(timer.remaining() - 1, timer.total(), 0);
+		}
+		if (!timer.armed()) {
+			return BlastTimer.IDLE;
+		}
+		int below = timer.belowTicks() + 1;
+		if (below >= Math.max(1, releaseTicks)) {
+			return BlastTimer.IDLE;
+		}
+		return new BlastTimer(timer.remaining(), timer.total(), below);
+	}
+
+	/**
+	 * Instability a bare core adds per tick — the scale a reactor with no room runs on (MOD-471).
+	 *
+	 * <p><b>Why a bare reactor needs a second scale at all.</b> Heat belongs to the room: it is made by
+	 * the energy actually sold, carried away by water, and read off a gauge the shell makes meaningful.
+	 * A bare core has none of that and deliberately produces no heat whatsoever. Yet the player's own
+	 * ruling is that a bare cluster must have a limit — small enough to farm lava from for ever, large
+	 * enough to become a bomb. So the danger is measured by what a bare core actually has: the size of
+	 * the pile.
+	 *
+	 * <p>Paired with a decay proportional to the current value ({@link #naturalCooling} with no flat
+	 * floor), this gives the same equilibrium curve the room's heat has — and with it the property the
+	 * whole feature rests on: a small cluster settles below the top and stays there indefinitely, a
+	 * large one has an equilibrium above the ceiling and therefore runs away. The threshold is a
+	 * rack count the player can count on their fingers, not a number in a config file.
+	 */
+	public static long instabilityGain(int rods, int perRod) {
+		return (long) Math.max(0, rods) * Math.max(0, perRod);
+	}
+
+	/**
+	 * Instability a bare core sheds this tick — a share of what it holds, plus one.
+	 *
+	 * <p><b>The "plus one" is not tuning, it is what stops the scale sticking.</b> The share is integer
+	 * arithmetic: at the shipped 8 per mille, anything under 125 sheds {@code value * 8 / 1000 == 0} and
+	 * a scrammed pile parks there for ever, showing one percent on a panel that will never reach zero.
+	 * The room's heat scale never had the problem because it carries a flat floor of its own
+	 * ({@code reactorPassiveCooling}); this is the same floor, at the smallest value that closes the
+	 * gap. A unit test drives a full pile down to nothing precisely to keep it closed.
+	 *
+	 * <p>Not a config key, deliberately: it is a correctness floor rather than a balance number, and an
+	 * operator who set it to zero would get a reactor whose scram silently stops working.
+	 */
+	public static long instabilityDecay(long instability, int permille) {
+		return instability <= 0 ? 0 : naturalCooling(instability, 1, permille);
+	}
+
+	/**
+	 * Dose a patch of fallout delivers per sweep, before distance and line of sight (MOD-471).
+	 *
+	 * <p><b>The cap is not tuning, it is what stops the crater being a death sentence.</b> Strength
+	 * linear in the block count would make a forty-cell scar instantly lethal at any distance the
+	 * radius allows, which is the exact trap MOD-474 had to fix for containers. Counting at most a
+	 * handful of cells keeps a fallout field dangerous to stand in and survivable to walk past.
+	 *
+	 * <p>The per-block figure has a floor it must clear that has nothing to do with balance: a dose is
+	 * stored as the remaining duration of an effect that vanilla ticks down every tick, so a source
+	 * contributing less than {@code radiationTickInterval} per sweep contributes nothing at all.
+	 */
+	public static int falloutDose(int blocks, int perBlock, int maxCounted) {
+		if (blocks <= 0 || perBlock <= 0) {
+			return 0;
+		}
+		int counted = maxCounted > 0 ? Math.min(blocks, maxCounted) : blocks;
+		return counted * perBlock;
+	}
+
 	private static int clampDepth(int depthPermille) {
 		return Math.min(FULL_DEPTH, Math.max(0, depthPermille));
 	}

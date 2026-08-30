@@ -6,6 +6,7 @@ import dev.alaindustrial.block.FuelRodAssemblyBlock;
 import dev.alaindustrial.block.ReactorControllerBlock;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.structure.BareReactorScan;
+import dev.alaindustrial.core.structure.ReactorBlast;
 import dev.alaindustrial.core.structure.ReactorCore;
 import dev.alaindustrial.core.structure.ReactorMeltdown;
 import dev.alaindustrial.core.structure.RoomScan;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -34,6 +36,7 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * The reactor controller's block entity (MOD-468, stage 1): it re-scans the room and publishes the
@@ -61,8 +64,8 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public class ReactorControllerBlockEntity extends MachineBlockEntity implements MenuProvider {
 
-	/** Base four channels plus: status, breach offset (3), interior size (3), heat/rods/depth/output (4). */
-	public static final int DATA_COUNT = MachineBlockEntity.DATA_COUNT + 18;
+	/** Base four plus: status, breach (3), size (3), heat/rods/depth/output (4), water/steam/idle/energy (5), meltdown, blast, instability. */
+	public static final int DATA_COUNT = MachineBlockEntity.DATA_COUNT + 20;
 	public static final int DATA_STATUS = 4;
 	public static final int DATA_BREACH_DX = 5;
 	public static final int DATA_BREACH_DY = 6;
@@ -109,6 +112,25 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 	 * inside it", and the two have different lifetimes.
 	 */
 	public static final int DATA_MELTDOWN = 21;
+	/**
+	 * How much of the accident countdown is left, 0…100 (MOD-471).
+	 *
+	 * <p><b>A share, not the seconds, and that is the whole reason the channel exists in this shape.</b>
+	 * The countdown is rolled fresh per accident between two and three minutes precisely so a player
+	 * cannot learn its length; shipping the raw tick count would let the panel print a stopwatch and
+	 * hand that knowledge straight back. A bar that empties tells them time is running out without
+	 * telling them exactly how much is left. 0 means no accident is under way.
+	 */
+	public static final int DATA_BLAST_PERCENT = 22;
+	/**
+	 * The bare reactor's instability, 0…100 (MOD-471).
+	 *
+	 * <p>Its own channel rather than a second use of {@link #DATA_HEAT_PERCENT}: the two scales are
+	 * never live at once, but they mean different things and a single channel would make the panel's
+	 * gauge lie about which one it is showing the moment a breached room fell into bare mode with heat
+	 * still on the clock.
+	 */
+	public static final int DATA_INSTABILITY = 23;
 
 	/** Coolant boiled on the last tick, in mB. Zero while the reactor is cold or idle. */
 	private int lastWater;
@@ -194,8 +216,57 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 	/** Ticks until the next victim is chosen. Zero means "pick on the next tick that qualifies". */
 	private int meltCooldown;
 
+	/**
+	 * Blocks this reactor has marked for melting since it was loaded.
+	 *
+	 * <p>Counts the CHOICE, not the change, so it moves even with {@code reactorMeltdownMeltsBlocks}
+	 * off — the question it answers is "is the hazard running", which is exactly what a switch is not
+	 * supposed to alter.
+	 *
+	 * <p><b>It exists because the hazard is otherwise unobservable except through the world</b>, and the
+	 * world is a bad oracle for it: the melt reaches five blocks from any rack, a gametest rig is eight
+	 * across, and where the victims land differs between the two loaders. A scenario counting lava
+	 * passed on Fabric and failed on NeoForge with nothing between them but structure layout. Not
+	 * persisted — it is a live counter, not a record.
+	 */
+	private int meltsScheduled;
+
 	/** Ticks until the next sweep. Zero means "scan on the next server tick". */
 	private int scanCooldown;
+
+	// ── MOD-471: the accident at the top of the scale ──
+	/**
+	 * Instability of a bare core: the second scale, and the only one a reactor with no room has.
+	 *
+	 * <p><b>Deliberately not persisted.</b> It is a function of the pile's size and nothing else, so a
+	 * chunk that reloads climbs back to the same equilibrium within seconds. Saving it would preserve
+	 * nothing and would let a reactor come back from disk already at the top of a scale the player
+	 * never watched fill.
+	 */
+	private long instability;
+
+	/**
+	 * Ticks left before this core blows up, or zero when no accident is under way.
+	 *
+	 * <p><b>Persisted, unlike everything else here, and for a specific reason.</b> The duration is
+	 * rolled per accident; a countdown that reset on restart would turn "log out and back in" into a
+	 * way to re-roll a bad number, and a server restart into a free rescue. The heat that caused it is
+	 * already saved, so the accident survives anyway — this only keeps it honest about how far along it
+	 * had got.
+	 */
+	private int blastCountdown;
+
+	/** What {@link #blastCountdown} started from, so the panel can draw a share rather than seconds. */
+	private int blastCountdownTotal;
+
+	/**
+	 * Consecutive ticks the scale has spent under a hundred percent while a countdown is armed.
+	 *
+	 * <p>Not persisted: it is at most a few seconds of intent, and a chunk that reloads mid-rescue
+	 * simply asks the player to hold the core down a moment longer. The countdown itself IS persisted,
+	 * so nothing is lost the other way round.
+	 */
+	private int blastBelowTicks;
 
 	// ── MOD-472: the room's voice ──
 	/**
@@ -324,6 +395,11 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 	 * full buffer with nothing drawing from it costs no uranium, exactly as the charging station spends
 	 * only per transfer. Heat, by contrast, is settled every tick whether the reactor ran or not: a
 	 * shut-down core still has to cool down, and "scram and wait" must actually work.
+	 *
+	 * <p><b>And heat is PRODUCED whenever the reaction is running, full buffer or not</b> (MOD-471).
+	 * That is not the same rule as the one above, and the difference is the whole of the accident: a
+	 * reactor nobody is drawing from is still a reactor, and if its coolant is missing it still cooks
+	 * itself to the top of the scale. See the block below for what a playtest looked like before it.
 	 */
 	private void runReactor(Level level, BlockPos pos) {
 		boolean sealed = status == ReactorRoomStatus.FORMED;
@@ -359,7 +435,7 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 			setChanged();
 		}
 
-		if (allowed && liveRods > 0 && energy.getAmount() < energy.getCapacity()) {
+		if (allowed && liveRods > 0) {
 			// What this core could give with the rods all the way down. The tier ceiling is applied to
 			// THIS, and the throttle is applied after it — not the other way round. Clipping a
 			// depth-scaled figure against the ceiling looked equivalent and was not: on any core whose
@@ -377,23 +453,39 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 					? ReactorCore.bareOutput(ceiling, Config.reactorBarePowerPercent,
 							Config.reactorBarePowerCap)
 					: ceiling * depthPermille / ReactorCore.FULL_DEPTH;
+
+			// ── Heat follows the REACTION. Fuel follows the SALE. ──
+			//
+			// The asymmetry is deliberate and it was paid for by a playtest (MOD-471). Heat used to be
+			// charged against the energy actually banked, which meant a sealed, fuelled, redstone-powered
+			// reactor with a full buffer produced no heat at all: the gauge fell back to zero and the
+			// core cooled itself down. A player watched exactly that — twelve rods, no coolant, no
+			// consumers — and pointed out the obvious: nobody switched the reactor off, so what stopped
+			// the chain reaction? Nothing did. A reactor is not a machine that decides to stop when the
+			// warehouse is full; it is a fire, and a fire that nobody is drawing heat from is the most
+			// dangerous kind. Since then the temperature is driven by {@code wanted} — what the reaction
+			// is producing — and the buffer only decides how much of it is banked.
+			//
+			// This is the same lesson MOD-469 learned on the bare core, where the melting was hung on
+			// output and a player could silence the hazard by unplugging their machines. Two features
+			// made the identical mistake; both now key on "the reaction is running", never on the sale.
+			//
+			// Fuel deliberately did NOT move with it. A rod is an amount of energy (MOD-468's own
+			// invariant, and the whole fuel cycle rests on it), so uranium is spent only on energy that
+			// was actually delivered. An idling reactor therefore heats up for free — which is precisely
+			// what makes "I filled the buffer and went to bed" an accident rather than a rounding error.
+			//
+			// A bare core still makes NO heat: it has no shell to hold it, no gauge to show it and no
+			// coolant loop to answer it. Its own scale is instability, and that one already keys on the
+			// reaction (see settleInstability).
+			long heatFull = bare ? 0 : ReactorCore.heatProduced(liveRods, pairs,
+					Config.reactorHeatPerRod, Config.reactorHeatNeighbourBonusPercent,
+					ReactorCore.FULL_DEPTH);
+			produced = ReactorCore.heatForOutput(heatFull, wanted, full);
+
 			long output = Math.min(wanted, energy.getCapacity() - energy.getAmount());
 			if (output > 0) {
 				energy.setAmountUntracked(energy.getAmount() + output);
-				// Heat and fuel are both charged against the ENERGY produced, so neither can be knocked
-				// out of range by a core that has left its own potential far behind. Heat is one
-				// division against the potential at full depth; because both terms carry the same rods
-				// and the same adjacencies, the ratio converges as the room grows instead of diverging.
-				//
-				// A bare core makes NO heat at all. There is no shell to hold it, no gauge to show it and
-				// no coolant loop to answer it — the danger of running without a room is what it does to
-				// the world outside, not a temperature nobody could read. Fuel is still charged per EU, so
-				// a bare core is slower rather than more wasteful: a rod is an amount of energy wherever
-				// it burns, and bending that here would break the one invariant the fuel cycle rests on.
-				long heatFull = bare ? 0 : ReactorCore.heatProduced(liveRods, pairs,
-						Config.reactorHeatPerRod, Config.reactorHeatNeighbourBonusPercent,
-						ReactorCore.FULL_DEPTH);
-				produced = ReactorCore.heatForOutput(heatFull, output, full);
 				burnFuel(columns, output);
 				lastOutput = (int) Math.min(Short.MAX_VALUE, output);
 				idleReason = ReactorIdleReason.RUNNING.ordinal();
@@ -405,9 +497,9 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 					awardMilestone(level, ReactorMilestone.POWER);
 				}
 			} else {
-				// Cleared, not left over. This branch means the throttle divided the output away to
-				// nothing, and a stale figure here would both mis-report on the panel and — since MOD-472
-				// — keep the room's drone alive on a core producing zero.
+				// Cleared, not left over. A stale figure here would both mis-report on the panel and —
+				// since MOD-472 — keep the room's drone alive on a core banking nothing. The reactor is
+				// still burning, and the temperature above says so; this row is about the sale.
 				lastOutput = 0;
 				idleReason = ReactorIdleReason.BUFFER_FULL.ordinal();
 			}
@@ -432,6 +524,7 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 			heat = settled;
 			setChanged();
 		}
+		settleInstability(liveRods);
 		if (!bare) {
 			settleStacks(columns);
 		}
@@ -444,6 +537,164 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		updateVoice(level, pos, bare ? List.of() : columns);
 		warnOnOverheat(level, pos);
 		runHazards(level, pos);
+		if (level instanceof ServerLevel serverLevel) {
+			runCountdown(serverLevel, pos);
+		}
+	}
+
+	/**
+	 * One tick of the bare core's own scale (MOD-471).
+	 *
+	 * <p><b>Why a bare reactor needs a scale at all, when it deliberately makes no heat.</b> Players
+	 * discovered that a bare core is a lava generator — it melts the scenery, the scenery is cobblestone,
+	 * and a pump underneath turns that into an endless supply. That invention stays, and it stays free:
+	 * the melt costs no fuel, because the hazard hangs on the reaction rather than on the sale. But a
+	 * mechanic with no ceiling is not a choice, and until now a bare pile was strictly safer than the
+	 * sealed room that was supposed to be the safe option.
+	 *
+	 * <p>So the danger of a bare core is measured by the one thing it actually has: the size of the pile.
+	 * Gain is linear in the rods, decay is a share of the current value — the same curve the room's heat
+	 * runs on, and with it the same property. A small cluster has an equilibrium below the ceiling and
+	 * sits there for ever; a large one has an equilibrium above it and therefore runs away. On the
+	 * shipped numbers that boundary falls between three racks and four: the farm has a limit the player
+	 * reads off the panel instead of out of a config file.
+	 *
+	 * <p>Driven by {@link #reacting} — the reaction, not the sale. A bare core with a full buffer is
+	 * still a bare core, exactly as MOD-469's playtest concluded for the melting.
+	 */
+	private void settleInstability(int liveRods) {
+		long gain = bare && reacting
+				? ReactorCore.instabilityGain(liveRods, Config.reactorBareInstabilityPerRod)
+				// Scrammed, or no longer bare: it only falls. A pile the player switched off has to become
+				// safe again, or the scram is not a scram.
+				: 0L;
+		long next = ReactorCore.settleHeat(instability, gain,
+				ReactorCore.instabilityDecay(instability, Config.reactorBareSettlePermille),
+				Config.reactorBareInstabilityCapacity);
+		if (next != instability) {
+			instability = next;
+		}
+	}
+
+	/**
+	 * The scale this reactor is judged on, as a percentage — heat in a room, instability in the open.
+	 *
+	 * <p>One accessor so the countdown, the panel and the tests cannot disagree about which scale is
+	 * live. A controller is either running a room or running bare; it is never both.
+	 */
+	private int criticalPercent() {
+		return bare
+				? ReactorCore.heatPercent(instability, Config.reactorBareInstabilityCapacity)
+				: ReactorCore.heatPercent(heat, Config.reactorHeatCapacity);
+	}
+
+	/**
+	 * The countdown between a pinned gauge and the explosion (MOD-471).
+	 *
+	 * <p><b>Armed by the scale and disarmed by the scale, which is what makes every cancellation work
+	 * without any of them being written down.</b> Water, the scram lever, a hole punched in the wall,
+	 * even unplugging the machines that were drawing the power — all four end the same way, with the
+	 * gauge coming off a hundred percent, and that one condition covers them. There is no point of no
+	 * return: the reactor can be saved on the last tick.
+	 *
+	 * <p>The duration is rolled once, when the countdown arms, somewhere between two and three minutes.
+	 * A fixed delay would be memorised within a week and stop being read.
+	 */
+	private void runCountdown(ServerLevel level, BlockPos pos) {
+		boolean critical = ReactorCore.isCritical(criticalPercent());
+		ReactorCore.BlastTimer before =
+				new ReactorCore.BlastTimer(blastCountdown, blastCountdownTotal, blastBelowTicks);
+		// Rolled every tick and used only on the tick that arms — cheaper than branching, and it keeps
+		// the whole transition inside one Minecraft-free function that a unit test can drive.
+		int roll = ReactorCore.blastCountdown(Config.reactorBlastCountdownMinTicks,
+				Config.reactorBlastCountdownMaxTicks, level.getRandom().nextInt(Integer.MAX_VALUE));
+		ReactorCore.BlastTimer after = ReactorCore.tickBlast(before, critical,
+				Config.reactorBlastReleaseTicks, roll);
+		if (!after.equals(before)) {
+			blastCountdown = after.remaining();
+			blastCountdownTotal = after.total();
+			blastBelowTicks = after.belowTicks();
+			setChanged();
+		}
+		if (after.armed()) {
+			if (critical) {
+				ReactorBlast.telegraphCountdown(level, pos, after.remaining(), after.total());
+			}
+			return;
+		}
+		// Not armed any more. Either it was never armed, or the core has been held under the line long
+		// enough to call the accident off — in both cases there is nothing to do. Only a timer that ran
+		// out WHILE the core was still critical detonates.
+		if (!before.armed() || !critical) {
+			return;
+		}
+		// The switch is read HERE rather than at the top, so an operator who turned the damage off still
+		// gets the whole performance — siren, particles, a panel counting down — and simply no crater. A
+		// hazard that goes completely silent teaches nobody anything; MOD-469's rule, kept.
+		if (Config.reactorBlastEnabled) {
+			explode(level, pos);
+		}
+	}
+
+	/**
+	 * The accident itself.
+	 *
+	 * <p><b>The room is taken apart BEFORE the blast, and that order is load-bearing.</b>
+	 * {@link #unformOnRemoval} only ever runs from the player's own mining hook, because touching the
+	 * world from a block entity's removal path deadlocks the server on chunk unload — something this
+	 * repository has already paid for once. A controller destroyed by an explosion therefore never runs
+	 * it, and the racks it painted with the drone flag would hum for the rest of the world's life with
+	 * nothing left able to switch them off. Here we ARE the explosion, so it can be done properly: while
+	 * the controller is still standing.
+	 */
+	private void explode(ServerLevel level, BlockPos pos) {
+		unformOnRemoval(level);
+		BlockPos epicentre = blastEpicentre(pos);
+		float power = ReactorCore.blastPower(rods, Config.reactorBlastBasePower,
+				Config.reactorBlastPowerPerTenRods, Config.reactorBlastMaxPower);
+		Set<BlockPos> before = ReactorBlast.snapshotSolids(level, epicentre, Config.reactorFalloutRadius);
+		ReactorBlast.detonate(level, Vec3.atCenterOf(epicentre), power, Config.reactorBlastFire);
+		// Everything after this is keyed to what the blast ACTUALLY destroyed, never to a radius. If a
+		// land-claim mod refused the explosion, this list comes back empty and there is no aftermath at
+		// all — the protection is honoured without this class knowing such mods exist.
+		List<BlockPos> destroyed = ReactorBlast.destroyedSince(level, before);
+		ReactorBlast.pourLava(level, destroyed, epicentre, Config.reactorBlastLavaCells);
+		ReactorBlast.scatterFallout(level, destroyed, epicentre, Config.reactorFalloutRadius);
+		// The controller goes LAST, and by hand rather than by hoping the blast reaches it.
+		//
+		// It is built of the same shielding alloy as the wall, so at the powers a small core produces
+		// only a lucky ray breaks it — the first run of the gametest found the controller standing in a
+		// gutted room. That is not a cosmetic loose end: the core it is still driving is still at a
+		// hundred percent, so it would re-arm the countdown and explode again, and again, for ever. A
+		// reactor gets to have exactly one accident.
+		level.destroyBlock(pos, false);
+	}
+
+	/**
+	 * Where the blast is centred.
+	 *
+	 * <p>The middle of the sealed interior for a room — the point furthest from every wall, so the shell
+	 * gets its fair chance to contain the thing it was built to contain, and a fixed point a gametest can
+	 * assert. For a bare core, the middle of the pile it was driving: there is no shell to be fair to,
+	 * and the fuel is what exploded.
+	 */
+	private BlockPos blastEpicentre(BlockPos pos) {
+		if (!bare && boxMaxX != Integer.MIN_VALUE) {
+			return new BlockPos((boxMinX + boxMaxX) / 2, (boxMinY + boxMaxY) / 2, (boxMinZ + boxMaxZ) / 2);
+		}
+		if (!bareRacks.isEmpty()) {
+			long x = 0;
+			long y = 0;
+			long z = 0;
+			for (BlockPos at : bareRacks) {
+				x += at.getX();
+				y += at.getY();
+				z += at.getZ();
+			}
+			int count = bareRacks.size();
+			return new BlockPos((int) (x / count), (int) (y / count), (int) (z / count));
+		}
+		return pos;
 	}
 
 	/**
@@ -515,6 +766,7 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 			return;
 		}
 		ReactorMeltdown.telegraph(serverLevel, victim);
+		meltsScheduled++;
 		meltTarget = victim;
 		meltCountdown = Math.max(0, Config.reactorMeltWarnTicks);
 	}
@@ -1227,6 +1479,8 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		output.putLong("Heat", heat);
 		output.putBoolean("OverheatWarned", overheatWarned);
 		output.putInt("Depth", depthPermille);
+		output.putInt("BlastCountdown", blastCountdown);
+		output.putInt("BlastCountdownTotal", blastCountdownTotal);
 	}
 
 	@Override
@@ -1241,6 +1495,8 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		heat = input.getLongOr("Heat", 0L);
 		overheatWarned = input.getBooleanOr("OverheatWarned", false);
 		depthPermille = input.getIntOr("Depth", ReactorCore.FULL_DEPTH);
+		blastCountdown = input.getIntOr("BlastCountdown", 0);
+		blastCountdownTotal = input.getIntOr("BlastCountdownTotal", 0);
 	}
 
 	/**
@@ -1308,6 +1564,10 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 						: (int) Math.min(100, energy.getAmount() * 100 / energy.getCapacity());
 				case DATA_ENERGY_HUNDREDS -> (int) Math.min(Short.MAX_VALUE, energy.getAmount() / 100);
 				case DATA_MELTDOWN -> meltingDown ? 1 : 0;
+				case DATA_BLAST_PERCENT -> blastCountdownTotal <= 0 || blastCountdown <= 0
+						? 0 : Math.max(1, blastCountdown * 100 / blastCountdownTotal);
+				case DATA_INSTABILITY -> bare
+						? ReactorCore.heatPercent(instability, Config.reactorBareInstabilityCapacity) : 0;
 				default -> ReactorControllerBlockEntity.this.dataAccess.get(index);
 			};
 		}
@@ -1432,6 +1692,28 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 	 * reactor", and a rack is only ever inside the room. An empty box answers no to everything, which is
 	 * the right answer for a controller that has never sealed anything.
 	 */
+	// ── MOD-471 ──
+
+	/** Blocks this reactor has marked for melting since it was loaded — "is the hazard running". */
+	public int getMeltsScheduled() {
+		return meltsScheduled;
+	}
+
+	/** Ticks left before this core blows up; zero when no accident is under way. */
+	public int getBlastCountdown() {
+		return blastCountdown;
+	}
+
+	/** What the countdown started from — the duration this particular accident rolled. */
+	public int getBlastCountdownTotal() {
+		return blastCountdownTotal;
+	}
+
+	/** A bare core's instability on its own 0…capacity scale. Always zero for a sealed room. */
+	public long getInstability() {
+		return instability;
+	}
+
 	public boolean sealedBoxContains(BlockPos at) {
 		if (boxMaxX == Integer.MIN_VALUE) {
 			return false;

@@ -959,5 +959,9 @@
   "tooltip.alaindustrial.tier_hv": "Tier: HV",
   "tooltip.alaindustrial.tier_lv": "Tier: LV",
   "tooltip.alaindustrial.tier_mv": "Tier: MV",
-  "tooltip.alaindustrial.wind_gauge.usage": "Shift + right-click: measure the wind here"
+  "tooltip.alaindustrial.wind_gauge.usage": "Shift + right-click: measure the wind here",
+  "gui.alaindustrial.reactor_controller.status.blast": "MELTDOWN IMMINENT",
+  "gui.alaindustrial.reactor_controller.label.instability": "Instability",
+  "gui.alaindustrial.reactor_controller.percent": "%s%%",
+  "block.alaindustrial.irradiated_soil": "Irradiated Soil"
 }

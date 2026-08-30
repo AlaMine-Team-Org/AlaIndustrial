@@ -254,6 +254,11 @@ public final class ModContent {
 	// torch via overrideLootTable/overrideDescription, exactly as vanilla WALL_TORCH mirrors TORCH.
 	public static Supplier<Block> ENRICHED_URANIUM_TORCH = unbound("ENRICHED_URANIUM_TORCH");
 	public static Supplier<Block> ENRICHED_URANIUM_WALL_TORCH = unbound("ENRICHED_URANIUM_WALL_TORCH");
+	// MOD-471: ground poisoned by a reactor accident. It shipped without a block item on the reasoning
+	// that an accident leaves it and nobody places it; a playtest overturned that — a block you can
+	// neither pick up nor mine is one a player can only endure. Ordinary block, ordinary item, and it
+	// goes on irradiating from the bag.
+	public static Supplier<Block> IRRADIATED_SOIL = unbound("IRRADIATED_SOIL");
 	// Oil (MOD-238): the in-world liquid block. No block item — a liquid block is never held.
 	public static Supplier<Block> OIL_BLOCK = unbound("OIL_BLOCK");
 	// Distillation fractions (MOD-251): the in-world liquid blocks. No block items either.
@@ -609,6 +614,9 @@ public final class ModContent {
 
 	// MOD-468, stage 1 — block items for the reactor shell.
 	public static Supplier<BlockItem> REACTOR_CASING_ITEM = unbound("REACTOR_CASING_ITEM");
+	// MOD-471: the fallout block is carried like any other. It keeps irradiating from the bag — the
+	// item is in #radioactive_medium, a step under raw uranium.
+	public static Supplier<BlockItem> IRRADIATED_SOIL_ITEM = unbound("IRRADIATED_SOIL_ITEM");
 	public static Supplier<BlockItem> REACTOR_GLASS_ITEM = unbound("REACTOR_GLASS_ITEM");
 	public static Supplier<BlockItem> REACTOR_PORT_ITEM = unbound("REACTOR_PORT_ITEM");
 	public static Supplier<BlockItem> REACTOR_DOOR_ITEM = unbound("REACTOR_DOOR_ITEM");

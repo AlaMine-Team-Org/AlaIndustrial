@@ -959,5 +959,9 @@
   "gui.alaindustrial.creative_energy_source.preset.hv": "HV",
   "gui.alaindustrial.creative_energy_source.output": "আউটপুট: %s EU/t",
   "gui.alaindustrial.creative_energy_source.output.tip": "আউটপুট সেট করতে টানুন",
-  "gui.alaindustrial.creative_energy_source.cable_warning": "প্রতি রিসিভারে সর্বোচ্চ %s EU/t"
+  "gui.alaindustrial.creative_energy_source.cable_warning": "প্রতি রিসিভারে সর্বোচ্চ %s EU/t",
+  "gui.alaindustrial.reactor_controller.status.blast": "চুল্লি বিস্ফোরণ আসন্ন",
+  "gui.alaindustrial.reactor_controller.label.instability": "অস্থিতিশীলতা",
+  "gui.alaindustrial.reactor_controller.percent": "%s%%",
+  "block.alaindustrial.irradiated_soil": "তেজস্ক্রিয় মাটি"
 }

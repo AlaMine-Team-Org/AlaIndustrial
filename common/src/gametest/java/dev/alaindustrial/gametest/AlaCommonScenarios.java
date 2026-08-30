@@ -179,6 +179,11 @@ public final class AlaCommonScenarios {
 			if (id.getPath().endsWith("torch")) {
 				continue;
 			}
+			// Irradiated Soil (MOD-471) is dirt that has been poisoned: shovelled, not mined, and gated by
+			// no tool at all — exactly like the dirt it decays back into.
+			if (id.getPath().equals("irradiated_soil")) {
+				continue;
+			}
 			Block block = BuiltInRegistries.BLOCK.getValue(id);
 			// Liquid blocks (MOD-238 oil): fluids are never mined — not requiresCorrectToolForDrops,
 			// not in mineable/pickaxe, no drops at all (vanilla water/lava behave identically), so

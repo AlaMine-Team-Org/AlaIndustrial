@@ -72,6 +72,16 @@ public final class ModTags {
 		 */
 		public static final TagKey<Block> MELTPROOF = key("meltproof");
 
+		/**
+		 * Ground a reactor's fallout may settle on (MOD-471).
+		 *
+		 * <p>Soil, sand, gravel, stone — the surfaces a crater actually exposes. Kept as a tag rather
+		 * than a hardcoded family for the same reason {@link #MELTPROOF} is: a modpack that adds its own
+		 * dirt should be able to say so, and a server that wants fallout to stop eating its terrain can
+		 * empty the tag instead of turning the whole feature off.
+		 */
+		public static final TagKey<Block> FALLOUT_REPLACEABLE = key("fallout_replaceable");
+
 		private static TagKey<Block> key(String path) {
 			return TagKey.create(Registries.BLOCK, Industrialization.id(path));
 		}

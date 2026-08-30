@@ -37,6 +37,7 @@ import dev.alaindustrial.block.MobRepellerBlock;
 import dev.alaindustrial.block.MobRepellerHvBlock;
 import dev.alaindustrial.block.MobRepellerMvBlock;
 import dev.alaindustrial.block.IncubatorDomeBlock;
+import dev.alaindustrial.block.IrradiatedSoilBlock;
 import dev.alaindustrial.block.IronChestBlock;
 import dev.alaindustrial.block.IronFurnaceBlock;
 import dev.alaindustrial.block.ItemPipeBlock;
@@ -560,6 +561,11 @@ public final class ContentManifest {
 	/** The room's brain: scans the shell, reports what is wrong and where. */
 	public static final BlockDef<ReactorControllerBlock> REACTOR_CONTROLLER =
 			block("reactor_controller", ReactorControllerBlock::new, s -> ModContent.REACTOR_CONTROLLER = s);
+	/**
+	 * MOD-471 — ground a reactor accident poisoned. No block item: it is left behind, never placed.
+	 */
+	public static final BlockDef<IrradiatedSoilBlock> IRRADIATED_SOIL =
+			block("irradiated_soil", IrradiatedSoilBlock::new, s -> ModContent.IRRADIATED_SOIL = s);
 	public static final BlockDef<ElectricHeaterBlock> ELECTRIC_HEATER =
 			block("electric_heater", ElectricHeaterBlock::new, s -> ModContent.ELECTRIC_HEATER = s);
 	public static final BlockDef<ChargePadBlock> CHARGE_PAD =
@@ -729,7 +735,7 @@ public final class ContentManifest {
 			LIGHTNING_ROD_GENERATOR,
 			// MOD-468 — the reactor room's shell, appended as one group.
 			REACTOR_CASING, REACTOR_GLASS, REACTOR_PORT, REACTOR_DOOR, REACTOR_CONTROLLER,
-			REACTOR_LAMP, REACTOR_BUTTON, FUEL_ROD_ASSEMBLY, REACTOR_OUTLET,
+			REACTOR_LAMP, REACTOR_BUTTON, FUEL_ROD_ASSEMBLY, REACTOR_OUTLET, IRRADIATED_SOIL,
 			// Stage 3 — the exhaust. Outside the shell, so it is not part of the group above.
 			STEAM_NOZZLE,
 			// MOD-479 — appended at the tail like every block since MOD-403; replay order is load-bearing.
@@ -854,6 +860,11 @@ public final class ContentManifest {
 			Map.entry("reactor_door", machine(p -> p.strength(5.0f, 30.0f).sound(SoundType.METAL)
 					.noOcclusion().pushReaction(PushReaction.DESTROY))),
 			Map.entry("reactor_controller", machine(p -> p.strength(5.0f, 30.0f).sound(SoundType.METAL))),
+			// MOD-471 — fallout. Soft as the dirt it replaces and no tool requirement: the scar is meant
+			// to be shovelled away by a player who would rather not wait for it to fade. randomTicks()
+			// is load-bearing — without it the decay in IrradiatedSoilBlock would never run and the
+			// contamination would be permanent.
+			Map.entry("irradiated_soil", p -> p.strength(0.6f).sound(SoundType.GRAVEL).randomTicks()),
 			// The lamp glows only while its shell passes the scan — light is the room's "done" signal.
 			Map.entry("reactor_lamp", machine(p -> p.strength(5.0f, 30.0f).sound(SoundType.METAL)
 					.lightLevel(ReactorLampBlock::lightLevel))),

@@ -959,5 +959,9 @@
   "gui.alaindustrial.creative_energy_source.preset.hv": "HV",
   "gui.alaindustrial.creative_energy_source.output": "Salida: %s EU/t",
   "gui.alaindustrial.creative_energy_source.output.tip": "Arrastra para ajustar la salida",
-  "gui.alaindustrial.creative_energy_source.cable_warning": "Máx. %s EU/t por receptor"
+  "gui.alaindustrial.creative_energy_source.cable_warning": "Máx. %s EU/t por receptor",
+  "gui.alaindustrial.reactor_controller.status.blast": "FUSIÓN INMINENTE",
+  "gui.alaindustrial.reactor_controller.label.instability": "Inestabilidad",
+  "gui.alaindustrial.reactor_controller.percent": "%s%%",
+  "block.alaindustrial.irradiated_soil": "Tierra irradiada"
 }

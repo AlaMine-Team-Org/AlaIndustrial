@@ -66,6 +66,42 @@ public class ReactorGameTest {
 		ReactorScenarios.aShieldedLeverInsideTheRoomSealsAndScrams(helper);
 	}
 
+	// MOD-471 — the accident at the top of the scale, and the lava farm it now has a limit for.
+	@GameTest(maxTicks = 400)
+	public void aCoreAtFullScaleCountsDownAndBlowsItsRoomApart(GameTestHelper helper) {
+		ReactorScenarios.aCoreAtFullScaleCountsDownAndBlowsItsRoomApart(helper);
+	}
+
+	@GameTest(maxTicks = 400)
+	public void aRedstoneClockDoesNotSaveTheReactor(GameTestHelper helper) {
+		ReactorScenarios.aRedstoneClockDoesNotSaveTheReactor(helper);
+	}
+
+	@GameTest(maxTicks = 400)
+	public void aFullBufferStillCooksTheCore(GameTestHelper helper) {
+		ReactorScenarios.aFullBufferStillCooksTheCore(helper);
+	}
+
+	@GameTest(maxTicks = 400)
+	public void aBareClusterSettlesUntilItIsTooBig(GameTestHelper helper) {
+		ReactorScenarios.aBareClusterSettlesUntilItIsTooBig(helper);
+	}
+
+	@GameTest(maxTicks = 400)
+	public void aLavaFarmBurnsNoFuel(GameTestHelper helper) {
+		ReactorScenarios.aLavaFarmBurnsNoFuel(helper);
+	}
+
+	@GameTest(maxTicks = 400)
+	public void aBlockedExplosionLeavesNoAftermath(GameTestHelper helper) {
+		ReactorScenarios.aBlockedExplosionLeavesNoAftermath(helper);
+	}
+
+	@GameTest(maxTicks = 400)
+	public void aBrokenRackGivesItsRodsBack(GameTestHelper helper) {
+		ReactorScenarios.aBrokenRackGivesItsRodsBack(helper);
+	}
+
 	@GameTest(maxTicks = 400)
 	public void reactorMilestonesReachTheControllersOwner(GameTestHelper helper) {
 		ReactorScenarios.reactorMilestonesReachTheControllersOwner(helper);

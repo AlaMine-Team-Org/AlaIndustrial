@@ -11,7 +11,6 @@ import org.jspecify.annotations.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.Containers;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -345,20 +344,22 @@ public class FuelRodAssemblyBlock extends BaseEntityBlock implements MachineHumP
 	 * Gives everything racked back when the column is destroyed — fuelled rods with their remaining
 	 * charge, and spent casings too.
 	 *
-	 * <p>{@code affectNeighborsAfterRemoval} rather than a player-only hook, because a creeper taking
-	 * out the rack is exactly when losing the fuel would hurt most. The earlier version handed back only
-	 * whole rods and destroyed the one mid-burn, which it had to: there was nowhere to record how much
-	 * of it was left. Now the wear lives on the item, so nothing has to be thrown away.
+	 * <p><b>This lived in {@code affectNeighborsAfterRemoval} from the day it was written, and it never
+	 * worked.</b> In 26.2 {@code LevelChunk.setBlockState} detaches the block entity BEFORE calling that
+	 * hook, so {@code level.getBlockEntity(pos)} inside it came back null and every rod a player had
+	 * racked was destroyed silently — by a pickaxe, by a creeper, by a piston, by anything. Nothing
+	 * caught it because the loot table returns the rack itself, so a break always looked like it had
+	 * worked, and no scenario had ever broken a LOADED rack. MOD-471 needed the uranium to survive into
+	 * the crater, wrote the test that breaks one, and the test went red on the first run.
+	 *
+	 * <p>{@code preRemoveSideEffects} is the hook that runs while the block entity is still attached,
+	 * and it fires on every removal path rather than only the player's — which is exactly the property
+	 * the original comment wanted. The incubator next door already documents the same ordering; this is
+	 * the same fix applied where it should have been in the first place.
 	 */
 	@Override
 	protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos,
 			boolean movedByPiston) {
-		if (level.getBlockEntity(pos) instanceof FuelRodAssemblyBlockEntity assembly) {
-			for (ItemStack stack : assembly.contents()) {
-				Containers.dropItemStack(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-						stack);
-			}
-		}
 		super.affectNeighborsAfterRemoval(state, level, pos, movedByPiston);
 	}
 

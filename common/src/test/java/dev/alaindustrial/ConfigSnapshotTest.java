@@ -358,6 +358,21 @@ class ConfigSnapshotTest {
 		SENTINELS.put("reactorMeltdownStartPercent", 91);
 		SENTINELS.put("reactorMeltdownIntervalTicks", 77);
 		SENTINELS.put("reactorMeltdownHeatRelief", 517);
+		// MOD-471 — the accident at the top of the scale.
+		SENTINELS.put("reactorBlastCountdownMinTicks", 1811);
+		SENTINELS.put("reactorBlastCountdownMaxTicks", 4211);
+		SENTINELS.put("reactorBlastReleaseTicks", 137);
+		SENTINELS.put("reactorBlastBasePower", 13);
+		SENTINELS.put("reactorBlastPowerPerTenRods", 7);
+		SENTINELS.put("reactorBlastMaxPower", 37);
+		SENTINELS.put("reactorBlastLavaCells", 11);
+		SENTINELS.put("reactorBareInstabilityPerRod", 13);
+		SENTINELS.put("reactorBareSettlePermille", 17);
+		SENTINELS.put("reactorBareInstabilityCapacity", 7717);
+		SENTINELS.put("reactorFalloutRadius", 13);
+		SENTINELS.put("reactorFalloutDosePerBlock", 41);
+		SENTINELS.put("reactorFalloutMaxBlocksCounted", 19);
+		SENTINELS.put("reactorFalloutDecayChancePercent", 43);
 		SENTINELS.put("thermalCentrifugeIdleEuPerTick", 344);
 		// Radiation (MOD-470). Every value differs from the shipped default, is non-zero and clears the
 		// field's own minimum, or the load would rewrite it and the sentinel would prove nothing.
@@ -503,7 +518,8 @@ class ConfigSnapshotTest {
 	 */
 	private static final Set<String> BOOLEAN_TUNABLES =
 			Set.of("bonusChestEnabled", "oilBurns", "bareCableShockEnabled", "radiationEnabled",
-					"radiationMobsEnabled", "reactorMeltdownMeltsBlocks");
+					"radiationMobsEnabled", "reactorMeltdownMeltsBlocks",
+					"reactorBlastEnabled", "reactorBlastFire", "reactorFalloutEnabled");
 
 	/**
 	 * Every key in {@link Config}'s own {@code FIELDS} registry is covered by this suite — either by a

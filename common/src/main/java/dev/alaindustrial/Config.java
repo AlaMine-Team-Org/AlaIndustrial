@@ -1131,6 +1131,115 @@ public final class Config {
 	 */
 	public static int reactorMeltdownHeatRelief = 400;
 
+	// ── MOD-471: the accident at the top of the scale ─────────────────────────────────────────────
+	/**
+	 * Master switch for the accident: the countdown, the blast and everything it leaves behind.
+	 *
+	 * <p>Off, a core pinned at the top of its scale still sounds, still says so on the panel and still
+	 * counts down — and then nothing happens. Same bargain as {@link #reactorMeltdownMeltsBlocks}: the
+	 * switch protects the world, not the operator's right to know what their reactor is doing.
+	 */
+	public static boolean reactorBlastEnabled = true;
+	/**
+	 * Shortest countdown between "the gauge is pinned" and the explosion, in ticks.
+	 *
+	 * <p><b>A range, not a number, and the spread is the feature.</b> A fixed delay becomes a memorised
+	 * norm — players learn it once and stop reading the panel. Rolled fresh per accident, the alarm is a
+	 * real question every time. Two minutes is the floor because the warning line at
+	 * {@link #reactorHeatWarnPercent} is worth less than three seconds on a runaway core: the countdown
+	 * is the only warning that can actually be acted on.
+	 */
+	public static int reactorBlastCountdownMinTicks = 2400;
+	/** Longest countdown, in ticks. Three minutes — time to run back from the far end of a base. */
+	public static int reactorBlastCountdownMaxTicks = 3600;
+	/**
+	 * How long the core must stay UNDER a hundred percent before an armed countdown is called off.
+	 *
+	 * <p><b>This is what makes cancelling cost something.</b> Without it the countdown cleared on the
+	 * first tick the gauge left the top — and because heat is clamped at the top, cutting the redstone
+	 * for a single tick was enough. A clock with one tick off in twenty ran the reactor at ninety-five
+	 * percent duty and never exploded; a player found it within an hour of the feature shipping.
+	 *
+	 * <p>Five seconds is short enough that every honest fix clears it comfortably — water, the scram
+	 * lever and a breached wall all hold the core down for far longer — and long enough that no duty
+	 * cycle capable of keeping the gauge pinned can ever finish the window.
+	 */
+	public static int reactorBlastReleaseTicks = 100;
+	/**
+	 * Explosion power of a core carrying no rods at all.
+	 *
+	 * <p>Under the ~8 a ray needs to break a reactor wall, on purpose: the smallest possible accident
+	 * wrecks the room's contents and leaves the shell standing.
+	 */
+	public static int reactorBlastBasePower = 6;
+	/**
+	 * Power added per TEN rods — integer arithmetic for a fractional slope.
+	 *
+	 * <p>At the shipped 4 (0.4 per rod) a three-column core reaches 10.8, which a sealed room contains
+	 * completely; twelve columns reach 25.2, which is where the containment starts to leak.
+	 */
+	public static int reactorBlastPowerPerTenRods = 4;
+	/**
+	 * Hard ceiling on explosion power.
+	 *
+	 * <p>For scale: TNT is 4, a charged creeper 6. A reactor shell absorbs 28–37 power per cell of
+	 * wall, so everything up to about 24 is held by the room entirely and 45 throws debris twenty-odd
+	 * blocks past it. Raising this is not free — the blast traces 1352 rays that force-load, and on an
+	 * unexplored border generate, every chunk they cross.
+	 */
+	public static int reactorBlastMaxPower = 45;
+	/** Whether the blast sets fire to what it touches, like TNT lit in the Nether does. */
+	public static boolean reactorBlastFire = true;
+	/**
+	 * Lava sources poured into the crater, at most.
+	 *
+	 * <p>Placed only in cells the explosion itself destroyed — see {@code ReactorBlast}. That rule is
+	 * what keeps the aftermath from outrunning a land-claim mod that blocked the blast.
+	 */
+	public static int reactorBlastLavaCells = 6;
+	/**
+	 * Instability a bare reactor gains per rod per tick (MOD-471).
+	 *
+	 * <p><b>This is the lava farm's speed limit, expressed as a rack count.</b> Against
+	 * {@link #reactorBareSettlePermille} it gives an equilibrium of
+	 * {@code rods x perRod x 1000 / permille}: on the shipped pair one rack settles at 30 % of the
+	 * scale, two at 60, three at 90 — all stable for ever — and four have no equilibrium below the
+	 * ceiling at all, so they run away and blow up. Players farm lava on three racks and lose the farm
+	 * on the fourth, which is a limit they can see on the panel instead of reading in a wiki.
+	 */
+	public static int reactorBareInstabilityPerRod = 6;
+	/** Share of current instability a bare core sheds per tick, per mille. The decay half of the curve. */
+	public static int reactorBareSettlePermille = 8;
+	/** Top of the bare reactor's instability scale. The same shape as the room's heat scale. */
+	public static int reactorBareInstabilityCapacity = 10000;
+	/** Whether an explosion leaves irradiated ground behind. */
+	public static boolean reactorFalloutEnabled = true;
+	/** Blocks around the epicentre within which fallout may settle, on top of what the blast destroyed. */
+	public static int reactorFalloutRadius = 8;
+	/**
+	 * Dose one fallout block delivers per radiation sweep, before distance and shielding.
+	 *
+	 * <p>Must clear {@link #radiationTickInterval} (20) or it does literally nothing: the dose is the
+	 * remaining duration of an effect vanilla ticks down every tick, so anything at or under the
+	 * interval is cancelled out by its own decay before the next sweep.
+	 */
+	public static int reactorFalloutDosePerBlock = 30;
+	/**
+	 * How many fallout blocks one player ever counts, however large the scar.
+	 *
+	 * <p>Without it strength is linear in the block count and a crater is instantly lethal from its far
+	 * edge — the same trap {@link #radiationContainerMaxItems} exists to close.
+	 */
+	public static int reactorFalloutMaxBlocksCounted = 8;
+	/**
+	 * Percent chance per random tick that a fallout block fades one step. Water on top doubles it.
+	 *
+	 * <p>Four steps at this rate is on the order of a Minecraft day of real decay for an untended
+	 * crater, and a few minutes for one somebody bothered to flood. Contamination that never lifts
+	 * would be a permanent hole in a player's world; contamination that lifts instantly is scenery.
+	 */
+	public static int reactorFalloutDecayChancePercent = 20;
+
 	// ── MOD-470: radiation, dose and the shielding suit ───────────────────────────────────────────
 	/**
 	 * Master switch. Off, nothing irradiates anything — the "never break a player's world" rule
@@ -2498,6 +2607,40 @@ public final class Config {
 				() -> reactorMeltdownIntervalTicks, v -> reactorMeltdownIntervalTicks = v, 1),
 			new IntField("reactorMeltdownHeatRelief", Section.MACHINES, "Heat carried away by one melted block of the room's contents; what makes a meltdown self-limiting.",
 				() -> reactorMeltdownHeatRelief, v -> reactorMeltdownHeatRelief = v, 0),
+			new BoolField("reactorBlastEnabled", Section.MACHINES, "When true, a core pinned at the top of its scale counts down and explodes. false keeps the countdown, the siren and the panel and changes no block.",
+				() -> reactorBlastEnabled, v -> reactorBlastEnabled = v),
+			new IntField("reactorBlastCountdownMinTicks", Section.MACHINES, "Shortest countdown between a pinned gauge and the explosion, in ticks; rolled fresh per accident.",
+				() -> reactorBlastCountdownMinTicks, v -> reactorBlastCountdownMinTicks = v, 1),
+			new IntField("reactorBlastCountdownMaxTicks", Section.MACHINES, "Longest countdown between a pinned gauge and the explosion, in ticks.",
+				() -> reactorBlastCountdownMaxTicks, v -> reactorBlastCountdownMaxTicks = v, 1),
+			new IntField("reactorBlastReleaseTicks", Section.MACHINES, "How long the core must stay under a hundred percent before an armed countdown is called off; stops a redstone clock resetting it.",
+				() -> reactorBlastReleaseTicks, v -> reactorBlastReleaseTicks = v, 1),
+			new IntField("reactorBlastBasePower", Section.MACHINES, "Explosion power of a reactor carrying no rods; below what it takes to break a reactor wall.",
+				() -> reactorBlastBasePower, v -> reactorBlastBasePower = v, 0),
+			new IntField("reactorBlastPowerPerTenRods", Section.MACHINES, "Explosion power added per ten rods burning when the countdown ran out.",
+				() -> reactorBlastPowerPerTenRods, v -> reactorBlastPowerPerTenRods = v, 0),
+			new IntField("reactorBlastMaxPower", Section.MACHINES, "Hard ceiling on explosion power; a sealed room contains everything up to about 24.",
+				() -> reactorBlastMaxPower, v -> reactorBlastMaxPower = v, 1),
+			new BoolField("reactorBlastFire", Section.MACHINES, "Whether the blast sets fire to what it touches.",
+				() -> reactorBlastFire, v -> reactorBlastFire = v),
+			new IntField("reactorBlastLavaCells", Section.MACHINES, "Lava sources poured into the crater, only into cells the explosion itself destroyed.",
+				() -> reactorBlastLavaCells, v -> reactorBlastLavaCells = v, 0),
+			new IntField("reactorBareInstabilityPerRod", Section.MACHINES, "Instability a bare reactor gains per rod per tick; against the settle rate this sets how many racks a lava farm may carry.",
+				() -> reactorBareInstabilityPerRod, v -> reactorBareInstabilityPerRod = v, 0),
+			new IntField("reactorBareSettlePermille", Section.MACHINES, "Share of current instability a bare reactor sheds per tick, per mille.",
+				() -> reactorBareSettlePermille, v -> reactorBareSettlePermille = v, 1),
+			new IntField("reactorBareInstabilityCapacity", Section.MACHINES, "Top of the bare reactor's instability scale.",
+				() -> reactorBareInstabilityCapacity, v -> reactorBareInstabilityCapacity = v, 1),
+			new BoolField("reactorFalloutEnabled", Section.MACHINES, "Whether an explosion leaves irradiated ground behind.",
+				() -> reactorFalloutEnabled, v -> reactorFalloutEnabled = v),
+			new IntField("reactorFalloutRadius", Section.MACHINES, "Blocks around the epicentre within which fallout may settle, on top of what the blast destroyed.",
+				() -> reactorFalloutRadius, v -> reactorFalloutRadius = v, 0),
+			new IntField("reactorFalloutDosePerBlock", Section.MACHINES, "Dose one fallout block delivers per radiation sweep; must exceed radiationTickInterval or its own decay cancels it.",
+				() -> reactorFalloutDosePerBlock, v -> reactorFalloutDosePerBlock = v, 0),
+			new IntField("reactorFalloutMaxBlocksCounted", Section.MACHINES, "How many fallout blocks one player ever counts, however large the scar.",
+				() -> reactorFalloutMaxBlocksCounted, v -> reactorFalloutMaxBlocksCounted = v, 0),
+			new IntField("reactorFalloutDecayChancePercent", Section.MACHINES, "Percent chance per random tick that a fallout block fades one step; water on top doubles it.",
+				() -> reactorFalloutDecayChancePercent, v -> reactorFalloutDecayChancePercent = v, 1),
 			new IntField("thermalCentrifugeIdleEuPerTick", Section.MACHINES, "EU/t a spun-up thermal centrifuge spends holding revolutions with nothing to process.",
 				() -> thermalCentrifugeIdleEuPerTick, v -> thermalCentrifugeIdleEuPerTick = v, 1),
 			new IntField("canningMachineDuration", Section.MACHINES, "Ticks the canning machine takes per ration at 1.0 speed; x machineEuPerTick 2 = 200 EU per ration.",

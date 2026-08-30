@@ -95,6 +95,9 @@ public final class ModBlocks {
 	public static final Block REACTOR_PORT = handle(ContentManifest.REACTOR_PORT);
 	public static final Block REACTOR_DOOR = handle(ContentManifest.REACTOR_DOOR);
 	public static final Block REACTOR_CONTROLLER = handle(ContentManifest.REACTOR_CONTROLLER);
+	// MOD-471 — fallout. Held here purely so the loader binds it: nothing places this block by hand,
+	// the accident leaves it behind.
+	public static final Block IRRADIATED_SOIL = handle(ContentManifest.IRRADIATED_SOIL);
 	public static final Block REACTOR_LAMP = handle(ContentManifest.REACTOR_LAMP);
 	public static final Block STEAM_NOZZLE = handle(ContentManifest.STEAM_NOZZLE);
 	public static final Block REACTOR_OUTLET = handle(ContentManifest.REACTOR_OUTLET);

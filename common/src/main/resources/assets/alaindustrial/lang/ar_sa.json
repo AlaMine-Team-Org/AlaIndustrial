@@ -959,5 +959,9 @@
   "gui.alaindustrial.creative_energy_source.preset.hv": "HV",
   "gui.alaindustrial.creative_energy_source.output": "الخرج: %s EU/t",
   "gui.alaindustrial.creative_energy_source.output.tip": "اسحب لضبط الخرج",
-  "gui.alaindustrial.creative_energy_source.cable_warning": "بحد أقصى %s EU/t لكل مستقبل"
+  "gui.alaindustrial.creative_energy_source.cable_warning": "بحد أقصى %s EU/t لكل مستقبل",
+  "gui.alaindustrial.reactor_controller.status.blast": "انصهار وشيك",
+  "gui.alaindustrial.reactor_controller.label.instability": "عدم الاستقرار",
+  "gui.alaindustrial.reactor_controller.percent": "%s%%",
+  "block.alaindustrial.irradiated_soil": "تربة مشعّة"
 }

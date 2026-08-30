@@ -959,5 +959,9 @@
   "gui.alaindustrial.creative_energy_source.preset.hv": "HV",
   "gui.alaindustrial.creative_energy_source.output": "Uitvoer: %s EU/t",
   "gui.alaindustrial.creative_energy_source.output.tip": "Sleep om de uitvoer in te stellen",
-  "gui.alaindustrial.creative_energy_source.cable_warning": "Max. %s EU/t per ontvanger"
+  "gui.alaindustrial.creative_energy_source.cable_warning": "Max. %s EU/t per ontvanger",
+  "gui.alaindustrial.reactor_controller.status.blast": "MELTDOWN DREIGT",
+  "gui.alaindustrial.reactor_controller.label.instability": "Instabiliteit",
+  "gui.alaindustrial.reactor_controller.percent": "%s%%",
+  "block.alaindustrial.irradiated_soil": "Bestraalde aarde"
 }

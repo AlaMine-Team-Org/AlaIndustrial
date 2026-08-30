@@ -959,5 +959,9 @@
   "gui.alaindustrial.creative_energy_source.preset.hv": "HV",
   "gui.alaindustrial.creative_energy_source.output": "आउटपुट: %s EU/t",
   "gui.alaindustrial.creative_energy_source.output.tip": "आउटपुट सेट करने के लिए खींचें",
-  "gui.alaindustrial.creative_energy_source.cable_warning": "प्रति रिसीवर अधिकतम %s EU/t"
+  "gui.alaindustrial.creative_energy_source.cable_warning": "प्रति रिसीवर अधिकतम %s EU/t",
+  "gui.alaindustrial.reactor_controller.status.blast": "रिएक्टर विस्फोट निकट",
+  "gui.alaindustrial.reactor_controller.label.instability": "अस्थिरता",
+  "gui.alaindustrial.reactor_controller.percent": "%s%%",
+  "block.alaindustrial.irradiated_soil": "विकिरणित मिट्टी"
 }

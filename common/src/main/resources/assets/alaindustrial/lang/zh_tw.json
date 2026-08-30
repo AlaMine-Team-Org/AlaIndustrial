@@ -959,5 +959,9 @@
   "gui.alaindustrial.creative_energy_source.preset.hv": "HV",
   "gui.alaindustrial.creative_energy_source.output": "輸出：%s EU/t",
   "gui.alaindustrial.creative_energy_source.output.tip": "拖曳以設定輸出",
-  "gui.alaindustrial.creative_energy_source.cable_warning": "每個接收方最多 %s EU/t"
+  "gui.alaindustrial.creative_energy_source.cable_warning": "每個接收方最多 %s EU/t",
+  "gui.alaindustrial.reactor_controller.status.blast": "即將熔毀",
+  "gui.alaindustrial.reactor_controller.label.instability": "不穩定度",
+  "gui.alaindustrial.reactor_controller.percent": "%s%%",
+  "block.alaindustrial.irradiated_soil": "輻射污染土"
 }

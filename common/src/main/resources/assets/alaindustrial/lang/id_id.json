@@ -959,5 +959,9 @@
   "gui.alaindustrial.creative_energy_source.preset.hv": "HV",
   "gui.alaindustrial.creative_energy_source.output": "Keluaran: %s EU/t",
   "gui.alaindustrial.creative_energy_source.output.tip": "Seret untuk mengatur keluaran",
-  "gui.alaindustrial.creative_energy_source.cable_warning": "Maks. %s EU/t per penerima"
+  "gui.alaindustrial.creative_energy_source.cable_warning": "Maks. %s EU/t per penerima",
+  "gui.alaindustrial.reactor_controller.status.blast": "MELELEH SEBENTAR LAGI",
+  "gui.alaindustrial.reactor_controller.label.instability": "Ketidakstabilan",
+  "gui.alaindustrial.reactor_controller.percent": "%s%%",
+  "block.alaindustrial.irradiated_soil": "Tanah Teradiasi"
 }

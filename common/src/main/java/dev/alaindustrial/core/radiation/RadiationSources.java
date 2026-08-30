@@ -1,6 +1,7 @@
 package dev.alaindustrial.core.radiation;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.block.IrradiatedSoilBlock;
 import dev.alaindustrial.block.entity.AbstractChestBlockEntity;
 import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
 import dev.alaindustrial.block.entity.ShieldingChestBlockEntity;
@@ -13,6 +14,7 @@ import net.minecraft.core.SectionPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -25,7 +27,9 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.entity.BarrelBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -67,6 +71,7 @@ public final class RadiationSources {
 		List<Source> sources = new ArrayList<>();
 		collectRods(level, target.position(), radius, sources);
 		collectGround(level, target.position(), radius, sources);
+		collectFallout(level, target.position(), radius, sources);
 		collectContainers(level, target.position(), radius, sources);
 		return doseFrom(level, target, sources, radius);
 	}
@@ -128,6 +133,94 @@ public final class RadiationSources {
 			}
 		}
 	}
+
+	/**
+	 * Ground poisoned by a reactor accident (MOD-471).
+	 *
+	 * <p><b>The only BLOCK source in the model, and the reason it can afford to be.</b> Everything else
+	 * here is a block entity or an item, both of which a chunk already indexes; ordinary blocks are not
+	 * indexed at all, and sweeping the (2r+1)³ box for them is exactly the cost this class was written
+	 * to avoid. {@link LevelChunkSection#maybeHas} answers "could this 16³ section contain one" straight
+	 * off the palette, so a world with no fallout in it pays a handful of comparisons per sweep and a
+	 * crater pays only for the sections the crater is actually in.
+	 *
+	 * <p>Emitted as ONE source at the centre of the patch rather than one per cell, with the strength
+	 * capped by {@code reactorFalloutMaxBlocksCounted}. Per-cell sources would be correct and would also
+	 * make a forty-block scar instantly lethal from its far edge — the same trap MOD-474 had to close
+	 * for containers, arriving from the other direction.
+	 */
+	public static void collectFallout(ServerLevel level, Vec3 centre, int radius, List<Source> out) {
+		if (!Config.reactorFalloutEnabled || Config.reactorFalloutDosePerBlock <= 0) {
+			return;
+		}
+		int counted = 0;
+		int strength = 0;
+		double sumX = 0;
+		double sumY = 0;
+		double sumZ = 0;
+		int cap = Config.reactorFalloutMaxBlocksCounted;
+		int minChunkX = SectionPos.blockToSectionCoord(Math.floor(centre.x) - radius);
+		int maxChunkX = SectionPos.blockToSectionCoord(Math.floor(centre.x) + radius);
+		int minChunkZ = SectionPos.blockToSectionCoord(Math.floor(centre.z) - radius);
+		int maxChunkZ = SectionPos.blockToSectionCoord(Math.floor(centre.z) + radius);
+		int minY = Mth.floor(centre.y) - radius;
+		int maxY = Mth.floor(centre.y) + radius;
+		BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
+		for (int cx = minChunkX; cx <= maxChunkX; cx++) {
+			for (int cz = minChunkZ; cz <= maxChunkZ; cz++) {
+				LevelChunk chunk = level.getChunkSource().getChunkNow(cx, cz);
+				if (chunk == null) {
+					continue;
+				}
+				int minSection = level.getSectionIndex(Math.max(minY, level.getMinY()));
+				int maxSection = level.getSectionIndex(Math.min(maxY, level.getMaxY()));
+				for (int index = minSection; index <= maxSection; index++) {
+					if (index < 0 || index >= chunk.getSections().length) {
+						continue;
+					}
+					LevelChunkSection section = chunk.getSections()[index];
+					// The palette check that makes a block source affordable at all.
+					if (section.hasOnlyAir() || !section.maybeHas(IS_FALLOUT)) {
+						continue;
+					}
+					int baseY = level.getSectionYFromSectionIndex(index) << 4;
+					for (int dy = 0; dy < 16; dy++) {
+						int y = baseY + dy;
+						if (y < minY || y > maxY) {
+							continue;
+						}
+						for (int dx = 0; dx < 16; dx++) {
+							for (int dz = 0; dz < 16; dz++) {
+								BlockState state = section.getBlockState(dx, dy, dz);
+								if (!IS_FALLOUT.test(state)) {
+									continue;
+								}
+								cursor.set((cx << 4) + dx, y, (cz << 4) + dz);
+								Vec3 at = Vec3.atCenterOf(cursor);
+								if (at.distanceTo(centre) > radius + 1) {
+									continue;
+								}
+								if (cap > 0 && counted >= cap) {
+									continue;
+								}
+								counted++;
+								strength += IrradiatedSoilBlock.doseFor(state);
+								sumX += at.x;
+								sumY += at.y;
+								sumZ += at.z;
+							}
+						}
+					}
+				}
+			}
+		}
+		if (counted > 0 && strength > 0) {
+			out.add(new Source(new Vec3(sumX / counted, sumY / counted, sumZ / counted), strength));
+		}
+	}
+
+	private static final java.util.function.Predicate<BlockState> IS_FALLOUT =
+			state -> state.getBlock() instanceof IrradiatedSoilBlock;
 
 	/** Radioactive items lying on the ground nearby — dropping a fuel rod does not switch it off. */
 	public static void collectGround(ServerLevel level, Vec3 centre, int radius, List<Source> out) {

@@ -361,4 +361,165 @@ class ReactorCoreTest {
 		assertEquals(0, ReactorCore.heatAfterMelt(100, 400),
 				"relief larger than the remaining heat floors at zero rather than going negative");
 	}
+
+	// ── MOD-471: the accident at the top of the scale ──
+
+	@Test
+	void blastPowerGrowsWithTheRodsAndThenStopsGrowing() {
+		assertEquals(6.0f, ReactorCore.blastPower(0, 6, 4, 45), 0.001f,
+				"an empty core still goes off, but under the ~8 it takes to break a reactor wall — the "
+						+ "smallest possible accident wrecks the contents and leaves the room standing");
+		assertEquals(10.8f, ReactorCore.blastPower(12, 6, 4, 45), 0.001f,
+				"three columns, the smallest core that can pin the gauge: a sealed room contains this whole");
+		assertEquals(25.2f, ReactorCore.blastPower(48, 6, 4, 45), 0.001f,
+				"twelve columns clear 24, where the containment starts to leak");
+		assertEquals(45.0f, ReactorCore.blastPower(400, 6, 4, 45), 0.001f,
+				"and the ceiling holds however large the station grows — without it one player could "
+						+ "erase a region and stall the server recomputing the rays");
+	}
+
+	@Test
+	void blastPowerIsTotalOnNonsenseInput() {
+		assertEquals(6.0f, ReactorCore.blastPower(-5, 6, 4, 45), 0.001f, "negative rods are no rods");
+		assertEquals(14.0f, ReactorCore.blastPower(20, 6, 4, 0), 0.001f,
+				"a cap of zero means no cap rather than an explosion of zero — a misconfiguration must not "
+						+ "silently delete the feature");
+	}
+
+	@Test
+	void everyAccidentRollsItsOwnCountdownInsideTheRange() {
+		// The spread IS the feature: a fixed delay becomes a memorised norm and stops being read.
+		assertEquals(2400, ReactorCore.blastCountdown(2400, 3600, 0), "the bottom of the range");
+		assertEquals(3600, ReactorCore.blastCountdown(2400, 3600, 1200), "and the top of it");
+		assertEquals(2400, ReactorCore.blastCountdown(2400, 3600, 1201), "the sample wraps rather than clipping");
+		for (int sample = 0; sample < 5000; sample++) {
+			int rolled = ReactorCore.blastCountdown(2400, 3600, sample);
+			assertTrue(rolled >= 2400 && rolled <= 3600, "sample " + sample + " left the range: " + rolled);
+		}
+	}
+
+	@Test
+	void aReversedOrDegenerateCountdownRangeStillProducesAWorkingReactor() {
+		assertEquals(3000, ReactorCore.blastCountdown(3000, 100, 77),
+				"max below min clamps to min rather than throwing — a bad config should make the reactor "
+						+ "unsurprising, not broken");
+		assertEquals(1, ReactorCore.blastCountdown(0, 0, 5),
+				"a zero range still leaves one tick, so the countdown always has somewhere to stand");
+	}
+
+	@Test
+	void aBareClusterSettlesBelowTheCeilingUntilItIsTooBig() {
+		// The whole lava-farm bargain, expressed as arithmetic. Equilibrium is where the gain meets the
+		// decay: rods x perRod == instability x permille / 1000.
+		int capacity = 10_000;
+		assertEquals(2_875, equilibrium(4, 6, 8), "one rack settles under 30 % and stays there for ever");
+		assertEquals(5_875, equilibrium(8, 6, 8), "two racks just under 60 %");
+		assertEquals(8_875, equilibrium(12, 6, 8), "three racks just under 90 % — the farm's practical limit");
+		assertTrue(equilibrium(16, 6, 8) > capacity,
+				"four racks have no equilibrium below the ceiling, so they run away and blow up");
+	}
+
+	@Test
+	void instabilityRunsAwayOnlyForTheBigPile() {
+		assertTrue(settleToRest(12, 6, 8, 10_000) < 10_000,
+				"three racks must never reach the top, or the lava farm players already built stops working");
+		assertEquals(10_000, settleToRest(16, 6, 8, 10_000),
+				"four racks must reach it, or the limit the panel promises does not exist");
+	}
+
+	@Test
+	void instabilityFallsBackToNothingOnceTheReactionStops() {
+		long instability = 10_000;
+		for (int tick = 0; tick < 5_000 && instability > 0; tick++) {
+			instability = ReactorCore.settleHeat(instability, 0,
+					ReactorCore.instabilityDecay(instability, 8), 10_000);
+		}
+		assertEquals(0, instability,
+				"a scrammed pile has to become safe again, or pulling the lever is not a scram");
+	}
+
+	@Test
+	void falloutStrengthIsCappedByTheBlockCount() {
+		assertEquals(90, ReactorCore.falloutDose(3, 30, 8), "a small patch counts every cell");
+		assertEquals(240, ReactorCore.falloutDose(40, 30, 8),
+				"a forty-cell scar counts eight — without the cap a crater is lethal from its far edge");
+		assertEquals(0, ReactorCore.falloutDose(0, 30, 8), "no fallout, no dose");
+		assertEquals(1200, ReactorCore.falloutDose(40, 30, 0), "a cap of zero means no cap");
+	}
+
+	@Test
+	void aRedstoneClockCannotResetTheCountdown() {
+		// The exploit a player found within an hour of the feature shipping: heat is clamped at the top,
+		// so ONE tick without a redstone signal reads 99 % — and the first version cleared the countdown
+		// on that reading. A clock with one tick off in twenty ran the reactor at ninety-five percent
+		// duty and made it permanently immune. Nineteen critical ticks then one calm one, for as long as
+		// it takes: the timer has to reach zero anyway.
+		ReactorCore.BlastTimer timer = ReactorCore.BlastTimer.IDLE;
+		int fired = -1;
+		for (int tick = 0; tick < 20_000; tick++) {
+			boolean critical = tick % 20 != 19;
+			timer = ReactorCore.tickBlast(timer, critical, 100, 240);
+			if (critical && !timer.armed() && tick > 0) {
+				fired = tick;
+				break;
+			}
+		}
+		assertTrue(fired > 0, "a 95 %-duty redstone clock kept the reactor alive for ever — the exploit "
+				+ "this whole state machine exists to close is open again");
+	}
+
+	@Test
+	void aGenuineScramStillCallsTheAccidentOff() {
+		// The other half of the promise, and the reason the fix is a release WINDOW rather than "the
+		// countdown never clears": a player who actually cools the core must be safe. Five seconds under
+		// the line is what water, the lever and a breached wall all buy comfortably.
+		ReactorCore.BlastTimer timer = ReactorCore.BlastTimer.IDLE;
+		for (int tick = 0; tick < 50; tick++) {
+			timer = ReactorCore.tickBlast(timer, true, 100, 240);
+		}
+		assertTrue(timer.armed(), "the countdown never armed, so the release is not under test");
+		for (int tick = 0; tick < 99; tick++) {
+			timer = ReactorCore.tickBlast(timer, false, 100, 240);
+		}
+		assertTrue(timer.armed(), "released one tick early — the window has to be honoured exactly");
+		// 191, not 190: the tick that ARMS the timer sets the duration and spends none of it, so fifty
+		// critical ticks are one arming plus forty-nine of countdown.
+		assertEquals(191, timer.remaining(),
+				"the countdown must PAUSE while the core is cooling, not keep draining: a player who "
+						+ "fixes the coolant with two seconds left is not to be punished for the two "
+						+ "seconds the temperature takes to fall");
+		timer = ReactorCore.tickBlast(timer, false, 100, 240);
+		assertFalse(timer.armed(), "a hundred continuous ticks under the line has to call the accident off");
+	}
+
+	@Test
+	void comingBackToTheLineForfeitsTheReleaseAlreadyBanked() {
+		ReactorCore.BlastTimer timer = ReactorCore.tickBlast(ReactorCore.BlastTimer.IDLE, true, 100, 240);
+		for (int tick = 0; tick < 90; tick++) {
+			timer = ReactorCore.tickBlast(timer, false, 100, 240);
+		}
+		assertEquals(90, timer.belowTicks(), "ninety ticks of the window banked");
+		timer = ReactorCore.tickBlast(timer, true, 100, 240);
+		assertEquals(0, timer.belowTicks(),
+				"one tick back at the top wipes the banked release — otherwise a clock could accumulate "
+						+ "the window one tick at a time and cancel an accident it never stopped causing");
+		assertTrue(timer.armed(), "and the countdown is still running");
+	}
+
+	/** Where gain meets decay: the resting point of a bare pile of this size. */
+	private static long equilibrium(int rods, int perRod, int permille) {
+		// The flat floor of one is part of the decay (see instabilityDecay), so it belongs here too.
+		return ((long) rods * perRod - 1) * 1000 / permille;
+	}
+
+	/** Runs the real settle loop long enough to reach the resting point, and reports where it stopped. */
+	private static long settleToRest(int rods, int perRod, int permille, int capacity) {
+		long instability = 0;
+		for (int tick = 0; tick < 20_000; tick++) {
+			instability = ReactorCore.settleHeat(instability,
+					ReactorCore.instabilityGain(rods, perRod),
+					ReactorCore.instabilityDecay(instability, permille), capacity);
+		}
+		return instability;
+	}
 }

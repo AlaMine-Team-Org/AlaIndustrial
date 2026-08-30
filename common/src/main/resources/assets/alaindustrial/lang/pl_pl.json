@@ -959,5 +959,9 @@
   "gui.alaindustrial.creative_energy_source.preset.hv": "HV",
   "gui.alaindustrial.creative_energy_source.output": "Moc: %s EU/t",
   "gui.alaindustrial.creative_energy_source.output.tip": "Przeciągnij, aby ustawić moc",
-  "gui.alaindustrial.creative_energy_source.cable_warning": "Maks. %s EU/t na odbiornik"
+  "gui.alaindustrial.creative_energy_source.cable_warning": "Maks. %s EU/t na odbiornik",
+  "gui.alaindustrial.reactor_controller.status.blast": "GROZI STOPIENIE",
+  "gui.alaindustrial.reactor_controller.label.instability": "Niestabilność",
+  "gui.alaindustrial.reactor_controller.percent": "%s%%",
+  "block.alaindustrial.irradiated_soil": "Napromieniowana ziemia"
 }

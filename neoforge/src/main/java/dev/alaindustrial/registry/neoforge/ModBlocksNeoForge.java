@@ -37,6 +37,7 @@ import dev.alaindustrial.block.GoldChestBlock;
 import dev.alaindustrial.block.HighAltitudeWindMillBlock;
 import dev.alaindustrial.block.IncubatorBlock;
 import dev.alaindustrial.block.IncubatorDomeBlock;
+import dev.alaindustrial.block.IrradiatedSoilBlock;
 import dev.alaindustrial.block.IronChestBlock;
 import dev.alaindustrial.block.IronFurnaceBlock;
 import dev.alaindustrial.block.ItemPipeBlock;
@@ -195,6 +196,10 @@ public final class ModBlocksNeoForge {
 			handle(ContentManifest.REACTOR_DOOR);
 	public static final DeferredBlock<ReactorControllerBlock> REACTOR_CONTROLLER =
 			handle(ContentManifest.REACTOR_CONTROLLER);
+	// MOD-471 — fallout. Bound for the same reason as on Fabric: no recipe, no creative tab, no
+	// block item; only an accident ever puts it in the world.
+	public static final DeferredBlock<IrradiatedSoilBlock> IRRADIATED_SOIL =
+			handle(ContentManifest.IRRADIATED_SOIL);
 	public static final DeferredBlock<ReactorLampBlock> REACTOR_LAMP =
 			handle(ContentManifest.REACTOR_LAMP);
 	public static final DeferredBlock<SteamNozzleBlock> STEAM_NOZZLE =

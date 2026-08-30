@@ -140,6 +140,24 @@ public class FuelRodAssemblyBlockEntity extends BlockEntity implements FluidPort
 	}
 
 	/** Everything racked, for the drop when the column is broken. Nothing is lost any more. */
+	/**
+	 * Hands the racked rods back before this block entity disappears.
+	 *
+	 * <p>Runs while the block entity is still attached, on every removal path — player, explosion,
+	 * piston, {@code /setblock}. The block's own removal hook cannot do this: 26.2 detaches the block
+	 * entity first, so it reads null and drops nothing (see {@code FuelRodAssemblyBlock}).
+	 */
+	@Override
+	public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+		if (level instanceof net.minecraft.server.level.ServerLevel serverLevel) {
+			for (ItemStack stack : contents()) {
+				net.minecraft.world.Containers.dropItemStack(serverLevel,
+						pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, stack);
+			}
+		}
+		super.preRemoveSideEffects(pos, state);
+	}
+
 	public java.util.List<ItemStack> contents() {
 		java.util.List<ItemStack> out = new java.util.ArrayList<>();
 		for (ItemStack stack : rack) {

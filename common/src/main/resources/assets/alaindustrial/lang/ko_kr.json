@@ -959,5 +959,9 @@
   "gui.alaindustrial.creative_energy_source.preset.hv": "HV",
   "gui.alaindustrial.creative_energy_source.output": "출력: %s EU/t",
   "gui.alaindustrial.creative_energy_source.output.tip": "드래그하여 출력 설정",
-  "gui.alaindustrial.creative_energy_source.cable_warning": "수신기당 최대 %s EU/t"
+  "gui.alaindustrial.creative_energy_source.cable_warning": "수신기당 최대 %s EU/t",
+  "gui.alaindustrial.reactor_controller.status.blast": "노심 용융 임박",
+  "gui.alaindustrial.reactor_controller.label.instability": "불안정도",
+  "gui.alaindustrial.reactor_controller.percent": "%s%%",
+  "block.alaindustrial.irradiated_soil": "오염된 흙"
 }

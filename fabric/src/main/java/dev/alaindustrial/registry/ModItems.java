@@ -385,6 +385,8 @@ public final class ModItems {
 
 	// MOD-468, stage 1 — block items for the reactor shell.
 	public static final BlockItem REACTOR_CASING_ITEM = blockItem("reactor_casing", ModBlocks.REACTOR_CASING);
+	public static final BlockItem IRRADIATED_SOIL_ITEM =
+			blockItem("irradiated_soil", ModBlocks.IRRADIATED_SOIL);
 	public static final BlockItem REACTOR_GLASS_ITEM = blockItem("reactor_glass", ModBlocks.REACTOR_GLASS);
 	public static final BlockItem REACTOR_PORT_ITEM = blockItem("reactor_port", ModBlocks.REACTOR_PORT);
 	public static final BlockItem REACTOR_DOOR_ITEM = blockItem("reactor_door", ModBlocks.REACTOR_DOOR);
@@ -1089,6 +1091,7 @@ public final class ModItems {
 		ModContent.REACTOR_CIRCUIT = () -> REACTOR_CIRCUIT;
 		ModContent.CONTROL_ROD_DRIVE = () -> CONTROL_ROD_DRIVE;
 		ModContent.REACTOR_CASING_ITEM = () -> REACTOR_CASING_ITEM;
+		ModContent.IRRADIATED_SOIL_ITEM = () -> IRRADIATED_SOIL_ITEM;
 		ModContent.REACTOR_GLASS_ITEM = () -> REACTOR_GLASS_ITEM;
 		ModContent.REACTOR_PORT_ITEM = () -> REACTOR_PORT_ITEM;
 		ModContent.REACTOR_DOOR_ITEM = () -> REACTOR_DOOR_ITEM;
