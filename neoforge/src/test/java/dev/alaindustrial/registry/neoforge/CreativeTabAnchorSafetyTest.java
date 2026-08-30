@@ -142,6 +142,7 @@ class CreativeTabAnchorSafetyTest {
 				ModContent.ENERGY_PACK.get().getDefaultInstance(),
 				ModContent.ELECTRIC_DRILL.get().getDefaultInstance(),
 				ModContent.ELECTRIC_DRILL_DIAMOND_TIP.get().getDefaultInstance(),
+				ModContent.ELECTRIC_DRILL_NETHERITE_TIP.get().getDefaultInstance(),
 				ModContent.ELECTRIC_CHAINSAW_DIAMOND_TIP.get().getDefaultInstance(),
 				ModContent.ELECTRIC_HOE_DIAMOND_TIP.get().getDefaultInstance(),
 				ModContent.ELECTROMAGNET.get().getDefaultInstance(),

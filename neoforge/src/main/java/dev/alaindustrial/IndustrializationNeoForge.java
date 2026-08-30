@@ -463,6 +463,7 @@ public final class IndustrializationNeoForge {
 				ModItemsNeoForge.BATTERY_POUCH.get(), ModItemsNeoForge.BATTERY.get(),
 				ModItemsNeoForge.ENERGY_PACK.get(),
 				ModItemsNeoForge.ELECTRIC_DRILL.get(), ModItemsNeoForge.ELECTRIC_DRILL_DIAMOND_TIP.get(),
+				ModItemsNeoForge.ELECTRIC_DRILL_NETHERITE_TIP.get(),
 				ModItemsNeoForge.ELECTRIC_CHAINSAW.get(),
 				ModItemsNeoForge.ELECTRIC_CHAINSAW_DIAMOND_TIP.get(),
 				ModItemsNeoForge.ELECTRIC_SHOVEL.get(),

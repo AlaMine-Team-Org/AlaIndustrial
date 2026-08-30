@@ -145,4 +145,24 @@ public class ElectricDrillGameTest {
 	public void tcDrill001Fun12_upgradeRecipeAcceptsAnyDrillState(GameTestHelper helper) {
 		ElectricDrillScenarios.fun12UpgradeRecipeAcceptsAnyDrillState(helper);
 	}
+
+	/**
+	 * @implements TC-DRILL-001-FUN13 — the netherite tip (MOD-534) digs at 12.0, strictly faster than the
+	 *     diamond tip, keeps the diamond mining tier, falls to hand speed when flat, and owns the line's
+	 *     only larger EU buffer while its intake stays the base drill's.
+	 */
+	@GameTest
+	public void tcDrill001Fun13_netheriteTipSpeedTierAndBuffer(GameTestHelper helper) {
+		ElectricDrillScenarios.fun13NetheriteTipSpeedTierAndBuffer(helper);
+	}
+
+	/**
+	 * @implements TC-DRILL-001-FUN14 — crafting the netherite tip carries the diamond tip's charge into
+	 *     the result instead of burning it, across the two tiers' differing buffers; a drained input
+	 *     still yields a component-free result.
+	 */
+	@GameTest
+	public void tcDrill001Fun14_netheriteTipUpgradeCarriesCharge(GameTestHelper helper) {
+		ElectricDrillScenarios.fun14NetheriteTipUpgradeCarriesCharge(helper);
+	}
 }

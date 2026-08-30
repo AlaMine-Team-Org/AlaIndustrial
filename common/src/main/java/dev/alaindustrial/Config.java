@@ -625,6 +625,12 @@ public final class Config {
 		this charge the drill refuses to place and notifies the player instead of giving a free torch
 		(MOD-097) — the torch is powered, not free. */
 	public static int electricDrillTorchEuCost = 5;
+	/** Netherite-Tipped Electric Drill EU buffer (MOD-534) — the only number the third tier does not share
+	 * with the two below it. Half again the base 10 000, so at the unchanged {@link #electricDrillEuPerBlock}
+	 * it is ~300 blocks on a full charge against their ~200. The per-block cost deliberately does NOT rise
+	 * with it: the tier is paid for in its recipe (netherite), not by charging the player more EU for the
+	 * same work. */
+	public static int electricDrillNetheriteTipBuffer = 15_000;
 
 	// --- Electric Chainsaw (MOD-337, the drill's wood-side counterpart) ---
 	/** Electric Chainsaw EU buffer — the same reservoir as the drill, so the two tools of the LV hand-tool
@@ -2340,6 +2346,8 @@ public final class Config {
 				() -> electricDrillInputRate, v -> electricDrillInputRate = v, 1),
 			new IntField("electricDrillTorchEuCost", Section.TOOLS, "EU the drill spends to place a torch on right-click.",
 				() -> electricDrillTorchEuCost, v -> electricDrillTorchEuCost = v, 0),
+			new IntField("electricDrillNetheriteTipBuffer", Section.TOOLS, "Netherite-Tipped Electric Drill EU buffer (the two tiers below share electricDrillBuffer).",
+				() -> electricDrillNetheriteTipBuffer, v -> electricDrillNetheriteTipBuffer = v, 1),
 			new IntField("electricChainsawBuffer", Section.TOOLS, "Electric Chainsaw EU buffer.",
 				() -> electricChainsawBuffer, v -> electricChainsawBuffer = v, 1),
 			new IntField("electricChainsawEuPerBlock", Section.TOOLS, "EU the chainsaw spends per block cut at powered speed (below this it cuts at hand speed for free).",

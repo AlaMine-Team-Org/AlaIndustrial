@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_1": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:netherite_drill_upgrade_smithing_template"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_item_1"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:netherite_drill_upgrade_smithing_template"
+    ]
+  }
+}

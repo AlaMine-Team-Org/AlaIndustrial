@@ -2,6 +2,7 @@ package dev.alaindustrial.item.energy;
 
 import dev.alaindustrial.item.tool.ElectricChainsawItem;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
+import dev.alaindustrial.item.tool.ElectricDrillNetheriteTipItem;
 import dev.alaindustrial.item.tool.ElectricHoeItem;
 import dev.alaindustrial.item.tool.ElectricSaberItem;
 import dev.alaindustrial.item.tool.ElectricShovelItem;
@@ -56,6 +57,13 @@ public final class ItemEnergy {
 		}
 		if (stack.getItem() instanceof EnergyPackItem) {
 			return Config.energyPackBuffer;
+		}
+		// MOD-534: the netherite tip is the one drill tier with a buffer of its own, and it is a subclass
+		// of ElectricDrillItem — so this branch MUST stay above the base one, which would otherwise
+		// swallow it and hand back the 10 000 shared by the two tiers below. Only capacity differs;
+		// inputRate and the per-block cost are deliberately inherited from the base drill below.
+		if (stack.getItem() instanceof ElectricDrillNetheriteTipItem) {
+			return Config.electricDrillNetheriteTipBuffer;
 		}
 		if (stack.getItem() instanceof ElectricDrillItem) {
 			return Config.electricDrillBuffer;

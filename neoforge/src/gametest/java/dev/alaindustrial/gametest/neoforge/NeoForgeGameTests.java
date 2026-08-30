@@ -936,6 +936,8 @@ public final class NeoForgeGameTests {
 		registerTest(event, "drill_diamond_tip_speed_and_tier", 40, true, ElectricDrillScenarios::fun10DiamondTipSpeedAndTier);
 		registerTest(event, "drill_diamond_tip_silk_toggle", 40, true, ElectricDrillScenarios::fun11DiamondTipSilkToggle);
 		registerTest(event, "drill_upgrade_recipe_any_state", 40, true, ElectricDrillScenarios::fun12UpgradeRecipeAcceptsAnyDrillState);
+		registerTest(event, "drill_netherite_tip_speed_tier_and_buffer", 40, true, ElectricDrillScenarios::fun13NetheriteTipSpeedTierAndBuffer);
+		registerTest(event, "drill_netherite_tip_upgrade_carries_charge", 40, true, ElectricDrillScenarios::fun14NetheriteTipUpgradeCarriesCharge);
 
 		// MOD-374 (TC-CHAINSAW-001-FUN01..03): the chainsaw's diamond-tipped upgrade cuts faster at the
 		// same tier, its sneak-toggled Silk Touch mode flips the real leaf loot table both ways, and the

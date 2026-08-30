@@ -215,11 +215,14 @@ import java.util.function.IntSupplier;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.SmithingTemplateItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
@@ -1130,6 +1133,9 @@ public final class ContentManifest {
 				"advanced_circuit", "alignment_chip_day", "alignment_chip_night",
 				// MOD-064 alloys: the four products of the alloy smelter.
 				"bronze_ingot", "cupronickel_ingot", "electrum_ingot", "invar_ingot",
+				// MOD-534: the alloy smelter's endgame product, electrum's first use as a gear, and the
+				// assembled bit those two go into before it is smithed onto the drill.
+				"netherite_alloy_ingot", "electrum_gear", "netherite_drill_head",
 				// MOD-460: plate forms for the four alloys above, plus their reinforced tier
 				// (two plates -> one reinforced plate, hammer or compressor).
 				"bronze_plate", "bronze_reinforced_plate", "cupronickel_plate",
@@ -1169,6 +1175,22 @@ public final class ContentManifest {
 		// Battery (MOD-083): the stackable EU carrier. Charge is per item, so the stack size is what
 		// keeps stack transfers exact — see BatteryItem for why 16 and not 64.
 		defs.put("battery", p -> new BatteryItem(p.stacksTo(BatteryItem.MAX_STACK)));
+		// Netherite Drill Upgrade smithing template (MOD-534) — the mod's first smithing template, and the
+		// gate on its top drill tier. Built on vanilla's own SmithingTemplateItem rather than a plain Item
+		// so the smithing screen shows what goes in which slot and greys the empty slots with the right
+		// sprites, exactly as it does for the vanilla netherite upgrade. Constructor argument order was
+		// read off the bytecode of Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE's factory (project rule 1):
+		// appliesTo, ingredients, baseSlotDescription, additionsSlotDescription, then the two icon lists.
+		defs.put("netherite_drill_upgrade_smithing_template", p -> new SmithingTemplateItem(
+				Component.translatable("item.alaindustrial.netherite_drill_upgrade_smithing_template.applies_to")
+						.withStyle(ChatFormatting.BLUE),
+				Component.translatable("item.alaindustrial.netherite_drill_upgrade_smithing_template.ingredients")
+						.withStyle(ChatFormatting.BLUE),
+				Component.translatable("item.alaindustrial.netherite_drill_upgrade_smithing_template.base_slot_description"),
+				Component.translatable("item.alaindustrial.netherite_drill_upgrade_smithing_template.additions_slot_description"),
+				List.of(Identifier.withDefaultNamespace("container/slot/pickaxe")),
+				List.of(Identifier.withDefaultNamespace("container/slot/ingot")),
+				p));
 		// EU crystals (MOD-504). Two items per tier: the blank carries the buffer and is stacksTo(1)
 		// (energy moved into a stack must divide by count, and at these buffer sizes any stack would
 		// start rounding EU away); the finished crystal is an ordinary crafting material that stacks

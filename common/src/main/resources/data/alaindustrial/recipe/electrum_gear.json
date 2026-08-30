@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"pattern": [
+		" M ",
+		"MGM",
+		" M "
+	],
+	"key": {
+		"M": "#c:ingots/electrum",
+		"G": "alaindustrial:wooden_gear"
+	},
+	"result": {
+		"id": "alaindustrial:electrum_gear",
+		"count": 1
+	}
+}

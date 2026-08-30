@@ -69,7 +69,8 @@ public final class StackAsEnergyStorage implements EnergyStorage {
 			return new DelegatingEnergyStorage(new StackAsEnergyStorage(context),
 					() -> context.getItemVariant().isOf(startingItem) && context.getAmount() > 0);
 		}, ModItems.BATTERY_POUCH, ModItems.BATTERY, ModItems.ENERGY_PACK, ModItems.ELECTRIC_DRILL,
-				ModItems.ELECTRIC_DRILL_DIAMOND_TIP, ModItems.ELECTRIC_CHAINSAW,
+				ModItems.ELECTRIC_DRILL_DIAMOND_TIP, ModItems.ELECTRIC_DRILL_NETHERITE_TIP,
+				ModItems.ELECTRIC_CHAINSAW,
 				ModItems.ELECTRIC_CHAINSAW_DIAMOND_TIP, ModItems.ELECTRIC_SHOVEL,
 				ModItems.ELECTRIC_SHOVEL_DIAMOND_TIP,
 				ModItems.ELECTRIC_HOE, ModItems.ELECTRIC_HOE_DIAMOND_TIP, ModItems.ELECTRIC_SABER,

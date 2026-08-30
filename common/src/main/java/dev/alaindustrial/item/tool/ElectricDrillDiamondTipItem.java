@@ -115,6 +115,17 @@ public class ElectricDrillDiamondTipItem extends ElectricDrillItem {
 						.build());
 	}
 
+	/**
+	 * Lang-key prefix for this tier's Silk Touch feedback — the action-bar line written by {@link #use}
+	 * and, through the same convention, the tooltip pair read by {@code MachineTooltips}. It is a method
+	 * rather than a constant so a tier built on top of this one (MOD-534) names itself instead of
+	 * inheriting this tier's name in the message the player reads. Every tip item in the mod keeps its own
+	 * key pair even where the English wording currently matches.
+	 */
+	protected String messageKeyPrefix() {
+		return "item.alaindustrial.electric_drill_diamond_tip";
+	}
+
 	// --- Silk Touch mode: shift-right-click flips it, the enchantment component carries the state ---
 
 	/**
@@ -192,9 +203,7 @@ public class ElectricDrillDiamondTipItem extends ElectricDrillItem {
 			});
 			if (player instanceof ServerPlayer serverPlayer) {
 				serverPlayer.sendSystemMessage(
-						Component.translatable(nowSilk
-								? "item.alaindustrial.electric_drill_diamond_tip.silk_on"
-								: "item.alaindustrial.electric_drill_diamond_tip.silk_off")
+						Component.translatable(messageKeyPrefix() + (nowSilk ? ".silk_on" : ".silk_off"))
 								.withStyle(nowSilk ? ChatFormatting.AQUA : ChatFormatting.GRAY),
 						true);
 			}

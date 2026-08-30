@@ -4,6 +4,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.item.tool.ElectricChainsawDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricChainsawItem;
 import dev.alaindustrial.item.tool.ElectricDrillDiamondTipItem;
+import dev.alaindustrial.item.tool.ElectricDrillNetheriteTipItem;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
 import dev.alaindustrial.item.tool.ElectricHoeDiamondTipItem;
 import dev.alaindustrial.item.tool.neoforge.ElectricHoeDiamondTipItemNeoForge;
@@ -161,6 +162,12 @@ public final class ModItemsNeoForge {
 	public static final DeferredItem<Item> IRON_GEAR = manifestItem("iron_gear");
 	public static final DeferredItem<Item> GOLD_GEAR = manifestItem("gold_gear");
 	public static final DeferredItem<Item> SILVER_GEAR = manifestItem("silver_gear");
+	// MOD-534: electrum's first use as a gear — the netherite tip's head drive.
+	public static final DeferredItem<Item> ELECTRUM_GEAR = manifestItem("electrum_gear");
+	// MOD-534: the assembled drill bit and the smithing template that gates it.
+	public static final DeferredItem<Item> NETHERITE_DRILL_HEAD = manifestItem("netherite_drill_head");
+	public static final DeferredItem<Item> NETHERITE_DRILL_UPGRADE_SMITHING_TEMPLATE =
+			manifestItem("netherite_drill_upgrade_smithing_template");
 	public static final DeferredItem<Item> TEMPERED_IRON = manifestItem("tempered_iron");
 	// Tempered-iron pickaxe — first mod tool (MOD-054). MC 26.2 has no PickaxeItem class: a pickaxe is
 	// a plain Item whose `minecraft:tool` component is attached via Item.Properties.pickaxe(...). The
@@ -256,6 +263,8 @@ public final class ModItemsNeoForge {
 	public static final DeferredItem<Item> INVAR_INGOT = manifestItem("invar_ingot");
 	public static final DeferredItem<Item> CUPRONICKEL_INGOT = manifestItem("cupronickel_ingot");
 	public static final DeferredItem<Item> ELECTRUM_INGOT = manifestItem("electrum_ingot");
+	// MOD-534: the alloy smelter's endgame product, built on a vanilla netherite ingot.
+	public static final DeferredItem<Item> NETHERITE_ALLOY_INGOT = manifestItem("netherite_alloy_ingot");
 	public static final DeferredItem<Item> SULFUR_DUST = manifestItem("sulfur_dust");
 	public static final DeferredItem<Item> RAW_SULFUR = manifestItem("raw_sulfur");
 	public static final DeferredItem<Item> URANIUM_DUST = manifestItem("uranium_dust");
@@ -314,6 +323,11 @@ public final class ModItemsNeoForge {
 	public static final DeferredItem<ElectricDrillDiamondTipItem> ELECTRIC_DRILL_DIAMOND_TIP =
 			ITEMS.registerItem("electric_drill_diamond_tip", ElectricDrillDiamondTipItem::new,
 					ElectricDrillDiamondTipItem::electricDrillDiamondTipProperties);
+	// Netherite-Tipped Electric Drill (MOD-534): the drill's third tier — faster still, harder hitting,
+	// and the one tier whose EU buffer differs. Same wiring again; only the properties factory changes.
+	public static final DeferredItem<ElectricDrillNetheriteTipItem> ELECTRIC_DRILL_NETHERITE_TIP =
+			ITEMS.registerItem("electric_drill_netherite_tip", ElectricDrillNetheriteTipItem::new,
+					ElectricDrillNetheriteTipItem::electricDrillNetheriteTipProperties);
 	// Electric Chainsaw (MOD-337): the drill's wood-side counterpart — an EU axe for logs and leaves.
 	// Same wiring as the drill; the properties factory carries the axe/leaves TOOL rules.
 	public static final DeferredItem<ElectricChainsawItem> ELECTRIC_CHAINSAW =
@@ -735,6 +749,9 @@ public final class ModItemsNeoForge {
 		ModContent.IRON_GEAR = IRON_GEAR;
 		ModContent.GOLD_GEAR = GOLD_GEAR;
 		ModContent.SILVER_GEAR = SILVER_GEAR;
+		ModContent.ELECTRUM_GEAR = ELECTRUM_GEAR;
+		ModContent.NETHERITE_DRILL_HEAD = NETHERITE_DRILL_HEAD;
+		ModContent.NETHERITE_DRILL_UPGRADE_SMITHING_TEMPLATE = NETHERITE_DRILL_UPGRADE_SMITHING_TEMPLATE;
 		ModContent.TEMPERED_IRON = TEMPERED_IRON;
 		ModContent.TEMPERED_IRON_PICKAXE = TEMPERED_IRON_PICKAXE;
 		ModContent.TEMPERED_IRON_AXE = TEMPERED_IRON_AXE;
@@ -767,6 +784,7 @@ public final class ModItemsNeoForge {
 		ModContent.INVAR_INGOT = INVAR_INGOT;
 		ModContent.CUPRONICKEL_INGOT = CUPRONICKEL_INGOT;
 		ModContent.ELECTRUM_INGOT = ELECTRUM_INGOT;
+		ModContent.NETHERITE_ALLOY_INGOT = NETHERITE_ALLOY_INGOT;
 		ModContent.SULFUR_DUST = SULFUR_DUST;
 		ModContent.RAW_SULFUR = RAW_SULFUR;
 		ModContent.URANIUM_DUST = URANIUM_DUST;
@@ -798,6 +816,7 @@ public final class ModItemsNeoForge {
 		// DeferredItem<ElectricDrillItem> into a Supplier<Item> slot — bind via ::get (invariant generics).
 		ModContent.ELECTRIC_DRILL = ELECTRIC_DRILL::get;
 		ModContent.ELECTRIC_DRILL_DIAMOND_TIP = ELECTRIC_DRILL_DIAMOND_TIP::get;
+		ModContent.ELECTRIC_DRILL_NETHERITE_TIP = ELECTRIC_DRILL_NETHERITE_TIP::get;
 		ModContent.ELECTRIC_CHAINSAW = ELECTRIC_CHAINSAW::get;
 		ModContent.ELECTRIC_CHAINSAW_DIAMOND_TIP = ELECTRIC_CHAINSAW_DIAMOND_TIP::get;
 		ModContent.ELECTRIC_SHOVEL = ELECTRIC_SHOVEL::get;

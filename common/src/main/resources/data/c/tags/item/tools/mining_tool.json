@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "alaindustrial:electric_drill",
-    "alaindustrial:electric_drill_diamond_tip"
+    "alaindustrial:electric_drill_diamond_tip",
+    "alaindustrial:electric_drill_netherite_tip"
   ]
 }

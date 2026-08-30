@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": "minecraft:diamond",
+    "C": "minecraft:netherrack",
+    "S": "alaindustrial:netherite_drill_upgrade_smithing_template"
+  },
+  "pattern": [
+    "#S#",
+    "#C#",
+    "###"
+  ],
+  "result": {
+    "id": "alaindustrial:netherite_drill_upgrade_smithing_template",
+    "count": 2
+  }
+}

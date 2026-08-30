@@ -1,0 +1,51 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_1": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:netherite_scrap"
+          }
+        ]
+      }
+    },
+    "has_item_2": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:netherite_alloy_ingot"
+          }
+        ]
+      }
+    },
+    "has_item_3": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:electrum_gear"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_item_1"
+    ],
+    [
+      "has_item_2"
+    ],
+    [
+      "has_item_3"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:netherite_drill_head"
+    ]
+  }
+}

@@ -65,6 +65,7 @@ public final class ModCreativeTabEventsNeoForge {
 			event.accept(ModContent.ENERGY_PACK.get());
 			event.accept(ModContent.ELECTRIC_DRILL.get());
 			event.accept(ModContent.ELECTRIC_DRILL_DIAMOND_TIP.get());
+			event.accept(ModContent.ELECTRIC_DRILL_NETHERITE_TIP.get());
 			// MOD-374/MOD-378 added the two diamond-tipped upgrades here and left their base tools
 			// Fabric-only; MOD-478 closed that gap, so this list now matches Fabric item for item and
 			// in the same order. A NeoForge player finds the same powered tools next to the vanilla

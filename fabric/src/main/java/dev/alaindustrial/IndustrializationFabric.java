@@ -2,6 +2,7 @@ package dev.alaindustrial;
 
 import dev.alaindustrial.command.AlaCommand;
 import dev.alaindustrial.loot.BonusChest;
+import dev.alaindustrial.loot.DrillTemplateLoot;
 import dev.alaindustrial.loot.Trellis;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -539,6 +540,17 @@ public class IndustrializationFabric implements ModInitializer {
 				tableBuilder.withPool(LootPool.lootPool()
 						.setRolls(ConstantValue.exactly(1.0f))
 						.add(NestedLootTable.lootTableReference(BonusChest.INJECT_TABLE)));
+			}
+			// MOD-534: the drill's smithing template, in the same four bastion chest tables vanilla puts
+			// its own netherite template in. Same shape as the bonus chest above — one added pool
+			// referencing a shared sub-table, vanilla pools untouched — and the drop chance lives in that
+			// sub-table, so both loaders read one number. NeoForge points four add_table modifiers at the
+			// same key. No config gate: unlike the bonus chest, this is the only route to a gameplay
+			// item, and switching it off would strand the drill's top tier behind nothing.
+			if (source.isBuiltin() && DrillTemplateLoot.BASTION_TABLES.contains(key)) {
+				tableBuilder.withPool(LootPool.lootPool()
+						.setRolls(ConstantValue.exactly(1.0f))
+						.add(NestedLootTable.lootTableReference(DrillTemplateLoot.INJECT_TABLE)));
 			}
 			// MOD-280: cotton seeds from grass, the way wheat seeds are found. Same shape as above — one
 			// added pool referencing a shared sub-table, vanilla pools untouched — and the shears rule

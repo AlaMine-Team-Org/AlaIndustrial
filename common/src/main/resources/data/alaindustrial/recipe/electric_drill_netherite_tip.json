@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": "alaindustrial:netherite_drill_upgrade_smithing_template",
+  "base": "alaindustrial:electric_drill_diamond_tip",
+  "addition": "alaindustrial:netherite_drill_head",
+  "result": {
+    "id": "alaindustrial:electric_drill_netherite_tip"
+  }
+}

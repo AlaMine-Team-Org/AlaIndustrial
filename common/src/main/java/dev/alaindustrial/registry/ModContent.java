@@ -362,6 +362,9 @@ public final class ModContent {
 	public static Supplier<Item> IRON_GEAR = unbound("IRON_GEAR");
 	public static Supplier<Item> GOLD_GEAR = unbound("GOLD_GEAR");
 	public static Supplier<Item> SILVER_GEAR = unbound("SILVER_GEAR");
+	// Electrum Gear (MOD-534) — the head drive of the netherite-tipped drill, and electrum's first use
+	// as a gear. Same wooden-gear-plus-four-ingots shape as the tiers above.
+	public static Supplier<Item> ELECTRUM_GEAR = unbound("ELECTRUM_GEAR");
 	public static Supplier<Item> TEMPERED_IRON = unbound("TEMPERED_IRON");
 	public static Supplier<Item> TEMPERED_IRON_PICKAXE = unbound("TEMPERED_IRON_PICKAXE");
 	public static Supplier<Item> TEMPERED_IRON_AXE = unbound("TEMPERED_IRON_AXE");
@@ -397,6 +400,15 @@ public final class ModContent {
 	public static Supplier<Item> INVAR_INGOT = unbound("INVAR_INGOT");
 	public static Supplier<Item> CUPRONICKEL_INGOT = unbound("CUPRONICKEL_INGOT");
 	public static Supplier<Item> ELECTRUM_INGOT = unbound("ELECTRUM_INGOT");
+	// Netherite Alloy (MOD-534) — the alloy smelter's endgame product and the first one built on a
+	// vanilla netherite ingot. Consumed by the netherite-tipped drill.
+	public static Supplier<Item> NETHERITE_ALLOY_INGOT = unbound("NETHERITE_ALLOY_INGOT");
+	// Netherite Drill Head (MOD-534) — the assembled bit: scrap + alloy + electrum gear, smithed onto
+	// the diamond-tipped drill. Exists so the four components survive the smithing table's three slots.
+	public static Supplier<Item> NETHERITE_DRILL_HEAD = unbound("NETHERITE_DRILL_HEAD");
+	// The smithing template that gates the drill's top tier — found in bastion remnants (MOD-534).
+	public static Supplier<Item> NETHERITE_DRILL_UPGRADE_SMITHING_TEMPLATE =
+			unbound("NETHERITE_DRILL_UPGRADE_SMITHING_TEMPLATE");
 	public static Supplier<Item> SULFUR_DUST = unbound("SULFUR_DUST");
 	public static Supplier<Item> RAW_SULFUR = unbound("RAW_SULFUR");
 	public static Supplier<Item> URANIUM_DUST = unbound("URANIUM_DUST");
@@ -454,6 +466,9 @@ public final class ModContent {
 	// Diamond-Tipped Electric Drill (MOD-321) — the drill's upgrade tier: faster, with a switchable
 	// Silk Touch mode. Shares the base drill's EU buffer and charging behaviour.
 	public static Supplier<Item> ELECTRIC_DRILL_DIAMOND_TIP = unbound("ELECTRIC_DRILL_DIAMOND_TIP");
+	// Netherite-Tipped Electric Drill (MOD-534) — the drill's third and last tier: faster still, hits
+	// harder, and the one tier with a bigger EU buffer of its own. Inherits the diamond tip's Silk Touch.
+	public static Supplier<Item> ELECTRIC_DRILL_NETHERITE_TIP = unbound("ELECTRIC_DRILL_NETHERITE_TIP");
 	// Electric Chainsaw (MOD-337) — the drill's wood-side counterpart: an EU axe for logs and leaves.
 	public static Supplier<Item> ELECTRIC_CHAINSAW = unbound("ELECTRIC_CHAINSAW");
 	// Diamond-Tipped Electric Chainsaw (MOD-374) — the chainsaw's upgrade tier: faster, with a

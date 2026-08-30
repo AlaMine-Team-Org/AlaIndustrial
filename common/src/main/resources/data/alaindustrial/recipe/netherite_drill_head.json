@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "S": "minecraft:netherite_scrap",
+    "A": "alaindustrial:netherite_alloy_ingot",
+    "G": "alaindustrial:electrum_gear"
+  },
+  "pattern": [
+    "SSS",
+    "AGA"
+  ],
+  "result": {
+    "id": "alaindustrial:netherite_drill_head",
+    "count": 1
+  }
+}

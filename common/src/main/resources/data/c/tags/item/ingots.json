@@ -10,6 +10,8 @@
     "#c:ingots/cupronickel",
     "#c:ingots/electrum",
     "#c:ingots/palladium",
-    "#c:ingots/shielding_alloy"
+    "#c:ingots/shielding_alloy",
+    "#c:ingots/netherite",
+    "#c:ingots/netherite_alloy"
   ]
 }

@@ -167,6 +167,7 @@ public final class CreativeTabContent {
 		show(out, ModContent.INVAR_INGOT);
 		show(out, ModContent.CUPRONICKEL_INGOT);
 		show(out, ModContent.ELECTRUM_INGOT);
+		show(out, ModContent.NETHERITE_ALLOY_INGOT);
 		show(out, ModContent.RAW_TIN);
 		show(out, ModContent.RAW_SILVER);
 		show(out, ModContent.RAW_NICKEL);
@@ -233,6 +234,9 @@ public final class CreativeTabContent {
 		show(out, ModContent.IRON_GEAR);
 		show(out, ModContent.GOLD_GEAR);
 		show(out, ModContent.SILVER_GEAR);
+		show(out, ModContent.ELECTRUM_GEAR);
+		show(out, ModContent.NETHERITE_DRILL_HEAD);
+		show(out, ModContent.NETHERITE_DRILL_UPGRADE_SMITHING_TEMPLATE);
 	}
 
 	public static void buildingBlocks(Sink out) {
@@ -364,6 +368,7 @@ public final class CreativeTabContent {
 	private static void poweredGear(Sink out) {
 		show(out, ModContent.ELECTRIC_DRILL);
 		show(out, ModContent.ELECTRIC_DRILL_DIAMOND_TIP);
+		show(out, ModContent.ELECTRIC_DRILL_NETHERITE_TIP);
 		show(out, ModContent.ELECTRIC_CHAINSAW);
 		show(out, ModContent.ELECTRIC_CHAINSAW_DIAMOND_TIP);
 		show(out, ModContent.ELECTRIC_SHOVEL);
@@ -435,6 +440,9 @@ public final class CreativeTabContent {
 		show(out, ModContent.IRON_GEAR);
 		show(out, ModContent.GOLD_GEAR);
 		show(out, ModContent.SILVER_GEAR);
+		show(out, ModContent.ELECTRUM_GEAR);
+		show(out, ModContent.NETHERITE_DRILL_HEAD);
+		show(out, ModContent.NETHERITE_DRILL_UPGRADE_SMITHING_TEMPLATE);
 		// The rubber and cloth chains, each from raw to finished.
 		show(out, ModContent.RAW_RUBBER);
 		show(out, ModContent.BIOMASS);

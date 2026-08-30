@@ -5,6 +5,7 @@ import dev.alaindustrial.item.assembler.AssemblyBlueprintItem;
 import dev.alaindustrial.item.tool.ElectricChainsawDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricChainsawItem;
 import dev.alaindustrial.item.tool.ElectricDrillDiamondTipItem;
+import dev.alaindustrial.item.tool.ElectricDrillNetheriteTipItem;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
 import dev.alaindustrial.item.tool.ElectricHoeDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricHoeItem;
@@ -136,6 +137,12 @@ public final class ModItems {
 	public static final Item IRON_GEAR = manifestItem("iron_gear");
 	public static final Item GOLD_GEAR = manifestItem("gold_gear");
 	public static final Item SILVER_GEAR = manifestItem("silver_gear");
+	// MOD-534: electrum's first use as a gear — the netherite tip's head drive.
+	public static final Item ELECTRUM_GEAR = manifestItem("electrum_gear");
+	// MOD-534: the assembled drill bit and the smithing template that gates it.
+	public static final Item NETHERITE_DRILL_HEAD = manifestItem("netherite_drill_head");
+	public static final Item NETHERITE_DRILL_UPGRADE_SMITHING_TEMPLATE =
+			manifestItem("netherite_drill_upgrade_smithing_template");
 	public static final Item TEMPERED_IRON = manifestItem("tempered_iron");
 	public static final Item TEMPERED_IRON_PICKAXE =
 			temperedIronTool("tempered_iron_pickaxe", p -> p.pickaxe(ModToolMaterials.TEMPERED_IRON, TemperedIronToolStats.PICKAXE.attackDamage(), TemperedIronToolStats.PICKAXE.attackSpeed()));
@@ -213,6 +220,8 @@ public final class ModItems {
 	public static final Item INVAR_INGOT = manifestItem("invar_ingot");
 	public static final Item CUPRONICKEL_INGOT = manifestItem("cupronickel_ingot");
 	public static final Item ELECTRUM_INGOT = manifestItem("electrum_ingot");
+	// MOD-534: the alloy smelter's endgame product, built on a vanilla netherite ingot.
+	public static final Item NETHERITE_ALLOY_INGOT = manifestItem("netherite_alloy_ingot");
 	public static final Item SULFUR_DUST = manifestItem("sulfur_dust");
 	public static final Item RAW_SULFUR = manifestItem("raw_sulfur");
 	public static final Item URANIUM_DUST = manifestItem("uranium_dust");
@@ -258,6 +267,9 @@ public final class ModItems {
 	public static final Item ELECTRIC_DRILL = electricDrill("electric_drill");
 	// Diamond-Tipped Electric Drill (MOD-321): the drill's upgrade tier — faster, switchable Silk Touch.
 	public static final Item ELECTRIC_DRILL_DIAMOND_TIP = electricDrillDiamondTip("electric_drill_diamond_tip");
+	// Netherite-Tipped Electric Drill (MOD-534): the drill's third tier — faster still, harder hitting,
+	// and the one tier with a bigger EU buffer of its own.
+	public static final Item ELECTRIC_DRILL_NETHERITE_TIP = electricDrillNetheriteTip("electric_drill_netherite_tip");
 	// Electric Chainsaw (MOD-337): the drill's wood-side counterpart — an EU axe for logs and leaves.
 	public static final Item ELECTRIC_CHAINSAW = electricChainsaw("electric_chainsaw");
 	// Diamond-Tipped Electric Chainsaw (MOD-374): the chainsaw's upgrade tier — faster, with a
@@ -574,6 +586,15 @@ public final class ModItems {
 						ElectricDrillDiamondTipItem.electricDrillDiamondTipProperties(new Item.Properties().setId(key))));
 	}
 
+	// Netherite-Tipped Electric Drill (MOD-534). Same shape again, one tier up: its own properties
+	// factory (mining speed 12.0, attack damage 7) and its own EU buffer, resolved by ItemEnergy.
+	private static Item electricDrillNetheriteTip(String path) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		return Registry.register(BuiltInRegistries.ITEM, key,
+				new ElectricDrillNetheriteTipItem(
+						ElectricDrillNetheriteTipItem.electricDrillNetheriteTipProperties(new Item.Properties().setId(key))));
+	}
+
 	// Electric Chainsaw (MOD-337). Same shape as the drill above — a plain-Item subclass whose
 	// properties come from a common static factory (hand-built TOOL component + EU-item bar, no
 	// MAX_DAMAGE; see ElectricChainsawItem.electricChainsawProperties for why it is not an AxeItem).
@@ -882,6 +903,7 @@ public final class ModItems {
 					output.accept(ModContent.ENERGY_PACK.get());
 					output.accept(ModContent.ELECTRIC_DRILL.get());
 					output.accept(ModContent.ELECTRIC_DRILL_DIAMOND_TIP.get());
+					output.accept(ModContent.ELECTRIC_DRILL_NETHERITE_TIP.get());
 					output.accept(ModContent.ELECTRIC_CHAINSAW.get());
 					output.accept(ModContent.ELECTRIC_CHAINSAW_DIAMOND_TIP.get());
 					output.accept(ModContent.ELECTRIC_SHOVEL.get());
@@ -941,6 +963,9 @@ public final class ModItems {
 		ModContent.IRON_GEAR = () -> IRON_GEAR;
 		ModContent.GOLD_GEAR = () -> GOLD_GEAR;
 		ModContent.SILVER_GEAR = () -> SILVER_GEAR;
+		ModContent.ELECTRUM_GEAR = () -> ELECTRUM_GEAR;
+		ModContent.NETHERITE_DRILL_HEAD = () -> NETHERITE_DRILL_HEAD;
+		ModContent.NETHERITE_DRILL_UPGRADE_SMITHING_TEMPLATE = () -> NETHERITE_DRILL_UPGRADE_SMITHING_TEMPLATE;
 		ModContent.TEMPERED_IRON = () -> TEMPERED_IRON;
 		ModContent.TEMPERED_IRON_PICKAXE = () -> TEMPERED_IRON_PICKAXE;
 		ModContent.TEMPERED_IRON_AXE = () -> TEMPERED_IRON_AXE;
@@ -973,6 +998,7 @@ public final class ModItems {
 		ModContent.INVAR_INGOT = () -> INVAR_INGOT;
 		ModContent.CUPRONICKEL_INGOT = () -> CUPRONICKEL_INGOT;
 		ModContent.ELECTRUM_INGOT = () -> ELECTRUM_INGOT;
+		ModContent.NETHERITE_ALLOY_INGOT = () -> NETHERITE_ALLOY_INGOT;
 		ModContent.SULFUR_DUST = () -> SULFUR_DUST;
 		ModContent.RAW_SULFUR = () -> RAW_SULFUR;
 		ModContent.URANIUM_DUST = () -> URANIUM_DUST;
@@ -999,6 +1025,7 @@ public final class ModItems {
 		ModContent.ENERGY_PACK = () -> ENERGY_PACK;
 		ModContent.ELECTRIC_DRILL = () -> ELECTRIC_DRILL;
 		ModContent.ELECTRIC_DRILL_DIAMOND_TIP = () -> ELECTRIC_DRILL_DIAMOND_TIP;
+		ModContent.ELECTRIC_DRILL_NETHERITE_TIP = () -> ELECTRIC_DRILL_NETHERITE_TIP;
 		ModContent.ELECTRIC_CHAINSAW = () -> ELECTRIC_CHAINSAW;
 		ModContent.ELECTRIC_CHAINSAW_DIAMOND_TIP = () -> ELECTRIC_CHAINSAW_DIAMOND_TIP;
 		ModContent.ELECTRIC_SHOVEL = () -> ELECTRIC_SHOVEL;

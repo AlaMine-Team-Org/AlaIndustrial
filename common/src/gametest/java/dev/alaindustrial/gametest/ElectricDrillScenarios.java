@@ -1,10 +1,12 @@
 package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import java.util.List;
+import java.util.Optional;
 import dev.alaindustrial.item.tool.ElectricDrillDiamondTipItem;
 import dev.alaindustrial.menu.BatteryBoxMenu;
 import dev.alaindustrial.registry.ModContent;
@@ -31,6 +33,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.SmithingRecipe;
+import net.minecraft.world.item.crafting.SmithingRecipeInput;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -706,7 +710,162 @@ public final class ElectricDrillScenarios {
 		helper.succeed();
 	}
 
+	/**
+	 * TC-DRILL-001-FUN13 — the netherite tip (MOD-534) digs at 12.0, strictly faster than the diamond
+	 * tip, keeps the diamond mining tier, still drops to hand speed when flat, and is the one tier with
+	 * a larger EU buffer while its intake stays the base drill's.
+	 *
+	 * <p>Every number is asserted twice where a second tier could drift into it: absolutely (pinning the
+	 * balance value) and relatively against the tier below (so the test goes red if the diamond tip is
+	 * ever raised to match, which would quietly stop this from being an upgrade at all). The buffer is
+	 * the interesting one — it is resolved through an {@code instanceof} cascade in {@link ItemEnergy}
+	 * where this subclass sits below {@code ElectricDrillItem}, so putting the branches in the wrong
+	 * order silently hands back the base buffer and nothing else would notice.
+	 */
+	public static void fun13NetheriteTipSpeedTierAndBuffer(GameTestHelper helper) {
+		Item tip = ModContent.ELECTRIC_DRILL_NETHERITE_TIP.get();
+		BlockState stone = Blocks.STONE.defaultBlockState();
+
+		float charged = tip.getDestroySpeed(netheriteTipDrill(Config.electricDrillNetheriteTipBuffer), stone);
+		if (charged != 12.0f) {
+			helper.fail("a charged netherite-tipped drill must mine stone at 12.0, got " + charged);
+		}
+		float diamondSpeed = ModContent.ELECTRIC_DRILL_DIAMOND_TIP.get()
+				.getDestroySpeed(diamondTipDrill(Config.electricDrillBuffer), stone);
+		if (!(charged > diamondSpeed)) {
+			helper.fail("the netherite tip must out-dig the diamond tip, got " + charged + " vs " + diamondSpeed);
+		}
+		float flat = tip.getDestroySpeed(netheriteTipDrill(0), stone);
+		if (flat != 1.0f) {
+			helper.fail("a flat netherite-tipped drill must mine at exactly hand speed 1.0, got " + flat);
+		}
+
+		// The mining tier is unchanged across the whole line — same answers as both tiers below.
+		ItemStack charge = netheriteTipDrill(Config.electricDrillNetheriteTipBuffer);
+		assertCorrect(helper, charge, Blocks.OBSIDIAN.defaultBlockState(), "obsidian", true);
+		assertCorrect(helper, charge, Blocks.ANCIENT_DEBRIS.defaultBlockState(), "ancient_debris", true);
+		assertCorrect(helper, charge, Blocks.DIRT.defaultBlockState(), "dirt", false);
+
+		// The buffer is this tier's own, and bigger than the one the two tiers below share.
+		long capacity = ItemEnergy.capacity(charge);
+		if (capacity != Config.electricDrillNetheriteTipBuffer) {
+			helper.fail("the netherite tip's buffer is " + capacity + " EU, expected "
+					+ Config.electricDrillNetheriteTipBuffer
+					+ " — the ItemEnergy branch for this class is missing or sits below the base drill's");
+		}
+		if (!(capacity > ItemEnergy.capacity(diamondTipDrill(0)))) {
+			helper.fail("the netherite tip's buffer (" + capacity + ") must exceed the shared "
+					+ ItemEnergy.capacity(diamondTipDrill(0)));
+		}
+		// Intake and per-block cost are deliberately inherited: the tier buys autonomy, not a cheaper
+		// or faster charge. Asserted so a future split cannot happen unnoticed.
+		long intake = ItemEnergy.inputRate(charge);
+		if (intake != Config.electricDrillInputRate) {
+			helper.fail("the netherite tip must accept the base drill's " + Config.electricDrillInputRate
+					+ " EU/t, got " + intake);
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * TC-DRILL-001-FUN14 — smithing the netherite tip (MOD-534) carries the diamond tip's charge AND its
+	 * Silk Touch mode into the result instead of burning them, and a drained input still yields a
+	 * component-free result.
+	 *
+	 * <p>The upgrade is a vanilla {@code minecraft:smithing_transform}, whose {@code assemble} routes
+	 * through {@code TransmuteRecipe.createWithOriginalComponents} and therefore copies the base's whole
+	 * component map. That is what makes the mod's own {@code crafting_shaped_charge_transfer} unnecessary
+	 * here — and exactly why it needs a test: swapping this recipe to any other smithing type, or moving
+	 * it back to a plain bench recipe, would empty a player's drill with no error and no log line (the
+	 * MOD-373 defect class). The recipe is fetched from the {@code RecipeManager} by id rather than read
+	 * from JSON, so the recipe TYPE is what is under test, not the file's contents.
+	 *
+	 * <p>The transfer also crosses a buffer boundary the diamond-tip test could not exercise: the input
+	 * holds at most 10 000 while the result holds 15 000, so this pins that the carry is not clamped to
+	 * the source's capacity.
+	 */
+	public static void fun14NetheriteTipUpgradeCarriesCharge(GameTestHelper helper) {
+		Optional<RecipeHolder<?>> found = helper.getLevel().getServer().getRecipeManager()
+				.byKey(net.minecraft.resources.ResourceKey.create(
+						Registries.RECIPE, Industrialization.id("electric_drill_netherite_tip")));
+		if (found.isEmpty()) {
+			helper.fail("electric_drill_netherite_tip recipe not loaded — cannot test charge transfer");
+			return;
+		}
+		if (!(found.get().value() instanceof SmithingRecipe recipe)) {
+			helper.fail("electric_drill_netherite_tip must be a smithing recipe, got "
+					+ found.get().value().getClass().getSimpleName()
+					+ " — a bench recipe would burn the drill's charge");
+			return;
+		}
+		long charge = Config.electricDrillBuffer;
+		if (charge <= 0) {
+			helper.fail("the drill's configured buffer is " + charge + " — this test would prove nothing");
+			return;
+		}
+		ItemStack template = new ItemStack(ModContent.NETHERITE_DRILL_UPGRADE_SMITHING_TEMPLATE.get());
+		ItemStack addition = new ItemStack(ModContent.NETHERITE_DRILL_HEAD.get());
+
+		// A charged drill that is ALSO in Silk Touch mode: both pieces of per-stack state must survive.
+		ItemStack input = diamondTipDrill(charge);
+		EnchantmentHelper.updateEnchantments(input,
+				mutable -> mutable.set(enchant(helper.getLevel(), Enchantments.SILK_TOUCH), 1));
+		if (!ElectricDrillDiamondTipItem.isSilkMode(input)) {
+			helper.fail("test setup failed: the input drill is not in Silk Touch mode");
+			return;
+		}
+
+		SmithingRecipeInput smithing = new SmithingRecipeInput(template, input, addition);
+		if (!recipe.matches(smithing, helper.getLevel())) {
+			helper.fail("the smithing recipe refuses template + charged diamond-tip drill + drill head");
+			return;
+		}
+		ItemStack result = recipe.assemble(smithing);
+		if (result.isEmpty()) {
+			helper.fail("recipe assembled nothing");
+			return;
+		}
+		if (!result.is(ModContent.ELECTRIC_DRILL_NETHERITE_TIP.get())) {
+			helper.fail("smithing produced " + result.getItem() + " instead of the netherite tip");
+			return;
+		}
+		// The result's buffer is the bigger one, so the input's charge cannot be clamped on the way in.
+		long capacity = ItemEnergy.capacity(result);
+		if (capacity < charge) {
+			helper.fail("the netherite tip holds " + capacity + " EU but the input carries " + charge
+					+ " — the transfer asserted below would be clamped, not full");
+			return;
+		}
+		long carried = ItemEnergy.get(result);
+		if (carried != charge) {
+			helper.fail("smithing a drill charged to " + charge + " EU produced " + carried
+					+ " EU — the charge is being burned instead of carried over (recipe type changed?)");
+			return;
+		}
+		// Components come across wholesale, so the drop mode the player had set survives the upgrade too.
+		if (!ElectricDrillDiamondTipItem.isSilkMode(result)) {
+			helper.fail("the input drill was in Silk Touch mode and the upgraded one is not — "
+					+ "components are not being carried over");
+			return;
+		}
+		// A drained, unenchanted input must still give exactly the plain item: no charge component at all,
+		// so a freshly smithed drill stays interchangeable with one made from an empty drill.
+		ItemStack plain = recipe.assemble(
+				new SmithingRecipeInput(template, diamondTipDrill(0), addition));
+		if (ItemEnergy.get(plain) != 0) {
+			helper.fail("smithing a drained drill produced a charged result: " + ItemEnergy.get(plain));
+			return;
+		}
+		helper.succeed();
+	}
+
 	// ── helpers ────────────────────────────────────────────────────────────────────────────────────
+
+	private static ItemStack netheriteTipDrill(long eu) {
+		ItemStack stack = new ItemStack(ModContent.ELECTRIC_DRILL_NETHERITE_TIP.get());
+		ItemEnergy.set(stack, eu);
+		return stack;
+	}
 
 	private static ItemStack diamondTipDrill(long eu) {
 		ItemStack stack = new ItemStack(ModContent.ELECTRIC_DRILL_DIAMOND_TIP.get());

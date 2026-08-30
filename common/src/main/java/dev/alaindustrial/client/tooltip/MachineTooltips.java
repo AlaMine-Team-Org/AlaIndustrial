@@ -31,6 +31,7 @@ import dev.alaindustrial.item.tool.AnalyzerMode;
 import dev.alaindustrial.item.tool.ElectricChainsawDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricChainsawItem;
 import dev.alaindustrial.item.tool.ElectricDrillDiamondTipItem;
+import dev.alaindustrial.item.tool.ElectricDrillNetheriteTipItem;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
 import dev.alaindustrial.item.tool.ElectricHoeDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricHoeItem;
@@ -336,7 +337,15 @@ public final class MachineTooltips {
 		// MOD-321: the upgraded drill adds its switchable Silk Touch mode. The line is worth showing in
 		// both states: vanilla already lists "Silk Touch I" while the mode is on, but with it off nothing
 		// would hint that the drill has a toggle at all, so this is where the player learns the control.
-		if (stack.getItem() instanceof ElectricDrillDiamondTipItem) {
+		// MOD-534: the netherite tip is a subclass of the diamond one, so its branch must come FIRST or the
+		// diamond branch below would claim it and label the top tier with the name of the tier under it.
+		if (stack.getItem() instanceof ElectricDrillNetheriteTipItem) {
+			boolean silk = ElectricDrillDiamondTipItem.isSilkMode(stack);
+			lines.add(Component.translatable(silk
+					? "tooltip.alaindustrial.electric_drill_netherite_tip.silk_on"
+					: "tooltip.alaindustrial.electric_drill_netherite_tip.silk_off")
+					.withStyle(silk ? ChatFormatting.AQUA : ChatFormatting.GRAY));
+		} else if (stack.getItem() instanceof ElectricDrillDiamondTipItem) {
 			boolean silk = ElectricDrillDiamondTipItem.isSilkMode(stack);
 			lines.add(Component.translatable(silk
 					? "tooltip.alaindustrial.electric_drill_diamond_tip.silk_on"

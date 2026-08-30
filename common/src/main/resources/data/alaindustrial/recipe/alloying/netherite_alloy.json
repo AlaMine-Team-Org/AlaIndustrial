@@ -1,0 +1,17 @@
+{
+  "type": "alaindustrial:alloying",
+  "components": [
+    {
+      "ingredient": "#c:ingots/netherite"
+    },
+    {
+      "ingredient": "#c:ingots/electrum",
+      "count": 2
+    }
+  ],
+  "result": {
+    "id": "alaindustrial:netherite_alloy_ingot",
+    "count": 2
+  },
+  "energy": 1200
+}
