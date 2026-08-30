@@ -363,7 +363,7 @@
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="11 个页面">11</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
-<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="14 个页面">14</span></a>
+<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="15 个页面">15</span></a>
 <div class="group-title">加工</div>
 <a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="15 个页面">15</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="3 个页面">3</span></a>
@@ -372,7 +372,7 @@
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">世界与自动化</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="21 个页面">21</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="22 个页面">22</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="5 个页面">5</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">其他</div>
@@ -576,6 +576,32 @@
 <blockquote>⚠️ <strong>玩家或生物脚下的方块并不受保护。</strong>这份严苛是有意的：在一场已经开始的事故当中因为大意而丧命 是可能的，不会为了安全而跳过任何一格。</blockquote>
 
 <p>用 可以整个关掉。关掉之后<strong>所有</strong>警告依旧在——声音、粒子、状态——但不 会改动任何一块方块：这个开关保护的是世界，而不是把反应堆的状态藏起来。</p>
+
+<h2 id="满百分之百的事故">满百分之百的事故</h2>
+
+<p>热量条走到顶端不再只是停在那里——它会<strong>启动倒计时</strong>。面板标题变成「即将熔毁」，下方出现一条不断缩短的红 色条，警报一直响到最后。</p>
+
+<p>条上故意不写数字。时长在每次事故时随机抽取，<strong>两到三分钟</strong>：固定时长玩家一周就背下来了，然后就不再看面 板。红条诚实地说「时间不多了」，但不告诉你还剩多少。</p>
+
+<p><strong>直到最后一刻都能取消——没有不可挽回的时点。</strong> 三种办法，而三种归根到底是同一件事：<strong>让热量条离开百 分之百，并在下面保持五秒</strong>。</p>
+
+<ul><li>往回路里<strong>注水</strong>；</li><li>拉下<strong>拉杆</strong>（紧急停堆）；</li><li><strong>打穿一面墙</strong>——房间不再是房间，反应堆会平滑地退回裸机模式。</li></ul>
+
+<p>这五秒不是吹毛求疵，而是堵住一个显而易见的漏洞。热量被压在刻度顶端，所以只要一个 tick 没有信号，读数就 会变成 99 %。当倒计时还按这个瞬时读数清零时，一个二十 tick 里断开一 tick 的中继器时钟，就能让反应堆保 持 95 % 的占空比并完全免疫。现在倒计时在低于红线期间会<strong>暂停</strong>，只有在下面待满整个窗口才会解除；只要有 一个 tick 回到顶端，攒下的进度就清零。任何诚实的补救都能轻松满足，而闪烁信号什么也换不到。</p>
+
+<p><strong>缓冲区满不在这个列表里。</strong> 能量无处可去的反应堆并不会停下：反应照旧进行，热量照旧上升，没有冷却照样会 炸。唯一变的是不再消耗铀，因为燃料是按<strong>实际输出</strong>的能量结算的。开着不管、缓冲区又满的反应堆，白白发 热，也白白炸掉。</p>
+
+<p>事故会被房间完全兜住——里面烧成一片，外面一格不动——大型电站则兜不住。墙壁的造价就是为了这个。</p>
+
+<p>事后留下的是弹坑、震中的岩浆、从堆架里甩出来的铀，以及 <a href="irradiated_soil.html">辐射污染土</a>——但只出现在爆炸真正够到的地方。开关 会彻底移除事故，保留倒计时、声音和面板显示。</p>
+
+<h2 id="裸机反应堆的不稳定度">裸机反应堆的不稳定度</h2>
+
+<p>没有房间的反应堆既没有热量也没有水——它有的是<strong>不稳定度</strong>，在面板上单独占一行。它随堆中燃料棒数量增长， 也会自行衰减，所以每种规模都有自己的平衡点：</p>
+
+<table><thead><tr><th>堆架数量</th><th>稳定在</th><th>意味着</th></tr></thead><tbody><tr><td>1</td><td>约 29 %</td><td>可以一直放着</td></tr><tr><td>2</td><td>约 59 %</td><td>可以一直放着</td></tr><tr><td>3</td><td>约 89 %</td><td>极限：能一直跑，但面板是红的</td></tr><tr><td>4 及以上</td><td>没有平衡点</td><td>冲到一百并进入同样的倒计时</td></tr></tbody></table>
+
+<p>由此得出岩浆农场的规则：<strong>最多三个堆架</strong>可以无人值守地放着跑。第四个把农场变成炸弹，而面板会提前告诉 你。</p>
 
 <h2 id="界面">界面</h2>
 

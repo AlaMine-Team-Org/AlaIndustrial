@@ -363,7 +363,7 @@
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="11 ページ">11</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
-<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>原子力</span><span class="cat-count" aria-label="14 ページ">14</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>原子力</span><span class="cat-count" aria-label="15 ページ">15</span></a>
 <div class="group-title">加工</div>
 <a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>マシン</span><span class="cat-count" aria-label="15 ページ">15</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>液体マシン</span><span class="cat-count" aria-label="3 ページ">3</span></a>
@@ -372,7 +372,7 @@
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>液体輸送</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>液体貯蔵</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <div class="group-title">世界と自動化</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>素材</span><span class="cat-count" aria-label="21 ページ">21</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>素材</span><span class="cat-count" aria-label="22 ページ">22</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>農業</span><span class="cat-count" aria-label="5 ページ">5</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>高度なマシン</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <div class="group-title">その他</div>
@@ -450,7 +450,7 @@
 
 <p>設計上、各製錬は <strong>正確に1回だけ</strong> 表示されるはずです。モッドは、バニラのかまどが同じ入力と出力で既に行っていること（丸石 → 石、砂 → ガラス、raw_copper/gold/iron → インゴット）を独自のレシピで重複させません。そのような製錬はバニラの製錬だけに存在し、カテゴリには単一のミラーとして入ります。Mekanism の Energized Smelter も Modern Industrialization も同じやり方で、バニラと数値的に同一の製錬についての単一の情報源を保っています（ミラーが取り出す 200 EU/FE · 5秒という価格も、機械がティックするのと同じ設定から来ています）。</p>
 
-<p><strong>既知の例外：</strong> 銅、金、鉄、ニッケル、銀、スズについては、現在この原則が破れています — これらの重複レシピはモッドのレシピとは別にミラーされるため、「粉 → インゴット」の製錬が2回表示されます（上記参照）。ゲームプレイには影響せず、ビューアーの表示だけの問題です。バニラのアイテムセットでカテゴリには約100のレシピがあります。 以降、生ゴムは製錬に含まれません。</p>
+<p><strong>重複レシピがある場所でこの原則をどう保っているか（）。</strong> 鉄のかまどのために、12 個のモッドレシピがそれぞれバニラの重複レシピを持っています（6 種類の粉、5 種類の「原石 → インゴット」、そして鉄の焼き入れ）。その重複レシピのミラーはカテゴリに入りません。入力アイテムのすべてをモッドのレシピが既に同じスタックへ変えているバニラ製錬は、そこで捨てられるからです。残るのはモッドのレシピで、これはプレイヤーに有利な選択でもあります。入力がタグ（<code>#c:dusts/copper</code>）なので、他のモッドの銅粉もそのカードが覆いますが、重複レシピは 1 つの具体的なアイテムしか指しません。バニラのアイテムセットでカテゴリには約100のレシピがあります。 以降、生ゴムは製錬に含まれません。</p>
 
 <h2 id="進行">進行</h2>
 

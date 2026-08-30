@@ -363,7 +363,7 @@
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="11 сторінок">11</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="4 сторінки">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
-<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>Ядерна техніка</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
+<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>Ядерна техніка</span><span class="cat-count" aria-label="15 сторінок">15</span></a>
 <div class="group-title">Переробка</div>
 <a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машини</span><span class="cat-count" aria-label="15 сторінок">15</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машини для рідин</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
@@ -372,7 +372,7 @@
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логістика рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Зберігання рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Світ та автоматизація</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="21 сторінка">21</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="22 сторінки">22</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сільське господарство</span><span class="cat-count" aria-label="5 сторінок">5</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Високотехнологічні машини</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Інше</div>
@@ -576,6 +576,32 @@
 <blockquote>⚠️ <strong>Блок під гравцем або мобом не захищений.</strong> Суворість свідома: загинути через неуважність посеред уже наявної аварії можна, і пропусків позицій заради безпеки немає.</blockquote>
 
 <p>Повністю вимикається ключем. Вимкнений лишає <strong>всі</strong> попередження на місці — звук, частинки, статус, — але не змінює жодного блока: ключ захищає світ, а не ховає стан реактора.</p>
+
+<h2 id="аварія-на-ста-відсотках">Аварія на ста відсотках</h2>
+
+<p>Шкала нагріву, що дійшла до верху, більше нічим не закінчується — вона <strong>запускає зворотний відлік</strong>. Заголовок панелі змінюється на «АВАРІЯ», під ним з'являється спадна червона смуга, і сирена звучить до самого кінця.</p>
+
+<p>Смуга без цифр навмисно. Тривалість випадає випадково, <strong>від двох до трьох хвилин</strong> на кожну аварію: фіксований строк гравці вивчили б напам'ять за тиждень і перестали б читати панель. Смуга чесно каже «часу дедалі менше» і не каже, скільки саме.</p>
+
+<p><strong>Скасувати можна до останнього тіка — точки неповернення немає.</strong> Три способи, і всі три зводяться до одного: <strong>шкала має зійти зі сотні й протриматися внизу п'ять секунд</strong>.</p>
+
+<ul><li>подати <strong>воду</strong> в контур;</li><li>смикнути <strong>важіль</strong> (скрам);</li><li><strong>пробити стіну</strong> — кімната перестане бути кімнатою, і реактор м'яко впаде в голий режим.</li></ul>
+
+<p>П'ять секунд — не прискіпливість, а захист від очевидного обходу. Тепло притиснуте до стелі шкали, тож одного тіка без сигналу досить, щоб прилад прочитав 99 %. Поки відлік знімався за миттєвим значенням, редстоун-таймер із одним вимкненим тіком із двадцяти давав реактору 95 % потужності й цілковиту невразливість. Тепер відлік на час «просідання» <strong>завмирає</strong>, а скасовується лише якщо ядро протрималося внизу все вікно; повернулося до сотні хоч на тік — накопичене згоряє. Будь-який чесний спосіб укладається з великим запасом, блимання сигналом не дає нічого.</p>
+
+<p><strong>Повний буфер до цього списку не належить.</strong> Реактор, якому нікуди дівати енергію, не зупиняється: реакція йде, шкала росте, і без охолодження він дійде до вибуху так само. Змінюється тільки одне — уран при цьому не витрачається, бо паливо списується за <strong>віддану</strong> енергію. Реактор, забутий увімкненим із повним буфером, гріється безкоштовно й вибухає задарма.</p>
+
+<p><strong>Сила вибуху росте від кількості стрижнів</strong> і впирається в стелю. Числа — у цілком (усередині все випалено, назовні не зачеплено жодного блока), велику станцію — уже ні. Заради цього стіни й коштують стільки, скільки коштують.</p>
+
+<p>Після вибуху лишається вирва, лава в епіцентрі, розкиданий зі стійок уран і <a href="irradiated_soil.html">заражена земля</a> — але тільки там, куди вибух справді дотягнувся. Вимикач прибирає аварію цілком, лишаючи відлік, звук і напис на панелі.</p>
+
+<h2 id="нестабільність-голого-реактора">Нестабільність голого реактора</h2>
+
+<p>У реактора без кімнати немає ні нагріву, ні води — зате є <strong>нестабільність</strong>, і її видно на панелі окремим рядком. Росте вона від кількості стрижнів у купі й сама ж спадає, тож у кожного розміру є</p>
+
+<table><thead><tr><th>Стійок у купі</th><th>Де стане</th><th>Що це означає</th></tr></thead><tbody><tr><td>1</td><td>~29 %</td><td>стоїть вічно</td></tr><tr><td>2</td><td>~59 %</td><td>стоїть вічно</td></tr><tr><td>3</td><td>~89 %</td><td>межа: працює вічно, але панель у червоному</td></tr><tr><td>4 і більше</td><td>рівноваги немає</td><td>розгін до ста й той самий відлік</td></tr></tbody></table>
+
+<p>Звідси й правило лавової ферми: <strong>три стійки — максимум</strong>, який можна лишити працювати без нагляду. Четверта перетворює ферму на бомбу, і панель показує це заздалегідь.</p>
 
 <h2 id="інтерфейс">Інтерфейс</h2>
 

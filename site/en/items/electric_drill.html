@@ -363,7 +363,7 @@
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="11 pages">11</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
-<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>Nuclear</span><span class="cat-count" aria-label="14 pages">14</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>Nuclear</span><span class="cat-count" aria-label="15 pages">15</span></a>
 <div class="group-title">Processing</div>
 <a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="15 pages">15</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="3 pages">3</span></a>
@@ -372,7 +372,7 @@
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="21 pages">21</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="22 pages">22</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="5 pages">5</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
@@ -403,6 +403,8 @@
 <p>Like the mod's other EU/FE items, the drill has <strong>no durability</strong> and never breaks: the bar under the icon shows EU/FE charge (gold), not wear. It charges where the <a href="energy_pack.html">Energy Pack</a> does — in the <a href="../energy-storage/battery_box.html">Battery Box</a> charge slot and from a worn pack.</p>
 
 <p>The drill has a second tier — the <strong>Diamond-Tipped Electric Drill</strong>: the same tool, but it digs faster and can switch its drops to Silk Touch. See <a href="#diamond-tip-upgrade">Diamond tip (upgrade)</a> below.</p>
+
+<p>A third and final tier follows it — the <strong>Netherite-Tipped Electric Drill</strong>: faster still, hitting harder, and carrying half again as much charge. See <a href="#netherite-tip-upgrade">Netherite tip (upgrade)</a> below.</p>
 
 <h2 id="energy">Energy</h2>
 
@@ -452,9 +454,33 @@
 
 <blockquote><strong>Place the drill in the grid by hand.</strong> The recipe accepts a drill in any state — empty, charged, enchanted — and laying the grid out yourself always works. The <strong>auto-fill</strong> button, though (the recipe book, and the "+" in viewers like REI/JEI), <strong>will not find a charged drill</strong> and will report missing materials. That is a Minecraft limitation rather than a mod one: auto-fill looks for an item whose components exactly match the recipe's display stack, and the display shows an empty drill. It is the same reason auto-fill never picks up enchanted or renamed items, in any recipe in the game. Laying the grid out by hand takes a couple of seconds and works with any drill.</blockquote>
 
+<h2 id="netherite-tip-upgrade">Netherite tip (upgrade)</h2>
+
+<p>The <strong>Netherite-Tipped Electric Drill</strong> (is the line's third and last tier. Exactly three things differ from the diamond tip; everything else is inherited unchanged, the switchable Silk Touch included.</p>
+
+<p><strong>1. It digs faster.</strong> Mining speed <strong>12.0</strong> against the diamond tip's 10.0 (and a netherite pickaxe's 9.0). The mining <strong>tier does not change</strong> — it stays diamond, exactly like both tiers below. Vanilla 26.2 has no tier above diamond at all, so "netherite" here is about how fast the work goes rather than about new blocks: the same relationship a vanilla netherite pickaxe has to a diamond one.</p>
+
+<p><strong>2. It hits harder.</strong> Attack damage <strong>7</strong> against 6 on both tiers below — the step vanilla gives netherite over diamond. Attack speed is unchanged, and attacking still spends no EU/FE.</p>
+
+<p><strong>3. It holds more charge.</strong> A <strong>15 000 EU/FE</strong> buffer against the 10 000 the first two tiers share. At an <strong>unchanged 50 EU/FE per block</strong> that is ~300 blocks on a charge instead of ~200. The per-block cost deliberately does not rise with the buffer: the tier is paid for in its recipe (netherite), not by charging more EU/FE for the same work.</p>
+
+<p><strong>Inherited unchanged:</strong> the switchable Silk Touch mode (sneak + right-click), torch placement on a plain right-click at 5 EU/FE, the 32 EU/FE/t intake, no durability, hand-speed mining when flat, and creative behaviour.</p>
+
+<p><strong>The craft takes two steps, and the second one is at a smithing table</strong> — the way every netherite upgrade works in vanilla.</p>
+
+<p><strong>Step 1 — assemble the head (crafting bench).</strong> Three netherite scrap along the top row, then a <a href="../materials/netherite_alloy.html">netherite alloy ingot</a>, an <a href="../components/metal_gears.html">electrum gear</a> and a second alloy ingot below them. That yields the <strong>Netherite Drill Head</strong>. The step exists for a mechanical reason: a smithing table has only three slots, and four components do not fit into them — the head folds them into one part.</p>
+
+<p><strong>Step 2 — fit the head (smithing table).</strong> Template + the diamond-tipped drill + the drill head. The template is <strong>not consumed</strong>, exactly like the vanilla netherite one.</p>
+
+<p><strong>The template — the Netherite Drill Upgrade Smithing Template</strong> — is found in <strong>bastion remnant</strong> chests, in the same four loot tables vanilla hides its own netherite template in, at a 20 % chance per chest. Like the vanilla one it <strong>duplicates on a bench</strong>: 7 diamonds + 1 netherrack around the template give two back. It only ever has to be found once.</p>
+
+<p><strong>Charge and mode both carry over.</strong> In 26.2 a smithing table assembles its result through <code>TransmuteRecipe.createWithOriginalComponents</code>, which copies the base's <strong>whole</strong> component map. So the netherite drill inherits not only the diamond tip's EU/FE (the result's buffer is larger, so nothing is clipped) but its enchantments and its Silk Touch mode along with them. That is broader than the charge transfer one tier below, and it comes for free — no mod recipe serializer is involved.</p>
+
+<p>It also settles the old complaint from as a side effect: the note about laying the grid out by hand does not apply to a smithing table, which has no auto-fill to trip over a charged drill.</p>
+
 <h2 id="progression">Progression</h2>
 
-<p>The mod's first powered tool — a bridge between the energy progression and hand mining. Available after the <a href="../energy-storage/battery_box.html">Battery Box</a> and the <a href="energy_pack.html">Energy Pack</a>. Its second tier is the diamond-tip upgrade above, gated behind the <a href="../machines/alloy_smelter.html">Alloy Smelter</a> (invar) and the <a href="../machines/macerator.html">Macerator</a> (diamond dust). Other electric tools (chainsaw/hoe/saber) are future work.</p>
+<p>The mod's first powered tool — a bridge between the energy progression and hand mining. Available after the <a href="../energy-storage/battery_box.html">Battery Box</a> and the <a href="energy_pack.html">Energy Pack</a>. Its second tier is the diamond-tip upgrade above, gated behind the <a href="../machines/alloy_smelter.html">Alloy Smelter</a> (invar) and the <a href="../machines/macerator.html">Macerator</a> (diamond dust). Its third and last is the netherite tip — faster, harder-hitting and longer-lasting — gated behind a Nether trip for netherite plus that same Alloy Smelter for the <a href="../materials/netherite_alloy.html">netherite alloy</a>. Other electric tools (chainsaw/hoe/saber) are future work.</p>
 
 <h2 id="related">Related</h2>
 

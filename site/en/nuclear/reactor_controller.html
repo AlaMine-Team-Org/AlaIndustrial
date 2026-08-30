@@ -363,7 +363,7 @@
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="11 pages">11</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
-<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>Nuclear</span><span class="cat-count" aria-label="14 pages">14</span></a>
+<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>Nuclear</span><span class="cat-count" aria-label="15 pages">15</span></a>
 <div class="group-title">Processing</div>
 <a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="15 pages">15</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="3 pages">3</span></a>
@@ -372,7 +372,7 @@
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="21 pages">21</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="22 pages">22</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="5 pages">5</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
@@ -589,6 +589,32 @@ removed = boiled x 2</code></pre>
 <blockquote>⚠️ <strong>The block under a player or a mob is not protected.</strong> The harshness is deliberate: dying through inattention in the middle of an accident already under way is possible, and no position is skipped for safety's sake.</blockquote>
 
 <p>The whole thing is switched off by. Switched off it leaves <strong>every</strong> warning in place — the sound, the particles, the status — but changes not one block: the key protects the world, it does not hide the reactor's state.</p>
+
+<h2 id="the-accident-at-a-hundred-percent">The accident at a hundred percent</h2>
+
+<p>A heat gauge that reaches the top no longer just sits there — it <strong>starts a countdown</strong>. The panel's headline changes to MELTDOWN IMMINENT, a draining red bar appears under it, and the siren keeps going to the end.</p>
+
+<p>The bar carries no figure, on purpose. The duration is rolled per accident, <strong>between two and three minutes</strong>: a fixed delay would be memorised within a week and the panel would stop being read. The bar honestly says "time is running out" and does not say how much is left.</p>
+
+<p><strong>It can be cancelled up to the last tick — there is no point of no return.</strong> Three ways, and all three come down to the same thing: <strong>the gauge has to come off a hundred and stay off it for five seconds</strong>.</p>
+
+<ul><li>feed <strong>water</strong> into the loop;</li><li>pull the <strong>lever</strong> (the scram);</li><li><strong>breach a wall</strong> — the room stops being a room, and the reactor falls softly into bare mode.</li></ul>
+
+<p>The five seconds are not pedantry, they close an obvious loophole. Heat is clamped at the top of the scale, so a single tick without a signal is enough for the gauge to read 99 %. While the countdown was cleared on that instantaneous reading, a repeater clock with one tick off in twenty gave the reactor ninety-five percent duty and total immunity. Now the countdown <strong>pauses</strong> while the core is below the line and clears only once it has stayed there for the whole window; one tick back at the top forfeits everything banked. Every honest fix clears it with room to spare, and blinking the signal buys nothing.</p>
+
+<p><strong>A full buffer is not on that list.</strong> A reactor with nowhere to put its energy does not stop: the reaction runs, the gauge climbs, and without coolant it reaches the explosion just the same. Only one thing changes — no uranium is spent, because fuel is charged against energy actually <strong>delivered</strong>. A reactor left switched on with a full buffer heats for free and explodes for nothing.</p>
+
+<p><strong>Blast power grows with the rod count</strong> and stops at a ceiling. The numbers live in the room entirely — everything inside is gutted, not one block outside changes — and a large station is not. That is what the walls cost what they cost for.</p>
+
+<p>What is left afterwards is a crater, lava at the epicentre, uranium scattered out of the racks, and <a href="irradiated_soil.html">irradiated soil</a> — but only where the blast actually reached. The switch removes the accident entirely, keeping the countdown, the sound and the panel.</p>
+
+<h2 id="a-bare-reactors-instability">A bare reactor's instability</h2>
+
+<p>A reactor with no room has neither heat nor water — what it has is <strong>instability</strong>, shown on the panel as a row of its own. It grows with the number of rods in the pile and decays on its own, so every size has its own resting point:</p>
+
+<table><thead><tr><th>Racks in the pile</th><th>Where it settles</th><th>What that means</th></tr></thead><tbody><tr><td>1</td><td>~29 %</td><td>stands for ever</td></tr><tr><td>2</td><td>~59 %</td><td>stands for ever</td></tr><tr><td>3</td><td>~89 %</td><td>the limit: runs for ever, panel in the red</td></tr><tr><td>4 or more</td><td>no resting point</td><td>runs away to a hundred and the same countdown</td></tr></tbody></table>
+
+<p>Hence the lava farm's rule: <strong>three racks is the maximum</strong> that can be left running unattended. The fourth turns the farm into a bomb, and the panel says so in advance.</p>
 
 <h2 id="interface">Interface</h2>
 

@@ -363,7 +363,7 @@
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="11 ページ">11</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
-<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>原子力</span><span class="cat-count" aria-label="14 ページ">14</span></a>
+<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>原子力</span><span class="cat-count" aria-label="15 ページ">15</span></a>
 <div class="group-title">加工</div>
 <a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>マシン</span><span class="cat-count" aria-label="15 ページ">15</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>液体マシン</span><span class="cat-count" aria-label="3 ページ">3</span></a>
@@ -372,7 +372,7 @@
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>液体輸送</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>液体貯蔵</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <div class="group-title">世界と自動化</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>素材</span><span class="cat-count" aria-label="21 ページ">21</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>素材</span><span class="cat-count" aria-label="22 ページ">22</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>農業</span><span class="cat-count" aria-label="5 ページ">5</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>高度なマシン</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <div class="group-title">その他</div>
@@ -576,6 +576,32 @@
 <blockquote>⚠️ <strong>プレイヤーやモブの下のブロックは保護されません。</strong> この厳しさは意図的です。すでに始まって いる事故のただ中で、不注意から死ぬこともありえます。安全のために位置を飛ばすことはしません。</blockquote>
 
 <p>で丸ごと切れます。切った状態でも警告は<strong>すべて</strong>残り——音、 パーティクル、状態表示——ブロックはひとつも変わりません。この設定はワールドを守るものであって、 原子炉の状態を隠すものではありません。</p>
+
+<h2 id="一〇〇パーセントの事故">一〇〇パーセントの事故</h2>
+
+<p>上限に達した熱ゲージは、もうそこに留まりません——<strong>カウントダウンが始まります</strong>。パネルの見出しは「メ ルトダウン間近」に変わり、その下に減っていく赤いバーが現れ、サイレンは最後まで鳴り続けます。</p>
+
+<p>バーに数字がないのは意図的です。長さは事故ごとに、<strong>二分から三分</strong>のあいだで抽選されます。固定の長さ なら一週間で覚えられ、誰もパネルを読まなくなるからです。バーは「時間がなくなりつつある」とだけ正直に告 げ、あと何秒かは告げません。</p>
+
+<p><strong>最後のティックまで中止できます——引き返せない一線はありません。</strong> 方法は三つ、そしてどれも結局は同じ 一つのことです。<strong>ゲージを一〇〇から降ろし、五秒のあいだ下に留めること</strong>。</p>
+
+<ul><li>回路に<strong>水</strong>を送る；</li><li><strong>レバー</strong>を倒す（スクラム）；</li><li><strong>壁を破る</strong>——部屋が部屋でなくなり、原子炉は静かにむき出しモードへ落ちます。</li></ul>
+
+<p>この五秒は細かいことを言っているのではなく、明白な抜け道をふさぐためのものです。熱は目盛りの上限に張り 付いているので、信号が一ティック切れるだけでゲージは 99 % を示します。カウントダウンがその瞬間値で解除 されていたころは、二十ティックに一ティックだけ切るリピーター時計で、原子炉は九五パーセントの稼働率と完 全な無敵を手に入れていました。いまはカウントダウンは線の下にいるあいだ<strong>停止</strong>し、窓のあいだずっと下に 留まってはじめて解除されます。一ティックでも上限に戻れば、貯めた分は失われます。まっとうな対処はどれも 余裕で満たしますが、信号を点滅させても何も得られません。</p>
+
+<p><strong>バッファ満杯はこの一覧に入りません。</strong> エネルギーの行き場がない原子炉は止まりません。反応は続き、ゲー ジは上がり、冷却がなければ同じように爆発に至ります。変わるのは一点だけ——ウランは消費されません。燃料は 実際に<strong>送り出した</strong>エネルギーに対して引かれるからです。バッファ満杯のまま点けっぱなしにされた原子炉 は、ただで加熱し、ただで爆発します。</p>
+
+<p><strong>爆発の威力は燃料棒の本数とともに増え</strong>、上限で止まります。数値は —内部は焼き尽くされ、外側は一ブロックも動きません——大きな発電所は受け止めきれません。壁があの値段なの はそのためです。</p>
+
+<p>あとに残るのはクレーター、震源の溶岩、ラックから飛び散ったウラン、そして <a href="irradiated_soil.html">汚染された土</a>——ただし爆発が実際に届いた場所にだけです。 を切れば事故そのものが消え、カウントダウンと音とパネル表示だけが残ります。</p>
+
+<h2 id="むき出し原子炉の不安定度">むき出し原子炉の不安定度</h2>
+
+<p>部屋を持たない原子炉には熱も水もありません——代わりにあるのが<strong>不安定度</strong>で、パネルには独立した行として 表示されます。山にある燃料棒の本数とともに増え、自分で減っていくので、規模ごとに釣り合いの点があります。</p>
+
+<table><thead><tr><th>山のラック数</th><th>落ち着く先</th><th>意味</th></tr></thead><tbody><tr><td>1</td><td>約 29 %</td><td>永久に置いておける</td></tr><tr><td>2</td><td>約 59 %</td><td>永久に置いておける</td></tr><tr><td>3</td><td>約 89 %</td><td>限界：永久に動くが、パネルは赤</td></tr><tr><td>4 以上</td><td>釣り合う点がない</td><td>一〇〇まで暴走し、同じカウントダウンへ</td></tr></tbody></table>
+
+<p>ここから溶岩ファームの規則が出ます。<strong>ラックは三つまで</strong>が、見ていなくても動かし続けられる上限です。四 つ目はファームを爆弾に変え、パネルはそれを前もって示します。</p>
 
 <h2 id="インターフェース">インターフェース</h2>
 
