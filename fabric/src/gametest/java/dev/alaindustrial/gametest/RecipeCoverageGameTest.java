@@ -42,6 +42,11 @@ public class RecipeCoverageGameTest {
 	}
 
 	@GameTest
+	public void tcRecie12_electricFurnaceCategoryListsEachSmeltOnce(GameTestHelper helper) {
+		RecipeCoverageScenarios.tcRecie12_electricFurnaceCategoryListsEachSmeltOnce(helper);
+	}
+
+	@GameTest
 	public void tcRecie05_machineCasingResolves(GameTestHelper helper) {
 		RecipeCoverageScenarios.tcRecie05_machineCasingResolves(helper);
 	}

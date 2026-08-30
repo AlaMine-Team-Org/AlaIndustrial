@@ -5,8 +5,13 @@ import dev.alaindustrial.recipe.AlaProcessingRecipe;
 import dev.alaindustrial.recipe.AlloyingRecipe;
 import dev.alaindustrial.recipe.PolymerizingRecipe;
 import dev.alaindustrial.recipe.VanillaSmeltingMirror;
+import dev.architectury.utils.GameInstance;
 import java.util.List;
+import java.util.Map;
 import me.shedaniel.rei.api.common.display.DisplaySerializerRegistry;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import me.shedaniel.rei.api.common.plugins.REICommonPlugin;
 import me.shedaniel.rei.api.common.registry.display.ServerDisplayRegistry;
@@ -53,13 +58,19 @@ public class AlaReiCommonPlugin implements REICommonPlugin {
 		// its category lists those too — otherwise players opening it see only the mod's recipes and
 		// cannot tell the machine smelts ores, food and sand as well. Each vanilla recipe is mirrored
 		// into an AlaProcessingRecipe carrying the furnace's real EU cost; see VanillaSmeltingMirror
-		// (including why the five duplicate "balance anchor" recipes are left in).
-		// fillMultiple (not fill): a recipe that cannot be mirrored yields no display at all, and an
-		// empty collection is the only way to say "skip this one" — fill() would have to return null.
+		// (including why the twelve Iron-Furnace parity duplicates are left in the datapack).
+		// MOD-523: a vanilla smelt a mod recipe already covers is dropped here, or the category would
+		// list those twelve twice — once as the mod recipe, once as the mirror of our own duplicate.
+		// fillMultiple (not fill): a skipped recipe must yield no display at all, and an empty
+		// collection is the only way to say "skip this one" — fill() would have to return null.
+		ModSmeltingCoverage coverage = new ModSmeltingCoverage();
 		registry.beginRecipeFiller(SmeltingRecipe.class)
 				.fillMultiple(holder -> {
 					AlaProcessingRecipe mirror = VanillaSmeltingMirror.mirror(holder.value());
-					return mirror == null ? List.of() : List.of(new AlaProcessingDisplay(mirror));
+					if (mirror == null || VanillaSmeltingMirror.isCoveredByModSmelting(mirror, coverage.get())) {
+						return List.of();
+					}
+					return List.of(new AlaProcessingDisplay(mirror));
 				});
 		// MOD-019: the Polymerizer's own recipe family — a fluid volume in, an item out.
 		registry.beginRecipeFiller(PolymerizingRecipe.class)
@@ -70,5 +81,33 @@ public class AlaReiCommonPlugin implements REICommonPlugin {
 		// MOD-251: the distillation column's family — one fluid volume in, two fractions out.
 		registry.beginRecipeFiller(dev.alaindustrial.recipe.FluidOutputRecipe.class)
 				.fill(holder -> new FluidOutputDisplay(holder.value()));
+	}
+
+	/**
+	 * The mod-smelting coverage map (MOD-523), built once per REI reload on first use.
+	 *
+	 * <p>Lazy rather than built in {@link #registerDisplays}: REI registers the fillers while it
+	 * reloads but runs them later, in {@code fillRecipes}, and it reads the recipes from
+	 * {@code GameInstance.getServer()} at that later moment itself — skipping the fill entirely while
+	 * that server is still null. Asking the same source from inside the filler therefore sees exactly
+	 * the recipe map REI is iterating. One instance per {@code registerDisplays} call, so a datapack
+	 * reload rebuilds it instead of answering from the previous world's recipes.
+	 */
+	private static final class ModSmeltingCoverage {
+		private Map<Item, ItemStack> coverage;
+
+		Map<Item, ItemStack> get() {
+			if (coverage == null) {
+				MinecraftServer server = GameInstance.getServer();
+				if (server == null) {
+					Industrialization.LOGGER.warn("REI filled the electric furnace category with no server in reach; "
+							+ "vanilla smelts the mod's own recipes already cover will be listed twice.");
+					coverage = Map.of();
+				} else {
+					coverage = VanillaSmeltingMirror.modSmeltingCoverage(server.getRecipeManager().getRecipes());
+				}
+			}
+			return coverage;
+		}
 	}
 }

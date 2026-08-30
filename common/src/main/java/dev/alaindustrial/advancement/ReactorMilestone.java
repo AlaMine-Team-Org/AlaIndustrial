@@ -19,7 +19,11 @@ public enum ReactorMilestone {
 	/** A reactor put its first EU into its own buffer. */
 	POWER("power"),
 	/** The coolant loop boiled its first water into steam. */
-	STEAM("steam");
+	STEAM("steam"),
+	/** A sealed room went over the meltdown line and started eating its own contents (MOD-469). */
+	MELTDOWN("meltdown"),
+	/** A reactor's countdown ran out and it detonated (MOD-471). */
+	BLAST("blast");
 
 	private final String id;
 

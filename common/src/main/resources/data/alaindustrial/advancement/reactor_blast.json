@@ -1,0 +1,17 @@
+{
+  "parent": "alaindustrial:reactor_room",
+  "display": {
+    "icon": { "id": "alaindustrial:irradiated_soil" },
+    "title": { "translate": "advancements.alaindustrial.reactor_blast.title" },
+    "description": { "translate": "advancements.alaindustrial.reactor_blast.description" },
+    "frame": "challenge",
+    "hidden": true
+  },
+  "criteria": {
+    "blast": {
+      "trigger": "alaindustrial:reactor_milestone",
+      "conditions": { "milestone": "blast" }
+    }
+  },
+  "requirements": [["blast"]]
+}

@@ -624,6 +624,12 @@ public final class ReactorScenarios {
 		// changed. A core that genuinely pins the gauge needs no global to be bent.
 		buildRoom(helper);
 		ReactorControllerBlockEntity brain = controller(helper);
+		// MOD-473: the hidden meltdown step is asserted HERE rather than in a rig of its own, because a
+		// rig of its own would be a second writer of the meltdown config keys — and the paragraph above
+		// is the story of what that costs. An owner is all this scenario needs to also answer "was the
+		// advancement handed out", and it changes nothing about what the reactor does.
+		ServerPlayer owner = AlaGameTestHelper.survivalPlayer(helper);
+		brain.setOwner(owner.getUUID(), owner.getName().getString());
 		// Five racks packed on the floor: adjacency multiplies heat harder than output (that is the whole
 		// density trade), so this core sits at the top of the scale within a few dozen ticks.
 		BlockPos[] racks = {
@@ -648,6 +654,10 @@ public final class ReactorScenarios {
 				.setValue(FaceAttachedHorizontalDirectionalBlock.FACE, AttachFace.WALL)
 				.setValue(HorizontalDirectionalBlock.FACING, Direction.EAST));
 		BlockPos floor = new BlockPos(2, 0, 2);
+		// Nothing has run yet, so the hidden step must NOT be there. Without this line the assertion
+		// after the first sixty ticks could not tell "the meltdown awarded it" from "earned() always
+		// says yes" — the two are the same green.
+		assertNotEarned(helper, owner, "reactor_meltdown", "before the room ever overheated");
 		helper.setBlock(CONTROLLER.west(), Blocks.REDSTONE_BLOCK.defaultBlockState());
 
 		// The flag is checked EARLY and the damage LATE, because the two can be true at different times.
@@ -658,6 +668,7 @@ public final class ReactorScenarios {
 			helper.fail("a room at " + ReactorCore.heatPercent(brain.getHeat(), Config.reactorHeatCapacity)
 					+ "% of the heat scale did not report melting down");
 		}
+		assertEarned(helper, owner, "reactor_meltdown");
 
 		driveUnderLoad(helper, brain, 340);
 		if (!helper.getBlockState(pipe).is(Blocks.LAVA)) {
@@ -904,8 +915,12 @@ public final class ReactorScenarios {
 	}
 
 	private static void assertNotEarned(GameTestHelper helper, ServerPlayer player, String name) {
+		assertNotEarned(helper, player, name, "by an UNOWNED reactor");
+	}
+
+	private static void assertNotEarned(GameTestHelper helper, ServerPlayer player, String name, String why) {
 		if (earned(helper, player, name)) {
-			helper.fail("advancement " + name + " was awarded by an UNOWNED reactor");
+			helper.fail("advancement " + name + " was awarded " + why);
 		}
 	}
 
@@ -953,6 +968,11 @@ public final class ReactorScenarios {
 
 			buildRoom(helper);
 			ReactorControllerBlockEntity brain = controller(helper);
+			// MOD-473: same reasoning as the meltdown scenario — this is the only rig in the batch allowed
+			// to touch the blast keys, so the hidden accident step is asserted here. Phase one doubles as
+			// the control: a countdown that runs out with the switch off must award nothing.
+			ServerPlayer owner = AlaGameTestHelper.survivalPlayer(helper);
+			brain.setOwner(owner.getUUID(), owner.getName().getString());
 			for (BlockPos at : HOT_CORE) {
 				FuelRodAssemblyBlockEntity column = placeColumnAt(helper, at);
 				for (int i = 0; i < FuelRodAssemblyBlock.MAX_RODS; i++) {
@@ -979,6 +999,8 @@ public final class ReactorScenarios {
 			if (!helper.getBlockState(CONTROLLER).is(ModContent.REACTOR_CONTROLLER.get())) {
 				helper.fail("the blast switch was off and the reactor exploded anyway");
 			}
+			assertNotEarned(helper, owner, "reactor_blast",
+					"by a countdown that ran out with the blast switch off");
 
 			// Phase two: pull the lever. The gauge comes off a hundred and the countdown must clear — this
 			// is the promise that there is no point of no return.
@@ -1024,6 +1046,7 @@ public final class ReactorScenarios {
 				helper.fail("the blast blew through the far wall — containment failed, and in a live world "
 						+ "this rig's neighbours would be gone too");
 			}
+			assertEarned(helper, owner, "reactor_blast");
 			// And the racks the drone was painted onto must not be left humming: the controller is gone,
 			// so nothing in the world could ever switch them off again (the reason unformOnRemoval runs
 			// before the blast rather than from a removal hook that never fires for an explosion).
@@ -1141,6 +1164,11 @@ public final class ReactorScenarios {
 
 			buildRoom(helper);
 			ReactorControllerBlockEntity brain = controller(helper);
+			// MOD-473: same reasoning as the meltdown scenario — this is the only rig in the batch allowed
+			// to touch the blast keys, so the hidden accident step is asserted here. Phase one doubles as
+			// the control: a countdown that runs out with the switch off must award nothing.
+			ServerPlayer owner = AlaGameTestHelper.survivalPlayer(helper);
+			brain.setOwner(owner.getUUID(), owner.getName().getString());
 			for (BlockPos at : HOT_CORE) {
 				FuelRodAssemblyBlockEntity column = placeColumnAt(helper, at);
 				for (int i = 0; i < FuelRodAssemblyBlock.MAX_RODS; i++) {
@@ -1307,6 +1335,11 @@ public final class ReactorScenarios {
 			Config.reactorBlastEnabled = false;
 			buildRoom(helper);
 			ReactorControllerBlockEntity brain = controller(helper);
+			// MOD-473: same reasoning as the meltdown scenario — this is the only rig in the batch allowed
+			// to touch the blast keys, so the hidden accident step is asserted here. Phase one doubles as
+			// the control: a countdown that runs out with the switch off must award nothing.
+			ServerPlayer owner = AlaGameTestHelper.survivalPlayer(helper);
+			brain.setOwner(owner.getUUID(), owner.getName().getString());
 			for (BlockPos at : HOT_CORE) {
 				FuelRodAssemblyBlockEntity column = placeColumnAt(helper, at);
 				for (int i = 0; i < FuelRodAssemblyBlock.MAX_RODS; i++) {

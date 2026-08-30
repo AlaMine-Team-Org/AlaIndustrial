@@ -648,6 +648,10 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 	 * the controller is still standing.
 	 */
 	private void explode(ServerLevel level, BlockPos pos) {
+		// MOD-473: the hidden accident step goes FIRST. Everything below this line dismantles the
+		// reactor, and the last statement destroys the controller itself — a trigger fired after that
+		// would be fired from a block entity the world has already dropped.
+		awardMilestone(level, ReactorMilestone.BLAST);
 		unformOnRemoval(level);
 		BlockPos epicentre = blastEpicentre(pos);
 		float power = ReactorCore.blastPower(rods, Config.reactorBlastBasePower,
@@ -722,6 +726,12 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		if (melting != meltingDown) {
 			meltingDown = melting;
 			setChanged();
+			// MOD-473: the hidden meltdown step, on the EDGE rather than on a melted block. A room that
+			// crosses the line has had its accident whether or not reactorMeltdownMeltsBlocks lets it
+			// take the furniture with it, and an edge needs no latch of its own.
+			if (melting) {
+				awardMilestone(level, ReactorMilestone.MELTDOWN);
+			}
 		}
 		// The scenery hazard runs on the REACTION, not on this tick's output. A core whose buffer is full
 		// has stopped selling power and has not stopped being a reactor — hanging the danger on output let

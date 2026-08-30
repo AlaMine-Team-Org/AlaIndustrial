@@ -1,0 +1,17 @@
+{
+  "parent": "alaindustrial:reactor_room",
+  "display": {
+    "icon": { "id": "minecraft:lava_bucket" },
+    "title": { "translate": "advancements.alaindustrial.reactor_meltdown.title" },
+    "description": { "translate": "advancements.alaindustrial.reactor_meltdown.description" },
+    "frame": "goal",
+    "hidden": true
+  },
+  "criteria": {
+    "melting": {
+      "trigger": "alaindustrial:reactor_milestone",
+      "conditions": { "milestone": "meltdown" }
+    }
+  },
+  "requirements": [["melting"]]
+}

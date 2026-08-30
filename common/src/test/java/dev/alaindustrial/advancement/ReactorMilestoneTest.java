@@ -27,6 +27,8 @@ class ReactorMilestoneTest {
 		assertEquals("room_sealed", ReactorMilestone.ROOM_SEALED.id());
 		assertEquals("power", ReactorMilestone.POWER.id());
 		assertEquals("steam", ReactorMilestone.STEAM.id());
+		assertEquals("meltdown", ReactorMilestone.MELTDOWN.id());
+		assertEquals("blast", ReactorMilestone.BLAST.id());
 	}
 
 	/**

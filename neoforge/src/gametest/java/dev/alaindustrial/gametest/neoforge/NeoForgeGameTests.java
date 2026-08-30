@@ -1768,6 +1768,8 @@ public final class NeoForgeGameTests {
 				RecipeCoverageScenarios::tcRecie04_extractingRecipesAllLoad);
 		registerTest(event, "tc_recie11_distilling_recipe_family_registered", 40, true,
 				RecipeCoverageScenarios::tcRecie11_distillingRecipeFamilyRegistered);
+		registerTest(event, "tc_recie12_electric_furnace_category_lists_each_smelt_once", 40, true,
+				RecipeCoverageScenarios::tcRecie12_electricFurnaceCategoryListsEachSmeltOnce);
 		registerTest(event, "tc_recie05_machine_casing_resolves", 40, true,
 				RecipeCoverageScenarios::tcRecie05_machineCasingResolves);
 		registerTest(event, "tc_recie06_macerator_resolves", 40, true,
