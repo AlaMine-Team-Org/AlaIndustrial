@@ -8,6 +8,9 @@ repositories {
     maven { url = 'https://maven.shedaniel.me/' }
     // Architectury API — transitive runtime dependency of REI on Fabric.
     maven { url = 'https://maven.architectury.dev/' }
+    // JEI (the second recipe viewer on Fabric, MOD-541) — same BlameJared maven the NeoForge
+    // lane pulls its JEI jars from.
+    maven { url = 'https://maven.blamejared.com/' }
     // Mod Menu optional integration (MOD-030): pulled from Modrinth's maven instead of
     // maven.terraformersmc.com. That host is a single point of failure — it 502'd for the entire
     // 0.1.40 release build (Mod Menu had no mirror), so the build now avoids it. Same jar/version.
@@ -36,7 +39,22 @@ dependencies {
     // widgets. (Loom 1.17 here is not split-client, so these map to compileOnly, not clientCompileOnly.)
     compileOnly(libs.cloth.basic.math)
     compileOnly(libs.architectury.fabric)
-    runtimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:${rei_version}")
+
+    // JEI — the second recipe viewer on Fabric (MOD-541): players who install JEI instead of REI
+    // must see the machine categories too (REI plugins are invisible to JEI and vice versa). Same
+    // shape as REI above: APIs on the compile classpath, full JEI on the dev-run classpath only.
+    compileOnly("mezz.jei:jei-26.2-common-api:${jei_version}@jar")
+    compileOnly("mezz.jei:jei-26.2-fabric-api:${jei_version}@jar")
+
+    // One viewer at a time in the dev client (MOD-541): REI by default, JEI with
+    //   ./gradlew :fabric:runClient -Pviewer=jei
+    // Both viewers at once stack two overlays over the same screen edge and hide regressions
+    // instead of showing them, so the dev-run classpath carries exactly one of the two.
+    if ((project.findProperty('viewer') ?: 'rei').toString().equalsIgnoreCase('jei')) {
+        runtimeOnly("mezz.jei:jei-26.2-fabric:${jei_version}")
+    } else {
+        runtimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:${rei_version}")
+    }
 
     // Mod Menu via Modrinth maven (project id mOgUt4GM). Coordinates differ from the terraformersmc
     // maven (com.terraformersmc:modmenu) but it is the same jar — the package com.terraformersmc.modmenu

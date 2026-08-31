@@ -1,9 +1,9 @@
-## 0.1.134
+## 0.1.135
 
-<p><img alt="Ala Industrial 0.1.134 update preview" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.134/release-media/v0.1.134/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial 0.1.135 update preview" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.135/release-media/v0.1.135/changelog.png" width="720"></p>
 
-The garden drone now works together with Farmer's Delight.
+Machine recipes now show up in both of the big recipe viewers.
 
-### Bug Fixes
+### New
 
-- **Drone tends rich soil.** The garden drone station now plants and harvests on rich soil from Farmer's Delight like on plain farmland. The rich soil itself is never dug over.
+- Machine recipes are now visible in JEI alongside REI, with the same categories, energy costs and GUI click areas

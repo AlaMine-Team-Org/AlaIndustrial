@@ -36,6 +36,9 @@
 		],
 		"rei_client": [
 			"dev.alaindustrial.compat.rei.AlaReiPlugin"
+		],
+		"jei_mod_plugin": [
+			"dev.alaindustrial.compat.jei.AlaJeiPlugin"
 		]
 	},
 	"mixins": [
@@ -49,5 +52,9 @@
 		"java": ">=${java_version}",
 		"fabric-api": "*",
 		"team_reborn_energy": "*"
+	},
+	"suggests": {
+		"roughlyenoughitems": "*",
+		"jei": "*"
 	}
 }
