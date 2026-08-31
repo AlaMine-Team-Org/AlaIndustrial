@@ -36,6 +36,38 @@ public class RadiationGameTest {
 	}
 
 	/**
+	 * @implements R-RAD-13 — a full suit is complete protection on a mob (MOD-535).
+	 */
+	@GameTest
+	public void radSuitedVillagerTakesNoDose(GameTestHelper helper) {
+		RadiationScenarios.suitedVillagerTakesNoDose(helper);
+	}
+
+	/**
+	 * @implements R-RAD-14 — a real dispenser dresses the villager, and the suit then answers (MOD-535).
+	 */
+	@GameTest
+	public void radDispenserDressesTheVillagerForRadiation(GameTestHelper helper) {
+		RadiationScenarios.dispenserDressesTheVillagerForRadiation(helper);
+	}
+
+	/**
+	 * @implements R-RAD-15 — a miss is a visible eject, never a silently dressed bystander (MOD-535).
+	 */
+	@GameTest
+	public void radDispenserRefusesToDressAnyoneButConvertibleMobs(GameTestHelper helper) {
+		RadiationScenarios.dispenserRefusesToDressAnyoneButConvertibleMobs(helper);
+	}
+
+	/**
+	 * @implements R-RAD-16 — the live server-tick chain shields a suited villager end to end (MOD-535).
+	 */
+	@GameTest(maxTicks = 200)
+	public void radLiveTickChainShieldsTheSuitedVillager(GameTestHelper helper) {
+		RadiationScenarios.liveTickChainShieldsTheSuitedVillager(helper);
+	}
+
+	/**
 	 * @implements R-RAD-04 — a cow becomes a mooshroom and is never hurt on the way.
 	 */
 	@GameTest

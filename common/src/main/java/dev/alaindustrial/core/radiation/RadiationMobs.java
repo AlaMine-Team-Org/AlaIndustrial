@@ -41,6 +41,14 @@ import net.minecraft.world.phys.Vec3;
  *
  * <p>The dose is carried the same way the player's is: as the remaining duration of the radiation
  * effect on the mob itself. No per-entity bookkeeping, no attachment, and it survives a chunk reload.
+ *
+ * <p><b>A suit on a mob shields it completely (MOD-535)</b> — the same per-piece cut of
+ * {@code RadiationCore.shielded}, but under a flat 100 ceiling rather than the player's 95 % rod
+ * cap: the cap makes a live core survivable-but-scary for somebody who can walk away, and a mob
+ * cannot. A full set is total protection, which is what a dispenser-loaded villager is FOR.
+ * <b>It never wears</b>, an owner decision, not an oversight: a villager can neither repair nor
+ * re-equip a suit, so one that silently broke would silently cost a trader — the exact quiet loss
+ * this class refuses everywhere else. Wear stays a player-only cost in {@link RadiationTicker}.
  */
 public final class RadiationMobs {
 
@@ -82,16 +90,28 @@ public final class RadiationMobs {
 			}
 		}
 		for (Mob mob : found.values()) {
+			// The suit answers for a mob by the player's own per-piece formula (MOD-535), under ONE
+			// flat ceiling of 100 — deliberately NOT the player's 95 % rod cap. That cap makes a live
+			// core survivable-but-scary for somebody who can walk away; a villager cannot back off,
+			// and the first live test showed a suited one still converting beside scattered uranium
+			// through the 5 % leak. Full set on a mob is complete protection; partial is 25 % a piece.
 			int exposure = RadiationSources.exposureAt(level, mob, radius)
 					+ RadiationSources.doseFrom(level, mob, carriedSources, radius);
-			if (exposure > 0) {
-				expose(level, mob, exposure);
+			int shielded = RadiationCore.shielded(exposure, RadiationTicker.wornShieldingPieces(mob),
+					Config.radiationShieldPerPiecePercent, 100);
+			if (shielded > 0) {
+				expose(level, mob, shielded);
 			}
 		}
 	}
 
-	/** The closed list. A zombie villager or an existing mooshroom is already past the end of it. */
-	private static boolean isConvertible(Mob mob) {
+	/**
+	 * The closed list of species radiation transforms — villager, wandering trader, cow. A zombie
+	 * villager or an existing mooshroom is already past the end of it. Shared with
+	 * {@code SuitDispenseBehavior}, which refuses to aim a suit piece at anything else: a miss must
+	 * be a visible eject, never a silent wrong wearer.
+	 */
+	public static boolean isConvertible(Mob mob) {
 		return mob instanceof AbstractVillager || (mob instanceof Cow && !(mob instanceof MushroomCow));
 	}
 

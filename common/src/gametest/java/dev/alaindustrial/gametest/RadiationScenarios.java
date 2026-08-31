@@ -6,8 +6,10 @@ import dev.alaindustrial.block.ReactorDoorBlock;
 import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
 import dev.alaindustrial.block.entity.IronChestBlockEntity;
 import dev.alaindustrial.block.entity.ShieldingChestBlockEntity;
+import dev.alaindustrial.core.radiation.RadiationDose;
 import dev.alaindustrial.core.radiation.RadiationMobs;
 import dev.alaindustrial.core.radiation.RadiationSources;
+import dev.alaindustrial.core.radiation.RadiationTicker;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModEffects;
 import java.util.List;
@@ -15,16 +17,21 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.Container;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.cow.Cow;
 import net.minecraft.world.entity.animal.cow.MushroomCow;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.animal.pig.Pig;
 import net.minecraft.world.entity.monster.zombie.ZombieVillager;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.entity.DispenserBlockEntity;
 import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.properties.AttachFace;
@@ -173,6 +180,217 @@ public final class RadiationScenarios {
 			}
 			helper.succeed();
 		});
+	}
+
+	/**
+	 * A full suit is COMPLETE protection on a mob (MOD-535): the villager takes no dose at all — not
+	 * from the rack's field, and not from the exact carried exposure that converts a bare villager
+	 * (R-RAD-03). The rig proves it could irradiate by measuring the raw dose on the same villager
+	 * before the suit goes on.
+	 *
+	 * <p><b>Why a mob gets more than a player.</b> The player's 95 % rod cap makes a live core
+	 * survivable-but-scary for somebody who can walk away from it; a villager cannot back off, and
+	 * the first live test showed a suited one still converting beside scattered uranium through the
+	 * 5 % leak. So on a mob the ceiling is a flat 100: a full set stops everything, a partial one
+	 * still cuts its 25 % per piece.
+	 *
+	 * <p>Equipping is done straight to the slots rather than through a dispenser: the dispense path
+	 * is vanilla's ({@code EquipmentDispenseItemBehavior} equips any living entity), and duplicating
+	 * it here would test vanilla, not the mod. The suit does not RENDER on a villager — vanilla's
+	 * villager model has no armour layer at all (the zombie villager does, which is why conversion
+	 * makes it appear) — but that is a rendering gap tracked separately, never a reason for the dose
+	 * to be anything but zero.
+	 *
+	 * @implements R-RAD-13 — see docs/testing/RULES.md
+	 */
+	public static void suitedVillagerTakesNoDose(GameTestHelper helper) {
+		withIsolatedField(() -> {
+			placeFuelledRack(helper);
+			Villager villager = helper.spawn(EntityTypes.VILLAGER, BYSTANDER);
+			ServerLevel level = helper.getLevel();
+			int radius = Config.radiationSourceRadius;
+
+			int raw = RadiationSources.exposureAt(level, villager, radius);
+			if (raw < 20) {
+				helper.fail("rig is wrong: the rack must reach this villager with room to spare (got "
+						+ raw + "), or the zeros below would be the rig's doing and not the suit's");
+				return;
+			}
+
+			villager.setItemSlot(EquipmentSlot.HEAD, new ItemStack(ModContent.SHIELDING_HELMET.get()));
+			villager.setItemSlot(EquipmentSlot.CHEST, new ItemStack(ModContent.SHIELDING_CHESTPLATE.get()));
+			villager.setItemSlot(EquipmentSlot.LEGS, new ItemStack(ModContent.SHIELDING_LEGGINGS.get()));
+			villager.setItemSlot(EquipmentSlot.FEET, new ItemStack(ModContent.SHIELDING_BOOTS.get()));
+
+			// The field first: a full suit must stop it entirely on a mob.
+			RadiationMobs.sweep(level, List.of(villager.position()), List.of(), radius);
+			int fieldDose = RadiationDose.of(villager);
+			if (fieldDose != 0) {
+				helper.fail("a full suit must stop the whole field on a mob: raw " + raw
+						+ ", leaked " + fieldDose);
+				return;
+			}
+
+			// Then the exact exposure that converts a bare villager (R-RAD-03): same answer — nothing.
+			sweepWithCarried(level, villager, Config.radiationDoseCapacity);
+			int both = RadiationDose.of(villager);
+			if (both != 0) {
+				helper.fail("a converting carried exposure must not pass a full suit: leaked " + both);
+				return;
+			}
+			if (villager.isRemoved() || !villager.isAlive()) {
+				helper.fail("the villager should still be standing — this carried source converts a bare one");
+				return;
+			}
+			helper.succeed();
+		});
+	}
+
+	/**
+	 * The player's own scenario, played by a REAL dispenser (MOD-535): a dispenser fires the helmet
+	 * at a villager, the villager ends up wearing it, and the fully suited villager takes no dose
+	 * from the exposure that converts a bare one.
+	 *
+	 * <p><b>Why a real dispenser instead of {@code setItemSlot}.</b> The first live test read as
+	 * "the shielding is broken": the pieces never landed on the villager (vanilla equips only an
+	 * entity standing INSIDE the single facing block, and a villager wanders), so a bare villager
+	 * converted and the zombie villager later showed up wearing armor it had picked off the floor.
+	 * {@link dev.alaindustrial.item.wearable.SuitDispenseBehavior} widens the target and prefers the
+	 * convertible species — this rig is what proves the whole chain end to end: redstone fires the
+	 * dispenser, the helmet lands in the HEAD slot, and the suit then answers a converting exposure
+	 * with zero.
+	 *
+	 * <p>The sequence body runs AFTER {@code withIsolatedField} has restored the radii, so the sweep
+	 * half re-pins them itself — the same isolation, restated where it is actually consumed.
+	 *
+	 * @implements R-RAD-14 — see docs/testing/RULES.md
+	 */
+	public static void dispenserDressesTheVillagerForRadiation(GameTestHelper helper) {
+		helper.setBlock(WALL, Blocks.DISPENSER.defaultBlockState()
+				.setValue(DispenserBlock.FACING, Direction.SOUTH));
+		DispenserBlockEntity dispenser = helper.getBlockEntity(WALL, DispenserBlockEntity.class);
+		dispenser.setItem(0, new ItemStack(ModContent.SHIELDING_HELMET.get()));
+		Villager villager = helper.spawn(EntityTypes.VILLAGER, BYSTANDER);
+		// Power from behind — the dispenser fires a tick or two later.
+		helper.setBlock(RACK, Blocks.REDSTONE_BLOCK);
+
+		helper.startSequence()
+				.thenExecuteFor(6, () -> { })
+				.thenExecute(() -> {
+					ItemStack worn = villager.getItemBySlot(EquipmentSlot.HEAD);
+					if (!worn.is(ModContent.SHIELDING_HELMET.get())) {
+						helper.fail("the dispenser must put the helmet on the villager in front of it; "
+								+ "HEAD holds " + worn);
+						return;
+					}
+					// The dispenser proved its half; finish the set and ask the converting question.
+					villager.setItemSlot(EquipmentSlot.CHEST, new ItemStack(ModContent.SHIELDING_CHESTPLATE.get()));
+					villager.setItemSlot(EquipmentSlot.LEGS, new ItemStack(ModContent.SHIELDING_LEGGINGS.get()));
+					villager.setItemSlot(EquipmentSlot.FEET, new ItemStack(ModContent.SHIELDING_BOOTS.get()));
+					withIsolatedField(() -> {
+						sweepWithCarried(helper.getLevel(), villager, Config.radiationDoseCapacity);
+						int dose = RadiationDose.of(villager);
+						if (dose != 0) {
+							helper.fail("a dispenser-suited villager must take no dose from a converting "
+									+ "exposure; leaked " + dose);
+							return;
+						}
+						if (villager.isRemoved() || !villager.isAlive()) {
+							helper.fail("the dispenser-suited villager should still be standing");
+						}
+					});
+				})
+				.thenSucceed();
+	}
+
+	/**
+	 * A miss must be a VISIBLE eject, never a silent wrong wearer (MOD-535). A pig stands where the
+	 * dispenser aims — vanilla's own equipment behavior would happily dress it — but the suit is for
+	 * convertible mobs only, so the piece must NOT land on the pig.
+	 *
+	 * <p>This is the regression rig for the second live report: the first forgiving version of
+	 * {@code SuitDispenseBehavior} accepted any living entity, and while the villager had wandered
+	 * out of the target box it quietly dressed the PLAYER standing at the rig — four equip sounds,
+	 * a bare villager, and a report that read as "the shielding is broken". A pig is the bystander
+	 * of choice because it also does not PICK UP the ejected piece (a zombie would, within ticks,
+	 * and a picked-up helmet would fake the very failure this test guards against).
+	 *
+	 * @implements R-RAD-15 — see docs/testing/RULES.md
+	 */
+	public static void dispenserRefusesToDressAnyoneButConvertibleMobs(GameTestHelper helper) {
+		helper.setBlock(WALL, Blocks.DISPENSER.defaultBlockState()
+				.setValue(DispenserBlock.FACING, Direction.SOUTH));
+		DispenserBlockEntity dispenser = helper.getBlockEntity(WALL, DispenserBlockEntity.class);
+		dispenser.setItem(0, new ItemStack(ModContent.SHIELDING_HELMET.get()));
+		Pig pig = helper.spawn(EntityTypes.PIG, BYSTANDER);
+		helper.setBlock(RACK, Blocks.REDSTONE_BLOCK);
+
+		helper.startSequence()
+				.thenExecuteFor(12, () -> { })
+				.thenExecute(() -> {
+					// An empty slot means the piece LEFT the dispenser — it fired (onto someone, or
+					// ejected as the spit-out item). A piece still inside means the rig never ran.
+					if (!dispenser.getItem(0).isEmpty()) {
+						helper.fail("rig is wrong: the dispenser never fired (piece still inside), so "
+								+ "the empty pig slot above proves nothing");
+						return;
+					}
+					if (!pig.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
+						helper.fail("the suit must never land on a non-convertible mob: a miss has to "
+								+ "be a spat-out item, not a silently dressed bystander");
+					}
+				})
+				.thenSucceed();
+	}
+
+	/**
+	 * The LIVE tick chain, not the direct call (MOD-535): a suited villager and a bare control beside
+	 * a fuelled rack, a mock player standing in the level as the anchor, and
+	 * {@code RadiationTicker.tickAll} driven across real ticks. The bare villager MUST convert (the
+	 * chain runs and the rig is hot) while the suited one stays at zero dose and on its feet.
+	 *
+	 * <p>Every other radiation scenario calls {@code RadiationMobs.sweep} directly; this is the only
+	 * one that exercises the loader server-tick wiring end to end. Radii are re-pinned inside each
+	 * driven tick — the sequence body runs after any {@code withIsolatedField} around the setup has
+	 * already restored them.
+	 *
+	 * @implements R-RAD-16 — see docs/testing/RULES.md
+	 */
+	public static void liveTickChainShieldsTheSuitedVillager(GameTestHelper helper) {
+		placeFuelledRack(helper);
+		ServerPlayer anchor = AlaGameTestHelper.survivalPlayer(helper);
+		// The sweep is anchored on PLAYERS; put the mock right beside the villagers so both are
+		// inside the (pinned, 3-block) sweep box whichever corner the mock spawned in.
+		BlockPos at = helper.absolutePos(BYSTANDER);
+		anchor.snapTo(at.getX() + 0.5, at.getY(), at.getZ() + 0.5, 0.0f, 0.0f);
+		Villager suited = helper.spawn(EntityTypes.VILLAGER, BYSTANDER);
+		suited.setItemSlot(EquipmentSlot.HEAD, new ItemStack(ModContent.SHIELDING_HELMET.get()));
+		suited.setItemSlot(EquipmentSlot.CHEST, new ItemStack(ModContent.SHIELDING_CHESTPLATE.get()));
+		suited.setItemSlot(EquipmentSlot.LEGS, new ItemStack(ModContent.SHIELDING_LEGGINGS.get()));
+		suited.setItemSlot(EquipmentSlot.FEET, new ItemStack(ModContent.SHIELDING_BOOTS.get()));
+		Villager bare = helper.spawn(EntityTypes.VILLAGER, RACK.above());
+
+		helper.startSequence()
+				.thenExecuteFor(100, () -> withIsolatedField(() ->
+						RadiationTicker.tickAll(helper.getLevel().getServer())))
+				.thenExecute(() -> {
+					if (bare.isAlive() && !bare.isRemoved()) {
+						helper.fail("the bare control villager must convert — if it does not, neither "
+								+ "did the chain run nor the rig radiate, and the zeros below prove "
+								+ "nothing");
+						return;
+					}
+					int dose = RadiationDose.of(suited);
+					if (dose != 0) {
+						helper.fail("the live tick chain must leave a suited villager at zero dose; "
+								+ "leaked " + dose);
+						return;
+					}
+					if (suited.isRemoved() || !suited.isAlive()) {
+						helper.fail("the suited villager should still be standing");
+					}
+				})
+				.thenSucceed();
 	}
 
 	/**

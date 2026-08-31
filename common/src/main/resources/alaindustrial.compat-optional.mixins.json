@@ -12,7 +12,10 @@
   ],
   "client": [
     "client.FogRendererAccessor",
-    "client.ScreenEffectRendererMixin"
+    "client.LivingEntityRendererInvoker",
+    "client.ScreenEffectRendererMixin",
+    "client.VillagerRenderStateMixin",
+    "client.VillagerRendererMixin"
   ],
   "server": [],
   "injectors": {

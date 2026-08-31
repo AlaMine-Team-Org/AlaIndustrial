@@ -249,6 +249,9 @@ public final class IndustrializationNeoForge {
 		// enqueueWork — the Fabric side registers it directly in its single-threaded mod init.
 		modBus.addListener((net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent event) ->
 				event.enqueueWork(dev.alaindustrial.item.fluid.OilBucketDispenseBehavior::register));
+		// MOD-535: forgiving dispenser equipping for the shielding suit (same threading rule as above).
+		modBus.addListener((net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent event) ->
+				event.enqueueWork(dev.alaindustrial.item.wearable.SuitDispenseBehavior::register));
 		// MOD-022/MOD-242 — the world-gametest RegisterGameTestsEvent listener is added by
 		// NeoForgeGameTestBootstrap (gametest source set, dev runs only; see bootstrapGameTests).
 	}

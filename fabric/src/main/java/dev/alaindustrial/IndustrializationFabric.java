@@ -229,6 +229,9 @@ public class IndustrializationFabric implements ModInitializer {
 		// MOD-238: dispenser support for the filled oil bucket (the empty-bucket pickup behaviour is
 		// generic in vanilla and already worked; emptying is registered per item and was missing).
 		dev.alaindustrial.item.fluid.OilBucketDispenseBehavior.register();
+		// MOD-535: forgiving dispenser equipping for the shielding suit — vanilla only accepts an
+		// entity standing INSIDE the single facing block, which a wandering villager keeps leaving.
+		dev.alaindustrial.item.wearable.SuitDispenseBehavior.register();
 		ModRecipes.init();
 		ModCriteria.init();
 		ModWorldGen.init();

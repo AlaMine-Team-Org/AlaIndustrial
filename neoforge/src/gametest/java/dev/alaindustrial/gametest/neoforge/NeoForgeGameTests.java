@@ -2260,6 +2260,18 @@ public final class NeoForgeGameTests {
 				RadiationScenarios::casingBlocksTheRod);
 		registerTest(event, "rad_villager_becomes_zombie_villager", 40, true,
 				RadiationScenarios::villagerBecomesZombieVillager);
+		// MOD-535 — a full suit is complete protection on a mob, without wear.
+		registerTest(event, "rad_suited_villager_takes_no_dose", 40, true,
+				RadiationScenarios::suitedVillagerTakesNoDose);
+		// MOD-535 — the player's own rig: a real dispenser dresses the villager, and the suit answers.
+		registerTest(event, "rad_dispenser_dresses_the_villager_for_radiation", 40, true,
+				RadiationScenarios::dispenserDressesTheVillagerForRadiation);
+		// MOD-535 — a miss is a visible eject, never a silently dressed bystander.
+		registerTest(event, "rad_dispenser_refuses_to_dress_anyone_but_convertible_mobs", 40, true,
+				RadiationScenarios::dispenserRefusesToDressAnyoneButConvertibleMobs);
+		// MOD-535 — the live server-tick chain shields a suited villager end to end.
+		registerTest(event, "rad_live_tick_chain_shields_the_suited_villager", 200, true,
+				RadiationScenarios::liveTickChainShieldsTheSuitedVillager);
 		registerTest(event, "rad_cow_becomes_mooshroom", 40, true,
 				RadiationScenarios::cowBecomesMooshroom);
 		registerTest(event, "rad_zombie_villager_is_past_the_end", 40, true,

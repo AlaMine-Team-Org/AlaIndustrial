@@ -11,6 +11,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
@@ -125,11 +126,14 @@ public final class RadiationTicker {
 				+ RadiationSources.carried(player, ModTags.Items.RADIOACTIVE_HIGH) * Config.radiationDoseHighPerItem;
 	}
 
-	/** Worn pieces of the shielding suit, 0..4. */
-	private static int wornShieldingPieces(ServerPlayer player) {
+	/**
+	 * Worn pieces of the shielding suit, 0..4. Asked of any wearer — player or mob (MOD-535) —
+	 * because the count is a property of the equipment, not of who is in it.
+	 */
+	static int wornShieldingPieces(LivingEntity entity) {
 		int worn = 0;
 		for (EquipmentSlot slot : ARMOR_SLOTS) {
-			ItemStack stack = player.getItemBySlot(slot);
+			ItemStack stack = entity.getItemBySlot(slot);
 			if (!stack.isEmpty() && stack.is(ModTags.Items.RADIATION_SHIELDING)) {
 				worn++;
 			}
