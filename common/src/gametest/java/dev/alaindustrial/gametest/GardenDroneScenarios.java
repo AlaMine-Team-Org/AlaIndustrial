@@ -404,6 +404,42 @@ public final class GardenDroneScenarios {
 		});
 	}
 
+	/**
+	 * TC-DRONE-001-FUN11 — the drone plants on whatever soil the vanilla
+	 * {@code #minecraft:supports_crops} tag blesses, not only on vanilla farmland (MOD-538: Farmer's
+	 * Delight adds its rich soil farmland to that tag, and the station must treat it as a planting
+	 * spot).
+	 *
+	 * <p>Each loader's gametest mod widens the tag with {@code minecraft:rooted_dirt} via
+	 * {@code data/minecraft/tags/block/supports_crops.json} — the same datapack move Farmer's Delight
+	 * makes in a real pack, so the scenario simulates the mod without taking a dependency on it.
+	 * Rooted dirt also asserts the tilling policy: it is soil the tag accepts but
+	 * {@code isTillable} refuses, so a drone that "fixed" planting by tilling foreign soil flat
+	 * would fail the second assertion.
+	 */
+	public static void fun11PlantsOnTaggedSoil(GameTestHelper helper) {
+		withIsolatedZone(() -> {
+			GardenDroneStationBlockEntity station = place(helper);
+			charge(station);
+			station.setItem(GardenDroneStationBlockEntity.SEED_SLOT, new ItemStack(Items.WHEAT_SEEDS, 2));
+			helper.setBlock(PLOT, Blocks.ROOTED_DIRT);
+			helper.setBlock(PLOT.above(), Blocks.AIR);
+
+			AlaGameTestHelper.drive(station, helper, TICKS_PER_JOB);
+
+			BlockState planted = helper.getLevel().getBlockState(helper.absolutePos(PLOT.above()));
+			if (!planted.is(Blocks.WHEAT)) {
+				helper.fail("the station did not plant on tagged soil; found " + planted.getBlock());
+			}
+			BlockState soil = helper.getLevel().getBlockState(helper.absolutePos(PLOT));
+			if (!soil.is(Blocks.ROOTED_DIRT)) {
+				helper.fail("the station reworked tagged soil into " + soil.getBlock()
+						+ "; foreign soil must never be tilled over");
+			}
+			helper.succeed();
+		});
+	}
+
 	/** Whether any output slot holds the given item. */
 	private static boolean stationHolds(GardenDroneStationBlockEntity station, net.minecraft.world.item.Item item) {
 		for (int i = 0; i < GardenDroneStationBlockEntity.OUTPUT_SLOT_COUNT; i++) {

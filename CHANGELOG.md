@@ -1,11 +1,9 @@
-## 0.1.133
+## 0.1.134
 
-<p><img alt="Ala Industrial 0.1.133 update preview" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.133/release-media/v0.1.133/changelog.webp" width="720"></p>
+<p><img alt="Ala Industrial 0.1.134 update preview" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.134/release-media/v0.1.134/changelog.png" width="720"></p>
 
-Villagers can now wear the radiation suit.
+The garden drone now works together with Farmer's Delight.
 
-### New
+### Bug Fixes
 
-- **Suit protects mobs.** Dispense the suit onto a villager, a wandering trader or a cow. Each piece blocks 25 % of the radiation, a full set blocks all of it. The suit never breaks on mobs.
-- **Suit is visible on villagers.** The villager now wears a yellow hazmat suit with a steel visor, a strapped jacket and rubber boots. A partial set shows partially.
-- **Friendlier dispenser.** It looks for a villager, trader or cow in a small area in front of it. If nobody is there the piece drops to the ground, and the equip sound plays only when the piece lands on a mob.
+- **Drone tends rich soil.** The garden drone station now plants and harvests on rich soil from Farmer's Delight like on plain farmland. The rich soil itself is never dug over.

@@ -19,6 +19,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.MenuProvider;
@@ -341,7 +342,7 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 			// a tool that is consumed by an action but not required for it makes no sense to the player.
 			case HARVEST -> hasUsableHoe() && CropMaturity.isHarvestable(level, target, state);
 			case PLANT -> state.isAir()
-					&& level.getBlockState(target.below()).is(Blocks.FARMLAND)
+					&& isPlantableSoil(level.getBlockState(target.below()))
 					&& seedBlock() != null;
 			case FERTILIZE -> !items.get(FERTILIZER_SLOT).isEmpty()
 					&& CropMaturity.isFertilizable(level, target, state)
@@ -557,7 +558,8 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 
 	/**
 	 * Rebuilds {@link #zoneCache} with every tile in range that could ever need work: a crop, bare
-	 * farmland, or tillable ground. Filtering here (rather than walking the raw cube every tick) is the
+	 * plantable soil, or tillable ground. Filtering here (rather than walking the raw cube every
+	 * tick) is the
 	 * whole point of the cache — a radius-4 zone (9×9×3) is ~240 positions, while the farm inside it is a few
 	 * dozen tiles.
 	 */
@@ -589,8 +591,22 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 		if (isTillable(state)) {
 			return true; // till target
 		}
-		// A bare tile above farmland is where a seed goes.
-		return state.isAir() && level.getBlockState(pos.below()).is(Blocks.FARMLAND);
+		// A bare tile above plantable soil is where a seed goes.
+		return state.isAir() && isPlantableSoil(level.getBlockState(pos.below()));
+	}
+
+	/**
+	 * Soil the drone plants into: the vanilla {@code #minecraft:supports_crops} contract (MOD-538) —
+	 * the same tag a crop's own {@code canSurvive} consults, so the drone and the crop agree about
+	 * what counts as ground. The crop still votes on arrival: {@code canSurvive} re-checks light
+	 * and anything else it cares about, and a tile that refuses the seed costs no seed and no EU.
+	 * Farmer's Delight's rich soil farmland and any other modpack-added soil join that tag with a
+	 * datapack line, which keeps this class free of every other mod's ids. Tilling deliberately
+	 * does NOT follow the tag — see {@link #isTillable}: the drone must never rework a foreign
+	 * soil into vanilla farmland.
+	 */
+	private static boolean isPlantableSoil(BlockState state) {
+		return state.is(BlockTags.SUPPORTS_CROPS);
 	}
 
 	/** Ground the drone converts into farmland. Kept to the two unambiguous cases (MVP). */

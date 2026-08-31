@@ -106,6 +106,16 @@ public class AlaCommonGameTest {
 		GardenDroneScenarios.fun10StandsOnTheTileBeforeFlyingHome(helper);
 	}
 
+	/**
+	 * @implements TC-DRONE-001-FUN11 — any {@code #minecraft:supports_crops} soil is a planting spot
+	 * (MOD-538: Farmer's Delight rich soil farmland joins the tag by datapack, the gametest mods do
+	 * the same with rooted dirt)
+	 */
+	@GameTest
+	public void gardenDronePlantsOnTaggedSoil(GameTestHelper helper) {
+		GardenDroneScenarios.fun11PlantsOnTaggedSoil(helper);
+	}
+
 	/** @implements TC-DRONE-001-FUN07 — an empty dock tends nothing and says why */
 	@GameTest
 	public void gardenDroneWithoutDroneIsInert(GameTestHelper helper) {

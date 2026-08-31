@@ -1077,6 +1077,10 @@ public final class NeoForgeGameTests {
 		// MOD-317: the drone holds on the tile it worked before the return leg starts.
 		registerTest(event, "garden_drone_stands_on_tile_before_flying_home", 300, true,
 				GardenDroneScenarios::fun10StandsOnTheTileBeforeFlyingHome);
+		// MOD-538: any #minecraft:supports_crops soil is a planting spot (Farmer's Delight rich soil
+		// farmland joins the tag by datapack; the gametest mods do the same with rooted dirt).
+		registerTest(event, "garden_drone_plants_on_tagged_soil", 40, true,
+				GardenDroneScenarios::fun11PlantsOnTaggedSoil);
 		registerTest(event, "menu_data_width_matches_block_entity", 200, true,
 				MenuDataWidthScenarios::reg02ClientMenuWidthMatchesBlockEntity);
 		// MOD-107: the pump's slots exchange with fluid containers through the loader's item fluid
