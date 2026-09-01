@@ -373,7 +373,7 @@
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>液体貯蔵</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <div class="group-title">世界と自動化</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>素材</span><span class="cat-count" aria-label="22 ページ">22</span></a>
-<a class="cat-link active" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>農業</span><span class="cat-count" aria-label="5 ページ">5</span></a>
+<a class="cat-link active" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>農業</span><span class="cat-count" aria-label="6 ページ">6</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>高度なマシン</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
@@ -398,7 +398,7 @@
 
 <p><strong>ガーデンドローンステーション</strong>は 1×1 のドックブロック（ロボット掃除機のベースステーションのようなもので）、 そこからドローンが離陸し、ステーション周囲半径 4 ブロックの範囲を巡回します。ドローンはエンティティでなく、 ステーション自体の が描画するオブジェクトです — 見た目も動きも飛行装置のように 見えますが、物理的には常にステーションブロックに「属し」、その領域を離れることはできません。</p>
 
-<p>プレイヤーはステーションに種と骨粉を入れ、EU/FE を接続します — あとはドローンが自ら農場を維持します： 空いている土を耕し、空の耕されたマスに種を蒔き、未成熟の作物を骨粉で成長させ、成熟した収穫物を そのまま出力スロットへ運びます（ワールド内に <code>ItemEntity</code> は発生しません）。計画されていたが未実装の 「作物自動管理」（<code>crop_matron</code>）と「収穫機」（<code>crop_harvester</code>）を置き換えます — 2 つではなく 1 つの ブロックで、メカニクスの重複なしに。</p>
+<p>プレイヤーはステーションに種と骨粉を入れ、EU/FE を接続します — あとはドローンが自ら農場を維持します： 空いている土を耕し、適切な土の上の空きマスに種を蒔き、未成熟の作物を骨粉で成長させ、成熟した収穫物を そのまま出力スロットへ運びます（ワールド内に <code>ItemEntity</code> は発生しません）。計画されていたが未実装の 「作物自動管理」（<code>crop_matron</code>）と「収穫機」（<code>crop_harvester</code>）を置き換えます — 2 つではなく 1 つの ブロックで、メカニクスの重複なしに。</p>
 
 <h2 id="エネルギー">エネルギー</h2>
 
@@ -418,9 +418,11 @@
 
 <p><strong>動作の優先順位</strong>（この順序でチェックされ、最初に合致したものを実行）：</p>
 
-<ol><li><strong>収穫</strong> — 範囲内の成熟した作物のマス（クワ必須）。</li><li><strong>植え付け</strong> — 空の耕されたマス + スロットに適切な種がある。</li><li><strong>施肥</strong> — 未成熟作物のマス + スロットに骨粉がある。</li><li><strong>耕起</strong> — 空き土のマス（クワ必須。耕された土に変える）。</li></ol>
+<ol><li><strong>収穫</strong> — 範囲内の成熟した作物のマス（クワ必須）。</li><li><strong>植え付け</strong> — <code>#minecraft:supports_crops</code> の土の上の空きマス + スロットに適切な種がある。</li><li><strong>施肥</strong> — 未成熟作物のマス + スロットに骨粉がある。</li><li><strong>耕起</strong> — バニラの土または草のマス（クワ必須。耕地に変える）。</li></ol>
 
 <p>この順序により、「農場は自らを維持する」ことが切れ目なく保証されます：耕起が第 4 動作でなければ、 プレイヤーが農場を広げた最初の瞬間に約束が崩れていました。</p>
+
+<p><strong>植え付けの土はバニラのタグであってブロックではない（）。</strong> 植え付け（および 範囲キャッシュのマス選別）は <code>#minecraft:supports_crops</code> に含まれる任意のブロックを土と みなします — 作物自身がブロックの上に立てるかを判断するのと同じタグです。そのため ドローンと作物は「何を土とみなすか」で食い違いません：Farmer's Delight の rich soil farmland（およびこのタグに追加された任意のモッドの土）を、ドローンはネイティブの 農地と同じように世話します — 外来 id を知る一行もないままに。<strong>耕起はこのタグに従い ません</strong>：バニラの耕地に変えられるのはバニラの土と草だけで、外来の土をドローンが掘り 返すことは決してありません — rich soil はプレイヤーが骨粉で得たものであり、ステーションが それを破壊してはなりません。</p>
 
 <p><strong>飛行。</strong> 動作は目標選択の瞬間でなく、<strong>ドローン到着時</strong> に起きます：ドローンは経路 1 ブロックあたり = <strong>11</strong> ティックの速度でマスへ飛び、そこで初めて作業します。 腕は <code>MIN_FLIGHT_TICKS</code> = <strong>26</strong> ティックより短くなりません — さもなければ隣接マスを目が気づくより 早く横切ることになります。ドックへの帰路は目標への往路と同じ時間で、さらに <code>LANDING_PAUSE_TICKS</code> = <strong>6</strong> ティックだけドローンは処理済みマスに留まります（下記参照）。そのため 1 サイクル「動作」は <strong>最低 58 ティック</strong>（≈2.9 秒）で、ティックではありません：ステーションは瞬間でなく機械のテンポで 農場を手入れします。これがなければ全農場を数ティックで処理してしまい — 視覚的に機械が作業している のでなくテレポートと読めるものでした。到着時、タスクは <strong>再検証</strong> されます：飛行中にワールドが 変わり得るため（プレイヤーが手で収穫、ピストンがブロックを動かす）、目標は信頼でなく再検証されます。</p>
 

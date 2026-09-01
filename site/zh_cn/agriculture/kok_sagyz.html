@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh_cn" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>Kok-Sagyz — Ala Industrial — 指南</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../assets/guide-site.js" defer></script>
+
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="打开菜单" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../assets/item/guide_book_3d.png" alt="">全部内容</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="搜索维基…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="搜索指南" autocomplete="off" spellcheck="false" data-index="../assets/search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;搜索结果&quot;,&quot;one&quot;:&quot;个页面&quot;,&quot;few&quot;:&quot;个页面&quot;,&quot;many&quot;:&quot;个页面&quot;,&quot;loading&quot;:&quot;正在加载搜索索引…&quot;,&quot;nothing&quot;:&quot;未找到结果&quot;}"></search>
+    <details class="language-menu"><summary aria-label="Language">中文</summary><div class="language-popover"><span>中文</span><a href="../../en/agriculture/kok_sagyz.html">EN</a><a href="../../ru/agriculture/kok_sagyz.html">RU</a><a href="../../uk/agriculture/kok_sagyz.html">UA</a><a href="../../ja_jp/agriculture/kok_sagyz.html">日本語</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">浏览</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../assets/item/tempered_iron_pickaxe.png" alt=""><span>新手入门</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
+<div class="group-title">能源</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="11 个页面">11</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="15 个页面">15</span></a>
+<div class="group-title">加工</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="15 个页面">15</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<div class="group-title">物流</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>物品物流</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<div class="group-title">世界与自动化</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="22 个页面">22</span></a>
+<a class="cat-link active" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="6 个页面">6</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<div class="group-title">其他</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
+<div class="group-title">物品</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="23 个页面">23</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="22 个页面">22</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">首页</a><span class="sep">/</span><a href="../agriculture/index.html">农业</a><span class="sep">/</span><span>Kok-Sagyz</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../assets/item/kok_sagyz_3d.png" alt="Kok-Sagyz" width="64" height="64">
+    <div class="info">
+      <h1>Kok-Sagyz</h1>
+      <div class="block-id">alaindustrial:kok_sagyz</div>
+      <div class="tags"><span class="tag cat" style="background:#22c55e">农业</span><span class="tag lifecycle" style="background:#22c55e">已实现</span><span class="tag">agriculture</span><span class="tag">rubber</span><span class="tag">crop</span><span class="tag">perennial</span><span class="tag">root</span><span class="tag">farming</span><span class="tag">tier-lv</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="概述">概述</h2>
+
+<p><strong>青胶蒲公英（kok sagyz）</strong>是多年生产胶蒲公英，也是本模组第一种能产出<strong>橡胶</strong>的农作物。这是农人对石油有限性的回答：聚合机的生胶依赖不可再生的石油，而青胶蒲公英可以在农田里无限生长。用它做橡胶更费时间、更省 EU/FE——正是水晶温室的准则应用到了材料上。</p>
+
+<p>植株是 <strong>1×3 的柱状体</strong>：地上一朵花，地下<strong>两个根块</strong>。花下方的土壤会生根，柱体达到全深后，<strong>最下方的根块（根尖）可以挖出</strong>：掉落根物品，植株存活并重新长出根尖。挖掉花或上方的根则会杀死植株——橡胶藏在深处，不在顶端。</p>
+
+<h2 id="现实原型">现实原型</h2>
+
+<p>青胶蒲公英（<em>Taraxacum kok-saghyz</em>，"俄罗斯蒲公英"）是中亚特有植物：哈萨克斯坦、吉尔吉斯斯坦、乌兹别克斯坦、卡拉套山脉。名字来自哈萨克语 "kök-sağız"，意为"绿色口香糖"——哈萨克人传统上咀嚼其根部乳汁。橡胶只存在于<strong>根部</strong>的乳汁管中（野生占干重 5–12%，育成品系可达 25%）；经典的田间测试是把晒干的根折断，看断面之间拉出的橡胶细丝。</p>
+
+<p>1932 年苏联探险队在哈萨克斯坦发现了它；苏联从 1931 年栽培到约 1950 年，到 1941 年青胶蒲公英提供了苏联约三分之一的橡胶。当日本切断美国的橡胶树供应后，美国的"应急橡胶计划"（1942–45）在约 30 个州的试验站播种了它——该计划被称为"农业界的曼哈顿计划"。战后被廉价合成橡胶和恢复供应的橡胶树终结。如今是俄亥俄州立大学的 PENRA 联盟与普利司通在推进；2019 年大陆集团卖出了第一条蒲公英橡胶自行车胎。加工的副产物<strong>菊粉</strong>（生物乙醇原料）在模组里同样出自粉碎机。</p>
+
+<h2 id="获取">获取</h2>
+
+<p><strong>野生植株。</strong>最初的种子来自世界：成熟的青胶蒲公英花（绒球阶段）生成于平原和稀树草原生物群系（平原、向日葵平原、三种稀树草原），每区块稀有度 1/8，最多 12 朵散布其中。野生的根会自行长成。<strong>仅限新区块</strong>——已生成的地形不会再出现野生植株（见"旧世界"）。</p>
+
+<p><strong>种植。</strong>种子（<code>kok_sagyz_seeds</code>）种在<strong>单独一格</strong>土壤上：泥土（<code>#minecraft:dirt</code>）、草方块、灰化土、菌丝体、泥巴、沙子（<code>#minecraft:sand</code>）、耕好的农田，以及 <code>#minecraft:supports_crops</code> 中其他模组的土壤。深度不是必需的——根会自适应：下方有两格土壤时长成向下两格的根柱，石头上只有一格土壤时根尖直接长在花朵下方。非土壤方块（石头、木板、树叶）无法种植。</p>
+
+<h2 id="生命周期">生命周期</h2>
+
+<p>植株在光照 <strong>≥9</strong> 时随机刻生长（与原版作物相同）。花的阶段（<code>age</code> 0..3）：莲座叶丛 → 花苞 → 黄花 → 绒球。成熟的花会生根：正下方的第一个土壤块变成"带根的泥土"，随后根下探到 2 格深——最下方的块带有 <code>tip</code> 属性（根尖）。柱体全深即完全成熟。</p>
+
+<table><thead><tr><th>阶段</th><th>除数</th><th>大致耗时</th></tr></thead><tbody><tr><td>地上部分，3 个阶段，农田（除数 1）</td><td>= <strong>1</strong></td><td>约 3.4 分钟（按平均随机刻每阶段约 68 秒）</td></tr><tr><td>根部，再向下 2 格</td><td>= <strong>1</strong></td><td>再约 2.3 分钟</td></tr><tr><td>同一植株在<strong>野生土地</strong>（非农田）上</td><td>= <strong>×2</strong></td><td>慢一倍</td></tr></tbody></table>
+
+<p>在野生土地（普通泥土——非农田、非植株自身的根）上，两个除数都乘以 2——野生植株比照料的长得慢。<strong>骨粉</strong>和<strong>洒水器</strong>能加速生长，但买到的是速度而非豁免：每次使用恰好推进一步（一个阶段或一格根），光照下限和"有无处可长"的检查依然生效。</p>
+
+<p>收获根尖后，植株以根部生长的同样速度重新长出它。</p>
+
+<h2 id="收获">收获</h2>
+
+<p>唯一的规则：<strong>挖根尖，别拔花</strong>。根尖是最下方的根块，在花下方两格。</p>
+
+<table><thead><tr><th>操作</th><th>结果</th></tr></thead><tbody><tr><td>挖掉<strong>最下方</strong>的根块（根尖，<code>tip=true</code>）</td><td>掉落 <strong>1 × 青胶蒲公英根</strong> + <strong>35%</strong> 概率种子；原处留下泥土；植株存活并重新长出根尖</td></tr><tr><td>挖掉花或<strong>上方</strong>的根块</td><td>植株死亡；<strong>35%</strong> 概率种子，<strong>没有根</strong></td></tr><tr><td>移除下方根块之下的支撑</td><td>柱体垮塌——植株死亡</td></tr><tr><td>"像蒲公英一样摘下绒球"（对绒球右键）</td><td>一无所获——橡胶在土里，不在绒球里</td></tr></tbody></table>
+
+<p>根尖收获是无限的，也无需补种：建好种植园，之后定期来挖就行。扩产用的种子来自收获概率和野生植株。</p>
+
+<h2 id="加工">加工</h2>
+
+<p>根进入<strong>粉碎机</strong>——链条中没有新机器：</p>
+
+<table><thead><tr><th>材料</th><th>产物</th><th>EU/FE</th></tr></thead><tbody><tr><td>2 × 青胶蒲公英根</td><td>1 × <strong>生胶</strong> + 1 × <strong>菊粉</strong>（副产物）</td><td>300</td></tr></tbody></table>
+
+<p>菊粉不与生胶堆叠在同一格：<strong>副产物从机器顶部弹出</strong>——在粉碎机上方放漏斗或管道即可自行运走，绝不阻塞工作（不可堆叠的副产物从不停机）。之后走标准链条：<strong>硫化机</strong>（1 生胶 + 4 硫粉 → 橡胶，400 EU/FE）。</p>
+
+<h2 id="自动化">自动化</h2>
+
+<p>青胶蒲公英属于 标签：</p>
+
+<ul><li><strong>镰刀</strong>（对成熟植株潜行右键）自动收割根尖——精准、不伤植株。</li><li><strong>园丁无人机</strong>对成熟柱体同样只挖最下方的根块并拾取掉落物。</li><li><strong>洒水器</strong>逐步加速生长（见"生命周期"）。</li></ul>
+
+<h2 id="进度">进度</h2>
+
+<p>青胶蒲公英是 LV 时代可再生橡胶分支的入口：电缆绝缘、<code>advanced_circuit</code> 和绝缘护甲套装如今可以靠种地获得。成就<strong>"深深的根"</strong>（<code>kok_sagyz_root</code>，条件——背包中有根）插在 <code>first_oil</code> 与 <code>rubber_production</code> 之间：挖田的玩家和抽油的玩家从两侧走向同一种橡胶。</p>
+
+<h2 id="旧世界">旧世界</h2>
+
+<p>野生植株<strong>只在新区块生成</strong>：已生成的草原不会再被播种。旧世界里完全找不到第一颗种子——但从别的世界/别的玩家那里拿来的一颗种子就能展开成无限种植园，因为不再需要补种。</p>
+
+<h2 id="方块属性">方块属性</h2>
+
+<table><thead><tr><th>属性</th><th>数值</th></tr></thead><tbody><tr><td>花</td><td>十字形无碰撞，<code>age</code> 0..3，随机刻</td></tr><tr><td>根块</td><td>"带根的泥土"整方块（参照原版 <code>rooted dirt</code>），<code>tip</code> 属性</td></tr><tr><td>柱体</td><td>1×3：花 + 2 个根块</td></tr><tr><td>土壤</td><td><code>#minecraft:dirt</code>、草方块/灰化土/菌丝体/泥巴、<code>#minecraft:sand</code>、<code>#minecraft:supports_crops</code>；一格即可</td></tr></tbody></table>
+
+<h2 id="开放问题">开放问题</h2>
+
+<ul><li>菊粉暂时是无配方的物品——为未来任务的饲料/食物留的底（所有者决定， §5.6）。</li><li>银胶菊与一枝黄花是本分支的后续植物（同一任务，第 2+ 阶段）。</li></ul>
+
+<h2 id="相关">相关</h2>
+
+<ul><li>粉碎机——把根连同菊粉粉碎成生胶。</li><li>硫化机——生胶 + 硫 → 橡胶（日后也可用银胶菊树脂）。</li><li>孵化器——作为应急路线的橡胶复制（）。</li><li>橡胶——材料及其消费者。</li><li>洒水器、园丁无人机站、镰刀——生长与收获的自动化。</li></ul>
+
+
+  </main>
+</div>
+
+</body>
+</html>

@@ -373,7 +373,7 @@
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>液体貯蔵</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <div class="group-title">世界と自動化</div>
 <a class="cat-link active" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>素材</span><span class="cat-count" aria-label="22 ページ">22</span></a>
-<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>農業</span><span class="cat-count" aria-label="5 ページ">5</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>農業</span><span class="cat-count" aria-label="6 ページ">6</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>高度なマシン</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
@@ -394,9 +394,31 @@
     </div>
   </div>
 </div>
+<h2 id="ore-depth-h2">採掘する場所</h2>
+<section class="od" id="ore-depth" data-l10n="{&quot;surface&quot;: &quot;地表&quot;, &quot;dig_here&quot;: &quot;ここを掘る&quot;}"
+         data-min="-64" data-max="16" data-count="1"
+         data-dim="overworld"
+         data-ore="../assets/block/uranium_ore.png" data-deep="../assets/block/deepslate_uranium_ore.png" data-torch="../assets/block/enriched_uranium_torch.png">
+  <div class="od-stage">
+    <div class="od-ruler"></div>
+    <div class="od-canvas-wrap"><canvas></canvas>
+      <span class="od-surface" hidden></span><span class="od-flag"></span></div>
+  </div>
+  <div class="od-side">
+    <div class="od-fact"><b>Y -24</b><span>最適な高さ</span></div>
+    <div class="od-fact"><b>Y -64 … 16</b><span>生成範囲</span></div>
+    <div class="od-fact"><b>最大 4 ブロック</b><span>鉱脈の大きさ</span></div>
+    <div class="od-fact"><b>1</b><span>チャンクあたりの試行回数</span></div>
+    <p class="od-hint">この断面は鉱石自身の生成数値から描かれています。1行の鉱石ブロックが多いほど、その高さでの出現率が高くなります。</p>
+    <div class="od-legend">
+      <span><img src="../assets/block/uranium_ore.png" alt="" width="16" height="16">岩壁の鉱石</span>
+      <span><img src="../assets/block/enriched_uranium_torch.png" alt="" width="16" height="16">最適な高さのトンネル</span>
+    </div>
+  </div>
+</section>
 <h2 id="概要">概要</h2>
 
-<p><strong>ウラン</strong>は本modで最も希少な金属で、<strong>原子力トラック</strong>（RTG、原子炉、濃縮）のために予約されています。鉱石はワールドの最下層付近に微小な鉱脈で現れ、他の鉱石と異なり<strong>鉄のツルハシ</strong>以上が必要です。木、金、石のツルハシではドロップしません。</p>
+<p><strong>ウラン</strong>は本modで最も希少な金属で、<strong>原子力トラック</strong>（RTG、原子炉、濃縮）のために予約されています。鉱石は中間の深さに微小な鉱脈で現れ、他の鉱石と異なり<strong>鉄のツルハシ</strong>以上が必要です。木、金、石のツルハシではドロップしません。</p>
 
 <blockquote><strong>ミニ例：</strong>加工はスズと同じ2つのルートで、炉では鉱石1個からインゴット1個、粉砕機では2個得られます。ただしウランはダイヤモンドより約7倍稀なので、ブロックも原石も1つ1つが貴重です。炉で焼かず、粉砕しましょう。</blockquote>
 
@@ -408,7 +430,9 @@
 
 <h2 id="探索場所">探索場所</h2>
 
-<p>ウランはワールドの最下部付近、微小な鉱脈で存在し、ダイヤモンドより約7倍稀です。鉄のツルハシ（以上）を持って行きましょう。それ以下ではドロップしません。</p>
+<p>ウランは Y −64 から Y 16 の間に生成されますが、<strong>最下部ではありません</strong>。最も密集するのはこの範囲の中央、<strong>Y −24</strong> 付近で、両端に向かうほど少なくなります。ダイヤモンドの深さ（Y −59 付近）こそウランが最も少ない場所で、「何日も掘ったのに見つからない」の主な原因です。</p>
+
+<p>鉱脈は微小で、ダイヤモンドより約7倍稀です。鉄のツルハシ（以上）を持って行きましょう。それ以下ではドロップしません。</p>
 
 <h2 id="ブロックの性質">ブロックの性質</h2>
 

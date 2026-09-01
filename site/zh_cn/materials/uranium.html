@@ -373,7 +373,7 @@
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">世界与自动化</div>
 <a class="cat-link active" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="22 个页面">22</span></a>
-<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="5 个页面">5</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="6 个页面">6</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">其他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
@@ -394,9 +394,31 @@
     </div>
   </div>
 </div>
+<h2 id="ore-depth-h2">在哪里挖掘</h2>
+<section class="od" id="ore-depth" data-l10n="{&quot;surface&quot;: &quot;地表&quot;, &quot;dig_here&quot;: &quot;在此挖掘&quot;}"
+         data-min="-64" data-max="16" data-count="1"
+         data-dim="overworld"
+         data-ore="../assets/block/uranium_ore.png" data-deep="../assets/block/deepslate_uranium_ore.png" data-torch="../assets/block/enriched_uranium_torch.png">
+  <div class="od-stage">
+    <div class="od-ruler"></div>
+    <div class="od-canvas-wrap"><canvas></canvas>
+      <span class="od-surface" hidden></span><span class="od-flag"></span></div>
+  </div>
+  <div class="od-side">
+    <div class="od-fact"><b>Y -24</b><span>最佳高度</span></div>
+    <div class="od-fact"><b>Y -64 … 16</b><span>完整范围</span></div>
+    <div class="od-fact"><b>最多 4 个方块</b><span>矿脉大小</span></div>
+    <div class="od-fact"><b>1</b><span>每区块尝试次数</span></div>
+    <p class="od-hint">剖面由矿石自身的生成数值绘制：一行中的矿石方块越多，该高度的出现几率越高。</p>
+    <div class="od-legend">
+      <span><img src="../assets/block/uranium_ore.png" alt="" width="16" height="16">岩壁中的矿石</span>
+      <span><img src="../assets/block/enriched_uranium_torch.png" alt="" width="16" height="16">最佳高度的隧道</span>
+    </div>
+  </div>
+</section>
 <h2 id="概览">概览</h2>
 
-<p><strong>铀</strong>是本模组最稀有的金属，预留给<strong>核能路线</strong>（RTG、反应堆、浓缩）。矿石出现在世界底部，以微小矿脉形式存在，并且与其他矿石不同，它需要<strong>铁镐</strong>及以上——木镐、金镐和石镐都不会掉落。</p>
+<p><strong>铀</strong>是本模组最稀有的金属，预留给<strong>核能路线</strong>（RTG、反应堆、浓缩）。矿石以微小矿脉形式出现在中层深度，并且与其他矿石不同，它需要<strong>铁镐</strong>及以上——木镐、金镐和石镐都不会掉落。</p>
 
 <blockquote><strong>小示例：</strong>与锡相同的两条加工路线——熔炉每块矿石给 1 个锭，粉碎机给 2 个。但铀大约比钻石稀有七倍，所以每块矿石和每个粗矿都很宝贵：粉碎它，别扔进熔炉烧。</blockquote>
 
@@ -408,7 +430,9 @@
 
 <h2 id="哪里能找到">哪里能找到</h2>
 
-<p>铀位于世界最底部，以微小矿脉存在——大约比钻石稀有七倍。带上铁镐（或更好的）：更弱的镐不会掉落任何东西。</p>
+<p>铀生成于 Y −64 到 Y 16 之间，但<strong>并非在世界最底部</strong>：它在该范围的中部最密集，大约在 <strong>Y −24</strong>，越靠近两端越稀少。钻石所在的深度（约 Y −59）恰恰是铀最少的地方——这正是「挖了好几天却一无所获」的常见原因。</p>
+
+<p>矿脉很小，大约比钻石稀有七倍。带上铁镐（或更好的）：更弱的镐不会掉落任何东西。</p>
 
 <h2 id="方块属性">方块属性</h2>
 

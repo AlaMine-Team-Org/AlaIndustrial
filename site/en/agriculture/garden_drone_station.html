@@ -373,7 +373,7 @@
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="22 pages">22</span></a>
-<a class="cat-link active" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="5 pages">5</span></a>
+<a class="cat-link active" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="6 pages">6</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
@@ -398,7 +398,7 @@
 
 <p>The <strong>Garden Drone Station</strong> is a 1×1 dock block (like a robot-vacuum base) from which a drone lifts off and patrols the area around the station within a 4-block radius. The drone is not an Entity — it's an object drawn by the station's own. Visually it looks and moves like a flying craft, but physically it always "belongs" to the station block and can never leave its zone.</p>
 
-<p>The player puts seeds and bone meal into the station and hooks up EU/FE — from there the drone tends the farm on its own: tilling free dirt, planting seeds into empty tilled tiles, speeding up immature crops with bone meal, and hauling ripe harvest straight into its own output slots (no <code>ItemEntity</code> ever spawns in the world). It supersedes the planned-but-unbuilt "Crop Matron" and "Crop Harvester" — one block instead of two, no duplicated mechanics.</p>
+<p>The player puts seeds and bone meal into the station and hooks up EU/FE — from there the drone tends the farm on its own: tilling free dirt, planting seeds into empty tiles above suitable soil, speeding up immature crops with bone meal, and hauling ripe harvest straight into its own output slots (no <code>ItemEntity</code> ever spawns in the world). It supersedes the planned-but-unbuilt "Crop Matron" and "Crop Harvester" — one block instead of two, no duplicated mechanics.</p>
 
 <h2 id="energy">Energy</h2>
 
@@ -416,9 +416,11 @@
 
 <p><strong>Action priority</strong> (checked in this order, the first match runs):</p>
 
-<ol><li><strong>Harvest</strong> — a tile with a ripe crop in the zone (needs a hoe).</li><li><strong>Plant</strong> — an empty tilled tile, provided matching seeds sit in the seed slot.</li><li><strong>Fertilize</strong> — a tile with an immature crop, provided bone meal sits in the fertilizer slot.</li><li><strong>Till</strong> — a tile of free dirt (needs a hoe; turns it into tilled soil).</li></ol>
+<ol><li><strong>Harvest</strong> — a tile with a ripe crop in the zone (needs a hoe).</li><li><strong>Plant</strong> — an empty tile above soil from <code>#minecraft:supports_crops</code>, provided matching seeds sit in the seed slot.</li><li><strong>Fertilize</strong> — a tile with an immature crop, provided bone meal sits in the fertilizer slot.</li><li><strong>Till</strong> — a tile of vanilla dirt or grass (needs a hoe; turns it into farmland).</li></ol>
 
 <p>This order keeps the "the farm tends itself" promise unbroken: without tilling as the fourth action, the promise would break the moment the player expands the farm.</p>
+
+<p><strong>Planting soil is a vanilla tag, not a block.</strong> Planting (and the zone-cache tile selection) treats any block from <code>#minecraft:supports_crops</code> as soil — the same tag the crop itself uses to decide whether it can stand on a block. Drone and plant therefore never disagree about what counts as ground: rich soil farmland from Farmer's Delight (and any modded soil added to this tag) the drone tends as a native farm tile — without a single line that knows a foreign id. <strong>Tilling does not follow the tag</strong>: only vanilla dirt and grass are turned into vanilla farmland, foreign soil is never dug over — the player got that rich soil with bone meal, and the station must not destroy it.</p>
 
 <p><strong>Flight.</strong> The action lands when the drone <em>arrives</em>, not when the target is picked: it flies at = <strong>11</strong> ticks per block of distance and only then does the work. A leg is never shorter than <code>MIN_FLIGHT_TICKS</code> = <strong>26</strong> ticks — otherwise the drone would cover the tile next door faster than the eye can follow. The trip home takes as long as the trip out, plus the <code>LANDING_PAUSE_TICKS</code> = <strong>6</strong> ticks the drone spends standing on the tile it worked (below), so one action costs <strong>at least 58 ticks</strong> (≈2.9 seconds), not a tick: the station tends the plot at the pace of a machine, not instantly. Without that it would tend a whole farm within a couple of ticks, which reads as teleportation rather than as a machine doing work. On arrival the job is <strong>re-validated</strong> — the world may have changed mid-flight (the player harvested it by hand, a piston moved it), so the target is checked again rather than trusted.</p>
 

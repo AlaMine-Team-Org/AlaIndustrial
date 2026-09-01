@@ -373,7 +373,7 @@
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>液体貯蔵</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <div class="group-title">世界と自動化</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>素材</span><span class="cat-count" aria-label="22 ページ">22</span></a>
-<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>農業</span><span class="cat-count" aria-label="5 ページ">5</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>農業</span><span class="cat-count" aria-label="6 ページ">6</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>高度なマシン</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
@@ -412,9 +412,17 @@
 
 <p>放射線は距離とともに弱まるので、スーツと一歩下がる行動は組み合わせて効きます。燃料棒アセンブリの 真横ではフルセットでも線量の約 5 % が通り、致死域まではおよそ1分半です。1ブロック離れるとその時間は 3倍になり、3〜4ブロックも離れれば線量はほとんど増えません。</p>
 
-<p>フルセットは<strong>通常の被曝すべて</strong>を遮ります: 懐のウラン、地面のウラン、外殻のない原子炉。ただし むき出しの炉心には別の上限があり (、95 %)、そこでスーツが与えるのは 無敵ではなく時間です。耐久値は<strong>ウランに触れているかぎり</strong>減り、その速さは線源の強さで決まります。稼働中の炉心では毎秒 1ポイント、懐の濃縮ウラン1個なら2秒に1ポイント、鉱石なら8秒に1ポイントです。つまりスーツの寿命は 時間で測れます — 炉心でおよそ3分、濃縮ウランを持ち歩いて約5分、鉱石なら20分以上。壊れた部位は 遮蔽しなくなります。</p>
+<p>フルセットは<strong>自分の懐のウラン</strong>は完全に遮ります。外のフィールド —— 地面のウラン、外殻の ない原子炉、燃料棒そのもの —— は 95 %カット: どのフィールドも 5 %は必ず通り抜けるため、むき出しの炉心でスーツが与えるのは無敵ではなく時間です。耐久値は<strong>ウランに触れているかぎり</strong>減り、その速さは線源の強さで決まります。稼働中の炉心では毎秒 1ポイント、懐の濃縮ウラン1個なら2秒に1ポイント、鉱石なら8秒に1ポイントです。つまりスーツの寿命は 時間で測れます — 炉心でおよそ3分、濃縮ウランを持ち歩いて約5分、鉱石なら20分以上。壊れた部位は 遮蔽しなくなります。</p>
 
 <p>修理は金床で<strong>ゴム</strong> (タグ) を使います。</p>
+
+<h2 id="モブへの装着">モブへの装着</h2>
+
+<p>ディスペンサーで着せた相手 —— 村人、行商人、ウシ —— にもスーツは効果を発揮します。各部位が 25 %ずつカットし、<strong>フルセットはモブを完全に守ります</strong>: 何からの線量もゼロ、稼働中の燃料棒 群に密着していても同じです。同じ場所に立つプレイヤーには 95 %上限が残ります —— プレイヤーは 線源から離れられますがモブは離れられないため、「少し危しい」区域に留める意味がないからです。 ディスペンサーは<strong>余裕を持って</strong>装着します: ノズル正面のブロックだけでなく周囲 (~3×3) まで モブを探しますが、<strong>村人・行商人・ウシに限ります</strong>。近くにこれらがいなければ部位はアイテム として地面に落ち (外れたのが見える)、装備音は部位が対象に届いたときにだけ鳴ります。防具を 着せた行商人はデスポーンしなくなります —— バニラは装備したモブをそう扱います (村人とウシは もともとデスポーンしません)。</p>
+
+<p><strong>村人のスーツは見えます</strong>。バニラの村人モデルはどの防具も表示できません (バニラ防具も同じくレイヤーがないため) なので、モッドがスーツを自前で描きます—— モデルの膨張シェルへのオーバーレイとして: 頭上に鋼のバイザー付きの立体的な<strong>ヘルメット</strong> (村人の鼻はレスピレーターになります)、ローブの上に襟・ジッパー・チェストストラップ付きの <strong>ジャケットシェル</strong>、カフス付きの袖、ズボン、ゴムのブーツ。村人の顔はバイザーの下に完全に 隠れ、部分セットは部分表示 (各部位が個別に描画)、職業の帽子はヘルメットの下に収まります。 両ローダーで動作し、村人のアニメーション (歩行、組んだ腕、睡眠) は共有モデルから 自動的に継承されます。</p>
+
+<p><strong>モブのスーツは摩耗しない —— 意図的な決定です。</strong> 村人はスーツを修理も交換もできないため、 黙って壊れた部位は、黙って交易相手を失うことを意味します。モブの装備は着ているかぎりずっと 防護し続け、摩耗はプレイヤーだけの代償です。</p>
 
 <h2 id="ブロックの性質">ブロックの性質</h2>
 

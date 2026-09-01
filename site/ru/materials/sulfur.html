@@ -314,7 +314,7 @@
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Хранение жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Мир и автоматизация</div>
 <a class="cat-link active" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="22 страницы">22</span></a>
-<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сельское хозяйство</span><span class="cat-count" aria-label="5 страниц">5</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сельское хозяйство</span><span class="cat-count" aria-label="6 страниц">6</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Хай-тек машины</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Прочее</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="14 страниц">14</span></a>
@@ -335,6 +335,28 @@
     </div>
   </div>
 </div>
+<h2 id="ore-depth-h2">Где копать</h2>
+<section class="od" id="ore-depth" data-l10n="{&quot;surface&quot;: &quot;Поверхность&quot;, &quot;dig_here&quot;: &quot;Копать здесь&quot;}"
+         data-min="-32" data-max="32" data-count="7"
+         data-dim="overworld"
+         data-ore="../assets/block/sulfur_ore.png" data-deep="../assets/block/deepslate_sulfur_ore.png" data-torch="../assets/block/enriched_uranium_torch.png">
+  <div class="od-stage">
+    <div class="od-ruler"></div>
+    <div class="od-canvas-wrap"><canvas></canvas>
+      <span class="od-surface" hidden></span><span class="od-flag"></span></div>
+  </div>
+  <div class="od-side">
+    <div class="od-fact"><b>Y 0</b><span>Лучшая высота</span></div>
+    <div class="od-fact"><b>Y -32 … 32</b><span>Весь диапазон</span></div>
+    <div class="od-fact"><b>до 6 блоков</b><span>Размер жилы</span></div>
+    <div class="od-fact"><b>7</b><span>Попыток на чанк</span></div>
+    <p class="od-hint">Срез построен по числам самой генерации: чем больше блоков руды в ряду, тем выше шанс на этой высоте.</p>
+    <div class="od-legend">
+      <span><img src="../assets/block/sulfur_ore.png" alt="" width="16" height="16">руда в породе</span>
+      <span><img src="../assets/block/enriched_uranium_torch.png" alt="" width="16" height="16">туннель на лучшей высоте</span>
+    </div>
+  </div>
+</section>
 
 <h2 id="сводка">Сводка</h2>
 

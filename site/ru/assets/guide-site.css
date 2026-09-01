@@ -110,3 +110,29 @@ body{font-size:20px;line-height:1.5;background:linear-gradient(90deg,#0e0e11,#17
 @media(max-width:900px){.site-search{margin-left:0;flex:1 1 130px;max-width:230px}.site-search input{width:100%}.wiki-search-pop,.home-search .wiki-search-pop{position:fixed;left:8px;right:8px;top:64px;width:auto}}
 @media(max-width:560px){.site-search{flex-basis:100px}.wso{min-height:48px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+/* Ore depth cross-section (MOD-544). The generator emits the frame and the
+   numbers; guide-site.js paints the world slice onto the canvas from the same
+   data-* attributes. Until the canvas is painted the block stays laid out but
+   empty, so nothing jumps when the ore textures finish loading. */
+.od{display:flex;flex-wrap:wrap;gap:22px;margin:14px 0 8px;padding:18px;background:var(--panel);border:3px solid var(--edge);outline:2px solid #5c626b;outline-offset:-6px;box-shadow:6px 6px var(--edge)}
+.od-stage{display:flex;align-items:flex-start;gap:0}
+.od-ruler{position:relative;width:52px;flex:0 0 52px;padding-right:9px;text-align:right;color:var(--muted2);font:16px/1 'VT323',monospace;font-variant-numeric:tabular-nums}
+.od-ruler div{position:absolute;right:9px;transform:translateY(-50%);white-space:nowrap}
+.od-ruler div::after{content:"";position:absolute;left:calc(100% + 4px);top:50%;width:7px;height:2px;background:var(--muted2);transform:translateY(-50%)}
+.od-ruler div.od-peak{color:var(--gold);font-size:19px}
+.od-ruler div.od-peak::after{background:var(--gold);width:10px;height:3px}
+.od-canvas-wrap{position:relative;line-height:0;border:3px solid var(--edge);box-shadow:4px 4px var(--edge)}
+.od-canvas-wrap canvas{display:block;image-rendering:pixelated}
+.od-surface{position:absolute;left:6px;top:6px;z-index:2;color:#132009;background:rgba(255,255,255,.72);padding:2px 6px;font:11px/1 'Press Start 2P',monospace}
+.od-surface[hidden]{display:none}
+.od-flag{position:absolute;right:5px;z-index:2;transform:translateY(-50%);white-space:nowrap;color:#181203;background:var(--gold);padding:5px 8px;font:11px/1 'Press Start 2P',monospace;box-shadow:2px 2px rgba(0,0,0,.55);opacity:0;transition:opacity .12s}
+.od-ready .od-flag{opacity:1}
+.od-side{flex:1 1 260px;min-width:240px;display:flex;flex-direction:column;gap:11px}
+.od-fact{padding:11px 14px;background:var(--steel);border:2px solid var(--edge);box-shadow:3px 3px var(--edge)}
+.od-fact b{display:block;color:var(--gold);font:20px/1 'VT323',monospace;font-variant-numeric:tabular-nums}
+.od-fact span{color:#dadbe0;font:16px/1.4 'VT323',monospace}
+.od-hint{margin:2px 0 0;color:#c7c8cd;font-size:17px;line-height:1.5}
+.od-legend{display:flex;flex-wrap:wrap;gap:16px;color:#c7c8cd;font-size:16px}
+.od-legend span{display:inline-flex;align-items:center;gap:7px}
+.od-legend img{image-rendering:pixelated}
+@media(max-width:760px){.od{padding:13px;gap:16px}.od-ruler{width:42px;flex-basis:42px}.od-side{min-width:0}}

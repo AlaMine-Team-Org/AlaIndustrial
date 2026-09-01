@@ -314,7 +314,7 @@
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">世界与自动化</div>
 <a class="cat-link active" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="22 个页面">22</span></a>
-<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="5 个页面">5</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="6 个页面">6</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">其他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
@@ -335,6 +335,28 @@
     </div>
   </div>
 </div>
+<h2 id="ore-depth-h2">在哪里挖掘</h2>
+<section class="od" id="ore-depth" data-l10n="{&quot;surface&quot;: &quot;地表&quot;, &quot;dig_here&quot;: &quot;在此挖掘&quot;}"
+         data-min="-32" data-max="32" data-count="7"
+         data-dim="overworld"
+         data-ore="../assets/block/sulfur_ore.png" data-deep="../assets/block/deepslate_sulfur_ore.png" data-torch="../assets/block/enriched_uranium_torch.png">
+  <div class="od-stage">
+    <div class="od-ruler"></div>
+    <div class="od-canvas-wrap"><canvas></canvas>
+      <span class="od-surface" hidden></span><span class="od-flag"></span></div>
+  </div>
+  <div class="od-side">
+    <div class="od-fact"><b>Y 0</b><span>最佳高度</span></div>
+    <div class="od-fact"><b>Y -32 … 32</b><span>完整范围</span></div>
+    <div class="od-fact"><b>最多 6 个方块</b><span>矿脉大小</span></div>
+    <div class="od-fact"><b>7</b><span>每区块尝试次数</span></div>
+    <p class="od-hint">剖面由矿石自身的生成数值绘制：一行中的矿石方块越多，该高度的出现几率越高。</p>
+    <div class="od-legend">
+      <span><img src="../assets/block/sulfur_ore.png" alt="" width="16" height="16">岩壁中的矿石</span>
+      <span><img src="../assets/block/enriched_uranium_torch.png" alt="" width="16" height="16">最佳高度的隧道</span>
+    </div>
+  </div>
+</section>
 <h2 id="概览">概览</h2>
 
 <p><strong>硫磺</strong>是早期可开采的非金属，用于橡胶硫化。矿石出现在石头和深板岩中，可用石镐及以上开采，产出粗硫磺。粉碎机把一块矿石或一份粗硫磺变成两份粉；普通熔炉给一份粉，不翻倍。</p>

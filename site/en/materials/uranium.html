@@ -373,7 +373,7 @@
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
 <a class="cat-link active" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="22 pages">22</span></a>
-<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="5 pages">5</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="6 pages">6</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
@@ -394,9 +394,31 @@
     </div>
   </div>
 </div>
+<h2 id="ore-depth-h2">Where to dig</h2>
+<section class="od" id="ore-depth" data-l10n="{&quot;surface&quot;: &quot;Surface&quot;, &quot;dig_here&quot;: &quot;Dig here&quot;}"
+         data-min="-64" data-max="16" data-count="1"
+         data-dim="overworld"
+         data-ore="../assets/block/uranium_ore.png" data-deep="../assets/block/deepslate_uranium_ore.png" data-torch="../assets/block/enriched_uranium_torch.png">
+  <div class="od-stage">
+    <div class="od-ruler"></div>
+    <div class="od-canvas-wrap"><canvas></canvas>
+      <span class="od-surface" hidden></span><span class="od-flag"></span></div>
+  </div>
+  <div class="od-side">
+    <div class="od-fact"><b>Y -24</b><span>Best level</span></div>
+    <div class="od-fact"><b>Y -64 … 16</b><span>Full range</span></div>
+    <div class="od-fact"><b>up to 4 blocks</b><span>Vein size</span></div>
+    <div class="od-fact"><b>1</b><span>Vein tries per chunk</span></div>
+    <p class="od-hint">The slice is drawn from the ore&#x27;s own generation numbers: the more ore blocks in a row, the higher the chance at that depth.</p>
+    <div class="od-legend">
+      <span><img src="../assets/block/uranium_ore.png" alt="" width="16" height="16">ore in the wall</span>
+      <span><img src="../assets/block/enriched_uranium_torch.png" alt="" width="16" height="16">tunnel at the best level</span>
+    </div>
+  </div>
+</section>
 <h2 id="summary">Summary</h2>
 
-<p><strong>Uranium</strong> is the mod's rarest metal, reserved for the <strong>nuclear track</strong> (RTG, reactor, enrichment). Its ore spawns in tiny veins at the very bottom of the world, and unlike the other ores it needs an <strong>iron pickaxe</strong> or better — wood, gold and stone drop nothing.</p>
+<p><strong>Uranium</strong> is the mod's rarest metal, reserved for the <strong>nuclear track</strong> (RTG, reactor, enrichment). Its ore spawns in tiny veins at middling depths, and unlike the other ores it needs an <strong>iron pickaxe</strong> or better — wood, gold and stone drop nothing.</p>
 
 <blockquote><strong>Mini-example:</strong> same two processing routes as tin — furnace for 1 ingot per ore, Macerator for 2. But uranium is roughly seven times rarer than diamond, so each block and each raw drop matters; macerate, don't furnace.</blockquote>
 
@@ -408,7 +430,9 @@
 
 <h2 id="where-to-find-it">Where to find it</h2>
 
-<p>Uranium sits at the very bottom of the world, in tiny veins, about seven times rarer than diamond. Bring an iron pickaxe (or better) — anything weaker drops nothing.</p>
+<p>Uranium spawns between Y −64 and Y 16, but <strong>not at the very bottom</strong>: it is densest in the middle of that range, around <strong>Y −24</strong>, and thins out toward both ends. Diamond depth (about Y −59) is where you will find the least of it — the usual reason behind "I have been mining for days and found nothing".</p>
+
+<p>Veins are tiny, roughly seven times rarer than diamond. Bring an iron pickaxe (or better) — anything weaker drops nothing.</p>
 
 <h2 id="block-properties">Block Properties</h2>
 

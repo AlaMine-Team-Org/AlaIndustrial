@@ -657,4 +657,236 @@
       .then(render)
       .catch(() => {});
   }
+
+  /* -- Ore depth cross-section (MOD-544) ----------------------------------
+     A slice of the world drawn block by block. How many ore blocks land in a
+     row comes from the same trapezoid the game uses to place the ore, so the
+     wall visibly thickens toward the level with the best odds and a torch-lit
+     tunnel marks it. Every number arrives in data-* attributes filled from the
+     worldgen files, every caption in data-l10n: this file is copied byte for
+     byte into all five locales and must not hold a translatable string. */
+  const od = document.getElementById('ore-depth');
+  if (od) {
+    const L = JSON.parse(od.dataset.l10n);
+    const minY = +od.dataset.min, maxY = +od.dataset.max;
+    const mid = Math.floor((minY + maxY) / 2), half = (maxY - minY) / 2;
+    const nether = od.dataset.dim === 'nether';
+    const veinCount = +od.dataset.count;
+
+    /* A trapezoid height provider with no plateau is a symmetric triangle:
+       the chance peaks in the middle of the range and reaches zero at both
+       ends. The very bottom of the range is its thinnest part, not its best. */
+    const density = y => Math.max(0, 1 - Math.abs(y - mid) / half);
+
+    /* Seeded RNG: the slice must look the same on every visit, and identical
+       in every locale - the pages are compared byte for byte. */
+    const rand = seed => () => {
+      seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+      let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+    const shade = (hex, d) => {
+      const n = parseInt(hex.slice(1), 16);
+      const c = [(n >> 16) & 255, (n >> 8) & 255, n & 255]
+        .map(v => Math.max(0, Math.min(255, v + d)));
+      return 'rgb(' + c[0] + ',' + c[1] + ',' + c[2] + ')';
+    };
+    const loadImg = src => new Promise(res => {
+      if (!src) { res(null); return; }
+      const im = new Image();
+      im.onload = () => res(im);
+      im.onerror = () => res(null);
+      im.src = src;
+    });
+
+    /* Framing: show the ore's own range plus a margin, and reach for a landmark
+       only when the ore actually gets there - a surface strip above an ore that
+       stops at Y 16 would place the sky underground. */
+    const SURFACE = 64, WORLD_BOTTOM = -64, NETHER_FLOOR = 0, PAD = 8;
+    let top = maxY + PAD, bottom = minY - PAD;
+    const showSurface = !nether && top >= SURFACE - 12;
+    if (showSurface) top = SURFACE;
+    const floorY = nether ? NETHER_FLOOR : WORLD_BOTTOM;
+    const showBedrock = bottom <= floorY + 4;
+    if (showBedrock) bottom = floorY;
+
+    const BLOCK = 24, COLS = 15;
+    const step = Math.max(1, Math.round((top - bottom) / 17));
+    const rows = Math.floor((top - bottom) / step) + 1;
+    const SKY = showSurface ? 54 : 0;
+    const W = COLS * BLOCK, H = SKY + rows * BLOCK;
+
+    /* How rich the wall gets. Two inputs, because either alone lies: the vein
+       count per chunk (a common ore must look common), and how many Y levels a
+       drawn row stands for - an ore squeezed into 24 levels packs more into one
+       row than an ore spread over 80, and without the row height a narrow band
+       would masquerade as the richer one. Counts grow logarithmically so twelve
+       veins read as denser than one without burying the wall in ore. */
+    const maxPerRow = Math.max(2, Math.min(9,
+      Math.round(2.2 * Math.log2(1 + veinCount) * step / 4)));
+    const rowY = i => top - i * step;
+    const toPx = y => SKY + (top - y) / step * BLOCK;
+
+    const PAL = nether
+      ? { rock: '#6d3436', deep: '#4d2527', dirt: '#7c4034', bed: '#26262a',
+          spot1: '#8b4b3d', spot2: '#57282a', spot3: '#3d2a2c' }
+      : { rock: '#7b7b7b', deep: '#4c4c53', dirt: '#6b4a2c', bed: '#26262a',
+          spot1: '#8a8a86', spot2: '#6e6a66', spot3: '#5a5a52' };
+
+    const canvas = od.querySelector('canvas');
+    const flag = od.querySelector('.od-flag');
+    const surfaceLbl = od.querySelector('.od-surface');
+    const ruler = od.querySelector('.od-ruler');
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.scale(dpr, dpr);
+    ctx.imageSmoothingEnabled = false;
+
+    const grain = (x, y, w, h, base, rng) => {
+      ctx.fillStyle = base;
+      ctx.fillRect(x, y, w, h);
+      const p = w / 8;
+      for (let i = 0; i < 8; i++) {
+        for (let j = 0; j < Math.round(h / p); j++) {
+          const r = rng();
+          if (r < 0.34) {
+            ctx.fillStyle = shade(base, r < 0.17 ? -16 : 13);
+            ctx.fillRect(x + i * p, y + j * p, p, p);
+          }
+        }
+      }
+      ctx.fillStyle = 'rgba(255,255,255,.05)'; ctx.fillRect(x, y, w, 2);
+      ctx.fillStyle = 'rgba(0,0,0,.20)'; ctx.fillRect(x, y + h - 2, w, 2);
+    };
+
+    const paint = imgs => {
+      const oreImg = imgs[0], deepImg = imgs[1] || imgs[0], torchImg = imgs[2];
+
+      if (showSurface) {
+        const sky = ctx.createLinearGradient(0, 0, 0, SKY);
+        sky.addColorStop(0, '#63b6e8'); sky.addColorStop(1, '#a9dcf3');
+        ctx.fillStyle = sky; ctx.fillRect(0, 0, W, SKY);
+        ctx.fillStyle = '#fff8d0'; ctx.fillRect(W - 56, 11, 22, 22);
+        const cr = rand(77);
+        ctx.fillStyle = '#ffffff';
+        for (let c = 0; c < 3; c++) {
+          const cx = Math.floor(cr() * (W - 76)) + 6, cy = 9 + Math.floor(cr() * 22);
+          const cw = 18 + Math.floor(cr() * 24);
+          ctx.fillRect(cx, cy, cw, 6);
+          ctx.fillRect(cx + 6, cy - 5, Math.max(8, cw - 16), 5);
+        }
+        const gr = rand(1337);
+        for (let c = 0; c < COLS; c++) {
+          ctx.fillStyle = '#5c9c3f';
+          ctx.fillRect(c * BLOCK, SKY - (4 + Math.floor(gr() * 5)), BLOCK, 9);
+        }
+      }
+
+      const rockRng = rand(20260901);
+      const kinds = [];
+      for (let i = 0; i < rows; i++) {
+        kinds[i] = [];
+        const y = rowY(i);
+        for (let c = 0; c < COLS; c++) {
+          const r = rockRng();
+          let kind;
+          if (showBedrock && i >= rows - 1) kind = 'bed';
+          else if (showBedrock && i === rows - 2) kind = r < 0.45 ? 'bed' : (nether ? 'rock' : 'deep');
+          else if (nether) kind = 'rock';
+          else if (showSurface && y > SURFACE - step * 2) kind = r < 0.55 ? 'dirt' : 'rock';
+          else if (y > 8) kind = 'rock';
+          else if (y > 0) kind = r < (8 - y) / 8 ? 'deep' : 'rock';
+          else kind = 'deep';
+          if (kind === 'rock' && r > 0.93) kind = r > 0.965 ? 'spot1' : 'spot2';
+          else if (kind === 'deep' && r > 0.95) kind = 'spot3';
+          kinds[i][c] = kind;
+          grain(c * BLOCK, SKY + i * BLOCK, BLOCK, BLOCK, PAL[kind], rockRng);
+        }
+      }
+
+      /* Depth darkening goes under the ore, never over it: the point of the
+         picture is which blocks sit where, and deepslate is dark enough. */
+      const deepest = nether ? 0.26 : 0.36;
+      const dark = ctx.createLinearGradient(0, SKY, 0, H);
+      dark.addColorStop(0, 'rgba(0,0,0,0)');
+      dark.addColorStop(0.55, 'rgba(0,0,0,' + (deepest * 0.5).toFixed(2) + ')');
+      dark.addColorStop(1, 'rgba(0,0,0,' + deepest.toFixed(2) + ')');
+      ctx.fillStyle = dark; ctx.fillRect(0, SKY, W, H - SKY);
+
+      const tunnelRow = Math.max(0, Math.min(rows - 1, Math.round((top - mid) / step)));
+      const oreRng = rand(4242);
+      const put = (i, c) => {
+        if (i < 0 || i >= rows || c < 0 || c >= COLS || i === tunnelRow) return;
+        const k = kinds[i][c];
+        if (k === 'bed' || k === 'ore') return;
+        const img = (k === 'deep' || k === 'spot3') ? deepImg : oreImg;
+        if (img) ctx.drawImage(img, c * BLOCK, SKY + i * BLOCK, BLOCK, BLOCK);
+        kinds[i][c] = 'ore';
+      };
+      for (let i = 0; i < rows; i++) {
+        if (i === tunnelRow) continue;
+        const n = Math.round(density(rowY(i)) * maxPerRow);
+        for (let k = 0; k < n; k++) {
+          const c = Math.floor(oreRng() * COLS);
+          put(i, c);
+          /* Veins are clumps, not lone blocks - a single scattered pixel reads
+             as noise, a pair reads as something you would actually mine. */
+          if (oreRng() < 0.6) put(i, oreRng() < 0.5 ? c - 1 : c + 1);
+          if (oreRng() < 0.3) put(i + (oreRng() < 0.5 ? -1 : 1), c);
+        }
+      }
+
+      const ty = SKY + tunnelRow * BLOCK;
+      const air = ctx.createLinearGradient(0, ty, 0, ty + BLOCK);
+      air.addColorStop(0, '#0b0b0f'); air.addColorStop(1, '#17171d');
+      ctx.fillStyle = air; ctx.fillRect(0, ty, W, BLOCK);
+      ctx.fillStyle = 'rgba(0,0,0,.55)'; ctx.fillRect(0, ty, W, 3);
+      ctx.globalCompositeOperation = 'lighter';
+      for (let c = 2; c < COLS; c += 5) {
+        const cx = c * BLOCK + BLOCK / 2, cy = ty + BLOCK * 0.45;
+        const g = ctx.createRadialGradient(cx, cy, 2, cx, cy, BLOCK * 2.6);
+        g.addColorStop(0, 'rgba(255,206,110,.55)');
+        g.addColorStop(0.45, 'rgba(255,190,80,.16)');
+        g.addColorStop(1, 'rgba(255,180,60,0)');
+        ctx.fillStyle = g;
+        ctx.fillRect(cx - BLOCK * 2.6, cy - BLOCK * 2.6, BLOCK * 5.2, BLOCK * 5.2);
+      }
+      ctx.globalCompositeOperation = 'source-over';
+      for (let c = 2; c < COLS; c += 5) {
+        if (torchImg) ctx.drawImage(torchImg, c * BLOCK, ty, BLOCK, BLOCK);
+      }
+
+      if (flag) {
+        flag.textContent = L.dig_here + ' Y' + mid;
+        flag.style.top = (ty + BLOCK / 2) + 'px';
+      }
+      if (surfaceLbl && showSurface) {
+        surfaceLbl.textContent = L.surface;
+        surfaceLbl.hidden = false;
+      }
+      od.classList.add('od-ready');
+    };
+
+    if (ruler) {
+      ruler.style.height = H + 'px';
+      const mark = (y, cls, text) => {
+        const d = document.createElement('div');
+        if (cls) d.className = cls;
+        d.style.top = toPx(y) + 'px';
+        d.textContent = text;
+        ruler.appendChild(d);
+      };
+      const stride = step <= 2 ? 8 : 16;
+      for (let y = Math.floor(top / stride) * stride; y >= bottom; y -= stride) {
+        if (Math.abs(y - mid) >= step) mark(y, '', 'Y' + y);
+      }
+      mark(mid, 'od-peak', 'Y' + mid);
+    }
+
+    Promise.all([loadImg(od.dataset.ore), loadImg(od.dataset.deep),
+                 loadImg(od.dataset.torch)]).then(paint);
+  }
 })();

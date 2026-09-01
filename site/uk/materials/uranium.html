@@ -373,7 +373,7 @@
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Зберігання рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Світ та автоматизація</div>
 <a class="cat-link active" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="22 сторінки">22</span></a>
-<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сільське господарство</span><span class="cat-count" aria-label="5 сторінок">5</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сільське господарство</span><span class="cat-count" aria-label="6 сторінок">6</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Високотехнологічні машини</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Інше</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилітарні блоки</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
@@ -394,9 +394,31 @@
     </div>
   </div>
 </div>
+<h2 id="ore-depth-h2">Де копати</h2>
+<section class="od" id="ore-depth" data-l10n="{&quot;surface&quot;: &quot;Поверхня&quot;, &quot;dig_here&quot;: &quot;Копати тут&quot;}"
+         data-min="-64" data-max="16" data-count="1"
+         data-dim="overworld"
+         data-ore="../assets/block/uranium_ore.png" data-deep="../assets/block/deepslate_uranium_ore.png" data-torch="../assets/block/enriched_uranium_torch.png">
+  <div class="od-stage">
+    <div class="od-ruler"></div>
+    <div class="od-canvas-wrap"><canvas></canvas>
+      <span class="od-surface" hidden></span><span class="od-flag"></span></div>
+  </div>
+  <div class="od-side">
+    <div class="od-fact"><b>Y -24</b><span>Найкраща висота</span></div>
+    <div class="od-fact"><b>Y -64 … 16</b><span>Увесь діапазон</span></div>
+    <div class="od-fact"><b>до 4 блоків</b><span>Розмір жили</span></div>
+    <div class="od-fact"><b>1</b><span>Спроб на чанк</span></div>
+    <p class="od-hint">Зріз побудований за числами самої генерації: що більше блоків руди в ряду, то вищий шанс на цій висоті.</p>
+    <div class="od-legend">
+      <span><img src="../assets/block/uranium_ore.png" alt="" width="16" height="16">руда в породі</span>
+      <span><img src="../assets/block/enriched_uranium_torch.png" alt="" width="16" height="16">тунель на найкращій висоті</span>
+    </div>
+  </div>
+</section>
 <h2 id="зведення">Зведення</h2>
 
-<p><strong>Уран</strong> — найрідкісніший метал моду, зарезервований під <strong>ядерний трек</strong> (РІТЕГ, реактор, збагачення). Руда трапляється біля самого дна світу, крихітними жилами, і на відміну від решти руд вимагає <strong>залізного кайла</strong> або кращого — дерев'яне, золоте й кам'яне кайло дропу не дають.</p>
+<p><strong>Уран</strong> — найрідкісніший метал моду, зарезервований під <strong>ядерний трек</strong> (РІТЕГ, реактор, збагачення). Руда трапляється крихітними жилами на середніх глибинах, і на відміну від решти руд вимагає <strong>залізного кайла</strong> або кращого — дерев'яне, золоте й кам'яне кайло дропу не дають.</p>
 
 <blockquote><strong>Міні-приклад:</strong> ті самі два шляхи переробки, що в олова — піч дає 1 зливок з руди, подрібнювач дає 2. Але уран приблизно всемеро рідкісніший за алмаз, тому кожен блок і кожна сировина на рахунку: дробіть, а не паліть у печі.</blockquote>
 
@@ -408,7 +430,9 @@
 
 <h2 id="де-шукати">Де шукати</h2>
 
-<p>Уран лежить біля самого дна світу, крихітними жилами — приблизно всемеро рідкісніший за алмаз. Беріть залізне кайло (або краще): усе слабше дропу не дає.</p>
+<p>Уран трапляється від Y −64 до Y 16, але <strong>не біля самого дна</strong>: найгустіше руда лежить посередині цього діапазону, приблизно на <strong>Y −24</strong>, а до обох країв сходить нанівець. На алмазній глибині (близько Y −59) її якраз найменше — це найчастіша причина «копаю тиждень і нічого».</p>
+
+<p>Жили крихітні, приблизно всемеро рідкісніші за алмаз. Беріть залізне кайло (або краще): усе слабше дропу не дає.</p>
 
 <h2 id="властивості-блока">Властивості блока</h2>
 

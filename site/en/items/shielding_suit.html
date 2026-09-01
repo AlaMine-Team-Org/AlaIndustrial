@@ -373,7 +373,7 @@
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="22 pages">22</span></a>
-<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="5 pages">5</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="6 pages">6</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
@@ -412,9 +412,17 @@
 
 <p>Radiation weakens with distance, so the suit and a step back work together: right at a column about 5 % of the dose gets through a full set — roughly a minute and a half to a lethal level; one block out that triples, and three or four blocks out the dose barely climbs.</p>
 
-<p>The full set stops <strong>all ordinary background</strong>: uranium in the pockets, uranium on the ground, a reactor with no shell. At an open core a separate ceiling applies ( 95 %) — there the suit buys time, not invulnerability. Durability is spent on <strong>any contact with uranium</strong>, paced by how fierce the source is: a point a second at a live core, one every two seconds with a refined-uranium item in your pocket, one every eight with ore. The life of the suit is therefore a TIME: about three minutes in a core, about five with refined uranium carried, over twenty with ore. A broken piece stops shielding.</p>
+<p>The full set stops <strong>the uranium in your own pockets</strong> outright; the outside field — uranium on the ground, a reactor with no shell, the rods themselves — is cut by 95 % 5 % of any field always gets through, and that is exactly why at an open core the suit buys time, not invulnerability. Durability is spent on <strong>any contact with uranium</strong>, paced by how fierce the source is: a point a second at a live core, one every two seconds with a refined-uranium item in your pocket, one every eight with ore. The life of the suit is therefore a TIME: about three minutes in a core, about five with refined uranium carried, over twenty with ore. A broken piece stops shielding.</p>
 
 <p>Repaired with <strong>rubber</strong> (tag) at an anvil.</p>
+
+<h2 id="on-mobs">On mobs</h2>
+
+<p>The suit also protects whoever you put it on <strong>through a dispenser</strong> — a villager, a wandering trader, a cow. Each piece cuts its 25 %, and <strong>a full set protects a mob completely</strong>: zero dose from anything, standing right against a running column included. The player keeps a 95 % ceiling in the same spot — a player can step away from a source and a mob cannot, so holding it in a "slightly dangerous" zone makes no sense. The dispenser equips the pieces <strong>forgivingly</strong>: it looks for a mob not only in the block right at the nozzle but in the area around it (~3×3) — and <strong>only a villager, a wandering trader or a cow</strong>. With no such mob nearby the piece drops to the g, and the equip sound plays only when the piece lands on its target. An equipped wandering trader stops despawning — that is how vanilla treats an equipped mob (villagers and cows never despawn on their own).</p>
+
+<p><strong>The suit is visible on a villager.</strong> The vanilla villager model cannot show armor of any kind (no armor layer — true for vanilla armor too), so the mod draws the suit itself, as overlays on the model's inflated shells: a volumetric <strong>helmet</strong> with a steel visor over the head (the villager's nose becomes the respirator), a <strong>jacket shell</strong> with collar, zipper and chest straps over the robe, sleeved arms, trousers and rubber boots. The villager's face is fully hidden behind the visor; a partial set shows partially — each piece renders on its own; a profession hat tucks under the helmet. Works on both loaders, and the villager's animations (walking, crossed arms, sleeping) are inherited from the shared model.</p>
+
+<p><strong>A suit on a mob never wears out — a deliberate decision.</strong> A villager can neither repair nor replace a suit, so a piece that silently broke would silently cost a trader. A set worn by a mob shields for as long as it stays on; wear remains the player's price alone.</p>
 
 <h2 id="block-properties">Block Properties</h2>
 

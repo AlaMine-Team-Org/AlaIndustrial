@@ -373,7 +373,7 @@
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">世界与自动化</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="22 个页面">22</span></a>
-<a class="cat-link active" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="5 个页面">5</span></a>
+<a class="cat-link active" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="6 个页面">6</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">其他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
@@ -398,7 +398,7 @@
 
 <p><strong>园艺无人机基站</strong>——1×1 的方块底座（如同扫地机器人的基座），无人机会从中升空并巡视基站 周围半径 4 格的区域。无人机不是 Entity，而是由基站本身的 绘制的对象 —视觉上它看起来和移动起来都像飞行器，但物理上始终「属于」基站方块，无法离开其区域。</p>
 
-<p>玩家把种子和骨粉放进基站，接上 EU/FE——无人机就会自己维护农田：犁空闲的土地、在空的犁好 格子里种种子、用骨粉加速未成熟作物的生长，并把成熟作物直接运回其输出槽（世界中不出现 <code>ItemEntity</code>）。它取代了计划中但未实现的「自动作物护理」（<code>crop_matron</code>）和「收割机」 （<code>crop_harvester</code>）——一个方块替代两个，不重复机制。</p>
+<p>玩家把种子和骨粉放进基站，接上 EU/FE——无人机就会自己维护农田：犁空闲的土地、在合适土壤 上方的空格子里播种、用骨粉加速未成熟作物的生长，并把成熟作物直接运回其输出槽（世界中不出现 <code>ItemEntity</code>）。它取代了计划中但未实现的「自动作物护理」（<code>crop_matron</code>）和「收割机」 （<code>crop_harvester</code>）——一个方块替代两个，不重复机制。</p>
 
 <h2 id="能量">能量</h2>
 
@@ -418,9 +418,11 @@
 
 <p><strong>动作优先级</strong>（按此顺序检查，执行第一个匹配的）：</p>
 
-<ol><li><strong>采集</strong>——区域内有成熟作物的格子（需要锄）。</li><li><strong>种植</strong>——空的犁好格子 + 槽中有合适的种子。</li><li><strong>施肥</strong>——未成熟作物的格子 + 槽中有骨粉。</li><li><strong>犁地</strong>——空闲土地的格子（需要锄；将其转为犁好的）。</li></ol>
+<ol><li><strong>采集</strong>——区域内有成熟作物的格子（需要锄）。</li><li><strong>种植</strong>——<code>#minecraft:supports_crops</code> 中土壤上方的空格子 + 槽中有合适的种子。</li><li><strong>施肥</strong>——未成熟作物的格子 + 槽中有骨粉。</li><li><strong>犁地</strong>——原版泥土或草的格子（需要锄；将其转为耕地）。</li></ol>
 
 <p>此顺序保证「农场自我维护」无中断：若没有作为第四动作的犁地，玩家首次扩展田地时该承诺 就会破裂。</p>
+
+<p><strong>种植土壤是原版标签，而非方块（）。</strong> 种植（以及区域缓存中的格子筛选）把 <code>#minecraft:supports_crops</code> 中的任何方块都当作土壤——作物自身正是用同一个标签判断自己 能否立在方块上。因此无人机和作物在「什么算土地」上不会分歧：Farmer's Delight 的 rich soil farmland（以及任何加入该标签的模组土壤）无人机都当作原生农田来处理——不需要 任何一行知道外来 id 的代码。<strong>犁地不跟随该标签</strong>：只有原版的泥土和草才会被转为原版 耕地，外来土壤无人机绝不翻动——玩家的 rich soil 是用骨粉换来的，基站不应毁掉它。</p>
 
 <p><strong>飞行。</strong> 动作不在选定目标时发生，而在<strong>无人机到达后</strong>：无人机以 = <strong>11</strong> 刻每格的速度飞向目标格，然后才在那里执行工作。飞行段不短于 <code>MIN_FLIGHT_TICKS</code> = <strong>26</strong> 刻——否则相邻格子的飞行会比眼睛能注意到的还快。返航到基座所需时间与飞向目标 相同，加上 <code>LANDING_PAUSE_TICKS</code> = <strong>6</strong> 刻——无人机在被处理的格子上停留（见下文），因此 一个「动作」周期最少 <strong>58 刻</strong>（≈2.9 秒），而不是一刻：基站以机器的节奏而非瞬间维护田地。 没有这一点，它会在几刻内服务整个农场——视觉上会读作瞬移，而非一台做活的机器。到达后任务 <strong>会重新验证</strong>：飞行期间世界可能已变化（玩家徒手采摘、活塞推动方块），因此目标会重新验证， 而非凭信仰接受。</p>
 

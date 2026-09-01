@@ -373,7 +373,7 @@
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>液体貯蔵</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <div class="group-title">世界と自動化</div>
 <a class="cat-link active" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>素材</span><span class="cat-count" aria-label="22 ページ">22</span></a>
-<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>農業</span><span class="cat-count" aria-label="5 ページ">5</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>農業</span><span class="cat-count" aria-label="6 ページ">6</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>高度なマシン</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <div class="group-title">その他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
@@ -394,6 +394,28 @@
     </div>
   </div>
 </div>
+<h2 id="ore-depth-h2">採掘する場所</h2>
+<section class="od" id="ore-depth" data-l10n="{&quot;surface&quot;: &quot;地表&quot;, &quot;dig_here&quot;: &quot;ここを掘る&quot;}"
+         data-min="-16" data-max="64" data-count="12"
+         data-dim="overworld"
+         data-ore="../assets/block/tin_ore.png" data-deep="../assets/block/deepslate_tin_ore.png" data-torch="../assets/block/enriched_uranium_torch.png">
+  <div class="od-stage">
+    <div class="od-ruler"></div>
+    <div class="od-canvas-wrap"><canvas></canvas>
+      <span class="od-surface" hidden></span><span class="od-flag"></span></div>
+  </div>
+  <div class="od-side">
+    <div class="od-fact"><b>Y 24</b><span>最適な高さ</span></div>
+    <div class="od-fact"><b>Y -16 … 64</b><span>生成範囲</span></div>
+    <div class="od-fact"><b>最大 8 ブロック</b><span>鉱脈の大きさ</span></div>
+    <div class="od-fact"><b>12</b><span>チャンクあたりの試行回数</span></div>
+    <p class="od-hint">この断面は鉱石自身の生成数値から描かれています。1行の鉱石ブロックが多いほど、その高さでの出現率が高くなります。</p>
+    <div class="od-legend">
+      <span><img src="../assets/block/tin_ore.png" alt="" width="16" height="16">岩壁の鉱石</span>
+      <span><img src="../assets/block/enriched_uranium_torch.png" alt="" width="16" height="16">最適な高さのトンネル</span>
+    </div>
+  </div>
+</section>
 <h2 id="概要">概要</h2>
 
 <p><strong>スズ</strong>は本modで最初の金属であり、LVティアの基盤です。最初のマシンを動かすワイヤーと回路の素材になります。鉱石は中程度の深さの石と深層岩に現れ、石のツルハシ以上で採掘できます。</p>

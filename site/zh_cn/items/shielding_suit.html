@@ -373,7 +373,7 @@
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">世界与自动化</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="22 个页面">22</span></a>
-<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="5 个页面">5</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="6 个页面">6</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">其他</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
@@ -412,9 +412,17 @@
 
 <p>辐射会随距离减弱，所以防护服和后退一步是配合起效的：紧贴燃料棒组件时，整套仍会漏进约 5 % 的剂量， 大约一分半就会到致命水平；退开一格，这个时间会变成三倍；退开三四格后，剂量几乎不再上升。</p>
 
-<p>整套可以挡下<strong>全部普通辐射背景</strong>：口袋里的铀、地上的铀、没有外壳的反应堆。而在裸露的堆芯旁另有上限 （，95 %）——在那里它买到的是时间，不是无敌。<strong>只要接触铀，耐久就会消耗</strong>，速度取决于辐射源的强弱：在运转的堆芯旁每秒 1 点，口袋里放一块浓缩铀 是每两秒 1 点，矿石则是每八秒 1 点。所以它的寿命是一段时间：堆芯里约三分钟，随身带浓缩铀约五分钟， 只带矿石则超过二十分钟。损坏的部件不再提供屏蔽。</p>
+<p>整套能完全挡住<strong>自己口袋里的铀</strong>；外部辐射场——地上的铀、没有外壳的反应堆、燃料棒本身—— 则一律削减 95 %（）：任何辐射场都有 5 % 始终漏过，这正是为什么 在裸露的堆芯旁它买到的是时间，不是无敌。<strong>只要接触铀，耐久就会消耗</strong>，速度取决于辐射源的强弱：在运转的堆芯旁每秒 1 点，口袋里放一块浓缩铀 是每两秒 1 点，矿石则是每八秒 1 点。所以它的寿命是一段时间：堆芯里约三分钟，随身带浓缩铀约五分钟， 只带矿石则超过二十分钟。损坏的部件不再提供屏蔽。</p>
 
 <p>在铁砧上用<strong>橡胶</strong>修复（标签 ）。</p>
+
+<h2 id="穿在生物身上">穿在生物身上（）</h2>
+
+<p>用<strong>发射器</strong>给村民、流浪商人或奶牛穿上防护服，它同样有效。每个部件削减 25 %，而<strong>整套对 生物是完全防护</strong>：任何来源都是零剂量，紧贴运转中的燃料棒柱也一样。玩家在同一位置仍受 95 % 上限约束——玩家可以离开辐射源，生物不能，把生物留在“稍微有点危险”的区域里毫无意义。 发射器穿戴<strong>带容错</strong>：它不只看喷嘴正对的那个方块，而是查找周围约 3×3 的区域——但<strong>只针对 村民、流浪商人或奶牛</strong>。附近没有这类生物时，部件会作为物品掉落在地（看得见的脱靶），而穿戴 音效只在部件落到目标身上时才会响起。穿上盔甲的 流浪商人顺便也不会再自然消失了——原版就是这样对待穿戴装备的生物的（村民和奶牛本来就不会 自然消失）。</p>
+
+<p><strong>防护服在村民身上可见（）。</strong> 原版村民模型完全不能显示任何盔甲（原版盔甲也一样 没有渲染层），因此模组自己绘制防护服——以模型膨胀外壳上的贴层形式呈现：头顶带钢质面罩的 立体<strong>头盔</strong>（村民的鼻子变成呼吸器）、长袍外面的<strong>护甲衣</strong>（带衣领、拉链和胸带）、带袖口 的袖子、裤子和橡胶靴。村民的脸完全藏在面罩后面；不完整的套装只显示对应部件——每个部件 单独渲染；职业帽子会收进头盔下面。两个加载器都能工作，村民的动画（走路、交叉手臂、睡觉） 由共享模型自动继承。</p>
+
+<p><strong>生物身上的防护服不消耗耐久——这是有意的设计决定。</strong> 村民既不能修理也不能更换防护服： 悄悄坏掉的部件，就意味着悄悄失去一位交易对象。因此穿在生物身上的套装只要一直穿着就永久 生效；耐久消耗只是玩家要付的代价。</p>
 
 <h2 id="方块属性">方块属性</h2>
 
