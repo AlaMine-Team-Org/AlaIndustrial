@@ -40,6 +40,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -233,6 +234,21 @@ public class IndustrializationFabric implements ModInitializer {
 		// entity standing INSIDE the single facing block, which a wandering villager keeps leaving.
 		dev.alaindustrial.item.wearable.SuitDispenseBehavior.register();
 		ModRecipes.init();
+		// MOD-543: opt every machine-recipe serializer into fabric-api's recipe sync. Vanilla 26.2
+		// syncs only display-capable vanilla recipes to clients, so on a dedicated server the synced
+		// recipe map (the one JEI reads) holds none of our custom recipe types and every machine
+		// category in JEI stayed empty for server players — the category and its GUI click areas
+		// existed but showed nothing (REI is immune: its server entrypoint ships its own displays).
+		// Both sides run this code, so the client also reports these serializers as supported.
+		for (ModRecipes.Kind kind : ModRecipes.kinds()) {
+			RecipeSynchronization.synchronizeRecipeSerializer(kind.serializer());
+		}
+		for (ModRecipes.FluidKind<?> kind : ModRecipes.fluidKinds()) {
+			RecipeSynchronization.synchronizeRecipeSerializer(kind.serializer());
+		}
+		for (ModRecipes.AlloyKind<?> kind : ModRecipes.alloyKinds()) {
+			RecipeSynchronization.synchronizeRecipeSerializer(kind.serializer());
+		}
 		ModCriteria.init();
 		ModWorldGen.init();
 		// MOD-062: villager profession + its POI (needs the workbench block registered by ModBlocks

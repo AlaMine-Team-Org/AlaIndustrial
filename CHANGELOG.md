@@ -1,9 +1,7 @@
-## 0.1.135
+## 0.1.136
 
-<p><img alt="Ala Industrial 0.1.135 update preview" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.135/release-media/v0.1.135/changelog.png" width="720"></p>
+Machine recipes now show up correctly in the recipe viewer when playing on a server.
 
-Machine recipes now show up in both of the big recipe viewers.
+### Bug Fixes
 
-### New
-
-- Machine recipes are now visible in JEI alongside REI, with the same categories, energy costs and GUI click areas
+- Machine recipes are visible in JEI again when playing on a dedicated server

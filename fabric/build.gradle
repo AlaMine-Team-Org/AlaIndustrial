@@ -91,6 +91,17 @@ loom {
             runDir('runs/demo')
             programArgs '--quickPlaySingleplayer', 'AlaDemo'
         }
+        // MOD-543 repro: joins the local dev server (see the `server` run above), for testing the
+        // dedicated-server code paths (recipe sync, JEI's empty-at-registration issue). The dev
+        // client picks a RANDOM Player### name per launch, which breaks ops.json between runs —
+        // pin the name so the server-side op grant (fabric/runs/server/ops.json) stays valid.
+        serverClient {
+            client()
+            setConfigName('Fabric Server-joined Client')
+            ideConfigGenerated(true)
+            runDir('runs/client')
+            programArgs '--quickPlayMultiplayer', 'localhost:25565', '--username', 'DevOwner'
+        }
         // GUI-only screenshot mode: ./gradlew :fabric:runClientGameTest -Pguionly
         configureEach {
             if (project.findProperty("guionly") != null) {
