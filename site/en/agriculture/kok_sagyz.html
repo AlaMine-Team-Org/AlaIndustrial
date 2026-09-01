@@ -335,76 +335,91 @@
     </div>
   </div>
 </div>
+<h2 id="plant-growth-h2">How it grows</h2>
+<section class="pg" id="plant-growth">
+  <div class="pg-stages">
+    <figure class="pg-stage"><img src="../assets/block/kok_sagyz_stage0.png" alt="" width="48" height="48" loading="lazy"><figcaption>Rosette</figcaption></figure>
+    <span class="pg-arrow" aria-hidden="true">-&gt;</span>
+    <figure class="pg-stage"><img src="../assets/block/kok_sagyz_stage1.png" alt="" width="48" height="48" loading="lazy"><figcaption>Bud</figcaption></figure>
+    <span class="pg-arrow" aria-hidden="true">-&gt;</span>
+    <figure class="pg-stage"><img src="../assets/block/kok_sagyz_stage2.png" alt="" width="48" height="48" loading="lazy"><figcaption>Flower</figcaption></figure>
+    <span class="pg-arrow" aria-hidden="true">-&gt;</span>
+    <figure class="pg-stage"><img src="../assets/block/kok_sagyz_stage3.png" alt="" width="48" height="48" loading="lazy"><figcaption>Seed head</figcaption></figure>
+  </div>
+  <div class="pg-column">
+    <div class="pg-label">Above ground</div>
+    <div class="pg-row pg-air"><img src="../assets/block/kok_sagyz_stage3.png" alt="" width="40" height="40" loading="lazy"><p><b>Flower</b> — the only part that can kill the plant. Break it and you may get seeds.</p></div>
+    <div class="pg-label">Underground</div>
+    <div class="pg-row pg-soil"><img src="../assets/block/kok_sagyz_root_side.png" alt="" width="40" height="40" loading="lazy"><p><b>Upper root</b> — dig it for seeds. The flower stays and roots into the hole again.</p></div>
+    <div class="pg-row pg-soil"><img src="../assets/block/kok_sagyz_root_tip_side.png" alt="" width="40" height="40" loading="lazy"><p><b>Root tip</b> — dig it for the root. The plant lives and grows a new tip.</p></div>
+  </div>
+  <p class="pg-hint">The plant is three blocks tall and only the top one shows. Everything worth digging is under your feet.</p>
+</section>
 <h2 id="summary">Summary</h2>
 
-<p><strong>Kok sagyz</strong> is a perennial rubber-bearing dandelion and the mod's first crop that yields <strong>rubber</strong>. It is the farmer's answer to oil being finite: raw rubber from a polymerizer demands irreplaceable oil, while kok sagyz grows on a farm forever. Rubber from it costs more time and less EU/FE — the crystal farm doctrine applied to a material.</p>
+<p><strong>Kok sagyz is rubber you can grow.</strong> An oil well runs dry; a field does not. One planting keeps you in rubber for as long as you are willing to dig.</p>
 
-<p>The plant is a <strong>1×3 column</strong>: a flower above ground and <strong>two root blocks down</strong>. The soil under the flower sprouts a root, and once the column reaches full depth the <strong>lower root block (the tip) can be dug out</strong>: the drop is the root item, and the plant survives and regrows the tip. Breaking the flower or the upper root kills the plant — the rubber sits in the depth, not on top.</p>
+<p>The catch is that the harvest hides under your feet. What stands above ground is a dandelion; the valuable part is the <strong>root, two blocks down</strong>. You dig the bottom block — the <strong>tip</strong> — and it drops the root while the plant stays alive and grows a new tip. You never replant.</p>
+
+<p>There is exactly one way to kill it: break the flower itself. Whatever you do underground, the dandelion shrugs off.</p>
 
 <h2 id="real-world-prototype">Real-world prototype</h2>
 
-<p>Kok sagyz (<em>Taraxacum kok-saghyz</em>, the "Russian dandelion") is endemic to Central Asia: Kazakhstan, Kyrgyzstan, Uzbekistan, the Karatau range. The name comes from Kazakh "kök-sağız", "green chewing gum" — Kazakhs traditionally chewed the root latex. The rubber lives in latex vessels <strong>of the root only</strong> (5–12% dry weight in the wild, up to 25% in bred lines); the classic field test is to snap a dried root and watch rubber threads stretch between the halves.</p>
-
-<p>A Soviet expedition found it in Kazakhstan in 1932; the USSR cultivated it from 1931 to ~1950, and by 1941 kok sagyz supplied roughly a third of Soviet rubber. When Japan cut the USA off from hevea, the American Emergency Rubber Project of 1942–45 sowed it across experiment stations in ~30 states — the project was called "the Manhattan Project of agriculture". Cheap synthetic rubber and liberated hevea shut it down after the war. Today it is the PENRA consortium (Ohio State) with Bridgestone; Continental sold the first bicycle tire made of dandelion rubber in</p>
-<ol><li>The by-product of processing — <strong>inulin</strong> (a bioethanol feedstock) — also comes out of the</li></ol>
-<p>macerator in the mod.</p>
+<p><em>Taraxacum kok-saghyz</em> is a dandelion of the Kazakh steppe and the foothills of the Karatau range. The name is Kazakh — "kök-sağız", "green gum": the latex in its root was chewed here long before anyone made tyres from it. The rubber sits <strong>only in the root</strong>, up to a quarter of its dry weight; the field test is simple — snap a dried root and watch the rubber threads stretch across the break. The sugar from that same root, <strong>inulin</strong>, comes out of the macerator here too.</p>
 
 <h2 id="obtaining">Obtaining</h2>
 
-<p><strong>Wild specimens.</strong> The first seeds come from the world: a mature kok sagyz flower (puff stage) generates in plains and savanna biomes (plains, sunflower plains, the three savannas), rarity 1/8 per chunk, up to 12 flowers scattered across it. Wild roots regrow on their own. <strong>New chunks only</strong> already generated land never grows new wild plants (see "Old worlds").</p>
+<p><strong>Find it in the world.</strong> Ripe dandelions turn up now and then on plains and savannas — roughly one chunk in 48 carries a small scatter of up to four flowers. Wild plants grow their own roots, so the first one you find is already a finished column. <strong>New chunks only:</strong> kok sagyz will not appear in land you have already explored.</p>
 
-<p><strong>Planting.</strong> The seed goes onto a <strong>single</strong> block of soil: dirt (<code>#minecraft:dirt</code>), grass, podzol, mycelium, mud, sand (<code>#minecraft:sand</code>), tilled farmland and any modded ground in <code>#minecraft:supports_crops</code>. Depth is optional — the root adapts: two blocks of soil grow a two-deep column, a lone block over stone puts the tip straight under the flower. Anything that is not soil (stone, planks, a leaf) refuses the seed.</p>
+<p><strong>Plant it.</strong> A seed goes onto <strong>any single block of ground</strong> — grass, dirt, sand, tilled farmland or modded soil tagged <code>#minecraft:supports_crops</code>. No need to dig a pit: the root adapts. Two blocks of soil grow a column two deep; a lone block of earth over stone puts the tip straight under the flower, and you dig once instead of twice.</p>
 
 <h2 id="life-cycle">Life cycle</h2>
 
-<p>The plant grows on random ticks at light level <strong>≥9</strong> (same as vanilla crops). Flower stages (<code>age</code> 0..3): leaf rosette → bud → yellow flower → puff. A mature flower sprouts a root: the first soil block beneath it turns into "dirt with a root", then the root descends to depth 2 — the lower block carries the <code>tip</code> property. Full column = full maturity.</p>
+<p>It grows on random ticks at light level <strong>9 or above</strong>, like vanilla crops: rosette → bud → yellow flower → seed head. A ripe flower then roots: the soil beneath it turns into rooted earth, and the root reaches down to depth two.</p>
 
-<table><thead><tr><th>Phase</th><th>Divisor</th><th>Rough time</th></tr></thead><tbody><tr><td>Above-ground part, 3 stages, on farmland (divisor 1)</td><td>= <strong>1</strong></td><td>~3.4</td></tr><tr><td>Root, 2 stages deeper</td><td>= <strong>1</strong></td><td>another ~2.3 min</td></tr><tr><td>Same column on <strong>wild soil</strong> (not farmland)</td><td>= <strong>×2</strong></td><td>twice as long</td></tr></tbody></table>
+<table><thead><tr><th>Phase</th><th>Time on farmland</th></tr></thead><tbody><tr><td>Above ground, rosette → seed head</td><td>~3.4 min</td></tr><tr><td>Root, two blocks down</td><td>another ~2.3 min</td></tr><tr><td>The same on wild g</td><td>twice as long</td></tr></tbody></table>
 
-<p>On wild soil (plain dirt — not farmland and not the plant's own root) both divisors are multiplied by 2 — a wild specimen grows slower than a tended one. <strong>Bone meal</strong> and the <strong>sprinkler</strong> accelerate growth but buy speed, not exemption: each application gives exactly one step (a stage or one root block), while the light floor and the "somewhere to grow" check stay in force.</p>
-
-<p>After a tip harvest the plant regrows it at the same pace as root growth.</p>
+<p><strong>Bone meal</strong> and the <strong>sprinkler</strong> each buy exactly one step — a stage or a block of root. You can buy speed; you cannot buy your way past darkness or a column with nowhere left to grow. A harvested tip regrows at the same rate.</p>
 
 <h2 id="harvesting">Harvesting</h2>
 
-<p>The one rule: <strong>dig the tip, do not tear off the flower</strong>. The tip is the lowest root block, two blocks under the flower.</p>
+<p>One rule: <strong>dig the tip, don't pick the flower.</strong></p>
 
-<table><thead><tr><th>Action</th><th>Result</th></tr></thead><tbody><tr><td>Break the <strong>lower</strong> root block (the tip, <code>tip=true</code>)</td><td>drop <strong>1 × kok sagyz root</strong> + <strong>35%</strong> chance of seeds; dirt remains where the tip was; the plant lives and regrows the tip</td></tr><tr><td>Break the flower or the <strong>upper</strong> root block</td><td>the plant dies; <strong>35%</strong> chance of seeds, <strong>no root</strong></td></tr><tr><td>Remove the support under the lower root</td><td>the column collapses — the plant dies</td></tr><tr><td>"Pluck the top like a dandelion" (right-click the puff)</td><td>gives nothing — the rubber is in the ground, not in the puff</td></tr></tbody></table>
+<table><thead><tr><th>Action</th><th>Result</th></tr></thead><tbody><tr><td>Dig the <strong>tip</strong> (the lower root block)</td><td><strong>1 × root</strong> + 35% chance of seeds; dirt is left behind, the plant lives and regrows the tip</td></tr><tr><td>Dig the <strong>upper</strong> root block</td><td>35% chance of seeds, no root; the flower stands and roots into the hole again</td></tr><tr><td>Break the <strong>flower</strong></td><td>the plant dies; 35% chance of seeds</td></tr><tr><td>The root after the plant dies</td><td>stays in the ground — you can still dig it out, but nothing is left to regrow it</td></tr><tr><td>Right-click the seed head</td><td>nothing: the rubber is in the ground, not in the fluff</td></tr></tbody></table>
 
-<p>Tip harvesting is endless and needs no reseeding: set up a plantation, then dig it out periodically. Seeds for expansion come back from the harvest chance and from wild specimens.</p>
+<p>Seeds come back on a chance from every harvest, so a patch keeps itself in planting stock.</p>
 
 <h2 id="processing">Processing</h2>
 
-<p>The root goes into the <strong>Macerator</strong> — no new machines in the chain:</p>
+<p>The root goes into the <strong>macerator</strong> — the chain needs no new machines:</p>
 
-<table><thead><tr><th>Ingredients</th><th>Result</th><th>EU/FE</th></tr></thead><tbody><tr><td>2 × kok sagyz root</td><td>1 × <strong>raw rubber</strong> + 1 × <strong>inulin</strong> (by-product)</td><td>300</td></tr></tbody></table>
+<table><thead><tr><th>Ingredients</th><th>Result</th><th>EU/FE</th></tr></thead><tbody><tr><td>2 × kok sagyz root</td><td>1 × <strong>raw rubber</strong> + 1 × <strong>inulin</strong></td><td>300</td></tr></tbody></table>
 
-<p>Inulin does not stack with rubber in one slot: the <strong>by-product is ejected from the top of the machine</strong> — put a hopper or pipe above the macerator and it leaves on its own, never blocking the work (a non-stacking by-product never stops the machine). Then the standard chain: <strong>vulcanizer</strong> (1 raw rubber + 4 sulfur dust → rubber, 400 EU/FE).</p>
+<p>Inulin will not stack with rubber, so the macerator <strong>throws it out of the top</strong> — put a hopper or a pipe above it and the by-product leaves on its own without clogging the machine. From there it is business as usual: the vulcanizer turns raw rubber and sulfur into rubber for 400 EU/FE.</p>
 
 <h2 id="automation">Automation</h2>
 
-
-<ul><li>The <strong>scythe</strong> (shift-right-click a mature plant) digs the root tip by itself — surgically,</li></ul>
-<p>without harming the plant.</p>
-<ul><li>The <strong>garden drone</strong> in a mature column likewise breaks exactly the lower root block and</li></ul>
-<p>collects the drop.</p>
-<ul><li>The <strong>sprinkler</strong> accelerates growth step by step (see "Life cycle").</li></ul>
+<ul><li>The <strong>scythe</strong> (shift right-click on a ripe plant) digs the tip for you, precisely, without</li></ul>
+<p>killing the plant.</p>
+<ul><li>The <strong>garden drone</strong> cannot reach the root — it hovers over the field, and the root lies two</li></ul>
+<p>blocks down. Its job is the other one: cut ripe flowers, bank the seeds and plant them back. That makes an automatic seed farm; the roots stay yours and the scythe's. The drone also sows kok sagyz on untilled ground.</p>
+<ul><li>The <strong>sprinkler</strong> speeds growth up a step at a time.</li></ul>
 
 <h2 id="progression">Progression</h2>
 
-<p>Kok sagyz is the entry into the renewable rubber branch of the LV era: cable insulation, <code>advanced_circuit</code> and the insulation armor set can now be farmed. The advancement <strong>"Deep Roots"</strong> (<code>kok_sagyz_root</code>, criterion — a root in inventory) sits in the chain between <code>first_oil</code> and <code>rubber_production</code>: the player digging a field and the player pumping oil arrive at the same rubber from two sides.</p>
+<p>This is the way into renewable rubber in the LV era: cable insulation, advanced circuits and armor mesh are now farmable. The <strong>Deep Roots</strong> advancement sits between <code>first_oil</code> and <code>rubber_production</code> — the player pumping oil and the player digging a field arrive at the same rubber from opposite directions.</p>
 
 <h2 id="old-worlds">Old worlds</h2>
 
-<p>Wild specimens generate <strong>in new chunks only</strong>: already generated plains are never seeded with kok sagyz. In an old world the first seed cannot be found at all — but a single seed brought from another world or player grows into an endless plantation, since reseeding is no longer required.</p>
+<p>Wild plants arrive <strong>with new chunks only</strong>: settled steppe will not sprout dandelions. One seed is enough forever, though — from another world, a friend, or a trip far enough out — after that the patch feeds itself.</p>
 
 <h2 id="block-properties">Block properties</h2>
 
-<table><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody><tr><td>Flower</td><td>cross shape, no collision, <code>age</code> 0..3, random ticks</td></tr><tr><td>Root block</td><td>full cube of "dirt with a root" (after vanilla <code>rooted dirt</code>), <code>tip</code> property</td></tr><tr><td>Column</td><td>1×3: flower + 2 root blocks</td></tr><tr><td>Soil</td><td><code>#minecraft:dirt</code>, grass/podzol/mycelium/mud, <code>#minecraft:sand</code>, <code>#minecraft:supports_crops</code>; one block is enough</td></tr></tbody></table>
+<table><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody><tr><td>Root block</td><td>full cube of rooted earth, <code>tip</code> property</td></tr><tr><td>Column</td><td>1×3: flower + 2 root blocks</td></tr><tr><td>Soil</td><td><code>#minecraft:dirt</code>, grass/podzol/mycelium/mud, <code>#minecraft:sand</code>, <code>#minecraft:supports_crops</code>; one block is enough</td></tr></tbody></table>
 
 <h2 id="related">Related</h2>
 
-<ul><li>Macerator — roots into rubber with inulin.</li><li>Vulcanizer — rubber + sulfur → vulcanized rubber (or guayule resin later).</li><li>Incubator — rubber duplication as the emergency path.</li><li>Rubber — the material and its consumers.</li><li>Sprinkler, Garden drone station, Scythe — growth and harvest automation.</li></ul>
+<ul><li>Macerator — macerates the root into rubber with inulin.</li><li>Vulcanizer — rubber + sulfur → rubber.</li><li>Incubator — rubber duplication as the emergency path.</li><li>Rubber — the material and what needs it.</li><li>Sprinkler, Garden drone station, Scythe — growth and harvest automation.</li></ul>
 
 
   </main>

@@ -136,3 +136,22 @@ body{font-size:20px;line-height:1.5;background:linear-gradient(90deg,#0e0e11,#17
 .od-legend span{display:inline-flex;align-items:center;gap:7px}
 .od-legend img{image-rendering:pixelated}
 @media(max-width:760px){.od{padding:13px;gap:16px}.od-ruler{width:42px;flex-basis:42px}.od-side{min-width:0}}
+
+/* Column-plant growth diagram: stages above ground, cross-section below. */
+.pg{margin:14px 0 8px;padding:18px;background:var(--panel);border:3px solid var(--edge);outline:2px solid #5c626b;outline-offset:-6px;box-shadow:6px 6px var(--edge)}
+.pg-stages{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px;padding-bottom:16px;border-bottom:2px dashed #5c626b}
+.pg-stage{margin:0;text-align:center}
+.pg-stage img{display:block;image-rendering:pixelated}
+.pg-stage figcaption{margin-top:6px;color:#c7c8cd;font:16px/1.2 'VT323',monospace}
+.pg-arrow{align-self:center;color:var(--gold);font:20px/1 'VT323',monospace}
+.pg-column{margin-top:16px;border:2px solid var(--edge);box-shadow:3px 3px var(--edge)}
+.pg-label{padding:5px 12px;background:var(--steel);color:#dadbe0;font:15px/1.3 'VT323',monospace;letter-spacing:.04em}
+.pg-row{display:flex;align-items:center;gap:14px;padding:11px 14px;border-top:2px solid var(--edge)}
+.pg-row img{flex:0 0 auto;image-rendering:pixelated}
+.pg-row p{margin:0;color:#dadbe0;font-size:17px;line-height:1.45}
+.pg-row b{color:var(--gold)}
+.pg-air{background:#26313d}
+.pg-soil{background:#3a2c1e}
+.pg-soil+.pg-soil{border-top:2px solid #5a4630}
+.pg-hint{margin:12px 0 0;color:#c7c8cd;font-size:17px;line-height:1.5}
+@media(max-width:760px){.pg{padding:13px}.pg-row{gap:10px;padding:9px 10px}.pg-row p{font-size:16px}}

@@ -335,75 +335,91 @@
     </div>
   </div>
 </div>
+<h2 id="plant-growth-h2">育ち方</h2>
+<section class="pg" id="plant-growth">
+  <div class="pg-stages">
+    <figure class="pg-stage"><img src="../assets/block/kok_sagyz_stage0.png" alt="" width="48" height="48" loading="lazy"><figcaption>ロゼット</figcaption></figure>
+    <span class="pg-arrow" aria-hidden="true">-&gt;</span>
+    <figure class="pg-stage"><img src="../assets/block/kok_sagyz_stage1.png" alt="" width="48" height="48" loading="lazy"><figcaption>つぼみ</figcaption></figure>
+    <span class="pg-arrow" aria-hidden="true">-&gt;</span>
+    <figure class="pg-stage"><img src="../assets/block/kok_sagyz_stage2.png" alt="" width="48" height="48" loading="lazy"><figcaption>花</figcaption></figure>
+    <span class="pg-arrow" aria-hidden="true">-&gt;</span>
+    <figure class="pg-stage"><img src="../assets/block/kok_sagyz_stage3.png" alt="" width="48" height="48" loading="lazy"><figcaption>綿毛</figcaption></figure>
+  </div>
+  <div class="pg-column">
+    <div class="pg-label">地上</div>
+    <div class="pg-row pg-air"><img src="../assets/block/kok_sagyz_stage3.png" alt="" width="40" height="40" loading="lazy"><p><b>花</b>——植株を枯らせる唯一の部位。壊すと種が落ちることがあります。</p></div>
+    <div class="pg-label">地中</div>
+    <div class="pg-row pg-soil"><img src="../assets/block/kok_sagyz_root_side.png" alt="" width="40" height="40" loading="lazy"><p><b>上側の根</b>——種のために掘ります。花はそのまま残り、跡地に再び根を張ります。</p></div>
+    <div class="pg-row pg-soil"><img src="../assets/block/kok_sagyz_root_tip_side.png" alt="" width="40" height="40" loading="lazy"><p><b>根の先端</b>——根のために掘ります。植株は生き続け、先端をまた伸ばします。</p></div>
+  </div>
+  <p class="pg-hint">植株は高さ3ブロック、見えているのは一番上だけ。掘る価値のあるものは足元にあります。</p>
+</section>
 <h2 id="概要">概要</h2>
 
-<p><strong>コクサギズ（kok sagyz）</strong>は多年生のゴム産タンポポで、本モッド初の<strong>ゴム</strong>を産出する農作物です。石油が有限であることに対する農家の答え：重合機の生ゴムは再生できない石油を要求しますが、コクサギズは畑で無限に育ちます。ゴムは時間は高くつき、EU/FE は安い——クリスタル農場の doctrine を素材に適用したものです。</p>
+<p><strong>コクサギズは「育てられるゴム」です。</strong> 油井は枯れますが、畑は枯れません。一度植えれば、掘る気がある限りゴムを供給し続けます。</p>
 
-<p>植株は地上に花、地下に根ブロック（土壌が深ければ 2 個、浅ければ花の直下に根先端 1 個）。花の下の土壌が根を伸ばし、柱が全深に達すると<strong>最下段の根ブロック（根先端）を掘り出せます</strong>：ドロップは根アイテムで、植株は生存し根先端を再生します。花や上側の根を壊すと植株は死にます——ゴムは地表ではなく地中にあります。</p>
+<p>肝心なのは、収穫物が足元に隠れていること。地上に立っているのはタンポポで、価値があるのは<strong>2 ブロック下の根</strong>です。一番下のブロック——<strong>根の先端</strong>——を掘ると根がドロップし、植株は生きたまま新しい先端を伸ばします。植え直しは一度も要りません。</p>
+
+<p>枯らす方法はただ一つ、花そのものを壊すこと。地中で何をしようと、このタンポポは平気です。</p>
 
 <h2 id="実在の原型">実在の原型</h2>
 
-<p>コクサギズ（<em>Taraxacum kok-saghyz</em>、「ロシアンタンポポ」）は中央アジアの固有種：カザフスタン、キルギス、ウズベキスタン、カラタウ山脈。名はカザフ語の "kök-sağız"（緑のガム）に由来し、カザフ人は古くから根のラテックスを噛んでいました。ゴムは<strong>根のみ</strong>の乳管に含まれ（野生で乾燥重量の 5–12%、育種系統では最大 25%）；古典的な野外テストは乾燥した根を折って、断面の間に伸びるゴムの糸を見ることです。</p>
-
-<p>1932 年にソ連の探検隊がカザフスタンで発見し、ソ連は 1931 年から約 1950 年まで栽培、1941 年までにソ連のゴムの約 3 分の 1 を供給しました。日本がアメリカをヘビアから切り離すと、アメリカの Emergency Rubber Project（1942–45）は約 30 州の試験場でこれを播きました——「農業のマンハッタン計画」と呼ばれた計画です。戦後は安価な合成ゴムと解放されたヘビアで終わりました。現在はオハイオ州立大の PENRA コンソーシアムとブリヂストンが推進し、コンチネンタルは 2019 年にタンポポゴム初の自転車タイヤを売りました。加工の副産物<strong>イヌリン</strong>（バイオエタノール原料）も、モッドでは粉砕機から出ます。</p>
+<p><em>Taraxacum kok-saghyz</em> はカザフスタンの草原とカラタウ山麓に生えるタンポポです。名前はカザフ語の "kök-sağız"（緑のガム）に由来し、タイヤの原料になるずっと前から、この地では根のラテックスが噛まれていました。ゴムは<strong>根だけ</strong>に含まれ、乾燥重量の最大 4 分の 1 に達します。野外での確かめ方は簡単で、乾かした根を折り、断面の間に伸びるゴムの糸を見るだけです。同じ根から採れる副産物の糖——<strong>イヌリン</strong>——も、この MOD では粉砕機から出てきます。</p>
 
 <h2 id="入手">入手</h2>
 
-<p><strong>野生株。</strong>最初の種は世界から：成熟したコクサギズの花（綿毛ステージ）が平原・サバンナ系バイオーム（平原、ヒマワリ平原、3 種のサバンナ）に稀に生成されます。チャンクあたりの希少度は 1/8、最大 12 本がその中に散らばって生成されます。野生の根は自力で伸びます。<strong>新チャンクのみ</strong>——生成済みの地形には現れません（「旧世界」を参照）。</p>
+<p><strong>世界で見つける。</strong> 熟したタンポポは平原とサバンナにときどき現れます——おおよそ 48 チャンクに 1 つ、最大 4 本の小さな群れです。野生株は自分で根を伸ばすので、最初に見つけた 1 本がすでに完成した柱です。<strong>新チャンクのみ:</strong> すでに探索した土地には現れません。</p>
 
-<p><strong>播種。</strong>種（<code>kok_sagyz_seeds</code>）は<strong>1 ブロック</strong>の土壌に置けます：土（<code>#minecraft:dirt</code>）、草ブロック、ポドゾル、菌糸、泥、砂（<code>#minecraft:sand</code>）、耕した畑、そして <code>#minecraft:supports_crops</code> に含まれる他 MOD の土壌。深さは必須ではありません——根は適応します：土壌が 2 ブロックあれば下に 2 ブロックの根の柱が育ち、石の上に 1 ブロックだけなら根の先端が花のすぐ下にできます。土壌でないもの（石・板材・葉）には植えられません。</p>
+<p><strong>自分で植える。</strong> 種は<strong>どんな土壌でも 1 ブロック</strong>あれば置けます——草ブロック、土、砂、耕した畑、あるいは <code>#minecraft:supports_crops</code> を持つ他 MOD の土壌。穴を掘る必要はありません。根が適応するからです。土壌が 2 ブロックあれば下に 2 ブロックの柱が育ち、石の上に土が 1 ブロックだけなら先端が花のすぐ下にでき、掘る回数は 2 回ではなく 1 回で済みます。</p>
 
 <h2 id="ライフサイクル">ライフサイクル</h2>
 
-<p>植株は照度 <strong>≥9</strong> でランダムティックにより生長します（バニラの作物と同じ）。花の段階（<code>age</code> 0..3）：根葉 → つぼみ → 黄色い花 → 綿毛。成熟した花は根を伸ばし、直下の土壌ブロックが「根のある土」に変わり、次に根が深さ 2 まで達します——最下段のブロックは <code>tip</code> 属性（根先端）を持ちます。柱の全深が完全な成熟です。</p>
+<p>明るさ <strong>9 以上</strong>でランダムティックにより成長します。バニラの作物と同じで、ロゼット → つぼみ → 黄色い花 → 綿毛。熟した花は根を張り、下の土は根を含んだ土に変わり、根は深さ 2 まで伸びます。</p>
 
-<table><thead><tr><th>フェーズ</th><th>除数</th><th>目安時間</th></tr></thead><tbody><tr><td>地上部、3 段階、畑（除数 1）</td><td>= <strong>1</strong></td><td>約 3.4 分（平均ランダムティックで 1 段階約 68 秒）</td></tr><tr><td>根、さらなる 2 段階</td><td>= <strong>1</strong></td><td>さらに約 2.3 分</td></tr><tr><td>同じ柱が<strong>野生の土</strong>（非畑）で</td><td>= <strong>×2</strong></td><td>2 倍の時間</td></tr></tbody></table>
+<table><thead><tr><th>段階</th><th>畑での時間</th></tr></thead><tbody><tr><td>地上部、ロゼット → 綿毛</td><td>約 3.4 分</td></tr><tr><td>根、下へ 2 ブロック</td><td>さらに約 2.3 分</td></tr><tr><td>同じことを野地（畑以外）で</td><td>2 倍の時間</td></tr></tbody></table>
 
-<p>野生の土（畑でも植株自身の根でもない普通の土）では両除数に 2 が乗ります——野生株は手入れされた株より遅く育ちます。<strong>骨粉</strong>と<strong>スプリンクラー</strong>は生長を加速しますが、買うのは速度であって免除ではありません：使用ごとにちょうど 1 ステップ（1 段階または根 1 ブロック）で、照度の下限と「伸びる場所があるか」の検査はそのままです。</p>
-
-<p>根先端の収穫後、植株は根の生長と同じ速度でそれを再生します。</p>
+<p><strong>骨粉</strong>と<strong>スプリンクラー</strong>は 1 回につきちょうど 1 段階——成長段階か根 1 ブロック——を買います。速さは買えますが、暗さや「伸びる先がない」ことは買えません。収穫した先端は同じ速さで再び伸びます。</p>
 
 <h2 id="収穫">収穫</h2>
 
-<p>唯一のルール：<strong>根先端を掘れ、花を引き抜くな</strong>。根先端は最下段の根ブロック、花の 2 ブロック下です。</p>
+<p>ルールは一つ：<strong>先端を掘り、花を摘まないこと。</strong></p>
 
-<table><thead><tr><th>操作</th><th>結果</th></tr></thead><tbody><tr><td><strong>最下段</strong>の根ブロック（先端、<code>tip=true</code>）を壊す</td><td><strong>コクサギズの根 ×1</strong> + <strong>35%</strong> の種ドロップ；先端のあった場所は土に戻る；植株は生存し先端を再生</td></tr><tr><td>花または<strong>上側</strong>の根ブロックを壊す</td><td>植株の死亡；<strong>35%</strong> の種チャンス、<strong>根はなし</strong></td></tr><tr><td>下の根の支えを除く</td><td>柱が崩れ、植株は死亡</td></tr><tr><td>「タンポポのように頂を摘む」（綿毛の右クリック）</td><td>何も得られない——ゴムは地面の中で、綿毛ではない</td></tr></tbody></table>
+<table><thead><tr><th>操作</th><th>結果</th></tr></thead><tbody><tr><td><strong>先端</strong>（下側の根ブロック）を掘る</td><td><strong>根 ×1</strong> + 35% で種；跡には土が残り、植株は生きて先端を再生します</td></tr><tr><td><strong>上側</strong>の根ブロックを掘る</td><td>35% で種、根はなし；花はそのまま立ち、跡地に再び根を張ります</td></tr><tr><td><strong>花</strong>を壊す</td><td>植株の死亡；35% で種</td></tr><tr><td>植株が死んだ後の根</td><td>地中に残ります——まだ掘り出せますが、再生させるものはもうありません</td></tr><tr><td>綿毛を右クリック</td><td>何も起きません：ゴムは地中にあり、綿毛にはありません</td></tr></tbody></table>
 
-<p>根先端の収穫は無限で、播き直しも不要です：農場を作れば、あとは定期的に掘るだけ。増やすための種は収穫チャンスと野生株から戻ってきます。</p>
+<p>どの収穫からも確率で種が戻るので、畑は自分で苗床をまかないます。</p>
 
 <h2 id="加工">加工</h2>
 
-<p>根は<strong>粉砕機</strong>へ——チェーンに新しい機械はありません：</p>
+<p>根は<strong>粉砕機</strong>へ——この流れに新しい機械は要りません：</p>
 
-<table><thead><tr><th>材料</th><th>結果</th><th>EU/FE</th></tr></thead><tbody><tr><td>コクサギズの根 ×2</td><td><strong>生ゴム ×1</strong> + <strong>イヌリン ×1</strong>（副産物）</td><td>300</td></tr></tbody></table>
+<table><thead><tr><th>材料</th><th>産出</th><th>EU/FE</th></tr></thead><tbody><tr><td>コクサギズの根 ×2</td><td><strong>生ゴム ×1</strong> + <strong>イヌリン ×1</strong></td><td>300</td></tr></tbody></table>
 
-<p>イヌリンは生ゴムと同じスロットに積めません：<strong>副産物は機械の上から排出されます</strong>——粉砕機の上にホッパーやパイプを置けば自動で運ばれ、作業を妨げません（積めない副産物が機械を止めることはありません）。その後は標準チェーン：<strong>加硫機</strong>（生ゴム 1 + 硫黄の粉 4 → ゴム、400 EU/FE）。</p>
+<p>イヌリンは生ゴムとスタックしないため、粉砕機は<strong>上へ放り出します</strong>——上にホッパーかパイプを置けば副産物は勝手に流れ、機械を詰まらせません。あとはいつも通り、加硫機が生ゴムと硫黄をゴムに変えます（400 EU/FE）。</p>
 
 <h2 id="自動化">自動化</h2>
 
-<p>コクサギズは タグに入っています：</p>
-
-<ul><li><strong>大鎌</strong>（成熟植株へのスニーク右クリック）が根先端を正確に収穫します——植株を傷つけません。</li><li><strong>ガーデンドローン</strong>も成熟した柱の最下段の根ブロックだけを壊し、ドロップを回収します。</li><li><strong>スプリンクラー</strong>がステップごとに生長を加速します（「ライフサイクル」参照）。</li></ul>
+<ul><li><strong>大鎌</strong>（熟した植株にスニーク右クリック）が先端を正確に掘り、植株を枯らしません。</li><li><strong>ガーデンドローン</strong>は根に届きません——畑の上を飛ぶだけで、根は 2 ブロック下だからです。仕事は別で、熟した花を刈り、種を回収し、また植え直します。つまり自動の種農場になり、根はあなたと大鎌の担当のままです。ドローンは耕していない地面にもコクサギズを植えられます。</li><li><strong>スプリンクラー</strong>は成長を 1 段階ずつ早めます。</li></ul>
 
 <h2 id="進行">進行</h2>
 
-<p>コクサギズは LV 時代の再生可能ゴム分岐の入口です：ケーブル絶縁、<code>advanced_circuit</code>、絶縁防具一式が農業で得られるようになります。実績<strong>「深い根」</strong>（<code>kok_sagyz_root</code>、条件——インベントリに根）は <code>first_oil</code> と <code>rubber_production</code> の間に挿入されています：畑を掘るプレイヤーと石油を汲むプレイヤーが、同じゴムに両側から到達します。</p>
+<p>これが LV 時代の再生可能なゴムへの入口です。ケーブルの絶縁、上位回路、防具のメッシュが農業で手に入るようになります。実績<strong>「深い根」</strong>は <code>first_oil</code> と <code>rubber_production</code> の間にあり、石油を汲む人と畑を掘る人が同じゴムに両側からたどり着きます。</p>
 
 <h2 id="旧世界">旧世界</h2>
 
-<p>野生株は<strong>新しいチャンクにのみ生成</strong>されます：生成済みの草原にコクサギズは撒かれません。旧世界では最初の種はまったく見つかりません——ただし別の世界／プレイヤーから持ち込んだ種 1 個が無限の農場に広がります。播き直しはもう不要だからです。</p>
+<p>野生株は<strong>新しいチャンクにのみ</strong>現れます。住み慣れた草原にタンポポは生えてきません。ただし種が 1 粒あれば一生分です——別の世界から、友人から、あるいは遠出の帰りに——あとは畑が自分をまかないます。</p>
 
 <h2 id="ブロック属性">ブロック属性</h2>
 
-<table><thead><tr><th>属性</th><th>値</th></tr></thead><tbody><tr><td>花</td><td>クロス形状・当たり判定なし、<code>age</code> 0..3、ランダムティック</td></tr><tr><td>根ブロック</td><td>「根のある土」のフルキューブ（バニラの <code>rooted dirt</code> に準拠）、<code>tip</code> 属性</td></tr><tr><td>柱</td><td>1×3：花 + 根ブロック 2</td></tr><tr><td>土壌</td><td><code>#minecraft:dirt</code>、草ブロック/ポドゾル/菌糸/泥、<code>#minecraft:sand</code>、<code>#minecraft:supports_crops</code>；1 ブロックで十分</td></tr></tbody></table>
+<table><thead><tr><th>属性</th><th>値</th></tr></thead><tbody><tr><td>花</td><td>十字モデル、当たり判定なし、<code>age</code> 0..3、ランダムティック</td></tr><tr><td>根ブロック</td><td>根を含んだ土のフルブロック、<code>tip</code> プロパティ</td></tr><tr><td>柱</td><td>1×3：花 + 根ブロック 2 個</td></tr><tr><td>土壌</td><td><code>#minecraft:dirt</code>、草ブロック/ポドゾル/菌糸/泥、<code>#minecraft:sand</code>、<code>#minecraft:supports_crops</code>；1 ブロックで十分</td></tr></tbody></table>
 
 <h2 id="未解決の質問">未解決の質問</h2>
 
-<ul><li>イヌリンは当面レシピのないアイテムです——将来のタスクでの飼料／食料への布石（所有者の決定、 §5.6）。</li><li>グアユーレとアキノキリンソウはこの分岐の次の植物です（同じタスク、段階 2 以降）。</li></ul>
+<ul><li>イヌリンはまだレシピのないアイテムです——将来の飼料・food への布石。</li><li>グアユールとセイタカアワダチソウがこの分岐の次の植物です。</li></ul>
 
 <h2 id="関連">関連</h2>
 
-<ul><li>粉砕機——根をイヌリンとともに生ゴムへ粉砕。</li><li>加硫機——生ゴム + 硫黄 → ゴム（将来はグアユーレ樹脂も）。</li><li>孵化器——緊急ルートとしてのゴム複製（）。</li><li>ゴム——素材とその消費者。</li><li>スプリンクラー、ガーデンドローンステーション、大鎌——生長と収穫の自動化。</li></ul>
+<ul><li>粉砕機——根を生ゴムとイヌリンに粉砕します。</li><li>加硫機——生ゴム + 硫黄 → ゴム。</li><li>インキュベーター——ゴム複製の緊急経路。</li><li>ゴム——素材とその用途。</li><li>スプリンクラー、ガーデンドローンステーション、大鎌——生長と収穫の自動化。</li></ul>
 
 
   </main>
