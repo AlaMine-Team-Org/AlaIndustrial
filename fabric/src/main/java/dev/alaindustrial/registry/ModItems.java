@@ -97,6 +97,10 @@ public final class ModItems {
 	// stays a plain Item — no BlockItem/ItemNameBlockItem), the fibre is the harvest.
 	public static final Item COTTON_SEEDS = manifestItem("cotton_seeds");
 	public static final Item COTTON_FIBER = manifestItem("cotton_fiber");
+	// Kok sagyz (MOD-537): the dug root macerates into raw rubber; inulin rides along as the
+	// by-product. The seeds are a BlockItem — see the blockItem block below.
+	public static final Item KOK_SAGYZ_ROOT_ITEM = manifestItem("kok_sagyz_root");
+	public static final Item INULIN = manifestItem("inulin");
 	// Fluxweave chain (MOD-127): silver-plated fibre, then the woven sheet. Both are plain crafting
 	// components — the EU buffer lives on the armor, not on the material.
 	public static final Item FLUX_THREAD = manifestItem("flux_thread");
@@ -417,6 +421,11 @@ public final class ModItems {
 	public static final BlockItem MOB_REPELLER_HV_ITEM = blockItem("mob_repeller_hv", ModBlocks.MOB_REPELLER_HV);
 	public static final BlockItem INCUBATOR_ITEM = blockItem("incubator", ModBlocks.INCUBATOR);
 	public static final BlockItem TRELLIS_ITEM = blockItem("trellis", ModBlocks.TRELLIS);
+	// MOD-537 — the seeds carry the flower's id-in-name-only ("kok_sagyz_seeds"): planting is just
+	// placing the block, so a BlockItem is exactly right. The root has NO block item: it is dug,
+	// never placed — the plain "kok_sagyz_root" item above is the harvest.
+	public static final BlockItem KOK_SAGYZ_SEEDS =
+			blockItem("kok_sagyz_seeds", ModBlocks.KOK_SAGYZ);
 	// MOD-505 — the greenhouse. The bud has no item: it is grown, never placed.
 	public static final BlockItem CRYSTAL_FARM_FLOOR_ITEM =
 			blockItem("crystal_farm_floor", ModBlocks.CRYSTAL_FARM_FLOOR);
@@ -1140,6 +1149,7 @@ public final class ModItems {
 		ModContent.SOUL_VESSEL = () -> SOUL_VESSEL;
 		ModContent.INCUBATOR_ITEM = () -> INCUBATOR_ITEM;
 		ModContent.TRELLIS_ITEM = () -> TRELLIS_ITEM;
+		ModContent.KOK_SAGYZ_SEEDS = () -> KOK_SAGYZ_SEEDS;
 		ModContent.CRYSTAL_FARM_FLOOR_ITEM = () -> CRYSTAL_FARM_FLOOR_ITEM;
 		ModContent.CRYSTAL_FARM_GLASS_ITEM = () -> CRYSTAL_FARM_GLASS_ITEM;
 		ModContent.CRYSTAL_FARM_DOOR_ITEM = () -> CRYSTAL_FARM_DOOR_ITEM;
@@ -1157,6 +1167,8 @@ public final class ModItems {
 		ModContent.BIOMASS = () -> BIOMASS;
 		ModContent.COTTON_SEEDS = () -> COTTON_SEEDS;
 		ModContent.COTTON_FIBER = () -> COTTON_FIBER;
+		ModContent.KOK_SAGYZ_ROOT_ITEM = () -> KOK_SAGYZ_ROOT_ITEM;
+		ModContent.INULIN = () -> INULIN;
 		ModContent.FLUX_THREAD = () -> FLUX_THREAD;
 		ModContent.FLUXWEAVE_CLOTH = () -> FLUXWEAVE_CLOTH;
 		ModContent.FLUXWEAVE_HELMET = () -> FLUXWEAVE_HELMET;

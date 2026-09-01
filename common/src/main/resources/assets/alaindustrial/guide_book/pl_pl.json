@@ -917,6 +917,18 @@
           ]
         },
         {
+          "id": "irradiated_soil",
+          "title": "Napromieniowana ziemia",
+          "icon": "alaindustrial:irradiated_soil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Napromieniowana ziemia",
+              "text": "Ślad po awarii jądrowej: ziemia zatruta wybuchem reaktora. Promieniuje stopień niżej niż uran — także z plecaka — i blednie sama przez cztery etapy, szybciej pod wodą. Kopie się i przenosi jak każdy blok, ale nigdy nie wytworzy się jej w craftingach."
+            }
+          ]
+        },
+        {
           "id": "reactor_controller",
           "title": "Sterownik reaktora",
           "icon": "alaindustrial:reactor_controller",
@@ -1113,6 +1125,43 @@
                 "alaindustrial:rubber"
               ],
               "result_id": "alaindustrial:reactor_outlet",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lever",
+          "title": "Dźwignia reaktora",
+          "icon": "alaindustrial:reactor_lever",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Dźwignia reaktora",
+              "text": "Dźwignia ze stopu osłonowego: sygnał podtrzymywany z wnętrza szczelnej sali — awaryjne zatrzymanie reaktora, które nie narusza osłony sali i nie topi się wraz z jej zawartością."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Bufor: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie bez wzoru",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:lever",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_lever",
               "result_count": 2
             }
           ]
@@ -1716,6 +1765,44 @@
           ]
         },
         {
+          "id": "fermenter",
+          "title": "Fermentator",
+          "icon": "alaindustrial:fermenter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Fermentator",
+              "text": "Maszyna LV, która fermentuje materię organiczną z wodą na biopaliwo (zawsze płyn) i biomasę (przedmiot, czasami). Pierwsze paliwo moda pozyskiwane uprawą, a nie pompą: każda partia kosztuje tyle samo, a wydajność zależy tylko od tego, czym ją karmisz — od trawy do złotej marchewki."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Energia: 600 EU/op",
+                "Bufor: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:bucket",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:copper_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:fermenter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "pump",
           "title": "Pompa",
           "icon": "alaindustrial:pump",
@@ -1899,8 +1986,32 @@
     {
       "id": "world_automation",
       "title": "Świat i automatyzacja",
-      "icon": "alaindustrial:tempered_iron_block",
+      "icon": "alaindustrial:biomass",
       "entries": [
+        {
+          "id": "biomass",
+          "title": "Biomasa",
+          "icon": "alaindustrial:biomass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Biomasa",
+              "text": "Stała pozostałość fermentacji — wyrzucana przez fermentator z szansą, im bogatszy surowiec, tym większa szansa. Nie ma jeszcze zastosowania: celowy placeholder dostarczony uczciwie, bez wymyślonego przeznaczenia."
+            }
+          ]
+        },
+        {
+          "id": "biofuel",
+          "title": "Biopaliwo",
+          "icon": "alaindustrial:biofuel_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Biopaliwo",
+              "text": "Mętna oliwkowa ciecz warzona w fermentatorze — pierwsze paliwo moda pozyskiwane uprawą, a nie pompą. Nie występuje w świecie; druga destylacja daje roztwór odżywczy, który zrasza zraszacz."
+            }
+          ]
+        },
         {
           "id": "tempered_iron_block",
           "title": "Blok hartowanego żelaza",
@@ -1992,6 +2103,18 @@
           ]
         },
         {
+          "id": "netherite_alloy_ingot",
+          "title": "Sztabka stopu netherytu",
+          "icon": "alaindustrial:netherite_alloy_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Sztabka stopu netherytu",
+              "text": "Stop końcowej fazy gry moda — jeden waniliowy netheryt i dwie sztabki elektrum dają w Piecu stopowym dwie sztabki stopu netherytu."
+            }
+          ]
+        },
+        {
           "id": "oil",
           "title": "Ropa naftowa",
           "icon": "alaindustrial:oil_bucket",
@@ -2078,6 +2201,18 @@
               "type": "text",
               "title": "Para",
               "text": "Czynnik roboczy pomieszczenia reaktora. Jedyny płyn w modzie bez żadnej postaci w świecie: brak kałuży, brak bloku, brak wiadra — para istnieje wyłącznie w zbiornikach i rurach."
+            }
+          ]
+        },
+        {
+          "id": "nutrient_solution",
+          "title": "Roztwór odżywczy",
+          "icon": "alaindustrial:nutrient_solution_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Roztwór odżywczy",
+              "text": "Jaskrawozielony produkt drugiej destylacji biopaliwa — jedyny płyn moda, w którym nic się nie pali. Jego jedyny konsument to zraszacz, który przyspiesza uprawy i kryształy."
             }
           ]
         },
@@ -2239,6 +2374,55 @@
           ]
         },
         {
+          "id": "kok_sagyz",
+          "title": "Kok-sagiz",
+          "icon": "alaindustrial:kok_sagyz",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kok-sagiz",
+              "text": "Wieloletni «rosyjski mniszek» — odnawialne źródło gumy. Kolumna kwiatu i korzenia sięgającego dwa bloki w głąb: kop czubek korzenia bez końca, roślina przeżywa i odrasta. Korzeń trafia do Rozdrabniacza na surowy kauczuk, z inuliną jako produktem ubocznym."
+            }
+          ]
+        },
+        {
+          "id": "sprinkler",
+          "title": "Zraszacz",
+          "icon": "alaindustrial:sprinkler",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Zraszacz",
+              "text": "Obracająca się głowica na maszcie, która zrasza roztworem odżywczym wszystko, co rośnie w promieniu 4 bloków. Jedyna maszyna moda, która w ogóle nie pobiera EU — nie podłącza się do niej kabla, działa wyłącznie na roztwór. Montowana na podłodze lub pod sufitem."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Bufor: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "alaindustrial:copper_plate",
+                "alaindustrial:gold_gear",
+                "alaindustrial:copper_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:sprinkler",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "garden_drone_station",
           "title": "Stacja drona ogrodnika",
           "icon": "alaindustrial:garden_drone_station",
@@ -2271,6 +2455,43 @@
                 "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:garden_drone_station",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "crystal_farm_controller",
+          "title": "Sterownik szklarni",
+          "icon": "alaindustrial:crystal_farm_controller",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Sterownik szklarni",
+              "text": "Sala o dowolnym kształcie, której przebudzone wysiewy uprawiają prawdziwie waniliowe klastry ametystu. Sterownik wypełnia powietrze w środku, więc kopuła, piramida schodkowa czy skrzydło w kształcie L się liczą, a gotowa szklarnia pokazuje to, tracąc szwy swojej skorupy. Woda, EU i zraszacz tylko przyspieszają; żadne z trojga nie jest wymagane."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Bufor: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "alaindustrial:crystal_farm_floor",
+                "minecraft:amethyst_shard",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:crystal_farm_floor"
+              ],
+              "result_id": "alaindustrial:crystal_farm_controller",
               "result_count": 1
             }
           ]

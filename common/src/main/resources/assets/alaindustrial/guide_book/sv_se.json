@@ -917,6 +917,18 @@
           ]
         },
         {
+          "id": "irradiated_soil",
+          "title": "Bestrålad jord",
+          "icon": "alaindustrial:irradiated_soil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Bestrålad jord",
+              "text": "Märket en kärnolycka lämnar: mark förgiftad av en reaktorexplosion. Den strålar ett steg under uran — även ur en ryggsäck — och bleknar av sig själv i fyra steg, snabbare under vatten. Grävs och bärs som vilken block som helst, men tillverkas aldrig."
+            }
+          ]
+        },
+        {
           "id": "reactor_controller",
           "title": "Reaktorstyrenhet",
           "icon": "alaindustrial:reactor_controller",
@@ -1113,6 +1125,43 @@
                 "alaindustrial:rubber"
               ],
               "result_id": "alaindustrial:reactor_outlet",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lever",
+          "title": "Reaktorspak",
+          "icon": "alaindustrial:reactor_lever",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reaktorspak",
+              "text": "En spak i avskärmningslegering: en hållen signal inifrån ett förslutet rum — reaktorns nödstop, som varken bryter rummets avskärmning eller smälter med dess innehåll."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Buffert: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formlös tillverkning",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:lever",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_lever",
               "result_count": 2
             }
           ]
@@ -1716,6 +1765,44 @@
           ]
         },
         {
+          "id": "fermenter",
+          "title": "Fermenterare",
+          "icon": "alaindustrial:fermenter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Fermenterare",
+              "text": "En LV-maskin som jäser organiskt material med vatten till biobränsle (alltid en fluid) och biomassa (ibland ett föremål). Moddens första bränsle som odlas istället för pumpas: varje sats kostar lika mycket, och avkastningen beror bara på vad du matar den med — från gräs till en gyllene morot."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Energi: 600 EU/op",
+                "Buffert: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:bucket",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:copper_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:fermenter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "pump",
           "title": "Pump",
           "icon": "alaindustrial:pump",
@@ -1899,8 +1986,32 @@
     {
       "id": "world_automation",
       "title": "Värld och automation",
-      "icon": "alaindustrial:tempered_iron_block",
+      "icon": "alaindustrial:biomass",
       "entries": [
+        {
+          "id": "biomass",
+          "title": "Biomassa",
+          "icon": "alaindustrial:biomass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Biomassa",
+              "text": "Den fasta resten av jäsningen — kastas ut av fermenteraren slumpvis, ju rikare inmatning desto troligare. Har ingen användning än: en medveten platshållare, ärligt levererad, utan påhittat syfte."
+            }
+          ]
+        },
+        {
+          "id": "biofuel",
+          "title": "Biobränsle",
+          "icon": "alaindustrial:biofuel_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Biobränsle",
+              "text": "En grumlig olivfärgad fluid bryggd i fermenteraren — moddens första bränsle som odlas istället för pumpas. Förekommer inte i världen; en andra destillation ger den näringslösning som sprinklern sprejer."
+            }
+          ]
+        },
         {
           "id": "tempered_iron_block",
           "title": "Block av härdat järn",
@@ -1992,6 +2103,18 @@
           ]
         },
         {
+          "id": "netherite_alloy_ingot",
+          "title": "Netheritlegeringstacka",
+          "icon": "alaindustrial:netherite_alloy_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Netheritlegeringstacka",
+              "text": "Moddens slutspelslegering — en vanilj-Netherit och två Elektrumtackor ger två Netheritlegeringstackor i Legeringsugnen."
+            }
+          ]
+        },
+        {
           "id": "oil",
           "title": "Olja",
           "icon": "alaindustrial:oil_bucket",
@@ -2078,6 +2201,18 @@
               "type": "text",
               "title": "Ånga",
               "text": "Reaktorrummets arbetsmedium. Moddens enda vätska helt utan form i världen: ingen pöl, inget block, ingen hink — ånga finns bara inuti tankar och rör."
+            }
+          ]
+        },
+        {
+          "id": "nutrient_solution",
+          "title": "Näringslösning",
+          "icon": "alaindustrial:nutrient_solution_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Näringslösning",
+              "text": "Den klargröna produkten av att destillera biobränsle en andra gång — moddens enda fluid som inget brinner i. Dess enda konsument är sprinklern, som skyndar på grödor och kristaller."
             }
           ]
         },
@@ -2239,6 +2374,55 @@
           ]
         },
         {
+          "id": "kok_sagyz",
+          "title": "Kok-sagys",
+          "icon": "alaindustrial:kok_sagyz",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kok-sagys",
+              "text": "En flerårig «rysk maskros» — den förnybara källan till gummi. En pelare av blomma och en två block djup rot: gräv rotens spets oändligt många gånger, växten överlever och växer ut den igen. Roten mals i Krossaren till rågummi, med inulin som biprodukt."
+            }
+          ]
+        },
+        {
+          "id": "sprinkler",
+          "title": "Sprinkler",
+          "icon": "alaindustrial:sprinkler",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Sprinkler",
+              "text": "Ett roterande huvud på en mast som sprejer näringslösning över allt som växer inom 4 block. Moddens enda maskin som inte drar någon EU alls — ingen kabel ansluts till den, och den drivs enbart av lösningen. Monteras på golvet eller under taket."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Buffert: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "alaindustrial:copper_plate",
+                "alaindustrial:gold_gear",
+                "alaindustrial:copper_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:sprinkler",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "garden_drone_station",
           "title": "Trädgårdsdrönarstation",
           "icon": "alaindustrial:garden_drone_station",
@@ -2271,6 +2455,43 @@
                 "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:garden_drone_station",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "crystal_farm_controller",
+          "title": "Växthusstyrenhet",
+          "icon": "alaindustrial:crystal_farm_controller",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Växthusstyrenhet",
+              "text": "Ett förslutet rum i vilken form som helst vars väckta såbäddar odlar äkta vanilj-ametistklasrar. Styrenheten fyller luften därinne, så en kupol, en trappstegspyramid eller en L-formad flygel räcker alla, och ett färdigt växthus visar det genom att skarvarna i skalet försvinner. Vatten, EU och en sprinkler gör det bara snabbare; ingen av de tre krävs."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Buffert: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "alaindustrial:crystal_farm_floor",
+                "minecraft:amethyst_shard",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:crystal_farm_floor"
+              ],
+              "result_id": "alaindustrial:crystal_farm_controller",
               "result_count": 1
             }
           ]

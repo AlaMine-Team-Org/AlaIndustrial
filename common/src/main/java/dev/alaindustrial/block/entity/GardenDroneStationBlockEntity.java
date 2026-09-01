@@ -1,6 +1,7 @@
 package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.block.KokSagyzBlock;
 import dev.alaindustrial.core.crop.CropMaturity;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
@@ -340,10 +341,12 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 		return switch (action) {
 			// Harvesting wears the hoe exactly as tilling does, so it needs one for the same reason:
 			// a tool that is consumed by an action but not required for it makes no sense to the player.
-			case HARVEST -> hasUsableHoe() && CropMaturity.isHarvestable(level, target, state);
-			case PLANT -> state.isAir()
-					&& isPlantableSoil(level.getBlockState(target.below()))
-					&& seedBlock() != null;
+			case HARVEST -> hasUsableHoe() && isHarvestTarget(level, target, state);
+			// The CROP decides what ground it takes, not a tag kept here (round 8): wheat still wants
+			// farmland because its own canSurvive says so, and kok-sagyz takes plain dirt, grass or
+			// its own leftover root because its canSurvive says THAT. One oracle, and a seed the
+			// station cannot plant is never flown to.
+			case PLANT -> state.isAir() && seedCanSurviveAt(level, target);
 			case FERTILIZE -> !items.get(FERTILIZER_SLOT).isEmpty()
 					&& CropMaturity.isFertilizable(level, target, state)
 					&& state.getBlock() instanceof BonemealableBlock bonemealable
@@ -363,6 +366,20 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 			case FERTILIZE -> fertilize(level, target, state);
 			case TILL -> till(level, target);
 		};
+	}
+
+	/**
+	 * Whether the tile holds something a harvest can actually take. Ripeness is the whole test —
+	 * whatever the crop's loot table pays is what the drone gets.
+	 *
+	 * <p><b>Kok-sagyz used to be special here and is not any more (round 8).</b> The station briefly
+	 * dug the plant's root tip, two blocks underground, which is work this drone has no business
+	 * doing: it hovers over the field. It now cuts the flower like any other ripe crop and banks the
+	 * seeds, so a stocked station turns one plant into a seed supply. The root stays where a root
+	 * belongs — in the ground, for the player to dig by hand.
+	 */
+	private static boolean isHarvestTarget(ServerLevel level, BlockPos target, BlockState state) {
+		return CropMaturity.isHarvestable(level, target, state);
 	}
 
 	// ---------------------------------------------------------------- the four actions
@@ -596,17 +613,30 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 	}
 
 	/**
-	 * Soil the drone plants into: the vanilla {@code #minecraft:supports_crops} contract (MOD-538) —
-	 * the same tag a crop's own {@code canSurvive} consults, so the drone and the crop agree about
-	 * what counts as ground. The crop still votes on arrival: {@code canSurvive} re-checks light
-	 * and anything else it cares about, and a tile that refuses the seed costs no seed and no EU.
-	 * Farmer's Delight's rich soil farmland and any other modpack-added soil join that tag with a
-	 * datapack line, which keeps this class free of every other mod's ids. Tilling deliberately
-	 * does NOT follow the tag — see {@link #isTillable}: the drone must never rework a foreign
-	 * soil into vanilla farmland.
+	 * Ground SOME crop could root in — deliberately broad, because this only decides whether a tile
+	 * is worth remembering in the scan cache ({@link #isInteresting}). It cannot ask the loaded seed:
+	 * the cache outlives whatever is in the seed slot, so a narrow answer here would strand tiles the
+	 * moment the player swapped seeds. The exact verdict belongs to the crop and is taken per action
+	 * in {@code applies}, through {@link #seedCanSurviveAt}.
+	 *
+	 * <p>{@code #minecraft:supports_crops} (MOD-538) is the vanilla farmland contract — Farmer's
+	 * Delight rich soil and other modpack soils join it with a datapack line, which keeps this class
+	 * free of every other mod's ids. The rest is kok-sagyz's own idea of ground (round 8: it grows on
+	 * bare dirt and grass, not just tilled land), plus its leftover root, which is what a replanted
+	 * seed lands on after the drone has cut the flower off it. Tilling deliberately does NOT follow
+	 * any of this — see {@link #isTillable}: the drone must never rework a foreign soil into vanilla
+	 * farmland.
 	 */
 	private static boolean isPlantableSoil(BlockState state) {
-		return state.is(BlockTags.SUPPORTS_CROPS);
+		return state.is(BlockTags.SUPPORTS_CROPS)
+				|| KokSagyzBlock.isSoil(state)
+				|| state.is(dev.alaindustrial.registry.ModContent.KOK_SAGYZ_ROOT.get());
+	}
+
+	/** Whether the seed in the seed slot would survive if planted at {@code target}. */
+	private boolean seedCanSurviveAt(ServerLevel level, BlockPos target) {
+		Block crop = seedBlock();
+		return crop != null && crop.defaultBlockState().canSurvive(level, target);
 	}
 
 	/** Ground the drone converts into farmland. Kept to the two unambiguous cases (MVP). */

@@ -1,0 +1,10 @@
+{
+	"variants": {
+		"tip=false": {
+			"model": "alaindustrial:block/kok_sagyz_root"
+		},
+		"tip=true": {
+			"model": "alaindustrial:block/kok_sagyz_root_tip"
+		}
+	}
+}

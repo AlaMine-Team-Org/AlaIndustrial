@@ -27,6 +27,9 @@ public final class VisualWorld {
 
     private static final Logger LOG = LoggerFactory.getLogger("alaindustrial-gametest");
 
+    /** Ceiling for {@link #awaitContainerScreen}; see its javadoc for why this is not the default. */
+    private static final int AWAIT_CONTAINER_SCREEN_TIMEOUT_TICKS = 600;
+
     /** Noon: the sun is up, shadows are short, nothing is mid-transition. */
     public static final int FIXED_TIME = 6000;
 
@@ -88,10 +91,19 @@ public final class VisualWorld {
      *
      * <p>Replaces {@code waitTicks(5)} after opening a menu: the condition is observable, so wait for
      * the condition. Faster when the screen is ready sooner, and correct when it is ready later.
+     *
+     * <p>The explicit budget exists because of the first screen opened after the locale sweep's
+     * language switch (MOD-542). A language switch reloads every resource pack, and with a recipe
+     * viewer attached the integrated server measurably stalls behind it — JEI pushed it to «Running
+     * 5005ms or 100 ticks behind», so the menu-open packet landed past the {@code waitFor} default
+     * (~10 s) and the lane timed out with nothing actually broken. REI's reload stays inside the
+     * default, which is why only the JEI lane ever saw this. 600 ticks is a ceiling, not a cost:
+     * the predicate is checked before every tick, so green runs still return immediately.
      */
     public static void awaitContainerScreen(ClientGameTestContext context, String what) {
         try {
-            context.waitFor(mc -> mc.gui.screen() instanceof AbstractContainerScreen<?>);
+            context.waitFor(mc -> mc.gui.screen() instanceof AbstractContainerScreen<?>,
+                    AWAIT_CONTAINER_SCREEN_TIMEOUT_TICKS);
         } catch (RuntimeException e) {
             throw new AssertionError("[VISUAL] no container screen appeared for " + what
                     + " — the menu never opened (wrong block, player out of reach, or the screen is not "

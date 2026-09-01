@@ -113,6 +113,9 @@ public final class ModBlocks {
 	public static final Block INCUBATOR = handle(ContentManifest.INCUBATOR);
 	public static final Block INCUBATOR_DOME = handle(ContentManifest.INCUBATOR_DOME);
 	public static final Block TRELLIS = handle(ContentManifest.TRELLIS);
+	// MOD-537 — kok sagyz: the flower, and the root column it grows downward.
+	public static final Block KOK_SAGYZ = handle(ContentManifest.KOK_SAGYZ);
+	public static final Block KOK_SAGYZ_ROOT = handle(ContentManifest.KOK_SAGYZ_ROOT);
 	// MOD-505 — the crystal greenhouse.
 	public static final Block CRYSTAL_FARM_FLOOR = handle(ContentManifest.CRYSTAL_FARM_FLOOR);
 	public static final Block CRYSTAL_FARM_GLASS = handle(ContentManifest.CRYSTAL_FARM_GLASS);

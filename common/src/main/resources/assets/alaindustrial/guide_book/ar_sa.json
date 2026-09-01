@@ -917,6 +917,18 @@
           ]
         },
         {
+          "id": "irradiated_soil",
+          "title": "تربة مشعّة",
+          "icon": "alaindustrial:irradiated_soil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "تربة مشعّة",
+              "text": "أثر الحادث النووي: أرض مسمومة بانفجار مفاعل. تشعّ درجة دون اليورانيوم — حتى من الحقيبة — وتتلاشى من تلقاء نفسها عبر أربع درجات، وأسرع تحت الماء. تُحفر وتُحمل كأي كتلة، لكنها لا تُصنع أبدا."
+            }
+          ]
+        },
+        {
           "id": "reactor_controller",
           "title": "وحدة تحكم المفاعل",
           "icon": "alaindustrial:reactor_controller",
@@ -1113,6 +1125,43 @@
                 "alaindustrial:rubber"
               ],
               "result_id": "alaindustrial:reactor_outlet",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lever",
+          "title": "ذراع المفاعل",
+          "icon": "alaindustrial:reactor_lever",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ذراع المفاعل",
+              "text": "ذراع من سبيكة العزل الإشعاعي: إشارة مستمرة من داخل غرفة محكمة — إيقاف طوارئ المفاعل، لا يخترق عزل الغرفة ولا يذوب مع محتوياتها."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "الاحتياطي: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع غير مرتب",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:lever",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_lever",
               "result_count": 2
             }
           ]
@@ -1716,6 +1765,44 @@
           ]
         },
         {
+          "id": "fermenter",
+          "title": "المخمّر",
+          "icon": "alaindustrial:fermenter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "المخمّر",
+              "text": "آلة LV تخمّر المادة العضوية بالماء إلى وقود حيوي (سائل، دائما) وكتلة حيوية (عنصر، بحسب حظ). أول وقود في المود يُزرع بدل أن يُضخّ: كل دفعة بتكلفة واحدة، والغلة تتوقف فقط على ما تطعمه — من العشب إلى الجزر الذهبي."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "الطاقة: 600 EU/عملية",
+                "الاحتياطي: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:bucket",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:copper_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:fermenter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "pump",
           "title": "مضخة",
           "icon": "alaindustrial:pump",
@@ -1899,8 +1986,32 @@
     {
       "id": "world_automation",
       "title": "العالم والأتمتة",
-      "icon": "alaindustrial:tempered_iron_block",
+      "icon": "alaindustrial:biomass",
       "entries": [
+        {
+          "id": "biomass",
+          "title": "كتلة حيوية",
+          "icon": "alaindustrial:biomass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "كتلة حيوية",
+              "text": "بقايا التخمير الصلبة — يُسقطها المخمّر بحسب حظ، وكلما أغنى الطعم زاد الاحتمال. لا استخدام له بعد: عنصر نائب متعمّد أُضيف بصراحة، دون استخدام مُختلَق."
+            }
+          ]
+        },
+        {
+          "id": "biofuel",
+          "title": "وقود حيوي",
+          "icon": "alaindustrial:biofuel_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "وقود حيوي",
+              "text": "سائل زيتوني عكر يُحضَّر في المخمّر — أول وقود في المود يُزرع بدل أن يُضخّ. لا يوجد في العالم بشكل طبيعي؛ تقطيره مرة ثانية يعطي المحلول المغذي الذي ترشّه المرشّة."
+            }
+          ]
+        },
         {
           "id": "tempered_iron_block",
           "title": "مكعب حديد مقسى",
@@ -1992,6 +2103,18 @@
           ]
         },
         {
+          "id": "netherite_alloy_ingot",
+          "title": "سبيكة نيثرايت المركّبة",
+          "icon": "alaindustrial:netherite_alloy_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "سبيكة نيثرايت المركّبة",
+              "text": "سبيكة نهاية اللعبة في المود — سبيكة نيثرايت فانيلا واحدة وسبيكتا إلكتروم تعطيان سبيكتين من سبيكة نيثرايت المركّبة في فرن السبائك."
+            }
+          ]
+        },
+        {
           "id": "oil",
           "title": "النفط",
           "icon": "alaindustrial:oil_bucket",
@@ -2078,6 +2201,18 @@
               "type": "text",
               "title": "بخار",
               "text": "السائل العامل في غرفة المفاعل. وهو سائل المود الوحيد الذي لا صورة له في العالم إطلاقا: لا بركة ولا كتلة ولا دلو — فالبخار لا يوجد إلا داخل الخزانات والأنابيب."
+            }
+          ]
+        },
+        {
+          "id": "nutrient_solution",
+          "title": "محلول مغذٍ",
+          "icon": "alaindustrial:nutrient_solution_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "محلول مغذٍ",
+              "text": "منتج التقطير الثاني للوقود الحيوي، أخضر زاهٍ — السائل الوحيد في المود الذي لا يحترق بشيء. مستهلكه الوحيد هو المرشّة، التي تسرّع المحاصيل والبلورات."
             }
           ]
         },
@@ -2239,6 +2374,55 @@
           ]
         },
         {
+          "id": "kok_sagyz",
+          "title": "كوك ساغيز",
+          "icon": "alaindustrial:kok_sagyz",
+          "pages": [
+            {
+              "type": "text",
+              "title": "كوك ساغيز",
+              "text": "«الطرخشقون الروسي» المعمّر — المصدر المتجدد للمطاط. عمود من الزهرة وجذر بعمق كتلتين: احفر طرف الجذر بلا نهاية، والنبات يبقى ويعيد إنباته. يُسحق الجذر في الساحق إلى مطاط خام مع الإينولين كمنتج جانبي."
+            }
+          ]
+        },
+        {
+          "id": "sprinkler",
+          "title": "مرشّة",
+          "icon": "alaindustrial:sprinkler",
+          "pages": [
+            {
+              "type": "text",
+              "title": "مرشّة",
+              "text": "رأس دوّار على سارية ترشّ المحلول المغذي على كل ما ينمو في مدى 4 كتل. الآلة الوحيدة في المود التي لا تسحب EU إطلاقا — لا كابل يتصل بها، وتعمل بالمحلول وحده. تُركّب على الأرض أو تحت السقف."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "الاحتياطي: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "alaindustrial:copper_plate",
+                "alaindustrial:gold_gear",
+                "alaindustrial:copper_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:sprinkler",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "garden_drone_station",
           "title": "محطة درون الحديقة",
           "icon": "alaindustrial:garden_drone_station",
@@ -2271,6 +2455,43 @@
                 "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:garden_drone_station",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "crystal_farm_controller",
+          "title": "متحكم الدفيئة",
+          "icon": "alaindustrial:crystal_farm_controller",
+          "pages": [
+            {
+              "type": "text",
+              "title": "متحكم الدفيئة",
+              "text": "غرفة محكمة بأي شكل، تكبر في مهابط بذرها الموقظة عناقيد أمثيست حقيقية من الفانيلا. تملأ وحدة التحكم الهواء داخلها، فالقبة والهرم المدرّج والجناح على شكل L كلها تصلح، والدفيئة المكتملة تُظهر ذلك باختفاء دروز قشرتها. الماء وEU والمرشّة تزيد السرعة فقط؛ ولا شيء من الثلاثة واجب."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "الاحتياطي: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "alaindustrial:crystal_farm_floor",
+                "minecraft:amethyst_shard",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:crystal_farm_floor"
+              ],
+              "result_id": "alaindustrial:crystal_farm_controller",
               "result_count": 1
             }
           ]

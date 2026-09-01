@@ -917,6 +917,18 @@
           ]
         },
         {
+          "id": "irradiated_soil",
+          "title": "輻照土壤",
+          "icon": "alaindustrial:irradiated_soil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "輻照土壤",
+              "text": "核子事故留下的印記：被反應爐爆炸污染的土地。它的輻射比鈾低一級——即使放在背包裡也會輻射——並會自行經過四個階段消退，在水下更快。可以像任何方塊一樣挖掘和攜帶，但無法合成。"
+            }
+          ]
+        },
+        {
           "id": "reactor_controller",
           "title": "反應爐控制器",
           "icon": "alaindustrial:reactor_controller",
@@ -1113,6 +1125,43 @@
                 "alaindustrial:rubber"
               ],
               "result_id": "alaindustrial:reactor_outlet",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lever",
+          "title": "反應爐拉桿",
+          "icon": "alaindustrial:reactor_lever",
+          "pages": [
+            {
+              "type": "text",
+              "title": "反應爐拉桿",
+              "text": "用屏蔽合金製成的拉桿：從密封房間內部保持的訊號——反應爐的急停開關，既不會破壞房間的屏蔽，也不會隨內容物一起熔化。"
+            },
+            {
+              "type": "stats",
+              "title": "數據",
+              "lines": [
+                "緩衝：0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "無序合成",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:lever",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_lever",
               "result_count": 2
             }
           ]
@@ -1716,6 +1765,44 @@
           ]
         },
         {
+          "id": "fermenter",
+          "title": "發酵罐",
+          "icon": "alaindustrial:fermenter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "發酵罐",
+              "text": "一台LV機器，用水把有機物發酵成生質燃料（必然為流體）和生物質（有機率掉落的物品）。模組中第一種靠種植而非泵取獲得的燃料：每批成本相同，產量只取決於你投入的原料——從草到金胡蘿蔔。"
+            },
+            {
+              "type": "stats",
+              "title": "數據",
+              "lines": [
+                "能量：600 EU/操作",
+                "緩衝：800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:bucket",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:copper_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:fermenter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "pump",
           "title": "抽水機",
           "icon": "alaindustrial:pump",
@@ -1899,8 +1986,32 @@
     {
       "id": "world_automation",
       "title": "世界與自動化",
-      "icon": "alaindustrial:tempered_iron_block",
+      "icon": "alaindustrial:biomass",
       "entries": [
+        {
+          "id": "biomass",
+          "title": "生物質",
+          "icon": "alaindustrial:biomass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "生物質",
+              "text": "發酵的固態殘餘——由發酵罐有機率掉出，原料越肥沃機率越高。目前沒有用途：一個刻意保留的佔位物，誠實地隨模組發布，沒有編造的用途。"
+            }
+          ]
+        },
+        {
+          "id": "biofuel",
+          "title": "生質燃料",
+          "icon": "alaindustrial:biofuel_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "生質燃料",
+              "text": "在發酵罐中釀出的渾濁橄欖色流體——模組中第一種靠種植而非泵取獲得的燃料。世界中不會天然生成；將其二次蒸餾可得到噴灌器噴灑的營養液。"
+            }
+          ]
+        },
         {
           "id": "tempered_iron_block",
           "title": "回火鐵塊",
@@ -1992,6 +2103,18 @@
           ]
         },
         {
+          "id": "netherite_alloy_ingot",
+          "title": "獄髓複合錠",
+          "icon": "alaindustrial:netherite_alloy_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "獄髓複合錠",
+              "text": "模組的終局合金——在合金熔爐中，一個原版獄髓錠加兩個琥珀金錠可產出兩個獄髓複合錠。"
+            }
+          ]
+        },
+        {
           "id": "oil",
           "title": "石油",
           "icon": "alaindustrial:oil_bucket",
@@ -2078,6 +2201,18 @@
               "type": "text",
               "title": "蒸汽",
               "text": "反應爐房間的工作流體。它是本模組唯一在世界裡完全沒有形態的流體：沒有水窪、沒有方塊、也不能用桶裝——蒸汽只存在於儲罐與管道之中。"
+            }
+          ]
+        },
+        {
+          "id": "nutrient_solution",
+          "title": "營養液",
+          "icon": "alaindustrial:nutrient_solution_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "營養液",
+              "text": "生質燃料二次蒸餾的翠綠產物——模組中唯一不可燃燒的流體。它唯一的消費者是噴灌器，能加速作物和水晶的生長。"
             }
           ]
         },
@@ -2239,6 +2374,55 @@
           ]
         },
         {
+          "id": "kok_sagyz",
+          "title": "青膠蒲公英",
+          "icon": "alaindustrial:kok_sagyz",
+          "pages": [
+            {
+              "type": "text",
+              "title": "青膠蒲公英",
+              "text": "多年生的「俄羅斯蒲公英」——可再生的橡膠來源。植株由花和兩格深的根組成：根尖可以無限挖取，植株存活並重新長出根尖。根在研磨機中加工成生橡膠，副產物是菊粉。"
+            }
+          ]
+        },
+        {
+          "id": "sprinkler",
+          "title": "噴灌器",
+          "icon": "alaindustrial:sprinkler",
+          "pages": [
+            {
+              "type": "text",
+              "title": "噴灌器",
+              "text": "桅杆上旋轉的噴頭，向4格範圍內所有生長中的作物噴灑營養液。模組中唯一完全不消耗EU的機器——沒有電纜能連接它，僅靠營養液運轉。可安裝在地面上或天花板下。"
+            },
+            {
+              "type": "stats",
+              "title": "數據",
+              "lines": [
+                "緩衝：0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:copper_plate",
+                "alaindustrial:gold_gear",
+                "alaindustrial:copper_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:sprinkler",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "garden_drone_station",
           "title": "園藝無人機基站",
           "icon": "alaindustrial:garden_drone_station",
@@ -2271,6 +2455,43 @@
                 "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:garden_drone_station",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "crystal_farm_controller",
+          "title": "溫室控制器",
+          "icon": "alaindustrial:crystal_farm_controller",
+          "pages": [
+            {
+              "type": "text",
+              "title": "溫室控制器",
+              "text": "任意形狀的密封房間，甦醒的苗床上會長出真正的原版紫水晶簇。控制器會注滿內部空氣，因此圓頂、階梯金字塔或L形側翼都算數，而建成的溫室會以外殼接縫的消失來表明這一點。水、EU和噴灌器只是讓它更快；三者都不是必需的。"
+            },
+            {
+              "type": "stats",
+              "title": "數據",
+              "lines": [
+                "緩衝：4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:crystal_farm_floor",
+                "minecraft:amethyst_shard",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:crystal_farm_floor"
+              ],
+              "result_id": "alaindustrial:crystal_farm_controller",
               "result_count": 1
             }
           ]

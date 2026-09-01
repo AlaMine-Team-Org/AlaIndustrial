@@ -632,6 +632,14 @@ public final class DemoStand {
 				level.setBlock(half, state.setValue(TrellisBlock.AGE, TrellisBlock.MAX_AGE), 3);
 			}
 		}
+		// Kok-sagyz column (MOD-537): shown as an exposed soil cross-section beside the trellis —
+		// tip at the bottom, upper root above it, mature puff on top — so the stand answers "where
+		// does the rubber come from" the way the plant itself does: dig the bottom block.
+		level.setBlockAndUpdate(origin.offset(41, 0, 9), ModContent.KOK_SAGYZ_ROOT.get().defaultBlockState()
+				.setValue(dev.alaindustrial.block.KokSagyzRootBlock.TIP, true));
+		level.setBlockAndUpdate(origin.offset(41, 1, 9), ModContent.KOK_SAGYZ_ROOT.get().defaultBlockState());
+		level.setBlockAndUpdate(origin.offset(41, 2, 9), ModContent.KOK_SAGYZ.get().defaultBlockState()
+				.setValue(dev.alaindustrial.block.KokSagyzBlock.AGE, dev.alaindustrial.block.KokSagyzBlock.AGE_MATURE));
 		// Garden Drone Station (MOD-277): the dock beside the trellis plot, charged so its status light
 		// reads "powered" rather than "no EU". Placed next to farmland on purpose — the stand should show
 		// the block in the context it works in.

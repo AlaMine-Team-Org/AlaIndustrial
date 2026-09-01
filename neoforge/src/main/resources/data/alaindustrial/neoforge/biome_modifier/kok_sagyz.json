@@ -1,0 +1,8 @@
+{
+	"type": "neoforge:add_features",
+	"biomes": "#alaindustrial:has_kok_sagyz",
+	"features": [
+		"alaindustrial:kok_sagyz"
+	],
+	"step": "vegetal_decoration"
+}

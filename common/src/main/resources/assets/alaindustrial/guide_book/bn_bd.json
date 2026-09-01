@@ -917,6 +917,18 @@
           ]
         },
         {
+          "id": "irradiated_soil",
+          "title": "বিকিরিত মাটি",
+          "icon": "alaindustrial:irradiated_soil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "বিকিরিত মাটি",
+              "text": "পারমাণবিক দুর্ঘটনার দাগ: রিঅ্যাক্টর বিস্ফোরণে বিষাক্ত মাটি। ইউরেনিয়ামের এক ধাপ নিচের মাত্রায় বিকিরণ করে — ব্যাকপ্যাক থেকেও — এবং নিজে নিজে চার ধাপে মিলিয়ে যায়, পানির নিচে দ্রুত। যেকোনো ব্লকের মতো খোঁড়া ও বহন করা যায়, তবে কখনো তৈরি করা যায় না।"
+            }
+          ]
+        },
+        {
           "id": "reactor_controller",
           "title": "রিঅ্যাক্টর নিয়ন্ত্রক",
           "icon": "alaindustrial:reactor_controller",
@@ -1113,6 +1125,43 @@
                 "alaindustrial:rubber"
               ],
               "result_id": "alaindustrial:reactor_outlet",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lever",
+          "title": "রিঅ্যাক্টর লিভার",
+          "icon": "alaindustrial:reactor_lever",
+          "pages": [
+            {
+              "type": "text",
+              "title": "রিঅ্যাক্টর লিভার",
+              "text": "রক্ষা-সংকর ধাতুর লিভার: সিল করা ঘরের ভেতর থেকে ধরে রাখা সংকেত — রিঅ্যাক্টরের জরুরি বন্ধ; ঘরের ঢাল ভাঙে না, ভেতরের জিনিসের সঙ্গে গলেও যায় না।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "বাফার: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিহীন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:lever",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_lever",
               "result_count": 2
             }
           ]
@@ -1716,6 +1765,44 @@
           ]
         },
         {
+          "id": "fermenter",
+          "title": "ফার্মেন্টার",
+          "icon": "alaindustrial:fermenter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ফার্মেন্টার",
+              "text": "একটি LV যন্ত্র, জৈব পদার্থ পানির সঙ্গে গেঁজে বায়োফুয়েল (সবসময় তরল) ও বায়োমাস (কখনো সখনো আইটেম) বানায়। মডের প্রথম জ্বালানি যা পাম্প নয়, চাষ করে পাওয়া যায়: প্রতি ব্যাচের খরচ একই, ফলন নির্ভর করে শুধু যা খাওয়ানো হয় তার ওপর — ঘাস থেকে সোনালি গাজ পর্যন্ত।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: 600 EU/ক্রিয়া",
+                "বাফার: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:bucket",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:copper_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:fermenter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "pump",
           "title": "পাম্প",
           "icon": "alaindustrial:pump",
@@ -1899,8 +1986,32 @@
     {
       "id": "world_automation",
       "title": "জগৎ ও স্বয়ংক্রিয়করণ",
-      "icon": "alaindustrial:tempered_iron_block",
+      "icon": "alaindustrial:biomass",
       "entries": [
+        {
+          "id": "biomass",
+          "title": "বায়োমাস",
+          "icon": "alaindustrial:biomass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "বায়োমাস",
+              "text": "গাঁজনের কঠিন অবশিষ্টাংশ — ফার্মেন্টার ভাগ্যের ওপর ফেলে দেয়, খাদ যত সমৃদ্ধ সম্ভাবনা তত বেশি। এখনো কোনো কাজে লাগে না: ইচ্ছাকৃত প্লেসহোল্ডার, নিজের সীমা নিয়ে সৎ, বানানো কোনো উদ্দেশ্য ছাড়াই।"
+            }
+          ]
+        },
+        {
+          "id": "biofuel",
+          "title": "বায়োফুয়েল",
+          "icon": "alaindustrial:biofuel_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "বায়োফুয়েল",
+              "text": "ফার্মেন্টারে তৈরি ঘোলাটে জলপাই রঙের তরল — মডের প্রথম জ্বালানি যা পাম্প নয়, চাষ থেকে আসে। পৃথিবীতে স্বাভাবিকভাবে পাওয়া যায় না; দ্বিতীয়বার পাতন করলে স্প্রিংকলার যে পুষ্টি দ্রবণ ছড়ায় তা মেলে।"
+            }
+          ]
+        },
         {
           "id": "tempered_iron_block",
           "title": "টেম্পার্ড আয়রন ব্লক",
@@ -1992,6 +2103,18 @@
           ]
         },
         {
+          "id": "netherite_alloy_ingot",
+          "title": "নেদারাইট অ্যালয় ইনগট",
+          "icon": "alaindustrial:netherite_alloy_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "নেদারাইট অ্যালয় ইনগট",
+              "text": "মডের এন্ডগেম সংকর ধাতু — একটি ভ্যানিলা নেদারাইট ইনগট ও দুটি ইলেকট্রামের পিণ্ড মিলে সংকর ধাতু চুল্লিতে দুটি নেদারাইট অ্যালয় ইনগট দেয়।"
+            }
+          ]
+        },
+        {
           "id": "oil",
           "title": "খনিজ তেল",
           "icon": "alaindustrial:oil_bucket",
@@ -2078,6 +2201,18 @@
               "type": "text",
               "title": "বাষ্প",
               "text": "চুল্লিকক্ষের কার্যকরী তরল। এই মডের একমাত্র তরল যার পৃথিবীতে কোনো রূপই নেই: না জলাশয়, না ব্লক, না বালতি — বাষ্প কেবল ট্যাংক আর পাইপের ভেতরেই থাকে।"
+            }
+          ]
+        },
+        {
+          "id": "nutrient_solution",
+          "title": "পুষ্টি দ্রবণ",
+          "icon": "alaindustrial:nutrient_solution_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "পুষ্টি দ্রবণ",
+              "text": "বায়োফুয়েল দ্বিতীয়বার পাতনের উজ্জ্বল সবুজ ফল — মডের একমাত্র তরল যা কিছুতেই পোড়ে না। এর একমাত্র ভোক্তা স্প্রিংকলার, যা ফসল ও স্ফটিকের বৃদ্ধি ত্বরান্বিত করে।"
             }
           ]
         },
@@ -2239,6 +2374,55 @@
           ]
         },
         {
+          "id": "kok_sagyz",
+          "title": "কক-সাগিজ",
+          "icon": "alaindustrial:kok_sagyz",
+          "pages": [
+            {
+              "type": "text",
+              "title": "কক-সাগিজ",
+              "text": "বহুবর্ষজীবী «রাশিয়ান ড্যান্ডেলিয়ন» — রাবারের নবায়নযোগ্য উৎস। একটি ফুল আর দুই ব্লক গভীর শিকড়ের স্তম্ভ: শিকড়ের ডগা অবিরাম খুঁড়ে নিন, গাছ বেঁচে থাকে আর ডগা আবার গজায়। শিকড় পেষক যন্ত্রে পিষে কাঁচা রাবার হয়, পার্শ্ব-পণ্য হিসেবে ইনুলিন।"
+            }
+          ]
+        },
+        {
+          "id": "sprinkler",
+          "title": "স্প্রিংকলার",
+          "icon": "alaindustrial:sprinkler",
+          "pages": [
+            {
+              "type": "text",
+              "title": "স্প্রিংকলার",
+              "text": "মাস্টের ওপর ঘূর্ণায়মান মাথা, ৪ ব্লকের মধ্যে বেড়ে ওঠা সবকিছুতে পুষ্টি দ্রবণ ছড়ায়। মডের একমাত্র যন্ত্র যা একটুও EU টানে না — কোনো কেবল লাগে না, শুধু দ্রবণেই চলে। মেঝেতে বা ছাদের নিচে বসানো যায়।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "বাফার: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:copper_plate",
+                "alaindustrial:gold_gear",
+                "alaindustrial:copper_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:sprinkler",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "garden_drone_station",
           "title": "গার্ডেন ড্রোন স্টেশন",
           "icon": "alaindustrial:garden_drone_station",
@@ -2271,6 +2455,43 @@
                 "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:garden_drone_station",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "crystal_farm_controller",
+          "title": "গ্রিনহাউস কন্ট্রোলার",
+          "icon": "alaindustrial:crystal_farm_controller",
+          "pages": [
+            {
+              "type": "text",
+              "title": "গ্রিনহাউস কন্ট্রোলার",
+              "text": "যেকোনো আকৃতির সিল করা ঘর, যার জাগানো বীজশয্যায় আসল ভ্যানিলা অ্যামেথিস্ট ক্লাস্টার জন্মায়। কন্ট্রোলার ভেতরের বাতাস ভরে দেয়, তাই গম্বুজ, ধাপযুক্ত পিরামিড বা L-আকৃতির ডানা — সবই গ্রহণযোগ্য, আর সম্পূর্ণ গ্রিনহাউস তা প্রকাশ করে খোলসের সীমানা-রেখা মিলিয়ে গিয়ে। পানি, EU ও স্প্রিংকলার শুধু দ্রুততর করে; তিনটির কোনোটিই বাধ্যতামূলক নয়।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "বাফার: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:crystal_farm_floor",
+                "minecraft:amethyst_shard",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:crystal_farm_floor"
+              ],
+              "result_id": "alaindustrial:crystal_farm_controller",
               "result_count": 1
             }
           ]

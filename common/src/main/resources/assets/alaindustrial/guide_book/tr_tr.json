@@ -917,6 +917,18 @@
           ]
         },
         {
+          "id": "irradiated_soil",
+          "title": "Işılanmış Toprak",
+          "icon": "alaindustrial:irradiated_soil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Işılanmış Toprak",
+              "text": "Bir nükleer kazanın bıraktığı iz: reaktör patlamasıyla zehirlenmiş toprak. Uranyumun bir basamak altında ışınlar — sırt çantasından bile — ve dört aşamada kendi kendine solar, su altında daha hızlı. Herhangi bir blok gibi kazılır ve taşınır, ama asla üretilmez."
+            }
+          ]
+        },
+        {
           "id": "reactor_controller",
           "title": "Reaktör Kontrol Ünitesi",
           "icon": "alaindustrial:reactor_controller",
@@ -1113,6 +1125,43 @@
                 "alaindustrial:rubber"
               ],
               "result_id": "alaindustrial:reactor_outlet",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lever",
+          "title": "Reaktör Kolu",
+          "icon": "alaindustrial:reactor_lever",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reaktör Kolu",
+              "text": "Kalkan alaşımından bir kol: mühürlü bir odanın içinden tutulan bir sinyal — reaktörün acil durdurması; odanın kalkanını bozmaz, içeriğiyle birlikte erimez de."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Tampon: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilsiz Üretim",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:lever",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_lever",
               "result_count": 2
             }
           ]
@@ -1716,6 +1765,44 @@
           ]
         },
         {
+          "id": "fermenter",
+          "title": "Fermantör",
+          "icon": "alaindustrial:fermenter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Fermantör",
+              "text": "Organik maddeyi su ile fermante edip biyoyakıt (her zaman sıvı) ve biyokütle (bazen eşya) üreten bir LV makinesi. Pomplanmak yerine yetiştirilen modun ilk yakıtı: her parti aynı bedel, verim ise yalnızca yediğe bağlı — ottan altın havuca kadar."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 600 EU/işlem",
+                "Tampon: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:bucket",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:copper_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:fermenter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "pump",
           "title": "Pompa",
           "icon": "alaindustrial:pump",
@@ -1899,8 +1986,32 @@
     {
       "id": "world_automation",
       "title": "Dünya ve Otomasyon",
-      "icon": "alaindustrial:tempered_iron_block",
+      "icon": "alaindustrial:biomass",
       "entries": [
+        {
+          "id": "biomass",
+          "title": "Biyokütle",
+          "icon": "alaindustrial:biomass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Biyokütle",
+              "text": "Fermantasyonun katı artığı — fermantörün şans eseri bıraktığı, yem ne kadar zenginse olasılığı o kadar yüksek. Henüz bir kullanımı yok: bilinçli bir yer tutucu, uydurulmuş bir amaç olmadan dürüstçe sunulmuş."
+            }
+          ]
+        },
+        {
+          "id": "biofuel",
+          "title": "Biyoyakıt",
+          "icon": "alaindustrial:biofuel_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Biyoyakıt",
+              "text": "Fermantörde demlenen bulanık zeytin yeşili sıvı — pomplanmak yerine yetiştirilen modun ilk yakıtı. Dünyada kendiliğinden bulunmaz; ikinci kez damıtıldığında fıskiyanın serptiği besin çözeltisi elde edilir."
+            }
+          ]
+        },
         {
           "id": "tempered_iron_block",
           "title": "Su Verilmiş Demir Bloğu",
@@ -1992,6 +2103,18 @@
           ]
         },
         {
+          "id": "netherite_alloy_ingot",
+          "title": "Netherit Alaşımı Külçesi",
+          "icon": "alaindustrial:netherite_alloy_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Netherit Alaşımı Külçesi",
+              "text": "Modun oyun sonu alaşımı — bir vanilla Netherit külçesi ve iki Elektrum Külçesi, Alaşım Fırını'nda iki Netherit Alaşımı Külçesi verir."
+            }
+          ]
+        },
+        {
           "id": "oil",
           "title": "Petrol",
           "icon": "alaindustrial:oil_bucket",
@@ -2078,6 +2201,18 @@
               "type": "text",
               "title": "Buhar",
               "text": "Reaktör odasının çalışma akışkanı. Modun dünyada hiçbir biçimi olmayan tek sıvısı: ne birikinti, ne blok, ne kova — buhar yalnızca tankların ve boruların içinde bulunur."
+            }
+          ]
+        },
+        {
+          "id": "nutrient_solution",
+          "title": "Besin Çözeltisi",
+          "icon": "alaindustrial:nutrient_solution_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Besin Çözeltisi",
+              "text": "Biyoyakıtın ikinci kez damıtılmasından elde edilen parlak yeşil ürün — modda hiçbir şeyin yanmadığı tek sıvı. Tek tüketicisi, ekinleri ve kristalleri hızlandıran fıskiyedir."
             }
           ]
         },
@@ -2239,6 +2374,55 @@
           ]
         },
         {
+          "id": "kok_sagyz",
+          "title": "Kok-sagız",
+          "icon": "alaindustrial:kok_sagyz",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kok-sagız",
+              "text": "Çok yıllık bir «Rus karahindibası» — kauçuğun yenilenebilir kaynağı. Bir çiçek ve iki blok derinlikte kökten oluşan kolon: kök ucunu sonsuza dek kazın, bitki hayatta kalır ve ucunu yeniden büyütür. Kök, Öğütücü'de yan ürün olarak inülinle birlikte ham kauçuğa öğütülür."
+            }
+          ]
+        },
+        {
+          "id": "sprinkler",
+          "title": "Fıskiye",
+          "icon": "alaindustrial:sprinkler",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Fıskiye",
+              "text": "Bir direk üzerinde dönerek 4 blok içinde büyüyen her şeyin üzerine besin çözeltisi serpen başlık. Modda hiç EU çekmeyen tek makine — kablo bağlanmaz, yalnızca çözeltiyle çalışır. Yere veya tavana monte edilir."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Tampon: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:copper_plate",
+                "alaindustrial:gold_gear",
+                "alaindustrial:copper_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:sprinkler",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "garden_drone_station",
           "title": "Bahçe Dronu İstasyonu",
           "icon": "alaindustrial:garden_drone_station",
@@ -2271,6 +2455,43 @@
                 "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:garden_drone_station",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "crystal_farm_controller",
+          "title": "Sera Kumandası",
+          "icon": "alaindustrial:crystal_farm_controller",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Sera Kumandası",
+              "text": "Herhangi bir biçimde mühürlü bir oda; uyandırılmış tohum yataklarında gerçek vanilla ametist kümeleri büyür. Kumanda içindeki havayı doldurur, yani kubbe, basamaklı piramit veya L biçimli kanat kabul edilir; bitmiş serayınsa kabuğundaki derzlerin kaybolması bunu gösterir. Su, EU ve bir fıskiye yalnızca hızlandırır; üçünden hiçbiri zorunlu değildir."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Tampon: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:crystal_farm_floor",
+                "minecraft:amethyst_shard",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:crystal_farm_floor"
+              ],
+              "result_id": "alaindustrial:crystal_farm_controller",
               "result_count": 1
             }
           ]

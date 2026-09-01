@@ -1,0 +1,46 @@
+{
+	"type": "minecraft:block",
+	"pools": [
+		{
+			"rolls": 1.0,
+			"entries": [
+				{
+					"type": "minecraft:alternatives",
+					"children": [
+						{
+							"type": "minecraft:item",
+							"name": "alaindustrial:kok_sagyz_root",
+							"conditions": [
+								{
+									"condition": "minecraft:block_state_property",
+										"block": "alaindustrial:kok_sagyz_root",
+										"properties": {
+											"tip": "true"
+										}
+									}
+								]
+							}
+						]
+					}
+				]
+			},
+			{
+				"rolls": 1.0,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "alaindustrial:kok_sagyz_seeds"
+				}
+			],
+			"conditions": [
+				{
+					"condition": "minecraft:survives_explosion"
+				},
+				{
+					"condition": "minecraft:random_chance",
+					"chance": 0.35
+				}
+			]
+		}
+	]
+}

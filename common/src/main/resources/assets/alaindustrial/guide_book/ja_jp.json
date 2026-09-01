@@ -917,6 +917,18 @@
           ]
         },
         {
+          "id": "irradiated_soil",
+          "title": "放射能に汚染された土",
+          "icon": "alaindustrial:irradiated_soil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "放射能に汚染された土",
+              "text": "原子炉事故が残す痕：爆発で汚染された土。ウランの一段階下の放射線を出す——バックパックの中からも——そして4段階を経て自然に消え、水中ではより速い。通常のブロックと同様に掘って運べるが、クラフトは決してできない。"
+            }
+          ]
+        },
+        {
           "id": "reactor_controller",
           "title": "原子炉制御装置",
           "icon": "alaindustrial:reactor_controller",
@@ -1113,6 +1125,43 @@
                 "alaindustrial:rubber"
               ],
               "result_id": "alaindustrial:reactor_outlet",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lever",
+          "title": "原子炉レバー",
+          "icon": "alaindustrial:reactor_lever",
+          "pages": [
+            {
+              "type": "text",
+              "title": "原子炉レバー",
+              "text": "遮蔽合金のレバー：密閉された部屋の内側から押し続ける信号——原子炉の非常停止。部屋の遮蔽を破壊せず、内容物と一緒に溶けることもありません。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "バッファ: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "不定形クラフト",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:lever",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_lever",
               "result_count": 2
             }
           ]
@@ -1716,6 +1765,44 @@
           ]
         },
         {
+          "id": "fermenter",
+          "title": "発酵槽",
+          "icon": "alaindustrial:fermenter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "発酵槽",
+              "text": "有機物を水とともに発酵させ、バイオ燃料（必ず液体）とバイオマス（確率でアイテム）を作るLV機械。ポンプで汲むのではなく農場で作る、モッド初の燃料です：毎回のコストは同じで、収量は投入物だけで決まります — 草から金のニンジンまで。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 600 EU/処理",
+                "バッファ: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:bucket",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:copper_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:fermenter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "pump",
           "title": "ポンプ",
           "icon": "alaindustrial:pump",
@@ -1899,8 +1986,32 @@
     {
       "id": "world_automation",
       "title": "ワールドと自動化",
-      "icon": "alaindustrial:tempered_iron_block",
+      "icon": "alaindustrial:biomass",
       "entries": [
+        {
+          "id": "biomass",
+          "title": "バイオマス",
+          "icon": "alaindustrial:biomass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "バイオマス",
+              "text": "発酵の固形残余 — 発酵槽が確率で排出します。素材が豊かなほど確率は上がります。今のところ用途なし：意図的なプレースホルダーとして、嘘の用途をでっち上げずに正直に出荷されています。"
+            }
+          ]
+        },
+        {
+          "id": "biofuel",
+          "title": "バイオ燃料",
+          "icon": "alaindustrial:biofuel_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "バイオ燃料",
+              "text": "発酵槽で醸される濁ったオリーブ色の液体 — ポンプで汲むのではなく農場で作る、モッド初の燃料。世界には自然には存在せず、もう一度蒸留すると、スプリンクラーが散水する養液が得られます。"
+            }
+          ]
+        },
         {
           "id": "tempered_iron_block",
           "title": "焼き入れ鉄ブロック",
@@ -1992,6 +2103,18 @@
           ]
         },
         {
+          "id": "netherite_alloy_ingot",
+          "title": "ネザライト合金インゴット",
+          "icon": "alaindustrial:netherite_alloy_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ネザライト合金インゴット",
+              "text": "モッドのエンドゲーム合金 — バニラのネザライトインゴット1個とエレクトラムインゴット2個を合金炉にかけることで、ネザライト合金インゴット2個が得られます。"
+            }
+          ]
+        },
+        {
           "id": "oil",
           "title": "石油",
           "icon": "alaindustrial:oil_bucket",
@@ -2078,6 +2201,18 @@
               "type": "text",
               "title": "蒸気",
               "text": "原子炉室の作動流体です。ワールド上の姿をまったく持たない、このモッド唯一の流体でもあります。水たまりもブロックもバケツもなく、蒸気はタンクとパイプの内側にだけ存在します。"
+            }
+          ]
+        },
+        {
+          "id": "nutrient_solution",
+          "title": "養液",
+          "icon": "alaindustrial:nutrient_solution_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "養液",
+              "text": "バイオ燃料をもう一度蒸留して得られる鮮やかな緑の生成物 — モッド唯一、何も燃えない液体です。唯一の消費者はスプリンクラーで、作物とクリスタルの成長を速めます。"
             }
           ]
         },
@@ -2239,6 +2374,55 @@
           ]
         },
         {
+          "id": "kok_sagyz",
+          "title": "コクサギズ",
+          "icon": "alaindustrial:kok_sagyz",
+          "pages": [
+            {
+              "type": "text",
+              "title": "コクサギズ",
+              "text": "多年生の「ロシアンタンポポ」——再生可能なゴムの供給源。花と深さ2ブロックの根からなる柱：根先端は何度でも掘り出せ、植株は生き残り根先端を再生します。根は粉砕機で生ゴムに砕かれ、副産物としてイヌリンが得られます。"
+            }
+          ]
+        },
+        {
+          "id": "sprinkler",
+          "title": "スプリンクラー",
+          "icon": "alaindustrial:sprinkler",
+          "pages": [
+            {
+              "type": "text",
+              "title": "スプリンクラー",
+              "text": "マストの上で回る散水ヘッドが、4ブロック内で育つすべてに養液を撒きます。モッドで唯一まったくEUを消費しない機械 — ケーブルは接続できず、養液だけで動きます。床にも天井の下にも取り付けられます。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "バッファ: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:copper_plate",
+                "alaindustrial:gold_gear",
+                "alaindustrial:copper_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:sprinkler",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "garden_drone_station",
           "title": "ガーデンドローンステーション",
           "icon": "alaindustrial:garden_drone_station",
@@ -2271,6 +2455,43 @@
                 "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:garden_drone_station",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "crystal_farm_controller",
+          "title": "温室コントローラー",
+          "icon": "alaindustrial:crystal_farm_controller",
+          "pages": [
+            {
+              "type": "text",
+              "title": "温室コントローラー",
+              "text": "形はどんな形でもよい密閉された部屋で、目覚めた苗床が本物のバニラのアメジスト塊を育てます。コントローラーが内部の空気を満たすため、ドーム、段ピラミッド、L字翼のどれでも有効で、完成した温室は外殻の継ぎ目が消えることでそれを示します。水とEUとスプリンクラーは速くするだけ。3つのどれも必須ではありません。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "バッファ: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:crystal_farm_floor",
+                "minecraft:amethyst_shard",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:crystal_farm_floor"
+              ],
+              "result_id": "alaindustrial:crystal_farm_controller",
               "result_count": 1
             }
           ]

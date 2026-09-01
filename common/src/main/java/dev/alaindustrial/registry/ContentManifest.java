@@ -40,6 +40,8 @@ import dev.alaindustrial.block.IncubatorDomeBlock;
 import dev.alaindustrial.block.IrradiatedSoilBlock;
 import dev.alaindustrial.block.IronChestBlock;
 import dev.alaindustrial.block.IronFurnaceBlock;
+import dev.alaindustrial.block.KokSagyzBlock;
+import dev.alaindustrial.block.KokSagyzRootBlock;
 import dev.alaindustrial.block.ItemPipeBlock;
 import dev.alaindustrial.block.MaceratorBlock;
 import dev.alaindustrial.block.MoonlitSolarPanelBlock;
@@ -589,6 +591,13 @@ public final class ContentManifest {
 	// Cotton trellis (MOD-280) — the mod's first crop; a two-block plant support, not a machine.
 	public static final BlockDef<TrellisBlock> TRELLIS =
 			block("trellis", TrellisBlock::new, s -> ModContent.TRELLIS = s);
+	// MOD-537 — kok sagyz, the rubber dandelion. Two blocks, three states of one plant: the flower
+	// the player plants, and the root column it grows downward (tip=true is the harvestable end).
+	// The root has no BlockItem of its own: it is dug, never placed — its plain item is the harvest.
+	public static final BlockDef<KokSagyzBlock> KOK_SAGYZ =
+			block("kok_sagyz", KokSagyzBlock::new, s -> ModContent.KOK_SAGYZ = s);
+	public static final BlockDef<KokSagyzRootBlock> KOK_SAGYZ_ROOT =
+			block("kok_sagyz_root", KokSagyzRootBlock::new, s -> ModContent.KOK_SAGYZ_ROOT = s);
 
 	// ── MOD-505: the crystal greenhouse. Glass and door come from tags, and what grows is vanilla
 	// amethyst, so the mod adds only the deck, the brain and the bed. ──
@@ -725,7 +734,11 @@ public final class ContentManifest {
 			DISTILLATION_COLUMN_MIDDLE, DISTILLATION_COLUMN_TOP, RECTIFICATION_SECTION, ALLOY_SMELTER,
 			VULCANIZER, GALVANIC_BATH, ELECTRIC_HEATER, CHARGE_PAD, ENERGY_CONDENSER,
 			MOB_REPELLER, MOB_REPELLER_MV, MOB_REPELLER_HV, INCUBATOR,
-			INCUBATOR_DOME, TRELLIS, TIN_ORE, DEEPSLATE_TIN_ORE, SILVER_ORE, DEEPSLATE_SILVER_ORE,
+			INCUBATOR_DOME, TRELLIS,
+			// MOD-537 — kok sagyz: flower first, then its root, so the root's factory can read the
+			// flower's registered entry (and its loot/props ordering stays next to the plant group).
+			KOK_SAGYZ, KOK_SAGYZ_ROOT,
+			TIN_ORE, DEEPSLATE_TIN_ORE, SILVER_ORE, DEEPSLATE_SILVER_ORE,
 			NICKEL_ORE, DEEPSLATE_NICKEL_ORE, SULFUR_ORE, DEEPSLATE_SULFUR_ORE, URANIUM_ORE,
 			DEEPSLATE_URANIUM_ORE, PALLADIUM_ORE,
 			IRON_CHEST, STORAGE_MODULE, SILVER_CHEST, GOLD_CHEST, ELECTRUM_CHEST, SHIELDING_CHEST,
@@ -925,6 +938,14 @@ public final class ContentManifest {
 			// plant away from its other half.
 			Map.entry("trellis", p -> p.strength(0.2f).sound(SoundType.GRASS)
 					.noOcclusion().randomTicks().pushReaction(PushReaction.DESTROY)),
+			// MOD-537 — kok sagyz. A vanilla-flower block: instabreak, walked through, and randomTicks()
+			// is load-bearing (the plant advances on the random tick, like the trellis). A piston must
+			// not drag the flower away from the root column it owns.
+			Map.entry("kok_sagyz", p -> p.instabreak().sound(SoundType.GRASS)
+					.noCollision().randomTicks().pushReaction(PushReaction.DESTROY)),
+			// The root is a full dirt-strength cube and ticks never: growth is driven from the flower
+			// above, so a random tick here would be work nothing reads.
+			Map.entry("kok_sagyz_root", p -> p.strength(0.6f).sound(SoundType.ROOTED_DIRT)),
 			// ── MOD-505: the crystal greenhouse. Ordinary machine-grade blocks — the room contains
 			// nothing more dangerous than a growing crystal, so none of the reactor's toughness.
 			// Deliberately NO randomTicks() anywhere here: growth is driven by the controller's tick,
@@ -1148,6 +1169,9 @@ public final class ContentManifest {
 				"emerald_dust", "empty_can", "flux_thread", "fluxweave_cloth", "garden_drone", "gold_dust",
 				"gold_gear", "gold_plate", "iron_dust", "iron_gear", "iron_plate",
 				"irradiated_diamond", "irradiated_slag", "lapis_dust", "mutagen_dust",
+				// MOD-537 — the kok sagyz harvest and its by-product: the dug root (macerable into
+				// raw rubber + inulin) and the inulin itself.
+				"inulin", "kok_sagyz_root",
 				"nickel_dust", "nickel_ingot", "nickel_plate",
 				"palladium_dust", "palladium_ingot", "palladium_plate",
 				"raw_nickel", "raw_palladium", "raw_rubber",

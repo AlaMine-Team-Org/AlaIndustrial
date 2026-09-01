@@ -65,6 +65,15 @@ public final class ModWorldGen {
 	public static final TagKey<Biome> HAS_PALLADIUM_ORE =
 			TagKey.create(Registries.BIOME, Industrialization.id("has_palladium_ore"));
 
+	/**
+	 * Biomes where wild kok-sagyz grows (MOD-537). Defaults to {@code #c:is_plains} +
+	 * {@code #c:is_savanna} ({@code data/alaindustrial/tags/worldgen/biome/has_kok_sagyz.json}),
+	 * the steppe/temperate plain convention tags. The placed feature spawns mature plants
+	 * (age 3); the roots regrow from random ticks because the plants stand on dirt/grass.
+	 */
+	public static final TagKey<Biome> HAS_KOK_SAGYZ =
+			TagKey.create(Registries.BIOME, Industrialization.id("has_kok_sagyz"));
+
 	public static void init() {
 		// MOD-238 audit: alaindustrial:oil_lake_filter, the placement modifier that keeps oil features
 		// out of villages/mineshafts/Ancient Cities. Registered before any datapack load, because the
@@ -117,5 +126,9 @@ public final class ModWorldGen {
 				BiomeSelectors.tag(HAS_PALLADIUM_ORE),
 				GenerationStep.Decoration.UNDERGROUND_ORES,
 				ResourceKey.create(Registries.PLACED_FEATURE, Industrialization.id("palladium_ore")));
+		BiomeModifications.addFeature(
+				BiomeSelectors.tag(HAS_KOK_SAGYZ),
+				GenerationStep.Decoration.VEGETAL_DECORATION,
+				ResourceKey.create(Registries.PLACED_FEATURE, Industrialization.id("kok_sagyz")));
 	}
 }

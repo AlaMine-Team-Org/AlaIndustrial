@@ -917,6 +917,18 @@
           ]
         },
         {
+          "id": "irradiated_soil",
+          "title": "Đất nhiễm phóng xạ",
+          "icon": "alaindustrial:irradiated_soil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Đất nhiễm phóng xạ",
+              "text": "Dấu vết một vụ tai nạn hạt nhân: đất bị nhiễm độc bởi vụ nổ lò phản ứng. Nó phát phóng xạ thấp hơn uranium một nấc — cả khi nằm trong ba lô — và tự phai qua bốn giai đoạn, nhanh hơn dưới nước. Đào và mang như mọi khối, nhưng không bao giờ chế tạo được."
+            }
+          ]
+        },
+        {
           "id": "reactor_controller",
           "title": "Bộ Điều Khiển Lò Phản Ứng",
           "icon": "alaindustrial:reactor_controller",
@@ -1113,6 +1125,43 @@
                 "alaindustrial:rubber"
               ],
               "result_id": "alaindustrial:reactor_outlet",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lever",
+          "title": "Đòn Bẩy Lò Phản Ứng",
+          "icon": "alaindustrial:reactor_lever",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Đòn Bẩy Lò Phản Ứng",
+              "text": "Đòn bẩy bằng hợp kim che chắn: tín hiệu được giữ từ bên trong căn phòng kín — phanh khẩn cấp của lò phản ứng, không phá lớp che chắn của phòng cũng không chảy ra cùng nội dung bên trong."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Bộ đệm: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo không định hình",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:lever",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_lever",
               "result_count": 2
             }
           ]
@@ -1716,6 +1765,44 @@
           ]
         },
         {
+          "id": "fermenter",
+          "title": "Máy Lên Men",
+          "icon": "alaindustrial:fermenter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Máy Lên Men",
+              "text": "Máy LV lên men vật chất hữu cơ với nước thành nhiên liệu sinh học (luôn là chất lỏng) và sinh khối (thỉnh thoảng là vật phẩm). Nhiên liệu đầu tiên của mod được trồng thay vì bơm: mỗi mẻ chi phí như nhau, và sản lượng chỉ phụ thuộc vào thứ bạn cho vào — từ cỏ đến cà rốt vàng."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 600 EU/thao tác",
+                "Bộ đệm: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:bucket",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:copper_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:fermenter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "pump",
           "title": "Máy bơm",
           "icon": "alaindustrial:pump",
@@ -1899,8 +1986,32 @@
     {
       "id": "world_automation",
       "title": "Thế giới & Tự động hóa",
-      "icon": "alaindustrial:tempered_iron_block",
+      "icon": "alaindustrial:biomass",
       "entries": [
+        {
+          "id": "biomass",
+          "title": "Sinh khối",
+          "icon": "alaindustrial:biomass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Sinh khối",
+              "text": "Phần rắn còn lại của quá trình lên men — máy lên men thỉnh thoảng thả ra, nguyên liệu càng giàu thì xác suất càng cao. Chưa có công dụng: một chỗ trống có chủ đích, cung cấp trung thực, không bịa ra mục đích."
+            }
+          ]
+        },
+        {
+          "id": "biofuel",
+          "title": "Nhiên liệu sinh học",
+          "icon": "alaindustrial:biofuel_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Nhiên liệu sinh học",
+              "text": "Chất lỏng ô liu đục được ủ trong máy lên men — nhiên liệu đầu tiên của mod được trồng thay vì bơm. Không xuất hiện tự nhiên trong thế giới; chưng cất lần thứ hai cho ra dung dịch dinh dưỡng mà vòi tưới phun ra."
+            }
+          ]
+        },
         {
           "id": "tempered_iron_block",
           "title": "Khối Sắt Tôi",
@@ -1992,6 +2103,18 @@
           ]
         },
         {
+          "id": "netherite_alloy_ingot",
+          "title": "Thỏi Hợp Kim Netherite",
+          "icon": "alaindustrial:netherite_alloy_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Thỏi Hợp Kim Netherite",
+              "text": "Hợp kim cuối game của mod — một thỏi Netherite gốc và hai thỏi Electrum cho ra hai thỏi Hợp Kim Netherite trong Lò Nung Hợp Kim."
+            }
+          ]
+        },
+        {
           "id": "oil",
           "title": "Dầu mỏ",
           "icon": "alaindustrial:oil_bucket",
@@ -2078,6 +2201,18 @@
               "type": "text",
               "title": "Hơi nước",
               "text": "Chất công tác của phòng lò. Đây là chất lỏng duy nhất của bản mod hoàn toàn không có hình hài trong thế giới: không vũng, không khối, không xô — hơi chỉ tồn tại bên trong bồn và ống."
+            }
+          ]
+        },
+        {
+          "id": "nutrient_solution",
+          "title": "Dung dịch dinh dưỡng",
+          "icon": "alaindustrial:nutrient_solution_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Dung dịch dinh dưỡng",
+              "text": "Sản phẩm xanh rực từ việc chưng cất nhiên liệu sinh học lần thứ hai — chất lỏng duy nhất của mod mà không gì cháy được. Đối tượng tiêu thụ duy nhất của nó là vòi tưới, giúp cây trồng và tinh thể mọc nhanh hơn."
             }
           ]
         },
@@ -2239,6 +2374,55 @@
           ]
         },
         {
+          "id": "kok_sagyz",
+          "title": "Kok-Sagyz",
+          "icon": "alaindustrial:kok_sagyz",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kok-Sagyz",
+              "text": "Cây «bồ công anh Nga» lâu năm — nguồn cao su tái tạo. Một cột gồm hoa và rễ sâu hai khối: đào đầu rễ mãi không hết, cây vẫn sống và mọc lại đầu rễ. Rễ được nghiền trong Máy nghiền thành cao su thô, với inulin là sản phẩm phụ."
+            }
+          ]
+        },
+        {
+          "id": "sprinkler",
+          "title": "Vòi tưới",
+          "icon": "alaindustrial:sprinkler",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Vòi tưới",
+              "text": "Đầu quay trên cột phun dung dịch dinh dưỡng lên mọi thứ đang mọc trong phạm vi 4 khối. Cỗ máy duy nhất trong mod không tiêu thụ EU chút nào — không cáp nào nối vào nó, và nó chạy hoàn toàn bằng dung dịch. Lắp trên sàn hoặc dưới trần."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Bộ đệm: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:copper_plate",
+                "alaindustrial:gold_gear",
+                "alaindustrial:copper_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:sprinkler",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "garden_drone_station",
           "title": "Trạm Drone Làm Vườn",
           "icon": "alaindustrial:garden_drone_station",
@@ -2271,6 +2455,43 @@
                 "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:garden_drone_station",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "crystal_farm_controller",
+          "title": "Bộ Điều Khiển Nhà Kính",
+          "icon": "alaindustrial:crystal_farm_controller",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Bộ Điều Khiển Nhà Kính",
+              "text": "Một căn phòng kín hình dạng bất kỳ, các luống gieo hạt đã thức dậy của nó mọc ra các chùm amethyst vanilla thật. Bộ điều khiển làm đầy không khí bên trong, nên vòm, kim tự tháp bậc thang hay cánh hình chữ L đều được tính, và nhà kính hoàn thành thể hiện điều đó bằng cách các mối nối trên vỏ biến mất. Nước, EU và vòi tưới chỉ làm nhanh hơn; cả ba đều không bắt buộc."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Bộ đệm: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:crystal_farm_floor",
+                "minecraft:amethyst_shard",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:crystal_farm_floor"
+              ],
+              "result_id": "alaindustrial:crystal_farm_controller",
               "result_count": 1
             }
           ]

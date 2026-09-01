@@ -51,7 +51,18 @@ dependencies {
     // Both viewers at once stack two overlays over the same screen edge and hide regressions
     // instead of showing them, so the dev-run classpath carries exactly one of the two.
     if ((project.findProperty('viewer') ?: 'rei').toString().equalsIgnoreCase('jei')) {
-        runtimeOnly("mezz.jei:jei-26.2-fabric:${jei_version}")
+        runtimeOnly("mezz.jei:jei-26.2-fabric:${jei_version}") {
+            // JEI's POM drags fabric-api 0.158+ and Gradle's highest-wins resolution would
+            // silently override our pinned fabric_version — the pin exists because 0.156+
+            // ships fabric-client-gametest-api 6.0.0, which drops TestSingleplayerContext.
+            // getClientLevel() (see gradle.properties). Without this exclude the very first
+            // client-gametest run under -Pviewer=jei crashes in GuiClientGameTest while a
+            // plain runClient keeps working, so the bump stays invisible until the L3 lane
+            // meets JEI. The fabric-api umbrella we already depend on covers every module
+            // JEI calls at runtime.
+            exclude group: 'net.fabricmc.fabric-api'
+            exclude group: 'net.fabricmc', module: 'fabric-loader'
+        }
     } else {
         runtimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:${rei_version}")
     }

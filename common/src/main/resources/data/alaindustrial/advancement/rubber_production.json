@@ -1,5 +1,5 @@
 {
-  "parent": "alaindustrial:first_oil",
+  "parent": "alaindustrial:kok_sagyz_root",
   "display": {
     "icon": { "id": "alaindustrial:rubber" },
     "title": { "translate": "advancements.alaindustrial.rubber_production.title" },

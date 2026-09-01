@@ -7,9 +7,11 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.alaindustrial.registry.ModRecipes;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -47,9 +49,50 @@ import net.minecraft.world.level.Level;
  *                   {@link #CHANCE_UNSET} when the recipe does not state one and the machine should
  *                   fall back to its own default. Only the incubator reads this; every other machine
  *                   is deterministic and ignores it.
+ * @param secondaryResult optional second item output (MOD-537): a bonus stack the operation drops
+ *                   alongside {@link #result}, e.g. macerator grit. Absent means "no secondary".
+ *                   The single-output-slot machines merge it into the SAME slot as the primary, so
+ *                   a shipped secondary must stack with the primary result — the schema allows any
+ *                   item and the machine stalls with OUTPUT_BLOCKED on a non-stacking one.
  */
 public record AlaProcessingRecipe(ModRecipes.Kind kind, List<Ingredient> ingredients, List<Integer> inputCounts,
-		ItemStackTemplate result, int energy, double chance) implements Recipe<ProcessingRecipeInput> {
+		ItemStackTemplate result, int energy, double chance, Optional<SecondaryOutput> secondaryResult)
+		implements Recipe<ProcessingRecipeInput> {
+
+	/**
+	 * The optional second item output of one operation (MOD-537): the produced stack template plus
+	 * the probability of actually getting it, where an omitted {@code chance} means 1.0 (always).
+	 * Carries its own chance rather than reusing the recipe-level one on purpose: the primary result
+	 * of a deterministic machine is guaranteed while the bonus is a gamble, and blending the two
+	 * would force every deterministic family to state a chance it does not have.
+	 *
+	 * @param stack  produced bonus stack template ({@code {id, count}})
+	 * @param chance probability the bonus is actually granted, in (0, 1]
+	 */
+	public record SecondaryOutput(ItemStackTemplate stack, double chance) {
+
+		/**
+		 * JSON form: {@code {id, count?, chance?}} — both optionals mean "one" and "always". Built over
+		 * {@link Item#CODEC} + an explicit count rather than {@link ItemStackTemplate#CODEC} because the
+		 * flat shape shares its {@code id} key with the wrapper's {@code chance}; nesting the template
+		 * ({@code {id: {id, count}, chance}}) would not match the schema the validator and the recipe
+		 * JSONs agree on.
+		 */
+		public static final Codec<SecondaryOutput> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+				Item.CODEC.fieldOf("id").forGetter(secondary -> secondary.stack().typeHolder()),
+				Codec.intRange(1, 99).optionalFieldOf("count", 1)
+						.forGetter(secondary -> secondary.stack().count()),
+				Codec.DOUBLE.optionalFieldOf("chance", 1.0).forGetter(SecondaryOutput::chance)
+		).apply(instance, (holder, count, chance) ->
+				new SecondaryOutput(new ItemStackTemplate(holder, count, DataComponentPatch.EMPTY), chance)));
+
+		/** Network form. */
+		public static final StreamCodec<RegistryFriendlyByteBuf, SecondaryOutput> STREAM_CODEC =
+				StreamCodec.composite(
+						ItemStackTemplate.STREAM_CODEC, SecondaryOutput::stack,
+						ByteBufCodecs.DOUBLE, SecondaryOutput::chance,
+						SecondaryOutput::new);
+	}
 
 	/**
 	 * Sentinel for "this recipe does not state a chance". A machine that cares (the incubator) then
@@ -84,18 +127,18 @@ public record AlaProcessingRecipe(ModRecipes.Kind kind, List<Ingredient> ingredi
 	/** Backward-compatible Java constructor for the existing one-input machines and recipe mirrors. */
 	public AlaProcessingRecipe(ModRecipes.Kind kind, Ingredient ingredient, ItemStackTemplate result,
 			int energy, double chance) {
-		this(kind, List.of(ingredient), List.of(), result, energy, chance);
+		this(kind, List.of(ingredient), List.of(), result, energy, chance, Optional.empty());
 	}
 
 	/** A recipe with no stated chance — the form every machine but the incubator uses. */
 	public AlaProcessingRecipe(ModRecipes.Kind kind, Ingredient ingredient, ItemStackTemplate result, int energy) {
-		this(kind, List.of(ingredient), List.of(), result, energy, CHANCE_UNSET);
+		this(kind, List.of(ingredient), List.of(), result, energy, CHANCE_UNSET, Optional.empty());
 	}
 
 	/** A one- or two-input recipe consuming one of each, with no stated chance. */
 	public AlaProcessingRecipe(ModRecipes.Kind kind, List<Ingredient> ingredients, ItemStackTemplate result,
 			int energy) {
-		this(kind, ingredients, List.of(), result, energy, CHANCE_UNSET);
+		this(kind, ingredients, List.of(), result, energy, CHANCE_UNSET, Optional.empty());
 	}
 
 	/** How many items input {@code index} consumes per operation. */
@@ -158,6 +201,15 @@ public record AlaProcessingRecipe(ModRecipes.Kind kind, List<Ingredient> ingredi
 	/** A fresh output {@link ItemStack} (item + count) for the machine's slot logic. */
 	public ItemStack resultStack() {
 		return result.create();
+	}
+
+	/**
+	 * A fresh secondary output {@link ItemStack} (MOD-537), or {@link ItemStack#EMPTY} when the recipe
+	 * has none — EMPTY rather than an {@code Optional} because every machine's slot logic already
+	 * speaks "empty stack means nothing to place".
+	 */
+	public ItemStack secondaryResultStack() {
+		return secondaryResult.map(SecondaryOutput::stack).map(ItemStackTemplate::create).orElse(ItemStack.EMPTY);
 	}
 
 	@Override
@@ -230,9 +282,13 @@ public record AlaProcessingRecipe(ModRecipes.Kind kind, List<Ingredient> ingredi
 						recipe.consumesOneEach() ? Optional.empty() : Optional.of(recipe.inputCounts())),
 				ItemStackTemplate.CODEC.fieldOf("result").forGetter(AlaProcessingRecipe::result),
 				Codec.INT.optionalFieldOf("energy", kind.defaultEnergy()).forGetter(AlaProcessingRecipe::energy),
-				Codec.DOUBLE.optionalFieldOf("chance", CHANCE_UNSET).forGetter(AlaProcessingRecipe::chance)
-		).apply(instance, (ingredients, inputCounts, result, energy, chance) ->
-				new AlaProcessingRecipe(kind, ingredients, inputCounts.orElse(List.of()), result, energy, chance)));
+				Codec.DOUBLE.optionalFieldOf("chance", CHANCE_UNSET).forGetter(AlaProcessingRecipe::chance),
+				// MOD-537: optional bonus output. Absent in JSON = no secondary, and the field is written
+				// back only when present so the existing recipes round-trip unchanged.
+				SecondaryOutput.CODEC.optionalFieldOf("secondary_result").forGetter(AlaProcessingRecipe::secondaryResult)
+		).apply(instance, (ingredients, inputCounts, result, energy, chance, secondaryResult) ->
+				new AlaProcessingRecipe(kind, ingredients, inputCounts.orElse(List.of()), result, energy, chance,
+						secondaryResult)));
 	}
 
 	/** Network sync codec for a machine kind. */
@@ -243,7 +299,9 @@ public record AlaProcessingRecipe(ModRecipes.Kind kind, List<Ingredient> ingredi
 				ItemStackTemplate.STREAM_CODEC, AlaProcessingRecipe::result,
 				ByteBufCodecs.INT, AlaProcessingRecipe::energy,
 				ByteBufCodecs.DOUBLE, AlaProcessingRecipe::chance,
-				(ingredients, inputCounts, result, energy, chance) ->
-						new AlaProcessingRecipe(kind, ingredients, inputCounts, result, energy, chance));
+				ByteBufCodecs.optional(SecondaryOutput.STREAM_CODEC), AlaProcessingRecipe::secondaryResult,
+				(ingredients, inputCounts, result, energy, chance, secondaryResult) ->
+						new AlaProcessingRecipe(kind, ingredients, inputCounts, result, energy, chance,
+								secondaryResult));
 	}
 }

@@ -1,0 +1,16 @@
+{
+	"type": "alaindustrial:maceration",
+	"ingredient": "alaindustrial:kok_sagyz_root",
+	"input_counts": [
+		2
+	],
+	"result": {
+		"id": "alaindustrial:raw_rubber",
+		"count": 1
+	},
+	"secondary_result": {
+		"id": "alaindustrial:inulin",
+		"count": 1
+	},
+	"energy": 300
+}

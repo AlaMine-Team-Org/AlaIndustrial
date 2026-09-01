@@ -917,6 +917,18 @@
           ]
         },
         {
+          "id": "irradiated_soil",
+          "title": "Bestralde aarde",
+          "icon": "alaindustrial:irradiated_soil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Bestralde aarde",
+              "text": "Het litteken van een nucleair ongeluk: grond vergiftigd door een reactorexplosie. Straalt een stap onder uranium — ook vanuit een rugzak — en vervaagt uit zichzelf in vier stappen, onder water sneller. Graaft en draagt als elke blok, maar wordt nooit vervaardigd."
+            }
+          ]
+        },
+        {
           "id": "reactor_controller",
           "title": "Reactorbesturing",
           "icon": "alaindustrial:reactor_controller",
@@ -1113,6 +1125,43 @@
                 "alaindustrial:rubber"
               ],
               "result_id": "alaindustrial:reactor_outlet",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lever",
+          "title": "Reactorhendel",
+          "icon": "alaindustrial:reactor_lever",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reactorhendel",
+              "text": "Een hendel van afschermingslegering: een vastgehouden signaal vanuit een verzegelde ruimte — de noodstop van de reactor, die de afscherming van de ruimte niet breekt en niet meesmelt met de inhoud."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Buffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Vormloos vervaardigen",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:lever",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_lever",
               "result_count": 2
             }
           ]
@@ -1716,6 +1765,44 @@
           ]
         },
         {
+          "id": "fermenter",
+          "title": "Fermenteerder",
+          "icon": "alaindustrial:fermenter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Fermenteerder",
+              "text": "Een LV-machine die organisch materiaal met water fermenteert tot biobrandstof (altijd een vloeistof) en biomassa (soms een item). De eerste brandstof van de mod die geteeld wordt in plaats van gepompt: elke batch kost hetzelfde, en de opbrengst hangt alleen af van wat je erin stopt — van gras tot een gouden wortel."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 600 EU/bew.",
+                "Buffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:bucket",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:copper_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:fermenter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "pump",
           "title": "Pomp",
           "icon": "alaindustrial:pump",
@@ -1899,8 +1986,32 @@
     {
       "id": "world_automation",
       "title": "Wereld & automatisering",
-      "icon": "alaindustrial:tempered_iron_block",
+      "icon": "alaindustrial:biomass",
       "entries": [
+        {
+          "id": "biomass",
+          "title": "Biomassa",
+          "icon": "alaindustrial:biomass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Biomassa",
+              "text": "De vaste rest van de fermentatie — door de fermenteerder bij wijze van kans uitgeworpen, hoe rijker de invoer, hoe waarschijnlijker. Heeft nog geen gebruik: een bewuste placeholder, eerlijk meegeleverd, zonder verzonnen doel."
+            }
+          ]
+        },
+        {
+          "id": "biofuel",
+          "title": "Biobrandstof",
+          "icon": "alaindustrial:biofuel_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Biobrandstof",
+              "text": "Een troebele olijfkleurige vloeistof uit de fermenteerder — de eerste brandstof van de mod die geteeld wordt in plaats van gepompt. Komt niet vanzelf in de wereld voor; nog een keer destilleren levert de voedingsoplossing die de sproeier vernevelt."
+            }
+          ]
+        },
         {
           "id": "tempered_iron_block",
           "title": "Blok gehard ijzer",
@@ -1992,6 +2103,18 @@
           ]
         },
         {
+          "id": "netherite_alloy_ingot",
+          "title": "Netheriet-legeringsstaaf",
+          "icon": "alaindustrial:netherite_alloy_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Netheriet-legeringsstaaf",
+              "text": "De eindgame-legering van de mod — één vanilla Netherietstaaf en twee Elektrumstaven geven in de Legeringsoven twee Netheriet-legeringsstaven."
+            }
+          ]
+        },
+        {
           "id": "oil",
           "title": "Aardolie",
           "icon": "alaindustrial:oil_bucket",
@@ -2078,6 +2201,18 @@
               "type": "text",
               "title": "Stoom",
               "text": "Het werkmedium van de reactorruimte. De enige vloeistof van de mod zonder enige vorm in de wereld: geen plas, geen blok, geen emmer — stoom bestaat alleen binnen tanks en buizen."
+            }
+          ]
+        },
+        {
+          "id": "nutrient_solution",
+          "title": "Voedingsoplossing",
+          "icon": "alaindustrial:nutrient_solution_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Voedingsoplossing",
+              "text": "Het heldergroene product van biobrandstof een tweede keer destilleren — de enige vloeistof van de mod waarin niets brandt. De enige consument is de sproeier, die gewassen en kristallen versnelt."
             }
           ]
         },
@@ -2239,6 +2374,55 @@
           ]
         },
         {
+          "id": "kok_sagyz",
+          "title": "Kok-sagyz",
+          "icon": "alaindustrial:kok_sagyz",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kok-sagyz",
+              "text": "Een overblijvende «Russische paardenbloem» — de hernieuwbare bron van rubber. Een kolom van een bloem en een twee blokken diepe wortel: graaf de wortelpunt eindeloos uit, de plant overleeft en groeit opnieuw. De wortel wordt in de Vermaler tot ruwe rubber gemalen, met inuline als bijproduct."
+            }
+          ]
+        },
+        {
+          "id": "sprinkler",
+          "title": "Sproeier",
+          "icon": "alaindustrial:sprinkler",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Sproeier",
+              "text": "Een draaiende kop op een mast die voedingsoplossing vernevelt over alles wat binnen 4 blokken groeit. De enige machine van de mod die helemaal geen EU trekt — er gaat geen kabel naartoe, hij draait alleen op de oplossing. Monteer op de vloer of onder het plafond."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Buffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:copper_plate",
+                "alaindustrial:gold_gear",
+                "alaindustrial:copper_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:sprinkler",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "garden_drone_station",
           "title": "Tuindrone-station",
           "icon": "alaindustrial:garden_drone_station",
@@ -2271,6 +2455,43 @@
                 "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:garden_drone_station",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "crystal_farm_controller",
+          "title": "Kassenregelaar",
+          "icon": "alaindustrial:crystal_farm_controller",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kassenregelaar",
+              "text": "Een verzegelde ruimte van elke vorm waarvan de gewekte zaaibedden echte vanilla amethistclusters laten groeien. De regelaar doordrenkt de lucht binnenin, dus een koepel, een trappiramide of een L-vleugel tellen allemaal, en een voltooid kassencomplex laat dat zien doordat de naden van zijn bolster verdwijnen. Water, EU en een sproeier maken het alleen sneller; geen van de drie is vereist."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Buffer: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:crystal_farm_floor",
+                "minecraft:amethyst_shard",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:crystal_farm_floor"
+              ],
+              "result_id": "alaindustrial:crystal_farm_controller",
               "result_count": 1
             }
           ]

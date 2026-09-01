@@ -484,6 +484,11 @@ class ConfigSnapshotTest {
 		// Cotton growth divisors.
 		SENTINELS.put("cottonRootingChanceDivisor", 27);
 		SENTINELS.put("cottonFruitingChanceDivisor", 14);
+		// Kok-sagyz growth divisors (MOD-537): distinct from defaults (1/1/2), from 0 and from the
+		// min bound (1), per the sentinel rule above.
+		SENTINELS.put("kokSagyzGrowthChanceDivisor", 9);
+		SENTINELS.put("kokSagyzRootChanceDivisor", 6);
+		SENTINELS.put("kokSagyzWildGrowthDivisor", 5);
 		// Alloy smelter (MOD-064).
 		SENTINELS.put("alloySmelterEuPerTick", 19);
 		SENTINELS.put("alloySmelterDuration", 233);

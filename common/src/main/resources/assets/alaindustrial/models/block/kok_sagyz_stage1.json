@@ -1,0 +1,6 @@
+{
+	"parent": "minecraft:block/cross",
+	"textures": {
+		"cross": "alaindustrial:block/kok_sagyz_stage1"
+	}
+}

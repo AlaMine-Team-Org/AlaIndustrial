@@ -88,6 +88,12 @@ final class AlaProcessingJeiCategory implements IRecipeCategory<RecipeHolder<Ala
 		builder.addOutputSlot(RecipeViewerLayout.outputXs(1).getFirst(), RecipeViewerLayout.SLOT_Y)
 				.setOutputSlotBackground()
 				.add(recipe.result());
+		// MOD-537: the optional bonus output gets its own slot; the two-slot row already exists for
+		// the alloy smelter, so the geometry needs no widening.
+		recipe.secondaryResult().ifPresent(secondary -> builder
+				.addOutputSlot(RecipeViewerLayout.outputXs(2).get(1), RecipeViewerLayout.SLOT_Y)
+				.setOutputSlotBackground()
+				.add(secondary.stack()));
 	}
 
 	@Override

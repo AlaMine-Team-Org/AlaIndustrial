@@ -1714,6 +1714,32 @@ public final class Config {
 	 */
 	public static int cottonFruitingChanceDivisor = 4;
 
+	// --- Kok sagyz (MOD-537): the rubber dandelion — root rubber without an oil rig. ---
+	/**
+	 * Chance divisor for one flower stage of the kok sagyz (rosette → bud → flower → seed head):
+	 * on each random tick of a lit plant there is a 1-in-this chance of advancing. Like the cotton
+	 * trellis, growth is random rather than a timer — the plant carries no block entity, so a
+	 * plantation of any size costs nothing to tick.
+	 *
+	 * <p>On farmland (or the plant's own root) this is the rate actually used; off tended ground the
+	 * {@link #kokSagyzWildGrowthDivisor} multiplies it on top.
+	 */
+	public static int kokSagyzGrowthChanceDivisor = 1;
+	/**
+	 * Chance divisor for one block of root growth: only a mature (seed-head) plant rolls this, and
+	 * only while the column can still go deeper. Kept separate from the flower divisor because the
+	 * two waits feel different — the flower is what the player watches, the root is what he waits
+	 * for, and they should be tunable apart.
+	 */
+	public static int kokSagyzRootChanceDivisor = 1;
+	/**
+	 * Multiplier stacked onto both kok sagyz divisors when the ground below is neither farmland nor
+	 * the plant's own root — a self-seeded roadside specimen grows this many times slower than the
+	 * plantation it escaped from. Wild plants stay a curiosity rather than a free farm, without
+	 * being impossible.
+	 */
+	public static int kokSagyzWildGrowthDivisor = 2;
+
 	// --- Iron Furnace (fuel-based, MOD-115): ticks to smelt one item. Vanilla furnace = 200. ---
 	/** Ticks the iron furnace needs to smelt one item on fuel. Between vanilla (200) and the
 	 * electric furnace, so it reads as "a bit faster than stone" without devaluing the electric tier. */
@@ -2493,6 +2519,14 @@ public final class Config {
 				() -> cottonRootingChanceDivisor, v -> cottonRootingChanceDivisor = v, 1),
 			new IntField("cottonFruitingChanceDivisor", Section.WORLD, "Cotton trellis: 1-in-this chance of advancing one fruiting stage per random tick (the repeating harvest cycle).",
 				() -> cottonFruitingChanceDivisor, v -> cottonFruitingChanceDivisor = v, 1),
+			// MOD-537 — kok sagyz, the rubber dandelion: flower stages, root growth, and the wild
+			// multiplier stacked onto both away from tended ground.
+			new IntField("kokSagyzGrowthChanceDivisor", Section.WORLD, "Kok sagyz: 1-in-this chance of advancing one flower stage per random tick on tended ground (farmland or the plant's own root).",
+				() -> kokSagyzGrowthChanceDivisor, v -> kokSagyzGrowthChanceDivisor = v, 1),
+			new IntField("kokSagyzRootChanceDivisor", Section.WORLD, "Kok sagyz: 1-in-this chance of growing the root one block deeper per random tick of a mature plant.",
+				() -> kokSagyzRootChanceDivisor, v -> kokSagyzRootChanceDivisor = v, 1),
+			new IntField("kokSagyzWildGrowthDivisor", Section.WORLD, "Kok sagyz: multiplier on both growth divisors when the plant is NOT on farmland or its own root, so a wild specimen grows slower than a tended one.",
+				() -> kokSagyzWildGrowthDivisor, v -> kokSagyzWildGrowthDivisor = v, 1),
 			new IntField("electricFurnaceDuration", Section.MACHINES, "Ticks an electric furnace takes per smelt at 1.0 speed.",
 				() -> electricFurnaceDuration, v -> electricFurnaceDuration = v, 1),
 			new IntField("compressorDuration", Section.MACHINES, "Ticks a compressor takes per operation at 1.0 speed.",

@@ -917,6 +917,18 @@
           ]
         },
         {
+          "id": "irradiated_soil",
+          "title": "Заражённая земля",
+          "icon": "alaindustrial:irradiated_soil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Заражённая земля",
+              "text": "След ядерной аварии: почва, отравленная взрывом реактора. Фонит ступенью ниже урана, в том числе из рюкзака; гаснет сама за четыре ступени, водой вдвое быстрее. Копается и переносится, но не крафтится."
+            }
+          ]
+        },
+        {
           "id": "reactor_controller",
           "title": "Контроллер реактора",
           "icon": "alaindustrial:reactor_controller",
@@ -1113,6 +1125,43 @@
                 "alaindustrial:rubber"
               ],
               "result_id": "alaindustrial:reactor_outlet",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lever",
+          "title": "Реакторный рычаг",
+          "icon": "alaindustrial:reactor_lever",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Реакторный рычаг",
+              "text": "Рычаг из экранирующего сплава: удерживаемый сигнал изнутри герметичной комнаты — аварийный стоп реактора, который не рушит её защиту и переживает аварию."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Буфер: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Бесформенный крафт",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:lever",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_lever",
               "result_count": 2
             }
           ]
@@ -1716,6 +1765,44 @@
           ]
         },
         {
+          "id": "fermenter",
+          "title": "Бочка брожения",
+          "icon": "alaindustrial:fermenter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Бочка брожения",
+              "text": "LV-машина, которая сбраживает органику с водой в биотопливо (жидкость, всегда) и биомассу (предмет, по шансу). Первое топливо мода, которое выращивают, а не выкачивают: цена партии одна на всех, а выход зависит только от того, чем её кормят — от травы до золотой моркови."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Энергия: 600 EU/оп",
+                "Буфер: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:bucket",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:copper_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:fermenter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "pump",
           "title": "Насос",
           "icon": "alaindustrial:pump",
@@ -1899,8 +1986,32 @@
     {
       "id": "world_automation",
       "title": "Мир и автоматизация",
-      "icon": "alaindustrial:tempered_iron_block",
+      "icon": "alaindustrial:biomass",
       "entries": [
+        {
+          "id": "biomass",
+          "title": "Биомасса",
+          "icon": "alaindustrial:biomass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Биомасса",
+              "text": "Твёрдый остаток брожения — выпадает из бочки по шансу, тем чаще, чем дороже сырьё. Применения у неё пока нет ни одного: это задел под будущую машину, отгруженный честно и без выдуманного назначения."
+            }
+          ]
+        },
+        {
+          "id": "biofuel",
+          "title": "Биотопливо",
+          "icon": "alaindustrial:biofuel_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Биотопливо",
+              "text": "Мутно-оливковая жидкость из бочки брожения — первое топливо мода, которое выращивают, а не выкачивают из земли. В мире не встречается; из него перегоняют питательный раствор для опрыскивателя."
+            }
+          ]
+        },
         {
           "id": "tempered_iron_block",
           "title": "Блок закалённого железа",
@@ -1992,6 +2103,18 @@
           ]
         },
         {
+          "id": "netherite_alloy_ingot",
+          "title": "Слиток незеритового сплава",
+          "icon": "alaindustrial:netherite_alloy_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Слиток незеритового сплава",
+              "text": "Эндгейм-сплав мода — ванильный незеритовый слиток и два электрумовых дают в сплавочной печи два слитка незеритового сплава."
+            }
+          ]
+        },
+        {
           "id": "oil",
           "title": "Нефть",
           "icon": "alaindustrial:oil_bucket",
@@ -2078,6 +2201,18 @@
               "type": "text",
               "title": "Пар",
               "text": "Рабочее тело реакторной комнаты. Единственная жидкость мода, которой нет в мире: ни лужи, ни блока, ни ведра — пар живёт только внутри баков и труб."
+            }
+          ]
+        },
+        {
+          "id": "nutrient_solution",
+          "title": "Питательный раствор",
+          "icon": "alaindustrial:nutrient_solution_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Питательный раствор",
+              "text": "Ярко-зелёная жидкость второй перегонки биотоплива — единственная жидкость мода, которую ничто не жжёт. Её единственный потребитель — опрыскиватель, разгоняющий рост культур и кристаллов."
             }
           ]
         },
@@ -2239,6 +2374,55 @@
           ]
         },
         {
+          "id": "kok_sagyz",
+          "title": "Кок-сагыз",
+          "icon": "alaindustrial:kok_sagyz",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Кок-сагыз",
+              "text": "Многолетний «русский одуванчик» — возобновляемый источник резины. Колонна из цветка и корня на два блока в глубину: кончик корня откапывается бесконечно, растение живёт и отращивает его заново. Корень дробится в каучук с побочным инулином."
+            }
+          ]
+        },
+        {
+          "id": "sprinkler",
+          "title": "Опрыскиватель",
+          "icon": "alaindustrial:sprinkler",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Опрыскиватель",
+              "text": "Вращающаяся головка на мачте, которая разбрызгивает питательный раствор на всё растущее в радиусе 4 блоков. Единственная машина мода, не потребляющая EU вообще: кабель к ней не подключается, работает она только на растворе. Ставится и на пол, и на потолок."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Буфер: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "alaindustrial:copper_plate",
+                "alaindustrial:gold_gear",
+                "alaindustrial:copper_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:sprinkler",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "garden_drone_station",
           "title": "Станция дрона-садовника",
           "icon": "alaindustrial:garden_drone_station",
@@ -2271,6 +2455,43 @@
                 "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:garden_drone_station",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "crystal_farm_controller",
+          "title": "Контроллер теплицы",
+          "icon": "alaindustrial:crystal_farm_controller",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Контроллер теплицы",
+              "text": "Герметичная комната любой формы, внутри которой оживлённые рассадники выращивают настоящие ванильные аметистовые друзы. Контроллер заливает объём воздуха, принимает любую замкнутую постройку — купол, пирамиду, крыло — и показывает сборку тем, что оболочка теряет швы. Вода, EU и опрыскиватель только ускоряют рост — обязательным не является ничто из трёх."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Буфер: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "alaindustrial:crystal_farm_floor",
+                "minecraft:amethyst_shard",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:crystal_farm_floor"
+              ],
+              "result_id": "alaindustrial:crystal_farm_controller",
               "result_count": 1
             }
           ]

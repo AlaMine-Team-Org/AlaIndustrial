@@ -16,6 +16,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 
 /**
  * What one energy-network tick actually costs (MOD-404).
@@ -251,6 +252,117 @@ public final class EnergyNetworkPerfScenarios {
 		if (mid <= 0) {
 			helper.fail("mid-line cable holds " + mid + " EU after the running phase — the benchmark "
 					+ "measured a network that was not actually transporting anything");
+		}
+		helper.succeed();
+	}
+
+	// ── MOD-323: large-field smoke + teardown bench, moved from the Fabric-only NetworkBenchGameTest ──
+	//
+	// Each CableBlockEntity#setRemoved() with two or more cable neighbours re-runs the connected-
+	// component BFS (NetworkManager.rebuildComponents), so a worst-case teardown of an N-cable
+	// network is O(N²). This scenario guards that path against catastrophic regression. The
+	// threshold is deliberately generous so it never flaps on a loaded CI box — it only trips if
+	// teardown blows up by orders of magnitude (a hang or an accidental super-linear blow-up at
+	// this size). Re-measured on both lanes when the body moved to common: see TEARDOWN_BUDGET_MS.
+
+	// 6×6 cable plane on two stacked layers => 72 connected cables, plus a producer and a consumer.
+	private static final int FIELD_X0 = 1;
+	private static final int FIELD_X1 = 6;
+	private static final int FIELD_Z0 = 1;
+	private static final int FIELD_Z1 = 6;
+	private static final int FIELD_Y0 = 2;
+	private static final int FIELD_Y1 = 3;
+	private static final BlockPos FIELD_GEN = new BlockPos(0, 2, 1); // touches the −x face of cable (1,2,1)
+	private static final BlockPos FIELD_MAC = new BlockPos(7, 3, 6); // touches the +x face of cable (6,3,6)
+
+	/**
+	 * Generous, non-flapping ceiling for tearing the whole field down (ms). It exists to catch
+	 * order-of-magnitude regressions, not to pin the exact cost — the per-run measurement is in the
+	 * log line below on every lane. Re-measured on both lanes when the body moved to common
+	 * (MOD-323): 8 ms on the NeoForge lane, 18 ms on Fabric — the historical 2000 ms ceiling stays
+	 * with two orders of magnitude of headroom.
+	 */
+	private static final long TEARDOWN_BUDGET_MS = 2000;
+
+	/** Place the cable field plus a fuelled generator and a working macerator; return every cable pos. */
+	private static List<BlockPos> buildField(GameTestHelper helper) {
+		List<BlockPos> cables = new ArrayList<>();
+		for (int y = FIELD_Y0; y <= FIELD_Y1; y++) {
+			for (int x = FIELD_X0; x <= FIELD_X1; x++) {
+				for (int z = FIELD_Z0; z <= FIELD_Z1; z++) {
+					BlockPos p = new BlockPos(x, y, z);
+					helper.setBlock(p, ModContent.COPPER_CABLE.get());
+					cables.add(p);
+				}
+			}
+		}
+		helper.setBlock(FIELD_GEN, ModContent.GENERATOR.get());
+		helper.setBlock(FIELD_MAC, ModContent.MACERATOR.get());
+		if (be(helper, FIELD_GEN) instanceof GeneratorBlockEntity gen) {
+			gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
+		}
+		if (be(helper, FIELD_MAC) instanceof MaceratorBlockEntity mac) {
+			mac.setItem(MaceratorBlockEntity.INPUT_SLOT, new ItemStack(Items.RAW_IRON, 8));
+		}
+		return cables;
+	}
+
+	/**
+	 * Mirrors: NetworkBenchGameTest.benchLargeNetworkSmoke. A 72-cable field unions into a single
+	 * network that delivers EU from the generator to the macerator across the whole field; tearing
+	 * the field down (each cut re-runs the component BFS) completes within a generous budget and
+	 * leaves this field with no network. Infrastructure check, no dedicated case ID.
+	 */
+	public static void benchLargeNetworkSmoke(GameTestHelper helper) {
+		List<BlockPos> cables = buildField(helper);
+		// Register every cable by ticking it once (lazy registration), unioning the field into one net.
+		for (BlockPos p : cables) {
+			tick(helper, be(helper, p));
+		}
+
+		// One network must own the whole field. Assert on THIS field's network (net.size()), not the
+		// level-wide count — game tests share one ServerLevel, so other suites' networks coexist here.
+		EnergyNetwork net = NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(cables.get(0)));
+		if (net == null) {
+			helper.fail("no energy network formed on the cable field");
+		}
+		if (net.size() != cables.size()) {
+			helper.fail("field did not union into one network: net=" + net.size() + " cables=" + cables.size());
+		}
+
+		// Smoke: drive generator + network + macerator and confirm the consumer receives EU across the
+		// whole field (network-scale cable loss is well under the LV transfer cap at this size).
+		for (int i = 0; i < 120; i++) {
+			tick(helper, be(helper, FIELD_GEN));
+			NetworkManager.tickAll(helper.getLevel());
+			tick(helper, be(helper, FIELD_MAC));
+		}
+		long delivered = be(helper, FIELD_MAC) instanceof MaceratorBlockEntity mac
+				? mac.getEnergyStorage().getAmount() : -1;
+		if (delivered <= 0) {
+			helper.fail("macerator received no EU across the large network: " + delivered);
+		}
+
+		// Teardown bench: remove every cable (each cut re-runs the component BFS) and time the churn.
+		long startNs = System.nanoTime();
+		for (BlockPos p : cables) {
+			helper.setBlock(p, Blocks.AIR);
+		}
+		long elapsedMs = (System.nanoTime() - startNs) / 1_000_000L;
+
+		// This field's network must be gone. Don't assert a level-wide count (other suites share this
+		// level) — verify this field's own cables no longer belong to any network.
+		boolean fieldGone = NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(cables.get(0))) == null
+				&& NetworkManager.networkAt(helper.getLevel(),
+						helper.absolutePos(cables.get(cables.size() - 1))) == null;
+		if (!fieldGone) {
+			helper.fail("this field's network survived teardown (cables still mapped to a network)");
+		}
+		dev.alaindustrial.Industrialization.LOGGER.info("[bench] teardown of {} cables took {} ms",
+				cables.size(), elapsedMs);
+		if (elapsedMs > TEARDOWN_BUDGET_MS) {
+			helper.fail("teardown of " + cables.size() + " cables took " + elapsedMs
+					+ " ms (> " + TEARDOWN_BUDGET_MS + " ms budget) — component rebuild likely regressed");
 		}
 		helper.succeed();
 	}

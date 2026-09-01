@@ -5,8 +5,11 @@ import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.GeneratorBlockEntity;
+import dev.alaindustrial.block.entity.MaceratorBlockEntity;
+import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.core.energy.EnergyNetwork;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.energy.EnergyTransactions;
 import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDataComponents;
@@ -15,8 +18,20 @@ import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.CraftingInput;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.TagValueInput;
+
+import java.util.List;
 
 import static dev.alaindustrial.gametest.EnergyScenarioSupport.LINE_CABLE;
 import static dev.alaindustrial.gametest.EnergyScenarioSupport.LINE_GEN;
@@ -844,5 +859,429 @@ public final class StorageEnergyScenarios {
 			return;
 		}
 		helper.fail("battery box block entity missing");
+	}
+
+	// ── MOD-323 batch D: BatteryBox suite bodies migrated from the Fabric BatteryBoxGameTest lane ──
+
+	/** Shared single-box position for the migrated solo battery_box scenarios. */
+	private static final BlockPos SOLO_BOX = new BlockPos(1, 2, 1);
+
+	private static BatteryBoxBlockEntity placeBatteryBox(GameTestHelper helper) {
+		return AlaGameTestHelper.place(helper, SOLO_BOX, ModContent.BATTERY_BOX.get(),
+				BatteryBoxBlockEntity.class);
+	}
+
+	/**
+	 * TC-BATTERYBOX-001-FUN01 — storage both accepts (insert) and emits (extract) EU, and stores up to
+	 * its configured capacity.
+	 * Mirrors: BatteryBoxGameTest.tcBatteryBox001Fun01_acceptsAndEmits
+	 */
+	public static void batteryBoxAcceptsAndEmits(GameTestHelper helper) {
+		BatteryBoxBlockEntity bat = placeBatteryBox(helper);
+		if (!bat.getEnergyStorage().supportsInsertion()) {
+			helper.fail("battery_box must accept energy (maxInsert > 0)");
+		}
+		if (!bat.getEnergyStorage().supportsExtraction()) {
+			helper.fail("battery_box must emit energy (maxExtract > 0)");
+		}
+		if (bat.getEnergyStorage().getCapacity() <= 0) {
+			helper.fail("battery_box capacity must be positive");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * TC-BATTERYBOX-001-PER01 — stored EU survives an NBT save/load round-trip (the storage drop
+	 * carries its charge — R-BRK-07's prerequisite).
+	 * Mirrors: BatteryBoxGameTest.tcBatteryBox001Per01_chargeSurvivesNbt
+	 */
+	public static void batteryBoxChargeSurvivesNbt(GameTestHelper helper) {
+		BatteryBoxBlockEntity bat = placeBatteryBox(helper);
+		long charge = Math.min(12345L, bat.getEnergyStorage().getCapacity());
+		bat.getEnergyStorage().setAmountUntracked(charge);
+
+		var registries = helper.getLevel().registryAccess();
+		CompoundTag tag = bat.saveCustomOnly(registries);
+		BatteryBoxBlockEntity restored = new BatteryBoxBlockEntity(bat.getBlockPos(),
+				helper.getLevel().getBlockState(bat.getBlockPos()));
+		restored.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, tag));
+
+		if (restored.getEnergyStorage().getAmount() != charge) {
+			helper.fail("battery_box charge lost on NBT round-trip: " + charge + " -> "
+					+ restored.getEnergyStorage().getAmount());
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * TC-BATTERYBOX-001-BRK07b — a machine (not storage) does NOT carry EU on its drop (R-BRK-07 second
+	 * half: machines lose their buffer on break).
+	 * Mirrors: BatteryBoxGameTest.tcBatteryBox001Brk07b_machineDropsNoEnergy
+	 */
+	public static void machineDropsNoEnergy(GameTestHelper helper) {
+		helper.setBlock(SOLO_BOX, ModContent.MACERATOR.get());
+		MachineBlockEntity mac = helper.getBlockEntity(SOLO_BOX, MachineBlockEntity.class);
+		mac.getEnergyStorage().setAmountUntracked(5000);
+		if (mac.collectComponents().get(ModDataComponents.STORED_ENERGY.get()) != null) {
+			helper.fail("a machine leaked the STORED_ENERGY component");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * TC-BATTERYBOX-001-PRF01 — insert(100_000, EXECUTE) caps at getCapacity() (20 000 EU from Config),
+	 * not at whatever amount= would have allowed.
+	 * Mirrors: BatteryBoxGameTest.tcBatteryBox001Prf01_insertCapsAtCapacity
+	 */
+	public static void batteryBoxInsertCapsAtCapacity(GameTestHelper helper) {
+		BatteryBoxBlockEntity bat = placeBatteryBox(helper);
+		// A single insert() is rate-capped at maxInsert (32 EU/t LV), separate from capacity. Insert
+		// repeatedly until the buffer saturates, then verify it caps at capacity (never over).
+		for (int i = 0; i < 1000; i++) {
+			long[] moved = {0};
+			EnergyTransactions.get().runCommitting(txn ->
+					moved[0] = bat.getEnergyStorage().insert(100_000L, txn));
+			if (moved[0] == 0) {
+				break;
+			}
+		}
+		if (bat.getEnergyStorage().getAmount() != bat.getEnergyStorage().getCapacity()) {
+			helper.fail("battery_box overshot/undershot capacity on insert: "
+					+ bat.getEnergyStorage().getAmount() + "/" + bat.getEnergyStorage().getCapacity());
+		}
+		if (bat.getEnergyStorage().getCapacity() != Config.batteryBoxBuffer) {
+			helper.fail("battery_box capacity does not match Config.batteryBoxBuffer: "
+					+ bat.getEnergyStorage().getCapacity() + " != " + Config.batteryBoxBuffer);
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * TC-BATTERYBOX-001-PRF02 — extract(1_000, EXECUTE) from an empty buffer returns 0 and getAmount()
+	 * stays 0 (does not go negative).
+	 * Mirrors: BatteryBoxGameTest.tcBatteryBox001Prf02_extractFromEmptyReturnsZero
+	 */
+	public static void batteryBoxExtractFromEmptyReturnsZero(GameTestHelper helper) {
+		BatteryBoxBlockEntity bat = placeBatteryBox(helper);
+		bat.getEnergyStorage().setAmountUntracked(0);
+		long[] extracted = {0};
+		EnergyTransactions.get().runCommitting(txn ->
+				extracted[0] = bat.getEnergyStorage().extract(1_000L, txn));
+		if (extracted[0] != 0) {
+			helper.fail("empty battery_box extracted " + extracted[0] + " EU, expected 0");
+		}
+		if (bat.getEnergyStorage().getAmount() != 0) {
+			helper.fail("battery_box amount went below 0: " + bat.getEnergyStorage().getAmount());
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * TC-BATTERYBOX-001-NEG01 — a charged battery_box left alone (no neighbours, no load) does not lose
+	 * EU over 1000 server ticks (no passive self-drain in onServerTick).
+	 * Mirrors: BatteryBoxGameTest.tcBatteryBox001Neg01_noSelfDrainOver1000Ticks
+	 */
+	public static void batteryBoxNoSelfDrainOver1000Ticks(GameTestHelper helper) {
+		BatteryBoxBlockEntity bat = placeBatteryBox(helper);
+		bat.getEnergyStorage().setAmountUntracked(10_000L);
+		for (int i = 0; i < 1000; i++) {
+			bat.serverTick(helper.getLevel(), bat.getBlockPos(), helper.getLevel().getBlockState(bat.getBlockPos()));
+		}
+		if (bat.getEnergyStorage().getAmount() != 10_000L) {
+			helper.fail("battery_box self-drained: 10000 -> " + bat.getEnergyStorage().getAmount());
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * TC-BATTERYBOX-001-NEG02 — an empty battery_box left alone (no neighbours, no source) does not
+	 * gain EU out of nowhere over 1000 server ticks.
+	 * Mirrors: BatteryBoxGameTest.tcBatteryBox001Neg02_noSelfChargeOver1000Ticks
+	 */
+	public static void batteryBoxNoSelfChargeOver1000Ticks(GameTestHelper helper) {
+		BatteryBoxBlockEntity bat = placeBatteryBox(helper);
+		bat.getEnergyStorage().setAmountUntracked(0);
+		for (int i = 0; i < 1000; i++) {
+			bat.serverTick(helper.getLevel(), bat.getBlockPos(), helper.getLevel().getBlockState(bat.getBlockPos()));
+		}
+		if (bat.getEnergyStorage().getAmount() != 0L) {
+			helper.fail("battery_box self-charged from nothing: 0 -> " + bat.getEnergyStorage().getAmount());
+		}
+		helper.succeed();
+	}
+
+	// Ring rig: a closed loop of 3 cables (a literal cycle in the network graph) with the generator
+	// touching two of them — the network must resolve the cycle instead of hanging or double-counting.
+	// Box FACING=WEST so its input face meets RING_CABLE_A.
+	private static final BlockPos RING_GEN = new BlockPos(1, 2, 1);
+	private static final BlockPos RING_CABLE_A = new BlockPos(2, 2, 1);
+	private static final BlockPos RING_CABLE_B = new BlockPos(2, 2, 2);
+	private static final BlockPos RING_CABLE_C = new BlockPos(1, 2, 2);
+	private static final BlockPos RING_BOX = new BlockPos(3, 2, 1);
+
+	/**
+	 * TC-BATTERYBOX-001-CON01 — a ring/cyclic cable topology (generator, three cables forming a closed
+	 * loop back to the generator, one of the loop cables touching the battery_box) charges the
+	 * battery_box, and driving it for a bounded number of ticks completes without hanging (no infinite
+	 * loop / stack overflow on cycle discovery).
+	 * Mirrors: BatteryBoxGameTest.tcBatteryBox001Con01_ringTopologyNoHang
+	 */
+	public static void ringTopologyNoHang(GameTestHelper helper) {
+		helper.setBlock(RING_GEN, ModContent.GENERATOR.get());
+		helper.setBlock(RING_CABLE_A, ModContent.COPPER_CABLE.get()); // (2,2,1) — adjacent to gen (+x) and box (-x)
+		helper.setBlock(RING_CABLE_B, ModContent.COPPER_CABLE.get()); // (2,2,2) — adjacent to A (+z)
+		helper.setBlock(RING_CABLE_C, ModContent.COPPER_CABLE.get()); // (1,2,2) — adjacent to B (-x) and gen (+z): closes the loop
+		helper.setBlock(RING_BOX, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
+		if (be(helper, RING_GEN) instanceof GeneratorBlockEntity gen) {
+			gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
+			gen.getEnergyStorage().setAmountUntracked(gen.getEnergyStorage().getCapacity());
+		}
+		for (int i = 0; i < 120; i++) {
+			for (BlockPos p : new BlockPos[] { RING_GEN, RING_CABLE_A, RING_CABLE_B, RING_CABLE_C }) {
+				tick(helper, be(helper, p));
+			}
+			NetworkManager.tickAll(helper.getLevel());
+			tick(helper, be(helper, RING_BOX));
+		}
+		long charge = be(helper, RING_BOX) instanceof BatteryBoxBlockEntity bb ? bb.getEnergyStorage().getAmount() : -1;
+		if (charge <= 0) {
+			helper.fail("ring-fed battery_box received no EU: " + charge);
+		}
+		helper.succeed();
+	}
+
+	// Break/rejoin rig: generator -> cable -> battery_box.
+	private static final BlockPos BRJ_GEN = new BlockPos(1, 2, 1);
+	private static final BlockPos BRJ_CABLE = new BlockPos(2, 2, 1);
+	private static final BlockPos BRJ_BOX = new BlockPos(3, 2, 1);
+
+	private static void driveBreakRejoinLine(GameTestHelper helper, int n) {
+		for (int i = 0; i < n; i++) {
+			tick(helper, be(helper, BRJ_GEN));
+			tick(helper, be(helper, BRJ_CABLE)); // air after the break: be() is null, tick() skips
+			NetworkManager.tickAll(helper.getLevel());
+			tick(helper, be(helper, BRJ_BOX));
+		}
+	}
+
+	/**
+	 * TC-BATTERYBOX-001-CON02 — removing the only cable stops delivery into the battery_box; replacing
+	 * it resumes flow without player intervention beyond the block placement.
+	 * Mirrors: BatteryBoxGameTest.tcBatteryBox001Con02_breakRejoinCable
+	 */
+	public static void breakRejoinCable(GameTestHelper helper) {
+		helper.setBlock(BRJ_GEN, ModContent.GENERATOR.get());
+		helper.setBlock(BRJ_CABLE, ModContent.COPPER_CABLE.get());
+		helper.setBlock(BRJ_BOX, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
+		if (be(helper, BRJ_GEN) instanceof GeneratorBlockEntity gen) {
+			gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
+			gen.getEnergyStorage().setAmountUntracked(gen.getEnergyStorage().getCapacity());
+		}
+		driveBreakRejoinLine(helper, 60);
+		long chargeAfterFirstRun = be(helper, BRJ_BOX) instanceof BatteryBoxBlockEntity bb
+				? bb.getEnergyStorage().getAmount() : -1;
+		if (chargeAfterFirstRun <= 0) {
+			helper.fail("battery_box did not charge before cable removal: " + chargeAfterFirstRun);
+		}
+
+		// Break the cable: charge must stop increasing.
+		helper.setBlock(BRJ_CABLE, Blocks.AIR);
+		driveBreakRejoinLine(helper, 40);
+		long chargeAfterBreak = be(helper, BRJ_BOX) instanceof BatteryBoxBlockEntity bb
+				? bb.getEnergyStorage().getAmount() : -1;
+		if (chargeAfterBreak != chargeAfterFirstRun) {
+			helper.fail("battery_box kept charging through an air gap: " + chargeAfterFirstRun + " -> "
+					+ chargeAfterBreak);
+		}
+
+		// Rejoin the cable and drain the box back down so we can observe fresh delivery.
+		if (be(helper, BRJ_BOX) instanceof BatteryBoxBlockEntity bb) {
+			bb.getEnergyStorage().setAmountUntracked(0);
+		}
+		helper.setBlock(BRJ_CABLE, ModContent.COPPER_CABLE.get());
+		driveBreakRejoinLine(helper, 80);
+		long chargeAfterRejoin = be(helper, BRJ_BOX) instanceof BatteryBoxBlockEntity bb
+				? bb.getEnergyStorage().getAmount() : -1;
+		if (chargeAfterRejoin <= 0) {
+			helper.fail("flow did not resume after the cable was replaced: " + chargeAfterRejoin);
+		}
+		helper.succeed();
+	}
+
+	// Throughput-cap rig: 5 generators feeding one cable feeding the battery_box's single input face
+	// (combined output >> 32 EU/t LV cap on that face). CAP_CABLE sits at the hub; generators are
+	// orthogonally adjacent to it directly (west/north/up) plus two via a stub cable, so every contact
+	// is orthogonal — no diagonal touches per R-CON-06.
+	private static final BlockPos CAP_BOX = new BlockPos(4, 2, 3);
+	private static final BlockPos CAP_CABLE = new BlockPos(3, 2, 3);
+	private static final BlockPos CAP_STUB_CABLE = new BlockPos(3, 2, 4);
+	private static final BlockPos[] CAP_GENS = {
+		new BlockPos(2, 2, 3), // -x of hub
+		new BlockPos(3, 2, 2), // -z of hub
+		new BlockPos(3, 3, 3), // +y of hub
+		new BlockPos(3, 2, 5), // -z of the stub cable
+		new BlockPos(4, 2, 4), // +x of the stub cable
+	};
+
+	/**
+	 * TC-BATTERYBOX-001-CON04 — five generators (combined well above the 32 EU/t LV rate) feed one
+	 * cable into the battery_box's single input face; the face-level rate cap holds: charge never grows
+	 * by more than the LV rate in a single tick, even though supply exceeds it.
+	 * Mirrors: BatteryBoxGameTest.tcBatteryBox001Con04_faceThroughputCappedUnderExcessSupply
+	 */
+	public static void faceThroughputCappedUnderExcessSupply(GameTestHelper helper) {
+		for (BlockPos g : CAP_GENS) {
+			helper.setBlock(g, ModContent.GENERATOR.get());
+			if (be(helper, g) instanceof GeneratorBlockEntity gen) {
+				gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
+				gen.getEnergyStorage().setAmountUntracked(gen.getEnergyStorage().getCapacity());
+			}
+		}
+		helper.setBlock(CAP_CABLE, ModContent.COPPER_CABLE.get());
+		helper.setBlock(CAP_STUB_CABLE, ModContent.COPPER_CABLE.get()); // orthogonal to CAP_CABLE (+z), links the stub gens in
+		helper.setBlock(CAP_BOX, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
+
+		long maxSingleTickGain = 0;
+		long prev = 0;
+		for (int i = 0; i < 60; i++) {
+			for (BlockPos g : CAP_GENS) {
+				tick(helper, be(helper, g));
+			}
+			tick(helper, be(helper, CAP_CABLE));
+			tick(helper, be(helper, CAP_STUB_CABLE));
+			NetworkManager.tickAll(helper.getLevel());
+			tick(helper, be(helper, CAP_BOX));
+			long now = be(helper, CAP_BOX) instanceof BatteryBoxBlockEntity bb ? bb.getEnergyStorage().getAmount() : prev;
+			maxSingleTickGain = Math.max(maxSingleTickGain, now - prev);
+			prev = now;
+		}
+		if (maxSingleTickGain > EnergyTier.LV.maxVoltage()) {
+			helper.fail("battery_box input face exceeded the LV rate in a single tick: " + maxSingleTickGain
+					+ " > " + EnergyTier.LV.maxVoltage());
+		}
+		if (prev <= 0) {
+			helper.fail("battery_box received no EU despite ample oversupply: " + prev);
+		}
+		helper.succeed();
+	}
+
+	// Split rig: charged battery_box -> one cable -> two macerators (both empty input, so they only buffer).
+	private static final BlockPos SPLIT_BOX = new BlockPos(1, 2, 1);
+	private static final BlockPos SPLIT_CABLE = new BlockPos(2, 2, 1);
+	private static final BlockPos SPLIT_MAC_A = new BlockPos(3, 2, 1);
+	private static final BlockPos SPLIT_MAC_B = new BlockPos(2, 2, 2);
+
+	/**
+	 * TC-BATTERYBOX-001-CON05 — a charged battery_box's output feeds one cable that branches to two
+	 * macerators; both receive a share of the flow (no "first consumer takes all").
+	 * Mirrors: BatteryBoxGameTest.tcBatteryBox001Con05_splitsToTwoConsumers
+	 */
+	public static void splitsToTwoConsumers(GameTestHelper helper) {
+		// SPLIT_CABLE(2,2,1) is +x (EAST) of SPLIT_BOX(1,2,1); the box's output is the face OPPOSITE
+		// FACING, so FACING=WEST puts the output on EAST, toward the cable. (An earlier version of this
+		// rig set FACING=NORTH — output=SOUTH — which pointed away from the cable entirely and never
+		// connected, masking the real split behaviour under test.)
+		helper.setBlock(SPLIT_BOX, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.WEST)); // output = EAST, toward the cable
+		helper.setBlock(SPLIT_CABLE, ModContent.COPPER_CABLE.get());
+		// SPLIT_MAC_A(3,2,1) touches the cable on its own WEST face (a working face, default FACING=NORTH
+		// is fine). SPLIT_MAC_B(2,2,2) touches the cable on its own NORTH face — which IS the default
+		// FACING and therefore energy-inert (D-FACING) — so it needs a non-default FACING to actually
+		// connect; SOUTH keeps NORTH (its cable-facing side) as a working face.
+		helper.setBlock(SPLIT_MAC_A, ModContent.MACERATOR.get());
+		helper.setBlock(SPLIT_MAC_B, ModContent.MACERATOR.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.SOUTH));
+		if (be(helper, SPLIT_BOX) instanceof BatteryBoxBlockEntity bb) {
+			bb.getEnergyStorage().setAmountUntracked(bb.getEnergyStorage().getCapacity());
+		}
+		// Both macerators' input slots stay empty: no recipe consumption masking the split.
+
+		for (int i = 0; i < 120; i++) {
+			tick(helper, be(helper, SPLIT_BOX));
+			tick(helper, be(helper, SPLIT_CABLE));
+			NetworkManager.tickAll(helper.getLevel());
+			tick(helper, be(helper, SPLIT_MAC_A));
+			tick(helper, be(helper, SPLIT_MAC_B));
+		}
+		long macA = be(helper, SPLIT_MAC_A) instanceof MaceratorBlockEntity m ? m.getEnergyStorage().getAmount() : -1;
+		long macB = be(helper, SPLIT_MAC_B) instanceof MaceratorBlockEntity m ? m.getEnergyStorage().getAmount() : -1;
+		if (macA <= 0 || macB <= 0) {
+			helper.fail("split did not reach both consumers: a=" + macA + " b=" + macB);
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * TC-BATTERYBOX-001-NET02 — a full battery_box's insert(100, EXECUTE) returns 0; a full buffer
+	 * accepts nothing more.
+	 * Mirrors: BatteryBoxGameTest.tcBatteryBox001Net02_fullInsertReturnsZero
+	 */
+	public static void batteryBoxFullInsertReturnsZero(GameTestHelper helper) {
+		BatteryBoxBlockEntity bat = placeBatteryBox(helper);
+		bat.getEnergyStorage().setAmountUntracked(bat.getEnergyStorage().getCapacity());
+		long[] inserted = {0};
+		EnergyTransactions.get().runCommitting(txn ->
+				inserted[0] = bat.getEnergyStorage().insert(100L, txn));
+		if (inserted[0] != 0) {
+			helper.fail("full battery_box accepted " + inserted[0] + " EU, expected 0");
+		}
+		if (bat.getEnergyStorage().getAmount() != bat.getEnergyStorage().getCapacity()) {
+			helper.fail("full battery_box amount changed: " + bat.getEnergyStorage().getAmount());
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * TC-BATTERYBOX-001-NET03 — an empty battery_box's extract(100, EXECUTE) returns 0; an empty buffer
+	 * emits nothing.
+	 * Mirrors: BatteryBoxGameTest.tcBatteryBox001Net03_emptyExtractReturnsZero
+	 */
+	public static void batteryBoxEmptyExtractReturnsZero(GameTestHelper helper) {
+		BatteryBoxBlockEntity bat = placeBatteryBox(helper);
+		bat.getEnergyStorage().setAmountUntracked(0);
+		long[] extracted = {0};
+		EnergyTransactions.get().runCommitting(txn ->
+				extracted[0] = bat.getEnergyStorage().extract(100L, txn));
+		if (extracted[0] != 0) {
+			helper.fail("empty battery_box emitted " + extracted[0] + " EU, expected 0");
+		}
+		if (bat.getEnergyStorage().getAmount() != 0) {
+			helper.fail("empty battery_box amount changed: " + bat.getEnergyStorage().getAmount());
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * TC-BATTERYBOX-001-RECIPE01 — the shaped crafting recipe resolves and yields a battery_box
+	 * (MOD-152: pattern is {@code PBP/CRC/PBP}, with two {@code alaindustrial:battery} items in the
+	 * middle of the top and bottom rows). Guards against a silently skipped recipe.
+	 * Mirrors: BatteryBoxGameTest.tcBatteryBox001Recipe01_craftingRecipeResolves
+	 */
+	public static void batteryBoxCraftingRecipeResolves(GameTestHelper helper) {
+		ServerLevel level = helper.getLevel();
+		RecipeManager recipes = level.getServer().getRecipeManager();
+
+		ItemStack planks = new ItemStack(Items.OAK_PLANKS);
+		ItemStack cable = new ItemStack(ModContent.COPPER_CABLE_ITEM.get());
+		ItemStack redstone = new ItemStack(Items.REDSTONE);
+		ItemStack battery = new ItemStack(ModContent.BATTERY.get());
+		CraftingInput input = CraftingInput.of(3, 3, List.of(
+				planks, battery, planks,
+				cable, redstone, cable,
+				planks, battery, planks));
+		RecipeHolder<CraftingRecipe> recipe =
+				recipes.getRecipeFor(RecipeType.CRAFTING, input, level).orElse(null);
+		if (recipe == null) {
+			helper.fail("battery_box crafting recipe did not resolve (expected pattern PBP/CRC/PBP)");
+			return;
+		}
+		ItemStack out = recipe.value().assemble(input);
+		if (!out.is(ModContent.BATTERY_BOX_ITEM.get())) {
+			helper.fail("battery_box recipe produced " + out + " (expected battery_box)");
+		}
+		helper.succeed();
 	}
 }

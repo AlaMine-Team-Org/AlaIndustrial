@@ -71,6 +71,8 @@ import dev.alaindustrial.block.CrystalFarmControllerBlock;
 import dev.alaindustrial.block.CrystalFarmDoorBlock;
 import dev.alaindustrial.block.CrystalFarmShellBlock;
 import dev.alaindustrial.block.CrystalSeedbedBlock;
+import dev.alaindustrial.block.KokSagyzBlock;
+import dev.alaindustrial.block.KokSagyzRootBlock;
 import dev.alaindustrial.block.TrellisBlock;
 import dev.alaindustrial.block.VulcanizerBlock;
 import dev.alaindustrial.block.WaterMillBlock;
@@ -227,6 +229,10 @@ public final class ModBlocksNeoForge {
 	public static final DeferredBlock<IncubatorBlock> INCUBATOR = handle(ContentManifest.INCUBATOR);
 	public static final DeferredBlock<IncubatorDomeBlock> INCUBATOR_DOME = handle(ContentManifest.INCUBATOR_DOME);
 	public static final DeferredBlock<TrellisBlock> TRELLIS = handle(ContentManifest.TRELLIS);
+	// MOD-537 — kok sagyz: the flower, and the root column it grows downward.
+	public static final DeferredBlock<KokSagyzBlock> KOK_SAGYZ = handle(ContentManifest.KOK_SAGYZ);
+	public static final DeferredBlock<KokSagyzRootBlock> KOK_SAGYZ_ROOT =
+			handle(ContentManifest.KOK_SAGYZ_ROOT);
 	// MOD-505 — the crystal greenhouse.
 	public static final DeferredBlock<CrystalFarmShellBlock> CRYSTAL_FARM_FLOOR =
 			handle(ContentManifest.CRYSTAL_FARM_FLOOR);

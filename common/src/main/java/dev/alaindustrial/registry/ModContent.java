@@ -201,6 +201,11 @@ public final class ModContent {
 	public static Supplier<Block> INCUBATOR_DOME = unbound("INCUBATOR_DOME");
 	/** Cotton trellis (MOD-280) — the mod's first crop: a two-block support carrying a perennial plant. */
 	public static Supplier<Block> TRELLIS = unbound("TRELLIS");
+	// MOD-537 — kok sagyz: the flower above ground, and the root column it grows downward.
+	/** The kok sagyz flower — the block the player plants and the one whose random tick grows the plant. */
+	public static Supplier<Block> KOK_SAGYZ = unbound("KOK_SAGYZ");
+	/** The kok sagyz root column: upper root (tip=false) under the flower, harvestable tip (tip=true) below it. */
+	public static Supplier<Block> KOK_SAGYZ_ROOT = unbound("KOK_SAGYZ_ROOT");
 	// ── MOD-505: the crystal greenhouse. Shell, brain, and the two blocks that do the growing. ──
 	/** The deck a greenhouse stands on. */
 	public static Supplier<Block> CRYSTAL_FARM_FLOOR = unbound("CRYSTAL_FARM_FLOOR");
@@ -554,6 +559,14 @@ public final class ModContent {
 	public static Supplier<Item> COTTON_SEEDS = unbound("COTTON_SEEDS");
 	/** Cotton fibre (MOD-280) — the harvest; the farming alternative to spider string for MOD-127. */
 	public static Supplier<Item> COTTON_FIBER = unbound("COTTON_FIBER");
+	// MOD-537 — the kok sagyz chain: seeds plant the flower, the dug root macerates into raw rubber,
+	// and inulin is the by-product that makes the crop more than a rubber faucet.
+	/** Kok sagyz seeds (MOD-537) — placed on two blocks of soil to plant the flower. */
+	public static Supplier<BlockItem> KOK_SAGYZ_SEEDS = unbound("KOK_SAGYZ_SEEDS");
+	/** The dug kok sagyz root (MOD-537) — macerable into raw rubber with an inulin by-product. */
+	public static Supplier<Item> KOK_SAGYZ_ROOT_ITEM = unbound("KOK_SAGYZ_ROOT_ITEM");
+	/** Inulin (MOD-537) — the kok sagyz by-product carried by every macerated root. */
+	public static Supplier<Item> INULIN = unbound("INULIN");
 	// Fluxweave chain (MOD-127): the Galvanic Bath plates fibre with silver into conductive thread, and
 	// four threads weave into one sheet of cloth — the material the LV armor set is built from.
 	public static Supplier<Item> FLUX_THREAD = unbound("FLUX_THREAD");

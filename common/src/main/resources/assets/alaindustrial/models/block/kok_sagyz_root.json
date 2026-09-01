@@ -1,0 +1,8 @@
+{
+	"parent": "minecraft:block/cube_bottom_top",
+	"textures": {
+		"top": "alaindustrial:block/kok_sagyz_root_top",
+		"bottom": "alaindustrial:block/kok_sagyz_root_top",
+		"side": "alaindustrial:block/kok_sagyz_root_side"
+	}
+}

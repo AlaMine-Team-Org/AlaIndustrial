@@ -917,6 +917,18 @@
           ]
         },
         {
+          "id": "irradiated_soil",
+          "title": "방사능 오염 흙",
+          "icon": "alaindustrial:irradiated_soil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "방사능 오염 흙",
+              "text": "원자로 사고가 남긴 흔적: 폭발로 오염된 땅. 우라늄 한 단계 아래의 방사선을 냅니다 — 배낭 안에서도요 — 그리고 네 단계를 거쳐 저절로 사라지며, 물속에서는 더 빠릅니다. 일반 블록처럼 캐고 나를 수 있지만 절대 제작할 수는 없습니다."
+            }
+          ]
+        },
+        {
           "id": "reactor_controller",
           "title": "원자로 제어기",
           "icon": "alaindustrial:reactor_controller",
@@ -1113,6 +1125,43 @@
                 "alaindustrial:rubber"
               ],
               "result_id": "alaindustrial:reactor_outlet",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lever",
+          "title": "원자로 레버",
+          "icon": "alaindustrial:reactor_lever",
+          "pages": [
+            {
+              "type": "text",
+              "title": "원자로 레버",
+              "text": "차폐 합금으로 만든 레버: 밀폐된 방 안에서 유지되는 신호 — 원자로의 비상 정지. 방의 차폐를 깨지 않고, 내용물과 함께 녹지도 않습니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "버퍼: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "무정형 제작",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:lever",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_lever",
               "result_count": 2
             }
           ]
@@ -1716,6 +1765,44 @@
           ]
         },
         {
+          "id": "fermenter",
+          "title": "발효조",
+          "icon": "alaindustrial:fermenter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "발효조",
+              "text": "유기물을 물과 함께 발효시켜 바이오연료(항상 액체)와 바이오매스(확률로 아이템)를 만드는 LV 기계입니다. 펌프로 뽑는 대신 농사로 얻는 모드 최초의 연료: 배치당 비용은 항상 같고, 수확량은 투입물만으로 정해집니다 — 풀부터 황금 당근까지."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 600 EU/작업",
+                "버퍼: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:bucket",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:copper_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:fermenter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "pump",
           "title": "펌프",
           "icon": "alaindustrial:pump",
@@ -1899,8 +1986,32 @@
     {
       "id": "world_automation",
       "title": "월드 및 자동화",
-      "icon": "alaindustrial:tempered_iron_block",
+      "icon": "alaindustrial:biomass",
       "entries": [
+        {
+          "id": "biomass",
+          "title": "바이오매스",
+          "icon": "alaindustrial:biomass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "바이오매스",
+              "text": "발효의 고형 잔여물 — 발효조가 확률로 배출하며, 원료가 풍부할수록 확률이 높아집니다. 아직 쓸모는 없습니다: 의도된 자리표시자로, 꾸며낸 용도 없이 정직하게 출하되었습니다."
+            }
+          ]
+        },
+        {
+          "id": "biofuel",
+          "title": "바이오연료",
+          "icon": "alaindustrial:biofuel_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "바이오연료",
+              "text": "발효조에서 양조되는 탁한 올리브빛 액체 — 펌프로 뽑는 대신 농사로 얻는 모드 최초의 연료. 월드에 자연 생성되지 않으며, 한 번 더 증류하면 스프링클러가 뿌리는 양액이 나옵니다."
+            }
+          ]
+        },
         {
           "id": "tempered_iron_block",
           "title": "담금질된 철 블록",
@@ -1992,6 +2103,18 @@
           ]
         },
         {
+          "id": "netherite_alloy_ingot",
+          "title": "네더라이트 합금 주괴",
+          "icon": "alaindustrial:netherite_alloy_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "네더라이트 합금 주괴",
+              "text": "모드의 엔드게임 합금 — 바닐라 네더라이트 주괴 1개와 호박금 주괴 2개를 합금 제련기에 넣으면 네더라이트 합금 주괴 2개가 나옵니다."
+            }
+          ]
+        },
+        {
           "id": "oil",
           "title": "석유",
           "icon": "alaindustrial:oil_bucket",
@@ -2078,6 +2201,18 @@
               "type": "text",
               "title": "증기",
               "text": "원자로실의 작동 유체입니다. 이 모드에서 세계 상의 형태가 전혀 없는 유일한 유체이기도 합니다. 웅덩이도, 블록도, 양동이도 없습니다 — 증기는 탱크와 파이프 안에만 존재합니다."
+            }
+          ]
+        },
+        {
+          "id": "nutrient_solution",
+          "title": "양액",
+          "icon": "alaindustrial:nutrient_solution_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "양액",
+              "text": "바이오연료를 한 번 더 증류해 얻는 선명한 초록 생성물 — 모드에서 유일하게 아무것도 타지 않는 액체입니다. 유일한 소비자는 스프링클러로, 작물과 결정의 성장을 앞당깁니다."
             }
           ]
         },
@@ -2239,6 +2374,55 @@
           ]
         },
         {
+          "id": "kok_sagyz",
+          "title": "콕사기즈",
+          "icon": "alaindustrial:kok_sagyz",
+          "pages": [
+            {
+              "type": "text",
+              "title": "콕사기즈",
+              "text": "다년생 «러시아 민들레» — 고무의 재생 가능한 공급원. 꽃과 두 블록 깊이의 뿌리로 이루어진 기둥: 뿌리 끝을 끝없이 캐내도 식물은 살아남아 다시 자라냅니다. 뿌리는 분쇄기에서 생고무로 갈리며, 부산물로 이눌린이 나옵니다."
+            }
+          ]
+        },
+        {
+          "id": "sprinkler",
+          "title": "스프링클러",
+          "icon": "alaindustrial:sprinkler",
+          "pages": [
+            {
+              "type": "text",
+              "title": "스프링클러",
+              "text": "마스트 위에서 회전하며 4블록 안에서 자라는 모든 것에 양액을 뿌리는 헤드. 모드에서 유일하게 EU를 전혀 소비하지 않는 기계 — 케이블을 연결할 수 없고, 양액만으로 작동합니다. 바닥이나 천장 아래에 설치할 수 있습니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "버퍼: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:copper_plate",
+                "alaindustrial:gold_gear",
+                "alaindustrial:copper_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:sprinkler",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "garden_drone_station",
           "title": "정원 드론 스테이션",
           "icon": "alaindustrial:garden_drone_station",
@@ -2271,6 +2455,43 @@
                 "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:garden_drone_station",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "crystal_farm_controller",
+          "title": "온실 제어기",
+          "icon": "alaindustrial:crystal_farm_controller",
+          "pages": [
+            {
+              "type": "text",
+              "title": "온실 제어기",
+              "text": "어떤 모양이든 되는 밀폐된 방으로, 깨어난 묘상에서 진짜 바닐라 자수정 덩어리가 자랍니다. 제어기가 내부 공기를 채우므로 돔, 계단식 피라미드, L자 날개 모두 유효하며, 완성된 온실은 껍질의 이음매가 사라지는 것으로 이를 보여줍니다. 물, EU, 스프링클러는 가속할 뿐이며 셋 중 무엇도 필수가 아닙니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "버퍼: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:crystal_farm_floor",
+                "minecraft:amethyst_shard",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:crystal_farm_floor"
+              ],
+              "result_id": "alaindustrial:crystal_farm_controller",
               "result_count": 1
             }
           ]

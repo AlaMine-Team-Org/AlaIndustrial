@@ -22,6 +22,10 @@ import dev.alaindustrial.gametest.ChargePadScenarios;
 import dev.alaindustrial.gametest.MobRepellerScenarios;
 import dev.alaindustrial.gametest.RadiationScenarios;
 import dev.alaindustrial.gametest.CoreFluidScenarios;
+	import dev.alaindustrial.gametest.FluidMachineScenarios;
+	import dev.alaindustrial.gametest.MobSpawnEquipmentScenarios;
+	import dev.alaindustrial.gametest.SolarPanelScenarios;
+	import dev.alaindustrial.gametest.WindMillScenarios;
 import dev.alaindustrial.gametest.GeneratorEnergyScenarios;
 import dev.alaindustrial.gametest.LightningRodScenarios;
 import dev.alaindustrial.gametest.MachineEnergyScenarios;
@@ -53,6 +57,7 @@ import dev.alaindustrial.gametest.PolymerizerScenarios;
 import dev.alaindustrial.gametest.ThermalCentrifugeScenarios;
 import dev.alaindustrial.gametest.VulcanizerScenarios;
 import dev.alaindustrial.gametest.GardenDroneScenarios;
+import dev.alaindustrial.gametest.KokSagyzScenarios;
 import dev.alaindustrial.gametest.MenuDataWidthScenarios;
 import dev.alaindustrial.gametest.EnergyPackScenarios;
 import dev.alaindustrial.gametest.JetpackScenarios;
@@ -171,6 +176,18 @@ public final class NeoForgeGameTests {
 				dev.alaindustrial.gametest.IndustrialistScenarios::houseCapFilter);
 		registerTest(event, "industrialist_house_structure_loads", 40, true,
 				dev.alaindustrial.gametest.IndustrialistScenarios::houseStructureLoads);
+// MOD-323 batch: Industrialist/MobSpawnEquipment - bodies moved from
+		// IndustrialistVillagerGameTest.java and MobSpawnEquipmentGameTest.java.
+		registerTest(event, "villager_sell_offers_ignore_reputation", 100, true,
+				dev.alaindustrial.gametest.IndustrialistScenarios::tcVil003_sellOffersIgnoreReputation);
+		registerTest(event, "unemployed_villager_takes_profession", 300, true,
+				dev.alaindustrial.gametest.IndustrialistScenarios::tcVil004_unemployedVillagerTakesProfession);
+		registerTest(event, "mob_spawn_full_plan_equips_tempered_gear", 100, true,
+				MobSpawnEquipmentScenarios::tcMob001_fullPlanEquipsTemperedGear);
+		registerTest(event, "mob_spawn_fill_is_non_destructive", 100, true,
+				MobSpawnEquipmentScenarios::tcMob002_fillIsNonDestructive);
+		registerTest(event, "mob_spawn_empty_plan_equips_nothing", 100, true,
+				MobSpawnEquipmentScenarios::tcMob003_emptyPlanEquipsNothing);
 		registerTest(event, "macerator_processes_recipe", 420, true,
 				MachineEnergyScenarios::maceratorProcessesRecipe);
 
@@ -405,6 +422,23 @@ public final class NeoForgeGameTests {
 				CableEnergyScenarios::mod021LossOverTenCables);
 		registerTest(event, "mod253_long_copper_line_still_delivers_and_tops_off", 200, true,
 				CableEnergyScenarios::mod253LongCopperLineStillDeliversAndTopsOff);
+// MOD-323 batch: CableEnergyScenarios - bodies moved from NetworkGameTest.java.
+		registerTest(event, "splits_between_equal_consumers", 100, true,
+				CableEnergyScenarios::rNrg08_splitsBetweenEqualConsumers);
+		registerTest(event, "idle_network_sleeps", 100, true,
+				CableEnergyScenarios::rNrg09_idleNetworkSleeps);
+		registerTest(event, "network_wakes_on_consumer", 100, true,
+				CableEnergyScenarios::rNrg09_networkWakesOnConsumer);
+		registerTest(event, "mod009_machine_served_before_storage", 60, true,
+				CableEnergyScenarios::mod009Pri_machineServedBeforeStorage);
+		registerTest(event, "no_loss_on_short_line", 40, true,
+				CableEnergyScenarios::tcCable001Nrg02b_noLossOnShortLine);
+		registerTest(event, "tops_off_exactly_over_lossy_line", 40, true,
+				CableEnergyScenarios::tcCable001Nrg02c_topsOffExactlyOverLossyLine);
+		registerTest(event, "two_empty_cables_no_phantom_eu", 20, true,
+				CableEnergyScenarios::tcCable001Neg02_twoEmptyCablesTenThousandTicksNoPhantomEu);
+		registerTest(event, "mod156_lazy_path_reregisters_after_reload", 100, true,
+				CableEnergyScenarios::mod156_lazyPathReregistersAfterReload);
 		registerTest(event, "nbt_round_trip_preserves_state", 40, true,
 				MachineEnergyScenarios::nbtRoundTripPreservesState);
 		// MOD-025: ring network union-find merge on cycle, proven on both loaders (loader-neutral body
@@ -461,6 +495,36 @@ public final class NeoForgeGameTests {
 		// capability-view rate tests (BatteryBoxGameTest PRF03/Prf04).
 		registerTest(event, "battery_box_rate_exact_lv", 40, true,
 				StorageEnergyScenarios::batteryBoxRateExactLv);
+// MOD-323 batch: StorageEnergyScenarios - bodies moved from BatteryBoxGameTest.java
+		// (the Fabric-only EnergyStorage.SIDED rate/neighbour cases stay on the Fabric lane).
+		registerTest(event, "battery_box_accepts_and_emits", 100, true,
+				StorageEnergyScenarios::batteryBoxAcceptsAndEmits);
+		registerTest(event, "battery_box_charge_survives_nbt", 100, true,
+				StorageEnergyScenarios::batteryBoxChargeSurvivesNbt);
+		registerTest(event, "machine_drops_no_energy", 100, true,
+				StorageEnergyScenarios::machineDropsNoEnergy);
+		registerTest(event, "battery_box_insert_caps_at_capacity", 100, true,
+				StorageEnergyScenarios::batteryBoxInsertCapsAtCapacity);
+		registerTest(event, "battery_box_extract_from_empty_returns_zero", 100, true,
+				StorageEnergyScenarios::batteryBoxExtractFromEmptyReturnsZero);
+		registerTest(event, "battery_box_no_self_drain_over_1000_ticks", 100, true,
+				StorageEnergyScenarios::batteryBoxNoSelfDrainOver1000Ticks);
+		registerTest(event, "battery_box_no_self_charge_over_1000_ticks", 100, true,
+				StorageEnergyScenarios::batteryBoxNoSelfChargeOver1000Ticks);
+		registerTest(event, "battery_box_ring_topology_no_hang", 100, true,
+				StorageEnergyScenarios::ringTopologyNoHang);
+		registerTest(event, "battery_box_break_rejoin_cable", 100, true,
+				StorageEnergyScenarios::breakRejoinCable);
+		registerTest(event, "battery_box_face_throughput_capped_under_excess_supply", 100, true,
+				StorageEnergyScenarios::faceThroughputCappedUnderExcessSupply);
+		registerTest(event, "battery_box_splits_to_two_consumers", 100, true,
+				StorageEnergyScenarios::splitsToTwoConsumers);
+		registerTest(event, "battery_box_full_insert_returns_zero", 100, true,
+				StorageEnergyScenarios::batteryBoxFullInsertReturnsZero);
+		registerTest(event, "battery_box_empty_extract_returns_zero", 100, true,
+				StorageEnergyScenarios::batteryBoxEmptyExtractReturnsZero);
+		registerTest(event, "battery_box_crafting_recipe_resolves", 100, true,
+				StorageEnergyScenarios::batteryBoxCraftingRecipeResolves);
 
 		// Solar panel day/night generation (R-NRG-15). The day case asserts the exact rate × ticks; the
 		// night case asserts 0 EU (a brightness-read regression that leaks day gen into night fails here).
@@ -515,6 +579,88 @@ public final class NeoForgeGameTests {
 		// Moonlit panel: night generation at exact moonlitEuPerTick × multiplier.
 		registerTest(event, "moonlit_panel_generates_at_night", 60, true,
 				GeneratorEnergyScenarios::moonlitPanelGeneratesAtNight);
+// MOD-323 batch: SolarPanelScenarios - bodies moved from SolarPanelGameTest.java.
+		// Sky-facing cases ride the rig with skyAccess=true (same as the Fabric annotations).
+		registerTest(event, "solar_rain_flags_weather_mode", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcSolar001Sta02_rainFlagsWeatherMode);
+		registerTest(event, "solar_thunder_flags_weather_mode", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcSolar001Sta03_thunderFlagsWeatherMode);
+		registerTest(event, "solar_automation_cannot_stack_second_chip", 100, true,
+				SolarPanelScenarios::solarPanel_automationCannotStackSecondChip);
+		registerTest(event, "solar_evolution_consumes_one_chip_not_the_stack", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::solarPanel_evolutionConsumesOneChipNotTheStack);
+		registerTest(event, "solar_rain_yields_zero_eu", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcSolar001Neg02_rainYieldsZeroEu);
+		registerTest(event, "solar_opaque_block_above_yields_zero", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcSolar001Neg03_opaqueBlockAboveYieldsZero);
+		registerTest(event, "solar_glass_above_stays_full", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcSolar001Fun04_glassAboveStaysFull);
+		registerTest(event, "solar_leaves_above_flag_partial", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcSolar001Sta06_leavesAboveFlagPartial);
+		registerTest(event, "solar_snow_layer_above_flags_snow", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcSolar001Sta05_snowLayerAboveFlagsSnow);
+		registerTest(event, "solar_snow_layer_plus_thunder_is_weather", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcSolar001Sta09_snowLayerPlusThunderIsWeather);
+		registerTest(event, "solar_snow_layer_at_night_is_zero", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcSolar001Sta10_snowLayerAtNightIsZero);
+		registerTest(event, "solar_top_face_no_output", 100, true,
+				SolarPanelScenarios::tcSolar001Phy01_topFaceNoOutput);
+		registerTest(event, "solar_eu_rate_matches_config", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcSolar001Prf01_euRateMatchesConfig);
+		registerTest(event, "moonlit_no_eu_by_day", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcMoonlit001Neg01_noEuByDay);
+		registerTest(event, "moonlit_rain_flags_weather_mode", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcMoonlit001Sta01_rainFlagsWeatherMode);
+		registerTest(event, "moonlit_thunder_yields_weather_trickle", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcMoonlit001Sta03_thunderYieldsWeatherTrickle);
+		registerTest(event, "moonlit_opaque_block_above_yields_zero", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcMoonlit001Neg03_opaqueBlockAboveYieldsZero);
+		registerTest(event, "moonlit_leaves_above_partial_halves_output", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcMoonlit001Sta02_leavesAbovePartialHalvesOutput);
+		registerTest(event, "moonlit_top_face_no_output", 100, true,
+				SolarPanelScenarios::tcMoonlit001Phy01_topFaceNoOutput);
+		registerTest(event, "moonlit_eu_rate_matches_config", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcMoonlit001Prf01_euRateMatchesConfig);
+		registerTest(event, "moonlit_buffer_caps_at_max", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcMoonlit001Prf02_bufferCapsAtMax);
+		registerTest(event, "solar_night_chip_evolves_to_moonlit", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcSolar001Fun03_nightChipEvolvesToMoonlit);
+		registerTest(event, "daylight_rain_yields_zero_eu", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcDaylight001Neg02_rainYieldsZeroEu);
+		registerTest(event, "daylight_opaque_block_above_yields_zero", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcDaylight001Neg03_opaqueBlockAboveYieldsZero);
+		registerTest(event, "daylight_leaves_above_partial_halves_output", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcDaylight001Sta02_leavesAbovePartialHalvesOutput);
+		registerTest(event, "daylight_glass_above_stays_full", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcDaylight001Fun02_glassAboveStaysFull);
+		registerTest(event, "daylight_rain_flags_weather_mode", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcDaylight001Sta01_rainFlagsWeatherMode);
+		registerTest(event, "daylight_top_face_no_output", 100, true,
+				SolarPanelScenarios::tcDaylight001Phy01_topFaceNoOutput);
+		registerTest(event, "daylight_eu_rate_matches_config", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcDaylight001Prf01_euRateMatchesConfig);
+		registerTest(event, "daylight_buffer_caps_at_max", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcDaylight001Prf02_bufferCapsAtMax);
+		registerTest(event, "solar_ice_above_yields_blocked", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcSolar001Sta13_iceAboveYieldsBlocked);
+		registerTest(event, "solar_glowstone_above_yields_blocked", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcSolar001Sta15_glowstoneAboveYieldsBlocked);
+		registerTest(event, "solar_water_above_yields_zero", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcSolar001Neg08_waterAboveYieldsZero);
+		registerTest(event, "solar_global_rate_multiplier_scales_output", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcSolar001Prf03_globalRateMultiplierScalesOutput);
+		registerTest(event, "solar_config_change_applies_next_tick", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcSolar001Prf04_configChangeAppliesNextTick);
+		registerTest(event, "solar_battery_box_wrong_facing_gets_nothing", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcSolar001Con01_batteryBoxWrongFacingGetsNothing);
+		registerTest(event, "solar_opaque_gap_blocks_delivery", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcSolar001Con02_opaqueGapBlocksDelivery);
+		registerTest(event, "solar_immediate_delivery_on_placement", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcSolar001Con03_immediateDeliveryOnPlacement);
+		registerTest(event, "solar_two_receivers_do_not_double_output", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcSolar001Con04_twoReceiversDoNotDoubleOutput);
+		registerTest(event, "solar_buffer_holds_while_receiver_full", 40, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::tcSolar001Con05_bufferHoldsWhileReceiverFull);
 
 		// Machine positive recipes: compressor (dust->ingot), extractor (gravel->flint), furnace
 		// (raw_iron->ingot). Each proves that machine's recipe-type resolves on the NeoForge lane.
@@ -644,6 +790,12 @@ public final class NeoForgeGameTests {
 		registerTest(event, "energy_network_fifty_cable_tick_cost", 100, true,
 				EnergyNetworkPerfScenarios::perf01FiftyCableLineTickCost);
 
+		// MOD-323 — the 72-cable field smoke + teardown bench, moved from the Fabric-only
+		// NetworkBenchGameTest. The absolute wall-clock ceiling was re-measured on this lane when
+		// the body moved (see the log line the scenario prints); the generous 2000 ms budget held.
+		registerTest(event, "network_bench_large_network_smoke", 100, true,
+				EnergyNetworkPerfScenarios::benchLargeNetworkSmoke);
+
 		// Pump: source -> tank -> sink (geo) -> EU. Fluid transport end-to-end on the NeoForge lane.
 		registerTest(event, "pump_source_to_tank_to_sink_to_eu", 100, true,
 				WorldContentScenarios::pumpSourceToTankToSinkToEu);
@@ -699,6 +851,74 @@ public final class NeoForgeGameTests {
 		// Geothermal tank droplet↔MB boundary: one lava bucket = exactly 1000 mB.
 		registerTest(event, "geothermal_tank_bucket_boundary", 40, true,
 				GeneratorEnergyScenarios::geothermalTankBucketBoundary);
+// MOD-323 batch: FluidMachineScenarios - bodies moved from FluidGameTest.java
+		// (the Fabric Transfer/Energy API remainder stays on the Fabric lane).
+		registerTest(event, "lava_source_to_geothermal", 100, true,
+				FluidMachineScenarios::lavaSourceToGeothermal);
+		registerTest(event, "geothermal_hitbox_is_full_cube", 100, true,
+				FluidMachineScenarios::geothermalHitboxIsFullCube);
+		registerTest(event, "geothermal_pump_fills_tank_and_burns_without_bucket", 100, true,
+				FluidMachineScenarios::geothermalPumpFillsTankAndBurnsWithoutBucket);
+		registerTest(event, "geothermal_tank_holds_ten_buckets_of_burn_ticks", 100, true,
+				FluidMachineScenarios::geothermalTankHoldsTenBucketsOfBurnTicks);
+		registerTest(event, "geothermal_buffer_caps_at_geothermal_max", 100, true,
+				FluidMachineScenarios::geothermalBufferCapsAtGeothermalMax);
+		registerTest(event, "geothermal_pushes_to_adjacent_consumer", 100, true,
+				FluidMachineScenarios::geothermalPushesToAdjacentConsumer);
+		registerTest(event, "geothermal_slot_rejects_non_lava_bucket", 100, true,
+				FluidMachineScenarios::geothermalSlotRejectsNonLavaBucket);
+		registerTest(event, "geothermal_tank_rejects_non_lava", 100, true,
+				FluidMachineScenarios::geothermalTankRejectsNonLava);
+		registerTest(event, "geothermal_full_buffer_pauses_burn", 100, true,
+				FluidMachineScenarios::geothermalFullBufferPausesBurn);
+		registerTest(event, "geothermal_lava_bucket_loaded_when_energy_full", 100, true,
+				FluidMachineScenarios::geothermalLavaBucketLoadedWhenEnergyFull);
+		registerTest(event, "geothermal_rejects_external_eu", 100, true,
+				FluidMachineScenarios::geothermalRejectsExternalEu);
+		registerTest(event, "geothermal_tank_never_extractable", 100, true,
+				FluidMachineScenarios::geothermalTankNeverExtractable);
+		registerTest(event, "geothermal_lit_state_tracks_burning", 100, true,
+				FluidMachineScenarios::geothermalLitStateTracksBurning);
+		registerTest(event, "geothermal_rate_per_tick_matches_config", 100, true,
+				FluidMachineScenarios::geothermalRatePerTickMatchesConfig);
+		registerTest(event, "geothermal_packet_capped_at_lv", 100, true,
+				FluidMachineScenarios::geothermalPacketCappedAtLv);
+		registerTest(event, "pump_exact_eu_acquires_one_bucket", 100, true,
+				FluidMachineScenarios::pumpExactEuAcquiresOneBucket);
+		registerTest(event, "pump_pulls_from_adjacent_fluid_storage", 100, true,
+				FluidMachineScenarios::pumpPullsFromAdjacentFluidStorage);
+		registerTest(event, "pump_pushes_entire_tank_in_one_tick", 100, true,
+				FluidMachineScenarios::pumpPushesEntireTankInOneTick);
+		registerTest(event, "pump_progress_persists_across_power_loss", 100, true,
+				FluidMachineScenarios::pumpProgressPersistsAcrossPowerLoss);
+		registerTest(event, "pump_source_to_tank_to_sink", 100, true,
+				FluidMachineScenarios::pumpSourceToTankToSink);
+		registerTest(event, "pump_no_source_no_acquisition", 100, true,
+				FluidMachineScenarios::pumpNoSourceNoAcquisition);
+		registerTest(event, "pump_no_power_no_acquisition", 100, true,
+				FluidMachineScenarios::pumpNoPowerNoAcquisition);
+		registerTest(event, "pump_full_tank_pauses_acquisition", 100, true,
+				FluidMachineScenarios::pumpFullTankPausesAcquisition);
+		registerTest(event, "pump_no_insertable_neighbour_no_push", 100, true,
+				FluidMachineScenarios::pumpNoInsertableNeighbourNoPush);
+		registerTest(event, "pump_flowing_lava_acquires_source", 100, true,
+				FluidMachineScenarios::pumpFlowingLavaAcquiresSource);
+		registerTest(event, "pump_acquires_water_from_source", 100, true,
+				FluidMachineScenarios::pumpAcquiresWaterFromSource);
+		registerTest(event, "pump_lava_tank_rejects_water", 100, true,
+				FluidMachineScenarios::pumpLavaTankRejectsWater);
+		registerTest(event, "pump_bucket_empties_into_tank", 100, true,
+				FluidMachineScenarios::pumpBucketEmptiesIntoTank);
+		registerTest(event, "pump_fills_bucket_from_tank", 100, true,
+				FluidMachineScenarios::pumpFillsBucketFromTank);
+		registerTest(event, "fluid_tank_rollback_to_positive_amount_keeps_fluid_identity", 100, true,
+				FluidMachineScenarios::fluidTankRollbackToPositiveAmountKeepsFluidIdentity);
+		registerTest(event, "fluid_tank_full_drain_then_rollback_keeps_fluid_identity", 100, true,
+				FluidMachineScenarios::fluidTankFullDrainThenRollbackKeepsFluidIdentity);
+		registerTest(event, "fluid_tank_legacy_droplet_key_migrates_to_mb_on_load", 100, true,
+				FluidMachineScenarios::fluidTankLegacyDropletKeyMigratesToMbOnLoad);
+		registerTest(event, "fluid_tank_new_mb_key_takes_priority_over_legacy_key", 100, true,
+				FluidMachineScenarios::fluidTankNewMbKeyTakesPriorityOverLegacyKey);
 
 		// Generator rejects external EU (producer-only, R-NRG-03): maxInsert == 0.
 		registerTest(event, "generator_rejects_external_eu", 40, true,
@@ -729,6 +949,54 @@ public final class NeoForgeGameTests {
 		// Wind mill roofed → 0 EU (open-sky gate, mode wiring).
 		registerTest(event, "wind_mill_roofed_yields_zero", 120, true,
 				GeneratorEnergyScenarios::windMillRoofedYieldsZero);
+// MOD-323 batch: WindMillScenarios - bodies moved from WindMillGameTest.java
+		// (the Fabric-only EnergyStorage.SIDED back-face case stays on the Fabric lane).
+		registerTest(event, "wind_mill_generates_sampled_rate", 120, true, RIG_STRUCTURE, true,
+				WindMillScenarios::tcWindmill001Fun01_generatesSampledRate);
+		registerTest(event, "wind_mill_front_obstruction_yields_zero", 120, true, RIG_STRUCTURE, true,
+				WindMillScenarios::tcWindmill001Neg02_frontObstructionYieldsZero);
+		registerTest(event, "wind_mill_side_obstruction_yields_zero", 120, true, RIG_STRUCTURE, true,
+				WindMillScenarios::tcWindmill001Neg03_sideObstructionYieldsZero);
+		registerTest(event, "wind_mill_pit_obstruction_yields_zero", 120, true, RIG_STRUCTURE, true,
+				WindMillScenarios::tcWindmill001Neg04_pitObstructionYieldsZero);
+		registerTest(event, "wind_mill_clear_area_not_obstructed", 120, true, RIG_STRUCTURE, true,
+				WindMillScenarios::tcWindmill001Neg05_clearAreaNotObstructed);
+		registerTest(event, "wind_mill_buffer_caps_at_max", 120, true, RIG_STRUCTURE, true,
+				WindMillScenarios::tcWindmill001Prf01_bufferCapsAtMax);
+		registerTest(event, "wind_mill_energy_survives_nbt_round_trip", 120, true, RIG_STRUCTURE, true,
+				WindMillScenarios::tcWindmill001Per01_energySurvivesNbtRoundTrip);
+		registerTest(event, "wind_mill_no_rotor_produces_nothing", 120, true, RIG_STRUCTURE, true,
+				WindMillScenarios::tcWindmill001Fun02_noRotorProducesNothing);
+		registerTest(event, "wind_mill_side_by_side_interference", 120, true, RIG_STRUCTURE, true,
+				WindMillScenarios::tcWindmill001Neg06_sideBySideInterference);
+		registerTest(event, "wind_mill_face_to_face_interference", 120, true, RIG_STRUCTURE, true,
+				WindMillScenarios::tcWindmill001Neg07_faceToFaceInterference);
+		registerTest(event, "wind_mill_late_rotor_triggers_interference", 160, true, RIG_STRUCTURE, true,
+				WindMillScenarios::tcWindmill001Neg08_lateRotorTriggersInterference);
+		registerTest(event, "wind_mill_spaced_mills_not_interfering", 120, true, RIG_STRUCTURE, true,
+				WindMillScenarios::tcWindmill001Neg09_spacedMillsNotInterfering);
+		registerTest(event, "wind_mill_back_to_back_not_interfering", 120, true, RIG_STRUCTURE, true,
+				WindMillScenarios::tcWindmill001Neg10_backToBackNotInterfering);
+		registerTest(event, "wind_mill_interference_freezes_evolution", 120, true, RIG_STRUCTURE, true,
+				WindMillScenarios::tcWindmill001Fun04_interferenceFreezesEvolution);
+		registerTest(event, "wind_mill_day_chip_evolves_to_high_altitude", 120, true, RIG_STRUCTURE, true,
+				WindMillScenarios::tcWindmill001Fun03_dayChipEvolvesToHighAltitude);
+		registerTest(event, "wind_mill_automation_cannot_stack_second_chip", 100, true,
+				WindMillScenarios::windMill_automationCannotStackSecondChip);
+		registerTest(event, "wind_mill_evolution_consumes_one_chip_not_the_stack", 120, true, RIG_STRUCTURE, true,
+				WindMillScenarios::windMill_evolutionConsumesOneChipNotTheStack);
+		registerTest(event, "wind_mill_night_chip_evolves_to_storm", 120, true, RIG_STRUCTURE, true,
+				WindMillScenarios::tcWindmill001Fun05_nightChipEvolvesToStorm);
+		registerTest(event, "wind_mill_rotor_wears_out_and_breaks", 120, true, RIG_STRUCTURE, true,
+				WindMillScenarios::tcWindmill001Wear01_rotorWearsOutAndBreaks);
+		registerTest(event, "wind_mill_t2_high_altitude_rotor_breaks", 120, true, RIG_STRUCTURE, true,
+				WindMillScenarios::tcWindmill001Wear02_t2HighAltitudeRotorBreaks);
+		registerTest(event, "wind_mill_no_wear_while_idle", 120, true, RIG_STRUCTURE, true,
+				WindMillScenarios::tcWindmill001Wear03_noWearWhileIdle);
+		registerTest(event, "wind_mill_wear_survives_evolution", 120, true, RIG_STRUCTURE, true,
+				WindMillScenarios::tcWindmill001Wear04_wearSurvivesEvolution);
+		registerTest(event, "wind_mill_wears_at_full_buffer_with_no_consumer", 120, true, RIG_STRUCTURE, true,
+				WindMillScenarios::tcWindmill001Wear05_wearsAtFullBufferWithNoConsumer);
 
 		// MOD-386 — the lightning rod generator: capacitor banking, overload, bleed, persistence.
 		registerTest(event, "lightning_rod_strike_banks_into_capacitor", 40, true,
@@ -1081,6 +1349,31 @@ public final class NeoForgeGameTests {
 		// farmland joins the tag by datapack; the gametest mods do the same with rooted dirt).
 		registerTest(event, "garden_drone_plants_on_tagged_soil", 40, true,
 				GardenDroneScenarios::fun11PlantsOnTaggedSoil);
+		// MOD-537 — kok sagyz, the rubber dandelion that grows down. Growth is driven by bone meal
+		// (performBonemeal): the rig is a closed box, so the random-tick light floor would make every
+		// growth scenario non-deterministic here; bone meal is deliberately not light-gated.
+		registerTest(event, "kok_sagyz_stages_advance", 100, true,
+				KokSagyzScenarios::mod537StagesAdvance);
+		registerTest(event, "kok_sagyz_root_grows_two_deep", 100, true,
+				KokSagyzScenarios::mod537RootGrowsTwoDeep);
+		registerTest(event, "kok_sagyz_tip_break_drops_root_keeps_flower", 100, true,
+				KokSagyzScenarios::mod537TipBreakDropsRootAndKeepsFlower);
+		registerTest(event, "kok_sagyz_tip_regrows_after_harvest", 100, true,
+				KokSagyzScenarios::mod537TipRegrows);
+		registerTest(event, "kok_sagyz_upper_root_break_keeps_flower", 100, true,
+				KokSagyzScenarios::mod537UpperRootBreakKeepsFlower);
+		registerTest(event, "kok_sagyz_flower_break_gives_no_root", 100, true,
+				KokSagyzScenarios::mod537FlowerBreakGivesNoRoot);
+		registerTest(event, "kok_sagyz_placement_accepts_any_single_soil", 100, true,
+				KokSagyzScenarios::mod537PlacementAcceptsAnySingleSoil);
+		registerTest(event, "kok_sagyz_worldgen_feature_plants_on_grass", 100, true,
+				KokSagyzScenarios::mod537WorldgenFeaturePlantsOnGrass);
+		registerTest(event, "kok_sagyz_maceration_yields_rubber_and_inulin", 100, true,
+				KokSagyzScenarios::mod537MacerationYieldsRubberAndInulin);
+		registerTest(event, "kok_sagyz_scythe_harvests_tip", 100, true,
+				KokSagyzScenarios::mod537ScytheHarvestsTip);
+		registerTest(event, "kok_sagyz_drone_cuts_flower_not_root", 200, true,
+				KokSagyzScenarios::mod537DroneCutsFlowerNotRoot);
 		registerTest(event, "menu_data_width_matches_block_entity", 200, true,
 				MenuDataWidthScenarios::reg02ClientMenuWidthMatchesBlockEntity);
 		// MOD-107: the pump's slots exchange with fluid containers through the loader's item fluid

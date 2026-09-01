@@ -1,0 +1,15 @@
+{
+  "parent": "alaindustrial:first_oil",
+  "display": {
+    "icon": { "id": "alaindustrial:kok_sagyz_root" },
+    "title": { "translate": "advancements.alaindustrial.kok_sagyz_root.title" },
+    "description": { "translate": "advancements.alaindustrial.kok_sagyz_root.description" }
+  },
+  "criteria": {
+    "kok_sagyz_root": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [ { "items": "alaindustrial:kok_sagyz_root" } ] }
+    }
+  },
+  "requirements": [["kok_sagyz_root"]]
+}

@@ -61,6 +61,7 @@
       "dev.alaindustrial.gametest.ItemEnergyCapabilityGameTest",
       "dev.alaindustrial.gametest.ItemPipeGameTest",
       "dev.alaindustrial.gametest.JetpackGameTest",
+      "dev.alaindustrial.gametest.KokSagyzGameTest",
       "dev.alaindustrial.gametest.MachineEnergyGameTest",
       "dev.alaindustrial.gametest.MachineGameTest",
       "dev.alaindustrial.gametest.MagnetGameTest",

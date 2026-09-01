@@ -268,6 +268,10 @@ public final class CreativeTabContent {
 		show(out, ModContent.CRYSTAL_FARM_CONTROLLER_ITEM);
 		show(out, ModContent.CRYSTAL_SEEDBED_ITEM);
 		show(out, ModContent.COTTON_SEEDS);
+		// MOD-537 — the second crop, next to the first: seeds to plant, the dug root, and its by-product.
+		show(out, ModContent.KOK_SAGYZ_SEEDS);
+		show(out, ModContent.KOK_SAGYZ_ROOT_ITEM);
+		show(out, ModContent.INULIN);
 	}
 
 	public static void functionalBlocks(Sink out) {

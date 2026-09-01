@@ -14,6 +14,7 @@ import dev.alaindustrial.core.energy.EnergyShare;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.registry.ModContent;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.BlockPos;
@@ -1371,6 +1372,426 @@ public final class CableEnergyScenarios {
 		long east = be(helper, FORK_BOX_EAST) instanceof BatteryBoxBlockEntity b ? b.getEnergyStorage().getAmount() : -1;
 		if (west <= 0 || east <= 0) {
 			helper.fail("both consumers must end with energy: west=" + west + " EU, east=" + east + " EU");
+		}
+		helper.succeed();
+	}
+
+	// ── R-NRG-08 split rig: one generator -> one cable -> TWO macerators on two cable faces ─────────
+	// (prefixed RNRG08_ because the MOD-252 rig above already owns a SPLIT_GEN cell)
+	private static final BlockPos RNRG08_GEN = new BlockPos(1, 2, 1);
+	private static final BlockPos RNRG08_CABLE = new BlockPos(2, 2, 1);
+	private static final BlockPos RNRG08_MAC_A = new BlockPos(3, 2, 1); // +x face of the cable
+	private static final BlockPos RNRG08_MAC_B = new BlockPos(2, 2, 2); // +z face of the cable
+
+	/** Energy currently buffered in a macerator at {@code rel}, or -1 if it's not there (null-safe). */
+	private static long splitMacEnergy(GameTestHelper helper, BlockPos rel) {
+		return be(helper, rel) instanceof MaceratorBlockEntity mac ? mac.getEnergyStorage().getAmount() : -1;
+	}
+
+	/** Tick generator + cable + NetworkManager + BOTH macerators for {@code n} ticks (null-safe). */
+	private static void driveSplit(GameTestHelper helper, int n) {
+		for (int i = 0; i < n; i++) {
+			tick(helper, be(helper, RNRG08_GEN));
+			tick(helper, be(helper, RNRG08_CABLE));
+			NetworkManager.tickAll(helper.getLevel());
+			tick(helper, be(helper, RNRG08_MAC_A));
+			tick(helper, be(helper, RNRG08_MAC_B));
+		}
+	}
+
+	/**
+	 * A single network splits its deliverable energy roughly proportionally between two equal
+	 * consumers: two macerators with empty input slots (so they never drain their buffers) share one
+	 * cable's worth of generator output, and with equal capacity and equal room their buffers must
+	 * fill to roughly equal amounts.
+	 * Mirrors: NetworkGameTest.rNrg08_splitsBetweenEqualConsumers
+	 */
+	public static void rNrg08_splitsBetweenEqualConsumers(GameTestHelper helper) {
+		// Build: generator -> one cable -> two macerators on two different cable faces.
+		helper.setBlock(RNRG08_GEN, ModContent.GENERATOR.get());
+		helper.setBlock(RNRG08_CABLE, ModContent.COPPER_CABLE.get());
+		helper.setBlock(RNRG08_MAC_A, ModContent.MACERATOR.get());
+		// RNRG08_MAC_B touches the cable on its own NORTH face, which is the default FACING and therefore
+		// energy-inert (D-FACING); give it a non-default FACING so that face stays a working IN face.
+		helper.setBlock(RNRG08_MAC_B, ModContent.MACERATOR.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.SOUTH));
+		if (be(helper, RNRG08_GEN) instanceof GeneratorBlockEntity gen) {
+			gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
+		}
+		// Leave both macerators' input slots EMPTY: with no recipe they cannot work, so their energy
+		// buffers only accumulate and the split is read cleanly (no consumption masking the share).
+
+		// One network must own the cable + both consumer faces.
+		driveSplit(helper, 120);
+		EnergyNetwork net = NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(RNRG08_CABLE));
+		if (net == null) {
+			helper.fail("no energy network formed on the cable");
+		}
+
+		long a = splitMacEnergy(helper, RNRG08_MAC_A);
+		long b = splitMacEnergy(helper, RNRG08_MAC_B);
+		if (a <= 0 || b <= 0) {
+			helper.fail("a consumer received no EU: a=" + a + " b=" + b);
+		}
+		// Roughly equal split: generous tolerance (the room-proportional split can hand the rounding
+		// remainder to one side each tick, and packetCap clamps per consumer, so allow up to half).
+		if (Math.abs(a - b) > Math.max(a, b) / 2) {
+			helper.fail("split not roughly equal: a=" + a + " b=" + b);
+		}
+		helper.succeed();
+	}
+
+	// ── R-NRG-09 sleep/wake rig: own positions so the producer-only network has no consumer. ────────
+	private static final BlockPos SLEEP_GEN = new BlockPos(1, 2, 1);
+	private static final BlockPos SLEEP_CABLE = new BlockPos(2, 2, 1);
+	/** Consumer placed ABOVE the cable on wake, so no cable block is touched/replaced. */
+	private static final BlockPos WAKE_MAC = new BlockPos(2, 3, 1);
+
+	/**
+	 * Build a producer-only line (generator + one cable, fuelled, no consumer) and register + charge
+	 * it by ticking the generator, the cable (lazy {@link NetworkManager} registration) and the
+	 * manager directly. Mirrors the monolith {@code NETWORK_SLEEP/WAKE} setup.
+	 */
+	private static void buildProducerOnly(GameTestHelper helper) {
+		helper.setBlock(SLEEP_GEN, ModContent.GENERATOR.get());
+		helper.setBlock(SLEEP_CABLE, ModContent.COPPER_CABLE.get());
+		if (be(helper, SLEEP_GEN) instanceof GeneratorBlockEntity gen) {
+			gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
+		}
+		for (int i = 0; i < 10; i++) {
+			tick(helper, be(helper, SLEEP_GEN));
+			tick(helper, be(helper, SLEEP_CABLE));
+			NetworkManager.tickAll(helper.getLevel());
+		}
+	}
+
+	/**
+	 * A producer-only network (generator + one cable, no consumer) sleeps: it has nothing to move,
+	 * so {@link EnergyNetwork#isAwake()} must be false.
+	 * Mirrors: NetworkGameTest.rNrg09_idleNetworkSleeps
+	 */
+	public static void rNrg09_idleNetworkSleeps(GameTestHelper helper) {
+		buildProducerOnly(helper);
+		EnergyNetwork net = NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(SLEEP_CABLE));
+		if (net == null) {
+			helper.fail("no energy network formed on the producer-only cable");
+		}
+		if (net.isAwake()) {
+			helper.fail("producer-only network is awake; it has no consumer so it must sleep");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * An asleep producer-only network wakes when a consumer is placed adjacent to the cable WITHOUT
+	 * replacing a cable: the cable's neighbourChanged hook (fired by setBlockAndUpdate) dirties the
+	 * network, which re-discovers the consumer, becomes awake, and delivers EU.
+	 * Mirrors: NetworkGameTest.rNrg09_networkWakesOnConsumer
+	 */
+	public static void rNrg09_networkWakesOnConsumer(GameTestHelper helper) {
+		buildProducerOnly(helper);
+		EnergyNetwork net = NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(SLEEP_CABLE));
+		if (net == null || net.isAwake()) {
+			helper.fail("network should exist and be asleep before the consumer is placed");
+		}
+
+		// Place the consumer above the cable via setBlockAndUpdate so the cable's neighbourChanged hook
+		// fires and dirties the network (gameplay: a machine placed next to an existing cable).
+		helper.getLevel().setBlockAndUpdate(helper.absolutePos(WAKE_MAC),
+				ModContent.MACERATOR.get().defaultBlockState());
+		long macBefore = 0;
+		if (be(helper, WAKE_MAC) instanceof MaceratorBlockEntity mac) {
+			mac.setItem(MaceratorBlockEntity.INPUT_SLOT, new ItemStack(Items.RAW_IRON, 8));
+			macBefore = mac.getEnergyStorage().getAmount();
+		}
+
+		// Drive the producer-only line plus the new consumer.
+		for (int i = 0; i < 60; i++) {
+			tick(helper, be(helper, SLEEP_GEN));
+			tick(helper, be(helper, SLEEP_CABLE));
+			NetworkManager.tickAll(helper.getLevel());
+			tick(helper, be(helper, WAKE_MAC));
+		}
+
+		EnergyNetwork woke = NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(SLEEP_CABLE));
+		if (woke == null || !woke.isAwake()) {
+			helper.fail("network did not wake after a consumer was placed adjacent to the cable");
+		}
+		long macAfter = 0;
+		ItemStack out = ItemStack.EMPTY;
+		if (be(helper, WAKE_MAC) instanceof MaceratorBlockEntity mac) {
+			macAfter = mac.getEnergyStorage().getAmount();
+			out = mac.getItem(MaceratorBlockEntity.OUTPUT_SLOT);
+		}
+		if (macAfter <= macBefore && out.isEmpty()) {
+			helper.fail("woken network delivered no EU to the consumer: macBefore=" + macBefore
+					+ " macAfter=" + macAfter);
+		}
+		helper.succeed();
+	}
+
+	// ── MOD-009 priority rig: generator + cable + macerator (machine) + BatteryBox (sink) ──────────
+	private static final BlockPos PRI_GEN = new BlockPos(1, 2, 1);
+	private static final BlockPos PRI_CABLE = new BlockPos(2, 2, 1);
+	private static final BlockPos PRI_MAC = new BlockPos(2, 3, 1);   // above the cable
+	private static final BlockPos PRI_BOX = new BlockPos(2, 2, 2);   // +z of the cable
+
+	/**
+	 * With scarce supply, a working machine is served before a storage sink: the macerator fills from
+	 * the limited generator buffer while the BatteryBox gets only the remainder (here 0). Guards the
+	 * "machines before storage, no BatteryBox starvation" criterion.
+	 * Mirrors: NetworkGameTest.mod009Pri_machineServedBeforeStorage
+	 */
+	public static void mod009Pri_machineServedBeforeStorage(GameTestHelper helper) {
+		helper.setBlock(PRI_GEN, ModContent.GENERATOR.get());
+		helper.setBlock(PRI_CABLE, ModContent.COPPER_CABLE.get());
+		helper.setBlock(PRI_MAC, ModContent.MACERATOR.get());
+		helper.setBlock(PRI_BOX, ModContent.BATTERY_BOX.get());
+		// Scarce, fixed supply: no fuel (no regeneration), generator buffer seeded with exactly 10 EU.
+		if (be(helper, PRI_GEN) instanceof GeneratorBlockEntity gen) {
+			gen.getEnergyStorage().setAmountUntracked(10L);
+		}
+		// Macerator input empty → it only buffers EU (no consumption masking the share).
+		// Register the network + run a single delivery pass; 10 EU < packetCap so it all fits one tick.
+		for (int i = 0; i < 8; i++) {
+			tick(helper, be(helper, PRI_GEN));
+			tick(helper, be(helper, PRI_CABLE));
+			NetworkManager.tickAll(helper.getLevel());
+		}
+		long mac = be(helper, PRI_MAC) instanceof MaceratorBlockEntity m ? m.getEnergyStorage().getAmount() : -1;
+		long box = be(helper, PRI_BOX) instanceof BatteryBoxBlockEntity bb ? bb.getEnergyStorage().getAmount() : -1;
+		if (mac != 10L) {
+			helper.fail("machine should be served first: macerator=" + mac + " (expected 10), battery_box=" + box);
+		}
+		if (box != 0L) {
+			helper.fail("storage sink took EU before the machine was satisfied: battery_box=" + box + " (expected 0)");
+		}
+		helper.succeed();
+	}
+
+	// ── TC-CABLE-001-NRG02b: a single-hop line is loss-free even at a full packet ──────────────────
+	private static final BlockPos SHORT_GEN = new BlockPos(1, 2, 1);
+	private static final BlockPos SHORT_CABLE_A = new BlockPos(2, 2, 1);
+	private static final BlockPos SHORT_BOX = new BlockPos(3, 2, 1);
+
+	/**
+	 * At cable-distance 1 the proportional loss floors to zero even at a full 32 EU packet
+	 * ({@code floor(32 × 0.02 × 1) = 0}), so a consumer one cable away receives the full throughput.
+	 * Mirrors: NetworkGameTest.tcCable001Nrg02b_noLossOnShortLine
+	 */
+	public static void tcCable001Nrg02b_noLossOnShortLine(GameTestHelper helper) {
+		helper.setBlock(SHORT_GEN, ModContent.GENERATOR.get());
+		helper.setBlock(SHORT_CABLE_A, ModContent.COPPER_CABLE.get());
+		helper.setBlock(SHORT_BOX, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
+		long cap = EnergyTier.LV.maxVoltage();
+		if (be(helper, SHORT_GEN) instanceof GeneratorBlockEntity gen) {
+			gen.getEnergyStorage().setAmountUntracked(cap * 200);
+		}
+		if (be(helper, SHORT_BOX) instanceof BatteryBoxBlockEntity bb) {
+			bb.getEnergyStorage().setAmountUntracked(0);
+		}
+
+		int ticks = 20;
+		for (int i = 0; i < ticks; i++) {
+			tick(helper, be(helper, SHORT_GEN));
+			tick(helper, be(helper, SHORT_CABLE_A));
+			NetworkManager.tickAll(helper.getLevel());
+			tick(helper, be(helper, SHORT_BOX));
+		}
+
+		long got = be(helper, SHORT_BOX) instanceof BatteryBoxBlockEntity bb ? bb.getEnergyStorage().getAmount() : -1;
+		// MOD-070: per-cable throughput is now the segment buffer (cableBuffer), not the tier voltage —
+		// energy flows THROUGH the wire, so the wire's carry rate is its buffer size.
+		long flow = Config.cableBuffer;
+		long expected = flow * ticks;
+		// Full delivery minus a couple ticks of line fill-front latency; a single hop must not lose EU.
+		if (got < expected - 3 * flow) {
+			helper.fail("short line lost EU it should not: expected ~" + expected + " (full throughput), got " + got);
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * Top-off guard over the lossy 10-cable line: a nearly-full BatteryBox still reaches its
+	 * <em>exact</em> capacity — the last 1-EU top-off packet floors to zero loss
+	 * ({@code floor(1 × 0.02 × 10) = 0}), so it is delivered, not stranded. Reuses the LOSS_* rig.
+	 * Mirrors: NetworkGameTest.tcCable001Nrg02c_topsOffExactlyOverLossyLine
+	 */
+	public static void tcCable001Nrg02c_topsOffExactlyOverLossyLine(GameTestHelper helper) {
+		helper.setBlock(LOSS_GEN, ModContent.GENERATOR.get());
+		for (BlockPos c : LOSS_CABLES) {
+			helper.setBlock(c, ModContent.COPPER_CABLE.get());
+		}
+		helper.setBlock(LOSS_BOX, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.NORTH));
+		long cap = EnergyTier.LV.maxVoltage();
+		long capacity = Config.batteryBoxBuffer;
+		if (be(helper, LOSS_GEN) instanceof GeneratorBlockEntity gen) {
+			gen.getEnergyStorage().setAmountUntracked(cap * 200);
+		}
+		if (be(helper, LOSS_BOX) instanceof BatteryBoxBlockEntity bb) {
+			bb.getEnergyStorage().setAmountUntracked(capacity - 1); // one EU short of full: room = 1
+		}
+
+		int ticks = 20;
+		for (int i = 0; i < ticks; i++) {
+			tick(helper, be(helper, LOSS_GEN));
+			for (BlockPos c : LOSS_CABLES) {
+				tick(helper, be(helper, c));
+			}
+			NetworkManager.tickAll(helper.getLevel());
+			tick(helper, be(helper, LOSS_BOX));
+		}
+
+		long got = be(helper, LOSS_BOX) instanceof BatteryBoxBlockEntity bb ? bb.getEnergyStorage().getAmount() : -1;
+		if (got != capacity) {
+			helper.fail("BatteryBox did not top off to exact capacity over a lossy line (MOD-009 regression): "
+					+ got + "/" + capacity);
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * Two connected cables with neither a producer nor a consumer: over 10 000 synthetic ticks there
+	 * is no NPE walking the network, no EU accumulates "in the air", and the network stays asleep the
+	 * whole time. The 10 000 ticks run inside a single gametest tick, hence the tiny maxTicks.
+	 * Mirrors: NetworkGameTest.tcCable001Neg02_twoEmptyCablesTenThousandTicksNoPhantomEu
+	 */
+	public static void tcCable001Neg02_twoEmptyCablesTenThousandTicksNoPhantomEu(GameTestHelper helper) {
+		BlockPos a = new BlockPos(1, 2, 1);
+		BlockPos b = new BlockPos(2, 2, 1);
+		helper.setBlock(a, ModContent.COPPER_CABLE.get());
+		helper.setBlock(b, ModContent.COPPER_CABLE.get());
+
+		for (int i = 0; i < 10_000; i++) {
+			tick(helper, be(helper, a));
+			tick(helper, be(helper, b));
+			NetworkManager.tickAll(helper.getLevel()); // must never NPE / hang across 10k synthetic ticks
+		}
+
+		EnergyNetwork net = NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(a));
+		if (net == null) {
+			helper.fail("no network formed for two connected cables");
+		}
+		if (net.isAwake()) {
+			helper.fail("a producer-less, consumer-less network must stay asleep");
+		}
+		if (net.lastTickMoved() != 0L) {
+			helper.fail("phantom EU moved on a network with no producer and no consumer: " + net.lastTickMoved());
+		}
+		helper.succeed();
+	}
+
+	// ── MOD-156: the LAZY registration path must re-register a cable after a simulated reload ──────
+	private static final BlockPos RELOG_GEN = new BlockPos(1, 2, 1);
+	private static final BlockPos RELOG_CABLE_A = new BlockPos(2, 2, 1);
+	private static final BlockPos RELOG_CABLE_B = new BlockPos(3, 2, 1);
+	private static final BlockPos RELOG_BOX = new BlockPos(4, 2, 1);
+
+	/**
+	 * Forces a cable block entity back into the "never registered" state a freshly-deserialized
+	 * instance would start in (the {@code registered} field is {@code transient} — never saved/loaded —
+	 * so a real world reload always produces {@code registered == false} on the new object). Reflection
+	 * is the only way to reach it: there is deliberately no public reset API on
+	 * {@link CableBlockEntity}, since production code always starts at {@code false} for free.
+	 */
+	private static void forceUnregisteredState(CableBlockEntity cable) {
+		try {
+			Field registered = CableBlockEntity.class.getDeclaredField("registered");
+			registered.setAccessible(true);
+			registered.setBoolean(cable, false);
+		} catch (ReflectiveOperationException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	/** Tick generator + both RELOG cables + NetworkManager + the box for {@code n} ticks (null-safe). */
+	private static void driveRelog(GameTestHelper helper, int n) {
+		for (int i = 0; i < n; i++) {
+			tick(helper, be(helper, RELOG_GEN));
+			tick(helper, be(helper, RELOG_CABLE_A));
+			tick(helper, be(helper, RELOG_CABLE_B));
+			NetworkManager.tickAll(helper.getLevel());
+			tick(helper, be(helper, RELOG_BOX));
+		}
+	}
+
+	/**
+	 * A cable that is still block-loaded but whose network registration was lost (the exact shape of
+	 * a player relog / chunk reload) re-registers on its own next server tick via the lazy
+	 * {@code CableBlockEntity.ensureRegistered()} path in {@code onServerTick}, and energy delivery
+	 * resumes: the network re-forms, the intermediate cable buffer genuinely refills, and the
+	 * BatteryBox keeps gaining EU past its pre-"reload" baseline.
+	 * Mirrors: NetworkGameTest.mod156_lazyPathReregistersAfterReload
+	 */
+	public static void mod156_lazyPathReregistersAfterReload(GameTestHelper helper) {
+		helper.setBlock(RELOG_GEN, ModContent.GENERATOR.get());
+		helper.setBlock(RELOG_CABLE_A, ModContent.COPPER_CABLE.get());
+		helper.setBlock(RELOG_CABLE_B, ModContent.COPPER_CABLE.get());
+		// FACING = WEST so the BatteryBox's input face (MOD-006: input on FACING) meets cable B's east side.
+		helper.setBlock(RELOG_BOX, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
+		if (be(helper, RELOG_GEN) instanceof GeneratorBlockEntity gen) {
+			gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
+		}
+
+		// Phase 1 — establish a normal working baseline (this alone already exercises the lazy path once,
+		// same as every other rig in this suite: helper.setBlock never calls CableBlock#setPlacedBy).
+		driveRelog(helper, 30);
+
+		EnergyNetwork netBefore = NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(RELOG_CABLE_A));
+		if (netBefore == null) {
+			helper.fail("test setup: no energy network formed before the simulated reload");
+		}
+		long boxBeforeReload = be(helper, RELOG_BOX) instanceof BatteryBoxBlockEntity bb
+				? bb.getEnergyStorage().getAmount() : -1;
+		if (boxBeforeReload <= 0) {
+			helper.fail("test setup: battery_box received no EU before the simulated reload — baseline invalid");
+		}
+
+		// Phase 2 — simulate a relog/chunk reload: drop THIS network's registration (per-cable, so
+		// concurrently-running gametest structures sharing the same ServerLevel are unaffected) and reset
+		// each cable's own bookkeeping flag, exactly what a fresh, freshly-deserialized block entity starts
+		// with after a real reload.
+		if (be(helper, RELOG_CABLE_A) instanceof CableBlockEntity cableA) {
+			NetworkManager.unregister(cableA);
+			forceUnregisteredState(cableA);
+		}
+		if (be(helper, RELOG_CABLE_B) instanceof CableBlockEntity cableB) {
+			NetworkManager.unregister(cableB);
+			forceUnregisteredState(cableB);
+		}
+		if (NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(RELOG_CABLE_A)) != null
+				|| NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(RELOG_CABLE_B)) != null) {
+			helper.fail("test setup: the simulated reload did not actually drop the network registration");
+		}
+
+		// Phase 3 — the cables are still block-loaded (never removed from the world), so only the lazy
+		// onServerTick path — never CableBlock#setPlacedBy, nothing else calls this — can bring them back.
+		driveRelog(helper, 40);
+
+		EnergyNetwork netAfter = NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(RELOG_CABLE_A));
+		EnergyNetwork netAfterB = NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(RELOG_CABLE_B));
+		if (netAfter == null || netAfter != netAfterB) {
+			helper.fail("cable did not re-register with NetworkManager after the simulated reload "
+					+ "(ensureRegistered's lazy onServerTick path did not run)");
+		}
+
+		// MOD-070 gotcha: check the INTERMEDIATE cable's own buffer, not just the final consumer — energy
+		// must flow THROUGH the re-registered wire, not bypass it.
+		long cableABuffer = cableAmount(helper, RELOG_CABLE_A);
+		long cableBBuffer = cableAmount(helper, RELOG_CABLE_B);
+		if (cableABuffer <= 0 && cableBBuffer <= 0) {
+			helper.fail("neither cable holds any EU after re-registration — energy is not flowing through the "
+					+ "wire post-reload (cableA=" + cableABuffer + ", cableB=" + cableBBuffer + ")");
+		}
+
+		long boxAfterReload = be(helper, RELOG_BOX) instanceof BatteryBoxBlockEntity bb
+				? bb.getEnergyStorage().getAmount() : -1;
+		if (boxAfterReload <= boxBeforeReload) {
+			helper.fail("battery_box did not gain EU past its pre-reload baseline: before=" + boxBeforeReload
+					+ " after=" + boxAfterReload + " — delivery did not resume after the simulated reload");
 		}
 		helper.succeed();
 	}

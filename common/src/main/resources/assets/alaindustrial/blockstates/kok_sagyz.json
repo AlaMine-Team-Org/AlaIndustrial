@@ -1,0 +1,16 @@
+{
+	"variants": {
+		"age=0": {
+			"model": "alaindustrial:block/kok_sagyz_stage0"
+		},
+		"age=1": {
+			"model": "alaindustrial:block/kok_sagyz_stage1"
+		},
+		"age=2": {
+			"model": "alaindustrial:block/kok_sagyz_stage2"
+		},
+		"age=3": {
+			"model": "alaindustrial:block/kok_sagyz_stage3"
+		}
+	}
+}

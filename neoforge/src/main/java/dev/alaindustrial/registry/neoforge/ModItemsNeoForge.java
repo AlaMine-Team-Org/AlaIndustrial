@@ -126,6 +126,12 @@ public final class ModItemsNeoForge {
 			manifestItem("cotton_seeds");
 	public static final DeferredItem<Item> COTTON_FIBER =
 			manifestItem("cotton_fiber");
+	// Kok sagyz (MOD-537): the dug root macerates into raw rubber; inulin rides along as the
+	// by-product. The seeds are a BlockItem — see the block-item block below.
+	public static final DeferredItem<Item> KOK_SAGYZ_ROOT_ITEM =
+			manifestItem("kok_sagyz_root");
+	public static final DeferredItem<Item> INULIN =
+			manifestItem("inulin");
 	// Fluxweave chain (MOD-127): silver-plated fibre, then the woven sheet. Both are plain crafting
 	// components — the EU buffer lives on the armor, not on the material.
 	public static final DeferredItem<Item> FLUX_THREAD =
@@ -570,6 +576,11 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("incubator", ModBlocksNeoForge.INCUBATOR);
 	public static final DeferredItem<BlockItem> TRELLIS_ITEM =
 			ITEMS.registerSimpleBlockItem("trellis", ModBlocksNeoForge.TRELLIS);
+	// MOD-537 — the seeds carry the flower's id-in-name-only ("kok_sagyz_seeds"): planting is just
+	// placing the block, so a BlockItem is exactly right. The root has NO block item: it is dug,
+	// never placed — the plain "kok_sagyz_root" item above is the harvest.
+	public static final DeferredItem<BlockItem> KOK_SAGYZ_SEEDS =
+			ITEMS.registerSimpleBlockItem("kok_sagyz_seeds", ModBlocksNeoForge.KOK_SAGYZ);
 	// MOD-505 — the greenhouse. The bud has no item: it is grown, never placed.
 	public static final DeferredItem<BlockItem> CRYSTAL_FARM_FLOOR_ITEM =
 			ITEMS.registerSimpleBlockItem("crystal_farm_floor", ModBlocksNeoForge.CRYSTAL_FARM_FLOOR);
@@ -918,6 +929,7 @@ public final class ModItemsNeoForge {
 		ModContent.SOUL_VESSEL = SOUL_VESSEL;
 		ModContent.INCUBATOR_ITEM = INCUBATOR_ITEM;
 		ModContent.TRELLIS_ITEM = TRELLIS_ITEM;
+		ModContent.KOK_SAGYZ_SEEDS = KOK_SAGYZ_SEEDS;
 		ModContent.CRYSTAL_FARM_FLOOR_ITEM = CRYSTAL_FARM_FLOOR_ITEM;
 		ModContent.CRYSTAL_FARM_GLASS_ITEM = CRYSTAL_FARM_GLASS_ITEM;
 		ModContent.CRYSTAL_FARM_DOOR_ITEM = CRYSTAL_FARM_DOOR_ITEM;
@@ -935,6 +947,8 @@ public final class ModItemsNeoForge {
 		ModContent.BIOMASS = BIOMASS::get;
 		ModContent.COTTON_SEEDS = COTTON_SEEDS::get;
 		ModContent.COTTON_FIBER = COTTON_FIBER::get;
+		ModContent.KOK_SAGYZ_ROOT_ITEM = KOK_SAGYZ_ROOT_ITEM::get;
+		ModContent.INULIN = INULIN::get;
 		ModContent.FLUX_THREAD = FLUX_THREAD::get;
 		ModContent.FLUXWEAVE_CLOTH = FLUXWEAVE_CLOTH::get;
 		ModContent.FLUXWEAVE_HELMET = FLUXWEAVE_HELMET::get;

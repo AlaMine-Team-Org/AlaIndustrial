@@ -1,7 +1,10 @@
 package dev.alaindustrial.item.tool;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.block.KokSagyzBlock;
+import dev.alaindustrial.block.KokSagyzRootBlock;
 import dev.alaindustrial.core.crop.CropMaturity;
+import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModSounds;
 import dev.alaindustrial.registry.ModTags;
 import java.util.ArrayList;
@@ -29,6 +32,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Scythe (MOD-068) — a hand tool for mass-clearing decorative foliage and harvesting mature crops.
@@ -190,7 +194,7 @@ public class ScytheItem extends Item {
 		if (level.isClientSide() || !(player instanceof ServerPlayer serverPlayer)) {
 			for (BlockPos pos : area) {
 				BlockState state = level.getBlockState(pos);
-				if (cropMode ? CropMaturity.isHarvestable(level, pos, state) : isDecorTarget(state)) {
+				if (cropMode ? isCropTarget(level, pos, state) : isDecorTarget(state)) {
 					return InteractionResult.SUCCESS;
 				}
 			}
@@ -206,10 +210,17 @@ public class ScytheItem extends Item {
 			// tall plant, or a sugar-cane/cactus column collapsing) may have already cleared this spot,
 			// and we must not spend durability on air.
 			BlockState state = level.getBlockState(pos);
-			if (!(cropMode ? CropMaturity.isHarvestable(level, pos, state) : isDecorTarget(state))) {
+			if (!(cropMode ? isCropTarget(level, pos, state) : isDecorTarget(state))) {
 				continue;
 			}
-			if (serverPlayer.gameMode.destroyBlock(pos)) {
+			// MOD-537: a kok-sagyz flower is never the block the scythe breaks — the loot (root +
+			// seeds) and the "leave dirt behind" rule both live on the root tip two blocks below.
+			// Break the tip through the same canonical path; the flower survives and regrows it.
+			BlockPos breakPos = pos;
+			if (cropMode && state.getBlock() instanceof KokSagyzBlock) {
+				breakPos = kokSagyzRootTip(level, pos);
+			}
+			if (serverPlayer.gameMode.destroyBlock(breakPos)) {
 				broken++;
 				// MOD-315: the tier's yield bonus. Rolled AFTER the block actually broke (so a block
 				// vetoed by a protection mod pays nothing) and only in crop mode, where `state` is by
@@ -304,6 +315,34 @@ public class ScytheItem extends Item {
 	 */
 	private static boolean isDecorTarget(BlockState state) {
 		return !state.isAir() && state.is(ModTags.Blocks.SCYTHE_HARVESTABLE);
+	}
+
+	/**
+	 * Crop-mode target: a block old-enough to harvest, with kok-sagyz's extra rule that the part worth
+	 * taking (the root tip) must actually exist (MOD-537). {@link CropMaturity#isHarvestable} reports a
+	 * mature kok-sagyz flower as harvestable by AGE alone; a flower whose roots have not grown yet is
+	 * skipped here so the client's swing prediction and the server's break loop agree, and no durability
+	 * is spent on a plant with nothing to take.
+	 */
+	private static boolean isCropTarget(Level level, BlockPos pos, BlockState state) {
+		if (!CropMaturity.isHarvestable(level, pos, state)) {
+			return false;
+		}
+		return !(state.getBlock() instanceof KokSagyzBlock) || kokSagyzRootTip(level, pos) != null;
+	}
+
+	/**
+	 * The block a kok-sagyz harvest breaks: the lower-most root block (the tip) at {@code pos.below(2)},
+	 * or {@code null} when the roots have not grown yet. The tip's loot table carries the root and the
+	 * seeds, and its {@code playerDestroy} replaces it with dirt so the plant survives and regrows.
+	 */
+	@Nullable
+	private static BlockPos kokSagyzRootTip(Level level, BlockPos flowerPos) {
+		BlockState tip = level.getBlockState(flowerPos.below(2));
+		if (tip.is(ModContent.KOK_SAGYZ_ROOT.get()) && tip.getValue(KokSagyzRootBlock.TIP)) {
+			return flowerPos.below(2);
+		}
+		return null;
 	}
 
 	/**

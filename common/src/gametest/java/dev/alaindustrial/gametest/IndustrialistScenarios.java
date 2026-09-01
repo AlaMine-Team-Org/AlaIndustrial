@@ -3,24 +3,27 @@ package dev.alaindustrial.gametest;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModProfessions;
 import dev.alaindustrial.worldgen.VillagePoolInjector;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.entity.npc.villager.Villager;
+import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 
 /**
  * Loader-neutral MOD-062 world scenarios, mirrored on the NeoForge lane via
- * {@code NeoForgeGameTests.registerTest} (the Fabric lane runs the richer
- * {@code IndustrialistVillagerGameTest}, including the live POI-acquisition case). These three
- * verify exactly the seams that differ per loader: the POI blockstate map (PoiHelper vs registry
- * callback), the profession record + data-driven trade sets, and the server-start pool injection.
+ * {@code NeoForgeGameTests.registerTest}. They verify exactly the seams that differ per loader: the
+ * POI blockstate map (PoiHelper vs registry callback), the profession record + data-driven trade
+ * sets, and the server-start pool injection.
  */
 public final class IndustrialistScenarios {
 	private IndustrialistScenarios() {
 	}
+
+	private static final BlockPos WORKBENCH = new BlockPos(2, 2, 2);
 
 	/** The workbench blockstate maps to the mod's PoiType (state map filled on this loader). */
 	public static void workbenchStateMapsToPoi(GameTestHelper helper) {
@@ -114,5 +117,68 @@ public final class IndustrialistScenarios {
 		long after = VillagePoolInjector.houseCopies(templates);
 		helper.assertTrue(after == copies, "second inject() must be a no-op, found " + after);
 		helper.succeed();
+	}
+
+	/**
+	 * Anti-dupe + sell-discount guard on the loaded data: across all levels no mod metal appears as a
+	 * cost in more than one item form, and every offer that SELLS mod items for emeralds (the Master
+	 * shortcuts + the pickaxe buy) carries priceMultiplier 0.0 so the zombie-cure reputation exploit
+	 * cannot collapse its price.
+	 * Mirrors: IndustrialistVillagerGameTest.tcVil003_sellOffersIgnoreReputation
+	 */
+	public static void tcVil003_sellOffersIgnoreReputation(GameTestHelper helper) {
+		Villager villager = helper.spawn(EntityTypes.VILLAGER, WORKBENCH.above());
+		villager.setVillagerData(villager.getVillagerData()
+				.withProfession(helper.getLevel().registryAccess(), ModProfessions.INDUSTRIALIST)
+				.withLevel(5));
+		MerchantOffers offers = villager.getOffers();
+		helper.assertTrue(offers.size() == 2, "master level should yield the 2 reverse sells");
+		for (MerchantOffer offer : offers) {
+			helper.assertTrue(offer.getItemCostA().itemStack().is(net.minecraft.world.item.Items.EMERALD),
+					"master offers should cost emeralds");
+			helper.assertTrue(offer.getPriceMultiplier() == 0.0f,
+					"reverse sells must have reputation_discount 0.0, got " + offer.getPriceMultiplier());
+		}
+		// Discard so this employed Industrialist cannot claim the POI tcVil004 places (1 ticket).
+		villager.discard();
+		helper.succeed();
+	}
+
+	/**
+	 * Live acquisition: an unemployed adult villager standing next to a placed workbench claims the
+	 * POI and takes the {@code alaindustrial:industrialist} profession.
+	 * Mirrors: IndustrialistVillagerGameTest.tcVil004_unemployedVillagerTakesProfession
+	 */
+	public static void tcVil004_unemployedVillagerTakesProfession(GameTestHelper helper) {
+		// The default gametest structure has no floor — a spawned villager just falls, its brain
+		// never acquires anything. Build a 5x5 stone floor and a barrier pen so it stays put.
+		for (int x = 0; x <= 4; x++) {
+			for (int z = 0; z <= 4; z++) {
+				helper.setBlock(new BlockPos(x, 1, z), net.minecraft.world.level.block.Blocks.STONE);
+				if (x == 0 || x == 4 || z == 0 || z == 4) {
+					helper.setBlock(new BlockPos(x, 2, z), net.minecraft.world.level.block.Blocks.BARRIER);
+					helper.setBlock(new BlockPos(x, 3, z), net.minecraft.world.level.block.Blocks.BARRIER);
+				}
+			}
+		}
+		helper.setBlock(WORKBENCH, ModContent.INDUSTRIAL_WORKBENCH.get());
+		var poiHolder = PoiTypes.forState(ModContent.INDUSTRIAL_WORKBENCH.get().defaultBlockState()).orElseThrow();
+		helper.assertTrue(poiHolder.is(net.minecraft.tags.PoiTypeTags.ACQUIRABLE_JOB_SITE),
+				"industrialist POI must be in minecraft:acquirable_job_site (unemployed scan tag)");
+		Villager villager = helper.spawn(EntityTypes.VILLAGER, WORKBENCH.east());
+		helper.succeedWhen(() -> {
+			helper.assertTrue(helper.getLevel().getPoiManager()
+							.existsAtPosition(ModProfessions.INDUSTRIALIST_POI, helper.absolutePos(WORKBENCH)),
+					"the placed workbench should be registered in the PoiManager");
+			boolean potential = villager.getBrain()
+					.hasMemoryValue(net.minecraft.world.entity.ai.memory.MemoryModuleType.POTENTIAL_JOB_SITE);
+			boolean jobSite = villager.getBrain()
+					.hasMemoryValue(net.minecraft.world.entity.ai.memory.MemoryModuleType.JOB_SITE);
+			helper.assertTrue(
+					villager.getVillagerData().profession().is(ModProfessions.INDUSTRIALIST),
+					"villager should become the Industrialist; profession="
+							+ villager.getVillagerData().profession()
+							+ " potentialJobSite=" + potential + " jobSite=" + jobSite);
+		});
 	}
 }

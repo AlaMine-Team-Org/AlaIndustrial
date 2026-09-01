@@ -119,6 +119,19 @@ public final class AlaCommonScenarios {
 			if (id.getPath().endsWith("_ore")) {
 				continue;
 			}
+			// The kok-sagyz FLOWER (MOD-537) is a wheat-shaped crop: its loot pays SEEDS at a chance
+			// (the hand-held form is the seed item) and the rubber lives in the root column below —
+			// like the ores above, it legitimately does not self-drop; the payout is asserted in
+			// KokSagyzScenarios (tip dig = exactly one root item).
+			if (id.getPath().equals("kok_sagyz")) {
+				continue;
+			}
+			// The kok-sagyz root blocks (MOD-537) are "dirt claimed by the plant": breaking the tip
+			// pays the ROOT ITEM (state-conditioned loot) and leaves dirt, breaking the upper root pays
+			// seeds at most — the block itself is never an item, exactly like farmland is never held.
+			if (id.getPath().equals("kok_sagyz_root")) {
+				continue;
+			}
 			// The Enriched Uranium Wall Torch (MOD-085) intentionally has NO block item — it drops the
 			// STANDING torch via Properties.overrideLootTable (vanilla wallVariant), so block.asItem() is
 			// AIR and it cannot "self-drop". Its drop is asserted in EnrichedUraniumTorchGameTest instead.
@@ -182,6 +195,12 @@ public final class AlaCommonScenarios {
 			// Irradiated Soil (MOD-471) is dirt that has been poisoned: shovelled, not mined, and gated by
 			// no tool at all — exactly like the dirt it decays back into.
 			if (id.getPath().equals("irradiated_soil")) {
+				continue;
+			}
+			// The kok-sagyz root block (MOD-537) is the same story as irradiated soil: it is dirt a
+			// plant claimed — dug by hand, never tool-gated (and the flower is a VegetationBlock,
+			// exempted by the class rule two blocks below).
+			if (id.getPath().equals("kok_sagyz_root")) {
 				continue;
 			}
 			Block block = BuiltInRegistries.BLOCK.getValue(id);
@@ -271,6 +290,10 @@ public final class AlaCommonScenarios {
 			}
 			Block block = BuiltInRegistries.BLOCK.getValue(id);
 			BlockState state = block.defaultBlockState();
+			// The kok-sagyz flower (MOD-537) follows the vanilla-crop pattern: its hand-held form is
+			// the SEED item (kok_sagyz_seeds, a BlockItem of this block), exactly like wheat's block
+			// item is wheat_seeds — the same-id block-item invariant is waived for it alone.
+			boolean seedItemCrop = id.getPath().equals("kok_sagyz");
 
 			// Liquid blocks (MOD-238 oil): the fluid's block form mirrors vanilla water/lava — no
 			// block item (the hand-carried form is the bucket) and no loot table (LiquidBlock#getDrops
@@ -285,7 +308,7 @@ public final class AlaCommonScenarios {
 			boolean occlusionOk = (fullCube == occludes);
 
 			// 2. A BlockItem is registered under the same id (waived for liquids, see above).
-			boolean hasItem = liquid || BuiltInRegistries.ITEM.containsKey(id);
+			boolean hasItem = liquid || seedItemCrop || BuiltInRegistries.ITEM.containsKey(id);
 
 			// 3. The loot-table datapack resource exists (waived for liquids, see above).
 			boolean hasLoot = liquid;

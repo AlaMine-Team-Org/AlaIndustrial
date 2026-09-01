@@ -36,8 +36,21 @@ public class AlaProcessingDisplay extends BasicDisplay {
 	/** Build a display from a live recipe (the common case, used by the server-side filler). */
 	public AlaProcessingDisplay(AlaProcessingRecipe recipe) {
 		this(inputsOf(recipe),
-				List.of(EntryIngredients.of(recipe.result())),
+				outputsOf(recipe),
 				recipe.kind(), recipe.energy(), recipe.chance());
+	}
+
+	/**
+	 * Outputs of one operation (MOD-537): the primary result plus the optional secondary bonus, in
+	 * that order. The category lays the row out from {@code getOutputEntries().size()}, so a second
+	 * entry renders as a second slot with no further changes.
+	 */
+	private static List<EntryIngredient> outputsOf(AlaProcessingRecipe recipe) {
+		if (recipe.secondaryResult().isEmpty()) {
+			return List.of(EntryIngredients.of(recipe.result()));
+		}
+		return List.of(EntryIngredients.of(recipe.result()),
+				EntryIngredients.of(recipe.secondaryResultStack()));
 	}
 
 	/**

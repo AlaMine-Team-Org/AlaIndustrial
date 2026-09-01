@@ -917,6 +917,18 @@
           ]
         },
         {
+          "id": "irradiated_soil",
+          "title": "विकिरित मिट्टी",
+          "icon": "alaindustrial:irradiated_soil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "विकिरित मिट्टी",
+              "text": "नाभिकीय दुर्घटना का निशान: रिएक्टर विस्फोट से ज़हरीली हुई मिट्टी। यह यूरेनियम से एक पायदान नीचे का विकिरण करती है — बैकपैक से भी — और अपने आप चार चरणों में फीकी पड़ जाती है, पानी के नीचे जल्दी। किसी भी ब्लॉक की तरह खोदी और ढोई जा सकती है, पर कभी नहीं बनाई जा सकती।"
+            }
+          ]
+        },
+        {
           "id": "reactor_controller",
           "title": "रिएक्टर नियंत्रक",
           "icon": "alaindustrial:reactor_controller",
@@ -1113,6 +1125,43 @@
                 "alaindustrial:rubber"
               ],
               "result_id": "alaindustrial:reactor_outlet",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lever",
+          "title": "रिएक्टर लीवर",
+          "icon": "alaindustrial:reactor_lever",
+          "pages": [
+            {
+              "type": "text",
+              "title": "रिएक्टर लीवर",
+              "text": "ढाल मिश्रधातु का लीवर: सील किए कमरे के भीतर से दबाए रखा संकेत — रिएक्टर का आपात बंद, जो न कमरे की ढाल तोड़ता है और न उसकी सामग्री के साथ पिघलता है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "बफ़र: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "बिना आकार की क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:lever",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_lever",
               "result_count": 2
             }
           ]
@@ -1716,6 +1765,44 @@
           ]
         },
         {
+          "id": "fermenter",
+          "title": "फ़र्मेंटर",
+          "icon": "alaindustrial:fermenter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "फ़र्मेंटर",
+              "text": "एक LV मशीन जो कार्बनिक पदार्थ को पानी के साथ किण्वित करके जैव ईंधन (हमेशा तरल) और बायोमास (कभी-कभी वस्तु) बनाती है। मॉड का पहला ईंधन जो पंप नहीं, खेती से मिलता है: हर बैच की लागत एक जैसी है, और उपज सिर्फ इस बात पर निर्भर करती है कि आप क्या डालते हैं — घास से लेकर सुनहरी गाजर तक।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 600 EU/संचालन",
+                "बफ़र: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:bucket",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:copper_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:fermenter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "pump",
           "title": "पंप",
           "icon": "alaindustrial:pump",
@@ -1899,8 +1986,32 @@
     {
       "id": "world_automation",
       "title": "दुनिया और स्वचालन",
-      "icon": "alaindustrial:tempered_iron_block",
+      "icon": "alaindustrial:biomass",
       "entries": [
+        {
+          "id": "biomass",
+          "title": "बायोमास",
+          "icon": "alaindustrial:biomass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "बायोमास",
+              "text": "किण्वन का ठोस अवशेष — फ़र्मेंटर इसे कभी-कभी गिराता है, चारा जितना समृद्ध, संभावना उतनी अधिक। इसका अभी कोई उपयोग नहीं: जानबूझकर रखा गया प्लेसहोल्डर, ईमानदारी से शिप किया गया, बिना कोई मनगढ़ंत उद्देश्य।"
+            }
+          ]
+        },
+        {
+          "id": "biofuel",
+          "title": "जैव ईंधन",
+          "icon": "alaindustrial:biofuel_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "जैव ईंधन",
+              "text": "फ़र्मेंटर में बना गंदहरा जैतूनी तरल — मॉड का पहला ईंधन जो पंप नहीं, खेती से आता है। यह संसार में स्वाभाविक रूप से नहीं मिलता; दूसरी बार आसवित करने पर वह पोषक घोल मिलता है जिसे फव्वारा छिड़कता है।"
+            }
+          ]
+        },
         {
           "id": "tempered_iron_block",
           "title": "टेम्पर्ड आयरन ब्लॉक",
@@ -1992,6 +2103,18 @@
           ]
         },
         {
+          "id": "netherite_alloy_ingot",
+          "title": "नेदराइट मिश्रधातु पिंड",
+          "icon": "alaindustrial:netherite_alloy_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "नेदराइट मिश्रधातु पिंड",
+              "text": "मॉड की अंतिम-चरण मिश्रधातु — एक वैनिला नेदराइट पिंड और दो इलेक्ट्रम के पिंड मिश्रधातु भट्ठी में मिलकर दो नेदराइट मिश्रधातु पिंड देते हैं।"
+            }
+          ]
+        },
+        {
           "id": "oil",
           "title": "कच्चा तेल",
           "icon": "alaindustrial:oil_bucket",
@@ -2078,6 +2201,18 @@
               "type": "text",
               "title": "भाप",
               "text": "रिएक्टर कक्ष का कार्यकारी तरल। इस मॉड का इकलौता तरल जिसका दुनिया में कोई रूप ही नहीं है: न पोखर, न ब्लॉक, न बाल्टी — भाप केवल टंकियों और पाइपों के भीतर रहती है।"
+            }
+          ]
+        },
+        {
+          "id": "nutrient_solution",
+          "title": "पोषक घोल",
+          "icon": "alaindustrial:nutrient_solution_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "पोषक घोल",
+              "text": "जैव ईंधन की दूसरी बार आसवन से बना चमकीला हरा उत्पाद — मॉड का एकमात्र तरल जिसमें कुछ नहीं जलता। इसका एकमात्र उपभोक्ता फव्वारा है, जो फसलों और क्रिस्टलों को तेज़ करता है।"
             }
           ]
         },
@@ -2239,6 +2374,55 @@
           ]
         },
         {
+          "id": "kok_sagyz",
+          "title": "कोक-साग़िज़",
+          "icon": "alaindustrial:kok_sagyz",
+          "pages": [
+            {
+              "type": "text",
+              "title": "कोक-साग़िज़",
+              "text": "बहुवर्षीय «रूसी डेंडेलायन» — रबर का नवीकरणीय स्रोत। एक फूल और दो ब्लॉक गहरी जड़ का स्तंभ: जड़ की नोक को बार-बार खोदते रहिए, पौधा ज़िंदा रहता है और नोक फिर उगा लेता है। जड़ को पेषक में पीसकर कच्चा रबर बनता है, और उपोत्पाद के रूप में इनुलिन मिलता है।"
+            }
+          ]
+        },
+        {
+          "id": "sprinkler",
+          "title": "फव्वारा",
+          "icon": "alaindustrial:sprinkler",
+          "pages": [
+            {
+              "type": "text",
+              "title": "फव्वारा",
+              "text": "एक खंभे पर घूमता सिर, जो 4 ब्लॉक के दायरे में उगती हर चीज़ पर पोषक घोल छिड़कता है। मॉड की इकलौती मशीन जो बिल्कुल EU नहीं खींचती — कोई केबल इससे जुड़ता नहीं, यह केवल घोल से चलती है। ज़मीन पर या छत के नीचे लगाई जा सकती है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "बफ़र: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:copper_plate",
+                "alaindustrial:gold_gear",
+                "alaindustrial:copper_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:sprinkler",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "garden_drone_station",
           "title": "गार्डन ड्रोन स्टेशन",
           "icon": "alaindustrial:garden_drone_station",
@@ -2271,6 +2455,43 @@
                 "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:garden_drone_station",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "crystal_farm_controller",
+          "title": "ग्रीनहाउस नियंत्रक",
+          "icon": "alaindustrial:crystal_farm_controller",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ग्रीनहाउस नियंत्रक",
+              "text": "किसी भी आकार का सील किया कमरा, जिसकी जागी हुई बीज-क्यारियों में असली वैनिला एमेथिस्ट क्लस्टर उगते हैं। नियंत्रक भीतर की हवा को भर देता है, इसलिए गुंबद, सीढ़ीदार पिरामिड या L-आकार का विंग — सब चलते हैं, और पूरा ग्रीनहाउस अपने खोल की जोड़ियों के गायब होने से यह दिखाता है। पानी, EU और फव्वारा केवल तेज़ करते हैं; तीनों में से कोई भी ज़रूरी नहीं।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "बफ़र: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:crystal_farm_floor",
+                "minecraft:amethyst_shard",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:crystal_farm_floor"
+              ],
+              "result_id": "alaindustrial:crystal_farm_controller",
               "result_count": 1
             }
           ]

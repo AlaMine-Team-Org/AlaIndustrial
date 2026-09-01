@@ -10,6 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
@@ -106,24 +107,36 @@ public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockE
 	 *     {@link AlaProcessingRecipe} because these machines have exactly ONE input slot, so
 	 *     {@code inputCount(0)} is the complete story — and because the Electric Furnace's vanilla
 	 *     fallback has no {@code AlaProcessingRecipe} to carry in the first place.
+	 * @param secondary the recipe's optional bonus output (MOD-537), {@link ItemStack#EMPTY} when the
+	 *     recipe has none. On completion it merges into the SAME output slot as {@code result} when it
+	 *     stacks with the primary; a DIFFERENT item (e.g. macerated kok-sagyz roots paying raw rubber
+	 *     plus inulin) cannot share the single slot, so it is ejected on top of the machine — hoppers
+	 *     and pipes collect it from there. A dedicated second output slot is a deliberate stage-2
+	 *     question (guayule's crumbs + resin will want it); stage 1 ships the eject path.
 	 */
-	public record RecipeSolution(int energy, ItemStack result, int inputCount) {
+	public record RecipeSolution(int energy, ItemStack result, ItemStack secondary, int inputCount) {
 		/**
 		 * A solution consuming one item per operation — the shape of every recipe but the batch ones,
 		 * and the form the Electric Furnace's vanilla fallback builds.
 		 */
 		public RecipeSolution(int energy, ItemStack result) {
-			this(energy, result, 1);
+			this(energy, result, ItemStack.EMPTY, 1);
+		}
+
+		/** A batch solution with no secondary output. */
+		public RecipeSolution(int energy, ItemStack result, int inputCount) {
+			this(energy, result, ItemStack.EMPTY, inputCount);
 		}
 
 		/** No recipe matched — equivalent to "nothing to do this tick". */
 		public static RecipeSolution empty() {
-			return new RecipeSolution(0, ItemStack.EMPTY);
+			return new RecipeSolution(0, ItemStack.EMPTY, ItemStack.EMPTY, 1);
 		}
 
 		/** A mod {@link AlaProcessingRecipe} matched — carries its EU cost, result stack and batch size. */
 		public static RecipeSolution of(AlaProcessingRecipe recipe) {
-			return new RecipeSolution(recipe.energy(), recipe.resultStack(), recipe.inputCount(0));
+			return new RecipeSolution(recipe.energy(), recipe.resultStack(), recipe.secondaryResultStack(),
+					recipe.inputCount(0));
 		}
 
 		public boolean hasRecipe() {
@@ -171,7 +184,7 @@ public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockE
 		// at completion — checking it only in the completion branch would let one dust buy a full block.
 		boolean canWork = solution.hasRecipe() && input.getCount() >= solution.inputCount()
 				&& energy.getAmount() >= euPerTick
-				&& canOutput(OUTPUT_SLOT, solution.result());
+				&& canOutputWithSecondary(solution.result(), solution.secondary());
 
 		// MOD-458: the starvation counter is driven by the SAME expression that gates work, so the caption
 		// can never contradict the arrow. It resets on any paid tick, including one that finishes an op.
@@ -195,6 +208,16 @@ public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockE
 				progress = 0;
 				items.get(INPUT_SLOT).shrink(solution.inputCount());
 				addOutput(OUTPUT_SLOT, solution.result());
+				// MOD-537: a stacking bonus merges into the same output slot; a different item cannot
+				// share the single slot, so the machine pays it out on top of itself (hopper-collectable).
+				if (!solution.secondary().isEmpty()) {
+					if (solution.secondary().getItem() == solution.result().getItem()) {
+						addOutput(OUTPUT_SLOT, solution.secondary());
+					} else {
+						Containers.dropItemStack(level, worldPosition.getX() + 0.5, worldPosition.getY() + 1.0,
+								worldPosition.getZ() + 0.5, solution.secondary().copy());
+					}
+				}
 				recordItemProcessed(); // MOD-125: lifetime operation counter (persisted, drawn later)
 				creditUsefulWork(level, (long) euPerTick * maxProgress); // MOD-133: completed op → XP
 			}
@@ -233,13 +256,32 @@ public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockE
 		if (input.getCount() < solution.inputCount()) {
 			return ProcessingMachineStatus.NOT_ENOUGH_INPUT;
 		}
-		if (!canOutput(OUTPUT_SLOT, solution.result())) {
+		if (!canOutputWithSecondary(solution.result(), solution.secondary())) {
 			return ProcessingMachineStatus.OUTPUT_BLOCKED;
 		}
 		if (energy.getAmount() < euPerTick && starvedEvaluations >= STARVED_GRACE_EVALUATIONS) {
 			return ProcessingMachineStatus.NO_ENERGY;
 		}
 		return ProcessingMachineStatus.READY;
+	}
+
+	/**
+	 * Whether the single output slot can absorb the primary result AND the optional secondary
+	 * (MOD-537) in one operation. A stacking secondary must fit under the slot cap together with
+	 * the primary; a NON-stacking secondary never blocks work — it is ejected on top of the machine
+	 * on completion instead of sharing the slot (see the payout site for the reasoning).
+	 */
+	private boolean canOutputWithSecondary(ItemStack primary, ItemStack secondary) {
+		if (!canOutput(OUTPUT_SLOT, primary)) {
+			return false;
+		}
+		if (secondary.isEmpty() || secondary.getItem() != primary.getItem()) {
+			return true;
+		}
+		ItemStack out = items.get(OUTPUT_SLOT);
+		int cap = Math.min(OUTPUT_MAX, out.isEmpty() ? primary.getMaxStackSize() : out.getMaxStackSize());
+		int afterPrimary = (out.isEmpty() ? 0 : out.getCount()) + primary.getCount();
+		return afterPrimary + secondary.getCount() <= cap;
 	}
 
 	private void setStatus(ProcessingMachineStatus next) {

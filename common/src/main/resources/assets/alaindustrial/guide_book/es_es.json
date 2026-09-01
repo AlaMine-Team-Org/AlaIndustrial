@@ -917,6 +917,18 @@
           ]
         },
         {
+          "id": "irradiated_soil",
+          "title": "Tierra irradiada",
+          "icon": "alaindustrial:irradiated_soil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tierra irradiada",
+              "text": "La marca que deja un accidente nuclear: suelo envenenado por una explosión del reactor. Irradia un escalón por debajo del uranio —también desde la mochila— y se desvanece por sí solo en cuatro etapas, más rápido bajo el agua. Se excava y se transporta como cualquier bloque, pero nunca se fabrica."
+            }
+          ]
+        },
+        {
           "id": "reactor_controller",
           "title": "Controlador de reactor",
           "icon": "alaindustrial:reactor_controller",
@@ -1113,6 +1125,43 @@
                 "alaindustrial:rubber"
               ],
               "result_id": "alaindustrial:reactor_outlet",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lever",
+          "title": "Palanca del reactor",
+          "icon": "alaindustrial:reactor_lever",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Palanca del reactor",
+              "text": "Una palanca de aleación de blindaje: una señal mantenida desde el interior de una sala sellada — el paro de emergencia del reactor, que ni rompe el blindaje de la sala ni se funde con su contenido."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Búfer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación sin forma",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:lever",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_lever",
               "result_count": 2
             }
           ]
@@ -1716,6 +1765,44 @@
           ]
         },
         {
+          "id": "fermenter",
+          "title": "Fermentador",
+          "icon": "alaindustrial:fermenter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Fermentador",
+              "text": "Una máquina LV que fermenta materia orgánica con agua en biocombustible (un fluido, siempre) y biomasa (un objeto, a veces). El primer combustible del mod que se cultiva en lugar de bombearse: cada lote cuesta lo mismo y el rendimiento depende solo de lo que le eches — desde hierba hasta una zanahoria dorada."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Energía: 600 EU/op",
+                "Búfer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:bucket",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:copper_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:fermenter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "pump",
           "title": "Bomba",
           "icon": "alaindustrial:pump",
@@ -1899,8 +1986,32 @@
     {
       "id": "world_automation",
       "title": "Mundo y automatización",
-      "icon": "alaindustrial:tempered_iron_block",
+      "icon": "alaindustrial:biomass",
       "entries": [
+        {
+          "id": "biomass",
+          "title": "Biomasa",
+          "icon": "alaindustrial:biomass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Biomasa",
+              "text": "El residuo sólido de la fermentación: lo suelta el fermentador a veces, cuanto más rico el sustrato, más probable. Aún no tiene uso: un marcador de posición deliberado, entregado con honestidad, sin ningún propósito inventado."
+            }
+          ]
+        },
+        {
+          "id": "biofuel",
+          "title": "Biocombustible",
+          "icon": "alaindustrial:biofuel_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Biocombustible",
+              "text": "Un fluido verde oliva turbio elaborado en el fermentador — el primer combustible del mod que se cultiva en lugar de bombearse. No aparece en el mundo; destilarlo una segunda vez produce la solución nutritiva que rocía el aspersor."
+            }
+          ]
+        },
         {
           "id": "tempered_iron_block",
           "title": "Bloque de hierro templado",
@@ -1992,6 +2103,18 @@
           ]
         },
         {
+          "id": "netherite_alloy_ingot",
+          "title": "Lingote de aleación de netherita",
+          "icon": "alaindustrial:netherite_alloy_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lingote de aleación de netherita",
+              "text": "La aleación del final de partida del mod: un lingote de netherita vainilla y dos lingotes de electro dan dos lingotes de aleación de netherita en el horno de aleaciones."
+            }
+          ]
+        },
+        {
           "id": "oil",
           "title": "Petróleo",
           "icon": "alaindustrial:oil_bucket",
@@ -2078,6 +2201,18 @@
               "type": "text",
               "title": "Vapor",
               "text": "El fluido de trabajo de la sala de reactor. El único fluido del mod sin forma alguna en el mundo: ni charco, ni bloque, ni cubo — el vapor solo existe dentro de depósitos y tuberías."
+            }
+          ]
+        },
+        {
+          "id": "nutrient_solution",
+          "title": "Solución nutritiva",
+          "icon": "alaindustrial:nutrient_solution_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Solución nutritiva",
+              "text": "El producto verde brillante de destilar biocombustible una segunda vez — el único fluido del mod donde nada arde. Su único consumidor es el aspersor, que acelera cultivos y cristales."
             }
           ]
         },
@@ -2239,6 +2374,55 @@
           ]
         },
         {
+          "id": "kok_sagyz",
+          "title": "Kok sagyz",
+          "icon": "alaindustrial:kok_sagyz",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kok sagyz",
+              "text": "Un «diente de león ruso» perenne — la fuente renovable de caucho. Una columna de flor y una raíz de dos bloques de profundidad: cava la punta de la raíz sin fin, la planta sobrevive y la rebrota. La raíz se tritura en el triturador en caucho en bruto, con inulina como subproducto."
+            }
+          ]
+        },
+        {
+          "id": "sprinkler",
+          "title": "Aspersor",
+          "icon": "alaindustrial:sprinkler",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Aspersor",
+              "text": "Una cabeza giratoria en un mástil que rocía solución nutritiva sobre todo lo que crezca en un radio de 4 bloques. La única máquina del mod que no consume EU en absoluto: no se le conecta ningún cable y funciona solo con la solución. Se monta en el suelo o bajo el techo."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Búfer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "alaindustrial:copper_plate",
+                "alaindustrial:gold_gear",
+                "alaindustrial:copper_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:sprinkler",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "garden_drone_station",
           "title": "Estación de dron jardinero",
           "icon": "alaindustrial:garden_drone_station",
@@ -2271,6 +2455,43 @@
                 "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:garden_drone_station",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "crystal_farm_controller",
+          "title": "Controlador de invernadero",
+          "icon": "alaindustrial:crystal_farm_controller",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Controlador de invernadero",
+              "text": "Una sala sellada de cualquier forma cuyas semilleras despertadas hacen crecer racimos de amatista vainilla auténticos. El controlador inunda el aire interior, así que una cúpula, una pirámide escalonada o un ala en L cuentan igual, y un invernadero terminado lo demuestra perdiendo las juntas de su cáscara. El agua, los EU y un aspersor solo lo aceleran; ninguno de los tres es necesario."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Búfer: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "alaindustrial:crystal_farm_floor",
+                "minecraft:amethyst_shard",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:crystal_farm_floor"
+              ],
+              "result_id": "alaindustrial:crystal_farm_controller",
               "result_count": 1
             }
           ]
