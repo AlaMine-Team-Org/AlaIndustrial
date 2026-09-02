@@ -271,6 +271,13 @@ pitest {
     // (HudSmootherTest, LevelMathTest, GuidePaginatorTest, TemperedGearRollTest) invisible to PIT.
     targetTests = ['dev.alaindustrial.*Test']
     excludedClasses = [
+            // MOD-546: the condenser crystal's geometry is GENERATED data — arrays of cube corners and
+            // UVs written out of the designer's .bbmodel, with no branch, no arithmetic and nothing a
+            // mutant could change that a test could notice. It is MC-free only because numbers are, so
+            // pitest_check --targets sees it and asks for a home; this is the honest one. The code that
+            // READS these numbers lives in the renderer and is client-side, hence out of L1 entirely —
+            // it is covered by the L3 shot instead.
+            'dev.alaindustrial.client.render.EnergyCondenserCrystalGeometry',
             // MOD-383: CanningRules answers "may this stack go in the machine", which means it reads
             // ItemStack / Items / DataComponents.FOOD — Minecraft types common's L1 classpath does not
             // have, so every mutant here would be a guaranteed NO_COVERAGE. The arithmetic it delegates

@@ -25,7 +25,8 @@ import org.slf4j.LoggerFactory;
 /**
  * Every stand that proves a {@code BlockEntityRenderer}'s geometry really reaches the captured frame:
  * the water mill's wheel (MOD-024), the three wind mills' rotors (MOD-232), the incubator's floating
- * item (MOD-118), the energy condenser's orb (MOD-393) and the thermal centrifuge's rotor (MOD-424).
+ * item (MOD-118), the energy condenser's crystal (MOD-546) and the thermal centrifuge's rotor
+ * (MOD-424).
  *
  * <p>Split out of {@code GuiClientGameTest} by MOD-404. They belong together because they are the same
  * test, five times over, and the shape of it is the load-bearing part:
@@ -69,7 +70,7 @@ public final class RendererStands {
     private static final int WIND_MILL_Y = 102;
     private static final int WIND_MILL_Z = 150;
 
-    /** Where the condenser stands for {@link #checkEnergyCondenserOrb}. */
+    /** Where the condenser stands for {@link #checkEnergyCondenserCrystal}. */
     private static final int ORB_X = 170;
     private static final int ORB_Y = 101;
     private static final int ORB_Z = 150;
@@ -258,11 +259,11 @@ public final class RendererStands {
     }
 
     // ────────────────────────────────────────────────────────────────────────────────
-    // Energy condenser — BER orb visual (MOD-393)
+    // Energy condenser — BER crystal visual (MOD-546)
     // ────────────────────────────────────────────────────────────────────────────────
 
     /**
-     * MOD-393: proves the condenser's orb actually reaches the captured frame.
+     * MOD-546: proves the condenser's crystal actually reaches the captured frame.
      *
      * <p>The toggle is the bank itself, not the block. {@code EnergyCondenserBlockEntityRenderer}
      * draws nothing at zero — a deliberate rule, because a glowing orb inside an empty condenser
@@ -273,7 +274,7 @@ public final class RendererStands {
      *
      * <p>That makes one gate cover two things: the orb renders, AND it obeys the empty-bank rule.
      */
-    public static void checkEnergyCondenserOrb(ClientGameTestContext context,
+    public static void checkEnergyCondenserCrystal(ClientGameTestContext context,
             TestSingleplayerContext singleplayer) {
         TestServerContext server = singleplayer.getServer();
         // Rain and night both put moving or dimming pixels into the baseline pair; the noise floor has
@@ -286,38 +287,47 @@ public final class RendererStands {
                 + (ORB_X + 3) + " " + (ORB_Y + 3) + " " + (ORB_Z + 3) + " minecraft:air");
         server.runCommand("setblock " + ORB_X + " " + ORB_Y + " " + ORB_Z
                 + " alaindustrial:energy_condenser");
-        // Banked past tier I, so the orb is at a healthy size and brightness rather than its dimmest.
-        server.runCommand("data merge block " + ORB_X + " " + ORB_Y + " " + ORB_Z + " {Energy: 700000L}");
+        // Top tier (MOD-546): the crystal has three shapes, and this is the largest of them — the one
+        // with the halves that pull apart. A smaller stage would hand the pixel gate below less to
+        // measure while proving less about the geometry.
+        server.runCommand("data merge block " + ORB_X + " " + ORB_Y + " " + ORB_Z + " {Energy: 4000000L}");
 
-        // Close in: the orb is a 0.6-block ball inside the frame, an order of magnitude smaller than
-        // the wind mill's rotor quad, so the camera has to be near enough for it to own real pixels.
+        // Close in: the crystal is four pixels across inside the frame, an order of magnitude smaller
+        // than the wind mill's rotor quad, so the camera has to be near enough for it to own real
+        // pixels.
         server.runCommand("tp @p " + (ORB_X + 0.5) + " " + (ORB_Y + 0.3) + " " + (ORB_Z + 2.2) + " 180 5");
         server.runCommand("gamemode spectator @p");
         singleplayer.getClientLevel().waitForChunksRender();
         context.waitTicks(10);
 
-        Path withOrb = takeCleanScreenshot(context, "condenser_orb");
-        LOG.info("[GUITEST][CONDENSER] condenser_orb -> {}", withOrb.toAbsolutePath());
+        Path withCrystal = takeCleanScreenshot(context, "condenser_crystal");
+        LOG.info("[GUITEST][CONDENSER] condenser_crystal -> {}", withCrystal.toAbsolutePath());
 
-        server.runCommand("data merge block " + ORB_X + " " + ORB_Y + " " + ORB_Z + " {Energy: 0L}");
+        // One EU, not zero. The comparison has to isolate the CRYSTAL, and an empty bank changes far
+        // more than that: LIT goes false, so the block stops emitting light 13 and swaps its frame
+        // texture for the dim one — the whole frame differs, and the gate below would pass at full
+        // marks with the crystal deleted from the renderer entirely (measured: the diff covered the
+        // entire 1280x720 frame). A single EU keeps LIT true and the frame identical while leaving
+        // the bank below tier I, where no clot exists and nothing is drawn inside.
+        server.runCommand("data merge block " + ORB_X + " " + ORB_Y + " " + ORB_Z + " {Energy: 1L}");
         context.waitTicks(10);
-        Path emptyA = takeCleanScreenshot(context, "condenser_orb_empty_a");
+        Path emptyA = takeCleanScreenshot(context, "condenser_crystal_empty_a");
         context.waitTicks(5);
-        Path emptyB = takeCleanScreenshot(context, "condenser_orb_empty_b");
+        Path emptyB = takeCleanScreenshot(context, "condenser_crystal_empty_b");
 
-        int orbDelta = differingPixels(withOrb, emptyA);
+        int crystalDelta = differingPixels(withCrystal, emptyA);
         int staticNoise = differingPixels(emptyA, emptyB);
-        // 4x the measured floor, and at least 400 px. Lower than the rotor's 2000 on purpose: the orb
-        // is a much smaller object, and a threshold it cannot clear on a healthy build is a gate that
-        // gets deleted rather than fixed.
+        // 4x the measured floor, and at least 400 px. Lower than the rotor's 2000 on purpose: the
+        // crystal is a much smaller object, and a threshold it cannot clear on a healthy build is a
+        // gate that gets deleted rather than fixed.
         int required = Math.max(4 * staticNoise, 400);
-        LOG.info("[GUITEST][CONDENSER] orb pixel gate: delta={} px, static baseline={} px, required>{}",
-                orbDelta, staticNoise, required);
-        if (orbDelta < required) {
-            throw new AssertionError("[GUITEST][CONDENSER] emptying the bank changed only " + orbDelta
+        LOG.info("[GUITEST][CONDENSER] crystal pixel gate: delta={} px, static baseline={} px, "
+                + "required>{}", crystalDelta, staticNoise, required);
+        if (crystalDelta < required) {
+            throw new AssertionError("[GUITEST][CONDENSER] dropping below tier I changed only " + crystalDelta
                     + " px (static baseline " + staticNoise + " px, required > " + required + ") — either "
                     + "EnergyCondenserBlockEntityRenderer's geometry is not in the captured frame, or the "
-                    + "orb no longer hides on an empty bank. " + explainWithDiff(withOrb, emptyA));
+                    + "crystal no longer hides below tier I. " + explainWithDiff(withCrystal, emptyA));
         }
     }
 
@@ -336,7 +346,7 @@ public final class RendererStands {
      *
      * <p><b>Why the gate measures motion rather than presence.</b> The rotor is drawn whether or not it
      * is turning — it is hardware, not a readout — so "with vs without" is not available here the way it
-     * is for the condenser's orb. Worse, the rotor carries four vanes per tier and is therefore symmetric
+     * is for the condenser's crystal. Worse, the rotor carries four vanes per tier and is therefore symmetric
      * every 90&deg;, so comparing a stopped rotor against a spinning one could legitimately land on two
      * near-identical poses and fail on a healthy build. So the measurement is turned around: two frames a
      * few ticks apart while it spins must differ far more than two frames a few ticks apart while it is
@@ -393,7 +403,7 @@ public final class RendererStands {
 
         int spinDelta = differingPixels(spinningA, spinningB);
         int stoppedNoise = differingPixels(stoppedA, stoppedB);
-        // 4x the measured floor, and at least 400 px — the condenser orb's numbers, and for the same
+        // 4x the measured floor, and at least 400 px — the condenser crystal's numbers, and for the same
         // reason: the rotor is seen through an 8x8-pixel window rather than filling a 2x2-block quad like
         // the wind mill's blades, and a threshold a healthy build cannot clear is a gate that gets
         // deleted rather than fixed.

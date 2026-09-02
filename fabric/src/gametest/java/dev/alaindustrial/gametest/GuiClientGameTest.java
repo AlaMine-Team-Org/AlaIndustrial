@@ -37,7 +37,7 @@ import net.minecraft.world.level.gamerules.GameRules;
  *   <li>MOD-024  — {@link RendererStands#checkWaterMillWheel}          — the water wheel BER draws into the frame
  *   <li>MOD-232  — {@link RendererStands#checkWindMillRotor}           — the wind mill rotor BER draws into the frame
  *   <li>MOD-118  — {@link RendererStands#checkIncubatorDome}           — the incubator's floating item reaches the frame
- *   <li>MOD-393  — {@link RendererStands#checkEnergyCondenserOrb}      — the condenser orb draws, and hides on an empty bank
+ *   <li>MOD-546  — {@link RendererStands#checkEnergyCondenserCrystal}  — the condenser crystal draws, and hides below tier I
  *   <li>MOD-424  — {@link RendererStands#checkThermalCentrifugeRotor}  — the centrifuge rotor draws AND turns, and stops
  *       dead when the redstone signal goes away
  *   <li>MOD-354  — {@link WaterMillGuiStand#checkWaterMillStatusRow}   — the water mill's GUI status row draws, and draws
@@ -89,7 +89,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
                 RendererStands.checkWaterMillWheel(context, singleplayer);       // MOD-024 BER visual regression
                 RendererStands.checkWindMillRotor(context, singleplayer);        // MOD-232 BER visual regression
                 RendererStands.checkIncubatorDome(context, singleplayer);        // MOD-118 BER visual regression
-                RendererStands.checkEnergyCondenserOrb(context, singleplayer);   // MOD-393 BER visual regression
+                RendererStands.checkEnergyCondenserCrystal(context, singleplayer);   // MOD-393 BER visual regression
                 RendererStands.checkThermalCentrifugeRotor(context, singleplayer); // MOD-424 BER visual regression
                 StorageModuleStands.checkStorageModuleSeams(context, singleplayer); // MOD-287 connected textures
                 // R-PHY-10: mc.debugHitboxes removed in MC 26.2; re-enable when API is found.

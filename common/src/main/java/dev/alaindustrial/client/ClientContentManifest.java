@@ -145,7 +145,8 @@ public final class ClientContentManifest {
 					ChestBlockEntityRenderer::shielding),
 			renderer(ContentManifest.blockEntity("water_mill", WaterMillBlockEntity.class),
 					WaterMillWheelBlockEntityRenderer::new),
-			// MOD-393: the orb inside the condenser frame — its speed and glow are the block's gauge.
+			// MOD-546: the crystal inside the condenser frame — which of its three shapes is drawn says
+			// which clot the block is holding.
 			renderer(ContentManifest.blockEntity("energy_condenser", EnergyCondenserBlockEntity.class),
 					EnergyCondenserBlockEntityRenderer::new),
 			// Garden Drone (MOD-277): the drone is geometry this renderer places above its station,

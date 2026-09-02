@@ -105,9 +105,10 @@ public final class ShotFamilies {
             new Object[] {"incubator_", new Family(ShotGroup.BER, List.of("R-VIS-01", "R-VIS-04"),
                     "Incubator dome: the glass dome and its contents are drawn above the base, not "
                             + "floating or sunk into it")},
-            new Object[] {"condenser_orb", new Family(ShotGroup.BER, List.of("R-VIS-01"),
-                    "Energy condenser orb: the orb is drawn above a charged bank and is absent on an "
-                            + "empty one — its presence IS the charge readout")},
+            new Object[] {"condenser_crystal", new Family(ShotGroup.BER, List.of("R-VIS-01"),
+                    "Energy condenser crystal: the crystal is drawn once a clot is banked and is "
+                            + "absent below tier I — its presence IS the readout that an item is "
+                            + "waiting in the slot")},
             new Object[] {"centrifuge_rotor", new Family(ShotGroup.BER, List.of("R-VIS-01", "R-VIS-04"),
                     "Thermal centrifuge rotor: the basket is drawn inside the housing and moves between "
                             + "the two spinning frames, while the two stopped frames are identical; the "

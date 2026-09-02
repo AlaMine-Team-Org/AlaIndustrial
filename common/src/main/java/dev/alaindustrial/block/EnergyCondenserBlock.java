@@ -20,7 +20,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
- * The Energy Condenser (MOD-393): an open frame with an orb turning inside it, banking the grid's
+ * The Energy Condenser (MOD-393): an open frame with an energy crystal turning inside it, banking the grid's
  * surplus. Behaviour lives in {@link EnergyCondenserBlockEntity}; this class is shape, faces and state.
  *
  * <p>Rotation-symmetric — no {@code FACING}, because which way it points would mean nothing. Cable
@@ -29,22 +29,27 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * racing block-entity load), so if the two ever disagreed a cable would draw an arm to a face that
  * carries nothing. Items leave through the sides, so power and logistics never contend for an edge.
  *
- * <p>The shape is a full cube even though the frame is open: the orb the renderer draws does not exist
- * for hit-testing, and a shape cut to the frame's ribs would let clicks pass straight through the orb
- * into whatever is behind it — the exact regression the fluid tank's glass once had.
+ * <p>The shape is one box, not a cut-out of the frame's ribs: the crystal the renderer draws does not
+ * exist for hit-testing, and a shape following the gaps would let clicks pass straight through it into
+ * whatever is behind — the exact regression the fluid tank's glass once had.
  */
 public class EnergyCondenserBlock extends AbstractMachineBlock implements MachineHumProvider {
 
 	public static final MapCodec<EnergyCondenserBlock> CODEC = simpleCodec(EnergyCondenserBlock::new);
 
 	/**
-	 * One box a pixel in from the sides, not a full cube: the frame is open, so the block declares
-	 * {@code noOcclusion()}, and the block-standards gate rightly refuses "full cube that does not
-	 * occlude" — that pair culls neighbours' faces as if solid while showing gaps. Inset instead of cut
-	 * to the ribs, because the orb the renderer draws does not exist for hit-testing: a shape following
-	 * the gaps would let clicks pass straight through it (the fluid tank's glass regression).
+	 * The frame's own extent, not a full cube: it is open, so the block declares {@code noOcclusion()},
+	 * and the block-standards gate rightly refuses "full cube that does not occlude" — that pair culls
+	 * neighbours' faces as if solid while showing gaps.
+	 *
+	 * <p>Depth follows the model (MOD-546): it spans 3.85 to 12.15 and leaves the last four pixels
+	 * front and back empty, so a hand reaching where nothing is drawn no longer hits the block. Width
+	 * and height stay full — the frame does fill them, minus a tenth of a pixel that is not worth
+	 * carving out. One solid box rather than a shape cut to the ribs, because the crystal the renderer
+	 * draws does not exist for hit-testing: a shape following the gaps would let clicks pass straight
+	 * through it (the fluid tank's glass regression).
 	 */
-	private static final VoxelShape SHAPE = Block.box(1, 0, 1, 15, 16, 15);
+	private static final VoxelShape SHAPE = Block.box(0, 0, 3.85, 16, 16, 12.15);
 
 	public EnergyCondenserBlock(Properties properties) {
 		super(properties);

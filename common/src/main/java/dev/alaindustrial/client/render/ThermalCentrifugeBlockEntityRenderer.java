@@ -270,7 +270,7 @@ public final class ThermalCentrifugeBlockEntityRenderer
 	@Override
 	public void submit(State state, PoseStack poseStack, SubmitNodeCollector collector,
 			CameraRenderState camera) {
-		// No early return on a stopped rotor, unlike the condenser's orb: the rotor is hardware, not a
+		// No early return on a stopped rotor, unlike the condenser's crystal: the rotor is hardware, not a
 		// readout. A centrifuge whose rotor vanished the moment the lever went off would read as a broken
 		// machine rather than as a switched-off one — standing still IS the "off" state.
 		poseStack.pushPose();

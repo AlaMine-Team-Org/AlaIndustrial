@@ -31,7 +31,7 @@ slf4j = "2.0.9"
 
 # Fabric-only compile-time helpers pulled in by optional integrations.
 cloth-basic-math = "0.6.1"
-architectury = "21.0.2"
+architectury = "21.0.7"
 
 # Build plugins.
 fabric-loom = "1.17.12"

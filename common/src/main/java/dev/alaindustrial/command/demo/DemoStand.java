@@ -653,7 +653,7 @@ public final class DemoStand {
 		// Sits at floor level under the wall torch's post; it is a 4px plate, so nothing above it moves.
 		set(level, origin, 38, 1, 10, ModContent.CHARGE_PAD.get());
 		chargeBuffer(level, origin, 38, 1, 10);
-		// Energy condenser (MOD-393): banked full, so the stand's copy shows the orb spinning at speed
+		// Energy condenser (MOD-546): banked full, so the stand's copy shows the top-tier crystal
 		// and a tier-III clot already sitting in its slot — an empty one would just be a dark frame.
 		set(level, origin, 39, 1, 10, ModContent.ENERGY_CONDENSER.get());
 		chargeBuffer(level, origin, 39, 1, 10);
