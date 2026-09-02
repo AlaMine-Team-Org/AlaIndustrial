@@ -154,6 +154,8 @@ class CreativeTabAnchorSafetyTest {
 				"alaindustrial:network_analyzer",
 				"alaindustrial:wrench",
 				"alaindustrial:battery_pouch",
+				// MOD-545 — the shielding tier stands beside the pouch it upgrades.
+				"alaindustrial:shielding_pouch",
 				"alaindustrial:energy_pack",
 				"alaindustrial:electric_drill",
 				"alaindustrial:electric_drill_diamond_tip",

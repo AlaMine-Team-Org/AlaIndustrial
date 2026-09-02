@@ -1,0 +1,8 @@
+{
+	"type": "minecraft:crafting_transmute",
+	"category": "misc",
+	"input": "alaindustrial:battery_pouch",
+	"material": "alaindustrial:shielding_alloy_plate",
+	"material_count": 4,
+	"result": { "id": "alaindustrial:shielding_pouch" }
+}

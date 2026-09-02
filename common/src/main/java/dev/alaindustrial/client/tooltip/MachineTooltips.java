@@ -45,6 +45,7 @@ import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.item.tool.NetworkAnalyzerItem;
 import dev.alaindustrial.item.tool.NetworkScanData;
 import dev.alaindustrial.item.energy.PouchItem;
+import dev.alaindustrial.item.misc.ShieldingPouchItem;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDataComponents;
 import dev.alaindustrial.registry.ModRecipes;
@@ -84,6 +85,10 @@ public final class MachineTooltips {
 		boolean detailed = shiftDown || AlaClientConfig.alwaysDetailedTooltips;
 		if (stack.getItem() instanceof NetworkAnalyzerItem) {
 			addNetworkAnalyzerTooltip(stack, lines, detailed);
+			return;
+		}
+		if (stack.getItem() instanceof ShieldingPouchItem) {
+			addShieldingPouchTooltip(stack, lines, detailed);
 			return;
 		}
 		if (stack.getItem() instanceof PouchItem) {
@@ -229,6 +234,22 @@ public final class MachineTooltips {
 	 * must be readable at a glance), tier. The contents grid and the weight bar are visual — see
 	 * {@code PouchClientTooltip} (bundle-style tooltip image, player request).
 	 */
+	/**
+	 * Tooltip text for the Shielding Pouch (MOD-545): how to use it, and — the whole point of the
+	 * item — that it stops the radiation of what is inside without standing in for the suit.
+	 */
+	private static void addShieldingPouchTooltip(ItemStack stack, List<Component> lines, boolean detailed) {
+		// Everything the Battery Pouch says — it IS one, plus lead — and then the two lines that are
+		// the whole reason this tier exists. The charge keys are the base pouch's on purpose: the text
+		// is the same sentence about the same buffer, and a second copy would be one more string for
+		// twenty-one locales to drift on.
+		addPouchTooltip(stack, lines, detailed);
+		lines.add(Component.translatable("tooltip.alaindustrial.shielding_pouch.shielded")
+				.withStyle(ChatFormatting.GREEN));
+		lines.add(Component.translatable("tooltip.alaindustrial.shielding_pouch.not_a_suit")
+				.withStyle(ChatFormatting.YELLOW));
+	}
+
 	private static void addPouchTooltip(ItemStack stack, List<Component> lines, boolean detailed) {
 		// Two short list lines instead of one long sentence — long single-line tooltips stretch the
 		// box, and other locales run even longer (player feedback).

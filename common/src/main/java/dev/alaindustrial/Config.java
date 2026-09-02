@@ -734,6 +734,14 @@ public final class Config {
 			doc = "Fluid networks processed per server tick; the rest round-robin to later ticks.")
 	public static int fluidNetworksPerTick = 512;
 
+	// --- Shielding Pouch (MOD-545, radiation-proof carrier) ---
+	/** Shielding Pouch storage capacity in weight units, same bundle math as the Battery Pouch.
+	 * 128 = two stacks of ordinary items, which is the mining trip the pouch exists for: enough for
+	 * the ore a player digs out in one run without turning into bulk uranium logistics. */
+	@Knob(section = Section.TOOLS, min = 1,
+			doc = "Shielding Pouch item-storage capacity in weight units (one ordinary item = 1).")
+	public static int shieldingPouchCapacity = 128;
+
 	// --- Battery Pouch (MOD-052, powered item) ---
 	/** Pouch storage capacity in weight units (vanilla-bundle math: one item weighs 64/maxStackSize).
 	 * 128 = exactly twice a vanilla bundle, ≈ two stacks of ordinary items. */

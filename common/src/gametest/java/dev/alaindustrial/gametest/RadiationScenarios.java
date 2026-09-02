@@ -6,14 +6,19 @@ import dev.alaindustrial.block.ReactorDoorBlock;
 import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
 import dev.alaindustrial.block.entity.IronChestBlockEntity;
 import dev.alaindustrial.block.entity.ShieldingChestBlockEntity;
+import dev.alaindustrial.item.energy.PouchContents;
+import dev.alaindustrial.item.energy.PouchItem;
+import dev.alaindustrial.item.misc.ShieldingPouchItem;
 import dev.alaindustrial.core.radiation.RadiationDose;
 import dev.alaindustrial.core.radiation.RadiationMobs;
 import dev.alaindustrial.core.radiation.RadiationSources;
 import dev.alaindustrial.core.radiation.RadiationTicker;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModEffects;
+import dev.alaindustrial.registry.ModTags;
 import java.util.List;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.Container;
 import net.minecraft.server.level.ServerLevel;
@@ -29,6 +34,12 @@ import net.minecraft.world.entity.monster.zombie.ZombieVillager;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.BundleContents;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.entity.DispenserBlockEntity;
@@ -689,6 +700,251 @@ public final class RadiationScenarios {
 				helper.fail("the sweep generated a foreign chest's loot: the pending loot table is gone, "
 						+ "which leaves another mod's chest empty for good (MOD-524)");
 			}
+			helper.succeed();
+		});
+	}
+
+	// --- MOD-545: the shielding pouch, the portable counterpart of the shielding chest ---
+
+	/** A shielding pouch holding {@code stack}. */
+	private static ItemStack shieldingPouchOf(ItemStack stack) {
+		ItemStack pouch = new ItemStack(ModContent.SHIELDING_POUCH.get());
+		PouchItem.setContents(pouch,
+				PouchContents.EMPTY.insert(stack, ShieldingPouchItem.storageCapacity()).contents());
+		return pouch;
+	}
+
+	/** A battery pouch holding {@code stack} — the unshielded pouch, used as a control. */
+	private static ItemStack batteryPouchOf(ItemStack stack) {
+		ItemStack pouch = new ItemStack(ModContent.BATTERY_POUCH.get());
+		PouchItem.setContents(pouch,
+				PouchContents.EMPTY.insert(stack, Config.lvPouchCapacity).contents());
+		return pouch;
+	}
+
+	/** A vanilla bundle holding {@code stack} — free shielding until MOD-545 closed it. */
+	private static ItemStack bundleOf(ItemStack stack) {
+		ItemStack bundle = new ItemStack(Items.BUNDLE);
+		bundle.set(DataComponents.BUNDLE_CONTENTS,
+				new BundleContents(List.of(new ItemStackTemplate(stack.getItem(), stack.getCount()))));
+		return bundle;
+	}
+
+	/**
+	 * Uranium of every tag is invisible to the sweep inside a shielding pouch, and visible everywhere
+	 * else — including the two carriers that used to hide it for free.
+	 *
+	 * <p>The loose stack is the positive control: "the pouch reads zero" on its own would pass just as
+	 * happily against a mod that never counted carried items at all. The bundle and the battery pouch
+	 * are the other half of MOD-545 — until it, the sweep read only {@code CONTAINER}, so a bundle of
+	 * leather and string shielded uranium better than a lead chest did, for free, and this item would
+	 * have had nothing to be better than.
+	 *
+	 * @implements R-RAD-17 — see docs/testing/RULES.md
+	 */
+	public static void pouchHidesEveryTagFromTheCarrier(GameTestHelper helper) {
+		ServerPlayer carrier = AlaGameTestHelper.survivalPlayer(helper);
+		List<TagKey<Item>> tags = List.of(ModTags.Items.RADIOACTIVE_LOW,
+				ModTags.Items.RADIOACTIVE_MEDIUM, ModTags.Items.RADIOACTIVE_HIGH);
+		List<ItemStack> samples = List.of(new ItemStack(ModContent.RAW_URANIUM.get(), 8),
+				new ItemStack(ModContent.URANIUM_INGOT.get(), 8),
+				new ItemStack(ModContent.REFINED_URANIUM.get(), 8));
+		for (int i = 0; i < tags.size(); i++) {
+			TagKey<Item> tag = tags.get(i);
+			ItemStack sample = samples.get(i);
+
+			carrier.getInventory().clearContent();
+			carrier.getInventory().add(sample.copy());
+			int loose = RadiationSources.carried(carrier, tag);
+			if (loose <= 0) {
+				helper.fail("rig is wrong: loose " + sample.getItem() + " must be counted, otherwise the "
+						+ "pouch assertion below proves nothing; got " + loose);
+			}
+
+			carrier.getInventory().clearContent();
+			carrier.getInventory().add(shieldingPouchOf(sample.copy()));
+			int pouched = RadiationSources.carried(carrier, tag);
+			if (pouched != 0) {
+				helper.fail(sample.getItem() + " in a shielding pouch must not be counted; got " + pouched);
+			}
+
+			// The closed hole: both of these counted as zero before MOD-545.
+			carrier.getInventory().clearContent();
+			carrier.getInventory().add(bundleOf(sample.copy()));
+			int bundled = RadiationSources.carried(carrier, tag);
+			if (bundled != loose) {
+				helper.fail(sample.getItem() + " in a vanilla bundle must count the same as loose ("
+						+ loose + "); got " + bundled);
+			}
+
+			carrier.getInventory().clearContent();
+			carrier.getInventory().add(batteryPouchOf(sample.copy()));
+			int battery = RadiationSources.carried(carrier, tag);
+			if (battery != loose) {
+				helper.fail(sample.getItem() + " in a battery pouch must count the same as loose ("
+						+ loose + "); got " + battery);
+			}
+		}
+		carrier.getInventory().clearContent();
+		helper.succeed();
+	}
+
+	/**
+	 * The rule holds one level down, where the OTHER {@code countTagged} overload answers.
+	 *
+	 * <p>A pouch inside a shulker box is read as an {@code ItemStackTemplate}, never as an
+	 * {@code ItemStack}, and at the shipped {@code radiationContainerDepth} of 1 that path is
+	 * unreachable through a world at all — a pouch in a chest is already answered at depth 0. So a
+	 * world-level test cannot tell "both overloads guarded" from "only the stack one guarded", and
+	 * this scenario asks the depth-2 question directly. The shulker holding bare uranium is the
+	 * positive control: it proves the depth budget really does reach that far.
+	 *
+	 * @implements R-RAD-18 — see docs/testing/RULES.md
+	 */
+	public static void pouchRuleHoldsInsideAnotherContainer(GameTestHelper helper) {
+		ItemStack fuel = new ItemStack(ModContent.REFINED_URANIUM.get(), 8);
+
+		ItemStack shulkerWithUranium = new ItemStack(Items.SHULKER_BOX);
+		shulkerWithUranium.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(List.of(fuel.copy())));
+		int nested = RadiationSources.countTagged(shulkerWithUranium, ModTags.Items.RADIOACTIVE_HIGH, 2);
+		if (nested <= 0) {
+			helper.fail("rig is wrong: a shulker of uranium must count at depth 2, otherwise the pouch "
+					+ "assertion below proves nothing; got " + nested);
+		}
+
+		ItemStack shulkerWithPouch = new ItemStack(Items.SHULKER_BOX);
+		shulkerWithPouch.set(DataComponents.CONTAINER,
+				ItemContainerContents.fromItems(List.of(shieldingPouchOf(fuel.copy()))));
+		int shielded = RadiationSources.countTagged(shulkerWithPouch, ModTags.Items.RADIOACTIVE_HIGH, 2);
+		if (shielded != 0) {
+			helper.fail("a shielding pouch inside another container must still shield; got " + shielded);
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * A miner carrying uranium in a shielding pouch does not irradiate the bystanders they walk past:
+	 * the carrier never becomes a source at all.
+	 *
+	 * @implements R-RAD-19 — see docs/testing/RULES.md
+	 */
+	public static void pouchCarrierDoesNotIrradiateBystanders(GameTestHelper helper) {
+		withIsolatedField(() -> {
+			ServerLevel level = helper.getLevel();
+			Cow bystander = helper.spawn(EntityTypes.COW, BYSTANDER);
+			Vec3 at = bystander.getEyePosition();
+			ItemStack fuel = new ItemStack(ModContent.REFINED_URANIUM.get(), 8);
+
+			// Control: the same uranium loose in the pockets is a source, and it does reach the mob.
+			int loose = RadiationSources.strengthOf(fuel);
+			if (loose <= 0) {
+				helper.fail("rig is wrong: loose uranium must have strength; got " + loose);
+			}
+			RadiationMobs.sweep(level, List.of(at), List.of(new RadiationSources.Source(at, loose)),
+					Config.radiationSourceRadius);
+			int dosed = RadiationDose.of(bystander);
+			if (dosed <= 0) {
+				helper.fail("rig is wrong: a carried source at the mob's eyes must dose it; got " + dosed);
+			}
+
+			// The pouch: strength zero is what keeps the carrier out of carriedSources entirely, so the
+			// sweep has nothing to deliver and the bystander's dose only decays from here.
+			int shielded = RadiationSources.strengthOf(shieldingPouchOf(fuel.copy()));
+			if (shielded != 0) {
+				helper.fail("a shielding pouch must not be a source; got " + shielded);
+			}
+			RadiationMobs.sweep(level, List.of(at), List.of(), Config.radiationSourceRadius);
+			int after = RadiationDose.of(bystander);
+			if (after > dosed) {
+				helper.fail("a pouch carrier must not raise a bystander's dose; it went from " + dosed
+						+ " to " + after);
+			}
+			helper.succeed();
+		});
+	}
+
+	/**
+	 * The pouch shields what is INSIDE it and nothing else: a fuelled rack irradiates exactly as hard
+	 * with one in the pocket as without. The suit remains the only answer to the field — the division
+	 * of labour this feature was asked for.
+	 *
+	 * @implements R-RAD-20 — see docs/testing/RULES.md
+	 */
+	public static void pouchDoesNotShieldTheField(GameTestHelper helper) {
+		withIsolatedField(() -> {
+			ServerLevel level = helper.getLevel();
+			ServerPlayer carrier = AlaGameTestHelper.survivalPlayer(helper);
+			BlockPos at = helper.absolutePos(BYSTANDER);
+			carrier.snapTo(at.getX() + 0.5, at.getY(), at.getZ() + 0.5, 0.0f, 0.0f);
+			placeFuelledRack(helper);
+
+			carrier.getInventory().clearContent();
+			int bare = RadiationSources.exposureAt(level, carrier, Config.radiationSourceRadius);
+			if (bare <= 0) {
+				helper.fail("rig is wrong: a fuelled rack must irradiate the carrier; got " + bare);
+			}
+
+			carrier.getInventory().add(shieldingPouchOf(new ItemStack(ModContent.REFINED_URANIUM.get(), 8)));
+			int withPouch = RadiationSources.exposureAt(level, carrier, Config.radiationSourceRadius);
+			if (withPouch != bare) {
+				helper.fail("a shielding pouch must not shield the field: the rack read " + bare
+						+ " without it and " + withPouch + " with it");
+			}
+			carrier.getInventory().clearContent();
+			helper.succeed();
+		});
+	}
+
+	/**
+	 * A closed pouch is quiet wherever it lies — dropped on the floor or stored in somebody's chest —
+	 * while the same uranium in the open goes on radiating from both places.
+	 *
+	 * @implements R-RAD-21 — see docs/testing/RULES.md
+	 */
+	public static void pouchIsQuietOnTheFloorAndInAChest(GameTestHelper helper) {
+		withIsolatedField(() -> {
+			ServerLevel level = helper.getLevel();
+			Cow viewer = helper.spawn(EntityTypes.COW, BYSTANDER);
+			ItemStack fuel = new ItemStack(ModContent.REFINED_URANIUM.get(), 16);
+			BlockPos abs = helper.absolutePos(RACK);
+
+			// Control on the floor: a spilled pile radiates.
+			ItemEntity loose = new ItemEntity(level, abs.getX() + 0.5, abs.getY() + 0.5, abs.getZ() + 0.5,
+					fuel.copy());
+			level.addFreshEntity(loose);
+			int spilled = RadiationSources.exposureAt(level, viewer, Config.radiationSourceRadius);
+			if (spilled <= 0) {
+				helper.fail("rig is wrong: uranium on the floor must irradiate; got " + spilled);
+			}
+			// Remove it, or it goes on radiating through every phase below.
+			loose.discard();
+
+			ItemEntity dropped = new ItemEntity(level, abs.getX() + 0.5, abs.getY() + 0.5, abs.getZ() + 0.5,
+					shieldingPouchOf(fuel.copy()));
+			level.addFreshEntity(dropped);
+			int onFloor = RadiationSources.exposureAt(level, viewer, Config.radiationSourceRadius);
+			if (onFloor != 0) {
+				helper.fail("a dropped shielding pouch must not radiate; got " + onFloor);
+			}
+			dropped.discard();
+
+			// Control in a chest: an ordinary chest is not a shield.
+			helper.setBlock(RACK, ModContent.IRON_CHEST.get());
+			Container chest = helper.getBlockEntity(RACK, IronChestBlockEntity.class);
+			chest.setItem(0, fuel.copy());
+			int stored = RadiationSources.exposureAt(level, viewer, Config.radiationSourceRadius);
+			if (stored <= 0) {
+				helper.fail("rig is wrong: uranium in an ordinary chest must irradiate; got " + stored);
+			}
+
+			// Empty it before the next phase, or the loose stack keeps radiating from the same chest.
+			chest.clearContent();
+			chest.setItem(0, shieldingPouchOf(fuel.copy()));
+			int pouched = RadiationSources.exposureAt(level, viewer, Config.radiationSourceRadius);
+			if (pouched != 0) {
+				helper.fail("a shielding pouch in a chest must not radiate; got " + pouched);
+			}
+			chest.clearContent();
 			helper.succeed();
 		});
 	}

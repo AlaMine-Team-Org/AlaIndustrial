@@ -10,11 +10,19 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * Immutable contents of an Battery Pouch (MOD-052), carried on the item as the
- * {@code alaindustrial:pouch_contents} data component. Not the vanilla {@code bundle_contents}:
- * the pouch needs its own capacity ({@link Config#lvPouchCapacity}, default 128 weight — twice a
- * bundle) and its own insert rules (merge-first, no pouch-in-pouch), and the vanilla component's
- * internals keep churning between versions (26.x moved it to {@code ItemStackTemplate}).
+ * Immutable contents of a pouch — the Battery Pouch (MOD-052) and the Shielding Pouch (MOD-545)
+ * share this type and the one {@code alaindustrial:pouch_contents} data component that carries it;
+ * they differ by capacity and by item type, not by storage. Not the vanilla {@code bundle_contents}:
+ * a pouch needs its own capacity and its own insert rules (merge-first, no pouch-in-pouch), and the
+ * vanilla component's internals keep churning between versions (26.x moved it to
+ * {@code ItemStackTemplate}).
+ *
+ * <p><b>One component for both pouches is what makes the shielding rule readable.</b> The radiation
+ * sweep reads this component like it reads a bundle's and a shulker's, so a Battery Pouch full of
+ * uranium irradiates its carrier. The Shielding Pouch is skipped by an explicit type check in
+ * {@code RadiationSources.countTagged} — the same doctrine as {@code isExposedStorage} skipping the
+ * shielding chest. A separate component would have shielded it by being invisible, which is not a
+ * rule anyone can find later.
  *
  * <p>Weight model matches the vanilla bundle so player expectations carry over: one item weighs
  * {@code 64 / maxStackSize} (min 1) — a full 64-stack weighs 64, a pearl weighs 4, a tool weighs 64.
@@ -51,17 +59,23 @@ public record PouchContents(List<ItemStack> items) {
 		return total;
 	}
 
-	/** Remaining weight before the pouch is full ({@link Config#lvPouchCapacity}). */
-	public int room() {
-		return Math.max(0, Config.lvPouchCapacity - weight());
+	/**
+	 * Remaining weight before the pouch is full. The capacity is passed in rather than read from
+	 * {@link Config}: the same contents back two pouches with different capacities (the Battery
+	 * Pouch's {@link Config#lvPouchCapacity} and the Shielding Pouch's
+	 * {@link Config#shieldingPouchCapacity}), and a capacity read here would silently be the wrong
+	 * one for whichever pouch was not the original.
+	 */
+	public int room(int capacity) {
+		return Math.max(0, capacity - weight());
 	}
 
 	public boolean isEmpty() {
 		return items.isEmpty();
 	}
 
-	public boolean isFull() {
-		return room() <= 0;
+	public boolean isFull(int capacity) {
+		return room(capacity) <= 0;
 	}
 
 	/** Result of {@link #insert}: the new contents, what did not fit, and how many items went in. */
@@ -78,12 +92,12 @@ public record PouchContents(List<ItemStack> items) {
 	 * new stack at the end (keeping LIFO order = insertion order). Pouches themselves are rejected
 	 * (no pouch-in-pouch). The input stack is not mutated.
 	 */
-	public InsertResult insert(ItemStack stack) {
+	public InsertResult insert(ItemStack stack, int capacity) {
 		if (stack.isEmpty() || stack.getItem() instanceof PouchItem) {
 			return new InsertResult(this, stack.copy(), 0);
 		}
 		int perItem = weightOf(stack);
-		int accepted = Math.min(stack.getCount(), room() / perItem);
+		int accepted = Math.min(stack.getCount(), room(capacity) / perItem);
 		if (accepted <= 0) {
 			return new InsertResult(this, stack.copy(), 0);
 		}

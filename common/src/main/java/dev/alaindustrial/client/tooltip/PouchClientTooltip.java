@@ -1,6 +1,5 @@
 package dev.alaindustrial.client.tooltip;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.item.energy.PouchContents;
 import dev.alaindustrial.item.energy.PouchTooltip;
 import java.util.List;
@@ -38,9 +37,11 @@ public class PouchClientTooltip implements ClientTooltipComponent {
 	private static final int PERCENT_TEXT = 0xFFAAAAAA; // secondary grey, sits outside the bar
 
 	private final PouchContents contents;
+	private final int capacity;
 
 	public PouchClientTooltip(PouchTooltip tooltip) {
 		this.contents = tooltip.contents();
+		this.capacity = tooltip.capacity();
 	}
 
 	private int cells() {
@@ -60,8 +61,10 @@ public class PouchClientTooltip implements ClientTooltipComponent {
 		return Math.max(columns() * CELL, NARROW_COLUMNS * CELL); // keep the bar readable even for one item
 	}
 
+	// The capacity comes from the payload, not from a config knob: the Battery Pouch and the
+	// Shielding Pouch are drawn by this same renderer and hold different amounts (MOD-545).
 	private int capacity() {
-		return Math.max(1, Config.lvPouchCapacity);
+		return Math.max(1, capacity);
 	}
 
 	private String percentLabel() {

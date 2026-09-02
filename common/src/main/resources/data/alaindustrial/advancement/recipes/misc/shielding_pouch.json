@@ -1,0 +1,15 @@
+{
+	"parent": "minecraft:recipes/root",
+	"criteria": {
+		"has_ingredient": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": { "items": [ { "items": "alaindustrial:battery_pouch" } ] }
+		},
+		"has_the_recipe": {
+			"trigger": "minecraft:recipe_unlocked",
+			"conditions": { "recipe": "alaindustrial:shielding_pouch" }
+		}
+	},
+	"requirements": [ [ "has_the_recipe", "has_ingredient" ] ],
+	"rewards": { "recipes": [ "alaindustrial:shielding_pouch" ] }
+}

@@ -2597,6 +2597,17 @@ public final class NeoForgeGameTests {
 		// MOD-524 — the sweep must not open a foreign chest whose loot is still ungenerated.
 		registerTest(event, "rad_sweep_leaves_ungenerated_loot_alone", 40, true,
 				RadiationScenarios::sweepLeavesUngeneratedLootAlone);
+		// MOD-545 — the shielding pouch: the one carried container the sweep skips.
+		registerTest(event, "rad_pouch_hides_every_tag_from_the_carrier", 40, true,
+				RadiationScenarios::pouchHidesEveryTagFromTheCarrier);
+		registerTest(event, "rad_pouch_rule_holds_inside_another_container", 40, true,
+				RadiationScenarios::pouchRuleHoldsInsideAnotherContainer);
+		registerTest(event, "rad_pouch_carrier_does_not_irradiate_bystanders", 40, true,
+				RadiationScenarios::pouchCarrierDoesNotIrradiateBystanders);
+		registerTest(event, "rad_pouch_does_not_shield_the_field", 40, true,
+				RadiationScenarios::pouchDoesNotShieldTheField);
+		registerTest(event, "rad_pouch_is_quiet_on_the_floor_and_in_a_chest", 40, true,
+				RadiationScenarios::pouchIsQuietOnTheFloorAndInAChest);
 		registerTest(event, "crystal_farm_fun01_sealed_room_forms", 200, true, CrystalFarmScenarios::fun01SealedRoomForms);
 		registerTest(event, "crystal_farm_fun02_breach_unforms_and_repaints", 200, true, CrystalFarmScenarios::fun02BreachUnformsAndRepaints);
 		registerTest(event, "crystal_farm_fun03_breach_is_reported_at_the_hole", 200, true, CrystalFarmScenarios::fun03BreachIsReportedAtTheHole);

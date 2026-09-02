@@ -138,4 +138,44 @@ public class RadiationGameTest {
 	public void radSweepLeavesUngeneratedLootAlone(GameTestHelper helper) {
 		RadiationScenarios.sweepLeavesUngeneratedLootAlone(helper);
 	}
+
+	/**
+	 * @implements R-RAD-17 — uranium of every tag is invisible inside a shielding pouch and visible in a bundle.
+	 */
+	@GameTest
+	public void radPouchHidesEveryTagFromTheCarrier(GameTestHelper helper) {
+		RadiationScenarios.pouchHidesEveryTagFromTheCarrier(helper);
+	}
+
+	/**
+	 * @implements R-RAD-18 — the shielding survives one level down, where the template overload answers.
+	 */
+	@GameTest
+	public void radPouchRuleHoldsInsideAnotherContainer(GameTestHelper helper) {
+		RadiationScenarios.pouchRuleHoldsInsideAnotherContainer(helper);
+	}
+
+	/**
+	 * @implements R-RAD-19 — a pouch carrier is never a source, so bystanders take no dose from them.
+	 */
+	@GameTest
+	public void radPouchCarrierDoesNotIrradiateBystanders(GameTestHelper helper) {
+		RadiationScenarios.pouchCarrierDoesNotIrradiateBystanders(helper);
+	}
+
+	/**
+	 * @implements R-RAD-20 — the pouch shields its contents only; a fuelled rack reads the same with it and without.
+	 */
+	@GameTest
+	public void radPouchDoesNotShieldTheField(GameTestHelper helper) {
+		RadiationScenarios.pouchDoesNotShieldTheField(helper);
+	}
+
+	/**
+	 * @implements R-RAD-21 — a closed pouch radiates neither dropped on the floor nor stored in a chest.
+	 */
+	@GameTest
+	public void radPouchIsQuietOnTheFloorAndInAChest(GameTestHelper helper) {
+		RadiationScenarios.pouchIsQuietOnTheFloorAndInAChest(helper);
+	}
 }

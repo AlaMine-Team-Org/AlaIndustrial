@@ -86,6 +86,7 @@ public final class ModItems {
 	// Powered items: read by the Fabric item-energy capability registration (StackAsEnergyStorage).
 	public static final Item BATTERY = handle("battery");
 	public static final Item BATTERY_POUCH = handle("battery_pouch");
+	public static final Item SHIELDING_POUCH = handle("shielding_pouch");
 	public static final Item ENERGY_PACK = handle("energy_pack");
 	public static final Item ELECTRIC_DRILL = handle("electric_drill");
 	public static final Item ELECTRIC_DRILL_DIAMOND_TIP = handle("electric_drill_diamond_tip");

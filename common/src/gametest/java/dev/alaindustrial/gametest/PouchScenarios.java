@@ -120,10 +120,10 @@ public final class PouchScenarios {
 	/** FUN02: capacity is 128 weight — a third 64-stack does not fit and comes back as leftover. */
 	public static void fun02CapacityLeftover(GameTestHelper helper) {
 		PouchContents contents = PouchContents.EMPTY;
-		PouchContents.InsertResult r1 = contents.insert(new ItemStack(Items.COBBLESTONE, 64));
-		PouchContents.InsertResult r2 = r1.contents().insert(new ItemStack(Items.STONE, 64));
-		PouchContents.InsertResult r3 = r2.contents().insert(new ItemStack(Items.DIRT, 64));
-		if (r2.contents().weight() != Config.lvPouchCapacity || !r2.contents().isFull()) {
+		PouchContents.InsertResult r1 = contents.insert(new ItemStack(Items.COBBLESTONE, 64), Config.lvPouchCapacity);
+		PouchContents.InsertResult r2 = r1.contents().insert(new ItemStack(Items.STONE, 64), Config.lvPouchCapacity);
+		PouchContents.InsertResult r3 = r2.contents().insert(new ItemStack(Items.DIRT, 64), Config.lvPouchCapacity);
+		if (r2.contents().weight() != Config.lvPouchCapacity || !r2.contents().isFull(Config.lvPouchCapacity)) {
 			helper.fail("two 64-stacks must fill the pouch exactly (weight " + r2.contents().weight() + ")");
 		}
 		if (r3.inserted() != 0 || r3.leftover().getCount() != 64) {
@@ -140,12 +140,12 @@ public final class PouchScenarios {
 			helper.fail("weightOf must be 64/maxStackSize (1 / 4 / 64)");
 		}
 		PouchContents contents = PouchContents.EMPTY
-				.insert(new ItemStack(Items.IRON_PICKAXE)).contents()
-				.insert(new ItemStack(Items.ENDER_PEARL, 16)).contents();
-		if (contents.weight() != 128 || !contents.isFull()) {
+				.insert(new ItemStack(Items.IRON_PICKAXE), Config.lvPouchCapacity).contents()
+				.insert(new ItemStack(Items.ENDER_PEARL, 16), Config.lvPouchCapacity).contents();
+		if (contents.weight() != 128 || !contents.isFull(Config.lvPouchCapacity)) {
 			helper.fail("pickaxe (64) + 16 pearls (64) must fill 128 exactly, got " + contents.weight());
 		}
-		if (contents.insert(new ItemStack(Items.COBBLESTONE)).inserted() != 0) {
+		if (contents.insert(new ItemStack(Items.COBBLESTONE), Config.lvPouchCapacity).inserted() != 0) {
 			helper.fail("a full pouch must reject even a single item");
 		}
 		helper.succeed();
@@ -154,9 +154,9 @@ public final class PouchScenarios {
 	/** FUN04: LIFO — removeTop returns whole stacks in reverse insertion order. */
 	public static void fun04RemoveLifo(GameTestHelper helper) {
 		PouchContents contents = PouchContents.EMPTY
-				.insert(new ItemStack(Items.STONE, 8)).contents()
-				.insert(new ItemStack(Items.IRON_INGOT, 8)).contents()
-				.insert(new ItemStack(Items.COAL, 8)).contents();
+				.insert(new ItemStack(Items.STONE, 8), Config.lvPouchCapacity).contents()
+				.insert(new ItemStack(Items.IRON_INGOT, 8), Config.lvPouchCapacity).contents()
+				.insert(new ItemStack(Items.COAL, 8), Config.lvPouchCapacity).contents();
 		PouchContents.RemoveResult r1 = contents.removeTop();
 		PouchContents.RemoveResult r2 = r1.contents().removeTop();
 		PouchContents.RemoveResult r3 = r2.contents().removeTop();
@@ -172,7 +172,7 @@ public final class PouchScenarios {
 	/** FUN05: one drain step takes exactly lvPouchDrainPerSecond EU while items are inside. */
 	public static void fun05PassiveDrain(GameTestHelper helper) {
 		ItemStack pouch = pouch(Config.lvPouchBuffer);
-		PouchItem.setContents(pouch, PouchContents.EMPTY.insert(new ItemStack(Items.COBBLESTONE, 8)).contents());
+		PouchItem.setContents(pouch, PouchContents.EMPTY.insert(new ItemStack(Items.COBBLESTONE, 8), Config.lvPouchCapacity).contents());
 		if (!PouchItem.drainStep(pouch, null) || ItemEnergy.get(pouch) != Config.lvPouchBuffer - Config.lvPouchDrainPerSecond) {
 			helper.fail("drain step must take exactly " + Config.lvPouchDrainPerSecond + " EU");
 		}
@@ -191,7 +191,7 @@ public final class PouchScenarios {
 			Player player = helper.makeMockPlayer(mode);
 			mode.updatePlayerAbilities(player.getAbilities());
 			ItemStack pouch = pouch(Config.lvPouchBuffer);
-			PouchItem.setContents(pouch, PouchContents.EMPTY.insert(new ItemStack(Items.COBBLESTONE, 8)).contents());
+			PouchItem.setContents(pouch, PouchContents.EMPTY.insert(new ItemStack(Items.COBBLESTONE, 8), Config.lvPouchCapacity).contents());
 			for (int i = 0; i < 100; i++) {
 				if (PouchItem.drainStep(pouch, player)) {
 					helper.fail("a pouch carried in " + mode + " must not drain");
@@ -237,8 +237,8 @@ public final class PouchScenarios {
 
 	/** FUN08: inserting merges into an existing partial stack before opening a new one. */
 	public static void fun08MergeOnInsert(GameTestHelper helper) {
-		PouchContents contents = PouchContents.EMPTY.insert(new ItemStack(Items.COBBLESTONE, 32)).contents();
-		PouchContents merged = contents.insert(new ItemStack(Items.COBBLESTONE, 64)).contents();
+		PouchContents contents = PouchContents.EMPTY.insert(new ItemStack(Items.COBBLESTONE, 32), Config.lvPouchCapacity).contents();
+		PouchContents merged = contents.insert(new ItemStack(Items.COBBLESTONE, 64), Config.lvPouchCapacity).contents();
 		if (merged.items().size() != 2
 				|| merged.items().get(0).getCount() != 64
 				|| merged.items().get(1).getCount() != 32
@@ -254,7 +254,7 @@ public final class PouchScenarios {
 		if (item(pouch).getTooltipImage(pouch).isPresent()) {
 			helper.fail("empty pouch must expose no tooltip image");
 		}
-		PouchItem.setContents(pouch, PouchContents.EMPTY.insert(new ItemStack(Items.COBBLESTONE, 8)).contents());
+		PouchItem.setContents(pouch, PouchContents.EMPTY.insert(new ItemStack(Items.COBBLESTONE, 8), Config.lvPouchCapacity).contents());
 		if (!(item(pouch).getTooltipImage(pouch).orElse(null) instanceof dev.alaindustrial.item.energy.PouchTooltip tooltip)
 				|| tooltip.contents().weight() != 8) {
 			helper.fail("filled pouch must expose a PouchTooltip carrying its contents");
@@ -266,7 +266,7 @@ public final class PouchScenarios {
 
 	/** NEG01: no pouch-in-pouch. */
 	public static void neg01NoPouchInPouch(GameTestHelper helper) {
-		PouchContents.InsertResult r = PouchContents.EMPTY.insert(pouch(0));
+		PouchContents.InsertResult r = PouchContents.EMPTY.insert(pouch(0), Config.lvPouchCapacity);
 		if (r.inserted() != 0 || r.leftover().isEmpty()) {
 			helper.fail("a pouch must never fit into a pouch");
 		}
@@ -297,7 +297,7 @@ public final class PouchScenarios {
 	/** NEG03: drain floors at 0 (never negative) and the lock then refuses extraction. */
 	public static void neg03DrainFloorsAndLocks(GameTestHelper helper) {
 		ItemStack pouch = pouch(1);
-		PouchItem.setContents(pouch, PouchContents.EMPTY.insert(new ItemStack(Items.COBBLESTONE, 8)).contents());
+		PouchItem.setContents(pouch, PouchContents.EMPTY.insert(new ItemStack(Items.COBBLESTONE, 8), Config.lvPouchCapacity).contents());
 		PouchItem.drainStep(pouch, null);
 		if (ItemEnergy.get(pouch) != 0 || PouchItem.drainStep(pouch, null)) {
 			helper.fail("drain must stop exactly at 0 EU");
@@ -361,9 +361,9 @@ public final class PouchScenarios {
 	public static void per01ContentsRoundTrip(GameTestHelper helper) {
 		ItemStack pouch = pouch(777);
 		PouchContents contents = PouchContents.EMPTY
-				.insert(new ItemStack(Items.COBBLESTONE, 64)).contents()
-				.insert(new ItemStack(Items.ENDER_PEARL, 5)).contents()
-				.insert(new ItemStack(Items.IRON_PICKAXE)).contents();
+				.insert(new ItemStack(Items.COBBLESTONE, 64), Config.lvPouchCapacity).contents()
+				.insert(new ItemStack(Items.ENDER_PEARL, 5), Config.lvPouchCapacity).contents()
+				.insert(new ItemStack(Items.IRON_PICKAXE), Config.lvPouchCapacity).contents();
 		PouchItem.setContents(pouch, contents);
 		RegistryOps<Tag> ops = helper.getLevel().registryAccess().createSerializationContext(NbtOps.INSTANCE);
 		Tag tag = ItemStack.CODEC.encodeStart(ops, pouch).getOrThrow();

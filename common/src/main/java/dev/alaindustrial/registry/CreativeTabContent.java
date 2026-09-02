@@ -217,6 +217,8 @@ public final class CreativeTabContent {
 		after(out, Items.COMPASS, ModContent.NETWORK_ANALYZER);
 		show(out, ModContent.WRENCH);
 		show(out, ModContent.BATTERY_POUCH);
+		// MOD-545 — the lead-lined tier of the pouch above, kept beside it.
+		show(out, ModContent.SHIELDING_POUCH);
 		show(out, ModContent.ENERGY_PACK);
 		show(out, ModContent.ELECTRIC_DRILL);
 		show(out, ModContent.ELECTRIC_DRILL_DIAMOND_TIP);
@@ -505,6 +507,8 @@ public final class CreativeTabContent {
 		// Charge carriers last: they exist to feed everything above.
 		show(out, ModContent.BATTERY);
 		show(out, ModContent.BATTERY_POUCH);
+		// MOD-545 — the lead-lined tier of the pouch above, kept beside it.
+		show(out, ModContent.SHIELDING_POUCH);
 		show(out, ModContent.ENERGY_PACK);
 		// Crystals after the pack, each blank next to what it becomes.
 		show(out, ModContent.ENERGY_CRYSTAL_BLANK);

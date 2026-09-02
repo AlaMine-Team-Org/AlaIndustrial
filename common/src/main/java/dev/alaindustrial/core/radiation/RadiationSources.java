@@ -5,12 +5,16 @@ import dev.alaindustrial.block.IrradiatedSoilBlock;
 import dev.alaindustrial.block.entity.AbstractChestBlockEntity;
 import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
 import dev.alaindustrial.block.entity.ShieldingChestBlockEntity;
+import dev.alaindustrial.item.energy.PouchContents;
+import dev.alaindustrial.item.misc.ShieldingPouchItem;
 import dev.alaindustrial.loot.PendingLoot;
+import dev.alaindustrial.registry.ModDataComponents;
 import dev.alaindustrial.registry.ModTags;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
@@ -22,6 +26,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.entity.BarrelBlockEntity;
@@ -363,13 +368,8 @@ public final class RadiationSources {
 			return 0;
 		}
 		int count = stack.is(tag) ? stack.getCount() : 0;
-		if (depth > 0) {
-			ItemContainerContents contents = stack.get(DataComponents.CONTAINER);
-			if (contents != null) {
-				for (ItemStackTemplate inner : contents.nonEmptyItems()) {
-					count += countTagged(inner, tag, depth - 1);
-				}
-			}
+		if (depth > 0 && !isShieldingPouch(stack.getItem())) {
+			count += taggedInside(stack, tag, depth);
 		}
 		return count;
 	}
@@ -381,12 +381,50 @@ public final class RadiationSources {
 	 */
 	public static int countTagged(ItemStackTemplate template, TagKey<Item> tag, int depth) {
 		int count = template.typeHolder().is(tag) ? template.count() : 0;
-		if (depth > 0) {
-			ItemContainerContents contents = template.get(DataComponents.CONTAINER);
-			if (contents != null) {
-				for (ItemStackTemplate inner : contents.nonEmptyItems()) {
-					count += countTagged(inner, tag, depth - 1);
-				}
+		if (depth > 0 && !isShieldingPouch(template.typeHolder().value())) {
+			count += taggedInside(template, tag, depth);
+		}
+		return count;
+	}
+
+	/**
+	 * The one carried container that stops the radiation of its contents (MOD-545) — the portable
+	 * counterpart of {@link #isExposedStorage}'s shielding chest, and keyed the same way, on the item
+	 * TYPE rather than on a tag: no datapack can hand shielding to another pouch, and no future pouch
+	 * inherits it by accident.
+	 */
+	private static boolean isShieldingPouch(Item item) {
+		return item instanceof ShieldingPouchItem;
+	}
+
+	/**
+	 * Tagged items inside a carried container, whichever component it keeps them in.
+	 *
+	 * <p><b>All three are read on purpose (MOD-545).</b> Until then only {@code CONTAINER} was, which
+	 * made a shulker box of uranium lethal and a vanilla BUNDLE of the same uranium completely inert —
+	 * bundles keep their contents in {@code BUNDLE_CONTENTS}, and the mod's own pouches in
+	 * {@code POUCH_CONTENTS}. A bundle of leather and string was therefore a better radiation shield
+	 * than a lead chest, for free, and the shielding pouch would have had nothing to be better than.
+	 * The exclusion above is the only hole, and it is a decision rather than a blind spot.
+	 */
+	private static int taggedInside(DataComponentGetter carrier, TagKey<Item> tag, int depth) {
+		int count = 0;
+		ItemContainerContents contents = carrier.get(DataComponents.CONTAINER);
+		if (contents != null) {
+			for (ItemStackTemplate inner : contents.nonEmptyItems()) {
+				count += countTagged(inner, tag, depth - 1);
+			}
+		}
+		BundleContents bundle = carrier.get(DataComponents.BUNDLE_CONTENTS);
+		if (bundle != null) {
+			for (ItemStackTemplate inner : bundle.items()) {
+				count += countTagged(inner, tag, depth - 1);
+			}
+		}
+		PouchContents pouch = carrier.get(ModDataComponents.POUCH_CONTENTS.get());
+		if (pouch != null) {
+			for (ItemStack inner : pouch.items()) {
+				count += countTagged(inner, tag, depth - 1);
 			}
 		}
 		return count;

@@ -464,7 +464,8 @@ public final class IndustrializationNeoForge {
 		// expected set from ItemEnergy.capacity(stack) > 0 and reddens the lane on the next omission.
 		event.registerItem(Capabilities.Energy.ITEM,
 				(stack, access) -> new dev.alaindustrial.core.neoforge.StackAsEnergyHandler(access),
-				ModItemsNeoForge.BATTERY_POUCH.get(), ModItemsNeoForge.BATTERY.get(),
+				ModItemsNeoForge.BATTERY_POUCH.get(), ModItemsNeoForge.SHIELDING_POUCH.get(),
+				ModItemsNeoForge.BATTERY.get(),
 				ModItemsNeoForge.ENERGY_PACK.get(),
 				ModItemsNeoForge.ELECTRIC_DRILL.get(), ModItemsNeoForge.ELECTRIC_DRILL_DIAMOND_TIP.get(),
 				ModItemsNeoForge.ELECTRIC_DRILL_NETHERITE_TIP.get(),

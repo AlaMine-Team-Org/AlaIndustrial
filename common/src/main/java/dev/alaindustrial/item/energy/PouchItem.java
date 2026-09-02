@@ -37,6 +37,14 @@ public class PouchItem extends Item {
 		super(properties);
 	}
 
+	/**
+	 * Storage capacity in weight units. Overridable so a tier of the pouch can hold a different
+	 * amount without restating the handling: the Shielding Pouch (MOD-545) is this item plus lead.
+	 */
+	protected int capacity() {
+		return Config.lvPouchCapacity;
+	}
+
 	// --- extraction: right-click in air -> whole top stack (LIFO, Q-EXT-1) back into inventory ---
 
 	@Override
@@ -82,7 +90,7 @@ public class PouchItem extends Item {
 			PouchContents result = removed.contents();
 			if (!rejected.isEmpty()) {
 				// slot refused part of it — the freed weight always fits back
-				result = result.insert(rejected).contents();
+				result = result.insert(rejected, capacity()).contents();
 			}
 			setContents(pouch, result);
 			playRemove(player);
@@ -96,7 +104,8 @@ public class PouchItem extends Item {
 			playFail(player);
 			return true;
 		}
-		int acceptable = Math.min(slotStack.getCount(), contents.room() / PouchContents.weightOf(slotStack));
+		int acceptable = Math.min(slotStack.getCount(),
+				contents.room(capacity()) / PouchContents.weightOf(slotStack));
 		if (acceptable <= 0) {
 			playFail(player);
 			return true;
@@ -105,7 +114,7 @@ public class PouchItem extends Item {
 		if (taken.isEmpty()) {
 			return false;
 		}
-		PouchContents.InsertResult inserted = contents.insert(taken);
+		PouchContents.InsertResult inserted = contents.insert(taken, capacity());
 		setContents(pouch, inserted.contents());
 		if (!inserted.leftover().isEmpty()) {
 			slot.safeInsert(inserted.leftover());
@@ -147,7 +156,7 @@ public class PouchItem extends Item {
 			playFail(player);
 			return true;
 		}
-		PouchContents.InsertResult inserted = contents.insert(other);
+		PouchContents.InsertResult inserted = contents.insert(other, capacity());
 		if (inserted.inserted() <= 0) {
 			playFail(player);
 			return true;
@@ -211,7 +220,8 @@ public class PouchItem extends Item {
 	@Override
 	public java.util.Optional<net.minecraft.world.inventory.tooltip.TooltipComponent> getTooltipImage(ItemStack stack) {
 		PouchContents contents = contentsOf(stack);
-		return contents.isEmpty() ? java.util.Optional.empty() : java.util.Optional.of(new PouchTooltip(contents));
+		return contents.isEmpty() ? java.util.Optional.empty()
+				: java.util.Optional.of(new PouchTooltip(contents, capacity()));
 	}
 
 	// --- helpers ---

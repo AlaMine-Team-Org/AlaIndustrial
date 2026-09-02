@@ -445,6 +445,8 @@ public final class ModContent {
 	/** Teleporter Remote (MOD-092) — hidden from the creative tab until MOD-093 completes the feature. */
 	public static Supplier<Item> TELEPORTER_REMOTE = unbound("TELEPORTER_REMOTE");
 	public static Supplier<Item> BATTERY_POUCH = unbound("BATTERY_POUCH");
+	/** Shielding Pouch (MOD-545) — carries radioactive items without irradiating anyone. */
+	public static Supplier<Item> SHIELDING_POUCH = unbound("SHIELDING_POUCH");
 	// Energy Pack (MOD-065) — worn LV energy buffer (chest slot) that tops up the powered items the
 	// player carries; BATTERY is its crafting component (an inert cell, no charge of its own).
 	public static Supplier<Item> BATTERY = unbound("BATTERY");

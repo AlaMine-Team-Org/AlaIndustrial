@@ -156,6 +156,7 @@ import dev.alaindustrial.item.misc.DurableComponentItem;
 import dev.alaindustrial.item.misc.HintItem;
 import dev.alaindustrial.item.misc.MutationChipItem;
 import dev.alaindustrial.item.misc.OverclockerChipItem;
+import dev.alaindustrial.item.misc.ShieldingPouchItem;
 import dev.alaindustrial.item.misc.SoulVesselItem;
 import dev.alaindustrial.item.teleport.RtpChipItem;
 import dev.alaindustrial.entity.StockDisplayFrameEntity;
@@ -1606,6 +1607,10 @@ public final class ContentManifest {
 			// MOD-093 finishes the feature (same treatment as the station — see CreativeTabContent).
 			item("teleporter_remote", p -> new TeleporterRemoteItem(p.stacksTo(1)), s -> ModContent.TELEPORTER_REMOTE = s),
 			item("battery_pouch", p -> new PouchItem(p.stacksTo(1)), s -> ModContent.BATTERY_POUCH = s),
+			// Shielding Pouch (MOD-545): the same pouch handling with no electricity, and the one
+			// carried container the radiation sweep skips — see RadiationSources.countTagged.
+			item("shielding_pouch", p -> new ShieldingPouchItem(p.stacksTo(1)),
+					s -> ModContent.SHIELDING_POUCH = s),
 			// Energy Pack (MOD-065): worn LV buffer + the inert battery cell it is crafted from.
 			item("battery", p -> new BatteryItem(p.stacksTo(BatteryItem.MAX_STACK)), s -> ModContent.BATTERY = s),
 			// EU crystals (MOD-504). Two items per tier: the blank carries the buffer and is stacksTo(1)
