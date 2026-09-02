@@ -93,4 +93,35 @@ public class PersistenceGameTest {
 	public void rPer01c_furnaceNbtRoundTrip(GameTestHelper helper) {
 		MachineEnergyScenarios.furnaceNbtRoundTrip(helper);
 	}
+
+	// -- MOD-556: the tank saves itself; the on-disk shape must not have moved with it --
+
+	/**
+	 * Every machine tank still writes the exact {@code <prefix>Mb} / {@code <prefix>Fluid} pair it wrote
+	 * before the code moved into {@code FluidTank}. Body:
+	 * {@link PersistenceScenarios#mod556_tankKeysUnchangedAfterSelfSave}.
+	 */
+	@GameTest
+	public void mod556Per01_tankKeysUnchangedAfterSelfSave(GameTestHelper helper) {
+		PersistenceScenarios.mod556_tankKeysUnchangedAfterSelfSave(helper);
+	}
+
+	/**
+	 * A world saved by a build from before the move still opens: hand-built pre-MOD-556 tags load with
+	 * their contents intact, including the pump's two legacy fallbacks. Body:
+	 * {@link PersistenceScenarios#mod556_preRefactorSavesStillLoad}.
+	 */
+	@GameTest
+	public void mod556Per02_preRefactorSavesStillLoad(GameTestHelper helper) {
+		PersistenceScenarios.mod556_preRefactorSavesStillLoad(helper);
+	}
+
+	/**
+	 * The block-entity format version and its migration ladder agree, and the version really gates the
+	 * ladder. Body: {@link PersistenceScenarios#mod556_dataVersionMatchesTheLadder}.
+	 */
+	@GameTest
+	public void mod556Per03_dataVersionMatchesTheLadder(GameTestHelper helper) {
+		PersistenceScenarios.mod556_dataVersionMatchesTheLadder(helper);
+	}
 }

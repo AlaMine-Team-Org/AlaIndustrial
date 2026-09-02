@@ -1,4 +1,4 @@
-package dev.alaindustrial.compat.jei;
+package dev.alaindustrial.client.compat.jei;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.client.compat.CanningExchange;
@@ -11,7 +11,7 @@ import dev.alaindustrial.recipe.AlloyingRecipe;
 import dev.alaindustrial.recipe.FluidOutputRecipe;
 import dev.alaindustrial.recipe.PolymerizingRecipe;
 import dev.alaindustrial.recipe.VanillaSmeltingMirror;
-import dev.alaindustrial.registry.ModBlocks;
+import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModRecipes;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -22,7 +22,6 @@ import mezz.jei.api.IModPlugin;
 import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.recipe.types.IRecipeHolderType;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
@@ -39,44 +38,25 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 
 /**
- * JEI integration for the Fabric build (MOD-541) — the twin of the NeoForge {@code AlaJeiPlugin}
- * and a sibling of the Fabric REI integration: JEI cannot read REI plugins, so players who install
- * JEI on Fabric saw none of the machine recipes. Registered via the {@code jei_mod_plugin}
- * entrypoint in fabric.mod.json (JEI discovers its own key; there is no annotation on Fabric).
+ * The JEI integration — one implementation for both loaders (MOD-558).
  *
- * <p>Found through this entrypoint only when JEI is installed; with REI (or no viewer) the class
- * never loads and the REI integration carries the categories instead.
+ * <p>It used to be two: `fabric/.../compat/jei` (MOD-541 — JEI cannot read REI plugins, so a Fabric
+ * player who installs JEI instead of REI must still get the machine categories) and
+ * `neoforge/.../compat/jei`, nine files each, of which only this one differed in anything but a
+ * javadoc sentence. What differed was the source of the workstation blocks (each loader's own
+ * registry class) and one accessor — and the JEI-specific half is identical because both loaders
+ * compile against the same {@code jei-26.2-common-api}. Since the workstation is declared on the
+ * recipe family itself ({@link ModRecipes.Kind#station()}), nothing loader-specific is left in the
+ * plugin body, and the loaders keep only their entry point: the {@code @JeiPlugin} annotation on
+ * NeoForge, the {@code jei_mod_plugin} entrypoint in {@code fabric.mod.json} on Fabric (JEI
+ * discovers its own key there; Fabric has no annotation scan).
+ *
+ * <p>Loaded through that entry point only when JEI is installed. With REI — or with no viewer at all
+ * — the class is never touched, and on Fabric the REI integration carries the categories instead.
+ *
+ * <p>Not {@code final}: the NeoForge entry point is an empty annotated subclass.
  */
-public final class AlaJeiPlugin implements IModPlugin {
-	private record Machine(
-			ModRecipes.Kind kind,
-			Block block,
-			IRecipeHolderType<AlaProcessingRecipe> type) {
-	}
-
-	private static final Machine[] MACHINES = {
-			machine(ModRecipes.MACERATION, ModBlocks.MACERATOR),
-			machine(ModRecipes.SMELTING, ModBlocks.ELECTRIC_FURNACE),
-			machine(ModRecipes.COMPRESSING, ModBlocks.COMPRESSOR),
-			machine(ModRecipes.EXTRACTING, ModBlocks.EXTRACTOR),
-			machine(ModRecipes.VULCANIZING, ModBlocks.VULCANIZER),
-			machine(ModRecipes.GALVANIC_BATH, ModBlocks.GALVANIC_BATH),
-			machine(ModRecipes.FERMENTING, ModBlocks.FERMENTER),
-			machine(ModRecipes.CENTRIFUGING, ModBlocks.THERMAL_CENTRIFUGE),
-			// Sawmill (MOD-150): four mode families, all worked at the same sawmill block.
-			machine(ModRecipes.SAWING_PLANKS, ModBlocks.SAWMILL),
-			machine(ModRecipes.SAWING_STICKS, ModBlocks.SAWMILL),
-			machine(ModRecipes.SAWING_SLABS, ModBlocks.SAWMILL),
-			machine(ModRecipes.SAWING_STAIRS, ModBlocks.SAWMILL),
-			// Incubator (MOD-118): three mutation families, all worked at the same incubator block.
-			machine(ModRecipes.MUTATION_TRANSFORM, ModBlocks.INCUBATOR),
-			machine(ModRecipes.MUTATION_DUPLICATE, ModBlocks.INCUBATOR),
-			machine(ModRecipes.MUTATION_CREATE, ModBlocks.INCUBATOR),
-	};
-
-	private static Machine machine(ModRecipes.Kind kind, Block block) {
-		return new Machine(kind, block, AlaJeiRecipeTypes.byKind(kind));
-	}
+public class AlaJeiPlugin implements IModPlugin {
 
 	@Override
 	public Identifier getPluginUid() {
@@ -86,49 +66,57 @@ public final class AlaJeiPlugin implements IModPlugin {
 	@Override
 	public void registerCategories(IRecipeCategoryRegistration registration) {
 		IGuiHelper guiHelper = registration.getJeiHelpers().getGuiHelper();
-		for (Machine machine : MACHINES) {
-			Block block = machine.block();
-			registration.addRecipeCategories(new AlaProcessingJeiCategory(machine.type(), block,
-					RecipeCategoryTitle.of(machine.kind(), block.getName()), guiHelper));
+		// MOD-558: one category per recipe family, replayed from ModRecipes.kinds() — the same list the
+		// loaders register the families from, with the machine that works each one declared on the
+		// family. Before that this was a static MACHINES table resolved through a hand-written ladder,
+		// and a family missing from the ladder threw out of the class initialiser: JEI dropped the whole
+		// plugin and the player saw no card of ANY machine (MOD-146).
+		for (ModRecipes.Kind kind : ModRecipes.kinds()) {
+			Block block = kind.station().get();
+			registration.addRecipeCategories(new AlaProcessingJeiCategory(AlaJeiRecipeTypes.byKind(kind),
+					block, RecipeCategoryTitle.of(kind, block.getName()), guiHelper));
 		}
-		// MOD-019: the Polymerizer's fluid → item family. A single family, so the plain block name titles it.
-		Block polymerizer = ModBlocks.POLYMERIZER;
+		// MOD-019: the Polymerizer's fluid → item family. A single family, so the plain block name titles
+		// it. Its card layout is unlike the processing one, so it is registered by hand — but the block
+		// still comes from the family, not from a second mention of it here.
+		Block polymerizer = ModRecipes.POLYMERIZING.station().get();
 		registration.addRecipeCategories(new PolymerizingJeiCategory(AlaJeiRecipeTypes.POLYMERIZING,
 				polymerizer, polymerizer.getName(), guiHelper));
 		// MOD-064: the alloy smelter. A single family, so the plain block name titles it.
-		Block alloySmelter = ModBlocks.ALLOY_SMELTER;
+		Block alloySmelter = ModRecipes.ALLOYING.station().get();
 		registration.addRecipeCategories(new AlloyingJeiCategory(AlaJeiRecipeTypes.ALLOYING,
 				alloySmelter, alloySmelter.getName(), guiHelper));
 		// MOD-251: the distillation column's fluid → two-fluids family (the MOD-257 contract,
 		// registered now that the real workstation exists).
-		Block column = ModBlocks.DISTILLATION_COLUMN;
+		Block column = ModRecipes.DISTILLING.station().get();
 		registration.addRecipeCategories(new FluidOutputJeiCategory(AlaJeiRecipeTypes.DISTILLING,
 				column, column.getName(), guiHelper));
 		// MOD-383: the canning machine. No recipe type at all — the cards are computed from the item
-		// registry (CanningExchange), so the title comes from its own lang key rather than a block name.
+		// registry (CanningExchange), so the title comes from its own lang key rather than a block name,
+		// and the block cannot come from a recipe family because it has none.
 		registration.addRecipeCategories(new CanningJeiCategory(AlaJeiRecipeTypes.CANNING,
-				ModBlocks.CANNING_MACHINE, RecipeCategoryTitle.canning(), guiHelper));
+				ModContent.CANNING_MACHINE.get(), RecipeCategoryTitle.canning(), guiHelper));
 		// MOD-420: machines with no recipe of any kind. Its own category rather than JEI's built-in
 		// ingredient info, because a click area opens a category unfocused — see MachineInfoJeiCategory.
 		registration.addRecipeCategories(new MachineInfoJeiCategory(AlaJeiRecipeTypes.MACHINE_INFO,
-				ModBlocks.GEOTHERMAL_GENERATOR,
+				ModContent.GEOTHERMAL_GENERATOR.get(),
 				Component.translatable("jei.alaindustrial.category.machine_info"), guiHelper));
 	}
 
 	@Override
 	public void registerRecipes(IRecipeRegistration registration) {
 		Collection<RecipeHolder<?>> recipes = clientSyncedRecipes();
-		for (Machine machine : MACHINES) {
-			List<RecipeHolder<AlaProcessingRecipe>> machineRecipes = recipesFor(recipes, machine.kind());
+		for (ModRecipes.Kind kind : ModRecipes.kinds()) {
+			List<RecipeHolder<AlaProcessingRecipe>> machineRecipes = recipesFor(recipes, kind);
 			// MOD-086: the electric furnace also runs every vanilla smelt (RecipeType.SMELTING fallback),
 			// so its category lists those too — otherwise players opening it see only the mod's recipes and
 			// cannot tell the machine smelts ores, food and sand as well.
-			if (machine.kind() == ModRecipes.SMELTING) {
+			if (kind == ModRecipes.SMELTING) {
 				machineRecipes.addAll(VanillaSmeltingMirror.mirrorAll(recipes));
 			}
 			Industrialization.LOGGER.info("Registering {} AlaIndustrial JEI recipe(s) for {}", machineRecipes.size(),
-					machine.kind().id());
-			registration.addRecipes(machine.type(), machineRecipes);
+					kind.id());
+			registration.addRecipes(AlaJeiRecipeTypes.byKind(kind), machineRecipes);
 		}
 		// MOD-019: the Polymerizer's recipes live in their own class, so they are collected separately.
 		List<RecipeHolder<PolymerizingRecipe>> polymerizing = polymerizingRecipes(recipes);
@@ -180,29 +168,29 @@ public final class AlaJeiPlugin implements IModPlugin {
 
 	@Override
 	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-		for (Machine machine : MACHINES) {
-			registration.addCraftingStation(machine.type(), machine.block());
+		for (ModRecipes.Kind kind : ModRecipes.kinds()) {
+			registration.addCraftingStation(AlaJeiRecipeTypes.byKind(kind), kind.station().get());
 		}
-		registration.addCraftingStation(AlaJeiRecipeTypes.POLYMERIZING, ModBlocks.POLYMERIZER);
-		registration.addCraftingStation(AlaJeiRecipeTypes.ALLOYING, ModBlocks.ALLOY_SMELTER);
+		registration.addCraftingStation(AlaJeiRecipeTypes.POLYMERIZING, ModRecipes.POLYMERIZING.station().get());
+		registration.addCraftingStation(AlaJeiRecipeTypes.ALLOYING, ModRecipes.ALLOYING.station().get());
 		// MOD-251: the distillation column performs the distilling family.
-		registration.addCraftingStation(AlaJeiRecipeTypes.DISTILLING, ModBlocks.DISTILLATION_COLUMN);
+		registration.addCraftingStation(AlaJeiRecipeTypes.DISTILLING, ModRecipes.DISTILLING.station().get());
 		// MOD-383: the canning machine works its own (recipe-less) category.
-		registration.addCraftingStation(AlaJeiRecipeTypes.CANNING, ModBlocks.CANNING_MACHINE);
+		registration.addCraftingStation(AlaJeiRecipeTypes.CANNING, ModContent.CANNING_MACHINE.get());
 		// MOD-420: both machine-info pages are "worked at" the machine they describe, so clicking either
-		// block in JEI opens the category — the Fabric twin of REI's addWorkstations calls.
-		registration.addCraftingStation(AlaJeiRecipeTypes.MACHINE_INFO, ModBlocks.GEOTHERMAL_GENERATOR);
-		registration.addCraftingStation(AlaJeiRecipeTypes.MACHINE_INFO, ModBlocks.ENERGY_CONDENSER);
+		// block in JEI opens the category — the twin of REI's addWorkstations calls.
+		registration.addCraftingStation(AlaJeiRecipeTypes.MACHINE_INFO, ModContent.GEOTHERMAL_GENERATOR.get());
+		registration.addCraftingStation(AlaJeiRecipeTypes.MACHINE_INFO, ModContent.ENERGY_CONDENSER.get());
 		// MOD-076: the electric furnace also performs vanilla smelting — ElectricFurnaceBlockEntity
 		// falls back to RecipeType.SMELTING when no alaindustrial:smelting recipe matches — so it is a
 		// crafting station for JEI's built-in minecraft:smelting category too (ore smelting,
-		// sand → glass, food, etc.). The MACHINES loop above cannot cover this because it is typed to
+		// sand → glass, food, etc.). The kinds loop above cannot cover this because its types are
 		// IRecipeHolderType<AlaProcessingRecipe>, while vanilla smelting is IRecipeHolderType<SmeltingRecipe>.
 		// BLASTING/SMOKING/CAMPFIRE are intentionally NOT added — the electric furnace cannot blast/smoke.
-		registration.addCraftingStation(RecipeTypes.SMELTING, ModBlocks.ELECTRIC_FURNACE);
+		registration.addCraftingStation(RecipeTypes.SMELTING, ModRecipes.SMELTING.station().get());
 		// Iron furnace (MOD-115) — fuel-burning, runs the same vanilla smelting recipes, so it is a
-		// station for the built-in smelting category too.
-		registration.addCraftingStation(RecipeTypes.SMELTING, ModBlocks.IRON_FURNACE);
+		// station for the built-in smelting category too. It works no family of ours, hence ModContent.
+		registration.addCraftingStation(RecipeTypes.SMELTING, ModContent.IRON_FURNACE.get());
 	}
 
 	@Override
@@ -286,7 +274,7 @@ public final class AlaJeiPlugin implements IModPlugin {
 	public void onRuntimeAvailable(IJeiRuntime runtime) {
 		// Hide items that ship registered-but-invisible for v1.0 (no creative-tab entry, no recipe —
 		// see RecipeViewerInfo.hiddenFromRecipeViewerItems). Same list as the REI side, so the
-		// recipe viewer grid stays in sync across viewers.
+		// recipe viewer grid stays in sync across viewers and loaders.
 		List<ItemStack> hidden = new ArrayList<>();
 		for (Supplier<? extends ItemLike> item : RecipeViewerInfo.hiddenFromRecipeViewerItems()) {
 			hidden.add(new ItemStack(item.get().asItem()));
@@ -345,9 +333,11 @@ public final class AlaJeiPlugin implements IModPlugin {
 	}
 
 	/**
-	 * All recipes the client can see. Vanilla 26.2 exposes no {@code RecipeMap} accessor on the
-	 * manager — only NeoForge patches one in — so the Fabric lane walks the plain collection and
-	 * unwraps the {@code RecipeMap} the JEI-internal fallback hands back.
+	 * All recipes the client can see, as the plain collection vanilla's {@code RecipeManager} exposes.
+	 *
+	 * <p>{@code getRecipes()} rather than {@code recipeMap()}: the {@link RecipeMap} accessor is a
+	 * NeoForge patch, so the shared implementation has to read what BOTH loaders have. The
+	 * JEI-internal fallback below hands a {@link RecipeMap} back either way, which is unwrapped here.
 	 */
 	private static Collection<RecipeHolder<?>> clientSyncedRecipes() {
 		MinecraftServer server = Minecraft.getInstance().getSingleplayerServer();

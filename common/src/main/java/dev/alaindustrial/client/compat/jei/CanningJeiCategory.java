@@ -1,4 +1,4 @@
-package dev.alaindustrial.compat.jei;
+package dev.alaindustrial.client.compat.jei;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.client.compat.CanningExchange;
@@ -21,7 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
 /**
- * JEI category for the Canning Machine (MOD-383) — the Fabric twin of the NeoForge lane and the REI {@code CanningCategory}.
+ * JEI category for the Canning Machine (MOD-383) — the JEI counterpart of the REI {@code CanningCategory}.
  *
  * <p>The only category here whose "recipe" is not a {@code RecipeHolder}: the machine matches no JSON
  * recipe, so the cards are {@link CanningExchange.Card} records computed from the item registry.

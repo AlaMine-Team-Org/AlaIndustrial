@@ -1,4 +1,4 @@
-package dev.alaindustrial.compat.jei;
+package dev.alaindustrial.client.compat.jei;
 
 import dev.alaindustrial.client.screen.MachineScreen;
 import java.util.List;

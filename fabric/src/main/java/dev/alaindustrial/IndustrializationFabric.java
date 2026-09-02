@@ -44,13 +44,11 @@ import net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.NestedLootTable;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
-import java.util.function.Supplier;
 
 /**
  * Fabric {@code ModInitializer} entrypoint. Loader-neutral constants/helpers live in
@@ -75,6 +73,7 @@ public class IndustrializationFabric implements ModInitializer {
 		registerDataComponents();
 		registerParticles();
 		registerContent();
+		registerEffects();
 		registerSounds();
 		verifyContentBound();
 		dev.alaindustrial.stats.fabric.FabricPlayerStats.init(); // MOD-133 player-stats attachment + store seam
@@ -124,84 +123,43 @@ public class IndustrializationFabric implements ModInitializer {
 	}
 
 	/**
-	 * Binds the neutral data-component handles via eager registration (Fabric keeps the
-	 * DATA_COMPONENT_TYPE registry writable during init). Must run before {@link #registerContent()}
-	 * so item/loot code sees them.
+	 * Registers every shared data component (MOD-555). Fabric keeps the {@code DATA_COMPONENT_TYPE}
+	 * registry writable during init, so each entry of {@link ModDataComponents#COMPONENTS} is registered
+	 * eagerly and its handle bound to a constant supplier; NeoForge replays the same list through a
+	 * {@code DeferredRegister} (see {@code ModDataComponentsNeoForge}).
+	 *
+	 * <p>Must run before {@link #registerContent()} so item and loot code sees the components.
 	 */
 	private void registerDataComponents() {
-		// Data components: Fabric keeps the DATA_COMPONENT_TYPE registry writable during init, so bind the
-		// neutral handles with eager registration (NeoForge uses a DeferredRegister — see
-		// ModDataComponentsNeoForge). Must run before ModItems/ModBlocks so item/loot code sees them.
-		// registerDataComponent eagerly registers the type and returns the Supplier the handle expects.
-		ModDataComponents.STORED_ENERGY = registerDataComponent(
-				ModDataComponents.STORED_ENERGY_ID, ModDataComponents.createStoredEnergy());
-		ModDataComponents.NETWORK_SCAN = registerDataComponent(
-				ModDataComponents.NETWORK_SCAN_ID, ModDataComponents.createNetworkScan());
-		ModDataComponents.NETWORK_ANALYZER_MODE = registerDataComponent(
-				ModDataComponents.NETWORK_ANALYZER_MODE_ID, ModDataComponents.createNetworkAnalyzerMode());
-		ModDataComponents.POUCH_ENERGY = registerDataComponent(
-				ModDataComponents.POUCH_ENERGY_ID, ModDataComponents.createPouchEnergy());
-		ModDataComponents.POUCH_CONTENTS = registerDataComponent(
-				ModDataComponents.POUCH_CONTENTS_ID, ModDataComponents.createPouchContents());
-		ModDataComponents.BLUEPRINT_PATTERN = registerDataComponent(
-				ModDataComponents.BLUEPRINT_PATTERN_ID, ModDataComponents.createBlueprintPattern());
-		ModDataComponents.BLUEPRINT_RESULT = registerDataComponent(
-				ModDataComponents.BLUEPRINT_RESULT_ID, ModDataComponents.createBlueprintResult());
-		ModDataComponents.BLUEPRINT_SUBSTITUTE = registerDataComponent(
-				ModDataComponents.BLUEPRINT_SUBSTITUTE_ID, ModDataComponents.createBlueprintSubstitute());
-		ModDataComponents.CAPSULE_FLUID = registerDataComponent(
-				ModDataComponents.CAPSULE_FLUID_ID, ModDataComponents.createCapsuleFluid());
-		ModDataComponents.FLUID_TANK_CONTENTS = registerDataComponent(
-				ModDataComponents.FLUID_TANK_CONTENTS_ID, ModDataComponents.createFluidTankContents());
-		ModDataComponents.DISTILLATION_COLUMN_CONTENTS = registerDataComponent(
-				ModDataComponents.DISTILLATION_COLUMN_CONTENTS_ID,
-				ModDataComponents.createDistillationColumnContents());
-		ModDataComponents.TELEPORTER_PRIVATE = registerDataComponent(
-				ModDataComponents.TELEPORTER_PRIVATE_ID, ModDataComponents.createTeleporterPrivate());
-		ModDataComponents.TELEPORTER_RTP_MODULE = registerDataComponent(
-				ModDataComponents.TELEPORTER_RTP_MODULE_ID, ModDataComponents.createTeleporterRtpModule());
-		ModDataComponents.MAGNET_ENABLED = registerDataComponent(
-				ModDataComponents.MAGNET_ENABLED_ID, ModDataComponents.createMagnetEnabled());
-		ModDataComponents.SOUL_VESSEL_KILLS = registerDataComponent(
-				ModDataComponents.SOUL_VESSEL_KILLS_ID, ModDataComponents.createSoulVesselKills());
-		ModDataComponents.REPAIR_COUNT = registerDataComponent(
-				ModDataComponents.REPAIR_COUNT_ID, ModDataComponents.createRepairCount());
-		ModDataComponents.STEP_ASSIST_ENABLED = registerDataComponent(
-				ModDataComponents.STEP_ASSIST_ENABLED_ID, ModDataComponents.createStepAssistEnabled());
-		ModDataComponents.SABER_ACTIVE = registerDataComponent(
-				ModDataComponents.SABER_ACTIVE_ID, ModDataComponents.createSaberActive());
-		ModDataComponents.MUTATION_GRADE = registerDataComponent(
-				ModDataComponents.MUTATION_GRADE_ID, ModDataComponents.createMutationGrade());
-		ModDataComponents.TELEPORTER_OWNER = registerDataComponent(
-				ModDataComponents.TELEPORTER_OWNER_ID, ModDataComponents.createTeleporterOwner());
-		ModDataComponents.TELEPORTER_POINTS = registerDataComponent(
-				ModDataComponents.TELEPORTER_POINTS_ID, ModDataComponents.createTeleporterPoints());
+		for (ModDataComponents.ComponentDef<?> def : ModDataComponents.COMPONENTS) {
+			registerDataComponent(def);
+		}
 	}
 
 	/**
-	 * Eagerly registers a data-component {@code type} under {@code id} in the vanilla
-	 * DATA_COMPONENT_TYPE registry (writable during Fabric init) and returns the {@link Supplier} the
-	 * neutral {@code ModDataComponents} handle expects (MOD-141). The generic {@code T} is inferred from
-	 * the {@code create*()} factory's return type, so each call is a one-liner.
+	 * One entry, the Fabric way. Separate from {@link #registerDataComponents()} only to capture the
+	 * entry's type parameter — the registry is heterogeneous, the handle is not.
 	 */
-	private static <T> Supplier<DataComponentType<T>> registerDataComponent(Identifier id, DataComponentType<T> type) {
-		DataComponentType<T> registered = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, id, type);
-		return () -> registered;
+	private static <T> void registerDataComponent(ModDataComponents.ComponentDef<T> def) {
+		DataComponentType<T> registered =
+				Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, def.id(), def.factory().get());
+		def.bind().accept(() -> registered);
 	}
 
-	/** Publishes the Enriched Uranium Torch's green flame particle type (MOD-085). */
+	/**
+	 * Registers every shared particle type (MOD-085, MOD-555). The objects themselves are eager class-load
+	 * constants in {@code ModParticles} — the blocks already read them directly; this only publishes them
+	 * into the {@code PARTICLE_TYPE} registry for networking and spawning. Fabric keeps that registry
+	 * writable during init, so the registration is eager; NeoForge replays the same list through a
+	 * {@code DeferredRegister}.
+	 */
 	private void registerParticles() {
-		// MOD-085: publish the Enriched Uranium Torch's green flame (an eager object in the neutral
-		// ModParticles) into the PARTICLE_TYPE registry for networking/spawning. Fabric keeps the registry
-		// writable during init, so register eagerly; the torch block already reads the object directly.
-		net.minecraft.core.Registry.register(
-				net.minecraft.core.registries.BuiltInRegistries.PARTICLE_TYPE,
-				dev.alaindustrial.registry.ModParticles.ENRICHED_URANIUM_FLAME_ID,
-				dev.alaindustrial.registry.ModParticles.ENRICHED_URANIUM_FLAME);
-		net.minecraft.core.Registry.register(
-				net.minecraft.core.registries.BuiltInRegistries.PARTICLE_TYPE,
-				dev.alaindustrial.registry.ModParticles.NUTRIENT_SPRAY_ID,
-				dev.alaindustrial.registry.ModParticles.NUTRIENT_SPRAY);
+		for (dev.alaindustrial.registry.ModParticles.ParticleDef def
+				: dev.alaindustrial.registry.ModParticles.PARTICLES) {
+			net.minecraft.core.Registry.register(
+					net.minecraft.core.registries.BuiltInRegistries.PARTICLE_TYPE,
+					Industrialization.id(def.id()), def.instance());
+		}
 	}
 
 	/**
@@ -295,84 +253,36 @@ public class IndustrializationFabric implements ModInitializer {
 				dev.alaindustrial.registry.ModProfessions.createIndustrialist());
 	}
 
-	/** Eagerly registers the mod's sound events (Fabric keeps the SOUND_EVENT registry writable). */
-	private void registerSounds() {
-		// Sound: Fabric keeps the SOUND_EVENT registry writable during init, so bind the neutral handle
-		// with an eager registration (NeoForge uses a DeferredRegister instead — see ModSoundsNeoForge).
-		// registerSound eagerly registers the event and returns the Supplier the handle expects.
-		// Status effects: same story as sound — Fabric keeps MOB_EFFECT writable during init, NeoForge
-		// does not (see ModEffectsNeoForge). registerForHolder is what yields the Holder the effect API
-		// wants; a bare Registry.register would hand back the MobEffect and nothing could apply it.
-		dev.alaindustrial.registry.ModEffects.RADIATION = registerEffect(
-				dev.alaindustrial.registry.ModEffects.RADIATION_ID,
-				dev.alaindustrial.registry.ModEffects.createRadiation());
-		ModSounds.MACERATOR_GRIND = registerSound(
-				ModSounds.MACERATOR_GRIND_ID, ModSounds.createMaceratorGrind());
-		ModSounds.GENERATOR_HUM = registerSound(
-				ModSounds.GENERATOR_HUM_ID, ModSounds.createGeneratorHum());
-		ModSounds.ELECTRIC_FURNACE_HUM = registerSound(
-				ModSounds.ELECTRIC_FURNACE_HUM_ID, ModSounds.createElectricFurnaceHum());
-		ModSounds.SOLAR_PANEL_HUM = registerSound(
-				ModSounds.SOLAR_PANEL_HUM_ID, ModSounds.createSolarPanelHum());
-		ModSounds.IRON_CHEST_OPEN = registerSound(
-				ModSounds.IRON_CHEST_OPEN_ID, ModSounds.createIronChestOpen());
-		ModSounds.IRON_CHEST_CLOSE = registerSound(
-				ModSounds.IRON_CHEST_CLOSE_ID, ModSounds.createIronChestClose());
-		ModSounds.SCYTHE_SWING = registerSound(
-				ModSounds.SCYTHE_SWING_ID, ModSounds.createScytheSwing());
-		ModSounds.EXTRACTOR_HUM = registerSound(
-				ModSounds.EXTRACTOR_HUM_ID, ModSounds.createExtractorHum());
-		ModSounds.WATER_MILL_HUM = registerSound(
-				ModSounds.WATER_MILL_HUM_ID, ModSounds.createWaterMillHum());
-		ModSounds.WIND_MILL_HUM = registerSound(
-				ModSounds.WIND_MILL_HUM_ID, ModSounds.createWindMillHum());
-		ModSounds.COMPRESSOR_HUM = registerSound(
-				ModSounds.COMPRESSOR_HUM_ID, ModSounds.createCompressorHum());
-		ModSounds.GARDEN_DRONE_FLY = registerSound(
-				ModSounds.GARDEN_DRONE_FLY_ID, ModSounds.createGardenDroneFly());
-		ModSounds.PUMP_HUM = registerSound(
-				ModSounds.PUMP_HUM_ID, ModSounds.createPumpHum());
-		ModSounds.CANNING_MACHINE_HUM = registerSound(
-				ModSounds.CANNING_MACHINE_HUM_ID, ModSounds.createCanningMachineHum());
-		ModSounds.GALVANIC_BATH_HUM = registerSound(
-				ModSounds.GALVANIC_BATH_HUM_ID, ModSounds.createGalvanicBathHum());
-		ModSounds.SAWMILL_HUM = registerSound(
-				ModSounds.SAWMILL_HUM_ID, ModSounds.createSawmillHum());
-		ModSounds.POLYMERIZER_HUM = registerSound(
-				ModSounds.POLYMERIZER_HUM_ID, ModSounds.createPolymerizerHum());
-		ModSounds.CHARGE_PAD_HUM = registerSound(
-				ModSounds.CHARGE_PAD_HUM_ID, ModSounds.createChargePadHum());
-		ModSounds.ENERGY_CONDENSER_HUM = registerSound(
-				ModSounds.ENERGY_CONDENSER_HUM_ID, ModSounds.createEnergyCondenserHum());
-		ModSounds.COMPONENT_REPAIR_BENCH_HUM = registerSound(
-				ModSounds.COMPONENT_REPAIR_BENCH_HUM_ID, ModSounds.createComponentRepairBenchHum());
-		ModSounds.REACTOR_HUM = registerSound(
-				ModSounds.REACTOR_HUM_ID, ModSounds.createReactorHum());
-		ModSounds.REACTOR_ALARM = registerSound(
-				ModSounds.REACTOR_ALARM_ID, ModSounds.createReactorAlarm());
-		ModSounds.REACTOR_SPINDOWN = registerSound(
-				ModSounds.REACTOR_SPINDOWN_ID, ModSounds.createReactorSpindown());
-		ModSounds.REACTOR_DOOR_OPEN = registerSound(
-				ModSounds.REACTOR_DOOR_OPEN_ID, ModSounds.createReactorDoorOpen());
-		ModSounds.REACTOR_DOOR_CLOSE = registerSound(
-				ModSounds.REACTOR_DOOR_CLOSE_ID, ModSounds.createReactorDoorClose());
+	/**
+	 * Registers every shared status effect (MOD-470, MOD-555). Fabric keeps the {@code MOB_EFFECT}
+	 * registry writable during init, so registration is eager here and deferred on NeoForge.
+	 *
+	 * <p>A replay of its own rather than a branch inside {@link #registerSounds()}: an effect handle is a
+	 * {@code Holder}, and only {@code registerForHolder} yields one — a bare {@code Registry.register}
+	 * hands back the {@code MobEffect} itself, which nothing can apply.
+	 */
+	private void registerEffects() {
+		for (dev.alaindustrial.registry.ModEffects.EffectDef def
+				: dev.alaindustrial.registry.ModEffects.EFFECTS) {
+			net.minecraft.core.Holder.Reference<net.minecraft.world.effect.MobEffect> holder =
+					Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT,
+							Industrialization.id(def.id()), def.factory().get());
+			def.bind().accept(() -> holder);
+		}
 	}
 
 	/**
-	 * Eagerly registers a sound {@code event} under {@code id} in the vanilla SOUND_EVENT registry
-	 * (writable during Fabric init) and returns the {@link Supplier} the neutral {@code ModSounds}
-	 * handle expects (MOD-141).
+	 * Registers every shared sound event (MOD-555). Fabric keeps the {@code SOUND_EVENT} registry writable
+	 * during init, so each entry of {@link ModSounds#SOUNDS} is registered eagerly and its handle bound to
+	 * a constant supplier; NeoForge replays the same list through a {@code DeferredRegister} (see
+	 * {@code ModSoundsNeoForge}).
 	 */
-	private static Supplier<net.minecraft.core.Holder<net.minecraft.world.effect.MobEffect>> registerEffect(
-			Identifier id, net.minecraft.world.effect.MobEffect effect) {
-		net.minecraft.core.Holder.Reference<net.minecraft.world.effect.MobEffect> holder =
-				Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, id, effect);
-		return () -> holder;
-	}
-
-	private static Supplier<SoundEvent> registerSound(Identifier id, SoundEvent event) {
-		SoundEvent registered = Registry.register(BuiltInRegistries.SOUND_EVENT, id, event);
-		return () -> registered;
+	private void registerSounds() {
+		for (ModSounds.SoundDef def : ModSounds.SOUNDS) {
+			SoundEvent registered = Registry.register(BuiltInRegistries.SOUND_EVENT,
+					Industrialization.id(def.id()), def.factory().get());
+			def.bind().accept(() -> registered);
+		}
 	}
 
 	/** Fails loudly at init if any {@code ModContent} handle was declared but never bound. */

@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_ingredient": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:cotton_fiber" } ] } },
+    "has_the_recipe": { "trigger": "minecraft:recipe_unlocked", "conditions": { "recipe": "alaindustrial:white_wool_from_cotton" } }
+  },
+  "requirements": [ [ "has_the_recipe", "has_ingredient" ] ],
+  "rewards": {
+    "recipes": [ "alaindustrial:white_wool_from_cotton" ]
+  }
+}

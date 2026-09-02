@@ -1,4 +1,4 @@
-package dev.alaindustrial.compat.jei;
+package dev.alaindustrial.client.compat.jei;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.client.compat.RecipeViewerInfo;
@@ -22,8 +22,8 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 
 /**
- * JEI category for machines with no recipe of any kind (MOD-420) — the Fabric twin of the NeoForge
- * lane and the machine-info half of the REI {@code AlaInfoCategory}.
+ * JEI category for machines with no recipe of any kind (MOD-420) — the JEI counterpart of the
+ * machine-info half of the REI {@code AlaInfoCategory}.
  *
  * <p><b>Why this exists instead of {@code addIngredientInfo}.</b> The solar evolution pages use JEI's
  * built-in ingredient info, and that is fine for pages reached from the item. It cannot serve a GUI

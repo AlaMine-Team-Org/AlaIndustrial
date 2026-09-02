@@ -46,6 +46,9 @@ public final class AlloySmelterBlockEntity extends MachineBlockEntity implements
 	private final RecipeManager.CachedCheck<AlloyRecipeInput, AlloyingRecipe> recipeCheck =
 			ModRecipes.ALLOYING.newCheck();
 
+	/** The shared eight-step tick loop (MOD-557). */
+	private final ProcessingCycle cycle = new ProcessingCycle(this);
+
 	public AlloySmelterBlockEntity(BlockPos pos, BlockState state) {
 		super(ModContent.ALLOY_SMELTER_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT,
 				Config.machineBuffer, EnergyTier.LV.maxVoltage(), 0L);
@@ -59,14 +62,6 @@ public final class AlloySmelterBlockEntity extends MachineBlockEntity implements
 	}
 
 
-	/**
-	 * EU drawn per working tick — the smelter's own tariff, scaled by the global speed knob and by any
-	 * overclocker chips, so one operation keeps costing what the recipe says (see {@link #onServerTick}).
-	 */
-	private int euPerTick() {
-		return effectiveEuPerTick(Config.alloySmelterEuPerTick);
-	}
-
 	/** The three input slots as the recipe layer sees them — position carries no meaning. */
 	private AlloyRecipeInput currentInput() {
 		return new AlloyRecipeInput(items.get(INPUT_SLOT_0), items.get(INPUT_SLOT_1), items.get(INPUT_SLOT_2));
@@ -74,64 +69,45 @@ public final class AlloySmelterBlockEntity extends MachineBlockEntity implements
 
 	@Override
 	protected int onServerTick(Level level, BlockPos pos, BlockState state) {
-		// The smelter is one of the machines with its own tariff, so it does NOT read
-		// machineEuPerTickEffective() — that is the shared 2 EU/t rate, and using it here would silently
-		// quarter the price the balance docs and the recipe viewers both state.
+		// The smelter is one of the machines with its own tariff, so it hands the cycle
+		// alloySmelterEuPerTick rather than the shared 2 EU/t rate — using the shared one here would
+		// silently quarter the price the balance docs and the recipe viewers both state.
 		//
 		// The speed multiplier is applied to the RATE as well as the duration, exactly as the incubator
 		// does it. Config calls the knob "energy-neutral", and it only is if both move together: scaling
 		// the duration alone would make a 2x-speed smelter run a 1200 EU recipe for 600 EU, while the
-		// docs and both recipe viewers went on printing 1200.
-		int euPerTick = euPerTick();
+		// docs and both recipe viewers went on printing 1200. The cycle applies both.
 		AlloyRecipeInput input = currentInput();
 		AlloyingRecipe recipe = level instanceof ServerLevel server
 				? ModRecipes.lookup(recipeCheck, server, input)
 				: null;
 
-		// Duration divides by the UNSCALED rate; scaledDuration then applies the multiplier once. Using
-		// the scaled rate here would apply it twice and cancel the speed-up entirely.
+		// Duration divides by the UNSCALED rate; the cycle then applies the multiplier once. Using the
+		// scaled rate here would apply it twice and cancel the speed-up entirely.
 		int baseDuration = recipe != null && recipe.energy() > 0
 				? Math.max(1, recipe.energy() / Math.max(1, Config.alloySmelterEuPerTick))
 				: Config.alloySmelterDuration;
-		maxProgress = effectiveDuration(baseDuration);
-
-		if (recipe == null) {
-			if (progress != 0) {
-				progress = 0;
-				setChanged();
-			}
-			updateLit(false);
-			recordEuRate(0);
-			return IDLE_SLEEP_TICKS;
-		}
+		ProcessingCycle.Job job = cycle.job(Config.alloySmelterEuPerTick, baseDuration);
 
 		// Recomputed with counts: the same recipe can match (right metals) yet not be affordable (too
 		// few of one of them). The assignment is captured so consumption takes each component from the
 		// very slot the affordability check approved.
-		int[] assignment = recipe.assign(input, true);
-		ItemStack result = recipe.resultStack();
-		boolean canWork = assignment != null && energy.getAmount() >= euPerTick
+		int[] assignment = recipe == null ? null : recipe.assign(input, true);
+		ItemStack result = recipe == null ? ItemStack.EMPTY : recipe.resultStack();
+		boolean canWork = assignment != null && energy.getAmount() >= job.euPerTick()
 				&& canOutput(OUTPUT_SLOT, result);
 
-		updateLit(canWork);
-		// MOD-125/MOD-440: the statistics panel's "now" line is this tick's draw, 0 when stopped.
-		recordEuRate(canWork ? euPerTick : 0);
-		if (!canWork) {
-			return IDLE_SLEEP_TICKS;
-		}
-
-		energy.drainInternal(euPerTick);
-		progress++;
-		if (progress >= maxProgress) {
-			recipe.consume(List.of(items.get(INPUT_SLOT_0), items.get(INPUT_SLOT_1), items.get(INPUT_SLOT_2)),
-					assignment);
-			addOutput(OUTPUT_SLOT, result);
-			recordItemProcessed();
-			progress = 0;
-			creditUsefulWork(level, (long) euPerTick * maxProgress); // MOD-133: completed op → XP
-		}
-		setChanged();
-		return 0;
+		// The shared cycle (MOD-557) owns the lit state, the rate report, the drain, the progress step,
+		// the operation counter, the XP credit and the sleep answer. Only a vanished recipe restarts the
+		// bar; too few of one metal, a flat buffer or a full output freeze it (R-NRG-10).
+		return job.canWork(canWork)
+				.jobIntact(recipe != null)
+				.run(level, () -> {
+					recipe.consume(
+							List.of(items.get(INPUT_SLOT_0), items.get(INPUT_SLOT_1), items.get(INPUT_SLOT_2)),
+							assignment);
+					addOutput(OUTPUT_SLOT, result);
+				});
 	}
 
 	/** Whether {@code slot} is one of the three interchangeable input slots. */

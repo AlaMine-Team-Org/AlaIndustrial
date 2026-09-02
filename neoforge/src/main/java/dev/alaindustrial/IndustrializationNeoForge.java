@@ -210,6 +210,7 @@ public final class IndustrializationNeoForge {
 		ModMenusNeoForge.init();
 		dev.alaindustrial.registry.neoforge.ModSoundsNeoForge.init();
 		dev.alaindustrial.registry.neoforge.ModEffectsNeoForge.init(); // MOD-470 radiation effect
+		dev.alaindustrial.registry.neoforge.ModParticlesNeoForge.init(); // MOD-085 — replay guard only
 		dev.alaindustrial.registry.neoforge.ModDataComponentsNeoForge.init();
 		dev.alaindustrial.registry.neoforge.ModAttachmentsNeoForge.init(); // MOD-133 player-stats store seam
 		dev.alaindustrial.registry.neoforge.ModRecipesNeoForge.init();

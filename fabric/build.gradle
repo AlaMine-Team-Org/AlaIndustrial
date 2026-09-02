@@ -65,6 +65,19 @@ dependencies {
         }
     } else {
         runtimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:${rei_version}")
+        // Architectury is pinned AT RUNTIME to the same version we compile against
+        // (libs.versions.toml). REI drags 21.0.2 transitively, and on that version every character
+        // typed into ANY text field — the new-world name box and the chat included — throws
+        // IllegalStateException out of fabric-screen-api-v1: the current screen (Architectury's own
+        // ScreenInputDelegate$DelegateScreen) is not considered initialised. The exception itself is
+        // harmless; the CONSEQUENCE is not. Minecraft catches it and builds a crash report, and that
+        // report collects a system report by querying WMI — 2-3 seconds on the render thread PER
+        // KEYSTROKE. The symptom reads as "the client freezes while I type" and sends you hunting for
+        // a performance problem in your own mod.
+        // Established by experiment, three runs: REI with 21.0.2 — exceptions within a minute;
+        // -Pviewer=jei (no REI, no Architectury on the classpath) — zero in six minutes of play;
+        // REI with 21.0.7 — zero in four minutes, world entered, typing exercised.
+        runtimeOnly(libs.architectury.fabric)
     }
 
     // Mod Menu via Modrinth maven (project id mOgUt4GM). Coordinates differ from the terraformersmc

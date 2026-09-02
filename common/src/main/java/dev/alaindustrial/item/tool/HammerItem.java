@@ -2,6 +2,7 @@ package dev.alaindustrial.item.tool;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStackTemplate;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,6 +30,21 @@ public class HammerItem extends Item {
 
 	public HammerItem(Properties properties) {
 		super(properties);
+	}
+
+	/**
+	 * The hammer's shared {@code Properties} (MOD-554). The CLASS is loader-specific — each loader's
+	 * craft-remainder hook has a different signature, see the class javadoc — but the numbers are not,
+	 * so they live here rather than being typed once per loader.
+	 *
+	 * <p>{@code durability(128)} sets {@code max_damage}: non-stackable, standard durability bar.
+	 * {@code repairable(IRON_INGOT)} allows anvil repair with iron. Deliberately NOT enchantable and NOT
+	 * in any tool tag — Unbreaking cannot work through the craft-remainder hook (no {@code Level} and no
+	 * {@code Player} there), so the hammer is honestly non-enchantable rather than carrying a no-op
+	 * enchant. See the MOD-078 task log.
+	 */
+	public static Properties hammerProperties(Properties properties) {
+		return properties.durability(128).repairable(Items.IRON_INGOT);
 	}
 
 	/**

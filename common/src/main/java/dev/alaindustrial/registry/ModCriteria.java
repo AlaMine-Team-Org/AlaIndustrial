@@ -7,7 +7,9 @@ import dev.alaindustrial.advancement.ReactorMilestone;
 import dev.alaindustrial.advancement.ReactorMilestoneTrigger;
 import dev.alaindustrial.core.energy.EnergyNetwork;
 import dev.alaindustrial.core.energy.NetworkManager;
+import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import net.minecraft.advancements.triggers.CriterionTrigger;
 import net.minecraft.core.BlockPos;
@@ -15,7 +17,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -25,48 +26,68 @@ import org.jspecify.annotations.Nullable;
  * Central registration for Industrialization's custom advancement criteria (see task MOD-015).
  *
  * <p>MOD-022 facade: NeoForge freezes the vanilla {@code TRIGGER_TYPES} registry before mod construction,
- * so the trigger is bound lazily per loader — Fabric via the eager {@link #init()} below, NeoForge via a
+ * so a trigger is bound lazily per loader — Fabric via the eager {@link #init()} below, NeoForge via a
  * {@code DeferredRegister} (see {@code ModCriteriaNeoForge}) — and read through a {@code Supplier}.
+ *
+ * <p><b>Which criteria exist is decided once, here</b> (MOD-555): {@link #TRIGGERS} is the list both
+ * loaders replay, so only the registration mechanism differs between them. Each entry used to be written
+ * three times — the handle and factory here, an eager registration block in {@code init()}, and a
+ * {@code DeferredHolder} field plus a binding line on NeoForge.
  */
 public final class ModCriteria {
 	private ModCriteria() {
 	}
 
-	/** The registry id, shared by both loaders' registration. */
-	public static final Identifier NETWORK_ENERGIZED_ID = Industrialization.id("network_energized");
-
-	/** Bound once per loader before first fire; unbound = loud failure, never a silent NPE. */
-	public static Supplier<NetworkEnergizedTrigger> NETWORK_ENERGIZED = () -> {
-		throw new IllegalStateException("ModCriteria.NETWORK_ENERGIZED read before its loader bound it");
-	};
-
-	/** Build the trigger instance both loaders register. */
-	public static NetworkEnergizedTrigger createNetworkEnergized() {
-		return new NetworkEnergizedTrigger();
+	/**
+	 * One advancement criterion: its registry path, how to build the trigger, and where to publish the
+	 * registered result.
+	 *
+	 * @param id      registry path ({@code alaindustrial:<id>})
+	 * @param factory builds the trigger instance the loader registers
+	 * @param bind    publishes the registered trigger into its handle above
+	 */
+	public record CriterionDef<T extends CriterionTrigger<?>>(String id, Supplier<T> factory,
+			Consumer<Supplier<T>> bind) {
 	}
 
-	/** The registry id of the incubator's criterion (MOD-118), shared by both loaders. */
-	public static final Identifier MUTATION_COMPLETED_ID = Industrialization.id("mutation_completed");
-
-	/** Bound once per loader before first fire; unbound = loud failure, never a silent NPE. */
-	public static Supplier<MutationCompletedTrigger> MUTATION_COMPLETED = () -> {
-		throw new IllegalStateException("ModCriteria.MUTATION_COMPLETED read before its loader bound it");
-	};
-
-	public static MutationCompletedTrigger createMutationCompleted() {
-		return new MutationCompletedTrigger();
+	/** What a handle holds until its loader binds it: a loud failure, never a silent NPE. */
+	private static <T> Supplier<T> unbound(String handle) {
+		return () -> {
+			throw new IllegalStateException("ModCriteria." + handle + " read before its loader bound it");
+		};
 	}
 
-	/** The registry id of the reactor branch's criterion (MOD-473), shared by both loaders. */
-	public static final Identifier REACTOR_MILESTONE_ID = Industrialization.id("reactor_milestone");
+	public static Supplier<NetworkEnergizedTrigger> NETWORK_ENERGIZED = unbound("NETWORK_ENERGIZED");
 
-	/** Bound once per loader before first fire; unbound = loud failure, never a silent NPE. */
-	public static Supplier<ReactorMilestoneTrigger> REACTOR_MILESTONE = () -> {
-		throw new IllegalStateException("ModCriteria.REACTOR_MILESTONE read before its loader bound it");
-	};
+	/** The incubator's criterion (MOD-118). */
+	public static Supplier<MutationCompletedTrigger> MUTATION_COMPLETED = unbound("MUTATION_COMPLETED");
 
-	public static ReactorMilestoneTrigger createReactorMilestone() {
-		return new ReactorMilestoneTrigger();
+	/** The reactor branch's criterion (MOD-473). */
+	public static Supplier<ReactorMilestoneTrigger> REACTOR_MILESTONE = unbound("REACTOR_MILESTONE");
+
+	/** Every criterion, in one shared registration order. Both loaders replay this list. */
+	public static final List<CriterionDef<?>> TRIGGERS = List.of(
+			new CriterionDef<>("network_energized", NetworkEnergizedTrigger::new, t -> NETWORK_ENERGIZED = t),
+			new CriterionDef<>("mutation_completed", MutationCompletedTrigger::new, t -> MUTATION_COMPLETED = t),
+			new CriterionDef<>("reactor_milestone", ReactorMilestoneTrigger::new, t -> REACTOR_MILESTONE = t));
+
+	/**
+	 * Fabric registration: the {@code TRIGGER_TYPES} registry stays writable during init, so every entry of
+	 * {@link #TRIGGERS} is registered eagerly and bound to a constant supplier. NeoForge replays the same
+	 * list through a {@code DeferredRegister} (see {@code ModCriteriaNeoForge}).
+	 */
+	public static void init() {
+		for (CriterionDef<?> def : TRIGGERS) {
+			registerEagerly(def);
+		}
+	}
+
+	/** One entry, the Fabric way. Separate from {@link #init()} only to capture the entry's type parameter. */
+	private static <T extends CriterionTrigger<?>> void registerEagerly(CriterionDef<T> def) {
+		ResourceKey<CriterionTrigger<?>> key =
+				ResourceKey.create(Registries.TRIGGER_TYPE, Industrialization.id(def.id()));
+		T trigger = Registry.register(BuiltInRegistries.TRIGGER_TYPES, key, def.factory().get());
+		def.bind().accept(() -> trigger);
 	}
 
 	/**
@@ -90,30 +111,6 @@ public final class ModCriteria {
 		if (player != null) {
 			REACTOR_MILESTONE.get().trigger(player, milestone);
 		}
-	}
-
-	/**
-	 * Fabric registration: the {@code TRIGGER_TYPES} registry stays writable during init, so register the
-	 * trigger eagerly and bind it to a constant supplier. NeoForge instead uses a {@code DeferredRegister}
-	 * (see {@code ModCriteriaNeoForge}).
-	 */
-	public static void init() {
-		ResourceKey<CriterionTrigger<?>> key = ResourceKey.create(Registries.TRIGGER_TYPE, NETWORK_ENERGIZED_ID);
-		NetworkEnergizedTrigger trigger =
-				Registry.register(BuiltInRegistries.TRIGGER_TYPES, key, createNetworkEnergized());
-		NETWORK_ENERGIZED = () -> trigger;
-
-		ResourceKey<CriterionTrigger<?>> mutationKey =
-				ResourceKey.create(Registries.TRIGGER_TYPE, MUTATION_COMPLETED_ID);
-		MutationCompletedTrigger mutation =
-				Registry.register(BuiltInRegistries.TRIGGER_TYPES, mutationKey, createMutationCompleted());
-		MUTATION_COMPLETED = () -> mutation;
-
-		ResourceKey<CriterionTrigger<?>> reactorKey =
-				ResourceKey.create(Registries.TRIGGER_TYPE, REACTOR_MILESTONE_ID);
-		ReactorMilestoneTrigger reactor =
-				Registry.register(BuiltInRegistries.TRIGGER_TYPES, reactorKey, createReactorMilestone());
-		REACTOR_MILESTONE = () -> reactor;
 	}
 
 	/**

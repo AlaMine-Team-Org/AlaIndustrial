@@ -25,13 +25,11 @@ import dev.alaindustrial.registry.ModTags;
 import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.IdMap;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -46,7 +44,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
@@ -91,8 +88,8 @@ public class DistillationColumnBlockEntity extends MachineBlockEntity implements
 	/** Each of the three tanks: 10 buckets — the corpus convention (pump/polymerizer/geothermal). */
 	public static final long TANK_CAPACITY = FluidAmounts.BUCKET * 10;
 
-	/** Sentinel for an empty tank on a fluid-id sync channel — the vanilla {@code IdMap} default. */
-	public static final int FLUID_ID_NONE = IdMap.DEFAULT;
+	/** Sentinel for an empty tank on a fluid-id sync channel — see {@link FluidTank#FLUID_ID_NONE}. */
+	public static final int FLUID_ID_NONE = FluidTank.FLUID_ID_NONE;
 
 	/**
 	 * Extra diesel a Rectification Section condenses per run (round 2): losses 10 % → 5 %, and the
@@ -424,9 +421,9 @@ public class DistillationColumnBlockEntity extends MachineBlockEntity implements
 				case CH_OIL_PERMILLE -> permille(oilTank);
 				case CH_DIESEL_PERMILLE -> permille(dieselTank);
 				case CH_FUEL_OIL_PERMILLE -> permille(fuelOilTank);
-				case CH_OIL_FLUID_ID -> fluidRegistryId(oilTank.fluid);
-				case CH_DIESEL_FLUID_ID -> fluidRegistryId(dieselTank.fluid);
-				case CH_FUEL_OIL_FLUID_ID -> fluidRegistryId(fuelOilTank.fluid);
+				case CH_OIL_FLUID_ID -> oilTank.fluidSyncId();
+				case CH_DIESEL_FLUID_ID -> dieselTank.fluidSyncId();
+				case CH_FUEL_OIL_FLUID_ID -> fuelOilTank.fluidSyncId();
 				case CH_STATUS -> status.ordinal();
 				case CH_HEAT_PERMILLE -> heatPermille();
 				case CH_FOULING -> fouling;
@@ -500,9 +497,12 @@ public class DistillationColumnBlockEntity extends MachineBlockEntity implements
 	@Override
 	protected void saveAdditional(ValueOutput output) {
 		super.saveAdditional(output);
-		saveTank(output, "Oil", oilTank);
-		saveTank(output, "Diesel", dieselTank);
-		saveTank(output, "FuelOil", fuelOilTank);
+		// The tank writes itself (MOD-556): amount + fluid registry id under the same keys as before.
+		// The id matters for all three — the oil tank accepts foreign `c:oil` fluids and the output tanks
+		// hold whatever a datapack recipe produces, so the fluid is never implicit.
+		oilTank.save(output, "Oil");
+		dieselTank.save(output, "Diesel");
+		fuelOilTank.save(output, "FuelOil");
 		output.putInt("Heat", heat);
 		output.putInt("Fouling", fouling);
 	}
@@ -510,31 +510,11 @@ public class DistillationColumnBlockEntity extends MachineBlockEntity implements
 	@Override
 	protected void loadAdditional(ValueInput input) {
 		super.loadAdditional(input);
-		loadTank(input, "Oil", oilTank);
-		loadTank(input, "Diesel", dieselTank);
-		loadTank(input, "FuelOil", fuelOilTank);
+		oilTank.load(input, "Oil");
+		dieselTank.load(input, "Diesel");
+		fuelOilTank.load(input, "FuelOil");
 		heat = Math.max(0, input.getIntOr("Heat", 0));
 		fouling = Math.max(0, Math.min(FOULING_MAX, input.getIntOr("Fouling", 0)));
-	}
-
-	/**
-	 * Persist a tank as amount + fluid registry key. The key matters for all three: the oil tank
-	 * accepts foreign {@code c:oil} fluids, and the output tanks hold whatever a datapack recipe
-	 * produces — never hardcode the fluid on load (the geothermal generator's exact save-corruption
-	 * bug, flagged 🔴 in MOD-261).
-	 */
-	private static void saveTank(ValueOutput output, String prefix, FluidTank tank) {
-		output.putLong(prefix + "Mb", tank.amount);
-		output.putString(prefix + "Fluid", fluidKey(tank.fluid));
-	}
-
-	private static void loadTank(ValueInput input, String prefix, FluidTank tank) {
-		tank.amount = Math.max(0L, Math.min(tank.capacity, input.getLongOr(prefix + "Mb", 0L)));
-		FluidHolder restored = holderFromKey(input.getStringOr(prefix + "Fluid", ""));
-		tank.fluid = tank.amount > 0 ? restored : FluidHolder.EMPTY;
-		if (tank.fluid.isEmpty()) {
-			tank.amount = 0L;
-		}
 	}
 
 	// --- item-form contents (MOD-251: the tower drops with its fluids, the portable-tank pattern) ---
@@ -592,32 +572,5 @@ public class DistillationColumnBlockEntity extends MachineBlockEntity implements
 		}
 		tank.fluid = FluidHolder.of(stored.get().fluid().value());
 		tank.amount = Math.min(tank.capacity, stored.get().amount());
-	}
-
-	// --- shared key helpers (the polymerizer's exact pair) ---
-
-	private static String fluidKey(FluidHolder fluid) {
-		return fluid.isEmpty() ? "" : BuiltInRegistries.FLUID.getKey(fluid.fluid()).toString();
-	}
-
-	private static FluidHolder holderFromKey(String key) {
-		if (key == null || key.isEmpty()) {
-			return FluidHolder.EMPTY;
-		}
-		Identifier id = Identifier.tryParse(key);
-		if (id == null) {
-			return FluidHolder.EMPTY;
-		}
-		Fluid resolved = BuiltInRegistries.FLUID.getValue(id);
-		return resolved == null ? FluidHolder.EMPTY : FluidHolder.of(resolved);
-	}
-
-	/** See {@link PolymerizerBlockEntity#fluidRegistryId} — the same short-channel guard. */
-	private static int fluidRegistryId(FluidHolder fluid) {
-		if (fluid.isEmpty()) {
-			return FLUID_ID_NONE;
-		}
-		int id = BuiltInRegistries.FLUID.getId(fluid.fluid());
-		return id > Short.MAX_VALUE ? FLUID_ID_NONE : id;
 	}
 }

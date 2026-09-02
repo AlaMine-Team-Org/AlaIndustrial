@@ -10,7 +10,9 @@ import dev.alaindustrial.item.assembler.BlueprintPattern;
 import dev.alaindustrial.item.energy.PouchContents;
 import dev.alaindustrial.item.teleport.TeleportPoints;
 import dev.alaindustrial.mutation.MutationGrade;
+import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import net.minecraft.core.Holder;
 import net.minecraft.core.UUIDUtil;
@@ -35,6 +37,9 @@ import net.minecraft.world.level.material.Fluid;
  * Each loader binds the handles below during its own registration — Fabric via an eager
  * {@code Registry.register}, NeoForge via a {@code DeferredRegister} holder (itself a {@link Supplier}) —
  * and content reads them lazily through {@code .get()}.
+ *
+ * <p><b>Which components exist is decided once, here</b> (MOD-555): {@link #COMPONENTS} is the list both
+ * loaders replay, so the registration mechanism is all that differs between them.
  */
 public final class ModDataComponents {
 	private ModDataComponents() {
@@ -478,4 +483,55 @@ public final class ModDataComponents {
 				.cacheEncoding()
 				.build();
 	}
+
+	/**
+	 * One data-component type: its registry id, how to build it, and where to publish the registered
+	 * result (MOD-555).
+	 *
+	 * <p>The id is the {@code Identifier} constant declared at the top rather than a bare path string,
+	 * because these ids have readers outside registration — {@code AssemblerScenarios} checks the item
+	 * model of the Assembly Blueprint against {@link #BLUEPRINT_RESULT_ID}. NeoForge takes the path back
+	 * off it for {@code DeferredRegister}; the namespace is ours on both loaders either way.
+	 *
+	 * @param id      the registry id constant above
+	 * @param factory builds the component type the loader registers
+	 * @param bind    publishes the registered type into its handle above
+	 */
+	public record ComponentDef<T>(Identifier id, Supplier<DataComponentType<T>> factory,
+			Consumer<Supplier<DataComponentType<T>>> bind) {
+	}
+
+	/**
+	 * Every data component, in one shared registration order (MOD-555). Both loaders replay this list.
+	 *
+	 * <p>Each entry used to be written three times — the handle and factory here, an eager registration
+	 * line in {@code IndustrializationFabric}, and a {@code DeferredHolder} field plus a binding line in
+	 * {@code ModDataComponentsNeoForge}. Two of the three were in loader files, so a component added on one
+	 * loader and forgotten on the other compiled and shipped: on the loader that missed it, the handle
+	 * threw at the first {@code .get()}, mid-gameplay, on whatever item happened to use it first.
+	 *
+	 * <p>Order is not load-bearing (no entry reads another); keep new entries appended.
+	 */
+	public static final List<ComponentDef<?>> COMPONENTS = List.of(
+			new ComponentDef<>(STORED_ENERGY_ID, ModDataComponents::createStoredEnergy, c -> STORED_ENERGY = c),
+			new ComponentDef<>(NETWORK_SCAN_ID, ModDataComponents::createNetworkScan, c -> NETWORK_SCAN = c),
+			new ComponentDef<>(NETWORK_ANALYZER_MODE_ID, ModDataComponents::createNetworkAnalyzerMode, c -> NETWORK_ANALYZER_MODE = c),
+			new ComponentDef<>(POUCH_ENERGY_ID, ModDataComponents::createPouchEnergy, c -> POUCH_ENERGY = c),
+			new ComponentDef<>(POUCH_CONTENTS_ID, ModDataComponents::createPouchContents, c -> POUCH_CONTENTS = c),
+			new ComponentDef<>(BLUEPRINT_PATTERN_ID, ModDataComponents::createBlueprintPattern, c -> BLUEPRINT_PATTERN = c),
+			new ComponentDef<>(BLUEPRINT_RESULT_ID, ModDataComponents::createBlueprintResult, c -> BLUEPRINT_RESULT = c),
+			new ComponentDef<>(BLUEPRINT_SUBSTITUTE_ID, ModDataComponents::createBlueprintSubstitute, c -> BLUEPRINT_SUBSTITUTE = c),
+			new ComponentDef<>(CAPSULE_FLUID_ID, ModDataComponents::createCapsuleFluid, c -> CAPSULE_FLUID = c),
+			new ComponentDef<>(FLUID_TANK_CONTENTS_ID, ModDataComponents::createFluidTankContents, c -> FLUID_TANK_CONTENTS = c),
+			new ComponentDef<>(DISTILLATION_COLUMN_CONTENTS_ID, ModDataComponents::createDistillationColumnContents, c -> DISTILLATION_COLUMN_CONTENTS = c),
+			new ComponentDef<>(TELEPORTER_PRIVATE_ID, ModDataComponents::createTeleporterPrivate, c -> TELEPORTER_PRIVATE = c),
+			new ComponentDef<>(TELEPORTER_RTP_MODULE_ID, ModDataComponents::createTeleporterRtpModule, c -> TELEPORTER_RTP_MODULE = c),
+			new ComponentDef<>(MAGNET_ENABLED_ID, ModDataComponents::createMagnetEnabled, c -> MAGNET_ENABLED = c),
+			new ComponentDef<>(SOUL_VESSEL_KILLS_ID, ModDataComponents::createSoulVesselKills, c -> SOUL_VESSEL_KILLS = c),
+			new ComponentDef<>(REPAIR_COUNT_ID, ModDataComponents::createRepairCount, c -> REPAIR_COUNT = c),
+			new ComponentDef<>(STEP_ASSIST_ENABLED_ID, ModDataComponents::createStepAssistEnabled, c -> STEP_ASSIST_ENABLED = c),
+			new ComponentDef<>(SABER_ACTIVE_ID, ModDataComponents::createSaberActive, c -> SABER_ACTIVE = c),
+			new ComponentDef<>(MUTATION_GRADE_ID, ModDataComponents::createMutationGrade, c -> MUTATION_GRADE = c),
+			new ComponentDef<>(TELEPORTER_OWNER_ID, ModDataComponents::createTeleporterOwner, c -> TELEPORTER_OWNER = c),
+			new ComponentDef<>(TELEPORTER_POINTS_ID, ModDataComponents::createTeleporterPoints, c -> TELEPORTER_POINTS = c));
 }

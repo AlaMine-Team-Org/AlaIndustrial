@@ -9,6 +9,7 @@ import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.VanillaCreativeTabs;
 import it.unimi.dsi.fastutil.Hash;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 import dev.alaindustrial.junit.StopEphemeralServerBeforeFmlTeardown;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -89,69 +90,122 @@ class CreativeTabAnchorSafetyTest {
 	}
 
 	/**
-	 * MOD-478 — the powered hand tools reach the vanilla Tools &amp; Utilities tab on NeoForge too.
+	 * The id sequence a tab ends up with, parent half then search half, after the real listener has run
+	 * over a tab seeded with {@code seeded}.
+	 */
+	private static List<String> tabOrder(MinecraftServer server, ResourceKey<CreativeModeTab> tabKey,
+			ItemStack... seeded) {
+		BuildCreativeModeTabContentsEvent event = tabContaining(server, tabKey, seeded);
+		assertDoesNotThrow(() -> ModCreativeTabEventsNeoForge.buildCreativeTabContents(event),
+				() -> "building the vanilla " + tabKey.identifier() + " tab must not throw");
+		List<String> order = new ArrayList<>();
+		for (ItemStack stack : event.getParentEntries()) {
+			order.add(BuiltInRegistries.ITEM.getKey(stack.getItem()).toString());
+		}
+		for (ItemStack stack : event.getSearchEntries()) {
+			order.add(BuiltInRegistries.ITEM.getKey(stack.getItem()).toString());
+		}
+		return order;
+	}
+
+	/**
+	 * MOD-478 → MOD-555 — the exact ORDER the mod leaves the vanilla Tools &amp; Utilities tab in.
 	 *
-	 * <p><b>The defect.</b> Fabric put the electric chainsaw, shovel and hoe into that tab; NeoForge put
-	 * only their diamond-tipped upgrades there (MOD-374/MOD-378 added those and left the base tools
-	 * behind). Nothing was unobtainable — the mod's own tab carried all of them on both loaders — but a
-	 * NeoForge player looking for a powered tool beside the vanilla ones did not find it, and the two
-	 * loaders showed different vanilla tabs for the same mod version.
+	 * <p><b>The defect this started as.</b> Fabric put the electric chainsaw, shovel and hoe into that
+	 * tab; NeoForge put only their diamond-tipped upgrades there (MOD-374/MOD-378 added those and left the
+	 * base tools behind). Nothing was unobtainable — the mod's own tab carried all of them on both
+	 * loaders — but a NeoForge player looking for a powered tool beside the vanilla ones did not find it,
+	 * and the two loaders showed different vanilla tabs for the same mod version.
 	 *
-	 * <p><b>What this pins.</b> The full set the listener contributes, not just the three that were
-	 * missing: an assertion naming only the repaired items goes green again the moment some OTHER entry
-	 * is dropped, which is the same class of regression. The list is the vanilla-tab contribution as of
-	 * MOD-478 and is deliberately spelled out — it is the NeoForge half of a parity that no gate checks
-	 * (the two loaders keep these lists by hand; see MOD-477 for why), so it has to be pinned somewhere.
-	 * A deliberate addition updates this list; an accidental deletion trips it.
+	 * <p><b>Why the whole sequence, and not the set.</b> The set was what this pinned until MOD-555 moved
+	 * both tab lists into one shared {@code CreativeTabContent} group. That move rewrites the ORDER the
+	 * inserts are issued in on this loader (the NeoForge copy grouped its statements differently), and
+	 * order is the half a set assertion cannot see — yet it is exactly what the player sees. The list
+	 * below is the sequence this tab had BEFORE that move, captured from a run of the pre-MOD-555 code,
+	 * so it pins the shipped behaviour rather than whatever the new code happens to produce.
+	 *
+	 * <p>A deliberate change updates this list; an accidental reshuffle, deletion or duplicate trips it.
 	 */
 	@Test
-	void toolsTabCarriesThePoweredToolsOnNeoForge(MinecraftServer server) {
-		// Seeded with the vanilla anchors the listener positions against, so the anchored inserts take
+	void toolsTabKeepsItsOrderOnNeoForge(MinecraftServer server) {
+		// Seeded with the vanilla anchors the shared list positions against, so the anchored inserts take
 		// their real path rather than silently falling back to an append.
-		BuildCreativeModeTabContentsEvent event = tabContaining(server, VanillaCreativeTabs.TOOLS_AND_UTILITIES,
+		List<String> parentAndSearch = List.of(
+				"minecraft:wooden_hoe",
+				"alaindustrial:scythe_wood",
+				"minecraft:stone_hoe",
+				"alaindustrial:scythe_stone",
+				"minecraft:copper_hoe",
+				"alaindustrial:scythe_copper",
+				"minecraft:iron_hoe",
+				"alaindustrial:scythe_iron",
+				"alaindustrial:tempered_iron_pickaxe",
+				"alaindustrial:tempered_iron_axe",
+				"alaindustrial:tempered_iron_shovel",
+				"alaindustrial:tempered_iron_hoe",
+				"alaindustrial:scythe_tempered_iron",
+				"minecraft:golden_hoe",
+				"alaindustrial:scythe_gold",
+				"minecraft:diamond_hoe",
+				"alaindustrial:scythe_diamond",
+				"minecraft:netherite_hoe",
+				"alaindustrial:scythe_netherite",
+				"minecraft:compass",
+				"alaindustrial:network_analyzer",
+				"alaindustrial:wrench",
+				"alaindustrial:battery_pouch",
+				"alaindustrial:energy_pack",
+				"alaindustrial:electric_drill",
+				"alaindustrial:electric_drill_diamond_tip",
+				"alaindustrial:electric_drill_netherite_tip",
+				// The three MOD-478 restored — the reason this test exists.
+				"alaindustrial:electric_chainsaw",
+				"alaindustrial:electric_chainsaw_diamond_tip",
+				"alaindustrial:electric_shovel",
+				"alaindustrial:electric_shovel_diamond_tip",
+				"alaindustrial:electric_hoe",
+				"alaindustrial:electric_hoe_diamond_tip",
+				"alaindustrial:electromagnet",
+				"alaindustrial:jetpack");
+		List<String> expected = new ArrayList<>(parentAndSearch);
+		// insertAfter asserts against the parent and search sets independently, and the mod contributes
+		// to both — so the search half repeats the parent half exactly.
+		expected.addAll(parentAndSearch);
+
+		assertEquals(expected, tabOrder(server, VanillaCreativeTabs.TOOLS_AND_UTILITIES,
 				Items.WOODEN_HOE.getDefaultInstance(), Items.STONE_HOE.getDefaultInstance(),
 				Items.COPPER_HOE.getDefaultInstance(), Items.IRON_HOE.getDefaultInstance(),
 				Items.GOLDEN_HOE.getDefaultInstance(), Items.DIAMOND_HOE.getDefaultInstance(),
-				Items.NETHERITE_HOE.getDefaultInstance(), Items.COMPASS.getDefaultInstance());
+				Items.NETHERITE_HOE.getDefaultInstance(), Items.COMPASS.getDefaultInstance()),
+				"the vanilla Tools & Utilities tab must look to a NeoForge player exactly as it did "
+						+ "before the two loader copies were merged into one shared list");
+	}
 
-		assertDoesNotThrow(() -> ModCreativeTabEventsNeoForge.buildCreativeTabContents(event),
-				"building the vanilla Tools & Utilities tab must not throw");
+	/**
+	 * The same pin for Combat (MOD-555). It is the tab where the merge changed the most on this loader:
+	 * the NeoForge copy placed the four armour pieces one statement at a time, the Fabric copy placed
+	 * them as a group, and the shared list kept the Fabric shape. Both produce this sequence — which is
+	 * a claim, not an observation, until something checks it.
+	 */
+	@Test
+	void combatTabKeepsItsOrderOnNeoForge(MinecraftServer server) {
+		List<String> parentAndSearch = List.of(
+				"minecraft:iron_sword",
+				"alaindustrial:tempered_iron_sword",
+				"minecraft:iron_boots",
+				"alaindustrial:tempered_iron_helmet",
+				"alaindustrial:tempered_iron_chestplate",
+				"alaindustrial:tempered_iron_leggings",
+				"alaindustrial:tempered_iron_boots",
+				"alaindustrial:energy_pack",
+				"alaindustrial:jetpack");
+		List<String> expected = new ArrayList<>(parentAndSearch);
+		expected.addAll(parentAndSearch);
 
-		for (ItemStack expected : List.of(
-				// The three MOD-478 restored — the reason this test exists.
-				ModContent.ELECTRIC_CHAINSAW.get().getDefaultInstance(),
-				ModContent.ELECTRIC_SHOVEL.get().getDefaultInstance(),
-				ModContent.ELECTRIC_HOE.get().getDefaultInstance(),
-				// Everything else the listener contributes, so a different entry going missing is caught
-				// by this test rather than by a player.
-				ModContent.SCYTHE_WOOD.get().getDefaultInstance(),
-				ModContent.SCYTHE_STONE.get().getDefaultInstance(),
-				ModContent.SCYTHE_COPPER.get().getDefaultInstance(),
-				ModContent.SCYTHE_IRON.get().getDefaultInstance(),
-				ModContent.SCYTHE_TEMPERED_IRON.get().getDefaultInstance(),
-				ModContent.SCYTHE_GOLD.get().getDefaultInstance(),
-				ModContent.SCYTHE_DIAMOND.get().getDefaultInstance(),
-				ModContent.SCYTHE_NETHERITE.get().getDefaultInstance(),
-				ModContent.TEMPERED_IRON_PICKAXE.get().getDefaultInstance(),
-				ModContent.TEMPERED_IRON_AXE.get().getDefaultInstance(),
-				ModContent.TEMPERED_IRON_SHOVEL.get().getDefaultInstance(),
-				ModContent.TEMPERED_IRON_HOE.get().getDefaultInstance(),
-				ModContent.NETWORK_ANALYZER.get().getDefaultInstance(),
-				ModContent.WRENCH.get().getDefaultInstance(),
-				ModContent.BATTERY_POUCH.get().getDefaultInstance(),
-				ModContent.ENERGY_PACK.get().getDefaultInstance(),
-				ModContent.ELECTRIC_DRILL.get().getDefaultInstance(),
-				ModContent.ELECTRIC_DRILL_DIAMOND_TIP.get().getDefaultInstance(),
-				ModContent.ELECTRIC_DRILL_NETHERITE_TIP.get().getDefaultInstance(),
-				ModContent.ELECTRIC_CHAINSAW_DIAMOND_TIP.get().getDefaultInstance(),
-				ModContent.ELECTRIC_HOE_DIAMOND_TIP.get().getDefaultInstance(),
-				ModContent.ELECTROMAGNET.get().getDefaultInstance(),
-				ModContent.JETPACK.get().getDefaultInstance())) {
-			assertTrue(event.getParentEntries().contains(expected),
-					() -> "missing from the vanilla Tools & Utilities tab on NeoForge: " + expected);
-			assertTrue(event.getSearchEntries().contains(expected),
-					() -> "missing from the search half of Tools & Utilities on NeoForge: " + expected);
-		}
+		assertEquals(expected, tabOrder(server, VanillaCreativeTabs.COMBAT,
+				Items.IRON_SWORD.getDefaultInstance(), Items.IRON_BOOTS.getDefaultInstance()),
+				"the vanilla Combat tab must look to a NeoForge player exactly as it did before the two "
+						+ "loader copies were merged into one shared list");
 	}
 
 	private static ItemStack ourSword() {

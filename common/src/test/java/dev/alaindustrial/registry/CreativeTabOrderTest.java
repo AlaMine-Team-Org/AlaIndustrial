@@ -44,7 +44,7 @@ class CreativeTabOrderTest {
 	 * rather than trusted.
 	 */
 	private static final Set<String> ROOTS = Set.of("main", "ingredients", "buildingBlocks",
-			"naturalBlocks", "functionalBlocks");
+			"naturalBlocks", "functionalBlocks", "combat", "toolsAndUtilities");
 
 	/**
 	 * Where a loader actually fills a creative tab. Relative to {@code common/}, which is this task's
@@ -58,8 +58,15 @@ class CreativeTabOrderTest {
 			Path.of("../neoforge/src/main/java/dev/alaindustrial/registry/neoforge/"
 					+ "ModCreativeTabNeoForge.java"));
 
-	/** {@code CreativeTabContent.groupName} as a loader writes it, in any of the call forms used. */
-	private static final Pattern LOADER_CALL = Pattern.compile("CreativeTabContent\\.(\\w+)\\s*\\(");
+	/**
+	 * {@code CreativeTabContent.groupName} as a loader writes it, in any of the call forms used.
+	 *
+	 * <p>The name must start LOWERCASE. A loader also NAMES a type from this class —
+	 * {@code new CreativeTabContent.AnchoredSink() {…}} (MOD-555) — which is a member reference, not a
+	 * group call. Matching it would put a type name in the called set and fail this test against a
+	 * "group" that never existed.
+	 */
+	private static final Pattern LOADER_CALL = Pattern.compile("CreativeTabContent\\.([a-z]\\w*)\\s*\\(");
 
 	/**
 	 * Comments, stripped before the call scan. A javadoc line that merely MENTIONS a group by name reads
@@ -74,8 +81,14 @@ class CreativeTabOrderTest {
 	private static final Pattern ENTRY = Pattern.compile(
 			"show\\(out, ModContent\\.(\\w+)\\)|out\\.accept\\(ModContent\\.(\\w+)\\.get\\(\\)\\)");
 	private static final Pattern CALL = Pattern.compile("^\\t\\t(\\w+)\\(out\\);");
+	/**
+	 * A group head. {@code AnchoredSink} is a {@link CreativeTabContent.Sink} that can also place an entry
+	 * after an anchor — the vanilla Combat and Tools &amp; Utilities groups take one (MOD-555). Without
+	 * that alternative their bodies would be invisible here while {@link #ROOTS} already named them, and
+	 * every group reachable only through them would look orphaned.
+	 */
 	private static final Pattern METHOD = Pattern.compile(
-			"(?:private|public) static void (\\w+)\\(Sink out\\) \\{");
+			"(?:private|public) static void (\\w+)\\((?:Anchored)?Sink out\\) \\{");
 
 	private static Map<String, List<String>> bodies() throws IOException {
 		List<String> lines = Files.readAllLines(SOURCE, StandardCharsets.UTF_8);

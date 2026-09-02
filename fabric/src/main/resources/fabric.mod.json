@@ -38,7 +38,7 @@
 			"dev.alaindustrial.compat.rei.AlaReiPlugin"
 		],
 		"jei_mod_plugin": [
-			"dev.alaindustrial.compat.jei.AlaJeiPlugin"
+			"dev.alaindustrial.client.compat.jei.AlaJeiPlugin"
 		]
 	},
 	"mixins": [

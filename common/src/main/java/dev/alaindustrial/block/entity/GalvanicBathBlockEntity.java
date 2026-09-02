@@ -18,10 +18,7 @@ import dev.alaindustrial.registry.ModTags;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.IdMap;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -33,7 +30,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -78,8 +74,8 @@ public class GalvanicBathBlockEntity extends MachineBlockEntity implements Overc
 	/** Internal tank: 10 buckets, matching the pump, the geothermal generator and the polymerizer. */
 	public static final long TANK_CAPACITY = FluidAmounts.BUCKET * 10;
 
-	/** Sentinel for an empty tank on the fluid-id sync channel — the vanilla {@code IdMap} default. */
-	public static final int FLUID_ID_NONE = IdMap.DEFAULT;
+	/** Sentinel for an empty tank on the fluid-id sync channel — see {@link FluidTank#FLUID_ID_NONE}. */
+	public static final int FLUID_ID_NONE = FluidTank.FLUID_ID_NONE;
 
 	/**
 	 * Water-only tank, insertable from any side, never extractable (R-CON-08 — the machine consumes
@@ -102,6 +98,9 @@ public class GalvanicBathBlockEntity extends MachineBlockEntity implements Overc
 			ModRecipes.GALVANIC_BATH.newCheck();
 
 	private GalvanicBathStatus status = GalvanicBathStatus.READY;
+
+	/** The shared eight-step tick loop (MOD-557). */
+	private final ProcessingCycle cycle = new ProcessingCycle(this);
 
 	public GalvanicBathBlockEntity(BlockPos pos, BlockState state) {
 		// EU consumer: maxInsert = tier voltage (so the network sees a consumer), maxExtract = 0.
@@ -135,7 +134,6 @@ public class GalvanicBathBlockEntity extends MachineBlockEntity implements Overc
 		boolean filled = ItemFluidBridge.get()
 				.drainSlotIntoTank(this, FILL_INPUT_SLOT, FILL_OUTPUT_SLOT, fluidTank, FluidAmounts.BUCKET) > 0;
 
-		int euPerTick = effectiveEuPerTick(Config.machineEuPerTick);
 		ProcessingRecipeInput input =
 				new ProcessingRecipeInput(items.get(FIBER_SLOT), items.get(SILVER_SLOT));
 		AlaProcessingRecipe recipe = level instanceof ServerLevel server
@@ -145,7 +143,7 @@ public class GalvanicBathBlockEntity extends MachineBlockEntity implements Overc
 		int baseDuration = recipe != null && recipe.energy() > 0
 				? Math.max(1, recipe.energy() / Config.machineEuPerTick)
 				: Config.galvanicBathDuration;
-		this.maxProgress = effectiveDuration(baseDuration);
+		ProcessingCycle.Job job = cycle.job(Config.machineEuPerTick, baseDuration);
 
 		ItemStack result = recipe != null ? recipe.resultStack() : ItemStack.EMPTY;
 		long waterPerOp = waterPerOperation();
@@ -153,33 +151,22 @@ public class GalvanicBathBlockEntity extends MachineBlockEntity implements Overc
 		// water out mid-cycle stops the run instead of completing it underpaid (MOD-271's lesson on
 		// the Vulcanizer's batch price).
 		boolean canWork = recipe != null && recipe.hasEnough(input) && fluidTank.amount >= waterPerOp
-				&& energy.getAmount() >= euPerTick && canOutput(OUTPUT_SLOT, result);
+				&& energy.getAmount() >= job.euPerTick() && canOutput(OUTPUT_SLOT, result);
 
 		setStatus(diagnose(recipe, input, result, waterPerOp));
-		updateLit(canWork);
-		// MOD-125/MOD-440: the statistics panel's "now" line is this tick's draw, 0 when stopped.
-		recordEuRate(canWork ? euPerTick : 0);
 
-		if (canWork) {
-			energy.drainInternal(euPerTick);
-			progress++;
-			if (progress >= maxProgress) {
-				progress = 0;
-				recipe.consume(List.of(items.get(FIBER_SLOT), items.get(SILVER_SLOT)));
-				consumeWater(waterPerOp);
-				addOutput(OUTPUT_SLOT, result);
-				recordItemProcessed();
-				creditUsefulWork(level, (long) euPerTick * maxProgress); // MOD-133: completed op → XP
-			}
-			setChanged();
-		} else if (recipe == null && progress != 0) {
-			// The inputs no longer form a recipe: restart from zero. On mere power loss, a dry tank or a
-			// full output the recipe is still there, so progress FREEZES and resumes when work can
-			// continue (R-NRG-10) — the same contract as the other item-fed machines.
-			progress = 0;
-			setChanged();
-		}
-		return canWork || filled ? 0 : IDLE_SLEEP_TICKS;
+		// The shared cycle (MOD-557) owns the lit state, the rate report, the drain, the progress step,
+		// the operation counter, the XP credit and the sleep answer. "The inputs no longer form a recipe"
+		// is what restarts progress; on mere power loss, a dry tank or a full output the recipe is still
+		// there, so progress FREEZES and resumes (R-NRG-10) — the other item-fed machines' contract.
+		return job.canWork(canWork)
+				.jobIntact(recipe != null)
+				.keepAwake(filled)
+				.run(level, () -> {
+					recipe.consume(List.of(items.get(FIBER_SLOT), items.get(SILVER_SLOT)));
+					consumeWater(waterPerOp);
+					addOutput(OUTPUT_SLOT, result);
+				});
 	}
 
 	/**
@@ -263,7 +250,7 @@ public class GalvanicBathBlockEntity extends MachineBlockEntity implements Overc
 			return switch (index) {
 				case 4 -> fluidTank.amount <= 0 ? 0
 						: Math.max(1, (int) Math.min(fluidTank.amount * 1000L / TANK_CAPACITY, 1000));
-				case 5 -> fluidRegistryId(fluidTank.fluid);
+				case 5 -> fluidTank.fluidSyncId();
 				case 6 -> status.ordinal();
 				default -> GalvanicBathBlockEntity.this.dataAccess.get(index);
 			};
@@ -336,50 +323,15 @@ public class GalvanicBathBlockEntity extends MachineBlockEntity implements Overc
 	@Override
 	protected void saveAdditional(ValueOutput output) {
 		super.saveAdditional(output);
-		output.putLong("FluidTankMb", fluidTank.amount);
-		output.putString("FluidTankFluid", fluidKey(fluidTank.fluid));
+		// The tank writes itself (MOD-556) under the keys it has always used.
+		fluidTank.save(output, "FluidTank");
 	}
 
 	@Override
 	protected void loadAdditional(ValueInput input) {
 		super.loadAdditional(input);
-		fluidTank.amount = Math.max(0L, Math.min(TANK_CAPACITY, input.getLongOr("FluidTankMb", 0L)));
-		FluidHolder restored = holderFromKey(input.getStringOr("FluidTankFluid", ""));
-		// Uphold the tank invariant in both directions: no fluid means no amount, and vice versa.
-		fluidTank.fluid = fluidTank.amount > 0 ? restored : FluidHolder.EMPTY;
-		if (fluidTank.fluid.isEmpty()) {
-			fluidTank.amount = 0L;
-		}
-	}
-
-	/** Registry key of {@code fluid} for persistence (e.g. {@code "minecraft:water"}), or {@code ""}. */
-	private static String fluidKey(FluidHolder fluid) {
-		return fluid.isEmpty() ? "" : BuiltInRegistries.FLUID.getKey(fluid.fluid()).toString();
-	}
-
-	private static FluidHolder holderFromKey(String key) {
-		if (key == null || key.isEmpty()) {
-			return FluidHolder.EMPTY;
-		}
-		Identifier id = Identifier.tryParse(key);
-		if (id == null) {
-			return FluidHolder.EMPTY;
-		}
-		Fluid resolved = BuiltInRegistries.FLUID.getValue(id);
-		return resolved == null ? FluidHolder.EMPTY : FluidHolder.of(resolved);
-	}
-
-	/**
-	 * The {@link BuiltInRegistries#FLUID} registry id of {@code fluid} ({@link IdMap#DEFAULT} when the
-	 * tank is empty), for the client to resolve the fluid type over sync channel 5. Ids above
-	 * {@link Short#MAX_VALUE} report as empty rather than as their truncated low 16 bits, which the
-	 * channel's short encoding would otherwise resolve to an unrelated fluid.
-	 */
-	private static int fluidRegistryId(FluidHolder fluid) {
-		if (fluid.isEmpty()) {
-			return FLUID_ID_NONE;
-		}
-		int id = BuiltInRegistries.FLUID.getId(fluid.fluid());
-		return id > Short.MAX_VALUE ? FLUID_ID_NONE : id;
+		// The tank clamps to its own capacity (TANK_CAPACITY, the value it was built with) and upholds
+		// the invariant in both directions: no fluid means no amount, and vice versa.
+		fluidTank.load(input, "FluidTank");
 	}
 }

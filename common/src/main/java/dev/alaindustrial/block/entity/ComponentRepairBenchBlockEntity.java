@@ -100,6 +100,9 @@ public class ComponentRepairBenchBlockEntity extends MachineBlockEntity
 	 */
 	private RepairStatus status = RepairStatus.NO_TARGET;
 
+	/** The shared eight-step tick loop (MOD-557). */
+	private final ProcessingCycle cycle = new ProcessingCycle(this);
+
 	public ComponentRepairBenchBlockEntity(BlockPos pos, BlockState state) {
 		super(ModContent.COMPONENT_REPAIR_BENCH_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT,
 				Config.machineBuffer, EnergyTier.LV.maxVoltage(), 0L);
@@ -158,7 +161,6 @@ public class ComponentRepairBenchBlockEntity extends MachineBlockEntity
 
 	@Override
 	protected int onServerTick(Level level, BlockPos pos, BlockState state) {
-		int euPerTick = effectiveEuPerTick(baseEuPerTick());
 		ItemStack target = items.get(TARGET_SLOT);
 		ComponentTier tier = AbstractGeneratorBlockEntity.tierOf(target, null);
 		int repairsDone = DurableComponentItem.repairs(target);
@@ -176,36 +178,24 @@ public class ComponentRepairBenchBlockEntity extends MachineBlockEntity
 		int baseDuration = tier != null
 				? Math.max(1, tier.repairEuCost() / Math.max(1, baseEuPerTick()))
 				: defaultDuration();
-		this.maxProgress = effectiveDuration(baseDuration);
+		ProcessingCycle.Job job = cycle.job(baseEuPerTick(), baseDuration);
 
-		boolean canWork = status.canWork() && energy.getAmount() >= euPerTick;
-		updateLit(canWork);
-		// MOD-125/MOD-440: the statistics panel's "now" line is this tick's draw, 0 when stopped.
-		recordEuRate(canWork ? euPerTick : 0);
+		boolean canWork = status.canWork() && energy.getAmount() >= job.euPerTick();
 
-		if (canWork) {
-			energy.drainInternal(euPerTick);
-			progress++;
-			if (progress >= maxProgress) {
-				progress = 0;
-				items.get(MATERIAL_SLOT).shrink(1);
-				applyRepair(target, tier, repairsDone);
-				recordItemProcessed(); // MOD-125/MOD-440: one completed repair
-				creditUsefulWork(level, (long) euPerTick * maxProgress); // MOD-133: completed op → XP
-				// The repaired stack's components changed in place; without this the open screen and the
-				// item in the slot keep drawing the old durability bar until something else dirties the
-				// block entity.
-				syncBlockEntityToClient();
-			}
-			setChanged();
-		} else if (progress != 0 && !status.jobIntact()) {
-			// The job itself is gone (component pulled, swapped for an undamaged/spent one, or the
-			// material ran out) → start over, matching the sibling processing machines' "recipe gone"
-			// reset. Only a flat buffer (status stays READY) leaves progress FROZEN and resumes (R-NRG-10).
-			progress = 0;
-			setChanged();
-		}
-		return canWork ? 0 : IDLE_SLEEP_TICKS;
+		// The shared cycle (MOD-557) owns the lit state, the rate report, the drain, the progress step,
+		// the operation counter, the XP credit and the sleep answer. The job is gone when the component
+		// is pulled, swapped for an undamaged/spent one, or the material runs out — the sibling machines'
+		// "recipe gone" reset. A flat buffer alone (status stays READY) leaves progress FROZEN (R-NRG-10).
+		return job.canWork(canWork)
+				.jobIntact(status.jobIntact())
+				.run(level, () -> {
+					items.get(MATERIAL_SLOT).shrink(1);
+					applyRepair(target, tier, repairsDone);
+					// The repaired stack's components changed in place; without this the open screen and
+					// the item in the slot keep drawing the old durability bar until something else
+					// dirties the block entity.
+					syncBlockEntityToClient();
+				});
 	}
 
 	/**

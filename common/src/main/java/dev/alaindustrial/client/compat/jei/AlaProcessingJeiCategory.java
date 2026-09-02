@@ -1,4 +1,4 @@
-package dev.alaindustrial.compat.jei;
+package dev.alaindustrial.client.compat.jei;
 
 import dev.alaindustrial.block.entity.IncubatorMode;
 import dev.alaindustrial.client.compat.RecipeViewerLayout;

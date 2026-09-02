@@ -1,3 +1,35 @@
 * text=auto eol=lf
 *.bat text eol=crlf
 *.cmd text eol=crlf
+
+# ── Generated registers (MOD-548) ─────────────────────────────────────────────────────────────
+# Written by the generators of the docs/tools/regen.py roster; since MOD-548 they are regenerated
+# once per push (.githooks/pre-push), not on every commit. In the 30 days before that change
+# docs/tasks/README.md was rewritten 564 times and COVERAGE.md 295, and review — plus `git log -p`
+# — drowned in those regenerations.
+#
+#   linguist-generated=true — GitHub collapses the file in a pull-request diff and leaves it out of
+#                             the language statistics;
+#   -diff                   — git builds no line diff locally (`git diff` says "Binary files …
+#                             differ"). To look inside once: `git diff --text` / `git log -p --text`.
+#
+# MERGING is unaffected: `-diff` does not unset the `merge` attribute, so the merge driver stays
+# textual. The text/eol attributes are DELIBERATELY left alone here: docs/tools/line_endings_check.py
+# reads them as the single oracle for "which line ending is prescribed", and `-diff` does not touch
+# that answer.
+#
+# Deliberately NOT listed: files where the generated part is one region inside a hand-written page —
+# docs/ROADMAP.md (`AUTO:released`, `AUTO:advancement-count`), docs/testing/progression/advancements.md
+# and docs/blocks/*/index.md (`AUTO:planned`). There the diff is what you want: the hand-written text
+# is the content and the generated region is an inset. In docs/tasks/README.md and
+# docs/roadmap/README.md the `AUTO:` region is most of the file, which is why they are listed.
+docs/tasks/README.md              linguist-generated=true -diff
+docs/tasks/archive/README.md      linguist-generated=true -diff
+docs/roadmap/README.md            linguist-generated=true -diff
+docs/testing/TRACEABILITY.md      linguist-generated=true -diff
+docs/testing/COVERAGE.md          linguist-generated=true -diff
+tools/crafts_board.html           linguist-generated=true -diff
+tools/recipes_graph.html          linguist-generated=true -diff
+tools/showcase.html               linguist-generated=true -diff
+tools/advancement_tree.html       linguist-generated=true -diff
+docs/tools/block_graph.html       linguist-generated=true -diff

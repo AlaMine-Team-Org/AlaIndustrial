@@ -14,9 +14,10 @@ import net.neoforged.neoforge.registries.DeferredRegister;
  * NeoForge entity-type registration (MOD-022 registration-facade). Mirrors the Fabric
  * {@code dev.alaindustrial.registry.ModEntities} 1:1 (same ids, same builder values — see that
  * class for the vanilla-item-frame provenance of each builder call). {@code build(ResourceKey)} is
- * required on 26.2; NeoForge's {@code RegisterEvent} for ENTITY_TYPE fires before ITEM, but the
- * frame's item still resolves this holder lazily inside its registration lambda
- * (see {@code ModItemsNeoForge.STOCK_DISPLAY_FRAME_ITEM}) so no ordering assumption is load-bearing.
+ * required on 26.2; NeoForge's {@code RegisterEvent} for ENTITY_TYPE fires before ITEM, and the frame's
+ * item resolves the registered type by id inside its own factory (MOD-554,
+ * {@code ContentManifest#stockDisplayFrameType}) rather than holding a handle, so no ordering
+ * assumption is load-bearing.
  */
 public final class ModEntitiesNeoForge {
 	public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =

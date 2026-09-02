@@ -3,6 +3,12 @@ package dev.alaindustrial.core.fluid;
 import java.util.function.Predicate;
 import dev.alaindustrial.core.energy.EnergyBuffer;
 import dev.alaindustrial.core.energy.EnergyPort;
+import net.minecraft.core.IdMap;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 /**
  * The platform-neutral single-fluid tank backing the pump and geothermal generator (MOD-028). Owns the
@@ -44,11 +50,17 @@ import dev.alaindustrial.core.energy.EnergyPort;
  * for {@link EnergyBuffer} — see {@link FluidPort} class doc for why fluid reuses the energy transaction
  * seam instead of a parallel type.
  *
- * <p><b>Direct field access (internal drain/production + persistence).</b> {@link #fluid} and
- * {@link #amount} are public and mutable so machine content (the geothermal generator burning its own
- * tank) can mutate them directly outside any transaction, and so {@code saveAdditional}/{@code loadAdditional}
- * can persist them — the same pattern {@link EnergyBuffer#amount} allows. Direct mutators MUST uphold the
- * same invariant (clear {@link #fluid} to {@link FluidHolder#EMPTY} whenever they drop {@link #amount} to 0).
+ * <p><b>Direct field access (internal drain/production).</b> {@link #fluid} and {@link #amount} are
+ * public and mutable so machine content (the geothermal generator burning its own tank) can mutate them
+ * directly outside any transaction — the same pattern {@link EnergyBuffer#amount} allows. Direct mutators
+ * MUST uphold the same invariant (clear {@link #fluid} to {@link FluidHolder#EMPTY} whenever they drop
+ * {@link #amount} to 0).
+ *
+ * <p><b>Persistence (MOD-556).</b> The tank writes and reads itself through {@link #save} / {@link #load}.
+ * Before that, "amount + fluid registry id" was copied verbatim into six block entities together with the
+ * key encoder, the key decoder and the GUI sync-id clamp — eighteen methods for one format, where a single
+ * forgotten edit would have silently emptied a player's machine. The on-disk shape is unchanged by the
+ * move: same key literals, same values, same order.
  */
 public class FluidTank implements FluidPort, EnergyPort.Participant {
 
@@ -196,5 +208,120 @@ public class FluidTank implements FluidPort, EnergyPort.Participant {
 			fluid = FluidHolder.EMPTY;
 		}
 		onCommit.run();
+	}
+
+	// --- persistence (26.2 ValueInput/ValueOutput) ----------------------------------------------
+
+	/**
+	 * Key suffix holding the stored amount in mB. Together with {@link #FLUID_KEY_SUFFIX} it fixes the
+	 * on-disk shape of a tank: {@code <prefix>Mb} + {@code <prefix>Fluid}, which is exactly what the six
+	 * machines wrote before MOD-556 moved the code here. Changing either literal rewrites every existing
+	 * world's tanks to empty — that is what the format version on the block entity is for.
+	 */
+	private static final String AMOUNT_KEY_SUFFIX = "Mb";
+
+	/** Key suffix holding the stored fluid's registry id, or {@code ""} for an empty tank. */
+	private static final String FLUID_KEY_SUFFIX = "Fluid";
+
+	/**
+	 * Write this tank under {@code prefix} as the pair {@code <prefix>Mb} + {@code <prefix>Fluid}
+	 * (MOD-556).
+	 *
+	 * <p>The fluid id is written even when the tank is empty (as {@code ""}), because that is what the
+	 * six machines wrote before this method existed and the byte-for-byte shape is the point of the
+	 * move. The identity is never implicit: a machine's tank accepts whatever a datapack recipe or a
+	 * foreign {@code c:} tag puts in it, so hardcoding the fluid on load is the geothermal generator's
+	 * save-corruption bug (flagged in MOD-261).
+	 */
+	public void save(ValueOutput output, String prefix) {
+		output.putLong(prefix + AMOUNT_KEY_SUFFIX, amount);
+		output.putString(prefix + FLUID_KEY_SUFFIX, registryKey(fluid));
+	}
+
+	/**
+	 * Restore this tank from the pair {@link #save} wrote, clamped to {@link #capacity} and upholding the
+	 * tank invariant in both directions: no fluid means no amount, and no amount means no fluid. A save
+	 * whose fluid id no longer resolves (its mod was removed) drops the contents rather than keeping a
+	 * phantom amount the machine could never consume.
+	 */
+	public void load(ValueInput input, String prefix) {
+		load(input, prefix, FluidHolder.EMPTY, 0L);
+	}
+
+	/**
+	 * {@link #load(ValueInput, String)} with the two legacy fallbacks the pump needs.
+	 *
+	 * @param legacyAmountMb amount to use when {@code <prefix>Mb} is absent or zero — the pump converts
+	 *                       the Fabric v0.1.0 droplet-valued {@code "FluidTank"} key into this
+	 * @param legacyFluid    fluid to assume when a POSITIVE amount carries no resolvable id — the very
+	 *                       first pump revision was lava-only and wrote no id at all, so dropping those
+	 *                       contents would empty a real player's pump
+	 */
+	public void load(ValueInput input, String prefix, FluidHolder legacyFluid, long legacyAmountMb) {
+		long stored = input.getLongOr(prefix + AMOUNT_KEY_SUFFIX, 0L);
+		if (stored == 0L) {
+			stored = legacyAmountMb;
+		}
+		amount = Math.max(0L, Math.min(capacity, stored));
+		FluidHolder restored = fromRegistryKey(input.getStringOr(prefix + FLUID_KEY_SUFFIX, ""));
+		if (amount > 0 && restored.isEmpty()) {
+			restored = legacyFluid;
+		}
+		fluid = amount > 0 ? restored : FluidHolder.EMPTY;
+		if (fluid.isEmpty()) {
+			amount = 0L;
+		}
+	}
+
+	/**
+	 * What {@link #fluidSyncId()} reports for an empty (or unrepresentable) tank — the vanilla
+	 * {@link IdMap#DEFAULT}. Screens compare against it to decide whether to draw a fluid at all, so the
+	 * sentinel and the method that emits it are deliberately one declaration: before MOD-556 each machine
+	 * held its own copy of both, and a copy of a sentinel is a copy that can drift from its producer.
+	 */
+	public static final int FLUID_ID_NONE = IdMap.DEFAULT;
+
+	/**
+	 * The {@link BuiltInRegistries#FLUID} registry id of the stored fluid ({@link IdMap#DEFAULT} when the
+	 * tank is empty), for a client to resolve the fluid type over a {@code ContainerData} channel.
+	 *
+	 * <p>Ids above {@link Short#MAX_VALUE} report as empty rather than as their truncated low 16 bits,
+	 * which a channel's short encoding would otherwise resolve to an unrelated fluid — a wrongly-labelled
+	 * tank is worse than an unlabelled one. Only reachable in a pack with &gt;32767 registered fluids;
+	 * the tank itself is unaffected either way.
+	 */
+	public int fluidSyncId() {
+		if (fluid.isEmpty()) {
+			return FLUID_ID_NONE;
+		}
+		int id = BuiltInRegistries.FLUID.getId(fluid.fluid());
+		return id > Short.MAX_VALUE ? FLUID_ID_NONE : id;
+	}
+
+	/** Registry id of {@code fluid} for persistence (e.g. {@code "minecraft:water"}), or {@code ""}. */
+	private static String registryKey(FluidHolder fluid) {
+		return fluid.isEmpty() ? "" : BuiltInRegistries.FLUID.getKey(fluid.fluid()).toString();
+	}
+
+	/**
+	 * Resolve a persisted registry id back to a fluid; anything absent, malformed or no longer
+	 * registered reads as {@link FluidHolder#EMPTY}.
+	 *
+	 * <p>Note on the pump's pre-MOD-099 bare spellings {@code "lava"} / {@code "water"}: they need no
+	 * branch of their own. {@code Identifier.tryParse} with no {@code ':'} falls through to
+	 * {@code withDefaultNamespace}, so a bare path becomes {@code minecraft:<path>} and resolves exactly
+	 * as the old special case did (verified against the 26.2 bytecode of
+	 * {@code Identifier.tryBySeparator}). The pump gametest pins it.
+	 */
+	private static FluidHolder fromRegistryKey(String key) {
+		if (key == null || key.isEmpty()) {
+			return FluidHolder.EMPTY;
+		}
+		Identifier id = Identifier.tryParse(key);
+		if (id == null) {
+			return FluidHolder.EMPTY;
+		}
+		Fluid resolved = BuiltInRegistries.FLUID.getValue(id);
+		return resolved == null ? FluidHolder.EMPTY : FluidHolder.of(resolved);
 	}
 }

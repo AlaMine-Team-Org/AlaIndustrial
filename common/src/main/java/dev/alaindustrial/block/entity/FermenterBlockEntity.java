@@ -18,10 +18,7 @@ import dev.alaindustrial.registry.ModTags;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.IdMap;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -33,7 +30,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -91,8 +87,8 @@ public class FermenterBlockEntity extends MachineBlockEntity
 	/** Both tanks hold 10 buckets, matching every other tank-bearing machine in the mod. */
 	public static final long TANK_CAPACITY = FluidAmounts.BUCKET * 10;
 
-	/** Sentinel for an empty tank on a fluid-id sync channel — the vanilla {@code IdMap} default. */
-	public static final int FLUID_ID_NONE = IdMap.DEFAULT;
+	/** Sentinel for an empty tank on a fluid-id sync channel — see {@link FluidTank#FLUID_ID_NONE}. */
+	public static final int FLUID_ID_NONE = FluidTank.FLUID_ID_NONE;
 
 	/**
 	 * Water in. Source water only: {@code Fluids.FLOWING_WATER} is a different object and a
@@ -120,6 +116,9 @@ public class FermenterBlockEntity extends MachineBlockEntity
 			ModRecipes.FERMENTING.newCheck();
 
 	private FermenterStatus status = FermenterStatus.NO_ORGANIC;
+
+	/** The shared eight-step tick loop (MOD-557). */
+	private final ProcessingCycle cycle = new ProcessingCycle(this);
 
 	public FermenterBlockEntity(BlockPos pos, BlockState state) {
 		// EU consumer: maxInsert = tier voltage (so the network sees a consumer), maxExtract = 0.
@@ -160,7 +159,6 @@ public class FermenterBlockEntity extends MachineBlockEntity
 		bucketWork |= ItemFluidBridge.get().fillSlotFromTank(this,
 				BIOFUEL_DRAIN_INPUT_SLOT, BIOFUEL_DRAIN_OUTPUT_SLOT, biofuelTank, FluidAmounts.BUCKET) > 0;
 
-		int euPerTick = effectiveEuPerTick(Config.machineEuPerTick);
 		ProcessingRecipeInput input = new ProcessingRecipeInput(items.get(ORGANIC_SLOT));
 		AlaProcessingRecipe recipe = level instanceof ServerLevel server
 				? ModRecipes.lookup(recipeCheck, server, input)
@@ -169,7 +167,7 @@ public class FermenterBlockEntity extends MachineBlockEntity
 		int baseDuration = recipe != null && recipe.energy() > 0
 				? Math.max(1, recipe.energy() / Config.machineEuPerTick)
 				: Config.fermenterDuration;
-		this.maxProgress = effectiveDuration(baseDuration);
+		ProcessingCycle.Job job = cycle.job(Config.machineEuPerTick, baseDuration);
 
 		ItemStack result = recipe != null ? recipe.resultStack() : ItemStack.EMPTY;
 		long waterPerOp = waterPerOperation();
@@ -179,41 +177,32 @@ public class FermenterBlockEntity extends MachineBlockEntity
 		boolean canWork = recipe != null && recipe.hasEnough(input)
 				&& waterTank.amount >= waterPerOp
 				&& biofuelFits(biofuelPerOp)
-				&& energy.getAmount() >= euPerTick
+				&& energy.getAmount() >= job.euPerTick()
 				&& canOutput(OUTPUT_SLOT, result);
 
 		setStatus(diagnose(recipe, input, result, waterPerOp, biofuelPerOp));
-		updateLit(canWork);
-		recordEuRate(canWork ? euPerTick : 0);
 
-		if (canWork) {
-			energy.drainInternal(euPerTick);
-			progress++;
-			if (progress >= maxProgress) {
-				progress = 0;
-				// Read the tier BEFORE the input is consumed — afterwards the slot may be empty, and
-				// an empty stack matches no tag, which would silently pay every batch at the poor rate.
-				long brewed = biofuelFor(items.get(ORGANIC_SLOT));
-				recipe.consume(List.of(items.get(ORGANIC_SLOT)));
-				consumeWater(waterPerOp);
-				brewBiofuel(brewed);
-				// Biofuel is certain, biomass is a roll: the fluid is what fermentation always yields,
-				// the solid leftover is what sometimes survives it. A recipe with no stated chance
-				// (chance() < 0) always delivers, so a datapack can opt out of the gamble.
-				if (recipe.chance() < 0 || level.getRandom().nextDouble() < recipe.chance()) {
-					addOutput(OUTPUT_SLOT, result);
-				}
-				recordItemProcessed();
-				creditUsefulWork(level, (long) euPerTick * maxProgress); // MOD-133: completed op → XP
-			}
-			setChanged();
-		} else if (recipe == null && progress != 0) {
-			// The input is no longer a recipe: restart from zero. On mere power loss, a dry tank or a
-			// full output the recipe is still there, so progress FREEZES and resumes (R-NRG-10).
-			progress = 0;
-			setChanged();
-		}
-		return canWork || bucketWork ? 0 : IDLE_SLEEP_TICKS;
+		// The shared cycle (MOD-557) owns the lit state, the rate report, the drain, the progress step,
+		// the operation counter, the XP credit and the sleep answer. "The input is no longer a recipe"
+		// is what restarts progress; on mere power loss, a dry tank or a full output the recipe is still
+		// there, so progress FREEZES and resumes (R-NRG-10).
+		return job.canWork(canWork)
+				.jobIntact(recipe != null)
+				.keepAwake(bucketWork)
+				.run(level, () -> {
+					// Read the tier BEFORE the input is consumed — afterwards the slot may be empty, and
+					// an empty stack matches no tag, which would silently pay every batch at the poor rate.
+					long brewed = biofuelFor(items.get(ORGANIC_SLOT));
+					recipe.consume(List.of(items.get(ORGANIC_SLOT)));
+					consumeWater(waterPerOp);
+					brewBiofuel(brewed);
+					// Biofuel is certain, biomass is a roll: the fluid is what fermentation always yields,
+					// the solid leftover is what sometimes survives it. A recipe with no stated chance
+					// (chance() < 0) always delivers, so a datapack can opt out of the gamble.
+					if (recipe.chance() < 0 || level.getRandom().nextDouble() < recipe.chance()) {
+						addOutput(OUTPUT_SLOT, result);
+					}
+				});
 	}
 
 	/** Water consumed per batch, clamped to at least 1 mB so a config of 0 cannot delete the gate. */
@@ -320,9 +309,9 @@ public class FermenterBlockEntity extends MachineBlockEntity
 		public int get(int index) {
 			return switch (index) {
 				case CH_WATER_PERMILLE -> permille(waterTank);
-				case CH_WATER_FLUID_ID -> fluidRegistryId(waterTank.fluid);
+				case CH_WATER_FLUID_ID -> waterTank.fluidSyncId();
 				case CH_BIOFUEL_PERMILLE -> permille(biofuelTank);
-				case CH_BIOFUEL_FLUID_ID -> fluidRegistryId(biofuelTank.fluid);
+				case CH_BIOFUEL_FLUID_ID -> biofuelTank.fluidSyncId();
 				case CH_STATUS -> status.ordinal();
 				default -> FermenterBlockEntity.this.dataAccess.get(index);
 			};
@@ -402,59 +391,17 @@ public class FermenterBlockEntity extends MachineBlockEntity
 	@Override
 	protected void saveAdditional(ValueOutput output) {
 		super.saveAdditional(output);
-		saveTank(output, "Water", waterTank);
-		saveTank(output, "Biofuel", biofuelTank);
+		// The tanks write themselves (MOD-556) under the keys they have always used.
+		waterTank.save(output, "Water");
+		biofuelTank.save(output, "Biofuel");
 	}
 
 	@Override
 	protected void loadAdditional(ValueInput input) {
 		super.loadAdditional(input);
-		loadTank(input, "Water", waterTank);
-		loadTank(input, "Biofuel", biofuelTank);
-	}
-
-	private static void saveTank(ValueOutput output, String prefix, FluidTank tank) {
-		output.putLong(prefix + "Mb", tank.amount);
-		output.putString(prefix + "Fluid", fluidKey(tank.fluid));
-	}
-
-	/**
-	 * Restore a tank from its saved pair. The fluid is read back from the registry key, never assumed
-	 * from the machine's expected contents — hardcoding it here is the geothermal generator's exact
-	 * save-corruption bug, flagged in MOD-261. Uphold the invariant both ways: no fluid means no
-	 * amount, and no amount means no fluid.
-	 */
-	private static void loadTank(ValueInput input, String prefix, FluidTank tank) {
-		tank.amount = Math.max(0L, Math.min(tank.capacity, input.getLongOr(prefix + "Mb", 0L)));
-		FluidHolder restored = holderFromKey(input.getStringOr(prefix + "Fluid", ""));
-		tank.fluid = tank.amount > 0 ? restored : FluidHolder.EMPTY;
-		if (tank.fluid.isEmpty()) {
-			tank.amount = 0L;
-		}
-	}
-
-	/** Registry key of {@code fluid} for persistence (e.g. {@code "minecraft:water"}), or {@code ""}. */
-	private static String fluidKey(FluidHolder fluid) {
-		return fluid.isEmpty() ? "" : BuiltInRegistries.FLUID.getKey(fluid.fluid()).toString();
-	}
-
-	private static FluidHolder holderFromKey(String key) {
-		if (key == null || key.isEmpty()) {
-			return FluidHolder.EMPTY;
-		}
-		Identifier id = Identifier.tryParse(key);
-		if (id == null) {
-			return FluidHolder.EMPTY;
-		}
-		Fluid resolved = BuiltInRegistries.FLUID.getValue(id);
-		return resolved == null ? FluidHolder.EMPTY : FluidHolder.of(resolved);
-	}
-
-	private static int fluidRegistryId(FluidHolder fluid) {
-		if (fluid.isEmpty()) {
-			return FLUID_ID_NONE;
-		}
-		int id = BuiltInRegistries.FLUID.getId(fluid.fluid());
-		return id > Short.MAX_VALUE ? FLUID_ID_NONE : id;
+		// Each tank reads its fluid back from the stored registry id, never from the machine's expected
+		// contents — hardcoding it is the geothermal generator's save-corruption bug (MOD-261).
+		waterTank.load(input, "Water");
+		biofuelTank.load(input, "Biofuel");
 	}
 }

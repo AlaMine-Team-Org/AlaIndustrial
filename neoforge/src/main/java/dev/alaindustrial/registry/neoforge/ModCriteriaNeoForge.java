@@ -1,39 +1,51 @@
 package dev.alaindustrial.registry.neoforge;
 
 import dev.alaindustrial.Industrialization;
-import dev.alaindustrial.advancement.MutationCompletedTrigger;
-import dev.alaindustrial.advancement.NetworkEnergizedTrigger;
-import dev.alaindustrial.advancement.ReactorMilestoneTrigger;
 import dev.alaindustrial.registry.ModCriteria;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.advancements.triggers.CriterionTrigger;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 /**
- * NeoForge advancement-criterion registration (MOD-022 facade). NeoForge freezes the vanilla
- * {@code TRIGGER_TYPES} registry before mod construction, so the neutral {@link ModCriteria} cannot
- * self-register there (unlike Fabric). This {@link DeferredRegister} registers the trigger on the mod bus
- * and {@link #init()} binds the neutral handle to the deferred holder (a lazy {@code Supplier}).
+ * NeoForge advancement-criterion registration: a replay of the shared {@link ModCriteria#TRIGGERS} list
+ * (MOD-022 facade, MOD-555).
+ *
+ * <p>NeoForge freezes the vanilla {@code TRIGGER_TYPES} registry before mod construction, so the neutral
+ * {@link ModCriteria} cannot self-register there the way it can on Fabric. What is left here is the
+ * NeoForge registration MECHANISM and only that.
  */
 public final class ModCriteriaNeoForge {
 	public static final DeferredRegister<CriterionTrigger<?>> TRIGGERS =
 			DeferredRegister.create(Registries.TRIGGER_TYPE, Industrialization.MOD_ID);
 
-	public static final DeferredHolder<CriterionTrigger<?>, NetworkEnergizedTrigger> NETWORK_ENERGIZED =
-			TRIGGERS.register("network_energized", ModCriteria::createNetworkEnergized);
+	/** Every shared entry, queued and bound the moment this class loads. See {@code ModSoundsNeoForge}. */
+	private static final List<DeferredHolder<CriterionTrigger<?>, ?>> REGISTERED = registerAll();
 
-	public static final DeferredHolder<CriterionTrigger<?>, MutationCompletedTrigger> MUTATION_COMPLETED =
-			TRIGGERS.register("mutation_completed", ModCriteria::createMutationCompleted);
+	private static List<DeferredHolder<CriterionTrigger<?>, ?>> registerAll() {
+		List<DeferredHolder<CriterionTrigger<?>, ?>> registered = new ArrayList<>();
+		for (ModCriteria.CriterionDef<?> def : ModCriteria.TRIGGERS) {
+			registered.add(register(def));
+		}
+		return List.copyOf(registered);
+	}
 
-	public static final DeferredHolder<CriterionTrigger<?>, ReactorMilestoneTrigger> REACTOR_MILESTONE =
-			TRIGGERS.register("reactor_milestone", ModCriteria::createReactorMilestone);
+	/** One entry. Separate from {@link #registerAll()} only to capture the entry's type parameter. */
+	private static <T extends CriterionTrigger<?>> DeferredHolder<CriterionTrigger<?>, T> register(
+			ModCriteria.CriterionDef<T> def) {
+		DeferredHolder<CriterionTrigger<?>, T> holder = TRIGGERS.register(def.id(), def.factory());
+		def.bind().accept(holder::get);
+		return holder;
+	}
 
-	/** Bind the neutral handles to the deferred holders. Called from the {@code @Mod} ctor after register. */
+	/** Class-load trigger for the {@code @Mod} ctor; also checks the replay covered the whole list. */
 	public static void init() {
-		ModCriteria.NETWORK_ENERGIZED = NETWORK_ENERGIZED::get;
-		ModCriteria.MUTATION_COMPLETED = MUTATION_COMPLETED::get;
-		ModCriteria.REACTOR_MILESTONE = REACTOR_MILESTONE::get;
+		if (REGISTERED.size() != ModCriteria.TRIGGERS.size()) {
+			throw new IllegalStateException("ModCriteriaNeoForge registered " + REGISTERED.size() + " of "
+					+ ModCriteria.TRIGGERS.size() + " shared advancement criteria");
+		}
 	}
 
 	private ModCriteriaNeoForge() {

@@ -51,6 +51,9 @@ public final class CanningMachineBlockEntity extends MachineBlockEntity
 	/** Accumulated food value in tenths; survives save/load and is shown as the calorie gauge. */
 	private int foodBuffer;
 
+	/** The shared eight-step tick loop (MOD-557). */
+	private final ProcessingCycle cycle = new ProcessingCycle(this);
+
 	public CanningMachineBlockEntity(BlockPos pos, BlockState state) {
 		super(ModContent.CANNING_MACHINE_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT,
 				Config.machineBuffer, EnergyTier.LV.maxVoltage(), 0L);
@@ -59,52 +62,42 @@ public final class CanningMachineBlockEntity extends MachineBlockEntity
 
 	@Override
 	protected int onServerTick(Level level, BlockPos pos, BlockState state) {
-		// Through the instance helpers, not Config's statics: the statics cannot see this machine's
-		// upgrade panel, so a player's overclocker chip would silently do nothing (MOD-392).
-		int euPerTick = effectiveEuPerTick(Config.machineEuPerTick);
 		int valuePerRation = Config.canningFoodValuePerCan;
-		maxProgress = effectiveDuration(Config.canningMachineDuration);
+		// The cycle derives the draw and the length through the instance helpers, so a player's
+		// overclocker chip is actually seen (MOD-392) — Config's statics cannot see the upgrade panel.
+		ProcessingCycle.Job job = cycle.job(Config.machineEuPerTick, Config.canningMachineDuration);
 
 		// Everything the PRESS needs apart from the calories themselves.
 		boolean pressReady = !items.get(CAN_SLOT).isEmpty()
 				&& canOutput()
-				&& energy.getAmount() >= euPerTick;
+				&& energy.getAmount() >= job.euPerTick();
 
 		// Absorption is unconditional (MOD-488): a player pre-feeding food before the first empty can
 		// arrives should see it banked as calories right away, not sitting untouched in the slot. Only
 		// the paid PRESS step still needs a can, power and output room.
-		boolean changed = absorbFood(valuePerRation);
+		boolean absorbed = absorbFood(valuePerRation);
 		boolean canWork = pressReady && CanningMath.hasFullRation(foodBuffer, valuePerRation);
 
-		updateLit(canWork);
-		// MOD-125/MOD-440: the statistics panel's "now" line is this tick's draw, 0 when stopped.
-		recordEuRate(canWork ? euPerTick : 0);
-		if (!canWork) {
-			if (progress != 0) {
-				progress = 0;
-				changed = true;
-			}
-			if (changed) {
-				setChanged();
-			}
-			return IDLE_SLEEP_TICKS;
-		}
-
-		energy.drainInternal(euPerTick);
-		progress++;
-		if (progress >= maxProgress) {
-			progress = 0;
-			foodBuffer = CanningMath.consumeRation(foodBuffer, valuePerRation);
-			items.get(CAN_SLOT).shrink(1);
-			if (items.get(CAN_SLOT).isEmpty()) {
-				items.set(CAN_SLOT, ItemStack.EMPTY);
-			}
-			addRation();
-			recordItemProcessed();
-			creditUsefulWork(level, (long) euPerTick * maxProgress);
-		}
-		setChanged();
-		return 0;
+		// The shared cycle (MOD-557) owns the lit state, the rate report, the drain, the progress step,
+		// the operation counter, the XP credit and the sleep answer.
+		//
+		// Unlike the recipe machines, ANY stall abandons the press rather than freezing it — hence
+		// jobIntact(canWork). Nothing is lost by that: the calories stay banked in the buffer and the can
+		// stays in its slot, so the only thing thrown away is a partially pressed lid.
+		//
+		// Absorption happens outside the cycle and can move items on a tick that does no work, so it is
+		// declared here instead of calling setChanged() a second time.
+		return job.canWork(canWork)
+				.jobIntact(canWork)
+				.alreadyChanged(absorbed)
+				.run(level, () -> {
+					foodBuffer = CanningMath.consumeRation(foodBuffer, valuePerRation);
+					items.get(CAN_SLOT).shrink(1);
+					if (items.get(CAN_SLOT).isEmpty()) {
+						items.set(CAN_SLOT, ItemStack.EMPTY);
+					}
+					addRation();
+				});
 	}
 
 	/**

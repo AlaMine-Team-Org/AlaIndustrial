@@ -17,10 +17,7 @@ import dev.alaindustrial.registry.ModRecipes;
 import dev.alaindustrial.registry.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.IdMap;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -33,7 +30,6 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
@@ -70,8 +66,8 @@ public class PolymerizerBlockEntity extends MachineBlockEntity implements Overcl
 	/** Internal tank: 10 buckets, matching the pump and the geothermal generator. */
 	public static final long TANK_CAPACITY = FluidAmounts.BUCKET * 10;
 
-	/** Sentinel for an empty tank on the fluid-id sync channel — the vanilla {@code IdMap} default. */
-	public static final int FLUID_ID_NONE = IdMap.DEFAULT;
+	/** Sentinel for an empty tank on the fluid-id sync channel — see {@link FluidTank#FLUID_ID_NONE}. */
+	public static final int FLUID_ID_NONE = FluidTank.FLUID_ID_NONE;
 
 	/**
 	 * Oil-only tank, insertable from any side, never extractable (R-CON-08 — the machine consumes its own
@@ -90,6 +86,9 @@ public class PolymerizerBlockEntity extends MachineBlockEntity implements Overcl
 
 	private final RecipeManager.CachedCheck<FluidRecipeInput, PolymerizingRecipe> recipeCheck =
 			ModRecipes.POLYMERIZING.newCheck();
+
+	/** The shared eight-step tick loop (MOD-557). */
+	private final ProcessingCycle cycle = new ProcessingCycle(this);
 
 	public PolymerizerBlockEntity(BlockPos pos, BlockState state) {
 		// EU consumer: maxInsert = tier voltage (so the network sees a consumer), maxExtract = 0. Three
@@ -134,37 +133,27 @@ public class PolymerizerBlockEntity extends MachineBlockEntity implements Overcl
 		// 2) Resolve what the tank's contents make. A recipe only matches once the tank holds at least the
 		//    recipe's volume, so a half-filled tank simply idles.
 		PolymerizingRecipe recipe = level instanceof ServerLevel serverLevel ? resolveRecipe(serverLevel) : null;
-		int euPerTick = effectiveEuPerTick(Config.machineEuPerTick);
 		int baseDuration = recipe != null && recipe.energy() > 0
 				? Math.max(1, recipe.energy() / Config.machineEuPerTick)
 				: Config.polymerizerDuration;
-		this.maxProgress = effectiveDuration(baseDuration);
+		ProcessingCycle.Job job = cycle.job(Config.machineEuPerTick, baseDuration);
 
 		ItemStack result = recipe != null ? recipe.resultStack() : ItemStack.EMPTY;
-		boolean canWork = recipe != null && energy.getAmount() >= euPerTick && canOutput(OUTPUT_SLOT, result);
-		updateLit(canWork);
-		// MOD-125/MOD-440: the statistics panel's "now" line is this tick's draw, 0 when stopped.
-		recordEuRate(canWork ? euPerTick : 0);
+		boolean canWork = recipe != null && energy.getAmount() >= job.euPerTick()
+				&& canOutput(OUTPUT_SLOT, result);
 
-		if (canWork) {
-			energy.drainInternal(euPerTick);
-			progress++;
-			if (progress >= maxProgress) {
-				progress = 0;
-				consume(recipe.amount());
-				addOutput(OUTPUT_SLOT, result);
-				recordItemProcessed();
-				creditUsefulWork(level, (long) euPerTick * maxProgress); // MOD-133: completed op → XP
-			}
-			setChanged();
-		} else if (recipe == null && progress != 0) {
-			// The tank ran dry (or its fluid no longer has a recipe): restart the operation from zero. On
-			// mere power loss or a full output the recipe is still there, so progress FREEZES and resumes
-			// when work can continue (R-NRG-10) — same contract as the item-fed machines.
-			progress = 0;
-			setChanged();
-		}
-		return canWork || filled ? 0 : IDLE_SLEEP_TICKS;
+		// 3) The shared cycle (MOD-557) draws the lit state, reports the rate, drains, steps the bar,
+		//    counts the operation and answers the sleep gate. "The tank ran dry (or its fluid no longer
+		//    has a recipe)" is what restarts progress; on mere power loss or a full output the recipe is
+		//    still there, so progress FREEZES and resumes (R-NRG-10) — the item-fed machines' contract.
+		//    A container exchange keeps the machine awake even when it cannot work.
+		return job.canWork(canWork)
+				.jobIntact(recipe != null)
+				.keepAwake(filled)
+				.run(level, () -> {
+					consume(recipe.amount());
+					addOutput(OUTPUT_SLOT, result);
+				});
 	}
 
 	/** The recipe the tank's current contents satisfy, or {@code null}. */
@@ -212,7 +201,7 @@ public class PolymerizerBlockEntity extends MachineBlockEntity implements Overcl
 			return switch (index) {
 				case 4 -> fluidTank.amount <= 0 ? 0
 						: Math.max(1, (int) Math.min(fluidTank.amount * 1000L / TANK_CAPACITY, 1000));
-				case 5 -> fluidRegistryId(fluidTank.fluid);
+				case 5 -> fluidTank.fluidSyncId();
 				default -> PolymerizerBlockEntity.this.dataAccess.get(index);
 			};
 		}
@@ -276,53 +265,17 @@ public class PolymerizerBlockEntity extends MachineBlockEntity implements Overcl
 	@Override
 	protected void saveAdditional(ValueOutput output) {
 		super.saveAdditional(output);
-		output.putLong("FluidTankMb", fluidTank.amount);
-		// Persist which oil the tank holds: the tag accepts foreign oils, so the variant is not implicit.
-		output.putString("FluidTankFluid", fluidKey(fluidTank.fluid));
+		// The tank writes itself (MOD-556) under the keys it has always used. It persists which oil it
+		// holds, not just how much: the tag accepts foreign oils, so the variant is not implicit.
+		fluidTank.save(output, "FluidTank");
 	}
 
 	@Override
 	protected void loadAdditional(ValueInput input) {
 		super.loadAdditional(input);
-		fluidTank.amount = Math.max(0L, Math.min(TANK_CAPACITY, input.getLongOr("FluidTankMb", 0L)));
-		FluidHolder restored = holderFromKey(input.getStringOr("FluidTankFluid", ""));
-		// Uphold the tank invariant in both directions: no fluid means no amount, and vice versa. A save
-		// whose fluid id no longer resolves (its mod was removed) drops the contents rather than keeping a
-		// phantom amount the machine could never consume.
-		fluidTank.fluid = fluidTank.amount > 0 ? restored : FluidHolder.EMPTY;
-		if (fluidTank.fluid.isEmpty()) {
-			fluidTank.amount = 0L;
-		}
-	}
-
-	/** Registry key of {@code fluid} for persistence (e.g. {@code "alaindustrial:oil"}), or {@code ""}. */
-	private static String fluidKey(FluidHolder fluid) {
-		return fluid.isEmpty() ? "" : BuiltInRegistries.FLUID.getKey(fluid.fluid()).toString();
-	}
-
-	private static FluidHolder holderFromKey(String key) {
-		if (key == null || key.isEmpty()) {
-			return FluidHolder.EMPTY;
-		}
-		Identifier id = Identifier.tryParse(key);
-		if (id == null) {
-			return FluidHolder.EMPTY;
-		}
-		Fluid resolved = BuiltInRegistries.FLUID.getValue(id);
-		return resolved == null ? FluidHolder.EMPTY : FluidHolder.of(resolved);
-	}
-
-	/**
-	 * The {@link BuiltInRegistries#FLUID} registry id of {@code fluid} ({@link IdMap#DEFAULT} when the tank
-	 * is empty), for the client to resolve the fluid type over sync channel 5. Ids above
-	 * {@link Short#MAX_VALUE} report as empty rather than as their truncated low 16 bits, which the
-	 * channel's short encoding would otherwise resolve to an unrelated fluid.
-	 */
-	private static int fluidRegistryId(FluidHolder fluid) {
-		if (fluid.isEmpty()) {
-			return FLUID_ID_NONE;
-		}
-		int id = BuiltInRegistries.FLUID.getId(fluid.fluid());
-		return id > Short.MAX_VALUE ? FLUID_ID_NONE : id;
+		// Clamped to the tank's own capacity (TANK_CAPACITY, the value it was built with), invariant
+		// upheld both ways, and a save whose fluid id no longer resolves (its mod was removed) drops the
+		// contents rather than keeping a phantom amount the machine could never consume.
+		fluidTank.load(input, "FluidTank");
 	}
 }

@@ -9,7 +9,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.network.chat.Component;
-import net.minecraft.core.IdMap;
 import dev.alaindustrial.menu.SprinklerMenu;
 import dev.alaindustrial.item.fluid.ItemFluidBridge;
 import dev.alaindustrial.core.fluid.FluidAmounts;
@@ -26,15 +25,12 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
@@ -94,8 +90,8 @@ public class SprinklerBlockEntity extends MachineBlockEntity implements FluidPor
 	/** Machine-specific slot count; no upgrade panel is appended (see {@link #hasUpgradePanel()}). */
 	public static final int SLOT_COUNT = 2;
 
-	/** Sentinel for an empty tank on the fluid-id sync channel — the vanilla {@code IdMap} default. */
-	public static final int FLUID_ID_NONE = IdMap.DEFAULT;
+	/** Sentinel for an empty tank on the fluid-id sync channel — see {@link FluidTank#FLUID_ID_NONE}. */
+	public static final int FLUID_ID_NONE = FluidTank.FLUID_ID_NONE;
 
 	/**
 	 * Solution in, never out. A neighbour may fill the tank; nothing may siphon it back (R-CON-08) —
@@ -338,7 +334,7 @@ public class SprinklerBlockEntity extends MachineBlockEntity implements FluidPor
 			return switch (index) {
 				case CH_SOLUTION_PERMILLE -> tank.amount <= 0 ? 0
 						: Math.max(1, (int) Math.min(tank.amount * 1000L / tank.capacity, 1000));
-				case CH_SOLUTION_FLUID_ID -> fluidRegistryId(tank.fluid);
+				case CH_SOLUTION_FLUID_ID -> tank.fluidSyncId();
 				default -> SprinklerBlockEntity.this.dataAccess.get(index);
 			};
 		}
@@ -394,47 +390,18 @@ public class SprinklerBlockEntity extends MachineBlockEntity implements FluidPor
 				ContainerLevelAccess.create(getLevel(), getBlockPos()));
 	}
 
-	private static int fluidRegistryId(FluidHolder fluid) {
-		if (fluid.isEmpty()) {
-			return FLUID_ID_NONE;
-		}
-		int id = BuiltInRegistries.FLUID.getId(fluid.fluid());
-		return id > Short.MAX_VALUE ? FLUID_ID_NONE : id;
-	}
-
 	@Override
 	protected void saveAdditional(ValueOutput output) {
 		super.saveAdditional(output);
-		output.putLong("SolutionMb", tank.amount);
-		output.putString("SolutionFluid", fluidKey(tank.fluid));
+		// The tank writes itself (MOD-556) under the keys it has always used.
+		tank.save(output, "Solution");
 	}
 
 	@Override
 	protected void loadAdditional(ValueInput input) {
 		super.loadAdditional(input);
-		tank.amount = Math.max(0L, Math.min(tank.capacity, input.getLongOr("SolutionMb", 0L)));
-		FluidHolder restored = holderFromKey(input.getStringOr("SolutionFluid", ""));
-		// Read the fluid back from the key, never assume it — hardcoding the expected fluid on load is
-		// the geothermal generator's save-corruption bug (flagged in MOD-261).
-		tank.fluid = tank.amount > 0 ? restored : FluidHolder.EMPTY;
-		if (tank.fluid.isEmpty()) {
-			tank.amount = 0L;
-		}
-	}
-
-	private static String fluidKey(FluidHolder fluid) {
-		return fluid.isEmpty() ? "" : BuiltInRegistries.FLUID.getKey(fluid.fluid()).toString();
-	}
-
-	private static FluidHolder holderFromKey(String key) {
-		if (key == null || key.isEmpty()) {
-			return FluidHolder.EMPTY;
-		}
-		Identifier id = Identifier.tryParse(key);
-		if (id == null) {
-			return FluidHolder.EMPTY;
-		}
-		Fluid resolved = BuiltInRegistries.FLUID.getValue(id);
-		return resolved == null ? FluidHolder.EMPTY : FluidHolder.of(resolved);
+		// The fluid comes back from the stored id, never from what the sprinkler expects — hardcoding the
+		// expected fluid on load is the geothermal generator's save-corruption bug (flagged in MOD-261).
+		tank.load(input, "Solution");
 	}
 }

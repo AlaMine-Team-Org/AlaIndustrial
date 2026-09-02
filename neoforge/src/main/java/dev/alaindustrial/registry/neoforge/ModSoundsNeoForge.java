@@ -2,123 +2,58 @@ package dev.alaindustrial.registry.neoforge;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.registry.ModSounds;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 /**
- * NeoForge sound registration (MOD-022 facade). NeoForge freezes the vanilla {@code SOUND_EVENT}
- * registry before mod construction, so the neutral {@link ModSounds} cannot self-register there (unlike
- * Fabric). This {@link DeferredRegister} registers on the mod bus and binds the neutral
- * {@link ModSounds#MACERATOR_GRIND} handle to the deferred holder (itself a {@code Supplier<SoundEvent>}).
+ * NeoForge sound registration: a replay of the shared {@link ModSounds#SOUNDS} list (MOD-022 facade,
+ * MOD-555).
+ *
+ * <p>NeoForge freezes the vanilla {@code SOUND_EVENT} registry before mod construction, so the neutral
+ * {@link ModSounds} cannot self-register there the way it can on Fabric. What is left in this file is the
+ * NeoForge registration MECHANISM and only that: the {@link DeferredRegister} (which has to live on this
+ * side), its lazy {@code register}, and the binding of each resulting {@link DeferredHolder} — itself a
+ * {@code Supplier<SoundEvent>} — into the entry's handle.
+ *
+ * <p>Before MOD-555 this file also carried the LIST: 25 holder fields and 25 more assignment lines in
+ * {@code init()}, mirroring 25 registration lines in {@code IndustrializationFabric} by convention alone.
  */
 public final class ModSoundsNeoForge {
 	public static final DeferredRegister<SoundEvent> SOUNDS =
 			DeferredRegister.create(Registries.SOUND_EVENT, Industrialization.MOD_ID);
 
-	public static final DeferredHolder<SoundEvent, SoundEvent> MACERATOR_GRIND =
-			SOUNDS.register("macerator_grind", ModSounds::createMaceratorGrind);
+	/**
+	 * Every {@link ModSounds#SOUNDS} entry, queued the moment this class loads and bound into its handle
+	 * right away — a {@code DeferredHolder} is a {@code Supplier} and resolves lazily, so binding before
+	 * the {@code RegisterEvent} fires is legal and is exactly what the hand-written {@code init()} body
+	 * used to do.
+	 */
+	private static final List<DeferredHolder<SoundEvent, SoundEvent>> REGISTERED = registerAll();
 
-	public static final DeferredHolder<SoundEvent, SoundEvent> GENERATOR_HUM =
-			SOUNDS.register("generator_hum", ModSounds::createGeneratorHum);
+	private static List<DeferredHolder<SoundEvent, SoundEvent>> registerAll() {
+		List<DeferredHolder<SoundEvent, SoundEvent>> registered = new ArrayList<>();
+		for (ModSounds.SoundDef def : ModSounds.SOUNDS) {
+			DeferredHolder<SoundEvent, SoundEvent> holder = SOUNDS.register(def.id(), def.factory());
+			def.bind().accept(holder);
+			registered.add(holder);
+		}
+		return List.copyOf(registered);
+	}
 
-	public static final DeferredHolder<SoundEvent, SoundEvent> ELECTRIC_FURNACE_HUM =
-			SOUNDS.register("electric_furnace", ModSounds::createElectricFurnaceHum);
-
-	public static final DeferredHolder<SoundEvent, SoundEvent> SOLAR_PANEL_HUM =
-			SOUNDS.register("solar_panel_hum", ModSounds::createSolarPanelHum);
-
-	public static final DeferredHolder<SoundEvent, SoundEvent> IRON_CHEST_OPEN =
-			SOUNDS.register("iron_chest_open", ModSounds::createIronChestOpen);
-
-	public static final DeferredHolder<SoundEvent, SoundEvent> IRON_CHEST_CLOSE =
-			SOUNDS.register("iron_chest_close", ModSounds::createIronChestClose);
-
-	public static final DeferredHolder<SoundEvent, SoundEvent> SCYTHE_SWING =
-			SOUNDS.register("scythe_swing", ModSounds::createScytheSwing);
-
-	public static final DeferredHolder<SoundEvent, SoundEvent> EXTRACTOR_HUM =
-			SOUNDS.register("extractor_hum", ModSounds::createExtractorHum);
-
-	public static final DeferredHolder<SoundEvent, SoundEvent> WATER_MILL_HUM =
-			SOUNDS.register("water_mill_hum", ModSounds::createWaterMillHum);
-
-	public static final DeferredHolder<SoundEvent, SoundEvent> WIND_MILL_HUM =
-			SOUNDS.register("wind_mill_hum", ModSounds::createWindMillHum);
-
-	public static final DeferredHolder<SoundEvent, SoundEvent> COMPRESSOR_HUM =
-			SOUNDS.register("compressor_hum", ModSounds::createCompressorHum);
-
-	public static final DeferredHolder<SoundEvent, SoundEvent> GARDEN_DRONE_FLY =
-			SOUNDS.register("garden_drone_fly", ModSounds::createGardenDroneFly);
-
-	public static final DeferredHolder<SoundEvent, SoundEvent> PUMP_HUM =
-			SOUNDS.register("pump_hum", ModSounds::createPumpHum);
-
-	public static final DeferredHolder<SoundEvent, SoundEvent> CANNING_MACHINE_HUM =
-			SOUNDS.register("canning_machine_hum", ModSounds::createCanningMachineHum);
-
-	public static final DeferredHolder<SoundEvent, SoundEvent> GALVANIC_BATH_HUM =
-			SOUNDS.register("galvanic_bath_hum", ModSounds::createGalvanicBathHum);
-
-	public static final DeferredHolder<SoundEvent, SoundEvent> SAWMILL_HUM =
-			SOUNDS.register("sawmill_hum", ModSounds::createSawmillHum);
-
-	public static final DeferredHolder<SoundEvent, SoundEvent> POLYMERIZER_HUM =
-			SOUNDS.register("polymerizer_hum", ModSounds::createPolymerizerHum);
-
-	public static final DeferredHolder<SoundEvent, SoundEvent> CHARGE_PAD_HUM =
-			SOUNDS.register("charge_pad_hum", ModSounds::createChargePadHum);
-
-	public static final DeferredHolder<SoundEvent, SoundEvent> ENERGY_CONDENSER_HUM =
-			SOUNDS.register("energy_condenser_hum", ModSounds::createEnergyCondenserHum);
-
-	public static final DeferredHolder<SoundEvent, SoundEvent> COMPONENT_REPAIR_BENCH_HUM =
-			SOUNDS.register("component_repair_bench_hum", ModSounds::createComponentRepairBenchHum);
-
-	public static final DeferredHolder<SoundEvent, SoundEvent> REACTOR_HUM =
-			SOUNDS.register("reactor_hum", ModSounds::createReactorHum);
-
-	public static final DeferredHolder<SoundEvent, SoundEvent> REACTOR_ALARM =
-			SOUNDS.register("reactor_alarm", ModSounds::createReactorAlarm);
-
-	public static final DeferredHolder<SoundEvent, SoundEvent> REACTOR_SPINDOWN =
-			SOUNDS.register("reactor_spindown", ModSounds::createReactorSpindown);
-
-	public static final DeferredHolder<SoundEvent, SoundEvent> REACTOR_DOOR_OPEN =
-			SOUNDS.register("reactor_door_open", ModSounds::createReactorDoorOpen);
-
-	public static final DeferredHolder<SoundEvent, SoundEvent> REACTOR_DOOR_CLOSE =
-			SOUNDS.register("reactor_door_close", ModSounds::createReactorDoorClose);
-
-	/** Bind the neutral handles to the deferred holders. Called from the {@code @Mod} ctor after register. */
+	/**
+	 * Class-load trigger for the {@code @Mod} ctor. Queueing and binding both happen in the static
+	 * initializer above, so this only has to touch the class — and it checks, cheaply, that the replay
+	 * covered the whole list rather than silently stopping short.
+	 */
 	public static void init() {
-		ModSounds.MACERATOR_GRIND = MACERATOR_GRIND;
-		ModSounds.GENERATOR_HUM = GENERATOR_HUM;
-		ModSounds.ELECTRIC_FURNACE_HUM = ELECTRIC_FURNACE_HUM;
-		ModSounds.SOLAR_PANEL_HUM = SOLAR_PANEL_HUM;
-		ModSounds.IRON_CHEST_OPEN = IRON_CHEST_OPEN;
-		ModSounds.IRON_CHEST_CLOSE = IRON_CHEST_CLOSE;
-		ModSounds.SCYTHE_SWING = SCYTHE_SWING;
-		ModSounds.EXTRACTOR_HUM = EXTRACTOR_HUM;
-		ModSounds.WATER_MILL_HUM = WATER_MILL_HUM;
-		ModSounds.WIND_MILL_HUM = WIND_MILL_HUM;
-		ModSounds.COMPRESSOR_HUM = COMPRESSOR_HUM;
-		ModSounds.GARDEN_DRONE_FLY = GARDEN_DRONE_FLY;
-		ModSounds.PUMP_HUM = PUMP_HUM;
-		ModSounds.CANNING_MACHINE_HUM = CANNING_MACHINE_HUM;
-		ModSounds.GALVANIC_BATH_HUM = GALVANIC_BATH_HUM;
-		ModSounds.SAWMILL_HUM = SAWMILL_HUM;
-		ModSounds.POLYMERIZER_HUM = POLYMERIZER_HUM;
-		ModSounds.CHARGE_PAD_HUM = CHARGE_PAD_HUM;
-		ModSounds.ENERGY_CONDENSER_HUM = ENERGY_CONDENSER_HUM;
-		ModSounds.COMPONENT_REPAIR_BENCH_HUM = COMPONENT_REPAIR_BENCH_HUM;
-		ModSounds.REACTOR_HUM = REACTOR_HUM;
-		ModSounds.REACTOR_ALARM = REACTOR_ALARM;
-		ModSounds.REACTOR_SPINDOWN = REACTOR_SPINDOWN;
-		ModSounds.REACTOR_DOOR_OPEN = REACTOR_DOOR_OPEN;
-		ModSounds.REACTOR_DOOR_CLOSE = REACTOR_DOOR_CLOSE;
+		if (REGISTERED.size() != ModSounds.SOUNDS.size()) {
+			throw new IllegalStateException("ModSoundsNeoForge registered " + REGISTERED.size() + " of "
+					+ ModSounds.SOUNDS.size() + " shared sound events");
+		}
 	}
 
 	private ModSoundsNeoForge() {

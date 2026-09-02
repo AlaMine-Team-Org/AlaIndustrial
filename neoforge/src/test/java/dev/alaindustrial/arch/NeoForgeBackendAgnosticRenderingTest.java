@@ -16,8 +16,11 @@ import org.junit.jupiter.api.Test;
  * <p><b>Why a second copy of the rule exists at all.</b> ArchUnit can only see the classpath of the
  * module it runs in, and {@code :common}'s test classpath has no NeoForge output — so
  * {@code ArchitectureRules.renderingStaysBackendAgnostic} guards {@code common/} and nothing else.
- * The classes it cannot reach are exactly the ones most likely to draw: the JEI compatibility layer
- * renders recipe categories, tooltips and GUI overlays of its own.
+ * What it cannot reach is this loader's own client glue: the overlay hook on
+ * {@code SubmitCustomGeometryEvent} and the cable ghost, i.e. exactly the place a backend call would
+ * be written. (Until MOD-558 the JEI compat layer was in that same blind spot; it now lives in
+ * {@code common/} and the {@code :common} lane covers it for both loaders. This copy stays for the
+ * rest of {@code neoforge/src/main}, which no other lane sees.)
  *
  * <p><b>Why plain {@code @Test} instead of {@code @ArchTest}.</b> This lane is ModDevGradle's
  * {@code unitTest}, which runs under FML on a transformed classloader. ArchUnit's JUnit 5 integration
@@ -55,9 +58,11 @@ class NeoForgeBackendAgnosticRenderingTest {
 		// having nothing to complain about.
 		assertTrue(productionClasses.contain("dev.alaindustrial.registry.neoforge.ModBlocksNeoForge"),
 				"NeoForge production classes must be on this lane's classpath, or the rule below is vacuous");
-		assertTrue(productionClasses.contain("dev.alaindustrial.compat.jei.MachineInfoJeiCategory"),
-				"the JEI compat layer is the drawing code this rule exists for — if it is not imported, "
-						+ "the zone that most needs guarding is the one being skipped");
+		assertTrue(productionClasses.contain("dev.alaindustrial.client.compat.jei.MachineInfoJeiCategory"),
+				"the JEI compat layer is drawing code this rule has to reach — if it is not imported, a "
+						+ "zone that needs guarding is being skipped. Since MOD-558 it lives in common/, "
+						+ "which this module compiles into its own output, so its absence here would mean "
+						+ "the common sources stopped reaching this lane at all");
 	}
 
 	@Test

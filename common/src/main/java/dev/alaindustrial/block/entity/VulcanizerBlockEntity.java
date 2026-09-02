@@ -41,6 +41,8 @@ public final class VulcanizerBlockEntity extends MachineBlockEntity
 
 	private final RecipeManager.CachedCheck<ProcessingRecipeInput, AlaProcessingRecipe> recipeCheck =
 			ModRecipes.VULCANIZING.newCheck();
+	/** The shared eight-step tick loop (MOD-557). */
+	private final ProcessingCycle cycle = new ProcessingCycle(this);
 	private HeatSource heatSource = HeatSource.NONE;
 	private VulcanizerStatus status = VulcanizerStatus.READY;
 	/** Heat tier captured by the first paid tick; changing it restarts the batch without consuming inputs. */
@@ -55,7 +57,6 @@ public final class VulcanizerBlockEntity extends MachineBlockEntity
 
 	@Override
 	protected int onServerTick(Level level, BlockPos pos, BlockState state) {
-		int euPerTick = effectiveEuPerTick(Config.machineEuPerTick);
 		ProcessingRecipeInput input = new ProcessingRecipeInput(items.get(RAW_RUBBER_SLOT), items.get(SULFUR_SLOT));
 		AlaProcessingRecipe recipe = level instanceof ServerLevel server
 				? ModRecipes.lookup(recipeCheck, server, input)
@@ -66,57 +67,49 @@ public final class VulcanizerBlockEntity extends MachineBlockEntity
 		int baseDuration = recipe != null && recipe.energy() > 0
 				? Math.max(1, recipe.energy() / Config.machineEuPerTick)
 				: Config.vulcanizerDuration;
-		maxProgress = effectiveDuration(baseDuration);
+		ProcessingCycle.Job job = cycle.job(Config.machineEuPerTick, baseDuration);
 
-		if (recipe == null) {
-			if (progress != 0 || cycleHeatLevel != 0) {
-				progress = 0;
-				cycleHeatLevel = 0;
-				setChanged();
+		ItemStack result = ItemStack.EMPTY;
+		boolean canWork = false;
+		if (recipe != null) {
+			int outputLevel = cycleHeatLevel > 0 ? cycleHeatLevel : heatSource.level();
+			result = scaledResult(recipe.resultStack(), outputLevel);
+			// The batch price (MOD-271: four sulfur dust) must be on hand every tick, not just at the
+			// start — pulling dust out mid-cycle stops the run instead of completing it underpaid.
+			canWork = heatSource.level() > 0 && recipe.hasEnough(input)
+					&& energy.getAmount() >= job.euPerTick() && canOutput(OUTPUT_SLOT, result);
+			if (canWork && !WorldHeatSources.consumeForProgress(level, pos, heatSource, overclockerCount())) {
+				canWork = false;
+				heatSource = HeatSource.NONE;
 			}
-			setStatus(diagnose(null, ItemStack.EMPTY));
-			updateLit(false);
-			recordEuRate(0);
-			return IDLE_SLEEP_TICKS;
-		}
-
-		int outputLevel = cycleHeatLevel > 0 ? cycleHeatLevel : heatSource.level();
-		ItemStack result = scaledResult(recipe.resultStack(), outputLevel);
-		boolean heatEnough = heatSource.level() > 0;
-		// The batch price (MOD-271: four sulfur dust) must be on hand every tick, not just at the
-		// start — pulling dust out mid-cycle stops the run instead of completing it underpaid.
-		boolean canWork = heatEnough && recipe.hasEnough(input)
-				&& energy.getAmount() >= euPerTick && canOutput(OUTPUT_SLOT, result);
-
-		if (canWork && !WorldHeatSources.consumeForProgress(level, pos, heatSource, overclockerCount())) {
-			canWork = false;
-			heatSource = HeatSource.NONE;
+		} else if (progress != 0 || cycleHeatLevel != 0) {
+			// An abandoned batch loses BOTH its progress and the heat tier it was priced at. The shared
+			// cycle would clear the progress on its own, but the captured tier is this machine's own
+			// PERSISTED field, so the whole abandonment is stated here, in one place, and dirties the
+			// block entity once.
+			progress = 0;
+			cycleHeatLevel = 0;
+			setChanged();
 		}
 
 		setStatus(diagnose(recipe, result));
-		updateLit(canWork);
-		// MOD-125/MOD-440: the statistics panel's "now" line is this tick's draw, 0 when stopped.
-		recordEuRate(canWork ? euPerTick : 0);
-		if (!canWork) {
-			return IDLE_SLEEP_TICKS;
-		}
-
-		if (cycleHeatLevel == 0) {
+		if (canWork && cycleHeatLevel == 0) {
+			// The batch captures the tier it will actually run at on its first PAID tick, so a source that
+			// gets hotter late still pays out at the tier the work was done on (MOD-418).
 			cycleHeatLevel = heatSource.level();
 			result = scaledResult(recipe.resultStack(), cycleHeatLevel);
 		}
-		energy.drainInternal(euPerTick);
-		progress++;
-		if (progress >= maxProgress) {
-			recipe.consume(List.of(items.get(RAW_RUBBER_SLOT), items.get(SULFUR_SLOT)));
-			addOutput(OUTPUT_SLOT, result);
-			recordItemProcessed();
-			progress = 0;
-			cycleHeatLevel = 0;
-			creditUsefulWork(level, (long) euPerTick * maxProgress);
-		}
-		setChanged();
-		return 0;
+
+		ItemStack committedResult = result;
+		// The shared cycle (MOD-557) owns the lit state, the rate report, the drain, the progress step,
+		// the operation counter, the XP credit and the sleep answer.
+		return job.canWork(canWork)
+				.jobIntact(recipe != null)
+				.run(level, () -> {
+					recipe.consume(List.of(items.get(RAW_RUBBER_SLOT), items.get(SULFUR_SLOT)));
+					addOutput(OUTPUT_SLOT, committedResult);
+					cycleHeatLevel = 0;
+				});
 	}
 
 	private VulcanizerStatus diagnose(AlaProcessingRecipe recipe, ItemStack result) {

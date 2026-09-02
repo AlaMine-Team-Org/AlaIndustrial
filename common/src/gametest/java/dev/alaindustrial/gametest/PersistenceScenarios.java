@@ -1,15 +1,22 @@
 package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
+import dev.alaindustrial.block.entity.BlockEntityDataMigrations;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.CompressorBlockEntity;
+import dev.alaindustrial.block.entity.DistillationColumnBlockEntity;
 import dev.alaindustrial.block.entity.ElectricFurnaceBlockEntity;
 import dev.alaindustrial.block.entity.ExtractorBlockEntity;
+import dev.alaindustrial.block.entity.GalvanicBathBlockEntity;
 import dev.alaindustrial.block.entity.GeothermalGeneratorBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
+import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
 import dev.alaindustrial.block.entity.PumpBlockEntity;
 import dev.alaindustrial.block.entity.SolarPanelBlockEntity;
+import dev.alaindustrial.block.entity.SprinklerBlockEntity;
 import dev.alaindustrial.core.fluid.FluidAmounts;
+import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
@@ -436,6 +443,265 @@ public final class PersistenceScenarios {
 		}
 		if (!resaved.contains("Energy")) {
 			helper.fail("re-saved cable tag lost the Energy key: " + resaved);
+		}
+		helper.succeed();
+	}
+
+	// -- MOD-556: the tank now saves itself; the bytes on disk must not have moved ----------------
+
+	/** Second/third probe positions inside the 8^3 rig, so each machine gets its own block. */
+	private static final BlockPos POS_B = new BlockPos(3, 2, 1);
+	private static final BlockPos POS_C = new BlockPos(5, 2, 1);
+
+	/**
+	 * @implements R-PER-01 -- every machine tank still writes the exact key pair it wrote before
+	 *     MOD-556 moved the code into {@code FluidTank}: {@code <prefix>Mb} (a long, in mB) and
+	 *     {@code <prefix>Fluid} (the fluid's registry id, {@code ""} when empty). Both keys are
+	 *     written even for an empty tank, which is what the six copies did.
+	 * @covers R-PER-01
+	 *
+	 * <p>The key literals here are hand-written on purpose. Deriving them from the production code
+	 * would make this test agree with any rename, which is the one thing it exists to refuse: a
+	 * renamed key does not fail to load, it loads as "absent" and silently empties a player's machine.
+	 * The single-tank shape ({@code FluidTankMb}), the machine-specific one ({@code SolutionMb}) and
+	 * the multi-tank prefixes ({@code OilMb}/{@code DieselMb}/{@code FuelOilMb}) are all covered,
+	 * because a prefix is exactly where a consolidation slips.
+	 */
+	public static void mod556_tankKeysUnchangedAfterSelfSave(GameTestHelper helper) {
+		ServerLevel level = helper.getLevel();
+		RegistryAccess registries = level.registryAccess();
+
+		// 1. Single tank, a MOD fluid: the polymerizer holds oil, so the id is not a vanilla one.
+		helper.setBlock(POS, ModContent.POLYMERIZER.get());
+		PolymerizerBlockEntity poly = helper.getBlockEntity(POS, PolymerizerBlockEntity.class);
+		poly.fluidTank.fluid = FluidHolder.of(ModContent.OIL.get());
+		poly.fluidTank.amount = 3000L;
+		CompoundTag polyTag = poly.saveCustomOnly(registries);
+		if (polyTag.getLongOr("FluidTankMb", -1L) != 3000L
+				|| !"alaindustrial:oil".equals(polyTag.getStringOr("FluidTankFluid", "<absent>"))) {
+			helper.fail("polymerizer tank no longer writes FluidTankMb/FluidTankFluid: " + polyTag);
+			return;
+		}
+
+		// 2. An EMPTY tank still writes BOTH keys, the id as the empty string. A tank that stopped
+		// writing its id when empty would look harmless and would leave the previous id in place on any
+		// reader that treats a missing key as "keep what you had".
+		poly.fluidTank.fluid = FluidHolder.EMPTY;
+		poly.fluidTank.amount = 0L;
+		CompoundTag emptyTag = poly.saveCustomOnly(registries);
+		if (emptyTag.getLongOr("FluidTankMb", -1L) != 0L
+				|| !"".equals(emptyTag.getStringOr("FluidTankFluid", "<absent>"))) {
+			helper.fail("an empty polymerizer tank must still write both keys: " + emptyTag);
+			return;
+		}
+
+		// 3. A machine whose prefix is not "FluidTank": the sprinkler's solution tank.
+		helper.setBlock(POS_B, ModContent.SPRINKLER.get());
+		SprinklerBlockEntity sprinkler = helper.getBlockEntity(POS_B, SprinklerBlockEntity.class);
+		long solution = Math.min(500L, sprinkler.tank.capacity);
+		sprinkler.tank.fluid = FluidHolder.of(Fluids.WATER);
+		sprinkler.tank.amount = solution;
+		CompoundTag sprinklerTag = sprinkler.saveCustomOnly(registries);
+		if (sprinklerTag.getLongOr("SolutionMb", -1L) != solution
+				|| !"minecraft:water".equals(sprinklerTag.getStringOr("SolutionFluid", "<absent>"))) {
+			helper.fail("sprinkler tank no longer writes SolutionMb/SolutionFluid: " + sprinklerTag);
+			return;
+		}
+
+		// 4. Three tanks behind three prefixes: the distillation column.
+		helper.setBlock(POS_C, ModContent.DISTILLATION_COLUMN.get());
+		DistillationColumnBlockEntity column =
+				helper.getBlockEntity(POS_C, DistillationColumnBlockEntity.class);
+		column.oilTank.fluid = FluidHolder.of(ModContent.OIL.get());
+		column.oilTank.amount = 1200L;
+		// Water and lava stand in for diesel/fuel oil: any registered fluid proves the id path, and a
+		// vanilla one lets the expected string be a hand-written literal rather than a lookup.
+		column.dieselTank.fluid = FluidHolder.of(Fluids.WATER);
+		column.dieselTank.amount = 340L;
+		column.fuelOilTank.fluid = FluidHolder.of(Fluids.LAVA);
+		column.fuelOilTank.amount = 7L;
+		CompoundTag columnTag = column.saveCustomOnly(registries);
+		if (columnTag.getLongOr("OilMb", -1L) != 1200L
+				|| !"alaindustrial:oil".equals(columnTag.getStringOr("OilFluid", "<absent>"))
+				|| columnTag.getLongOr("DieselMb", -1L) != 340L
+				|| !"minecraft:water".equals(columnTag.getStringOr("DieselFluid", "<absent>"))
+				|| columnTag.getLongOr("FuelOilMb", -1L) != 7L
+				|| !"minecraft:lava".equals(columnTag.getStringOr("FuelOilFluid", "<absent>"))) {
+			helper.fail("distillation column tank prefixes drifted: " + columnTag);
+			return;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * @implements R-PER-01 -- a save written by a build from BEFORE MOD-556 still loads. The tags here
+	 *     are hand-built in the old shape and handed straight to {@code loadWithComponents}; nothing in
+	 *     them came from the current save path, so this is the "an existing world opens" guarantee
+	 *     rather than a round trip of the new code with itself.
+	 * @covers R-PER-01
+	 *
+	 * <p>Also pins the two pump fallbacks that used to live in its own {@code holderFromKey}: the
+	 * droplet-valued {@code "FluidTank"} key of Fabric v0.1.0, and the pre-MOD-099 bare {@code "lava"}
+	 * spelling -- the latter has no branch of its own any more, because {@code Identifier.tryParse}
+	 * gives a namespace-less path the {@code minecraft} default. If that ever stops being true, this
+	 * fails instead of quietly emptying a pump.
+	 */
+	public static void mod556_preRefactorSavesStillLoad(GameTestHelper helper) {
+		ServerLevel level = helper.getLevel();
+		RegistryAccess registries = level.registryAccess();
+		BlockPos abs = helper.absolutePos(POS);
+
+		// 1. Distillation column, three prefixes, written the way the old code wrote them.
+		helper.setBlock(POS, ModContent.DISTILLATION_COLUMN.get());
+		CompoundTag columnTag = new CompoundTag();
+		columnTag.putLong("OilMb", 2500L);
+		columnTag.putString("OilFluid", "alaindustrial:oil");
+		columnTag.putLong("DieselMb", 800L);
+		columnTag.putString("DieselFluid", "minecraft:water");
+		columnTag.putLong("FuelOilMb", 0L);
+		columnTag.putString("FuelOilFluid", "");
+		DistillationColumnBlockEntity column =
+				new DistillationColumnBlockEntity(abs, level.getBlockState(abs));
+		column.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, columnTag));
+		if (column.oilTank.amount != 2500L || !column.oilTank.fluid.is(ModContent.OIL.get())
+				|| column.dieselTank.amount != 800L || !column.dieselTank.fluid.is(Fluids.WATER)
+				|| column.fuelOilTank.amount != 0L || !column.fuelOilTank.fluid.isEmpty()) {
+			helper.fail("a pre-MOD-556 column save did not come back: oil=" + column.oilTank.amount
+					+ " diesel=" + column.dieselTank.amount + " fuelOil=" + column.fuelOilTank.amount);
+			return;
+		}
+
+		// 2. Galvanic bath: a positive amount whose fluid id no longer resolves (its mod was removed)
+		// drops the contents rather than keeping a phantom amount -- the historic invariant, both ways.
+		helper.setBlock(POS_B, ModContent.GALVANIC_BATH.get());
+		BlockPos absB = helper.absolutePos(POS_B);
+		CompoundTag bathTag = new CompoundTag();
+		bathTag.putLong("FluidTankMb", 4000L);
+		bathTag.putString("FluidTankFluid", "somemod:unobtainium");
+		GalvanicBathBlockEntity bath = new GalvanicBathBlockEntity(absB, level.getBlockState(absB));
+		bath.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, bathTag));
+		if (bath.fluidTank.amount != 0L || !bath.fluidTank.fluid.isEmpty()) {
+			helper.fail("an unresolvable fluid id must empty the tank, got amount="
+					+ bath.fluidTank.amount + " fluid=" + bath.fluidTank.fluid);
+			return;
+		}
+
+		// 3. Pump, Fabric v0.1.0: droplet-valued "FluidTank", no fluid id at all -> 2 buckets of lava.
+		helper.setBlock(POS_C, ModContent.PUMP.get());
+		BlockPos absC = helper.absolutePos(POS_C);
+		CompoundTag dropletTag = new CompoundTag();
+		dropletTag.putLong("FluidTank", FluidAmounts.BUCKET * 2 * FluidAmounts.FABRIC_DROPLETS_PER_MB);
+		PumpBlockEntity dropletPump = new PumpBlockEntity(absC, level.getBlockState(absC));
+		dropletPump.loadWithComponents(
+				TagValueInput.create(ProblemReporter.DISCARDING, registries, dropletTag));
+		if (dropletPump.fluidTank.amount != FluidAmounts.BUCKET * 2
+				|| !dropletPump.fluidTank.fluid.is(Fluids.LAVA)) {
+			helper.fail("legacy droplet pump save lost its lava: amount=" + dropletPump.fluidTank.amount
+					+ " fluid=" + dropletPump.fluidTank.fluid);
+			return;
+		}
+
+		// 4. Pump, pre-MOD-099: the bare "lava" spelling, no namespace.
+		CompoundTag bareTag = new CompoundTag();
+		bareTag.putLong("FluidTankMb", 1000L);
+		bareTag.putString("FluidTankFluid", "lava");
+		PumpBlockEntity barePump = new PumpBlockEntity(absC, level.getBlockState(absC));
+		barePump.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, bareTag));
+		if (barePump.fluidTank.amount != 1000L || !barePump.fluidTank.fluid.is(Fluids.LAVA)) {
+			helper.fail("the bare lava spelling no longer resolves: amount="
+					+ barePump.fluidTank.amount + " fluid=" + barePump.fluidTank.fluid);
+			return;
+		}
+		helper.succeed();
+	}
+
+	// -- MOD-556: the save-format version and the ladder it starts ---------------------------------
+
+	/**
+	 * @implements R-PER-01 -- the block-entity format version and the migration ladder agree, and the
+	 *     version actually gates the ladder: a save that declares version 0 is repaired, one that
+	 *     declares the current version is left alone.
+	 * @covers R-PER-01
+	 *
+	 * <p>The shape half is the block-entity twin of {@code ConfigSchemaTest}'s ladder guard, and it
+	 * lives here rather than in the L1 suite for a concrete reason: the ladder's rungs are
+	 * {@code Consumer<EnergyBlockEntity>} lambdas, so merely reading the list runs a
+	 * {@code LambdaMetafactory} link that resolves a block-entity method handle -- and {@code :common}
+	 * has no Minecraft jar on its test classpath. A lane with Minecraft is the only place this
+	 * assertion can honestly run.
+	 *
+	 * <p>The behaviour half is what protects a player: without it the numbers could agree while nothing
+	 * called the ladder at all.
+	 */
+	public static void mod556_dataVersionMatchesTheLadder(GameTestHelper helper) {
+		ServerLevel level = helper.getLevel();
+		RegistryAccess registries = level.registryAccess();
+
+		// 1. One rung per version hop, ascending and gapless. A bump with no rung leaves every old save
+		// unconverted; a rung with no bump means it never runs. Both fail here instead of in a world.
+		if (BlockEntityDataMigrations.stepCount() != BlockEntityDataMigrations.DATA_VERSION) {
+			helper.fail("the save-format ladder has " + BlockEntityDataMigrations.stepCount()
+					+ " rung(s) but DATA_VERSION is " + BlockEntityDataMigrations.DATA_VERSION
+					+ " — every hop 0->1, 1->2, ... needs exactly one rung");
+			return;
+		}
+		for (int i = 0; i < BlockEntityDataMigrations.stepCount(); i++) {
+			if (BlockEntityDataMigrations.stepFromVersion(i) != i) {
+				helper.fail("rung " + i + " converts from version "
+						+ BlockEntityDataMigrations.stepFromVersion(i)
+						+ "; the ladder is walked in list order and must be ascending and gapless");
+				return;
+			}
+		}
+
+		// 2. The save path stamps the version. Everything below depends on it being written at all.
+		helper.setBlock(POS, ModContent.BATTERY_BOX.get());
+		BlockPos abs = helper.absolutePos(POS);
+		BatteryBoxBlockEntity box = helper.getBlockEntity(POS, BatteryBoxBlockEntity.class);
+		// An item with no EU buffer in the discharge slot is the pre-MOD-083 tell the rung looks for:
+		// back then that slot did not exist and the first upgrade chip lived there.
+		box.setItem(BatteryBoxBlockEntity.DISCHARGE_SLOT, new ItemStack(Items.REDSTONE));
+		CompoundTag current = box.saveCustomOnly(registries);
+		if (current.getIntOr(BlockEntityDataMigrations.DATA_VERSION_KEY, -1)
+				!= BlockEntityDataMigrations.DATA_VERSION) {
+			helper.fail("a saved block entity does not carry its format version: " + current);
+			return;
+		}
+
+		// 3. A tag with NO version key is version 0 and gets repaired: the run shifts one slot up.
+		CompoundTag legacy = box.saveCustomOnly(registries);
+		legacy.remove(BlockEntityDataMigrations.DATA_VERSION_KEY);
+		BatteryBoxBlockEntity migrated = new BatteryBoxBlockEntity(abs, level.getBlockState(abs));
+		migrated.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, legacy));
+		if (!migrated.getItem(BatteryBoxBlockEntity.DISCHARGE_SLOT).isEmpty()
+				|| !migrated.getItem(BatteryBoxBlockEntity.DISCHARGE_SLOT + 1).is(Items.REDSTONE)) {
+			helper.fail("a versionless battery box save was not migrated: discharge="
+					+ migrated.getItem(BatteryBoxBlockEntity.DISCHARGE_SLOT) + " next="
+					+ migrated.getItem(BatteryBoxBlockEntity.DISCHARGE_SLOT + 1));
+			return;
+		}
+
+		// 4. Running the rung twice must not shift anything a second time — an older jar of this mod
+		// re-saves without the version key, so already-repaired data comes back round as "version 0".
+		CompoundTag reSavedByAnOldJar = migrated.saveCustomOnly(registries);
+		reSavedByAnOldJar.remove(BlockEntityDataMigrations.DATA_VERSION_KEY);
+		BatteryBoxBlockEntity twice = new BatteryBoxBlockEntity(abs, level.getBlockState(abs));
+		twice.loadWithComponents(
+				TagValueInput.create(ProblemReporter.DISCARDING, registries, reSavedByAnOldJar));
+		if (!twice.getItem(BatteryBoxBlockEntity.DISCHARGE_SLOT + 1).is(Items.REDSTONE)) {
+			helper.fail("the 0->1 rung is not idempotent: a second pass moved the chip again, leaving "
+					+ twice.getItem(BatteryBoxBlockEntity.DISCHARGE_SLOT + 1));
+			return;
+		}
+
+		// 5. A tag that declares the CURRENT version is left alone — this is what the version buys, and
+		// without it the rung would keep re-deciding on every load exactly as the old heuristic did.
+		BatteryBoxBlockEntity untouched = new BatteryBoxBlockEntity(abs, level.getBlockState(abs));
+		untouched.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, current));
+		if (!untouched.getItem(BatteryBoxBlockEntity.DISCHARGE_SLOT).is(Items.REDSTONE)) {
+			helper.fail("a current-version save was migrated anyway: discharge="
+					+ untouched.getItem(BatteryBoxBlockEntity.DISCHARGE_SLOT));
+			return;
 		}
 		helper.succeed();
 	}

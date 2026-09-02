@@ -133,25 +133,19 @@ public class BatteryBoxBlockEntity extends MachineBlockEntity implements MenuPro
 	}
 
 	/**
-	 * Reads the container, then migrates a pre-MOD-083 save (C-20).
+	 * Reads the container, then walks the save-format ladder (MOD-556).
 	 *
-	 * <p>Upgrade slots are numbered <em>after</em> the machine slots, so adding the discharge slot moved
-	 * them from 1…4 to 2…5. A box saved before this change therefore loads its first upgrade chip into
-	 * what is now the discharge slot. The tell is unambiguous, because {@link #canPlaceItem} has always
-	 * refused anything without an EU buffer: a non-powered item sitting in the discharge slot can only
-	 * have come from the old numbering. When that is what we see, shift the whole run one slot up.
+	 * <p>The pre-MOD-083 slot renumbering (C-20) used to be recognised right here, by noticing an item
+	 * with no EU buffer in the discharge slot. It is now rung 0 → 1 of
+	 * {@link BlockEntityDataMigrations}: same repair, but it runs only against data that actually
+	 * predates the change, and it says so on disk afterwards instead of re-deciding on every load. The
+	 * call must come last — the rung shifts container slots, and the container is what {@code super}
+	 * above has just read.
 	 */
 	@Override
 	protected void loadAdditional(ValueInput input) {
 		super.loadAdditional(input);
-		ItemStack inDischarge = getItem(DISCHARGE_SLOT);
-		if (inDischarge.isEmpty() || ItemEnergy.capacity(inDischarge) > 0) {
-			return;
-		}
-		for (int slot = getContainerSize() - 1; slot > DISCHARGE_SLOT; slot--) {
-			setItem(slot, getItem(slot - 1));
-		}
-		setItem(DISCHARGE_SLOT, ItemStack.EMPTY);
+		migrateLoadedData();
 	}
 
 	/**

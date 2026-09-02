@@ -43,8 +43,10 @@ import net.minecraft.world.level.block.state.BlockState;
  *
  * <p>A subclass overrides {@link #resolveInput} to return a {@link RecipeSolution} for the current
  * input and {@link #canPlaceInput} for slot validation. The base handles the output-slot check, the
- * result placement (stack-merge up to {@code min(OUTPUT_MAX, maxStackSize)}), the EU drain, and the
- * lit-state toggle.
+ * result placement (stack-merge up to {@code min(OUTPUT_MAX, maxStackSize)}) and the status line; the
+ * eight steps of the tick itself — draw, lit state, rate report, drain, progress, completion, operation
+ * counter, sleep — are run by a shared {@link ProcessingCycle} (MOD-557), which is also what the
+ * machines outside this family now use instead of writing the sequence out again.
  */
 public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockEntity implements Overclockable {
 	/** Input slot index, shared by every processing machine. Subclasses re-export as {@code public} ({@code CompressorBlockEntity.INPUT_SLOT} etc.) for callers. */
@@ -152,6 +154,9 @@ public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockE
 	/** Consecutive evaluations that could not pay for a tick; see {@link #STARVED_GRACE_EVALUATIONS}. */
 	private int starvedEvaluations;
 
+	/** The shared eight-step tick loop (MOD-557); this family is its first client. */
+	private final ProcessingCycle cycle = new ProcessingCycle(this);
+
 	protected AbstractProcessingMachineBlockEntity(
 			BlockEntityType<?> type, BlockPos pos, BlockState state,
 			EnergyTier tier, long buffer, int defaultDuration) {
@@ -172,14 +177,14 @@ public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockE
 
 	@Override
 	protected final int onServerTick(Level level, BlockPos pos, BlockState state) {
-		int euPerTick = effectiveEuPerTick(Config.machineEuPerTick);
 		ItemStack input = items.get(INPUT_SLOT);
 		RecipeSolution solution = level instanceof ServerLevel sl
 				? resolveInput(sl, input) : RecipeSolution.empty();
 
 		int baseDuration = solution.hasRecipe() && solution.energy() > 0
 				? Math.max(1, solution.energy() / Config.machineEuPerTick) : defaultDuration;
-		this.maxProgress = effectiveDuration(baseDuration);
+		ProcessingCycle.Job job = cycle.job(Config.machineEuPerTick, baseDuration);
+		int euPerTick = job.euPerTick();
 		// MOD-455: a batch recipe (glowstone dust ×4) needs its whole price on hand every tick, not just
 		// at completion — checking it only in the completion branch would let one dust buy a full block.
 		boolean canWork = solution.hasRecipe() && input.getCount() >= solution.inputCount()
@@ -195,42 +200,26 @@ public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockE
 		}
 		setStatus(diagnose(input, solution, euPerTick));
 
-		updateLit(canWork);
-
-		// MOD-125: the statistics panel's "now" line for a consumer is its draw, and a stopped machine must
-		// report 0 rather than keep its last reading — the same contract generators follow.
-		recordEuRate(canWork ? euPerTick : 0);
-
-		if (canWork) {
-			energy.drainInternal(euPerTick);
-			progress++;
-			if (progress >= maxProgress) {
-				progress = 0;
-				items.get(INPUT_SLOT).shrink(solution.inputCount());
-				addOutput(OUTPUT_SLOT, solution.result());
-				// MOD-537: a stacking bonus merges into the same output slot; a different item cannot
-				// share the single slot, so the machine pays it out on top of itself (hopper-collectable).
-				if (!solution.secondary().isEmpty()) {
-					if (solution.secondary().getItem() == solution.result().getItem()) {
-						addOutput(OUTPUT_SLOT, solution.secondary());
-					} else {
-						Containers.dropItemStack(level, worldPosition.getX() + 0.5, worldPosition.getY() + 1.0,
-								worldPosition.getZ() + 0.5, solution.secondary().copy());
+		// The cycle owns the lit state, the rate report, the drain, the progress step, the operation
+		// counter, the XP credit and the sleep answer (MOD-557); everything below is this family's own.
+		// "Recipe gone" (input removed or swapped) is what restarts progress — mere power loss or a full
+		// output slot keeps the recipe matched, so progress FREEZES and resumes (R-NRG-10).
+		return job.canWork(canWork)
+				.jobIntact(solution.hasRecipe())
+				.run(level, () -> {
+					items.get(INPUT_SLOT).shrink(solution.inputCount());
+					addOutput(OUTPUT_SLOT, solution.result());
+					// MOD-537: a stacking bonus merges into the same output slot; a different item cannot
+					// share the single slot, so the machine pays it out on top of itself (hopper-collectable).
+					if (!solution.secondary().isEmpty()) {
+						if (solution.secondary().getItem() == solution.result().getItem()) {
+							addOutput(OUTPUT_SLOT, solution.secondary());
+						} else {
+							Containers.dropItemStack(level, worldPosition.getX() + 0.5, worldPosition.getY() + 1.0,
+									worldPosition.getZ() + 0.5, solution.secondary().copy());
+						}
 					}
-				}
-				recordItemProcessed(); // MOD-125: lifetime operation counter (persisted, drawn later)
-				creditUsefulWork(level, (long) euPerTick * maxProgress); // MOD-133: completed op → XP
-			}
-			setChanged();
-		} else if (!solution.hasRecipe() && progress != 0) {
-			// Recipe gone (input removed/changed): reset progress. On mere power loss or a full output
-			// (recipe still present) neither branch runs, so progress stays FROZEN and resumes when work
-			// can continue (R-NRG-10).
-			progress = 0;
-			setChanged();
-		}
-		// Idle (no recipe / no power / output full) → sleep until input, energy or output changes (R-29).
-		return canWork ? 0 : IDLE_SLEEP_TICKS;
+				});
 	}
 
 	/**

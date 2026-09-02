@@ -2,6 +2,8 @@ package dev.alaindustrial.registry.neoforge;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.registry.ModParticles;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
@@ -9,25 +11,36 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 /**
- * NeoForge particle registration (MOD-085), mirroring {@link ModSoundsNeoForge}. Registers the shared
- * loader-neutral {@link ModParticles#ENRICHED_URANIUM_FLAME} object (the green flame of the Enriched
- * Uranium Torch) into the {@code PARTICLE_TYPE} registry via a {@link DeferredRegister} on the mod bus.
+ * NeoForge particle registration: a replay of the shared {@link ModParticles#PARTICLES} list (MOD-085,
+ * MOD-555), mirroring {@link ModSoundsNeoForge}.
  *
- * <p>The particle object itself is an eager class-load constant in {@link ModParticles} (so the torch
- * block constructor can read it with no init-order dependency); this class only publishes that same
- * instance to the registry for networking/spawning. There is no facade handle to bind, hence no
- * {@code init()} — the block never reads through this class.
+ * <p>The particle objects themselves are eager class-load constants in {@link ModParticles} (so a block
+ * constructor can read one with no init-order dependency); this class only publishes those same instances
+ * to the {@code PARTICLE_TYPE} registry for networking and spawning. There is no facade handle to bind,
+ * hence no {@code bind} on the shared entry — a block never reads through this class.
  */
 public final class ModParticlesNeoForge {
 	public static final DeferredRegister<ParticleType<?>> PARTICLES =
 			DeferredRegister.create(Registries.PARTICLE_TYPE, Industrialization.MOD_ID);
 
-	public static final DeferredHolder<ParticleType<?>, SimpleParticleType> ENRICHED_URANIUM_FLAME =
-			PARTICLES.register("enriched_uranium_flame", () -> ModParticles.ENRICHED_URANIUM_FLAME);
+	/** Every shared entry, queued the moment this class loads. */
+	private static final List<DeferredHolder<ParticleType<?>, SimpleParticleType>> REGISTERED = registerAll();
 
-	/** The Sprinkler's spray (MOD-525), bound to the same eager common instance. */
-	public static final DeferredHolder<ParticleType<?>, SimpleParticleType> NUTRIENT_SPRAY =
-			PARTICLES.register("nutrient_spray", () -> ModParticles.NUTRIENT_SPRAY);
+	private static List<DeferredHolder<ParticleType<?>, SimpleParticleType>> registerAll() {
+		List<DeferredHolder<ParticleType<?>, SimpleParticleType>> registered = new ArrayList<>();
+		for (ModParticles.ParticleDef def : ModParticles.PARTICLES) {
+			registered.add(PARTICLES.register(def.id(), def::instance));
+		}
+		return List.copyOf(registered);
+	}
+
+	/** Class-load trigger for the {@code @Mod} ctor; also checks the replay covered the whole list. */
+	public static void init() {
+		if (REGISTERED.size() != ModParticles.PARTICLES.size()) {
+			throw new IllegalStateException("ModParticlesNeoForge registered " + REGISTERED.size() + " of "
+					+ ModParticles.PARTICLES.size() + " shared particle types");
+		}
+	}
 
 	private ModParticlesNeoForge() {
 	}

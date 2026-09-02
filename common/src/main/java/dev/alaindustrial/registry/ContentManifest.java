@@ -158,6 +158,36 @@ import dev.alaindustrial.item.misc.MutationChipItem;
 import dev.alaindustrial.item.misc.OverclockerChipItem;
 import dev.alaindustrial.item.misc.SoulVesselItem;
 import dev.alaindustrial.item.teleport.RtpChipItem;
+import dev.alaindustrial.entity.StockDisplayFrameEntity;
+import dev.alaindustrial.item.assembler.AssemblyBlueprintItem;
+import dev.alaindustrial.item.energy.PouchItem;
+import dev.alaindustrial.item.fluid.FilledCapsuleItem;
+import dev.alaindustrial.item.fluid.FluidTankBlockItem;
+import dev.alaindustrial.item.fluid.VacuumCapsuleItem;
+import dev.alaindustrial.item.material.ModArmorMaterials;
+import dev.alaindustrial.item.material.ModToolMaterials;
+import dev.alaindustrial.item.material.TemperedIronToolStats;
+import dev.alaindustrial.item.misc.FluidPipeBlockItem;
+import dev.alaindustrial.item.misc.GuideBookItem;
+import dev.alaindustrial.item.misc.ItemPipeBlockItem;
+import dev.alaindustrial.item.misc.StockDisplayFrameItem;
+import dev.alaindustrial.item.teleport.TeleporterRemoteItem;
+import dev.alaindustrial.item.tool.ElectricChainsawDiamondTipItem;
+import dev.alaindustrial.item.tool.ElectricChainsawItem;
+import dev.alaindustrial.item.tool.ElectricDrillDiamondTipItem;
+import dev.alaindustrial.item.tool.ElectricDrillItem;
+import dev.alaindustrial.item.tool.ElectricDrillNetheriteTipItem;
+import dev.alaindustrial.item.tool.ElectricSaberItem;
+import dev.alaindustrial.item.tool.MagnetItem;
+import dev.alaindustrial.item.tool.NetworkAnalyzerItem;
+import dev.alaindustrial.item.tool.ScytheItem;
+import dev.alaindustrial.item.tool.ScytheTier;
+import dev.alaindustrial.item.tool.ScytheTiers;
+import dev.alaindustrial.item.tool.WindGaugeItem;
+import dev.alaindustrial.item.tool.WrenchItem;
+import dev.alaindustrial.item.wearable.EnergyPackItem;
+import dev.alaindustrial.item.wearable.FluxweaveArmorItem;
+import dev.alaindustrial.item.wearable.JetpackItem;
 import dev.alaindustrial.menu.AssemblerMenu;
 import dev.alaindustrial.menu.BatteryBoxMenu;
 import dev.alaindustrial.menu.EnergyCondenserMenu;
@@ -206,7 +236,6 @@ import dev.alaindustrial.menu.FermenterMenu;
 import dev.alaindustrial.menu.SprinklerMenu;
 import dev.alaindustrial.menu.GalvanicBathMenu;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -225,6 +254,20 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.SmithingTemplateItem;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.AxeItem;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.HoeItem;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.ShovelItem;
+import net.minecraft.world.item.StandingAndWallBlockItem;
+import net.minecraft.world.item.equipment.ArmorMaterial;
+import net.minecraft.world.item.equipment.ArmorType;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FlowingFluid;
+import org.jetbrains.annotations.Nullable;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
@@ -1046,89 +1089,72 @@ public final class ContentManifest {
 	}
 
 	// ─────────────────────────────────────────────────────────────────────────────────────────
-	// Items (MOD-305 / MOD-306)
+	// Items — the COMPOSITION, not just the construction (MOD-305 / MOD-306 / MOD-554)
 	// ─────────────────────────────────────────────────────────────────────────────────────────
 
 	/**
-	 * How an item is CONSTRUCTED, declared once for both loaders (MOD-306). Same shape as
-	 * {@link #BLOCK_PROPS}: keyed by registry path, looked up by the per-loader registry class.
+	 * One {@code Item} to register. MOD-306 moved the per-item CONSTRUCTION here; MOD-554 moves the
+	 * <b>list itself</b>, which until then was kept by hand in two files ({@code ModItems} on Fabric,
+	 * {@code ModItemsNeoForge}) — 273 registrations plus 273 {@code ModContent} bindings in each,
+	 * guarded only by a Python set-comparison after the fact. An item declared here registers on BOTH
+	 * loaders or on neither.
 	 *
-	 * <p><b>What this fixes.</b> {@code ModItems} (Fabric) and {@code ModItemsNeoForge} were
-	 * line-for-line twins — same ids, same comments, two different registration syntaxes around an
-	 * identical construction. Adding an item meant two edits in two files, and nothing but a Python
-	 * validator running after the fact stopped the two from drifting apart.
+	 * <p><b>What each loader still does.</b> Only the registration <i>mechanism</i>, because the two
+	 * genuinely differ: Fabric constructs the item eagerly and stamps the id itself
+	 * ({@code new Item.Properties().setId(key)} → {@code Registry.register}), NeoForge hands the same
+	 * factory to {@code DeferredRegister.Items#registerItem}, which calls it later with a
+	 * {@code Properties} whose id it derived from the deferred key. Neither side chooses the id any more.
 	 *
-	 * <p><b>Why a factory over {@code Item.Properties} and not a finished {@code Item}.</b> That is the
-	 * one shape both loaders can consume, because they disagree on <i>when</i> and <i>with what</i> the
-	 * properties appear:
-	 * <ul>
-	 *   <li>Fabric registers eagerly and must stamp the id itself — it calls the factory with
-	 *       {@code new Item.Properties().setId(key)};</li>
-	 *   <li>NeoForge registers lazily through {@code DeferredRegister.Items#registerItem}, which hands
-	 *       the factory a {@code Properties} whose id it has already derived from the deferred key.</li>
-	 * </ul>
-	 * Neither loader can hold a constructed {@code Item} at this point, but both can hold the function
-	 * that makes one. Everything else about the item — extra {@code Properties} steps such as
-	 * {@code durability(...)}, and the concrete {@code Item} subclass — lives inside the factory, so the
-	 * whole definition is one expression here.
+	 * <p><b>Why the factory closes over registry IDS, not handles.</b> A block item needs its block, a
+	 * bucket its fluid, the display frame its entity type — all of which are per-loader objects
+	 * ({@code Block} vs {@code DeferredBlock}). Resolving them by id from the vanilla registry INSIDE the
+	 * factory works on both loaders for the same reason {@link BlockEntityDef#blockSet()} does: the
+	 * factory runs after those registries are populated (Fabric registers blocks/fluids/entities before
+	 * items in its entrypoint; on NeoForge the {@code RegisterEvent} order does it). The comment that
+	 * used to sit here — "a shared factory would have to close over a loader type" — was disproved by
+	 * this manifest's own liquid blocks, which have closed over {@code ModContent} inside their factory
+	 * since MOD-403.
 	 *
-	 * <p><b>Scope, deliberately.</b> Entries here are the items whose construction is genuinely
-	 * loader-neutral. Block items are NOT here: their factory needs the loader's own block handle
-	 * ({@code ModBlocks.X} is an eager {@code Block}, {@code ModBlocksNeoForge.X} a lazy holder), so a
-	 * shared factory would have to close over a loader type — exactly what {@code common} must not do.
-	 * The typed field per loader also stays: it is the handle 100+ call sites already use, and MOD-190
-	 * settled that trade-off (menus collapse fully, blocks/items keep their field, definition is shared).
+	 * <p><b>Order is load-bearing.</b> Both loaders replay {@link #ITEMS} in list order, and one entry
+	 * depends on an earlier one: {@code filled_vacuum_capsule} takes the empty capsule as its
+	 * craft-remainder. Keep new entries appended rather than interleaved.
+	 *
+	 * @param id      registry path ({@code alaindustrial:<id>})
+	 * @param factory builds the item from the loader-supplied {@code Properties}, or {@code null} for an
+	 *                entry whose CLASS differs per loader — see {@link #loaderItem}
+	 * @param bind    publishes the registered item into its {@link ModContent} slot
 	 */
-	public static final Map<String, Function<Item.Properties, ? extends Item>> ITEM_FACTORIES =
-			buildItemFactories();
+	public record ItemDef(String id, @Nullable Function<Item.Properties, ? extends Item> factory,
+			Consumer<Supplier<Item>> bind) {
+	}
+
+	/** An item with a hand-written construction. */
+	private static ItemDef item(String id, Function<Item.Properties, ? extends Item> factory,
+			Consumer<Supplier<Item>> bind) {
+		return new ItemDef(id, factory, bind);
+	}
 
 	/**
-	 * Presentation for a block item a player cannot obtain (MOD-479): the light-purple name vanilla puts
-	 * on the dragon egg, the barrier and the command block — technical blocks, exactly like this one —
-	 * plus this mod's own tooltip frame.
-	 *
-	 * <p>Two things are worth stating, because both are easy to get wrong:
-	 *
-	 * <ul>
-	 *   <li><b>One value, both loaders.</b> {@code loader_parity_check} compares the SETS of item ids,
-	 *       never their properties, so a {@code .rarity(...)} written once per loader would drift the
-	 *       first time somebody edited one of them, with every gate still green. This is why a block
-	 *       item's properties live here even though its factory cannot.</li>
-	 *   <li><b>{@code EPIC} is the ceiling.</b> NeoForge marks {@code Rarity} extensible and Fabric does
-	 *       not, so inventing a "legendary" tier would be an asymmetry by construction.</li>
-	 * </ul>
-	 *
-	 * <p>The tooltip style is an id, not a sprite: {@code TooltipRenderUtil} expands it into
-	 * {@code alaindustrial:tooltip/creative_background} and {@code …_frame}. BOTH must exist — a custom
-	 * style replaces the vanilla background instead of falling back to it, so shipping only the frame
-	 * leaves the text sitting on a missing texture. Nothing in the repo checks that; see the task.
+	 * A plain crafting component: nothing but {@code new Item(properties)} — dusts, plates, ingots, raw
+	 * ores, by-products. The largest group by far.
 	 */
-	public static final UnaryOperator<Item.Properties> CREATIVE_ONLY_ITEM = props -> props
-			.rarity(Rarity.EPIC)
-			.component(DataComponents.TOOLTIP_STYLE, Industrialization.id("creative"));
-
-	/** The construction function for item {@code id} (see {@link #ITEM_FACTORIES}); throws if unknown. */
-	public static Function<Item.Properties, ? extends Item> itemFactory(String id) {
-		Function<Item.Properties, ? extends Item> factory = ITEM_FACTORIES.get(id);
-		if (factory == null) {
-			throw new IllegalArgumentException("No ITEM_FACTORIES entry for item id '" + id + "'");
-		}
-		return factory;
+	private static ItemDef plain(String id, Consumer<Supplier<Item>> bind) {
+		return item(id, Item::new, bind);
 	}
 
 	/**
 	 * Two gray hint lines under the name, keyed {@code item.alaindustrial.<id>.hint} / {@code .hint2}.
 	 * The key strings are derived from the id here rather than typed twice per loader.
 	 */
-	private static Function<Item.Properties, ? extends Item> hintItem(String id) {
-		return p -> new HintItem(p, "item.alaindustrial." + id + ".hint",
-				"item.alaindustrial." + id + ".hint2");
+	private static ItemDef hint(String id, Consumer<Supplier<Item>> bind) {
+		return item(id, p -> new HintItem(p, "item.alaindustrial." + id + ".hint",
+				"item.alaindustrial." + id + ".hint2"), bind);
 	}
 
 	/** An overclocker chip of a fixed tier (MOD-393) — a hint item that also carries its step count. */
-	private static Function<Item.Properties, ? extends Item> overclockerChip(String id, int tier) {
-		return p -> new OverclockerChipItem(p, tier, "item.alaindustrial." + id + ".hint",
-				"item.alaindustrial." + id + ".hint2");
+	private static ItemDef overclockerChip(String id, int tier, Consumer<Supplier<Item>> bind) {
+		return item(id, p -> new OverclockerChipItem(p, tier, "item.alaindustrial." + id + ".hint",
+				"item.alaindustrial." + id + ".hint2"), bind);
 	}
 
 	/**
@@ -1142,70 +1168,303 @@ public final class ContentManifest {
 	 * individual stack it repairs and {@code ItemStack.getMaxDamage()} reads that override.
 	 * {@link DurableComponentItem} carries the matching tooltip.
 	 */
-	private static Function<Item.Properties, ? extends Item> durableComponent(IntSupplier maxDamage) {
-		return p -> new DurableComponentItem(p.durability(maxDamage.getAsInt()));
+	private static ItemDef durableComponent(String id, IntSupplier maxDamage, Consumer<Supplier<Item>> bind) {
+		return item(id, p -> new DurableComponentItem(p.durability(maxDamage.getAsInt())), bind);
 	}
 
-	private static Map<String, Function<Item.Properties, ? extends Item>> buildItemFactories() {
-		Map<String, Function<Item.Properties, ? extends Item>> defs = new LinkedHashMap<>();
-		// Plain items: crafting components, dusts, plates, ingots, raw ores, by-products. Nothing but
-		// `new Item(properties)` — the largest and most duplicated group.
-		for (String id : List.of(
-				"advanced_circuit", "alignment_chip_day", "alignment_chip_night",
-				// MOD-064 alloys: the four products of the alloy smelter.
-				"bronze_ingot", "cupronickel_ingot", "electrum_ingot", "invar_ingot",
-				// MOD-534: the alloy smelter's endgame product, electrum's first use as a gear, and the
-				// assembled bit those two go into before it is smithed onto the drill.
-				"netherite_alloy_ingot", "electrum_gear", "netherite_drill_head",
-				// MOD-460: plate forms for the four alloys above, plus their reinforced tier
-				// (two plates -> one reinforced plate, hammer or compressor).
-				"bronze_plate", "bronze_reinforced_plate", "cupronickel_plate",
-				"cupronickel_reinforced_plate", "electrum_plate", "electrum_reinforced_plate",
-				"invar_plate", "invar_reinforced_plate",
-				// MOD-146: the fermenter's solid leftover — a plain item with no behaviour of its own.
-				"biomass",
-				"coal_dust", "copper_coil", "copper_dust", "copper_plate", "cotton_fiber",
-				"cotton_seeds", "depleted_uranium", "diamond_dust", "electronic_circuit",
-				"emerald_dust", "empty_can", "flux_thread", "fluxweave_cloth", "garden_drone", "gold_dust",
-				"gold_gear", "gold_plate", "iron_dust", "iron_gear", "iron_plate",
-				"irradiated_diamond", "irradiated_slag", "lapis_dust", "mutagen_dust",
-				// MOD-537 — the kok sagyz harvest and its by-product: the dug root (macerable into
-				// raw rubber + inulin) and the inulin itself.
-				"inulin", "kok_sagyz_root",
-				"nickel_dust", "nickel_ingot", "nickel_plate",
-				"palladium_dust", "palladium_ingot", "palladium_plate",
-				"raw_nickel", "raw_palladium", "raw_rubber",
-				"raw_silver", "raw_sulfur", "raw_tin", "raw_uranium",
-				// MOD-424: the centrifuge's product and what smelting it yields.
-				"refined_uranium", "resonance_coil", "resonant_shard", "rubber",
-				"silver_dust", "silver_gear", "silver_ingot", "silver_plate", "spatial_crystal", "stone_gear",
-				"sulfur_dust", "tempered_iron", "tempered_iron_plate", "tin_dust", "tin_ingot",
-				"tin_plate", "unstable_isotope", "uranium_dust", "uranium_ingot", "uranium_plate",
-				"uranium_shavings", "wooden_gear",
-				// MOD-468: the shielding chain (palladium + tempered iron) and the controller's parts.
-				"shielding_alloy_ingot", "shielding_alloy_plate", "shielding_alloy_reinforced_plate",
-				"reactor_circuit", "control_rod_drive",
-				// MOD-468 stage 4: the empty casing. Crafted 3x3, filled with one refined uranium, and
-				// handed back by the column when its charge is spent — refuelling a reactor is topping up
-				// casings you already own, not building rods from scratch every time.
-				"empty_fuel_rod")) {
-			defs.put(id, Item::new);
+	/**
+	 * An armour piece (MOD-056/466/470). {@code humanoidArmor(material, type)} wires durability,
+	 * attributes, enchantability, the {@code EQUIPPABLE} component (equip sound + asset id from the
+	 * material) and the repair tag in one call — exactly how vanilla {@code Items.IRON_HELMET} is built.
+	 */
+	private static ItemDef armor(String id, ArmorMaterial material, ArmorType type,
+			Consumer<Supplier<Item>> bind) {
+		return item(id, p -> new Item(p.humanoidArmor(material, type)), bind);
+	}
+
+	/**
+	 * A scythe tier (MOD-068/168). The id and every stat come from the loader-neutral
+	 * {@link ScytheTiers} catalogue, so a balance tweak cannot drift between the loaders.
+	 * {@code .hoe(...)} attaches the data-driven tool component exactly like a vanilla hoe, but the
+	 * instance is a {@link ScytheItem}: right-click clears an area instead of tilling.
+	 */
+	private static ItemDef scythe(ScytheTier tier, Consumer<Supplier<Item>> bind) {
+		return item(tier.id(), p -> {
+			Item.Properties props = p.hoe(tier.material(), tier.attackDamage(), -1.0f);
+			return new ScytheItem(tier.profile(), tier.fireResistant() ? props.fireResistant() : props);
+		}, bind);
+	}
+
+	/**
+	 * A filled mod-fluid bucket (MOD-238 oil, MOD-251 diesel/fuel oil, MOD-146/525 the organic pair) —
+	 * built exactly like vanilla {@code Items.WATER_BUCKET}. The still fluid is resolved by id: on both
+	 * loaders the fluid registry is populated before the item factory runs (Fabric calls
+	 * {@code ModFluids.init()} first; on NeoForge the FLUID {@code RegisterEvent} fires before ITEM).
+	 */
+	private static ItemDef bucket(String id, String fluidId, Consumer<Supplier<Item>> bind) {
+		return item(id, p -> new BucketItem(registeredFluid(fluidId),
+				p.craftRemainder(Items.BUCKET).stacksTo(1)), bind);
+	}
+
+	/**
+	 * An item whose CLASS differs per loader — the manifest owns its id, its place in the order and its
+	 * {@link ModContent} slot, and the loader supplies the constructor through its own override map
+	 * (see {@code ModItems.LOADER_ITEMS} / {@code ModItemsNeoForge.LOADER_ITEMS}).
+	 *
+	 * <p>There are five, and each is a loader-API seam rather than a difference of content: the forge
+	 * hammer routes a craft-remainder hook whose signature differs on the two loaders, and the four
+	 * electric hoe/shovel tiers must declare NeoForge {@code ItemAbility}s that Fabric has no concept of
+	 * (MOD-378/MOD-379 — without them NeoForge's patched {@code HoeItem}/{@code ShovelItem} refuse to
+	 * till and make no paths).
+	 *
+	 * <p><b>There is deliberately no shared default.</b> A default would let a loader that forgot its
+	 * override ship the wrong class silently — which is exactly the defect MOD-378 and MOD-379 each
+	 * fixed once. With {@code factory == null} the replay throws at startup instead.
+	 */
+	private static ItemDef loaderItem(String id, Consumer<Supplier<Item>> bind) {
+		return new ItemDef(id, null, bind);
+	}
+
+	/** A block item whose registry id equals its block's ({@code alaindustrial:macerator} → the block). */
+	private static ItemDef blockItem(String id, Consumer<Supplier<BlockItem>> bind) {
+		return blockItem(id, id, bind);
+	}
+
+	/** A block item whose id differs from the block's ({@code kok_sagyz_seeds} places {@code kok_sagyz}). */
+	private static ItemDef blockItem(String id, String blockId, Consumer<Supplier<BlockItem>> bind) {
+		return blockItem(id, blockId, UnaryOperator.identity(), bind);
+	}
+
+	/**
+	 * A block item with extra shared {@code Properties} (MOD-479: rarity + tooltip style). The extras
+	 * live here rather than per loader because {@code loader_parity_check} compares the SETS of item
+	 * ids, never their properties — a {@code .rarity(...)} written once per loader would drift the first
+	 * time somebody edited one of them, with every gate still green.
+	 */
+	private static ItemDef blockItem(String id, String blockId, UnaryOperator<Item.Properties> extra,
+			Consumer<Supplier<BlockItem>> bind) {
+		return blockItem(id, p -> new BlockItem(registeredBlock(blockId), extra.apply(p)), bind);
+	}
+
+	/** A block item under its own {@code BlockItem} subclass (pipes, the tank, the torch). */
+	private static ItemDef blockItem(String id, Function<Item.Properties, ? extends BlockItem> factory,
+			Consumer<Supplier<BlockItem>> bind) {
+		return new ItemDef(id, p -> factory.apply(p.useBlockDescriptionPrefix()), blockItemSlot(bind));
+	}
+
+	/**
+	 * Adapts a {@code Supplier<BlockItem>} {@link ModContent} slot to the {@code Supplier<Item>} the
+	 * replay hands out. The cast cannot lie: only {@link #blockItem} reaches this, and every one of its
+	 * factories returns a {@code BlockItem}. Keeping the slot type in the helper signature is what makes
+	 * pointing a block item at a plain-item slot (or the reverse) a compile error.
+	 */
+	private static Consumer<Supplier<Item>> blockItemSlot(Consumer<Supplier<BlockItem>> bind) {
+		return s -> bind.accept(() -> (BlockItem) s.get());
+	}
+
+	/**
+	 * Presentation for a block item a player cannot obtain (MOD-479): the light-purple name vanilla puts
+	 * on the dragon egg, the barrier and the command block — technical blocks, exactly like this one —
+	 * plus this mod's own tooltip frame.
+	 *
+	 * <p><b>{@code EPIC} is the ceiling.</b> NeoForge marks {@code Rarity} extensible and Fabric does
+	 * not, so inventing a "legendary" tier would be an asymmetry by construction.
+	 *
+	 * <p>The tooltip style is an id, not a sprite: {@code TooltipRenderUtil} expands it into
+	 * {@code alaindustrial:tooltip/creative_background} and {@code …_frame}. BOTH must exist — a custom
+	 * style replaces the vanilla background instead of falling back to it, so shipping only the frame
+	 * leaves the text sitting on a missing texture. Nothing in the repo checks that; see the task.
+	 */
+	public static final UnaryOperator<Item.Properties> CREATIVE_ONLY_ITEM = props -> props
+			.rarity(Rarity.EPIC)
+			.component(DataComponents.TOOLTIP_STYLE, Industrialization.id("creative"));
+
+	/**
+	 * The factory a loader must call for {@code def}: its own override when the entry is
+	 * {@linkplain #loaderItem loader-specific}, the manifest's own otherwise. Both mismatches throw
+	 * rather than picking a side — an override for a shared entry would shadow the shared definition
+	 * on one loader only, which is the drift this manifest exists to remove.
+	 *
+	 * @param def      the manifest entry being replayed
+	 * @param override this loader's entry from its {@code LOADER_ITEMS} map, or {@code null}
+	 */
+	public static Function<Item.Properties, ? extends Item> itemFactory(ItemDef def,
+			@Nullable Function<Item.Properties, ? extends Item> override) {
+		if (def.factory() == null) {
+			if (override == null) {
+				throw new IllegalStateException("ItemDef '" + def.id() + "' is declared loader-specific "
+						+ "(no shared factory), but this loader supplied no override for it");
+			}
+			return override;
 		}
-		// Uranium Fuel Rod (MOD-468 stage 4). Durability IS its remaining charge: the column wears the
-		// rod down as the reactor draws on it, so a half-spent rod shows a half-empty bar in the hand
-		// and can be pulled out and put back without losing what is left. Before this it was a plain
-		// item and a rod taken out mid-burn was simply destroyed.
-		defs.put("uranium_fuel_rod", p -> new Item(p.durability(FuelRodMath.ROD_DURABILITY)));
-		// Battery (MOD-083): the stackable EU carrier. Charge is per item, so the stack size is what
-		// keeps stack transfers exact — see BatteryItem for why 16 and not 64.
-		defs.put("battery", p -> new BatteryItem(p.stacksTo(BatteryItem.MAX_STACK)));
-		// Netherite Drill Upgrade smithing template (MOD-534) — the mod's first smithing template, and the
-		// gate on its top drill tier. Built on vanilla's own SmithingTemplateItem rather than a plain Item
-		// so the smithing screen shows what goes in which slot and greys the empty slots with the right
-		// sprites, exactly as it does for the vanilla netherite upgrade. Constructor argument order was
-		// read off the bytecode of Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE's factory (project rule 1):
-		// appliesTo, ingredients, baseSlotDescription, additionsSlotDescription, then the two icon lists.
-		defs.put("netherite_drill_upgrade_smithing_template", p -> new SmithingTemplateItem(
+		if (override != null) {
+			throw new IllegalStateException("ItemDef '" + def.id() + "' has a shared factory, so this "
+					+ "loader's override for it would silently shadow the shared definition");
+		}
+		return def.factory();
+	}
+
+	/**
+	 * The registered block for {@code blockId}, for a block item's factory.
+	 *
+	 * <p>Resolved from the vanilla registry rather than from a loader handle, for the same reason
+	 * {@link BlockEntityDef#blockSet()} does it: the id is the one name both loaders share. An
+	 * unregistered id throws instead of quietly resolving to {@code AIR} — {@code getValue} on a
+	 * defaulted registry substitutes AIR, so AIR is what a typo looks like, and a {@code BlockItem} over
+	 * AIR would place nothing while looking perfectly registered.
+	 */
+	private static Block registeredBlock(String blockId) {
+		Identifier key = Industrialization.id(blockId);
+		Block block = BuiltInRegistries.BLOCK.getValue(key);
+		if (block == Blocks.AIR) {
+			throw new IllegalStateException("ItemDef: block '" + key + "' is not registered (yet) — "
+					+ "its block item cannot be built");
+		}
+		return block;
+	}
+
+	/** The registered still fluid for {@code fluidId}, for a bucket's factory. See {@link #registeredBlock}. */
+	private static FlowingFluid registeredFluid(String fluidId) {
+		Identifier key = Industrialization.id(fluidId);
+		Fluid fluid = BuiltInRegistries.FLUID.getValue(key);
+		if (!(fluid instanceof FlowingFluid flowing)) {
+			throw new IllegalStateException("ItemDef: fluid '" + key + "' is not a registered FlowingFluid "
+					+ "(got " + fluid + ") — its bucket cannot be built");
+		}
+		return flowing;
+	}
+
+	/** The registered item for {@code itemId} — only an EARLIER entry of {@link #ITEMS} can be asked for. */
+	private static Item registeredItem(String itemId) {
+		Identifier key = Industrialization.id(itemId);
+		Item item = BuiltInRegistries.ITEM.getValue(key);
+		if (item == Items.AIR) {
+			throw new IllegalStateException("ItemDef: item '" + key + "' is not registered (yet) — an "
+					+ "entry may only reference an item declared EARLIER in ContentManifest.ITEMS");
+		}
+		return item;
+	}
+
+	/**
+	 * The stock display frame's entity type (MOD-066), typed for {@code StockDisplayFrameItem}.
+	 *
+	 * <p>The cast is unchecked because the registry is heterogeneous, and safe because
+	 * {@code alaindustrial:stock_display_frame} is registered from exactly one place on each loader with
+	 * exactly this entity class. The same cast, for the same reason, is in
+	 * {@code StockDisplayFrameScenarios}.
+	 */
+	@SuppressWarnings("unchecked")
+	private static EntityType<StockDisplayFrameEntity> stockDisplayFrameType() {
+		Identifier key = Industrialization.id("stock_display_frame");
+		EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getValue(key);
+		if (type == null) {
+			throw new IllegalStateException("ItemDef: entity type '" + key + "' is not registered (yet) — "
+					+ "the display-frame item cannot be built");
+		}
+		return (EntityType<StockDisplayFrameEntity>) type;
+	}
+
+	/**
+	 * Every item, in one shared registration order — the single source of the mod's item composition
+	 * (MOD-554). Both loaders replay this list; see {@link ItemDef}.
+	 */
+	public static final List<ItemDef> ITEMS = List.of(
+			// Crafting components (referenced by MaceratorBlockEntity recipes and crafting recipes).
+			plain("electronic_circuit", s -> ModContent.ELECTRONIC_CIRCUIT = s),
+			// MOD-299 — the MV circuit: electronic circuit + gold plates + rubber. Gates the advanced casing.
+			plain("advanced_circuit", s -> ModContent.ADVANCED_CIRCUIT = s),
+			item("assembly_blueprint", p -> new AssemblyBlueprintItem(p.stacksTo(AssemblyBlueprintItem.BLANK_STACK_SIZE)), s -> ModContent.ASSEMBLY_BLUEPRINT = s),
+			// Copper Coil — crafting component (copper cable + tin), gates the Electric Drill.
+			plain("copper_coil", s -> ModContent.COPPER_COIL = s),
+			// Resonance chain (MOD-116): spatial stock -> the coil above the copper one -> the station's chip.
+			plain("spatial_crystal", s -> ModContent.SPATIAL_CRYSTAL = s),
+			plain("resonance_coil", s -> ModContent.RESONANCE_COIL = s),
+			// Random Jump Chip (MOD-116): the teleporter station's one permanent upgrade. Its own class
+			// rather than a hintItem because fitting it is an interaction, not just a tooltip.
+			item("rtp_chip", p -> new RtpChipItem(p, "item.alaindustrial.rtp_chip.hint",
+				"item.alaindustrial.rtp_chip.hint2"), s -> ModContent.RTP_CHIP = s),
+			plain("alignment_chip_day", s -> ModContent.ALIGNMENT_CHIP_DAY = s),
+			plain("alignment_chip_night", s -> ModContent.ALIGNMENT_CHIP_NIGHT = s),
+			// Upgrade chips (MOD-080): empty blank + the mute upgrade. Each shows a gray hint line.
+			hint("empty_chip", s -> ModContent.EMPTY_CHIP = s),
+			// Incubator (MOD-118): mode chips, by-products and the tier-1 evolution materials.
+			item("mutation_chip_transform", p -> new MutationChipItem(p, IncubatorMode.TRANSFORM), s -> ModContent.MUTATION_CHIP_TRANSFORM = s),
+			item("mutation_chip_duplicate", p -> new MutationChipItem(p, IncubatorMode.DUPLICATE), s -> ModContent.MUTATION_CHIP_DUPLICATE = s),
+			item("mutation_chip_create", p -> new MutationChipItem(p, IncubatorMode.CREATE), s -> ModContent.MUTATION_CHIP_CREATE = s),
+			plain("irradiated_slag", s -> ModContent.IRRADIATED_SLAG = s),
+			plain("irradiated_diamond", s -> ModContent.IRRADIATED_DIAMOND = s),
+			plain("resonant_shard", s -> ModContent.RESONANT_SHARD = s),
+			plain("mutagen_dust", s -> ModContent.MUTAGEN_DUST = s),
+			// Oil → rubber chain: the polymerizer's product and the vulcanizer's cured output.
+			plain("raw_rubber", s -> ModContent.RAW_RUBBER = s),
+			// Organic chain (MOD-146): the fermenter's solid leftover, stock for a later task.
+			plain("biomass", s -> ModContent.BIOMASS = s),
+			plain("rubber", s -> ModContent.RUBBER = s),
+			// Cotton (MOD-280): the seed is planted onto a trellis by right-click (the block handles it, so this
+			// stays a plain Item — no BlockItem/ItemNameBlockItem), the fibre is the harvest.
+			plain("cotton_seeds", s -> ModContent.COTTON_SEEDS = s),
+			plain("cotton_fiber", s -> ModContent.COTTON_FIBER = s),
+			// Kok sagyz (MOD-537): the dug root macerates into raw rubber; inulin rides along as the
+			// by-product. The seeds are a BlockItem — see the blockItem block below.
+			plain("kok_sagyz_root", s -> ModContent.KOK_SAGYZ_ROOT_ITEM = s),
+			// MOD-537 — the kok sagyz harvest and its by-product: the dug root (macerable into
+			// raw rubber + inulin) and the inulin itself.
+			plain("inulin", s -> ModContent.INULIN = s),
+			// Fluxweave chain (MOD-127): silver-plated fibre, then the woven sheet. Both are plain crafting
+			// components — the EU buffer lives on the armor, not on the material.
+			plain("flux_thread", s -> ModContent.FLUX_THREAD = s),
+			plain("fluxweave_cloth", s -> ModContent.FLUXWEAVE_CLOTH = s),
+			plain("unstable_isotope", s -> ModContent.UNSTABLE_ISOTOPE = s),
+			hint("mute_chip", s -> ModContent.MUTE_CHIP = s),
+			hint("stats_chip", s -> ModContent.STATS_CHIP = s),
+			// Soul Vessel (MOD-278): the repeller's upgrade currency. stacksTo(1) is not a balance knob —
+			// the kill counter is a stack component, and stacks with different components never merge, so a
+			// stackable vessel would only ever look broken.
+			// Soul Vessel (MOD-278): the Mob Repeller upgrade currency.
+			item("soul_vessel", p -> new SoulVesselItem(p.stacksTo(1)), s -> ModContent.SOUL_VESSEL = s),
+			// Overclocker chips (MOD-392/393): three tiers trading energy for machine speed.
+			overclockerChip("overclocker_chip_i", 1, s -> ModContent.OVERCLOCKER_CHIP_I = s),
+			overclockerChip("overclocker_chip_ii", 2, s -> ModContent.OVERCLOCKER_CHIP_II = s),
+			overclockerChip("overclocker_chip_iii", 3, s -> ModContent.OVERCLOCKER_CHIP_III = s),
+			// Energy clots (MOD-393): surplus grid power packed into an item by the energy condenser.
+			hint("energy_clot_i", s -> ModContent.ENERGY_CLOT_I = s),
+			hint("energy_clot_ii", s -> ModContent.ENERGY_CLOT_II = s),
+			hint("energy_clot_iii", s -> ModContent.ENERGY_CLOT_III = s),
+			// Cable breaker (MOD-276): clamps onto a laid cable and cuts the line for maintenance. A hint
+			// item because the whole control scheme (install / throw / pry off) is gestures on the wire,
+			// with no GUI anywhere to explain itself.
+			// Cable breaker (MOD-276): clamps onto a laid cable to cut the line for maintenance.
+			hint("cable_breaker", s -> ModContent.CABLE_BREAKER = s),
+			// Rotor / wheel (MOD-189): durability components — wear shows as a vanilla durability bar and, being
+			// damageable, they are automatically non-stackable. maxDamage from Config (registration-time).
+			durableComponent("windmill_rotor", () -> Config.windMillRotorMaxDamage, s -> ModContent.WINDMILL_ROTOR = s),
+			durableComponent("water_mill_wheel", () -> Config.waterMillWheelMaxDamage, s -> ModContent.WATER_MILL_WHEEL = s),
+			// MOD-385: upper grades — richer craft, higher output, longer life. See core.machine.ComponentTier.
+			durableComponent("windmill_rotor_reinforced", () -> Config.windMillRotorReinforcedMaxDamage, s -> ModContent.WINDMILL_ROTOR_REINFORCED = s),
+			durableComponent("windmill_rotor_advanced", () -> Config.windMillRotorAdvancedMaxDamage, s -> ModContent.WINDMILL_ROTOR_ADVANCED = s),
+			// MOD-386: the lightning rod's conductor tips.
+			durableComponent("lightning_rod_conductor_tip", () -> Config.lightningRodTipMaxDamage, s -> ModContent.LIGHTNING_ROD_CONDUCTOR_TIP = s),
+			durableComponent("lightning_rod_conductor_tip_reinforced", () -> Config.lightningRodTipReinforcedMaxDamage, s -> ModContent.LIGHTNING_ROD_CONDUCTOR_TIP_REINFORCED = s),
+			durableComponent("lightning_rod_conductor_tip_advanced", () -> Config.lightningRodTipAdvancedMaxDamage, s -> ModContent.LIGHTNING_ROD_CONDUCTOR_TIP_ADVANCED = s),
+			durableComponent("water_mill_wheel_reinforced", () -> Config.waterMillWheelReinforcedMaxDamage, s -> ModContent.WATER_MILL_WHEEL_REINFORCED = s),
+			durableComponent("water_mill_wheel_advanced", () -> Config.waterMillWheelAdvancedMaxDamage, s -> ModContent.WATER_MILL_WHEEL_ADVANCED = s),
+			plain("wooden_gear", s -> ModContent.WOODEN_GEAR = s),
+			// Metal gears (MOD-105): crafting components for machinery still to come.
+			plain("stone_gear", s -> ModContent.STONE_GEAR = s),
+			plain("iron_gear", s -> ModContent.IRON_GEAR = s),
+			plain("gold_gear", s -> ModContent.GOLD_GEAR = s),
+			plain("silver_gear", s -> ModContent.SILVER_GEAR = s),
+			// MOD-534: electrum's first use as a gear — the netherite tip's head drive.
+			plain("electrum_gear", s -> ModContent.ELECTRUM_GEAR = s),
+			// MOD-534: the assembled drill bit and the smithing template that gates it.
+			plain("netherite_drill_head", s -> ModContent.NETHERITE_DRILL_HEAD = s),
+			// Netherite Drill Upgrade smithing template (MOD-534) — the mod's first smithing template, and the
+			// gate on its top drill tier. Built on vanilla's own SmithingTemplateItem rather than a plain Item
+			// so the smithing screen shows what goes in which slot and greys the empty slots with the right
+			// sprites, exactly as it does for the vanilla netherite upgrade. Constructor argument order was
+			// read off the bytecode of Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE's factory (project rule 1):
+			// appliesTo, ingredients, baseSlotDescription, additionsSlotDescription, then the two icon lists.
+			item("netherite_drill_upgrade_smithing_template", p -> new SmithingTemplateItem(
 				Component.translatable("item.alaindustrial.netherite_drill_upgrade_smithing_template.applies_to")
 						.withStyle(ChatFormatting.BLUE),
 				Component.translatable("item.alaindustrial.netherite_drill_upgrade_smithing_template.ingredients")
@@ -1214,29 +1473,63 @@ public final class ContentManifest {
 				Component.translatable("item.alaindustrial.netherite_drill_upgrade_smithing_template.additions_slot_description"),
 				List.of(Identifier.withDefaultNamespace("container/slot/pickaxe")),
 				List.of(Identifier.withDefaultNamespace("container/slot/ingot")),
-				p));
-		// EU crystals (MOD-504). Two items per tier: the blank carries the buffer and is stacksTo(1)
-		// (energy moved into a stack must divide by count, and at these buffer sizes any stack would
-		// start rounding EU away); the finished crystal is an ordinary crafting material that stacks
-		// normally, because it holds no energy at all.
-		//
-		// Written out id by id rather than looped over CrystalTier.values(): arch_check's
-		// `items-registered-through-manifest` rule is a TEXT scan that pairs each manifestItem("x") in
-		// the loader registries against a defs.put("x", ...) literal here. A loop registers correctly at
-		// runtime and is invisible to that scan, which would leave every future item id unguarded.
-		defs.put("energy_crystal_blank", p -> new CrystalBlankItem(p.stacksTo(1), CrystalTier.ENERGY));
-		defs.put("energy_crystal", Item::new);
-		defs.put("lapotron_crystal_blank", p -> new CrystalBlankItem(p.stacksTo(1), CrystalTier.LAPOTRON));
-		defs.put("lapotron_crystal", Item::new);
-		defs.put("resonant_crystal_blank", p -> new CrystalBlankItem(p.stacksTo(1), CrystalTier.RESONANT));
-		defs.put("resonant_crystal", Item::new);
-		// Canned Ration (MOD-383): the mod's first edible item, and the one place its food numbers are
-		// declared. Its nutrition is fixed no matter what went into the machine — that is precisely
-		// what lets every ration stack with every other one, which is the entire point of the machine
-		// (a ration that remembered its source would carry a different component and never merge).
-		// Its Consumable is built here rather than inherited from the source food, so effects like a
-		// golden apple's regeneration have nowhere to travel.
-		defs.put("canned_ration", p -> new Item(p.food(
+				p), s -> ModContent.NETHERITE_DRILL_UPGRADE_SMITHING_TEMPLATE = s),
+			plain("tempered_iron", s -> ModContent.TEMPERED_IRON = s),
+			item("tempered_iron_pickaxe", p -> new Item(p.pickaxe(ModToolMaterials.TEMPERED_IRON,
+					TemperedIronToolStats.PICKAXE.attackDamage(), TemperedIronToolStats.PICKAXE.attackSpeed())), s -> ModContent.TEMPERED_IRON_PICKAXE = s),
+			// Axe/Hoe/Shovel extend their vanilla subclasses so useOn (stripping/tilling/path) works —
+			// in 26.2 these subclasses still exist and carry that behavior; PickaxeItem/SwordItem were
+			// removed, so pickaxe/sword stay plain Item with .pickaxe()/.sword().
+			item("tempered_iron_axe", p -> new AxeItem(ModToolMaterials.TEMPERED_IRON,
+					TemperedIronToolStats.AXE.attackDamage(), TemperedIronToolStats.AXE.attackSpeed(), p), s -> ModContent.TEMPERED_IRON_AXE = s),
+			item("tempered_iron_hoe", p -> new HoeItem(ModToolMaterials.TEMPERED_IRON,
+					TemperedIronToolStats.HOE.attackDamage(), TemperedIronToolStats.HOE.attackSpeed(), p), s -> ModContent.TEMPERED_IRON_HOE = s),
+			item("tempered_iron_shovel", p -> new ShovelItem(ModToolMaterials.TEMPERED_IRON,
+					TemperedIronToolStats.SHOVEL.attackDamage(), TemperedIronToolStats.SHOVEL.attackSpeed(), p), s -> ModContent.TEMPERED_IRON_SHOVEL = s),
+			item("tempered_iron_sword", p -> new Item(p.sword(ModToolMaterials.TEMPERED_IRON,
+					TemperedIronToolStats.SWORD.attackDamage(), TemperedIronToolStats.SWORD.attackSpeed())), s -> ModContent.TEMPERED_IRON_SWORD = s),
+			// Tempered-iron armor (MOD-056). MC 26.2 has no ArmorItem: each piece is a plain Item whose
+			// equipment properties are attached via Item.Properties.humanoidArmor(ArmorMaterial, ArmorType).
+			// That helper chains durability, attributes, enchantability, the EQUIPPABLE component (with the
+			// material's asset id + equip sound) and the repair tag in one go (javap-verified).
+			armor("tempered_iron_helmet", ModArmorMaterials.TEMPERED_IRON, ArmorType.HELMET, s -> ModContent.TEMPERED_IRON_HELMET = s),
+			armor("tempered_iron_chestplate", ModArmorMaterials.TEMPERED_IRON, ArmorType.CHESTPLATE, s -> ModContent.TEMPERED_IRON_CHESTPLATE = s),
+			armor("tempered_iron_leggings", ModArmorMaterials.TEMPERED_IRON, ArmorType.LEGGINGS, s -> ModContent.TEMPERED_IRON_LEGGINGS = s),
+			armor("tempered_iron_boots", ModArmorMaterials.TEMPERED_IRON, ArmorType.BOOTS, s -> ModContent.TEMPERED_IRON_BOOTS = s),
+			// Fluxweave armour (MOD-127): humanoidArmor gives it ordinary armour stats; FluxweaveArmorItem
+			// layers the charge-driven worn asset and bonus attributes on top of that.
+			item("fluxweave_helmet", p -> new FluxweaveArmorItem(
+					FluxweaveArmorItem.equipmentProperties(p, ArmorType.HELMET), ArmorType.HELMET), s -> ModContent.FLUXWEAVE_HELMET = s),
+			item("fluxweave_chestplate", p -> new FluxweaveArmorItem(
+					FluxweaveArmorItem.equipmentProperties(p, ArmorType.CHESTPLATE), ArmorType.CHESTPLATE), s -> ModContent.FLUXWEAVE_CHESTPLATE = s),
+			item("fluxweave_leggings", p -> new FluxweaveArmorItem(
+					FluxweaveArmorItem.equipmentProperties(p, ArmorType.LEGGINGS), ArmorType.LEGGINGS), s -> ModContent.FLUXWEAVE_LEGGINGS = s),
+			item("fluxweave_boots", p -> new FluxweaveArmorItem(
+					FluxweaveArmorItem.equipmentProperties(p, ArmorType.BOOTS), ArmorType.BOOTS), s -> ModContent.FLUXWEAVE_BOOTS = s),
+			// Shielding suit (MOD-470): ordinary armour items; the shielding lives in the item tag.
+			armor("shielding_helmet", ModArmorMaterials.SHIELDING, ArmorType.HELMET, s -> ModContent.SHIELDING_HELMET = s),
+			armor("shielding_chestplate", ModArmorMaterials.SHIELDING, ArmorType.CHESTPLATE, s -> ModContent.SHIELDING_CHESTPLATE = s),
+			armor("shielding_leggings", ModArmorMaterials.SHIELDING, ArmorType.LEGGINGS, s -> ModContent.SHIELDING_LEGGINGS = s),
+			armor("shielding_boots", ModArmorMaterials.SHIELDING, ArmorType.BOOTS, s -> ModContent.SHIELDING_BOOTS = s),
+			// Insulated set (MOD-466): ordinary armour items; the insulation lives in the item tag.
+			armor("insulated_helmet", ModArmorMaterials.INSULATED, ArmorType.HELMET, s -> ModContent.INSULATED_HELMET = s),
+			armor("insulated_chestplate", ModArmorMaterials.INSULATED, ArmorType.CHESTPLATE, s -> ModContent.INSULATED_CHESTPLATE = s),
+			armor("insulated_leggings", ModArmorMaterials.INSULATED, ArmorType.LEGGINGS, s -> ModContent.INSULATED_LEGGINGS = s),
+			armor("insulated_boots", ModArmorMaterials.INSULATED, ArmorType.BOOTS, s -> ModContent.INSULATED_BOOTS = s),
+			plain("iron_dust", s -> ModContent.IRON_DUST = s),
+			plain("copper_dust", s -> ModContent.COPPER_DUST = s),
+			plain("gold_dust", s -> ModContent.GOLD_DUST = s),
+			plain("coal_dust", s -> ModContent.COAL_DUST = s),
+			plain("diamond_dust", s -> ModContent.DIAMOND_DUST = s),
+			plain("emerald_dust", s -> ModContent.EMERALD_DUST = s),
+			plain("empty_can", s -> ModContent.EMPTY_CAN = s),
+			// Canned Ration (MOD-383): the mod's first edible item, and the one place its food numbers are
+			// declared. Its nutrition is fixed no matter what went into the machine — that is precisely
+			// what lets every ration stack with every other one, which is the entire point of the machine
+			// (a ration that remembered its source would carry a different component and never merge).
+			// Its Consumable is built here rather than inherited from the source food, so effects like a
+			// golden apple's regeneration have nowhere to travel.
+			item("canned_ration", p -> new Item(p.food(
 				new FoodProperties.Builder()
 						.nutrition(CanningMath.RATION_NUTRITION)
 						.saturationModifier(CanningMath.RATION_SATURATION_MODIFIER)
@@ -1259,52 +1552,281 @@ public final class ContentManifest {
 						// A metallic clink as the emptied tin is thrown away — the one cue that this was
 						// a can and not a bowl.
 						.soundAfterConsume(SoundEvents.ARMOR_EQUIP_IRON)
-						.build())));
-		// Upgrade chips (MOD-080): the blank and the mute upgrade, each with its hint lines.
-		defs.put("empty_chip", hintItem("empty_chip"));
-		defs.put("mute_chip", hintItem("mute_chip"));
-		defs.put("stats_chip", hintItem("stats_chip"));
-		defs.put("overclocker_chip_i", overclockerChip("overclocker_chip_i", 1));
-		defs.put("overclocker_chip_ii", overclockerChip("overclocker_chip_ii", 2));
-		defs.put("overclocker_chip_iii", overclockerChip("overclocker_chip_iii", 3));
-		// Random Jump Chip (MOD-116): the teleporter station's one permanent upgrade. Its own class
-		// rather than a hintItem because fitting it is an interaction, not just a tooltip.
-		defs.put("rtp_chip", p -> new RtpChipItem(p, "item.alaindustrial.rtp_chip.hint",
-				"item.alaindustrial.rtp_chip.hint2"));
-		// Energy clots (MOD-393): what the condenser packs surplus grid power into. Three tiers, told
-		// apart by how much was banked when the player pulled it out.
-		defs.put("energy_clot_i", hintItem("energy_clot_i"));
-		defs.put("energy_clot_ii", hintItem("energy_clot_ii"));
-		defs.put("energy_clot_iii", hintItem("energy_clot_iii"));
-		// Cable breaker (MOD-276): clamps onto a laid cable and cuts the line for maintenance. A hint
-		// item because the whole control scheme (install / throw / pry off) is gestures on the wire,
-		// with no GUI anywhere to explain itself.
-		defs.put("cable_breaker", hintItem("cable_breaker"));
-		// Incubator mode chips (MOD-118) — the mode binding lives in the item.
-		defs.put("mutation_chip_transform", p -> new MutationChipItem(p, IncubatorMode.TRANSFORM));
-		defs.put("mutation_chip_duplicate", p -> new MutationChipItem(p, IncubatorMode.DUPLICATE));
-		defs.put("mutation_chip_create", p -> new MutationChipItem(p, IncubatorMode.CREATE));
-		// Wearing components (MOD-189).
-		defs.put("windmill_rotor", durableComponent(() -> Config.windMillRotorMaxDamage));
-		defs.put("water_mill_wheel", durableComponent(() -> Config.waterMillWheelMaxDamage));
-		// MOD-385: the upper two grades of each component. Same factory — only the durability differs at
-		// registration; output multiplier and wear rate are read live per tick from ComponentTier.
-		defs.put("windmill_rotor_reinforced", durableComponent(() -> Config.windMillRotorReinforcedMaxDamage));
-		defs.put("windmill_rotor_advanced", durableComponent(() -> Config.windMillRotorAdvancedMaxDamage));
-		defs.put("water_mill_wheel_reinforced", durableComponent(() -> Config.waterMillWheelReinforcedMaxDamage));
-		defs.put("water_mill_wheel_advanced", durableComponent(() -> Config.waterMillWheelAdvancedMaxDamage));
-		// MOD-386: the lightning rod's conductor tips — the third component family on the same ladder.
-		defs.put("lightning_rod_conductor_tip", durableComponent(() -> Config.lightningRodTipMaxDamage));
-		defs.put("lightning_rod_conductor_tip_reinforced",
-				durableComponent(() -> Config.lightningRodTipReinforcedMaxDamage));
-		defs.put("lightning_rod_conductor_tip_advanced",
-				durableComponent(() -> Config.lightningRodTipAdvancedMaxDamage));
-		// Soul Vessel (MOD-278): the repeller's upgrade currency. stacksTo(1) is not a balance knob —
-		// the kill counter is a stack component, and stacks with different components never merge, so a
-		// stackable vessel would only ever look broken.
-		defs.put("soul_vessel", p -> new SoulVesselItem(p.stacksTo(1)));
-		return Map.copyOf(defs);
-	}
+						.build())), s -> ModContent.CANNED_RATION = s),
+			plain("lapis_dust", s -> ModContent.LAPIS_DUST = s),
+			plain("tin_dust", s -> ModContent.TIN_DUST = s),
+			plain("raw_tin", s -> ModContent.RAW_TIN = s),
+			plain("tin_ingot", s -> ModContent.TIN_INGOT = s),
+			plain("silver_dust", s -> ModContent.SILVER_DUST = s),
+			plain("raw_silver", s -> ModContent.RAW_SILVER = s),
+			plain("silver_ingot", s -> ModContent.SILVER_INGOT = s),
+			plain("nickel_dust", s -> ModContent.NICKEL_DUST = s),
+			plain("raw_nickel", s -> ModContent.RAW_NICKEL = s),
+			plain("nickel_ingot", s -> ModContent.NICKEL_INGOT = s),
+			// MOD-064 alloys.
+			plain("bronze_ingot", s -> ModContent.BRONZE_INGOT = s),
+			plain("invar_ingot", s -> ModContent.INVAR_INGOT = s),
+			plain("cupronickel_ingot", s -> ModContent.CUPRONICKEL_INGOT = s),
+			plain("electrum_ingot", s -> ModContent.ELECTRUM_INGOT = s),
+			// MOD-534: the alloy smelter's endgame product, built on a vanilla netherite ingot.
+			plain("netherite_alloy_ingot", s -> ModContent.NETHERITE_ALLOY_INGOT = s),
+			plain("sulfur_dust", s -> ModContent.SULFUR_DUST = s),
+			plain("raw_sulfur", s -> ModContent.RAW_SULFUR = s),
+			plain("uranium_dust", s -> ModContent.URANIUM_DUST = s),
+			plain("raw_uranium", s -> ModContent.RAW_URANIUM = s),
+			plain("uranium_ingot", s -> ModContent.URANIUM_INGOT = s),
+			// MOD-424: the centrifuge's product, and what smelting it yields.
+			plain("uranium_shavings", s -> ModContent.URANIUM_SHAVINGS = s),
+			// MOD-424: the centrifuge's product and what smelting it yields.
+			plain("refined_uranium", s -> ModContent.REFINED_URANIUM = s),
+			// MOD-468, stage 1 — the shielding chain and the controller's parts.
+			plain("shielding_alloy_ingot", s -> ModContent.SHIELDING_ALLOY_INGOT = s),
+			plain("shielding_alloy_plate", s -> ModContent.SHIELDING_ALLOY_PLATE = s),
+			plain("shielding_alloy_reinforced_plate", s -> ModContent.SHIELDING_ALLOY_REINFORCED_PLATE = s),
+			plain("reactor_circuit", s -> ModContent.REACTOR_CIRCUIT = s),
+			plain("control_rod_drive", s -> ModContent.CONTROL_ROD_DRIVE = s),
+			// Uranium Fuel Rod (MOD-468 stage 4). Durability IS its remaining charge: the column wears the
+			// rod down as the reactor draws on it, so a half-spent rod shows a half-empty bar in the hand
+			// and can be pulled out and put back without losing what is left. Before this it was a plain
+			// item and a rod taken out mid-burn was simply destroyed.
+			item("uranium_fuel_rod", p -> new Item(p.durability(FuelRodMath.ROD_DURABILITY)), s -> ModContent.URANIUM_FUEL_ROD = s),
+			// MOD-468 stage 4: the empty casing. Crafted 3x3, filled with one refined uranium, and
+			// handed back by the column when its charge is spent — refuelling a reactor is topping up
+			// casings you already own, not building rods from scratch every time.
+			plain("empty_fuel_rod", s -> ModContent.EMPTY_FUEL_ROD = s),
+			plain("depleted_uranium", s -> ModContent.DEPLETED_URANIUM = s),
+			plain("palladium_dust", s -> ModContent.PALLADIUM_DUST = s),
+			plain("raw_palladium", s -> ModContent.RAW_PALLADIUM = s),
+			plain("palladium_ingot", s -> ModContent.PALLADIUM_INGOT = s),
+			item("network_analyzer", p -> new NetworkAnalyzerItem(p.stacksTo(1)), s -> ModContent.NETWORK_ANALYZER = s),
+			item("wind_gauge", p -> new WindGaugeItem(p.stacksTo(1)), s -> ModContent.WIND_GAUGE = s),
+			item("wrench", p -> new WrenchItem(p.stacksTo(1)), s -> ModContent.WRENCH = s),
+			item("guide_book", p -> new GuideBookItem(p.stacksTo(1)), s -> ModContent.GUIDE_BOOK = s),
+			// Teleporter Remote (MOD-092): registered but kept out of the creative tab + no recipe until
+			// MOD-093 finishes the feature (same treatment as the station — see CreativeTabContent).
+			item("teleporter_remote", p -> new TeleporterRemoteItem(p.stacksTo(1)), s -> ModContent.TELEPORTER_REMOTE = s),
+			item("battery_pouch", p -> new PouchItem(p.stacksTo(1)), s -> ModContent.BATTERY_POUCH = s),
+			// Energy Pack (MOD-065): worn LV buffer + the inert battery cell it is crafted from.
+			item("battery", p -> new BatteryItem(p.stacksTo(BatteryItem.MAX_STACK)), s -> ModContent.BATTERY = s),
+			// EU crystals (MOD-504). Two items per tier: the blank carries the buffer and is stacksTo(1)
+			// (energy moved into a stack must divide by count, and at these buffer sizes any stack would
+			// start rounding EU away); the finished crystal is an ordinary crafting material that stacks
+			// normally, because it holds no energy at all.
+			// Written out id by id rather than looped over CrystalTier.values(): every gate that knows
+			// which items exist (arch_check, loader_parity_check, graph_data) reads the id LITERALS of
+			// this list. A loop registers correctly at runtime and is invisible to all three, which
+			// would leave the looped ids unguarded — and the six crystals out of the item catalogue.
+			// EU crystals (MOD-504): a chargeable blank per tier, and the finished crystal it becomes at 100 %.
+			// Only the blanks have an EU buffer; the finished three are ordinary crafting materials.
+			item("energy_crystal_blank", p -> new CrystalBlankItem(p.stacksTo(1), CrystalTier.ENERGY), s -> ModContent.ENERGY_CRYSTAL_BLANK = s),
+			item("energy_crystal", Item::new, s -> ModContent.ENERGY_CRYSTAL = s),
+			item("lapotron_crystal_blank", p -> new CrystalBlankItem(p.stacksTo(1), CrystalTier.LAPOTRON), s -> ModContent.LAPOTRON_CRYSTAL_BLANK = s),
+			item("lapotron_crystal", Item::new, s -> ModContent.LAPOTRON_CRYSTAL = s),
+			item("resonant_crystal_blank", p -> new CrystalBlankItem(p.stacksTo(1), CrystalTier.RESONANT), s -> ModContent.RESONANT_CRYSTAL_BLANK = s),
+			item("resonant_crystal", Item::new, s -> ModContent.RESONANT_CRYSTAL = s),
+			item("energy_pack", p -> new EnergyPackItem(EnergyPackItem.equipmentProperties(p)), s -> ModContent.ENERGY_PACK = s),
+			// Electric Drill (MOD-079): first powered hand tool — a diamond-tier pickaxe that runs on EU.
+			item("electric_drill", p -> new ElectricDrillItem(ElectricDrillItem.electricDrillProperties(p)), s -> ModContent.ELECTRIC_DRILL = s),
+			// Diamond-Tipped Electric Drill (MOD-321): the drill's upgrade tier — faster, switchable Silk Touch.
+			item("electric_drill_diamond_tip", p -> new ElectricDrillDiamondTipItem(
+					ElectricDrillDiamondTipItem.electricDrillDiamondTipProperties(p)), s -> ModContent.ELECTRIC_DRILL_DIAMOND_TIP = s),
+			// Netherite-Tipped Electric Drill (MOD-534): the drill's third tier — faster still, harder hitting,
+			// and the one tier with a bigger EU buffer of its own.
+			item("electric_drill_netherite_tip", p -> new ElectricDrillNetheriteTipItem(
+					ElectricDrillNetheriteTipItem.electricDrillNetheriteTipProperties(p)), s -> ModContent.ELECTRIC_DRILL_NETHERITE_TIP = s),
+			// Electric Chainsaw (MOD-337): the drill's wood-side counterpart — an EU axe for logs and leaves.
+			item("electric_chainsaw", p -> new ElectricChainsawItem(ElectricChainsawItem.electricChainsawProperties(p)), s -> ModContent.ELECTRIC_CHAINSAW = s),
+			// Diamond-Tipped Electric Chainsaw (MOD-374): the chainsaw's upgrade tier — faster, with a
+			// switchable Silk Touch mode that drops leaves as blocks.
+			item("electric_chainsaw_diamond_tip", p -> new ElectricChainsawDiamondTipItem(
+					ElectricChainsawDiamondTipItem.electricChainsawDiamondTipProperties(p)), s -> ModContent.ELECTRIC_CHAINSAW_DIAMOND_TIP = s),
+			// Electric Shovel (MOD-338): the earth-side member of the same line — an EU shovel for loose ground.
+			loaderItem("electric_shovel", s -> ModContent.ELECTRIC_SHOVEL = s),
+			// Diamond-Tipped Electric Shovel (MOD-481): the shovel's upgrade tier — faster, and its drops switch
+			// between normal and Silk Touch on the fly.
+			loaderItem("electric_shovel_diamond_tip", s -> ModContent.ELECTRIC_SHOVEL_DIAMOND_TIP = s),
+			// Electric Hoe (MOD-342): the farming member of the same line — an EU hoe that tills for free.
+			loaderItem("electric_hoe", s -> ModContent.ELECTRIC_HOE = s),
+			// Diamond-Tipped Electric Hoe (MOD-378): the hoe's upgrade tier — faster, and the plots it tills
+			// come out already watered.
+			loaderItem("electric_hoe_diamond_tip", s -> ModContent.ELECTRIC_HOE_DIAMOND_TIP = s),
+			// Electric Saber (MOD-149): the line's first weapon — EU per hit, plain sword when flat or off.
+			item("electric_saber", p -> new ElectricSaberItem(ElectricSaberItem.electricSaberProperties(p)), s -> ModContent.ELECTRIC_SABER = s),
+			// Electromagnet (MOD-132): EU item in any inventory slot that pulls loose drops toward the carrier.
+			item("electromagnet", p -> new MagnetItem(p.stacksTo(1)), s -> ModContent.ELECTROMAGNET = s),
+			// Jetpack (MOD-148): worn EU flight — thrust on held jump, powerless glide when drained.
+			item("jetpack", p -> new JetpackItem(JetpackItem.equipmentProperties(p)), s -> ModContent.JETPACK = s),
+			// Vacuum Capsule (MOD-063): empty (×64) + filled (×16, fluid in the capsule_fluid component).
+			item("vacuum_capsule", VacuumCapsuleItem::new, s -> ModContent.VACUUM_CAPSULE = s),
+			item("filled_vacuum_capsule", p -> new FilledCapsuleItem(p.stacksTo(FilledCapsuleItem.STACK_SIZE)
+					.craftRemainder(registeredItem("vacuum_capsule"))), s -> ModContent.FILLED_VACUUM_CAPSULE = s),
+			// Stock Display Frame (MOD-066). The entity type is resolved by id inside the factory, so it is
+			// read when the item is built, never at class-init: Fabric registers entity types before items
+			// in its entrypoint, and on NeoForge the ENTITY_TYPE RegisterEvent fires before ITEM.
+			item("stock_display_frame", p -> new StockDisplayFrameItem(stockDisplayFrameType(), p), s -> ModContent.STOCK_DISPLAY_FRAME_ITEM = s),
+			// Scythe (MOD-068): six material tiers, each an AOE foliage clearer. Registered like a hoe
+			// (.hoe(material, attackDamage, -1.0f) attaches the tool component + enchantability) but as
+			// ScytheItem, not HoeItem — the scythe must not till dirt on right-click, it clears its area
+			// instead. The eight tiers (material + AOE profile + attack bias) are declared once in the
+			// loader-neutral dev.alaindustrial.item.tool.ScytheTiers — both loaders register from the same list,
+			// so a balance tweak cannot drift between Fabric and NeoForge.
+			scythe(ScytheTiers.WOOD, s -> ModContent.SCYTHE_WOOD = s),
+			scythe(ScytheTiers.STONE, s -> ModContent.SCYTHE_STONE = s),
+			scythe(ScytheTiers.COPPER, s -> ModContent.SCYTHE_COPPER = s),
+			scythe(ScytheTiers.IRON, s -> ModContent.SCYTHE_IRON = s),
+			scythe(ScytheTiers.GOLD, s -> ModContent.SCYTHE_GOLD = s),
+			scythe(ScytheTiers.TEMPERED_IRON, s -> ModContent.SCYTHE_TEMPERED_IRON = s),
+			scythe(ScytheTiers.DIAMOND, s -> ModContent.SCYTHE_DIAMOND = s),
+			scythe(ScytheTiers.NETHERITE, s -> ModContent.SCYTHE_NETHERITE = s),
+			// Metal plates (MOD-078): plain ingredient items, ingot form. Made by the Forge Hammer (by hand)
+			// or the Compressor; recycled back to dust by the Macerator (except tempered_iron — no dust).
+			plain("copper_plate", s -> ModContent.COPPER_PLATE = s),
+			plain("gold_plate", s -> ModContent.GOLD_PLATE = s),
+			plain("iron_plate", s -> ModContent.IRON_PLATE = s),
+			plain("tin_plate", s -> ModContent.TIN_PLATE = s),
+			plain("silver_plate", s -> ModContent.SILVER_PLATE = s),
+			plain("nickel_plate", s -> ModContent.NICKEL_PLATE = s),
+			plain("uranium_plate", s -> ModContent.URANIUM_PLATE = s),
+			plain("palladium_plate", s -> ModContent.PALLADIUM_PLATE = s),
+			plain("tempered_iron_plate", s -> ModContent.TEMPERED_IRON_PLATE = s),
+			// Alloy plates + reinforced tier (MOD-460): same hammer/compressor path, no dust to recycle to.
+			plain("bronze_plate", s -> ModContent.BRONZE_PLATE = s),
+			plain("invar_plate", s -> ModContent.INVAR_PLATE = s),
+			plain("cupronickel_plate", s -> ModContent.CUPRONICKEL_PLATE = s),
+			plain("electrum_plate", s -> ModContent.ELECTRUM_PLATE = s),
+			plain("bronze_reinforced_plate", s -> ModContent.BRONZE_REINFORCED_PLATE = s),
+			plain("invar_reinforced_plate", s -> ModContent.INVAR_REINFORCED_PLATE = s),
+			plain("cupronickel_reinforced_plate", s -> ModContent.CUPRONICKEL_REINFORCED_PLATE = s),
+			plain("electrum_reinforced_plate", s -> ModContent.ELECTRUM_REINFORCED_PLATE = s),
+			// Forge Hammer (MOD-078): pre-machine hand tool — ingot + hammer on the grid → plate; the hammer
+			// stays and loses 1 durability per plate. The craft-remainder hook has a different signature on
+			// each loader, so the CLASS is loader-supplied (HammerItemFabric / HammerItemNeoForge) while the
+			// durability and the anvil repair stay shared, in HammerItem#hammerProperties.
+			loaderItem("forge_hammer", s -> ModContent.FORGE_HAMMER = s),
+			// Oil Bucket (MOD-238): the vanilla WATER_BUCKET pattern — BucketItem(fluid, props with
+			// craftRemainder(BUCKET).stacksTo(1)); the still fluid is resolved by id (see bucket()).
+			bucket("oil_bucket", "oil", s -> ModContent.OIL_BUCKET = s),
+			// Distillation fraction buckets (MOD-251) — same pattern, filled by the column's output tanks.
+			bucket("diesel_bucket", "diesel", s -> ModContent.DIESEL_BUCKET = s),
+			bucket("fuel_oil_bucket", "fuel_oil", s -> ModContent.FUEL_OIL_BUCKET = s),
+			// The organic chain (MOD-146/MOD-525) — same vanilla BucketItem pattern.
+			bucket("biofuel_bucket", "biofuel", s -> ModContent.BIOFUEL_BUCKET = s),
+			bucket("nutrient_solution_bucket", "nutrient_solution", s -> ModContent.NUTRIENT_SOLUTION_BUCKET = s),
+			// Block items.
+			blockItem("generator", s -> ModContent.GENERATOR_ITEM = s),
+			blockItem("geothermal_generator", s -> ModContent.GEOTHERMAL_GENERATOR_ITEM = s),
+			blockItem("solar_panel", s -> ModContent.SOLAR_PANEL_ITEM = s),
+			blockItem("moonlit_solar_panel", s -> ModContent.MOONLIT_SOLAR_PANEL_ITEM = s),
+			blockItem("daylight_solar_panel", s -> ModContent.DAYLIGHT_SOLAR_PANEL_ITEM = s),
+			blockItem("copper_cable", s -> ModContent.COPPER_CABLE_ITEM = s),
+			blockItem("tin_cable", s -> ModContent.TIN_CABLE_ITEM = s),
+			blockItem("gold_cable", s -> ModContent.GOLD_CABLE_ITEM = s),
+			blockItem("electrum_cable", s -> ModContent.ELECTRUM_CABLE_ITEM = s),
+			blockItem("insulated_copper_cable", s -> ModContent.INSULATED_COPPER_CABLE_ITEM = s),
+			blockItem("insulated_tin_cable", s -> ModContent.INSULATED_TIN_CABLE_ITEM = s),
+			blockItem("insulated_gold_cable", s -> ModContent.INSULATED_GOLD_CABLE_ITEM = s),
+			blockItem("insulated_electrum_cable", s -> ModContent.INSULATED_ELECTRUM_CABLE_ITEM = s),
+			// MOD-108: its own BlockItem subclass so the pipe can carry a tooltip (plain hint + Shift for the
+			// throughput numbers) — a plain blockItem() has none.
+			blockItem("item_pipe", p -> new ItemPipeBlockItem(registeredBlock("item_pipe"),
+					p.useBlockDescriptionPrefix()), s -> ModContent.ITEM_PIPE_ITEM = s),
+			blockItem("fluid_pipe", p -> new FluidPipeBlockItem(registeredBlock("fluid_pipe"),
+					p.useBlockDescriptionPrefix()), s -> ModContent.FLUID_PIPE_ITEM = s),
+			blockItem("macerator", s -> ModContent.MACERATOR_ITEM = s),
+			blockItem("battery_box", s -> ModContent.BATTERY_BOX_ITEM = s),
+			blockItem("cesu", s -> ModContent.CESU_ITEM = s),
+			blockItem("teleporter", s -> ModContent.TELEPORTER_ITEM = s),
+			blockItem("electric_furnace", s -> ModContent.ELECTRIC_FURNACE_ITEM = s),
+			blockItem("extractor", s -> ModContent.EXTRACTOR_ITEM = s),
+			blockItem("compressor", s -> ModContent.COMPRESSOR_ITEM = s),
+			blockItem("component_repair_bench", s -> ModContent.COMPONENT_REPAIR_BENCH_ITEM = s),
+			blockItem("canning_machine", s -> ModContent.CANNING_MACHINE_ITEM = s),
+			blockItem("sawmill", s -> ModContent.SAWMILL_ITEM = s),
+			blockItem("assembler", s -> ModContent.ASSEMBLER_ITEM = s),
+			blockItem("polymerizer", s -> ModContent.POLYMERIZER_ITEM = s),
+			// Distillation Column (MOD-251): one item raises the whole 1×1×3 tower; segments have no items.
+			blockItem("distillation_column", s -> ModContent.DISTILLATION_COLUMN_ITEM = s),
+			blockItem("rectification_section", s -> ModContent.RECTIFICATION_SECTION_ITEM = s),
+			blockItem("vulcanizer", s -> ModContent.VULCANIZER_ITEM = s),
+			blockItem("alloy_smelter", s -> ModContent.ALLOY_SMELTER_ITEM = s),
+			blockItem("galvanic_bath", s -> ModContent.GALVANIC_BATH_ITEM = s),
+			// The organic chain (MOD-146/MOD-525).
+			blockItem("fermenter", s -> ModContent.FERMENTER_ITEM = s),
+			blockItem("sprinkler", s -> ModContent.SPRINKLER_ITEM = s),
+			blockItem("thermal_centrifuge", s -> ModContent.THERMAL_CENTRIFUGE_ITEM = s),
+			// MOD-468, stage 1 — block items for the reactor shell.
+			blockItem("reactor_casing", s -> ModContent.REACTOR_CASING_ITEM = s),
+			blockItem("irradiated_soil", s -> ModContent.IRRADIATED_SOIL_ITEM = s),
+			blockItem("reactor_glass", s -> ModContent.REACTOR_GLASS_ITEM = s),
+			blockItem("reactor_port", s -> ModContent.REACTOR_PORT_ITEM = s),
+			blockItem("reactor_door", s -> ModContent.REACTOR_DOOR_ITEM = s),
+			blockItem("reactor_controller", s -> ModContent.REACTOR_CONTROLLER_ITEM = s),
+			blockItem("reactor_lamp", s -> ModContent.REACTOR_LAMP_ITEM = s),
+			blockItem("steam_nozzle", s -> ModContent.STEAM_NOZZLE_ITEM = s),
+			blockItem("reactor_outlet", s -> ModContent.REACTOR_OUTLET_ITEM = s),
+			blockItem("reactor_button", s -> ModContent.REACTOR_BUTTON_ITEM = s),
+			blockItem("reactor_lever", s -> ModContent.REACTOR_LEVER_ITEM = s),
+			blockItem("fuel_rod_assembly", s -> ModContent.FUEL_ROD_ASSEMBLY_ITEM = s),
+			blockItem("electric_heater", s -> ModContent.ELECTRIC_HEATER_ITEM = s),
+			blockItem("charge_pad", s -> ModContent.CHARGE_PAD_ITEM = s),
+			blockItem("energy_condenser", s -> ModContent.ENERGY_CONDENSER_ITEM = s),
+			blockItem("mob_repeller", s -> ModContent.MOB_REPELLER_ITEM = s),
+			blockItem("mob_repeller_mv", s -> ModContent.MOB_REPELLER_MV_ITEM = s),
+			blockItem("mob_repeller_hv", s -> ModContent.MOB_REPELLER_HV_ITEM = s),
+			blockItem("incubator", s -> ModContent.INCUBATOR_ITEM = s),
+			blockItem("trellis", s -> ModContent.TRELLIS_ITEM = s),
+			// MOD-537 — the seeds carry the flower's id-in-name-only ("kok_sagyz_seeds"): planting is just
+			// placing the block, so a BlockItem is exactly right. The root has NO block item: it is dug,
+			// never placed — the plain "kok_sagyz_root" item above is the harvest.
+			blockItem("kok_sagyz_seeds", "kok_sagyz", s -> ModContent.KOK_SAGYZ_SEEDS = s),
+			// MOD-505 — the greenhouse. The bud has no item: it is grown, never placed.
+			blockItem("crystal_farm_floor", s -> ModContent.CRYSTAL_FARM_FLOOR_ITEM = s),
+			blockItem("crystal_farm_glass", s -> ModContent.CRYSTAL_FARM_GLASS_ITEM = s),
+			blockItem("crystal_farm_door", s -> ModContent.CRYSTAL_FARM_DOOR_ITEM = s),
+			blockItem("crystal_farm_controller", s -> ModContent.CRYSTAL_FARM_CONTROLLER_ITEM = s),
+			blockItem("crystal_seedbed", s -> ModContent.CRYSTAL_SEEDBED_ITEM = s),
+			blockItem("pump", s -> ModContent.PUMP_ITEM = s),
+			blockItem("garden_drone_station", s -> ModContent.GARDEN_DRONE_STATION_ITEM = s),
+			plain("garden_drone", s -> ModContent.GARDEN_DRONE = s),
+			blockItem("fluid_tank", p -> new FluidTankBlockItem(registeredBlock("fluid_tank"),
+					p.useBlockDescriptionPrefix()), s -> ModContent.FLUID_TANK_ITEM = s),
+			blockItem("water_mill", s -> ModContent.WATER_MILL_ITEM = s),
+			blockItem("wind_mill", s -> ModContent.WIND_MILL_ITEM = s),
+			blockItem("high_altitude_wind_mill", s -> ModContent.HIGH_ALTITUDE_WIND_MILL_ITEM = s),
+			blockItem("storm_wind_mill", s -> ModContent.STORM_WIND_MILL_ITEM = s),
+			blockItem("lightning_rod_generator", s -> ModContent.LIGHTNING_ROD_GENERATOR_ITEM = s),
+			blockItem("creative_energy_source", "creative_energy_source", CREATIVE_ONLY_ITEM, s -> ModContent.CREATIVE_ENERGY_SOURCE_ITEM = s),
+			blockItem("tin_ore", s -> ModContent.TIN_ORE_ITEM = s),
+			blockItem("deepslate_tin_ore", s -> ModContent.DEEPSLATE_TIN_ORE_ITEM = s),
+			blockItem("silver_ore", s -> ModContent.SILVER_ORE_ITEM = s),
+			blockItem("deepslate_silver_ore", s -> ModContent.DEEPSLATE_SILVER_ORE_ITEM = s),
+			blockItem("nickel_ore", s -> ModContent.NICKEL_ORE_ITEM = s),
+			blockItem("deepslate_nickel_ore", s -> ModContent.DEEPSLATE_NICKEL_ORE_ITEM = s),
+			blockItem("sulfur_ore", s -> ModContent.SULFUR_ORE_ITEM = s),
+			blockItem("deepslate_sulfur_ore", s -> ModContent.DEEPSLATE_SULFUR_ORE_ITEM = s),
+			blockItem("uranium_ore", s -> ModContent.URANIUM_ORE_ITEM = s),
+			blockItem("deepslate_uranium_ore", s -> ModContent.DEEPSLATE_URANIUM_ORE_ITEM = s),
+			blockItem("palladium_ore", s -> ModContent.PALLADIUM_ORE_ITEM = s),
+			blockItem("iron_chest", s -> ModContent.IRON_CHEST_ITEM = s),
+			blockItem("storage_module", s -> ModContent.STORAGE_MODULE_ITEM = s),
+			blockItem("iron_furnace", s -> ModContent.IRON_FURNACE_ITEM = s),
+			blockItem("silver_chest", s -> ModContent.SILVER_CHEST_ITEM = s),
+			blockItem("gold_chest", s -> ModContent.GOLD_CHEST_ITEM = s),
+			blockItem("electrum_chest", s -> ModContent.ELECTRUM_CHEST_ITEM = s),
+			blockItem("shielding_chest", s -> ModContent.SHIELDING_CHEST_ITEM = s),
+			blockItem("tempered_iron_block", s -> ModContent.TEMPERED_IRON_BLOCK_ITEM = s),
+			// MOD-225 block-items.
+			blockItem("machine_casing", s -> ModContent.MACHINE_CASING_ITEM = s),
+			blockItem("advanced_machine_casing", s -> ModContent.ADVANCED_MACHINE_CASING_ITEM = s),
+			blockItem("silver_plate_block", s -> ModContent.SILVER_PLATE_BLOCK_ITEM = s),
+			blockItem("tempered_iron_plate_block", s -> ModContent.TEMPERED_IRON_PLATE_BLOCK_ITEM = s),
+			blockItem("industrial_workbench", s -> ModContent.INDUSTRIAL_WORKBENCH_ITEM = s),
+			// Enriched Uranium Torch (MOD-085): a StandingAndWallBlockItem (like vanilla Items.TORCH) so using it
+			// on a wall places the wall variant and on the floor the standing variant. The wall block has no item
+			// of its own — this item maps to both blocks (StandingAndWallBlockItem#registerBlocks).
+			blockItem("enriched_uranium_torch", p -> new StandingAndWallBlockItem(registeredBlock("enriched_uranium_torch"),
+					registeredBlock("enriched_uranium_wall_torch"), Direction.DOWN,
+					p.useBlockDescriptionPrefix()), s -> ModContent.ENRICHED_URANIUM_TORCH_ITEM = s));
 
 	// ─────────────────────────────────────────────────────────────────────────────────────────
 	// BlockEntity types (MOD-307)

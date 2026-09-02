@@ -1,6 +1,11 @@
 package dev.alaindustrial.registry;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Loader-neutral source of truth for public creative-inventory visibility.
@@ -9,16 +14,14 @@ import net.minecraft.world.level.ItemLike;
  * such as non-copper cables stay out of both the mod tab and the vanilla tabs until their
  * progression path is restored. (The T2 wind mills were restored to the player in MOD-172.)
  *
- * <p><b>Why there is no group for vanilla Combat / Tools &amp; Utilities</b> (MOD-477). There used to
- * be — {@code combat(Sink)} and {@code toolsAndUtilities(Sink)} — and both loaders called them, until
- * the mod's gear had to sit NEXT TO the matching vanilla gear rather than at the end of the tab. A
- * {@link Sink} appends; positioning needs an anchor ({@code insertAfter(IRON_SWORD, …)}), which a Sink
- * cannot express. So the two loaders took those two tabs over and kept them by hand, the groups here
- * stopped being called, and for six weeks they looked like working code while nothing read them — new
- * armour sets were added to a method the game never runs. They are gone rather than reconnected: their
- * contents had long since diverged from what the loaders actually inject, so "just call them again"
- * would silently change what the player sees. Giving Sink anchors and unifying the two tabs is a
- * feature of its own, not a cleanup — see MOD-477 for the full comparison.
+ * <p><b>Vanilla Combat and Tools &amp; Utilities are back here</b> (MOD-477 → MOD-555). They were groups
+ * once, then the mod's gear had to sit NEXT TO the matching vanilla gear rather than at the end of the
+ * tab: a {@link Sink} only appends, and positioning needs an anchor. So the two loaders took those tabs
+ * over and kept a copy each — and the copies drifted, which is MOD-478 (three powered tools reached the
+ * vanilla tab on Fabric and not on NeoForge). {@link AnchoredSink} is the missing verb; with it the two
+ * lists collapse back into {@link #combat} and {@link #toolsAndUtilities}, and a loader supplies only its
+ * own way of placing an entry after an anchor. The lists were reunified from the Fabric copy, which
+ * MOD-478 had already made item-for-item equal to the NeoForge one.
  */
 public final class CreativeTabContent {
 	private CreativeTabContent() {
@@ -27,6 +30,21 @@ public final class CreativeTabContent {
 	@FunctionalInterface
 	public interface Sink {
 		void accept(ItemLike item);
+	}
+
+	/**
+	 * A {@link Sink} that can also POSITION an entry, for the vanilla tabs where the mod's gear has to
+	 * stand next to the matching vanilla gear rather than at the end (MOD-555).
+	 *
+	 * <p>One verb, because that is all the two loaders have in common. Fabric's tab output takes an anchor
+	 * and a whole group at once ({@code insertAfter(anchor, a, b, c)}); NeoForge's event takes one stack at
+	 * a time and asserts the anchor is present, so its adapter chains the group — anchor → a, a → b, b → c —
+	 * and falls back to an append when a third-party mod has removed the anchor (MOD-349). Both produce the
+	 * same order; neither shape belongs in this file.
+	 */
+	public interface AnchoredSink extends Sink {
+		/** Places {@code items} directly after {@code anchor}, in the order given. */
+		void insertAfter(ItemLike anchor, List<ItemLike> items);
 	}
 
 	/** Logged once per run: a broken handle would otherwise print the same line for every tab rebuild. */
@@ -45,10 +63,17 @@ public final class CreativeTabContent {
 	 * fails the BUILD when a registered item stops being listed, so a real gap is caught long before a
 	 * player sees it. What this guard removes is the crash as a failure mode.
 	 */
-	private static void show(Sink out, java.util.function.Supplier<? extends ItemLike> handle) {
-		ItemLike item;
+	private static void show(Sink out, Supplier<? extends ItemLike> handle) {
+		ItemLike item = resolve(handle);
+		if (item != null) {
+			out.accept(item);
+		}
+	}
+
+	/** The item behind a handle, or {@code null} if it cannot be resolved. See {@link #show}. */
+	private static @Nullable ItemLike resolve(Supplier<? extends ItemLike> handle) {
 		try {
-			item = handle.get();
+			return handle.get();
 		} catch (RuntimeException e) {
 			if (!warnedAboutMissingEntry) {
 				warnedAboutMissingEntry = true;
@@ -56,11 +81,45 @@ public final class CreativeTabContent {
 						"[creative] an entry could not be resolved and was skipped; the rest of the tab is"
 								+ " unaffected. Further occurrences this run are not logged.", e);
 			}
+			return null;
+		}
+	}
+
+	/**
+	 * Place {@code entries} after a VANILLA anchor. Unresolvable entries are skipped one by one, the same
+	 * way {@link #show} skips them — a tab is a display, and it must degrade to one icon fewer.
+	 */
+	@SafeVarargs
+	private static void after(AnchoredSink out, ItemLike anchor, Supplier<? extends ItemLike>... entries) {
+		List<ItemLike> items = resolveAll(entries);
+		if (!items.isEmpty()) {
+			out.insertAfter(anchor, items);
+		}
+	}
+
+	/**
+	 * Place {@code entries} after one of the mod's OWN items, already placed by an earlier call. An
+	 * anchor that cannot be resolved takes its whole group with it: there is nowhere to put them.
+	 */
+	@SafeVarargs
+	private static void after(AnchoredSink out, Supplier<? extends ItemLike> anchor,
+			Supplier<? extends ItemLike>... entries) {
+		ItemLike resolvedAnchor = resolve(anchor);
+		if (resolvedAnchor == null) {
 			return;
 		}
-		if (item != null) {
-			out.accept(item);
+		after(out, resolvedAnchor, entries);
+	}
+
+	private static List<ItemLike> resolveAll(Supplier<? extends ItemLike>[] handles) {
+		List<ItemLike> items = new ArrayList<>(handles.length);
+		for (Supplier<? extends ItemLike> handle : handles) {
+			ItemLike item = resolve(handle);
+			if (item != null) {
+				items.add(item);
+			}
 		}
+		return items;
 	}
 
 	/**
@@ -109,6 +168,67 @@ public final class CreativeTabContent {
 		blocks(out);
 		// 13 - the armour and weapon lines close the tab, tempered iron then Fluxweave.
 		wearablesAndWeapons(out);
+	}
+
+	/**
+	 * The mod's contribution to the VANILLA Combat tab (MOD-478 → MOD-555): the tempered-iron weapon and
+	 * armour line, each piece beside the vanilla iron piece it upgrades.
+	 *
+	 * <p>Order is load-bearing between statements, not only within them: an entry anchored on one of the
+	 * mod's own items can only be placed once that item is in the tab. Anchors on vanilla items are
+	 * independent of each other, so their statements may be in any order — the loaders used to write these
+	 * two lists in different orders for that reason, and produced the same tab.
+	 */
+	public static void combat(AnchoredSink out) {
+		after(out, Items.IRON_SWORD, ModContent.TEMPERED_IRON_SWORD);
+		after(out, Items.IRON_BOOTS, ModContent.TEMPERED_IRON_HELMET, ModContent.TEMPERED_IRON_CHESTPLATE,
+				ModContent.TEMPERED_IRON_LEGGINGS, ModContent.TEMPERED_IRON_BOOTS);
+		// The Energy Pack is worn in the chest slot, so a player looking for chest gear finds it here too —
+		// it also sits with the other powered items under Tools & Utilities below.
+		after(out, ModContent.TEMPERED_IRON_BOOTS, ModContent.ENERGY_PACK);
+		// The Jetpack is chest gear too (MOD-148) — it sits right after the pack here.
+		after(out, ModContent.ENERGY_PACK, ModContent.JETPACK);
+	}
+
+	/**
+	 * The mod's contribution to the VANILLA Tools &amp; Utilities tab (MOD-478 → MOD-555): each scythe
+	 * beside the vanilla hoe tier it matches, the tempered-iron tool set between iron and gold, and the
+	 * powered gear appended at the end.
+	 *
+	 * <p>The powered tools are appended rather than anchored on purpose — there is no vanilla tool they
+	 * upgrade, so there is nothing to stand beside. This list is exactly what MOD-478 restored on NeoForge
+	 * after two releases in which the base chainsaw, shovel and hoe reached this tab on Fabric only.
+	 */
+	public static void toolsAndUtilities(AnchoredSink out) {
+		// Each scythe sits right after the matching vanilla hoe tier. The iron scythe follows the vanilla
+		// iron hoe; the tempered-iron scythe follows the mod's own tempered-iron hoe, placed just below.
+		after(out, Items.IRON_HOE, ModContent.SCYTHE_IRON);
+		// The tempered-iron tool set is the mod's tier between iron and gold, so it follows the iron scythe
+		// right after the vanilla iron hoe.
+		after(out, ModContent.SCYTHE_IRON, ModContent.TEMPERED_IRON_PICKAXE, ModContent.TEMPERED_IRON_AXE,
+				ModContent.TEMPERED_IRON_SHOVEL, ModContent.TEMPERED_IRON_HOE);
+		after(out, Items.WOODEN_HOE, ModContent.SCYTHE_WOOD);
+		after(out, Items.STONE_HOE, ModContent.SCYTHE_STONE);
+		after(out, Items.COPPER_HOE, ModContent.SCYTHE_COPPER);
+		after(out, ModContent.TEMPERED_IRON_HOE, ModContent.SCYTHE_TEMPERED_IRON);
+		after(out, Items.GOLDEN_HOE, ModContent.SCYTHE_GOLD);
+		after(out, Items.DIAMOND_HOE, ModContent.SCYTHE_DIAMOND);
+		after(out, Items.NETHERITE_HOE, ModContent.SCYTHE_NETHERITE);
+		after(out, Items.COMPASS, ModContent.NETWORK_ANALYZER);
+		show(out, ModContent.WRENCH);
+		show(out, ModContent.BATTERY_POUCH);
+		show(out, ModContent.ENERGY_PACK);
+		show(out, ModContent.ELECTRIC_DRILL);
+		show(out, ModContent.ELECTRIC_DRILL_DIAMOND_TIP);
+		show(out, ModContent.ELECTRIC_DRILL_NETHERITE_TIP);
+		show(out, ModContent.ELECTRIC_CHAINSAW);
+		show(out, ModContent.ELECTRIC_CHAINSAW_DIAMOND_TIP);
+		show(out, ModContent.ELECTRIC_SHOVEL);
+		show(out, ModContent.ELECTRIC_SHOVEL_DIAMOND_TIP);
+		show(out, ModContent.ELECTRIC_HOE);
+		show(out, ModContent.ELECTRIC_HOE_DIAMOND_TIP);
+		show(out, ModContent.ELECTROMAGNET);
+		show(out, ModContent.JETPACK);
 	}
 
 	/** The eight metal plates (MOD-078), in the mod's canonical metal order. */

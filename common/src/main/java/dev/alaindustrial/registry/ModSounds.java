@@ -1,402 +1,159 @@
 package dev.alaindustrial.registry;
 
 import dev.alaindustrial.Industrialization;
+import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
-import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 
 /**
- * Platform-neutral sound handle (MOD-022 facade). NeoForge freezes the vanilla {@code SOUND_EVENT}
- * registry before mod construction, so a direct {@code Registry.register} (fine on Fabric) throws
- * {@code Registry is already frozen} there. Each loader binds {@link #MACERATOR_GRIND} during its own
- * registration — Fabric via an eager {@code Registry.register}, NeoForge via a {@code DeferredRegister}
- * holder (itself a {@link Supplier}) — and content reads it lazily through {@code .get()}.
+ * Every sound event the mod registers, declared once for both loaders (MOD-022 facade, MOD-555).
+ *
+ * <p>NeoForge freezes the vanilla {@code SOUND_EVENT} registry before mod construction, so a direct
+ * {@code Registry.register} (fine on Fabric) throws {@code Registry is already frozen} there. The
+ * registration MECHANISM therefore has to differ per loader — Fabric registers eagerly during init,
+ * NeoForge queues on a {@code DeferredRegister} — but nothing else does: {@link #SOUNDS} says which
+ * events exist, under which id, with which audible range, and into which handle the result is bound.
+ * Each loader replays that one list in a single loop.
+ *
+ * <p><b>Before MOD-555 each event was written three times</b> — an id constant plus a {@code create*}
+ * factory here, an eager registration line in {@code IndustrializationFabric}, and a
+ * {@code DeferredHolder} field plus a binding line in {@code ModSoundsNeoForge}. Two of the three lived
+ * in loader files, so a sound added to one loader and forgotten on the other compiled, tested green and
+ * went silent for half the players. No compiler and no test could have said so.
+ *
+ * <p><b>The handles below are what content code reads</b> ({@code ModSounds.MACERATOR_GRIND.get()}); the
+ * replaying loader binds them. Reading one before its loader has run throws with the handle's name
+ * rather than returning null — see {@link #unbound}.
  */
 public final class ModSounds {
 
-	/** The registry id, shared by both loaders' registration. */
-	public static final Identifier MACERATOR_GRIND_ID = Industrialization.id("macerator_grind");
-
-	/** Bound once per loader before any block entity plays it; unbound = loud failure, never a silent NPE. */
-	public static Supplier<SoundEvent> MACERATOR_GRIND = () -> {
-		throw new IllegalStateException("ModSounds.MACERATOR_GRIND read before its loader bound it");
-	};
-
-	/** Build the event instance both loaders register (variable range, like vanilla machine sounds). */
-	public static SoundEvent createMaceratorGrind() {
-		return SoundEvent.createVariableRangeEvent(MACERATOR_GRIND_ID);
-	}
-
-	/** The registry id for the generator/geothermal ambient engine hum. */
-	public static final Identifier GENERATOR_HUM_ID = Industrialization.id("generator_hum");
-
-	/** Bound once per loader before any block plays it; unbound = loud failure, never a silent NPE. */
-	public static Supplier<SoundEvent> GENERATOR_HUM = () -> {
-		throw new IllegalStateException("ModSounds.GENERATOR_HUM read before its loader bound it");
-	};
-
-	/** Build the generator-hum event instance both loaders register. */
-	public static SoundEvent createGeneratorHum() {
-		return SoundEvent.createVariableRangeEvent(GENERATOR_HUM_ID);
-	}
-
-	/** The registry id for the electric furnace ambient fire-roar hum. */
-	public static final Identifier ELECTRIC_FURNACE_HUM_ID = Industrialization.id("electric_furnace");
-
-	/** Bound once per loader before any block plays it; unbound = loud failure, never a silent NPE. */
-	public static Supplier<SoundEvent> ELECTRIC_FURNACE_HUM = () -> {
-		throw new IllegalStateException("ModSounds.ELECTRIC_FURNACE_HUM read before its loader bound it");
-	};
-
-	/** Build the electric-furnace-hum event instance both loaders register. */
-	public static SoundEvent createElectricFurnaceHum() {
-		return SoundEvent.createVariableRangeEvent(ELECTRIC_FURNACE_HUM_ID);
-	}
-
-	/** The registry id for the solar panel ambient hum (lit-less generators — pattern C). */
-	public static final Identifier SOLAR_PANEL_HUM_ID = Industrialization.id("solar_panel_hum");
-
-	/** Bound once per loader before any block plays it; unbound = loud failure, never a silent NPE. */
-	public static Supplier<SoundEvent> SOLAR_PANEL_HUM = () -> {
-		throw new IllegalStateException("ModSounds.SOLAR_PANEL_HUM read before its loader bound it");
-	};
-
 	/**
-	 * Build the solar-panel-hum event instance both loaders register. Fixed 10-block audible range
-	 * (vs the generator's variable {@code /16}): solar farms place many sources close together, and
-	 * each stacks into the others, so each panel is tuned shorter-range than a lone generator to keep
-	 * a farm from becoming a wall of sound. Per-block {@code humVolume()} (0.28) sets the loudness.
-	 */
-	public static SoundEvent createSolarPanelHum() {
-		return SoundEvent.createFixedRangeEvent(SOLAR_PANEL_HUM_ID, 10.0f);
-	}
-
-	/** The registry id for the iron chest open sound (lid lifts). */
-	public static final Identifier IRON_CHEST_OPEN_ID = Industrialization.id("iron_chest_open");
-
-	/** Bound once per loader before the chest BE plays it; unbound = loud failure, never a silent NPE. */
-	public static Supplier<SoundEvent> IRON_CHEST_OPEN = () -> {
-		throw new IllegalStateException("ModSounds.IRON_CHEST_OPEN read before its loader bound it");
-	};
-
-	/** Build the iron-chest-open event instance both loaders register. */
-	public static SoundEvent createIronChestOpen() {
-		return SoundEvent.createVariableRangeEvent(IRON_CHEST_OPEN_ID);
-	}
-
-	/** The registry id for the iron chest close sound (lid drops). */
-	public static final Identifier IRON_CHEST_CLOSE_ID = Industrialization.id("iron_chest_close");
-
-	/** Bound once per loader before the chest BE plays it; unbound = loud failure, never a silent NPE. */
-	public static Supplier<SoundEvent> IRON_CHEST_CLOSE = () -> {
-		throw new IllegalStateException("ModSounds.IRON_CHEST_CLOSE read before its loader bound it");
-	};
-
-	/** Build the iron-chest-close event instance both loaders register. */
-	public static SoundEvent createIronChestClose() {
-		return SoundEvent.createVariableRangeEvent(IRON_CHEST_CLOSE_ID);
-	}
-
-	/** The registry id for the scythe swing/cut sound (MOD-068), played once per successful AOE clear. */
-	public static final Identifier SCYTHE_SWING_ID = Industrialization.id("scythe_swing");
-
-	/** Bound once per loader before the scythe plays it; unbound = loud failure, never a silent NPE. */
-	public static Supplier<SoundEvent> SCYTHE_SWING = () -> {
-		throw new IllegalStateException("ModSounds.SCYTHE_SWING read before its loader bound it");
-	};
-
-	/** Build the scythe-swing event instance both loaders register. */
-	public static SoundEvent createScytheSwing() {
-		return SoundEvent.createVariableRangeEvent(SCYTHE_SWING_ID);
-	}
-
-	/** The registry id for the extractor working loop (MOD-143) — a single lit machine, pattern A. */
-	public static final Identifier EXTRACTOR_HUM_ID = Industrialization.id("extractor_hum");
-
-	/** Bound once per loader before any block plays it; unbound = loud failure, never a silent NPE. */
-	public static Supplier<SoundEvent> EXTRACTOR_HUM = () -> {
-		throw new IllegalStateException("ModSounds.EXTRACTOR_HUM read before its loader bound it");
-	};
-
-	/** Build the extractor-hum event instance both loaders register (variable range, like the macerator). */
-	public static SoundEvent createExtractorHum() {
-		return SoundEvent.createVariableRangeEvent(EXTRACTOR_HUM_ID);
-	}
-
-	/** The registry id for the water-mill working loop (MOD-143) — lit-less passive generator, pattern C. */
-	public static final Identifier WATER_MILL_HUM_ID = Industrialization.id("water_mill_hum");
-
-	/** Bound once per loader before any block plays it; unbound = loud failure, never a silent NPE. */
-	public static Supplier<SoundEvent> WATER_MILL_HUM = () -> {
-		throw new IllegalStateException("ModSounds.WATER_MILL_HUM read before its loader bound it");
-	};
-
-	/**
-	 * Build the water-mill-hum event instance both loaders register. Fixed 12-block audible range (like
-	 * the solar panel's, not the generator's variable {@code /16}): water mills are passive generators
-	 * players line up in rows along a channel, so each is tuned to a short fixed range to keep a mill row
-	 * from becoming a wall of sound. Per-block {@code humVolume()} sets the loudness.
-	 */
-	public static SoundEvent createWaterMillHum() {
-		return SoundEvent.createFixedRangeEvent(WATER_MILL_HUM_ID, 12.0f);
-	}
-
-	/** The registry id for the wind-mill working loop (MOD-143) — lit-less passive generator, pattern C. */
-	public static final Identifier WIND_MILL_HUM_ID = Industrialization.id("wind_mill_hum");
-
-	/** Bound once per loader before any block plays it; unbound = loud failure, never a silent NPE. */
-	public static Supplier<SoundEvent> WIND_MILL_HUM = () -> {
-		throw new IllegalStateException("ModSounds.WIND_MILL_HUM read before its loader bound it");
-	};
-
-	/**
-	 * Build the wind-mill-hum event instance both loaders register. Fixed 12-block audible range, same
-	 * reasoning as the water mill: wind farms stack many rotors close together, so each is tuned to a
-	 * short fixed range rather than the lone generator's variable radius.
-	 */
-	public static SoundEvent createWindMillHum() {
-		return SoundEvent.createFixedRangeEvent(WIND_MILL_HUM_ID, 12.0f);
-	}
-
-	/** The registry id for the compressor working loop (MOD-143) — a single lit machine, pattern A. */
-	public static final Identifier COMPRESSOR_HUM_ID = Industrialization.id("compressor_hum");
-
-	/** Bound once per loader before any block plays it; unbound = loud failure, never a silent NPE. */
-	public static Supplier<SoundEvent> COMPRESSOR_HUM = () -> {
-		throw new IllegalStateException("ModSounds.COMPRESSOR_HUM read before its loader bound it");
-	};
-
-	/** Build the compressor-hum event instance both loaders register (variable range, like the macerator). */
-	public static SoundEvent createCompressorHum() {
-		return SoundEvent.createVariableRangeEvent(COMPRESSOR_HUM_ID);
-	}
-
-	/** The registry id for the garden drone's flight loop (MOD-329) — plays while the drone is airborne. */
-	public static final Identifier GARDEN_DRONE_FLY_ID = Industrialization.id("garden_drone_fly");
-
-	/** Bound once per loader before any block plays it; unbound = loud failure, never a silent NPE. */
-	public static Supplier<SoundEvent> GARDEN_DRONE_FLY = () -> {
-		throw new IllegalStateException("ModSounds.GARDEN_DRONE_FLY read before its loader bound it");
-	};
-
-	/**
-	 * Build the drone-flight-loop event both loaders register. Fixed <b>8</b>-block range — the shortest
-	 * of any loop in the mod, and deliberately so: this is the only sound whose source moves, and it
-	 * flies to the player rather than waiting to be walked up to. A wider radius would mean a drone
-	 * crossing the far side of its own farm is still audible indoors.
-	 */
-	public static SoundEvent createGardenDroneFly() {
-		return SoundEvent.createFixedRangeEvent(GARDEN_DRONE_FLY_ID, 8.0f);
-	}
-
-	/** The registry id for the pump working loop (MOD-143) — a single lit machine, pattern A. */
-	public static final Identifier PUMP_HUM_ID = Industrialization.id("pump_hum");
-
-	/** Bound once per loader before any block plays it; unbound = loud failure, never a silent NPE. */
-	public static Supplier<SoundEvent> PUMP_HUM = () -> {
-		throw new IllegalStateException("ModSounds.PUMP_HUM read before its loader bound it");
-	};
-
-	/** Build the pump-hum event instance both loaders register (variable range, like the compressor). */
-	public static SoundEvent createPumpHum() {
-		return SoundEvent.createVariableRangeEvent(PUMP_HUM_ID);
-	}
-
-	/** The registry id for the canning machine's working loop — a single lit machine, pattern A. */
-	public static final Identifier CANNING_MACHINE_HUM_ID = Industrialization.id("canning_machine_hum");
-
-	/** Bound once per loader before any block plays it; unbound = loud failure, never a silent NPE. */
-	public static Supplier<SoundEvent> CANNING_MACHINE_HUM = () -> {
-		throw new IllegalStateException("ModSounds.CANNING_MACHINE_HUM read before its loader bound it");
-	};
-
-	/** Build the canning-machine-hum event instance both loaders register (variable range, single stationary machine). */
-	public static SoundEvent createCanningMachineHum() {
-		return SoundEvent.createVariableRangeEvent(CANNING_MACHINE_HUM_ID);
-	}
-
-	/** The registry id for the galvanic bath's working loop — a single lit machine, pattern A. */
-	public static final Identifier GALVANIC_BATH_HUM_ID = Industrialization.id("galvanic_bath_hum");
-
-	/** Bound once per loader before any block plays it; unbound = loud failure, never a silent NPE. */
-	public static Supplier<SoundEvent> GALVANIC_BATH_HUM = () -> {
-		throw new IllegalStateException("ModSounds.GALVANIC_BATH_HUM read before its loader bound it");
-	};
-
-	/** Build the galvanic-bath-hum event instance both loaders register (variable range, single stationary machine). */
-	public static SoundEvent createGalvanicBathHum() {
-		return SoundEvent.createVariableRangeEvent(GALVANIC_BATH_HUM_ID);
-	}
-
-	/** The registry id for the sawmill working loop (MOD-447) — a single lit machine, pattern A. */
-	public static final Identifier SAWMILL_HUM_ID = Industrialization.id("sawmill_hum");
-
-	/** Bound once per loader before any block plays it; unbound = loud failure, never a silent NPE. */
-	public static Supplier<SoundEvent> SAWMILL_HUM = () -> {
-		throw new IllegalStateException("ModSounds.SAWMILL_HUM read before its loader bound it");
-	};
-
-	/** Build the sawmill-hum event instance both loaders register (variable range, single stationary machine). */
-	public static SoundEvent createSawmillHum() {
-		return SoundEvent.createVariableRangeEvent(SAWMILL_HUM_ID);
-	}
-
-	/** The registry id for the polymerizer working loop (MOD-447) — a single lit machine, pattern A. */
-	public static final Identifier POLYMERIZER_HUM_ID = Industrialization.id("polymerizer_hum");
-
-	/** Bound once per loader before any block plays it; unbound = loud failure, never a silent NPE. */
-	public static Supplier<SoundEvent> POLYMERIZER_HUM = () -> {
-		throw new IllegalStateException("ModSounds.POLYMERIZER_HUM read before its loader bound it");
-	};
-
-	/** Build the polymerizer-hum event instance both loaders register (variable range, single stationary machine). */
-	public static SoundEvent createPolymerizerHum() {
-		return SoundEvent.createVariableRangeEvent(POLYMERIZER_HUM_ID);
-	}
-
-	/**
-	 * The registry id for the charging station's working loop (MOD-447) — plays while the station is
-	 * actively charging someone standing on it (pattern C: the blockstate is {@code ChargePadState.CHARGING},
-	 * not {@code lit}). Variable range, single stationary block.
-	 */
-	public static final Identifier CHARGE_PAD_HUM_ID = Industrialization.id("charge_pad_hum");
-
-	/** Bound once per loader before any block plays it; unbound = loud failure, never a silent NPE. */
-	public static Supplier<SoundEvent> CHARGE_PAD_HUM = () -> {
-		throw new IllegalStateException("ModSounds.CHARGE_PAD_HUM read before its loader bound it");
-	};
-
-	/** Build the charge-pad-hum event instance both loaders register (variable range, single stationary block). */
-	public static SoundEvent createChargePadHum() {
-		return SoundEvent.createVariableRangeEvent(CHARGE_PAD_HUM_ID);
-	}
-
-	/**
-	 * The registry id for the energy condenser's working loop (MOD-447) — plays while the condenser is
-	 * packing grid surplus into clots (pattern A: the block carries {@code BlockStateProperties.LIT},
-	 * the same property {@code LitMachineBlock.LIT} aliases, so the default lit predicate applies).
-	 */
-	public static final Identifier ENERGY_CONDENSER_HUM_ID = Industrialization.id("energy_condenser_hum");
-
-	/** Bound once per loader before any block plays it; unbound = loud failure, never a silent NPE. */
-	public static Supplier<SoundEvent> ENERGY_CONDENSER_HUM = () -> {
-		throw new IllegalStateException("ModSounds.ENERGY_CONDENSER_HUM read before its loader bound it");
-	};
-
-	/** Build the energy-condenser-hum event instance both loaders register (variable range, single stationary machine). */
-	public static SoundEvent createEnergyCondenserHum() {
-		return SoundEvent.createVariableRangeEvent(ENERGY_CONDENSER_HUM_ID);
-	}
-
-	/**
-	 * The registry id for the component repair bench's working loop (MOD-447) — a single lit machine,
-	 * pattern A: soft rhythmic hammer taps with a metallic ring, playing only while a repair is running.
-	 */
-	public static final Identifier COMPONENT_REPAIR_BENCH_HUM_ID = Industrialization.id("component_repair_bench_hum");
-
-	/** Bound once per loader before any block plays it; unbound = loud failure, never a silent NPE. */
-	public static Supplier<SoundEvent> COMPONENT_REPAIR_BENCH_HUM = () -> {
-		throw new IllegalStateException("ModSounds.COMPONENT_REPAIR_BENCH_HUM read before its loader bound it");
-	};
-
-	/** Build the component-repair-bench-hum event instance both loaders register (variable range, single stationary machine). */
-	public static SoundEvent createComponentRepairBenchHum() {
-		return SoundEvent.createVariableRangeEvent(COMPONENT_REPAIR_BENCH_HUM_ID);
-	}
-
-	/**
-	 * The registry id for the reactor's core drone (MOD-472) — the deep hum of a running active zone.
+	 * One sound event: its registry path, how to build it, and where to publish the registered result.
 	 *
-	 * <p>Played per <em>voiced column</em> rather than once at the controller: the noise belongs to the
-	 * fuel racks standing on the floor, and a room the player walks around should sound like a hall, not
-	 * like a panel on the wall. The controller picks which columns are voiced (see
-	 * {@code ReactorControllerBlockEntity}) so a packed room cannot stack dozens of copies.
+	 * <p>The factory takes no argument and closes over the id, because the two loaders hand it different
+	 * things — Fabric calls it and registers the result itself, NeoForge passes it straight to
+	 * {@code DeferredRegister.register(String, Supplier)} — while the {@code SoundEvent} carries its own
+	 * identifier either way.
+	 *
+	 * @param id      registry path ({@code alaindustrial:<id>})
+	 * @param factory builds the event instance the loader registers
+	 * @param bind    publishes the registered event into its handle above
 	 */
-	public static final Identifier REACTOR_HUM_ID = Industrialization.id("reactor_hum");
-
-	/** Bound once per loader before any block plays it; unbound = loud failure, never a silent NPE. */
-	public static Supplier<SoundEvent> REACTOR_HUM = () -> {
-		throw new IllegalStateException("ModSounds.REACTOR_HUM read before its loader bound it");
-	};
+	public record SoundDef(String id, Supplier<SoundEvent> factory, Consumer<Supplier<SoundEvent>> bind) {
+	}
 
 	/**
-	 * Build the reactor-hum event instance both loaders register.
-	 *
-	 * <p>Variable range, and the choice is <b>cosmetic</b>: {@link SoundEvent#getRange} is read only by
-	 * {@code ServerLevel.playSeededSound}, which decides who receives the packet. This loop is created
-	 * client-side by {@code MachineHumClientHook}, so no range from here ever reaches it — the audible
-	 * distance comes from {@code attenuation_distance} in {@code sounds.json} (absent, so vanilla's 16)
-	 * and the loudness from the block's {@code humVolume}. A fixed-range event here would look like a
-	 * tuning knob and do nothing.
+	 * A sound whose audible radius scales with its volume, the way vanilla machine sounds do. The
+	 * default: use it unless there is a reason for a fixed range, and write that reason down.
 	 */
-	public static SoundEvent createReactorHum() {
-		return SoundEvent.createVariableRangeEvent(REACTOR_HUM_ID);
+	private static SoundDef variableRange(String id, Consumer<Supplier<SoundEvent>> bind) {
+		return new SoundDef(id, () -> SoundEvent.createVariableRangeEvent(Industrialization.id(id)), bind);
 	}
 
-	/** The registry id for the reactor overheat warning (MOD-472) — one-shot, played by the controller. */
-	public static final Identifier REACTOR_ALARM_ID = Industrialization.id("reactor_alarm");
+	/** A sound audible out to a fixed radius regardless of volume. */
+	private static SoundDef fixedRange(String id, float range, Consumer<Supplier<SoundEvent>> bind) {
+		return new SoundDef(id, () -> SoundEvent.createFixedRangeEvent(Industrialization.id(id), range), bind);
+	}
 
-	/** Bound once per loader before the controller plays it; unbound = loud failure, never a silent NPE. */
-	public static Supplier<SoundEvent> REACTOR_ALARM = () -> {
-		throw new IllegalStateException("ModSounds.REACTOR_ALARM read before its loader bound it");
-	};
+	/** What a handle holds until its loader binds it: a loud failure, never a silent NPE. */
+	private static Supplier<SoundEvent> unbound(String handle) {
+		return () -> {
+			throw new IllegalStateException("ModSounds." + handle + " read before its loader bound it");
+		};
+	}
+
+	public static Supplier<SoundEvent> MACERATOR_GRIND = unbound("MACERATOR_GRIND");
+	public static Supplier<SoundEvent> GENERATOR_HUM = unbound("GENERATOR_HUM");
+	public static Supplier<SoundEvent> ELECTRIC_FURNACE_HUM = unbound("ELECTRIC_FURNACE_HUM");
+	public static Supplier<SoundEvent> SOLAR_PANEL_HUM = unbound("SOLAR_PANEL_HUM");
+	public static Supplier<SoundEvent> IRON_CHEST_OPEN = unbound("IRON_CHEST_OPEN");
+	public static Supplier<SoundEvent> IRON_CHEST_CLOSE = unbound("IRON_CHEST_CLOSE");
+	public static Supplier<SoundEvent> SCYTHE_SWING = unbound("SCYTHE_SWING");
+	public static Supplier<SoundEvent> EXTRACTOR_HUM = unbound("EXTRACTOR_HUM");
+	public static Supplier<SoundEvent> WATER_MILL_HUM = unbound("WATER_MILL_HUM");
+	public static Supplier<SoundEvent> WIND_MILL_HUM = unbound("WIND_MILL_HUM");
+	public static Supplier<SoundEvent> COMPRESSOR_HUM = unbound("COMPRESSOR_HUM");
+	public static Supplier<SoundEvent> GARDEN_DRONE_FLY = unbound("GARDEN_DRONE_FLY");
+	public static Supplier<SoundEvent> PUMP_HUM = unbound("PUMP_HUM");
+	public static Supplier<SoundEvent> CANNING_MACHINE_HUM = unbound("CANNING_MACHINE_HUM");
+	public static Supplier<SoundEvent> GALVANIC_BATH_HUM = unbound("GALVANIC_BATH_HUM");
+	public static Supplier<SoundEvent> SAWMILL_HUM = unbound("SAWMILL_HUM");
+	public static Supplier<SoundEvent> POLYMERIZER_HUM = unbound("POLYMERIZER_HUM");
+	public static Supplier<SoundEvent> CHARGE_PAD_HUM = unbound("CHARGE_PAD_HUM");
+	public static Supplier<SoundEvent> ENERGY_CONDENSER_HUM = unbound("ENERGY_CONDENSER_HUM");
+	public static Supplier<SoundEvent> COMPONENT_REPAIR_BENCH_HUM = unbound("COMPONENT_REPAIR_BENCH_HUM");
+	public static Supplier<SoundEvent> REACTOR_HUM = unbound("REACTOR_HUM");
+	public static Supplier<SoundEvent> REACTOR_ALARM = unbound("REACTOR_ALARM");
+	public static Supplier<SoundEvent> REACTOR_SPINDOWN = unbound("REACTOR_SPINDOWN");
+	public static Supplier<SoundEvent> REACTOR_DOOR_OPEN = unbound("REACTOR_DOOR_OPEN");
+	public static Supplier<SoundEvent> REACTOR_DOOR_CLOSE = unbound("REACTOR_DOOR_CLOSE");
 
 	/**
-	 * Build the overheat-alarm event both loaders register.
-	 *
-	 * <p><b>Carrying twice as far as anything else in the mod takes TWO settings, not one.</b> The fixed
-	 * 32 here is only half of it: {@code SoundEvent#getRange} is read by
-	 * {@code ServerLevel.playSeededSound} and decides who gets sent the packet at all. How far the sound
-	 * is then audible is decided on the client by {@code attenuation_distance} in {@code sounds.json} —
-	 * a key that defaults to 16 and that no other entry in this mod sets. Setting one without the other
-	 * gives an alarm that is delivered to players who cannot hear it, which is exactly the bug this
-	 * javadoc used to describe as a feature.
-	 *
-	 * <p>Both are 32, and they have to stay in step: an alarm that only carried as far as a machine hum
-	 * would fail at its one job — telling a player who is somewhere else that the reactor needs them.
+	 * Every sound event, in one shared registration order. Both loaders replay this list; see
+	 * {@link SoundDef}. Order is not load-bearing (no entry reads another), but keep new entries
+	 * appended so a diff shows what was added rather than where it was inserted.
 	 */
-	public static SoundEvent createReactorAlarm() {
-		return SoundEvent.createFixedRangeEvent(REACTOR_ALARM_ID, 32.0f);
-	}
-
-	/** The registry id for the reactor spin-down (MOD-472) — one-shot, played when the core stops. */
-	public static final Identifier REACTOR_SPINDOWN_ID = Industrialization.id("reactor_spindown");
-
-	/** Bound once per loader before the controller plays it; unbound = loud failure, never a silent NPE. */
-	public static Supplier<SoundEvent> REACTOR_SPINDOWN = () -> {
-		throw new IllegalStateException("ModSounds.REACTOR_SPINDOWN read before its loader bound it");
-	};
-
-	/** Build the spin-down event both loaders register (variable range — it reports, it does not warn). */
-	public static SoundEvent createReactorSpindown() {
-		return SoundEvent.createVariableRangeEvent(REACTOR_SPINDOWN_ID);
-	}
-
-	/** The registry id for the reactor airlock opening (MOD-472), replacing vanilla {@code IRON_DOOR_OPEN}. */
-	public static final Identifier REACTOR_DOOR_OPEN_ID = Industrialization.id("reactor_door_open");
-
-	/** Bound once per loader before the door plays it; unbound = loud failure, never a silent NPE. */
-	public static Supplier<SoundEvent> REACTOR_DOOR_OPEN = () -> {
-		throw new IllegalStateException("ModSounds.REACTOR_DOOR_OPEN read before its loader bound it");
-	};
-
-	/** Build the airlock-open event both loaders register (variable range, like the chest lids). */
-	public static SoundEvent createReactorDoorOpen() {
-		return SoundEvent.createVariableRangeEvent(REACTOR_DOOR_OPEN_ID);
-	}
-
-	/** The registry id for the reactor airlock sealing (MOD-472), replacing vanilla {@code IRON_DOOR_CLOSE}. */
-	public static final Identifier REACTOR_DOOR_CLOSE_ID = Industrialization.id("reactor_door_close");
-
-	/** Bound once per loader before the door plays it; unbound = loud failure, never a silent NPE. */
-	public static Supplier<SoundEvent> REACTOR_DOOR_CLOSE = () -> {
-		throw new IllegalStateException("ModSounds.REACTOR_DOOR_CLOSE read before its loader bound it");
-	};
-
-	/** Build the airlock-close event both loaders register (variable range, like the chest lids). */
-	public static SoundEvent createReactorDoorClose() {
-		return SoundEvent.createVariableRangeEvent(REACTOR_DOOR_CLOSE_ID);
-	}
+	public static final List<SoundDef> SOUNDS = List.of(
+			variableRange("macerator_grind", s -> MACERATOR_GRIND = s),
+			variableRange("generator_hum", s -> GENERATOR_HUM = s),
+			// The id is `electric_furnace`, not `electric_furnace_hum`: it predates the naming the later
+			// machine loops follow, and renaming it would break every pack that already references it.
+			variableRange("electric_furnace", s -> ELECTRIC_FURNACE_HUM = s),
+			// Fixed 10 blocks rather than the generator's variable range: solar farms place many sources
+			// close together and each stacks into the others, so one panel is tuned shorter-range than a
+			// lone generator to keep a farm from becoming a wall of sound. Loudness is the block's humVolume().
+			fixedRange("solar_panel_hum", 10.0f, s -> SOLAR_PANEL_HUM = s),
+			variableRange("iron_chest_open", s -> IRON_CHEST_OPEN = s),
+			variableRange("iron_chest_close", s -> IRON_CHEST_CLOSE = s),
+			// MOD-068 — played once per successful AOE clear, not once per broken crop.
+			variableRange("scythe_swing", s -> SCYTHE_SWING = s),
+			// MOD-143 — a single lit machine each (pattern A).
+			variableRange("extractor_hum", s -> EXTRACTOR_HUM = s),
+			// Fixed 12 blocks, same reasoning as the solar panel: players line water mills up in rows
+			// along a channel, and wind farms stack rotors just as tightly.
+			fixedRange("water_mill_hum", 12.0f, s -> WATER_MILL_HUM = s),
+			fixedRange("wind_mill_hum", 12.0f, s -> WIND_MILL_HUM = s),
+			variableRange("compressor_hum", s -> COMPRESSOR_HUM = s),
+			// MOD-329 — fixed 8 blocks, the shortest loop in the mod and deliberately so: this is the only
+			// sound whose source MOVES, and it flies to the player rather than waiting to be walked up to.
+			// A wider radius would leave a drone crossing the far side of its own farm audible indoors.
+			fixedRange("garden_drone_fly", 8.0f, s -> GARDEN_DRONE_FLY = s),
+			variableRange("pump_hum", s -> PUMP_HUM = s),
+			variableRange("canning_machine_hum", s -> CANNING_MACHINE_HUM = s),
+			variableRange("galvanic_bath_hum", s -> GALVANIC_BATH_HUM = s),
+			// MOD-447 — the second wave of machine loops.
+			variableRange("sawmill_hum", s -> SAWMILL_HUM = s),
+			variableRange("polymerizer_hum", s -> POLYMERIZER_HUM = s),
+			// The charging station runs on ChargePadState.CHARGING rather than `lit` (pattern C).
+			variableRange("charge_pad_hum", s -> CHARGE_PAD_HUM = s),
+			variableRange("energy_condenser_hum", s -> ENERGY_CONDENSER_HUM = s),
+			// Soft rhythmic hammer taps with a metallic ring, playing only while a repair is running.
+			variableRange("component_repair_bench_hum", s -> COMPONENT_REPAIR_BENCH_HUM = s),
+			// MOD-472 — the reactor's core drone, played per VOICED COLUMN rather than once at the
+			// controller: the noise belongs to the fuel racks standing on the floor, and a room the player
+			// walks around should sound like a hall, not like a panel on the wall. The controller picks
+			// which columns are voiced (ReactorControllerBlockEntity) so a packed room cannot stack dozens.
+			//
+			// The variable range is COSMETIC here: SoundEvent#getRange is read only by
+			// ServerLevel.playSeededSound, which decides who receives the packet, and this loop is created
+			// client-side by MachineHumClientHook — so no range from here ever reaches it. The audible
+			// distance comes from `attenuation_distance` in sounds.json (absent, so vanilla's 16) and the
+			// loudness from the block's humVolume. A fixed range here would look like a knob and do nothing.
+			variableRange("reactor_hum", s -> REACTOR_HUM = s),
+			// The overheat warning, and the one sound that has to carry twice as far as anything else —
+			// which takes TWO settings, not one. The fixed 32 decides who is sent the packet at all;
+			// `attenuation_distance: 32` in sounds.json decides how far it is then audible on the client
+			// (that key defaults to 16, and no other entry in this mod sets it). Setting one without the
+			// other gives an alarm delivered to players who cannot hear it. The two must stay in step: an
+			// alarm carrying no further than a machine hum fails at its one job — telling a player who is
+			// somewhere else that the reactor needs them.
+			fixedRange("reactor_alarm", 32.0f, s -> REACTOR_ALARM = s),
+			// It reports, it does not warn — so no extended range.
+			variableRange("reactor_spindown", s -> REACTOR_SPINDOWN = s),
+			// The airlock, replacing vanilla IRON_DOOR_OPEN / IRON_DOOR_CLOSE.
+			variableRange("reactor_door_open", s -> REACTOR_DOOR_OPEN = s),
+			variableRange("reactor_door_close", s -> REACTOR_DOOR_CLOSE = s));
 
 	private ModSounds() {
 	}

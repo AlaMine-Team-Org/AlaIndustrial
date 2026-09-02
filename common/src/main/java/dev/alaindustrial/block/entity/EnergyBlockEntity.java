@@ -45,7 +45,9 @@ import net.minecraft.world.level.storage.ValueOutput;
  * needs a buffer and a tick, and {@link MachineBlockEntity} if it has slots or a screen.
  *
  * <p><b>Save format.</b> The buffer is written under the canonical {@code "Energy"} key, exactly where
- * the machine path wrote it before the split, so existing worlds load without a migration.
+ * the machine path wrote it before the split, so existing worlds load without a migration. Since
+ * MOD-556 this path also stamps the data with {@link BlockEntityDataMigrations#DATA_VERSION}, so a
+ * future change to a saved layout is a rung of a ladder rather than a guess at the point of reading.
  */
 public abstract class EnergyBlockEntity extends BlockEntity implements EnergyPortHost {
 
@@ -329,7 +331,33 @@ public abstract class EnergyBlockEntity extends BlockEntity implements EnergyPor
 	@Override
 	protected void saveAdditional(ValueOutput output) {
 		super.saveAdditional(output);
+		// MOD-556: stamp the layout version on the way out. This is the one save path every block
+		// entity of this mod goes through, which is exactly why the stamp belongs here and not on
+		// MachineBlockEntity — a cable and a pipe have data worth versioning and are not machines.
+		output.putInt(BlockEntityDataMigrations.DATA_VERSION_KEY, BlockEntityDataMigrations.DATA_VERSION);
 		output.putLong("Energy", energy.getAmount());
+	}
+
+	/**
+	 * Layout version of the tag currently being read, or {@link BlockEntityDataMigrations#DATA_VERSION}
+	 * for a block entity that has never been loaded from one (a freshly placed block is current by
+	 * definition). An absent key reads as 0 — see {@link BlockEntityDataMigrations#DATA_VERSION_KEY}.
+	 */
+	private int loadedDataVersion = BlockEntityDataMigrations.DATA_VERSION;
+
+	/** The version {@link #loadAdditional} last read; the ladder's starting rung. */
+	protected final int loadedDataVersion() {
+		return loadedDataVersion;
+	}
+
+	/**
+	 * Walk this block entity up the save-format ladder from the version its tag declared. Call it as the
+	 * LAST statement of {@code loadAdditional} in a class whose data a rung repairs — by then the fields
+	 * that rung reads are populated, which is why the base class cannot make the call itself
+	 * ({@code loadWithComponents} is {@code final} in 26.2, so there is no after-the-whole-load hook).
+	 */
+	protected final void migrateLoadedData() {
+		BlockEntityDataMigrations.migrate(this, loadedDataVersion);
 	}
 
 	/**
@@ -341,6 +369,8 @@ public abstract class EnergyBlockEntity extends BlockEntity implements EnergyPor
 	@Override
 	protected void loadAdditional(ValueInput input) {
 		super.loadAdditional(input);
+		// Absent means "saved before MOD-556", i.e. version 0, which is read exactly as it always was.
+		loadedDataVersion = input.getIntOr(BlockEntityDataMigrations.DATA_VERSION_KEY, 0);
 		long stored = input.getLongOr("Energy", 0L);
 		energy.setAmountUntracked(stored);
 		// The clamp inside setAmountUntracked is right — a buffer must not hold more than its capacity —

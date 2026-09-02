@@ -26,6 +26,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.block.Block;
 
 /**
  * Central registration for the machine {@link RecipeType}s + {@link RecipeSerializer}s (R-14). Each
@@ -44,12 +45,17 @@ public final class ModRecipes {
 	private ModRecipes() {
 	}
 
-	/** One machine recipe family: its {@link RecipeType}, {@link RecipeSerializer} and default EU cost. */
+	/**
+	 * One machine recipe family: its {@link RecipeType}, {@link RecipeSerializer}, default EU cost and
+	 * the block that works it.
+	 */
 	public static final class Kind {
 		private final String id;
 		private final int defaultEnergy;
 		/** Read lazily: Config values are reloadable, so a captured int would go stale. */
 		private final IntSupplier euPerTick;
+		/** Read lazily: the {@link ModContent} slot is rebound by whichever loader registered it. */
+		private final Supplier<Block> station;
 		private Supplier<RecipeType<AlaProcessingRecipe>> type = () -> {
 			throw new IllegalStateException("ModRecipes.Kind type read before its loader bound it");
 		};
@@ -57,13 +63,14 @@ public final class ModRecipes {
 			throw new IllegalStateException("ModRecipes.Kind serializer read before its loader bound it");
 		};
 
-		private Kind(String id, int defaultEnergy) {
-			this(id, defaultEnergy, () -> Config.machineEuPerTick);
+		private Kind(String id, int defaultEnergy, Supplier<Block> station) {
+			this(id, defaultEnergy, station, () -> Config.machineEuPerTick);
 		}
 
-		private Kind(String id, int defaultEnergy, IntSupplier euPerTick) {
+		private Kind(String id, int defaultEnergy, Supplier<Block> station, IntSupplier euPerTick) {
 			this.id = id;
 			this.defaultEnergy = defaultEnergy;
+			this.station = station;
 			this.euPerTick = euPerTick;
 		}
 
@@ -73,6 +80,23 @@ public final class ModRecipes {
 
 		public int defaultEnergy() {
 			return defaultEnergy;
+		}
+
+		/**
+		 * The block that works this family — what a recipe viewer shows as the category icon and
+		 * registers as the crafting station (MOD-558).
+		 *
+		 * <p><b>Why it lives on the kind.</b> The pair "family → machine" used to be written out once
+		 * per viewer: a {@code MACHINES} table in the REI plugin and one in each of the two JEI
+		 * plugins. Three hand-kept lists of the same fact, none of which the compiler could compare —
+		 * and the JEI ones ran from a static initialiser, so a family missing from one of them took
+		 * the whole viewer down rather than one category (MOD-146: the fermenter shipped a release
+		 * cycle with no Ala Industrial recipe cards at all on NeoForge). Declared here, next to the
+		 * family itself, the viewers replay {@link #kinds()} and there is no second list to forget.
+		 * A new family cannot be added without naming its station: the constructor demands one.
+		 */
+		public Supplier<Block> station() {
+			return station;
 		}
 
 		/** What the machine working this family draws per tick. Almost every machine shares one rate. */
@@ -116,43 +140,44 @@ public final class ModRecipes {
 	// maceration JSON sets `energy: 300` (= maceratorDuration × machineEuPerTick), so this default
 	// is never active. It is kept aligned with the actual recipe energy on purpose so the
 	// recipe_check.py validator does not flag a stale-looking fallback (MOD-134).
-	public static final Kind MACERATION = new Kind("maceration", 300);
-	public static final Kind SMELTING = new Kind("smelting", 200);
-	public static final Kind COMPRESSING = new Kind("compressing", 260);
-	public static final Kind EXTRACTING = new Kind("extracting", 240);
-	public static final Kind VULCANIZING = new Kind("vulcanizing", 400);
+	public static final Kind MACERATION = new Kind("maceration", 300, () -> ModContent.MACERATOR.get());
+	public static final Kind SMELTING = new Kind("smelting", 200, () -> ModContent.ELECTRIC_FURNACE.get());
+	public static final Kind COMPRESSING = new Kind("compressing", 260, () -> ModContent.COMPRESSOR.get());
+	public static final Kind EXTRACTING = new Kind("extracting", 240, () -> ModContent.EXTRACTOR.get());
+	public static final Kind VULCANIZING = new Kind("vulcanizing", 400, () -> ModContent.VULCANIZER.get());
 	// Galvanic Bath (MOD-127): fibre + silver dust → flux thread. Two item inputs like the Vulcanizer;
 	// the water the bath also consumes is a fixed config cost, not a recipe field (see the block entity).
-	public static final Kind GALVANIC_BATH = new Kind("galvanic_bath", 1000);
+	public static final Kind GALVANIC_BATH =
+			new Kind("galvanic_bath", 1000, () -> ModContent.GALVANIC_BATH.get());
 	// Thermal Centrifuge (MOD-424): the second doubling step on an ore, after the macerator's. Carries its
 	// own draw (4 EU/t against the shared 2), so the kind must be told — energy / euPerTick is what the
 	// recipe viewers print as the operation's length, and a wrong divisor here shows players a wrong time.
-	public static final Kind CENTRIFUGING =
-			new Kind("centrifuging", 800, () -> Config.thermalCentrifugeEuPerTick);
+	public static final Kind CENTRIFUGING = new Kind("centrifuging", 800,
+			() -> ModContent.THERMAL_CENTRIFUGE.get(), () -> Config.thermalCentrifugeEuPerTick);
 	// Sawmill (MOD-150): one Kind per cutting mode (planks/sticks/slabs/stairs). defaultEnergy 160 =
 	// sawmillDuration (80) × machineEuPerTick (2); every shipped sawing JSON sets energy: 160 explicitly.
-	public static final Kind SAWING_PLANKS = new Kind("sawing_planks", 160);
-	public static final Kind SAWING_STICKS = new Kind("sawing_sticks", 160);
-	public static final Kind SAWING_SLABS = new Kind("sawing_slabs", 160);
-	public static final Kind SAWING_STAIRS = new Kind("sawing_stairs", 160);
+	public static final Kind SAWING_PLANKS = new Kind("sawing_planks", 160, () -> ModContent.SAWMILL.get());
+	public static final Kind SAWING_STICKS = new Kind("sawing_sticks", 160, () -> ModContent.SAWMILL.get());
+	public static final Kind SAWING_SLABS = new Kind("sawing_slabs", 160, () -> ModContent.SAWMILL.get());
+	public static final Kind SAWING_STAIRS = new Kind("sawing_stairs", 160, () -> ModContent.SAWMILL.get());
 
 	// Incubator (MOD-118): one kind per mutation mode, selected by the chip in the machine.
 	// Splitting by type (rather than a "kind" field inside one type) matches how the sawmill models
 	// its cutting modes, and it comes with per-mode recipe-viewer categories for free.
 	// The incubator is the one machine with its own draw (8 EU/t against the shared 2), so these three
 	// carry it: energy / euPerTick is what the recipe viewers show as the operation's length.
-	public static final Kind MUTATION_TRANSFORM =
-			new Kind("mutation_transform", 2400, () -> Config.incubatorEuPerTick);
-	public static final Kind MUTATION_DUPLICATE =
-			new Kind("mutation_duplicate", 4000, () -> Config.incubatorEuPerTick);
-	public static final Kind MUTATION_CREATE =
-			new Kind("mutation_create", 8000, () -> Config.incubatorEuPerTick);
+	public static final Kind MUTATION_TRANSFORM = new Kind("mutation_transform", 2400,
+			() -> ModContent.INCUBATOR.get(), () -> Config.incubatorEuPerTick);
+	public static final Kind MUTATION_DUPLICATE = new Kind("mutation_duplicate", 4000,
+			() -> ModContent.INCUBATOR.get(), () -> Config.incubatorEuPerTick);
+	public static final Kind MUTATION_CREATE = new Kind("mutation_create", 8000,
+			() -> ModContent.INCUBATOR.get(), () -> Config.incubatorEuPerTick);
 
 	// Fermenter (MOD-146): organic waste → biomass. The water it drinks and the biofuel it brews are
 	// fixed config costs rather than recipe fields — the mod has no recipe family that mixes items and
 	// fluids on one side, and the Galvanic Bath already set this precedent rather than inventing one.
 	// 1200 = fermenterDuration (600) × machineEuPerTick (2); every shipped fermenting JSON says so.
-	public static final Kind FERMENTING = new Kind("fermenting", 1200);
+	public static final Kind FERMENTING = new Kind("fermenting", 1200, () -> ModContent.FERMENTER.get());
 
 	private static final Kind[] ALL = {MACERATION, SMELTING, COMPRESSING, EXTRACTING, VULCANIZING,
 			GALVANIC_BATH, CENTRIFUGING, SAWING_PLANKS, SAWING_STICKS, SAWING_SLABS, SAWING_STAIRS,
@@ -170,6 +195,8 @@ public final class ModRecipes {
 	public static final class FluidKind<R extends Recipe<FluidRecipeInput>> {
 		private final String id;
 		private final int defaultEnergy;
+		/** Read lazily: the {@link ModContent} slot is rebound by whichever loader registered it. */
+		private final Supplier<Block> station;
 		private final Function<FluidKind<R>, MapCodec<R>> mapCodecFactory;
 		private final Function<FluidKind<R>, StreamCodec<RegistryFriendlyByteBuf, R>> streamCodecFactory;
 		private Supplier<RecipeType<R>> type = () -> {
@@ -179,11 +206,12 @@ public final class ModRecipes {
 			throw new IllegalStateException("ModRecipes.FluidKind serializer read before its loader bound it");
 		};
 
-		private FluidKind(String id, int defaultEnergy,
+		private FluidKind(String id, int defaultEnergy, Supplier<Block> station,
 				Function<FluidKind<R>, MapCodec<R>> mapCodecFactory,
 				Function<FluidKind<R>, StreamCodec<RegistryFriendlyByteBuf, R>> streamCodecFactory) {
 			this.id = id;
 			this.defaultEnergy = defaultEnergy;
+			this.station = station;
 			this.mapCodecFactory = mapCodecFactory;
 			this.streamCodecFactory = streamCodecFactory;
 		}
@@ -194,6 +222,11 @@ public final class ModRecipes {
 
 		public int defaultEnergy() {
 			return defaultEnergy;
+		}
+
+		/** The block that works this family — see {@link Kind#station()} (MOD-558). */
+		public Supplier<Block> station() {
+			return station;
 		}
 
 		/** What the machine working this family draws per tick — the shared processing-machine rate. */
@@ -238,11 +271,11 @@ public final class ModRecipes {
 	// Codec factories receive their already-created FluidKind when registration runs. They therefore
 	// never read a not-yet-assigned ModRecipes static during this class's own initialization.
 	public static final FluidKind<PolymerizingRecipe> POLYMERIZING = new FluidKind<>(
-			"polymerizing", 400,
+			"polymerizing", 400, () -> ModContent.POLYMERIZER.get(),
 			kind -> PolymerizingRecipe.mapCodec(kind),
 			kind -> PolymerizingRecipe.streamCodec(kind));
 	public static final FluidKind<FluidOutputRecipe> DISTILLING = new FluidKind<>(
-			"distilling", 400,
+			"distilling", 400, () -> ModContent.DISTILLATION_COLUMN.get(),
 			kind -> FluidOutputRecipe.mapCodec(kind),
 			kind -> FluidOutputRecipe.streamCodec(kind));
 
@@ -265,6 +298,8 @@ public final class ModRecipes {
 		private final int defaultEnergy;
 		/** Read lazily: Config values are reloadable, so a captured int would go stale. */
 		private final IntSupplier euPerTick;
+		/** Read lazily: the {@link ModContent} slot is rebound by whichever loader registered it. */
+		private final Supplier<Block> station;
 		private final Function<AlloyKind<R>, MapCodec<R>> mapCodecFactory;
 		private final Function<AlloyKind<R>, StreamCodec<RegistryFriendlyByteBuf, R>> streamCodecFactory;
 		private Supplier<RecipeType<R>> type = () -> {
@@ -274,11 +309,12 @@ public final class ModRecipes {
 			throw new IllegalStateException("ModRecipes.AlloyKind serializer read before its loader bound it");
 		};
 
-		private AlloyKind(String id, int defaultEnergy, IntSupplier euPerTick,
+		private AlloyKind(String id, int defaultEnergy, Supplier<Block> station, IntSupplier euPerTick,
 				Function<AlloyKind<R>, MapCodec<R>> mapCodecFactory,
 				Function<AlloyKind<R>, StreamCodec<RegistryFriendlyByteBuf, R>> streamCodecFactory) {
 			this.id = id;
 			this.defaultEnergy = defaultEnergy;
+			this.station = station;
 			this.euPerTick = euPerTick;
 			this.mapCodecFactory = mapCodecFactory;
 			this.streamCodecFactory = streamCodecFactory;
@@ -290,6 +326,11 @@ public final class ModRecipes {
 
 		public int defaultEnergy() {
 			return defaultEnergy;
+		}
+
+		/** The block that works this family — see {@link Kind#station()} (MOD-558). */
+		public Supplier<Block> station() {
+			return station;
 		}
 
 		/** What the smelter draws per tick — its own rate, not the shared processing-machine one. */
@@ -333,7 +374,7 @@ public final class ModRecipes {
 	// The smelter is one of the few machines with its own draw (8 EU/t against the shared 2), so the kind
 	// carries it: energy / euPerTick is what the recipe viewers show as the operation's length.
 	public static final AlloyKind<AlloyingRecipe> ALLOYING = new AlloyKind<>(
-			"alloying", 1200, () -> Config.alloySmelterEuPerTick,
+			"alloying", 1200, () -> ModContent.ALLOY_SMELTER.get(), () -> Config.alloySmelterEuPerTick,
 			kind -> AlloyingRecipe.mapCodec(kind),
 			kind -> AlloyingRecipe.streamCodec(kind));
 

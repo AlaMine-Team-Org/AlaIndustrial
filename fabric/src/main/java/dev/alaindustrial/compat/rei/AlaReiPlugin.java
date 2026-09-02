@@ -40,37 +40,9 @@ import net.minecraft.world.level.block.Block;
  */
 public class AlaReiPlugin implements REIClientPlugin {
 
-	/** One machine family: its recipe {@link ModRecipes.Kind}, icon/workstation block and REI id. */
-	private record Machine(ModRecipes.Kind kind, Block block, CategoryIdentifier<AlaProcessingDisplay> id) {
-	}
-
-	private static Machine machine(ModRecipes.Kind kind, Block block) {
-		return new Machine(kind, block, CategoryIdentifier.of(Industrialization.id(kind.id())));
-	}
-
 	private static CategoryIdentifier<AlaProcessingDisplay> categoryId(ModRecipes.Kind kind) {
 		return CategoryIdentifier.of(Industrialization.id(kind.id()));
 	}
-
-	private static final Machine[] MACHINES = {
-			machine(ModRecipes.MACERATION, ModBlocks.MACERATOR),
-			machine(ModRecipes.SMELTING, ModBlocks.ELECTRIC_FURNACE),
-			machine(ModRecipes.COMPRESSING, ModBlocks.COMPRESSOR),
-			machine(ModRecipes.EXTRACTING, ModBlocks.EXTRACTOR),
-			machine(ModRecipes.VULCANIZING, ModBlocks.VULCANIZER),
-			machine(ModRecipes.GALVANIC_BATH, ModBlocks.GALVANIC_BATH),
-			machine(ModRecipes.FERMENTING, ModBlocks.FERMENTER),
-			machine(ModRecipes.CENTRIFUGING, ModBlocks.THERMAL_CENTRIFUGE),
-			// Sawmill (MOD-150): four mode families, all worked at the same sawmill block.
-			machine(ModRecipes.SAWING_PLANKS, ModBlocks.SAWMILL),
-			machine(ModRecipes.SAWING_STICKS, ModBlocks.SAWMILL),
-			machine(ModRecipes.SAWING_SLABS, ModBlocks.SAWMILL),
-			machine(ModRecipes.SAWING_STAIRS, ModBlocks.SAWMILL),
-			// Incubator (MOD-118): three mutation families, all worked at the same incubator block.
-			machine(ModRecipes.MUTATION_TRANSFORM, ModBlocks.INCUBATOR),
-			machine(ModRecipes.MUTATION_DUPLICATE, ModBlocks.INCUBATOR),
-			machine(ModRecipes.MUTATION_CREATE, ModBlocks.INCUBATOR),
-	};
 
 	/**
 	 * Gives fluid entries a texture (MOD-250). REI 26.2.820 ships a fluid renderer whose drawing code is
@@ -84,11 +56,15 @@ public class AlaReiPlugin implements REIClientPlugin {
 
 	@Override
 	public void registerCategories(CategoryRegistry registry) {
-		for (Machine m : MACHINES) {
-			registry.add(new AlaProcessingCategory(m.id(), m.block(),
-					RecipeCategoryTitle.of(m.kind(), m.block().getName())));
+		// MOD-558: one category per recipe family, replayed from ModRecipes.kinds() — the same list the
+		// loaders register the families from. The machine each family is worked at is declared on the
+		// family itself (ModRecipes.Kind#station), so this plugin keeps no table of its own to drift.
+		for (ModRecipes.Kind kind : ModRecipes.kinds()) {
+			Block block = kind.station().get();
+			CategoryIdentifier<AlaProcessingDisplay> id = categoryId(kind);
+			registry.add(new AlaProcessingCategory(id, block, RecipeCategoryTitle.of(kind, block.getName())));
 			// Clicking the machine block in REI opens its recipes.
-			registry.addWorkstations(m.id(), EntryStacks.of(m.block()));
+			registry.addWorkstations(id, EntryStacks.of(block));
 		}
 		// MOD-076: the electric furnace also performs vanilla smelting — ElectricFurnaceBlockEntity
 		// falls back to RecipeType.SMELTING when no alaindustrial:smelting recipe matches — so it is a
@@ -103,19 +79,23 @@ public class AlaReiPlugin implements REIClientPlugin {
 		registry.addWorkstations(
 				CategoryIdentifier.of("minecraft", "plugins/smelting"),
 				EntryStacks.of(ModBlocks.IRON_FURNACE));
-		// MOD-019: the Polymerizer's fluid → item family. One category, its own display type.
-		registry.add(new PolymerizingCategory(ModBlocks.POLYMERIZER, ModBlocks.POLYMERIZER.getName()));
-		registry.addWorkstations(PolymerizingDisplay.CATEGORY, EntryStacks.of(ModBlocks.POLYMERIZER));
+		// MOD-019: the Polymerizer's fluid → item family. One category, its own display type. Its card
+		// layout is unlike the processing one, so it is registered by hand — but the block still comes
+		// from the family (MOD-558), not from a second mention of it here.
+		Block polymerizer = ModRecipes.POLYMERIZING.station().get();
+		registry.add(new PolymerizingCategory(polymerizer, polymerizer.getName()));
+		registry.addWorkstations(PolymerizingDisplay.CATEGORY, EntryStacks.of(polymerizer));
 		// MOD-251: the Distillation Column's fluid → two-fluids family (the MOD-257 display contract,
 		// registered now that the real workstation exists).
-		registry.add(new FluidOutputCategory(
-				CategoryIdentifier.of(Industrialization.id(ModRecipes.DISTILLING.id())),
-				ModBlocks.DISTILLATION_COLUMN, ModBlocks.DISTILLATION_COLUMN.getName()));
-		registry.addWorkstations(CategoryIdentifier.of(Industrialization.id(ModRecipes.DISTILLING.id())),
-				EntryStacks.of(ModBlocks.DISTILLATION_COLUMN));
+		Block column = ModRecipes.DISTILLING.station().get();
+		CategoryIdentifier<FluidOutputDisplay> distilling =
+				CategoryIdentifier.of(Industrialization.id(ModRecipes.DISTILLING.id()));
+		registry.add(new FluidOutputCategory(distilling, column, column.getName()));
+		registry.addWorkstations(distilling, EntryStacks.of(column));
 		// MOD-064: the alloy smelter's multi-component family. One category, its own display type.
-		registry.add(new AlloyingCategory(ModBlocks.ALLOY_SMELTER, ModBlocks.ALLOY_SMELTER.getName()));
-		registry.addWorkstations(AlloyingDisplay.CATEGORY, EntryStacks.of(ModBlocks.ALLOY_SMELTER));
+		Block alloySmelter = ModRecipes.ALLOYING.station().get();
+		registry.add(new AlloyingCategory(alloySmelter, alloySmelter.getName()));
+		registry.addWorkstations(AlloyingDisplay.CATEGORY, EntryStacks.of(alloySmelter));
 		// MOD-383: the canning machine. No recipe type at all — the cards are computed from the item
 		// registry (CanningExchange), so the title comes from its own lang key rather than a block name.
 		registry.add(new CanningCategory(ModBlocks.CANNING_MACHINE, RecipeCategoryTitle.canning()));

@@ -21,7 +21,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.IdMap;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -92,7 +91,7 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 	 * {@link BuiltInRegistries#FLUID} registry id (resolved back to a fluid client-side) instead of
 	 * the old fixed 0/1/2 = none/lava/water encoding.
 	 */
-	public static final int FLUID_ID_NONE = net.minecraft.core.IdMap.DEFAULT;
+	public static final int FLUID_ID_NONE = FluidTank.FLUID_ID_NONE;
 
 	public final FluidTank fluidTank = new FluidTank(TANK_CAPACITY,
 			PumpBlockEntity::isPumpableFluid,
@@ -368,7 +367,7 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 				case 4 -> fluidTank.amount <= 0 ? 0
 						: Math.max(1, (int) Math.min(fluidTank.amount * 1000L / TANK_CAPACITY, 1000));
 				case 5 -> 1000;
-				case 6 -> fluidRegistryId(fluidTank.fluid);
+				case 6 -> fluidTank.fluidSyncId();
 				default -> PumpBlockEntity.this.dataAccess.get(index);
 			};
 		}
@@ -443,83 +442,24 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 	@Override
 	protected void saveAdditional(ValueOutput output) {
 		super.saveAdditional(output);
-		output.putLong("FluidTankMb", fluidTank.amount);
-		// Persist which fluid the tank holds so a reload restores the right variant, not just the amount.
-		// MOD-099: the key is now the fluid's full registry id (e.g. "minecraft:lava"), so any fluid
-		// survives a reload — not only lava/water. holderFromKey still accepts the legacy bare
-		// "lava"/"water" spellings for pre-MOD-099 saves.
-		output.putString("FluidTankFluid", fluidKey(fluidTank.fluid));
+		// The tank writes itself (MOD-556) under the keys it has always used. It persists which fluid it
+		// holds, not just the amount, so a reload restores the right variant. MOD-099: the id is the
+		// fluid's full registry id (e.g. "minecraft:lava"), so any fluid survives a reload — not only
+		// lava/water; the legacy bare "lava"/"water" spellings of pre-MOD-099 saves still resolve, because
+		// Identifier.tryParse gives a namespace-less path the "minecraft" default.
+		fluidTank.save(output, "FluidTank");
 	}
 
 	@Override
 	protected void loadAdditional(ValueInput input) {
 		super.loadAdditional(input);
-		// MOD-028: prefer the new mB-valued key; fall back to the legacy Fabric v0.1.0 droplet-valued
-		// "FluidTank" key, converting ÷81 (81000 droplets/bucket ÷ 81 = 1000 mB/bucket, exact).
-		long amount = input.getLongOr("FluidTankMb", 0L);
-		if (amount == 0L) {
-			amount = input.getLong("FluidTank")
-						.map(dr -> dr / FluidAmounts.FABRIC_DROPLETS_PER_MB).orElse(0L);
-		}
-		fluidTank.amount = Math.max(0L, Math.min(TANK_CAPACITY, amount));
-		// Restore the fluid variant from the persisted registry key. The very first pump revision was
-		// lava-only with no key at all; a non-zero amount with an empty/unresolved key is therefore a
-		// legacy lava-only save → treat it as lava rather than dropping the contents.
-		String key = input.getStringOr("FluidTankFluid", "");
-		FluidHolder restored = holderFromKey(key);
-		fluidTank.fluid = fluidTank.amount > 0 && restored.isEmpty()
-				? FluidHolder.of(Fluids.LAVA) : restored;
-		if (fluidTank.amount == 0) {
-			fluidTank.fluid = FluidHolder.EMPTY;
-		}
-	}
-
-	/**
-	 * Registry key of {@code fluid} for persistence (e.g. {@code "minecraft:lava"}). MOD-099: now stores
-	 * the full namespaced id so any fluid survives a reload, not just lava/water. The legacy bare
-	 * {@code "lava"}/{@code "water"} spellings (pre-MOD-099 saves) are still accepted by
-	 * {@link #holderFromKey} for backwards compatibility.
-	 */
-	private static String fluidKey(FluidHolder fluid) {
-		if (fluid.isEmpty()) {
-			return "";
-		}
-		return BuiltInRegistries.FLUID.getKey(fluid.fluid()).toString();
-	}
-
-	private static FluidHolder holderFromKey(String key) {
-		if (key == null || key.isEmpty()) {
-			return FluidHolder.EMPTY;
-		}
-		// Legacy pre-MOD-099 spellings.
-		if ("lava".equals(key)) {
-			return FluidHolder.of(Fluids.LAVA);
-		}
-		if ("water".equals(key)) {
-			return FluidHolder.of(Fluids.WATER);
-		}
-		Identifier id = Identifier.tryParse(key);
-		if (id == null) {
-			return FluidHolder.EMPTY;
-		}
-		Fluid resolved = BuiltInRegistries.FLUID.getValue(id);
-		return resolved == null ? FluidHolder.EMPTY : FluidHolder.of(resolved);
-	}
-
-	/**
-	 * The {@link BuiltInRegistries#FLUID} registry id of {@code fluid} ({@link IdMap#DEFAULT} when the
-	 * tank is empty), for the client to resolve the fluid type over ContainerData channel 6.
-	 *
-	 * <p>Ids above {@link Short#MAX_VALUE} report as empty rather than as the id's truncated low 16 bits,
-	 * which the channel's short encoding (see {@link #pumpData}) would otherwise resolve to an unrelated
-	 * fluid — a wrongly-labelled tank is worse than an unlabelled one. Only reachable in a pack with
-	 * >32767 registered fluids; the tank itself is unaffected either way.
-	 */
-	private static int fluidRegistryId(FluidHolder fluid) {
-		if (fluid.isEmpty()) {
-			return FLUID_ID_NONE;
-		}
-		int id = BuiltInRegistries.FLUID.getId(fluid.fluid());
-		return id > Short.MAX_VALUE ? FLUID_ID_NONE : id;
+		// Two legacy fallbacks the shared tank loader takes as arguments (MOD-556):
+		// MOD-028 — when the mB-valued key is absent/zero, use the Fabric v0.1.0 droplet-valued
+		// "FluidTank" key, converted ÷81 (81000 droplets/bucket ÷ 81 = 1000 mB/bucket, exact);
+		// the very first pump revision was lava-only and wrote no fluid id at all, so a non-zero amount
+		// with an empty/unresolved id is a legacy lava save → lava, rather than dropping the contents.
+		long legacyDroplets = input.getLong("FluidTank")
+				.map(dr -> dr / FluidAmounts.FABRIC_DROPLETS_PER_MB).orElse(0L);
+		fluidTank.load(input, "FluidTank", FluidHolder.of(Fluids.LAVA), legacyDroplets);
 	}
 }

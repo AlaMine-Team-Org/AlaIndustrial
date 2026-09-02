@@ -120,19 +120,36 @@ class ConfigSchemaTest {
 		assertEquals(5, Config.solarEuPerTick, "and the value round-trips through the sectioned form");
 	}
 
-	/** A fresh install writes the version straight away, so the very first file is already migratable. */
+	/**
+	 * A fresh install writes the version straight away, so the very first file is already migratable —
+	 * and it writes the inline documentation that makes the file readable without leaving it.
+	 *
+	 * <p>The {@code _comment_} lines are asserted, not assumed. They are this file's entire contract
+	 * with an operator who opens it in a text editor, and nothing else in the suite reads the top-level
+	 * ones: a dropped section heading or a dropped explanation of {@code builtinDefaults} would leave
+	 * every value correct and the file unusable to the person editing it.
+	 */
 	@Test
-	void defaultsWritten_carryTheSchemaVersionAndEverySection(@TempDir Path dir) throws IOException {
+	void defaultsWritten_carryTheSchemaVersionEverySectionAndTheirInlineDocs(@TempDir Path dir)
+			throws IOException {
 		Path f = dir.resolve("alaindustrial.json");
 		assertEquals(Config.LoadResult.DEFAULTS_WRITTEN, Config.loadFrom(f));
 
 		String body = Files.readString(f);
 		assertTrue(body.contains("\"schemaVersion\": " + Config.SCHEMA_VERSION),
 				"a freshly written file states its schema version");
+		assertTrue(body.contains("\"_comment_schemaVersion\": \""),
+				"and explains what that version means");
 		for (Config.Section section : Config.Section.values()) {
 			assertTrue(body.contains("\"" + section.id + "\": {"),
 					"section '" + section.id + "' is written even on a fresh file");
+			assertTrue(body.contains("\"_comment_" + section.id + "\": \""),
+					"section '" + section.id + "' carries its own inline note");
 		}
+		assertTrue(body.contains("\"builtinDefaults\": {"), "the machine-owned defaults block is written");
+		assertTrue(body.contains("\"_comment_builtinDefaults\": \""),
+				"and it explains itself — an unexplained block of 380 numbers reads as file corruption,"
+						+ " and its two limitations are stated nowhere else the operator will look");
 	}
 
 	// --- the future-version guard ----------------------------------------------------------------
@@ -263,6 +280,193 @@ class ConfigSchemaTest {
 		assertEquals(6, Config.machineEuPerTick, "a field whose whole section is absent keeps its live value");
 	}
 
+	// --- the config shadow: a changed compiled default reaching an existing file (MOD-553) ---------
+
+	/**
+	 * A file at the current schema, sectioned, carrying the {@code builtinDefaults} block that a
+	 * previous mod build wrote. Values and recorded defaults are hand-written literals, so the test
+	 * states the scenario instead of deriving it from the production registry.
+	 *
+	 * @param generatorSolar          value stored for {@code generators.solarEuPerTick}
+	 * @param recordedSolar           default recorded beside it (the previous build's)
+	 * @param generatorWindRainFactor value stored for {@code generators.windMillRainFactor}
+	 * @param recordedWindRainFactor  default recorded beside it
+	 * @param cableLoss               value stored for {@code cables.copperCableLossPerBlock}
+	 * @param recordedCableLoss       default recorded beside it
+	 * @param oilBurns                value stored for {@code world.oilBurns}
+	 * @param recordedOilBurns        default recorded beside it
+	 */
+	private static String fileWithRecordedDefaults(int generatorSolar, int recordedSolar,
+			double generatorWindRainFactor, double recordedWindRainFactor,
+			double cableLoss, double recordedCableLoss, boolean oilBurns, boolean recordedOilBurns) {
+		return "{\n"
+				+ "  \"schemaVersion\": " + Config.SCHEMA_VERSION + ",\n"
+				+ "  \"generators\": { \"solarEuPerTick\": " + generatorSolar
+				+ ", \"windMillRainFactor\": " + generatorWindRainFactor + " },\n"
+				+ "  \"cables\": { \"copperCableLossPerBlock\": " + cableLoss + " },\n"
+				+ "  \"world\": { \"oilBurns\": " + oilBurns + " },\n"
+				+ "  \"builtinDefaults\": {\n"
+				+ "    \"solarEuPerTick\": " + recordedSolar + ",\n"
+				+ "    \"windMillRainFactor\": " + recordedWindRainFactor + ",\n"
+				+ "    \"copperCableLossPerBlock\": " + recordedCableLoss + ",\n"
+				+ "    \"oilBurns\": " + recordedOilBurns + "\n"
+				+ "  }\n"
+				+ "}";
+	}
+
+	/**
+	 * The end of the config shadow (MOD-553). Every knob below still holds exactly the default the file
+	 * was written against — a default this build no longer ships — so this build's number wins.
+	 *
+	 * <p>Before this, {@code snapshot()} wrote every key on the very first run, which pinned every knob
+	 * to the file; a default changed in {@code Config.java} could then never reach an existing install,
+	 * and the symptom read as "my code change did not apply". It cost MOD-070 and MOD-104 a rebalance
+	 * each.
+	 *
+	 * <p>Expected values are the literals compiled into this build (1 / 1.5 / 0.02 / true), the same
+	 * hand-written oracle {@link #futureSchemaVersion_appliesNothingAndFallsBackToCompiledDefaults}
+	 * uses. One knob of each registry type, so the adoption is proven for int, float, double and
+	 * boolean rather than for ints alone.
+	 */
+	@Test
+	void valueStillAtTheRecordedDefault_followsThisBuildsNewDefault(@TempDir Path dir) throws IOException {
+		Path f = dir.resolve("alaindustrial.json");
+		// 99 / 9.5 / 0.9 / false are "the defaults of the build that wrote this file" — none of them is
+		// what this build ships, so all four must be replaced.
+		Files.writeString(f, fileWithRecordedDefaults(99, 99, 9.5, 9.5, 0.9, 0.9, false, false));
+
+		assertEquals(Config.LoadResult.LOADED, Config.loadFrom(f));
+		assertEquals(1, Config.solarEuPerTick,
+				"an int left at the default the file recorded follows this build's default");
+		assertEquals(1.5f, Config.windMillRainFactor, 0.0f, "same for a float knob");
+		assertEquals(0.02, Config.copperCableLossPerBlock, 0.0, "same for a double knob");
+		assertTrue(Config.oilBurns, "same for a boolean knob");
+	}
+
+	/**
+	 * The other half of the same rule, and the one that must never break: a value the operator actually
+	 * changed differs from the default recorded beside it, so it is kept exactly as written — even
+	 * though this build's default is different again.
+	 */
+	@Test
+	void valueEditedAwayFromTheRecordedDefault_isKept(@TempDir Path dir) throws IOException {
+		Path f = dir.resolve("alaindustrial.json");
+		Files.writeString(f, fileWithRecordedDefaults(42, 99, 3.25, 9.5, 0.077, 0.9, false, true));
+
+		assertEquals(Config.LoadResult.LOADED, Config.loadFrom(f));
+		assertEquals(42, Config.solarEuPerTick, "an operator's int survives a default change");
+		assertEquals(3.25f, Config.windMillRainFactor, 0.0f, "an operator's float survives");
+		assertEquals(0.077, Config.copperCableLossPerBlock, 0.0, "an operator's double survives");
+		assertFalse(Config.oilBurns, "an operator's boolean survives");
+	}
+
+	/**
+	 * A knob with no entry in {@code builtinDefaults} — the file predates the knob, or the block was
+	 * trimmed — is treated as operator-edited and kept. "No evidence it was untouched" must read as
+	 * "leave it alone": the failure mode of guessing wrong here is silently discarding a server's
+	 * balance.
+	 */
+	@Test
+	void valueWithNoRecordedDefault_isKeptAsWritten(@TempDir Path dir) throws IOException {
+		Path f = dir.resolve("alaindustrial.json");
+		Files.writeString(f, "{ \"schemaVersion\": " + Config.SCHEMA_VERSION + ","
+				+ " \"generators\": { \"solarEuPerTick\": 42 },"
+				+ " \"builtinDefaults\": { \"daylightEuPerTick\": 4 } }");
+
+		assertEquals(Config.LoadResult.LOADED, Config.loadFrom(f));
+		assertEquals(42, Config.solarEuPerTick, "a knob the defaults block says nothing about is kept");
+	}
+
+	/**
+	 * The defaults block never speaks for a key the file does not contain. A knob absent from its
+	 * section keeps its live value, even when the block records a default that happens to equal it.
+	 *
+	 * <p>"Still at the default it was saved with" is a statement about a value the operator's file
+	 * actually holds. Dropping the presence check would let the block alone trigger an adoption on a
+	 * hand-trimmed file — the one shape of file the absent-key contract exists to support.
+	 */
+	@Test
+	void absentKey_isNeverAdopted_evenWhenTheBlockRecordsItsValue(@TempDir Path dir) throws IOException {
+		Config.solarEuPerTick = 5;
+		Path f = dir.resolve("alaindustrial.json");
+		// The section omits solarEuPerTick; only the defaults block mentions it, recording the live 5.
+		Files.writeString(f, "{ \"schemaVersion\": " + Config.SCHEMA_VERSION + ","
+				+ " \"generators\": { \"daylightEuPerTick\": 7 },"
+				+ " \"builtinDefaults\": { \"solarEuPerTick\": 5 } }");
+
+		assertEquals(Config.LoadResult.LOADED, Config.loadFrom(f));
+		assertEquals(7, Config.daylightEuPerTick, "the key that IS in the file applies");
+		assertEquals(5, Config.solarEuPerTick,
+				"a key absent from its section keeps its live value; the defaults block does not stand in"
+						+ " for it and must not pull it to the compiled default of 1");
+	}
+
+	/**
+	 * A damaged {@code builtinDefaults} block does not fail the load, unlike a damaged section. It is
+	 * the mod's own bookkeeping, not the operator's data: reading it as "everything was edited by hand"
+	 * keeps every value in the file exactly as written and rebuilds the block on the self-heal, whereas
+	 * throwing would refuse the whole file over a line the operator was told not to touch.
+	 */
+	@Test
+	void damagedBuiltinDefaultsBlock_doesNotFailTheLoad(@TempDir Path dir) throws IOException {
+		Path f = dir.resolve("alaindustrial.json");
+		Files.writeString(f, "{ \"schemaVersion\": " + Config.SCHEMA_VERSION + ","
+				+ " \"generators\": { \"solarEuPerTick\": 42 },"
+				+ " \"builtinDefaults\": \"oops\" }");
+
+		assertEquals(Config.LoadResult.LOADED, Config.loadFrom(f), "a broken defaults block is tolerated");
+		assertEquals(42, Config.solarEuPerTick, "and every value in the file is kept as written");
+		assertTrue(Files.readString(f).contains("\"builtinDefaults\": {"),
+				"the self-heal rebuilds the block it could not read");
+	}
+
+	/**
+	 * A file at the PREVIOUS schema (sectioned, but written before the defaults block existed) migrates:
+	 * every operator value survives, the version is raised, and the block appears filled with this
+	 * build's defaults — which is exactly the documented reference point. Knobs that drifted before this
+	 * moment are frozen at whatever they hold, because nothing ever recorded what they were saved
+	 * against.
+	 */
+	@Test
+	void previousSchemaFile_gainsTheDefaultsBlock_andKeepsEveryValue(@TempDir Path dir) throws IOException {
+		Path f = dir.resolve("alaindustrial.json");
+		Files.writeString(f, "{\n"
+				+ "  \"schemaVersion\": 1,\n"
+				+ "  \"generators\": { \"solarEuPerTick\": 42 },\n"
+				+ "  \"world\": { \"oilBurns\": false }\n"
+				+ "}");
+
+		assertEquals(Config.LoadResult.LOADED, Config.loadFrom(f), "a v1 file still loads");
+		assertEquals(42, Config.solarEuPerTick, "the operator's value survives the v1 -> v2 migration");
+		assertFalse(Config.oilBurns, "and so does their boolean");
+
+		String body = Files.readString(f);
+		assertTrue(body.contains("\"schemaVersion\": " + Config.SCHEMA_VERSION),
+				"the rewritten file records the schema version it is now in");
+		assertEquals("1", recordedDefault(body, "solarEuPerTick"),
+				"the migrated file records THIS build's default (1), not the operator's 42 — recording the"
+						+ " value instead would mark every knob untouched and let the next default change"
+						+ " overwrite real edits");
+		assertEquals("true", recordedDefault(body, "oilBurns"), "booleans are recorded too");
+	}
+
+	/**
+	 * The defaults block records what this build SHIPS, never what is currently live. Getting this wrong
+	 * is silent and total: a block filled from the live values would mark every knob as untouched, and
+	 * the next build with a changed default would overwrite the whole server's balance.
+	 */
+	@Test
+	void defaultsBlockRecordsTheCompiledDefault_notTheLiveValue(@TempDir Path dir) throws IOException {
+		Config.solarEuPerTick = 77;
+		Path f = dir.resolve("alaindustrial.json");
+
+		assertEquals(Config.LoadResult.DEFAULTS_WRITTEN, Config.loadFrom(f));
+		String body = Files.readString(f);
+		assertTrue(body.contains("\"solarEuPerTick\": 77"), "the section holds the live value");
+		assertEquals("1", recordedDefault(body, "solarEuPerTick"),
+				"the defaults block holds the value compiled into this build, not the live 77");
+	}
+
 	// --- structural guards on the layout itself ---------------------------------------------------
 
 	/**
@@ -373,6 +577,13 @@ class ConfigSchemaTest {
 	 * JSON parser on its compile classpath. The canonical form is plain Gson pretty-print, which puts
 	 * exactly one property per line — a section header sits at two spaces of indent and opens a brace,
 	 * its fields at four. {@code _comment_*} lines are skipped; they are documentation, not knobs.
+	 *
+	 * <p>Only objects whose name is an actual {@link Config.Section} id count as sections. The file also
+	 * carries the machine-owned {@code builtinDefaults} block at the same indent (MOD-553), and reading
+	 * its 380 entries as knobs would double every count here. Matching against the enum rather than
+	 * skipping that one name by hand also makes the guard stricter: a knob written under any object that
+	 * is not a declared section now goes missing from this map, and the "one line per registered
+	 * tunable" assertion catches it.
 	 */
 	private static Map<String, String> keyToSection(String canonical) {
 		Map<String, String> out = new LinkedHashMap<>();
@@ -381,7 +592,7 @@ class ConfigSchemaTest {
 			String line = rawLine.replace("\r", "");
 			String trimmed = line.strip();
 			if (line.startsWith("  \"") && trimmed.endsWith(": {")) {
-				current = nameOf(trimmed);
+				current = isSectionId(nameOf(trimmed)) ? nameOf(trimmed) : null;
 			} else if (line.startsWith("    \"") && current != null) {
 				String key = nameOf(trimmed);
 				if (!key.startsWith("_comment_")) {
@@ -395,5 +606,35 @@ class ConfigSchemaTest {
 	/** {@code "someKey": 5,} → {@code someKey}. */
 	private static String nameOf(String trimmedLine) {
 		return trimmedLine.substring(1, trimmedLine.indexOf('"', 1));
+	}
+
+	/** True when {@code name} is the json id of a declared {@link Config.Section}. */
+	private static boolean isSectionId(String name) {
+		for (Config.Section section : Config.Section.values()) {
+			if (section.id.equals(name)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * The value written under {@code key} inside the top-level {@code builtinDefaults} block, as raw
+	 * text ({@code "1"}, {@code "1.5"}, {@code "true"}), or {@code null} when the block has no such key.
+	 * Textual for the same reason as {@link #keyToSection}: no JSON parser on the L1 classpath.
+	 */
+	private static String recordedDefault(String canonical, String key) {
+		boolean inBlock = false;
+		for (String rawLine : canonical.split("\n")) {
+			String line = rawLine.replace("\r", "");
+			String trimmed = line.strip();
+			if (line.startsWith("  \"") && trimmed.endsWith(": {")) {
+				inBlock = "builtinDefaults".equals(nameOf(trimmed));
+			} else if (inBlock && line.startsWith("    \"") && nameOf(trimmed).equals(key)) {
+				String value = trimmed.substring(trimmed.indexOf(':') + 1).strip();
+				return value.endsWith(",") ? value.substring(0, value.length() - 1) : value;
+			}
+		}
+		return null;
 	}
 }

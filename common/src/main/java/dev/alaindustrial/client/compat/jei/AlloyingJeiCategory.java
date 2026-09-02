@@ -1,4 +1,4 @@
-package dev.alaindustrial.compat.jei;
+package dev.alaindustrial.client.compat.jei;
 
 import dev.alaindustrial.client.compat.RecipeViewerLayout;
 import dev.alaindustrial.recipe.AlloyComponent;
@@ -24,7 +24,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.Block;
 
 /**
- * JEI category for the Alloy Smelter (MOD-064) — the NeoForge mirror of {@code AlloyingCategory}.
+ * JEI category for the Alloy Smelter (MOD-064) — the JEI counterpart of the REI {@code AlloyingCategory}.
  *
  * <p>Same single-row layout as {@link AlaProcessingJeiCategory}, but the number of input slots varies
  * with the recipe (an alloy takes two components or three) and each slot shows the count the operation

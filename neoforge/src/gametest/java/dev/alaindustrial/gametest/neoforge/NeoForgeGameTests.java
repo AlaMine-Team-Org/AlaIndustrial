@@ -1885,6 +1885,13 @@ public final class NeoForgeGameTests {
 				PersistenceScenarios::tcCable001Per01_bufferNbtRoundTrip);
 		registerTest(event, "persistence_tc_cable001_per02_legacy_machine_keys_ignored_on_load", 40, true,
 				PersistenceScenarios::tcCable001Per02_legacyMachineKeysIgnoredOnLoad);
+		// MOD-556: the fluid tank writes itself now; these two hold the on-disk shape still.
+		registerTest(event, "persistence_mod556_tank_keys_unchanged_after_self_save", 40, true,
+				PersistenceScenarios::mod556_tankKeysUnchangedAfterSelfSave);
+		registerTest(event, "persistence_mod556_pre_refactor_saves_still_load", 40, true,
+				PersistenceScenarios::mod556_preRefactorSavesStillLoad);
+		registerTest(event, "persistence_mod556_data_version_matches_the_ladder", 40, true,
+				PersistenceScenarios::mod556_dataVersionMatchesTheLadder);
 		registerTest(event, "torch_torches_emit_vanilla_torch_light", 40, true,
 				EnrichedUraniumTorchScenarios::torchesEmitVanillaTorchLight);
 		registerTest(event, "torch_wall_torch_drops_standing_torch", 40, true,

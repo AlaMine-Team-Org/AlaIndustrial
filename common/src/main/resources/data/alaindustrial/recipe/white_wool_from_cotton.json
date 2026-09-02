@@ -1,0 +1,15 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "building",
+	"pattern": [
+		"CC",
+		"CC"
+	],
+	"key": {
+		"C": "alaindustrial:cotton_fiber"
+	},
+	"result": {
+		"id": "minecraft:white_wool",
+		"count": 1
+	}
+}

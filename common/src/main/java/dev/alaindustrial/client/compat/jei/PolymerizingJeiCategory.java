@@ -1,4 +1,4 @@
-package dev.alaindustrial.compat.jei;
+package dev.alaindustrial.client.compat.jei;
 
 import dev.alaindustrial.client.compat.RecipeViewerLayout;
 import dev.alaindustrial.recipe.PolymerizingRecipe;
@@ -21,7 +21,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 
 /**
- * JEI category for the Polymerizer (MOD-019) — the Fabric twin of the NeoForge lane and the REI {@code PolymerizingCategory}.
+ * JEI category for the Polymerizer (MOD-019) — the JEI counterpart of the REI {@code PolymerizingCategory}.
  * Same single-row layout as {@link AlaProcessingJeiCategory}, but the input slot holds a fluid stack
  * (JEI renders it with the fluid's own texture and a "1000 mB" tooltip) instead of an item ingredient.
  */
