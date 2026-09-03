@@ -1,7 +1,8 @@
 {
-  "replace": false,
-  "values": [
-    "alaindustrial:tempered_iron_shovel",
-    "alaindustrial:electric_shovel"
-  ]
+	"replace": false,
+	"values": [
+		"alaindustrial:tempered_iron_shovel",
+		"alaindustrial:electric_shovel",
+		"alaindustrial:electric_shovel_diamond_tip"
+	]
 }

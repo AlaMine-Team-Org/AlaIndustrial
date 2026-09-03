@@ -1,6 +1,9 @@
 {
-  "replace": false,
-  "values": [
-    "alaindustrial:tempered_iron_boots"
-  ]
+	"replace": false,
+	"values": [
+		"alaindustrial:tempered_iron_boots",
+		"alaindustrial:fluxweave_boots",
+		"alaindustrial:shielding_boots",
+		"alaindustrial:insulated_boots"
+	]
 }

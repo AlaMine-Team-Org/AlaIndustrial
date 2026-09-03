@@ -41,6 +41,7 @@
       "dev.alaindustrial.gametest.ElectricSaberGameTest",
       "dev.alaindustrial.gametest.ElectricShovelGameTest",
       "dev.alaindustrial.gametest.ElectricToolTagsGameTest",
+			"dev.alaindustrial.gametest.EnchantableRosterGameTest",
       "dev.alaindustrial.gametest.ElectrumChestGameTest",
       "dev.alaindustrial.gametest.EnergyCondenserGameTest",
       "dev.alaindustrial.gametest.EnergyFaceGameTest",

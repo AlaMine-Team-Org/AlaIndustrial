@@ -1,10 +1,11 @@
-## 0.1.143
+## 0.1.144
 
-<p><img alt="Ala Industrial 0.1.143 fix patch" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.143/release-media/v0.1.143/changelog.jpeg" width="720"></p>
+<p><img alt="Ala Industrial 0.1.144: enchanting table offering Protection III on mod armour" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.144/release-media/v0.1.144/changelog.png" width="720"></p>
 
-If the game seemed to hang on startup with 0.1.141 or 0.1.142 installed, this release fixes it.
+Armour from the mod can be enchanted again.
 
 ### Fixed
 
-- **The game starts normally again.** Loading the mod could take around nine minutes instead of a minute and a half — long enough to look like a freeze rather than a slow load. Worlds already saved are unaffected.
-- **Pipes and cables no longer recompute their shape over and over.** The game asks every block for its shape twenty times per state while loading, and after pipes learned to bend down to low neighbours they had a lot of states. The shape is now worked out once per distinct geometry.
+- **The enchanting table now offers enchantments for mod armour.** It used to show the levels and the cost but no enchantment name, so there was nothing to pick. All four armour sets now behave like vanilla armour.
+- **Anvils accept Unbreaking and Mending on mod armour.** Same cause — the armour was missing from the game's lists of enchantable items.
+- **The diamond-tipped electric shovel gained Efficiency, Fortune and Silk Touch.** It had been left out of those lists too.

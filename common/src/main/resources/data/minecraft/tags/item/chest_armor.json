@@ -1,6 +1,9 @@
 {
-  "replace": false,
-  "values": [
-    "alaindustrial:tempered_iron_chestplate"
-  ]
+	"replace": false,
+	"values": [
+		"alaindustrial:tempered_iron_chestplate",
+		"alaindustrial:fluxweave_chestplate",
+		"alaindustrial:shielding_chestplate",
+		"alaindustrial:insulated_chestplate"
+	]
 }

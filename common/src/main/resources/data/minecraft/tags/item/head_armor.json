@@ -1,6 +1,9 @@
 {
-  "replace": false,
-  "values": [
-    "alaindustrial:tempered_iron_helmet"
-  ]
+	"replace": false,
+	"values": [
+		"alaindustrial:tempered_iron_helmet",
+		"alaindustrial:fluxweave_helmet",
+		"alaindustrial:shielding_helmet",
+		"alaindustrial:insulated_helmet"
+	]
 }

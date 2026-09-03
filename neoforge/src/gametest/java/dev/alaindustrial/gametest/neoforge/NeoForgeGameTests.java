@@ -43,6 +43,7 @@ import dev.alaindustrial.gametest.GeothermalLavaInputScenarios;
 import dev.alaindustrial.gametest.ElectricChainsawScenarios;
 import dev.alaindustrial.gametest.ElectricHoeScenarios;
 import dev.alaindustrial.gametest.ElectricToolTagScenarios;
+import dev.alaindustrial.gametest.EnchantableRosterScenarios;
 import dev.alaindustrial.gametest.ElectricShovelScenarios;
 import dev.alaindustrial.gametest.ElectricDrillScenarios;
 import dev.alaindustrial.gametest.ElectricSaberScenarios;
@@ -1263,6 +1264,11 @@ public final class NeoForgeGameTests {
 		// MOD-057 defect, caught here on both loaders.
 		registerTest(event, "electric_tool_tip_membership_tags", 40, true, ElectricToolTagScenarios::fun01TipMembershipTags);
 		registerTest(event, "electric_tool_tip_enchantment_accepted", 40, true, ElectricToolTagScenarios::fun02TipEnchantmentAccepted);
+
+		// MOD-565 — the same defect a fourth time, so this one names no items: it walks the registry
+		// and demands that anything declaring itself enchantable accepts at least one enchantment.
+		registerTest(event, "enchantable_roster_has_candidates", 40, true,
+				EnchantableRosterScenarios::fun01EveryEnchantableItemHasCandidates);
 
 		// MOD-364 (TC-ETOOL-001-FUN03..05): the same tag/enchant ground for the BASE tools — the shovel had
 		// no coverage here at all, having no upgrade — plus the audit of the ToolCase table that the
