@@ -21,6 +21,7 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -282,6 +283,13 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 	private static final int SLOT_INNER = 16;
 
 	/**
+	 * How long each item stays up in a cycling ghost hint. Was 1200 ms; playtesting called that
+	 * flicker, so it is three times slower — long enough to read one answer before the next. Lives
+	 * here rather than per screen so every cycling hint in the mod beats in step.
+	 */
+	private static final long GHOST_CYCLE_MS = 3600L;
+
+	/**
 	 * Declare this machine's ghost hints with {@link #ghostHint} calls. Called every frame after the
 	 * slots and their items are drawn, and <em>before</em> the upgrade panel — so a hint never paints
 	 * over a panel the player has dragged across the slot it belongs to.
@@ -310,6 +318,24 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 		int y = this.topPos + slot.y;
 		graphics.item(hint, x, y);
 		graphics.fill(x, y, x + SLOT_INNER, y + SLOT_INNER, GHOST_WASH);
+	}
+
+	/**
+	 * Pick the entry of {@code options} whose turn it is, so a {@link #ghostHint} can name several
+	 * equally valid answers instead of freezing on one of them.
+	 *
+	 * <p>Use it wherever a slot takes a family of items and no member is the "right" one: a single
+	 * frozen picture there reads as "only this one fits". Where one answer IS right — the slot's
+	 * contents already narrowed it down — show that one instead and stop cycling.
+	 */
+	protected static ItemStack cyclingHint(List<Item> options) {
+		if (options.isEmpty()) {
+			return ItemStack.EMPTY;
+		}
+		// System.currentTimeMillis() is the clock the rest of this package already animates on
+		// (the press flashes below, UpgradePanelController) — one time source, not two.
+		int i = (int) ((System.currentTimeMillis() / GHOST_CYCLE_MS) % options.size());
+		return new ItemStack(options.get(i));
 	}
 
 	@Override

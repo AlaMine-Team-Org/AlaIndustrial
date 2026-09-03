@@ -83,6 +83,7 @@ public final class ModSounds {
 	public static Supplier<SoundEvent> CHARGE_PAD_HUM = unbound("CHARGE_PAD_HUM");
 	public static Supplier<SoundEvent> ENERGY_CONDENSER_HUM = unbound("ENERGY_CONDENSER_HUM");
 	public static Supplier<SoundEvent> COMPONENT_REPAIR_BENCH_HUM = unbound("COMPONENT_REPAIR_BENCH_HUM");
+	public static Supplier<SoundEvent> INCUBATOR_HUM = unbound("INCUBATOR_HUM");
 	public static Supplier<SoundEvent> REACTOR_HUM = unbound("REACTOR_HUM");
 	public static Supplier<SoundEvent> REACTOR_ALARM = unbound("REACTOR_ALARM");
 	public static Supplier<SoundEvent> REACTOR_SPINDOWN = unbound("REACTOR_SPINDOWN");
@@ -130,6 +131,10 @@ public final class ModSounds {
 			variableRange("energy_condenser_hum", s -> ENERGY_CONDENSER_HUM = s),
 			// Soft rhythmic hammer taps with a metallic ring, playing only while a repair is running.
 			variableRange("component_repair_bench_hum", s -> COMPONENT_REPAIR_BENCH_HUM = s),
+			// The mutation chamber's nutrient bath: a warm wet gurgle under the dome, chosen over the
+			// obvious Geiger ticking so the machine reads as growing something rather than as a hazard —
+			// the irradiation is the method here, not the point.
+			variableRange("incubator_hum", s -> INCUBATOR_HUM = s),
 			// MOD-472 — the reactor's core drone, played per VOICED COLUMN rather than once at the
 			// controller: the noise belongs to the fuel racks standing on the floor, and a room the player
 			// walks around should sound like a hall, not like a panel on the wall. The controller picks

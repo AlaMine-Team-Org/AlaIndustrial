@@ -1457,6 +1457,10 @@ public final class ContentManifest {
 			plain("silver_gear", s -> ModContent.SILVER_GEAR = s),
 			// MOD-534: electrum's first use as a gear — the netherite tip's head drive.
 			plain("electrum_gear", s -> ModContent.ELECTRUM_GEAR = s),
+			// MOD-467: bearings. Deliberately built out of parts the mod barely used — the stone gear had
+			// no consumer recipe at all, and neither did the nickel and reinforced-bronze plates.
+			plain("basic_bearing", s -> ModContent.BASIC_BEARING = s),
+			plain("reinforced_bearing", s -> ModContent.REINFORCED_BEARING = s),
 			// MOD-534: the assembled drill bit and the smithing template that gates it.
 			plain("netherite_drill_head", s -> ModContent.NETHERITE_DRILL_HEAD = s),
 			// Netherite Drill Upgrade smithing template (MOD-534) — the mod's first smithing template, and the

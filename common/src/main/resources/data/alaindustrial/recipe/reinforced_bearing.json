@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"pattern": [
+		" P ",
+		"BGB",
+		" P "
+	],
+	"key": {
+		"P": "alaindustrial:bronze_reinforced_plate",
+		"B": "alaindustrial:basic_bearing",
+		"G": "alaindustrial:electrum_gear"
+	},
+	"result": {
+		"id": "alaindustrial:reinforced_bearing",
+		"count": 1
+	}
+}

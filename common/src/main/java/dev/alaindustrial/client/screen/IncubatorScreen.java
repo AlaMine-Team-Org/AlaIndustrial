@@ -2,15 +2,19 @@ package dev.alaindustrial.client.screen;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.block.entity.IncubatorBlockEntity;
 import dev.alaindustrial.block.entity.IncubatorMode;
 import dev.alaindustrial.block.entity.IncubatorStatus;
 import dev.alaindustrial.menu.IncubatorMenu;
+import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Screen for the incubator (MOD-118).
@@ -95,6 +99,28 @@ public class IncubatorScreen extends MachineScreen<IncubatorMenu> {
 			graphics.fill(x + PIP_X, py, x + PIP_X + PIP_SIZE, py + PIP_SIZE,
 					i < charge ? PIP_ON : PIP_OFF);
 		}
+	}
+
+	/**
+	 * Ghost hints for the two slots the machine cannot start without.
+	 *
+	 * <p>The chip hint cycles through all three chips because they are equally valid answers to "what
+	 * goes here" — each one merely picks a different mode, and a frozen picture of the transform chip
+	 * would read as "only that one fits". The fuel hint is a single item: the fuel tag holds exactly
+	 * the uranium ingot, so there is nothing to cycle.
+	 *
+	 * <p>The input and output slots stay unhinted on purpose: the input takes whatever the loaded mode
+	 * has a recipe for, so no single picture would be honest, and the two right-hand slots are filled
+	 * by the machine, not by the player.
+	 */
+	@Override
+	protected void drawGhostHints(GuiGraphicsExtractor graphics) {
+		ghostHint(graphics, IncubatorBlockEntity.CHIP_SLOT, cyclingHint(List.of(
+				ModContent.MUTATION_CHIP_TRANSFORM.get(),
+				ModContent.MUTATION_CHIP_DUPLICATE.get(),
+				ModContent.MUTATION_CHIP_CREATE.get())));
+		ghostHint(graphics, IncubatorBlockEntity.FUEL_SLOT,
+				new ItemStack(ModContent.URANIUM_INGOT.get()));
 	}
 
 	@Override

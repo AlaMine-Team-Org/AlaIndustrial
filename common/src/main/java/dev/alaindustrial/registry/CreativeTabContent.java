@@ -357,6 +357,8 @@ public final class CreativeTabContent {
 		show(out, ModContent.GOLD_GEAR);
 		show(out, ModContent.SILVER_GEAR);
 		show(out, ModContent.ELECTRUM_GEAR);
+		show(out, ModContent.BASIC_BEARING);
+		show(out, ModContent.REINFORCED_BEARING);
 		show(out, ModContent.NETHERITE_DRILL_HEAD);
 		show(out, ModContent.NETHERITE_DRILL_UPGRADE_SMITHING_TEMPLATE);
 	}
@@ -569,6 +571,8 @@ public final class CreativeTabContent {
 		show(out, ModContent.GOLD_GEAR);
 		show(out, ModContent.SILVER_GEAR);
 		show(out, ModContent.ELECTRUM_GEAR);
+		show(out, ModContent.BASIC_BEARING);
+		show(out, ModContent.REINFORCED_BEARING);
 		show(out, ModContent.NETHERITE_DRILL_HEAD);
 		show(out, ModContent.NETHERITE_DRILL_UPGRADE_SMITHING_TEMPLATE);
 		// The rubber and cloth chains, each from raw to finished.

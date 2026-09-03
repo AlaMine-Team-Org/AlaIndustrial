@@ -189,6 +189,16 @@
       }
     ]
   },
+  "incubator_hum": {
+    "subtitle": "subtitles.alaindustrial.incubator_hum",
+    "sounds": [
+      {
+        "name": "alaindustrial:incubator_hum",
+        "stream": false,
+        "preload": true
+      }
+    ]
+  },
   "component_repair_bench_hum": {
     "subtitle": "subtitles.alaindustrial.component_repair_bench_hum",
     "sounds": [

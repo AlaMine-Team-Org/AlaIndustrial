@@ -4,9 +4,12 @@ import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.IncubatorBlockEntity;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModParticles;
+import dev.alaindustrial.registry.ModSounds;
 import dev.alaindustrial.registry.ModTags;
+import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -27,7 +30,7 @@ import net.minecraft.world.entity.LivingEntity;
  * the original state is remembered in this block entity, so breaking the multiblock hands the player
  * back exactly the glass they used (and a coloured glass tints the dome for free).
  */
-public class IncubatorBlock extends LitMachineBlock {
+public class IncubatorBlock extends LitMachineBlock implements MachineHumProvider {
 
 	public static final MapCodec<IncubatorBlock> CODEC = simpleCodec(IncubatorBlock::new);
 
@@ -48,7 +51,16 @@ public class IncubatorBlock extends LitMachineBlock {
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
 			BlockEntityType<T> type) {
-		return machineTicker(level);
+		// Hum ticker, not the plain machine ticker: the client loop is driven off the vanilla lit
+		// blockstate (pattern A). Swapping this back to machineTicker leaves the machine silent with a
+		// perfectly good MachineHumProvider implementation below — the failure is quiet, so it is called
+		// out here.
+		return humMachineTicker(level);
+	}
+
+	@Override
+	public Supplier<SoundEvent> humSound() {
+		return ModSounds.INCUBATOR_HUM;
 	}
 
 	@Override

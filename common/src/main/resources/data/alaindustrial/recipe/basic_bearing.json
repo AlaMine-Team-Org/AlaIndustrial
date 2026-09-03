@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"pattern": [
+		"NIN",
+		"ISI",
+		"NIN"
+	],
+	"key": {
+		"N": "alaindustrial:nickel_plate",
+		"I": "minecraft:iron_nugget",
+		"S": "alaindustrial:stone_gear"
+	},
+	"result": {
+		"id": "alaindustrial:basic_bearing",
+		"count": 4
+	}
+}

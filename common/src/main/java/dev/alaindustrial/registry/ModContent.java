@@ -370,6 +370,10 @@ public final class ModContent {
 	// Electrum Gear (MOD-534) — the head drive of the netherite-tipped drill, and electrum's first use
 	// as a gear. Same wooden-gear-plus-four-ingots shape as the tiers above.
 	public static Supplier<Item> ELECTRUM_GEAR = unbound("ELECTRUM_GEAR");
+	// Bearings (MOD-467): the rotating joint the mod had no part for. Two tiers — the plain one is
+	// built around a stone gear, the reinforced one is two of those stacked and braced.
+	public static Supplier<Item> BASIC_BEARING = unbound("BASIC_BEARING");
+	public static Supplier<Item> REINFORCED_BEARING = unbound("REINFORCED_BEARING");
 	public static Supplier<Item> TEMPERED_IRON = unbound("TEMPERED_IRON");
 	public static Supplier<Item> TEMPERED_IRON_PICKAXE = unbound("TEMPERED_IRON_PICKAXE");
 	public static Supplier<Item> TEMPERED_IRON_AXE = unbound("TEMPERED_IRON_AXE");

@@ -16,7 +16,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -58,12 +57,6 @@ public class ComponentRepairBenchScreen extends ProgressMachineScreen<ComponentR
 	private static final int ARROW_W = 25;
 	private static final int ARROW_H = 13;
 
-	/**
-	 * How long each item stays up in a cycling ghost hint. Was 1200 ms; playtesting called that
-	 * flicker, so it is three times slower — long enough to read one answer before the next.
-	 */
-	private static final long GHOST_CYCLE_MS = 3600L;
-
 	/** Wrap width for the arrow tooltip, matching the upgrade panel's. */
 	private static final int TOOLTIP_WIDTH = 200;
 
@@ -101,17 +94,6 @@ public class ComponentRepairBenchScreen extends ProgressMachineScreen<ComponentR
 		return AbstractGeneratorBlockEntity.tierOf(target(), null);
 	}
 
-	/** Pick the entry of {@code options} whose turn it is, so a hint can name several valid answers. */
-	private static ItemStack cycling(List<Item> options) {
-		if (options.isEmpty()) {
-			return ItemStack.EMPTY;
-		}
-		// System.currentTimeMillis() is the clock the rest of this package already animates on
-		// (MachineScreen's press flashes, UpgradePanelController) — one time source, not two.
-		int i = (int) ((System.currentTimeMillis() / GHOST_CYCLE_MS) % options.size());
-		return new ItemStack(options.get(i));
-	}
-
 	/**
 	 * Ghost hints for both empty slots.
 	 *
@@ -123,12 +105,12 @@ public class ComponentRepairBenchScreen extends ProgressMachineScreen<ComponentR
 	@Override
 	protected void drawGhostHints(GuiGraphicsExtractor graphics) {
 		ghostHint(graphics, ComponentRepairBenchBlockEntity.TARGET_SLOT,
-				cycling(List.of(ModContent.WINDMILL_ROTOR.get(), ModContent.WATER_MILL_WHEEL.get())));
+				cyclingHint(List.of(ModContent.WINDMILL_ROTOR.get(), ModContent.WATER_MILL_WHEEL.get())));
 
 		ComponentTier tier = loadedTier();
 		ItemStack materialHint = tier != null
 				? new ItemStack(ComponentRepairBenchBlockEntity.materialFor(tier))
-				: cycling(List.of(
+				: cyclingHint(List.of(
 						ComponentRepairBenchBlockEntity.materialFor(ComponentTier.WINDMILL_ROTOR),
 						ComponentRepairBenchBlockEntity.materialFor(ComponentTier.WINDMILL_ROTOR_REINFORCED),
 						ComponentRepairBenchBlockEntity.materialFor(ComponentTier.WINDMILL_ROTOR_ADVANCED)));
