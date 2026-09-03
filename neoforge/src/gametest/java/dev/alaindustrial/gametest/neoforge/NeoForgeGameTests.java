@@ -71,6 +71,7 @@ import dev.alaindustrial.gametest.ScytheScenarios;
 import dev.alaindustrial.gametest.StockDisplayFrameScenarios;
 import dev.alaindustrial.gametest.TemperedIronToolScenarios;
 import dev.alaindustrial.gametest.ItemPipeScenarios;
+import dev.alaindustrial.gametest.PipeLowArmScenarios;
 import dev.alaindustrial.gametest.PersistenceScenarios;
 import dev.alaindustrial.gametest.EnrichedUraniumTorchScenarios;
 import dev.alaindustrial.gametest.ComponentRepairBenchScenarios;
@@ -1412,6 +1413,20 @@ public final class NeoForgeGameTests {
 		registerTest(event, "scythe_crop_bonus_absent_on_zero_tier", 40, true, ScytheScenarios::fun04CropBonusAbsentOnZeroChanceTier);
 		registerTest(event, "scythe_crop_bonus_always_at_full_chance", 40, true, ScytheScenarios::fun05CropBonusAlwaysDropsAtFullChance);
 		registerTest(event, "scythe_crop_bonus_skips_non_crop_block", 40, true, ScytheScenarios::neg07CropBonusSkipsNonCropBlock);
+
+		// MOD-540: a pipe joining a half-block sideways drops its arm; shape and blockstate must agree.
+		registerTest(event, "mod540_item_pipe_drops_arm_toward_half_block", 40, true,
+				PipeLowArmScenarios::itemPipeDropsArmTowardHalfBlock);
+		registerTest(event, "mod540_item_pipe_keeps_arm_level_without_half_blocks", 40, true,
+				PipeLowArmScenarios::itemPipeKeepsArmLevelWithoutHalfBlocks);
+		registerTest(event, "mod540_item_pipe_low_arm_keeps_face_mode", 40, true,
+				PipeLowArmScenarios::itemPipeLowArmKeepsFaceMode);
+		registerTest(event, "mod540_item_pipe_vertical_face_never_drops", 40, true,
+				PipeLowArmScenarios::itemPipeVerticalFaceNeverDrops);
+		registerTest(event, "mod540_item_pipe_rederives_stale_low_arm", 40, true,
+				PipeLowArmScenarios::itemPipeRederivesStaleLowArm);
+		registerTest(event, "mod540_fluid_pipe_low_arm_drops_shape", 40, true,
+				PipeLowArmScenarios::fluidPipeLowArmDropsShape);
 
 		// MOD-104: exact end-to-end item movement through native item APIs and the disabled-face gate.
 		registerTest(event, "item_pipe_transfers_between_chests", 40, true, ItemPipeScenarios::transfersBetweenChests);

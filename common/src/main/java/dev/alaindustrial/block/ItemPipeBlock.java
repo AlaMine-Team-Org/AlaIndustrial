@@ -5,6 +5,7 @@ import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
 import dev.alaindustrial.core.item.ItemLookup;
 import dev.alaindustrial.core.item.ItemNetworkManager;
 import dev.alaindustrial.core.item.PipeFaceMode;
+import dev.alaindustrial.core.item.PipeFaceRender;
 import java.util.EnumMap;
 import java.util.Map;
 import net.minecraft.core.BlockPos;
@@ -33,34 +34,34 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import dev.alaindustrial.registry.ModContent;
 
-/** Passive multipart item pipe. Routing state lives in {@link ItemPipeBlockEntity}, not blockstate. */
+/**
+ * Passive multipart item pipe. Routing state lives in {@link ItemPipeBlockEntity}, not blockstate;
+ * the blockstate carries only what the model needs — per face, what to draw ({@link PipeFaceRender}).
+ *
+ * <p>A horizontal face touching a half-block neighbour draws a dropped arm so the sleeve hugs the
+ * neighbour's side instead of floating above it (MOD-540) — the same fix cables got in MOD-042, with
+ * the "low" answer folded into the face value rather than added as a fifth property; the reasoning,
+ * and its price in blockstates, is on {@link PipeFaceRender}.
+ */
 public final class ItemPipeBlock extends BaseEntityBlock {
 	public static final MapCodec<ItemPipeBlock> CODEC = simpleCodec(ItemPipeBlock::new);
-	// Item pipes are intentionally slimmer than the 6 px copper cable so the two transport systems
-	// remain recognisable in a dense factory line.
-	private static final VoxelShape CORE = Block.box(6, 6, 6, 10, 10, 10);
-	private static final Map<Direction, VoxelShape> ARMS = new EnumMap<>(Direction.class);
-	private static final Map<Direction, EnumProperty<PipeFaceMode>> FACE_MODES = new EnumMap<>(Direction.class);
+	private static final Map<Direction, EnumProperty<PipeFaceRender>> FACE_MODES = new EnumMap<>(Direction.class);
 	static {
-		ARMS.put(Direction.DOWN, Block.box(6, 0, 6, 10, 6, 10));
-		ARMS.put(Direction.UP, Block.box(6, 10, 6, 10, 16, 10));
-		ARMS.put(Direction.NORTH, Block.box(6, 6, 0, 10, 10, 6));
-		ARMS.put(Direction.SOUTH, Block.box(6, 6, 10, 10, 10, 16));
-		ARMS.put(Direction.WEST, Block.box(0, 6, 6, 6, 10, 10));
-		ARMS.put(Direction.EAST, Block.box(10, 6, 6, 16, 10, 10));
-		FACE_MODES.put(Direction.DOWN, EnumProperty.create("down_mode", PipeFaceMode.class));
-		FACE_MODES.put(Direction.UP, EnumProperty.create("up_mode", PipeFaceMode.class));
-		FACE_MODES.put(Direction.NORTH, EnumProperty.create("north_mode", PipeFaceMode.class));
-		FACE_MODES.put(Direction.SOUTH, EnumProperty.create("south_mode", PipeFaceMode.class));
-		FACE_MODES.put(Direction.WEST, EnumProperty.create("west_mode", PipeFaceMode.class));
-		FACE_MODES.put(Direction.EAST, EnumProperty.create("east_mode", PipeFaceMode.class));
+		FACE_MODES.put(Direction.DOWN,
+				EnumProperty.create("down_mode", PipeFaceRender.class, PipeFaceRender.VERTICAL));
+		FACE_MODES.put(Direction.UP,
+				EnumProperty.create("up_mode", PipeFaceRender.class, PipeFaceRender.VERTICAL));
+		FACE_MODES.put(Direction.NORTH, EnumProperty.create("north_mode", PipeFaceRender.class));
+		FACE_MODES.put(Direction.SOUTH, EnumProperty.create("south_mode", PipeFaceRender.class));
+		FACE_MODES.put(Direction.WEST, EnumProperty.create("west_mode", PipeFaceRender.class));
+		FACE_MODES.put(Direction.EAST, EnumProperty.create("east_mode", PipeFaceRender.class));
 	}
 
 	public ItemPipeBlock(Properties properties) {
 		super(properties);
 		BlockState state = stateDefinition.any();
-		for (EnumProperty<PipeFaceMode> property : FACE_MODES.values()) {
-			state = state.setValue(property, PipeFaceMode.DISABLED);
+		for (EnumProperty<PipeFaceRender> property : FACE_MODES.values()) {
+			state = state.setValue(property, PipeFaceRender.DISABLED);
 		}
 		registerDefaultState(state);
 	}
@@ -73,14 +74,14 @@ public final class ItemPipeBlock extends BaseEntityBlock {
 	@Override public BlockState getStateForPlacement(BlockPlaceContext context) {
 		BlockState state = defaultBlockState();
 		for (Direction dir : Direction.values()) {
-			state = state.setValue(FACE_MODES.get(dir), visibleMode(context.getLevel(), context.getClickedPos(), dir));
+			state = state.setValue(FACE_MODES.get(dir), visibleRender(context.getLevel(), context.getClickedPos(), dir));
 		}
 		return state;
 	}
 
 	@Override protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess,
 			BlockPos pos, Direction direction, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
-		return state.setValue(FACE_MODES.get(direction), visibleMode(level, pos, direction));
+		return state.setValue(FACE_MODES.get(direction), visibleRender(level, pos, direction));
 	}
 
 	@Override protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock,
@@ -130,12 +131,39 @@ public final class ItemPipeBlock extends BaseEntityBlock {
 	}
 
 	/**
-	 * Model state for one face. A missing neighbour intentionally maps to {@link PipeFaceMode#DISABLED}
+	 * What one face draws. A missing neighbour intentionally maps to {@link PipeFaceRender#DISABLED}
 	 * without overwriting the player's persistent BE configuration, so reconnecting a chest restores
 	 * its selected mode while an unconnected pipe stays visually compact.
+	 *
+	 * <p>The half-block answer rides along here rather than in a property of its own (MOD-540), which
+	 * is why the low arm needs no plumbing beyond this line: every path that keeps a face current —
+	 * placement, {@code updateShape}, {@link #refreshConnections} and the once-per-load re-derive in
+	 * {@link ItemPipeBlockEntity} — already goes through this method.
 	 */
-	private static PipeFaceMode visibleMode(LevelReader level, BlockPos pos, Direction direction) {
-		return shouldConnectTo(level, pos, direction) ? faceMode(level, pos, direction) : PipeFaceMode.DISABLED;
+	private static PipeFaceRender visibleRender(LevelReader level, BlockPos pos, Direction direction) {
+		if (!shouldConnectTo(level, pos, direction)) {
+			return PipeFaceRender.DISABLED;
+		}
+		boolean low = direction.getAxis().isHorizontal()
+				&& HalfBlockNeighbour.isLow(level, pos.relative(direction));
+		return PipeFaceRender.of(faceMode(level, pos, direction), low);
+	}
+
+	/**
+	 * What the given face of this state draws. The blockstate property itself stays private — this is
+	 * the read the gametests and any future tooling use, so the six properties keep exactly one owner.
+	 */
+	public static PipeFaceRender renderAt(BlockState state, Direction direction) {
+		return state.getValue(FACE_MODES.get(direction));
+	}
+
+	/**
+	 * The same state with one face set to {@code render}. Paired with {@link #renderAt} so the six
+	 * properties keep a single owner even where a caller needs to write one — today that is the
+	 * gametest covering the low-arm branch a future half-block fluid port would take.
+	 */
+	public static BlockState withRender(BlockState state, Direction direction, PipeFaceRender render) {
+		return state.setValue(FACE_MODES.get(direction), render);
 	}
 
 	/** Recompute the six baked model faces without recursively dirtying every neighbour network. */
@@ -144,15 +172,18 @@ public final class ItemPipeBlock extends BaseEntityBlock {
 		if (!(current.getBlock() instanceof ItemPipeBlock)) return;
 		BlockState updated = current;
 		for (Direction dir : Direction.values()) {
-			updated = updated.setValue(FACE_MODES.get(dir), visibleMode(level, pos, dir));
+			updated = updated.setValue(FACE_MODES.get(dir), visibleRender(level, pos, dir));
 		}
 		if (updated != current) level.setBlock(pos, updated, Block.UPDATE_CLIENTS);
 	}
 
 	@Override protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-		VoxelShape result = CORE;
-		for (Map.Entry<Direction, EnumProperty<PipeFaceMode>> entry : FACE_MODES.entrySet()) {
-			if (state.getValue(entry.getValue()) != PipeFaceMode.DISABLED) result = Shapes.or(result, ARMS.get(entry.getKey()));
+		VoxelShape result = PipeShapes.CORE;
+		for (Map.Entry<Direction, EnumProperty<PipeFaceRender>> entry : FACE_MODES.entrySet()) {
+			PipeFaceRender render = state.getValue(entry.getValue());
+			if (render != PipeFaceRender.DISABLED) {
+				result = Shapes.or(result, PipeShapes.arm(entry.getKey(), render.low()));
+			}
 		}
 		return result;
 	}

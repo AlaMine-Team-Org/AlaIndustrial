@@ -350,6 +350,10 @@ pitest {
             'dev.alaindustrial.core.item.ItemNetworkManager',
             'dev.alaindustrial.core.energy.NetworkManager',
             'dev.alaindustrial.core.item.PipeFaceMode',
+            // MOD-540: the render-side sibling of the enum above — what a pipe face DRAWS, low arm
+            // included. StringRepresentable-coupled exactly like PipeFaceMode, so PIT's minion cannot
+            // load it here; its behaviour is covered by the L2 low-arm scenarios on both loaders.
+            'dev.alaindustrial.core.item.PipeFaceRender',
             'dev.alaindustrial.core.environment.SolarSky',
             'dev.alaindustrial.core.environment.WindMillClearance',
             'dev.alaindustrial.core.environment.WindMillInterference',

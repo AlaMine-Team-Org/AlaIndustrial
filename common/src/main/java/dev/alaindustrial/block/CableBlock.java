@@ -135,7 +135,7 @@ public class CableBlock extends AbstractMachineBlock {
 
 	/**
 	 * Per-horizontal-direction {@code *Low} flag — {@code true} when the neighbour in that direction
-	 * is a half-block (collision {@code maxY <= LOW_NEIGHBOUR_THRESHOLD}), so the arm drops to
+	 * is a half-block (see {@link HalfBlockNeighbour}), so the arm drops to
 	 * {@link #ARMS_LOW}. Vertical directions are not flagged: a cable above/below a slab connects
 	 * at the cell centre already and is visually fine.
 	 */
@@ -146,9 +146,6 @@ public class CableBlock extends AbstractMachineBlock {
 		LOW_FLAGS.put(Direction.WEST, BooleanProperty.create("west_low"));
 		LOW_FLAGS.put(Direction.EAST, BooleanProperty.create("east_low"));
 	}
-
-	/** Neighbours at or below this height (in blocks) are "half-blocks" for the low-arm geometry. */
-	private static final double LOW_NEIGHBOUR_THRESHOLD = 0.5;
 
 	/**
 	 * A visually negligible contact tolerance around the solid cable shape. It only needs to exceed
@@ -682,15 +679,14 @@ public class CableBlock extends AbstractMachineBlock {
 
 	/**
 	 * Whether the block at {@code neighborPos} is a "low" (half-block) neighbour — collision shape
-	 * top at or below {@link #LOW_NEIGHBOUR_THRESHOLD} (0.5 blocks, e.g. a Solar Panel). Drives the
+	 * top at or below {@link HalfBlockNeighbour#LOW_NEIGHBOUR_THRESHOLD} (e.g. a Solar Panel). Drives the
 	 * per-direction {@code *_low} flag so the horizontal arm drops to {@link #ARMS_LOW}. This reads
 	 * the neighbour's shape generically (no block-type special-casing), so any future half-block
 	 * machine connects the same way. {@link LevelReader} extends {@link BlockGetter}, so it satisfies
 	 * {@link BlockState#getShape(BlockGetter, BlockPos)}; empty shapes (air, fluids) are not low.
 	 */
 	private static boolean isLowNeighbour(LevelReader level, BlockPos neighborPos) {
-		VoxelShape shape = level.getBlockState(neighborPos).getShape(level, neighborPos);
-		return !shape.isEmpty() && shape.bounds().maxY <= LOW_NEIGHBOUR_THRESHOLD;
+		return HalfBlockNeighbour.isLow(level, neighborPos);
 	}
 
 	/**

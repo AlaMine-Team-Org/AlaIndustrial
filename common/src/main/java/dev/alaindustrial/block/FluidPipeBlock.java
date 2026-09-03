@@ -5,6 +5,7 @@ import dev.alaindustrial.block.entity.FluidPipeBlockEntity;
 import dev.alaindustrial.core.fluid.FluidLookup;
 import dev.alaindustrial.core.fluid.FluidNetworkManager;
 import dev.alaindustrial.core.item.PipeFaceMode;
+import dev.alaindustrial.core.item.PipeFaceRender;
 import dev.alaindustrial.registry.ModContent;
 import java.util.EnumMap;
 import java.util.Map;
@@ -49,32 +50,26 @@ public final class FluidPipeBlock extends BaseEntityBlock {
 	/** True while the segment holds fluid — drives the visible core, not the colour. */
 	public static final BooleanProperty FILLED = BooleanProperty.create("filled");
 
-	// Same slim profile as the item pipe: the two transport systems read as siblings, and are told
-	// apart by texture and by the fluid colour showing through, not by size.
-	private static final VoxelShape CORE = Block.box(6, 6, 6, 10, 10, 10);
-	private static final Map<Direction, VoxelShape> ARMS = new EnumMap<>(Direction.class);
-	private static final Map<Direction, EnumProperty<PipeFaceMode>> FACE_MODES = new EnumMap<>(Direction.class);
+	// Geometry is shared with the item pipe (see PipeShapes): the two transport systems read as
+	// siblings, and are told apart by texture and by the fluid colour showing through, not by size.
+	private static final Map<Direction, EnumProperty<PipeFaceRender>> FACE_MODES = new EnumMap<>(Direction.class);
 
 	static {
-		ARMS.put(Direction.DOWN, Block.box(6, 0, 6, 10, 6, 10));
-		ARMS.put(Direction.UP, Block.box(6, 10, 6, 10, 16, 10));
-		ARMS.put(Direction.NORTH, Block.box(6, 6, 0, 10, 10, 6));
-		ARMS.put(Direction.SOUTH, Block.box(6, 6, 10, 10, 10, 16));
-		ARMS.put(Direction.WEST, Block.box(0, 6, 6, 6, 10, 10));
-		ARMS.put(Direction.EAST, Block.box(10, 6, 6, 16, 10, 10));
-		FACE_MODES.put(Direction.DOWN, EnumProperty.create("down_mode", PipeFaceMode.class));
-		FACE_MODES.put(Direction.UP, EnumProperty.create("up_mode", PipeFaceMode.class));
-		FACE_MODES.put(Direction.NORTH, EnumProperty.create("north_mode", PipeFaceMode.class));
-		FACE_MODES.put(Direction.SOUTH, EnumProperty.create("south_mode", PipeFaceMode.class));
-		FACE_MODES.put(Direction.WEST, EnumProperty.create("west_mode", PipeFaceMode.class));
-		FACE_MODES.put(Direction.EAST, EnumProperty.create("east_mode", PipeFaceMode.class));
+		FACE_MODES.put(Direction.DOWN,
+				EnumProperty.create("down_mode", PipeFaceRender.class, PipeFaceRender.VERTICAL));
+		FACE_MODES.put(Direction.UP,
+				EnumProperty.create("up_mode", PipeFaceRender.class, PipeFaceRender.VERTICAL));
+		FACE_MODES.put(Direction.NORTH, EnumProperty.create("north_mode", PipeFaceRender.class));
+		FACE_MODES.put(Direction.SOUTH, EnumProperty.create("south_mode", PipeFaceRender.class));
+		FACE_MODES.put(Direction.WEST, EnumProperty.create("west_mode", PipeFaceRender.class));
+		FACE_MODES.put(Direction.EAST, EnumProperty.create("east_mode", PipeFaceRender.class));
 	}
 
 	public FluidPipeBlock(Properties properties) {
 		super(properties);
 		BlockState state = stateDefinition.any().setValue(FILLED, false);
-		for (EnumProperty<PipeFaceMode> property : FACE_MODES.values()) {
-			state = state.setValue(property, PipeFaceMode.DISABLED);
+		for (EnumProperty<PipeFaceRender> property : FACE_MODES.values()) {
+			state = state.setValue(property, PipeFaceRender.DISABLED);
 		}
 		registerDefaultState(state);
 	}
@@ -95,7 +90,7 @@ public final class FluidPipeBlock extends BaseEntityBlock {
 		BlockState state = defaultBlockState();
 		for (Direction dir : Direction.values()) {
 			state = state.setValue(FACE_MODES.get(dir),
-					visibleMode(context.getLevel(), context.getClickedPos(), dir));
+					visibleRender(context.getLevel(), context.getClickedPos(), dir));
 		}
 		return state;
 	}
@@ -103,7 +98,7 @@ public final class FluidPipeBlock extends BaseEntityBlock {
 	@Override
 	protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess,
 			BlockPos pos, Direction direction, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
-		return state.setValue(FACE_MODES.get(direction), visibleMode(level, pos, direction));
+		return state.setValue(FACE_MODES.get(direction), visibleRender(level, pos, direction));
 	}
 
 	@Override
@@ -149,11 +144,37 @@ public final class FluidPipeBlock extends BaseEntityBlock {
 	}
 
 	/**
-	 * Model state for one face. A missing neighbour maps to {@link PipeFaceMode#DISABLED} without
+	 * What one face draws. A missing neighbour maps to {@link PipeFaceRender#DISABLED} without
 	 * overwriting the player's stored configuration, so reconnecting a tank restores the chosen mode.
+	 *
+	 * <p>Whether the arm drops toward a half-block neighbour is decided here too (MOD-540), so every
+	 * path that keeps a face current already keeps the low arm current — see the same method on the
+	 * item pipe for why that is the whole plumbing this feature needs.
 	 */
-	private static PipeFaceMode visibleMode(LevelReader level, BlockPos pos, Direction direction) {
-		return shouldConnectTo(level, pos, direction) ? faceMode(level, pos, direction) : PipeFaceMode.DISABLED;
+	private static PipeFaceRender visibleRender(LevelReader level, BlockPos pos, Direction direction) {
+		if (!shouldConnectTo(level, pos, direction)) {
+			return PipeFaceRender.DISABLED;
+		}
+		boolean low = direction.getAxis().isHorizontal()
+				&& HalfBlockNeighbour.isLow(level, pos.relative(direction));
+		return PipeFaceRender.of(faceMode(level, pos, direction), low);
+	}
+
+	/**
+	 * What the given face of this state draws. The blockstate property itself stays private — this is
+	 * the read the gametests and any future tooling use, so the six properties keep exactly one owner.
+	 */
+	public static PipeFaceRender renderAt(BlockState state, Direction direction) {
+		return state.getValue(FACE_MODES.get(direction));
+	}
+
+	/**
+	 * The same state with one face set to {@code render}. Paired with {@link #renderAt} so the six
+	 * properties keep a single owner even where a caller needs to write one — today that is the
+	 * gametest covering the low-arm branch a future half-block fluid port would take.
+	 */
+	public static BlockState withRender(BlockState state, Direction direction, PipeFaceRender render) {
+		return state.setValue(FACE_MODES.get(direction), render);
 	}
 
 	/** Recompute the six baked model faces without recursively dirtying neighbouring networks. */
@@ -164,7 +185,7 @@ public final class FluidPipeBlock extends BaseEntityBlock {
 		}
 		BlockState updated = current;
 		for (Direction dir : Direction.values()) {
-			updated = updated.setValue(FACE_MODES.get(dir), visibleMode(level, pos, dir));
+			updated = updated.setValue(FACE_MODES.get(dir), visibleRender(level, pos, dir));
 		}
 		if (updated != current) {
 			level.setBlock(pos, updated, Block.UPDATE_CLIENTS);
@@ -182,10 +203,11 @@ public final class FluidPipeBlock extends BaseEntityBlock {
 
 	@Override
 	protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-		VoxelShape result = CORE;
-		for (Map.Entry<Direction, EnumProperty<PipeFaceMode>> entry : FACE_MODES.entrySet()) {
-			if (state.getValue(entry.getValue()) != PipeFaceMode.DISABLED) {
-				result = Shapes.or(result, ARMS.get(entry.getKey()));
+		VoxelShape result = PipeShapes.CORE;
+		for (Map.Entry<Direction, EnumProperty<PipeFaceRender>> entry : FACE_MODES.entrySet()) {
+			PipeFaceRender render = state.getValue(entry.getValue());
+			if (render != PipeFaceRender.DISABLED) {
+				result = Shapes.or(result, PipeShapes.arm(entry.getKey(), render.low()));
 			}
 		}
 		return result;

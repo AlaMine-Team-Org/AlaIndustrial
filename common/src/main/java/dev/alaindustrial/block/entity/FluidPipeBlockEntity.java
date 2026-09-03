@@ -47,6 +47,8 @@ public final class FluidPipeBlockEntity extends EnergyBlockEntity implements Flu
 
 	private int packedFaceModes;
 	private boolean registered;
+	/** Whether the once-per-load face re-derive has run — see {@link #validateShapeOnce}. */
+	private boolean shapeValidated;
 
 	public FluidPipeBlockEntity(BlockPos pos, BlockState state) {
 		super(ModContent.FLUID_PIPE_BE.get(), pos, state, EnergyTier.LV, 0, 0, 0);
@@ -55,7 +57,25 @@ public final class FluidPipeBlockEntity extends EnergyBlockEntity implements Flu
 	@Override
 	protected int onServerTick(Level level, BlockPos pos, BlockState state) {
 		ensureRegistered();
+		validateShapeOnce(level, pos);
 		return 0;
+	}
+
+	/**
+	 * Re-derive the six drawn faces once per load (MOD-540, the pattern MOD-061 established for
+	 * cables). The blockstate stores what each face draws, including whether its arm drops toward a
+	 * half-block neighbour — but the paths that keep it current, {@code getStateForPlacement} and
+	 * {@code updateShape}, run on placement and on a neighbour change, never on chunk load. A pipe
+	 * laid before this feature existed, or one whose neighbour changed height while its chunk was
+	 * unloaded, would therefore keep a stale sleeve for ever. One pass on the first server tick costs
+	 * a handful of neighbour reads per segment per load and makes the saved geometry self-correcting.
+	 */
+	private void validateShapeOnce(Level level, BlockPos pos) {
+		if (shapeValidated) {
+			return;
+		}
+		shapeValidated = true;
+		FluidPipeBlock.refreshConnections(level, pos);
 	}
 
 	public void ensureRegistered() {

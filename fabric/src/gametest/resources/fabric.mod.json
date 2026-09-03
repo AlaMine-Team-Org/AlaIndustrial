@@ -60,6 +60,7 @@
       "dev.alaindustrial.gametest.IndustrialistVillagerGameTest",
       "dev.alaindustrial.gametest.ItemEnergyCapabilityGameTest",
       "dev.alaindustrial.gametest.ItemPipeGameTest",
+      "dev.alaindustrial.gametest.PipeLowArmGameTest",
       "dev.alaindustrial.gametest.JetpackGameTest",
       "dev.alaindustrial.gametest.KokSagyzGameTest",
       "dev.alaindustrial.gametest.MachineEnergyGameTest",
