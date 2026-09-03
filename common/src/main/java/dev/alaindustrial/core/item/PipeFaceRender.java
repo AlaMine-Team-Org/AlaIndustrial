@@ -13,7 +13,14 @@ import net.minecraft.util.StringRepresentable;
  * a four-value enum, six times over — so the same four booleans would multiply the item pipe from
  * 4 096 states to 65 536 and the fluid pipe from 8 192 to 131 072. States are not free: for a block
  * without a dynamic shape, {@code BlockBehaviour.BlockStateBase.initCache()} builds and keeps a
- * {@code VoxelShape} per state, and a pipe's shape is a fresh {@code Shapes.or} of its core and arms.
+ * {@code VoxelShape} per state.
+ *
+ * <p>What that accounting missed, and MOD-562 paid for: {@code initCache()} asks the block for its
+ * shape TWENTY times per state, so a pipe that assembled its shape in {@code getShape} paid the
+ * {@code Shapes.or} twenty times over — 440 s of a 530 s client startup. The shape now comes from
+ * {@link dev.alaindustrial.block.FaceShapeTable}, which holds one entry per geometry; the mode a face
+ * shows is texture, not geometry, so these seven values still cost only the states, never the
+ * assembly. See ADR-023.
  *
  * <p>Folding "low" into the face value instead costs 7 values on the four horizontal faces (the
  * vertical two keep the plain four — a pipe above or below a slab already meets it correctly), which

@@ -72,6 +72,7 @@ env:
 jobs:
   release:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     outputs:
       tag: ${{ steps.rel.outputs.tag }}
     steps:
@@ -115,6 +116,16 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x gradlew
 
+      # Same Gradle User Home cache as test.yml, but READ-ONLY, for two reasons. A tag ref is not
+      # the default branch, so the action would default to read-only anyway; saying it out loud
+      # keeps that from shifting under a future change of default. And `org.gradle.caching=true`
+      # means the restored home carries build-cache-1, which a release must never write task
+      # outputs back into for other runs to consume.
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: true
+
       - name: Release mode guard
         id: mode
         run: |
@@ -143,17 +154,23 @@ jobs:
       # the build's INPUTS, or processResources stops being up-to-date the moment the clock ticks over
       # a minute — which used to invalidate jar, remapJar and every gametest with it. A release build
       # is a clean one-shot, so re-stamping it costs nothing.
+      #
+      # --no-build-cache: the restored Gradle home carries build-cache-1, and a task result served
+      # from it is a test that did NOT run against the tree being shipped. This has bitten before —
+      # `:neoforge:test` came back FROM-CACHE in one second and the gate stayed green without
+      # executing anything. The cache still pays for itself here through dependencies and the asset
+      # root, which this flag does not touch.
       - name: Build
         run: |
           export ALA_BUILD_TIME="$(date -u +%Y-%m-%dT%H:%M)"
-          ./gradlew build --no-daemon --stacktrace
+          ./gradlew build --no-daemon --stacktrace --no-build-cache
 
       # In-world behaviour tests for BOTH loaders must pass before a release ships.
       # :fabric:runGameTest = Fabric server gametests; :neoforge:runGameTests =
       # NeoForge gameTestServer world tests. Required tests gate the build; tests
       # marked optional (unfinished features) only warn.
       - name: Game tests (both loaders)
-        run: ./gradlew :fabric:runGameTest :neoforge:runGameTests --no-daemon --stacktrace
+        run: ./gradlew :fabric:runGameTest :neoforge:runGameTests --no-daemon --stacktrace --no-build-cache
 
       # Resolve BOTH production jars and validate them before any upload. Guards:
       #  1. each jar exists and is non-empty,

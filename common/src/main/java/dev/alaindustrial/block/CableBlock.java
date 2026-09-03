@@ -134,6 +134,25 @@ public class CableBlock extends AbstractMachineBlock {
 	}
 
 	/**
+	 * Every shape a cable can have, one per geometry rather than one per blockstate (MOD-562). All
+	 * eight grades share the table — they differ in balance numbers and texture, not in size — and
+	 * {@code breaker_open} is not geometry either, so 2 048 states per grade collapse onto 324 shapes.
+	 */
+	private static final FaceShapeTable SHAPES = new FaceShapeTable(codes -> {
+		VoxelShape shape = CORE;
+		// PROPERTY_BY_DIRECTION's iteration order is the one the shipped getShape walked, kept so the
+		// geometry is provably unchanged — see FaceShapeTable.Assembler.
+		for (Map.Entry<Direction, BooleanProperty> entry : PipeBlock.PROPERTY_BY_DIRECTION.entrySet()) {
+			Direction dir = entry.getKey();
+			int code = codes[dir.ordinal()];
+			if (code != FaceShapeTable.NONE) {
+				shape = Shapes.or(shape, code == FaceShapeTable.LOW ? ARMS_LOW.get(dir) : ARMS.get(dir));
+			}
+		}
+		return shape;
+	});
+
+	/**
 	 * Per-horizontal-direction {@code *Low} flag — {@code true} when the neighbour in that direction
 	 * is a half-block (see {@link HalfBlockNeighbour}), so the arm drops to
 	 * {@link #ARMS_LOW}. Vertical directions are not flagged: a cable above/below a slab connects
@@ -703,16 +722,18 @@ public class CableBlock extends AbstractMachineBlock {
 
 	@Override
 	protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-		VoxelShape shape = CORE;
-		for (Map.Entry<Direction, BooleanProperty> entry : PipeBlock.PROPERTY_BY_DIRECTION.entrySet()) {
-			Direction dir = entry.getKey();
-			if (state.getValue(entry.getValue())) {
-				BooleanProperty lowFlag = LOW_FLAGS.get(dir);
-				VoxelShape arm = lowFlag != null && state.getValue(lowFlag) ? ARMS_LOW.get(dir) : ARMS.get(dir);
-				shape = Shapes.or(shape, arm);
-			}
+		return SHAPES.get(faceCode(state, Direction.DOWN), faceCode(state, Direction.UP),
+				faceCode(state, Direction.NORTH), faceCode(state, Direction.SOUTH),
+				faceCode(state, Direction.WEST), faceCode(state, Direction.EAST));
+	}
+
+	/** What one face contributes to the shape: nothing, its arm, or its dropped arm. */
+	private static int faceCode(BlockState state, Direction dir) {
+		if (!state.getValue(PipeBlock.PROPERTY_BY_DIRECTION.get(dir))) {
+			return FaceShapeTable.NONE;
 		}
-		return shape;
+		BooleanProperty lowFlag = LOW_FLAGS.get(dir);
+		return lowFlag != null && state.getValue(lowFlag) ? FaceShapeTable.LOW : FaceShapeTable.ARM;
 	}
 
 	/**

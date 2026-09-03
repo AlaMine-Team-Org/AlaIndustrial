@@ -14,7 +14,22 @@ on:
 
 jobs:
   test:
+    # A release push carries the SAME tree that release.yml then builds from the tag placed on
+    # that very commit, and release.yml runs a strict superset of the steps below: the identical
+    # `./gradlew build`, the identical gametest invocation, plus a cleanliness gate and artifact
+    # validation. Running both spends the full build twice to answer one question.
+    #
+    # The `push` clause comes first on purpose: `head_commit` is null on pull_request and on
+    # workflow_dispatch, and `startsWith(null, ...)` would be false there anyway, but leaning on
+    # that is fragile. Written this way, only a push can ever be skipped.
+    #
+    # The `>-` block is not cosmetic: a bare `!` opens a YAML tag, so `if: !startsWith(...)` is a
+    # parse error rather than a negation. Starting the scalar with `github` avoids it.
+    if: >-
+      github.event_name != 'push' ||
+      !startsWith(github.event.head_commit.message, 'Release v')
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -27,6 +42,16 @@ jobs:
 
       - name: Make gradlew executable
         run: chmod +x gradlew
+
+      # Restores the Gradle User Home (~/.gradle/caches): the Gradle distribution, the dependency
+      # cache, Loom's remapped Minecraft and NeoForm's asset root. Without it every run re-provisions
+      # all of that before a single line of Java compiles.
+      #
+      # cache-read-only is left at the action's default — false on the default branch, true
+      # everywhere else — which is exactly the split wanted here: pushes to main refresh the entry,
+      # branch pushes and pull requests only read it.
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Unit tests + build
         run: ./gradlew build --no-daemon --stacktrace

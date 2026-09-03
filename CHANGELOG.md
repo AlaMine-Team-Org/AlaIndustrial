@@ -1,15 +1,10 @@
-## 0.1.142
+## 0.1.143
 
-<p><img alt="Ala Industrial 0.1.142 update preview: basic and reinforced bearings with their recipes" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.142/release-media/v0.1.142/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial 0.1.143 fix patch" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.143/release-media/v0.1.143/changelog.jpeg" width="720"></p>
 
-Bearings arrive as a new pair of crafting parts, and the Incubator finally makes a sound.
+If the game seemed to hang on startup with 0.1.141 or 0.1.142 installed, this release fixes it.
 
-### New
+### Fixed
 
-- **Bearings — a rotating joint for machinery.** The basic one comes four at a time from a stone gear, nickel plates and iron nuggets; the reinforced one takes two of those, reinforced bronze plates and an electrum gear.
-- **Parts that had nothing to build.** Both recipes deliberately use pieces that were dead ends until now — you could craft a stone gear or a nickel plate, but there was nowhere to put them.
-
-### Improved
-
-- **The Incubator gurgles with its nutrient bath** while a mutation runs, and falls silent when it stops.
-- **Empty Incubator slots now show what goes in them.** The chip slot cycles through all three mutation chips, since any of them fits; the fuel slot shows a uranium ingot. The hint disappears as soon as you fill the slot.
+- **The game starts normally again.** Loading the mod could take around nine minutes instead of a minute and a half — long enough to look like a freeze rather than a slow load. Worlds already saved are unaffected.
+- **Pipes and cables no longer recompute their shape over and over.** The game asks every block for its shape twenty times per state while loading, and after pipes learned to bend down to low neighbours they had a lot of states. The shape is now worked out once per distinct geometry.

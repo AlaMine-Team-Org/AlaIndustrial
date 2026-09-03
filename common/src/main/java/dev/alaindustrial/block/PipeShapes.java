@@ -1,5 +1,6 @@
 package dev.alaindustrial.block;
 
+import dev.alaindustrial.core.item.PipeFaceRender;
 import java.util.EnumMap;
 import java.util.Map;
 import net.minecraft.core.Direction;
@@ -69,7 +70,42 @@ public final class PipeShapes {
 				Block.box(12, 0, 5, 16, 4, 11)));
 	}
 
+	/**
+	 * Every shape a pipe can have, one per geometry rather than one per blockstate (MOD-562). Both
+	 * pipes share the table: they are deliberately the same size, and neither the routing mode a face
+	 * shows nor the fluid pipe's {@code filled} flag is geometry.
+	 */
+	private static final FaceShapeTable TABLE = new FaceShapeTable(codes -> {
+		VoxelShape result = CORE;
+		// Direction.values() is the order both getShape loops walked (an EnumMap iterates by ordinal),
+		// kept so the geometry is provably the shipped one — see FaceShapeTable.Assembler.
+		for (Direction dir : Direction.values()) {
+			int code = codes[dir.ordinal()];
+			if (code != FaceShapeTable.NONE) {
+				result = Shapes.or(result, arm(dir, code == FaceShapeTable.LOW));
+			}
+		}
+		return result;
+	});
+
 	private PipeShapes() {
+	}
+
+	/**
+	 * The collision/outline shape of a pipe whose six faces draw these values — a table read, not an
+	 * assembly. Why that distinction is worth a class: {@link FaceShapeTable}.
+	 */
+	public static VoxelShape of(PipeFaceRender down, PipeFaceRender up, PipeFaceRender north,
+			PipeFaceRender south, PipeFaceRender west, PipeFaceRender east) {
+		return TABLE.get(code(down), code(up), code(north), code(south), code(west), code(east));
+	}
+
+	/** What one face contributes to the shape: nothing, its arm, or its dropped arm. */
+	private static int code(PipeFaceRender render) {
+		if (render == PipeFaceRender.DISABLED) {
+			return FaceShapeTable.NONE;
+		}
+		return render.low() ? FaceShapeTable.LOW : FaceShapeTable.ARM;
 	}
 
 	/**

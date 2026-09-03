@@ -30,7 +30,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import dev.alaindustrial.registry.ModContent;
 
@@ -178,14 +177,9 @@ public final class ItemPipeBlock extends BaseEntityBlock {
 	}
 
 	@Override protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-		VoxelShape result = PipeShapes.CORE;
-		for (Map.Entry<Direction, EnumProperty<PipeFaceRender>> entry : FACE_MODES.entrySet()) {
-			PipeFaceRender render = state.getValue(entry.getValue());
-			if (render != PipeFaceRender.DISABLED) {
-				result = Shapes.or(result, PipeShapes.arm(entry.getKey(), render.low()));
-			}
-		}
-		return result;
+		return PipeShapes.of(renderAt(state, Direction.DOWN), renderAt(state, Direction.UP),
+				renderAt(state, Direction.NORTH), renderAt(state, Direction.SOUTH),
+				renderAt(state, Direction.WEST), renderAt(state, Direction.EAST));
 	}
 
 	@Override public BlockEntity newBlockEntity(BlockPos pos, BlockState state) { return new ItemPipeBlockEntity(pos, state); }

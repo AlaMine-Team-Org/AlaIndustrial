@@ -11,6 +11,7 @@ on:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Token + game-version check (read-only, no upload)
         env:
