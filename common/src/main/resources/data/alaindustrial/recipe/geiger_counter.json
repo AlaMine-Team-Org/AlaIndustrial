@@ -1,0 +1,15 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"key": {
+		"T": "#c:ingots/tin",
+		"C": "alaindustrial:electronic_circuit",
+		"G": "#c:glass_panes/colorless"
+	},
+	"pattern": [
+		" G ",
+		"TCT",
+		"TTT"
+	],
+	"result": { "id": "alaindustrial:geiger_counter" }
+}

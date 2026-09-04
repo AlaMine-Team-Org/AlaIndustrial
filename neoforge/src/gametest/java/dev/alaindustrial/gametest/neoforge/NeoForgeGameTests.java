@@ -2605,6 +2605,12 @@ public final class NeoForgeGameTests {
 				RadiationScenarios::droppedUraniumStillRadiates);
 		registerTest(event, "rad_distance_weakens_the_rod", 40, true,
 				RadiationScenarios::distanceWeakensTheRod);
+		registerTest(event, "rad_ore_behind_stone_is_heard_but_feeds_no_dose", 40, true,
+				RadiationScenarios::oreBehindStoneIsHeardButFeedsNoDose);
+		registerTest(event, "rad_counter_hears_beyond_the_dose_radius", 40, true,
+				RadiationScenarios::theCounterHearsBeyondTheDoseRadius);
+		registerTest(event, "rad_many_counters_read_as_one_and_the_lamp_is_a_state", 40, true,
+				RadiationScenarios::manyCountersReadAsOneAndTheLampIsAState);
 		registerTest(event, "rad_casing_blocks_dropped_uranium", 40, true,
 				RadiationScenarios::casingBlocksDroppedUranium);
 		registerTest(event, "rad_open_door_leaks_radiation", 40, true,

@@ -2,14 +2,35 @@
 # Continuous test coverage: compiles all modules (common + fabric + neoforge),
 # runs the JUnit unit tests (via `build`) and the in-world game tests on BOTH
 # loaders (:fabric:runGameTest + :neoforge:runGameTests). Runs on branch pushes,
-# pull requests and on demand. Tags are handled by release.yml (which runs the
-# same tests before publishing), so they are excluded here to avoid a double run.
+# pull requests, weekly on a schedule (that run is what refreshes the Gradle cache)
+# and on demand. Two kinds of double run are excluded: tags go to release.yml, which
+# runs the same tests before publishing, and release COMMITS on main are skipped by
+# the job's `if:` because the tag on that very tree is about to run a superset.
 name: Tests
 
 on:
   push:
     branches: ['**']
   pull_request:
+  # Weekly, to keep the Gradle cache warm on a schedule instead of by luck (MOD-564).
+  #
+  # Only a run on the DEFAULT branch writes a cache entry, and a tag run cannot substitute: an entry
+  # written under refs/tags/vX is scoped to that tag and invisible to the next one. On main, two
+  # kinds of push reach this workflow — release commits, which the `if:` below now skips, and the
+  # guide-site publications (`docs: publish Ala Industrial guide site`, 7 of the last 30 Tests runs,
+  # roughly one or two a week). So a writer does exist; it is just irregular, tied to a manual skill,
+  # and can go quiet for weeks. A cron makes the refresh independent of it.
+  #
+  # What it buys: the ~2 minutes every release spends re-provisioning Minecraft, Loom and
+  # ModDevGradle (measured in the 0.1.144 release log: 69.4 s + 23.4 s + 21.1 s of pure setup),
+  # several times a day, against ~7 billed minutes a week here.
+  #
+  # NB: caching itself only started with 0.1.143 — before that neither workflow had `setup-gradle`
+  # at all, which is why `gh api .../actions/caches` still returned total_count = 0 and the first
+  # release log after it said «Gradle User Home cache not found. Will initialize empty.»
+  # Use `workflow_dispatch` to refresh by hand after a Minecraft/Loom/ModDevGradle bump.
+  schedule:
+    - cron: '0 4 * * 1'
   workflow_dispatch:
 
 jobs:
@@ -19,9 +40,10 @@ jobs:
     # `./gradlew build`, the identical gametest invocation, plus a cleanliness gate and artifact
     # validation. Running both spends the full build twice to answer one question.
     #
-    # The `push` clause comes first on purpose: `head_commit` is null on pull_request and on
-    # workflow_dispatch, and `startsWith(null, ...)` would be false there anyway, but leaning on
-    # that is fragile. Written this way, only a push can ever be skipped.
+    # The `push` clause comes first on purpose: `head_commit` is null on pull_request,
+    # workflow_dispatch and schedule, and `startsWith(null, ...)` would be false there anyway, but
+    # leaning on that is fragile. Written this way, only a push can ever be skipped — the weekly
+    # cache-warming run always proceeds.
     #
     # The `>-` block is not cosmetic: a bare `!` opens a YAML tag, so `if: !startsWith(...)` is a
     # parse error rather than a negation. Starting the scalar with `github` avoids it.
@@ -48,8 +70,10 @@ jobs:
       # all of that before a single line of Java compiles.
       #
       # cache-read-only is left at the action's default — false on the default branch, true
-      # everywhere else — which is exactly the split wanted here: pushes to main refresh the entry,
-      # branch pushes and pull requests only read it.
+      # everywhere else — so a run on main refreshes the entry and branch pushes and pull requests
+      # only read it. NB: release pushes to main are skipped above, so the runs that actually write
+      # the entry are the weekly schedule, a manual dispatch, and guide-site publications; see the
+      # `on:` block for why the schedule is there rather than relying on the last of those.
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 

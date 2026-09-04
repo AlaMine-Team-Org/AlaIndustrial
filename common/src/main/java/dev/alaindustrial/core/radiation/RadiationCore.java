@@ -12,6 +12,9 @@ package dev.alaindustrial.core.radiation;
  */
 public final class RadiationCore {
 
+	/** Hard ceiling on how long a Geiger reading may outlive its sweep — three seconds (MOD-475). */
+	public static final long STALE_WINDOW_CEILING_TICKS = 60L;
+
 	/** Below this share of the scale there is no effect at all — a trace dose is not a symptom. */
 	public static final int LEVEL_1_PERCENT = 1;
 	public static final int LEVEL_2_PERCENT = 25;
@@ -139,6 +142,85 @@ public final class RadiationCore {
 		}
 		long ceiling = (long) maxItems * dosePerItem;
 		return (int) Math.min(raw, ceiling);
+	}
+
+	/**
+	 * Step of the Geiger counter's click rate for a field, 0 (silent) to 4 (off the scale) — MOD-475.
+	 *
+	 * <p><b>The counter is deliberately more sensitive than harm.</b> Dose only accumulates while a
+	 * field beats the decay rate ({@code radiationTickInterval}); anything weaker bleeds off as fast as
+	 * it arrives. A counter that stayed silent below that line would be deaf to exactly the thing a
+	 * player wants it for — ore in the rock, which is under the line by design. So step 1 means "there
+	 * is something here", not "you are in danger", and silence means "there is nothing at all".
+	 *
+	 * <p><b>The top step is a ceiling, not a failure.</b> Above {@code offScale} the instrument stops
+	 * telling levels apart and just rattles. A cheap tool that saturates is honest — it does not lie
+	 * about the reading, it admits it has run out of scale, which is itself the signal to leave and to
+	 * build the dosimeter (MOD-567).
+	 *
+	 * <p>Thresholds are passed in rather than read from {@code Config} so this stays a pure function:
+	 * the same reason the rest of this class has no Minecraft types.
+	 */
+	public static int geigerStep(int field, int faint, int busy, int loud, int offScale) {
+		if (field < Math.max(1, faint)) {
+			return 0;
+		}
+		if (field < busy) {
+			return 1;
+		}
+		if (field < loud) {
+			return 2;
+		}
+		return field < offScale ? 3 : 4;
+	}
+
+
+
+	/**
+	 * Ore grade from how far away the nearest uranium ore is — 0 (nothing in range) to 3 (right here).
+	 *
+	 * <p><b>Distance, not an attenuated field.</b> The field halves within a block and a half, so a
+	 * grade read off it collapsed onto its lowest rung about two blocks from a vein: a player standing
+	 * on the ore heard one click every two seconds, which is what a player standing on nothing at all
+	 * would have heard. Distance splits the radius into three even bands, is monotone as the player
+	 * walks — the whole point of hunting by ear — and answers the question a miner is actually asking.
+	 *
+	 * <p>The bands are fractions of the radius rather than fixed numbers so that the ladder survives
+	 * any configured reach: at the shipped 16 blocks they are 0–4, 4–8 and 8–16.
+	 *
+	 * @param distance blocks to the nearest ore, or negative when there is none in range
+	 * @param radius   how far the counter hears ore at all
+	 */
+	public static int oreStep(double distance, int radius) {
+		if (distance < 0.0 || radius <= 0 || distance > radius) {
+			return 0;
+		}
+		if (distance <= radius / 4.0) {
+			return 3;
+		}
+		return distance <= radius / 2.0 ? 2 : 1;
+	}
+
+	/**
+	 * Has a Geiger reading gone stale — i.e. should the counter fall silent (MOD-475)?
+	 *
+	 * <p><b>This is a safety net for the sweep's early exits, not housekeeping.</b> The sweep that
+	 * produces readings returns early when radiation is switched off in the config and when the player
+	 * is in creative or spectator mode, and both exits happen BEFORE a reading could be cleared. Without
+	 * an age, a player who flips to creative beside a reactor would hear the rattle forever, and so
+	 * would every player in a world where an operator has just turned radiation off.
+	 *
+	 * <p>Two sweeps of slack, so one missed sweep does not stutter the sound. The window is derived from
+	 * the sweep interval rather than fixed: the cadence is tunable, and a hard-coded twenty ticks would
+	 * break silently the day somebody slows it down.
+	 */
+	public static boolean readingWentStale(long now, long takenAt, int sweepInterval) {
+		// Capped as well as scaled. A server that slows the sweep to half a minute to save tick time
+		// would otherwise get a full minute of phantom rattle after `/gamemode creative` or after
+		// radiation is switched off — the window is a safety net, and a safety net measured in minutes
+		// is the bug it exists to prevent.
+		long window = Math.min(2L * Math.max(1, sweepInterval), STALE_WINDOW_CEILING_TICKS);
+		return now - takenAt > window;
 	}
 
 	/**

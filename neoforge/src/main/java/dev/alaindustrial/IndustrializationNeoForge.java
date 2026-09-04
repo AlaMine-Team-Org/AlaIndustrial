@@ -293,6 +293,10 @@ public final class IndustrializationNeoForge {
 			dev.alaindustrial.stats.PlayerStatsTracker.get().onServerTick(event.getServer());
 			// MOD-470: per-player radiation exposure, on its own configurable cadence.
 			dev.alaindustrial.core.radiation.RadiationTicker.tickAll(event.getServer());
+			// MOD-475: the Geiger counter clicks EVERY tick, not on the radiation cadence — a sweep
+			// offers one sound a second, so a denser rattle is unreachable from it. The sweep sets the
+			// step; this spends it.
+			dev.alaindustrial.core.radiation.GeigerTicker.tick(event.getServer());
 			// MOD-148: clear any jetpack flight-glow light block whose flight ended (land, logout,
 			// death, unequip) — the one cleanup path for every exit (see JetpackLight).
 			dev.alaindustrial.item.wearable.JetpackLight.sweep(event.getServer(), event.getServer().getTickCount());
@@ -321,6 +325,8 @@ public final class IndustrializationNeoForge {
 						dev.alaindustrial.stats.PlayerStatsTracker.get().flushPlayer(serverPlayer);
 					}
 					dev.alaindustrial.teleporter.TeleportWarmupManager.forget(event.getEntity().getUUID());
+					// MOD-475: drop this player's counter reading (see the Fabric twin).
+					dev.alaindustrial.core.radiation.GeigerTicker.forget(event.getEntity().getUUID());
 				});
 		// MOD-067: auto-give the Guide Book on first join (game-bus event; once per player).
 		NeoForge.EVENT_BUS.addListener(
@@ -344,6 +350,9 @@ public final class IndustrializationNeoForge {
 			// MOD-176: clear a mid-flight glow light before the level save — the per-tick sweep no
 			// longer runs, and a saved minecraft:light block would survive as an invisible orphan.
 			dev.alaindustrial.item.wearable.JetpackLight.shutdown(event.getServer());
+			// MOD-475: drop every counter reading. In single player the server object goes away but
+			// this class is static, so a reading left behind would greet the next world.
+			dev.alaindustrial.core.radiation.GeigerTicker.clear();
 		});
 		NeoForge.EVENT_BUS.addListener((ServerStoppedEvent event) -> {
 			// MOD-401: same sweep, whole-server scope — energy, fluid and item networks plus the

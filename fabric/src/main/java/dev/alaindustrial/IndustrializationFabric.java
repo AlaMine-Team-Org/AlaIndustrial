@@ -362,6 +362,10 @@ public class IndustrializationFabric implements ModInitializer {
 			dev.alaindustrial.item.wearable.JetpackLight.sweep(server, server.getTickCount());
 			// MOD-470: per-player radiation exposure, on its own configurable cadence.
 			dev.alaindustrial.core.radiation.RadiationTicker.tickAll(server);
+			// MOD-475: the Geiger counter clicks EVERY tick, not on the radiation cadence — a sweep
+			// offers one sound a second, so a denser rattle is unreachable from it. The sweep sets the
+			// step; this spends it.
+			dev.alaindustrial.core.radiation.GeigerTicker.tick(server);
 		});
 		// Teleport warmup cancellation (MOD-092) — the mod's first player-event listeners. Three
 		// separate hooks are needed, not two: AFTER_DAMAGE does NOT fire for a killing blow, and
@@ -386,6 +390,9 @@ public class IndustrializationFabric implements ModInitializer {
 			// otherwise be dropped on the next server-tick flush, which runs after they have left).
 			dev.alaindustrial.stats.PlayerStatsTracker.get().flushPlayer(handler.player);
 			dev.alaindustrial.teleporter.TeleportWarmupManager.forget(handler.player.getUUID());
+			// MOD-475: drop this player's counter reading — the map is server-side and must not
+			// outlive the session.
+			dev.alaindustrial.core.radiation.GeigerTicker.forget(handler.player.getUUID());
 		});
 		// MOD-067: auto-give the Guide Book on first join (once per player; SavedData ledger).
 		net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.JOIN.register((handler, sender, server) ->
@@ -406,6 +413,9 @@ public class IndustrializationFabric implements ModInitializer {
 			// MOD-176: clear a mid-flight glow light before the level save — the per-tick sweep no
 			// longer runs, and a saved minecraft:light block would survive as an invisible orphan.
 			dev.alaindustrial.item.wearable.JetpackLight.shutdown(server);
+			// MOD-475: drop every counter reading. In single player the server object goes away but
+			// this class is static, so a reading left behind would greet the next world.
+			dev.alaindustrial.core.radiation.GeigerTicker.clear();
 		});
 		ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
 			// MOD-401: same sweep, whole-server scope — energy, fluid and item networks plus the

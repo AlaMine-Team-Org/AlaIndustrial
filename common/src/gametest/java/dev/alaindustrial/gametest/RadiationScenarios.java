@@ -9,11 +9,13 @@ import dev.alaindustrial.block.entity.ShieldingChestBlockEntity;
 import dev.alaindustrial.item.energy.PouchContents;
 import dev.alaindustrial.item.energy.PouchItem;
 import dev.alaindustrial.item.misc.ShieldingPouchItem;
+import dev.alaindustrial.core.radiation.GeigerTicker;
 import dev.alaindustrial.core.radiation.RadiationDose;
 import dev.alaindustrial.core.radiation.RadiationMobs;
 import dev.alaindustrial.core.radiation.RadiationSources;
 import dev.alaindustrial.core.radiation.RadiationTicker;
 import dev.alaindustrial.registry.ModContent;
+import dev.alaindustrial.registry.ModDataComponents;
 import dev.alaindustrial.registry.ModEffects;
 import dev.alaindustrial.registry.ModTags;
 import java.util.List;
@@ -109,6 +111,110 @@ public final class RadiationScenarios {
 	}
 
 	/** A fuelled rack: four rods in the assembly, which is what a running reactor column holds. */
+	/**
+	 * Ore in the rock is heard through stone and feeds NOTHING that becomes a dose (MOD-475).
+	 *
+	 * <p>Both halves are asserted against the two functions the sweep actually calls, not against a
+	 * player's dose bar. A mock player is permanently creative in 26.2 and the dose is skipped for
+	 * creative players, so "his dose stayed zero" would have been true no matter what the ore did —
+	 * the assertion would have passed on an implementation that irradiated everyone.
+	 *
+	 * @implements R-RAD-22 — see docs/testing/RULES.md
+	 */
+	public static void oreBehindStoneIsHeardButFeedsNoDose(GameTestHelper helper) {
+		withIsolatedField(() -> {
+			helper.setBlock(RACK, ModContent.URANIUM_ORE.get().defaultBlockState());
+			helper.setBlock(WALL, Blocks.STONE.defaultBlockState());
+			Cow viewer = helper.spawn(EntityTypes.COW, BYSTANDER);
+			double heard = RadiationSources.nearestOreDistance(helper.getLevel(), viewer,
+					Config.geigerOreRadius);
+			if (heard < 0) {
+				helper.fail("ore behind a wall must still be heard; the scan found none in range");
+			}
+			int field = RadiationSources.exposureAt(helper.getLevel(), viewer,
+					Config.radiationSourceRadius);
+			if (field != 0) {
+				helper.fail("ore in the rock must add nothing to the field that becomes a dose; got "
+						+ field);
+			}
+			helper.succeed();
+		});
+	}
+
+	/**
+	 * The counter hears a hazard from beyond the distance at which that hazard can dose anyone.
+	 *
+	 * <p>This is the whole reason the instrument has its own radius. The first shipped version shared
+	 * {@link Config#radiationSourceRadius}, so it first spoke where the dose had already started
+	 * climbing — measured in game at three blocks from a chest of uranium, taking damage, one click a
+	 * second. The scale is compressed to the rig here (a dose radius of one against a counter radius of
+	 * four); what is asserted is the ORDER, which is the rule, not the shipped numbers.
+	 *
+	 * @implements R-RAD-23 — see docs/testing/RULES.md
+	 */
+	public static void theCounterHearsBeyondTheDoseRadius(GameTestHelper helper) {
+		int source = Config.radiationSourceRadius;
+		int ground = Config.radiationGroundRadius;
+		Config.radiationSourceRadius = 1;
+		Config.radiationGroundRadius = 1;
+		try {
+			placeFuelledRack(helper);
+			Cow viewer = helper.spawn(EntityTypes.COW, BYSTANDER);
+			int dosing = RadiationSources.exposureAt(helper.getLevel(), viewer,
+					Config.radiationSourceRadius);
+			if (dosing != 0) {
+				helper.fail("the rig must put the viewer outside the dose radius; got " + dosing);
+			}
+			int heard = RadiationSources.exposureAt(helper.getLevel(), viewer, 4, 4);
+			if (heard <= 0) {
+				helper.fail("a counter reaching further than the dose must still hear the rack; got "
+						+ heard);
+			}
+			helper.succeed();
+		} finally {
+			Config.radiationSourceRadius = source;
+			Config.radiationGroundRadius = ground;
+		}
+	}
+
+	/**
+	 * Five counters in one inventory are one counter, and the lamp is a state rather than a tally.
+	 *
+	 * <p>The search stops at the first instrument found, which is what keeps a stack of them from
+	 * sounding like a stack of them; and the lamp is written only when it flips, so the same reading
+	 * twice must not dirty the stack a second time.
+	 *
+	 * @implements R-RAD-24 — see docs/testing/RULES.md
+	 */
+	public static void manyCountersReadAsOneAndTheLampIsAState(GameTestHelper helper) {
+		ServerPlayer player = AlaGameTestHelper.survivalPlayer(helper);
+		player.getInventory().clearContent();
+		for (int slot = 0; slot < 5; slot++) {
+			player.getInventory().setItem(slot, new ItemStack(ModContent.GEIGER_COUNTER.get()));
+		}
+		ItemStack found = GeigerTicker.findCounter(player);
+		if (found.isEmpty()) {
+			helper.fail("a counter anywhere in the inventory must be found");
+		}
+		if (found != player.getInventory().getItem(0)) {
+			helper.fail("the search must stop at the first counter, so five sound like one");
+		}
+		if (found.has(ModDataComponents.GEIGER_ALERT.get())) {
+			helper.fail("a fresh counter must have a dark lamp and no component at all");
+		}
+		GeigerTicker.setLamp(found, true);
+		if (!Boolean.TRUE.equals(found.get(ModDataComponents.GEIGER_ALERT.get()))) {
+			helper.fail("a hazard must light the lamp");
+		}
+		GeigerTicker.setLamp(found, false);
+		if (found.has(ModDataComponents.GEIGER_ALERT.get())) {
+			// Absent, not false: a counter that has seen radiation and walked away has to stack with a
+			// freshly crafted one again.
+			helper.fail("clearing the lamp must REMOVE the component, not set it to false");
+		}
+		helper.succeed();
+	}
+
 	private static void placeFuelledRack(GameTestHelper helper) {
 		helper.setBlock(RACK, ModContent.FUEL_ROD_ASSEMBLY.get().defaultBlockState()
 				.setValue(FuelRodAssemblyBlock.RODS, FuelRodAssemblyBlock.MAX_RODS));

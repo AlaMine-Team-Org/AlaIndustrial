@@ -81,6 +81,11 @@ public final class RadiationTicker {
 
 	private static void tickPlayer(ServerLevel level, ServerPlayer player, int radius, int carried,
 			long sweep) {
+		// The instrument reads for creative and spectator players too, and only the DOSE is skipped
+		// below. A counter that went dead in creative would be dead exactly where it is first picked
+		// up — it is handed out in the creative tab, and an operator checking a reactor room is the
+		// most likely person to be holding one.
+		tickGeiger(level, player, carried);
 		if (player.isCreative() || player.isSpectator()) {
 			return;
 		}
@@ -117,6 +122,47 @@ public final class RadiationTicker {
 			return;
 		}
 		RadiationDose.apply(player, RadiationCore.addDose(dose, added, capacity), capacity, false);
+	}
+
+	/**
+	 * What this player's Geiger counter reads this sweep (MOD-475).
+	 *
+	 * <p>Runs before the dose does, and for every game mode, because the instrument reports the world
+	 * rather than what the world is doing to you.
+	 *
+	 * <p><b>Its own radius, wider than the hazard's.</b> {@link Config#geigerRadius} is deliberately
+	 * larger than {@link Config#radiationSourceRadius}, so the counter speaks in the band where the
+	 * dose is still zero. Sharing the hazard's radius made the instrument useless as a warning: it
+	 * went quiet right up until the moment the player was already being irradiated.
+	 *
+	 * <p><b>Raw figures, not shielded ones.</b> A counter measures the field; a suit answers carried
+	 * items in full, so a shielded reading would drop to zero the moment a player put protection on,
+	 * and silence would come to mean "you are covered" instead of "there is nothing here". What gets
+	 * through the suit is the dosimeter's question (MOD-567).
+	 */
+	private static void tickGeiger(ServerLevel level, ServerPlayer player, int carried) {
+		ItemStack counter = GeigerTicker.findCounter(player);
+		if (counter.isEmpty()) {
+			// Nothing to light: a counter outside this inventory keeps whatever lamp it had, and picks
+			// the right one up on the next sweep after it is carried again.
+			GeigerTicker.setStep(player, 0, 0);
+			return;
+		}
+		// The counter's OWN radius, not the hazard's: a detector that first speaks where the dose has
+		// already started climbing has failed at the one job it has. Everything heard beyond
+		// radiationSourceRadius is pure warning, because out there the dose is exactly zero.
+		int heard = RadiationSources.exposureAt(level, player, Config.geigerRadius, Config.geigerRadius)
+				+ Math.max(0, carried);
+		int hazard = RadiationCore.geigerStep(heard, Config.geigerFaintThreshold,
+				Config.geigerBusyThreshold, Config.geigerLoudThreshold,
+				Config.geigerOffScaleThreshold);
+		// The ore scan is the expensive half, and above the ceiling it cannot change the answer.
+		int ore = hazard >= 4 ? 0
+				: RadiationCore.oreStep(
+						RadiationSources.nearestOreDistance(level, player, Config.geigerOreRadius),
+						Config.geigerOreRadius);
+		GeigerTicker.setStep(player, hazard, ore);
+		GeigerTicker.setLamp(counter, hazard > 0);
 	}
 
 	/** Dose per sweep from everything in this player's own inventory, containers opened one level. */

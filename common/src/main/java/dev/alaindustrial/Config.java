@@ -1919,6 +1919,91 @@ public final class Config {
 			doc = "Dose the shielding suit absorbs per point of durability spent; the suit is a consumable, not a permanent answer.")
 	public static int radiationDosePerSuitDurability = 200;
 	/**
+	 * How far the Geiger counter reaches, in blocks — deliberately FURTHER than radiation reaches
+	 * (MOD-475).
+	 *
+	 * <p><b>A detector tied to the hazard's own radius is useless as a warning.</b> While this shared
+	 * {@link #radiationSourceRadius} the counter first spoke at the distance where the dose had already
+	 * started climbing, which is the one thing an early-warning instrument must never do. Beyond the
+	 * hazard radius the dose is exactly zero, so everything the counter says out there is pure warning:
+	 * the player hears a rack or a chest of fuel long before standing in it.
+	 *
+	 * <p>Cost is not the volume: rods and chests are read out of the chunks' block-entity maps, and
+	 * dropped items out of an entity query, so a wider reach asks a few more chunks rather than
+	 * sweeping a bigger cube.
+	 */
+	@Knob(section = Section.SAFETY, min = 1,
+			doc = "How far a Geiger counter hears radiation. Larger than the radius radiation actually "
+					+ "reaches, on purpose: the counter has to warn before the dose starts.")
+	public static int geigerRadius = 16;
+	/**
+	 * How far the counter hears uranium ore still in the rock; 0 disables the ore scan (MOD-475).
+	 *
+	 * <p><b>Ore in the wall contributes nothing to the dose at all.</b> The scan feeds the counter
+	 * only; the rock counts as the ore's own shielding, which is why uranium has to be dug out and
+	 * carried before it becomes {@code #alaindustrial:radioactive_low} at
+	 * {@link #radiationDoseLowPerItem} a sweep. Zero dose rather than "a little" is the deliberate
+	 * part: a small contribution would still add on top of whatever else the player is standing in and
+	 * could tip a total past the decay rate, so a vein behind a wall would sometimes hurt after all.
+	 *
+	 * <p><b>The ore grade comes from DISTANCE, not from an attenuated field.</b> Attenuation halves
+	 * within a block and a half, so a field-based grade collapsed to its lowest rung two blocks from a
+	 * vein — the player was standing on the ore and hearing one click every two seconds. Distance
+	 * splits this radius into three even bands, which is also the thing a miner is actually asking:
+	 * how close.
+	 */
+	@Knob(section = Section.SAFETY, min = 0,
+			doc = "How far a Geiger counter hears uranium ore still in the rock. Ore in the wall gives "
+					+ "no dose at all — this only moves the needle. 0 disables the ore scan.")
+	public static int geigerOreRadius = 16;
+
+
+	/**
+	 * Where the Geiger counter's clicks begin — the field at which it stops being silent (MOD-475).
+	 *
+	 * <p>Silence is a message: "there is nothing here at all". It is not "you are safe" — that is what
+	 * the quiet band says. Keep this at 1 unless you want the instrument deaf to ore.
+	 */
+	@Knob(section = Section.SAFETY, min = 1,
+			doc = "Field at which the Geiger counter starts clicking. Below it the instrument is silent.")
+	public static int geigerFaintThreshold = 1;
+
+	/** Second step of the counter: from occasional clicks to an audible rattle. */
+	@Knob(section = Section.SAFETY, min = 1,
+			doc = "Field at which the counter moves from occasional clicks to an audible rattle.")
+	public static int geigerBusyThreshold = 20;
+
+	/** Third step: a dense rattle. Irradiated soil and a leaking chest live here. */
+	@Knob(section = Section.SAFETY, min = 1,
+			doc = "Field at which the counter's rattle becomes dense.")
+	public static int geigerLoudThreshold = 100;
+
+	/**
+	 * Where the cheap instrument runs out of scale and simply roars (MOD-475).
+	 *
+	 * <p>It does not break and it does not lie — it saturates, and admits it. That is both the signal
+	 * to leave and the reason to build the dosimeter, which reads the band above this one.
+	 */
+	@Knob(section = Section.SAFETY, min = 1,
+			doc = "Field above which the Geiger counter stops telling levels apart and just roars.")
+	public static int geigerOffScaleThreshold = 400;
+	/**
+	 * How loud the Geiger counter's clicks are, in percent (MOD-475).
+	 *
+	 * <p>The clicks are sent as a targeted sound in {@link net.minecraft.sounds.SoundSource#PLAYERS},
+	 * so a player already has a vanilla slider for them and does not depend on an operator to be able
+	 * to turn the instrument down. This knob is the server's own ceiling on top of that — useful for a
+	 * pack that wants the tool present but quieter.
+	 *
+	 * <p>0 silences the counter without removing it; the item still works, it simply says nothing.
+	 */
+	@Knob(section = Section.SAFETY, min = 0,
+			doc = "Loudness of the Geiger counter's clicks, in percent. 0 silences it; players also "
+					+ "have the vanilla Players volume slider.")
+	public static int geigerVolumePercent = 60;
+
+
+	/**
 	 * Whether radiation touches villagers, wandering traders and cows at all (MOD-470). This is the
 	 * ONE exception to "mobs are never irradiated": nothing dies of it, the list is closed, and the
 	 * sweep only runs where a player already stands in a radiation field. Off, the three

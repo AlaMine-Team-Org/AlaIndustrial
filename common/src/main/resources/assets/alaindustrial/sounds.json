@@ -219,6 +219,17 @@
       }
     ]
   },
+  "geiger_click": {
+    "subtitle": "subtitles.alaindustrial.geiger_click",
+    "sounds": [
+      {
+        "name": "alaindustrial:geiger_click",
+        "stream": false,
+        "preload": true,
+        "attenuation_distance": 16
+      }
+    ]
+  },
   "reactor_alarm": {
     "subtitle": "subtitles.alaindustrial.reactor_alarm",
     "sounds": [

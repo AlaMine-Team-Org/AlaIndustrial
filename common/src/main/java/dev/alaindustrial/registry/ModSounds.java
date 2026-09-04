@@ -86,6 +86,16 @@ public final class ModSounds {
 	public static Supplier<SoundEvent> INCUBATOR_HUM = unbound("INCUBATOR_HUM");
 	public static Supplier<SoundEvent> REACTOR_HUM = unbound("REACTOR_HUM");
 	public static Supplier<SoundEvent> REACTOR_ALARM = unbound("REACTOR_ALARM");
+
+	/**
+	 * One click of the Geiger counter (MOD-475).
+	 *
+	 * <p>Sent as a targeted packet to the one player carrying the instrument, several times a
+	 * second at the top step — so the sample must be short, dry and quiet enough to bear
+	 * repetition. A bright or long click becomes the thing players mute; the complaint about
+	 * other mods is literally «a screeching cicada».
+	 */
+	public static Supplier<SoundEvent> GEIGER_CLICK = unbound("GEIGER_CLICK");
 	public static Supplier<SoundEvent> REACTOR_SPINDOWN = unbound("REACTOR_SPINDOWN");
 	public static Supplier<SoundEvent> REACTOR_DOOR_OPEN = unbound("REACTOR_DOOR_OPEN");
 	public static Supplier<SoundEvent> REACTOR_DOOR_CLOSE = unbound("REACTOR_DOOR_CLOSE");
@@ -154,6 +164,7 @@ public final class ModSounds {
 			// alarm carrying no further than a machine hum fails at its one job — telling a player who is
 			// somewhere else that the reactor needs them.
 			fixedRange("reactor_alarm", 32.0f, s -> REACTOR_ALARM = s),
+			fixedRange("geiger_click", 16.0f, s -> GEIGER_CLICK = s),
 			// It reports, it does not warn — so no extended range.
 			variableRange("reactor_spindown", s -> REACTOR_SPINDOWN = s),
 			// The airlock, replacing vanilla IRON_DOOR_OPEN / IRON_DOOR_CLOSE.

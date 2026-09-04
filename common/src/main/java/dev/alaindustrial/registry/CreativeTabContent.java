@@ -488,6 +488,7 @@ public final class CreativeTabContent {
 		show(out, ModContent.FORGE_HAMMER);
 		show(out, ModContent.NETWORK_ANALYZER);
 		show(out, ModContent.WIND_GAUGE);
+		show(out, ModContent.GEIGER_COUNTER);
 		show(out, ModContent.TELEPORTER_REMOTE);
 		show(out, ModContent.GUIDE_BOOK);
 	}

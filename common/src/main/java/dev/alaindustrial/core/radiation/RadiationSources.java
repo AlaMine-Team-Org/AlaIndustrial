@@ -73,11 +73,29 @@ public final class RadiationSources {
 
 	/** Everything in the world irradiating this entity where it stands. */
 	public static int exposureAt(ServerLevel level, Entity target, int radius) {
+		return exposureAt(level, target, radius, Config.radiationGroundRadius);
+	}
+
+	/**
+	 * The same field, with the reach of loose items and containers given explicitly (MOD-475).
+	 *
+	 * <p>{@link Config#radiationGroundRadius} caps how far a chest or a dropped stack can DOSE someone,
+	 * and the collectors clamp to it. For the dose that is exactly right; for a DETECTOR it is not, and
+	 * the difference is the whole reason this overload exists. A Geiger counter sharing the cap went
+	 * quiet around a chest until the player was inside the band where it was already being irradiated —
+	 * measured in game: at three blocks from a chest of refined uranium, taking damage, the counter was
+	 * clicking once a second.
+	 *
+	 * <p>Passing a larger reach here does not make anything radiate further. The dose is computed by
+	 * the caller that owns it, still with {@code radiationGroundRadius}; this only lets an instrument
+	 * see a hazard before walking into it, which is what an instrument is for.
+	 */
+	public static int exposureAt(ServerLevel level, Entity target, int radius, int groundReach) {
 		List<Source> sources = new ArrayList<>();
 		collectRods(level, target.position(), radius, sources);
-		collectGround(level, target.position(), radius, sources);
+		collectGround(level, target.position(), radius, groundReach, sources);
 		collectFallout(level, target.position(), radius, sources);
-		collectContainers(level, target.position(), radius, sources);
+		collectContainers(level, target.position(), radius, groundReach, sources);
 		return doseFrom(level, target, sources, radius);
 	}
 
@@ -224,15 +242,25 @@ public final class RadiationSources {
 		}
 	}
 
+	/** Ore in the rock (MOD-475): the palette filter that keeps the block scan affordable. */
+	private static final java.util.function.Predicate<BlockState> IS_RADIOACTIVE_ORE =
+			state -> state.is(dev.alaindustrial.registry.ModTags.Blocks.RADIOACTIVE_ORE);
+
 	private static final java.util.function.Predicate<BlockState> IS_FALLOUT =
 			state -> state.getBlock() instanceof IrradiatedSoilBlock;
 
 	/** Radioactive items lying on the ground nearby — dropping a fuel rod does not switch it off. */
 	public static void collectGround(ServerLevel level, Vec3 centre, int radius, List<Source> out) {
-		if (Config.radiationGroundRadius <= 0) {
+		collectGround(level, centre, radius, Config.radiationGroundRadius, out);
+	}
+
+	/** As above, with the loose-item reach given explicitly — see {@link #exposureAt(ServerLevel, Entity, int, int)}. */
+	public static void collectGround(ServerLevel level, Vec3 centre, int radius, int groundReach,
+			List<Source> out) {
+		if (groundReach <= 0) {
 			return;
 		}
-		double reach = Math.min(radius, Config.radiationGroundRadius);
+		double reach = Math.min(radius, groundReach);
 		AABB box = AABB.ofSize(centre, reach * 2, reach * 2, reach * 2);
 		for (ItemEntity item : level.getEntitiesOfClass(ItemEntity.class, box)) {
 			int strength = strengthOf(item.getItem());
@@ -246,36 +274,118 @@ public final class RadiationSources {
 	}
 
 	/**
-	 * Uranium stored in the containers around this point (MOD-474) — a chest is not a shield.
+	 * Distance to the nearest uranium ore still in the rock, or {@code -1} when there is none in range
+	 * (MOD-475).
 	 *
-	 * <p><b>Why this source had to exist before the shielding chest could.</b> Until now nothing ever
-	 * looked inside a block container: rods were read from the chunk, dropped stacks from the entity
-	 * list, and carried stacks from the player's own inventory. So a stack of refined uranium was lethal
-	 * in your pockets, dangerous on the floor — and completely inert the moment it went into any chest at
-	 * all. That made every wooden chest a perfect radiation shield and left the shielding chest with
-	 * nothing to be better than. The rule the design wanted ("store it safely or store it dangerously")
-	 * needs both halves, and this is the half that was missing.
+	 * <p><b>Nearest block, not a sum of blocks — and that is a bug fix, not a simplification.</b> The
+	 * first version collected up to N ore blocks and added them up, which made the reading depend on
+	 * the order the scan happened to walk the chunk in: the cap could be spent on distant blocks whose
+	 * contribution rounds to zero, and a player standing against a vein would hear silence.
 	 *
-	 * <p><b>The list is closed on purpose.</b> Only the containers a player uses to STORE things count:
-	 * vanilla chests and barrels, and the mod's own chest tiers. Machine buffers, hoppers and pipes hold
-	 * uranium too, but for seconds at a time while a line processes it — making those radiate would turn
-	 * every automated refining setup into a no-go zone nobody asked for, and would punish automation for
-	 * being automation. Same reasoning, and the same shape, as the closed species list in
-	 * {@link RadiationMobs}.
+	 * <p><b>No line-of-sight test.</b> Ore is always behind stone; checking the ray would make the
+	 * signal unreachable exactly where it is wanted. That liberty is safe because this answer never
+	 * reaches a dose: it is read only by the counter, and {@code RadiationTicker} adds it to nothing.
 	 *
-	 * <p><b>And the shielding chest is the hole in it.</b> {@link ShieldingChestBlockEntity} is skipped —
-	 * that single exclusion is the entire mechanic of the block. It is keyed on the block-entity TYPE
-	 * rather than on a tag so that no datapack can hand shielding to a barrel and no future chest tier
-	 * can inherit it by accident.
+	 * <p>The scan is the one used for fallout — chunk sections rejected by their palette before any
+	 * block is touched — with two prunings the fallout version does not need, both of which matter at
+	 * this radius: the horizontal window is clipped to the radius, and a section whose NEAREST corner
+	 * is already further than the best block found so far is skipped whole. The walk also stops the
+	 * moment it lands inside the top grade's band, because nothing found later could improve it.
 	 *
-	 * <p>Cost is the same shape as {@link #collectRods}: block entities come out of the chunks' own maps
-	 * (at most four chunks at the shipped radius), never from a sweep over the cells of a cube.
+	 * @return distance in blocks to the closest ore, or {@code -1} if there is none in range
 	 */
+	public static double nearestOreDistance(ServerLevel level, Entity target, int radius) {
+		if (radius <= 0) {
+			return -1.0;
+		}
+		Vec3 eyes = target.getEyePosition();
+		Vec3 centre = target.position();
+		// Anything at or inside this distance is already the loudest grade the ore scale has.
+		double topBand = radius / 4.0;
+		double nearest = Double.MAX_VALUE;
+		int minChunkX = SectionPos.blockToSectionCoord(Math.floor(centre.x) - radius);
+		int maxChunkX = SectionPos.blockToSectionCoord(Math.floor(centre.x) + radius);
+		int minChunkZ = SectionPos.blockToSectionCoord(Math.floor(centre.z) - radius);
+		int maxChunkZ = SectionPos.blockToSectionCoord(Math.floor(centre.z) + radius);
+		int minX = Mth.floor(centre.x) - radius;
+		int maxX = Mth.floor(centre.x) + radius;
+		int minZ = Mth.floor(centre.z) - radius;
+		int maxZ = Mth.floor(centre.z) + radius;
+		int minY = Mth.floor(centre.y) - radius;
+		int maxY = Mth.floor(centre.y) + radius;
+		BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
+		for (int cx = minChunkX; cx <= maxChunkX; cx++) {
+			for (int cz = minChunkZ; cz <= maxChunkZ; cz++) {
+				LevelChunk chunk = level.getChunkSource().getChunkNow(cx, cz);
+				if (chunk == null) {
+					continue;
+				}
+				int minSection = level.getSectionIndex(Math.max(minY, level.getMinY()));
+				int maxSection = level.getSectionIndex(Math.min(maxY, level.getMaxY()));
+				for (int index = minSection; index <= maxSection; index++) {
+					if (index < 0 || index >= chunk.getSections().length) {
+						continue;
+					}
+					LevelChunkSection section = chunk.getSections()[index];
+					// The palette check that makes a block source affordable at all — same as fallout.
+					if (section.hasOnlyAir() || !section.maybeHas(IS_RADIOACTIVE_ORE)) {
+						continue;
+					}
+					int baseY = level.getSectionYFromSectionIndex(index) << 4;
+					// A whole section can be dismissed before any of its 4096 cells is read: if its
+					// closest corner is further than the best block already found, nothing inside it
+					// can win. In a uranium mine this is what keeps a wide radius affordable.
+					if (sectionMinDistance(eyes, cx << 4, baseY, cz << 4) >= nearest) {
+						continue;
+					}
+					for (int dy = 0; dy < 16; dy++) {
+						int y = baseY + dy;
+						if (y < minY || y > maxY) {
+							continue;
+						}
+						// Horizontal clipping too: without it a section is walked to its edges, some
+						// twenty blocks out, only for the distance test to throw the result away.
+						for (int dx = Math.max(0, minX - (cx << 4)); dx <= Math.min(15, maxX - (cx << 4)); dx++) {
+							for (int dz = Math.max(0, minZ - (cz << 4)); dz <= Math.min(15, maxZ - (cz << 4)); dz++) {
+								if (!IS_RADIOACTIVE_ORE.test(section.getBlockState(dx, dy, dz))) {
+									continue;
+								}
+								cursor.set((cx << 4) + dx, y, (cz << 4) + dz);
+								double distance = Vec3.atCenterOf(cursor).distanceTo(eyes);
+								if (distance < nearest) {
+									nearest = distance;
+									if (nearest <= topBand) {
+										return nearest;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return nearest > radius ? -1.0 : nearest;
+	}
+
+	/** Distance from a point to the closest corner of a 16³ chunk section, 0 when the point is inside. */
+	private static double sectionMinDistance(Vec3 point, int originX, int originY, int originZ) {
+		double dx = Math.max(0.0, Math.max(originX - point.x, point.x - (originX + 16)));
+		double dy = Math.max(0.0, Math.max(originY - point.y, point.y - (originY + 16)));
+		double dz = Math.max(0.0, Math.max(originZ - point.z, point.z - (originZ + 16)));
+		return Math.sqrt(dx * dx + dy * dy + dz * dz);
+	}
+
 	public static void collectContainers(ServerLevel level, Vec3 centre, int radius, List<Source> out) {
-		if (Config.radiationGroundRadius <= 0 || Config.radiationContainerMaxItems <= 0) {
+		collectContainers(level, centre, radius, Config.radiationGroundRadius, out);
+	}
+
+	/** As above, with the container reach given explicitly — see {@link #exposureAt(ServerLevel, Entity, int, int)}. */
+	public static void collectContainers(ServerLevel level, Vec3 centre, int radius, int groundReach,
+			List<Source> out) {
+		if (groundReach <= 0 || Config.radiationContainerMaxItems <= 0) {
 			return;
 		}
-		double reach = Math.min(radius, Config.radiationGroundRadius);
+		double reach = Math.min(radius, groundReach);
 		int minChunkX = SectionPos.blockToSectionCoord(Math.floor(centre.x) - reach);
 		int maxChunkX = SectionPos.blockToSectionCoord(Math.floor(centre.x) + reach);
 		int minChunkZ = SectionPos.blockToSectionCoord(Math.floor(centre.z) - reach);

@@ -66,6 +66,7 @@ public final class ModDataComponents {
 	public static final Identifier SABER_ACTIVE_ID = Industrialization.id("saber_active");
 	public static final Identifier SOUL_VESSEL_KILLS_ID = Industrialization.id("soul_vessel_kills");
 	public static final Identifier REPAIR_COUNT_ID = Industrialization.id("repair_count");
+	public static final Identifier GEIGER_ALERT_ID = Industrialization.id("geiger_alert");
 
 	/** Rarity grade rolled by the incubator on a successful mutation (MOD-118). */
 	public static final Identifier MUTATION_GRADE_ID = Industrialization.id("mutation_grade");
@@ -318,6 +319,31 @@ public final class ModDataComponents {
 		throw new IllegalStateException("ModDataComponents.SABER_ACTIVE read before its loader bound it");
 	};
 
+	/**
+	 * Present on a Geiger counter whose lamp is lit red — that is, one currently hearing a HAZARD
+	 * (MOD-475). Ore in the rock deliberately leaves the lamp green: the ore signal means "safe, dig
+	 * here", and a red lamp has to keep meaning danger to be read at a glance.
+	 *
+	 * <p><b>Absent, not false, when the lamp is dark.</b> A counter that has never seen radiation must
+	 * stay component-identical to a freshly crafted one, or a stack of them would refuse to merge and
+	 * the item model would need a third case for "written false".
+	 *
+	 * <p>Written by the sweep and ONLY when the state flips, never once a tick: the value changes at
+	 * most as often as a player walks in or out of a field, while the sweep runs every second and the
+	 * click loop twenty times a second.
+	 */
+	public static Supplier<DataComponentType<Boolean>> GEIGER_ALERT = () -> {
+		throw new IllegalStateException("ModDataComponents.GEIGER_ALERT read before its loader bound it");
+	};
+
+	/** Build the {@code geiger_alert} type both loaders register (MOD-475). */
+	public static DataComponentType<Boolean> createGeigerAlert() {
+		return DataComponentType.<Boolean>builder()
+				.persistent(Codec.BOOL)
+				.networkSynchronized(ByteBufCodecs.BOOL)
+				.build();
+	}
+
 	/** Build the {@code saber_active} type both loaders register (MOD-149). */
 	public static DataComponentType<Boolean> createSaberActive() {
 		return DataComponentType.<Boolean>builder()
@@ -531,6 +557,7 @@ public final class ModDataComponents {
 			new ComponentDef<>(REPAIR_COUNT_ID, ModDataComponents::createRepairCount, c -> REPAIR_COUNT = c),
 			new ComponentDef<>(STEP_ASSIST_ENABLED_ID, ModDataComponents::createStepAssistEnabled, c -> STEP_ASSIST_ENABLED = c),
 			new ComponentDef<>(SABER_ACTIVE_ID, ModDataComponents::createSaberActive, c -> SABER_ACTIVE = c),
+			new ComponentDef<>(GEIGER_ALERT_ID, ModDataComponents::createGeigerAlert, c -> GEIGER_ALERT = c),
 			new ComponentDef<>(MUTATION_GRADE_ID, ModDataComponents::createMutationGrade, c -> MUTATION_GRADE = c),
 			new ComponentDef<>(TELEPORTER_OWNER_ID, ModDataComponents::createTeleporterOwner, c -> TELEPORTER_OWNER = c),
 			new ComponentDef<>(TELEPORTER_POINTS_ID, ModDataComponents::createTeleporterPoints, c -> TELEPORTER_POINTS = c));

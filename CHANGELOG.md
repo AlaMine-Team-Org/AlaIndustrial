@@ -1,11 +1,12 @@
-## 0.1.144
+## 0.1.145
 
-<p><img alt="Ala Industrial 0.1.144: enchanting table offering Protection III on mod armour" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.144/release-media/v0.1.144/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial 0.1.145 — the Geiger counter&#39;s lamp turns red near radiation" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.145/release-media/v0.1.145/changelog.png" width="720"></p>
 
-Armour from the mod can be enchanted again.
+Radiation used to kill you without a word. Now there is an instrument that hears it coming.
 
-### Fixed
+### New
 
-- **The enchanting table now offers enchantments for mod armour.** It used to show the levels and the cost but no enchantment name, so there was nothing to pick. All four armour sets now behave like vanilla armour.
-- **Anvils accept Unbreaking and Mending on mod armour.** Same cause — the armour was missing from the game's lists of enchantable items.
-- **The diamond-tipped electric shovel gained Efficiency, Fortune and Silk Touch.** It had been left out of those lists too.
+- **Geiger Counter.** Clicks near radiation from **any slot in your inventory** — craft it, drop it in your bag, forget it. No power, nothing to press.
+- **It warns you before it hurts you.** A chest of fuel is audible from fifteen blocks away and only starts harming you at six.
+- **A lower tone means uranium ore in the rock** — "dig here". Ore behind stone is completely safe: the stone shields it, and it gives no dose at all.
+- **The lamp turns red** when something dangerous is near, and stays green at ore.

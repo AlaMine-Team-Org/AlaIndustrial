@@ -57,6 +57,22 @@ public final class ModTags {
 		 * ever breaks blocks from this tag when they are mature (see {@code ScytheItem}).
 		 */
 		public static final TagKey<Block> SCYTHE_CROPS = key("scythe_crops");
+		/**
+		 * Uranium ore as it sits in the rock — the source a Geiger counter is carried into a mine for
+		 * (MOD-475).
+		 *
+		 * <p><b>This tag is about the BLOCK, and it is not the item tag.</b> Mined uranium is already
+		 * covered by {@code #alaindustrial:radioactive_low} as an item; ore in the wall was not a
+		 * source at all until this task, because nothing scanned for it.
+		 *
+		 * <p><b>Membership makes a block audible, never harmful.</b> The scan feeds the counter only
+		 * ({@code geigerOreRadius}); no member of this tag adds anything to a player's dose
+		 * while it is still in the wall, which is what lets the scan skip the line-of-sight test that
+		 * every real source has to pass. Backed by
+		 * {@code data/alaindustrial/tags/block/radioactive_ore.json}.
+		 */
+		public static final TagKey<Block> RADIOACTIVE_ORE = key("radioactive_ore");
+
 
 		/**
 		 * Blocks a reactor's lava cannot take (MOD-469).

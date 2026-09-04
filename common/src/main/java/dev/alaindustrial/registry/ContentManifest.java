@@ -184,6 +184,7 @@ import dev.alaindustrial.item.tool.NetworkAnalyzerItem;
 import dev.alaindustrial.item.tool.ScytheItem;
 import dev.alaindustrial.item.tool.ScytheTier;
 import dev.alaindustrial.item.tool.ScytheTiers;
+import dev.alaindustrial.item.tool.GeigerCounterItem;
 import dev.alaindustrial.item.tool.WindGaugeItem;
 import dev.alaindustrial.item.tool.WrenchItem;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
@@ -1605,6 +1606,8 @@ public final class ContentManifest {
 			plain("palladium_ingot", s -> ModContent.PALLADIUM_INGOT = s),
 			item("network_analyzer", p -> new NetworkAnalyzerItem(p.stacksTo(1)), s -> ModContent.NETWORK_ANALYZER = s),
 			item("wind_gauge", p -> new WindGaugeItem(p.stacksTo(1)), s -> ModContent.WIND_GAUGE = s),
+			item("geiger_counter", p -> new GeigerCounterItem(p.stacksTo(1)),
+					s -> ModContent.GEIGER_COUNTER = s),
 			item("wrench", p -> new WrenchItem(p.stacksTo(1)), s -> ModContent.WRENCH = s),
 			item("guide_book", p -> new GuideBookItem(p.stacksTo(1)), s -> ModContent.GUIDE_BOOK = s),
 			// Teleporter Remote (MOD-092): registered but kept out of the creative tab + no recipe until

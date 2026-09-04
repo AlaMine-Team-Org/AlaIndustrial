@@ -223,4 +223,142 @@ class RadiationCoreTest {
 		assertEquals(stack, full, "a full chest is no worse than one stack once both are over the cap");
 		assertTrue(single < stack, "but a single item must still be milder than a heap");
 	}
+	// --- Geiger counter (MOD-475) --------------------------------------------------------------
+
+	/** The task's default bands: silent / faint / busy / loud / off the scale. */
+	private static final int FAINT = 1;
+	private static final int BUSY = 100;
+	private static final int LOUD = 300;
+	private static final int OFF_SCALE = 800;
+
+	private static int step(int field) {
+		return RadiationCore.geigerStep(field, FAINT, BUSY, LOUD, OFF_SCALE);
+	}
+
+	@Test
+	void silenceMeansNothingAtAll() {
+		assertEquals(0, step(0), "a clean spot must be silent");
+	}
+
+	@Test
+	void theOreLadderSplitsTheRadiusIntoThreeEvenBands() {
+		// Ore in the rock is audible and contributes NOTHING to the dose. The second half is
+		// structural — the ore scan feeds the counter and never reaches the dose sum — so it is proven
+		// where it can actually break, by the gametest that watches a player's dose stay at zero beside
+		// a vein. What arithmetic answers is whether "warmer" still works as the player walks, and the
+		// bands are what make it work: they follow the CONFIGURED radius rather than fixed distances,
+		// so shortening the reach shrinks the ladder instead of collapsing it onto one rung.
+		int radius = Config.geigerOreRadius;
+		assertEquals(3, RadiationCore.oreStep(0.0, radius), "standing on the vein is the top grade");
+		assertEquals(3, RadiationCore.oreStep(radius / 4.0, radius));
+		assertEquals(2, RadiationCore.oreStep(radius / 4.0 + 0.1, radius));
+		assertEquals(2, RadiationCore.oreStep(radius / 2.0, radius));
+		assertEquals(1, RadiationCore.oreStep(radius / 2.0 + 0.1, radius));
+		assertEquals(1, RadiationCore.oreStep(radius, radius), "the edge of the reach is still audible");
+		assertEquals(0, RadiationCore.oreStep(radius + 0.1, radius), "past the reach is silence");
+		assertEquals(0, RadiationCore.oreStep(-1.0, radius), "no ore found at all is silence");
+		assertEquals(0, RadiationCore.oreStep(0.0, 0), "a disabled scan is silence, not a top grade");
+	}
+
+	@Test
+	void theCounterReachesFurtherThanRadiationDoes() {
+		// The property the whole instrument rests on, and the one the first shipped version got wrong:
+		// it shared radiationSourceRadius, so it first spoke at the distance where the dose had already
+		// started climbing. Measured in game — three blocks from a chest of uranium, taking damage, one
+		// click a second. A detector has to speak in a band where the dose is still exactly zero.
+		assertTrue(Config.geigerRadius > Config.radiationSourceRadius,
+				"a counter that only hears as far as radiation reaches cannot warn about anything");
+	}
+
+	@Test
+	void theStepScaleIsMonotone() {
+		// A config with the thresholds out of order would silently skip a band — step 2 unreachable,
+		// and nothing anywhere would say so.
+		int previous = 0;
+		for (int field = 0; field <= OFF_SCALE + 100; field++) {
+			int current = step(field);
+			assertTrue(current >= previous,
+					"the step must never fall as the field rises (field " + field + ")");
+			previous = current;
+		}
+		assertEquals(4, previous, "the scale must reach its top");
+	}
+
+	@Test
+	void stepsFollowTheThresholds() {
+		assertEquals(1, step(FAINT));
+		assertEquals(1, step(BUSY - 1));
+		assertEquals(2, step(BUSY));
+		assertEquals(2, step(LOUD - 1));
+		assertEquals(3, step(LOUD));
+		assertEquals(3, step(OFF_SCALE - 1));
+		assertEquals(4, step(OFF_SCALE));
+	}
+
+	@Test
+	void theCheapInstrumentSaturatesInsteadOfLying() {
+		// A rack at arm's length reads 3600, the same rack three blocks away 720. Above the ceiling
+		// the instrument must not tell them apart: it does not lie about the reading, it admits the
+		// scale has run out (the trick HBM uses).
+		assertEquals(4, step(800));
+		assertEquals(4, step(3600));
+		assertEquals(step(800), step(3600), "past the ceiling the step is the same");
+	}
+
+	@Test
+	void aZeroThresholdCannotMakeSilenceUnreachable() {
+		// Guard against the config: faint = 0 would mean "step 1 at zero field", i.e. clicking in
+		// an empty meadow — precisely what players hold against other mods.
+		assertEquals(0, RadiationCore.geigerStep(0, 0, BUSY, LOUD, OFF_SCALE));
+	}
+
+	@Test
+	void aFreshReadingSurvivesAMissedSweep() {
+		// One missed sweep must not stutter the sound: the window is two sweeps, not one.
+		int interval = Config.radiationTickInterval;
+		assertTrue(RadiationCore.readingWentStale(1000, 1000 - 2L * interval - 1, interval));
+		assertTrue(!RadiationCore.readingWentStale(1000, 1000 - interval, interval),
+				"a reading one sweep old must still be alive");
+		assertTrue(!RadiationCore.readingWentStale(1000, 1000 - 2L * interval, interval),
+				"exactly two sweeps is still alive");
+	}
+
+	@Test
+	void aReadingNobodyRefreshesGoesSilent() {
+		// The point of the whole mechanism: the sweep has early exits (radiation switched off in the
+		// config, a creative player), and each of them leaves the last reading behind. Without an age
+		// the counter would rattle forever.
+		int interval = Config.radiationTickInterval;
+		long takenAt = 500;
+		assertTrue(!RadiationCore.readingWentStale(takenAt, takenAt, interval));
+		assertTrue(RadiationCore.readingWentStale(takenAt + 10L * interval, takenAt, interval),
+				"with nobody refreshing it, a reading must go stale");
+	}
+
+	@Test
+	void theStaleWindowFollowsTheSweepCadenceUpToACeiling() {
+		// Derived from the tunable interval rather than pinned to twenty ticks: slowing the sweep down
+		// would otherwise leave an operator with a counter that falls silent between sweeps.
+		int slower = 25;
+		assertTrue(!RadiationCore.readingWentStale(50, 0, slower), "a slower sweep widens the window");
+		assertTrue(RadiationCore.readingWentStale(51, 0, slower));
+
+		// But only up to a ceiling. A server that sweeps every half minute would otherwise get a full
+		// minute of phantom rattle after `/gamemode creative` — a safety net measured in minutes is
+		// the very bug it exists to prevent.
+		int verySlow = 600;
+		long ceiling = RadiationCore.STALE_WINDOW_CEILING_TICKS;
+		assertTrue(!RadiationCore.readingWentStale(ceiling, 0, verySlow), "at the ceiling, still fresh");
+		assertTrue(RadiationCore.readingWentStale(ceiling + 1, 0, verySlow),
+				"past the ceiling the reading must go stale however slow the sweep is");
+	}
+
+	@Test
+	void aZeroSweepIntervalCannotMakeEveryReadingStale() {
+		// The same class of guard as the silence threshold: a zero in the config must not break the
+		// mechanic.
+		assertTrue(!RadiationCore.readingWentStale(2, 0, 0));
+		assertTrue(RadiationCore.readingWentStale(3, 0, 0));
+	}
+
 }

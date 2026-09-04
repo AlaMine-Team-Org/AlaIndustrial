@@ -178,4 +178,28 @@ public class RadiationGameTest {
 	public void radPouchIsQuietOnTheFloorAndInAChest(GameTestHelper helper) {
 		RadiationScenarios.pouchIsQuietOnTheFloorAndInAChest(helper);
 	}
+
+	/**
+	 * @implements R-RAD-22 — ore in the rock is heard through stone and feeds nothing that becomes a dose.
+	 */
+	@GameTest
+	public void radOreBehindStoneIsHeardButFeedsNoDose(GameTestHelper helper) {
+		RadiationScenarios.oreBehindStoneIsHeardButFeedsNoDose(helper);
+	}
+
+	/**
+	 * @implements R-RAD-23 — the counter hears a hazard from beyond the distance it can dose anyone at.
+	 */
+	@GameTest
+	public void radCounterHearsBeyondTheDoseRadius(GameTestHelper helper) {
+		RadiationScenarios.theCounterHearsBeyondTheDoseRadius(helper);
+	}
+
+	/**
+	 * @implements R-RAD-24 — five counters read as one, and the lamp is a state that clears completely.
+	 */
+	@GameTest
+	public void radManyCountersReadAsOneAndTheLampIsAState(GameTestHelper helper) {
+		RadiationScenarios.manyCountersReadAsOneAndTheLampIsAState(helper);
+	}
 }

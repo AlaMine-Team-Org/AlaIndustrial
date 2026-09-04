@@ -334,6 +334,10 @@ pitest {
             // ItemStack and entities to ask "what is irradiating whoever stands here" and to write the
             // effect. The arithmetic they delegate to (RadiationCore) is deliberately Minecraft-free and
             // stays IN the run; these halves are covered by the L2 scenarios instead.
+            // MOD-475: the counter's ticker is the same case — ServerPlayer, packets, the sound
+            // registry. Its one piece of testable arithmetic (the stale window) lives in
+            // RadiationCore, which stays under mutation coverage.
+            'dev.alaindustrial.core.radiation.GeigerTicker',
             'dev.alaindustrial.core.radiation.RadiationDose',
             'dev.alaindustrial.core.radiation.RadiationMobs',
             'dev.alaindustrial.core.radiation.RadiationSources',
