@@ -1,15 +1,19 @@
 package dev.alaindustrial.item.energy;
 
+import dev.alaindustrial.item.wearable.EnergyPackItem;
 import dev.alaindustrial.registry.ModTags;
+import dev.alaindustrial.skill.SkillEnergy;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import net.minecraft.core.NonNullList;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Hands EU to the powered items a player is carrying — the shared rules for "charge everything on this
@@ -153,6 +157,12 @@ public final class PlayerEuDistributor {
 	public static Result distribute(Player player, long budget, Policy policy, int ticks) {
 		if (budget <= 0) {
 			return Result.NOTHING;
+		}
+		// MOD-483 Shared Bus: the worn pack normally leaves equipped gear alone, so charging a jetpack
+		// meant taking it off. The skill flips that one flag and nothing else about the pack changes.
+		if (!policy.includeEquipped() && SkillEnergy.packFeedsEquipped(player)) {
+			policy = new Policy(policy.skipNoAutoCharge(), policy.respectInputRate(), true,
+					policy.spreadEvenly());
 		}
 		int batch = Math.max(1, ticks);
 		return policy.spreadEvenly()
@@ -301,17 +311,18 @@ public final class PlayerEuDistributor {
 		List<Target> targets = new ArrayList<>();
 		NonNullList<ItemStack> items = player.getInventory().getNonEquipmentItems();
 		for (int i = 0; i < items.size(); i++) {
-			addTarget(targets, i, items.get(i), policy, batch);
+			addTarget(targets, i, items.get(i), policy, batch, player);
 		}
-		addTarget(targets, Inventory.SLOT_OFFHAND, player.getItemBySlot(EquipmentSlot.OFFHAND), policy, batch);
-		addTarget(targets, NO_SLOT, player.containerMenu.getCarried(), policy, batch);
+		addTarget(targets, Inventory.SLOT_OFFHAND, player.getItemBySlot(EquipmentSlot.OFFHAND),
+				policy, batch, player);
+		addTarget(targets, NO_SLOT, player.containerMenu.getCarried(), policy, batch, player);
 		CraftingContainer grid = player.inventoryMenu.getCraftSlots();
 		for (int i = 0; i < grid.getContainerSize(); i++) {
-			addTarget(targets, NO_SLOT, grid.getItem(i), policy, batch);
+			addTarget(targets, NO_SLOT, grid.getItem(i), policy, batch, player);
 		}
 		if (policy.includeEquipped()) {
 			for (EquipmentSlot slot : WORN_SLOTS) {
-				addTarget(targets, NO_SLOT, player.getItemBySlot(slot), policy, batch);
+				addTarget(targets, NO_SLOT, player.getItemBySlot(slot), policy, batch, player);
 			}
 		}
 		return targets;
@@ -323,7 +334,8 @@ public final class PlayerEuDistributor {
 	 * A foreign item is always kept: asking whether it has room means opening a capability lookup and a
 	 * transaction, which is exactly what {@link #give} does anyway.
 	 */
-	private static void addTarget(List<Target> targets, int slot, ItemStack stack, Policy policy, int batch) {
+	private static void addTarget(List<Target> targets, int slot, ItemStack stack, Policy policy,
+			int batch, Player owner) {
 		if (stack.isEmpty() || (policy.skipNoAutoCharge() && stack.is(ModTags.Items.NO_AUTO_CHARGE))) {
 			return;
 		}
@@ -334,7 +346,9 @@ public final class PlayerEuDistributor {
 			// item is unaffected — for count 1 these are the per-item numbers.
 			headroom = ItemEnergy.stackRoom(stack);
 			if (policy.respectInputRate()) {
-				headroom = Math.min(headroom, ItemEnergy.inputRate(stack) * stack.getCount() * batch);
+				// MOD-483 Quick Docking raises the per-tick ceiling for this player's own gear.
+				long rate = SkillEnergy.inputRate(ItemEnergy.inputRate(stack), owner);
+				headroom = Math.min(headroom, rate * stack.getCount() * batch);
 			}
 			if (headroom <= 0) {
 				return;
@@ -401,6 +415,24 @@ public final class PlayerEuDistributor {
 	}
 
 	/**
+	 * Put EU back into the owner's worn Energy Pack — where Recuperator (MOD-483) sends its refund.
+	 *
+	 * <p>Only the worn pack, and only what fits: a refund must never create charge the player has
+	 * nowhere to keep, and it must never land in the tool that just spent it (that would make the node
+	 * a second copy of the entry discount). Nothing worn, or a full pack, means the refund is simply
+	 * lost — which is the honest outcome for energy with nowhere to go.
+	 */
+	public static void refundToPack(@Nullable Entity owner, long eu) {
+		if (eu <= 0 || !(owner instanceof Player player)) {
+			return;
+		}
+		ItemStack pack = player.getItemBySlot(EquipmentSlot.CHEST);
+		if (pack.getItem() instanceof EnergyPackItem && ItemEnergy.room(pack) > 0) {
+			ItemEnergy.add(pack, Math.min(eu, ItemEnergy.room(pack)));
+		}
+	}
+
+	/**
 	 * Fill the stack in one slot with up to {@code budget} EU and return how much it took (the caller is
 	 * debited for the total). Nothing is written when the transfer would be 0 — a full consumer, or a
 	 * non-powered item, must not cost a component write and a stack resync.
@@ -419,7 +451,8 @@ public final class PlayerEuDistributor {
 		if (ItemEnergy.capacity(target) > 0) {
 			long move = Math.min(ItemEnergy.stackRoom(target), budget);
 			if (policy.respectInputRate()) {
-				move = Math.min(move, ItemEnergy.inputRate(target) * target.getCount());
+				long rate = SkillEnergy.inputRate(ItemEnergy.inputRate(target), player);
+				move = Math.min(move, rate * target.getCount());
 			}
 			if (move <= 0) {
 				return 0L;

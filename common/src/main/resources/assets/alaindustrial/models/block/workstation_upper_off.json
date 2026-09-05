@@ -1,0 +1,7 @@
+{
+  "parent": "alaindustrial:block/workstation_upper",
+  "textures": {
+    "particle": "alaindustrial:block/workstation_body_off",
+    "body": "alaindustrial:block/workstation_body_off"
+  }
+}

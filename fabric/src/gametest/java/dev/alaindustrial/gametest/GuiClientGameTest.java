@@ -91,6 +91,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
                 RendererStands.checkIncubatorDome(context, singleplayer);        // MOD-118 BER visual regression
                 RendererStands.checkEnergyCondenserCrystal(context, singleplayer);   // MOD-393 BER visual regression
                 RendererStands.checkThermalCentrifugeRotor(context, singleplayer); // MOD-424 BER visual regression
+                RendererStands.checkWorkstationScreens(context, singleplayer); // MOD-483 BER visual regression
                 StorageModuleStands.checkStorageModuleSeams(context, singleplayer); // MOD-287 connected textures
                 // R-PHY-10: mc.debugHitboxes removed in MC 26.2; re-enable when API is found.
             }
@@ -100,6 +101,9 @@ public class GuiClientGameTest implements FabricClientGameTest {
 
             // ── GUI screenshots (always runs) ─────────────────────────────────────────
             MachineGuiStands.shootGuiScreenshots(context);
+
+            // ── MOD-483: the skill wheel. Not a menu, so ScreensClientGameTest never sees it ──
+            SkillTreeGuiStand.shootSkillTree(context);
 
             // ── MOD-053: the same catalogue once in Arabic — R-GUI-15, the RTL layout audit ──
             // Runs after the English frames and restores en_us when done: a lane that left ar_sa

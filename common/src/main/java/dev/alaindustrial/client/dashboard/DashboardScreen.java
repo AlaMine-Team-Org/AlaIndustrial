@@ -2,6 +2,9 @@ package dev.alaindustrial.client.dashboard;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.client.screen.GuiStyle;
+import dev.alaindustrial.skill.SkillBuild;
+import dev.alaindustrial.skill.SkillClientCache;
+import dev.alaindustrial.skill.SkillPoints;
 import dev.alaindustrial.stats.LevelMath;
 import dev.alaindustrial.stats.PlayerModStats;
 import dev.alaindustrial.stats.PlayerStatsClientCache;
@@ -153,6 +156,15 @@ public final class DashboardScreen extends Screen {
 				? Component.translatable("gui.alaindustrial.dashboard.maxed").getString()
 				: Component.translatable("gui.alaindustrial.dashboard.xp", compact(xp)).getString();
 		g.text(this.font, Component.literal(xpLabel), inX, barY + 10, GuiStyle.TEXT_DIM, false);
+
+		// MOD-483: mastery earns Ala-Fragments, so the profile that reports mastery reports them
+		// too — otherwise the player only learns how many they have by walking to a Workstation.
+		SkillBuild build = SkillClientCache.current();
+		int earned = SkillPoints.forLevel(level);
+		String fragments = Component.translatable("gui.alaindustrial.dashboard.fragments",
+				build.free(earned), earned).getString();
+		g.text(this.font, Component.literal(fragments),
+				inRight - this.font.width(fragments), barY + 10, ACCENT, false);
 		return y + h;
 	}
 

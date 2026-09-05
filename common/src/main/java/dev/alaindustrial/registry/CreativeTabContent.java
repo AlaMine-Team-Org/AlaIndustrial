@@ -703,6 +703,9 @@ public final class CreativeTabContent {
 		show(out, ModContent.MOB_REPELLER_ITEM);
 		show(out, ModContent.MOB_REPELLER_MV_ITEM);
 		show(out, ModContent.MOB_REPELLER_HV_ITEM);
+		// MOD-483 — the workstation, listed in the mod's own tab as well as in vanilla's Functional
+		// Blocks for the same reason as the repellers above.
+		show(out, ModContent.WORKSTATION_ITEM);
 	}
 
 	/** 13 - the armour and weapon lines, plain tempered iron first, then the EU set. */
@@ -744,6 +747,9 @@ public final class CreativeTabContent {
 		show(out, ModContent.MOB_REPELLER_ITEM);
 		show(out, ModContent.MOB_REPELLER_MV_ITEM);
 		show(out, ModContent.MOB_REPELLER_HV_ITEM);
+		// MOD-483 — the workstation's casing. One item for the whole machine: two of them stacked
+		// assemble it, so there is nothing else to list.
+		show(out, ModContent.WORKSTATION_ITEM);
 	}
 
 	private static void generators(Sink out) {

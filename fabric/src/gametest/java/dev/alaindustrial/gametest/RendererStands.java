@@ -828,4 +828,99 @@ public final class RendererStands {
                     + withItem.getFileName() + " with " + emptyA.getFileName() + ".");
         }
     }
+
+    // ────────────────────────────────────────────────────────────────────────────────
+    // Workstation — BER fans and fold-out screens (MOD-483)
+    // ────────────────────────────────────────────────────────────────────────────────
+
+    /** Where the workstation stands for {@link #checkWorkstationScreens}. Clear of every other rig. */
+    private static final int WSTATION_X = 214;
+    private static final int WSTATION_Y = 101;
+    private static final int WSTATION_Z = 150;
+
+    /**
+     * Proves the workstation's animation is alive, not merely that its texture changed.
+     *
+     * <p>The machine has three moving parts — three fans on a loop and the monitor arm folding out —
+     * and all of them are driven by the game clock through a blockstate flag, with nothing stored and
+     * nothing synced. That design is cheap precisely because there is no packet to notice when it
+     * breaks: a renderer that stopped reading the clock, or a block that stopped flipping the flag,
+     * would look exactly like a machine standing still, and standing still is also what an unpowered
+     * one is supposed to look like.
+     *
+     * <p>So the gate is the same shape as the centrifuge's: two frames five ticks apart while the
+     * station is powered must differ by far more than two frames five ticks apart while it is dark.
+     * A screenshot of the lit machine alone would pass with the fans frozen.
+     *
+     * <p>The dark half is made by REPLACING the machine rather than by draining it: the buffer holds
+     * 40 000 EU and upkeep is 6 EU/t, so waiting for it to run down would cost the lane five and a half
+     * hours of ticks. A freshly placed pair has an empty buffer and goes dark on its first tick.
+     */
+    public static void checkWorkstationScreens(ClientGameTestContext context,
+            TestSingleplayerContext singleplayer) {
+        TestServerContext server = singleplayer.getServer();
+        server.runCommand("weather clear");
+        server.runCommand("time set day");
+        server.runCommand("fill " + (WSTATION_X - 3) + " " + WSTATION_Y + " " + (WSTATION_Z - 3) + " "
+                + (WSTATION_X + 3) + " " + (WSTATION_Y + 4) + " " + (WSTATION_Z + 3) + " minecraft:air");
+        server.runCommand("fill " + (WSTATION_X - 3) + " " + (WSTATION_Y - 1) + " " + (WSTATION_Z - 3) + " "
+                + (WSTATION_X + 3) + " " + (WSTATION_Y - 1) + " " + (WSTATION_Z + 3) + " minecraft:smooth_stone");
+
+        placeWorkstation(server);
+        // Energy through the save format rather than a cable: the frame is about the renderer, and a
+        // powered neighbour would put its own block into it.
+        server.runCommand("data merge block " + WSTATION_X + " " + WSTATION_Y + " " + WSTATION_Z
+                + " {Energy: 20000L}");
+
+        server.runCommand("gamemode spectator @p");
+        // Eye level with the monitors (one block up) and far enough back that both halves fit.
+        server.runCommand("tp @p " + (WSTATION_X + 0.5) + " " + (WSTATION_Y + 1.5 - EYE_HEIGHT) + " "
+                + (WSTATION_Z + 3.2) + " 180 0");
+        singleplayer.getClientLevel().waitForChunksRender();
+        // Past the one-second fold-out, so the arm is settled and only the fans still move.
+        context.waitTicks(30);
+
+        Path litA = takeCleanScreenshot(context, "vis_workstation_lit_a");
+        LOG.info("[GUITEST][WORKSTATION] vis_workstation_lit_a -> {}", litA.toAbsolutePath());
+        context.waitTicks(5);
+        Path litB = takeCleanScreenshot(context, "vis_workstation_lit_b");
+
+        // A brand-new pair: empty buffer, dark on its first tick.
+        server.runCommand("fill " + WSTATION_X + " " + WSTATION_Y + " " + WSTATION_Z + " "
+                + WSTATION_X + " " + (WSTATION_Y + 1) + " " + WSTATION_Z + " minecraft:air");
+        placeWorkstation(server);
+        // The fold-away plays for a second; the baseline has to be the settled pose, or it measures the
+        // animation it is supposed to be the absence of.
+        context.waitTicks(30);
+
+        Path darkA = takeCleanScreenshot(context, "vis_workstation_dark_a");
+        context.waitTicks(5);
+        Path darkB = takeCleanScreenshot(context, "vis_workstation_dark_b");
+
+        int litDelta = differingPixels(litA, litB);
+        int darkNoise = differingPixels(darkA, darkB);
+        // Same shape of threshold as the centrifuge, and a lower floor for the same reason in reverse:
+        // three fans of a few pixels each move less than a rotor seen through a window. 4x the measured
+        // floor keeps it honest; the 120 px absolute keeps it from passing on a still frame when the
+        // floor happens to measure zero.
+        int required = Math.max(4 * darkNoise, 120);
+        LOG.info("[GUITEST][WORKSTATION] fan pixel gate: lit delta={} px, dark baseline={} px, required>{}",
+                litDelta, darkNoise, required);
+        if (litDelta < required) {
+            throw new AssertionError("[GUITEST][WORKSTATION] five ticks of a powered workstation changed "
+                    + "only " + litDelta + " px (dark baseline " + darkNoise + " px, required > " + required
+                    + ") - either WorkstationBlockEntityRenderer's fans are not in the captured frame, or "
+                    + "they are drawn frozen (check that the renderer reads the game clock and that LIT "
+                    + "reaches the client). " + explainWithDiff(litA, litB));
+        }
+    }
+
+    /** Two casings, stacked: the neighbour update assembles them into the machine. */
+    private static void placeWorkstation(TestServerContext server) {
+        server.runCommand("setblock " + WSTATION_X + " " + WSTATION_Y + " " + WSTATION_Z
+                + " alaindustrial:workstation[facing=south]");
+        server.runCommand("setblock " + WSTATION_X + " " + (WSTATION_Y + 1) + " " + WSTATION_Z
+                + " alaindustrial:workstation[facing=south]");
+    }
+
 }

@@ -17,6 +17,7 @@ import dev.alaindustrial.block.entity.SprinklerBlockEntity;
 import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
+import dev.alaindustrial.block.entity.WorkstationBlockEntity;
 import dev.alaindustrial.client.render.CableAccessoryBlockEntityRenderer;
 import dev.alaindustrial.client.render.ChestBlockEntityRenderer;
 import dev.alaindustrial.client.render.EnergyCondenserBlockEntityRenderer;
@@ -30,6 +31,7 @@ import dev.alaindustrial.client.render.SprinklerHeadBlockEntityRenderer;
 import dev.alaindustrial.client.render.ThermalCentrifugeBlockEntityRenderer;
 import dev.alaindustrial.client.render.WaterMillWheelBlockEntityRenderer;
 import dev.alaindustrial.client.render.WindMillRotorBlockEntityRenderer;
+import dev.alaindustrial.client.render.WorkstationBlockEntityRenderer;
 import dev.alaindustrial.registry.ContentManifest;
 import dev.alaindustrial.registry.ModContent;
 import java.util.List;
@@ -149,6 +151,11 @@ public final class ClientContentManifest {
 			// which clot the block is holding.
 			renderer(ContentManifest.blockEntity("energy_condenser", EnergyCondenserBlockEntity.class),
 					EnergyCondenserBlockEntityRenderer::new),
+			// MOD-483: the workstation's fans and the screens that fold out. One renderer for all
+			// three parts of the block — the lower half draws the fans, the upper the screens, a
+			// loose casing nothing.
+			renderer(ContentManifest.blockEntity("workstation", WorkstationBlockEntity.class),
+					WorkstationBlockEntityRenderer::new),
 			// Garden Drone (MOD-277): the drone is geometry this renderer places above its station,
 			// not an entity.
 			renderer(ContentManifest.blockEntity("garden_drone_station", GardenDroneStationBlockEntity.class),

@@ -4,6 +4,7 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.core.radiation.RadiationCore;
 import dev.alaindustrial.core.radiation.RadiationDose;
 import dev.alaindustrial.registry.ModDamageTypes;
+import dev.alaindustrial.skill.SkillHazard;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -63,8 +64,13 @@ public class RadiationEffect extends MobEffect {
 		if (clock % Config.radiationSymptomIntervalTicks == 0) {
 			applySymptoms(player, level);
 		}
-		int damageInterval = damageIntervalFor(level);
-		if (damageInterval > 0 && clock % damageInterval == 0) {
+		// MOD-483 Tolerance Threshold / Background Shift. Both touch the DAMAGE only: the dose still climbs
+		// and the symptoms still show, so a player always sees the background rising even when it has
+		// stopped hurting them. Level 1 is the mod's own low band, which is what the threshold skill
+		// declares safe.
+		int damageInterval = SkillHazard.damageInterval(damageIntervalFor(level), player);
+		boolean harmless = SkillHazard.radiationHarmless(player, level, LOW_BAND_LEVEL);
+		if (!harmless && damageInterval > 0 && clock % damageInterval == 0) {
 			player.hurtServer(serverLevel, ModDamageTypes.radiation(serverLevel), damageFor(level));
 		}
 		return true;
@@ -84,6 +90,15 @@ public class RadiationEffect extends MobEffect {
 			player.addEffect(new MobEffectInstance(MobEffects.HUNGER, duration, 0, true, false, false));
 		}
 	}
+
+	/**
+	 * The lowest severity that hurts at all — see {@link #damageIntervalFor}, where levels below this
+	 * have no interval. Tolerance Threshold (MOD-483) removes the damage at exactly this step and
+	 * nothing above it: the first painful rung stops being painful, while a serious dose still kills.
+	 * Symptoms and the dose itself are untouched at every level, so the player always sees the
+	 * background rising.
+	 */
+	private static final int LOW_BAND_LEVEL = 2;
 
 	/** Ticks between hits at a given severity; 0 means this level does not hurt yet. */
 	private static int damageIntervalFor(int level) {

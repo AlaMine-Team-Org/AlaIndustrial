@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import dev.alaindustrial.skill.SkillHazard;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -117,7 +118,10 @@ public final class RadiationTicker {
 		int low = RadiationCore.cappedContribution(dose, lowShielded,
 				RadiationCore.cappedCeiling(capacity, Config.radiationLowDoseCapPercent));
 
-		int added = field + items + low;
+		// MOD-483 Respirator. Applied AFTER wearSuit above, deliberately: the suit is charged for
+		// what it stopped, and billing it for the skill's share too would wear it out for protection
+		// it never provided.
+		int added = SkillHazard.doseAdded(field + items + low, player);
 		if (added <= 0) {
 			return;
 		}
@@ -151,7 +155,9 @@ public final class RadiationTicker {
 		// The counter's OWN radius, not the hazard's: a detector that first speaks where the dose has
 		// already started climbing has failed at the one job it has. Everything heard beyond
 		// radiationSourceRadius is pure warning, because out there the dose is exactly zero.
-		int heard = RadiationSources.exposureAt(level, player, Config.geigerRadius, Config.geigerRadius)
+		// MOD-483 Dosimetrist: the counter reaches further.
+		int geiger = SkillHazard.geigerRadius(Config.geigerRadius, player);
+		int heard = RadiationSources.exposureAt(level, player, geiger, geiger)
 				+ Math.max(0, carried);
 		int hazard = RadiationCore.geigerStep(heard, Config.geigerFaintThreshold,
 				Config.geigerBusyThreshold, Config.geigerLoudThreshold,
@@ -200,7 +206,9 @@ public final class RadiationTicker {
 	 * a number of sweeps between points: a live core is one a second, a stray ingot is one every few.
 	 */
 	private static void wearSuit(ServerPlayer player, int absorbed, long sweep) {
-		int interval = RadiationCore.wearInterval(absorbed, Config.radiationDosePerSuitDurability);
+		// MOD-483 Careful Wear: one durability point absorbs more dose, so the suit lasts longer.
+		int interval = RadiationCore.wearInterval(absorbed,
+				SkillHazard.dosePerDurability(Config.radiationDosePerSuitDurability, player));
 		if (interval <= 0 || sweep % interval != 0) {
 			return;
 		}

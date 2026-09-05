@@ -33,7 +33,8 @@ public final class FabricPlayerStats {
 		PlayerStatsStore.bind(new PlayerStatsStore.Accessor() {
 			@Override
 			public PlayerModStats get(ServerPlayer player) {
-				return player.getAttachedOrCreate(TYPE);
+				// A read must not install the default - see the skills accessor and MOD-483.
+				return player.getAttachedOrElse(TYPE, PlayerModStats.EMPTY);
 			}
 
 			@Override

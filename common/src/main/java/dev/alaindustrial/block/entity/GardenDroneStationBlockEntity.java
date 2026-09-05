@@ -9,6 +9,7 @@ import dev.alaindustrial.menu.GardenDroneStationMenu;
 import dev.alaindustrial.registry.ModTags;
 import java.util.ArrayList;
 import java.util.List;
+import dev.alaindustrial.skill.SkillMachine;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -270,7 +271,9 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 		// The floor matters as much as the rate: an adjacent tile is a fraction of a block away, and
 		// without a minimum the drone would blink there and back before the eye caught it.
 		flightTotal = Math.max(MIN_FLIGHT_TICKS,
-				(int) Math.round(distance * Config.gardenDroneFlightTicksPerBlock));
+				// MOD-483 Swift Drone: one tick less per block of flight.
+				(int) Math.round(distance * SkillMachine.droneFlightTicks(
+						Config.gardenDroneFlightTicksPerBlock, level, getOwner())));
 		flightRemaining = flightTotal;
 		flightStart = level.getGameTime();
 	}
@@ -582,7 +585,9 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 	 */
 	private void rebuildZoneCache(ServerLevel level, BlockPos stationPos) {
 		zoneCache.clear();
-		int radius = Math.max(1, Config.gardenDroneRange);
+		// MOD-483 Extended Round: radius 6 rather than 4 — exactly twice the area, not four times,
+		// which is what doubling the radius would have given.
+		int radius = Math.max(1, SkillMachine.droneRange(Config.gardenDroneRange, level, getOwner()));
 		BlockPos.MutableBlockPos probe = new BlockPos.MutableBlockPos();
 		for (int dx = -radius; dx <= radius; dx++) {
 			for (int dz = -radius; dz <= radius; dz++) {

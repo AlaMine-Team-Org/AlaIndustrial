@@ -68,5 +68,11 @@ public final class NeoForgeNetwork {
 		registrar.playToServer(FluxweaveStepAssistPayload.TYPE, FluxweaveStepAssistPayload.CODEC,
 				(payload, context) -> context.enqueueWork(
 						() -> FluxweaveStepAssistPayload.handle(payload, (ServerPlayer) context.player())));
+		// MOD-483: no clientbound half — the skills attachment mirrors itself to its owner.
+		registrar.playToServer(dev.alaindustrial.network.SkillActionPayload.TYPE,
+				dev.alaindustrial.network.SkillActionPayload.CODEC,
+				(payload, context) -> context.enqueueWork(
+						() -> dev.alaindustrial.network.SkillActionPayload.handle(
+								payload, (ServerPlayer) context.player())));
 	}
 }

@@ -2,6 +2,7 @@ package dev.alaindustrial.item.wearable;
 
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.item.energy.PlayerEuDistributor;
+import dev.alaindustrial.skill.SkillEnergy;
 import dev.alaindustrial.item.material.ModArmorMaterials;
 
 import dev.alaindustrial.Config;
@@ -139,7 +140,13 @@ public class EnergyPackItem extends Item {
 	 */
 	@Override
 	public void inventoryTick(ItemStack stack, ServerLevel level, Entity entity, EquipmentSlot slot) {
-		if (slot != EquipmentSlot.CHEST || !(entity instanceof Player player)) {
+		if (!(entity instanceof Player player)) {
+			return;
+		}
+		// MOD-483 Field Circuit: without the skill a pack is a device you WEAR, and a pack in a bag
+		// does nothing. With it, any slot works — at half the rate, so wearing one is still better.
+		boolean worn = slot == EquipmentSlot.CHEST;
+		if (!worn && !(SkillEnergy.packWorksFromBag(player) && firstPackInBag(player, stack))) {
 			return;
 		}
 		// Self-heal the worn look. refreshWornAsset normally runs from ItemEnergy.set, but a pack can
@@ -149,7 +156,7 @@ public class EnergyPackItem extends Item {
 		// is a key comparison per tick; it writes only when the asset actually disagrees with the EU.
 		refreshWornAsset(stack, ItemEnergy.get(stack));
 		if (level.getGameTime() % 20 == 0) {
-			chargeStep(stack, player);
+			chargeStep(stack, player, worn);
 		}
 	}
 
@@ -165,8 +172,31 @@ public class EnergyPackItem extends Item {
 	 * <p>Separated from the game-time gate so gametests can drive it deterministically. Returns the EU
 	 * actually moved (0 = nothing was written, and the components stay untouched).
 	 */
+	/**
+	 * Only the first pack in the bag hands out charge (MOD-483).
+	 *
+	 * <p>Without this, five packs in an inventory would each run their own step and the player would be
+	 * handing out five times the rate for owning five bags.
+	 */
+	private static boolean firstPackInBag(Player player, ItemStack stack) {
+		for (ItemStack candidate : player.getInventory().getNonEquipmentItems()) {
+			if (candidate.getItem() instanceof EnergyPackItem) {
+				return candidate == stack;
+			}
+		}
+		return false;
+	}
+
 	public static long chargeStep(ItemStack pack, Player player) {
-		long budget = Math.min((long) Config.energyPackOutputRate * 20L, ItemEnergy.get(pack));
+		return chargeStep(pack, player, true);
+	}
+
+	/** Same, told whether the pack is worn — a bagged one pays out at a fraction of the rate. */
+	public static long chargeStep(ItemStack pack, Player player, boolean worn) {
+		long rate = worn
+				? Config.energyPackOutputRate
+				: Math.max(1, Config.energyPackOutputRate / Math.max(1, Config.skillFieldCircuitDivisor));
+		long budget = Math.min(rate * 20L, ItemEnergy.get(pack));
 		if (budget <= 0) {
 			return 0L;
 		}

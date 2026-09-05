@@ -2558,6 +2558,133 @@ public final class Config {
 			doc = "MOD-133: how often (server ticks) in-memory player stats fold into the attachment and sync. 100 = every 5s.")
 	public static int statsFlushTicks = 100;
 
+	// --- MOD-483 Workstation: what the station itself costs to run. ---
+
+	/**
+	 * EU/t the assembled Workstation draws while it is powered.
+	 *
+	 * <p>Debited for the ticks that actually elapsed, at most a second's worth per debit. An idle
+	 * station only visits its tick once a second, so it pays in one-second lumps; a station on a live
+	 * cable is woken every tick by the delivery and pays a tick at a time. Either way the rate the
+	 * player measures is this number.
+	 */
+	@Knob(section = Section.MACHINES, min = 0,
+			doc = "MOD-483: EU/t the assembled Workstation draws while powered. Charged per elapsed tick, at most a second per debit.")
+	public static int workstationEuPerTick = 6;
+	/**
+	 * EU the station spends to teach one skill, whatever the node costs in Ala-Fragments.
+	 *
+	 * <p>A flat price on purpose: Fragments already scale with how deep a node sits, and charging more
+	 * EU for a deeper one would price the same decision twice. Against the MV buffer this is most of a
+	 * full charge, so learning is an event the base has to be ready for.
+	 */
+	@Knob(section = Section.MACHINES, min = 0,
+			doc = "MOD-483: EU the Workstation spends per skill learned. Flat - the Ala-Fragment cost already scales with depth.")
+	public static int workstationSkillPurchaseEu = 30_000;
+
+	// --- MOD-483 skill tree: what each node is worth. ---
+	//
+	// These live here rather than as constants beside the code that applies them for the reason every
+	// balance number in this mod does: a value an operator cannot retune without rebuilding the jar is
+	// not a balance knob, it is a decision. Each number is also the ONE place its node is priced —
+	// the tree's own arithmetic (which nodes exist, what they cost in Ala-Fragments, which side of a
+	// fork closes which) stays in SkillSlot and is not configurable, because it is the design.
+
+	/** Frugal Stroke: what a powered-tool action costs, as a percentage of the listed price. */
+	@Knob(section = Section.PLAYER, min = 1,
+			doc = "MOD-483 Frugal Stroke: powered-tool action cost as a percent of the listed price (90 = 10% off). Rounded UP, so a 2 EU action is not halved.")
+	public static int skillFrugalStrokePercent = 90;
+	/** Frugal Armour: one second in this many is free. Counted in seconds — upkeep is 1 EU. */
+	@Knob(section = Section.PLAYER, min = 1,
+			doc = "MOD-483 Frugal Armour: one second of powered-armour upkeep in this many is free (3 = a third off). Counted in seconds because upkeep is 1 EU and a percent of one rounds to nothing.")
+	public static int skillFrugalArmourEverySeconds = 3;
+	/** Quick Docking: how much faster a powered item accepts charge. */
+	@Knob(section = Section.PLAYER, min = 1.0,
+			doc = "MOD-483 Quick Docking: multiplier on how fast powered items accept charge (1.5 = half again). The voltage tier ceiling still applies above it.")
+	public static float skillQuickDockFactor = 1.5f;
+	/** Recuperator: percent of a tool's spend that returns to the worn pack. */
+	@Knob(section = Section.PLAYER, min = 0,
+			doc = "MOD-483 Recuperator: percent of a tool's spend returned to the worn energy pack. Never applies to a carrier's own payout - that would mint EU.")
+	public static int skillRecuperatorPercent = 10;
+	/** Field Circuit: a bagged pack hands out at this fraction of the worn rate. */
+	@Knob(section = Section.PLAYER, min = 1,
+			doc = "MOD-483 Field Circuit: divisor on the pack's output rate while it sits in a bag rather than worn (2 = half speed). Keeps wearing it worthwhile.")
+	public static int skillFieldCircuitDivisor = 2;
+
+	/** Respirator: how much slower radiation dose builds up, in percent. */
+	@Knob(section = Section.PLAYER, min = 0,
+			doc = "MOD-483 Respirator: percent by which radiation dose builds slower. Deliberately below one suit piece (25%) - a skill must not replace the gear.")
+	public static int skillRespiratorPercent = 10;
+	/** Dielectric: how much weaker a bare cable hits, in percent. */
+	@Knob(section = Section.PLAYER, min = 0,
+			doc = "MOD-483 Dielectric: percent by which a bare cable hits weaker.")
+	public static int skillDielectricPercent = 20;
+	/** Full Insulation: the stronger shock cut. Replaces Dielectric rather than stacking with it. */
+	@Knob(section = Section.PLAYER, min = 0,
+			doc = "MOD-483 Full Insulation: percent by which a bare cable hits weaker. Together with a full insulating set it reaches the mod cap of 95%, never immunity.")
+	public static int skillFullInsulationPercent = 60;
+	/** Careful Wear: extra dose one point of suit durability absorbs, in percent. */
+	@Knob(section = Section.PLAYER, min = 0,
+			doc = "MOD-483 Careful Wear: percent more dose absorbed per point of hazmat durability (25 = the suit lasts a quarter longer).")
+	public static int skillCarefulWearPercent = 25;
+	/** Dosimetrist: how far the Geiger counter reaches with the skill, in blocks. */
+	@Knob(section = Section.PLAYER, min = 1,
+			doc = "MOD-483 Dosimetrist: Geiger counter reach in blocks with the skill (base geigerRadius applies without it).")
+	public static int skillDosimetristRadius = 20;
+	/** Background Shift: radiation damage arrives this many times less often. */
+	@Knob(section = Section.PLAYER, min = 1,
+			doc = "MOD-483 Background Shift: multiplier on the interval between radiation hits (2 = half as often). Not immunity - dose and symptoms are untouched.")
+	public static int skillBackgroundShiftFactor = 2;
+
+	/** Tuned Drive: percent taken off an operation's length. */
+	@Knob(section = Section.PLAYER, min = 0,
+			doc = "MOD-483 Tuned Drive: percent off machine operation length. Small on purpose next to an overclocker chip, which buys 25% speed for 60% more energy.")
+	public static int skillTunedDrivePercent = 5;
+	/** Fine Tuning: a second cut off an operation's length, on top of Tuned Drive. */
+	@Knob(section = Section.PLAYER, min = 0,
+			doc = "MOD-483 Fine Tuning: further percent off machine operation length, added to skillTunedDrivePercent.")
+	public static int skillFineTuningPercent = 5;
+	/** Precise Draw: one operation tick in this many costs nothing. */
+	@Knob(section = Section.PLAYER, min = 1,
+			doc = "MOD-483 Precise Draw: one drain tick in this many is free (10 = 10% off the operation). Counted in ticks because a basic machine draws 2 EU/t.")
+	public static int skillPreciseDrawEveryTicks = 10;
+	/** Steady Hands: how much longer fuel burns, in percent. */
+	@Knob(section = Section.PLAYER, min = 0,
+			doc = "MOD-483 Steady Hands: percent longer fuel burns in the owner's generators. Applied to burn LENGTH, not EU/t - a solar panel makes 1 EU/t and a percent of one is zero.")
+	public static int skillSteadyHandsPercent = 10;
+	/** Resilient Cycle: an operation past this share of its length may coast on the machine's charge. */
+	@Knob(section = Section.PLAYER, min = 0,
+			doc = "MOD-483 Resilient Cycle: percent of an operation that must be done before it may finish on the machine's own buffer. Below 50 a switch on a timer becomes free energy.")
+	public static int skillResilientFromPercent = 50;
+	/** Selection: mutation chance added, as a fraction. The mod's own cap still applies. */
+	@Knob(section = Section.PLAYER, min = 0.0,
+			doc = "MOD-483 Selection: mutation chance added in the incubator (0.05 = five points). Applied to the base chance, so mutationChanceCap still has the last word.")
+	public static double skillSelectionBonus = 0.05;
+	/** Frugal Sprayer and Frugal Vat: percent less fluid one action takes. */
+	@Knob(section = Section.PLAYER, min = 0,
+			doc = "MOD-483 Frugal Sprayer / Frugal Vat: percent less solution or water one action takes.")
+	public static int skillFrugalFluidPercent = 10;
+	/** Wide Watering: blocks added to the sprinkler's radius. */
+	@Knob(section = Section.PLAYER, min = 0,
+			doc = "MOD-483 Wide Watering: blocks added to sprinkler radius. Area grows with the SQUARE of it, which is why skillWideWateringCost exists.")
+	public static int skillWideWateringRadius = 1;
+	/** Wide Watering: multiplier on the solution a wider pass costs. */
+	@Knob(section = Section.PLAYER, min = 1.0,
+			doc = "MOD-483 Wide Watering: multiplier on solution per pass that pays for the larger area (1.5 keeps the cost per tile roughly level; 1.0 hands out 49% free work).")
+	public static double skillWideWateringCost = 1.5;
+	/** Swift Drone: ticks shaved off each block of drone flight. */
+	@Knob(section = Section.PLAYER, min = 0,
+			doc = "MOD-483 Swift Drone: ticks shaved off each block of garden-drone flight.")
+	public static int skillSwiftDroneTicks = 1;
+	/** Extended Round: the drone's radius with the skill, sized for exactly twice the area. */
+	@Knob(section = Section.PLAYER, min = 1,
+			doc = "MOD-483 Extended Round: garden-drone radius with the skill. 6 against a base of 4 is exactly double the area; doubling the radius would be four times.")
+	public static int skillExtendedRoundRadius = 6;
+	/** Crystal Care: percent off greenhouse growth time. */
+	@Knob(section = Section.PLAYER, min = 0,
+			doc = "MOD-483 Crystal Care: percent faster greenhouse growth, read through the sprinkler's owner (the greenhouse controller has no owner of its own).")
+	public static int skillCrystalCarePercent = 10;
+
 	// --- Energy tiers: per-tick voltage cap + default buffer capacity, configurable per tier ---
 	/**
 	 * Max packet voltage (EU) and per-tick transfer cap for the LV tier. Applies to every LV block
@@ -2914,7 +3041,7 @@ public final class Config {
 		TOOLS("tools", "Powered items the player carries or wears: buffers, charge rates and running costs."),
 		LOGISTICS("logistics", "Moving things around: item and fluid pipes, the pump, portable tanks,"
 				+ " the teleporter and the stock display frame."),
-		PLAYER("player", "Mod XP and the player profile curve."),
+		PLAYER("player", "Mod XP, the player profile curve, and what each Workstation skill is worth."),
 		WORLD("world", "World behaviour: bonus chest injection, burning oil, crop growth.");
 
 		/** Json key of the section object. */

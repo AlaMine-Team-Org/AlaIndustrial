@@ -9,6 +9,7 @@ import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.upgrade.OverclockMath;
 import dev.alaindustrial.item.misc.OverclockerChipItem;
 import dev.alaindustrial.registry.ModContent;
+import dev.alaindustrial.skill.SkillMachine;
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -261,6 +262,11 @@ public abstract class MachineBlockEntity extends EnergyBlockEntity implements Wo
 	 * exactly what it did before this task existed.
 	 */
 	public boolean hasStatsChip() {
+		// MOD-483 Free Telemetry: the panel reads the same way, the chip is simply no longer the
+		// only way to switch it on — which frees the upgrade slot it used to occupy.
+		if (SkillMachine.statsWithoutChip(this.level, getOwner())) {
+			return true;
+		}
 		if (!hasUpgradeSlots()) {
 			return false;
 		}
@@ -617,8 +623,11 @@ public abstract class MachineBlockEntity extends EnergyBlockEntity implements Wo
 		if (!supportsOverclock() || !hasUpgradeSlots()) {
 			return 0;
 		}
-		return OverclockMath.cap(baseEuPerTick(), tier.maxVoltage(),
+		int cap = OverclockMath.cap(baseEuPerTick(), tier.maxVoltage(),
 				Config.overclockerEuFactor, Config.overclockerMaxPerMachine);
+		// MOD-483 Overclock Headroom: one chip beyond what the tier would feed. It pays for itself — the
+		// fourth chip costs 6.5x the energy per operation — so no extra balancing is needed here.
+		return SkillMachine.overclockerCap(cap, this.level, getOwner());
 	}
 
 	/**
@@ -663,8 +672,11 @@ public abstract class MachineBlockEntity extends EnergyBlockEntity implements Wo
 	 * silently run at the square of its configured speed.
 	 */
 	public int effectiveDuration(int baseTicks) {
-		return OverclockMath.duration(Config.scaledDuration(baseTicks),
+		int ticks = OverclockMath.duration(Config.scaledDuration(baseTicks),
 				Config.overclockerSpeedFactor, overclockerCount());
+		// MOD-483 Tuned Drive / Fine Tuning — applied last, on top of the chip, and only
+		// while the owner is in the world.
+		return SkillMachine.duration(ticks, this.level, getOwner());
 	}
 
 	// --- Tier evolution (MOD-211, generalized in MOD-278): replace this block with a grown branch ---

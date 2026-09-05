@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "GKG",
+    "CRC",
+    "PMP"
+  ],
+  "key": {
+    "G": "#c:glass_panes",
+    "K": "alaindustrial:resonant_crystal",
+    "C": "alaindustrial:resonance_coil",
+    "R": "alaindustrial:reactor_circuit",
+    "P": "alaindustrial:reinforced_bearing",
+    "M": "alaindustrial:advanced_machine_casing"
+  },
+  "result": {
+    "id": "alaindustrial:workstation",
+    "count": 2
+  }
+}

@@ -19,6 +19,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import dev.alaindustrial.skill.SkillHazard;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -364,8 +365,13 @@ public class CableBlock extends AbstractMachineBlock {
 	 * set is simply the first that can take all of it.
 	 */
 	public static float insulatedShockDamage(float raw, ServerPlayer player) {
-		return ShockInsulation.remaining(raw, wornInsulatingPieces(player),
+		float afterArmour = ShockInsulation.remaining(raw, wornInsulatingPieces(player),
 				Config.bareCableShockInsulationPerPiecePercent);
+		// MOD-483 Dielectric / Full Insulation. Applied here, at the point of harm, and never in
+		// the "does this cable bite" predicate — that one is a pure function asserted directly by
+		// gametests on both loaders. The armour is charged durability for its own share above, so the
+		// skill's cut costs the set nothing.
+		return SkillHazard.shockDamage(afterArmour, player);
 	}
 
 	/**

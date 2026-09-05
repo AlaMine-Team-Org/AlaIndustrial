@@ -73,6 +73,10 @@ public final class ShotFamilies {
             new Object[] {"gui_assembler_", new Family(ShotGroup.GUI, List.of("R-GUI-03"),
                     "Assembler: the pattern grid, the recorded blueprint and the progress bar agree with "
                             + "each other and with the tab that is open")},
+            new Object[] {"gui_skill_tree_", new Family(ShotGroup.GUI, List.of("R-GUI-03"),
+                    "Skill wheel (MOD-483): the four branch captions stay pinned in their corners with "
+                            + "their icons, no label crosses a node or the profile column, the board is "
+                            + "clipped to its own panel at every zoom, and the hub reads as the centre")},
 
             // ── Block faces and world views ──────────────────────────────────────────────────
             new Object[] {"world_", new Family(ShotGroup.WORLD, List.of("R-VIS-04"),

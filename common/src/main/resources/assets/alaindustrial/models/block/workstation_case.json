@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "alaindustrial:block/workstation_case_side",
+    "down": "alaindustrial:block/workstation_case_bottom",
+    "up": "alaindustrial:block/workstation_case_top",
+    "north": "alaindustrial:block/workstation_case_front",
+    "east": "alaindustrial:block/workstation_case_side",
+    "south": "alaindustrial:block/workstation_case_side",
+    "west": "alaindustrial:block/workstation_case_side"
+  }
+}

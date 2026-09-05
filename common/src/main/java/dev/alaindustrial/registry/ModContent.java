@@ -215,6 +215,8 @@ public final class ModContent {
 	public static Supplier<Block> CRYSTAL_FARM_DOOR = unbound("CRYSTAL_FARM_DOOR");
 	/** The greenhouse's brain: seals the room and grows every seedbed inside it. */
 	public static Supplier<Block> CRYSTAL_FARM_CONTROLLER = unbound("CRYSTAL_FARM_CONTROLLER");
+	/** MOD-483: casing, lower half and upper half are all this block. */
+	public static Supplier<Block> WORKSTATION = unbound("WORKSTATION");
 	/** Dead until fed amethyst, then buds real vanilla clusters until its charge runs out. */
 	public static Supplier<Block> CRYSTAL_SEEDBED = unbound("CRYSTAL_SEEDBED");
 	public static Supplier<Block> TIN_ORE = unbound("TIN_ORE");
@@ -674,6 +676,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> CRYSTAL_FARM_GLASS_ITEM = unbound("CRYSTAL_FARM_GLASS_ITEM");
 	public static Supplier<BlockItem> CRYSTAL_FARM_DOOR_ITEM = unbound("CRYSTAL_FARM_DOOR_ITEM");
 	public static Supplier<BlockItem> CRYSTAL_FARM_CONTROLLER_ITEM = unbound("CRYSTAL_FARM_CONTROLLER_ITEM");
+	public static Supplier<BlockItem> WORKSTATION_ITEM = unbound("WORKSTATION_ITEM");
 	public static Supplier<BlockItem> CRYSTAL_SEEDBED_ITEM = unbound("CRYSTAL_SEEDBED_ITEM");
 	public static Supplier<BlockItem> PUMP_ITEM = unbound("PUMP_ITEM");
 	public static Supplier<BlockItem> GARDEN_DRONE_STATION_ITEM = unbound("GARDEN_DRONE_STATION_ITEM");
@@ -756,6 +759,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> REACTOR_DOOR_BE = unbound("REACTOR_DOOR_BE");
 	/** MOD-505 — the only ticking object in a greenhouse; the seedbeds and buds have none. */
 	public static Supplier<BlockEntityType<?>> CRYSTAL_FARM_CONTROLLER_BE = unbound("CRYSTAL_FARM_CONTROLLER_BE");
+	public static Supplier<BlockEntityType<?>> WORKSTATION_BE = unbound("WORKSTATION_BE");
 	public static Supplier<BlockEntityType<?>> ELECTRIC_HEATER_BE = unbound("ELECTRIC_HEATER_BE");
 	public static Supplier<BlockEntityType<?>> CHARGE_PAD_BE = unbound("CHARGE_PAD_BE");
 	public static Supplier<BlockEntityType<?>> ENERGY_CONDENSER_BE = unbound("ENERGY_CONDENSER_BE");

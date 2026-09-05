@@ -78,6 +78,7 @@ import dev.alaindustrial.block.TrellisBlock;
 import dev.alaindustrial.block.VulcanizerBlock;
 import dev.alaindustrial.block.WaterMillBlock;
 import dev.alaindustrial.block.WindMillBlock;
+import dev.alaindustrial.block.WorkstationBlock;
 import dev.alaindustrial.block.entity.CreativeEnergySourceBlockEntity;
 import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.block.entity.AssemblerBlockEntity;
@@ -149,6 +150,7 @@ import dev.alaindustrial.block.entity.AlloySmelterBlockEntity;
 import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
+import dev.alaindustrial.block.entity.WorkstationBlockEntity;
 import dev.alaindustrial.item.energy.BatteryItem;
 import dev.alaindustrial.item.energy.CrystalBlankItem;
 import dev.alaindustrial.item.energy.CrystalTier;
@@ -662,6 +664,9 @@ public final class ContentManifest {
 	public static final BlockDef<CrystalFarmControllerBlock> CRYSTAL_FARM_CONTROLLER =
 			block("crystal_farm_controller", CrystalFarmControllerBlock::new,
 					s -> ModContent.CRYSTAL_FARM_CONTROLLER = s);
+	/** Two of these stacked become the player's workstation; alone it is just a casing (MOD-483). */
+	public static final BlockDef<WorkstationBlock> WORKSTATION =
+			block("workstation", WorkstationBlock::new, s -> ModContent.WORKSTATION = s);
 	/** Dead until fed amethyst, then buds real vanilla clusters until its charge runs out. */
 	public static final BlockDef<CrystalSeedbedBlock> CRYSTAL_SEEDBED =
 			block("crystal_seedbed", CrystalSeedbedBlock::new, s -> ModContent.CRYSTAL_SEEDBED = s);
@@ -809,7 +814,9 @@ public final class ContentManifest {
 			FERMENTER, SPRINKLER, BIOFUEL, NUTRIENT_SOLUTION,
 			// MOD-514 — the reactor room's held-signal switch, appended at the tail like everything
 			// since MOD-403 rather than filed with the MOD-468 group above.
-			REACTOR_LEVER);
+			REACTOR_LEVER,
+			// MOD-483 — the workstation's casing, appended at the tail: replay order is load-bearing.
+			WORKSTATION);
 
 	/**
 	 * Wraps a machine/ore/material block's {@code strength/sound/…} chain with the shared base every such
@@ -1010,6 +1017,11 @@ public final class ContentManifest {
 			Map.entry("crystal_farm_door", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.COPPER)
 					.noOcclusion().pushReaction(PushReaction.DESTROY))),
 			Map.entry("crystal_farm_controller", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
+			// MOD-483. No noOcclusion: the default state is a loose casing, a full cube, and R-PHY-05
+			// reads exactly that state. pushReaction BLOCK because a piston that shoved one half clear
+			// would leave the other standing as a casing — legal, but not what the player asked for.
+			Map.entry("workstation", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
+					.pushReaction(PushReaction.BLOCK))),
 			// The bed is a block of amethyst that happens to be machinery, so it sounds like the stone
 			// it is made of rather than like metal — the cue that it is the thing crystals come out of.
 			Map.entry("crystal_seedbed", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.AMETHYST)
@@ -1838,7 +1850,9 @@ public final class ContentManifest {
 			// of its own — this item maps to both blocks (StandingAndWallBlockItem#registerBlocks).
 			blockItem("enriched_uranium_torch", p -> new StandingAndWallBlockItem(registeredBlock("enriched_uranium_torch"),
 					registeredBlock("enriched_uranium_wall_torch"), Direction.DOWN,
-					p.useBlockDescriptionPrefix()), s -> ModContent.ENRICHED_URANIUM_TORCH_ITEM = s));
+					p.useBlockDescriptionPrefix()), s -> ModContent.ENRICHED_URANIUM_TORCH_ITEM = s),
+			// MOD-483 — appended at the very tail; the order of this list is the registration order.
+			blockItem("workstation", s -> ModContent.WORKSTATION_ITEM = s));
 
 	// ─────────────────────────────────────────────────────────────────────────────────────────
 	// BlockEntity types (MOD-307)
@@ -2055,7 +2069,11 @@ public final class ContentManifest {
 			blockEntity("fermenter", FermenterBlockEntity.class, FermenterBlockEntity::new,
 					s -> ModContent.FERMENTER_BE = s, "fermenter"),
 			blockEntity("sprinkler", SprinklerBlockEntity.class, SprinklerBlockEntity::new,
-					s -> ModContent.SPRINKLER_BE = s, "sprinkler"));
+					s -> ModContent.SPRINKLER_BE = s, "sprinkler"),
+			// MOD-483: one type for all three parts — the casing and the upper half carry an inert one,
+			// because a state whose block is an EntityBlock has to produce a block entity.
+			blockEntity("workstation", WorkstationBlockEntity.class, WorkstationBlockEntity::new,
+					s -> ModContent.WORKSTATION_BE = s, "workstation"));
 
 	/**
 	 * The definition for block-entity {@code id}, checked against the type the caller expects.

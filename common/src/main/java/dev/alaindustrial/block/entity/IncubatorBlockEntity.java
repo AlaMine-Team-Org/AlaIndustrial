@@ -14,6 +14,7 @@ import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModRecipes;
 import dev.alaindustrial.registry.ModTags;
 import java.util.function.DoubleSupplier;
+import dev.alaindustrial.skill.SkillMachine;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -315,7 +316,11 @@ public final class IncubatorBlockEntity extends MachineBlockEntity implements Ov
 		// A recipe may state its own chance (the duplicate value classes do); otherwise the mode's
 		// Config default applies.
 		double baseChance = recipe.chance() >= 0 ? recipe.chance() : mode.baseChance();
-		double chance = MutationRoll.effectiveChance(baseChance, inputGrade, Config.mutationChanceCap);
+		// MOD-483 Selection: applied to the BASE chance, so the mod's own 0.95 cap still has the last
+		// word — a skill must not push a roll past a ceiling the game deliberately set.
+		double chance = MutationRoll.effectiveChance(
+				SkillMachine.mutationChance(baseChance, level, getOwner()),
+				inputGrade, Config.mutationChanceCap);
 
 		DoubleSupplier rng = level.getRandom()::nextDouble;
 		pendingOutcome = MutationRoll.rollOutcome(chance, Config.mutationSlagChance, rng);

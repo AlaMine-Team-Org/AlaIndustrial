@@ -10,6 +10,7 @@ import dev.alaindustrial.core.structure.CrystalFarmRoom;
 import dev.alaindustrial.core.structure.RoomFill;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.ChatFormatting;
+import dev.alaindustrial.skill.SkillMachine;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -382,6 +383,13 @@ public class CrystalFarmControllerBlockEntity extends EnergyBlockEntity {
 			int divisor = CrystalGrowth.effectiveChanceDivisor(Config.crystalFarmGrowthChanceDivisor,
 					hasWater, powered, sprinkler != null, Config.crystalFarmWaterSpeedup,
 					Config.crystalFarmPowerSpeedup, Config.crystalFarmSprinklerSpeedup);
+			// MOD-483 Crystal Care. Read through the SPRINKLER's owner, not the controller's: this
+			// block extends the energy base rather than the machine base and has no owner of its own.
+			// That is also the game rule — an agronomist speeds up watering, so a greenhouse with no
+			// sprinkler gains nothing here.
+			if (sprinkler != null) {
+				divisor = Math.max(1, SkillMachine.greenhouseGrowth(divisor, level, sprinkler.getOwner()));
+			}
 			if (random.nextInt(divisor) != 0) {
 				continue;
 			}

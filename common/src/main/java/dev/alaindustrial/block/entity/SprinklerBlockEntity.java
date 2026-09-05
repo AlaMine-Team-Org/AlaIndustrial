@@ -23,6 +23,7 @@ import dev.alaindustrial.core.fluid.FluidTank;
 import dev.alaindustrial.registry.ModContent;
 import java.util.ArrayList;
 import java.util.List;
+import dev.alaindustrial.skill.SkillMachine;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -185,8 +186,12 @@ public class SprinklerBlockEntity extends MachineBlockEntity implements FluidPor
 		return Math.max(1L, Config.crystalFarmSolutionPerGrowthMb);
 	}
 
-	private static long solutionPerSpray() {
-		return Math.max(1L, Config.sprinklerSolutionPerActionMb);
+	private long solutionPerSpray() {
+		// MOD-483 Frugal Sprayer / Wide Watering. The second one raises the cost as well as
+		// the radius: area grows with the SQUARE of the radius, so 81 tiles become 121, and handing that
+		// out at the old price would be 49 % of free work.
+		return Math.max(1L, SkillMachine.sprinklerSolution(
+				Config.sprinklerSolutionPerActionMb, level, getOwner()));
 	}
 
 	private void spend(long amount) {
@@ -294,7 +299,7 @@ public class SprinklerBlockEntity extends MachineBlockEntity implements FluidPor
 	 */
 	private void rebuildZoneCache(ServerLevel level, BlockPos origin, BlockState own) {
 		zoneCache.clear();
-		int radius = Math.max(1, Config.sprinklerRange);
+		int radius = Math.max(1, SkillMachine.sprinklerRange(Config.sprinklerRange, level, getOwner()));
 		// Which way the block faces decides how tall its zone is, and in which direction.
 		boolean hanging = own.hasProperty(SprinklerBlock.HANGING) && own.getValue(SprinklerBlock.HANGING);
 		int below = hanging ? SCAN_Y_BELOW_HANGING : SCAN_Y_BELOW;

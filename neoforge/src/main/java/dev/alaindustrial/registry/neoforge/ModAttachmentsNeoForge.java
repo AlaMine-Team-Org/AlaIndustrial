@@ -1,6 +1,8 @@
 package dev.alaindustrial.registry.neoforge;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.skill.PlayerSkills;
+import dev.alaindustrial.skill.SkillStore;
 import dev.alaindustrial.stats.PlayerModStats;
 import dev.alaindustrial.stats.PlayerStatsStore;
 import net.minecraft.server.level.ServerPlayer;
@@ -29,15 +31,48 @@ public final class ModAttachmentsNeoForge {
 					.sync((holder, player) -> holder == player, PlayerModStats.STREAM_CODEC)
 					.build());
 
+	/**
+	 * MOD-483: the Workstation's upgrade tree. Same four choices as the stats attachment above and for
+	 * the same reasons — persisted, kept across death (a tree bought with levels is career progress, not
+	 * carried inventory), and mirrored only to its owner, which is what lets the purchase packet be
+	 * one-way.
+	 */
+	public static final DeferredHolder<AttachmentType<?>, AttachmentType<PlayerSkills>> PLAYER_SKILLS =
+			ATTACHMENTS.register("player_skills", () -> AttachmentType
+					.builder(() -> PlayerSkills.EMPTY)
+					.serialize(PlayerSkills.MAP_CODEC)
+					.copyOnDeath()
+					.sync((holder, player) -> holder == player, PlayerSkills.STREAM_CODEC)
+					.build());
+
 	private ModAttachmentsNeoForge() {
 	}
 
 	/** Bind the server-side store seam to the deferred attachment holder. Called from the {@code @Mod} ctor. */
 	public static void init() {
+		SkillStore.bind(new SkillStore.Accessor() {
+			@Override
+			public PlayerSkills get(ServerPlayer player) {
+				// Read without creating (MOD-483). NeoForge's getData INSTALLS the default value when none
+				// exists and syncs it — so a plain read writes state and puts a packet on the wire, and on
+				// a player with no connection (a vanilla gametest mock) it throws outright. The mod asks a
+				// player for this several times a second, so the read has to be a read. Same rule as
+				// ADR-010 for containers, one layer up.
+				PlayerSkills stored = player.getExistingDataOrNull(PLAYER_SKILLS);
+				return stored != null ? stored : PlayerSkills.EMPTY;
+			}
+
+			@Override
+			public void set(ServerPlayer player, PlayerSkills skills) {
+				player.setData(PLAYER_SKILLS, skills);
+			}
+		});
 		PlayerStatsStore.bind(new PlayerStatsStore.Accessor() {
 			@Override
 			public PlayerModStats get(ServerPlayer player) {
-				return player.getData(PLAYER_STATS);
+				// Same rule as the skills accessor above: a read must not install and sync a default.
+				PlayerModStats stored = player.getExistingDataOrNull(PLAYER_STATS);
+				return stored != null ? stored : PlayerModStats.EMPTY;
 			}
 
 			@Override

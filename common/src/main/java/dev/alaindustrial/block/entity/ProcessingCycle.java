@@ -1,5 +1,6 @@
 package dev.alaindustrial.block.entity;
 
+import dev.alaindustrial.skill.SkillMachine;
 import net.minecraft.world.level.Level;
 
 /**
@@ -168,8 +169,19 @@ public final class ProcessingCycle {
 		machine.recordEuRate(job.canWork ? job.euPerTick : 0);
 
 		boolean changed = job.alreadyChanged;
-		if (job.canWork) {
-			machine.energy.drainInternal(job.euPerTick);
+		// MOD-483 Resilient Cycle: an operation past halfway may finish on the machine's own charge when
+		// the supply dies. The energy is still spent — only the demand for an incoming supply is waived,
+		// which is why a switch cutting power mid-run cannot be farmed for free operations.
+		boolean coasting = !job.canWork && machine.energy.getAmount() > 0
+				&& SkillMachine.canCoast(machine.progress, machine.maxProgress,
+						level, machine.getOwner());
+		if (job.canWork || coasting) {
+			// MOD-483 Precise Draw: one tick in ten costs nothing, which is 10 % off the operation.
+			// Counted in ticks because a basic machine draws 2 EU/t and a percentage of two rounds to
+			// nothing or to half.
+			if (!SkillMachine.freeDrainTick(machine.progress, level, machine.getOwner())) {
+				machine.energy.drainInternal(job.euPerTick);
+			}
 			machine.progress++;
 			if (machine.progress >= machine.maxProgress) {
 				machine.progress = 0;
@@ -187,7 +199,8 @@ public final class ProcessingCycle {
 		if (changed) {
 			machine.setChanged();
 		}
-		// Idle → sleep until inventory, energy or a neighbour wakes the block (R-29).
-		return job.canWork || job.keepAwake ? 0 : EnergyBlockEntity.IDLE_SLEEP_TICKS;
+		// Idle → sleep until inventory, energy or a neighbour wakes the block (R-29). A coasting
+		// machine counts as working: it must keep ticking to reach the end of its operation.
+		return job.canWork || coasting || job.keepAwake ? 0 : EnergyBlockEntity.IDLE_SLEEP_TICKS;
 	}
 }

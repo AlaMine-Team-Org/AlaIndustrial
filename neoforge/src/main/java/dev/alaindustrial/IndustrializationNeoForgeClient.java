@@ -51,6 +51,12 @@ public final class IndustrializationNeoForgeClient {
 			return p == null ? dev.alaindustrial.stats.PlayerModStats.EMPTY
 					: p.getData(dev.alaindustrial.registry.neoforge.ModAttachmentsNeoForge.PLAYER_STATS);
 		});
+		// MOD-483: the skill screen reads the same way — one synced attachment, no packet of its own.
+		dev.alaindustrial.skill.SkillClientCache.bind(() -> {
+			net.minecraft.client.player.LocalPlayer p = net.minecraft.client.Minecraft.getInstance().player;
+			return p == null ? dev.alaindustrial.skill.PlayerSkills.EMPTY
+					: p.getData(dev.alaindustrial.registry.neoforge.ModAttachmentsNeoForge.PLAYER_SKILLS);
+		});
 
 		Industrialization.LOGGER.info("Industrialization (NeoForge client) initialized.");
 	}

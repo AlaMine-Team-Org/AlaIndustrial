@@ -280,7 +280,12 @@ pitest {
                      // excludedClasses. The 157 is history, not a target: MOD-553 replaced the 380
                      // per-knob getter/setter lambdas with reflection, which deleted most of that
                      // mutable bytecode. Read the current number off the report, never off this line.
-                     'dev.alaindustrial.Config']
+                     'dev.alaindustrial.Config',
+                     // MOD-483: the skill tree's rules and the wheel's coordinate maths are
+                     // Minecraft-free on purpose and covered by L1 tests, so they mutate like the core.
+                     'dev.alaindustrial.skill.*',
+                     'dev.alaindustrial.client.skill.SkillWheelLayout'
+            ]
     // The MC-coupled classes are excluded from MUTATION (the bytecode PIT rewrites). But PIT's
     // JUnit discovery also walks every class under `targetTests` via reflection to find @Test
     // methods — and reflection on e.g. `EnergyNet` triggers `NoClassDefFoundError:
@@ -293,6 +298,26 @@ pitest {
     // (HudSmootherTest, LevelMathTest, GuidePaginatorTest, TemperedGearRollTest) invisible to PIT.
     targetTests = ['dev.alaindustrial.*Test']
     excludedClasses = [
+            // MOD-483: two skill-tree classes that the `dev.alaindustrial.skill.*` target glob sweeps in
+            // but PIT cannot mutate here. PlayerSkills is the attachment's codec form (Codec, MapCodec,
+            // StreamCodec, RegistryFriendlyByteBuf) and SkillStore is the server-side accessor seam over
+            // ServerPlayer — both reference net.minecraft types, which common/'s test classpath does not
+            // carry, so their mutants would be guaranteed NO_COVERAGE and would only drag the kill rate
+            // down. The rules they wrap are mutated instead, in SkillBuild/SkillSlot/SkillPoints, which
+            // are Minecraft-free by design and covered by SkillBuildTest.
+            'dev.alaindustrial.skill.PlayerSkills',
+            'dev.alaindustrial.skill.SkillStore',
+            // MOD-483, second group: the four classes that APPLY the skills. Each takes a ServerPlayer,
+            // an Entity or a Level to find whose skills to read, so they are Minecraft-coupled for the
+            // same reason as the two above and their mutants would be guaranteed NO_COVERAGE here. The
+            // arithmetic they wrap has no Minecraft in it and IS mutated: the tree's rules live in
+            // SkillBuild/SkillSlot/SkillPoints, covered by SkillBuildTest, and the wheel's coordinate
+            // maths in SkillWheelLayout, covered by SkillWheelLayoutTest. What is left uncovered here is
+            // the wiring itself, which the L2 gametests exercise in a world instead.
+            'dev.alaindustrial.skill.OwnerPresence',
+            'dev.alaindustrial.skill.SkillEnergy',
+            'dev.alaindustrial.skill.SkillHazard',
+            'dev.alaindustrial.skill.SkillMachine',
             // MOD-546: the condenser crystal's geometry is GENERATED data — arrays of cube corners and
             // UVs written out of the designer's .bbmodel, with no branch, no arithmetic and nothing a
             // mutant could change that a test could notice. It is MC-free only because numbers are, so
@@ -300,6 +325,11 @@ pitest {
             // READS these numbers lives in the renderer and is client-side, hence out of L1 entirely —
             // it is covered by the L3 shot instead.
             'dev.alaindustrial.client.render.EnergyCondenserCrystalGeometry',
+            // MOD-483: the workstation's fans and screens, written out of the same designer's file by
+            // tools/gen_workstation_assets.py — the same kind of generated number tables, excluded for
+            // the same reason. Their freshness is a gate of its own (`--check` against the .bbmodel),
+            // and what reads them is the client renderer.
+            'dev.alaindustrial.client.render.WorkstationGeometry',
             // MOD-383: CanningRules answers "may this stack go in the machine", which means it reads
             // ItemStack / Items / DataComponents.FOOD — Minecraft types common's L1 classpath does not
             // have, so every mutant here would be a guaranteed NO_COVERAGE. The arithmetic it delegates

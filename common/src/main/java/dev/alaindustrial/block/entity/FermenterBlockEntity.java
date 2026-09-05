@@ -16,6 +16,7 @@ import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModRecipes;
 import dev.alaindustrial.registry.ModTags;
 import java.util.List;
+import dev.alaindustrial.skill.SkillMachine;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -206,8 +207,9 @@ public class FermenterBlockEntity extends MachineBlockEntity
 	}
 
 	/** Water consumed per batch, clamped to at least 1 mB so a config of 0 cannot delete the gate. */
-	private static long waterPerOperation() {
-		return Math.max(1L, Config.fermenterWaterPerOp);
+	private long waterPerOperation() {
+		// MOD-483 Frugal Vat.
+		return Math.max(1L, SkillMachine.fermenterWater(Config.fermenterWaterPerOp, level, getOwner()));
 	}
 
 	/**

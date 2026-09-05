@@ -1,6 +1,7 @@
 package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.skill.SkillMachine;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.menu.GeneratorMenu;
 import dev.alaindustrial.registry.ModContent;
@@ -52,6 +53,9 @@ public class GeneratorBlockEntity extends AbstractGeneratorBlockEntity implement
 			@SuppressWarnings("deprecation")
 			int duration = level.fuelValues().burnDuration(fuel);
 			if (duration > 0) {
+				// MOD-483 Steady Hands: fuel lasts longer. Applied to the burn LENGTH rather than to
+				// EU/t, because a solar panel makes 1 EU/t and a percentage of one is zero.
+				duration = SkillMachine.burnDuration(duration, level, getOwner());
 				burnTime = duration;
 				burnDuration = duration;
 				// Return the fuel's crafting remainder (e.g. empty bucket from a lava bucket).

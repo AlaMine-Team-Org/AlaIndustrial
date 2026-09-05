@@ -23,6 +23,7 @@ import dev.alaindustrial.block.entity.GalvanicBathBlockEntity;
 import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
 import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
 import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
+import dev.alaindustrial.block.entity.WorkstationBlockEntity;
 import dev.alaindustrial.block.CrystalSeedbedBlock;
 import net.minecraft.world.level.block.AmethystClusterBlock;
 import net.minecraft.world.level.block.DoorBlock;
@@ -37,6 +38,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import dev.alaindustrial.block.TrellisBlock;
 import dev.alaindustrial.block.HorizontalMachineBlock;
+import dev.alaindustrial.block.WorkstationBlock;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.GlowItemFrame;
@@ -432,6 +434,19 @@ public final class DemoStand {
 			sprinkler.tank.amount = sprinkler.tank.capacity;
 			sprinkler.setChangedQuietly();
 			sprinkler.wake();
+		}
+		// Workstation (MOD-483): the 1x2 multiblock, shown assembled and powered so the stand carries a
+		// lit one rather than two loose casings. Both cells are written by hand and the assembly hook is
+		// then called explicitly — a programmatic setBlock never runs setPlacedBy, the same reason the
+		// airlock's halves are placed cell by cell. x=25 is clear in this row: the fermenter sits at 20
+		// and the nutrient pool at 22, and a second set on one cell silently drops the first block.
+		BlockState workstationCasing = ModContent.WORKSTATION.get().defaultBlockState();
+		level.setBlockAndUpdate(origin.offset(25, 1, 12), workstationCasing);
+		level.setBlockAndUpdate(origin.offset(25, 2, 12), workstationCasing);
+		WorkstationBlock.tryAssemble(level, origin.offset(25, 2, 12));
+		if (level.getBlockEntity(origin.offset(25, 1, 12)) instanceof WorkstationBlockEntity station) {
+			station.getEnergyStorage().setAmountUntracked(station.getEnergyStorage().getCapacity());
+			station.setChangedQuietly();
 		}
 		// Assembler (MOD-275): the first MV machine. Row z=10 is full from x=2 to x=41 (machines then
 		// the misc zone), so it opens a second machines row one block further south, in front of the

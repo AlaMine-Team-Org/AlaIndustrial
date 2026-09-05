@@ -1,6 +1,7 @@
 package dev.alaindustrial.stats;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.skill.OwnerPresence;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -58,16 +59,15 @@ public final class PlayerStatsTracker {
 	private PlayerStatsTracker() {
 	}
 
-	/** The owner if they are online and not in creative, else null (the single eligibility gate). */
+	/**
+	 * The owner if they are online and not in creative, else null.
+	 *
+	 * <p>Delegates to {@link OwnerPresence} since MOD-483: the skill tree needs the same gate, and two
+	 * copies would drift. The tracker keeps this thin wrapper rather than calling through everywhere,
+	 * so that the day XP accrual and machine buffs need to disagree, only this method changes.
+	 */
 	private static ServerPlayer eligibleOwner(MinecraftServer server, UUID owner) {
-		if (server == null || owner == null) {
-			return null;
-		}
-		ServerPlayer player = server.getPlayerList().getPlayer(owner);
-		if (player == null || player.hasInfiniteMaterials()) {
-			return null; // offline or creative → do not accrue career stats
-		}
-		return player;
+		return OwnerPresence.eligible(server, owner);
 	}
 
 	/**

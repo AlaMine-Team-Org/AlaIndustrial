@@ -8,6 +8,7 @@ import dev.alaindustrial.item.tool.ElectricSaberItem;
 import dev.alaindustrial.item.tool.ElectricShovelItem;
 import dev.alaindustrial.item.tool.MagnetItem;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
+import dev.alaindustrial.skill.SkillEnergy;
 import dev.alaindustrial.item.wearable.FluxweaveArmorItem;
 import dev.alaindustrial.item.wearable.JetpackItem;
 
@@ -212,7 +213,18 @@ public final class ItemEnergy {
 		if (eu <= 0 || free(owner)) {
 			return;
 		}
-		add(stack, -eu);
+		// MOD-483 Frugal Stroke / Recuperator. Both hang here because this is the mod's only debit
+		// of a carried item, so one edit covers the drill, saw, shovel, hoe, sabre, magnet, jetpack,
+		// armour upkeep and pouch at once — and no call site can forget the discount.
+		long price = SkillEnergy.toolCost(stack, eu, owner);
+		add(stack, -price);
+		long back = SkillEnergy.recuperated(stack, price, owner);
+		if (back > 0) {
+			// Into the worn pack, never back into the tool: refunding the same buffer would just be the
+			// entry node's discount again under a second name.
+			PlayerEuDistributor.refundToPack(owner, back);
+		}
+		return;
 	}
 
 	/**

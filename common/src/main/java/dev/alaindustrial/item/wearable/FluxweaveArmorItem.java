@@ -4,6 +4,7 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.item.energy.ItemEnergy;
+import dev.alaindustrial.skill.SkillEnergy;
 import dev.alaindustrial.item.material.ModArmorMaterials;
 import dev.alaindustrial.registry.ModDataComponents;
 import java.util.function.Consumer;
@@ -252,7 +253,12 @@ public class FluxweaveArmorItem extends Item {
 		if (!(stack.getItem() instanceof FluxweaveArmorItem piece)) {
 			return;
 		}
-		ItemEnergy.spend(stack, Config.fluxweaveUpkeepEuPerSecond, wearer);
+		// MOD-483 Frugal Armour / Quiet Stance. Upkeep is one EU per second, so a percentage would
+		// round to nothing or to everything — both skills therefore skip whole seconds instead.
+		long clock = wearer.level().getGameTime();
+		if (!SkillEnergy.armourUpkeepIdle(wearer) && !SkillEnergy.armourUpkeepFree(wearer, clock)) {
+			ItemEnergy.spend(stack, Config.fluxweaveUpkeepEuPerSecond, wearer);
+		}
 		if (piece.armorType() == ArmorType.HELMET
 				&& wearer instanceof net.minecraft.world.entity.LivingEntity living) {
 			trySetBonus(stack, living);

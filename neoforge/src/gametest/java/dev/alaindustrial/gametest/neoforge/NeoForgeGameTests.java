@@ -73,6 +73,9 @@ import dev.alaindustrial.gametest.StockDisplayFrameScenarios;
 import dev.alaindustrial.gametest.TemperedIronToolScenarios;
 import dev.alaindustrial.gametest.ItemPipeScenarios;
 import dev.alaindustrial.gametest.PipeLowArmScenarios;
+import dev.alaindustrial.gametest.SkillEffectScenarios;
+import dev.alaindustrial.gametest.SkillPurchaseScenarios;
+import dev.alaindustrial.gametest.WorkstationScenarios;
 import dev.alaindustrial.gametest.PersistenceScenarios;
 import dev.alaindustrial.gametest.EnrichedUraniumTorchScenarios;
 import dev.alaindustrial.gametest.ComponentRepairBenchScenarios;
@@ -1433,6 +1436,40 @@ public final class NeoForgeGameTests {
 				PipeLowArmScenarios::itemPipeRederivesStaleLowArm);
 		registerTest(event, "mod540_fluid_pipe_low_arm_drops_shape", 40, true,
 				PipeLowArmScenarios::fluidPipeLowArmDropsShape);
+
+		// MOD-483: two casings stacked become the workstation, and either half losing its partner
+		// falls back to a casing. maxTicks matches the Fabric wrappers' default.
+		registerTest(event, "mod483_two_casings_assemble", 40, true,
+				WorkstationScenarios::frm01TwoCasingsAssemble);
+		registerTest(event, "mod483_three_casings_pair_the_bottom_two", 40, true,
+				WorkstationScenarios::frm02ThreeCasingsPairTheBottomTwo);
+		registerTest(event, "mod483_breaking_upper_degrades_lower", 40, true,
+				WorkstationScenarios::brk01BreakingUpperDegradesLower);
+		registerTest(event, "mod483_breaking_lower_degrades_upper", 40, true,
+				WorkstationScenarios::brk02BreakingLowerDegradesUpper);
+		registerTest(event, "mod483_only_the_lower_half_takes_energy", 40, true,
+				WorkstationScenarios::nrg01OnlyTheLowerHalfTakesEnergy);
+
+		// MOD-483: what the skills DO. The wiring between a skill and the number it changes had no test
+		// of its own, and that is exactly where a dupe hid — a discounted pack delivered more EU than it
+		// debited. These assert the discount applies to work and that energy is conserved when it does not.
+		// Only the control case runs here: the other three grant a skill, and granting means writing a
+		// per-player attachment, which NeoForge syncs to the holder immediately (see LOADER_ONLY).
+		registerTest(event, "mod483_without_skills_nothing_changes", 40, true,
+				SkillEffectScenarios::withoutSkillsNothingChanges);
+
+		// MOD-483: the two purchase-suite scenarios that need no player. The other four write a
+		// per-player attachment, and NeoForge syncs that to the holder the moment it is written —
+		// through a connection a vanilla gametest mock does not have. They run on Fabric only; the
+		// reason is recorded in LOADER_ONLY in docs/tools/gametest_lane_parity_check.py.
+		registerTest(event, "mod483_offline_owner_gets_no_buffs", 40, true,
+				SkillPurchaseScenarios::offlineOwnerGetsNoBuffs);
+		registerTest(event, "mod483_build_survives_save_and_load", 40, true,
+				SkillPurchaseScenarios::buildSurvivesSaveAndLoad);
+		// The upkeep case is a regression: the station used to debit a whole second's worth on every
+		// visit to its tick, and a committed insert wakes it every tick.
+		registerTest(event, "mod483_upkeep_is_priced_per_tick_not_per_visit", 100, true,
+				SkillPurchaseScenarios::upkeepIsPricedPerTickNotPerVisit);
 
 		// MOD-104: exact end-to-end item movement through native item APIs and the disabled-face gate.
 		registerTest(event, "item_pipe_transfers_between_chests", 40, true, ItemPipeScenarios::transfersBetweenChests);

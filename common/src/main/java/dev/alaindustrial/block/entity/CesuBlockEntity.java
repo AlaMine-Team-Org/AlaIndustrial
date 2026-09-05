@@ -7,6 +7,7 @@ import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.item.energy.CrystalBlankItem;
 import dev.alaindustrial.item.energy.ItemEnergy;
+import dev.alaindustrial.skill.SkillEnergy;
 import dev.alaindustrial.menu.CesuMenu;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDataComponents;
@@ -72,7 +73,10 @@ public class CesuBlockEntity extends MachineBlockEntity implements MenuProvider 
 		if (target.isEmpty() || energy.getAmount() <= 0) {
 			return;
 		}
-		long rate = Math.min(EnergyTier.MV.maxVoltage(), ItemEnergy.inputRate(target) * target.getCount());
+		// MOD-483 Quick Docking: the charger's own slot, which is the place the skill's description
+		// actually names. The tier ceiling still has the last word above it.
+		long accepted = SkillEnergy.inputRate(ItemEnergy.inputRate(target), level, getOwner());
+		long rate = Math.min(EnergyTier.MV.maxVoltage(), accepted * target.getCount());
 		long budget = Math.min(Math.min(ItemEnergy.stackRoom(target), energy.getAmount()), rate);
 		long moved = ItemEnergy.stackAdd(target, budget);
 		if (moved <= 0) {

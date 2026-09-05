@@ -77,6 +77,7 @@ public class IndustrializationFabric implements ModInitializer {
 		registerSounds();
 		verifyContentBound();
 		dev.alaindustrial.stats.fabric.FabricPlayerStats.init(); // MOD-133 player-stats attachment + store seam
+		dev.alaindustrial.skill.fabric.FabricPlayerSkills.init(); // MOD-483 skill-tree attachment + store seam
 		registerChestStorage();
 		registerNetworkPayloads();
 		registerServerLifecycle();
@@ -335,6 +336,15 @@ public class IndustrializationFabric implements ModInitializer {
 				dev.alaindustrial.network.FluxweaveStepAssistPayload.TYPE,
 				(payload, context) -> context.server().execute(
 						() -> dev.alaindustrial.network.FluxweaveStepAssistPayload.handle(payload, context.player())));
+		// MOD-483: the upgrade tree needs no clientbound half — the skills attachment syncs itself to its
+		// owner, so this one payload carries every purchase and every reset.
+		PayloadTypeRegistry.serverboundPlay().register(
+				dev.alaindustrial.network.SkillActionPayload.TYPE,
+				dev.alaindustrial.network.SkillActionPayload.CODEC);
+		net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.registerGlobalReceiver(
+				dev.alaindustrial.network.SkillActionPayload.TYPE,
+				(payload, context) -> context.server().execute(
+						() -> dev.alaindustrial.network.SkillActionPayload.handle(payload, context.player())));
 	}
 
 	/**
