@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh_cn" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>屏蔽储物袋 — Ala Industrial — 指南</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="打开菜单" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../../assets/item/guide_book_3d.png" alt="">全部内容</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="搜索维基…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="搜索指南" autocomplete="off" spellcheck="false" data-index="../search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;搜索结果&quot;,&quot;one&quot;:&quot;个页面&quot;,&quot;few&quot;:&quot;个页面&quot;,&quot;many&quot;:&quot;个页面&quot;,&quot;loading&quot;:&quot;正在加载搜索索引…&quot;,&quot;nothing&quot;:&quot;未找到结果&quot;}"></search>
+    <details class="language-menu"><summary aria-label="Language">中文</summary><div class="language-popover"><span>中文</span><a href="../../en/items/shielding_pouch.html">EN</a><a href="../../ru/items/shielding_pouch.html">RU</a><a href="../../uk/items/shielding_pouch.html">UA</a><a href="../../ja_jp/items/shielding_pouch.html">日本語</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">浏览</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../../assets/item/tempered_iron_pickaxe.png" alt=""><span>新手入门</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
+<div class="group-title">能源</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="11 个页面">11</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="15 个页面">15</span></a>
+<div class="group-title">加工</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="15 个页面">15</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<div class="group-title">物流</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>物品物流</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<div class="group-title">世界与自动化</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="22 个页面">22</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="6 个页面">6</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<div class="group-title">其他</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="15 个页面">15</span></a>
+<div class="group-title">物品</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="24 个页面">24</span></a>
+<a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="24 个页面">24</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">首页</a><span class="sep">/</span><a href="../items/index.html">游戏物品</a><span class="sep">/</span><span>屏蔽储物袋</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../../assets/item/shielding_pouch_3d.png" alt="屏蔽储物袋" width="64" height="64">
+    <div class="info">
+      <h1>屏蔽储物袋</h1>
+      <div class="block-id">alaindustrial:shielding_pouch</div>
+      <div class="tags"><span class="tag cat" style="background:#d97706">游戏物品</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">已实现</span><span class="tag">item</span><span class="tag">storage</span><span class="tag">energy</span><span class="tag">pouch</span><span class="tag">radiation</span><span class="tag">nuclear</span><span class="tag">shielding</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="概览">概览</h2>
+
+<p><strong>屏蔽储物袋</strong>就是衬了铅的<a href="battery_pouch.html">电池储物袋</a>。携带、容量和耗电都完全一样： 一个槽位装 <strong>128 重量</strong>，<strong>2 000 EU/FE</strong> 缓冲，装有物品时每秒 <strong>1 EU/FE</strong>，电量耗尽即上锁。 没有新东西要学——你已经会用它了。</p>
+
+<p>区别只有一个，而它正是这件物品存在的理由：<strong>里面的放射性物品不辐射任何人。</strong> 不辐射你，不辐射周围的生物，也不辐射矿道里的同伴——把它丢在地上或放进别人的箱子里， 它也不会开始发光。</p>
+
+<p>它是<a href="../nuclear/shielding_chest.html">屏蔽箱子</a>的便携版本，而不是<a href="shielding_suit.html">屏蔽服</a>的替代品。 储物袋只挡住<strong>装在它里面</strong>的东西：运行中立柱里的燃料棒、地上的铀堆、受污染的土壤和别人的箱子 照旧辐射，防护服在它们面前也照旧磨损。</p>
+
+<blockquote><strong>示例：</strong> 你在 -50 高度挖到了一条铀矿脉。以前的选择很糟糕：穿着防护服挖矿，眼看它被自己挖出来的 矿石消耗殆尽；或者干脆放弃这些矿石。现在矿石装进屏蔽储物袋运上去——两组，零剂量，还在矿井里就能 脱下防护服。但如果你要钻进运行中的反应堆堆芯，防护服还是得穿回去：储物袋在那里帮不了你。</blockquote>
+
+<h2 id="它屏蔽什么">它屏蔽什么</h2>
+
+<p>辐射扫描会向携带的容器内部查看<strong>一层</strong>。屏蔽储物袋是唯一一个它完全不去查看的容器， 这不是副作用，而是这件物品的全部机制。</p>
+
+<table><thead><tr><th>放射性物品放在哪里</th><th>是否辐射</th></tr></thead><tbody><tr><td>直接放在玩家物品栏</td><td>是</td></tr><tr><td>放在物品栏里的原版收纳袋中</td><td><strong>是</strong>——自本版本起</td></tr><tr><td>放在<a href="battery_pouch.html">电池储物袋</a>中</td><td><strong>是</strong>——自本版本起</td></tr><tr><td>放在物品栏里的潜影盒中</td><td>是</td></tr><tr><td>地板上</td><td>是，在 范围内</td></tr><tr><td>原版箱子、木桶或本模组的任意存储箱中</td><td>是</td></tr><tr><td><a href="../nuclear/shielding_chest.html">屏蔽箱子</a>中</td><td>否</td></tr><tr><td><strong>屏蔽储物袋中——拿在手里、掉在地上、放在别人箱子里</strong></td><td><strong>否</strong></td></tr></tbody></table>
+
+<p>表中有两行以前是反过来的，那是个漏洞而不是设计：扫描只知道潜影盒和木桶里的内容， 所以<strong>原版收纳袋</strong>和<strong>电池储物袋</strong>里的铀根本不辐射任何人。一个皮革加线做的收纳袋成了免费的铅箱子， 屏蔽储物袋也就没什么可胜过的了。现在三种存储方式都会被读取，而只保留了一个例外——就是它。</p>
+
+<blockquote>⚠️ <strong>屏蔽的是内容物，不是携带者。</strong> 口袋里装着铀的储物袋是安全的；同一个口袋里散放的铀锭则不是。 必须放<strong>进去</strong>。</blockquote>
+
+<h2 id="能量">能量</h2>
+
+<p>铅不需要电，所以这里的能量与电池储物袋完全相同，买到的东西也相同：让你能在袋子里放东西。</p>
+
+<table><thead><tr><th>字段</th><th>值</th></tr></thead><tbody><tr><td>电量</td><td>2 000 EU/FE</td></tr><tr><td>充电</td><td><a href="../energy-storage/battery_box.html">储能库</a>充电槽——约 3 秒充满</td></tr><tr><td>耗电</td><td>每秒 1 EU/FE，仅当里面有物品且它在你的物品栏中时</td></tr><tr><td>可维持</td><td>约 33 分钟的携带时间</td></tr><tr><td>电量耗尽时</td><td>内容物上锁——但仍然继续屏蔽</td></tr></tbody></table>
+
+<p><strong>屏蔽与电量无关。</strong> 没电的储物袋像一个上了锁的保险箱：不充电就取不出里面的铀， 但它也不会开始辐射。忘记充电只是不方便，不是事故。</p>
+
+<h2 id="内容物">内容物</h2>
+
+<p>储物袋占用一个物品栏槽位，最多装 <strong>128 重量</strong>——与低一级完全相同的两组普通物品。 重量按可堆叠性计算，与原版收纳袋一致：</p>
+
+<table><thead><tr><th>物品类型</th><th>单个重量</th><th>128 能装下</th></tr></thead><tbody><tr><td>矿石、锭、粉（可堆叠至 64）</td><td>1</td><td>128 个（约 2 组）</td></tr><tr><td>末影珍珠、雪球（可堆叠至 16）</td><td>4</td><td>32 个</td></tr><tr><td>工具、桶（不可堆叠）</td><td>64</td><td>2 个</td></tr></tbody></table>
+
+<p>没有针对放射性物品的过滤器：这就是一个普通储物袋，什么都能装。两组足够一趟采矿之旅； 它刻意装不下成吨的精炼铀——大批量储存请用<a href="../nuclear/shielding_chest.html">屏蔽箱子</a>。</p>
+
+<h2 id="使用方式">使用方式</h2>
+
+<p><strong>放入：</strong> 在物品栏中用物品堆右键点击储物袋（或用储物袋右键点击物品堆）。物品会先补满已有的 同类未满堆叠，然后再占用新的重量。按重量放不下的部分留在手里。 <strong>取出：</strong> 对空右键或对空槽位右键，取出<strong>一整个顶部堆叠</strong>（后进先出）。 <strong>电量耗尽时的锁：</strong> 两种操作都被阻止，内容物保持上锁——并且保持屏蔽——直到充电为止。 <strong>什么会耗电：</strong> 每秒 1 EU/FE，仅当里面有物品<strong>且</strong>储物袋在玩家物品栏中时。放在箱子里、 地上或充电槽里都不耗电。 <strong>创造模式下：</strong> 完全不耗电——本模组的整个电力家族都是如此。 <strong>显示：</strong> 图标下方的电量条；提示框里有内容物网格、「重量 / 128（NN%）」填充条， 以及关于这件物品本身的两行：绿色的「里面的放射性物品不辐射任何人」和黄色的「不能替代屏蔽服」。 <strong>嵌套：</strong> 储物袋不能放进另一个储物袋。放进原版收纳袋或潜影盒则可以。 <strong>如果储物袋本身被摧毁：</strong> 被岩浆烧掉、被爆炸波及、在仙人掌上炸开——内容物会掉在地上， 而不是和它一起消失。当然，掉在地上的铀会像任何地上的铀一样开始辐射。 <strong>掉落或死亡时：</strong> 电量、内容物以及你起的名字都会保留在物品上。 <strong>重命名：</strong> 在原版铁砧上。</p>
+
+<h2 id="方块属性">方块属性</h2>
+
+<p>不适用（物品）。</p>
+
+<h2 id="配方">配方</h2>
+
+<p>这是一次升级，而不是一件新物品：一个<a href="battery_pouch.html">电池储物袋</a>加四块 <a href="../materials/shielding_alloy.html">屏蔽板</a>——就是反应堆房间外壳所用的同一种合金。 摆放形状无所谓，重要的只是材料组合。</p>
+
+<p><strong>储物袋会完整地挺过这次升级。</strong> 这类「转化」配方会把输入物品持有的一切转移到结果上： 电量、内容物，以及你给它起的名字。装满矿石的储物袋可以直接在矿井里升级，不必先清空。</p>
+
+<h2 id="进阶">进阶</h2>
+
+<p>等级：LV。便携储物袋线的第二级。 需要：一个<a href="battery_pouch.html">电池储物袋</a>和<a href="../materials/shielding_alloy.html">屏蔽合金</a> （钯 + 回火铁），因此它随核能分支一起解锁。 之后：不穿防护服也能采集和运输铀。长期储存请用 <a href="../nuclear/shielding_chest.html">屏蔽箱子</a>；在机器旁和反应堆里干活依然需要 <a href="shielding_suit.html">防护服</a>。</p>
+
+<h2 id="相关内容">相关内容</h2>
+
+<p><a href="battery_pouch.html">电池储物袋</a>——第一级：一模一样，只是没有铅。 <a href="../nuclear/shielding_chest.html">屏蔽箱子</a>——固定式的对应物：同样的原理，36 格而非一个口袋。 <a href="shielding_suit.html">屏蔽服</a>——针对辐射场的防护；储物袋不替代它，两者分工。 <a href="../materials/shielding_alloy.html">屏蔽合金</a>——升级用的板材。 <a href="../energy-storage/battery_box.html">储能库</a>——充电。 <a href="../materials/uranium.html">铀矿石</a>——把储物袋带下矿井的理由。</p>
+
+<h2>合成</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="屏蔽储物袋 alaindustrial:shielding_pouch" data-type="minecraft:crafting_transmute"><div class="recipe-header"><span class="recipe-type">minecraft:crafting_transmute</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="屏蔽储物袋"><img src="../../assets/item/shielding_pouch_3d.png" alt="屏蔽储物袋" width="32" height="32"></div><div class="result-name">屏蔽储物袋</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

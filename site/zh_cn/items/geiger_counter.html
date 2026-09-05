@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh_cn" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>盖革计数器 — Ala Industrial — 指南</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="打开菜单" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../../assets/item/guide_book_3d.png" alt="">全部内容</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="搜索维基…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="搜索指南" autocomplete="off" spellcheck="false" data-index="../search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;搜索结果&quot;,&quot;one&quot;:&quot;个页面&quot;,&quot;few&quot;:&quot;个页面&quot;,&quot;many&quot;:&quot;个页面&quot;,&quot;loading&quot;:&quot;正在加载搜索索引…&quot;,&quot;nothing&quot;:&quot;未找到结果&quot;}"></search>
+    <details class="language-menu"><summary aria-label="Language">中文</summary><div class="language-popover"><span>中文</span><a href="../../en/items/geiger_counter.html">EN</a><a href="../../ru/items/geiger_counter.html">RU</a><a href="../../uk/items/geiger_counter.html">UA</a><a href="../../ja_jp/items/geiger_counter.html">日本語</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">浏览</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../../assets/item/tempered_iron_pickaxe.png" alt=""><span>新手入门</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
+<div class="group-title">能源</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="11 个页面">11</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="15 个页面">15</span></a>
+<div class="group-title">加工</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="15 个页面">15</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<div class="group-title">物流</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>物品物流</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<div class="group-title">世界与自动化</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="22 个页面">22</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="6 个页面">6</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<div class="group-title">其他</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="15 个页面">15</span></a>
+<div class="group-title">物品</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="24 个页面">24</span></a>
+<a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="24 个页面">24</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">首页</a><span class="sep">/</span><a href="../items/index.html">游戏物品</a><span class="sep">/</span><span>盖革计数器</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../../assets/item/geiger_counter_3d.png" alt="盖革计数器" width="64" height="64">
+    <div class="info">
+      <h1>盖革计数器</h1>
+      <div class="block-id">alaindustrial:geiger_counter</div>
+      <div class="tags"><span class="tag cat" style="background:#d97706">游戏物品</span><span class="tag lifecycle" style="background:#22c55e">已实现</span><span class="tag">tool</span><span class="tag">nuclear</span><span class="tag">radiation</span><span class="tag">detector</span><span class="tag">sound</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="概述">概述</h2>
+
+<p>盖革计数器是一件无需能量的随身仪器。它不生产任何东西，也不影响任何东西——它只是<strong>被听见</strong>。在它出现 之前，本模组中的辐射是看不见的：效果既不带图标也不带粒子，站在燃料棒架旁的玩家会在一秒半内死去， 却从未收到过任何警告。</p>
+
+<p>这件仪器<strong>在物品栏的任何格子里都能工作</strong>。合成出来丢进背包，然后就可以忘掉它。这是警报，不是测量 流程：不用握在手里，不用取出来，也没有什么可按的。</p>
+
+<p><strong>唯一的通道是声音。</strong> 没有 HUD 面板，没有快捷栏上方的文字，工具提示里也没有读数。正因如此，开启 字幕后会显示"盖革计数器咔哒声"——这是唯一能告诉玩家这声音属于什么的东西。</p>
+
+<h2 id="咔哒声的含义">咔哒声的含义</h2>
+
+<p>这件仪器有<strong>两种截然不同的信号</strong>，靠耳朵就能分辨。</p>
+
+<p><strong>岩石中的矿石——音调更低，越靠近咔哒越密。</strong> 意思是"附近有矿脉，往这里挖"。档位来自<strong>到最近矿石 的距离</strong>，而不是衰减后的辐射场：辐射场在一格半内就衰减一半，所以基于场的档位在离矿脉两格时就已经 塌到最低一档——玩家站在矿石上面，却每两秒才听到一声。三段的边界是半径的四分之一、二分之一和全部： 0–4 格、4–8 格和 8–16 格。铀矿石只要还在墙里， 就<strong>完全不产生剂量</strong>：岩石本身被视为它的屏蔽层。为了这个信号，视线判定被刻意省略——否则毫无意义， 矿石总是在石头后面。铀要开始造成伤害，必须先挖出来带进物品栏，那时它才变成普通的 <code>radioactive_low</code>。</p>
+
+<p><strong>危险——正常音调，节奏随刻度上升。</strong> 这才是真正的辐射场：燃料棒、口袋里的铀、被污染的土、装着 燃料的箱子。矿石的最高档仍然比危险刻度的第一档更轻，所以无论玩家离矿石多近，都不会把"富矿脉"错听 成"这里危险"。</p>
+
+<p>咔哒声是<strong>随机的，不是节拍器</strong>：档位决定每刻发出咔哒的概率，音高还会略微漂移。规律的重复在一分钟 内就不再被当作警报——这一点在反应堆警笛上已经验证过了。</p>
+
+<h2 id="刻度">刻度</h2>
+
+<table><thead><tr><th>每次扫描的辐射场</th><th>每秒咔哒次数</th><th>在世界中意味着什么</th></tr></thead><tbody><tr><td>岩石中的矿石</td><td>0.8 / 1.6 / 2.8</td><td><strong>安全</strong> — 剂量完全不会累积</td></tr><tr><td>低于 1，其他情况</td><td>静默</td><td>剂量不增长</td></tr><tr><td>1–20</td><td>3</td><td>区域的边缘；12–15 格外的箱子</td></tr><tr><td>20–100</td><td>8</td><td>口袋里的铀（24）；3–5 格外的箱子</td></tr><tr><td>100–400</td><td>15</td><td>近在咫尺的箱子；3 格外的反应堆</td></tr><tr><td>高于 400</td><td>20，连成一片</td><td>近距离的燃料棒架——指针已经打满</td></tr></tbody></table>
+
+<p><strong>这件仪器不会磨损——它会爆表。</strong> 超过 400 之后它就分不出等级，只是轰鸣。廉价仪器不会撒谎，它只是 饱和了，而这恰恰成了制作剂量计的理由。</p>
+
+<p><strong>这件仪器有自己的半径，并且刻意比危险范围更大：</strong> 16 格，而辐射实际只到 6 格。超过 6 格剂量严格 为零，因此计数器在那之外说的一切都是纯粹的预警——装燃料的箱子在十五格外就能听见，而它从六格才开始 造成伤害。一台只能听到辐射所及之处的计数器什么也预警不了：第一版正是如此，在离箱子三格、已经在 受到伤害的情况下，它每秒才响一次。</p>
+
+<p>强度在 1.5 格内就衰减一半，所以方向本身就是听得出来的：往旁边走两步，节奏立刻变化。这件仪器刻意 没有指针、箭头和光源高亮。</p>
+
+<h2 id="指示灯">指示灯</h2>
+
+<p>外壳上有一盏灯：没有听到危险时是<strong>绿色</strong>，听到时变为<strong>红色</strong>。矿石不会点亮它——矿石的信号意思是 "安全，往这里挖"，而红色必须继续意味着危险，否则它就无话可说了。这是这件仪器唯一不需要用耳朵听的 读数。</p>
+
+<h2 id="仪器测的是什么">仪器测的是什么</h2>
+
+<p><strong>是防护服之前的场，而不是之后。</strong> 计数器报告的是周围的情况，而不是抵达身体的量。否则，穿上防护服 的一刻读数就会归零——它能完全挡住随身携带的辐射源——于是静默的含义就从"这里什么都没有"变成了"你被 挡住了"。有多少穿透了防护服，那是剂量计的问题，不是这件仪器的问题。</p>
+
+<p>读数与剂量在同一次扫描中取得（每 一次，即一秒），然后按刻消耗：扫描确定 档位，每一刻按该档位掷一次咔哒。因此放进箱子的计数器会在一秒内安静下来，而不是立刻。</p>
+
+<p><strong>带多个计数器和带一个听起来一样</strong>——搜索在找到第一个时就停止。潜影盒或者小包里的计数器不响：埋在 袋子底下的仪器不算在岗。</p>
+
+<p>在创造模式和旁观模式下仪器同样读数，只有剂量被跳过。一个在创造模式下失灵的计数器，恰恰会在玩家第一 次拿起它的地方失灵。</p>
+
+<h2 id="配方">配方</h2>
+
+<p>五块锡锭、一个<a href="../components/electronic_circuit.html">电子电路</a>和一块玻璃板：顶上的玻璃板是计数管的 窗口，锡是外壳。配方在玩家第一次捡到粗铀时解锁——也就是这件仪器刚好有活干的时候。</p>
+
+<p>选择中期科技是经过考虑的：矿石几乎无害（其上限是刻度的 20%，到危险区需要 22 分钟），而反应堆比 电路来得更晚。</p>
+
+<h2 id="设置">设置</h2>
+
+<table><thead><tr><th>键（<code>safety</code>）</th><th>默认值</th><th>作用</th></tr></thead><tbody><tr><td></td><td>16</td><td>计数器能听多远；比辐射实际到达的范围更大</td></tr><tr><td></td><td>16</td><td>能听见岩石中矿石的距离；为 0 时关闭矿石扫描</td></tr><tr><td></td><td>1</td><td>计数器开始咔哒的辐射场</td></tr><tr><td></td><td>20</td><td>切换到明显的噼啪声</td></tr><tr><td></td><td>100</td><td>切换到密集的噼啪声</td></tr><tr><td></td><td>400</td><td>爆表</td></tr><tr><td></td><td>60</td><td>咔哒声音量；为 0 时静音且不发送数据包</td></tr></tbody></table>
+
+<p>矿石半径是听觉距离，不是剂量：墙里的矿石在任何地方都不会被加进剂量里。调高 意味着更早、更远地听见矿脉，仅此而已。</p>
+
+<h2 id="相关">相关</h2>
+
+<p>核能 — 该分支与辐射的概览。 <a href="shielding_suit.html">防护服</a> — 削减剂量的东西；不影响读数。</p>
+
+<h2>合成</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="盖革计数器 alaindustrial:geiger_counter" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell empty"></div> <div class="cell" title="任意无色玻璃板"><img src="../../assets/item/glass_pane_3d.png" alt="任意无色玻璃板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell" title="任意锡锭"><img src="../../assets/item/tin_ingot_3d.png" alt="任意锡锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="电子电路"><img src="../../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="任意锡锭"><img src="../../assets/item/tin_ingot_3d.png" alt="任意锡锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意锡锭"><img src="../../assets/item/tin_ingot_3d.png" alt="任意锡锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意锡锭"><img src="../../assets/item/tin_ingot_3d.png" alt="任意锡锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意锡锭"><img src="../../assets/item/tin_ingot_3d.png" alt="任意锡锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="盖革计数器"><img src="../../assets/item/geiger_counter_3d.png" alt="盖革计数器" width="32" height="32"></div><div class="result-name">盖革计数器</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

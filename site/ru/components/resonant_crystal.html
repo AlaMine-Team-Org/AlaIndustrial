@@ -7,18 +7,77 @@
 <meta name="theme-color" content="#16161a">
 <title>Резонансный кристалл — Ala Industrial — Гайд</title>
 <link rel="icon" href="../favicon.png" type="image/png">
-<script src="../assets/guide-site.js" defer></script>
-
+<script src="../../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
 <style>
   
   @font-face {
     font-family:'Press Start 2P';
-    src:url('../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    src:url('../../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
     font-weight:400; font-style:normal; font-display:block;
     }
   @font-face {
     font-family:'VT323';
-    src:url('../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    src:url('../../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
     font-weight:400; font-style:normal; font-display:block;
     }
   :root {
@@ -272,7 +331,7 @@
     color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
   .notfound p { color:var(--muted); }
 </style>
-<link rel="stylesheet" href="../assets/guide-site.css">
+<link rel="stylesheet" href="../../assets/guide-site.css">
 </head>
 <body>
 
@@ -282,14 +341,14 @@
     <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
   </div>
   <div class="sitenav-right">
-    <a class="nav-all-content" href="../all-content.html"><img src="../assets/item/guide_book_3d.png" alt="">Весь контент</a>
+    <a class="nav-all-content" href="../all-content.html"><img src="../../assets/item/guide_book_3d.png" alt="">Весь контент</a>
     <div class="platform-links" aria-label="Project links">
-      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
-      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
-      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
-      <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../assets/platform/discord.svg" alt="Discord"></a>
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../../assets/platform/discord.svg" alt="Discord"></a>
     </div>
-    <search class="site-search"><input type="search" data-wiki-search placeholder="Поиск по вики…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="Поиск по гайду" autocomplete="off" spellcheck="false" data-index="../assets/search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;Результаты поиска&quot;,&quot;one&quot;:&quot;страница найдена&quot;,&quot;few&quot;:&quot;страницы найдены&quot;,&quot;many&quot;:&quot;страниц найдено&quot;,&quot;loading&quot;:&quot;Загрузка индекса поиска…&quot;,&quot;nothing&quot;:&quot;Ничего не найдено&quot;}"></search>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="Поиск по вики…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="Поиск по гайду" autocomplete="off" spellcheck="false" data-index="../search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;Результаты поиска&quot;,&quot;one&quot;:&quot;страница найдена&quot;,&quot;few&quot;:&quot;страницы найдены&quot;,&quot;many&quot;:&quot;страниц найдено&quot;,&quot;loading&quot;:&quot;Загрузка индекса поиска…&quot;,&quot;nothing&quot;:&quot;Ничего не найдено&quot;}"></search>
     <details class="language-menu"><summary aria-label="Language">RU</summary><div class="language-popover"><span>RU</span><a href="../../en/components/resonant_crystal.html">EN</a><a href="../../uk/components/resonant_crystal.html">UA</a><a href="../../zh_cn/components/resonant_crystal.html">中文</a><a href="../../ja_jp/components/resonant_crystal.html">日本語</a></div></details>
   </div>
 </nav>
@@ -297,37 +356,37 @@
 <div class="layout">
   <aside class="sidebar" id="wiki-sidebar">
 <div class="group-title">Обзор</div>
-<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../assets/item/tempered_iron_pickaxe.png" alt=""><span>С чего начать</span></a>
-<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепты</span></a>
-<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../../assets/item/tempered_iron_pickaxe.png" alt=""><span>С чего начать</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>Рецепты</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="11 страниц">11</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="4 страницы">4</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
-<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../assets/item/reactor_room_3d.png" alt=""><span>Ядерная техника</span><span class="cat-count" aria-label="15 страниц">15</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="11 страниц">11</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="4 страницы">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Ядерная техника</span><span class="cat-count" aria-label="15 страниц">15</span></a>
 <div class="group-title">Переработка</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="15 страниц">15</span></a>
-<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машины для жидкостей</span><span class="cat-count" aria-label="3 страницы">3</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="15 страниц">15</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Машины для жидкостей</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <div class="group-title">Логистика</div>
-<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логистика предметов</span><span class="cat-count" aria-label="1 страница">1</span></a>
-<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логистика жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
-<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Хранение жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Логистика предметов</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Логистика жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Хранение жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Мир и автоматизация</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="22 страницы">22</span></a>
-<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сельское хозяйство</span><span class="cat-count" aria-label="6 страниц">6</span></a>
-<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Хай-тек машины</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="22 страницы">22</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>Сельское хозяйство</span><span class="cat-count" aria-label="6 страниц">6</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>Хай-тек машины</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Прочее</div>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="14 страниц">14</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="15 страниц">15</span></a>
 <div class="group-title">Предметы</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="3 страницы">3</span></a>
-<a class="cat-link active" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="23 страницы">23</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="22 страницы">22</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="3 страницы">3</span></a>
+<a class="cat-link active" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="24 страницы">24</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="24 страницы">24</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="../components/index.html">Компоненты</a><span class="sep">/</span><span>Резонансный кристалл</span></div>
 <div class="block-card">
   <div class="card-head">
-    <img class="icon" src="../assets/item/resonant_crystal_3d.png" alt="Резонансный кристалл" width="64" height="64">
+    <img class="icon" src="../../assets/item/resonant_crystal_3d.png" alt="Резонансный кристалл" width="64" height="64">
     <div class="info">
       <h1>Резонансный кристалл</h1>
       <div class="block-id">alaindustrial:resonant_crystal</div>
@@ -372,7 +431,8 @@
 
 <p><a href="battery.html">Батарея</a> — первый носитель EU/FE, с которого начинается энергетическая ветка. <a href="../energy-storage/cesu.html">Усиленное энергохранилище</a> — самый быстрый зарядный слот в моде.</p>
 
-
+<h2>Используется в</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="рабочая станция alaindustrial:workstation" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell placeholder" title="glass_panes (tag)" aria-label="glass_panes (tag)"><span>glass </span><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Резонансный кристалл"><img src="../../assets/item/resonant_crystal_3d.png" alt="Резонансный кристалл" width="32" height="32"></div> <div class="cell placeholder" title="glass_panes (tag)" aria-label="glass_panes (tag)"><span>glass </span><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Резонансная катушка"><img src="../../assets/item/resonance_coil_3d.png" alt="Резонансная катушка" width="32" height="32"></div> <div class="cell" title="Схема управления реактором"><img src="../../assets/item/reactor_circuit_3d.png" alt="Схема управления реактором" width="32" height="32"></div> <div class="cell" title="Резонансная катушка"><img src="../../assets/item/resonance_coil_3d.png" alt="Резонансная катушка" width="32" height="32"></div> <div class="cell" title="Усиленный подшипник"><img src="../../assets/item/reinforced_bearing_3d.png" alt="Усиленный подшипник" width="32" height="32"></div> <div class="cell" title="Продвинутый машинный корпус"><img src="../../assets/item/advanced_machine_casing_3d.png" alt="Продвинутый машинный корпус" width="32" height="32"></div> <div class="cell" title="Усиленный подшипник"><img src="../../assets/item/reinforced_bearing_3d.png" alt="Усиленный подшипник" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Рабочая станция"><img src="../../assets/item/workstation_3d.png" alt="Рабочая станция" width="32" height="32"><span class="count">×2</span></div><div class="result-name">Рабочая станция</div></div></div></div></div>
   </main>
 </div>
 
