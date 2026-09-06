@@ -139,8 +139,8 @@ public class PolymerizerBlockEntity extends MachineBlockEntity implements Overcl
 		ProcessingCycle.Job job = cycle.job(Config.machineEuPerTick, baseDuration);
 
 		ItemStack result = recipe != null ? recipe.resultStack() : ItemStack.EMPTY;
-		boolean canWork = recipe != null && energy.getAmount() >= job.euPerTick()
-				&& canOutput(OUTPUT_SLOT, result);
+		boolean readyExceptEnergy = recipe != null && canOutput(OUTPUT_SLOT, result);
+		boolean canWork = readyExceptEnergy && energy.getAmount() >= job.euPerTick();
 
 		// 3) The shared cycle (MOD-557) draws the lit state, reports the rate, drains, steps the bar,
 		//    counts the operation and answers the sleep gate. "The tank ran dry (or its fluid no longer
@@ -148,6 +148,7 @@ public class PolymerizerBlockEntity extends MachineBlockEntity implements Overcl
 		//    still there, so progress FREEZES and resumes (R-NRG-10) — the item-fed machines' contract.
 		//    A container exchange keeps the machine awake even when it cannot work.
 		return job.canWork(canWork)
+				.readyExceptEnergy(readyExceptEnergy)
 				.jobIntact(recipe != null)
 				.keepAwake(filled)
 				.run(level, () -> {

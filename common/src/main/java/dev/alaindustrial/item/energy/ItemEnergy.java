@@ -81,8 +81,8 @@ public final class ItemEnergy {
 		if (stack.getItem() instanceof ElectricSaberItem) {
 			return Config.electricSaberBuffer;
 		}
-		if (stack.getItem() instanceof MagnetItem) {
-			return Config.magnetBuffer;
+		if (stack.getItem() instanceof MagnetItem magnet) {
+			return magnet.tier().buffer();
 		}
 		if (stack.getItem() instanceof JetpackItem) {
 			return Config.jetpackBuffer;
@@ -128,8 +128,8 @@ public final class ItemEnergy {
 		if (stack.getItem() instanceof ElectricSaberItem) {
 			return Config.electricSaberInputRate;
 		}
-		if (stack.getItem() instanceof MagnetItem) {
-			return Config.magnetInputRate;
+		if (stack.getItem() instanceof MagnetItem magnet) {
+			return magnet.tier().inputRate();
 		}
 		if (stack.getItem() instanceof JetpackItem) {
 			return Config.jetpackInputRate;

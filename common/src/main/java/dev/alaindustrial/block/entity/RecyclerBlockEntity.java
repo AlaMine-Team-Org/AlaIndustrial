@@ -101,6 +101,7 @@ public class RecyclerBlockEntity extends MachineBlockEntity implements MenuProvi
 
 		return job.canWork(canWork)
 				// Progress is bought for THIS item: swap the input and the accumulated ticks are void.
+				.readyExceptEnergy(hasWork && ashRoom && slagRoom)
 				.jobIntact(hasWork)
 				.run(level, () -> commit(input, profile, blade, ashRoom, slagRoom));
 	}

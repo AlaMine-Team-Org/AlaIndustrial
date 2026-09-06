@@ -184,6 +184,7 @@ import dev.alaindustrial.item.tool.ElectricDrillItem;
 import dev.alaindustrial.item.tool.ElectricDrillNetheriteTipItem;
 import dev.alaindustrial.item.tool.ElectricSaberItem;
 import dev.alaindustrial.item.tool.MagnetItem;
+import dev.alaindustrial.item.tool.MagnetTier;
 import dev.alaindustrial.item.tool.NetworkAnalyzerItem;
 import dev.alaindustrial.item.tool.ScytheItem;
 import dev.alaindustrial.item.tool.ScytheTier;
@@ -1691,6 +1692,8 @@ public final class ContentManifest {
 			item("electric_saber", p -> new ElectricSaberItem(ElectricSaberItem.electricSaberProperties(p)), s -> ModContent.ELECTRIC_SABER = s),
 			// Electromagnet (MOD-132): EU item in any inventory slot that pulls loose drops toward the carrier.
 			item("electromagnet", p -> new MagnetItem(p.stacksTo(1)), s -> ModContent.ELECTROMAGNET = s),
+			item("electromagnet_advanced", p -> new MagnetItem(p.stacksTo(1), MagnetTier.ADVANCED),
+					s -> ModContent.ELECTROMAGNET_ADVANCED = s),
 			// Jetpack (MOD-148): worn EU flight — thrust on held jump, powerless glide when drained.
 			item("jetpack", p -> new JetpackItem(JetpackItem.equipmentProperties(p)), s -> ModContent.JETPACK = s),
 			// Vacuum Capsule (MOD-063): empty (×64) + filled (×16, fluid in the capsule_fluid component).

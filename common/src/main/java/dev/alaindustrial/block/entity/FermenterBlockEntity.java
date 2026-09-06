@@ -175,11 +175,11 @@ public class FermenterBlockEntity extends MachineBlockEntity
 		long biofuelPerOp = biofuelFor(items.get(ORGANIC_SLOT));
 		// The whole price must be on hand every tick, not only at the start: pulling the input or the
 		// water out mid-batch stops the run rather than completing it underpaid.
-		boolean canWork = recipe != null && recipe.hasEnough(input)
+		boolean readyExceptEnergy = recipe != null && recipe.hasEnough(input)
 				&& waterTank.amount >= waterPerOp
 				&& biofuelFits(biofuelPerOp)
-				&& energy.getAmount() >= job.euPerTick()
 				&& canOutput(OUTPUT_SLOT, result);
+		boolean canWork = readyExceptEnergy && energy.getAmount() >= job.euPerTick();
 
 		setStatus(diagnose(recipe, input, result, waterPerOp, biofuelPerOp));
 
@@ -188,6 +188,7 @@ public class FermenterBlockEntity extends MachineBlockEntity
 		// is what restarts progress; on mere power loss, a dry tank or a full output the recipe is still
 		// there, so progress FREEZES and resumes (R-NRG-10).
 		return job.canWork(canWork)
+				.readyExceptEnergy(readyExceptEnergy)
 				.jobIntact(recipe != null)
 				.keepAwake(bucketWork)
 				.run(level, () -> {

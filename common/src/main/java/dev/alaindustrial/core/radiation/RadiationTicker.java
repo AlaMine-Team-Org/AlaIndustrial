@@ -157,7 +157,10 @@ public final class RadiationTicker {
 		// radiationSourceRadius is pure warning, because out there the dose is exactly zero.
 		// MOD-483 Dosimetrist: the counter reaches further.
 		int geiger = SkillHazard.geigerRadius(Config.geigerRadius, player);
-		int heard = RadiationSources.exposureAt(level, player, geiger, geiger)
+		// MOD-579: the counter reads the DETECTOR field, where a wall damps instead of deleting. Sharing
+		// exposureAt here made it deaf outside a reactor — no clear line to a single rod through the
+		// housing, so a strict zero — and then slammed to the top of the scale in the doorway.
+		int heard = RadiationSources.detectedAt(level, player, geiger, geiger)
 				+ Math.max(0, carried);
 		int hazard = RadiationCore.geigerStep(heard, Config.geigerFaintThreshold,
 				Config.geigerBusyThreshold, Config.geigerLoudThreshold,

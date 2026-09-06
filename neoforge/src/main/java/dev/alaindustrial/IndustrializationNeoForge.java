@@ -485,6 +485,7 @@ public final class IndustrializationNeoForge {
 				ModItemsNeoForge.ELECTRIC_HOE_DIAMOND_TIP.get(),
 				ModItemsNeoForge.ELECTRIC_SABER.get(),
 				ModItemsNeoForge.ELECTROMAGNET.get(),
+				ModItemsNeoForge.ELECTROMAGNET_ADVANCED.get(),
 				ModItemsNeoForge.JETPACK.get(),
 				ModItemsNeoForge.FLUXWEAVE_HELMET.get(), ModItemsNeoForge.FLUXWEAVE_CHESTPLATE.get(),
 				ModItemsNeoForge.FLUXWEAVE_LEGGINGS.get(), ModItemsNeoForge.FLUXWEAVE_BOOTS.get(),

@@ -100,10 +100,47 @@ public final class RadiationSources {
 	}
 
 	/**
+	 * What a DETECTOR at this point reads — same sources and same distance falloff as
+	 * {@link #exposureAt}, but a wall damps rather than deletes (MOD-579).
+	 */
+	public static int detectedAt(ServerLevel level, Entity target, int radius, int groundReach) {
+		List<Source> sources = new ArrayList<>();
+		collectRods(level, target.position(), radius, sources);
+		collectGround(level, target.position(), radius, groundReach, sources);
+		collectFallout(level, target.position(), radius, sources);
+		collectContainers(level, target.position(), radius, groundReach, sources);
+		return detectedFrom(level, target, sources, radius);
+	}
+
+	/**
 	 * Dose these sources deliver to this entity: attenuated by distance, and dropped entirely when
 	 * something solid stands in the way.
 	 */
 	public static int doseFrom(ServerLevel level, Entity target, List<Source> sources, int radius) {
+		return fieldFrom(level, target, sources, radius, false);
+	}
+
+	/**
+	 * The same field as a DETECTOR reads it: a wall damps the source instead of deleting it (MOD-579).
+	 *
+	 * <p>For the dose, "something solid in the way ⇒ nothing at all" is right and stays: that is what
+	 * a lead casing and a shielding suit are for. For an instrument it is the difference between a
+	 * detector and a decoration. A reactor's fuel rods sit inside their housing, so from outside there
+	 * is no clear line to a single one of them — the counter read a strict zero and said nothing, and
+	 * the moment the player stepped into the doorway the whole attenuated field appeared at once, at
+	 * two to four blocks, which is the top of the scale. Silence, then a solid rattle, with nothing in
+	 * between, because between "blocked" and "clear" there is no in-between value to have.
+	 *
+	 * <p>Damping instead keeps the shielding audible — a thick wall is heard faintly, a thin one
+	 * clearly — while the ladder stays monotone as the player walks toward the source, which is the
+	 * whole point of hunting by ear.
+	 */
+	public static int detectedFrom(ServerLevel level, Entity target, List<Source> sources, int radius) {
+		return fieldFrom(level, target, sources, radius, true);
+	}
+
+	private static int fieldFrom(ServerLevel level, Entity target, List<Source> sources, int radius,
+			boolean detector) {
 		if (sources.isEmpty()) {
 			return 0;
 		}
@@ -117,6 +154,8 @@ public final class RadiationSources {
 			}
 			if (hasLineOfSight(level, target, eyes, source.at())) {
 				dose += attenuated;
+			} else if (detector) {
+				dose += RadiationCore.throughWall(attenuated, Config.geigerWallPermille);
 			}
 		}
 		return dose;

@@ -187,9 +187,9 @@ public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockE
 		int euPerTick = job.euPerTick();
 		// MOD-455: a batch recipe (glowstone dust ×4) needs its whole price on hand every tick, not just
 		// at completion — checking it only in the completion branch would let one dust buy a full block.
-		boolean canWork = solution.hasRecipe() && input.getCount() >= solution.inputCount()
-				&& energy.getAmount() >= euPerTick
+		boolean readyExceptEnergy = solution.hasRecipe() && input.getCount() >= solution.inputCount()
 				&& canOutputWithSecondary(solution.result(), solution.secondary());
+		boolean canWork = readyExceptEnergy && energy.getAmount() >= euPerTick;
 
 		// MOD-458: the starvation counter is driven by the SAME expression that gates work, so the caption
 		// can never contradict the arrow. It resets on any paid tick, including one that finishes an op.
@@ -205,6 +205,7 @@ public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockE
 		// "Recipe gone" (input removed or swapped) is what restarts progress — mere power loss or a full
 		// output slot keeps the recipe matched, so progress FREEZES and resumes (R-NRG-10).
 		return job.canWork(canWork)
+				.readyExceptEnergy(readyExceptEnergy)
 				.jobIntact(solution.hasRecipe())
 				.run(level, () -> {
 					items.get(INPUT_SLOT).shrink(solution.inputCount());

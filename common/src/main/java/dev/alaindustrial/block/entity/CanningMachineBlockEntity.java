@@ -68,9 +68,8 @@ public final class CanningMachineBlockEntity extends MachineBlockEntity
 		ProcessingCycle.Job job = cycle.job(Config.machineEuPerTick, Config.canningMachineDuration);
 
 		// Everything the PRESS needs apart from the calories themselves.
-		boolean pressReady = !items.get(CAN_SLOT).isEmpty()
-				&& canOutput()
-				&& energy.getAmount() >= job.euPerTick();
+		boolean pressReadyExceptEnergy = !items.get(CAN_SLOT).isEmpty() && canOutput();
+		boolean pressReady = pressReadyExceptEnergy && energy.getAmount() >= job.euPerTick();
 
 		// Absorption is unconditional (MOD-488): a player pre-feeding food before the first empty can
 		// arrives should see it banked as calories right away, not sitting untouched in the slot. Only
@@ -88,6 +87,7 @@ public final class CanningMachineBlockEntity extends MachineBlockEntity
 		// Absorption happens outside the cycle and can move items on a tick that does no work, so it is
 		// declared here instead of calling setChanged() a second time.
 		return job.canWork(canWork)
+				.readyExceptEnergy(pressReadyExceptEnergy && CanningMath.hasFullRation(foodBuffer, valuePerRation))
 				.jobIntact(canWork)
 				.alreadyChanged(absorbed)
 				.run(level, () -> {

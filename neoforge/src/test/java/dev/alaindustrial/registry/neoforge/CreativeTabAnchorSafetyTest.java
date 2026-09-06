@@ -168,6 +168,7 @@ class CreativeTabAnchorSafetyTest {
 				"alaindustrial:electric_hoe",
 				"alaindustrial:electric_hoe_diamond_tip",
 				"alaindustrial:electromagnet",
+				"alaindustrial:electromagnet_advanced",
 				"alaindustrial:jetpack");
 		List<String> expected = new ArrayList<>(parentAndSearch);
 		// insertAfter asserts against the parent and search sets independently, and the mod contributes

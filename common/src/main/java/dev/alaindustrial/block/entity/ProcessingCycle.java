@@ -88,6 +88,7 @@ public final class ProcessingCycle {
 		private final int euPerTick;
 		private final int duration;
 		private boolean canWork;
+		private boolean readyExceptEnergy;
 		private boolean jobIntact = true;
 		private boolean keepAwake;
 		private boolean alreadyChanged;
@@ -113,6 +114,27 @@ public final class ProcessingCycle {
 		 */
 		public Job canWork(boolean value) {
 			this.canWork = value;
+			return this;
+		}
+
+		/**
+		 * Whether everything this operation needs EXCEPT an incoming supply is in place — a recipe
+		 * matched, the inputs are there, the output has room, the parts are fitted.
+		 *
+		 * <p>This is what the Resilient Cycle skill (MOD-483) is allowed to waive, and nothing else.
+		 * The skill's promise is "finish the operation on the machine's own charge when the supply
+		 * dies"; without this flag {@link #run} asked only "is progress past halfway", so it also
+		 * finished operations whose OUTPUT had filled — and the completion then wrote a result through
+		 * {@code addOutput}, which takes the caller's word for it and grew the stack past its limit
+		 * (MOD-576; the Recycler's ash bin reached 66 in a slot of 64).
+		 *
+		 * <p>Defaults to {@code false}: a machine that says nothing never coasts. That is the safe
+		 * default — the worst it costs is a skill that does not fire, whereas the opposite default
+		 * silently overfills slots. Every machine that composes this cycle sets it from the same
+		 * expression its {@code canWork} is built on, so the two cannot drift apart.
+		 */
+		public Job readyExceptEnergy(boolean value) {
+			this.readyExceptEnergy = value;
 			return this;
 		}
 
@@ -172,7 +194,12 @@ public final class ProcessingCycle {
 		// MOD-483 Resilient Cycle: an operation past halfway may finish on the machine's own charge when
 		// the supply dies. The energy is still spent — only the demand for an incoming supply is waived,
 		// which is why a switch cutting power mid-run cannot be farmed for free operations.
-		boolean coasting = !job.canWork && machine.energy.getAmount() > 0
+		//
+		// MOD-576: and ONLY that demand. `canWork` is every condition of the machine at once, so testing
+		// it alone let the skill waive a full output slot or a missing part too — the completion then ran
+		// with no room for its result. `readyExceptEnergy` is the machine saying "the supply is the only
+		// thing missing", which is exactly the case the skill was written for.
+		boolean coasting = !job.canWork && job.readyExceptEnergy && machine.energy.getAmount() > 0
 				&& SkillMachine.canCoast(machine.progress, machine.maxProgress,
 						level, machine.getOwner());
 		if (job.canWork || coasting) {

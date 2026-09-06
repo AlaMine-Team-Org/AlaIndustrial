@@ -180,13 +180,15 @@ public class ComponentRepairBenchBlockEntity extends MachineBlockEntity
 				: defaultDuration();
 		ProcessingCycle.Job job = cycle.job(baseEuPerTick(), baseDuration);
 
-		boolean canWork = status.canWork() && energy.getAmount() >= job.euPerTick();
+		boolean readyExceptEnergy = status.canWork();
+		boolean canWork = readyExceptEnergy && energy.getAmount() >= job.euPerTick();
 
 		// The shared cycle (MOD-557) owns the lit state, the rate report, the drain, the progress step,
 		// the operation counter, the XP credit and the sleep answer. The job is gone when the component
 		// is pulled, swapped for an undamaged/spent one, or the material runs out — the sibling machines'
 		// "recipe gone" reset. A flat buffer alone (status stays READY) leaves progress FROZEN (R-NRG-10).
 		return job.canWork(canWork)
+				.readyExceptEnergy(readyExceptEnergy)
 				.jobIntact(status.jobIntact())
 				.run(level, () -> {
 					items.get(MATERIAL_SLOT).shrink(1);

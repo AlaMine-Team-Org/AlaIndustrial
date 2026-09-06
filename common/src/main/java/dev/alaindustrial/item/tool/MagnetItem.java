@@ -16,6 +16,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -70,6 +71,9 @@ import org.jspecify.annotations.Nullable;
  */
 public class MagnetItem extends Item {
 
+	/** Which grade this magnet is — reach, buffer, tariffs and whether it reaches experience. */
+	private final MagnetTier tier;
+
 	/** Below this distance (blocks) the item is already on the player; leave the pickup to vanilla. */
 	private static final double PICKUP_SNAP = 0.2;
 	/** Max seek speed toward the player (blocks/tick). Fast enough to feel like a real magnet — the item
@@ -82,7 +86,23 @@ public class MagnetItem extends Item {
 	private static final int MAX_ITEMS_PER_SCAN = 64;
 
 	public MagnetItem(Properties properties) {
+		this(properties, MagnetTier.BASIC);
+	}
+
+	public MagnetItem(Properties properties, MagnetTier tier) {
 		super(properties);
+		this.tier = tier;
+	}
+
+	/** This magnet's grade. Read by {@code ItemEnergy} for the buffer and by the pull for its reach. */
+	public MagnetTier tier() {
+		return tier;
+	}
+
+	/** The grade of the magnet in this stack, or {@code null} if the stack is not a magnet at all. */
+	@Nullable
+	public static MagnetTier tierOf(ItemStack stack) {
+		return stack.getItem() instanceof MagnetItem magnet ? magnet.tier() : null;
 	}
 
 	// --- passive pull: every magnetScanIntervalTicks, draw nearby drops toward the carrier ---
@@ -107,7 +127,11 @@ public class MagnetItem extends Item {
 		if (!isEnabled(stack) || ItemEnergy.get(stack) <= 0) {
 			return 0;
 		}
-		double range = Config.magnetRange;
+		MagnetTier tier = tierOf(stack);
+		if (tier == null) {
+			return 0;
+		}
+		double range = tier.range();
 		Vec3 target = pullTarget(player);
 		AABB box = player.getBoundingBox().inflate(range);
 		List<ItemEntity> items = level.getEntitiesOfClass(ItemEntity.class, box,
@@ -119,14 +143,90 @@ public class MagnetItem extends Item {
 				break;
 			}
 			// Buffer exhausted — the magnet stalls (a per-item tariff, an idle scan is free).
-			if (!free && ItemEnergy.get(stack) < Config.magnetEuPerItem) {
+			if (!free && ItemEnergy.get(stack) < tier.euPerItem()) {
 				break;
 			}
 			if (pullSingle(stack, player, item)) {
 				pulled++;
 			}
 		}
+		return pulled + experienceStep(stack, player, level, tier, free, pulled);
+	}
+
+	/**
+	 * The advanced grade's own pass: draw experience orbs the player would otherwise walk to.
+	 *
+	 * <p><b>Only the orbs vanilla is not already collecting.</b> {@code ExperienceOrb.followNearbyPlayer}
+	 * seeks a player within 8 blocks and drops the target past {@code distanceToSqr > 64} — read out of
+	 * the 26.2 sources, not assumed. Inside that ring the orb is already on its way for free, so paying
+	 * EU there would buy the player nothing; {@link Config#magnetVanillaOrbReach} is that ring.
+	 *
+	 * <p>Shares {@link #MAX_ITEMS_PER_SCAN} with the item pass through {@code alreadyPulled}: a mob
+	 * grinder can drop hundreds of orbs at once, and the cap is there so one scan cannot stall the tick.
+	 */
+	private static int experienceStep(ItemStack stack, Player player, ServerLevel level,
+			MagnetTier tier, boolean free, int alreadyPulled) {
+		if (!tier.pullsExperience() || alreadyPulled >= MAX_ITEMS_PER_SCAN) {
+			return 0;
+		}
+		double range = tier.range();
+		double vanilla = Config.magnetVanillaOrbReach;
+		Vec3 target = pullTarget(player);
+		AABB box = player.getBoundingBox().inflate(range);
+		List<ExperienceOrb> orbs = level.getEntitiesOfClass(ExperienceOrb.class, box,
+				orb -> canPullOrb(orb, target, range * range, vanilla * vanilla));
+		int pulled = 0;
+		for (ExperienceOrb orb : orbs) {
+			if (alreadyPulled + pulled >= MAX_ITEMS_PER_SCAN) {
+				break;
+			}
+			if (!free && ItemEnergy.get(stack) < tier.euPerOrb()) {
+				break;
+			}
+			if (!pullOrb(stack, player, orb)) {
+				continue;
+			}
+			pulled++;
+		}
 		return pulled;
+	}
+
+	/**
+	 * Pull one specific experience orb — the per-orb twin of {@link #pullSingle}, and the single source
+	 * of truth for "may this orb be pulled, and what does it cost".
+	 *
+	 * <p>Exposed for the same reason as {@link #pullSingle}: a gametest drives it on a <em>detached</em>
+	 * orb, because the live scan finds its targets in the world and one test's orbs would drift into
+	 * another's radius on a shared gametest server.
+	 */
+	public static boolean pullOrb(ItemStack magnet, Player player, ExperienceOrb orb) {
+		MagnetTier tier = tierOf(magnet);
+		if (tier == null || !tier.pullsExperience() || !isEnabled(magnet) || ItemEnergy.get(magnet) <= 0) {
+			return false;
+		}
+		if (!ItemEnergy.free(player) && ItemEnergy.get(magnet) < tier.euPerOrb()) {
+			return false;
+		}
+		double range = tier.range();
+		double vanilla = Config.magnetVanillaOrbReach;
+		Vec3 target = pullTarget(player);
+		if (!canPullOrb(orb, target, range * range, vanilla * vanilla) || !applyPull(orb, target)) {
+			return false;
+		}
+		ItemEnergy.spend(magnet, tier.euPerOrb(), player);
+		return true;
+	}
+
+	/**
+	 * Whether an experience orb may be pulled: alive, inside the magnet's reach and OUTSIDE the ring
+	 * vanilla already covers.
+	 */
+	private static boolean canPullOrb(ExperienceOrb orb, Vec3 target, double rangeSqr, double vanillaSqr) {
+		if (!orb.isAlive()) {
+			return false;
+		}
+		double d = orb.distanceToSqr(target.x, target.y, target.z);
+		return d <= rangeSqr && d > vanillaSqr;
 	}
 
 	/**
@@ -144,15 +244,19 @@ public class MagnetItem extends Item {
 		if (!isEnabled(magnet) || ItemEnergy.get(magnet) <= 0) {
 			return false;
 		}
-		if (!ItemEnergy.free(player) && ItemEnergy.get(magnet) < Config.magnetEuPerItem) {
+		MagnetTier tier = tierOf(magnet);
+		if (tier == null) {
 			return false;
 		}
-		double range = Config.magnetRange;
+		if (!ItemEnergy.free(player) && ItemEnergy.get(magnet) < tier.euPerItem()) {
+			return false;
+		}
+		double range = tier.range();
 		Vec3 target = pullTarget(player);
-		if (!canPull(item, target, range * range) || !applyPull(item, target, range)) {
+		if (!canPull(item, target, range * range) || !applyPull(item, target)) {
 			return false;
 		}
-		ItemEnergy.spend(magnet, Config.magnetEuPerItem, player);
+		ItemEnergy.spend(magnet, tier.euPerItem(), player);
 		return true;
 	}
 
@@ -179,14 +283,14 @@ public class MagnetItem extends Item {
 	 * accumulate-and-drag XP-orb model was far too weak on grounded drops, which read as "not pulling").
 	 * Returns whether it moved the item (one already on the player is left to the vanilla pickup).
 	 */
-	private static boolean applyPull(ItemEntity item, Vec3 target, double range) {
-		Vec3 delta = new Vec3(target.x - item.getX(), target.y - item.getY(), target.z - item.getZ());
+	private static boolean applyPull(Entity pulled, Vec3 target) {
+		Vec3 delta = new Vec3(target.x - pulled.getX(), target.y - pulled.getY(), target.z - pulled.getZ());
 		double dist = delta.length();
 		if (dist < PICKUP_SNAP) {
 			return false;
 		}
 		double speed = Math.min(SEEK_SPEED, dist * SEEK_GAIN);
-		item.setDeltaMovement(delta.scale(speed / dist)); // unit direction × speed
+		pulled.setDeltaMovement(delta.scale(speed / dist)); // unit direction × speed
 		return true;
 	}
 
@@ -243,17 +347,24 @@ public class MagnetItem extends Item {
 	@Override
 	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
 			Consumer<Component> adder, TooltipFlag flag) {
-		adder.accept(Component.translatable("item.alaindustrial.electromagnet.flavor")
-				.withStyle(ChatFormatting.GRAY));
+		// Keys are DERIVED from this item's own description id, never spelled out: the hardcoded
+		// "item.alaindustrial.electromagnet.*" made the advanced grade describe the basic one — its
+		// tooltip claimed five blocks while it pulled from nine, and called itself an item magnet while
+		// it was collecting experience (MOD-580, found in play).
+		String base = getDescriptionId();
+		adder.accept(Component.translatable(base + ".flavor").withStyle(ChatFormatting.GRAY));
 		boolean enabled = isEnabled(stack);
-		adder.accept(Component.translatable(enabled
-				? "item.alaindustrial.electromagnet.state_on"
-				: "item.alaindustrial.electromagnet.state_off")
+		adder.accept(Component.translatable(enabled ? base + ".state_on" : base + ".state_off")
 				.withStyle(enabled ? ChatFormatting.GREEN : ChatFormatting.GRAY));
-		adder.accept(Component.translatable("item.alaindustrial.electromagnet.charge",
+		adder.accept(Component.translatable(base + ".charge",
 				ItemEnergy.get(stack), ItemEnergy.capacity(stack)).withStyle(ChatFormatting.GOLD));
-		adder.accept(Component.translatable("item.alaindustrial.electromagnet.desc",
-				Config.magnetRange, Config.magnetEuPerItem).withStyle(ChatFormatting.DARK_GRAY));
+		// Numbers come from the tier for the same reason: Config.magnetRange is the BASIC grade's knob.
+		adder.accept(Component.translatable(base + ".desc", tier.range(), tier.euPerItem())
+				.withStyle(ChatFormatting.DARK_GRAY));
+		if (tier.pullsExperience()) {
+			adder.accept(Component.translatable(base + ".experience", tier.euPerOrb())
+					.withStyle(ChatFormatting.DARK_GRAY));
+		}
 	}
 
 	// --- item bar shows the EU charge in the LV tier colour (numbers are in the tooltip) ---

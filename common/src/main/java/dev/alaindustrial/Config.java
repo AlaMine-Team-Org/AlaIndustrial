@@ -1004,7 +1004,7 @@ public final class Config {
 			doc = "Max EU/t the electromagnet accepts while charging in a slot.")
 	public static int magnetInputRate = 32;
 	/** Pull radius in blocks around the carrier (a sphere — up, down and sideways). Tier 1 covers 5
-	 * blocks; higher tiers (larger radius) are a later task. */
+	 * blocks; the advanced grade has its own {@link #magnetAdvancedRange} (MOD-580). */
 	@Knob(section = Section.TOOLS, min = 1,
 			doc = "Electromagnet pull radius in blocks around the carrier.")
 	public static int magnetRange = 5;
@@ -1018,6 +1018,44 @@ public final class Config {
 	@Knob(section = Section.TOOLS, min = 1,
 			doc = "How often (ticks) the electromagnet scans for and pulls nearby drops.")
 	public static int magnetScanIntervalTicks = 1;
+
+	// --- Advanced Electromagnet (MOD-580, tier 2) ---
+	/** Advanced magnet EU buffer. Four times the basic grade: it reaches further, so it works more. */
+	@Knob(section = Section.TOOLS, min = 1,
+			doc = "Advanced electromagnet EU buffer.")
+	public static int magnetAdvancedBuffer = 20_000;
+	/** Max EU/tick the advanced magnet accepts while charging (MV ceiling — it is an MV-tier item). */
+	@Knob(section = Section.TOOLS, min = 1,
+			doc = "Max EU/t the advanced electromagnet accepts while charging in a slot.")
+	public static int magnetAdvancedInputRate = 128;
+	/**
+	 * Pull radius of the advanced grade. Nine blocks against the basic five — a visible upgrade that
+	 * still leaves the item pipe and the sorter a job; past about twelve the magnet becomes a vacuum
+	 * for a whole mine shaft and there is nothing left for logistics to do.
+	 */
+	@Knob(section = Section.TOOLS, min = 1,
+			doc = "Advanced electromagnet pull radius in blocks around the carrier.")
+	public static int magnetAdvancedRange = 9;
+	/** EU per item pulled by the advanced grade. Same tariff as the basic one: reach is what you bought. */
+	@Knob(section = Section.TOOLS, min = 1,
+			doc = "EU the advanced electromagnet spends per item pulled each scan tick.")
+	public static int magnetAdvancedEuPerItem = 2;
+	/**
+	 * EU per experience orb pulled. Priced above an item on purpose — an orb is worth more to the
+	 * player than a cobblestone, and a mob farm should not be a free ride.
+	 */
+	@Knob(section = Section.TOOLS, min = 1,
+			doc = "EU the advanced electromagnet spends per experience orb pulled.")
+	public static int magnetAdvancedEuPerOrb = 4;
+	/**
+	 * Below this distance the magnet leaves experience orbs alone, because vanilla already collects
+	 * them: {@code ExperienceOrb.followNearbyPlayer} seeks a player within 8 blocks and drops the
+	 * target past {@code distanceToSqr > 64} — verified in the 26.2 sources, not assumed. Paying EU
+	 * inside that ring would buy nothing the player was not getting for free.
+	 */
+	@Knob(section = Section.TOOLS, min = 0,
+			doc = "Distance under which the magnet leaves experience orbs to vanilla's own pull.")
+	public static int magnetVanillaOrbReach = 8;
 
 	// --- Jetpack (MOD-148, worn EU flight) ---
 	/** Jetpack EU buffer — 1.5 Energy Packs. At {@link #jetpackEuPerTick} per tick of thrust this is
@@ -2025,6 +2063,16 @@ public final class Config {
 			doc = "Loudness of the Geiger counter's clicks, in percent. 0 silences it; players also "
 					+ "have the vanilla Players volume slider.")
 	public static int geigerVolumePercent = 60;
+	/**
+	 * Promille of a source's field a DETECTOR still hears through something solid (MOD-579). Applies to
+	 * the counter only — the DOSE is unchanged and a wall still stops it entirely, which is what lead
+	 * casings and the shielding suit are for. At 150 a wall drops the reading to about a seventh:
+	 * plainly quieter, but not the silence that made the counter read as broken outside a reactor.
+	 * Set 0 to restore the old all-or-nothing behaviour.
+	 */
+	@Knob(section = Section.TOOLS, min = 0,
+			doc = "Promille of a shielded source the Geiger counter still hears (dose is unaffected).")
+	public static int geigerWallPermille = 150;
 
 
 	/**

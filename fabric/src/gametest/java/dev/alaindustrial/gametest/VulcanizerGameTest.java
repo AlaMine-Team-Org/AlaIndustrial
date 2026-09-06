@@ -92,4 +92,10 @@ public class VulcanizerGameTest {
 	public void tcVulc001Fun03_rubberProductionAdvancement(GameTestHelper helper) {
 		VulcanizerScenarios.fun03RubberProductionAdvancement(helper);
 	}
+
+	/** @implements TC-HEATER-002-FUN01 — the heater's sound flag follows spending, its light temperature. */
+	@GameTest
+	public void tcHeater002Fun01_soundFollowsSpendingNotHeat(GameTestHelper helper) {
+		VulcanizerScenarios.tcHeater002Fun01_soundFollowsSpendingNotHeat(helper);
+	}
 }

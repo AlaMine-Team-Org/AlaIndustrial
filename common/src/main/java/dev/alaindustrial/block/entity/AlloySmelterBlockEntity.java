@@ -94,13 +94,14 @@ public final class AlloySmelterBlockEntity extends MachineBlockEntity implements
 		// very slot the affordability check approved.
 		int[] assignment = recipe == null ? null : recipe.assign(input, true);
 		ItemStack result = recipe == null ? ItemStack.EMPTY : recipe.resultStack();
-		boolean canWork = assignment != null && energy.getAmount() >= job.euPerTick()
-				&& canOutput(OUTPUT_SLOT, result);
+		boolean readyExceptEnergy = assignment != null && canOutput(OUTPUT_SLOT, result);
+		boolean canWork = readyExceptEnergy && energy.getAmount() >= job.euPerTick();
 
 		// The shared cycle (MOD-557) owns the lit state, the rate report, the drain, the progress step,
 		// the operation counter, the XP credit and the sleep answer. Only a vanished recipe restarts the
 		// bar; too few of one metal, a flat buffer or a full output freeze it (R-NRG-10).
 		return job.canWork(canWork)
+				.readyExceptEnergy(readyExceptEnergy)
 				.jobIntact(recipe != null)
 				.run(level, () -> {
 					recipe.consume(

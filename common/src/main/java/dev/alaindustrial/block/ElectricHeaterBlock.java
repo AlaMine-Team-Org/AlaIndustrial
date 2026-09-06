@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 
 /**
@@ -38,12 +39,27 @@ public final class ElectricHeaterBlock extends HorizontalMachineBlock implements
 	/** How hot the coils look; see {@link HeaterGlow} for why this is not the usual boolean LIT. */
 	public static final EnumProperty<HeaterGlow> GLOW = EnumProperty.create("glow", HeaterGlow.class);
 
+	/**
+	 * Whether the heater is spending EU this very tick — warming up, or feeding the machine above.
+	 *
+	 * <p>Separate from {@link #GLOW} on purpose (MOD-577): the two answer different questions and the
+	 * answers differ most of the time. GLOW says how hot the coils ARE, which is what the light is
+	 * about; this says whether the block is COSTING the player anything, which is what the sound is
+	 * about. A heater holding temperature for a machine that is waiting, and a heater cooling down over
+	 * its twenty-second tail, are both hot and both free.
+	 *
+	 * <p>It changes no model — every {@code drawing} pair renders identically. It exists because
+	 * {@link MachineHumProvider#isWorking} is handed nothing but the blockstate, and "am I costing
+	 * anything" cannot be derived from a temperature rung.
+	 */
+	public static final BooleanProperty DRAWING = BooleanProperty.create("drawing");
+
 	/** Heat escaping the seam sits just under the machine above, not on the (covered) top face. */
 	private static final double SEAM_Y = 0.94;
 
 	public ElectricHeaterBlock(Properties properties) {
 		super(properties);
-		registerDefaultState(defaultBlockState().setValue(GLOW, HeaterGlow.COLD));
+		registerDefaultState(defaultBlockState().setValue(GLOW, HeaterGlow.COLD).setValue(DRAWING, false));
 	}
 
 	@Override
@@ -54,7 +70,7 @@ public final class ElectricHeaterBlock extends HorizontalMachineBlock implements
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
-		builder.add(GLOW);
+		builder.add(GLOW, DRAWING);
 	}
 
 	@Override
@@ -88,30 +104,27 @@ public final class ElectricHeaterBlock extends HorizontalMachineBlock implements
 	}
 
 	/**
-	 * Audible means the coils have any colour at all — every rung except {@link HeaterGlow#COLD}.
+	 * Audible means the block is SPENDING energy — warming up, or feeding the machine above.
 	 *
-	 * <p>Read from the blockstate, so it is side-agnostic and free, as the client-tick contract of
-	 * {@link MachineHumProvider#isWorking} requires. Deliberately a wider window than
-	 * {@link #animateTick}, which waits for {@link HeaterGlow#GLOWING}: the particles announce "the
-	 * machine above is getting its x3 right now", while the sound answers a different question — are
-	 * these coils hot.
+	 * <p>Read from {@link #DRAWING}, so it is side-agnostic and free, as the client-tick contract of
+	 * {@link MachineHumProvider#isWorking} requires.
 	 *
-	 * <p><b>Hot is not the same as spending EU, and this window says hot.</b> Three states sit inside it
-	 * where the block draws nothing: the "freeze, don't waste" hold at full temperature; the whole
-	 * cool-down, which runs one degree per two ticks and so keeps a fully warmed heater audible for
-	 * about twenty seconds after the last work; and {@code NO_ENERGY}, where
-	 * {@link dev.alaindustrial.block.entity.ElectricHeaterBlockEntity} freezes {@code heat} while work
-	 * is pending, so an unpowered heater stays warm — and audible — indefinitely.
+	 * <p><b>Deliberately narrower than the light</b> (MOD-577). Until then this read {@link #GLOW},
+	 * i.e. "are the coils hot", and three states sat inside that window where the block draws nothing:
+	 * the "freeze, don't waste" hold at full temperature; the whole cool-down, which runs one degree
+	 * per two ticks and so kept a fully warmed heater audible for about twenty seconds after the last
+	 * work; and an unpowered heater with work pending, which freezes {@code heat} and so hummed
+	 * indefinitely. A gently glowing block that costs nothing is honest — hot metal glows. A humming
+	 * one is not: a sound is the mod's signal for "this is running", and this block's founding promise
+	 * is that a heater with nothing to heat costs exactly zero.
 	 *
-	 * <p>That is deliberate rather than overlooked: this is the same window the block's LIGHT has used
-	 * since MOD-418 ({@code ModBlockProperties::heaterLight} reads the very same ladder), and a block
-	 * that glows while it is silent would be the stranger pair. A sound is more intrusive than a glow,
-	 * though, so if the twenty-second tail or the unpowered drone reads wrong in play, the fix belongs
-	 * in the ladder itself — for the light and the sound together — not in a second definition here.
+	 * <p>The hold itself is untouched and must stay: letting the heat decay would send the machine
+	 * above back to asking for heat, and the re-ramp burns a full warm-up on a loop that produces
+	 * nothing.
 	 */
 	@Override
 	public boolean isWorking(Level level, BlockPos pos, BlockState state) {
-		return state.getValue(GLOW) != HeaterGlow.COLD;
+		return state.hasProperty(DRAWING) && state.getValue(DRAWING);
 	}
 
 	/**

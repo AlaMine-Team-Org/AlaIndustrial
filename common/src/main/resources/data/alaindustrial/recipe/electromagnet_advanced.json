@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "equipment",
+	"key": {
+		"P": "alaindustrial:electrum_reinforced_plate",
+		"C": "alaindustrial:advanced_circuit",
+		"E": "alaindustrial:energy_crystal",
+		"M": "alaindustrial:electromagnet",
+		"O": "alaindustrial:copper_coil"
+	},
+	"pattern": [
+		"POP",
+		"CMC",
+		"PEP"
+	],
+	"result": { "id": "alaindustrial:electromagnet_advanced" }
+}

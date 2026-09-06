@@ -361,4 +361,36 @@ class RadiationCoreTest {
 		assertTrue(RadiationCore.readingWentStale(3, 0, 0));
 	}
 
+
+	// --- MOD-579: what a detector still hears through a wall ---------------------------------------
+
+	@Test
+	void wallDampsTheDetectorInsteadOfSilencingIt() {
+		// The defect this replaces: a wall zeroed the source, so the counter said nothing outside a
+		// reactor and then jumped to the top of the scale in the doorway.
+		assertTrue(RadiationCore.throughWall(900, 150) > 0,
+				"a shielded source must still be heard by the instrument");
+		assertTrue(RadiationCore.throughWall(900, 150) < 900,
+				"a wall must be audible as a wall, not ignored");
+	}
+
+	@Test
+	void aWeakShieldedSourceNeverRoundsDownToSilence() {
+		// The whole message of a detector is "faint" versus "nothing"; integer division would swallow
+		// the faint end into the very silence this fix is about.
+		assertEquals(1, RadiationCore.throughWall(1, 150));
+		assertEquals(1, RadiationCore.throughWall(5, 150));
+	}
+
+	@Test
+	void zeroPermilleRestoresTheOldAllOrNothing() {
+		assertEquals(0, RadiationCore.throughWall(900, 0),
+				"0 must switch shielding back to total, for anyone who wants that");
+	}
+
+	@Test
+	void nothingThroughAWallFromNothing() {
+		assertEquals(0, RadiationCore.throughWall(0, 150));
+		assertEquals(0, RadiationCore.throughWall(-5, 150));
+	}
 }

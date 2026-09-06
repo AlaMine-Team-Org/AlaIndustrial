@@ -90,6 +90,7 @@ public final class ModItemsNeoForge {
 	public static final DeferredItem<Item> ELECTRIC_HOE_DIAMOND_TIP = handle("electric_hoe_diamond_tip");
 	public static final DeferredItem<Item> ELECTRIC_SABER = handle("electric_saber");
 	public static final DeferredItem<Item> ELECTROMAGNET = handle("electromagnet");
+	public static final DeferredItem<Item> ELECTROMAGNET_ADVANCED = handle("electromagnet_advanced");
 	public static final DeferredItem<Item> JETPACK = handle("jetpack");
 	public static final DeferredItem<Item> FLUXWEAVE_HELMET = handle("fluxweave_helmet");
 	public static final DeferredItem<Item> FLUXWEAVE_CHESTPLATE = handle("fluxweave_chestplate");

@@ -1,25 +1,18 @@
-## 0.1.147
+## 0.1.148
 
-<p><img alt="Ala Industrial 0.1.147 — the Recycler in the world" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.147/release-media/v0.1.147/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial 0.1.148 — the Advanced Electromagnet in hand" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.148/release-media/v0.1.148/changelog.png" width="720"></p>
 
-A machine that turns junk into something worth keeping, two blocks that finally have a voice, and a creative tab you can actually read.
+A stronger magnet, and two blocks that finally tell you the truth about what they are doing.
 
 ### New
 
-- **The Recycler eats anything** — stone, dirt, worn-out tools, whatever the chest sorter rejected. It does not trade you item for item: it fills a batch and casts a slag briquette.
-- **Mix your junk, not pile it.** A stack of one thing pays poor slag. Roughly equal parts mineral, metal and burnable pay rich slag. Cobblestone forever is the worst way to feed it.
-- **The lamps on the front say what is inside.** One lamp lit means one kind of junk and a poor result; three lit means the mix is right. You can read the machine while walking past it.
-- **Blades wear out and matter.** Iron is slow and hates scrap metal, tempered is smelted from iron in any furnace, diamond is fastest and leaves the least ash.
-- **The ash bin needs emptying.** Three quarters full slows the machine down, full stops it — put a hopper underneath and forget about it.
-- **Slag is not dead weight:** it presses into a block, burns as fuel, and the ash makes grey dye.
-- **No filter, on purpose.** Misroute a pipe and your diamond armour is slag. Wire it carefully.
+- **The Advanced Electromagnet reaches nine blocks** instead of five, and pulls experience as well as items.
+- **Built from the magnet you already carry.** Charged, flat or switched off — the recipe takes it as it is, so you never have to prepare one for the occasion.
+- **It leaves alone the orbs you were already getting.** Experience close enough to drift to you on its own costs nothing; the magnet only reaches past that.
 
-### Sound
+### Fixed
 
-- **The Alloy Smelter rings with induction heat** while it melts, and falls quiet the moment it stops.
-- **The Electric Heater crackles with hot nichrome** from the first rung of its glow, not only at full heat — a coil warming up is already spending power. It deliberately does not hiss: the Vulcanizer standing on it hisses steam already.
-
-### Improved
-
-- **The creative tab reads by subject now:** everything placeable first, everything carryable after, each subject in one unbroken run. Inside a subject the full blocks come before the shaped ones.
-- **Ore pages on the guide site show where to dig** — a cross-section where each row holds as many ore blocks as the world really generates, with the best level marked.
+- **The Geiger counter no longer goes silent behind walls.** Walking up to a running reactor it said nothing at all, then hit a solid rattle the instant you stepped through the door. A wall now muffles the instrument instead of blanking it, so the clicking builds while you are still outside.
+- **Your shielding is untouched.** A wall still stops radiation completely — only the counter learned to hear through one.
+- **The Electric Heater stopped humming when it costs you nothing.** It hummed while holding temperature for a waiting machine and all through its twenty-second cool-down. Now it is heard only while it is actually spending power. It still glows while hot, because hot metal glows.
+- **A skill stopped doing more than it promised.** "Finish the operation when the power dies" was also finishing operations into a full output slot, stacking the result past its limit. It now covers only the case it names.

@@ -516,6 +516,7 @@ public final class ModContent {
 	public static Supplier<Item> ELECTRIC_SABER = unbound("ELECTRIC_SABER");
 	// Electromagnet (MOD-132) — EU item in any inventory slot that draws loose drops toward the carrier.
 	public static Supplier<Item> ELECTROMAGNET = unbound("ELECTROMAGNET");
+	public static Supplier<Item> ELECTROMAGNET_ADVANCED = unbound("ELECTROMAGNET_ADVANCED");
 	// Jetpack (MOD-148) — worn EU flight device (chest slot): thrust on held jump, glide when drained.
 	public static Supplier<Item> JETPACK = unbound("JETPACK");
 	// Vacuum Capsule (MOD-063) — a stackable fluid container: empty (×64) exchanges with the

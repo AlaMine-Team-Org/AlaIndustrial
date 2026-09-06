@@ -96,6 +96,31 @@ public final class RadiationCore {
 	}
 
 	/**
+	 * What a DETECTOR still hears from a source hidden behind something solid (MOD-579).
+	 *
+	 * <p>The dose treats a wall as total: nothing gets through, which is the point of a lead casing.
+	 * An instrument that did the same is deaf exactly where it is wanted — a reactor's rods live inside
+	 * their housing, so from outside there is no clear line to any of them, and the counter read zero
+	 * until the player stepped into the doorway, where the full field arrived at once. That is heard as
+	 * "silence, then a solid rattle" with nothing in between, because between blocked and clear there
+	 * is no in-between value.
+	 *
+	 * <p>A permille rather than a boolean, so shielding still MEANS something on the instrument: at the
+	 * shipped 150 a wall drops the reading to a seventh, which is plainly quieter without being silent.
+	 * Zero restores the old all-or-nothing behaviour for anyone who wants it.
+	 *
+	 * <p>Rounds UP to 1 for any positive input, deliberately: the difference between "faint" and
+	 * "nothing" is the whole message of a detector, and integer division would silently swallow a weak
+	 * source into silence — the very failure this replaces.
+	 */
+	public static int throughWall(int attenuated, int permille) {
+		if (attenuated <= 0 || permille <= 0) {
+			return 0;
+		}
+		return Math.max(1, (int) Math.round(attenuated * permille / 1000.0));
+	}
+
+	/**
 	 * Sweeps between the durability points a shielding suit spends, given how much dose it stopped in
 	 * one sweep. Zero means it is not wearing at all.
 	 *

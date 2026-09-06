@@ -10,10 +10,25 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.item.crafting.CraftingInput;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeType;
+import dev.alaindustrial.item.tool.MagnetTier;
 
 import static dev.alaindustrial.gametest.AlaGameTestHelper.survivalPlayer;
 
@@ -203,6 +218,192 @@ public final class MagnetScenarios {
 		MagnetItem.setEnabled(magnet, true);
 		if (!MagnetItem.isEnabled(magnet) || magnet.has(ModDataComponents.MAGNET_ENABLED.get())) {
 			helper.fail("re-enabling must remove the component (back to the fresh default)");
+		}
+		helper.succeed();
+	}
+
+	// --- MOD-580: the advanced grade -------------------------------------------------------------
+
+	/**
+	 * TC-MAGNET-002-FUN01 — the advanced grade reaches further than the basic one.
+	 *
+	 * <p>Asserts the RELATION, not the number: a config edit that raises the basic reach past the
+	 * advanced one is exactly the regression worth catching, and a test pinned to "9" would go on
+	 * passing through it.
+	 */
+	public static void tcMagnet002Fun01_advancedReachesFurther(GameTestHelper helper) {
+		int basic = MagnetTier.BASIC.range();
+		int advanced = MagnetTier.ADVANCED.range();
+		if (advanced <= basic) {
+			helper.fail("the advanced magnet must reach further than the basic one: "
+					+ advanced + " vs " + basic);
+		}
+		if (MagnetTier.BASIC.pullsExperience()) {
+			helper.fail("experience is the advanced grade's own mechanic; the basic one must not pull it");
+		}
+		if (!MagnetTier.ADVANCED.pullsExperience()) {
+			helper.fail("the advanced grade must pull experience");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * TC-MAGNET-002-FUN02 — the recipe takes a magnet in ANY state: charged, flat, switched off.
+	 *
+	 * <p>The owner asked for this by name, and it is worth a test rather than a promise. It holds today
+	 * because {@code Ingredient.test} is {@code input.is(values)} — item identity only, components not
+	 * compared — but that is vanilla's decision, not ours: a component-aware ingredient added here later
+	 * would silently start rejecting the charged magnet a player actually carries, which is the ONLY
+	 * kind they ever have.
+	 */
+	public static void tcMagnet002Fun02_recipeTakesAnyMagnetState(GameTestHelper helper) {
+		ItemStack full = magnet(Config.magnetBuffer);
+		assertCraftsInto(helper, full, "a fully charged magnet");
+
+		ItemStack flat = magnet(0);
+		assertCraftsInto(helper, flat, "a flat magnet");
+
+		ItemStack off = magnet(Config.magnetBuffer / 2);
+		MagnetItem.setEnabled(off, false);
+		assertCraftsInto(helper, off, "a half-charged magnet that is switched off");
+
+		helper.succeed();
+	}
+
+	/** Puts {@code magnet} in the middle of the tier-2 grid and asserts the advanced magnet comes out. */
+	private static void assertCraftsInto(GameTestHelper helper, ItemStack magnet, String label) {
+		List<ItemStack> grid = new ArrayList<>(Collections.nCopies(9, ItemStack.EMPTY));
+		grid.set(0, new ItemStack(ModContent.ELECTRUM_REINFORCED_PLATE.get()));
+		grid.set(1, new ItemStack(ModContent.COPPER_COIL.get()));
+		grid.set(2, new ItemStack(ModContent.ELECTRUM_REINFORCED_PLATE.get()));
+		grid.set(3, new ItemStack(ModContent.ADVANCED_CIRCUIT.get()));
+		grid.set(4, magnet);
+		grid.set(5, new ItemStack(ModContent.ADVANCED_CIRCUIT.get()));
+		grid.set(6, new ItemStack(ModContent.ELECTRUM_REINFORCED_PLATE.get()));
+		grid.set(7, new ItemStack(ModContent.ENERGY_CRYSTAL.get()));
+		grid.set(8, new ItemStack(ModContent.ELECTRUM_REINFORCED_PLATE.get()));
+		assertCraft(helper, grid, ModContent.ELECTROMAGNET_ADVANCED.get(), label);
+	}
+
+	private static void assertCraft(GameTestHelper helper, List<ItemStack> grid, ItemLike expected,
+			String label) {
+		ServerLevel level = helper.getLevel();
+		CraftingInput input = CraftingInput.of(3, 3, grid);
+		RecipeHolder<CraftingRecipe> recipe = level.getServer().getRecipeManager()
+				.getRecipeFor(RecipeType.CRAFTING, input, level).orElse(null);
+		if (recipe == null) {
+			helper.fail("the tier-2 recipe did not resolve with " + label);
+			return;
+		}
+		ItemStack output = recipe.value().assemble(input);
+		if (!output.is(expected.asItem())) {
+			helper.fail("with " + label + " the grid produced " + output + " instead of the advanced magnet");
+		}
+	}
+
+	/**
+	 * TC-MAGNET-002-CON01 — the tooltip must describe THIS grade, not the one whose keys were typed in.
+	 *
+	 * <p>Found in play: the advanced magnet's tooltip said "radius 5 blocks" while it pulled from nine,
+	 * and called itself an item magnet while it collected experience — the lines were built from the
+	 * literal {@code item.alaindustrial.electromagnet.*} prefix and from {@code Config.magnetRange},
+	 * both of which belong to the BASIC grade. The keys now come from the item's own description id,
+	 * which is why this test asserts on the id rather than on any text.
+	 */
+	public static void tcMagnet002Con01_tooltipKeysFollowTheItem(GameTestHelper helper) {
+		ItemStack advanced = new ItemStack(ModContent.ELECTROMAGNET_ADVANCED.get());
+		String base = advanced.getItem().getDescriptionId();
+
+		List<TranslatableContents> lines = tooltipLines(advanced);
+		if (lines.isEmpty()) {
+			helper.fail("the advanced magnet produced no tooltip at all");
+			return;
+		}
+		for (TranslatableContents line : lines) {
+			if (!line.getKey().startsWith(base + ".")) {
+				helper.fail("the advanced magnet's tooltip borrows another item's key: " + line.getKey());
+				return;
+			}
+		}
+
+		TranslatableContents desc = lines.stream()
+				.filter(line -> line.getKey().equals(base + ".desc"))
+				.findFirst().orElse(null);
+		if (desc == null) {
+			helper.fail("the advanced magnet's tooltip has no description line");
+			return;
+		}
+		Object shown = desc.getArgs().length > 0 ? desc.getArgs()[0] : null;
+		if (!Integer.valueOf(MagnetTier.ADVANCED.range()).equals(shown)) {
+			helper.fail("the tooltip advertises radius " + shown + " while the magnet pulls from "
+					+ MagnetTier.ADVANCED.range());
+		}
+
+		boolean mentionsExperience = lines.stream()
+				.anyMatch(line -> line.getKey().equals(base + ".experience"));
+		if (!mentionsExperience) {
+			helper.fail("a grade that pulls experience must say so in its tooltip");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * The item's OWN tooltip lines, as translatable contents.
+	 *
+	 * <p>{@code Item#appendHoverText} is soft-deprecated by vanilla but is the only hook that yields
+	 * what the item computes for itself — the same reasoning already written down on
+	 * {@code AssemblerScenarios#tooltipLine}.
+	 */
+	@SuppressWarnings("deprecation")
+	private static List<TranslatableContents> tooltipLines(ItemStack stack) {
+		List<Component> raw = new ArrayList<>();
+		stack.getItem().appendHoverText(stack, Item.TooltipContext.EMPTY, TooltipDisplay.DEFAULT,
+				raw::add, TooltipFlag.NORMAL);
+		List<TranslatableContents> out = new ArrayList<>();
+		for (Component line : raw) {
+			if (line.getContents() instanceof TranslatableContents translatable) {
+				out.add(translatable);
+			}
+		}
+		return out;
+	}
+
+	/**
+	 * TC-MAGNET-002-FUN03 — the advanced grade actually moves an experience orb, and only outside the
+	 * ring vanilla already covers.
+	 *
+	 * <p>Driven on a detached orb for the same reason {@link MagnetItem#pullSingle} is: the live scan
+	 * finds targets in the world, and on a shared gametest server one test's orbs drift into another's
+	 * radius.
+	 */
+	public static void tcMagnet002Fun03_pullsExperienceBeyondVanillaReach(GameTestHelper helper) {
+		ServerPlayer player = survivalPlayer(helper);
+		ItemStack magnet = new ItemStack(ModContent.ELECTROMAGNET_ADVANCED.get());
+		ItemEnergy.set(magnet, MagnetTier.ADVANCED.buffer());
+
+		// Halfway between vanilla's ring and the magnet's edge. Not "reach + 1": the distance is measured
+		// from a point at half the player's eye height, so an orb placed at exactly the edge horizontally
+		// lands just OUTSIDE the sphere and the test would fail on its own geometry.
+		double far = (Config.magnetVanillaOrbReach + MagnetTier.ADVANCED.range()) / 2.0;
+		ExperienceOrb outside = new ExperienceOrb(player.level(),
+				player.getX() + far, player.getY(), player.getZ(), 1);
+		outside.setDeltaMovement(Vec3.ZERO);
+		if (!MagnetItem.pullOrb(magnet, player, outside)) {
+			helper.fail("an orb beyond vanilla's own reach must be pulled by the advanced magnet");
+		}
+		if (outside.getDeltaMovement().x >= 0) {
+			helper.fail("the pulled orb must move back toward the player, not away from them");
+		}
+
+		ExperienceOrb inside = new ExperienceOrb(player.level(),
+				player.getX() + 1.0, player.getY(), player.getZ(), 1);
+		if (MagnetItem.pullOrb(magnet, player, inside)) {
+			helper.fail("an orb vanilla already collects must cost the player no EU");
+		}
+
+		ItemStack basic = magnet(Config.magnetBuffer);
+		if (MagnetItem.pullOrb(basic, player, outside)) {
+			helper.fail("experience is the advanced grade's own mechanic; the basic magnet must not pull it");
 		}
 		helper.succeed();
 	}

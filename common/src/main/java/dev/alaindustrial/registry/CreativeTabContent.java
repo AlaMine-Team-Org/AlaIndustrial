@@ -301,6 +301,7 @@ public final class CreativeTabContent {
 		show(out, ModContent.ELECTRIC_HOE);
 		show(out, ModContent.ELECTRIC_HOE_DIAMOND_TIP);
 		show(out, ModContent.ELECTROMAGNET);
+		show(out, ModContent.ELECTROMAGNET_ADVANCED);
 		show(out, ModContent.JETPACK);
 	}
 
@@ -580,6 +581,7 @@ public final class CreativeTabContent {
 		show(out, ModContent.ELECTRIC_HOE_DIAMOND_TIP);
 		show(out, ModContent.ELECTRIC_SABER);
 		show(out, ModContent.ELECTROMAGNET);
+		show(out, ModContent.ELECTROMAGNET_ADVANCED);
 		show(out, ModContent.JETPACK);
 		// Charge carriers last: they exist to feed everything above.
 		show(out, ModContent.BATTERY);

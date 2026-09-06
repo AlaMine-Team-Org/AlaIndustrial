@@ -1,20 +1,124 @@
 {
   "variants": {
-    "facing=north,glow=cold": { "model": "alaindustrial:block/electric_heater" },
-    "facing=south,glow=cold": { "model": "alaindustrial:block/electric_heater", "y": 180 },
-    "facing=west,glow=cold": { "model": "alaindustrial:block/electric_heater", "y": 270 },
-    "facing=east,glow=cold": { "model": "alaindustrial:block/electric_heater", "y": 90 },
-    "facing=north,glow=warm": { "model": "alaindustrial:block/electric_heater_warm" },
-    "facing=south,glow=warm": { "model": "alaindustrial:block/electric_heater_warm", "y": 180 },
-    "facing=west,glow=warm": { "model": "alaindustrial:block/electric_heater_warm", "y": 270 },
-    "facing=east,glow=warm": { "model": "alaindustrial:block/electric_heater_warm", "y": 90 },
-    "facing=north,glow=hot": { "model": "alaindustrial:block/electric_heater_hot" },
-    "facing=south,glow=hot": { "model": "alaindustrial:block/electric_heater_hot", "y": 180 },
-    "facing=west,glow=hot": { "model": "alaindustrial:block/electric_heater_hot", "y": 270 },
-    "facing=east,glow=hot": { "model": "alaindustrial:block/electric_heater_hot", "y": 90 },
-    "facing=north,glow=glowing": { "model": "alaindustrial:block/electric_heater_on" },
-    "facing=south,glow=glowing": { "model": "alaindustrial:block/electric_heater_on", "y": 180 },
-    "facing=west,glow=glowing": { "model": "alaindustrial:block/electric_heater_on", "y": 270 },
-    "facing=east,glow=glowing": { "model": "alaindustrial:block/electric_heater_on", "y": 90 }
+    "facing=north,glow=cold,drawing=false": {
+      "model": "alaindustrial:block/electric_heater"
+    },
+    "facing=north,glow=cold,drawing=true": {
+      "model": "alaindustrial:block/electric_heater"
+    },
+    "facing=south,glow=cold,drawing=false": {
+      "model": "alaindustrial:block/electric_heater",
+      "y": 180
+    },
+    "facing=south,glow=cold,drawing=true": {
+      "model": "alaindustrial:block/electric_heater",
+      "y": 180
+    },
+    "facing=west,glow=cold,drawing=false": {
+      "model": "alaindustrial:block/electric_heater",
+      "y": 270
+    },
+    "facing=west,glow=cold,drawing=true": {
+      "model": "alaindustrial:block/electric_heater",
+      "y": 270
+    },
+    "facing=east,glow=cold,drawing=false": {
+      "model": "alaindustrial:block/electric_heater",
+      "y": 90
+    },
+    "facing=east,glow=cold,drawing=true": {
+      "model": "alaindustrial:block/electric_heater",
+      "y": 90
+    },
+    "facing=north,glow=warm,drawing=false": {
+      "model": "alaindustrial:block/electric_heater_warm"
+    },
+    "facing=north,glow=warm,drawing=true": {
+      "model": "alaindustrial:block/electric_heater_warm"
+    },
+    "facing=south,glow=warm,drawing=false": {
+      "model": "alaindustrial:block/electric_heater_warm",
+      "y": 180
+    },
+    "facing=south,glow=warm,drawing=true": {
+      "model": "alaindustrial:block/electric_heater_warm",
+      "y": 180
+    },
+    "facing=west,glow=warm,drawing=false": {
+      "model": "alaindustrial:block/electric_heater_warm",
+      "y": 270
+    },
+    "facing=west,glow=warm,drawing=true": {
+      "model": "alaindustrial:block/electric_heater_warm",
+      "y": 270
+    },
+    "facing=east,glow=warm,drawing=false": {
+      "model": "alaindustrial:block/electric_heater_warm",
+      "y": 90
+    },
+    "facing=east,glow=warm,drawing=true": {
+      "model": "alaindustrial:block/electric_heater_warm",
+      "y": 90
+    },
+    "facing=north,glow=hot,drawing=false": {
+      "model": "alaindustrial:block/electric_heater_hot"
+    },
+    "facing=north,glow=hot,drawing=true": {
+      "model": "alaindustrial:block/electric_heater_hot"
+    },
+    "facing=south,glow=hot,drawing=false": {
+      "model": "alaindustrial:block/electric_heater_hot",
+      "y": 180
+    },
+    "facing=south,glow=hot,drawing=true": {
+      "model": "alaindustrial:block/electric_heater_hot",
+      "y": 180
+    },
+    "facing=west,glow=hot,drawing=false": {
+      "model": "alaindustrial:block/electric_heater_hot",
+      "y": 270
+    },
+    "facing=west,glow=hot,drawing=true": {
+      "model": "alaindustrial:block/electric_heater_hot",
+      "y": 270
+    },
+    "facing=east,glow=hot,drawing=false": {
+      "model": "alaindustrial:block/electric_heater_hot",
+      "y": 90
+    },
+    "facing=east,glow=hot,drawing=true": {
+      "model": "alaindustrial:block/electric_heater_hot",
+      "y": 90
+    },
+    "facing=north,glow=glowing,drawing=false": {
+      "model": "alaindustrial:block/electric_heater_on"
+    },
+    "facing=north,glow=glowing,drawing=true": {
+      "model": "alaindustrial:block/electric_heater_on"
+    },
+    "facing=south,glow=glowing,drawing=false": {
+      "model": "alaindustrial:block/electric_heater_on",
+      "y": 180
+    },
+    "facing=south,glow=glowing,drawing=true": {
+      "model": "alaindustrial:block/electric_heater_on",
+      "y": 180
+    },
+    "facing=west,glow=glowing,drawing=false": {
+      "model": "alaindustrial:block/electric_heater_on",
+      "y": 270
+    },
+    "facing=west,glow=glowing,drawing=true": {
+      "model": "alaindustrial:block/electric_heater_on",
+      "y": 270
+    },
+    "facing=east,glow=glowing,drawing=false": {
+      "model": "alaindustrial:block/electric_heater_on",
+      "y": 90
+    },
+    "facing=east,glow=glowing,drawing=true": {
+      "model": "alaindustrial:block/electric_heater_on",
+      "y": 90
+    }
   }
 }

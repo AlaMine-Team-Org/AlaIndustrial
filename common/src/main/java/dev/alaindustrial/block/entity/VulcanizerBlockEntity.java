@@ -71,15 +71,20 @@ public final class VulcanizerBlockEntity extends MachineBlockEntity
 
 		ItemStack result = ItemStack.EMPTY;
 		boolean canWork = false;
+		boolean readyExceptEnergy = false;
 		if (recipe != null) {
 			int outputLevel = cycleHeatLevel > 0 ? cycleHeatLevel : heatSource.level();
 			result = scaledResult(recipe.resultStack(), outputLevel);
 			// The batch price (MOD-271: four sulfur dust) must be on hand every tick, not just at the
 			// start — pulling dust out mid-cycle stops the run instead of completing it underpaid.
-			canWork = heatSource.level() > 0 && recipe.hasEnough(input)
-					&& energy.getAmount() >= job.euPerTick() && canOutput(OUTPUT_SLOT, result);
+			readyExceptEnergy = heatSource.level() > 0 && recipe.hasEnough(input)
+					&& canOutput(OUTPUT_SLOT, result);
+			canWork = readyExceptEnergy && energy.getAmount() >= job.euPerTick();
 			if (canWork && !WorldHeatSources.consumeForProgress(level, pos, heatSource, overclockerCount())) {
 				canWork = false;
+				// The heat this operation needed is gone, so the supply is no longer the only thing
+				// missing: an unpowered machine must not coast past a dead burner either.
+				readyExceptEnergy = false;
 				heatSource = HeatSource.NONE;
 			}
 		} else if (progress != 0 || cycleHeatLevel != 0) {
@@ -104,6 +109,7 @@ public final class VulcanizerBlockEntity extends MachineBlockEntity
 		// The shared cycle (MOD-557) owns the lit state, the rate report, the drain, the progress step,
 		// the operation counter, the XP credit and the sleep answer.
 		return job.canWork(canWork)
+				.readyExceptEnergy(readyExceptEnergy)
 				.jobIntact(recipe != null)
 				.run(level, () -> {
 					recipe.consume(List.of(items.get(RAW_RUBBER_SLOT), items.get(SULFUR_SLOT)));

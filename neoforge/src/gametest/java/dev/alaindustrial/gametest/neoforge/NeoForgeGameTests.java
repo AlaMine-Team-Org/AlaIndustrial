@@ -1317,6 +1317,14 @@ public final class NeoForgeGameTests {
 		registerTest(event, "magnet_out_of_range_ignored", 40, true, MagnetScenarios::fun05OutOfRangeIgnored);
 		registerTest(event, "magnet_toggle_via_use", 40, true, MagnetScenarios::fun06ToggleViaUse);
 		registerTest(event, "magnet_toggle_round_trip", 40, true, MagnetScenarios::per01ToggleRoundTrip);
+		registerTest(event, "magnet_tc_magnet002_fun01_advanced_reaches_further", 40, true,
+				MagnetScenarios::tcMagnet002Fun01_advancedReachesFurther);
+		registerTest(event, "magnet_tc_magnet002_fun02_recipe_takes_any_magnet_state", 40, true,
+				MagnetScenarios::tcMagnet002Fun02_recipeTakesAnyMagnetState);
+		registerTest(event, "magnet_tc_magnet002_con01_tooltip_keys_follow_the_item", 40, true,
+				MagnetScenarios::tcMagnet002Con01_tooltipKeysFollowTheItem);
+		registerTest(event, "magnet_tc_magnet002_fun03_pulls_experience_beyond_vanilla_reach", 40, true,
+				MagnetScenarios::tcMagnet002Fun03_pullsExperienceBeyondVanillaReach);
 
 		// MOD-063 Vacuum Capsule (suite TC-CAPS-001) — same neutral bodies as the Fabric CapsuleGameTest.
 		registerTest(event, "capsule_component_round_trip", 40, true, CapsuleScenarios::per01ComponentRoundTrip);
@@ -1914,6 +1922,8 @@ public final class NeoForgeGameTests {
 				VulcanizerScenarios::sta01RoundTripPreservesInFlightCycle);
 		registerTest(event, "vulcanizer_rubber_production_advancement", 300, true,
 				VulcanizerScenarios::fun03RubberProductionAdvancement);
+		registerTest(event, "vulcanizer_tc_heater002_fun01_sound_follows_spending_not_heat", 200, true,
+				VulcanizerScenarios::tcHeater002Fun01_soundFollowsSpendingNotHeat);
 
 		// Scenarios moved out of Fabric-only bodies into common: the NBT round-trips and the two
 		// enriched-uranium-torch guarantees. Neither was exercised on NeoForge at all before the move.
@@ -2663,6 +2673,8 @@ public final class NeoForgeGameTests {
 				RadiationScenarios::oreBehindStoneIsHeardButFeedsNoDose);
 		registerTest(event, "rad_counter_hears_beyond_the_dose_radius", 40, true,
 				RadiationScenarios::theCounterHearsBeyondTheDoseRadius);
+		registerTest(event, "radiation_tc_geiger002_fun01_wall_damps_detector_but_not_dose", 40, true,
+				RadiationScenarios::tcGeiger002Fun01_wallDampsDetectorButNotDose);
 		registerTest(event, "rad_many_counters_read_as_one_and_the_lamp_is_a_state", 40, true,
 				RadiationScenarios::manyCountersReadAsOneAndTheLampIsAState);
 		registerTest(event, "rad_casing_blocks_dropped_uranium", 40, true,

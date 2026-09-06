@@ -129,7 +129,7 @@ public final class ElectricHeaterBlockEntity extends MachineBlockEntity implemen
 		// (a cold one is not a heat source at all, so the machine above never gets this far). Heating is
 		// its own idle draw in onServerTick.
 		status = ElectricHeaterStatus.HOT;
-		updateGlow();
+		updateGlow(true); // paid: drainInternal ran a few lines up, and that IS the spending
 		setChanged();
 		wake();
 		return true;
@@ -162,7 +162,7 @@ public final class ElectricHeaterBlockEntity extends MachineBlockEntity implemen
 		if (litLeaseTicks > 0) {
 			litLeaseTicks--;
 			status = ElectricHeaterStatus.HOT;
-			updateGlow();
+			updateGlow(true); // still inside the 2-tick lease consumeHeatTick paid for; tick order must not flicker it
 			return 0;
 		}
 
@@ -176,7 +176,7 @@ public final class ElectricHeaterBlockEntity extends MachineBlockEntity implemen
 				 * full 1200 EU ramp on a loop that never produces anything.
 				 */
 				status = ElectricHeaterStatus.HOT;
-				updateGlow();
+				updateGlow(false); // hold: hot with work pending, but nothing was drawn this tick
 				return 0;
 			}
 			if (energy.getAmount() >= costEuPerTick) {
@@ -184,7 +184,7 @@ public final class ElectricHeaterBlockEntity extends MachineBlockEntity implemen
 				heat++;
 				status = ElectricHeaterStatus.WARMING;
 				setChanged();
-				updateGlow();
+				updateGlow(true); // warming: drainInternal happened in this very branch
 				if (isHot()) {
 					// Just crossed the line: the machine above went to sleep on NO_HEAT, so tell it
 					// rather than leaving it to notice on its 40-tick safety poll.
@@ -193,7 +193,7 @@ public final class ElectricHeaterBlockEntity extends MachineBlockEntity implemen
 				return 0;
 			}
 			status = ElectricHeaterStatus.NO_ENERGY;
-			updateGlow();
+			updateGlow(false); // work pending but nothing to pay with: it spends nothing, so it says nothing
 			return 0;
 		}
 
@@ -208,7 +208,7 @@ public final class ElectricHeaterBlockEntity extends MachineBlockEntity implemen
 			}
 		}
 		status = idleStatus(consumer);
-		updateGlow();
+		updateGlow(false); // idle and cooling down: cooling is free
 
 		// Still warm means still cooling, and cooling is a tick-by-tick job — only a stone-cold heater
 		// has nothing left to do and may sleep.
@@ -241,17 +241,24 @@ public final class ElectricHeaterBlockEntity extends MachineBlockEntity implemen
 	 * {@code updateLit}, which cannot be reused: it is typed against {@code BlockStateProperties.LIT} and
 	 * this block deliberately shows four temperatures rather than two states (see {@link HeaterGlow}).
 	 */
-	private void updateGlow() {
+	private void updateGlow(boolean drawing) {
 		if (level == null || level.isClientSide()) {
 			return;
 		}
 		BlockState state = getBlockState();
-		if (!state.hasProperty(ElectricHeaterBlock.GLOW)) {
+		if (!state.hasProperty(ElectricHeaterBlock.GLOW) || !state.hasProperty(ElectricHeaterBlock.DRAWING)) {
 			return;
 		}
 		HeaterGlow next = HeaterGlow.forPermille(heatPermille());
-		if (state.getValue(ElectricHeaterBlock.GLOW) != next) {
-			level.setBlock(worldPosition, state.setValue(ElectricHeaterBlock.GLOW, next), Block.UPDATE_CLIENTS);
+		boolean glowMoved = state.getValue(ElectricHeaterBlock.GLOW) != next;
+		boolean drawMoved = state.getValue(ElectricHeaterBlock.DRAWING) != drawing;
+		if (glowMoved || drawMoved) {
+			// One write for both: the temperature rung the light reads and the spending flag the sound
+			// reads move together far more often than apart, and two setBlock calls would send the
+			// neighbours two updates for one tick.
+			level.setBlock(worldPosition, state
+					.setValue(ElectricHeaterBlock.GLOW, next)
+					.setValue(ElectricHeaterBlock.DRAWING, drawing), Block.UPDATE_CLIENTS);
 		}
 	}
 

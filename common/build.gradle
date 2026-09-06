@@ -170,6 +170,11 @@ pitest {
                      'dev.alaindustrial.client.hud.HudSmoother',
                      'dev.alaindustrial.client.sound.HumTeleportDetector',
                      'dev.alaindustrial.entity.TemperedGearRoll',
+                     // MOD-580: the magnet's two grades. Minecraft-free on purpose (Config plus an
+                     // IntSupplier), so it belongs in the run rather than in excludedClasses; the
+                     // relation it guards — advanced reaches further, only advanced pulls experience —
+                     // is what a wrong config edit would break silently.
+                     'dev.alaindustrial.item.tool.MagnetTier',
                      // MOD-238 shipped the oil-lake sampling geometry Minecraft-free precisely so it
                      // could be unit-tested (OilLakeSamplesTest), then never added it here — the same
                      // "code added, list not updated" defect as the incubator trio below.

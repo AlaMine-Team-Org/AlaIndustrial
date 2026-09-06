@@ -52,4 +52,28 @@ public class MagnetGameTest {
 	public void tcMagnet001Per01_toggleRoundTrip(GameTestHelper helper) {
 		MagnetScenarios.per01ToggleRoundTrip(helper);
 	}
+
+	/** @implements TC-MAGNET-002-FUN01 — the advanced grade reaches further and pulls experience. */
+	@GameTest
+	public void tcMagnet002Fun01_advancedReachesFurther(GameTestHelper helper) {
+		MagnetScenarios.tcMagnet002Fun01_advancedReachesFurther(helper);
+	}
+
+	/** @implements TC-MAGNET-002-FUN02 — the tier-2 recipe takes a magnet at any charge or toggle state. */
+	@GameTest
+	public void tcMagnet002Fun02_recipeTakesAnyMagnetState(GameTestHelper helper) {
+		MagnetScenarios.tcMagnet002Fun02_recipeTakesAnyMagnetState(helper);
+	}
+
+	/** @implements TC-MAGNET-002-CON01 — the tooltip keys follow the item, not a typed-in prefix. */
+	@GameTest
+	public void tcMagnet002Con01_tooltipKeysFollowTheItem(GameTestHelper helper) {
+		MagnetScenarios.tcMagnet002Con01_tooltipKeysFollowTheItem(helper);
+	}
+
+	/** @implements TC-MAGNET-002-FUN03 — the advanced grade pulls orbs beyond vanilla's own reach. */
+	@GameTest
+	public void tcMagnet002Fun03_pullsExperienceBeyondVanillaReach(GameTestHelper helper) {
+		MagnetScenarios.tcMagnet002Fun03_pullsExperienceBeyondVanillaReach(helper);
+	}
 }

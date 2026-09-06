@@ -202,4 +202,10 @@ public class RadiationGameTest {
 	public void radManyCountersReadAsOneAndTheLampIsAState(GameTestHelper helper) {
 		RadiationScenarios.manyCountersReadAsOneAndTheLampIsAState(helper);
 	}
+
+	/** @implements TC-GEIGER-002-FUN01 — a wall damps the detector and still stops the dose dead. */
+	@GameTest
+	public void tcGeiger002Fun01_wallDampsDetectorButNotDose(GameTestHelper helper) {
+		RadiationScenarios.tcGeiger002Fun01_wallDampsDetectorButNotDose(helper);
+	}
 }

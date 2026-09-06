@@ -21,6 +21,9 @@ import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Block;
+import dev.alaindustrial.block.ElectricHeaterBlock;
+import dev.alaindustrial.block.HeaterGlow;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.storage.TagValueInput;
@@ -606,6 +609,43 @@ public final class VulcanizerScenarios {
 		if (!player.getAdvancements().getOrStartProgress(advancement).isDone()) {
 			helper.fail("receiving Vulcanizer rubber did not award rubber_production");
 			return;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * TC-HEATER-002-FUN01 — the heater's SOUND flag follows spending, its LIGHT follows temperature.
+	 *
+	 * <p>MOD-577. Until then both read the same "are the coils hot" ladder, so a heater that was holding
+	 * temperature for free, or coasting through its twenty-second cool-down, hummed exactly like one
+	 * under load — and a block whose founding promise is "a heater with nothing to heat costs exactly
+	 * zero" spent most of its audible life costing nothing.
+	 *
+	 * <p>Asserted on the blockstate rather than on the sound, because the blockstate is what the client
+	 * reads: {@code MachineHumProvider#isWorking} is handed nothing else.
+	 */
+	public static void tcHeater002Fun01_soundFollowsSpendingNotHeat(GameTestHelper helper) {
+		VulcanizerBlockEntity machine = placeMachine(helper);
+		machine.getEnergyStorage().setAmountUntracked(AMPLE_EU);
+		stock(machine, 1);
+		ElectricHeaterBlockEntity heater = hotHeater(helper, machine);
+
+		BlockState hot = helper.getBlockState(HEAT);
+		if (hot.getValue(ElectricHeaterBlock.GLOW) == HeaterGlow.COLD) {
+			helper.fail("the heater should be hot after its warm-up");
+		}
+
+		// Nothing waiting on it any more: it holds its heat for free, then cools — and must go quiet
+		// while staying lit, because hot metal glows but a silent block is the honest signal for "free".
+		helper.setBlock(MACHINE, Blocks.AIR);
+		drive(heater, helper, 4);
+
+		BlockState idle = helper.getBlockState(HEAT);
+		if (idle.getValue(ElectricHeaterBlock.DRAWING)) {
+			helper.fail("a heater that is spending nothing must not claim to be working");
+		}
+		if (idle.getValue(ElectricHeaterBlock.GLOW) == HeaterGlow.COLD) {
+			helper.fail("the light follows temperature and must still be lit while the coils are hot");
 		}
 		helper.succeed();
 	}

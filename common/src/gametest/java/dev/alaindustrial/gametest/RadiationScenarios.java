@@ -10,6 +10,7 @@ import dev.alaindustrial.item.energy.PouchContents;
 import dev.alaindustrial.item.energy.PouchItem;
 import dev.alaindustrial.item.misc.ShieldingPouchItem;
 import dev.alaindustrial.core.radiation.GeigerTicker;
+import dev.alaindustrial.core.radiation.RadiationCore;
 import dev.alaindustrial.core.radiation.RadiationDose;
 import dev.alaindustrial.core.radiation.RadiationMobs;
 import dev.alaindustrial.core.radiation.RadiationSources;
@@ -1051,6 +1052,44 @@ public final class RadiationScenarios {
 				helper.fail("a shielding pouch in a chest must not radiate; got " + pouched);
 			}
 			chest.clearContent();
+			helper.succeed();
+		});
+	}
+
+	/**
+	 * TC-GEIGER-002-FUN01 — a wall damps the DETECTOR and still stops the DOSE dead (MOD-579).
+	 *
+	 * <p>Found in play: walking up to a running reactor the counter said nothing at all, then went to a
+	 * solid rattle the moment the player stepped into the doorway. The counter took its reading from the
+	 * dose, and the dose drops a source entirely when something solid stands in the line — and a
+	 * reactor's fuel rods live inside their housing, so from outside there is no clear line to a single
+	 * one. Between "blocked" and "clear" there is no in-between value, so no ramp could exist.
+	 *
+	 * <p>Both halves are asserted together on purpose. Making the instrument hear through a wall is only
+	 * correct while the DOSE still does not: a lead casing and the shielding suit are the whole point,
+	 * and a fix that quietly let radiation leak through walls would be worse than the bug.
+	 */
+	public static void tcGeiger002Fun01_wallDampsDetectorButNotDose(GameTestHelper helper) {
+		withIsolatedField(() -> {
+			placeFuelledRack(helper);
+			helper.setBlock(WALL, Blocks.STONE.defaultBlockState());
+			Cow viewer = helper.spawn(EntityTypes.COW, BYSTANDER);
+
+			int dose = RadiationSources.exposureAt(helper.getLevel(), viewer, 8, 8);
+			if (dose != 0) {
+				helper.fail("a wall must still stop the DOSE completely — that is what shielding is; got "
+						+ dose);
+			}
+
+			int heard = RadiationSources.detectedAt(helper.getLevel(), viewer, 8, 8);
+			if (heard <= 0) {
+				helper.fail("the counter must still hear a shielded rack, or it is deaf exactly where a "
+						+ "detector is wanted; got " + heard);
+			}
+			if (heard >= RadiationCore.attenuate(Config.radiationRodDosePerTick, 2.0, 8)) {
+				helper.fail("a wall must be AUDIBLE as a wall — the shielded reading must be quieter "
+						+ "than an open one; got " + heard);
+			}
 			helper.succeed();
 		});
 	}

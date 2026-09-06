@@ -150,8 +150,9 @@ public class GalvanicBathBlockEntity extends MachineBlockEntity implements Overc
 		// The whole price must be on hand every tick, not just at the start: pulling an input or the
 		// water out mid-cycle stops the run instead of completing it underpaid (MOD-271's lesson on
 		// the Vulcanizer's batch price).
-		boolean canWork = recipe != null && recipe.hasEnough(input) && fluidTank.amount >= waterPerOp
-				&& energy.getAmount() >= job.euPerTick() && canOutput(OUTPUT_SLOT, result);
+		boolean readyExceptEnergy = recipe != null && recipe.hasEnough(input)
+				&& fluidTank.amount >= waterPerOp && canOutput(OUTPUT_SLOT, result);
+		boolean canWork = readyExceptEnergy && energy.getAmount() >= job.euPerTick();
 
 		setStatus(diagnose(recipe, input, result, waterPerOp));
 
@@ -160,6 +161,7 @@ public class GalvanicBathBlockEntity extends MachineBlockEntity implements Overc
 		// is what restarts progress; on mere power loss, a dry tank or a full output the recipe is still
 		// there, so progress FREEZES and resumes (R-NRG-10) — the other item-fed machines' contract.
 		return job.canWork(canWork)
+				.readyExceptEnergy(readyExceptEnergy)
 				.jobIntact(recipe != null)
 				.keepAwake(filled)
 				.run(level, () -> {
