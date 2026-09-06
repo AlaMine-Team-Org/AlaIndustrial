@@ -31,6 +31,7 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import dev.alaindustrial.core.item.PipeTier;
 import dev.alaindustrial.registry.ModContent;
 
 /**
@@ -42,7 +43,7 @@ import dev.alaindustrial.registry.ModContent;
  * the "low" answer folded into the face value rather than added as a fifth property; the reasoning,
  * and its price in blockstates, is on {@link PipeFaceRender}.
  */
-public final class ItemPipeBlock extends BaseEntityBlock {
+public class ItemPipeBlock extends BaseEntityBlock {
 	public static final MapCodec<ItemPipeBlock> CODEC = simpleCodec(ItemPipeBlock::new);
 	private static final Map<Direction, EnumProperty<PipeFaceRender>> FACE_MODES = new EnumMap<>(Direction.class);
 	static {
@@ -63,6 +64,25 @@ public final class ItemPipeBlock extends BaseEntityBlock {
 			state = state.setValue(property, PipeFaceRender.DISABLED);
 		}
 		registerDefaultState(state);
+	}
+
+	/**
+	 * Which grade this pipe is (MOD-581). A field would have been simpler, but the block is built by
+	 * {@code simpleCodec}, which reconstructs from {@code Properties} alone and would hand every decoded
+	 * pipe the basic grade; a subclass carries the answer in its type instead, where nothing can lose it.
+	 */
+	public PipeTier tier() {
+		return PipeTier.BASIC;
+	}
+
+	/**
+	 * This grade's shape for these six faces. Overridden by the advanced pipe, which has its own
+	 * precomputed table — never its own assembly (ADR-023: {@code initCache} asks 20 times per state,
+	 * and there are 38 416 states).
+	 */
+	protected VoxelShape shapeFor(PipeFaceRender down, PipeFaceRender up, PipeFaceRender north,
+			PipeFaceRender south, PipeFaceRender west, PipeFaceRender east) {
+		return PipeShapes.of(down, up, north, south, west, east);
 	}
 
 	@Override protected MapCodec<? extends BaseEntityBlock> codec() { return CODEC; }
@@ -177,7 +197,7 @@ public final class ItemPipeBlock extends BaseEntityBlock {
 	}
 
 	@Override protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-		return PipeShapes.of(renderAt(state, Direction.DOWN), renderAt(state, Direction.UP),
+		return shapeFor(renderAt(state, Direction.DOWN), renderAt(state, Direction.UP),
 				renderAt(state, Direction.NORTH), renderAt(state, Direction.SOUTH),
 				renderAt(state, Direction.WEST), renderAt(state, Direction.EAST));
 	}

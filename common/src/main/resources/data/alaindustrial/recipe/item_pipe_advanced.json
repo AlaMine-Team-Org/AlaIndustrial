@@ -1,0 +1,15 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": {
+		"C": "alaindustrial:cupronickel_reinforced_plate",
+		"P": "alaindustrial:item_pipe",
+		"S": "alaindustrial:silver_plate"
+	},
+	"pattern": [
+		"CPC",
+		"PSP",
+		"CPC"
+	],
+	"result": { "id": "alaindustrial:item_pipe_advanced", "count": 4 }
+}

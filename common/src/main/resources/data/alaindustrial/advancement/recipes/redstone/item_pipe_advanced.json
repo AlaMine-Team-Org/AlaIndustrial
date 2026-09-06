@@ -1,0 +1,51 @@
+{
+	"parent": "minecraft:recipes/root",
+	"criteria": {
+		"has_item_1": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "alaindustrial:item_pipe"
+					}
+				]
+			}
+		},
+		"has_item_2": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "alaindustrial:cupronickel_reinforced_plate"
+					}
+				]
+			}
+		},
+		"has_item_3": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "alaindustrial:silver_plate"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item_1"
+		],
+		[
+			"has_item_2"
+		],
+		[
+			"has_item_3"
+		]
+	],
+	"rewards": {
+		"recipes": [
+			"alaindustrial:item_pipe_advanced"
+		]
+	}
+}

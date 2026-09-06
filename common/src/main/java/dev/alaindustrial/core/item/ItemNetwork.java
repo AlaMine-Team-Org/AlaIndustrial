@@ -59,6 +59,37 @@ public final class ItemNetwork {
 	}
 
 	ServerLevel level() { return level; }
+	/**
+	 * The grade this network runs at: the weakest of its segments (MOD-581).
+	 *
+	 * <p>Refreshed with the endpoints rather than per tick — the walk is over the same set, and the
+	 * flag that already says "the shape of this network changed" is exactly the flag that says "its
+	 * weakest segment may have changed".
+	 */
+	private PipeTier tier = PipeTier.BASIC;
+
+	/**
+	 * The weakest grade among this network's pipes.
+	 *
+	 * <p>One basic segment in an upgraded line throttles the whole line, the way a thin cable segment
+	 * throttles an energy one (ADR-001). The alternative — the fastest segment winning — would mean the
+	 * second grade is bought once for a whole base, and the alternative after that — grades refusing to
+	 * connect — would give the player a puzzle no other block in the mod poses.
+	 *
+	 * <p>A position whose block is no longer a pipe (broken this tick, chunk gone) contributes nothing
+	 * rather than defaulting to the basic grade: an upgraded line must not stutter down to half speed
+	 * because one of its segments was mid-removal when the endpoints refreshed.
+	 */
+	private PipeTier weakestTier() {
+		PipeTier weakest = null;
+		for (BlockPos pos : pipes) {
+			if (level.getBlockState(pos).getBlock() instanceof ItemPipeBlock pipe) {
+				weakest = PipeTier.min(weakest, pipe.tier());
+			}
+		}
+		return weakest == null ? PipeTier.BASIC : weakest;
+	}
+
 	Set<BlockPos> pipes() { return pipes; }
 	int size() { return pipes.size(); }
 	boolean contains(BlockPos pos) { return pipes.contains(pos); }
@@ -91,7 +122,9 @@ public final class ItemNetwork {
 			transferCooldown--;
 			return 0;
 		}
-		int per = Config.itemPipeItemsPerTransfer;
+		// MOD-581: the network moves at its WEAKEST segment's pace. Computed in refreshEndpoints, which
+		// the same endpointsDirty flag already gates, so a mixed line costs no extra walk per tick.
+		int per = tier.itemsPerTransfer();
 		int sourceCount = sources.size();
 		int targetCount = targets.size();
 		int totalMoved = 0;
@@ -244,6 +277,7 @@ public final class ItemNetwork {
 	private void refreshEndpoints() {
 		sources.clear();
 		targets.clear();
+		tier = weakestTier();
 		Set<Endpoint> sourceSeen = new LinkedHashSet<>();
 		Set<Endpoint> targetSeen = new LinkedHashSet<>();
 		boolean configured = hasExplicitRole();

@@ -9,16 +9,27 @@ import net.minecraft.server.level.ServerLevel;
 import dev.alaindustrial.core.item.ItemNetwork;
 import dev.alaindustrial.core.item.ItemNetworkManager;
 import dev.alaindustrial.core.item.PipeFaceMode;
+import dev.alaindustrial.core.item.PipeTier;
+import dev.alaindustrial.item.misc.TooltipKeys;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.resources.Identifier;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Cross-loader MOD-104 item-pipe scenarios. They deliberately use the mod's iron chests: the
@@ -902,5 +913,181 @@ public final class ItemPipeScenarios {
 			return;
 		}
 		helper.succeed();
+	}
+
+	// --- MOD-581: the advanced grade and the weakest-segment rule --------------------------------
+
+	/**
+	 * Builds the same rig with the two pipe segments set to the given blocks, and returns how many
+	 * items one interval actually moved. Measuring the MOVE, not "items appeared": the whole point of a
+	 * grade is a number, and a test that only checks arrival passes on every grade equally.
+	 */
+	private static int movedInOneInterval(GameTestHelper helper, net.minecraft.world.level.block.Block a,
+			net.minecraft.world.level.block.Block b) {
+		helper.setBlock(SOURCE, ModContent.IRON_CHEST.get());
+		helper.setBlock(PIPE_A, a);
+		helper.setBlock(PIPE_B, b);
+		helper.setBlock(TARGET, ModContent.IRON_CHEST.get());
+		Container source = container(helper, SOURCE);
+		ItemPipeBlockEntity pa = pipe(helper, PIPE_A);
+		ItemPipeBlockEntity pb = pipe(helper, PIPE_B);
+		Container target = container(helper, TARGET);
+		if (source == null || pa == null || pb == null || target == null) {
+			helper.fail("MOD-581 rig block entity missing");
+			return -1;
+		}
+		source.setItem(0, new ItemStack(Items.IRON_INGOT, 64));
+		target.setItem(0, ItemStack.EMPTY);
+		pa.setFaceMode(Direction.WEST, PipeFaceMode.EXTRACT);
+		pb.setFaceMode(Direction.EAST, PipeFaceMode.INSERT);
+		pa.serverTick(helper.getLevel(), pa.getBlockPos(), pa.getBlockState());
+		pb.serverTick(helper.getLevel(), pb.getBlockPos(), pb.getBlockState());
+		ItemNetworkManager.tickAll(helper.getLevel());
+		Container after = container(helper, TARGET);
+		return after == null ? -1 : after.getItem(0).getCount();
+	}
+
+	/**
+	 * TC-PIPE-002-FUN01 — an all-advanced line moves the advanced grade's batch, a basic one the basic
+	 * batch, and the advanced batch is the larger of the two.
+	 *
+	 * <p>The relation is asserted alongside the numbers on purpose: a config edit that lowers the
+	 * advanced grade below the basic one is the regression worth catching, and two tests pinned to
+	 * literals would both go on passing through it.
+	 */
+	public static void tcPipe002Fun01_advancedMovesMore(GameTestHelper helper) {
+		int basic = movedInOneInterval(helper, ModContent.ITEM_PIPE.get(), ModContent.ITEM_PIPE.get());
+		if (basic < 0) return;
+		if (basic != PipeTier.BASIC.itemsPerTransfer()) {
+			helper.fail("a basic line must move its own batch: expected "
+					+ PipeTier.BASIC.itemsPerTransfer() + ", moved " + basic);
+			return;
+		}
+		int advanced = movedInOneInterval(helper, ModContent.ITEM_PIPE_ADVANCED.get(),
+				ModContent.ITEM_PIPE_ADVANCED.get());
+		if (advanced < 0) return;
+		if (advanced != PipeTier.ADVANCED.itemsPerTransfer()) {
+			helper.fail("an advanced line must move its own batch: expected "
+					+ PipeTier.ADVANCED.itemsPerTransfer() + ", moved " + advanced);
+			return;
+		}
+		if (advanced <= basic) {
+			helper.fail("the advanced grade must move more than the basic one: " + advanced + " vs " + basic);
+			return;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * TC-PIPE-002-CON01 — one basic segment throttles an otherwise advanced line.
+	 *
+	 * <p>This is the rule a player meets in a build, and it is the reason the advanced pipe is visibly
+	 * thicker: a line capped by one forgotten segment has to be findable by eye. Asserted in both
+	 * orders, because "the weakest wins" must not depend on which end of the line the odd segment is at.
+	 */
+	public static void tcPipe002Con01_weakestSegmentThrottlesTheLine(GameTestHelper helper) {
+		int expected = PipeTier.BASIC.itemsPerTransfer();
+		int basicFirst = movedInOneInterval(helper, ModContent.ITEM_PIPE.get(),
+				ModContent.ITEM_PIPE_ADVANCED.get());
+		if (basicFirst < 0) return;
+		if (basicFirst != expected) {
+			helper.fail("a mixed line must run at its weakest segment: expected " + expected
+					+ ", moved " + basicFirst);
+			return;
+		}
+		int basicLast = movedInOneInterval(helper, ModContent.ITEM_PIPE_ADVANCED.get(),
+				ModContent.ITEM_PIPE.get());
+		if (basicLast < 0) return;
+		if (basicLast != expected) {
+			helper.fail("the rule must not depend on where the weak segment sits: expected " + expected
+					+ ", moved " + basicLast);
+			return;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * TC-PIPE-002-CON02 — each grade's tooltip must describe ITSELF.
+	 *
+	 * <p>Found in play (MOD-581): both pipes showed "2 items / 20 ticks" behind Shift, because
+	 * {@code ItemPipeBlockItem} spelled out the basic grade's lang prefix and read
+	 * {@code Config.itemPipeItemsPerTransfer} — the BASIC knob — while the advanced pipe moved 4 items
+	 * per second. That is the defect the advanced magnet shipped with (MOD-580), reappearing on the
+	 * next tiered item written the same way.
+	 *
+	 * <p>Both grades are asserted, and on the key AND the number: a "fix" that merely swaps one
+	 * hardcoded prefix for the other, or one hardcoded knob for the other, leaves this red.
+	 */
+	public static void tcPipe002Con02_tooltipDescribesItsOwnGrade(GameTestHelper helper) {
+		if (!tooltipMatchesGrade(helper, ModContent.ITEM_PIPE_ADVANCED.get().asItem(), PipeTier.ADVANCED)) {
+			return;
+		}
+		if (!tooltipMatchesGrade(helper, ModContent.ITEM_PIPE.get().asItem(), PipeTier.BASIC)) {
+			return;
+		}
+		helper.succeed();
+	}
+
+	/** Every tooltip line of {@code item} belongs to it, and its rate line quotes {@code grade}. */
+	private static boolean tooltipMatchesGrade(GameTestHelper helper, Item item, PipeTier grade) {
+		Identifier id = BuiltInRegistries.ITEM.getKey(item);
+		String base = "item." + id.getNamespace() + "." + id.getPath();
+
+		List<TranslatableContents> lines = tooltipLines(new ItemStack(item));
+		if (lines.isEmpty()) {
+			helper.fail(base + " produced no tooltip at all");
+			return false;
+		}
+		TranslatableContents rate = null;
+		for (TranslatableContents line : lines) {
+			if (!line.getKey().startsWith(base + ".")) {
+				helper.fail(base + " borrows another item's tooltip key: " + line.getKey());
+				return false;
+			}
+			if (line.getKey().equals(base + ".tech.rate")) {
+				rate = line;
+			}
+		}
+		if (rate == null) {
+			helper.fail(base + " shows no throughput line behind Shift");
+			return false;
+		}
+		Object shown = rate.getArgs().length > 0 ? rate.getArgs()[0] : null;
+		if (!Integer.valueOf(grade.itemsPerTransfer()).equals(shown)) {
+			helper.fail(base + " advertises " + shown + " items per transfer while this grade moves "
+					+ grade.itemsPerTransfer());
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * The item's OWN tooltip lines, read as if Shift were held.
+	 *
+	 * <p>{@code Item#appendHoverText} is soft-deprecated by vanilla but is the only hook that yields
+	 * what the item computes for itself — the reasoning already written down on
+	 * {@code AssemblerScenarios#tooltipLine}. The throughput line exists only behind Shift, so the
+	 * client hook is installed for the length of the read and restored in a {@code finally}: the three
+	 * items that branch on it (both pipes and the mutation chip) are read by no other scenario, so no
+	 * concurrent test can observe the flipped hook.
+	 */
+	@SuppressWarnings("deprecation")
+	private static List<TranslatableContents> tooltipLines(ItemStack stack) {
+		List<Component> raw = new ArrayList<>();
+		TooltipKeys.ClientHook previous = TooltipKeys.CLIENT;
+		try {
+			TooltipKeys.CLIENT = () -> true;
+			stack.getItem().appendHoverText(stack, Item.TooltipContext.EMPTY, TooltipDisplay.DEFAULT,
+					raw::add, TooltipFlag.NORMAL);
+		} finally {
+			TooltipKeys.CLIENT = previous;
+		}
+		List<TranslatableContents> out = new ArrayList<>();
+		for (Component line : raw) {
+			if (line.getContents() instanceof TranslatableContents translatable) {
+				out.add(translatable);
+			}
+		}
+		return out;
 	}
 }

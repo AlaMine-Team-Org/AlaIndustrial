@@ -43,6 +43,7 @@ import dev.alaindustrial.block.IronChestBlock;
 import dev.alaindustrial.block.IronFurnaceBlock;
 import dev.alaindustrial.block.KokSagyzBlock;
 import dev.alaindustrial.block.KokSagyzRootBlock;
+import dev.alaindustrial.block.AdvancedItemPipeBlock;
 import dev.alaindustrial.block.ItemPipeBlock;
 import dev.alaindustrial.block.MaceratorBlock;
 import dev.alaindustrial.block.MoonlitSolarPanelBlock;
@@ -527,6 +528,8 @@ public final class ContentManifest {
 					s -> ModContent.INSULATED_ELECTRUM_CABLE = s);
 	public static final BlockDef<ItemPipeBlock> ITEM_PIPE =
 			block("item_pipe", ItemPipeBlock::new, s -> ModContent.ITEM_PIPE = s);
+	public static final BlockDef<AdvancedItemPipeBlock> ITEM_PIPE_ADVANCED =
+			block("item_pipe_advanced", AdvancedItemPipeBlock::new, s -> ModContent.ITEM_PIPE_ADVANCED = s);
 	public static final BlockDef<FluidPipeBlock> FLUID_PIPE =
 			block("fluid_pipe", FluidPipeBlock::new, s -> ModContent.FLUID_PIPE = s);
 	public static final BlockDef<MaceratorBlock> MACERATOR =
@@ -788,7 +791,8 @@ public final class ContentManifest {
 			GENERATOR, SOLAR_PANEL, MOONLIT_SOLAR_PANEL, DAYLIGHT_SOLAR_PANEL, GEOTHERMAL_GENERATOR,
 			WATER_MILL, WIND_MILL, HIGH_ALTITUDE_WIND_MILL, STORM_WIND_MILL, PUMP, GARDEN_DRONE_STATION,
 			FLUID_TANK, COPPER_CABLE, TIN_CABLE, GOLD_CABLE, ELECTRUM_CABLE, INSULATED_COPPER_CABLE,
-			INSULATED_TIN_CABLE, INSULATED_GOLD_CABLE, INSULATED_ELECTRUM_CABLE, ITEM_PIPE, FLUID_PIPE,
+			INSULATED_TIN_CABLE, INSULATED_GOLD_CABLE, INSULATED_ELECTRUM_CABLE, ITEM_PIPE,
+			ITEM_PIPE_ADVANCED, FLUID_PIPE,
 			MACERATOR, BATTERY_BOX, CESU, TELEPORTER, ELECTRIC_FURNACE, IRON_FURNACE, EXTRACTOR,
 			COMPRESSOR, COMPONENT_REPAIR_BENCH, CANNING_MACHINE, SAWMILL, ASSEMBLER, POLYMERIZER, DISTILLATION_COLUMN,
 			DISTILLATION_COLUMN_MIDDLE, DISTILLATION_COLUMN_TOP, RECTIFICATION_SECTION, ALLOY_SMELTER,
@@ -881,6 +885,8 @@ public final class ContentManifest {
 			Map.entry("insulated_gold_cable", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.WOOL).noOcclusion())),
 			Map.entry("insulated_electrum_cable", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.WOOL).noOcclusion())),
 			Map.entry("item_pipe", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion())),
+			Map.entry("item_pipe_advanced",
+					machine(p -> p.strength(0.3f, 0.6f).sound(SoundType.COPPER).noOcclusion())),
 			Map.entry("fluid_pipe", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion())),
 			Map.entry("macerator", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("battery_box", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.WOOD))),
@@ -1770,6 +1776,8 @@ public final class ContentManifest {
 			// throughput numbers) — a plain blockItem() has none.
 			blockItem("item_pipe", p -> new ItemPipeBlockItem(registeredBlock("item_pipe"),
 					p.useBlockDescriptionPrefix()), s -> ModContent.ITEM_PIPE_ITEM = s),
+			blockItem("item_pipe_advanced", p -> new ItemPipeBlockItem(registeredBlock("item_pipe_advanced"),
+					p.useBlockDescriptionPrefix()), s -> ModContent.ITEM_PIPE_ADVANCED_ITEM = s),
 			blockItem("fluid_pipe", p -> new FluidPipeBlockItem(registeredBlock("fluid_pipe"),
 					p.useBlockDescriptionPrefix()), s -> ModContent.FLUID_PIPE_ITEM = s),
 			blockItem("macerator", s -> ModContent.MACERATOR_ITEM = s),
@@ -2011,7 +2019,8 @@ public final class ContentManifest {
 			blockEntity("moonlit_solar_panel", MoonlitSolarPanelBlockEntity.class, MoonlitSolarPanelBlockEntity::new, s -> ModContent.MOONLIT_SOLAR_PANEL_BE = s, "moonlit_solar_panel"),
 			blockEntity("daylight_solar_panel", DaylightSolarPanelBlockEntity.class, DaylightSolarPanelBlockEntity::new, s -> ModContent.DAYLIGHT_SOLAR_PANEL_BE = s, "daylight_solar_panel"),
 			blockEntity("copper_cable", CableBlockEntity.class, CableBlockEntity::new, s -> ModContent.COPPER_CABLE_BE = s, "copper_cable", "tin_cable", "gold_cable", "electrum_cable", "insulated_copper_cable", "insulated_tin_cable", "insulated_gold_cable", "insulated_electrum_cable"),
-			blockEntity("item_pipe", ItemPipeBlockEntity.class, ItemPipeBlockEntity::new, s -> ModContent.ITEM_PIPE_BE = s, "item_pipe"),
+			blockEntity("item_pipe", ItemPipeBlockEntity.class, ItemPipeBlockEntity::new,
+					s -> ModContent.ITEM_PIPE_BE = s, "item_pipe", "item_pipe_advanced"),
 			blockEntity("fluid_pipe", FluidPipeBlockEntity.class, FluidPipeBlockEntity::new, s -> ModContent.FLUID_PIPE_BE = s, "fluid_pipe"),
 			blockEntity("macerator", MaceratorBlockEntity.class, MaceratorBlockEntity::new, s -> ModContent.MACERATOR_BE = s, "macerator"),
 			blockEntity("component_repair_bench", ComponentRepairBenchBlockEntity.class, ComponentRepairBenchBlockEntity::new, s -> ModContent.COMPONENT_REPAIR_BENCH_BE = s, "component_repair_bench"),

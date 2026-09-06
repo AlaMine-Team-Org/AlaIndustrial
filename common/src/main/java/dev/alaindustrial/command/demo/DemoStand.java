@@ -540,6 +540,10 @@ public final class DemoStand {
 		set(level, origin, 16, 1, 26, ModContent.IRON_CHEST.get());
 		fillSlot(level, origin, 16, 1, 26, 0, new ItemStack(Items.IRON_INGOT, 32));
 		for (int x = 17; x <= 21; x++) set(level, origin, x, 1, 26, ModContent.ITEM_PIPE.get());
+		// MOD-581: the advanced grade directly ABOVE the basic one — the two are meant to be told apart by
+		// eye, and a stand showing only one proves nothing about that. One level up rather than one row
+		// back: DEPTH is 27, so z=26 is the last row this zone has.
+		for (int x = 17; x <= 21; x++) set(level, origin, x, 2, 26, ModContent.ITEM_PIPE_ADVANCED.get());
 		set(level, origin, 22, 1, 26, ModContent.IRON_CHEST.get());
 
 		// The fluid line continues the same row (DEPTH is 27, so z=26 is the last one available):

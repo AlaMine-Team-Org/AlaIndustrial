@@ -1,0 +1,30 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "body": "alaindustrial:block/item_pipe_advanced_body",
+    "band": "alaindustrial:block/item_pipe_advanced_band",
+    "mode": "alaindustrial:block/item_pipe_insert",
+    "particle": "alaindustrial:block/item_pipe_advanced_body"
+  },
+  "elements": [
+    { "from": [6, 6, 0], "to": [10, 10, 1.5], "faces": {
+      "down":  { "texture": "#mode" }, "up": { "texture": "#mode" },
+      "north": { "texture": "#mode" }, "west": { "texture": "#mode" },
+      "east":  { "texture": "#mode" }
+    }},
+    { "from": [5.5, 5.5, 1.5], "to": [10.5, 10.5, 3], "faces": {
+      "down":  { "texture": "#mode" }, "up": { "texture": "#mode" },
+      "north": { "texture": "#mode" }, "west": { "texture": "#mode" },
+      "east":  { "texture": "#mode" }
+    }},
+    { "from": [5, 5, 3], "to": [11, 11, 4], "faces": {
+      "down":  { "texture": "#body" }, "up": { "texture": "#body" },
+      "north": { "texture": "#body" }, "west": { "texture": "#body" },
+      "east":  { "texture": "#body" }
+    }},
+    { "from": [5, 5, 4], "to": [11, 11, 5], "faces": {
+      "down": { "texture": "#band" }, "up": { "texture": "#band" },
+      "west": { "texture": "#band" }, "east": { "texture": "#band" }
+    }}
+  ]
+}

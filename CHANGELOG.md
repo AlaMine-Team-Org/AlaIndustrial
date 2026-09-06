@@ -1,18 +1,12 @@
-## 0.1.148
+## 0.1.149
 
-<p><img alt="Ala Industrial 0.1.148 — the Advanced Electromagnet in hand" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.148/release-media/v0.1.148/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial 0.1.149 — the Advanced Item Pipe running between a chest and a display frame" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.149/release-media/v0.1.149/changelog.png" width="720"></p>
 
-A stronger magnet, and two blocks that finally tell you the truth about what they are doing.
+Item pipes got a second grade — twice as fast, and thick enough to spot from across the room.
 
 ### New
 
-- **The Advanced Electromagnet reaches nine blocks** instead of five, and pulls experience as well as items.
-- **Built from the magnet you already carry.** Charged, flat or switched off — the recipe takes it as it is, so you never have to prepare one for the occasion.
-- **It leaves alone the orbs you were already getting.** Experience close enough to drift to you on its own costs nothing; the magnet only reaches past that.
-
-### Fixed
-
-- **The Geiger counter no longer goes silent behind walls.** Walking up to a running reactor it said nothing at all, then hit a solid rattle the instant you stepped through the door. A wall now muffles the instrument instead of blanking it, so the clicking builds while you are still outside.
-- **Your shielding is untouched.** A wall still stops radiation completely — only the counter learned to hear through one.
-- **The Electric Heater stopped humming when it costs you nothing.** It hummed while holding temperature for a waiting machine and all through its twenty-second cool-down. Now it is heard only while it is actually spending power. It still glows while hot, because hot metal glows.
-- **A skill stopped doing more than it promised.** "Finish the operation when the power dies" was also finishing operations into a full output slot, stacking the result past its limit. It now covers only the case it names.
+- **The Advanced Item Pipe moves 4 items per second** instead of 2, to every destination it feeds.
+- **You can tell the two lines apart at a glance.** A steel body with an inspection window down the middle of every segment, noticeably thicker than the ordinary pipe.
+- **A line runs at the speed of its slowest pipe.** One ordinary segment left in an upgraded line drags the whole line back to 2 — the same way a thin cable throttles power, and exactly why the new pipe is thicker: the piece holding you back has to be findable by eye.
+- **Built from the pipes you already have.** Four ordinary pipes, four cupronickel reinforced plates and a silver plate give four advanced pipes, so the second grade cannot be reached around the first.

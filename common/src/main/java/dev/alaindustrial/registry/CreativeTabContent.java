@@ -521,6 +521,7 @@ public final class CreativeTabContent {
 		// The item pipe sits next to the fluid pipe: the two carriers are one idea, and a player looking
 		// for "the pipe" should find both without scrolling to another group.
 		show(out, ModContent.ITEM_PIPE_ITEM);
+		show(out, ModContent.ITEM_PIPE_ADVANCED_ITEM);
 		// MOD-251: the distillation tower - one item, three blocks tall when placed, plus its optional
 		// fourth storey (losses 10 % -> 5 %).
 		show(out, ModContent.DISTILLATION_COLUMN_ITEM);

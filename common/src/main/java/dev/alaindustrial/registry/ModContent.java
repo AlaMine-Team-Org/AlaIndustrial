@@ -142,6 +142,7 @@ public final class ModContent {
 	public static Supplier<Block> INSULATED_GOLD_CABLE = unbound("INSULATED_GOLD_CABLE");
 	public static Supplier<Block> INSULATED_ELECTRUM_CABLE = unbound("INSULATED_ELECTRUM_CABLE");
 	public static Supplier<Block> ITEM_PIPE = unbound("ITEM_PIPE");
+	public static Supplier<Block> ITEM_PIPE_ADVANCED = unbound("ITEM_PIPE_ADVANCED");
 	public static Supplier<Block> FLUID_PIPE = unbound("FLUID_PIPE");
 	public static Supplier<Block> MACERATOR = unbound("MACERATOR");
 	public static Supplier<Block> BATTERY_BOX = unbound("BATTERY_BOX");
@@ -640,6 +641,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> INSULATED_GOLD_CABLE_ITEM = unbound("INSULATED_GOLD_CABLE_ITEM");
 	public static Supplier<BlockItem> INSULATED_ELECTRUM_CABLE_ITEM = unbound("INSULATED_ELECTRUM_CABLE_ITEM");
 	public static Supplier<BlockItem> ITEM_PIPE_ITEM = unbound("ITEM_PIPE_ITEM");
+	public static Supplier<BlockItem> ITEM_PIPE_ADVANCED_ITEM = unbound("ITEM_PIPE_ADVANCED_ITEM");
 	public static Supplier<BlockItem> FLUID_PIPE_ITEM = unbound("FLUID_PIPE_ITEM");
 	public static Supplier<BlockItem> MACERATOR_ITEM = unbound("MACERATOR_ITEM");
 	public static Supplier<BlockItem> BATTERY_BOX_ITEM = unbound("BATTERY_BOX_ITEM");

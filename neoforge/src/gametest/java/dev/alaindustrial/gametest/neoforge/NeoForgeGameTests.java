@@ -2436,6 +2436,12 @@ public final class NeoForgeGameTests {
 				ItemPipeScenarios::mod408ExtractWithoutInsertMovesNothing);
 		registerTest(event, "item_pipe_mod408_unconfigured_line_still_feeds_a_machine", 100, true,
 				ItemPipeScenarios::mod408UnconfiguredLineStillFeedsAMachine);
+		registerTest(event, "item_pipe_tc_pipe002_fun01_advanced_moves_more", 40, true,
+				ItemPipeScenarios::tcPipe002Fun01_advancedMovesMore);
+		registerTest(event, "item_pipe_tc_pipe002_con01_weakest_segment_throttles", 40, true,
+				ItemPipeScenarios::tcPipe002Con01_weakestSegmentThrottlesTheLine);
+		registerTest(event, "item_pipe_tc_pipe002_con02_tooltip_describes_own_grade", 40, true,
+				ItemPipeScenarios::tcPipe002Con02_tooltipDescribesItsOwnGrade);
 		registerTest(event, "mod353_scene1_box_over_cable_to_teleporter", 100, true,
 				Mod353DiagnosticScenarios::scene1BoxOverCableToTeleporter);
 		registerTest(event, "mod353_scene3_box_flush_against_teleporter", 100, true,

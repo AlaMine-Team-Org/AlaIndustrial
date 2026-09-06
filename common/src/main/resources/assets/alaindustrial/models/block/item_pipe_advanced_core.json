@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "glass": "alaindustrial:block/item_pipe_advanced_glass",
+    "particle": "alaindustrial:block/item_pipe_advanced_body"
+  },
+  "elements": [{ "from": [5, 5, 5], "to": [11, 11, 11], "faces": {
+    "north": { "texture": "#glass" }, "south": { "texture": "#glass" },
+    "east": { "texture": "#glass" }, "west": { "texture": "#glass" },
+    "up": { "texture": "#glass" }, "down": { "texture": "#glass" }
+  }}]
+}

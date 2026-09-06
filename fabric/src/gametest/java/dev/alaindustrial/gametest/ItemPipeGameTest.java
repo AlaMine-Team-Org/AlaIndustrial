@@ -139,4 +139,22 @@ public final class ItemPipeGameTest {
 	public void mod408UnconfiguredLineStillFeedsAMachine(GameTestHelper helper) {
 		ItemPipeScenarios.mod408UnconfiguredLineStillFeedsAMachine(helper);
 	}
+
+	/** @implements TC-PIPE-002-FUN01 — the advanced grade moves its own, larger batch. */
+	@GameTest
+	public void tcPipe002Fun01_advancedMovesMore(GameTestHelper helper) {
+		ItemPipeScenarios.tcPipe002Fun01_advancedMovesMore(helper);
+	}
+
+	/** @implements TC-PIPE-002-CON01 — one basic segment throttles an otherwise advanced line. */
+	@GameTest
+	public void tcPipe002Con01_weakestSegmentThrottlesTheLine(GameTestHelper helper) {
+		ItemPipeScenarios.tcPipe002Con01_weakestSegmentThrottlesTheLine(helper);
+	}
+
+	/** @implements TC-PIPE-002-CON02 — each grade's tooltip quotes its own keys and its own rate. */
+	@GameTest
+	public void tcPipe002Con02_tooltipDescribesItsOwnGrade(GameTestHelper helper) {
+		ItemPipeScenarios.tcPipe002Con02_tooltipDescribesItsOwnGrade(helper);
+	}
 }

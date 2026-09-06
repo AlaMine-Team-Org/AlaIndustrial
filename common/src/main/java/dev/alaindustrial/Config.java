@@ -689,8 +689,12 @@ public final class Config {
 	 *
 	 * <p><b>Why an interval instead of a smaller batch.</b> A batch cannot go below 1 item, so the only
 	 * way down from 20/s is to stop moving every tick. Fixing the interval and growing the batch is
-	 * also what MI, AE2, Mekanism and EnderIO all do, which leaves a clean ladder for later tiers
-	 * (batch 2 → 8 → 32 → 64 at the same interval = 2 → 8 → 32 → 64 items/s).
+	 * also what MI, AE2, Mekanism and EnderIO all do, which leaves a clean ladder for later tiers.
+	 *
+	 * <p><b>The ladder is ×2 per grade: 2 → 4 → 8 → 16 items/s at the same interval.</b> It used to read
+	 * 2 → 8 → 32 → 64 here, and MOD-581 revised it to ×2 when the second grade was actually built: ×4
+	 * makes the grade below worthless the day the new one is craftable, and a logistics tier the player
+	 * skips entirely is a tier that did not need to exist. See {@link #itemPipeAdvancedItemsPerTransfer}.
 	 */
 	@Knob(section = Section.LOGISTICS, min = 1,
 			doc = "Items an item-pipe network moves per transfer. With the interval below this sets throughput.")
@@ -704,6 +708,19 @@ public final class Config {
 	@Knob(section = Section.LOGISTICS, min = 1,
 			doc = "Server ticks between item-pipe transfers (20 = once per second).")
 	public static int itemPipeTransferIntervalTicks = 20;
+
+	/**
+	 * Items an ADVANCED item-pipe network moves per transfer (MOD-581) — twice the basic grade at the
+	 * same interval, so 4 items per second per target.
+	 *
+	 * <p><b>Which grade a network runs at is decided by its WEAKEST pipe.</b> One basic segment left in
+	 * an advanced line throttles the whole line, exactly as a thin cable segment throttles an energy
+	 * one (ADR-001). That is why the advanced pipe is visibly thicker: the segment holding a line back
+	 * has to be findable by eye, not only by measuring throughput.
+	 */
+	@Knob(section = Section.LOGISTICS, min = 1,
+			doc = "Items an ADVANCED item-pipe network moves per transfer. A network runs at its weakest pipe.")
+	public static int itemPipeAdvancedItemsPerTransfer = 4;
 
 	// --- Fluid pipes (MOD-151) ---
 	/**

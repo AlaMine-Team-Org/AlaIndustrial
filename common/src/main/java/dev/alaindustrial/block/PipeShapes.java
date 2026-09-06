@@ -88,6 +88,82 @@ public final class PipeShapes {
 		return result;
 	});
 
+	// --- MOD-581: the advanced grade's body, two pixels wider on every side ---
+
+	/**
+	 * The advanced pipe's core: 6×6 against the basic 4×4 (5..11 instead of 6..10).
+	 *
+	 * <p><b>Why the thickness exists at all.</b> An advanced network runs at its WEAKEST pipe, so a
+	 * single basic segment left in an upgraded line silently caps the whole line. A rule that punishes
+	 * one forgotten segment has to let the player find that segment by looking, and a difference of two
+	 * pixels a side is the smallest one that reads across a room.
+	 */
+	public static final VoxelShape THICK_CORE = Block.box(5, 5, 5, 11, 11, 11);
+
+	private static final Map<Direction, VoxelShape> THICK_ARMS = new EnumMap<>(Direction.class);
+	static {
+		THICK_ARMS.put(Direction.DOWN, Block.box(5, 0, 5, 11, 5, 11));
+		THICK_ARMS.put(Direction.UP, Block.box(5, 11, 5, 11, 16, 11));
+		THICK_ARMS.put(Direction.NORTH, Block.box(5, 5, 0, 11, 11, 5));
+		THICK_ARMS.put(Direction.SOUTH, Block.box(5, 5, 11, 11, 11, 16));
+		THICK_ARMS.put(Direction.WEST, Block.box(0, 5, 5, 5, 11, 11));
+		THICK_ARMS.put(Direction.EAST, Block.box(11, 5, 5, 16, 11, 11));
+	}
+
+	/**
+	 * The dropped arms of the advanced grade — the same three-piece joint as the basic one, widened.
+	 * The nozzle stays 6px wide because it is sized against the NEIGHBOUR it enters, not against the
+	 * pipe: widening it further would make the flange overhang a 4px plate.
+	 */
+	private static final Map<Direction, VoxelShape> THICK_ARMS_LOW = new EnumMap<>(Direction.class);
+	static {
+		THICK_ARMS_LOW.put(Direction.NORTH, Shapes.or(
+				Block.box(5, 5, 2, 11, 11, 5),
+				Block.box(5, 4, 0, 11, 8, 3),
+				Block.box(5, 0, 0, 11, 4, 4)));
+		THICK_ARMS_LOW.put(Direction.SOUTH, Shapes.or(
+				Block.box(5, 5, 11, 11, 11, 14),
+				Block.box(5, 4, 13, 11, 8, 16),
+				Block.box(5, 0, 12, 11, 4, 16)));
+		THICK_ARMS_LOW.put(Direction.WEST, Shapes.or(
+				Block.box(2, 5, 5, 5, 11, 11),
+				Block.box(0, 4, 5, 3, 8, 11),
+				Block.box(0, 0, 5, 4, 4, 11)));
+		THICK_ARMS_LOW.put(Direction.EAST, Shapes.or(
+				Block.box(11, 5, 5, 14, 11, 11),
+				Block.box(13, 4, 5, 16, 8, 11),
+				Block.box(12, 0, 5, 16, 4, 11)));
+	}
+
+	/**
+	 * The advanced grade's own table, built the same way and for the same reason as {@link #TABLE}:
+	 * {@code initCache} asks a block for its shape twenty times per state, and this block has 38 416 of
+	 * them, so assembling geometry inside {@code getShape} would cost what ADR-023 was written to stop.
+	 * A second grade means a second TABLE — never a second assembly.
+	 */
+	private static final FaceShapeTable THICK_TABLE = new FaceShapeTable(codes -> {
+		VoxelShape result = THICK_CORE;
+		for (Direction dir : Direction.values()) {
+			int code = codes[dir.ordinal()];
+			if (code != FaceShapeTable.NONE) {
+				result = Shapes.or(result, thickArm(dir, code == FaceShapeTable.LOW));
+			}
+		}
+		return result;
+	});
+
+	/** The advanced pipe's shape for these six faces — a table read, exactly like {@link #of}. */
+	public static VoxelShape ofThick(PipeFaceRender down, PipeFaceRender up, PipeFaceRender north,
+			PipeFaceRender south, PipeFaceRender west, PipeFaceRender east) {
+		return THICK_TABLE.get(code(down), code(up), code(north), code(south), code(west), code(east));
+	}
+
+	/** The advanced grade's arm toward {@code dir}; {@code low} is honoured on horizontal faces only. */
+	public static VoxelShape thickArm(Direction dir, boolean low) {
+		VoxelShape lowArm = low ? THICK_ARMS_LOW.get(dir) : null;
+		return lowArm != null ? lowArm : THICK_ARMS.get(dir);
+	}
+
 	private PipeShapes() {
 	}
 
