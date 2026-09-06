@@ -1,6 +1,7 @@
 package dev.alaindustrial.registry;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -80,7 +81,16 @@ class CreativeTabOrderTest {
 	/** {@code show(out, ModContent.X)} — the current form — and the older {@code out.accept(...)}. */
 	private static final Pattern ENTRY = Pattern.compile(
 			"show\\(out, ModContent\\.(\\w+)\\)|out\\.accept\\(ModContent\\.(\\w+)\\.get\\(\\)\\)");
-	private static final Pattern CALL = Pattern.compile("^\\t\\t(\\w+)\\(out\\);");
+	/**
+	 * A group call. The sink is normally the parameter {@code out}, but {@code main} buffers the tab
+	 * through a {@code ShapeSorted} to group it by silhouette (MOD-574) and hands that buffer to
+	 * {@code fill} instead — so the argument name has to be part of the pattern, not assumed.
+	 *
+	 * <p>Spelling the two names out rather than accepting any identifier is deliberate: {@code (\w+)}
+	 * there would also match an ordinary one-argument statement and quietly invent a group that does
+	 * not exist. If a third sink name appears, it belongs here, next to these two.
+	 */
+	private static final Pattern CALL = Pattern.compile("^\\t\\t(\\w+)\\((?:out|sorted)\\);");
 	/**
 	 * A group head. {@code AnchoredSink} is a {@link CreativeTabContent.Sink} that can also place an entry
 	 * after an anchor — the vanilla Combat and Tools &amp; Utilities groups take one (MOD-555). Without
@@ -140,7 +150,32 @@ class CreativeTabOrderTest {
 	 */
 	@Test
 	void modTabListsEveryItemExactlyOnce() throws IOException {
-		List<String> entries = entriesOf("main", bodies(), 0);
+		assertNoDuplicates("main");
+	}
+
+	/**
+	 * The same rule for the vanilla tabs the mod feeds — they were unguarded until MOD-574.
+	 *
+	 * <p>The mod's OWN tab is the one that crashes on a duplicate: the vanilla builder behind it throws
+	 * {@code Accidentally adding the same item stack twice}. These tabs fail more quietly and therefore
+	 * worse — NeoForge collects into a set and swallows the second copy, Fabric appends and shows the
+	 * icon twice, so the same source file produces two different tabs and neither loader complains.
+	 *
+	 * <p>{@code combat} and {@code toolsAndUtilities} are not here: they place entries with an anchor
+	 * ({@code after(...)}) rather than by appending, so a repeat is a positioning question this parser
+	 * cannot answer. {@code CreativeTabAnchorSafetyTest} on the NeoForge side covers those two.
+	 */
+	@Test
+	void vanillaTabsListEveryItemExactlyOnce() throws IOException {
+		for (String root : List.of("functionalBlocks", "buildingBlocks", "naturalBlocks", "ingredients")) {
+			assertNoDuplicates(root);
+		}
+	}
+
+	private void assertNoDuplicates(String root) throws IOException {
+		List<String> entries = entriesOf(root, bodies(), 0);
+		assertFalse(entries.isEmpty(), "tab root '" + root + "' resolved to no entries at all — the "
+				+ "parser stopped seeing the group calls, so this test proves nothing");
 		Set<String> seen = new LinkedHashSet<>();
 		List<String> duplicates = new ArrayList<>();
 		for (String entry : entries) {
@@ -149,7 +184,7 @@ class CreativeTabOrderTest {
 			}
 		}
 		if (!duplicates.isEmpty()) {
-			fail("the mod tab lists these entries more than once: " + duplicates
+			fail("tab '" + root + "' lists these entries more than once: " + duplicates
 					+ " — one item, one cell; a second copy also shifts every entry after it");
 		}
 	}

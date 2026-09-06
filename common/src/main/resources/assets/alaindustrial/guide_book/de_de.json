@@ -1614,6 +1614,44 @@
           ]
         },
         {
+          "id": "recycler",
+          "title": "Recycler",
+          "icon": "alaindustrial:recycler",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Recycler",
+              "text": "Zerkleinert beliebigen Abfall zu Schlackebriketts. Die Güte hängt nicht davon ab, wie viel hineinging, sondern wie vielfältig es war — eine einförmige Charge zahlt Ballast, eine richtige Mischung reiche Schlacke."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 8 EU/t",
+                "Puffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:iron_ingot",
+                "alaindustrial:recycler_blades_iron",
+                "minecraft:iron_ingot",
+                "alaindustrial:recycler_blades_iron",
+                "alaindustrial:machine_casing",
+                "alaindustrial:recycler_blades_iron",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:recycler",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "Extraktor",
           "icon": "alaindustrial:extractor",
@@ -2381,7 +2419,7 @@
             {
               "type": "text",
               "title": "Kok-Sagys",
-              "text": "Ein mehrjähriger «Russischer Löwenzahn» — die erneuerbare Quelle für Gummi. Eine Säule aus Blüte und zwei Blöcke tiefem Wurzelwerk: die Wurzelspitze endlos ausgraben, die Pflanze überlebt und treibt sie neu. Die Wurzel wird im Brecher zu Rohkautschuk vermahlen, mit Inulin als Nebenprodukt."
+              "text": "Ein kautschukhaltiger Löwenzahn aus der kasachischen Steppe — Kautschuk zum Anbauen. Blüte oben, Wurzel zwei Blöcke tiefer: Ernte die Spitze beliebig oft, die Pflanze überlebt und treibt sie nach."
             }
           ]
         },
@@ -3105,6 +3143,44 @@
           ]
         },
         {
+          "id": "workstation",
+          "title": "Arbeitsstation",
+          "icon": "alaindustrial:workstation",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Arbeitsstation",
+              "text": "Ein Computer aus zwei aufeinandergestapelten Gehäusen. Bezieht Strom aus dem Netz und dient dem Spieler als eigener Arbeitsplatz."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 6 EU/t",
+                "Puffer: 40000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "#c:glass_panes",
+                "alaindustrial:resonant_crystal",
+                "#c:glass_panes",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:reactor_circuit",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:reinforced_bearing",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:reinforced_bearing"
+              ],
+              "result_id": "alaindustrial:workstation",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "stock_display_frame",
           "title": "Vorratsanzeige-Rahmen",
           "icon": "alaindustrial:stock_display_frame",
@@ -3532,6 +3608,36 @@
               ],
               "result_id": "alaindustrial:mutation_chip_duplicate",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "basic_bearing",
+          "title": "Einfaches Lager",
+          "icon": "alaindustrial:basic_bearing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Einfaches Lager",
+              "text": "Einfache und verstärkte Lager — Drehgelenke für Maschinen, gebaut aus Teilen, für die es bisher kaum ein Rezept gab."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:nickel_plate",
+                "minecraft:iron_nugget",
+                "alaindustrial:nickel_plate",
+                "minecraft:iron_nugget",
+                "alaindustrial:stone_gear",
+                "minecraft:iron_nugget",
+                "alaindustrial:nickel_plate",
+                "minecraft:iron_nugget",
+                "alaindustrial:nickel_plate"
+              ],
+              "result_id": "alaindustrial:basic_bearing",
+              "result_count": 4
             }
           ]
         },
@@ -4183,6 +4289,25 @@
           ]
         },
         {
+          "id": "shielding_pouch",
+          "title": "Abschirmbeutel",
+          "icon": "alaindustrial:shielding_pouch",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Abschirmbeutel",
+              "text": "Die zweite Stufe des Batteriebeutels, mit Blei ausgekleidet: dasselbe Gewicht 128 und 2000 EU, aber radioaktiver Inhalt bestrahlt niemanden mehr — weder den Träger noch die Mobs ringsum."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 2 000 EU"
+              ]
+            }
+          ]
+        },
+        {
           "id": "insulated_chestplate",
           "title": "Isolierbrustpanzer",
           "icon": "alaindustrial:insulated_chestplate",
@@ -4591,6 +4716,36 @@
                 "alaindustrial:silver_plate"
               ],
               "result_id": "alaindustrial:soul_vessel",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "geiger_counter",
+          "title": "Geigerzähler",
+          "icon": "alaindustrial:geiger_counter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Geigerzähler",
+              "text": "Knackt in der Nähe von Strahlung aus jedem Inventarplatz — die einzige Rückmeldung, die Strahlung überhaupt gibt."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "",
+                "minecraft:glass_pane",
+                "",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:geiger_counter",
               "result_count": 1
             }
           ]

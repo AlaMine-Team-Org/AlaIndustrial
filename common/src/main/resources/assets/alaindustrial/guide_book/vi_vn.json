@@ -1614,6 +1614,44 @@
           ]
         },
         {
+          "id": "recycler",
+          "title": "Máy tái chế",
+          "icon": "alaindustrial:recycler",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Máy tái chế",
+              "text": "Nghiền mọi loại rác thành viên xỉ. Chất lượng không phụ thuộc vào lượng rác mà vào độ đa dạng — mẻ chỉ một loại cho xỉ nghèo, hỗn hợp đúng cho xỉ giàu."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 8 EU/t",
+                "Bộ đệm: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:iron_ingot",
+                "alaindustrial:recycler_blades_iron",
+                "minecraft:iron_ingot",
+                "alaindustrial:recycler_blades_iron",
+                "alaindustrial:machine_casing",
+                "alaindustrial:recycler_blades_iron",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:recycler",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "Máy chiết xuất",
           "icon": "alaindustrial:extractor",
@@ -2381,7 +2419,7 @@
             {
               "type": "text",
               "title": "Kok-Sagyz",
-              "text": "Cây «bồ công anh Nga» lâu năm — nguồn cao su tái tạo. Một cột gồm hoa và rễ sâu hai khối: đào đầu rễ mãi không hết, cây vẫn sống và mọc lại đầu rễ. Rễ được nghiền trong Máy nghiền thành cao su thô, với inulin là sản phẩm phụ."
+              "text": "Cây bồ công anh cho cao su từ thảo nguyên Kazakhstan — cao su bạn có thể trồng. Hoa ở trên, rễ nằm dưới hai khối: cứ hái phần ngọn bao nhiêu tùy thích, cây vẫn sống và mọc lại."
             }
           ]
         },
@@ -3105,6 +3143,44 @@
           ]
         },
         {
+          "id": "workstation",
+          "title": "Trạm làm việc",
+          "icon": "alaindustrial:workstation",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Trạm làm việc",
+              "text": "Một chiếc máy tính lắp từ hai vỏ máy xếp chồng lên nhau. Nó lấy điện từ lưới và làm chỗ làm việc riêng của người chơi."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 6 EU/t",
+                "Bộ đệm: 40000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "#c:glass_panes",
+                "alaindustrial:resonant_crystal",
+                "#c:glass_panes",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:reactor_circuit",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:reinforced_bearing",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:reinforced_bearing"
+              ],
+              "result_id": "alaindustrial:workstation",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "stock_display_frame",
           "title": "Khung hiển thị kho",
           "icon": "alaindustrial:stock_display_frame",
@@ -3532,6 +3608,36 @@
               ],
               "result_id": "alaindustrial:mutation_chip_duplicate",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "basic_bearing",
+          "title": "Vòng Bi Cơ Bản",
+          "icon": "alaindustrial:basic_bearing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Vòng Bi Cơ Bản",
+              "text": "Vòng bi thường và vòng bi gia cố — khớp xoay cho máy móc, làm từ những chi tiết mà tới giờ gần như chưa có công thức nào dùng đến."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:nickel_plate",
+                "minecraft:iron_nugget",
+                "alaindustrial:nickel_plate",
+                "minecraft:iron_nugget",
+                "alaindustrial:stone_gear",
+                "minecraft:iron_nugget",
+                "alaindustrial:nickel_plate",
+                "minecraft:iron_nugget",
+                "alaindustrial:nickel_plate"
+              ],
+              "result_id": "alaindustrial:basic_bearing",
+              "result_count": 4
             }
           ]
         },
@@ -4183,6 +4289,25 @@
           ]
         },
         {
+          "id": "shielding_pouch",
+          "title": "Túi chắn phóng xạ",
+          "icon": "alaindustrial:shielding_pouch",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Túi chắn phóng xạ",
+              "text": "Bậc thứ hai của Túi Pin, lót chì: vẫn 128 trọng lượng và 2000 EU, nhưng đồ phóng xạ bên trong không còn chiếu xạ ai — cả người mang lẫn quái vật xung quanh."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 2 000 EU"
+              ]
+            }
+          ]
+        },
+        {
           "id": "insulated_chestplate",
           "title": "Giáp ngực cách điện",
           "icon": "alaindustrial:insulated_chestplate",
@@ -4591,6 +4716,36 @@
                 "alaindustrial:silver_plate"
               ],
               "result_id": "alaindustrial:soul_vessel",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "geiger_counter",
+          "title": "Máy đếm Geiger",
+          "icon": "alaindustrial:geiger_counter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Máy đếm Geiger",
+              "text": "Kêu lách tách khi ở gần phóng xạ từ bất kỳ ô hành trang nào — phản hồi duy nhất mà phóng xạ đưa ra."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "",
+                "minecraft:glass_pane",
+                "",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:geiger_counter",
               "result_count": 1
             }
           ]

@@ -11,6 +11,7 @@ import dev.alaindustrial.block.CesuBlock;
 import dev.alaindustrial.block.ChargePadBlock;
 import dev.alaindustrial.block.ComponentRepairBenchBlock;
 import dev.alaindustrial.block.CompressorBlock;
+import dev.alaindustrial.block.RecyclerBlock;
 import dev.alaindustrial.block.CreativeEnergySourceBlock;
 import dev.alaindustrial.block.DaylightSolarPanelBlock;
 import dev.alaindustrial.block.DistillationColumnBlock;
@@ -99,6 +100,7 @@ import net.minecraft.world.item.component.Consumable;
 import dev.alaindustrial.block.entity.EnergyCondenserBlockEntity;
 import dev.alaindustrial.block.entity.ComponentRepairBenchBlockEntity;
 import dev.alaindustrial.block.entity.CompressorBlockEntity;
+import dev.alaindustrial.block.entity.RecyclerBlockEntity;
 import dev.alaindustrial.block.entity.DaylightSolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.DistillationColumnBlockEntity;
 import dev.alaindustrial.block.entity.DistillationColumnSegmentBlockEntity;
@@ -200,6 +202,7 @@ import dev.alaindustrial.menu.ChargePadMenu;
 import dev.alaindustrial.menu.ElectricHeaterMenu;
 import dev.alaindustrial.menu.ComponentRepairBenchMenu;
 import dev.alaindustrial.menu.CompressorMenu;
+import dev.alaindustrial.menu.RecyclerMenu;
 import dev.alaindustrial.menu.DaylightSolarPanelMenu;
 import dev.alaindustrial.menu.DistillationColumnMenu;
 import dev.alaindustrial.menu.DoubleChestMenu;
@@ -351,6 +354,7 @@ public final class ContentManifest {
 			menu("electric_furnace", ElectricFurnaceMenu::new, s -> ModContent.ELECTRIC_FURNACE_MENU = s),
 			menu("extractor", ExtractorMenu::new, s -> ModContent.EXTRACTOR_MENU = s),
 			menu("compressor", CompressorMenu::new, s -> ModContent.COMPRESSOR_MENU = s),
+			menu("recycler", RecyclerMenu::new, s -> ModContent.RECYCLER_MENU = s),
 			menu("component_repair_bench", ComponentRepairBenchMenu::new,
 					s -> ModContent.COMPONENT_REPAIR_BENCH_MENU = s),
 			menu("canning_machine", CanningMachineMenu::new, s -> ModContent.CANNING_MACHINE_MENU = s),
@@ -542,6 +546,11 @@ public final class ContentManifest {
 			block("extractor", ExtractorBlock::new, s -> ModContent.EXTRACTOR = s);
 	public static final BlockDef<CompressorBlock> COMPRESSOR =
 			block("compressor", CompressorBlock::new, s -> ModContent.COMPRESSOR = s);
+	// MOD-145 — the Recycler and the building block its poor slag compacts into.
+	public static final BlockDef<RecyclerBlock> RECYCLER =
+			block("recycler", RecyclerBlock::new, s -> ModContent.RECYCLER = s);
+	public static final BlockDef<Block> SLAG_BLOCK =
+			block("slag_block", Block::new, s -> ModContent.SLAG_BLOCK = s);
 	// Component Repair Bench (MOD-384) — restores worn rotors/wheels instead of recrafting them.
 	public static final BlockDef<ComponentRepairBenchBlock> COMPONENT_REPAIR_BENCH =
 			block("component_repair_bench", ComponentRepairBenchBlock::new,
@@ -797,6 +806,8 @@ public final class ContentManifest {
 			ENRICHED_URANIUM_WALL_TORCH, OIL, DIESEL, FUEL_OIL,
 			// MOD-424 — appended rather than filed next to VULCANIZER, per the ordering note above.
 			THERMAL_CENTRIFUGE,
+			// MOD-145 — likewise appended: the Recycler and the slag block.
+			RECYCLER, SLAG_BLOCK,
 			// MOD-386 — likewise appended, not filed with the other generators.
 			LIGHTNING_ROD_GENERATOR,
 			// MOD-468 — the reactor room's shell, appended as one group.
@@ -1058,6 +1069,8 @@ public final class ContentManifest {
 			Map.entry("electrum_chest", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion())),
 			// MOD-474 — same stats as the storage chests: the shielding is a radiation rule, not armour.
 			Map.entry("shielding_chest", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion())),
+			Map.entry("recycler", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
+			Map.entry("slag_block", machine(p -> p.strength(2.5f, 6.0f).sound(SoundType.STONE))),
 			Map.entry("tempered_iron_block", machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL))),
 			// MOD-225: machine casing (crafting base for machines) + two decorative plate blocks.
 			Map.entry("machine_casing", machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL))),
@@ -1852,7 +1865,20 @@ public final class ContentManifest {
 					registeredBlock("enriched_uranium_wall_torch"), Direction.DOWN,
 					p.useBlockDescriptionPrefix()), s -> ModContent.ENRICHED_URANIUM_TORCH_ITEM = s),
 			// MOD-483 — appended at the very tail; the order of this list is the registration order.
-			blockItem("workstation", s -> ModContent.WORKSTATION_ITEM = s));
+			blockItem("workstation", s -> ModContent.WORKSTATION_ITEM = s),
+			// MOD-145 — the Recycler, its three grades of slag, its ash and the three blade grades.
+			blockItem("recycler", s -> ModContent.RECYCLER_ITEM = s),
+			blockItem("slag_block", s -> ModContent.SLAG_BLOCK_ITEM = s),
+			plain("slag_poor", s -> ModContent.SLAG_POOR = s),
+			plain("slag", s -> ModContent.SLAG = s),
+			plain("slag_rich", s -> ModContent.SLAG_RICH = s),
+			plain("ash", s -> ModContent.ASH = s),
+			durableComponent("recycler_blades_iron", () -> Config.recyclerBladesIronMaxDamage,
+					s -> ModContent.RECYCLER_BLADES_IRON = s),
+			durableComponent("recycler_blades_tempered", () -> Config.recyclerBladesTemperedMaxDamage,
+					s -> ModContent.RECYCLER_BLADES_TEMPERED = s),
+			durableComponent("recycler_blades_diamond", () -> Config.recyclerBladesDiamondMaxDamage,
+					s -> ModContent.RECYCLER_BLADES_DIAMOND = s));
 
 	// ─────────────────────────────────────────────────────────────────────────────────────────
 	// BlockEntity types (MOD-307)
@@ -1993,6 +2019,7 @@ public final class ContentManifest {
 			blockEntity("iron_furnace", IronFurnaceBlockEntity.class, IronFurnaceBlockEntity::new, s -> ModContent.IRON_FURNACE_BE = s, "iron_furnace"),
 			blockEntity("extractor", ExtractorBlockEntity.class, ExtractorBlockEntity::new, s -> ModContent.EXTRACTOR_BE = s, "extractor"),
 			blockEntity("compressor", CompressorBlockEntity.class, CompressorBlockEntity::new, s -> ModContent.COMPRESSOR_BE = s, "compressor"),
+			blockEntity("recycler", RecyclerBlockEntity.class, RecyclerBlockEntity::new, s -> ModContent.RECYCLER_BE = s, "recycler"),
 			blockEntity("canning_machine", CanningMachineBlockEntity.class, CanningMachineBlockEntity::new,
 					s -> ModContent.CANNING_MACHINE_BE = s, "canning_machine"),
 			blockEntity("sawmill", SawmillBlockEntity.class, SawmillBlockEntity::new, s -> ModContent.SAWMILL_BE = s, "sawmill"),

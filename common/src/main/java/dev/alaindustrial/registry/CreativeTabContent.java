@@ -3,6 +3,9 @@ package dev.alaindustrial.registry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import org.jspecify.annotations.Nullable;
@@ -49,6 +52,51 @@ public final class CreativeTabContent {
 
 	/** Logged once per run: a broken handle would otherwise print the same line for every tab rebuild. */
 	private static boolean warnedAboutMissingEntry;
+
+	/**
+	 * Items that belong in the BLOCK band even though they are not {@code BlockItem}s (MOD-574).
+	 *
+	 * <p>Exactly one so far: the Garden Drone is an item, but it is the thing the Garden Drone Station
+	 * launches, and the two are read as one machine. Splitting them across the two bands would put a
+	 * station in the first half of the tab and its drone somewhere among the ingots.
+	 *
+	 * <p>Registry paths rather than handles: this is asked once per entry while the tab is built, and a
+	 * path lookup cannot resolve a half-built handle by accident.
+	 */
+	private static final java.util.Set<String> ITEMS_SHOWN_WITH_BLOCKS = java.util.Set.of("garden_drone");
+
+	/**
+	 * Buffers the tab and hands it back in two bands: everything placeable first, loose items after.
+	 *
+	 * <p><b>Two bands, not three.</b> An earlier revision sorted by silhouette — cubes, then shaped
+	 * blocks, then items — and that read worse, not better: it tore families apart. The reactor room
+	 * came out as six cubes near the top of the tab and its door, button, lever, nozzle and fuel column
+	 * a hundred entries later, with the uranium that feeds it in a third place. Shape is a weaker
+	 * signal than subject; a player hunting for a reactor part looks for the reactor, not for a cube.
+	 *
+	 * <p>So the only thing this class separates is placeable from carryable, and every subject stays in
+	 * one run: the eight cables together, the six buckets together, the twelve reactor blocks together,
+	 * the thirteen uranium items together. Within a band the sequence {@link #fill} produced is kept
+	 * exactly, so the MOD-407 reading order survives; the shape ordering that remains is done by hand
+	 * INSIDE each group, where it cannot separate a family from itself.
+	 */
+	private static final class ShapeSorted implements Sink {
+		private final List<ItemLike> placeable = new ArrayList<>();
+		private final List<ItemLike> carryable = new ArrayList<>();
+
+		@Override
+		public void accept(ItemLike item) {
+			Identifier id = BuiltInRegistries.ITEM.getKey(item.asItem());
+			boolean withBlocks = item.asItem() instanceof BlockItem
+					|| (id != null && ITEMS_SHOWN_WITH_BLOCKS.contains(id.getPath()));
+			(withBlocks ? placeable : carryable).add(item);
+		}
+
+		void drainTo(Sink out) {
+			placeable.forEach(out::accept);
+			carryable.forEach(out::accept);
+		}
+	}
 
 	/**
 	 * Show one entry, and survive it being unavailable (MOD-407).
@@ -134,8 +182,31 @@ public final class CreativeTabContent {
 	 * gears, dusts, nuclear leftovers, the wrench, the chainsaw, a jetpack and three buckets of oil, in
 	 * one run. "Components" had come to mean "everything else", and nothing about the order told the
 	 * player where to look. Each group below answers exactly one question instead.
+	 *
+	 * <p><b>On top of that order the tab is split into two bands</b> (MOD-574): everything placeable
+	 * first, loose items after — see {@link ShapeSorted} for why two and not three. Each subject stays
+	 * in one run inside its band, because that is what a player searches by: the reactor room is twelve
+	 * blocks together and its uranium thirteen items together, the cables are one run of eight, the
+	 * buckets one run of six.
+	 *
+	 * <p><b>Shape is ordered INSIDE a group, never across groups.</b> Within a group the full cubes come
+	 * first and the shaped models follow, so a row of machine cubes is not broken by a flat pipe sprite.
+	 * Doing it the other way round — sorting the whole tab by shape — was tried and reverted: it moved
+	 * the seam to a row boundary at the cost of tearing every family in half.
 	 */
 	public static void main(Sink out) {
+		ShapeSorted sorted = new ShapeSorted();
+		fill(sorted);
+		sorted.drainTo(out);
+	}
+
+	/**
+	 * The tab's content in reading order, before {@link ShapeSorted} groups it by silhouette.
+	 *
+	 * <p>Split out of {@link #main} so this list stays the readable one: every group below is still in
+	 * the order a player meets the mod, and the shape grouping is a separate, mechanical step on top.
+	 */
+	private static void fill(Sink out) {
 		// 1 - where energy comes from.
 		generators(out);
 		// 2 - where it is kept (and, for the teleporter, banked to be spent in one go).
@@ -413,12 +484,13 @@ public final class CreativeTabContent {
 		show(out, ModContent.BATTERY_BOX_ITEM);
 		// Reinforced Energy Storage (MOD-351) - the MV step, directly after the LV box it is built from.
 		show(out, ModContent.CESU_ITEM);
-		// The Charging Station (MOD-274) banks EU exactly like the box above and exists to spend it on
-		// the player, so it belongs next to storage rather than among the processing machines.
-		show(out, ModContent.CHARGE_PAD_ITEM);
-		show(out, ModContent.ENERGY_CONDENSER_ITEM);
 		// Teleporter (MOD-091/092/093): a store with one very expensive way to spend itself.
 		show(out, ModContent.TELEPORTER_ITEM);
+		// --- shaped: the pad is a floor plate, the condenser a lattice (MOD-574).
+		// The Charging Station (MOD-274) banks EU exactly like the boxes above and exists to spend it on
+		// the player, so it belongs with storage rather than among the processing machines.
+		show(out, ModContent.CHARGE_PAD_ITEM);
+		show(out, ModContent.ENERGY_CONDENSER_ITEM);
 	}
 
 	/** 3 - the conductor ladder, each grade immediately followed by its insulated form. */
@@ -435,7 +507,14 @@ public final class CreativeTabContent {
 
 	/** 5 - the fluid chain: source, storage, transport, then the machines that transform fluids. */
 	private static void fluids(Sink out) {
+		// Cubes first, shaped after — inside the group only, so the fluid chain stays one subject.
 		show(out, ModContent.PUMP_ITEM);
+		show(out, ModContent.POLYMERIZER_ITEM);
+		show(out, ModContent.VULCANIZER_ITEM);
+		show(out, ModContent.GALVANIC_BATH_ITEM);
+		// MOD-146: the head of the organic chain, beside the other fluid-fed machines.
+		show(out, ModContent.FERMENTER_ITEM);
+		// --- shaped: the tank and the two pipes draw flat sprites, the tower is a tall model.
 		show(out, ModContent.FLUID_TANK_ITEM);
 		show(out, ModContent.FLUID_PIPE_ITEM);
 		// The item pipe sits next to the fluid pipe: the two carriers are one idea, and a player looking
@@ -445,11 +524,6 @@ public final class CreativeTabContent {
 		// fourth storey (losses 10 % -> 5 %).
 		show(out, ModContent.DISTILLATION_COLUMN_ITEM);
 		show(out, ModContent.RECTIFICATION_SECTION_ITEM);
-		show(out, ModContent.POLYMERIZER_ITEM);
-		show(out, ModContent.VULCANIZER_ITEM);
-		show(out, ModContent.GALVANIC_BATH_ITEM);
-		// MOD-146: the head of the organic chain, beside the other fluid-fed machines.
-		show(out, ModContent.FERMENTER_ITEM);
 	}
 
 	/**
@@ -666,6 +740,15 @@ public final class CreativeTabContent {
 		show(out, ModContent.UNSTABLE_ISOTOPE);
 		show(out, ModContent.IRRADIATED_SLAG);
 		show(out, ModContent.IRRADIATED_DIAMOND);
+		// MOD-145 - the Recycler's family: its three grades of slag, its ash and its blades.
+		show(out, ModContent.SLAG_POOR);
+		show(out, ModContent.SLAG);
+		show(out, ModContent.SLAG_RICH);
+		show(out, ModContent.SLAG_BLOCK_ITEM);
+		show(out, ModContent.ASH);
+		show(out, ModContent.RECYCLER_BLADES_IRON);
+		show(out, ModContent.RECYCLER_BLADES_TEMPERED);
+		show(out, ModContent.RECYCLER_BLADES_DIAMOND);
 		show(out, ModContent.RESONANT_SHARD);
 		show(out, ModContent.MUTAGEN_DUST);
 		// MOD-468, stage 1 - the reactor room's shell. Kept in the nuclear group rather than with the
@@ -675,10 +758,12 @@ public final class CreativeTabContent {
 		show(out, ModContent.IRRADIATED_SOIL_ITEM);
 		show(out, ModContent.REACTOR_GLASS_ITEM);
 		show(out, ModContent.REACTOR_PORT_ITEM);
-		show(out, ModContent.REACTOR_DOOR_ITEM);
 		show(out, ModContent.REACTOR_CONTROLLER_ITEM);
 		show(out, ModContent.REACTOR_LAMP_ITEM);
 		show(out, ModContent.REACTOR_OUTLET_ITEM);
+		// --- the shaped parts of the same room (MOD-574): a door, a nozzle, the two controls and the
+		// fuel column all draw something other than a cube. They stay in the room, not in a shape band.
+		show(out, ModContent.REACTOR_DOOR_ITEM);
 		show(out, ModContent.STEAM_NOZZLE_ITEM);
 		show(out, ModContent.REACTOR_BUTTON_ITEM);
 		show(out, ModContent.REACTOR_LEVER_ITEM);
@@ -696,7 +781,6 @@ public final class CreativeTabContent {
 		// The Industrial Workbench is a decorative building block (MOD-062 villager POI) and also shows
 		// in vanilla Building Blocks; listed here too so players browsing the mod's tab find it.
 		show(out, ModContent.INDUSTRIAL_WORKBENCH_ITEM);
-		show(out, ModContent.ENRICHED_URANIUM_TORCH_ITEM);
 		// Mob Repeller family (MOD-278): the crafted LV block then its two evolved tiers. Listed here
 		// as well as in utility() because those are different tabs — utility() feeds vanilla's
 		// Functional Blocks, and only what main() calls reaches the mod's OWN tab.
@@ -706,6 +790,8 @@ public final class CreativeTabContent {
 		// MOD-483 — the workstation, listed in the mod's own tab as well as in vanilla's Functional
 		// Blocks for the same reason as the repellers above.
 		show(out, ModContent.WORKSTATION_ITEM);
+		// --- shaped last (MOD-574): the torch is a sprite among cubes.
+		show(out, ModContent.ENRICHED_URANIUM_TORCH_ITEM);
 	}
 
 	/** 13 - the armour and weapon lines, plain tempered iron first, then the EU set. */
@@ -753,9 +839,7 @@ public final class CreativeTabContent {
 	}
 
 	private static void generators(Sink out) {
-		show(out, ModContent.SOLAR_PANEL_ITEM);
-		show(out, ModContent.DAYLIGHT_SOLAR_PANEL_ITEM);
-		show(out, ModContent.MOONLIT_SOLAR_PANEL_ITEM);
+		// Cubes first, shaped models after them — inside the group only (MOD-574).
 		show(out, ModContent.GENERATOR_ITEM);
 		show(out, ModContent.GEOTHERMAL_GENERATOR_ITEM);
 		show(out, ModContent.WATER_MILL_ITEM);
@@ -765,9 +849,13 @@ public final class CreativeTabContent {
 		// so they are listed right after the T1 mill as the visible tail of the wind progression.
 		show(out, ModContent.HIGH_ALTITUDE_WIND_MILL_ITEM);
 		show(out, ModContent.STORM_WIND_MILL_ITEM);
-		show(out, ModContent.LIGHTNING_ROD_GENERATOR_ITEM);
 		// MOD-479 — a QA instrument with no recipe: the creative tab is the only way to it.
 		show(out, ModContent.CREATIVE_ENERGY_SOURCE_ITEM);
+		// --- shaped: the panels draw a flat GUI sprite of their own, the rod is a mast.
+		show(out, ModContent.SOLAR_PANEL_ITEM);
+		show(out, ModContent.DAYLIGHT_SOLAR_PANEL_ITEM);
+		show(out, ModContent.MOONLIT_SOLAR_PANEL_ITEM);
+		show(out, ModContent.LIGHTNING_ROD_GENERATOR_ITEM);
 	}
 
 	/**
@@ -782,22 +870,25 @@ public final class CreativeTabContent {
 		show(out, ModContent.MACERATOR_ITEM);
 		show(out, ModContent.EXTRACTOR_ITEM);
 		show(out, ModContent.COMPRESSOR_ITEM);
+		// MOD-145 - the Recycler next to the crusher family: same idea, opposite end of the value chain.
+		show(out, ModContent.RECYCLER_ITEM);
 		show(out, ModContent.COMPONENT_REPAIR_BENCH_ITEM);
 		show(out, ModContent.SAWMILL_ITEM);
 		show(out, ModContent.ALLOY_SMELTER_ITEM);
 		show(out, ModContent.CANNING_MACHINE_ITEM);
 		show(out, ModContent.ELECTRIC_HEATER_ITEM);
-		// MOD-424 - directly after the heater it stands on, because it does nothing without one.
-		show(out, ModContent.THERMAL_CENTRIFUGE_ITEM);
-		// Agriculture: the station and the drone it flies.
 		show(out, ModContent.INCUBATOR_ITEM);
+		// MOD-275 - the first MV machine, last of the cubes because it sits a tier above the rest.
+		show(out, ModContent.ASSEMBLER_ITEM);
+		// --- shaped models close the group (MOD-574); the family itself stays here, one row down.
+		// MOD-424 - the centrifuge stands ON the heater above and does nothing without one.
+		show(out, ModContent.THERMAL_CENTRIFUGE_ITEM);
+		// Agriculture: the station and the drone it flies, kept adjacent.
 		show(out, ModContent.GARDEN_DRONE_STATION_ITEM);
 		show(out, ModContent.GARDEN_DRONE);
 		// MOD-525: the sprinkler belongs with the farm blocks, not with the machines — it takes
 		// no cable and its whole job is the plot around it.
 		show(out, ModContent.SPRINKLER_ITEM);
-		// MOD-275 - the first MV machine, last in the list because it sits a tier above the rest.
-		show(out, ModContent.ASSEMBLER_ITEM);
 	}
 
 

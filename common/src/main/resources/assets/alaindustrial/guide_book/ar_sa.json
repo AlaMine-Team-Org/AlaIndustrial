@@ -1614,6 +1614,44 @@
           ]
         },
         {
+          "id": "recycler",
+          "title": "معيد التدوير",
+          "icon": "alaindustrial:recycler",
+          "pages": [
+            {
+              "type": "text",
+              "title": "معيد التدوير",
+              "text": "يطحن أي نفايات إلى قوالب خبث. لا تعتمد الدرجة على كمية النفايات بل على تنوعها: دفعة من نوع واحد تعطي خبثًا فقيرًا، والخليط الصحيح يعطي خبثًا غنيًا."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "الطاقة: 8 EU/t",
+                "الاحتياطي: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "minecraft:iron_ingot",
+                "alaindustrial:recycler_blades_iron",
+                "minecraft:iron_ingot",
+                "alaindustrial:recycler_blades_iron",
+                "alaindustrial:machine_casing",
+                "alaindustrial:recycler_blades_iron",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:recycler",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "مستخلص",
           "icon": "alaindustrial:extractor",
@@ -2381,7 +2419,7 @@
             {
               "type": "text",
               "title": "كوك ساغيز",
-              "text": "«الطرخشقون الروسي» المعمّر — المصدر المتجدد للمطاط. عمود من الزهرة وجذر بعمق كتلتين: احفر طرف الجذر بلا نهاية، والنبات يبقى ويعيد إنباته. يُسحق الجذر في الساحق إلى مطاط خام مع الإينولين كمنتج جانبي."
+              "text": "هندباء مطاطية من سهوب كازاخستان — مطاط يمكنك زراعته. الزهرة في الأعلى والجذر على عمق كتلتين: احصد القمة كما تشاء، فالنبتة تبقى حية وتُنبتها من جديد."
             }
           ]
         },
@@ -3105,6 +3143,44 @@
           ]
         },
         {
+          "id": "workstation",
+          "title": "محطة العمل",
+          "icon": "alaindustrial:workstation",
+          "pages": [
+            {
+              "type": "text",
+              "title": "محطة العمل",
+              "text": "حاسوب يُجمَّع من هيكلين موضوعين أحدهما فوق الآخر. يسحب الطاقة من الشبكة ويعمل محطة عمل خاصة باللاعب."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "الطاقة: 6 EU/t",
+                "المخزن: 40000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "#c:glass_panes",
+                "alaindustrial:resonant_crystal",
+                "#c:glass_panes",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:reactor_circuit",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:reinforced_bearing",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:reinforced_bearing"
+              ],
+              "result_id": "alaindustrial:workstation",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "stock_display_frame",
           "title": "إطار عرض المخزون",
           "icon": "alaindustrial:stock_display_frame",
@@ -3532,6 +3608,36 @@
               ],
               "result_id": "alaindustrial:mutation_chip_duplicate",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "basic_bearing",
+          "title": "محمل بسيط",
+          "icon": "alaindustrial:basic_bearing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "محمل بسيط",
+              "text": "محامل عادية ومقوّاة — مفاصل دوّارة للآلات، مصنوعة من قطع لم يكن لها حتى الآن وصفة تُذكر."
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "alaindustrial:nickel_plate",
+                "minecraft:iron_nugget",
+                "alaindustrial:nickel_plate",
+                "minecraft:iron_nugget",
+                "alaindustrial:stone_gear",
+                "minecraft:iron_nugget",
+                "alaindustrial:nickel_plate",
+                "minecraft:iron_nugget",
+                "alaindustrial:nickel_plate"
+              ],
+              "result_id": "alaindustrial:basic_bearing",
+              "result_count": 4
             }
           ]
         },
@@ -4183,6 +4289,25 @@
           ]
         },
         {
+          "id": "shielding_pouch",
+          "title": "كيس واقٍ من الإشعاع",
+          "icon": "alaindustrial:shielding_pouch",
+          "pages": [
+            {
+              "type": "text",
+              "title": "كيس واقٍ من الإشعاع",
+              "text": "المستوى الثاني من كيس البطاريات، مبطَّن بالرصاص: الوزن نفسه 128 و2000 EU، لكن المحتوى المشع لم يعد يشعّ على أحد — لا على حامله ولا على الكائنات من حوله."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "الطاقة: 2 000 EU"
+              ]
+            }
+          ]
+        },
+        {
           "id": "insulated_chestplate",
           "title": "درع صدر عازل",
           "icon": "alaindustrial:insulated_chestplate",
@@ -4591,6 +4716,36 @@
                 "alaindustrial:silver_plate"
               ],
               "result_id": "alaindustrial:soul_vessel",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "geiger_counter",
+          "title": "عداد جايجر",
+          "icon": "alaindustrial:geiger_counter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "عداد جايجر",
+              "text": "يطقطق قرب الإشعاع من أي خانة في الحقيبة — وهو ردّ الفعل الوحيد الذي يعطيه الإشعاع."
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "",
+                "minecraft:glass_pane",
+                "",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:geiger_counter",
               "result_count": 1
             }
           ]

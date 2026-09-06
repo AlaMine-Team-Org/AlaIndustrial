@@ -1614,6 +1614,44 @@
           ]
         },
         {
+          "id": "recycler",
+          "title": "Утилизатор",
+          "icon": "alaindustrial:recycler",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Утилизатор",
+              "text": "Перемалывает любой мусор в шлаковые брикеты. Сорт брикета зависит не от количества мусора, а от его разнообразия — однородная садка платит балластом, смешанная даёт зернистый шлак."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Энергия: 8 EU/т",
+                "Буфер: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "minecraft:iron_ingot",
+                "alaindustrial:recycler_blades_iron",
+                "minecraft:iron_ingot",
+                "alaindustrial:recycler_blades_iron",
+                "alaindustrial:machine_casing",
+                "alaindustrial:recycler_blades_iron",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:recycler",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "Экстрактор",
           "icon": "alaindustrial:extractor",
@@ -2381,7 +2419,7 @@
             {
               "type": "text",
               "title": "Кок-сагыз",
-              "text": "Многолетний «русский одуванчик» — возобновляемый источник резины. Колонна из цветка и корня на два блока в глубину: кончик корня откапывается бесконечно, растение живёт и отращивает его заново. Корень дробится в каучук с побочным инулином."
+              "text": "Каучуконосный одуванчик из казахстанских степей — резина, которая растёт. Цветок наверху, корень на два блока вглубь: кончик откапывается бесконечно, растение живёт и отращивает его заново."
             }
           ]
         },
@@ -3105,6 +3143,44 @@
           ]
         },
         {
+          "id": "workstation",
+          "title": "Рабочая станция",
+          "icon": "alaindustrial:workstation",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Рабочая станция",
+              "text": "Компьютер, который собирается из двух заготовок, поставленных друг на друга. Питается от сети и служит рабочим местом игрока."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Энергия: 6 EU/t",
+                "Буфер: 40000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "#c:glass_panes",
+                "alaindustrial:resonant_crystal",
+                "#c:glass_panes",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:reactor_circuit",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:reinforced_bearing",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:reinforced_bearing"
+              ],
+              "result_id": "alaindustrial:workstation",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "stock_display_frame",
           "title": "Рамка-индикатор",
           "icon": "alaindustrial:stock_display_frame",
@@ -3532,6 +3608,36 @@
               ],
               "result_id": "alaindustrial:mutation_chip_duplicate",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "basic_bearing",
+          "title": "Простой подшипник",
+          "icon": "alaindustrial:basic_bearing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Простой подшипник",
+              "text": "Простой и усиленный подшипники — вращающиеся узлы для механизмов; собираются из деталей, которые до сих пор почти не использовались."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "alaindustrial:nickel_plate",
+                "minecraft:iron_nugget",
+                "alaindustrial:nickel_plate",
+                "minecraft:iron_nugget",
+                "alaindustrial:stone_gear",
+                "minecraft:iron_nugget",
+                "alaindustrial:nickel_plate",
+                "minecraft:iron_nugget",
+                "alaindustrial:nickel_plate"
+              ],
+              "result_id": "alaindustrial:basic_bearing",
+              "result_count": 4
             }
           ]
         },
@@ -4183,6 +4289,25 @@
           ]
         },
         {
+          "id": "shielding_pouch",
+          "title": "Защищённый мешок",
+          "icon": "alaindustrial:shielding_pouch",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Защищённый мешок",
+              "text": "Второй тир батарейного мешка, подбитый свинцом: те же 128 веса и 2000 EU, но радиоактивное внутри не облучает никого — ни носителя, ни мобов вокруг."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Энергия: 2 000 EU"
+              ]
+            }
+          ]
+        },
+        {
           "id": "insulated_chestplate",
           "title": "Изолирующий нагрудник",
           "icon": "alaindustrial:insulated_chestplate",
@@ -4591,6 +4716,36 @@
                 "alaindustrial:silver_plate"
               ],
               "result_id": "alaindustrial:soul_vessel",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "geiger_counter",
+          "title": "Счётчик Гейгера",
+          "icon": "alaindustrial:geiger_counter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Счётчик Гейгера",
+              "text": "Щёлкает рядом с радиацией из любого слота инвентаря — единственная обратная связь, которую радиация вообще имеет."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "",
+                "minecraft:glass_pane",
+                "",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:geiger_counter",
               "result_count": 1
             }
           ]

@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": {
+		"M": "#c:ingots/iron",
+		"B": "alaindustrial:basic_bearing",
+		"G": "alaindustrial:iron_gear"
+	},
+	"pattern": [
+		" M ",
+		"MBM",
+		" G "
+	],
+	"result": {
+		"id": "alaindustrial:recycler_blades_iron"
+	}
+}

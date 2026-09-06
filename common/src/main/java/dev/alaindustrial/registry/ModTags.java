@@ -192,6 +192,13 @@ public final class ModTags {
 		 */
 		public static final TagKey<Item> WINDMILL_ROTORS = key("windmill_rotors");
 
+		/**
+		 * Every grade of Recycler blade (MOD-145) — what the blade slot accepts, and what the input slot
+		 * refuses. The refusal matters: the machine is greedy and would happily grind its own spare parts
+		 * if a pipe pushed them into the waste slot.
+		 */
+		public static final TagKey<Item> RECYCLER_BLADES = key("recycler_blades");
+
 		/** Every grade of water mill wheel (MOD-385) — the wheel slot's filter. Twin of {@link #WINDMILL_ROTORS}. */
 		public static final TagKey<Item> WATER_MILL_WHEELS = key("water_mill_wheels");
 

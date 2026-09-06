@@ -1614,6 +1614,44 @@
           ]
         },
         {
+          "id": "recycler",
+          "title": "Utylizator",
+          "icon": "alaindustrial:recycler",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Utylizator",
+              "text": "Rozdrabnia dowolne śmieci na brykiety żużla. Gatunek zależy nie od ilości śmieci, lecz od ich różnorodności — jednorodny wsad daje ubogi żużel, właściwa mieszanka bogaty."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Energia: 8 EU/t",
+                "Bufor: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "minecraft:iron_ingot",
+                "alaindustrial:recycler_blades_iron",
+                "minecraft:iron_ingot",
+                "alaindustrial:recycler_blades_iron",
+                "alaindustrial:machine_casing",
+                "alaindustrial:recycler_blades_iron",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:recycler",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "Ekstraktor",
           "icon": "alaindustrial:extractor",
@@ -2381,7 +2419,7 @@
             {
               "type": "text",
               "title": "Kok-sagiz",
-              "text": "Wieloletni «rosyjski mniszek» — odnawialne źródło gumy. Kolumna kwiatu i korzenia sięgającego dwa bloki w głąb: kop czubek korzenia bez końca, roślina przeżywa i odrasta. Korzeń trafia do Rozdrabniacza na surowy kauczuk, z inuliną jako produktem ubocznym."
+              "text": "Mniszek kauczukodajny ze stepu kazachskiego — kauczuk, który da się uprawiać. Kwiat na górze, korzeń dwa bloki niżej: zrywaj wierzchołek do woli, roślina przeżyje i odrośnie."
             }
           ]
         },
@@ -3105,6 +3143,44 @@
           ]
         },
         {
+          "id": "workstation",
+          "title": "Stacja robocza",
+          "icon": "alaindustrial:workstation",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Stacja robocza",
+              "text": "Komputer złożony z dwóch obudów postawionych jedna na drugiej. Pobiera prąd z sieci i służy graczowi za własne stanowisko pracy."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Energia: 6 EU/t",
+                "Bufor: 40000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "#c:glass_panes",
+                "alaindustrial:resonant_crystal",
+                "#c:glass_panes",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:reactor_circuit",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:reinforced_bearing",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:reinforced_bearing"
+              ],
+              "result_id": "alaindustrial:workstation",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "stock_display_frame",
           "title": "Ramka wskaźnika zapasów",
           "icon": "alaindustrial:stock_display_frame",
@@ -3532,6 +3608,36 @@
               ],
               "result_id": "alaindustrial:mutation_chip_duplicate",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "basic_bearing",
+          "title": "Proste łożysko",
+          "icon": "alaindustrial:basic_bearing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Proste łożysko",
+              "text": "Łożyska zwykłe i wzmocnione — obrotowe przeguby do maszyn, zbudowane z części, które do tej pory prawie nie miały przepisu."
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "alaindustrial:nickel_plate",
+                "minecraft:iron_nugget",
+                "alaindustrial:nickel_plate",
+                "minecraft:iron_nugget",
+                "alaindustrial:stone_gear",
+                "minecraft:iron_nugget",
+                "alaindustrial:nickel_plate",
+                "minecraft:iron_nugget",
+                "alaindustrial:nickel_plate"
+              ],
+              "result_id": "alaindustrial:basic_bearing",
+              "result_count": 4
             }
           ]
         },
@@ -4183,6 +4289,25 @@
           ]
         },
         {
+          "id": "shielding_pouch",
+          "title": "Sakwa ekranująca",
+          "icon": "alaindustrial:shielding_pouch",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Sakwa ekranująca",
+              "text": "Drugi stopień sakwy na baterie, wyłożony ołowiem: ta sama waga 128 i 2000 EU, ale radioaktywna zawartość już nikogo nie napromieniowuje — ani noszącego, ani mobów wokół."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Energia: 2 000 EU"
+              ]
+            }
+          ]
+        },
+        {
           "id": "insulated_chestplate",
           "title": "Napierśnik izolacyjny",
           "icon": "alaindustrial:insulated_chestplate",
@@ -4591,6 +4716,36 @@
                 "alaindustrial:silver_plate"
               ],
               "result_id": "alaindustrial:soul_vessel",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "geiger_counter",
+          "title": "Licznik Geigera",
+          "icon": "alaindustrial:geiger_counter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Licznik Geigera",
+              "text": "Trzeszczy przy promieniowaniu z dowolnego slotu ekwipunku — to jedyna informacja zwrotna, jaką daje promieniowanie."
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "",
+                "minecraft:glass_pane",
+                "",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:geiger_counter",
               "result_count": 1
             }
           ]

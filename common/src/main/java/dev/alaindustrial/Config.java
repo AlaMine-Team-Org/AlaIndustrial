@@ -1133,6 +1133,30 @@ public final class Config {
 	@Knob(section = Section.MACHINES, min = 1,
 			doc = "Ticks an extractor takes per operation at 1.0 speed.")
 	public static int extractorDuration = 120;
+	/**
+	 * Recycler (MOD-145). The machine grinds ONE item per operation and casts a briquette once the batch
+	 * reaches {@link #recyclerBatchMass}; the numbers below are therefore per item, not per briquette.
+	 * A stack of blocks (mass 4 each) is 16 items to a batch, so one full batch costs about the same as
+	 * five macerator runs — junk must never be cheaper to process than ore is to mine.
+	 */
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "Ticks a recycler takes to grind one item at 1.0 speed, before the blade grade.")
+	public static int recyclerDuration = 40;
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "EU per tick a recycler draws while grinding.")
+	public static int recyclerEuPerTick = 8;
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "Slag mass a recycler batch must reach before it casts a briquette.")
+	public static int recyclerBatchMass = 64;
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "Items an iron recycler blade set grinds before it wears out.")
+	public static int recyclerBladesIronMaxDamage = 256;
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "Items a tempered-iron recycler blade set grinds before it wears out.")
+	public static int recyclerBladesTemperedMaxDamage = 768;
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "Items a diamond recycler blade set grinds before it wears out.")
+	public static int recyclerBladesDiamondMaxDamage = 2048;
 	/** Sawmill (MOD-150): ticks per cut at 1.0 speed. 80 → 160 EU/op — the cheapest machine op (wood
 	 * saws easier than ore mills): furnace 100, extractor 120, compressor 130, macerator 150. */
 	@Knob(section = Section.MACHINES, min = 1,

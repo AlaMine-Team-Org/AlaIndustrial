@@ -96,6 +96,10 @@ public class ScreensClientGameTest implements FabricClientGameTest {
             // status line. That is the state worth guarding: this machine's whole point is that it does
             // nothing until switched on, and a regression into a spinning idle would read as working.
             new Screen("thermal_centrifuge", "thermal_centrifuge", "Thermal Centrifuge"),
+            // MOD-145: the Recycler. Its window is the tallest in the mod (176x222) and carries four
+            // gauges, so a frame here is the only thing that would catch a layout that drifts off its
+            // troughs — which is exactly how the first two drafts broke.
+            new Screen("recycler", "recycler", "Recycler"),
             new Screen("canning_machine", "canning_machine", "Canning Machine"),
             new Screen("alloy_smelter", "alloy_smelter", "Alloy Smelter"),
             new Screen("galvanic_bath", "galvanic_bath", "Galvanic Bath"),

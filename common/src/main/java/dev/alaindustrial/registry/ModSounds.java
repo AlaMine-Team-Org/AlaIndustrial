@@ -84,6 +84,8 @@ public final class ModSounds {
 	public static Supplier<SoundEvent> ENERGY_CONDENSER_HUM = unbound("ENERGY_CONDENSER_HUM");
 	public static Supplier<SoundEvent> COMPONENT_REPAIR_BENCH_HUM = unbound("COMPONENT_REPAIR_BENCH_HUM");
 	public static Supplier<SoundEvent> INCUBATOR_HUM = unbound("INCUBATOR_HUM");
+	public static Supplier<SoundEvent> ALLOY_SMELTER_HUM = unbound("ALLOY_SMELTER_HUM");
+	public static Supplier<SoundEvent> ELECTRIC_HEATER_HUM = unbound("ELECTRIC_HEATER_HUM");
 	public static Supplier<SoundEvent> REACTOR_HUM = unbound("REACTOR_HUM");
 	public static Supplier<SoundEvent> REACTOR_ALARM = unbound("REACTOR_ALARM");
 
@@ -145,6 +147,15 @@ public final class ModSounds {
 			// obvious Geiger ticking so the machine reads as growing something rather than as a hazard —
 			// the irradiation is the method here, not the point.
 			variableRange("incubator_hum", s -> INCUBATOR_HUM = s),
+			// MOD-573 — the alloy smelter's induction ring. Its javadoc used to say it stayed silent
+			// "following the sawmill's precedent"; the sawmill got a voice in MOD-447, so the precedent
+			// was gone and the smelter was simply the last processing machine nobody had reached.
+			variableRange("alloy_smelter_hum", s -> ALLOY_SMELTER_HUM = s),
+			// MOD-573 — the electric heater's coil. Deliberately NOT a hiss: the vulcanizer this block
+			// feeds sits directly on top of it and already hisses steam (vanilla FIRE_EXTINGUISH), and
+			// two hissing blocks stacked would read as one undifferentiated noise. MOD-258 had left this
+			// block silent for that same reason; the decision was revisited by the owner on 2026-09-06.
+			variableRange("electric_heater_hum", s -> ELECTRIC_HEATER_HUM = s),
 			// MOD-472 — the reactor's core drone, played per VOICED COLUMN rather than once at the
 			// controller: the noise belongs to the fuel racks standing on the floor, and a room the player
 			// walks around should sound like a hall, not like a panel on the wall. The controller picks

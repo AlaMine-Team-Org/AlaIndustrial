@@ -270,5 +270,25 @@
         "preload": true
       }
     ]
+  },
+  "alloy_smelter_hum": {
+    "subtitle": "subtitles.alaindustrial.alloy_smelter_hum",
+    "sounds": [
+      {
+        "name": "alaindustrial:alloy_smelter_hum",
+        "stream": false,
+        "preload": true
+      }
+    ]
+  },
+  "electric_heater_hum": {
+    "subtitle": "subtitles.alaindustrial.electric_heater_hum",
+    "sounds": [
+      {
+        "name": "alaindustrial:electric_heater_hum",
+        "stream": false,
+        "preload": true
+      }
+    ]
   }
 }

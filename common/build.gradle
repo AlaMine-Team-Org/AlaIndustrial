@@ -208,6 +208,9 @@ pitest {
                      // status enums above, and added here WITH the class and its L1 suite
                      // (ReactorRoomStatusTest), not a release later.
                      'dev.alaindustrial.block.entity.ReactorRoomStatus',
+                     // MOD-145: why the Recycler is idle. MC-free enum, same shape as the two
+                     // above, added here with the class rather than a release later.
+                     'dev.alaindustrial.block.entity.RecyclerStatus',
                      // MOD-468 stage 3: the reason a reactor is idle. Same shape and same reason as
                      // the enum above — MC-free so the panel's diagnostics can be exercised by L1.
                      'dev.alaindustrial.block.entity.ReactorIdleReason',
@@ -298,6 +301,14 @@ pitest {
     // (HudSmootherTest, LevelMathTest, GuidePaginatorTest, TemperedGearRollTest) invisible to PIT.
     targetTests = ['dev.alaindustrial.*Test']
     excludedClasses = [
+            // MOD-145: the Recycler's two Minecraft-coupled waste classes. WasteClassifier reads
+            // ItemStack/ItemTags/SoundType and BladeTier compares against registered items, so both
+            // reference net.minecraft types that common/'s test classpath does not carry — their
+            // mutants would be guaranteed NO_COVERAGE. The rule they exist for is mutated instead,
+            // in SlagGrade (MC-free, covered by SlagGradeTest); the classification chain itself is
+            // covered by the machine's game tests.
+            'dev.alaindustrial.core.waste.WasteClassifier',
+            'dev.alaindustrial.core.waste.BladeTier',
             // MOD-483: two skill-tree classes that the `dev.alaindustrial.skill.*` target glob sweeps in
             // but PIT cannot mutate here. PlayerSkills is the attachment's codec form (Codec, MapCodec,
             // StreamCodec, RegistryFriendlyByteBuf) and SkillStore is the server-side accessor seam over

@@ -1614,6 +1614,44 @@
           ]
         },
         {
+          "id": "recycler",
+          "title": "पुनर्चक्रक",
+          "icon": "alaindustrial:recycler",
+          "pages": [
+            {
+              "type": "text",
+              "title": "पुनर्चक्रक",
+              "text": "किसी भी कचरे को पीसकर धातुमल की ईंटें बनाता है। श्रेणी इस पर निर्भर करती है कि कचरा कितना विविध था, न कि कितना था — एक ही तरह का बैच निम्न धातुमल देता है, सही मिश्रण समृद्ध धातुमल।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 8 EU/t",
+                "बफ़र: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:iron_ingot",
+                "alaindustrial:recycler_blades_iron",
+                "minecraft:iron_ingot",
+                "alaindustrial:recycler_blades_iron",
+                "alaindustrial:machine_casing",
+                "alaindustrial:recycler_blades_iron",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:recycler",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "एक्सट्रैक्टर",
           "icon": "alaindustrial:extractor",
@@ -2381,7 +2419,7 @@
             {
               "type": "text",
               "title": "कोक-साग़िज़",
-              "text": "बहुवर्षीय «रूसी डेंडेलायन» — रबर का नवीकरणीय स्रोत। एक फूल और दो ब्लॉक गहरी जड़ का स्तंभ: जड़ की नोक को बार-बार खोदते रहिए, पौधा ज़िंदा रहता है और नोक फिर उगा लेता है। जड़ को पेषक में पीसकर कच्चा रबर बनता है, और उपोत्पाद के रूप में इनुलिन मिलता है।"
+              "text": "कज़ाख़ मैदानों का रबरयुक्त डैंडिलियन — ऐसा रबर जिसे आप उगा सकते हैं। ऊपर फूल, दो ब्लॉक नीचे जड़: सिरा जितनी बार चाहें काटें, पौधा बचा रहता है और उसे फिर उगा देता है।"
             }
           ]
         },
@@ -3105,6 +3143,44 @@
           ]
         },
         {
+          "id": "workstation",
+          "title": "कार्य केंद्र",
+          "icon": "alaindustrial:workstation",
+          "pages": [
+            {
+              "type": "text",
+              "title": "कार्य केंद्र",
+              "text": "एक के ऊपर एक रखे दो केसिंग से बना कंप्यूटर। यह ग्रिड से बिजली लेता है और खिलाड़ी के अपने कार्यस्थल का काम करता है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 6 EU/t",
+                "बफ़र: 40000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "#c:glass_panes",
+                "alaindustrial:resonant_crystal",
+                "#c:glass_panes",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:reactor_circuit",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:reinforced_bearing",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:reinforced_bearing"
+              ],
+              "result_id": "alaindustrial:workstation",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "stock_display_frame",
           "title": "स्टॉक प्रदर्शन फ्रेम",
           "icon": "alaindustrial:stock_display_frame",
@@ -3532,6 +3608,36 @@
               ],
               "result_id": "alaindustrial:mutation_chip_duplicate",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "basic_bearing",
+          "title": "साधारण बेयरिंग",
+          "icon": "alaindustrial:basic_bearing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "साधारण बेयरिंग",
+              "text": "साधारण और प्रबलित बेयरिंग — मशीनों के लिए घूमने वाले जोड़, उन हिस्सों से बने जिनके लिए अब तक लगभग कोई विधि नहीं थी।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:nickel_plate",
+                "minecraft:iron_nugget",
+                "alaindustrial:nickel_plate",
+                "minecraft:iron_nugget",
+                "alaindustrial:stone_gear",
+                "minecraft:iron_nugget",
+                "alaindustrial:nickel_plate",
+                "minecraft:iron_nugget",
+                "alaindustrial:nickel_plate"
+              ],
+              "result_id": "alaindustrial:basic_bearing",
+              "result_count": 4
             }
           ]
         },
@@ -4183,6 +4289,25 @@
           ]
         },
         {
+          "id": "shielding_pouch",
+          "title": "परिरक्षण थैली",
+          "icon": "alaindustrial:shielding_pouch",
+          "pages": [
+            {
+              "type": "text",
+              "title": "परिरक्षण थैली",
+              "text": "बैटरी थैली का दूसरा स्तर, सीसे की परत वाला: वही 128 भार और 2000 EU, लेकिन रेडियोधर्मी सामान अब किसी को विकिरण नहीं देता — न ले जाने वाले को, न आसपास के जीवों को।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 2 000 EU"
+              ]
+            }
+          ]
+        },
+        {
           "id": "insulated_chestplate",
           "title": "रोधक कवच",
           "icon": "alaindustrial:insulated_chestplate",
@@ -4591,6 +4716,36 @@
                 "alaindustrial:silver_plate"
               ],
               "result_id": "alaindustrial:soul_vessel",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "geiger_counter",
+          "title": "गाइगर काउंटर",
+          "icon": "alaindustrial:geiger_counter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "गाइगर काउंटर",
+              "text": "विकिरण के पास किसी भी इन्वेंटरी स्लॉट से टिकटिक करता है — विकिरण की एकमात्र प्रतिक्रिया यही है।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "",
+                "minecraft:glass_pane",
+                "",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:geiger_counter",
               "result_count": 1
             }
           ]

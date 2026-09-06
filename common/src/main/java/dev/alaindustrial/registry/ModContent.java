@@ -13,6 +13,7 @@ import dev.alaindustrial.menu.ChargePadMenu;
 import dev.alaindustrial.menu.ElectricHeaterMenu;
 import dev.alaindustrial.menu.CanningMachineMenu;
 import dev.alaindustrial.menu.CompressorMenu;
+import dev.alaindustrial.menu.RecyclerMenu;
 import dev.alaindustrial.menu.DaylightSolarPanelMenu;
 import dev.alaindustrial.menu.DistillationColumnMenu;
 import dev.alaindustrial.menu.ElectrumChestMenu;
@@ -151,6 +152,10 @@ public final class ModContent {
 	public static Supplier<Block> ELECTRIC_FURNACE = unbound("ELECTRIC_FURNACE");
 	public static Supplier<Block> EXTRACTOR = unbound("EXTRACTOR");
 	public static Supplier<Block> COMPRESSOR = unbound("COMPRESSOR");
+	/** MOD-145: the Recycler grinds junk into slag briquettes. */
+	public static Supplier<Block> RECYCLER = unbound("RECYCLER");
+	/** MOD-145: nine briquettes of poor slag, stored as a building block. */
+	public static Supplier<Block> SLAG_BLOCK = unbound("SLAG_BLOCK");
 	/** Component Repair Bench (MOD-384) — restores worn rotors and wheels. */
 	public static Supplier<Block> COMPONENT_REPAIR_BENCH = unbound("COMPONENT_REPAIR_BENCH");
 	public static Supplier<Block> CANNING_MACHINE = unbound("CANNING_MACHINE");
@@ -328,6 +333,14 @@ public final class ModContent {
 	public static Supplier<Item> MUTATION_CHIP_DUPLICATE = unbound("MUTATION_CHIP_DUPLICATE");
 	public static Supplier<Item> MUTATION_CHIP_CREATE = unbound("MUTATION_CHIP_CREATE");
 	public static Supplier<Item> IRRADIATED_SLAG = unbound("IRRADIATED_SLAG");
+	// MOD-145 — the Recycler's output family: three grades of briquette, its ash, and the blades.
+	public static Supplier<Item> SLAG_POOR = unbound("SLAG_POOR");
+	public static Supplier<Item> SLAG = unbound("SLAG");
+	public static Supplier<Item> SLAG_RICH = unbound("SLAG_RICH");
+	public static Supplier<Item> ASH = unbound("ASH");
+	public static Supplier<Item> RECYCLER_BLADES_IRON = unbound("RECYCLER_BLADES_IRON");
+	public static Supplier<Item> RECYCLER_BLADES_TEMPERED = unbound("RECYCLER_BLADES_TEMPERED");
+	public static Supplier<Item> RECYCLER_BLADES_DIAMOND = unbound("RECYCLER_BLADES_DIAMOND");
 	public static Supplier<Item> IRRADIATED_DIAMOND = unbound("IRRADIATED_DIAMOND");
 	public static Supplier<Item> RESONANT_SHARD = unbound("RESONANT_SHARD");
 	public static Supplier<Item> MUTAGEN_DUST = unbound("MUTAGEN_DUST");
@@ -634,6 +647,8 @@ public final class ModContent {
 	public static Supplier<BlockItem> ELECTRIC_FURNACE_ITEM = unbound("ELECTRIC_FURNACE_ITEM");
 	public static Supplier<BlockItem> EXTRACTOR_ITEM = unbound("EXTRACTOR_ITEM");
 	public static Supplier<BlockItem> COMPRESSOR_ITEM = unbound("COMPRESSOR_ITEM");
+	public static Supplier<BlockItem> RECYCLER_ITEM = unbound("RECYCLER_ITEM");
+	public static Supplier<BlockItem> SLAG_BLOCK_ITEM = unbound("SLAG_BLOCK_ITEM");
 	public static Supplier<BlockItem> COMPONENT_REPAIR_BENCH_ITEM = unbound("COMPONENT_REPAIR_BENCH_ITEM");
 	public static Supplier<BlockItem> CANNING_MACHINE_ITEM = unbound("CANNING_MACHINE_ITEM");
 	public static Supplier<BlockItem> SAWMILL_ITEM = unbound("SAWMILL_ITEM");
@@ -736,6 +751,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> ELECTRIC_FURNACE_BE = unbound("ELECTRIC_FURNACE_BE");
 	public static Supplier<BlockEntityType<?>> EXTRACTOR_BE = unbound("EXTRACTOR_BE");
 	public static Supplier<BlockEntityType<?>> COMPRESSOR_BE = unbound("COMPRESSOR_BE");
+	public static Supplier<BlockEntityType<?>> RECYCLER_BE = unbound("RECYCLER_BE");
 	public static Supplier<BlockEntityType<?>> COMPONENT_REPAIR_BENCH_BE = unbound("COMPONENT_REPAIR_BENCH_BE");
 	public static Supplier<BlockEntityType<?>> CANNING_MACHINE_BE = unbound("CANNING_MACHINE_BE");
 	public static Supplier<BlockEntityType<?>> SAWMILL_BE = unbound("SAWMILL_BE");
@@ -794,6 +810,7 @@ public final class ModContent {
 	public static Supplier<MenuType<ElectricFurnaceMenu>> ELECTRIC_FURNACE_MENU = unbound("ELECTRIC_FURNACE_MENU");
 	public static Supplier<MenuType<ExtractorMenu>> EXTRACTOR_MENU = unbound("EXTRACTOR_MENU");
 	public static Supplier<MenuType<CompressorMenu>> COMPRESSOR_MENU = unbound("COMPRESSOR_MENU");
+	public static Supplier<MenuType<RecyclerMenu>> RECYCLER_MENU = unbound("RECYCLER_MENU");
 	public static Supplier<MenuType<ComponentRepairBenchMenu>> COMPONENT_REPAIR_BENCH_MENU =
 			unbound("COMPONENT_REPAIR_BENCH_MENU");
 	public static Supplier<MenuType<CanningMachineMenu>> CANNING_MACHINE_MENU = unbound("CANNING_MACHINE_MENU");

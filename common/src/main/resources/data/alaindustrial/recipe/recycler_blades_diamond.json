@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": {
+		"M": "minecraft:diamond",
+		"T": "alaindustrial:recycler_blades_tempered",
+		"R": "alaindustrial:reinforced_bearing"
+	},
+	"pattern": [
+		" M ",
+		"MTM",
+		" R "
+	],
+	"result": {
+		"id": "alaindustrial:recycler_blades_diamond"
+	}
+}

@@ -27,6 +27,7 @@ import dev.alaindustrial.block.entity.WorkstationBlockEntity;
 import dev.alaindustrial.block.CrystalSeedbedBlock;
 import net.minecraft.world.level.block.AmethystClusterBlock;
 import net.minecraft.world.level.block.DoorBlock;
+import dev.alaindustrial.block.entity.RecyclerBlockEntity;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.Industrialization;
 import java.util.ArrayList;
@@ -454,6 +455,19 @@ public final class DemoStand {
 		// crafting cycle (and with it a blueprint to stock it with) lands in a later slice.
 		set(level, origin, 2, 1, 12, ModContent.ASSEMBLER.get());
 		chargeBuffer(level, origin, 2, 1, 12);
+		// Recycler (MOD-145): stocked so the stand shows the thing that makes it different — a batch in
+		// progress. It gets blades (without them the machine is inert), cobblestone to chew, and a slag
+		// block set beside it so the building use of the output is visible in the same glance.
+		// x=23 and 24, NOT x=8: the distillation tower is raised at x=8 later in this same method and
+		// would overwrite the machine, spilling its stocked slots as item drops (which is exactly what
+		// the stand's idempotency test caught).
+		set(level, origin, 23, 1, 12, ModContent.RECYCLER.get());
+		chargeBuffer(level, origin, 23, 1, 12);
+		fillSlot(level, origin, 23, 1, 12, RecyclerBlockEntity.BLADE_SLOT,
+				new ItemStack(ModContent.RECYCLER_BLADES_TEMPERED.get()));
+		fillSlot(level, origin, 23, 1, 12, RecyclerBlockEntity.INPUT_SLOT,
+				new ItemStack(Items.COBBLESTONE, 64));
+		set(level, origin, 24, 1, 12, ModContent.SLAG_BLOCK.get());
 		// Iron furnace (MOD-115): fuel-burning, not EU — so it is loaded with input + coal instead of a
 		// pre-charged buffer, and lights itself on the first tick like a vanilla furnace.
 		set(level, origin, 14, 1, 10, ModContent.IRON_FURNACE.get());

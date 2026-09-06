@@ -2,8 +2,11 @@ package dev.alaindustrial.block;
 
 import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.ElectricHeaterBlockEntity;
+import dev.alaindustrial.registry.ModSounds;
+import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -21,8 +24,15 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
  * <p>Deliberately NOT {@link LitMachineBlock}, which it used to extend: that base contributes the
  * boolean {@code lit}, and since MOD-418 this block shows a four-rung temperature instead — see
  * {@link HeaterGlow} for why the distinction is worth a property of its own.
+ *
+ * <p>Audible since MOD-573, and that same four-rung ladder is what the loop runs on: pattern C, with
+ * {@link #isWorking} reading {@link #GLOW} rather than a boolean. The coil is heard from the moment it
+ * has any colour, not only at the top rung the particles wait for — a warming heater is doing work and
+ * costing EU, and silence there would read as "off". MOD-258 had left this block silent on the grounds
+ * that the Vulcanizer above it already hisses; the owner revisited that on 2026-09-06. The hiss is
+ * exactly what this sound must not be, which is why the coil crackles instead.
  */
-public final class ElectricHeaterBlock extends HorizontalMachineBlock {
+public final class ElectricHeaterBlock extends HorizontalMachineBlock implements MachineHumProvider {
 	public static final MapCodec<ElectricHeaterBlock> CODEC = simpleCodec(ElectricHeaterBlock::new);
 
 	/** How hot the coils look; see {@link HeaterGlow} for why this is not the usual boolean LIT. */
@@ -55,7 +65,53 @@ public final class ElectricHeaterBlock extends HorizontalMachineBlock {
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
 			BlockEntityType<T> type) {
-		return machineTicker(level);
+		// Hum ticker: without this the MachineHumProvider above is dead code and the block stays
+		// silent with every gate green (pattern C — the working state comes from GLOW below). MOD-573.
+		return humMachineTicker(level);
+	}
+
+	@Override
+	public Supplier<SoundEvent> humSound() {
+		return ModSounds.ELECTRIC_HEATER_HUM;
+	}
+
+	/**
+	 * Quieter than a machine of its own (0.18, the level the extractor and the charging station use).
+	 *
+	 * <p>This block is never listened to alone: it exists to feed the Vulcanizer standing on it, so the
+	 * player always hears the pair. At the volume a standalone machine gets, the helper would be the
+	 * louder half of a stack whose work is happening in the other block.
+	 */
+	@Override
+	public float humVolume() {
+		return 0.18f;
+	}
+
+	/**
+	 * Audible means the coils have any colour at all — every rung except {@link HeaterGlow#COLD}.
+	 *
+	 * <p>Read from the blockstate, so it is side-agnostic and free, as the client-tick contract of
+	 * {@link MachineHumProvider#isWorking} requires. Deliberately a wider window than
+	 * {@link #animateTick}, which waits for {@link HeaterGlow#GLOWING}: the particles announce "the
+	 * machine above is getting its x3 right now", while the sound answers a different question — are
+	 * these coils hot.
+	 *
+	 * <p><b>Hot is not the same as spending EU, and this window says hot.</b> Three states sit inside it
+	 * where the block draws nothing: the "freeze, don't waste" hold at full temperature; the whole
+	 * cool-down, which runs one degree per two ticks and so keeps a fully warmed heater audible for
+	 * about twenty seconds after the last work; and {@code NO_ENERGY}, where
+	 * {@link dev.alaindustrial.block.entity.ElectricHeaterBlockEntity} freezes {@code heat} while work
+	 * is pending, so an unpowered heater stays warm — and audible — indefinitely.
+	 *
+	 * <p>That is deliberate rather than overlooked: this is the same window the block's LIGHT has used
+	 * since MOD-418 ({@code ModBlockProperties::heaterLight} reads the very same ladder), and a block
+	 * that glows while it is silent would be the stranger pair. A sound is more intrusive than a glow,
+	 * though, so if the twenty-second tail or the unpowered drone reads wrong in play, the fix belongs
+	 * in the ladder itself — for the light and the sound together — not in a second definition here.
+	 */
+	@Override
+	public boolean isWorking(Level level, BlockPos pos, BlockState state) {
+		return state.getValue(GLOW) != HeaterGlow.COLD;
 	}
 
 	/**

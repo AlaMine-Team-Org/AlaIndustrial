@@ -1,0 +1,124 @@
+{
+	"variants": {
+		"facing=north,lamps=0,lit=false": {
+			"model": "alaindustrial:block/recycler"
+		},
+		"facing=north,lamps=0,lit=true": {
+			"model": "alaindustrial:block/recycler_on"
+		},
+		"facing=north,lamps=1,lit=false": {
+			"model": "alaindustrial:block/recycler"
+		},
+		"facing=north,lamps=1,lit=true": {
+			"model": "alaindustrial:block/recycler_on"
+		},
+		"facing=north,lamps=2,lit=false": {
+			"model": "alaindustrial:block/recycler"
+		},
+		"facing=north,lamps=2,lit=true": {
+			"model": "alaindustrial:block/recycler_on2"
+		},
+		"facing=north,lamps=3,lit=false": {
+			"model": "alaindustrial:block/recycler"
+		},
+		"facing=north,lamps=3,lit=true": {
+			"model": "alaindustrial:block/recycler_on3"
+		},
+		"facing=south,lamps=0,lit=false": {
+			"model": "alaindustrial:block/recycler",
+			"y": 180
+		},
+		"facing=south,lamps=0,lit=true": {
+			"model": "alaindustrial:block/recycler_on",
+			"y": 180
+		},
+		"facing=south,lamps=1,lit=false": {
+			"model": "alaindustrial:block/recycler",
+			"y": 180
+		},
+		"facing=south,lamps=1,lit=true": {
+			"model": "alaindustrial:block/recycler_on",
+			"y": 180
+		},
+		"facing=south,lamps=2,lit=false": {
+			"model": "alaindustrial:block/recycler",
+			"y": 180
+		},
+		"facing=south,lamps=2,lit=true": {
+			"model": "alaindustrial:block/recycler_on2",
+			"y": 180
+		},
+		"facing=south,lamps=3,lit=false": {
+			"model": "alaindustrial:block/recycler",
+			"y": 180
+		},
+		"facing=south,lamps=3,lit=true": {
+			"model": "alaindustrial:block/recycler_on3",
+			"y": 180
+		},
+		"facing=west,lamps=0,lit=false": {
+			"model": "alaindustrial:block/recycler",
+			"y": 270
+		},
+		"facing=west,lamps=0,lit=true": {
+			"model": "alaindustrial:block/recycler_on",
+			"y": 270
+		},
+		"facing=west,lamps=1,lit=false": {
+			"model": "alaindustrial:block/recycler",
+			"y": 270
+		},
+		"facing=west,lamps=1,lit=true": {
+			"model": "alaindustrial:block/recycler_on",
+			"y": 270
+		},
+		"facing=west,lamps=2,lit=false": {
+			"model": "alaindustrial:block/recycler",
+			"y": 270
+		},
+		"facing=west,lamps=2,lit=true": {
+			"model": "alaindustrial:block/recycler_on2",
+			"y": 270
+		},
+		"facing=west,lamps=3,lit=false": {
+			"model": "alaindustrial:block/recycler",
+			"y": 270
+		},
+		"facing=west,lamps=3,lit=true": {
+			"model": "alaindustrial:block/recycler_on3",
+			"y": 270
+		},
+		"facing=east,lamps=0,lit=false": {
+			"model": "alaindustrial:block/recycler",
+			"y": 90
+		},
+		"facing=east,lamps=0,lit=true": {
+			"model": "alaindustrial:block/recycler_on",
+			"y": 90
+		},
+		"facing=east,lamps=1,lit=false": {
+			"model": "alaindustrial:block/recycler",
+			"y": 90
+		},
+		"facing=east,lamps=1,lit=true": {
+			"model": "alaindustrial:block/recycler_on",
+			"y": 90
+		},
+		"facing=east,lamps=2,lit=false": {
+			"model": "alaindustrial:block/recycler",
+			"y": 90
+		},
+		"facing=east,lamps=2,lit=true": {
+			"model": "alaindustrial:block/recycler_on2",
+			"y": 90
+		},
+		"facing=east,lamps=3,lit=false": {
+			"model": "alaindustrial:block/recycler",
+			"y": 90
+		},
+		"facing=east,lamps=3,lit=true": {
+			"model": "alaindustrial:block/recycler_on3",
+			"y": 90
+		}
+	}
+}

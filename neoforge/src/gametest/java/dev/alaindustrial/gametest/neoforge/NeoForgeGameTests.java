@@ -2599,6 +2599,23 @@ public final class NeoForgeGameTests {
 				MachineScenarios::tcExtr001Prf01_extractorEopExactCompletes);
 		registerTest(event, "machine_tc_extr001_prf02_extractor_eop_minus_one_stalls", 40, true,
 				MachineScenarios::tcExtr001Prf02_extractorEopMinusOneStalls);
+		// MOD-145 — the Recycler: the grading rule and the two upkeep gates.
+		registerTest(event, "machine_tc_recycler001_fun01_mono_batch_casts_poor", 120, true,
+				MachineScenarios::tcRecycler001Fun01_monoBatchCastsPoor);
+		registerTest(event, "machine_tc_recycler001_fun02_mixed_batch_casts_rich", 120, true,
+				MachineScenarios::tcRecycler001Fun02_mixedBatchCastsRich);
+		registerTest(event, "machine_tc_recycler001_fun03_lamps_follow_fractions", 120, true,
+				MachineScenarios::tcRecycler001Fun03_lampsFollowFractions);
+		registerTest(event, "machine_tc_recycler001_con01_grass_is_mineral", 120, true,
+				MachineScenarios::tcRecycler001Con01_grassIsMineral);
+		registerTest(event, "machine_tc_recycler001_con02_no_blades_no_work", 120, true,
+				MachineScenarios::tcRecycler001Con02_noBladesNoWork);
+		registerTest(event, "machine_tc_recycler001_con03_full_ash_stops", 120, true,
+				MachineScenarios::tcRecycler001Con03_fullAshStops);
+		registerTest(event, "machine_tc_recycler001_con04_leftover_briquette_does_not_block", 120, true,
+				MachineScenarios::tcRecycler001Con04_leftoverBriquetteDoesNotBlock);
+		registerTest(event, "machine_tc_recycler001_con05_ash_never_overstacks", 120, true,
+				MachineScenarios::tcRecycler001Con05_ashNeverOverstacks);
 		registerTest(event, "machine_tc_saw001_fun01_planks_mode", 40, true,
 				MachineScenarios::tcSaw001Fun01_planksMode);
 		registerTest(event, "machine_tc_saw001_fun02_bamboo_half_yield", 40, true,

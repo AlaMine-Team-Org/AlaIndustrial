@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"category": "misc",
+	"ingredients": [
+		"alaindustrial:ash",
+		"alaindustrial:ash"
+	],
+	"result": {
+		"id": "minecraft:gray_dye",
+		"count": 1
+	}
+}

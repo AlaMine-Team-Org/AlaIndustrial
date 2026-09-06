@@ -784,4 +784,69 @@ public class MachineGameTest {
 		MachineScenarios.tcSaw001Con03_modeSwitchResetsProgress(helper);
 	}
 
+
+	/**
+	 * @implements TC-RECYCLER-001-FUN01 — sixteen blocks of one kind fill a batch and cast POOR slag.
+	 */
+	@GameTest
+	public void tcRecycler001Fun01_monoBatchCastsPoor(GameTestHelper helper) {
+		MachineScenarios.tcRecycler001Fun01_monoBatchCastsPoor(helper);
+	}
+
+	/**
+	 * @implements TC-RECYCLER-001-FUN02 — a balanced batch of all three fractions casts RICH slag.
+	 */
+	@GameTest
+	public void tcRecycler001Fun02_mixedBatchCastsRich(GameTestHelper helper) {
+		MachineScenarios.tcRecycler001Fun02_mixedBatchCastsRich(helper);
+	}
+
+	/**
+	 * @implements TC-RECYCLER-001-FUN03 — the front panel's lamp count follows the fractions in the batch.
+	 */
+	@GameTest
+	public void tcRecycler001Fun03_lampsFollowFractions(GameTestHelper helper) {
+		MachineScenarios.tcRecycler001Fun03_lampsFollowFractions(helper);
+	}
+
+	/**
+	 * @implements TC-RECYCLER-001-CON01 — grass block grades as MINERAL, not burnable (its sound type is shared with leaves).
+	 */
+	@GameTest
+	public void tcRecycler001Con01_grassIsMineral(GameTestHelper helper) {
+		MachineScenarios.tcRecycler001Con01_grassIsMineral(helper);
+	}
+
+	/**
+	 * @implements TC-RECYCLER-001-CON02 — without blades the machine does not run at all.
+	 */
+	@GameTest
+	public void tcRecycler001Con02_noBladesNoWork(GameTestHelper helper) {
+		MachineScenarios.tcRecycler001Con02_noBladesNoWork(helper);
+	}
+
+	/**
+	 * @implements TC-RECYCLER-001-CON03 — a full ash bin stops the machine instead of voiding the ash.
+	 */
+	@GameTest
+	public void tcRecycler001Con03_fullAshStops(GameTestHelper helper) {
+		MachineScenarios.tcRecycler001Con03_fullAshStops(helper);
+	}
+
+	/**
+	 * @implements TC-RECYCLER-001-CON04 — a leftover briquette of another grade does not block the batch.
+	 */
+	@GameTest
+	public void tcRecycler001Con04_leftoverBriquetteDoesNotBlock(GameTestHelper helper) {
+		MachineScenarios.tcRecycler001Con04_leftoverBriquetteDoesNotBlock(helper);
+	}
+
+	/**
+	 * @implements TC-RECYCLER-001-CON05 — the ash the installed blades owe must fit before a batch casts.
+	 */
+	@GameTest
+	public void tcRecycler001Con05_ashNeverOverstacks(GameTestHelper helper) {
+		MachineScenarios.tcRecycler001Con05_ashNeverOverstacks(helper);
+	}
+
 }

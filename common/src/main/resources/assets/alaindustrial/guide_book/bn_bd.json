@@ -1614,6 +1614,44 @@
           ]
         },
         {
+          "id": "recycler",
+          "title": "পুনর্ব্যবহারকারী",
+          "icon": "alaindustrial:recycler",
+          "pages": [
+            {
+              "type": "text",
+              "title": "পুনর্ব্যবহারকারী",
+              "text": "যেকোনো আবর্জনা পিষে স্ল্যাগ ব্রিকেট বানায়। মান নির্ভর করে আবর্জনার পরিমাণে নয়, বৈচিত্র্যে — একরকম আবর্জনার ব্যাচ দেয় নিম্নমানের স্ল্যাগ, সঠিক মিশ্রণ দেয় উন্নত স্ল্যাগ।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: 8 EU/t",
+                "বাফার: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "minecraft:iron_ingot",
+                "alaindustrial:recycler_blades_iron",
+                "minecraft:iron_ingot",
+                "alaindustrial:recycler_blades_iron",
+                "alaindustrial:machine_casing",
+                "alaindustrial:recycler_blades_iron",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:recycler",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "নিষ্কর্ষক",
           "icon": "alaindustrial:extractor",
@@ -2381,7 +2419,7 @@
             {
               "type": "text",
               "title": "কক-সাগিজ",
-              "text": "বহুবর্ষজীবী «রাশিয়ান ড্যান্ডেলিয়ন» — রাবারের নবায়নযোগ্য উৎস। একটি ফুল আর দুই ব্লক গভীর শিকড়ের স্তম্ভ: শিকড়ের ডগা অবিরাম খুঁড়ে নিন, গাছ বেঁচে থাকে আর ডগা আবার গজায়। শিকড় পেষক যন্ত্রে পিষে কাঁচা রাবার হয়, পার্শ্ব-পণ্য হিসেবে ইনুলিন।"
+              "text": "কাজাখ তৃণভূমির রাবারবাহী ড্যান্ডেলিয়ন — এমন রাবার যা আপনি চাষ করতে পারেন। উপরে ফুল, দুই ব্লক নিচে শিকড়: আগা যতবার খুশি কাটুন, গাছ বেঁচে থাকে আর আবার গজায়।"
             }
           ]
         },
@@ -3105,6 +3143,44 @@
           ]
         },
         {
+          "id": "workstation",
+          "title": "ওয়ার্কস্টেশন",
+          "icon": "alaindustrial:workstation",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ওয়ার্কস্টেশন",
+              "text": "একটির উপর আরেকটি বসানো দুটি কেসিং দিয়ে গড়া কম্পিউটার। এটি গ্রিড থেকে বিদ্যুৎ নেয় এবং খেলোয়াড়ের নিজের কর্মক্ষেত্র হিসেবে কাজ করে।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: 6 EU/t",
+                "বাফার: 40000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "#c:glass_panes",
+                "alaindustrial:resonant_crystal",
+                "#c:glass_panes",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:reactor_circuit",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:reinforced_bearing",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:reinforced_bearing"
+              ],
+              "result_id": "alaindustrial:workstation",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "stock_display_frame",
           "title": "স্টক প্রদর্শন ফ্রেম",
           "icon": "alaindustrial:stock_display_frame",
@@ -3532,6 +3608,36 @@
               ],
               "result_id": "alaindustrial:mutation_chip_duplicate",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "basic_bearing",
+          "title": "সাধারণ বিয়ারিং",
+          "icon": "alaindustrial:basic_bearing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "সাধারণ বিয়ারিং",
+              "text": "সাধারণ ও শক্তিশালী বিয়ারিং — যন্ত্রপাতির ঘূর্ণায়মান জোড়, এমন সব অংশ দিয়ে বানানো যেগুলোর এতদিন প্রায় কোনো রেসিপিই ছিল না।"
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:nickel_plate",
+                "minecraft:iron_nugget",
+                "alaindustrial:nickel_plate",
+                "minecraft:iron_nugget",
+                "alaindustrial:stone_gear",
+                "minecraft:iron_nugget",
+                "alaindustrial:nickel_plate",
+                "minecraft:iron_nugget",
+                "alaindustrial:nickel_plate"
+              ],
+              "result_id": "alaindustrial:basic_bearing",
+              "result_count": 4
             }
           ]
         },
@@ -4183,6 +4289,25 @@
           ]
         },
         {
+          "id": "shielding_pouch",
+          "title": "শিল্ডিং থলি",
+          "icon": "alaindustrial:shielding_pouch",
+          "pages": [
+            {
+              "type": "text",
+              "title": "শিল্ডিং থলি",
+              "text": "ব্যাটারি থলির দ্বিতীয় ধাপ, সিসা দিয়ে মোড়া: একই ১২৮ ওজন আর 2000 EU, কিন্তু তেজস্ক্রিয় জিনিস আর কাউকে বিকিরণ দেয় না — বহনকারীকেও নয়, আশপাশের মবকেও নয়।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: 2 000 EU"
+              ]
+            }
+          ]
+        },
+        {
           "id": "insulated_chestplate",
           "title": "অন্তরক বক্ষবর্ম",
           "icon": "alaindustrial:insulated_chestplate",
@@ -4591,6 +4716,36 @@
                 "alaindustrial:silver_plate"
               ],
               "result_id": "alaindustrial:soul_vessel",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "geiger_counter",
+          "title": "গাইগার কাউন্টার",
+          "icon": "alaindustrial:geiger_counter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "গাইগার কাউন্টার",
+              "text": "ইনভেন্টরির যেকোনো স্লট থেকে তেজস্ক্রিয়তার কাছে গেলে খটখট করে — তেজস্ক্রিয়তার একমাত্র সংকেত এটাই।"
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "",
+                "minecraft:glass_pane",
+                "",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:geiger_counter",
               "result_count": 1
             }
           ]

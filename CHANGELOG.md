@@ -1,15 +1,25 @@
-## 0.1.146
+## 0.1.147
 
-<p><img alt="Ala Industrial 0.1.146 — the Workstation and its skill wheel" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.146/release-media/v0.1.146/changelog.webp" width="720"></p>
+<p><img alt="Ala Industrial 0.1.147 — the Recycler in the world" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.147/release-media/v0.1.147/changelog.png" width="720"></p>
 
-The Workstation is here — build the computer, spend what you have earned, and keep the upgrades for good.
+A machine that turns junk into something worth keeping, two blocks that finally have a voice, and a creative tab you can actually read.
 
 ### New
 
-- **The Workstation — a computer you build yourself.** Two casings stacked become a machine with monitors; feed the lower half power and the screens light up.
-- **A skill wheel with four branches.** Power Engineer, Liquidator, Mechanic and Agronomist, seven nodes each, opened with a right-click on a powered station.
-- **You pay in Ala-Fragments** — one for every mastery level you earn. The whole tree is out of reach on purpose: a full run buys exactly two branches, so the specialisation is your choice.
-- **Forks are permanent.** Take one side and the other closes for good. There is no reset and no buying your way out.
-- **Upgrades land where you expect them.** Tools spend less energy, radiation builds up slower, your machines run faster, the sprinkler stretches its solution.
-- **Machine bonuses need you around.** A base left alone runs on its base numbers again.
-- **An end-game recipe.** A charged resonant crystal, a reactor circuit, resonance coils and reinforced bearings — and one craft gives you both halves at once.
+- **The Recycler eats anything** — stone, dirt, worn-out tools, whatever the chest sorter rejected. It does not trade you item for item: it fills a batch and casts a slag briquette.
+- **Mix your junk, not pile it.** A stack of one thing pays poor slag. Roughly equal parts mineral, metal and burnable pay rich slag. Cobblestone forever is the worst way to feed it.
+- **The lamps on the front say what is inside.** One lamp lit means one kind of junk and a poor result; three lit means the mix is right. You can read the machine while walking past it.
+- **Blades wear out and matter.** Iron is slow and hates scrap metal, tempered is smelted from iron in any furnace, diamond is fastest and leaves the least ash.
+- **The ash bin needs emptying.** Three quarters full slows the machine down, full stops it — put a hopper underneath and forget about it.
+- **Slag is not dead weight:** it presses into a block, burns as fuel, and the ash makes grey dye.
+- **No filter, on purpose.** Misroute a pipe and your diamond armour is slag. Wire it carefully.
+
+### Sound
+
+- **The Alloy Smelter rings with induction heat** while it melts, and falls quiet the moment it stops.
+- **The Electric Heater crackles with hot nichrome** from the first rung of its glow, not only at full heat — a coil warming up is already spending power. It deliberately does not hiss: the Vulcanizer standing on it hisses steam already.
+
+### Improved
+
+- **The creative tab reads by subject now:** everything placeable first, everything carryable after, each subject in one unbroken run. Inside a subject the full blocks come before the shaped ones.
+- **Ore pages on the guide site show where to dig** — a cross-section where each row holds as many ore blocks as the world really generates, with the best level marked.

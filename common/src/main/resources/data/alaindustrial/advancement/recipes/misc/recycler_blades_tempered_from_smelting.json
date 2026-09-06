@@ -1,0 +1,25 @@
+{
+	"parent": "minecraft:recipes/root",
+	"criteria": {
+		"has_item_1": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "alaindustrial:recycler_blades_iron"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item_1"
+		]
+	],
+	"rewards": {
+		"recipes": [
+			"alaindustrial:recycler_blades_tempered_from_smelting"
+		]
+	}
+}

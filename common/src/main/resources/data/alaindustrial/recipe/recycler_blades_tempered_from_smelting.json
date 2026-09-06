@@ -1,0 +1,10 @@
+{
+	"type": "minecraft:smelting",
+	"category": "misc",
+	"ingredient": "alaindustrial:recycler_blades_iron",
+	"result": {
+		"id": "alaindustrial:recycler_blades_tempered"
+	},
+	"experience": 0.3,
+	"cookingtime": 200
+}

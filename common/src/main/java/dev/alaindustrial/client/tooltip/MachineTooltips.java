@@ -7,6 +7,7 @@ import dev.alaindustrial.block.AlloySmelterBlock;
 import dev.alaindustrial.block.CableBlock;
 import dev.alaindustrial.block.ComponentRepairBenchBlock;
 import dev.alaindustrial.block.CompressorBlock;
+import dev.alaindustrial.block.RecyclerBlock;
 import dev.alaindustrial.block.SawmillBlock;
 import dev.alaindustrial.block.DaylightSolarPanelBlock;
 import dev.alaindustrial.block.ElectricFurnaceBlock;
@@ -181,6 +182,7 @@ public final class MachineTooltips {
 				|| block instanceof MaceratorBlock
 				|| block instanceof ElectricFurnaceBlock
 				|| block instanceof CompressorBlock
+				|| block instanceof RecyclerBlock
 				|| block instanceof ComponentRepairBenchBlock
 				|| block instanceof ExtractorBlock
 				|| block instanceof IncubatorBlock
@@ -532,6 +534,7 @@ public final class MachineTooltips {
 				|| block instanceof MaceratorBlock
 				|| block instanceof ElectricFurnaceBlock
 				|| block instanceof CompressorBlock
+				|| block instanceof RecyclerBlock
 				|| block instanceof ComponentRepairBenchBlock
 				|| block instanceof SawmillBlock
 				|| block instanceof ExtractorBlock
@@ -571,6 +574,9 @@ public final class MachineTooltips {
 		} else if (block instanceof ElectricFurnaceBlock) {
 			lines.add(tt("energy_input", Config.machineEuPerTickEffective()));
 			lines.add(tt("duration_ticks", Config.scaledDuration(Config.electricFurnaceDuration)));
+		} else if (block instanceof RecyclerBlock) {
+			lines.add(tt("energy_input", Config.recyclerEuPerTick));
+			lines.add(tt("duration_ticks", Config.scaledDuration(Config.recyclerDuration)));
 		} else if (block instanceof CompressorBlock) {
 			lines.add(tt("energy_input", Config.machineEuPerTickEffective()));
 			lines.add(tt("duration_ticks", Config.scaledDuration(Config.compressorDuration)));
@@ -653,6 +659,9 @@ public final class MachineTooltips {
 			lines.add(tt("buffer", Config.machineBuffer));
 			lines.add(tt("energy_per_op",
 					Config.machineEuPerTickEffective() * Config.scaledDuration(Config.electricFurnaceDuration)));
+		} else if (block instanceof RecyclerBlock) {
+			lines.add(tt("energy_input", Config.recyclerEuPerTick));
+			lines.add(tt("duration_ticks", Config.scaledDuration(Config.recyclerDuration)));
 		} else if (block instanceof CompressorBlock) {
 			lines.add(tier());
 			lines.add(tt("buffer", Config.machineBuffer));
