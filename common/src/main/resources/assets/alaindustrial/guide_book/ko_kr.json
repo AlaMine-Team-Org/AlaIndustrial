@@ -1953,6 +1953,36 @@
           ]
         },
         {
+          "id": "item_pipe_advanced",
+          "title": "고급 아이템 파이프",
+          "icon": "alaindustrial:item_pipe_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "고급 아이템 파이프",
+              "text": "2티어 아이템 파이프 — 처리량 두 배. 라인 속도는 가장 느린 구간에 맞춰집니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:item_pipe",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:item_pipe",
+                "alaindustrial:silver_plate",
+                "alaindustrial:item_pipe",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:item_pipe",
+                "alaindustrial:cupronickel_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:item_pipe_advanced",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "fluid_pipe",
           "title": "액체 파이프",
           "icon": "alaindustrial:fluid_pipe",
@@ -2414,7 +2444,7 @@
         {
           "id": "kok_sagyz",
           "title": "콕사기즈",
-          "icon": "alaindustrial:kok_sagyz",
+          "icon": "alaindustrial:kok_sagyz_seeds",
           "pages": [
             {
               "type": "text",
@@ -4746,6 +4776,43 @@
                 "alaindustrial:tin_ingot"
               ],
               "result_id": "alaindustrial:geiger_counter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electromagnet_advanced",
+          "title": "고급 전자석",
+          "icon": "alaindustrial:electromagnet_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "고급 전자석",
+              "text": "2티어 전자석 — 반경이 5가 아닌 9블록이며, 경험치까지 끌어당기는 유일한 전자석입니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "버퍼: 5 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:electrum_reinforced_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electrum_reinforced_plate",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:electromagnet",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:electrum_reinforced_plate",
+                "alaindustrial:energy_crystal",
+                "alaindustrial:electrum_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:electromagnet_advanced",
               "result_count": 1
             }
           ]

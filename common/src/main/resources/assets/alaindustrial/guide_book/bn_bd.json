@@ -1953,6 +1953,36 @@
           ]
         },
         {
+          "id": "item_pipe_advanced",
+          "title": "উন্নত বস্তু পাইপ",
+          "icon": "alaindustrial:item_pipe_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "উন্নত বস্তু পাইপ",
+              "text": "দ্বিতীয় স্তরের বস্তু পাইপ — দ্বিগুণ ধারণক্ষমতা; লাইন তার সবচেয়ে ধীর অংশের গতিতে চলে।"
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:item_pipe",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:item_pipe",
+                "alaindustrial:silver_plate",
+                "alaindustrial:item_pipe",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:item_pipe",
+                "alaindustrial:cupronickel_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:item_pipe_advanced",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "fluid_pipe",
           "title": "তরল পাইপ",
           "icon": "alaindustrial:fluid_pipe",
@@ -2414,7 +2444,7 @@
         {
           "id": "kok_sagyz",
           "title": "কক-সাগিজ",
-          "icon": "alaindustrial:kok_sagyz",
+          "icon": "alaindustrial:kok_sagyz_seeds",
           "pages": [
             {
               "type": "text",
@@ -4746,6 +4776,43 @@
                 "alaindustrial:tin_ingot"
               ],
               "result_id": "alaindustrial:geiger_counter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electromagnet_advanced",
+          "title": "উন্নত তড়িৎ চুম্বক",
+          "icon": "alaindustrial:electromagnet_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "উন্নত তড়িৎ চুম্বক",
+              "text": "দ্বিতীয় স্তরের তড়িৎচুম্বক — ৫-এর বদলে ৯ ব্লক পরিধি, আর কেবল এটিই অভিজ্ঞতাও টানে।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "বাফার: 5 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:electrum_reinforced_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electrum_reinforced_plate",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:electromagnet",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:electrum_reinforced_plate",
+                "alaindustrial:energy_crystal",
+                "alaindustrial:electrum_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:electromagnet_advanced",
               "result_count": 1
             }
           ]

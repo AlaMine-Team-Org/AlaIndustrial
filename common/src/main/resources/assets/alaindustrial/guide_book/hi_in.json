@@ -1953,6 +1953,36 @@
           ]
         },
         {
+          "id": "item_pipe_advanced",
+          "title": "उन्नत वस्तु पाइप",
+          "icon": "alaindustrial:item_pipe_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "उन्नत वस्तु पाइप",
+              "text": "दूसरे स्तर की वस्तु पाइप — दोगुनी क्षमता; लाइन अपने सबसे धीमे हिस्से की गति से चलती है।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:item_pipe",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:item_pipe",
+                "alaindustrial:silver_plate",
+                "alaindustrial:item_pipe",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:item_pipe",
+                "alaindustrial:cupronickel_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:item_pipe_advanced",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "fluid_pipe",
           "title": "द्रव पाइप",
           "icon": "alaindustrial:fluid_pipe",
@@ -2414,7 +2444,7 @@
         {
           "id": "kok_sagyz",
           "title": "कोक-साग़िज़",
-          "icon": "alaindustrial:kok_sagyz",
+          "icon": "alaindustrial:kok_sagyz_seeds",
           "pages": [
             {
               "type": "text",
@@ -4746,6 +4776,43 @@
                 "alaindustrial:tin_ingot"
               ],
               "result_id": "alaindustrial:geiger_counter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electromagnet_advanced",
+          "title": "उन्नत विद्युत चुंबक",
+          "icon": "alaindustrial:electromagnet_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "उन्नत विद्युत चुंबक",
+              "text": "दूसरे स्तर का विद्युत चुंबक — 5 के बजाय 9 ब्लॉक की परिधि, और केवल यही अनुभव भी खींचता है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "बफ़र: 5 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:electrum_reinforced_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electrum_reinforced_plate",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:electromagnet",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:electrum_reinforced_plate",
+                "alaindustrial:energy_crystal",
+                "alaindustrial:electrum_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:electromagnet_advanced",
               "result_count": 1
             }
           ]

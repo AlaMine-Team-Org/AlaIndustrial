@@ -1953,6 +1953,36 @@
           ]
         },
         {
+          "id": "item_pipe_advanced",
+          "title": "Tuyau à objets avancé",
+          "icon": "alaindustrial:item_pipe_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tuyau à objets avancé",
+              "text": "Tuyau à objets de deuxième niveau : le double de débit ; une ligne va à la vitesse de son tronçon le plus lent."
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:item_pipe",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:item_pipe",
+                "alaindustrial:silver_plate",
+                "alaindustrial:item_pipe",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:item_pipe",
+                "alaindustrial:cupronickel_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:item_pipe_advanced",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "fluid_pipe",
           "title": "Tuyau à fluides",
           "icon": "alaindustrial:fluid_pipe",
@@ -2414,7 +2444,7 @@
         {
           "id": "kok_sagyz",
           "title": "Kok-sagyz",
-          "icon": "alaindustrial:kok_sagyz",
+          "icon": "alaindustrial:kok_sagyz_seeds",
           "pages": [
             {
               "type": "text",
@@ -4746,6 +4776,43 @@
                 "alaindustrial:tin_ingot"
               ],
               "result_id": "alaindustrial:geiger_counter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electromagnet_advanced",
+          "title": "Électroaimant avancé",
+          "icon": "alaindustrial:electromagnet_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Électroaimant avancé",
+              "text": "Électroaimant de deuxième niveau : un rayon de 9 blocs au lieu de 5, et le seul à attirer aussi l’expérience."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiques",
+              "lines": [
+                "Tampon : 5 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "alaindustrial:electrum_reinforced_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electrum_reinforced_plate",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:electromagnet",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:electrum_reinforced_plate",
+                "alaindustrial:energy_crystal",
+                "alaindustrial:electrum_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:electromagnet_advanced",
               "result_count": 1
             }
           ]

@@ -1953,6 +1953,36 @@
           ]
         },
         {
+          "id": "item_pipe_advanced",
+          "title": "高级物品管道",
+          "icon": "alaindustrial:item_pipe_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "高级物品管道",
+              "text": "第二阶物品管道——运力翻倍；线路速度取决于其中最慢的一段。"
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:item_pipe",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:item_pipe",
+                "alaindustrial:silver_plate",
+                "alaindustrial:item_pipe",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:item_pipe",
+                "alaindustrial:cupronickel_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:item_pipe_advanced",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "fluid_pipe",
           "title": "流体管道",
           "icon": "alaindustrial:fluid_pipe",
@@ -2414,7 +2444,7 @@
         {
           "id": "kok_sagyz",
           "title": "青胶蒲公英",
-          "icon": "alaindustrial:kok_sagyz",
+          "icon": "alaindustrial:kok_sagyz_seeds",
           "pages": [
             {
               "type": "text",
@@ -4746,6 +4776,43 @@
                 "alaindustrial:tin_ingot"
               ],
               "result_id": "alaindustrial:geiger_counter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electromagnet_advanced",
+          "title": "高级电磁铁",
+          "icon": "alaindustrial:electromagnet_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "高级电磁铁",
+              "text": "第二阶电磁铁——半径 9 格而不是 5 格，并且是唯一还会吸引经验的电磁铁。"
+            },
+            {
+              "type": "stats",
+              "title": "属性",
+              "lines": [
+                "缓冲：5 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:electrum_reinforced_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electrum_reinforced_plate",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:electromagnet",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:electrum_reinforced_plate",
+                "alaindustrial:energy_crystal",
+                "alaindustrial:electrum_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:electromagnet_advanced",
               "result_count": 1
             }
           ]

@@ -2712,6 +2712,8 @@ public final class NeoForgeGameTests {
 				RadiationScenarios::pouchDoesNotShieldTheField);
 		registerTest(event, "rad_pouch_is_quiet_on_the_floor_and_in_a_chest", 40, true,
 				RadiationScenarios::pouchIsQuietOnTheFloorAndInAChest);
+		registerTest(event, "rad_empty_reactor_column_in_the_pocket_is_not_radioactive", 40, true,
+				RadiationScenarios::emptyReactorColumnInThePocketIsNotRadioactive);
 		registerTest(event, "crystal_farm_fun01_sealed_room_forms", 200, true, CrystalFarmScenarios::fun01SealedRoomForms);
 		registerTest(event, "crystal_farm_fun02_breach_unforms_and_repaints", 200, true, CrystalFarmScenarios::fun02BreachUnformsAndRepaints);
 		registerTest(event, "crystal_farm_fun03_breach_is_reported_at_the_hole", 200, true, CrystalFarmScenarios::fun03BreachIsReportedAtTheHole);

@@ -180,6 +180,14 @@ public class RadiationGameTest {
 	}
 
 	/**
+	 * @implements R-RAD-25 — an empty reactor column in the inventory radiates nothing.
+	 */
+	@GameTest
+	public void radEmptyReactorColumnInThePocketIsNotRadioactive(GameTestHelper helper) {
+		RadiationScenarios.emptyReactorColumnInThePocketIsNotRadioactive(helper);
+	}
+
+	/**
 	 * @implements R-RAD-22 — ore in the rock is heard through stone and feeds nothing that becomes a dose.
 	 */
 	@GameTest

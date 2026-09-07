@@ -1057,6 +1057,56 @@ public final class RadiationScenarios {
 	}
 
 	/**
+	 * An empty reactor column in the pocket is not radioactive (MOD-587).
+	 *
+	 * <p>The item tag said otherwise. {@code fuel_rod_assembly} sat in {@code radioactive_high} from
+	 * the day radiation was written (MOD-470, shipped in 0.1.112), so a rack crafted out of iron,
+	 * reactor glass and a shielding plate — a recipe with no uranium anywhere in it — dosed whoever
+	 * carried it at the refined-uranium rate, per item in the stack. A player found it and said the
+	 * right thing about it: the recipe is not radioactive.
+	 *
+	 * <p><b>The block side never had this bug, and that asymmetry is the whole lesson.</b> The field
+	 * scan asks the block entity {@code hasFuel()} before counting a rack as a source; the item was
+	 * answered by a tag, and a tag cannot ask a question. Nor could the item ever carry fuel: the rods
+	 * live in the blockstate and are handed back as separate drops when the column is removed, so a
+	 * carried assembly is empty by construction rather than by chance.
+	 *
+	 * <p>The fuel rod is the positive control. Without it a green run would prove only that the rig
+	 * counts nothing at all, which is exactly what the assertion below is trying to rule out.
+	 *
+	 * @implements R-RAD-25 — see docs/testing/RULES.md
+	 */
+	public static void emptyReactorColumnInThePocketIsNotRadioactive(GameTestHelper helper) {
+		ServerPlayer carrier = AlaGameTestHelper.survivalPlayer(helper);
+
+		carrier.getInventory().clearContent();
+		ItemStack rods = new ItemStack(ModContent.URANIUM_FUEL_ROD.get(), 4);
+		carrier.getInventory().add(rods.copy());
+		int fromRods = RadiationSources.carried(carrier, ModTags.Items.RADIOACTIVE_HIGH);
+		if (fromRods <= 0) {
+			helper.fail("rig is wrong: four uranium fuel rods in the inventory must be counted, "
+					+ "otherwise the assertion below proves nothing; got " + fromRods);
+		}
+
+		carrier.getInventory().clearContent();
+		ItemStack racks = new ItemStack(ModContent.FUEL_ROD_ASSEMBLY.get(), 4);
+		carrier.getInventory().add(racks.copy());
+		int fromRacks = RadiationSources.carried(carrier, ModTags.Items.RADIOACTIVE_HIGH);
+		if (fromRacks != 0) {
+			helper.fail("an empty reactor column carries no fuel and must not be radioactive; "
+					+ "counted " + fromRacks + " high-grade item(s) for four racks");
+		}
+		int strength = RadiationSources.strengthOf(racks);
+		if (strength != 0) {
+			helper.fail("an empty reactor column must radiate nothing at all; strengthOf gave "
+					+ strength + " per sweep");
+		}
+
+		carrier.getInventory().clearContent();
+		helper.succeed();
+	}
+
+	/**
 	 * TC-GEIGER-002-FUN01 — a wall damps the DETECTOR and still stops the DOSE dead (MOD-579).
 	 *
 	 * <p>Found in play: walking up to a running reactor the counter said nothing at all, then went to a
