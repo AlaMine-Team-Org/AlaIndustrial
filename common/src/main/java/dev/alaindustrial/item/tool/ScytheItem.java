@@ -2,9 +2,8 @@ package dev.alaindustrial.item.tool;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.KokSagyzBlock;
-import dev.alaindustrial.block.KokSagyzRootBlock;
+import dev.alaindustrial.block.KokSagyzRoots;
 import dev.alaindustrial.core.crop.CropMaturity;
-import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModSounds;
 import dev.alaindustrial.registry.ModTags;
 import java.util.ArrayList;
@@ -338,11 +337,7 @@ public class ScytheItem extends Item {
 	 */
 	@Nullable
 	private static BlockPos kokSagyzRootTip(Level level, BlockPos flowerPos) {
-		BlockState tip = level.getBlockState(flowerPos.below(2));
-		if (tip.is(ModContent.KOK_SAGYZ_ROOT.get()) && tip.getValue(KokSagyzRootBlock.TIP)) {
-			return flowerPos.below(2);
-		}
-		return null;
+		return KokSagyzRoots.inspect(level, flowerPos).harvestPos(flowerPos);
 	}
 
 	/**

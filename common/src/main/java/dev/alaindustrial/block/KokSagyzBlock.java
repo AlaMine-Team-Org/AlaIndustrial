@@ -2,10 +2,16 @@ package dev.alaindustrial.block;
 
 import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.Config;
+import dev.alaindustrial.block.entity.KokSagyzRootBlockEntity;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
@@ -101,6 +107,11 @@ public class KokSagyzBlock extends BushBlock {
 				|| state.is(BlockTags.SUPPORTS_CROPS);
 	}
 
+	/** Never replace a foreign block entity: its data is not part of a BlockState. */
+	public static boolean isRootableSoil(BlockState state) {
+		return isSoil(state) && !state.hasBlockEntity();
+	}
+
 	@Override
 	protected boolean mayPlaceOn(BlockState state, BlockGetter level, BlockPos pos) {
 		return isSoil(state);
@@ -158,6 +169,47 @@ public class KokSagyzBlock extends BushBlock {
 		return new ItemStack(ModContent.KOK_SAGYZ_SEEDS.get());
 	}
 
+	// --- trampling (MOD-584) ---
+
+	/**
+	 * Landing on the flower knocks it back one growth stage — the plant is trodden down, not
+	 * killed. It never drops below the rosette and never touches what is already underground: the
+	 * root keeps whatever depth it reached, the flower simply has to mature again before it can
+	 * grow deeper.
+	 *
+	 * <p><b>Walking through is safe; coming down on it is not.</b> The flower has no collision, so
+	 * an entity standing "on" it is really standing on the ground below and is inside this block
+	 * every tick it stands there — trampling on plain {@code entityInside} would flatten a whole
+	 * plantation as the player crossed it, and would fire three or four times in the single jump
+	 * that is supposed to cost one stage. The test is therefore that the entity crossed the block's
+	 * TOP face downward during this tick, which happens exactly once per descent and not at all
+	 * while walking at ground level.
+	 *
+	 * <p>Sneaking spares the plant, the way sneaking spares a turtle egg — and it is the same key
+	 * that opens the root inspection, so leaning in to read a plant can never damage it.
+	 */
+	@Override
+	protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity,
+			InsideBlockEffectApplier effectApplier, boolean isInside) {
+		trample(state, level, pos, entity);
+	}
+
+	/** Public for the shared Fabric/NeoForge GameTest body; normal play enters via {@link #entityInside}. */
+	public static boolean trample(BlockState state, Level level, BlockPos pos, Entity entity) {
+		if (!Config.kokSagyzTrampling || !(level instanceof ServerLevel server)
+				|| !(entity instanceof LivingEntity) || entity.isSteppingCarefully()) {
+			return false;
+		}
+		int age = state.getValue(AGE);
+		double top = pos.getY() + 1.0;
+		if (age <= AGE_ROSETTE || entity.yOld < top || entity.getY() >= top) {
+			return false;
+		}
+		server.setBlock(pos, state.setValue(AGE, age - 1), Block.UPDATE_CLIENTS);
+		server.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, pos, Block.getId(state));
+		return true;
+	}
+
 	// --- growth (random tick) ---
 
 	@Override
@@ -167,13 +219,13 @@ public class KokSagyzBlock extends BushBlock {
 		}
 		int age = state.getValue(AGE);
 		if (age < AGE_MATURE) {
-			if (random.nextInt(growthDivisor(level, pos)) == 0) {
+			if (takesStep(random, growthDivisor(age), level, pos)) {
 				level.setBlock(pos, state.setValue(AGE, age + 1), Block.UPDATE_CLIENTS);
 			}
 			return;
 		}
 		// AGE_MATURE: the root grows one block down, if it still has somewhere to reach.
-		if (random.nextInt(rootDivisor(level, pos)) == 0) {
+		if (takesStep(random, rootDivisor(level, pos), level, pos)) {
 			growRoot(level, pos);
 		}
 	}
@@ -183,20 +235,63 @@ public class KokSagyzBlock extends BushBlock {
 	 * grows through the root block it is part of). Anything else carries the wild multiplier, so a
 	 * self-seeded roadside plant is slower than the plantation it escaped from.
 	 */
-	private static int growthDivisor(LevelReader level, BlockPos pos) {
-		return Math.max(1, Config.kokSagyzGrowthChanceDivisor) * wildMultiplier(level, pos);
+	public static int growthDivisor(int age) {
+		return Math.max(1, switch (age) {
+			case AGE_ROSETTE -> Config.kokSagyzStage1Divisor;
+			case AGE_BUD -> Config.kokSagyzStage2Divisor;
+			default -> Config.kokSagyzStage3Divisor;
+		});
 	}
 
-	/** Same shape for the root's own chance — one shared wild rule, applied to both rolls. */
-	private static int rootDivisor(LevelReader level, BlockPos pos) {
-		return Math.max(1, Config.kokSagyzRootChanceDivisor) * wildMultiplier(level, pos);
+	/**
+	 * One growth roll, ground included. Written as "1 in {@code divisor × percent}, needing under
+	 * 100" rather than as a multiplied divisor so the ground factor stays exact: rounding a divisor
+	 * of 1 by a factor of 0.75 would land back on 1 and quietly drop the bonus for the first stage.
+	 */
+	private static boolean takesStep(RandomSource random, int divisor, LevelReader level, BlockPos pos) {
+		return random.nextInt(divisor * groundPercent(level, pos)) < 100;
 	}
 
-	private static int wildMultiplier(LevelReader level, BlockPos pos) {
+	/**
+	 * What the ground under the flower does to the rate, in percent of the ordinary time. Sand is
+	 * the plant's element and the only ground that differs; tilling is deliberately worth nothing.
+	 *
+	 * <p>The medium is read through the plant's own root: once a segment stands under the flower it
+	 * reports the ground it replaced, so a column sunk in sand keeps the sand rate all the way down
+	 * instead of reverting to the default the moment it takes root.
+	 */
+	public static int groundPercent(LevelReader level, BlockPos pos) {
 		BlockState below = level.getBlockState(pos.below());
-		boolean tended = below.is(BlockTags.SUPPORTS_CROPS) || below.is(ModContent.KOK_SAGYZ_ROOT.get());
-		return tended ? 1 : Math.max(1, Config.kokSagyzWildGrowthDivisor);
+		BlockState medium = below.is(ModContent.KOK_SAGYZ_ROOT.get())
+				? KokSagyzRootBlockEntity.soilAt(level, pos.below()) : below;
+		return medium.is(BlockTags.SAND) ? Math.clamp(Config.kokSagyzSandGrowthPercent, 1, 100) : 100;
 	}
+
+	/**
+	 * The price of the next underground step, chosen by WHAT it will create rather than by how deep
+	 * it lands. Shallow ground mints its harvestable tip on the very first step, so pricing by step
+	 * order would let a one-block plot out-yield a full column; this way the tip always costs the
+	 * tip and depth only decides how soon the first one arrives.
+	 */
+	public static int rootDivisor(LevelReader level, BlockPos pos) {
+		return Math.max(1, nextRootIsTip(level, pos)
+				? Config.kokSagyzRootTipDivisor : Config.kokSagyzRootUpperDivisor);
+	}
+
+	/**
+	 * Whether the next root {@link #growRoot} would place is the harvestable tip. Mirrors that
+	 * method's branch: soil under the flower grows the tip straight away unless there is somewhere
+	 * deeper to go, and the only other growable case is the tip landing two blocks down.
+	 */
+	public static boolean nextRootIsTip(LevelReader level, BlockPos pos) {
+		BlockState below = level.getBlockState(pos.below());
+		if (isRootableSoil(below)) {
+			BlockState twoDown = level.getBlockState(pos.below(2));
+			return !(isRootableSoil(twoDown) || twoDown.is(ModContent.KOK_SAGYZ_ROOT.get()));
+		}
+		return true;
+	}
+
 
 	/**
 	 * Whether the column can still go one block deeper: either the flower sits on soil (no root
@@ -205,12 +300,12 @@ public class KokSagyzBlock extends BushBlock {
 	 */
 	public static boolean canGrowRoot(LevelReader level, BlockPos pos) {
 		BlockState below = level.getBlockState(pos.below());
-		if (isSoil(below)) {
+		if (isRootableSoil(below)) {
 			return true;
 		}
 		return below.is(ModContent.KOK_SAGYZ_ROOT.get())
 				&& !below.getValue(KokSagyzRootBlock.TIP)
-				&& isSoil(level.getBlockState(pos.below(2)));
+				&& isRootableSoil(level.getBlockState(pos.below(2)));
 	}
 
 	/**
@@ -220,7 +315,7 @@ public class KokSagyzBlock extends BushBlock {
 	 */
 	public static boolean growRoot(ServerLevel level, BlockPos pos) {
 		BlockState below = level.getBlockState(pos.below());
-		if (isSoil(below)) {
+		if (isRootableSoil(below)) {
 			BlockState root = ModContent.KOK_SAGYZ_ROOT.get().defaultBlockState();
 			// Adaptive depth: soil under the soil grows a two-deep column; a lone block of ground
 			// over stone grows the tip right under the flower — one dig instead of two. An existing
@@ -228,14 +323,21 @@ public class KokSagyzBlock extends BushBlock {
 			// second TIP on top of the one still in the ground (round 7: digging the upper root no
 			// longer kills the plant, so that regrowth is now an everyday event, not an edge case).
 			BlockState twoDown = level.getBlockState(pos.below(2));
-			boolean deep = isSoil(twoDown) || twoDown.is(ModContent.KOK_SAGYZ_ROOT.get());
+			boolean deep = isRootableSoil(twoDown) || twoDown.is(ModContent.KOK_SAGYZ_ROOT.get());
 			level.setBlockAndUpdate(pos.below(), root.setValue(KokSagyzRootBlock.TIP, !deep));
+			if (level.getBlockEntity(pos.below()) instanceof KokSagyzRootBlockEntity entity) {
+				entity.setSoil(below);
+			}
 			return true;
 		}
 		if (below.is(ModContent.KOK_SAGYZ_ROOT.get()) && !below.getValue(KokSagyzRootBlock.TIP)
-				&& isSoil(level.getBlockState(pos.below(2)))) {
+				&& isRootableSoil(level.getBlockState(pos.below(2)))) {
+			BlockState original = level.getBlockState(pos.below(2));
 			BlockState tip = ModContent.KOK_SAGYZ_ROOT.get().defaultBlockState();
 			level.setBlockAndUpdate(pos.below(2), tip.setValue(KokSagyzRootBlock.TIP, true));
+			if (level.getBlockEntity(pos.below(2)) instanceof KokSagyzRootBlockEntity entity) {
+				entity.setSoil(original);
+			}
 			return true;
 		}
 		return false;

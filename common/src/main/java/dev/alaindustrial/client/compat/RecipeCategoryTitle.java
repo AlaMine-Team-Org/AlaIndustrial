@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
  * with the block name alone tells the player nothing: the progress-arrow tooltip listed "Sawmill,
  * Sawmill, Sawmill, Sawmill" and "Incubator, Incubator, Incubator". Each family is therefore named
  * after the mode that works it — "Sawmill: Planks", "Incubator: Duplication" — built from the block's
- * own name plus the mode key the machine's own screen already uses, so all twenty locales are covered
+ * own name plus the mode key the machine's own screen already uses, so every locale is covered
  * without a single new lang string.
  *
  * <p><b>Why this lives in one place.</b> The sawmill and the incubator each grew their own copy of

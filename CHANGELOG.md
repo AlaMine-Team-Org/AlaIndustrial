@@ -1,12 +1,22 @@
-## 0.1.149
+## 0.1.150
 
-<p><img alt="Ala Industrial 0.1.149 — the Advanced Item Pipe running between a chest and a display frame" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.149/release-media/v0.1.149/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial 0.1.150 kok sagyz root inspection preview" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.150/release-media/v0.1.150/changelog.webp" width="720"></p>
 
-Item pipes got a second grade — twice as fast, and thick enough to spot from across the room.
+The rubber dandelion got a proper body, a way to look at its roots without digging, and a much slower, more deliberate growth cycle.
 
 ### New
 
-- **The Advanced Item Pipe moves 4 items per second** instead of 2, to every destination it feeds.
-- **You can tell the two lines apart at a glance.** A steel body with an inspection window down the middle of every segment, noticeably thicker than the ordinary pipe.
-- **A line runs at the speed of its slowest pipe.** One ordinary segment left in an upgraded line drags the whole line back to 2 — the same way a thin cable throttles power, and exactly why the new pipe is thicker: the piece holding you back has to be findable by eye.
-- **Built from the pipes you already have.** Four ordinary pipes, four cupronickel reinforced plates and a silver plate give four advanced pipes, so the second grade cannot be reached around the first.
+- **Crouch beside a dandelion to see its root straight through the ground.** The world dims, the root glows inside the soil, and cell borders show how many blocks deep it has gone. A caption tells you whether it is still growing or ready to dig.
+- **Jumping onto a flower now sets it back one growth stage.** Walking through it is safe, and so is crouching — looking at a root never harms the plant.
+
+### Improved
+
+- **The flower and its roots have new solid models** — four growth stages and two root shapes instead of flat crosses.
+- **A root remembers the ground it grew in.** Dig one out of sand and sand stays behind, not dirt; red sand stays red, and farmland keeps its moisture.
+- **Growth is now a rising ladder:** the first stage is quick, later ones take longer, and the longest wait is the tip — the part that pays a root. A plantation now takes patience instead of a couple of minutes.
+- **It grows noticeably faster in sand** — that is its native soil. Tilling no longer helps at all: this is a steppe weed, not a hoe crop.
+- **Wild dandelions have moved** off the plains and into savannas, mountain meadows and windswept hills — where they belong.
+
+### Bug Fixes
+
+- **The scythe could not harvest a short root.** With only one block of soil over stone the ready tip was left in the ground; the scythe now takes it at either depth.

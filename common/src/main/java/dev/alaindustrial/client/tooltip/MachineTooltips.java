@@ -244,7 +244,7 @@ public final class MachineTooltips {
 		// Everything the Battery Pouch says — it IS one, plus lead — and then the two lines that are
 		// the whole reason this tier exists. The charge keys are the base pouch's on purpose: the text
 		// is the same sentence about the same buffer, and a second copy would be one more string for
-		// twenty-one locales to drift on.
+		// every locale to drift on.
 		addPouchTooltip(stack, lines, detailed);
 		lines.add(Component.translatable("tooltip.alaindustrial.shielding_pouch.shielded")
 				.withStyle(ChatFormatting.GREEN));
@@ -765,7 +765,7 @@ public final class MachineTooltips {
 
 	/**
 	 * One "Mode - Duration: N ticks" line for the incubator. The mode picks the duration, so three bare
-	 * duration lines would be unreadable; both halves reuse strings that already exist in all 20 locales
+	 * duration lines would be unreadable; both halves reuse strings that already exist in every locale
 	 * (the GUI mode label and the shared duration line), so no new lang key is introduced. The separator
 	 * is an escaped em dash, so the literal itself stays ASCII and cannot be mangled by a source-encoding
 	 * mismatch (a comment can survive that, a shipped string cannot).

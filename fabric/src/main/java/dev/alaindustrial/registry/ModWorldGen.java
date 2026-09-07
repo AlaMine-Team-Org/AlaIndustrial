@@ -66,10 +66,19 @@ public final class ModWorldGen {
 			TagKey.create(Registries.BIOME, Industrialization.id("has_palladium_ore"));
 
 	/**
-	 * Biomes where wild kok-sagyz grows (MOD-537). Defaults to {@code #c:is_plains} +
-	 * {@code #c:is_savanna} ({@code data/alaindustrial/tags/worldgen/biome/has_kok_sagyz.json}),
-	 * the steppe/temperate plain convention tags. The placed feature spawns mature plants
-	 * (age 3); the roots regrow from random ticks because the plants stand on dirt/grass.
+	 * Biomes where wild kok-sagyz grows (MOD-537, narrowed in MOD-584). The set is six explicit
+	 * vanilla ids in {@code data/alaindustrial/tags/worldgen/biome/has_kok_sagyz.json} — NOT the
+	 * {@code #c:is_plains}/{@code #c:is_savanna} convention tags an earlier version of this comment
+	 * claimed; those are wider and would drag in snowy plains and other mods' biomes.
+	 *
+	 * <p>Dry savanna for the steppe look, plus meadow and the two windswept hill biomes: the real
+	 * species is an endemic of the Tien Shan intermountain valleys at 1800-2000 m, on meadows and
+	 * gravelly slopes. Plains were dropped in MOD-584 — ordinary green lowland is the one place it
+	 * has no business being. Desert was considered and rejected: the plant is a mesophyte with a
+	 * high moisture requirement that survives drought by going dormant, not by thriving.
+	 *
+	 * <p>The placed feature spawns mature plants (age 3); the roots regrow from random ticks
+	 * because the plants stand on dirt/grass.
 	 */
 	public static final TagKey<Biome> HAS_KOK_SAGYZ =
 			TagKey.create(Registries.BIOME, Industrialization.id("has_kok_sagyz"));

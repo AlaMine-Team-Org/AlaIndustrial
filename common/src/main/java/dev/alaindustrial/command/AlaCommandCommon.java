@@ -105,7 +105,7 @@ public final class AlaCommandCommon {
 	/**
 	 * The {@code /ala config reload} subtree (MOD-100). Op-only (level 2) — it re-reads the server balance
 	 * file. Feedback is a plain English literal by the same op/diagnostic convention as {@link #demoTree()},
-	 * keeping the 18 player-facing locale files free of admin-only keys. Reload runs synchronously on the
+	 * keeping every player-facing locale file free of admin-only keys. Reload runs synchronously on the
 	 * server thread (where {@link Config}'s static fields are also read each tick), so there is no data race.
 	 */
 	private static LiteralArgumentBuilder<CommandSourceStack> configTree() {
@@ -214,7 +214,7 @@ public final class AlaCommandCommon {
 	 * The {@code /ala demo} subtree (MOD-058): build/clear the generated showcase stand and jump
 	 * between its fixed camera points. Op-only (level 2) — it edits the world. Feedback is plain
 	 * English literals by convention for op/diagnostic output (see the MOD-058 task log), keeping
-	 * the 18 player-facing locale files free of admin-only keys.
+	 * every player-facing locale file free of admin-only keys.
 	 */
 	private static LiteralArgumentBuilder<CommandSourceStack> demoTree() {
 		return Commands.literal("demo")

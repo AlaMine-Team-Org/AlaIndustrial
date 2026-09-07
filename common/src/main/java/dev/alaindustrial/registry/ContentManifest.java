@@ -42,6 +42,7 @@ import dev.alaindustrial.block.IrradiatedSoilBlock;
 import dev.alaindustrial.block.IronChestBlock;
 import dev.alaindustrial.block.IronFurnaceBlock;
 import dev.alaindustrial.block.KokSagyzBlock;
+import dev.alaindustrial.block.entity.KokSagyzRootBlockEntity;
 import dev.alaindustrial.block.KokSagyzRootBlock;
 import dev.alaindustrial.block.AdvancedItemPipeBlock;
 import dev.alaindustrial.block.ItemPipeBlock;
@@ -2013,6 +2014,9 @@ public final class ContentManifest {
 
 	/** Every {@code BlockEntityType}, declared once for both loaders. See {@link BlockEntityDef}. */
 	public static final List<BlockEntityDef<?>> BLOCK_ENTITIES = List.of(
+			blockEntity("kok_sagyz_root", KokSagyzRootBlockEntity.class,
+					KokSagyzRootBlockEntity::new,
+					s -> ModContent.KOK_SAGYZ_ROOT_BE = s, "kok_sagyz_root"),
 			blockEntity("generator", GeneratorBlockEntity.class, GeneratorBlockEntity::new, s -> ModContent.GENERATOR_BE = s, "generator"),
 			blockEntity("geothermal_generator", GeothermalGeneratorBlockEntity.class, GeothermalGeneratorBlockEntity::new, s -> ModContent.GEOTHERMAL_GENERATOR_BE = s, "geothermal_generator"),
 			blockEntity("solar_panel", SolarPanelBlockEntity.class, SolarPanelBlockEntity::new, s -> ModContent.SOLAR_PANEL_BE = s, "solar_panel"),

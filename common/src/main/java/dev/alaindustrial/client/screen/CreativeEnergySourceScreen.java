@@ -267,7 +267,7 @@ public class CreativeEnergySourceScreen extends MachineScreen<CreativeEnergySour
 	 *
 	 * <p>Not an ornament: the caveat below the slider is one of the longest strings in the mod, and it
 	 * runs off both edges of the panel in English before any translator sees it. Measuring the string and
-	 * shrinking the wording would only move the problem to whichever of the twenty-one locales is
+	 * shrinking the wording would only move the problem to whichever locale is
 	 * wordiest — German and Russian both run longer than English here. Wrapping is the only fix that
 	 * holds for a string nobody has written yet.
 	 */

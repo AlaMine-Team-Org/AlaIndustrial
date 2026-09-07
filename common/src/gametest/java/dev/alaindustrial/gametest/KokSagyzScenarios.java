@@ -58,6 +58,209 @@ import net.minecraft.world.phys.Vec3;
  */
 public final class KokSagyzScenarios {
 
+	/** MOD-584: mixed soil survives sync serialization and the actual player harvest path. */
+	public static void mod584SoilPersistsAndRestores(GameTestHelper helper) {
+		soilColumn(helper, Blocks.RED_SAND, Blocks.SAND);
+		helper.setBlock(POS, flower(3));
+		bonemeal(helper, POS);
+		bonemeal(helper, POS);
+		for (int depth = 1; depth <= 2; depth++) {
+			BlockPos pos = helper.absolutePos(POS.below(depth));
+			var root = (dev.alaindustrial.block.entity.KokSagyzRootBlockEntity) helper.getLevel().getBlockEntity(pos);
+			BlockState expected = (depth == 1 ? Blocks.RED_SAND : Blocks.SAND).defaultBlockState();
+			var copy = new dev.alaindustrial.block.entity.KokSagyzRootBlockEntity(pos, root.getBlockState());
+			copy.loadWithComponents(net.minecraft.world.level.storage.TagValueInput.create(
+					net.minecraft.util.ProblemReporter.DISCARDING, helper.getLevel().registryAccess(), root.getUpdateTag(helper.getLevel().registryAccess())));
+			if (!root.soil().equals(expected) || !copy.soil().equals(expected)) {
+				helper.fail("Root soil was lost at depth " + depth); return;
+			}
+		}
+		ServerPlayer player = survivalPlayer(helper);
+		player.gameMode.destroyBlock(helper.absolutePos(POS.below(2)));
+		if (!helper.getBlockState(POS.below(2)).is(Blocks.SAND)) {
+			helper.fail("Harvest changed sand to another block"); return;
+		}
+		bonemeal(helper, POS);
+		if (!((dev.alaindustrial.block.entity.KokSagyzRootBlockEntity) helper.getLevel()
+				.getBlockEntity(helper.absolutePos(POS.below(2)))).soil().is(Blocks.SAND)) {
+			helper.fail("Regrowth lost the restored soil"); return;
+		}
+		helper.succeed();
+	}
+
+	/** MOD-584: shallow soil yields one harvestable tip; repeated scythe use cannot duplicate it. */
+	public static void mod584ShortRootScythe(GameTestHelper helper) {
+		soilColumn(helper, Blocks.DIRT, Blocks.STONE);
+		helper.setBlock(POS, flower(3));
+		bonemeal(helper, POS);
+		var column = dev.alaindustrial.block.KokSagyzRoots.inspect(helper.getLevel(), helper.absolutePos(POS));
+		if (column.depth() != 1 || !column.harvestable() || column.growing()) {
+			helper.fail("Shallow column did not become a ready short tip"); return;
+		}
+		ServerPlayer player = survivalPlayer(helper);
+		player.setShiftKeyDown(true);
+		player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModContent.SCYTHE_WOOD.get()));
+		useOn(helper, player, POS);
+		useOn(helper, player, POS);
+		if (countDrops(helper, ModContent.KOK_SAGYZ_ROOT_ITEM.get()) != 1 || !helper.getBlockState(POS.below()).is(Blocks.DIRT)) {
+			helper.fail("Short-tip scythe harvest failed or duplicated the yield"); return;
+		}
+		if (!helper.getBlockState(POS).is(ModContent.KOK_SAGYZ.get())) {
+			helper.fail("Short-root harvest destroyed the flower"); return;
+		}
+		helper.succeed();
+	}
+
+	/** MOD-584: an absent upper segment never appears in the inspection snapshot. */
+	public static void mod584MissingSegmentAndLegacy(GameTestHelper helper) {
+		fullPlant(helper, 3);
+		ServerPlayer player = survivalPlayer(helper);
+		player.gameMode.destroyBlock(helper.absolutePos(POS.below()));
+		var column = dev.alaindustrial.block.KokSagyzRoots.inspect(helper.getLevel(), helper.absolutePos(POS));
+		if (column.upper() || !column.lower() || column.depth() != 2) {
+			helper.fail("Inspection invented an upper root after harvesting it"); return;
+		}
+		var legacy = new dev.alaindustrial.block.entity.KokSagyzRootBlockEntity(helper.absolutePos(POS.below(2)), helper.getBlockState(POS.below(2)));
+		legacy.loadWithComponents(net.minecraft.world.level.storage.TagValueInput.create(
+				net.minecraft.util.ProblemReporter.DISCARDING, helper.getLevel().registryAccess(), new net.minecraft.nbt.CompoundTag()));
+		if (!legacy.soil().is(Blocks.DIRT)) { helper.fail("Legacy root did not default to dirt"); return; }
+		helper.succeed();
+	}
+
+	/**
+	 * MOD-584: coming down on the flower costs one stage; crossing it at ground level costs
+	 * nothing, and neither does a sneaking descent. Each leg drives the same public entry the
+	 * {@code entityInside} hook uses, with the entity's own before/after height doing the talking.
+	 */
+	public static void mod584Trampling(GameTestHelper helper) {
+		fullPlant(helper, KokSagyzBlock.AGE_MATURE);
+		BlockPos abs = helper.absolutePos(POS);
+		ServerPlayer player = survivalPlayer(helper);
+		double top = abs.getY() + 1.0;
+
+		// 1. Crossing at ground level: the feet never cross the top face, so nothing happens.
+		if (stomp(helper, abs, player, top + 0.2, top + 0.1) || age(helper) != KokSagyzBlock.AGE_MATURE) {
+			helper.fail("Walking above the flower trampled it"); return;
+		}
+		if (stomp(helper, abs, player, top - 0.1, top - 0.2) || age(helper) != KokSagyzBlock.AGE_MATURE) {
+			helper.fail("Walking through the flower trampled it"); return;
+		}
+
+		// 2. Sneaking down through it is deliberately free — the same key opens the inspection.
+		player.setShiftKeyDown(true);
+		if (stomp(helper, abs, player, top + 0.5, top - 0.3) || age(helper) != KokSagyzBlock.AGE_MATURE) {
+			helper.fail("A sneaking descent trampled the flower"); return;
+		}
+		player.setShiftKeyDown(false);
+
+		// 3. Landing on it: exactly one stage per descent, down to the rosette and no further.
+		for (int expected = KokSagyzBlock.AGE_MATURE - 1; expected >= KokSagyzBlock.AGE_ROSETTE; expected--) {
+			if (!stomp(helper, abs, player, top + 0.5, top - 0.3) || age(helper) != expected) {
+				helper.fail("Landing should have left age " + expected + ", got " + age(helper)); return;
+			}
+		}
+		if (stomp(helper, abs, player, top + 0.5, top - 0.3) || age(helper) != KokSagyzBlock.AGE_ROSETTE) {
+			helper.fail("Trampling pushed the plant below the rosette"); return;
+		}
+
+		// 4. Nothing underground ever moved.
+		if (!helper.getBlockState(POS.below()).is(ModContent.KOK_SAGYZ_ROOT.get())
+				|| !helper.getBlockState(POS.below(2)).getValue(KokSagyzRootBlock.TIP)) {
+			helper.fail("Trampling the flower disturbed the root column"); return;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * One descent: put the entity where it was at the start of the tick and where it is now, then
+	 * drive the same entry {@code entityInside} uses. {@code yOld} is assigned after the move
+	 * because positioning the entity rewrites it.
+	 */
+	private static boolean stomp(GameTestHelper helper, BlockPos abs, ServerPlayer player,
+			double from, double to) {
+		player.setPos(player.getX(), to, player.getZ());
+		player.yOld = from;
+		return KokSagyzBlock.trample(helper.getLevel().getBlockState(abs), helper.getLevel(), abs, player);
+	}
+
+	private static int age(GameTestHelper helper) {
+		return helper.getBlockState(POS).getValue(KokSagyzBlock.AGE);
+	}
+
+	/**
+	 * MOD-584: the growth ladder rises step by step, and the harvestable tip is priced by being a
+	 * tip rather than by how deep it lands. The second claim is the one worth a test: shallow ground
+	 * mints its tip on the FIRST underground step, so pricing by step order would quietly make a
+	 * one-block plot out-yield a full column.
+	 */
+	public static void mod584GrowthLadder(GameTestHelper helper) {
+		BlockPos abs = helper.absolutePos(POS);
+		ServerLevel level = helper.getLevel();
+
+		// Flower stages: each one dearer than the last.
+		soilColumn(helper, Blocks.DIRT, Blocks.DIRT);
+		helper.setBlock(POS, flower(KokSagyzBlock.AGE_ROSETTE));
+		int s1 = KokSagyzBlock.growthDivisor(KokSagyzBlock.AGE_ROSETTE);
+		int s2 = KokSagyzBlock.growthDivisor(KokSagyzBlock.AGE_BUD);
+		int s3 = KokSagyzBlock.growthDivisor(KokSagyzBlock.AGE_FLOWER);
+		if (!(s1 < s2 && s2 < s3)) {
+			helper.fail("Flower stages are not a rising ladder: " + s1 + ", " + s2 + ", " + s3); return;
+		}
+
+		// Ground: sand is the one soil that pays, tilling is worth nothing, and a rooted column
+		// keeps the rate of the ground it was sunk into rather than of the root now under it.
+		int dirt = KokSagyzBlock.groundPercent(level, abs);
+		soilColumn(helper, Blocks.FARMLAND, Blocks.DIRT);
+		if (KokSagyzBlock.groundPercent(level, abs) != dirt) {
+			helper.fail("Tilling changed the growth rate; it must not"); return;
+		}
+		soilColumn(helper, Blocks.SAND, Blocks.SAND);
+		int sand = KokSagyzBlock.groundPercent(level, abs);
+		if (sand >= dirt) {
+			helper.fail("Sand should grow it faster: sand=" + sand + ", dirt=" + dirt); return;
+		}
+		helper.setBlock(POS.below(), ModContent.KOK_SAGYZ_ROOT.get().defaultBlockState()
+				.setValue(KokSagyzRootBlock.TIP, false));
+		if (helper.getLevel().getBlockEntity(helper.absolutePos(POS.below()))
+				instanceof dev.alaindustrial.block.entity.KokSagyzRootBlockEntity root) {
+			root.setSoil(Blocks.SAND.defaultBlockState());
+		}
+		if (KokSagyzBlock.groundPercent(level, abs) != sand) {
+			helper.fail("A column rooted in sand lost the sand rate once it took root"); return;
+		}
+		soilColumn(helper, Blocks.DIRT, Blocks.DIRT);
+
+		// Deep column, no root yet: the next step is the intermediate root, the cheaper one.
+		helper.setBlock(POS, flower(KokSagyzBlock.AGE_MATURE));
+		if (KokSagyzBlock.nextRootIsTip(level, abs)) {
+			helper.fail("Two blocks of soil should grow the intermediate root first"); return;
+		}
+		int upper = KokSagyzBlock.rootDivisor(level, abs);
+
+		// Same column once the intermediate root stands: now the tip, and it must cost more.
+		helper.setBlock(POS.below(), ModContent.KOK_SAGYZ_ROOT.get().defaultBlockState()
+				.setValue(KokSagyzRootBlock.TIP, false));
+		if (!KokSagyzBlock.nextRootIsTip(level, abs)) {
+			helper.fail("A column over soil should grow the tip next"); return;
+		}
+		int deepTip = KokSagyzBlock.rootDivisor(level, abs);
+		if (deepTip <= upper) {
+			helper.fail("The tip must cost more than the intermediate root: " + deepTip + " vs " + upper); return;
+		}
+
+		// Shallow ground: soil over stone mints the tip immediately — at the TIP price, not the
+		// cheap first-step price, or a one-block plot would out-yield the full column.
+		soilColumn(helper, Blocks.FARMLAND, Blocks.STONE);
+		if (!KokSagyzBlock.nextRootIsTip(level, abs)) {
+			helper.fail("Soil over stone should mint the tip straight away"); return;
+		}
+		int shallowTip = KokSagyzBlock.rootDivisor(level, abs);
+		if (shallowTip != deepTip) {
+			helper.fail("Shallow ground priced its tip differently: " + shallowTip + " vs " + deepTip); return;
+		}
+		helper.succeed();
+	}
+
 	private KokSagyzScenarios() {
 	}
 

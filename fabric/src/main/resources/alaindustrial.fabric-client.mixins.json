@@ -1,0 +1,7 @@
+{
+	"required": true,
+	"package": "dev.alaindustrial.mixin.client.fabric",
+	"compatibilityLevel": "JAVA_25",
+	"client": ["RootRenderDataMixin"],
+	"injectors": {"defaultRequire": 1}
+}

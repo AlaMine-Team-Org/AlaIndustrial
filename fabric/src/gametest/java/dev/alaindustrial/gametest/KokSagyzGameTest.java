@@ -16,6 +16,36 @@ import net.minecraft.gametest.framework.GameTestHelper;
  * the scythe/drone tip harvests.
  */
 public class KokSagyzGameTest {
+	/** @implements MOD-584 - preserve mixed soil across persistence and harvest. */
+	@GameTest
+	public void mod584SoilPersistsAndRestores(GameTestHelper helper) {
+		KokSagyzScenarios.mod584SoilPersistsAndRestores(helper);
+	}
+
+	/** @implements MOD-584 - harvest a shallow tip exactly once. */
+	@GameTest
+	public void mod584ShortRootScythe(GameTestHelper helper) {
+		KokSagyzScenarios.mod584ShortRootScythe(helper);
+	}
+
+	/** @implements MOD-584 - the growth ladder rises and the tip is priced as a tip at any depth. */
+	@GameTest
+	public void mod584GrowthLadder(GameTestHelper helper) {
+		KokSagyzScenarios.mod584GrowthLadder(helper);
+	}
+
+	/** @implements MOD-584 - landing on the flower costs one stage; walking and sneaking do not. */
+	@GameTest
+	public void mod584Trampling(GameTestHelper helper) {
+		KokSagyzScenarios.mod584Trampling(helper);
+	}
+
+	/** @implements MOD-584 - inspect missing segments and load legacy roots. */
+	@GameTest
+	public void mod584MissingSegmentAndLegacy(GameTestHelper helper) {
+		KokSagyzScenarios.mod584MissingSegmentAndLegacy(helper);
+	}
+
 
 	/** @implements MOD-537 — bone meal walks AGE 0→3 one stage at a time; maturity alone roots not. */
 	@GameTest

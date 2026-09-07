@@ -248,6 +248,7 @@ public final class ClientContentManifest {
 
 	/** Every block tint source, in one shared order. */
 	public static final List<BlockTintDef> BLOCK_TINTS = List.of(
+			new BlockTintDef(List.of(dev.alaindustrial.client.render.RootSoilAppearance.INSTANCE), () -> ModContent.KOK_SAGYZ_ROOT.get()),
 			// MOD-118: the incubator dome takes the colour of the glass it was built from.
 			new BlockTintDef(List.of(IncubatorDomeTint.INSTANCE), () -> ModContent.INCUBATOR_DOME.get()),
 			new BlockTintDef(List.of(FluidPipeTint.INSTANCE), () -> ModContent.FLUID_PIPE.get()));

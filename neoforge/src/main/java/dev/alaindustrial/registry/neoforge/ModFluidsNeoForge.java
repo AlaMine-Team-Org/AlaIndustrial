@@ -63,7 +63,7 @@ public final class ModFluidsNeoForge {
 	 * <p>{@code descriptionId} points at the block's existing key rather than letting NeoForge derive
 	 * {@code fluid_type.alaindustrial.oil}: that derived key has no translation, so any foreign GUI
 	 * naming the fluid type (JEI/EMI fluid entries, other mods' tanks) would print the raw key. The
-	 * block key is already translated in all 20 locales and reads exactly the same to the player.
+	 * block key is already translated in every locale and reads exactly the same to the player.
 	 */
 	public static FluidType.Properties oilTypeProperties() {
 		return FluidType.Properties.create()
@@ -90,7 +90,7 @@ public final class ModFluidsNeoForge {
 	 * oil). Entity-physics fields are pinned explicitly for the same reason as
 	 * {@link #oilTypeProperties()} — the fractions behave like water-that-does-nothing on both
 	 * loaders, and must keep doing so if NeoForge re-enables its fluid-type entity integration.
-	 * {@code descriptionId} points at the block key (translated in all 20 locales), not the derived
+	 * {@code descriptionId} points at the block key (translated in every locale), not the derived
 	 * {@code fluid_type.*} key which has no translation.
 	 */
 	public static final DeferredHolder<FluidType, FluidType> DIESEL_TYPE =

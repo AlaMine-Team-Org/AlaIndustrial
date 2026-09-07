@@ -1,9 +1,11 @@
 package dev.alaindustrial.block;
 
 import com.mojang.serialization.MapCodec;
+import dev.alaindustrial.block.entity.KokSagyzRootBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -20,9 +22,16 @@ import net.minecraft.world.item.ItemStack;
  * never destroyed by work underground — it is a living dandelion whose roots go two blocks down,
  * and a dug root simply grows back through the flower's random tick. The two depths pay
  * differently, which is the whole point of the column: the TIP mints the root item (plus the seed
- * chance), the upper root mints seeds only. {@link #playerDestroy} leaves dirt behind rather than
- * air, because the rubber has to come out of the ground without leaving a hole, and dirt under the
- * flower is exactly what the plant needs to root into again.
+ * chance), the upper root mints seeds only. {@link #playerDestroy} refills the hole rather than
+ * leaving air, because the rubber has to come out of the ground without leaving a hole, and ground
+ * under the flower is exactly what the plant needs to root into again.
+ *
+ * <p><b>The segment remembers the ground it replaced (MOD-584).</b> A non-ticking
+ * {@link dev.alaindustrial.block.entity.KokSagyzRootBlockEntity} holds the original BlockState, so
+ * a root grown in sand harvests back to sand instead of turning the desert into dirt, and the
+ * ordinary chunk model draws that ground rather than a root texture — the root itself is only
+ * visible through the crouch inspection. Segments saved before MOD-584 carry no such data and fall
+ * back to dirt, which is what they already looked like.
  *
  * <p>Before round 7 taking the upper root destroyed the flower on purpose, to stop players cheesing
  * the payout in the middle of the column. That guard is now unnecessary and was doing harm: the
@@ -37,7 +46,7 @@ import net.minecraft.world.item.ItemStack;
  * roots teleporting away. Nothing is farmable that way: an orphaned column has no flower to drive
  * {@code randomTick}, so the tip never regrows and the two blocks are a one-off dig.
  */
-public class KokSagyzRootBlock extends Block {
+public class KokSagyzRootBlock extends Block implements EntityBlock {
 
 	public static final MapCodec<KokSagyzRootBlock> CODEC = simpleCodec(KokSagyzRootBlock::new);
 
@@ -47,6 +56,11 @@ public class KokSagyzRootBlock extends Block {
 	public KokSagyzRootBlock(Properties properties) {
 		super(properties);
 		registerDefaultState(stateDefinition.any().setValue(TIP, false));
+	}
+
+	@Override
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return new KokSagyzRootBlockEntity(pos, state);
 	}
 
 	@Override
@@ -60,16 +74,12 @@ public class KokSagyzRootBlock extends Block {
 		builder.add(TIP);
 	}
 
-	/**
-	 * Digging a root leaves dirt, not air — the hole the harvest came out of is refilled by the
-	 * ground it was dug from, which is also what lets the flower above root into it again. The loot
-	 * (root item at the tip, seeds at either depth) drops through the ordinary destroy path before
-	 * this runs, and nothing here touches the plant above: harvesting underground never kills it.
-	 */
+	/** Restore the captured soil after ordinary loot handling, leaving the perennial flower alive. */
 	@Override
 	public void playerDestroy(net.minecraft.world.level.Level level, Player player, BlockPos pos, BlockState state,
 			BlockEntity blockEntity, ItemStack tool) {
 		super.playerDestroy(level, player, pos, state, blockEntity, tool);
-		level.setBlockAndUpdate(pos, Blocks.DIRT.defaultBlockState());
+		level.setBlockAndUpdate(pos, blockEntity instanceof KokSagyzRootBlockEntity root
+				? root.soil() : Blocks.DIRT.defaultBlockState());
 	}
 }

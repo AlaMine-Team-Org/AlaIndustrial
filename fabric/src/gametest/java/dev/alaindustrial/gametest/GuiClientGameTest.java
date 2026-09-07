@@ -77,7 +77,14 @@ public class GuiClientGameTest implements FabricClientGameTest {
             ShotRecorder.begin(context);
             singleplayer.getClientLevel().waitForChunksRender();
 
+            if (System.getProperty("alaindustrial.rootonly") != null) {
+                RootInspectionStand.check(context, singleplayer);
+                ShotRecorder.finish();
+                return;
+            }
+
             if (!GUI_ONLY) {
+                RootInspectionStand.check(context, singleplayer);
                 // ── World render rig ─────────────────────────────────────────────────
                 WorldBlockStands.renderBlocksInWorld(context, singleplayer);
 

@@ -779,6 +779,7 @@ public final class ModContent {
 	/** MOD-505 — the only ticking object in a greenhouse; the seedbeds and buds have none. */
 	public static Supplier<BlockEntityType<?>> CRYSTAL_FARM_CONTROLLER_BE = unbound("CRYSTAL_FARM_CONTROLLER_BE");
 	public static Supplier<BlockEntityType<?>> WORKSTATION_BE = unbound("WORKSTATION_BE");
+	public static Supplier<BlockEntityType<?>> KOK_SAGYZ_ROOT_BE = unbound("KOK_SAGYZ_ROOT_BE");
 	public static Supplier<BlockEntityType<?>> ELECTRIC_HEATER_BE = unbound("ELECTRIC_HEATER_BE");
 	public static Supplier<BlockEntityType<?>> CHARGE_PAD_BE = unbound("CHARGE_PAD_BE");
 	public static Supplier<BlockEntityType<?>> ENERGY_CONDENSER_BE = unbound("ENERGY_CONDENSER_BE");

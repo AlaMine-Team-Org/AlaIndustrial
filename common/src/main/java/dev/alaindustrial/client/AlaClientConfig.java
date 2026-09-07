@@ -27,6 +27,13 @@ public final class AlaClientConfig {
 	/** Held-drill charge readout (MOD-079). On by default; toggled in-game with its own key (default J),
 	 * independent of the pack readout so each can be bound and shown separately. */
 	public static boolean drillHudEnabled = true;
+	/**
+	 * How far the world is dimmed behind a root inspection, in percent (MOD-584). The wash is what
+	 * makes the underground shape readable against a lit surface, so it cannot be 0: a fully
+	 * transparent wash does not composite as "no change", it composites as a black screen.
+	 * 85 leaves the terrain, horizon and sky faintly readable — enough to keep your bearings.
+	 */
+	public static int rootInspectionDim = 85;
 	/** Dragged offset of the upgrade panel from its docked position (MOD-080). Persisted between sessions. */
 	public static int upgradePanelDX = 0;
 	public static int upgradePanelDY = 0;
@@ -82,6 +89,7 @@ public final class AlaClientConfig {
 					showEuNumbers = GsonHelper.getAsBoolean(o, "showEuNumbers", showEuNumbers);
 					energyHudEnabled = GsonHelper.getAsBoolean(o, "energyHudEnabled", energyHudEnabled);
 					drillHudEnabled = GsonHelper.getAsBoolean(o, "drillHudEnabled", drillHudEnabled);
+					rootInspectionDim = clamp(GsonHelper.getAsInt(o, "rootInspectionDim", rootInspectionDim), 10, 95);
 					upgradePanelDX = GsonHelper.getAsInt(o, "upgradePanelDX", upgradePanelDX);
 					upgradePanelDY = GsonHelper.getAsInt(o, "upgradePanelDY", upgradePanelDY);
 					statsPanelDX = GsonHelper.getAsInt(o, "statsPanelDX", statsPanelDX);
@@ -120,6 +128,7 @@ public final class AlaClientConfig {
 		o.addProperty("showEuNumbers", snapshot.showEuNumbers());
 		o.addProperty("energyHudEnabled", snapshot.energyHudEnabled());
 		o.addProperty("drillHudEnabled", snapshot.drillHudEnabled());
+		o.addProperty("rootInspectionDim", rootInspectionDim);
 		o.addProperty("upgradePanelDX", upgradePanelDX);
 		o.addProperty("upgradePanelDY", upgradePanelDY);
 		o.addProperty("statsPanelDX", statsPanelDX);

@@ -54,6 +54,8 @@ public final class ShotFamilies {
      * lets a family be refined later without re-sorting the table.
      */
     private static final List<Object[]> TABLE = List.of(
+            new Object[] {"root_inspect_", new Family(ShotGroup.WORLD, List.of("R-VIS-04"),
+                    "One and two root segments appear through original soil only while crouching")},
             // ── Screens ──────────────────────────────────────────────────────────────────────
             new Object[] {"gui_", new Family(ShotGroup.GUI, List.of("R-GUI-03"),
                     "Machine screen: the energy and progress bars match the numbers behind them, "

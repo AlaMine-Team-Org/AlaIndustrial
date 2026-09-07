@@ -22,8 +22,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
  * draining bubbles, the drowning damage, the client-side pop event and dismounting a boat all come
  * from vanilla unmodified. Two consequences are accepted rather than worked around: Respiration and
  * Water Breathing protect against oil too (a sealed mask is a sealed mask), and the death message is
- * the drowning one — a bespoke damage type would mean a new death message in all twenty language
- * files, which is its own task.
+ * the drowning one — a bespoke damage type would mean a new death message in every language
+ * file, which is its own task.
  *
  * <p>Config note: registered in {@code alaindustrial.compat-optional.mixins.json}. If another mod's
  * transformation makes this injection impossible, oil stops drowning and the game still boots — the

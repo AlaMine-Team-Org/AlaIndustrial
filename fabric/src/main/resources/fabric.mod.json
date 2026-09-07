@@ -42,6 +42,7 @@
 		]
 	},
 	"mixins": [
+		"alaindustrial.fabric-client.mixins.json",
 		"alaindustrial.mixins.json",
 		"alaindustrial.worldgen.mixins.json",
 		"alaindustrial.compat-optional.mixins.json"

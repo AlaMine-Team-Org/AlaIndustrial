@@ -8,6 +8,8 @@
     "LivingEntityModFluidTravelMixin"
   ],
   "client": [
+    "client.RootInspectionStateMixin",
+    "client.RootInspectionRendererMixin",
     "client.AbstractContainerScreenAccessor",
     "client.ItemModelsAccessor",
     "client.ItemStackRenderStateAccessor",

@@ -83,6 +83,8 @@ public final class IndustrializationNeoForgeClient {
 	 */
 	private void registerClientEvents(IEventBus modBus) {
 		modBus.addListener(this::registerMenuScreens);
+		dev.alaindustrial.client.neoforge.NeoForgeRootSoilModels.init();
+		modBus.addListener(dev.alaindustrial.client.neoforge.NeoForgeRootSoilModels::onBake);
 		// MOD-248: the submerged-in-oil look (screen overlay + near-black fog). Both halves live in
 		// common/ behind a client mixin, because Fabric has no fog/screen-effect API and one
 		// implementation must serve both loaders. NeoForge's IClientFluidTypeExtensions overlay hook
@@ -179,6 +181,7 @@ public final class IndustrializationNeoForgeClient {
 			event.register(ModKeyMappings.TOGGLE_STEP_ASSIST); // MOD-133 player dashboard
 		});
 		modBus.addListener((RegisterGuiLayersEvent event) -> {
+			event.registerAboveAll(Industrialization.id("root_inspection"), dev.alaindustrial.client.render.RootInspection::renderHud);
 			// Teleport screen fade (MOD-106) — counterpart to the Fabric HudElementRegistry entry; the
 			// drawing itself is loader-neutral (TeleportFadeHud). Registered before the readouts so they
 			// stay legible over it.

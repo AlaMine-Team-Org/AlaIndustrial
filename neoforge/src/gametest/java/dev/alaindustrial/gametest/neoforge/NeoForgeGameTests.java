@@ -1370,6 +1370,11 @@ public final class NeoForgeGameTests {
 		// MOD-537 — kok sagyz, the rubber dandelion that grows down. Growth is driven by bone meal
 		// (performBonemeal): the rig is a closed box, so the random-tick light floor would make every
 		// growth scenario non-deterministic here; bone meal is deliberately not light-gated.
+		registerTest(event, "kok_sagyz_soil_persistence", 100, true, KokSagyzScenarios::mod584SoilPersistsAndRestores);
+		registerTest(event, "kok_sagyz_short_scythe", 100, true, KokSagyzScenarios::mod584ShortRootScythe);
+		registerTest(event, "kok_sagyz_missing_segment_legacy", 100, true, KokSagyzScenarios::mod584MissingSegmentAndLegacy);
+		registerTest(event, "kok_sagyz_trampling", 100, true, KokSagyzScenarios::mod584Trampling);
+		registerTest(event, "kok_sagyz_growth_ladder", 100, true, KokSagyzScenarios::mod584GrowthLadder);
 		registerTest(event, "kok_sagyz_stages_advance", 100, true,
 				KokSagyzScenarios::mod537StagesAdvance);
 		registerTest(event, "kok_sagyz_root_grows_two_deep", 100, true,

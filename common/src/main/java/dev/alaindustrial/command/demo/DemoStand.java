@@ -673,6 +673,15 @@ public final class DemoStand {
 		level.setBlockAndUpdate(origin.offset(41, 1, 9), ModContent.KOK_SAGYZ_ROOT.get().defaultBlockState());
 		level.setBlockAndUpdate(origin.offset(41, 2, 9), ModContent.KOK_SAGYZ.get().defaultBlockState()
 				.setValue(dev.alaindustrial.block.KokSagyzBlock.AGE, dev.alaindustrial.block.KokSagyzBlock.AGE_MATURE));
+		// MOD-584: a short harvestable root beside the full column, both in their original soil.
+		set(level, origin, 42, 0, 9, FLOOR);
+		level.setBlockAndUpdate(origin.offset(42, 1, 9), ModContent.KOK_SAGYZ_ROOT.get().defaultBlockState()
+				.setValue(dev.alaindustrial.block.KokSagyzRootBlock.TIP, true));
+		if (level.getBlockEntity(origin.offset(42, 1, 9)) instanceof dev.alaindustrial.block.entity.KokSagyzRootBlockEntity root) {
+			root.setSoil(Blocks.SAND.defaultBlockState());
+		}
+		level.setBlockAndUpdate(origin.offset(42, 2, 9), ModContent.KOK_SAGYZ.get().defaultBlockState()
+				.setValue(dev.alaindustrial.block.KokSagyzBlock.AGE, dev.alaindustrial.block.KokSagyzBlock.AGE_MATURE));
 		// Garden Drone Station (MOD-277): the dock beside the trellis plot, charged so its status light
 		// reads "powered" rather than "no EU". Placed next to farmland on purpose — the stand should show
 		// the block in the context it works in.

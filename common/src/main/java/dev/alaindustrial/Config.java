@@ -2583,35 +2583,76 @@ public final class Config {
 
 	// --- Kok sagyz (MOD-537): the rubber dandelion — root rubber without an oil rig. ---
 	/**
-	 * Chance divisor for one flower stage of the kok sagyz (rosette → bud → flower → seed head):
-	 * on each random tick of a lit plant there is a 1-in-this chance of advancing. Like the cotton
-	 * trellis, growth is random rather than a timer — the plant carries no block entity, so a
-	 * plantation of any size costs nothing to tick.
+	 * Chance divisors for the kok sagyz, one per step of its life (MOD-584). On each random tick of
+	 * a lit plant there is a 1-in-this chance of taking that step. Growth is random rather than a
+	 * timer — the plant carries no block entity, so a plantation of any size costs nothing to tick.
 	 *
-	 * <p>On farmland (or the plant's own root) this is the rate actually used; off tended ground the
-	 * {@link #kokSagyzWildGrowthDivisor} multiplies it on top.
+	 * <p><b>The ladder rises on purpose.</b> A flat divisor made every step of the plant cost the
+	 * same wait, which read as mechanical: planting, ripening and the payout all felt alike. Cheap
+	 * first stage, dearer later ones, and the dearest step is the one that mints a root.
+	 *
+	 * <p><b>These are means, not timers.</b> At {@code randomTickSpeed 3} a block is picked about
+	 * once every 68 s, and the wait is geometric — for a divisor of 1 a tenth of the plants take a
+	 * step within 7 s and a tenth need over 157 s. The spread that makes a field ripen unevenly is
+	 * already there; these knobs set where its middle sits.
+	 *
+	 * <p>On farmland (or the plant's own root) these are the rates actually used; off tended ground
+	 * {@link #kokSagyzWildGrowthDivisor} multiplies them on top.
 	 */
 	@Knob(section = Section.WORLD, min = 1,
-			doc = "Kok sagyz: 1-in-this chance of advancing one flower stage per random tick on tended ground (farmland or the plant's own root).")
-	public static int kokSagyzGrowthChanceDivisor = 1;
+			doc = "Kok sagyz: 1-in-this chance per random tick of going rosette -> bud, on tended ground.")
+	public static int kokSagyzStage1Divisor = 1;
+	/** Bud → open flower. @see #kokSagyzStage1Divisor */
+	@Knob(section = Section.WORLD, min = 1,
+			doc = "Kok sagyz: 1-in-this chance per random tick of going bud -> open flower, on tended ground.")
+	public static int kokSagyzStage2Divisor = 2;
+	/** Open flower → seed head, the stage that unlocks rooting. @see #kokSagyzStage1Divisor */
+	@Knob(section = Section.WORLD, min = 1,
+			doc = "Kok sagyz: 1-in-this chance per random tick of going flower -> seed head, on tended ground.")
+	public static int kokSagyzStage3Divisor = 3;
 	/**
-	 * Chance divisor for one block of root growth: only a mature (seed-head) plant rolls this, and
-	 * only while the column can still go deeper. Kept separate from the flower divisor because the
-	 * two waits feel different — the flower is what the player watches, the root is what he waits
-	 * for, and they should be tunable apart.
+	 * The intermediate root — the segment directly under the flower on a two-deep column. It pays
+	 * seeds only, never a root item, so it is the cheaper of the two underground steps.
 	 */
 	@Knob(section = Section.WORLD, min = 1,
-			doc = "Kok sagyz: 1-in-this chance of growing the root one block deeper per random tick of a mature plant.")
-	public static int kokSagyzRootChanceDivisor = 1;
+			doc = "Kok sagyz: 1-in-this chance per random tick of growing the intermediate root under the flower.")
+	public static int kokSagyzRootUpperDivisor = 6;
 	/**
-	 * Multiplier stacked onto both kok sagyz divisors when the ground below is neither farmland nor
-	 * the plant's own root — a self-seeded roadside specimen grows this many times slower than the
-	 * plantation it escaped from. Wild plants stay a curiosity rather than a free farm, without
-	 * being impossible.
+	 * The harvestable tip — the step that mints the root item, and therefore the price of the whole
+	 * farm: dig the tip, wait this, dig again.
+	 *
+	 * <p><b>Priced by what it makes, not by how deep it is.</b> Shallow ground (one block of soil
+	 * over stone) mints its tip on the FIRST underground step, so keying the cost to step order
+	 * would make a one-block plot out-yield a full column — the opposite of the intent. Whatever
+	 * the depth, the tip costs the tip.
 	 */
 	@Knob(section = Section.WORLD, min = 1,
-			doc = "Kok sagyz: multiplier on both growth divisors when the plant is NOT on farmland or its own root, so a wild specimen grows slower than a tended one.")
-	public static int kokSagyzWildGrowthDivisor = 2;
+			doc = "Kok sagyz: 1-in-this chance per random tick of growing the harvestable root tip, at any depth.")
+	public static int kokSagyzRootTipDivisor = 9;
+	/**
+	 * How long a step takes in sand, as a percentage of the time it takes in any other ground
+	 * (MOD-584). Below 100 sand is faster; 100 removes the bonus.
+	 *
+	 * <p><b>Sand is the plant's element, and that is not flavour.</b> Real kok sagyz is a sandy-loam
+	 * plant of well-drained ground, and field trials record its seedlings establishing better in
+	 * sandy soil than in loamy soil. A deep taproot in loose ground is also simply easier to grow —
+	 * the same reason carrots are sown in sand. So sand is the one soil that changes the rate.
+	 *
+	 * <p><b>Tilling deliberately does nothing.</b> This is not a hoe crop: it is a steppe weed with
+	 * a taproot, and an earlier rule that made farmland the fast ground rewarded exactly the wrong
+	 * instinct. Farmland now grows it at the same rate as plain dirt, grass or podzol.
+	 */
+	@Knob(section = Section.WORLD, min = 1,
+			doc = "Kok sagyz: a step in sand takes this percent of the time it takes in other ground. 100 removes the sand bonus; values above 100 are clamped.")
+	public static int kokSagyzSandGrowthPercent = 75;
+	/**
+	 * Whether landing on a kok sagyz flower knocks it back one growth stage (MOD-584). Walking
+	 * through it is always safe and sneaking always spares it; this knob governs only the jump or
+	 * fall that comes down on the plant. Off means a plantation can be crossed any way you like.
+	 */
+	@Knob(section = Section.WORLD,
+			doc = "Kok sagyz: landing on a flower from above knocks it back one growth stage. Walking through and sneaking never trample.")
+	public static boolean kokSagyzTrampling = true;
 
 	// --- Iron Furnace (fuel-based, MOD-115): ticks to smelt one item. Vanilla furnace = 200. ---
 	/** Ticks the iron furnace needs to smelt one item on fuel. Between vanilla (200) and the

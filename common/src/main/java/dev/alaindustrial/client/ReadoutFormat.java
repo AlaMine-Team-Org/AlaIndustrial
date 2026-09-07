@@ -47,7 +47,7 @@ public final class ReadoutFormat {
 	 * A tick span as {@code d}, {@code hh}, {@code mm} — the pieces, not a rendered string.
 	 *
 	 * <p>The unit letters live in the language files, not here: "d/h/m" is English, and a helper that
-	 * baked them in would ship an untranslatable readout to nineteen other locales. The caller pairs
+	 * baked them in would ship an untranslatable readout to every other locale. The caller pairs
 	 * these numbers with a translatable pattern.
 	 *
 	 * @return {@code [days, hours, minutes]}

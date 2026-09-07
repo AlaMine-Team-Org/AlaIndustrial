@@ -26,6 +26,8 @@ import net.minecraft.client.gui.screens.MenuScreens;
 public class IndustrializationClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
+		HudElementRegistry.addLast(Industrialization.id("root_inspection"), dev.alaindustrial.client.render.RootInspection::renderHud);
+		dev.alaindustrial.client.RootSoilModels.init();
 		initClientConfig();
 		registerFluidRendering();
 		// MOD-248: the submerged-in-oil look. Loader-neutral (a client mixin + a vanilla fog

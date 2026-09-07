@@ -306,6 +306,13 @@ pitest {
     // (HudSmootherTest, LevelMathTest, GuidePaginatorTest, TemperedGearRollTest) invisible to PIT.
     targetTests = ['dev.alaindustrial.*Test']
     excludedClasses = [
+            // MOD-584: the mixin-side accessor for the per-frame root snapshot. Its own code
+            // names no net.minecraft type, but both abstract operations are typed by
+            // RootInspection.Frame (BlockPos/BlockState), so L1 cannot call it — the same
+            // transitive coupling as FluidTank, and listed as such in pitest_check.py. There
+            // is nothing to mutate either: two abstract accessors, no behaviour. What a frame
+            // may contain is decided in KokSagyzRoots and covered by the kok sagyz game tests.
+            'dev.alaindustrial.client.render.RootInspectionState',
             // MOD-145: the Recycler's two Minecraft-coupled waste classes. WasteClassifier reads
             // ItemStack/ItemTags/SoundType and BladeTier compares against registered items, so both
             // reference net.minecraft types that common/'s test classpath does not carry — their

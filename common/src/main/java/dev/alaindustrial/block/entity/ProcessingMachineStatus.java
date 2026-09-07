@@ -11,7 +11,7 @@ import java.util.Locale;
  * signal, a heater below, a glass dome, a blueprint. The gates here are the opposite — they are the ones
  * {@link AbstractProcessingMachineBlockEntity}'s tick loop already evaluates for all five machines, in
  * one expression. A per-machine copy would be five identical enums and five identical sets of keys in
- * twenty-one languages.
+ * every shipped language.
  *
  * <p><b>The order of the constants is the wire format</b> (the ordinal travels to the screen on a
  * {@code ContainerData} channel), so new states must be appended, never inserted.

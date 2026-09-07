@@ -122,7 +122,7 @@ public final class RecipeViewerInfo {
 	 *
 	 * <p>Deliberately terse: {@code AlaInfoCategory} reserves eight visual lines after word-wrap at
 	 * ~148 px and neither clips nor scrolls, so a ninth line would simply hang outside the panel. Every
-	 * line here is written to survive Russian, the longest of the twenty shipped locales.
+	 * line here is written to survive Russian, the longest of the shipped locales.
 	 *
 	 * <p>Titles reuse the blocks' own {@code block.alaindustrial.*} keys rather than dedicated ones:
 	 * the page names the machine, and a second key could only ever drift away from the first.
@@ -159,7 +159,7 @@ public final class RecipeViewerInfo {
 	 *
 	 * <p><b>Deliberately free of numbers.</b> An earlier draft printed the exact EU price and the
 	 * priming time in seconds. Both are balance values that move, and every move would have meant
-	 * re-translating the line in all twenty shipped locales — expensive, and guaranteed to leave some
+	 * re-translating the line in every shipped locale — expensive, and guaranteed to leave some
 	 * locale quoting a figure the game no longer uses. The page answers "how", the tooltip on the blank
 	 * answers "how much".
 	 */
