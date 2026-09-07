@@ -163,6 +163,33 @@ public final class RecipeViewerInfo {
 	 * locale quoting a figure the game no longer uses. The page answers "how", the tooltip on the blank
 	 * answers "how much".
 	 */
+	/**
+	 * Kok sagyz (MOD-584): neither the seeds nor the root have a recipe that MAKES them — both come out
+	 * of loot tables, and the root additionally out of the ground under a living plant. Recipe viewers
+	 * read recipes, not loot tables, so without this page the player sees where the root is SPENT (the
+	 * maceration card) and nothing at all about where either of them comes from.
+	 *
+	 * <p>The 35 % seed chance is deliberately absent from the text. It lives in the loot table JSON, not
+	 * in {@link Config}, so it could only be written here as a literal — and a literal drifts away from
+	 * the table the first time anyone retunes it. The sand bonus IS a knob, so that one is read live.
+	 *
+	 * <p>The titles are the items' own name keys, as {@link #crystalPage} does: a page headed by a
+	 * hand-written copy of the item name is one more string to keep in step across every locale.
+	 */
+	public static List<Entry> kokSagyzEntries() {
+		return List.of(
+				new Entry(ModContent.KOK_SAGYZ_SEEDS, "block.alaindustrial.kok_sagyz_seeds", List.of(
+						Line.of("jei.alaindustrial.kok_sagyz_seeds.line1"),
+						Line.of("jei.alaindustrial.kok_sagyz_seeds.line2"),
+						Line.of("jei.alaindustrial.kok_sagyz_seeds.line3"))),
+				new Entry(ModContent.KOK_SAGYZ_ROOT_ITEM, "item.alaindustrial.kok_sagyz_root", List.of(
+						Line.of("jei.alaindustrial.kok_sagyz_root.line1"),
+						Line.of("jei.alaindustrial.kok_sagyz_root.line2"),
+						Line.of("jei.alaindustrial.kok_sagyz_root.line3"),
+						new Line("jei.alaindustrial.kok_sagyz_root.line4", List.of(
+								() -> Config.kokSagyzSandGrowthPercent)))));
+	}
+
 	private static Entry crystalPage(Supplier<? extends ItemLike> crystal, String id) {
 		return new Entry(crystal, "item.alaindustrial." + id, List.of(
 				Line.of("jei.alaindustrial.crystal.line1"),

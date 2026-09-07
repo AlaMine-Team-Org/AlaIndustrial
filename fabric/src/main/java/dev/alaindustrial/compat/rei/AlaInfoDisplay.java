@@ -41,6 +41,15 @@ public final class AlaInfoDisplay implements Display {
 	public static final CategoryIdentifier<AlaInfoDisplay> MACHINE_CATEGORY =
 			CategoryIdentifier.of(dev.alaindustrial.Industrialization.id("machine_info"));
 
+	/**
+	 * Plants whose seeds and harvest come out of loot tables (MOD-584). A THIRD category for the same
+	 * reason MOD-420 made a second: REI prints the CATEGORY title above the page, and the two existing
+	 * titles would both lie over a dandelion — "Solar Evolution" says the panel line, "How It Works"
+	 * says machine. A page whose header contradicts its content is worse than no page.
+	 */
+	public static final CategoryIdentifier<AlaInfoDisplay> PLANT_CATEGORY =
+			CategoryIdentifier.of(dev.alaindustrial.Industrialization.id("plant_info"));
+
 	private final CategoryIdentifier<AlaInfoDisplay> category;
 	private final EntryIngredient ownerEntry;
 	private final Component title;

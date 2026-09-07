@@ -10,6 +10,7 @@ import dev.alaindustrial.core.structure.RoomValidator;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.command.demo.DemoStand;
 import dev.alaindustrial.storage.StorageCluster;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -43,7 +44,7 @@ import net.minecraft.world.phys.AABB;
  *   <li><b>Polygon (MOD-294)</b> — the 36-cable loss lane actually delivers EU to its far
  *       furnace and the LV-cycle farm's macerator works. Scenery that quietly died is the
  *       failure mode these two catch.</li>
- *   <li><b>Item showcase (MOD-294)</b> — every non-block item of the registry hangs in a glow
+ *   <li><b>Item showcase (MOD-294)</b> — every item of the registry hangs in a glow
  *       frame on the showcase wall. The wall refills from the live registry, so this reddens the
  *       day the registry outgrows the wall.</li>
  *   <li><b>Idempotency (MOD-294)</b> — build→build leaves the block multiset unchanged, no item
@@ -200,6 +201,7 @@ public final class DemoStandScenarios {
 	/** {@code clear} removes every stand block and entity above the restored floor — build → clear → scan. */
 	public static void demoStandClearLeavesNoBlocks(GameTestHelper helper) {
 		BlockPos origin = helper.absolutePos(ORIGIN);
+		Map<BlockPos, Block> ringBefore = ringSnapshot(helper, origin);
 		DemoStand.buildAll(helper.getLevel(), origin);
 		DemoStand.clear(helper.getLevel(), origin);
 		for (int x = 0; x < DemoStand.WIDTH; x++) {
@@ -219,7 +221,67 @@ public final class DemoStandScenarios {
 		if (!helper.getLevel().getEntitiesOfClass(ItemEntity.class, envelope(origin)).isEmpty()) {
 			helper.fail("clear left item drops inside the stand envelope");
 		}
+		assertRingUntouched(helper, origin, ringBefore);
 		helper.succeed();
+	}
+
+	/**
+	 * Every cell of the one-block ring around the stand, as it stood before the build (MOD-586).
+	 *
+	 * <p>The scan above walks {@code x < WIDTH, z < DEPTH} because that is the volume the stand
+	 * declares — and so does {@code clearAbove}, which is precisely the hole: a {@code set} one column
+	 * past {@code WIDTH} is written by {@code buildAll}, is never cleared, and is invisible to BOTH
+	 * oracles at once, because the test and the code agreed on the same wrong bound. It happened —
+	 * MOD-584 put a root column and a smooth-stone pad at x=42 — and it shipped with every gate green.
+	 *
+	 * <p>Compared as a before/after snapshot rather than by namespace: the pad the incident left behind
+	 * was VANILLA smooth stone, so "did the stand leave one of OUR blocks here" would have missed half
+	 * of the very defect this exists for.
+	 */
+	private static Map<BlockPos, Block> ringSnapshot(GameTestHelper helper, BlockPos origin) {
+		Map<BlockPos, Block> snapshot = new HashMap<>();
+		for (BlockPos local : ringCells()) {
+			snapshot.put(local, helper.getLevel().getBlockState(origin.offset(
+					local.getX(), local.getY(), local.getZ())).getBlock());
+		}
+		return snapshot;
+	}
+
+	private static void assertRingUntouched(GameTestHelper helper, BlockPos origin,
+			Map<BlockPos, Block> before) {
+		for (Map.Entry<BlockPos, Block> cell : before.entrySet()) {
+			BlockPos local = cell.getKey();
+			Block now = helper.getLevel().getBlockState(origin.offset(
+					local.getX(), local.getY(), local.getZ())).getBlock();
+			if (now != cell.getValue()) {
+				helper.fail("build+clear changed local (" + local.getX() + ", " + local.getY() + ", "
+						+ local.getZ() + "), which is OUTSIDE the stand's own "
+						+ DemoStand.WIDTH + "x" + DemoStand.HEIGHT + "x" + DemoStand.DEPTH
+						+ " volume: " + BuiltInRegistries.BLOCK.getKey(cell.getValue()) + " -> "
+						+ BuiltInRegistries.BLOCK.getKey(now) + ". Nothing clears that cell, so it "
+						+ "outlives `demo clear`");
+			}
+		}
+	}
+
+	/**
+	 * The ring's local coordinates. The rig is 44x14x28 with {@link #ORIGIN} at (1,1,1), so local
+	 * x=-1..42 and z=-1..26 exist while the stand occupies x=0..41 and z=0..26 — a testable margin on
+	 * three sides. The floor row (y=0) is included: {@code clear} restores grass only for x &lt; WIDTH,
+	 * so a floor block set one column out survives exactly like the column above it.
+	 */
+	private static List<BlockPos> ringCells() {
+		List<BlockPos> cells = new ArrayList<>();
+		for (int y = 0; y <= DemoStand.HEIGHT; y++) {
+			for (int z = -1; z < DemoStand.DEPTH; z++) {
+				cells.add(new BlockPos(-1, y, z));
+				cells.add(new BlockPos(DemoStand.WIDTH, y, z));
+			}
+			for (int x = -1; x <= DemoStand.WIDTH; x++) {
+				cells.add(new BlockPos(x, y, -1));
+			}
+		}
+		return cells;
 	}
 
 	/**
@@ -257,8 +319,10 @@ public final class DemoStandScenarios {
 	}
 
 	/**
-	 * MOD-294 item showcase: every non-block item of the registry hangs in a glow frame on the
-	 * wall — the item-side twin of the block coverage scan above.
+	 * MOD-294 item showcase: every item of the registry hangs in a glow frame on the wall — the
+	 * item-side twin of the block coverage scan above. Since MOD-586 that includes block items, so
+	 * this is also what keeps the wall's capacity honest: it is the check that reddens when the
+	 * registry outgrows {@code SHOWCASE_COLUMNS × SHOWCASE_ROWS}.
 	 */
 	public static void demoStandShowcaseCoversItems(GameTestHelper helper) {
 		BlockPos origin = helper.absolutePos(ORIGIN);
@@ -277,7 +341,7 @@ public final class DemoStandScenarios {
 		}
 		missing.removeAll(shown);
 		if (!missing.isEmpty()) {
-			helper.fail("showcase wall does not display every non-block item; missing: " + missing
+			helper.fail("showcase wall does not display every mod item; missing: " + missing
 					+ " — the wall is full or the frame placement broke");
 		}
 		helper.succeed();

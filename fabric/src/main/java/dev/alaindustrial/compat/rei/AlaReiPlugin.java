@@ -116,6 +116,13 @@ public class AlaReiPlugin implements REIClientPlugin {
 				RecipeViewerInfo.machineInfoEntries()));
 		registry.addWorkstations(AlaInfoDisplay.MACHINE_CATEGORY, EntryStacks.of(ModBlocks.GEOTHERMAL_GENERATOR));
 		registry.addWorkstations(AlaInfoDisplay.MACHINE_CATEGORY, EntryStacks.of(ModBlocks.ENERGY_CONDENSER));
+		// MOD-584: the kok sagyz plant. No workstation — there is no screen to click; the pages are
+		// reached by pressing the recipe key on the seeds or the root, which resolves through the
+		// display's output entry.
+		registry.add(new AlaInfoCategory(AlaInfoDisplay.PLANT_CATEGORY,
+				"jei.alaindustrial.category.plant_info",
+				dev.alaindustrial.registry.ModContent.KOK_SAGYZ_SEEDS.get(),
+				RecipeViewerInfo.kokSagyzEntries()));
 	}
 
 	@Override
@@ -129,6 +136,10 @@ public class AlaReiPlugin implements REIClientPlugin {
 		// recipe card has room for.
 		for (RecipeViewerInfo.Entry entry : RecipeViewerInfo.mutationGradeEntries()) {
 			registry.add(new AlaInfoDisplay(entry, AlaInfoDisplay.CATEGORY));
+		}
+		// MOD-584: kok sagyz seeds and root — loot-table drops, so no recipe names them as a result.
+		for (RecipeViewerInfo.Entry entry : RecipeViewerInfo.kokSagyzEntries()) {
+			registry.add(new AlaInfoDisplay(entry, AlaInfoDisplay.PLANT_CATEGORY));
 		}
 		// MOD-420: the geothermal generator and the energy condenser — no recipe kind, no recipe JSON,
 		// so the only thing a viewer can show for them is this page.

@@ -149,6 +149,15 @@ public class AlaJeiPlugin implements IModPlugin {
 					description.toArray(new Component[0]));
 		}
 
+		// MOD-584: kok sagyz seeds and root — loot-table drops, so no recipe names them as a result.
+		for (RecipeViewerInfo.Entry entry : RecipeViewerInfo.kokSagyzEntries()) {
+			List<Component> description = new ArrayList<>();
+			description.add(RecipeViewerInfo.title(entry));
+			description.addAll(RecipeViewerInfo.buildLines(entry));
+			registration.addIngredientInfo((ItemLike) entry.owner().get(),
+					description.toArray(new Component[0]));
+		}
+
 		// MOD-118: the incubator's rarity grades — a second roll on top of every success, which no
 		// recipe card has room for.
 		for (RecipeViewerInfo.Entry entry : RecipeViewerInfo.mutationGradeEntries()) {
