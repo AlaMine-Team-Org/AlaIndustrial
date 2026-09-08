@@ -398,6 +398,10 @@ public final class CreativeTabContent {
 		show(out, ModContent.COPPER_COIL);
 		show(out, ModContent.SPATIAL_CRYSTAL);
 		show(out, ModContent.RESONANCE_COIL);
+		// Choke (MOD-589), plain -> reinforced -> advanced.
+		show(out, ModContent.CHOKE);
+		show(out, ModContent.CHOKE_REINFORCED);
+		show(out, ModContent.CHOKE_ADVANCED);
 		show(out, ModContent.RTP_CHIP);
 		show(out, ModContent.ALIGNMENT_CHIP_DAY);
 		show(out, ModContent.ALIGNMENT_CHIP_NIGHT);
@@ -632,6 +636,10 @@ public final class CreativeTabContent {
 		// sits in upgrades() instead — it is applied to a block, not consumed by a machine recipe.
 		show(out, ModContent.SPATIAL_CRYSTAL);
 		show(out, ModContent.RESONANCE_COIL);
+		// Choke (MOD-589), plain -> reinforced -> advanced.
+		show(out, ModContent.CHOKE);
+		show(out, ModContent.CHOKE_REINFORCED);
+		show(out, ModContent.CHOKE_ADVANCED);
 		// Soul Vessel (MOD-278): the Mob Repeller's upgrade currency, listed with the other parts a
 		// machine is fed. Also in ingredients() — that group feeds the vanilla Ingredients tab.
 		show(out, ModContent.SOUL_VESSEL);

@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"pattern": [
+		"SAS",
+		"RWR",
+		"SPS"
+	],
+	"key": {
+		"S": "alaindustrial:silver_plate",
+		"A": "alaindustrial:advanced_circuit",
+		"R": "alaindustrial:resonance_coil",
+		"P": "alaindustrial:palladium_plate",
+		"W": "alaindustrial:choke_reinforced"
+	},
+	"result": {
+		"id": "alaindustrial:choke_advanced"
+	}
+}

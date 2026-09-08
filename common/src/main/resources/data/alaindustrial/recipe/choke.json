@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"pattern": [
+		"III",
+		"CEC",
+		"III"
+	],
+	"key": {
+		"I": "alaindustrial:invar_plate",
+		"C": "alaindustrial:copper_coil",
+		"E": "alaindustrial:electronic_circuit"
+	},
+	"result": {
+		"id": "alaindustrial:choke"
+	}
+}

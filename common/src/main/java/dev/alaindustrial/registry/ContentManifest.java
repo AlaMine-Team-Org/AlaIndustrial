@@ -1414,6 +1414,11 @@ public final class ContentManifest {
 			// Resonance chain (MOD-116): spatial stock -> the coil above the copper one -> the station's chip.
 			plain("spatial_crystal", s -> ModContent.SPATIAL_CRYSTAL = s),
 			plain("resonance_coil", s -> ModContent.RESONANCE_COIL = s),
+			// Choke (MOD-589): three tiers of the same part, plain -> reinforced -> advanced, the naming
+			// ladder the windmill rotor and the water-mill wheel already use.
+			plain("choke", s -> ModContent.CHOKE = s),
+			plain("choke_reinforced", s -> ModContent.CHOKE_REINFORCED = s),
+			plain("choke_advanced", s -> ModContent.CHOKE_ADVANCED = s),
 			// Random Jump Chip (MOD-116): the teleporter station's one permanent upgrade. Its own class
 			// rather than a hintItem because fitting it is an interaction, not just a tooltip.
 			item("rtp_chip", p -> new RtpChipItem(p, "item.alaindustrial.rtp_chip.hint",

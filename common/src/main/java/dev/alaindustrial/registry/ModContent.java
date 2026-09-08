@@ -313,6 +313,11 @@ public final class ModContent {
 	public static Supplier<Item> ASSEMBLY_BLUEPRINT = unbound("ASSEMBLY_BLUEPRINT");
 	// Copper Coil — a crafting component (copper cable wound on a tin core); gates the Electric Drill.
 	public static Supplier<Item> COPPER_COIL = unbound("COPPER_COIL");
+	// Choke (MOD-589): the line-smoothing part, in three tiers. Same silhouette family as the
+	// coils above - a laminated core with windings - so it reads as their neighbour on the bench.
+	public static Supplier<Item> CHOKE = unbound("CHOKE");
+	public static Supplier<Item> CHOKE_REINFORCED = unbound("CHOKE_REINFORCED");
+	public static Supplier<Item> CHOKE_ADVANCED = unbound("CHOKE_ADVANCED");
 	// Resonance chain (MOD-116): the crystal is the raw stock, the coil is the reusable component
 	// built on it, and the chip is the first thing that spends the coil. The coil is deliberately a
 	// general-purpose part rather than a teleporter part — it is the tier above COPPER_COIL and is

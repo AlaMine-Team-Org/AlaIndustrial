@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"pattern": [
+		"DTD",
+		"CKC",
+		"DTD"
+	],
+	"key": {
+		"D": "alaindustrial:diamond_dust",
+		"T": "alaindustrial:tempered_iron_plate",
+		"C": "alaindustrial:copper_coil",
+		"K": "alaindustrial:choke"
+	},
+	"result": {
+		"id": "alaindustrial:choke_reinforced"
+	}
+}
