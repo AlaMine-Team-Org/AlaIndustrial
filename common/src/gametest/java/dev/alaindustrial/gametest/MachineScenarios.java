@@ -12,10 +12,16 @@ import dev.alaindustrial.block.entity.RecyclerBlockEntity;
 import dev.alaindustrial.block.RecyclerBlock;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModRecipes;
+import dev.alaindustrial.skill.PlayerSkills;
+import dev.alaindustrial.skill.SkillBranch;
+import dev.alaindustrial.skill.SkillBuild;
+import dev.alaindustrial.skill.SkillSlot;
+import dev.alaindustrial.skill.SkillStore;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -237,6 +243,88 @@ public final class MachineScenarios {
 					+ Config.maceratorDuration + ")=" + eOp);
 		}
 		helper.succeed();
+	}
+
+	/**
+	 * Coasting finishes an operation ONLY when the supply is what went missing (MOD-576).
+	 *
+	 * <p>The Resilient Cycle skill is meant to carry a started operation across a power gap. Until
+	 * MOD-145 it carried it across ANYTHING: {@code canWork} is the conjunction of every condition a
+	 * machine has — recipe, input, room for the result, energy — and the coasting branch simply
+	 * ignored the lot. Since {@code addOutput} deliberately does not re-check its precondition
+	 * ("the caller already asked {@code canOutput}"), finishing into a full slot grew the stack past
+	 * its limit: the recycler's ash bin reached 66 of a maximum 64.
+	 *
+	 * <p><b>Why no test caught it.</b> A machine placed in a rig has {@code owner == null}, so
+	 * {@code SkillMachine.has} answers false and the coasting branch never executed — not once, in
+	 * any scenario. The fix shipped in 0.1.148 with no test able to reach the line it changed. This
+	 * scenario is that rig: a survival player who is IN the player list (creative is excluded by
+	 * {@code OwnerPresence.eligible}, and {@code hasInfiniteMaterials} reads
+	 * {@code abilities.instabuild}), the skill granted, and the machine's owner set to them.
+	 *
+	 * <p><b>Both halves are asserted together on purpose.</b> Half A alone would pass if coasting
+	 * were deleted outright, and deleting it would silently remove a skill players paid a fragment
+	 * for. Half B alone would pass on the old, broken behaviour. Only the pair pins the rule.
+	 *
+	 * @implements R-MACH-30 — see docs/testing/RULES.md
+	 */
+	public static void mod576CoastingFinishesOnlySupplyGaps(GameTestHelper helper) {
+		// ── A: the output is full — the operation must NOT finish, whatever the skill says ──
+		MachineBlockEntity jammed = ownedMacerator(helper);
+		jammed.getEnergyStorage().setAmountUntracked(AMPLE_EU);
+		jammed.setItem(0, new ItemStack(Items.RAW_IRON, 4));
+		driveUntilPastCoastThreshold(jammed, helper);
+		jammed.setItem(1, new ItemStack(ModContent.IRON_DUST.get(), 64));
+		drive(jammed, helper, DRIVE_TICKS);
+		int jammedCount = jammed.getItem(1).getCount();
+		if (jammedCount != 64) {
+			helper.fail("coasting finished into a full slot: " + jammedCount
+					+ " items in a stack of 64 — addOutput does not re-check, so this is an overflow");
+		}
+
+		// ── B: only the supply is missing — the operation MUST finish on the machine's own charge ──
+		MachineBlockEntity starved = ownedMacerator(helper);
+		starved.getEnergyStorage().setAmountUntracked(AMPLE_EU);
+		starved.setItem(0, new ItemStack(Items.RAW_IRON, 4));
+		driveUntilPastCoastThreshold(starved, helper);
+		// A positive charge that cannot pay a tick: coasting requires amount > 0, and canWork
+		// requires amount >= euPerTick. One EU sits between the two on purpose.
+		starved.getEnergyStorage().setAmountUntracked(1);
+		drive(starved, helper, DRIVE_TICKS);
+		if (starved.getItem(1).isEmpty()) {
+			helper.fail("the skill did not carry the operation across a power gap — coasting is dead, "
+					+ "and a fragment was spent on nothing");
+		}
+		helper.succeed();
+	}
+
+	/** A macerator owned by a survival player in the player list who has bought MECH/CAP. */
+	private static MachineBlockEntity ownedMacerator(GameTestHelper helper) {
+		ServerPlayer owner = AlaGameTestHelper.survivalPlayer(helper);
+		SkillStore.set(owner, new PlayerSkills(SkillBuild.EMPTY.with(SkillBranch.MECH, SkillSlot.CAP)));
+		MachineBlockEntity be = place(helper, macerator());
+		be.setOwner(owner.getUUID(), owner.getGameProfile().name());
+		return be;
+	}
+
+	/**
+	 * Ticks until progress passes the skill's threshold, then stops.
+	 *
+	 * <p>Driven by the machine's own numbers rather than a fixed tick count: the threshold is a
+	 * config percentage of a duration that recipes and overclockers both move, and a hardcoded
+	 * "drive 40 ticks" would quietly stop covering the branch the day either changed.
+	 */
+	private static void driveUntilPastCoastThreshold(MachineBlockEntity be, GameTestHelper helper) {
+		for (int i = 0; i < DRIVE_TICKS; i++) {
+			drive(be, helper, 1);
+			int progress = be.getDataAccess().get(2);
+			int duration = be.getDataAccess().get(3);
+			if (duration > 0 && progress * 100 >= duration * Config.skillResilientFromPercent
+					&& progress < duration) {
+				return;
+			}
+		}
+		helper.fail("never reached the coasting threshold — the rig cannot test what it claims to");
 	}
 
 	/**

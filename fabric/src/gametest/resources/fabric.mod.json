@@ -22,6 +22,7 @@
       "dev.alaindustrial.gametest.AssemblerGameTest",
       "dev.alaindustrial.gametest.BatteryBoxGameTest",
       "dev.alaindustrial.gametest.BatteryGameTest",
+      "dev.alaindustrial.gametest.CeramicGameTest",
       "dev.alaindustrial.gametest.BlockCapabilityParityGameTest",
       "dev.alaindustrial.gametest.CablePlacementGameTest",
       "dev.alaindustrial.gametest.CanningMachineGameTest",

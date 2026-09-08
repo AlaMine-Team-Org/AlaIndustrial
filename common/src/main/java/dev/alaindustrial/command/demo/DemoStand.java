@@ -477,6 +477,9 @@ public final class DemoStand {
 		fillSlot(level, origin, 23, 1, 12, RecyclerBlockEntity.INPUT_SLOT,
 				new ItemStack(Items.COBBLESTONE, 64));
 		set(level, origin, 24, 1, 12, ModContent.SLAG_BLOCK.get());
+		// MOD-590 — carbon ceramic beside the slag block it is fired with: the two blocks the Recycler
+		// feeds, standing next to each other.
+		set(level, origin, 25, 1, 12, ModContent.CARBON_CERAMIC.get());
 		// Iron furnace (MOD-115): fuel-burning, not EU — so it is loaded with input + coal instead of a
 		// pre-charged buffer, and lights itself on the first tick like a vanilla furnace.
 		set(level, origin, 14, 1, 10, ModContent.IRON_FURNACE.get());

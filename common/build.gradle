@@ -306,6 +306,12 @@ pitest {
     // (HudSmootherTest, LevelMathTest, GuidePaginatorTest, TemperedGearRollTest) invisible to PIT.
     targetTests = ['dev.alaindustrial.*Test']
     excludedClasses = [
+            // MOD-590: the quench press. Every operation it has takes a ServerLevel/BlockPos and works
+            // on ItemEntity, so L1 cannot construct a single call — its mutants would all be
+            // NO_COVERAGE. The behaviour is covered where it actually lives, in the both-lane game
+            // tests (CeramicScenarios): the press pays more than a hand quench, and an unpowered or
+            // waterless press pays nothing at all.
+            'dev.alaindustrial.core.ceramic.QuenchPress',
             // MOD-584: the mixin-side accessor for the per-frame root snapshot. Its own code
             // names no net.minecraft type, but both abstract operations are typed by
             // RootInspection.Frame (BlockPos/BlockState), so L1 cannot call it — the same

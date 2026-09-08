@@ -1,0 +1,11 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"category": "building",
+	"ingredients": [
+		"alaindustrial:carbon_ceramic"
+	],
+	"result": {
+		"id": "alaindustrial:ceramic_plate",
+		"count": 4
+	}
+}

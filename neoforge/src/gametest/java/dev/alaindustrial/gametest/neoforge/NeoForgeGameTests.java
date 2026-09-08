@@ -2,6 +2,7 @@ package dev.alaindustrial.gametest.neoforge;
 
 import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.gametest.CeramicScenarios;
 import dev.alaindustrial.gametest.CrystalFarmScenarios;
 import dev.alaindustrial.gametest.FermenterScenarios;
 import dev.alaindustrial.gametest.AssemblerPerfScenarios;
@@ -2653,6 +2654,15 @@ public final class NeoForgeGameTests {
 				MachineScenarios::tcSaw001Con02_modePersistsThroughNbt);
 		registerTest(event, "machine_tc_saw001_con03_mode_switch_resets_progress", 40, true,
 				MachineScenarios::tcSaw001Con03_modeSwitchResetsProgress);
+		registerTest(event, "machine_mod576_coasting_finishes_only_supply_gaps", 400, true,
+				MachineScenarios::mod576CoastingFinishesOnlySupplyGaps);
+		// MOD-590 — the quench press: a piston fired into water splits the briquettes floating there.
+		registerTest(event, "ceramic_quench_press_splits_floating_briquettes", 100, true,
+				CeramicScenarios::quenchPressSplitsFloatingBriquettes);
+		registerTest(event, "ceramic_dry_press_pays_nothing", 100, true,
+				CeramicScenarios::dryPressPaysNothing);
+		registerTest(event, "ceramic_press_without_redstone_pays_nothing", 100, true,
+				CeramicScenarios::pressWithoutRedstonePaysNothing);
 		// MOD-470 — radiation: line of sight, transformations, dropped sources.
 		registerTest(event, "rad_rod_irradiates_what_it_can_see", 40, true,
 				RadiationScenarios::rodIrradiatesWhatItCanSee);

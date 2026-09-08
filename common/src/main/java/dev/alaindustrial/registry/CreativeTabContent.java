@@ -757,6 +757,14 @@ public final class CreativeTabContent {
 		show(out, ModContent.SLAG_RICH);
 		show(out, ModContent.SLAG_BLOCK_ITEM);
 		show(out, ModContent.ASH);
+		// MOD-590 - the coal sink the slag feeds, listed in the order the player walks it: dust is
+		// pressed into rods, two rods are hammered into one, two of those are fired with slag into a
+		// briquette, the briquette cuts into plates, four plates make the block.
+		show(out, ModContent.CARBON_ROD);
+		show(out, ModContent.CARBON_ROD_DOUBLE);
+		show(out, ModContent.CARBON_BRIQUETTE);
+		show(out, ModContent.CERAMIC_PLATE);
+		show(out, ModContent.CARBON_CERAMIC_ITEM);
 		show(out, ModContent.RECYCLER_BLADES_IRON);
 		show(out, ModContent.RECYCLER_BLADES_TEMPERED);
 		show(out, ModContent.RECYCLER_BLADES_DIAMOND);

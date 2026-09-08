@@ -849,4 +849,12 @@ public class MachineGameTest {
 		MachineScenarios.tcRecycler001Con05_ashNeverOverstacks(helper);
 	}
 
+	/**
+	 * @implements R-MACH-30 — coasting finishes an operation only when the supply is what went missing.
+	 */
+	@GameTest(maxTicks = 400)
+	public void mod576CoastingFinishesOnlySupplyGaps(GameTestHelper helper) {
+		MachineScenarios.mod576CoastingFinishesOnlySupplyGaps(helper);
+	}
+
 }

@@ -1212,6 +1212,21 @@ public final class Config {
 	@Knob(section = Section.MACHINES, min = 1,
 			doc = "Items a diamond recycler blade set grinds before it wears out.")
 	public static int recyclerBladesDiamondMaxDamage = 2048;
+
+	/**
+	 * The quench press (MOD-590). A carbon briquette becomes ceramic plates, and HOW it is broken
+	 * decides how many. Four plates make one block, so this ladder is a straight doubling of the coal
+	 * price: one stack of coal per block through the press, two stacks if every briquette is broken dry.
+	 */
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "Plates one carbon briquette yields when a piston fires into the water it floats in.")
+	public static int ceramicPlatesFromPress = 4;
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "Plates one carbon briquette yields when quenched by hand in a water source.")
+	public static int ceramicPlatesFromWater = 3;
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "Redstone dust the press consumes per briquette, alongside the briquette itself.")
+	public static int ceramicPressRedstoneCost = 2;
 	/** Sawmill (MOD-150): ticks per cut at 1.0 speed. 80 → 160 EU/op — the cheapest machine op (wood
 	 * saws easier than ore mills): furnace 100, extractor 120, compressor 130, macerator 150. */
 	@Knob(section = Section.MACHINES, min = 1,

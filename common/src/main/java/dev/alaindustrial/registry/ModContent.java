@@ -157,6 +157,8 @@ public final class ModContent {
 	public static Supplier<Block> RECYCLER = unbound("RECYCLER");
 	/** MOD-145: nine briquettes of poor slag, stored as a building block. */
 	public static Supplier<Block> SLAG_BLOCK = unbound("SLAG_BLOCK");
+	/** MOD-590: a whole stack of coal and the slag of the Recycler, sintered into one refractory block. */
+	public static Supplier<Block> CARBON_CERAMIC = unbound("CARBON_CERAMIC");
 	/** Component Repair Bench (MOD-384) — restores worn rotors and wheels. */
 	public static Supplier<Block> COMPONENT_REPAIR_BENCH = unbound("COMPONENT_REPAIR_BENCH");
 	public static Supplier<Block> CANNING_MACHINE = unbound("CANNING_MACHINE");
@@ -344,6 +346,14 @@ public final class ModContent {
 	public static Supplier<Item> SLAG = unbound("SLAG");
 	public static Supplier<Item> SLAG_RICH = unbound("SLAG_RICH");
 	public static Supplier<Item> ASH = unbound("ASH");
+	/** MOD-590: sixteen coal dust pressed into one rod — the first rung of the ceramic chain. */
+	public static Supplier<Item> CARBON_ROD = unbound("CARBON_ROD");
+	/** MOD-590: two rods worked together under the forge hammer. */
+	public static Supplier<Item> CARBON_ROD_DOUBLE = unbound("CARBON_ROD_DOUBLE");
+	/** MOD-590: two doubled rods fired with slag — the feedstock of the ceramic. */
+	public static Supplier<Item> CARBON_BRIQUETTE = unbound("CARBON_BRIQUETTE");
+	/** MOD-590: fired from a briquette and slag; four of them assemble into a block of ceramic. */
+	public static Supplier<Item> CERAMIC_PLATE = unbound("CERAMIC_PLATE");
 	public static Supplier<Item> RECYCLER_BLADES_IRON = unbound("RECYCLER_BLADES_IRON");
 	public static Supplier<Item> RECYCLER_BLADES_TEMPERED = unbound("RECYCLER_BLADES_TEMPERED");
 	public static Supplier<Item> RECYCLER_BLADES_DIAMOND = unbound("RECYCLER_BLADES_DIAMOND");
@@ -657,6 +667,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> COMPRESSOR_ITEM = unbound("COMPRESSOR_ITEM");
 	public static Supplier<BlockItem> RECYCLER_ITEM = unbound("RECYCLER_ITEM");
 	public static Supplier<BlockItem> SLAG_BLOCK_ITEM = unbound("SLAG_BLOCK_ITEM");
+	public static Supplier<BlockItem> CARBON_CERAMIC_ITEM = unbound("CARBON_CERAMIC_ITEM");
 	public static Supplier<BlockItem> COMPONENT_REPAIR_BENCH_ITEM = unbound("COMPONENT_REPAIR_BENCH_ITEM");
 	public static Supplier<BlockItem> CANNING_MACHINE_ITEM = unbound("CANNING_MACHINE_ITEM");
 	public static Supplier<BlockItem> SAWMILL_ITEM = unbound("SAWMILL_ITEM");

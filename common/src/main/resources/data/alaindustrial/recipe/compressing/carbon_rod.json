@@ -1,0 +1,12 @@
+{
+  "type": "alaindustrial:compressing",
+  "ingredient": "#c:dusts/coal",
+  "input_counts": [
+    16
+  ],
+  "result": {
+    "id": "alaindustrial:carbon_rod",
+    "count": 1
+  },
+  "energy": 260
+}

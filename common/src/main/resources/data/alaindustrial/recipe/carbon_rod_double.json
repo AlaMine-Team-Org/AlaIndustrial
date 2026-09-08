@@ -1,0 +1,13 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"category": "misc",
+	"ingredients": [
+		"alaindustrial:forge_hammer",
+		"alaindustrial:carbon_rod",
+		"alaindustrial:carbon_rod"
+	],
+	"result": {
+		"id": "alaindustrial:carbon_rod_double",
+		"count": 1
+	}
+}

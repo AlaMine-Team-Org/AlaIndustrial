@@ -155,6 +155,7 @@ import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
 import dev.alaindustrial.block.entity.WorkstationBlockEntity;
+import dev.alaindustrial.item.CarbonBriquetteItem;
 import dev.alaindustrial.item.energy.BatteryItem;
 import dev.alaindustrial.item.energy.CrystalBlankItem;
 import dev.alaindustrial.item.energy.CrystalTier;
@@ -556,6 +557,9 @@ public final class ContentManifest {
 			block("recycler", RecyclerBlock::new, s -> ModContent.RECYCLER = s);
 	public static final BlockDef<Block> SLAG_BLOCK =
 			block("slag_block", Block::new, s -> ModContent.SLAG_BLOCK = s);
+	// MOD-590 — carbon ceramic: the coal sink, and the refractory the heated machines stand on.
+	public static final BlockDef<Block> CARBON_CERAMIC =
+			block("carbon_ceramic", Block::new, s -> ModContent.CARBON_CERAMIC = s);
 	// Component Repair Bench (MOD-384) — restores worn rotors/wheels instead of recrafting them.
 	public static final BlockDef<ComponentRepairBenchBlock> COMPONENT_REPAIR_BENCH =
 			block("component_repair_bench", ComponentRepairBenchBlock::new,
@@ -833,7 +837,9 @@ public final class ContentManifest {
 			// since MOD-403 rather than filed with the MOD-468 group above.
 			REACTOR_LEVER,
 			// MOD-483 — the workstation's casing, appended at the tail: replay order is load-bearing.
-			WORKSTATION);
+			WORKSTATION,
+			// MOD-590 — carbon ceramic, appended at the tail for the same reason.
+			CARBON_CERAMIC);
 
 	/**
 	 * Wraps a machine/ore/material block's {@code strength/sound/…} chain with the shared base every such
@@ -1079,6 +1085,10 @@ public final class ContentManifest {
 			Map.entry("shielding_chest", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion())),
 			Map.entry("recycler", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("slag_block", machine(p -> p.strength(2.5f, 6.0f).sound(SoundType.STONE))),
+			// MOD-590 — blast resistance 30, the same number the reactor shell carries, because this is
+			// the wall a player builds that room out of. Five times stone (6) and nowhere near obsidian
+			// (1200): the block is bulk-craftable, so it must not be the end of blast-proofing.
+			Map.entry("carbon_ceramic", machine(p -> p.strength(4.0f, 30.0f).sound(SoundType.CALCITE))),
 			Map.entry("tempered_iron_block", machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL))),
 			// MOD-225: machine casing (crafting base for machines) + two decorative plate blocks.
 			Map.entry("machine_casing", machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL))),
@@ -1895,7 +1905,14 @@ public final class ContentManifest {
 			durableComponent("recycler_blades_tempered", () -> Config.recyclerBladesTemperedMaxDamage,
 					s -> ModContent.RECYCLER_BLADES_TEMPERED = s),
 			durableComponent("recycler_blades_diamond", () -> Config.recyclerBladesDiamondMaxDamage,
-					s -> ModContent.RECYCLER_BLADES_DIAMOND = s));
+					s -> ModContent.RECYCLER_BLADES_DIAMOND = s),
+			// MOD-590 — the ceramic chain, appended at the tail like everything since MOD-403: the
+			// order of this list is the registration order. Pressed briquette -> fired plate -> block.
+			blockItem("carbon_ceramic", s -> ModContent.CARBON_CERAMIC_ITEM = s),
+			plain("carbon_rod", s -> ModContent.CARBON_ROD = s),
+			plain("carbon_rod_double", s -> ModContent.CARBON_ROD_DOUBLE = s),
+			item("carbon_briquette", CarbonBriquetteItem::new, s -> ModContent.CARBON_BRIQUETTE = s),
+			plain("ceramic_plate", s -> ModContent.CERAMIC_PLATE = s));
 
 	// ─────────────────────────────────────────────────────────────────────────────────────────
 	// BlockEntity types (MOD-307)

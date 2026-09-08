@@ -1,0 +1,18 @@
+{
+  "type": "alaindustrial:alloying",
+  "components": [
+    {
+      "ingredient": "alaindustrial:carbon_rod_double",
+      "count": 2
+    },
+    {
+      "ingredient": "alaindustrial:slag_poor",
+      "count": 4
+    }
+  ],
+  "result": {
+    "id": "alaindustrial:carbon_briquette",
+    "count": 1
+  },
+  "energy": 1200
+}
