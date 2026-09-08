@@ -365,10 +365,10 @@
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="15 个页面">15</span></a>
 <div class="group-title">加工</div>
-<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="15 个页面">15</span></a>
+<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="16 个页面">16</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <div class="group-title">物流</div>
-<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>物品物流</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>物品物流</span><span class="cat-count" aria-label="2 个页面">2</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">世界与自动化</div>
@@ -379,8 +379,8 @@
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="15 个页面">15</span></a>
 <div class="group-title">物品</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="24 个页面">24</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="24 个页面">24</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="25 个页面">25</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="25 个页面">25</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">首页</a><span class="sep">/</span><a href="../machines/index.html">机器</a><span class="sep">/</span><span>电热器</span></div>
@@ -437,6 +437,18 @@
 <h2 id="方块属性">方块属性</h2>
 
 <p>仅对正上方的方块提供热源，且仅在已达温度时提供。 LV 等级的 EU/FE 消费端，通过可用的侧面接收能量。 <strong>发光随温度变化</strong> — 从暗到炽热共四档。不打开界面也能在世界里看出它的状态。 完全预热的方块会从与机器的接缝处透出热气。粒子只在完全预热时出现：这是「正在 ×3」的信号，而不是常驻的背景效果。 使用镐采集；破坏时方块本身掉落。</p>
+
+<h2 id="声音">声音</h2>
+
+<p>只要线圈还有颜色，电热器就会发出高温镍铬丝的噼啪声 — 循环（模式C， 0.18）。它在 <code>cold</code> 以上的<strong>每一</strong>档都会响，包括升温过程，而不仅是满温时：正在升温的加热器同样在耗电做功。只有完全冷却时才静音（）。</p>
+
+<p>发声的条件是「正在耗电」，而不是「线圈是热的」（）。升温会响，向上方机器供热也会响 — 正是玩家为之付费的状态。另外两种状态保持安静：上方机器等待时的保温，以及整个冷却过程。</p>
+
+<p>发光仍按温度走，只要线圈是热的就会亮。这种不一致是有意的：热金属会发光，这在物理上是诚实的；而本模组中的声音意味着「正在运行」。在 之前两者共用一套档位，于是一个以「无热可供的加热器耗电恰好为零」为立身之本的方块，在停工后仍会响二十秒；若在上方机器仍等待时断电，更会无休止地响下去。</p>
+
+<p>保温本身未被改动，也不能改动：让热量散去会使上方机器重新索取热量，而重新升温会在一个什么都不产出的循环里烧掉整整一次预热的电量。</p>
+
+<p>刻意<strong>不用</strong>蒸汽声：叠在上面的硫化机已经在嘶嘶冒汽，两个都发嘶嘶声的方块叠在一起会变成一团无法分辨的噪音。</p>
 
 <h2 id="配方">配方</h2>
 

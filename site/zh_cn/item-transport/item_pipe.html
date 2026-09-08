@@ -365,10 +365,10 @@
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="15 个页面">15</span></a>
 <div class="group-title">加工</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="15 个页面">15</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="16 个页面">16</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <div class="group-title">物流</div>
-<a class="cat-link active" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>物品物流</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<a class="cat-link active" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>物品物流</span><span class="cat-count" aria-label="2 个页面">2</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">世界与自动化</div>
@@ -379,8 +379,8 @@
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="15 个页面">15</span></a>
 <div class="group-title">物品</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="24 个页面">24</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="24 个页面">24</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="25 个页面">25</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="25 个页面">25</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">首页</a><span class="sep">/</span><a href="../item-transport/index.html">物品物流</a><span class="sep">/</span><span>物品管道</span></div>
@@ -402,6 +402,10 @@
 
 <p>如果管道从多只箱子同时提取（或分发到多只），它会轮流访问它们——谁都不会被冷落。</p>
 
+<h3 id="高级管道">高级管道</h3>
+
+<p>第二阶的运力翻倍——每秒 4 个物品——并且有属于自己的页面：<a href="item_pipe_advanced.html">进阶物品管道</a>。 请记住最要紧的一点：<strong>一条线路的速度取决于其中最慢的那一段</strong>，因此进阶线路中间只要忘了换掉一段 普通管道，整条线路就会跌回原来的每秒 2 个。</p>
+
 <h2 id="侧面与密钥">侧面与密钥</h2>
 
 <p>管道的每一面都有自己的角色。对准所需的面按<strong>右键</strong>扳手——角色会切到下一个。只有你点击的 那个面会变；结果会显示在屏幕下方。</p>
@@ -409,6 +413,8 @@
 <table><thead><tr><th>模式</th><th>做什么</th><th>外观</th></tr></thead><tbody><tr><td><code>NEUTRAL</code></td><td>普通连接：既取也放。</td><td>简单接管</td></tr><tr><td><code>EXTRACT</code></td><td>从相邻箱子或机器提取物品。</td><td>宽喇叭口，<strong>橙色</strong>端面</td></tr><tr><td><code>INSERT</code></td><td>把物品放入相邻箱子或机器。</td><td>窄注口，<strong>青色</strong>端面</td></tr><tr><td><code>DISABLED</code></td><td>完全禁用此面。</td><td>无接管</td></tr></tbody></table>
 
 <p>角色直接在方块上可见，无需打开什么：<strong>橙色喇叭口抽取</strong>，<strong>青色注口放出</strong>，被禁用的面则 干脆没有接管。</p>
+
+<p><strong>高级</strong>管道的喇叭口与注口是整体着色的，而不只是端面。原因很简单：它的管体本来就宽，「比管体更宽」这一特征在它身上比在细管道上更难辨认——颜色补回了粗细吃掉的那部分。</p>
 
 <p>常见的「箱子 → 箱子」布局：在第一只箱子一侧设 <code>EXTRACT</code>，在第二只一侧设 <code>INSERT</code>。搞定， 物品就上路了。</p>
 
@@ -432,12 +438,16 @@
 
 <p>管道：铁齿轮周围 6 个银锭围成环形（四角留空），结果为 8 根管道。</p>
 
+<p>高级管道：四边放 4 根普通管道，四角放 4 块白铜强化板，中心放 1 块银板——结果为 4 根高级管道。普通管道是配方的一部分，因此绕不开第一阶直接得到第二阶。</p>
+
 <h2 id="相关内容">相关内容</h2>
 
 <p><a href="../fluid-storage/fluid_tank.html">便携式流体储罐</a>——存储流体 <a href="../fluid-machines/pump.html">抽水泵</a>——从世界抽取流体 <a href="../items/wrench.html">扳手</a></p>
 
 <h2>合成</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="物品管道 alaindustrial:item_pipe" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="任意银锭"><img src="../../assets/item/silver_ingot_3d.png" alt="任意银锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell" title="任意银锭"><img src="../../assets/item/silver_ingot_3d.png" alt="任意银锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意银锭"><img src="../../assets/item/silver_ingot_3d.png" alt="任意银锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="铁齿轮"><img src="../../assets/item/iron_gear_3d.png" alt="铁齿轮" width="32" height="32"></div> <div class="cell" title="任意银锭"><img src="../../assets/item/silver_ingot_3d.png" alt="任意银锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意银锭"><img src="../../assets/item/silver_ingot_3d.png" alt="任意银锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell" title="任意银锭"><img src="../../assets/item/silver_ingot_3d.png" alt="任意银锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="物品管道"><img src="../../assets/item/item_pipe_3d.png" alt="物品管道" width="32" height="32"><span class="count">×8</span></div><div class="result-name">物品管道</div></div></div></div></div>
+<h2>用于</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="高级物品管道 alaindustrial:item_pipe_advanced" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="强化白铜板"><img src="../../assets/item/cupronickel_reinforced_plate_3d.png" alt="强化白铜板" width="32" height="32"></div> <div class="cell" title="物品管道"><img src="../../assets/item/item_pipe_3d.png" alt="物品管道" width="32" height="32"></div> <div class="cell" title="强化白铜板"><img src="../../assets/item/cupronickel_reinforced_plate_3d.png" alt="强化白铜板" width="32" height="32"></div> <div class="cell" title="物品管道"><img src="../../assets/item/item_pipe_3d.png" alt="物品管道" width="32" height="32"></div> <div class="cell" title="银板"><img src="../../assets/item/silver_plate_3d.png" alt="银板" width="32" height="32"></div> <div class="cell" title="物品管道"><img src="../../assets/item/item_pipe_3d.png" alt="物品管道" width="32" height="32"></div> <div class="cell" title="强化白铜板"><img src="../../assets/item/cupronickel_reinforced_plate_3d.png" alt="强化白铜板" width="32" height="32"></div> <div class="cell" title="物品管道"><img src="../../assets/item/item_pipe_3d.png" alt="物品管道" width="32" height="32"></div> <div class="cell" title="强化白铜板"><img src="../../assets/item/cupronickel_reinforced_plate_3d.png" alt="强化白铜板" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="高级物品管道"><img src="../../assets/item/item_pipe_advanced_3d.png" alt="高级物品管道" width="32" height="32"><span class="count">×4</span></div><div class="result-name">高级物品管道</div></div></div></div></div>
   </main>
 </div>
 

@@ -365,10 +365,10 @@
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>原子力</span><span class="cat-count" aria-label="15 ページ">15</span></a>
 <div class="group-title">加工</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>マシン</span><span class="cat-count" aria-label="15 ページ">15</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>マシン</span><span class="cat-count" aria-label="16 ページ">16</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>液体マシン</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <div class="group-title">物流</div>
-<a class="cat-link active" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>アイテム輸送</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<a class="cat-link active" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>アイテム輸送</span><span class="cat-count" aria-label="2 ページ">2</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>液体輸送</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>液体貯蔵</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <div class="group-title">世界と自動化</div>
@@ -379,8 +379,8 @@
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="15 ページ">15</span></a>
 <div class="group-title">アイテム</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="24 ページ">24</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="24 ページ">24</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="25 ページ">25</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="25 ページ">25</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">ホーム</a><span class="sep">/</span><a href="../item-transport/index.html">アイテム輸送</a><span class="sep">/</span><span>アイテムパイプ</span></div>
@@ -402,6 +402,10 @@
 
 <p>パイプが複数のチェストから同時に取り（または複数へ配る）、それらを順に巡回します — 誰も冷遇されません。</p>
 
+<h3 id="高性能パイプ">高性能パイプ</h3>
+
+<p>第2ティアは2倍の量を運びます（毎秒4個）。専用のページがあります: <a href="item_pipe_advanced.html">強化アイテムパイプ</a>。肝心なのは次の点です。<strong>ラインの速度は、その中で 最も遅いパイプに合わせられます。</strong> そのため、強化ラインの途中に通常のパイプが1つ紛れているだけで、 ライン全体が元の毎秒2個まで落ちます。</p>
+
 <h2 id="面とキー">面とキー</h2>
 
 <p>パイプの各面に役割があります。対象の面にカーソルを合わせて <strong>レンチを右クリック</strong> — 役割が次へ切り替わ ります。クリックした面だけが変わります。結果は画面下に表示されます。</p>
@@ -409,6 +413,8 @@
 <table><thead><tr><th>モード</th><th>何をするか</th><th>見た目</th></tr></thead><tbody><tr><td><code>NEUTRAL</code></td><td>通常の接続：取りも置きもする。</td><td>シンプルな袖</td></tr><tr><td><code>EXTRACT</code></td><td>隣接チェストまたは機械からアイテムを取り出す。</td><td>太いラッパ、<strong>オレンジ</strong>の端</td></tr><tr><td><code>INSERT</code></td><td>隣接チェストまたは機械へアイテムを置く。</td><td>細いノズル、<strong>ターコイズ</strong>の端</td></tr><tr><td><code>DISABLED</code></td><td>この面を完全に無効化。</td><td>袖なし</td></tr></tbody></table>
 
 <p>役割はブロック上に直接見え、何も開く必要はありません：<strong>オレンジのラッパは取り</strong>、<strong>ターコイズの ノズルは置き</strong>、無効化された面には袖がありません。</p>
+
+<p><strong>高性能</strong>パイプではラッパとノズルが端だけでなく全体に着色されています。理由は単純で、こちらは本体そのものが太いため「本体より広い」という手がかりが細いパイプほど効かないのです。色が、太さの食べた分を返しています。</p>
 
 <p>「チェスト → チェスト」の通常構成：第 1 チェスト側に <code>EXTRACT</code>、第 2 チェスト側に <code>INSERT</code>。 これだけで、アイテムが流れます。</p>
 
@@ -432,12 +438,16 @@
 
 <p>パイプ：鉄の歯車の周りに銀インゴット 6 個をリング状に（四隅は空き）、結果はパイプ 8 個。</p>
 
+<p>高性能パイプ：四辺に基本パイプ 4 本、四隅に白銅強化板 4 枚、中央に銀板 1 枚 — 結果は高性能パイプ 4 本。基本パイプがレシピに入るため、第1段階を飛ばして第2段階を得ることはできません。</p>
+
 <h2 id="関連項目">関連項目</h2>
 
 <p><a href="../items/wrench.html">レンチ</a> —— 各面を設定し、パイプを再び取り外す。 <a href="../components/metal_gears.html">鉄の歯車</a> —— クラフトの中核。 <a href="../materials/silver.html">銀</a> —— パイプの本体。</p>
 
 <h2>クラフト</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="アイテムパイプ alaindustrial:item_pipe" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="いずれかの銀インゴット"><img src="../../assets/item/silver_ingot_3d.png" alt="いずれかの銀インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell" title="いずれかの銀インゴット"><img src="../../assets/item/silver_ingot_3d.png" alt="いずれかの銀インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの銀インゴット"><img src="../../assets/item/silver_ingot_3d.png" alt="いずれかの銀インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="鉄の歯車"><img src="../../assets/item/iron_gear_3d.png" alt="鉄の歯車" width="32" height="32"></div> <div class="cell" title="いずれかの銀インゴット"><img src="../../assets/item/silver_ingot_3d.png" alt="いずれかの銀インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの銀インゴット"><img src="../../assets/item/silver_ingot_3d.png" alt="いずれかの銀インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell" title="いずれかの銀インゴット"><img src="../../assets/item/silver_ingot_3d.png" alt="いずれかの銀インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="アイテムパイプ"><img src="../../assets/item/item_pipe_3d.png" alt="アイテムパイプ" width="32" height="32"><span class="count">×8</span></div><div class="result-name">アイテムパイプ</div></div></div></div></div>
+<h2>用途</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="高性能アイテムパイプ alaindustrial:item_pipe_advanced" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="強化白銅板"><img src="../../assets/item/cupronickel_reinforced_plate_3d.png" alt="強化白銅板" width="32" height="32"></div> <div class="cell" title="アイテムパイプ"><img src="../../assets/item/item_pipe_3d.png" alt="アイテムパイプ" width="32" height="32"></div> <div class="cell" title="強化白銅板"><img src="../../assets/item/cupronickel_reinforced_plate_3d.png" alt="強化白銅板" width="32" height="32"></div> <div class="cell" title="アイテムパイプ"><img src="../../assets/item/item_pipe_3d.png" alt="アイテムパイプ" width="32" height="32"></div> <div class="cell" title="銀板"><img src="../../assets/item/silver_plate_3d.png" alt="銀板" width="32" height="32"></div> <div class="cell" title="アイテムパイプ"><img src="../../assets/item/item_pipe_3d.png" alt="アイテムパイプ" width="32" height="32"></div> <div class="cell" title="強化白銅板"><img src="../../assets/item/cupronickel_reinforced_plate_3d.png" alt="強化白銅板" width="32" height="32"></div> <div class="cell" title="アイテムパイプ"><img src="../../assets/item/item_pipe_3d.png" alt="アイテムパイプ" width="32" height="32"></div> <div class="cell" title="強化白銅板"><img src="../../assets/item/cupronickel_reinforced_plate_3d.png" alt="強化白銅板" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="高性能アイテムパイプ"><img src="../../assets/item/item_pipe_advanced_3d.png" alt="高性能アイテムパイプ" width="32" height="32"><span class="count">×4</span></div><div class="result-name">高性能アイテムパイプ</div></div></div></div></div>
   </main>
 </div>
 

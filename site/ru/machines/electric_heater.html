@@ -365,10 +365,10 @@
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Ядерная техника</span><span class="cat-count" aria-label="15 страниц">15</span></a>
 <div class="group-title">Переработка</div>
-<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="15 страниц">15</span></a>
+<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="16 страниц">16</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Машины для жидкостей</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <div class="group-title">Логистика</div>
-<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Логистика предметов</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Логистика предметов</span><span class="cat-count" aria-label="2 страницы">2</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Логистика жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Хранение жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Мир и автоматизация</div>
@@ -379,8 +379,8 @@
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="15 страниц">15</span></a>
 <div class="group-title">Предметы</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="3 страницы">3</span></a>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="24 страницы">24</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="24 страницы">24</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="25 страниц">25</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="25 страниц">25</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="../machines/index.html">Машины</a><span class="sep">/</span><span>Электронагреватель</span></div>
@@ -438,6 +438,18 @@
 <h2 id="свойства-блока">Свойства блока</h2>
 
 <p>Источник тепла только для блока непосредственно сверху и только в прогретом состоянии. EU/FE-потребитель LV; принимает энергию через доступные боковые грани. <strong>Свечение меняется с температурой</strong> — четыре ступени от тёмной до раскалённой. Состояние видно в мире, не открывая экран. У полностью прогретого блока из стыка с машиной пробивается жар. Частицы идут только на полном прогреве: это сигнал «идёт ×3», а не постоянный фон. Кирка; при разрушении выпадает сам блок.</p>
+
+<h2 id="звук">Звук</h2>
+
+<p>Пока спираль не холодная, нагреватель потрескивает раскалённым нихромом — петля (паттерн C, 0.18). Звучит на <strong>всех</strong> ступенях накала выше <code>cold</code>. Молчит только холодным.</p>
+
+<p>Окно звука — это «идёт расход энергии», а не «спираль горячая». Слышно разогрев и слышно отдачу тепла машине сверху — то есть ровно те состояния, за которые игрок платит. Молчат два других: удержание температуры, пока машина сверху ждёт, и всё остывание.</p>
+
+<p>Свет при этом остался на температуре и продолжает гореть, пока спираль горячая. Расхождение намеренное: горячий металл светится, и это физически честно, а звук в моде означает «работает». До оба шли по одной шкале, и блок, чьё обещание — «нагревателю нечего греть, значит он стоит ровно ноль», — гудел ещё двадцать секунд после конца работы, а при обрыве питания с ждущей машиной сверху гудел бесконечно.</p>
+
+<p>Удержание накала не тронуто и трогать его нельзя: если дать теплу спасть, машина сверху снова запросит его, и разогрев сожжёт полторы тысячи EU/FE на цикле, который ничего не производит.</p>
+
+<p>Намеренно <strong>не</strong> шипение: вулканизатор, стоящий сверху, уже шипит паром, и два шипящих блока в стопке слились бы в один неразличимый шум. Громкость 0.18 — самая тихая ступень в моде: этот блок никогда не слушают отдельно, игрок всегда слышит пару.</p>
 
 <h2 id="рецепт">Рецепт</h2>
 

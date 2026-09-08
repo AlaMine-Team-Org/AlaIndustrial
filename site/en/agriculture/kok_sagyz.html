@@ -306,10 +306,10 @@
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Nuclear</span><span class="cat-count" aria-label="15 pages">15</span></a>
 <div class="group-title">Processing</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="15 pages">15</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="16 pages">16</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <div class="group-title">Logistics</div>
-<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="2 pages">2</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
@@ -320,14 +320,14 @@
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="15 pages">15</span></a>
 <div class="group-title">Items</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="24 pages">24</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="24 pages">24</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="25 pages">25</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="25 pages">25</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../agriculture/index.html">Agriculture</a><span class="sep">/</span><span>Kok-Sagyz</span></div>
 <div class="block-card">
   <div class="card-head">
-    <img class="icon" src="../../assets/item/kok_sagyz_3d.png" alt="Kok-Sagyz" width="64" height="64">
+    <img class="icon" src="../../assets/item/kok_sagyz_seeds_3d.png" alt="Kok-Sagyz" width="64" height="64">
     <div class="info">
       <h1>Kok-Sagyz</h1>
       <div class="block-id">alaindustrial:kok_sagyz</div>
@@ -369,7 +369,7 @@
 
 <h2 id="obtaining">Obtaining</h2>
 
-<p><strong>Find it in the world.</strong> Ripe dandelions turn up now and then on plains and savannas — roughly one chunk in 48 carries a small scatter of up to four flowers. Wild plants grow their own roots, so the first one you find is already a finished column. <strong>New chunks only:</strong> kok sagyz will not appear in land you have already explored.</p>
+<p><strong>Find it in the world.</strong> Ripe dandelions turn up now and then in savannas, on mountain meadows and windswept gravelly hills — roughly one chunk in 48 carries three flowers, which is one flower per 64x64 blocks of suitable biome. Wild plants grow their own roots, so the first one you find is already a finished column. <strong>New chunks only:</strong> kok sagyz will not appear in land you have already explored.</p>
 
 <p><strong>Plant it.</strong> A seed goes onto <strong>any single block of ground</strong> — grass, dirt, sand, tilled farmland or modded soil tagged <code>#minecraft:supports_crops</code>. No need to dig a pit: the root adapts. Two blocks of soil grow a column two deep; a lone block of earth over stone puts the tip straight under the flower, and you dig once instead of twice.</p>
 
@@ -379,13 +379,45 @@
 
 <table><thead><tr><th>Phase</th><th>Time on farmland</th></tr></thead><tbody><tr><td>Above ground, rosette → seed head</td><td>~3.4 min</td></tr><tr><td>Root, two blocks down</td><td>another ~2.3 min</td></tr><tr><td>The same on wild g</td><td>twice as long</td></tr></tbody></table>
 
-<p><strong>Bone meal</strong> and the <strong>sprinkler</strong> each buy exactly one step — a stage or a block of root. You can buy speed; you cannot buy your way past darkness or a column with nowhere left to grow. A harvested tip regrows at the same rate.</p>
+<p>Every step of growth is one random tick. At <code>randomTickSpeed 3</code> the game picks three random positions per section per tick, so a given block gets a tick about every <strong>68 seconds</strong> — independently of its neighbours. The wait is geometric and its spread equals its mean: at a divisor of 1 a tenth of the plants take a step within 7 seconds and another tenth wait over 157. A field therefore ripens unevenly all by itself, like wheat; the figures below are <strong>means, not timers</strong>.</p>
+
+<p>Steps cost different amounts: the first is cheap, later ones dearer, and the longest is the one that pays a root. Of all the grounds only <strong>sand</strong> speeds it up — a step there takes 75 % of the usual time.</p>
+
+<table><thead><tr><th>Step</th><th>What happens</th><th>Divisor</th><th>Ordinary ground</th><th>In sand</th></tr></thead><tbody><tr><td><code>age 0 → 1</code></td><td>rosette → bud</td><td>1</td><td>~1.1 min</td><td>~0.9 min</td></tr><tr><td><code>age 1 → 2</code></td><td>bud → yellow flower</td><td>2</td><td>~2.3 min</td><td>~1.7 min</td></tr><tr><td><code>age 2 → 3</code></td><td>flower → seed head (mature)</td><td>3</td><td>~3.4 min</td><td>~2.6 min</td></tr><tr><td><strong>Above ground total</strong></td><td>planting → maturity</td><td>—</td><td><strong>~6.8 min</strong></td><td><strong>~5.1 min</strong></td></tr><tr><td>Intermediate root</td><td>ground under the flower → root</td><td>6</td><td>~6.8 min</td><td>~5.1 min</td></tr><tr><td>Tip</td><td>the harvestable root, at any depth</td><td>9</td><td>~10.2 min</td><td>~7.7 min</td></tr><tr><td><strong>Root total</strong></td><td>maturity → full column</td><td>—</td><td><strong>~17.1 min</strong></td><td><strong>~12.8 min</strong></td></tr><tr><td><strong>Everything</strong></td><td>seed → two ready blocks of root</td><td>—</td><td><strong>~23.9 min</strong></td><td><strong>~17.9 min</strong></td></tr></tbody></table>
+
+<p><strong>The tip costs the same at any depth</strong> — the price is keyed to what grows, not to the step's number. Otherwise shallow g would grow its tip at the cheap first-step price and out-yield a full column. Shallow ground only reaches the first harvest <strong>sooner</strong> (~17.1 min against ~23.9); after that it yields at the same rate.</p>
+
+<p><strong>Tilling is worth nothing.</strong> This is not a hoe crop but a steppe weed with a taproot: dirt, grass, podzol, mycelium, mud and tilled farmland all grow it at the same rate. Only sand and red sand are faster — that is the real plant's element, a sandy well-drained soil where its seedlings establish better than in loam, and a taproot simply travels more easily through loose ground, which is why carrots are sown in sand too.</p>
+
+<p>The rate is read through the plant's own root: a segment occupied by root remembers the ground it replaced, so a column sunk into sand keeps the sand rate all the way down.</p>
+
+<p><strong>Regrowth after a harvest</strong> (the flower stays mature — it does not have to ripen again):</p>
+
+<table><thead><tr><th>What you dug</th><th>The wait</th></tr></thead><tbody><tr><td>The tip (the part that pays a root)</td><td>~10.2 min in soil, ~7.7 min in sand — the farm's working cycle</td></tr><tr><td>The intermediate root</td><td>~6.8 min in soil, ~5.1 min in sand</td></tr><tr><td>Both</td><td>~17.1 min in soil, ~12.8 min in sand</td></tr></tbody></table>
+
+<p>Sustained yield is about <strong>6 roots per hour per plant</strong> in ordinary ground and <strong>8 in sand</strong>. A twenty-plant plantation gives roughly two to three roots a minute.</p>
+
+<p><strong>Bone meal</strong> and the <strong>sprinkler</strong> each buy exactly one step — a stage or a block of root. You can buy speed; you cannot buy your way past darkness or a column with nowhere left to grow.</p>
+
+<p><strong>The plant can be trampled.</strong> Jumping or falling onto the flower from above costs it one growth stage: seed head → flower → bud → rosette, and never below the rosette. Walking through it at ground level is safe, and sneaking spares it too — the same key opens the root inspection, so leaning in to read a plant can never harm it. Trampling never touches what is already underground: the root keeps its depth, but grows no deeper until the flower has ripened again. Turned off with</p>
+
+<h2 id="inspecting-the-root">Inspecting the root</h2>
+
+<p>Walk up to a flower and hold the sneak key (<strong>Shift</strong> by default). The root appears underground as a solid shape inside a light textured shell of its original ground. The cell borders show the depth in blocks. Release the key and the view fades out. The key named in the prompt follows your own binding.</p>
+
+<p>The background is dimmed but not extinguished: terrain, horizon and sky stay readable so you keep your bearings underground. How dark it goes is the client setting (percent, 85 by default, 10–95 allowed).</p>
+
+<p>The inspection shows up to eight of the nearest visible plants within five blocks. Walls hide flowers from it; neighbouring ores and caves are not revealed. Looking at a plant adds its status: the root has not grown yet, is still growing, is ready to harvest, or growth is blocked.</p>
+
+<p><strong>One block does not always mean ready.</strong> On deep soil it is the first stage of growth. On soil over stone a short ready tip forms straight away. Two blocks make the long root. If the upper segment has been dug out, the remaining lower one is shown on its own, with no invented connection.</p>
+
+<p>The four above-ground stages and both roots use the designer's original models. The inspection runs on the client and changes no block, light, collision or growth rate.</p>
 
 <h2 id="harvesting">Harvesting</h2>
 
 <p>One rule: <strong>dig the tip, don't pick the flower.</strong></p>
 
-<table><thead><tr><th>Action</th><th>Result</th></tr></thead><tbody><tr><td>Dig the <strong>tip</strong> (the lower root block)</td><td><strong>1 × root</strong> + 35% chance of seeds; dirt is left behind, the plant lives and regrows the tip</td></tr><tr><td>Dig the <strong>upper</strong> root block</td><td>35% chance of seeds, no root; the flower stands and roots into the hole again</td></tr><tr><td>Break the <strong>flower</strong></td><td>the plant dies; 35% chance of seeds</td></tr><tr><td>The root after the plant dies</td><td>stays in the ground — you can still dig it out, but nothing is left to regrow it</td></tr><tr><td>Right-click the seed head</td><td>nothing: the rubber is in the ground, not in the fluff</td></tr></tbody></table>
+<table><thead><tr><th>Action</th><th>Result</th></tr></thead><tbody><tr><td>Dig the <strong>tip</strong> (the lower root block)</td><td><strong>1 × root</strong> + 35% chance of seeds; the original ground is restored, the plant lives and regrows the tip</td></tr><tr><td>Dig the <strong>upper</strong> root block</td><td>35% chance of seeds, no root; the flower stands and roots into the hole again</td></tr><tr><td>Break the <strong>flower</strong></td><td>the plant dies; 35% chance of seeds</td></tr><tr><td>The root after the plant dies</td><td>stays in the ground — you can still dig it out, but nothing is left to regrow it</td></tr><tr><td>Right-click the seed head</td><td>nothing: the rubber is in the ground, not in the fluff</td></tr></tbody></table>
 
 <p>Seeds come back on a chance from every harvest, so a patch keeps itself in planting stock.</p>
 
@@ -399,8 +431,8 @@
 
 <h2 id="automation">Automation</h2>
 
-<ul><li>The <strong>scythe</strong> (shift right-click on a ripe plant) digs the tip for you, precisely, without</li></ul>
-<p>killing the plant.</p>
+<ul><li>The <strong>scythe</strong> (shift right-click on a ripe plant) digs a ready tip at either one or two blocks</li></ul>
+<p>deep, without killing the plant.</p>
 <ul><li>The <strong>garden drone</strong> cannot reach the root — it hovers over the field, and the root lies two</li></ul>
 <p>blocks down. Its job is the other one: cut ripe flowers, bank the seeds and plant them back. That makes an automatic seed farm; the roots stay yours and the scythe's. The drone also sows kok sagyz on untilled ground.</p>
 <ul><li>The <strong>sprinkler</strong> speeds growth up a step at a time.</li></ul>
@@ -411,11 +443,13 @@
 
 <h2 id="old-worlds">Old worlds</h2>
 
+<p>New roots store the state of the original ground separately for each segment: sand stays sand, red sand stays red sand, farmland keeps its recorded moisture. While a segment is occupied by a root it stays a root block: the behaviour of the original g does not tick. Harvesting restores the stored state and the ordinary rules apply again. Ground with a block entity of its own is never replaced — its data does not fit in a BlockState and would be lost. The consequence: on such ground the flower plants and ripens, but no root will ever grow under it. No vanilla block is like this; it concerns modded soils with a block entity only. Older segments, saved before the ground was stored, are shown and restored as dirt; their id and <code>tip</code> property are kept.</p>
+
 <p>Wild plants arrive <strong>with new chunks only</strong>: settled steppe will not sprout dandelions. One seed is enough forever, though — from another world, a friend, or a trip far enough out — after that the patch feeds itself.</p>
 
 <h2 id="block-properties">Block properties</h2>
 
-<table><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody><tr><td>Root block</td><td>full cube of rooted earth, <code>tip</code> property</td></tr><tr><td>Column</td><td>1×3: flower + 2 root blocks</td></tr><tr><td>Soil</td><td><code>#minecraft:dirt</code>, grass/podzol/mycelium/mud, <code>#minecraft:sand</code>, <code>#minecraft:supports_crops</code>; one block is enough</td></tr></tbody></table>
+<table><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody><tr><td>Flower</td><td>solid model, no collision, <code>age</code> 0..3, random ticks</td></tr><tr><td>Root block</td><td>full cube that looks like the ground it replaced, <code>tip</code> property, non-ticking block entity holding that ground</td></tr><tr><td>Column</td><td>1×3: flower + 2 root blocks</td></tr><tr><td>Soil</td><td><code>#minecraft:dirt</code>, grass/podzol/mycelium/mud, <code>#minecraft:sand</code>, <code>#minecraft:supports_crops</code>; one block is enough</td></tr></tbody></table>
 
 <h2 id="related">Related</h2>
 

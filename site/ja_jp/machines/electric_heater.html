@@ -365,10 +365,10 @@
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>原子力</span><span class="cat-count" aria-label="15 ページ">15</span></a>
 <div class="group-title">加工</div>
-<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>マシン</span><span class="cat-count" aria-label="15 ページ">15</span></a>
+<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>マシン</span><span class="cat-count" aria-label="16 ページ">16</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>液体マシン</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <div class="group-title">物流</div>
-<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>アイテム輸送</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>アイテム輸送</span><span class="cat-count" aria-label="2 ページ">2</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>液体輸送</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>液体貯蔵</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <div class="group-title">世界と自動化</div>
@@ -379,8 +379,8 @@
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="15 ページ">15</span></a>
 <div class="group-title">アイテム</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="24 ページ">24</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="24 ページ">24</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="25 ページ">25</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="25 ページ">25</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">ホーム</a><span class="sep">/</span><a href="../machines/index.html">マシン</a><span class="sep">/</span><span>電気ヒーター</span></div>
@@ -437,6 +437,18 @@
 <h2 id="ブロック属性">ブロック属性</h2>
 
 <p>すぐ上のブロックに対してのみ、しかも適温に達しているときにだけ熱源になります。 LV の EU/FE 消費者。利用可能な側面からエネルギーを受け付けます。 <strong>発光は温度とともに変化します</strong> — 暗い状態から灼熱まで4段階。画面を開かなくてもワールドで状態が分かります。 完全に予熱されたブロックは、機械との継ぎ目から熱を漏らします。パーティクルが出るのは完全予熱のときだけです：常時の演出ではなく「×3 で動いている」という合図です。 ツルハシ。破壊時にブロック自体がドロップします。</p>
+
+<h2 id="音">音</h2>
+
+<p>コイルに色がついている間、ヒーターは高温ニクロム線のパチパチという音を発します — ループ（パターンC、 0.18）。<code>cold</code> より上の<strong>すべて</strong>の段階で鳴り、満温時だけではなく昇温中も鳴ります。昇温中のヒーターも電力を消費して仕事をしているためです。冷えているときだけ無音です（）。</p>
+
+<p>音の範囲は「コイルが熱い」ではなく「電力を消費している」です（）。昇温中と、上の機械へ熱を渡している間に鳴ります — プレイヤーが対価を払っている状態そのものです。残る二つは無音です。上の機械が待っている間の保温と、冷却の全区間です。</p>
+
+<p>発光は温度に従ったままで、コイルが熱い限り点いています。この食い違いは意図的です。熱い金属は光る、これは物理的に正直であり、一方このモッドにおける音は「稼働中」を意味します。 以前は両者が同じ段階を共有しており、「温めるものが無いヒーターの費用はちょうどゼロ」という約束を土台とするブロックが、作業終了後も20秒鳴り、上で待つ機械がある状態で電力を切れば無限に鳴り続けていました。</p>
+
+<p>保温そのものには手を付けておらず、付けてはいけません。熱を落とせば上の機械が再び熱を要求し、再昇温は何も生まない循環の中で予熱一回分の電力を燃やします。</p>
+
+<p>意図的に蒸気音では<strong>ありません</strong>。上に載る加硫機がすでに蒸気音を出しており、蒸気音の出るブロックが重なると一つの区別できない騒音になってしまいます。</p>
 
 <h2 id="レシピ">レシピ</h2>
 

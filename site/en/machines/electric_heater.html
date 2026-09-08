@@ -365,10 +365,10 @@
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Nuclear</span><span class="cat-count" aria-label="15 pages">15</span></a>
 <div class="group-title">Processing</div>
-<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="15 pages">15</span></a>
+<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="16 pages">16</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <div class="group-title">Logistics</div>
-<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="2 pages">2</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
@@ -379,8 +379,8 @@
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="15 pages">15</span></a>
 <div class="group-title">Items</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="24 pages">24</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="24 pages">24</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="25 pages">25</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="25 pages">25</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../machines/index.html">Machines</a><span class="sep">/</span><span>Electric Heater</span></div>
@@ -437,6 +437,18 @@
 <h2 id="block-properties">Block properties</h2>
 
 <p>A heat source for the block directly above it only, and only once it is up to temperature. An LV consumer of EU/FE; it accepts energy on its available side faces. <strong>The glow changes with temperature</strong> — four steps from dark to red hot. The state is readable in the world without opening the screen. A fully warmed block lets heat break out of the seam with the machine. The particles only appear at full warm-up: they are the "×3 is running" signal, not a constant background. Mine with a pickaxe; it drops itself.</p>
+
+<h2 id="sound">Sound</h2>
+
+<p>While the coils have any colour at all, the heater crackles with hot nichrome — the loop (pattern <strong>C</strong>, 0.18). It plays on <strong>every</strong> rung above <code>cold</code> and is silent only when the block is stone cold.</p>
+
+<p>The window means "EU/FE is being spent", not "the coils are hot". The warm-up is audible and so is heat being handed to the machine above — exactly the states the player pays for. Two others are silent: holding temperature while the machine above waits, and the whole cool-down.</p>
+
+<p>The light stayed on temperature and keeps burning while the coils are hot. The mismatch is deliberate: hot metal glows, which is physically honest, while a sound in this mod means "this is running". Until both followed one ladder, and a block whose founding promise is "a heater with nothing to heat costs exactly zero" hummed for twenty seconds after the work ended, and hummed indefinitely when power was cut with a machine still waiting above.</p>
+
+<p>The hold itself is untouched and must stay: letting the heat decay would send the machine above back to asking for it, and the re-ramp burns a full warm-up on a loop that produces nothing.</p>
+
+<p>Deliberately <strong>not</strong> a hiss: the Vulcanizer standing on top already hisses steam, and two hissing blocks in one stack would read as a single undifferentiated noise. The 0.18 volume is the quietest rung in the mod — this block is never listened to alone, the player always hears the pair.</p>
 
 <h2 id="recipe">Recipe</h2>
 
