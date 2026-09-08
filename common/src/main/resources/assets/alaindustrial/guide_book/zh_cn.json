@@ -918,12 +918,12 @@
         },
         {
           "id": "irradiated_soil",
-          "title": "辐照土壤",
+          "title": "辐射污染土",
           "icon": "alaindustrial:irradiated_soil",
           "pages": [
             {
               "type": "text",
-              "title": "辐照土壤",
+              "title": "辐射污染土",
               "text": "核事故留下的印记：被反应堆爆炸污染的土地。它的辐射比铀低一档——即使放在背包里也会辐射——并会自行经过四个阶段消退，在水下更快。可以像任何方块一样挖掘和携带，但无法合成。"
             }
           ]
@@ -2172,13 +2172,13 @@
         },
         {
           "id": "netherite_alloy_ingot",
-          "title": "下界合金复合锭",
+          "title": "复合下界合金锭",
           "icon": "alaindustrial:netherite_alloy_ingot",
           "pages": [
             {
               "type": "text",
-              "title": "下界合金复合锭",
-              "text": "模组的终局合金——在合金熔炉中，一个原版下界合金锭加两个琥珀金锭可产出两个下界合金复合锭。"
+              "title": "复合下界合金锭",
+              "text": "模组的终局合金——在合金熔炉中，一个原版下界合金锭加两个琥珀金锭可产出两个复合下界合金锭。"
             }
           ]
         },
@@ -3187,7 +3187,7 @@
               "title": "属性",
               "lines": [
                 "能量：6 EU/t",
-                "缓冲区：40000 EU"
+                "缓冲：40000 EU"
               ]
             },
             {
@@ -3961,12 +3961,12 @@
         },
         {
           "id": "alignment_chip_day",
-          "title": "太阳能进化芯片",
+          "title": "日光进化芯片",
           "icon": "alaindustrial:alignment_chip_day",
           "pages": [
             {
               "type": "text",
-              "title": "太阳能进化芯片",
+              "title": "日光进化芯片",
               "text": "一对进化芯片——太阳（白天）和月亮（夜晚）——通过进化将基础 T1 太阳能板和风车进化为 T2，并保留累积的 NBT 能量。"
             },
             {
@@ -4156,13 +4156,13 @@
         },
         {
           "id": "tempered_iron_chestplate",
-          "title": "淬火铁胸甲",
+          "title": "回火铁胸甲",
           "icon": "alaindustrial:tempered_iron_chestplate",
           "pages": [
             {
               "type": "text",
-              "title": "淬火铁胸甲",
-              "text": "整套淬火铁盔甲——头盔、胸甲、护腿和靴子；比铁更坚韧，用回火铁修复。"
+              "title": "回火铁胸甲",
+              "text": "整套回火铁盔甲——头盔、胸甲、护腿和靴子；比铁更坚韧，用回火铁修复。"
             },
             {
               "type": "stats",
@@ -4290,13 +4290,13 @@
         },
         {
           "id": "tempered_iron_pickaxe",
-          "title": "淬火铁镐",
+          "title": "回火铁镐",
           "icon": "alaindustrial:tempered_iron_pickaxe",
           "pages": [
             {
               "type": "text",
-              "title": "淬火铁镐",
-              "text": "手持淬火铁镐——各项属性略优于原版铁镐，但无法开采钻石级方块。"
+              "title": "回火铁镐",
+              "text": "手持回火铁镐——各项属性略优于原版铁镐，但无法开采钻石级方块。"
             },
             {
               "type": "recipe",
@@ -4376,13 +4376,13 @@
         },
         {
           "id": "tempered_iron_tools",
-          "title": "淬火铁工具",
+          "title": "回火铁工具",
           "icon": "alaindustrial:tempered_iron_axe",
           "pages": [
             {
               "type": "text",
-              "title": "淬火铁工具",
-              "text": "由淬火铁制成的五件手持工具——镐、斧、锄、锹和剑；略优于原版铁质工具，但无法开采钻石级方块。"
+              "title": "回火铁工具",
+              "text": "由回火铁制成的五件手持工具——镐、斧、锄、锹和剑；略优于原版铁质工具，但无法开采钻石级方块。"
             },
             {
               "type": "stats",

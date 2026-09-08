@@ -176,7 +176,7 @@
   "block.alaindustrial.extractor": "เครื่องสกัด",
   "block.alaindustrial.fermenter": "ถังหมัก",
   "block.alaindustrial.fluid_pipe": "ท่อของเหลว",
-  "block.alaindustrial.fluid_tank": "ถังของเหลว",
+  "block.alaindustrial.fluid_tank": "ถังของเหลวแบบพกพา",
   "block.alaindustrial.fuel_oil": "น้ำมันเตา",
   "block.alaindustrial.fuel_rod_assembly": "คอลัมน์เตาปฏิกรณ์",
   "block.alaindustrial.galvanic_bath": "อ่างชุบไฟฟ้า",

@@ -918,12 +918,12 @@
         },
         {
           "id": "irradiated_soil",
-          "title": "Işılanmış Toprak",
+          "title": "Işınlanmış Toprak",
           "icon": "alaindustrial:irradiated_soil",
           "pages": [
             {
               "type": "text",
-              "title": "Işılanmış Toprak",
+              "title": "Işınlanmış Toprak",
               "text": "Bir nükleer kazanın bıraktığı iz: reaktör patlamasıyla zehirlenmiş toprak. Uranyumun bir basamak altında ışınlar — sırt çantasından bile — ve dört aşamada kendi kendine solar, su altında daha hızlı. Herhangi bir blok gibi kazılır ve taşınır, ama asla üretilmez."
             }
           ]
@@ -1804,13 +1804,13 @@
         },
         {
           "id": "fermenter",
-          "title": "Fermantör",
+          "title": "Fermentör",
           "icon": "alaindustrial:fermenter",
           "pages": [
             {
               "type": "text",
-              "title": "Fermantör",
-              "text": "Organik maddeyi su ile fermante edip biyoyakıt (her zaman sıvı) ve biyokütle (bazen eşya) üreten bir LV makinesi. Pomplanmak yerine yetiştirilen modun ilk yakıtı: her parti aynı bedel, verim ise yalnızca yediğe bağlı — ottan altın havuca kadar."
+              "title": "Fermentör",
+              "text": "Organik maddeyi su ile fermente edip biyoyakıt (her zaman sıvı) ve biyokütle (bazen eşya) üreten bir LV makinesi. Pomplanmak yerine yetiştirilen modun ilk yakıtı: her parti aynı bedel, verim ise yalnızca yediğe bağlı — ottan altın havuca kadar."
             },
             {
               "type": "stats",
@@ -2064,7 +2064,7 @@
             {
               "type": "text",
               "title": "Biyokütle",
-              "text": "Fermantasyonun katı artığı — fermantörün şans eseri bıraktığı, yem ne kadar zenginse olasılığı o kadar yüksek. Henüz bir kullanımı yok: bilinçli bir yer tutucu, uydurulmuş bir amaç olmadan dürüstçe sunulmuş."
+              "text": "Fermantasyonun katı artığı — fermentörün şans eseri bıraktığı, yem ne kadar zenginse olasılığı o kadar yüksek. Henüz bir kullanımı yok: bilinçli bir yer tutucu, uydurulmuş bir amaç olmadan dürüstçe sunulmuş."
             }
           ]
         },
@@ -2076,7 +2076,7 @@
             {
               "type": "text",
               "title": "Biyoyakıt",
-              "text": "Fermantörde demlenen bulanık zeytin yeşili sıvı — pomplanmak yerine yetiştirilen modun ilk yakıtı. Dünyada kendiliğinden bulunmaz; ikinci kez damıtıldığında fıskiyanın serptiği besin çözeltisi elde edilir."
+              "text": "Fermentörde demlenen bulanık zeytin yeşili sıvı — pomplanmak yerine yetiştirilen modun ilk yakıtı. Dünyada kendiliğinden bulunmaz; ikinci kez damıtıldığında püskürtücünün serptiği besin çözeltisi elde edilir."
             }
           ]
         },
@@ -2160,25 +2160,25 @@
         },
         {
           "id": "fuel_oil",
-          "title": "Fuel Oil",
+          "title": "Fuel oil",
           "icon": "alaindustrial:fuel_oil_bucket",
           "pages": [
             {
               "type": "text",
-              "title": "Fuel Oil",
+              "title": "Fuel oil",
               "text": "Petrol damıtmasının ağır kalıntısı — koyu kahverengi, yoğun bir sıvı. Dizelden daha zayıf bir yakıt (6 EU/t), ama hiçbir şey ziyan olmaz — hepsi yanar."
             }
           ]
         },
         {
           "id": "netherite_alloy_ingot",
-          "title": "Netherit Alaşımı Külçesi",
+          "title": "Netherit Alaşım Külçesi",
           "icon": "alaindustrial:netherite_alloy_ingot",
           "pages": [
             {
               "type": "text",
-              "title": "Netherit Alaşımı Külçesi",
-              "text": "Modun oyun sonu alaşımı — bir vanilla Netherit külçesi ve iki Elektrum Külçesi, Alaşım Fırını'nda iki Netherit Alaşımı Külçesi verir."
+              "title": "Netherit Alaşım Külçesi",
+              "text": "Modun oyun sonu alaşımı — bir vanilla Netherit külçesi ve iki Elektrum Külçesi, Alaşım Fırını'nda iki Netherit Alaşım Külçesi verir."
             }
           ]
         },
@@ -2274,13 +2274,13 @@
         },
         {
           "id": "nutrient_solution",
-          "title": "Besin Çözeltisi",
+          "title": "Besin çözeltisi",
           "icon": "alaindustrial:nutrient_solution_bucket",
           "pages": [
             {
               "type": "text",
-              "title": "Besin Çözeltisi",
-              "text": "Biyoyakıtın ikinci kez damıtılmasından elde edilen parlak yeşil ürün — modda hiçbir şeyin yanmadığı tek sıvı. Tek tüketicisi, ekinleri ve kristalleri hızlandıran fıskiyedir."
+              "title": "Besin çözeltisi",
+              "text": "Biyoyakıtın ikinci kez damıtılmasından elde edilen parlak yeşil ürün — modda hiçbir şeyin yanmadığı tek sıvı. Tek tüketicisi, ekinleri ve kristalleri hızlandıran püskürtücüdür."
             }
           ]
         },
@@ -2443,24 +2443,24 @@
         },
         {
           "id": "kok_sagyz",
-          "title": "Kok-sagız",
+          "title": "Kok-Sagyz",
           "icon": "alaindustrial:kok_sagyz_seeds",
           "pages": [
             {
               "type": "text",
-              "title": "Kok-sagız",
+              "title": "Kok-Sagyz",
               "text": "Kazak bozkırından kauçuk taşıyan bir karahindiba — yetiştirilebilen kauçuk. Çiçek üstte, kök iki blok aşağıda: ucunu istediğin kadar topla, bitki hayatta kalır ve yeniden büyütür."
             }
           ]
         },
         {
           "id": "sprinkler",
-          "title": "Fıskiye",
+          "title": "Püskürtücü",
           "icon": "alaindustrial:sprinkler",
           "pages": [
             {
               "type": "text",
-              "title": "Fıskiye",
+              "title": "Püskürtücü",
               "text": "Bir direk üzerinde dönerek 4 blok içinde büyüyen her şeyin üzerine besin çözeltisi serpen başlık. Modda hiç EU çekmeyen tek makine — kablo bağlanmaz, yalnızca çözeltiyle çalışır. Yere veya tavana monte edilir."
             },
             {
@@ -2529,13 +2529,13 @@
         },
         {
           "id": "crystal_farm_controller",
-          "title": "Sera Kumandası",
+          "title": "Sera Kontrol Ünitesi",
           "icon": "alaindustrial:crystal_farm_controller",
           "pages": [
             {
               "type": "text",
-              "title": "Sera Kumandası",
-              "text": "Herhangi bir biçimde mühürlü bir oda; uyandırılmış tohum yataklarında gerçek vanilla ametist kümeleri büyür. Kumanda içindeki havayı doldurur, yani kubbe, basamaklı piramit veya L biçimli kanat kabul edilir; bitmiş serayınsa kabuğundaki derzlerin kaybolması bunu gösterir. Su, EU ve bir fıskiye yalnızca hızlandırır; üçünden hiçbiri zorunlu değildir."
+              "title": "Sera Kontrol Ünitesi",
+              "text": "Herhangi bir biçimde mühürlü bir oda; uyandırılmış tohum yataklarında gerçek vanilla ametist kümeleri büyür. Kontrol ünitesi içindeki havayı doldurur, yani kubbe, basamaklı piramit veya L biçimli kanat kabul edilir; bitmiş serayınsa kabuğundaki derzlerin kaybolması bunu gösterir. Su, EU ve bir püskürtücü yalnızca hızlandırır; üçünden hiçbiri zorunlu değildir."
             },
             {
               "type": "stats",
@@ -3336,12 +3336,12 @@
         },
         {
           "id": "stats_chip",
-          "title": "Istatistik cipi",
+          "title": "İstatistik Çipi",
           "icon": "alaindustrial:stats_chip",
           "pages": [
             {
               "type": "text",
-              "title": "Istatistik cipi",
+              "title": "İstatistik Çipi",
               "text": "Makineye kendi işinin kaydını tutturan bir yükseltme — süre, enerji ve işlenen eşya."
             },
             {
@@ -4156,12 +4156,12 @@
         },
         {
           "id": "tempered_iron_chestplate",
-          "title": "Tempered Iron Chestplate",
+          "title": "Su Verilmiş Demir Göğüslük",
           "icon": "alaindustrial:tempered_iron_chestplate",
           "pages": [
             {
               "type": "text",
-              "title": "Tempered Iron Chestplate",
+              "title": "Su Verilmiş Demir Göğüslük",
               "text": "Tam bir su verilmiş demir zırh takımı — kask, göğüslük, pantolon ve bot; demirden dayanıklı, su verilmiş demirle onarılır."
             },
             {
@@ -4290,12 +4290,12 @@
         },
         {
           "id": "tempered_iron_pickaxe",
-          "title": "Menevişlenmiş Demir Kazma",
+          "title": "Su Verilmiş Demir Kazma",
           "icon": "alaindustrial:tempered_iron_pickaxe",
           "pages": [
             {
               "type": "text",
-              "title": "Menevişlenmiş Demir Kazma",
+              "title": "Su Verilmiş Demir Kazma",
               "text": "El tipi bir su verilmiş demir kazma — her istatistikte vanilya demirinden biraz daha iyi, ama elmas seviyesindeki blokları kazamaz."
             },
             {
@@ -4376,12 +4376,12 @@
         },
         {
           "id": "tempered_iron_tools",
-          "title": "Menevişlenmiş Demir Aletler",
+          "title": "Su Verilmiş Demir Aletler",
           "icon": "alaindustrial:tempered_iron_axe",
           "pages": [
             {
               "type": "text",
-              "title": "Menevişlenmiş Demir Aletler",
+              "title": "Su Verilmiş Demir Aletler",
               "text": "Su verilmiş demirden yapılmış beş el aleti seti — kazma, balta, çapa, kürek ve kılıç; vanilya demirinden biraz daha iyi, ama elmas seviyesindeki blokları kazamazlar."
             },
             {

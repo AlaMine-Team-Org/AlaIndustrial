@@ -89,7 +89,7 @@
             {
               "type": "text",
               "title": "No que ele vira",
-              "text": "O petróleo é o começo da cadeia da borracha.\n\n1. Colete — com balde, Cápsula de vácuo ou Bomba\n2. Polimerizador: 1000 mB de petróleo e 400 EU produzem borracha bruta\n3. Vulcanizador: borracha bruta + pó de enxofre + 400 EU\n4. Coloque embaixo uma fogueira (×1), lava/magma (×2) ou um Aquecedor elétrico (×3)\n\nCalor melhor economiza materiais: cada operação sempre consome uma borracha bruta e quatro pós de enxofre."
+              "text": "O petróleo é o começo da cadeia da borracha.\n\n1. Colete — com balde, Cápsula de vácuo ou Bomba\n2. Polimerizador: 1000 mB de petróleo e 400 EU produzem borracha bruta\n3. Vulcanizador: borracha bruta + pó de enxofre + 400 EU\n4. Coloque embaixo uma fogueira (×1), lava/magma (×2) ou um Aquecedor Elétrico (×3)\n\nCalor melhor economiza materiais: cada operação sempre consome uma borracha bruta e quatro pós de enxofre."
             }
           ]
         }
@@ -1728,12 +1728,12 @@
         },
         {
           "id": "electric_heater",
-          "title": "Aquecedor elétrico",
+          "title": "Aquecedor Elétrico",
           "icon": "alaindustrial:electric_heater",
           "pages": [
             {
               "type": "text",
-              "title": "Aquecedor elétrico",
+              "title": "Aquecedor Elétrico",
               "text": "Um bloco de apoio LV que fica embaixo do vulcanizador. Ele precisa esquentar primeiro; quente, dá o calor máximo x3. Frio, não é fonte de calor nenhuma."
             },
             {
@@ -2328,12 +2328,12 @@
         },
         {
           "id": "sulfur_ore",
-          "title": "Minério de enxofre",
+          "title": "Minério de Enxofre",
           "icon": "alaindustrial:sulfur_ore",
           "pages": [
             {
               "type": "text",
-              "title": "Minério de enxofre",
+              "title": "Minério de Enxofre",
               "text": "Enxofre nativo — um não metal minerável, processado em pó para a vulcanização da borracha."
             }
           ]
@@ -4253,12 +4253,12 @@
         },
         {
           "id": "jetpack",
-          "title": "Jetpack",
+          "title": "Mochila a Jato",
           "icon": "alaindustrial:jetpack",
           "pages": [
             {
               "type": "text",
-              "title": "Jetpack",
+              "title": "Mochila a Jato",
               "text": "Um dispositivo de voo a EU para o slot do peito — impulso enquanto pular é segurado e um planeio suave sem energia quando descarregado."
             },
             {

@@ -1,19 +1,16 @@
-## 0.1.155
+## 0.1.156
 
-<p><img alt="Ala Industrial 0.1.155 - the welcome message the mod writes in chat" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.155/release-media/v0.1.155/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial 0.1.156 update summary" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.156/release-media/v0.1.156/changelog.png" width="720"></p>
 
-The mod says hello when you first load a world, and ceramic plates now have exactly one source.
+Every language the mod ships in is finished now — and the guide book finally speaks Thai.
 
 ### New
 
-- **The mod greets your world.** Two lines in chat the first time anyone joins: a welcome and a clickable link to our Discord. Once per world, not once per player.
-- **Server owners can switch the greeting off** with one line in the config.
+- **The guide book speaks Thai** — all 431 lines of it. It was the last language without a book of its own.
 
-### Changed
+### Bug Fixes
 
-- **Ceramic plates come out of the press and nowhere else.** Quenching a carbon briquette by hand in water used to hand you three plates for free.
-- **Build the press instead:** water, a piston, a briquette and two redstone dust give you four.
-
-### Fixed
-
-- **Every drill now names the pickaxe it really out-digs.** The netherite tip no longer claims it mines "like a diamond pickaxe".
+- **Every translation is finished.** 358 strings stayed English no matter which language you picked — item names, tooltips, advancement descriptions. They are translated now.
+- **Tools stop lying about what they are.** A pickaxe was called a shovel in one language and a hoe in two others; drill tooltips promised they mine "like a diamond hoe".
+- **The book and the game agree on names.** A hundred names across eighteen languages no longer disagree with your inventory.
+- **Teleporter buttons fit their labels** in six more languages, instead of scrolling them past.

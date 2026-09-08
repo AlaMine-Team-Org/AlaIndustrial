@@ -918,12 +918,12 @@
         },
         {
           "id": "irradiated_soil",
-          "title": "Tanah Terekspos Radiasi",
+          "title": "Tanah Teradiasi",
           "icon": "alaindustrial:irradiated_soil",
           "pages": [
             {
               "type": "text",
-              "title": "Tanah Terekspos Radiasi",
+              "title": "Tanah Teradiasi",
               "text": "Bekas kecelakaan nuklir: tanah yang diracuni ledakan reaktor. Memancarkan radiasi satu tingkat di bawah uranium — bahkan dari dalam tas — dan memudar sendiri melalui empat tahap, lebih cepat di bawah air. Digali dan diangkut seperti blok biasa, tetapi tidak pernah bisa diracik."
             }
           ]
@@ -1501,12 +1501,12 @@
         },
         {
           "id": "assembler",
-          "title": "Perakit",
+          "title": "Mesin Perakit",
           "icon": "alaindustrial:assembler",
           "pages": [
             {
               "type": "text",
-              "title": "Perakit",
+              "title": "Mesin Perakit",
               "text": "Mencetak resep meja kerajinan dari cetak biru secara terus-menerus dengan EU, mengambil bahan dari gudang modularnya sendiri. Menyimpan antrean tiga cetak biru."
             },
             {
@@ -1804,13 +1804,13 @@
         },
         {
           "id": "fermenter",
-          "title": "Fermenter",
+          "title": "Fermentor",
           "icon": "alaindustrial:fermenter",
           "pages": [
             {
               "type": "text",
-              "title": "Fermenter",
-              "text": "Mesin LV yang memfermentasi bahan organik dengan air menjadi biofuel (selalu fluida) dan biomassa (kadang-kadang item). Bahan bakar pertama di mod yang ditani, bukan dipompa: setiap batch berbiaya sama, dan hasilnya hanya bergantung pada asupannya — dari rumput hingga wortel emas."
+              "title": "Fermentor",
+              "text": "Mesin LV yang memfermentasi bahan organik dengan air menjadi bahan bakar hayati (selalu fluida) dan biomassa (kadang-kadang item). Bahan bakar pertama di mod yang ditani, bukan dipompa: setiap batch berbiaya sama, dan hasilnya hanya bergantung pada asupannya — dari rumput hingga wortel emas."
             },
             {
               "type": "stats",
@@ -2070,12 +2070,12 @@
         },
         {
           "id": "biofuel",
-          "title": "Biofuel",
+          "title": "Bahan bakar hayati",
           "icon": "alaindustrial:biofuel_bucket",
           "pages": [
             {
               "type": "text",
-              "title": "Biofuel",
+              "title": "Bahan bakar hayati",
               "text": "Fluida hijau zaitun keruh yang diseduh di fermenter — bahan bakar pertama di mod yang ditani, bukan dipompa. Tidak ditemukan di dunia; menyulingnya sekali lagi menghasilkan larutan nutrisi yang disemprotkan penyemprot."
             }
           ]
@@ -2172,12 +2172,12 @@
         },
         {
           "id": "netherite_alloy_ingot",
-          "title": "Batangan Paduan Netherit",
+          "title": "Batangan Paduan Netherite",
           "icon": "alaindustrial:netherite_alloy_ingot",
           "pages": [
             {
               "type": "text",
-              "title": "Batangan Paduan Netherit",
+              "title": "Batangan Paduan Netherite",
               "text": "Paduan akhir-permainan mod — satu batangan netherit vanilla dan dua batangan elektrum menghasilkan dua batangan paduan netherit di Tungku Paduan."
             }
           ]
@@ -2280,7 +2280,7 @@
             {
               "type": "text",
               "title": "Larutan Nutrisi",
-              "text": "Produk hijau terang hasil penyulingan biofuel untuk kedua kalinya — satu-satunya fluida di mod yang tidak terbakar oleh apa pun. Satu-satunya konsumennya adalah penyemprot, yang mempercepat tanaman dan kristal."
+              "text": "Produk hijau terang hasil penyulingan bahan bakar hayati untuk kedua kalinya — satu-satunya fluida di mod yang tidak terbakar oleh apa pun. Satu-satunya konsumennya adalah penyemprot, yang mempercepat tanaman dan kristal."
             }
           ]
         },
@@ -2443,12 +2443,12 @@
         },
         {
           "id": "kok_sagyz",
-          "title": "Kok Sagyz",
+          "title": "Kok-Sagyz",
           "icon": "alaindustrial:kok_sagyz_seeds",
           "pages": [
             {
               "type": "text",
-              "title": "Kok Sagyz",
+              "title": "Kok-Sagyz",
               "text": "Dandelion penghasil karet dari stepa Kazakh — karet yang bisa kamu tanam. Bunganya di atas, akarnya dua blok di bawah: petik pucuknya sesering apa pun, tanamannya tetap hidup dan menumbuhkannya lagi."
             }
           ]
@@ -3187,7 +3187,7 @@
               "title": "Statistik",
               "lines": [
                 "Energi: 6 EU/t",
-                "Buffer: 40000 EU"
+                "Bufer: 40000 EU"
               ]
             },
             {
@@ -4131,7 +4131,7 @@
               "title": "Statistik",
               "lines": [
                 "Energi: 15 000 EU",
-                "Penyangga: 15 000 EU"
+                "Bufer: 15 000 EU"
               ]
             },
             {
@@ -4156,12 +4156,12 @@
         },
         {
           "id": "tempered_iron_chestplate",
-          "title": "Tempered Iron Chestplate",
+          "title": "Zirah Besi Temper",
           "icon": "alaindustrial:tempered_iron_chestplate",
           "pages": [
             {
               "type": "text",
-              "title": "Tempered Iron Chestplate",
+              "title": "Zirah Besi Temper",
               "text": "Set zirah besi temper lengkap — helm, zirah dada, celana, dan sepatu bot; lebih tangguh dari besi, diperbaiki dengan besi temper."
             },
             {

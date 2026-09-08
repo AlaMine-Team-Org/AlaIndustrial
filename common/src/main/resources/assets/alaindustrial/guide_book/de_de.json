@@ -89,7 +89,7 @@
             {
               "type": "text",
               "title": "Was daraus wird",
-              "text": "Öl ist der Anfang der Gummikette.\n\n1. Sammle es ein — mit Eimer, Vakuumkapsel oder Pumpe\n2. Polymerisator: 1000 mB Öl und 400 EU ergeben Rohkautschuk\n3. Vulkanisator: Rohkautschuk + Schwefelstaub + 400 EU\n4. Stelle darunter ein Lagerfeuer (×1), Lava/Magma (×2) oder einen Elektroerhitzer (×3)\n\nBessere Hitze spart Material: Jeder Vorgang verbraucht immer einen Rohkautschuk und vier Schwefelstaub."
+              "text": "Öl ist der Anfang der Gummikette.\n\n1. Sammle es ein — mit Eimer, Vakuumkapsel oder Pumpe\n2. Polymerisator: 1000 mB Öl und 400 EU ergeben Rohkautschuk\n3. Vulkanisator: Rohkautschuk + Schwefelstaub + 400 EU\n4. Stelle darunter ein Lagerfeuer (×1), Lava/Magma (×2) oder einen Elektroheizer (×3)\n\nBessere Hitze spart Material: Jeder Vorgang verbraucht immer einen Rohkautschuk und vier Schwefelstaub."
             }
           ]
         }
@@ -918,12 +918,12 @@
         },
         {
           "id": "irradiated_soil",
-          "title": "Bestrahlte Erde",
+          "title": "Verstrahlte Erde",
           "icon": "alaindustrial:irradiated_soil",
           "pages": [
             {
               "type": "text",
-              "title": "Bestrahlte Erde",
+              "title": "Verstrahlte Erde",
               "text": "Das Mal, das ein Nuklearunfall hinterlässt: Erde, vergiftet durch eine Reaktorexplosion. Sie strahlt eine Stufe unter Uran — auch aus dem Rucksack — und verblasst von selbst über vier Stufen, unter Wasser schneller. Gräbt und trägt sich wie jeder Block, wird aber nie hergestellt."
             }
           ]
@@ -1728,12 +1728,12 @@
         },
         {
           "id": "electric_heater",
-          "title": "Elektroerhitzer",
+          "title": "Elektroheizer",
           "icon": "alaindustrial:electric_heater",
           "pages": [
             {
               "type": "text",
-              "title": "Elektroerhitzer",
+              "title": "Elektroheizer",
               "text": "Ein LV-Hilfsblock, der unter den Vulkanisator gehört. Er muss erst warm werden; heiß gibt er die maximale x3-Hitze. Kalt ist er überhaupt keine Wärmequelle."
             },
             {
@@ -2172,13 +2172,13 @@
         },
         {
           "id": "netherite_alloy_ingot",
-          "title": "Netherit-Legierungsbarren",
+          "title": "Netheritlegierungsbarren",
           "icon": "alaindustrial:netherite_alloy_ingot",
           "pages": [
             {
               "type": "text",
-              "title": "Netherit-Legierungsbarren",
-              "text": "Die Endgame-Legierung des Mods — ein Netheritbarren (Vanilla) und zwei Elektrumbarren ergeben im Legierungsofen zwei Netherit-Legierungsbarren."
+              "title": "Netheritlegierungsbarren",
+              "text": "Die Endgame-Legierung des Mods — ein Netheritbarren (Vanilla) und zwei Elektrumbarren ergeben im Legierungsofen zwei Netheritlegierungsbarren."
             }
           ]
         },
@@ -2443,12 +2443,12 @@
         },
         {
           "id": "kok_sagyz",
-          "title": "Kok-Sagys",
+          "title": "Kok-Sagyz",
           "icon": "alaindustrial:kok_sagyz_seeds",
           "pages": [
             {
               "type": "text",
-              "title": "Kok-Sagys",
+              "title": "Kok-Sagyz",
               "text": "Ein kautschukhaltiger Löwenzahn aus der kasachischen Steppe — Kautschuk zum Anbauen. Blüte oben, Wurzel zwei Blöcke tiefer: Ernte die Spitze beliebig oft, die Pflanze überlebt und treibt sie nach."
             }
           ]
@@ -2529,12 +2529,12 @@
         },
         {
           "id": "crystal_farm_controller",
-          "title": "Gewächshauscontroller",
+          "title": "Gewächshaussteuerung",
           "icon": "alaindustrial:crystal_farm_controller",
           "pages": [
             {
               "type": "text",
-              "title": "Gewächshauscontroller",
+              "title": "Gewächshaussteuerung",
               "text": "Ein versiegelter Raum beliebiger Form, dessen erweckte Saatbeete echte Amethysthaufen der Vanilla wachsen lassen. Der Controller flutet die Luft im Inneren, sodass Kuppel, Stufenpyramide oder L-förmiger Flügel alles zählen, und ein fertiges Gewächshaus zeigt das, indem die Nähte seiner Hülle verschwinden. Wasser, EU und ein Sprinkler machen es nur schneller; keins von dreien ist Pflicht."
             },
             {
@@ -4156,12 +4156,12 @@
         },
         {
           "id": "tempered_iron_chestplate",
-          "title": "Tempered Iron Chestplate",
+          "title": "Gehärteter Eisenbrustpanzer",
           "icon": "alaindustrial:tempered_iron_chestplate",
           "pages": [
             {
               "type": "text",
-              "title": "Tempered Iron Chestplate",
+              "title": "Gehärteter Eisenbrustpanzer",
               "text": "Ein vollständiges Rüstungsset aus gehärtetem Eisen — Helm, Brustplatte, Beinschutz und Stiefel; robuster als Eisen, wird mit gehärtetem Eisen repariert."
             },
             {

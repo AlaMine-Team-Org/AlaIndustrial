@@ -1804,12 +1804,12 @@
         },
         {
           "id": "fermenter",
-          "title": "Fermenterare",
+          "title": "Fermentor",
           "icon": "alaindustrial:fermenter",
           "pages": [
             {
               "type": "text",
-              "title": "Fermenterare",
+              "title": "Fermentor",
               "text": "En LV-maskin som jäser organiskt material med vatten till biobränsle (alltid en fluid) och biomassa (ibland ett föremål). Moddens första bränsle som odlas istället för pumpas: varje sats kostar lika mycket, och avkastningen beror bara på vad du matar den med — från gräs till en gyllene morot."
             },
             {
@@ -2064,7 +2064,7 @@
             {
               "type": "text",
               "title": "Biomassa",
-              "text": "Den fasta resten av jäsningen — kastas ut av fermenteraren slumpvis, ju rikare inmatning desto troligare. Har ingen användning än: en medveten platshållare, ärligt levererad, utan påhittat syfte."
+              "text": "Den fasta resten av jäsningen — kastas ut av fermentorn slumpvis, ju rikare inmatning desto troligare. Har ingen användning än: en medveten platshållare, ärligt levererad, utan påhittat syfte."
             }
           ]
         },
@@ -2076,7 +2076,7 @@
             {
               "type": "text",
               "title": "Biobränsle",
-              "text": "En grumlig olivfärgad fluid bryggd i fermenteraren — moddens första bränsle som odlas istället för pumpas. Förekommer inte i världen; en andra destillation ger den näringslösning som sprinklern sprejer."
+              "text": "En grumlig olivfärgad fluid bryggd i fermentorn — moddens första bränsle som odlas istället för pumpas. Förekommer inte i världen; en andra destillation ger den näringslösning som spridaren sprejer."
             }
           ]
         },
@@ -2088,7 +2088,7 @@
             {
               "type": "text",
               "title": "Block av härdat järn",
-              "text": "Ett kompakt block av 9 härdat järn-tackor — lagrar metallen i en plats och tillverkas eller plockas isär vid en arbetsbänk utan förlust."
+              "text": "Ett kompakt block av 9 tackor av härdat järn — lagrar metallen i en plats och tillverkas eller plockas isär vid en arbetsbänk utan förlust."
             },
             {
               "type": "recipe",
@@ -2214,7 +2214,7 @@
             {
               "type": "text",
               "title": "Beklädnad av härdat järn",
-              "text": "Ett dekorativt block av 4 plåtar härdat järn — en teknikpanel med skärm och linjer; tillverkas och plockas isär vid arbetsbänken utan förlust."
+              "text": "Ett dekorativt block av 4 plåtar av härdat järn — en teknikpanel med skärm och linjer; tillverkas och plockas isär vid arbetsbänken utan förlust."
             },
             {
               "type": "recipe",
@@ -2280,7 +2280,7 @@
             {
               "type": "text",
               "title": "Näringslösning",
-              "text": "Den klargröna produkten av att destillera biobränsle en andra gång — moddens enda fluid som inget brinner i. Dess enda konsument är sprinklern, som skyndar på grödor och kristaller."
+              "text": "Den klargröna produkten av att destillera biobränsle en andra gång — moddens enda fluid som inget brinner i. Dess enda konsument är spridaren, som skyndar på grödor och kristaller."
             }
           ]
         },
@@ -2443,24 +2443,24 @@
         },
         {
           "id": "kok_sagyz",
-          "title": "Kok-sagys",
+          "title": "Kok-Sagyz",
           "icon": "alaindustrial:kok_sagyz_seeds",
           "pages": [
             {
               "type": "text",
-              "title": "Kok-sagys",
+              "title": "Kok-Sagyz",
               "text": "En gummihaltig maskros från den kazakiska stäppen — gummi du kan odla. Blomman överst, roten två block ned: skörda toppen hur ofta du vill, växten överlever och låter den växa ut igen."
             }
           ]
         },
         {
           "id": "sprinkler",
-          "title": "Sprinkler",
+          "title": "Spridare",
           "icon": "alaindustrial:sprinkler",
           "pages": [
             {
               "type": "text",
-              "title": "Sprinkler",
+              "title": "Spridare",
               "text": "Ett roterande huvud på en mast som sprejer näringslösning över allt som växer inom 4 block. Moddens enda maskin som inte drar någon EU alls — ingen kabel ansluts till den, och den drivs enbart av lösningen. Monteras på golvet eller under taket."
             },
             {
@@ -2535,7 +2535,7 @@
             {
               "type": "text",
               "title": "Växthusstyrenhet",
-              "text": "Ett förslutet rum i vilken form som helst vars väckta såbäddar odlar äkta vanilj-ametistklasrar. Styrenheten fyller luften därinne, så en kupol, en trappstegspyramid eller en L-formad flygel räcker alla, och ett färdigt växthus visar det genom att skarvarna i skalet försvinner. Vatten, EU och en sprinkler gör det bara snabbare; ingen av de tre krävs."
+              "text": "Ett förslutet rum i vilken form som helst vars väckta såbäddar odlar äkta vanilj-ametistklasrar. Styrenheten fyller luften därinne, så en kupol, en trappstegspyramid eller en L-formad flygel räcker alla, och ett färdigt växthus visar det genom att skarvarna i skalet försvinner. Vatten, EU och en spridare gör det bara snabbare; ingen av de tre krävs."
             },
             {
               "type": "stats",
@@ -4156,12 +4156,12 @@
         },
         {
           "id": "tempered_iron_chestplate",
-          "title": "Tempered Iron Chestplate",
+          "title": "Bröstplåt av härdat järn",
           "icon": "alaindustrial:tempered_iron_chestplate",
           "pages": [
             {
               "type": "text",
-              "title": "Tempered Iron Chestplate",
+              "title": "Bröstplåt av härdat järn",
               "text": "En komplett rustningsuppsättning av härdat järn — hjälm, bröstplåt, benskydd och stövlar; tåligare än järn, repareras med härdat järn."
             },
             {
@@ -4290,12 +4290,12 @@
         },
         {
           "id": "tempered_iron_pickaxe",
-          "title": "Härdat Järn Hacka",
+          "title": "Hacka av härdat järn",
           "icon": "alaindustrial:tempered_iron_pickaxe",
           "pages": [
             {
               "type": "text",
-              "title": "Härdat Järn Hacka",
+              "title": "Hacka av härdat järn",
               "text": "En handhållen hacka av härdat järn — något bättre än vanilla-järn i alla värden, men den kan inte bryta block på diamantnivå."
             },
             {
@@ -4382,7 +4382,7 @@
             {
               "type": "text",
               "title": "Verktyg av härdat järn",
-              "text": "En uppsättning på fem handverktyg av härdat järn — hacka, yxa, jordhacka, spade och svärd; något bättre än vanilla-järn, men de kan inte bryta block på diamantnivå."
+              "text": "En uppsättning på fem handverktyg av härdat järn — hacka, yxa, flåhacka, spade och svärd; något bättre än vanilla-järn, men de kan inte bryta block på diamantnivå."
             },
             {
               "type": "stats",
@@ -4968,13 +4968,13 @@
         },
         {
           "id": "electric_hoe",
-          "title": "Elektrisk hacka",
+          "title": "Elektrisk flåhacka",
           "icon": "alaindustrial:electric_hoe",
           "pages": [
             {
               "type": "text",
-              "title": "Elektrisk hacka",
-              "text": "En laddningsbar EU-hacka — plöjer åkermark och bryter hö, löv och mossa snabbare än en diamanthacka, förbrukar 50 EU per användning och går aldrig sönder."
+              "title": "Elektrisk flåhacka",
+              "text": "En laddningsbar EU-flåhacka — plöjer åkermark och bryter hö, löv och mossa snabbare än en diamantflåhacka, förbrukar 50 EU per användning och går aldrig sönder."
             },
             {
               "type": "stats",

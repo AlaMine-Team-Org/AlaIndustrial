@@ -16,12 +16,12 @@
             {
               "type": "text",
               "title": "Bienvenue",
-              "text": "Voici le guide d'Ala Industrial — énergie EU, générateurs, machines et câbles.\n\nChoisissez une section à gauche, tournez les pages avec les flèches. Le bouton « Ouvrir le wiki » en haut ouvre le site complet du guide."
+              "text": "Voici le guide d’Ala Industrial — énergie EU, générateurs, machines et câbles.\n\nChoisissez une section à gauche, tournez les pages avec les flèches. Le bouton « Ouvrir le wiki » en haut ouvre le site complet du guide."
             },
             {
               "type": "text",
               "title": "Premiers pas",
-              "text": "1. Extrayez le minerai du mod — commencez par l'étain.\n2. Placez un panneau solaire — le générateur le plus simple.\n3. Reliez-y un câble en cuivre.\n4. Branchez votre première machine — le broyeur.\n\nLes détails sont dans les sections Énergie et Traitement."
+              "text": "1. Extrayez le minerai du mod — commencez par l’étain.\n2. Placez un panneau solaire — le générateur le plus simple.\n3. Reliez-y un câble en cuivre.\n4. Branchez votre première machine — le broyeur.\n\nLes détails sont dans les sections Énergie et Traitement."
             }
           ]
         }
@@ -29,28 +29,28 @@
     },
     {
       "id": "energy_basics",
-      "title": "Bases de l'énergie",
+      "title": "Bases de l’énergie",
       "icon": "alaindustrial:copper_cable",
       "entries": [
         {
           "id": "eu_basics",
-          "title": "Qu'est-ce que l'EU",
+          "title": "Qu’est-ce que l’EU",
           "icon": "alaindustrial:copper_cable",
           "pages": [
             {
               "type": "text",
               "title": "Énergie EU",
-              "text": "L'EU (unité d'énergie) est l'unité d'énergie du mod. Les générateurs produisent des EU, les câbles les transmettent, le stockage les conserve et les machines les consomment. C'est un système distinct de la redstone vanilla."
+              "text": "L’EU (unité d’énergie) est l’unité d’énergie du mod. Les générateurs produisent des EU, les câbles les transmettent, le stockage les conserve et les machines les consomment. C’est un système distinct de la redstone vanilla."
             },
             {
               "type": "text",
               "title": "Paliers de tension",
-              "text": "L'énergie circule en paquets plafonnés par une tension par tick :\n• LV — jusqu'à 32 EU/tick (blocs de base)\n• MV — jusqu'à 128 EU/tick\n• HV — jusqu'à 512 EU/tick\n\nLa limite d'un palier est un débit par tick, pas un seuil de rupture : les blocs ne sont pas détruits par une « surtension »."
+              "text": "L’énergie circule en paquets plafonnés par une tension par tick :\n• LV — jusqu’à 32 EU/tick (blocs de base)\n• MV — jusqu’à 128 EU/tick\n• HV — jusqu’à 512 EU/tick\n\nLa limite d’un palier est un débit par tick, pas un seuil de rupture : les blocs ne sont pas détruits par une « surtension »."
             },
             {
               "type": "text",
               "title": "Câbles",
-              "text": "Les câbles relient les blocs en un réseau électrique et transportent l’EU. Tout câble perd de l’énergie sur la distance : plus la ligne est longue, plus la perte est grande.\n\nIl existe trois types, et ils diffèrent :\n• Étain — étroit (8 EU/t) mais presque sans perte : pour les fermes solaires\n• Cuivre — le polyvalent (12 EU/t)\n• Or — le plus large (48 EU/t), mais plus déperditif\n\nNe mélangez pas les types sur une même ligne : tout le réseau suit le câble le plus puissant qu’il contient, pertes comprises."
+              "text": "Les câbles relient les blocs en un réseau électrique et transportent l’EU. Tout câble perd de l’énergie sur la distance : plus la ligne est longue, plus la perte est grande.\n\nIl existe trois types, et ils diffèrent :\n• Étain — étroit (8 EU/t) mais presque sans perte : pour les fermes solaires\n• Cuivre — le polyvalent (12 EU/t)\n• Or — le plus large (48 EU/t), mais plus déperditif\n\nNe mélangez pas les types sur une même ligne : tout le réseau suit le câble le plus puissant qu’il contient, pertes comprises."
             }
           ]
         }
@@ -69,27 +69,27 @@
             {
               "type": "text",
               "title": "Où chercher",
-              "text": "Le pétrole ne se fabrique ni ne se cuit — il se trouve, et c'est tout, partout à la Surface. Les gisements existent en quatre tailles :\n\n• Flaque de surface — une tous les 150 chunks, juste un avant-goût\n• Lac de mine — Y -40..-8, un tous les 50 chunks : votre source principale\n• Réservoir profond — Y -50..-30, un tous les 40 chunks, trois fois plus large\n• Veine de pétrole — une tous les 600 chunks, visible depuis la surface\n\nLe pétrole ne se génère jamais dans les villages, les mines abandonnées, les forteresses ni la cité antique."
+              "text": "Le pétrole ne se fabrique ni ne se cuit — il se trouve, et c’est tout, partout à la Surface. Les gisements existent en quatre tailles :\n\n• Flaque de surface — une tous les 150 chunks, juste un avant-goût\n• Lac de mine — Y -40..-8, un tous les 50 chunks : votre source principale\n• Réservoir profond — Y -50..-30, un tous les 40 chunks, trois fois plus large\n• Veine de pétrole — une tous les 600 chunks, visible depuis la surface\n\nLe pétrole ne se génère jamais dans les villages, les mines abandonnées, les forteresses ni la cité antique."
             },
             {
               "type": "text",
-              "title": "Un gisement s'épuise",
-              "text": "Un bloc de pétrole que vous puisez est perdu pour de bon — contrairement à l'eau, le gisement ne se reforme pas.\n\nUn lac de mine donne environ 160 seaux, un réservoir profond environ 1300, le dôme d'une veine près de quatre mille. Une fois l'un vidé, vous partez chercher le suivant : notez donc l'endroit dès que vous en trouvez un.\n\nPuiser au seau prend du temps : posez une Pompe à côté et elle vide tout le gisement dans un réservoir toute seule."
+              "title": "Un gisement s’épuise",
+              "text": "Un bloc de pétrole que vous puisez est perdu pour de bon — contrairement à l’eau, le gisement ne se reforme pas.\n\nUn lac de mine donne environ 160 seaux, un réservoir profond environ 1300, le dôme d’une veine près de quatre mille. Une fois l’un vidé, vous partez chercher le suivant : notez donc l’endroit dès que vous en trouvez un.\n\nPuiser au seau prend du temps : posez une Pompe à côté et elle vide tout le gisement dans un réservoir toute seule."
             },
             {
               "type": "text",
               "title": "Dans le pétrole",
-              "text": "Le pétrole est épais — vous y pataugez plutôt que vous n'y nagez, et vos déplacements ralentissent nettement.\n\n• Maintenez le saut pour remonter, environ un bloc par seconde — plus lent que dans l'eau, et même que dans la lave\n• Impossible de respirer : la tête immergée, votre air se vide comme sous l'eau, puis les dégâts arrivent\n• Les dégâts de chute sont entièrement annulés tant que vous êtes dans le pétrole\n• La vue en souffre : un voile sombre à l'écran, plus rien de visible au-delà de neuf blocs\n\nCalculez une descente dans le puits d'une veine sur votre réserve d'air, pas sur sa profondeur."
+              "text": "Le pétrole est épais — vous y pataugez plutôt que vous n’y nagez, et vos déplacements ralentissent nettement.\n\n• Maintenez le saut pour remonter, environ un bloc par seconde — plus lent que dans l’eau, et même que dans la lave\n• Impossible de respirer : la tête immergée, votre air se vide comme sous l’eau, puis les dégâts arrivent\n• Les dégâts de chute sont entièrement annulés tant que vous êtes dans le pétrole\n• La vue en souffre : un voile sombre à l’écran, plus rien de visible au-delà de neuf blocs\n\nCalculez une descente dans le puits d’une veine sur votre réserve d’air, pas sur sa profondeur."
             },
             {
               "type": "text",
               "title": "Ça brûle",
-              "text": "Le pétrole s'enflamme facilement : il suffit qu'un feu se trouve à proximité — même en diagonale en dessous. De là, la flamme parcourt la nappe bloc par bloc jusqu'à ce que tout ait disparu, blocs sources compris. Le briquet enflamme un gisement instantanément, à tous les coups.\n\nLa lave, elle, n'enflamme PAS le pétrole — c'est voulu : les lacs souterrains se génèrent souvent juste contre des lacs de lave.\n\nUn mur plein d'un bloc d'épaisseur arrête la flamme. Et s'il vous faut du pétrole bien tranquille à côté d'une usine, désactivez le réglage oilBurns du mod : il devient alors totalement inerte."
+              "text": "Le pétrole s’enflamme facilement : il suffit qu’un feu se trouve à proximité — même en diagonale en dessous. De là, la flamme parcourt la nappe bloc par bloc jusqu’à ce que tout ait disparu, blocs sources compris. Le briquet enflamme un gisement instantanément, à tous les coups.\n\nLa lave, elle, n’enflamme PAS le pétrole — c’est voulu : les lacs souterrains se génèrent souvent juste contre des lacs de lave.\n\nUn mur plein d’un bloc d’épaisseur arrête la flamme. Et s’il vous faut du pétrole bien tranquille à côté d’une usine, désactivez le réglage oilBurns du mod : il devient alors totalement inerte."
             },
             {
               "type": "text",
-              "title": "Ce qu'il devient",
-              "text": "Le pétrole est le début de la chaîne du caoutchouc.\n\n1. Récoltez-le — au seau, à la Capsule à vide ou à la Pompe\n2. Polymériseur : 1000 mB de pétrole et 400 EU donnent du caoutchouc brut\n3. Vulcaniseur : caoutchouc brut + poudre de soufre + 400 EU\n4. Placez dessous un feu de camp (×1), de la lave/du magma (×2) ou un Chauffage électrique (×3)\n\nUne meilleure chaleur économise les matériaux : chaque opération consomme toujours un caoutchouc brut et quatre poudres de soufre."
+              "title": "Ce qu’il devient",
+              "text": "Le pétrole est le début de la chaîne du caoutchouc.\n\n1. Récoltez-le — au seau, à la Capsule à vide ou à la Pompe\n2. Polymériseur : 1000 mB de pétrole et 400 EU donnent du caoutchouc brut\n3. Vulcanisateur : caoutchouc brut + poudre de soufre + 400 EU\n4. Placez dessous un feu de camp (×1), de la lave/du magma (×2) ou un Chauffage électrique (×3)\n\nUne meilleure chaleur économise les matériaux : chaque opération consomme toujours un caoutchouc brut et quatre poudres de soufre."
             }
           ]
         }
@@ -107,18 +107,18 @@
           "pages": [
             {
               "type": "text",
-              "title": "Ce que c'est",
-              "text": "Le réacteur nucléaire n'est pas un bloc : c'est une salle que tu construis toi-même. Une boîte vide en châssis de réacteur, avec des colonnes de combustible dressées à l'intérieur.\n\nLa coque n'est pas décorative : c'est elle qui retient ce qui se passe là-dedans."
+              "title": "Ce que c’est",
+              "text": "Le réacteur nucléaire n’est pas un bloc : c’est une salle que tu construis toi-même. Une boîte vide en châssis de réacteur, avec des colonnes de combustible dressées à l’intérieur.\n\nLa coque n’est pas décorative : c’est elle qui retient ce qui se passe là-dedans."
             },
             {
               "type": "text",
               "title": "La construire",
-              "text": "1. Monte une boîte étanche en châssis de réacteur. À l'intérieur : de 3x3x3 jusqu'à 12x12x12.\n2. Encastre le contrôleur dans un mur, face vers l'extérieur.\n3. Pas le moindre trou — le contrôleur te dit où est la brèche.\n\nLa porte est facultative : tu peux t'emmurer et creuser pour ressortir."
+              "text": "1. Monte une boîte étanche en châssis de réacteur. À l’intérieur : de 3x3x3 jusqu’à 12x12x12.\n2. Encastre le contrôleur dans un mur, face vers l’extérieur.\n3. Pas le moindre trou — le contrôleur te dit où est la brèche.\n\nLa porte est facultative : tu peux t’emmurer et creuser pour ressortir."
             },
             {
               "type": "text",
               "title": "Les pièces de la coque",
-              "text": "- Verre de réacteur : une fenêtre, mais pas plus d'un tiers des murs\n- Porte de sas du réacteur : un sas, s'ouvre à la redstone et se referme seul\n- Entrée de réacteur : là où le tuyau d'eau traverse le mur\n- Sortie de réacteur : là où se branche le câble\n- Lampe de réacteur : n'éclaire que la salle, jamais l'extérieur"
+              "text": "- Verre de réacteur : une fenêtre, mais pas plus d’un tiers des murs\n- Porte de sas du réacteur : un sas, s’ouvre à la redstone et se referme seul\n- Entrée de réacteur : là où le tuyau d’eau traverse le mur\n- Sortie de réacteur : là où se branche le câble\n- Lampe de réacteur : n’éclaire que la salle, jamais l’extérieur"
             }
           ]
         },
@@ -129,18 +129,18 @@
           "pages": [
             {
               "type": "text",
-              "title": "La filière de l'uranium",
-              "text": "Minerai d'uranium -> broyeur -> centrifugeuse thermique -> compresseur.\n\nLa centrifugeuse donne du concentré d'uranium ; le compresseur en presse deux pour obtenir un uranium enrichi (U-235).\n\nFabriquez ensuite une gaine de barre de combustible et placez-y un uranium enrichi."
+              "title": "La filière de l’uranium",
+              "text": "Minerai d’uranium -> broyeur -> centrifugeuse thermique -> compresseur.\n\nLa centrifugeuse donne du concentré d’uranium ; le compresseur en presse deux pour obtenir un uranium enrichi (U-235).\n\nFabriquez ensuite une gaine de barre de combustible et placez-y un uranium enrichi."
             },
             {
               "type": "text",
               "title": "La colonne de réacteur",
-              "text": "Pose une colonne dans la salle et insère les barres au clic droit, jusqu'à quatre. On les voit à travers le verre.\n\nLes colonnes s'empilent : une tour entière se comporte comme une seule cuve."
+              "text": "Pose une colonne dans la salle et insère les barres au clic droit, jusqu’à quatre. On les voit à travers le verre.\n\nLes colonnes s’empilent : une tour entière se comporte comme une seule cuve."
             },
             {
               "type": "text",
-              "title": "Les barres s'épuisent",
-              "text": "La durabilité d'une barre EST sa charge restante. Toutes les barres d'une colonne s'usent ensemble, de façon égale.\n\nUne barre épuisée devient une gaine vide et reste en place dans le râtelier. Retirez-la à la main et rechargez-la avec un uranium enrichi — inutile d'en fabriquer une neuve."
+              "title": "Les barres s’épuisent",
+              "text": "La durabilité d’une barre EST sa charge restante. Toutes les barres d’une colonne s’usent ensemble, de façon égale.\n\nUne barre épuisée devient une gaine vide et reste en place dans le râtelier. Retirez-la à la main et rechargez-la avec un uranium enrichi — inutile d’en fabriquer une neuve."
             }
           ]
         },
@@ -152,17 +152,17 @@
             {
               "type": "text",
               "title": "Cinq étapes",
-              "text": "1. La salle est étanche\n2. Il y a des barres dans les colonnes\n3. Un câble est sur la sortie de réacteur\n4. Un signal de redstone atteint le contrôleur\n5. La profondeur n'est pas à zéro : le contrôleur a cinq boutons — 0 %, 25 %, 50 %, 75 %, 100 %"
+              "text": "1. La salle est étanche\n2. Il y a des barres dans les colonnes\n3. Un câble est sur la sortie de réacteur\n4. Un signal de redstone atteint le contrôleur\n5. La profondeur n’est pas à zéro : le contrôleur a cinq boutons — 0 %, 25 %, 50 %, 75 %, 100 %"
             },
             {
               "type": "text",
               "title": "Si rien ne se passe",
-              "text": "Ouvre le contrôleur : la ligne de production nomme elle-même ce qui manque — pas de barres, pas de signal, barres relevées ou tampon plein.\n\nPas de signal, c'est l'arrêt d'urgence. Tu baisses le levier et le réacteur s'arrête."
+              "text": "Ouvre le contrôleur : la ligne de production nomme elle-même ce qui manque — pas de barres, pas de signal, barres relevées ou tampon plein.\n\nPas de signal, c’est l’arrêt d’urgence. Tu baisses le levier et le réacteur s’arrête."
             },
             {
               "type": "text",
               "title": "Puissance",
-              "text": "Une colonne donne 24 EU/t. Plus de barres et des colonnes plus serrées donnent davantage : les colonnes voisines se renforcent entre elles.\n\nLe plafond est de 512 EU/t. Le bouton de profondeur choisi divise à parts égales la puissance, la chaleur et la consommation de combustible."
+              "text": "Une colonne donne 24 EU/t. Plus de barres et des colonnes plus serrées donnent davantage : les colonnes voisines se renforcent entre elles.\n\nLe plafond est de 512 EU/t. Le bouton de profondeur choisi divise à parts égales la puissance, la chaleur et la consommation de combustible."
             }
           ]
         },
@@ -174,17 +174,17 @@
             {
               "type": "text",
               "title": "La chaleur",
-              "text": "Le réacteur chauffe et la salle évacue la chaleur toute seule — d'autant plus vite qu'elle est chaude. Chaque réacteur trouve donc sa température et s'y tient.\n\nUne colonne se stabilise vers 15%. Deux côte à côte atteignent les deux tiers. Trois ou plus, la salle ne tient plus toute seule."
+              "text": "Le réacteur chauffe et la salle évacue la chaleur toute seule — d’autant plus vite qu’elle est chaude. Chaque réacteur trouve donc sa température et s’y tient.\n\nUne colonne se stabilise vers 15%. Deux côte à côte atteignent les deux tiers. Trois ou plus, la salle ne tient plus toute seule."
             },
             {
               "type": "text",
-              "title": "Le circuit d'eau",
-              "text": "L'eau n'est pas un radiateur mais un système de sécurité : elle s'enclenche dès que la jauge approche de la zone ambre et maintient le réacteur en dessous. L'ambre signifie donc que le refroidissement ne suit plus.\n\nPompe -> tuyau -> entrée du réacteur -> colonne. Réglez les faces du tuyau à l'entrée avec la clé : extraction à l'extérieur, insertion à l'intérieur. La colonne et la buse n'ont pas besoin de clé — une colonne ne prend que de l'eau et ne rend que de la vapeur."
+              "title": "Le circuit d’eau",
+              "text": "L’eau n’est pas un radiateur mais un système de sécurité : elle s’enclenche dès que la jauge approche de la zone ambre et maintient le réacteur en dessous. L’ambre signifie donc que le refroidissement ne suit plus.\n\nPompe -> tuyau -> entrée du réacteur -> colonne. Réglez les faces du tuyau à l’entrée avec la clé : extraction à l’extérieur, insertion à l’intérieur. La colonne et la buse n’ont pas besoin de clé — une colonne ne prend que de l’eau et ne rend que de la vapeur."
             },
             {
               "type": "text",
-              "title": "La vapeur",
-              "text": "L'eau portée à ébullition devient de la vapeur et s'accumule dans la colonne. Il faut l'évacuer : un tuyau depuis la face supérieure de la colonne → entrée de réacteur → une buse à vapeur à l'extérieur.\n\nLa buse doit donner sur l'air libre. Enterrée dans un mur, elle ne rejette rien et le circuit se bloque derrière."
+              "title": "Vapeur",
+              "text": "L’eau portée à ébullition devient de la vapeur et s’accumule dans la colonne. Il faut l’évacuer : un tuyau depuis la face supérieure de la colonne → entrée de réacteur → une buse à vapeur à l’extérieur.\n\nLa buse doit donner sur l’air libre. Enterrée dans un mur, elle ne rejette rien et le circuit se bloque derrière."
             }
           ]
         }
@@ -209,8 +209,8 @@
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 0–8 EU/t",
-                "Tampon : 4000 EU"
+                "Énergie : 0–8 EU/t",
+                "Tampon : 4000 EU"
               ]
             },
             {
@@ -241,14 +241,14 @@
             {
               "type": "text",
               "title": "Moulin à eau",
-              "text": "Un générateur LV passif — produit des EU à partir de l'eau courante (un courant) située à côté, sans carburant ni réservoirs."
+              "text": "Un générateur LV passif — produit des EU à partir de l’eau courante (un courant) située à côté, sans carburant ni réservoirs."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 0–4 EU/t",
-                "Tampon : 4000 EU"
+                "Énergie : 0–4 EU/t",
+                "Tampon : 4000 EU"
               ]
             },
             {
@@ -279,14 +279,14 @@
             {
               "type": "text",
               "title": "Générateur",
-              "text": "Un générateur simple au charbon et combustibles solides — la source d'EU LV de départ pour vos premières machines."
+              "text": "Un générateur simple au charbon et combustibles solides — la source d’EU LV de départ pour vos premières machines."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 8 EU/t",
-                "Tampon : 4000 EU"
+                "Énergie : 8 EU/t",
+                "Tampon : 4000 EU"
               ]
             },
             {
@@ -323,8 +323,8 @@
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 16 EU/t",
-                "Tampon : 4000 EU"
+                "Énergie : 16 EU/t",
+                "Tampon : 4000 EU"
               ]
             },
             {
@@ -355,14 +355,14 @@
             {
               "type": "text",
               "title": "Générateur paratonnerre",
-              "text": "Attrape un éclair et le met de côté dans sa pointe conductrice — une ration d'énergie rare mais énorme ; si la réserve est encore pleine, l'éclair est perdu."
+              "text": "Attrape un éclair et le met de côté dans sa pointe conductrice — une ration d’énergie rare mais énorme ; si la réserve est encore pleine, l’éclair est perdu."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 16–24 EU/t à la décharge",
-                "Tampon : 4000 EU"
+                "Énergie : 16–24 EU/t à la décharge",
+                "Tampon : 4000 EU"
               ]
             },
             {
@@ -399,8 +399,8 @@
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 4 EU/t (jour)",
-                "Tampon : 8000 EU"
+                "Énergie : 4 EU/t (jour)",
+                "Tampon : 8000 EU"
               ]
             }
           ]
@@ -419,8 +419,8 @@
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 3 EU/t (nuit)",
-                "Tampon : 8000 EU"
+                "Énergie : 3 EU/t (nuit)",
+                "Tampon : 8000 EU"
               ]
             }
           ]
@@ -433,14 +433,14 @@
             {
               "type": "text",
               "title": "Panneau solaire",
-              "text": "La première source d'énergie du mod — génère des EU le jour à ciel ouvert ; là où commence toute la chaîne énergétique."
+              "text": "La première source d’énergie du mod — génère des EU le jour à ciel ouvert ; là où commence toute la chaîne énergétique."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 1 EU/t (jour)",
-                "Tampon : 8000 EU"
+                "Énergie : 1 EU/t (jour)",
+                "Tampon : 8000 EU"
               ]
             },
             {
@@ -471,14 +471,14 @@
             {
               "type": "text",
               "title": "Station de recharge",
-              "text": "Une plaque qui recharge tout l'équipement alimenté du joueur qui se tient dessus — inventaire, seconde main et équipement porté — sans le moindre clic."
+              "text": "Une plaque qui recharge tout l’équipement alimenté du joueur qui se tient dessus — inventaire, seconde main et équipement porté — sans le moindre clic."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 20 000 EU",
-                "Tampon : 20 000 EU"
+                "Énergie : 20 000 EU",
+                "Tampon : 20 000 EU"
               ]
             },
             {
@@ -503,19 +503,19 @@
         },
         {
           "id": "energy_condenser",
-          "title": "Condenseur d'énergie",
+          "title": "Condenseur d’énergie",
           "icon": "alaindustrial:energy_condenser",
           "pages": [
             {
               "type": "text",
-              "title": "Condenseur d'énergie",
-              "text": "Récupère le surplus du réseau et le comprime en caillot d'énergie ; le palier obtenu dépend du moment où tu le retires."
+              "title": "Condenseur d’énergie",
+              "text": "Récupère le surplus du réseau et le comprime en caillot d’énergie ; le palier obtenu dépend du moment où tu le retires."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 128 EU/t en entrée"
+                "Énergie : 128 EU/t en entrée"
               ]
             },
             {
@@ -546,13 +546,13 @@
             {
               "type": "text",
               "title": "Coffre à batteries renforcé",
-              "text": "Le bloc de stockage MV : il contient 100 000 EU, cinq fois le tampon de départ, et les déplace quatre fois plus vite, à 128 EU/tick."
+              "text": "Le bloc de stockage MV : il contient 100 000 EU, cinq fois le tampon de départ, et les déplace quatre fois plus vite, à 128 EU/tick."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 100 000 EU"
+                "Énergie : 100 000 EU"
               ]
             },
             {
@@ -583,13 +583,13 @@
             {
               "type": "text",
               "title": "Coffre à batteries",
-              "text": "Le bloc de stockage LV de départ — contient 20 000 EU, met en réserve le surplus d'un générateur et l'alimente aux machines à 32 EU/tick."
+              "text": "Le bloc de stockage LV de départ — contient 20 000 EU, met en réserve le surplus d’un générateur et l’alimente aux machines à 32 EU/tick."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 20 000 EU"
+                "Énergie : 20 000 EU"
               ]
             },
             {
@@ -620,14 +620,14 @@
             {
               "type": "text",
               "title": "Câble en or",
-              "text": "Un large câble MV nu, très déperditif, qui inflige une sérieuse décharge au contact tant que l'énergie circule réellement."
+              "text": "Un large câble MV nu, très déperditif, qui inflige une sérieuse décharge au contact tant que l’énergie circule réellement."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : ≤128 EU/paquet",
-                "Tampon : 48 EU"
+                "Énergie : ≤128 EU/paquet",
+                "Tampon : 48 EU"
               ]
             },
             {
@@ -658,14 +658,14 @@
             {
               "type": "text",
               "title": "Câble en or isolé",
-              "text": "Un câble MV en or gainé de caoutchouc : moitié moins de pertes et immunité totale aux décharges au contact."
+              "text": "Un câble MV en or gainé de caoutchouc : moitié moins de pertes et immunité totale aux décharges au contact."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : ≤128 EU/paquet",
-                "Tampon : 48 EU"
+                "Énergie : ≤128 EU/paquet",
+                "Tampon : 48 EU"
               ]
             },
             {
@@ -696,14 +696,14 @@
             {
               "type": "text",
               "title": "Câble en cuivre isolé",
-              "text": "Un câble LV en cuivre gainé de caoutchouc : moitié moins de pertes et immunité totale aux décharges au contact."
+              "text": "Un câble LV en cuivre gainé de caoutchouc : moitié moins de pertes et immunité totale aux décharges au contact."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : ≤32 EU/paquet",
-                "Tampon : 12 EU"
+                "Énergie : ≤32 EU/paquet",
+                "Tampon : 12 EU"
               ]
             },
             {
@@ -734,14 +734,14 @@
             {
               "type": "text",
               "title": "Câble en étain isolé",
-              "text": "Un câble LV en étain gainé de caoutchouc : pertes minimes et immunité totale aux décharges au contact."
+              "text": "Un câble LV en étain gainé de caoutchouc : pertes minimes et immunité totale aux décharges au contact."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : ≤8 EU/paquet",
-                "Tampon : 8 EU"
+                "Énergie : ≤8 EU/paquet",
+                "Tampon : 8 EU"
               ]
             },
             {
@@ -772,14 +772,14 @@
             {
               "type": "text",
               "title": "Câble en électrum isolé",
-              "text": "Un câble en électrum HV gainé de caoutchouc : les pertes les plus faibles du mod et une immunité totale aux décharges au contact."
+              "text": "Un câble en électrum HV gainé de caoutchouc : les pertes les plus faibles du mod et une immunité totale aux décharges au contact."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : ≤512 EU/paquet",
-                "Tampon : 192 EU"
+                "Énergie : ≤512 EU/paquet",
+                "Tampon : 192 EU"
               ]
             },
             {
@@ -810,14 +810,14 @@
             {
               "type": "text",
               "title": "Câble en cuivre",
-              "text": "Un câble LV bon marché et robuste ; le fil nu électrocute les joueurs tant qu'il est sous tension, relié à un réseau alimenté."
+              "text": "Un câble LV bon marché et robuste ; le fil nu électrocute les joueurs tant qu’il est sous tension, relié à un réseau alimenté."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : ≤32 EU/paquet",
-                "Tampon : 12 EU"
+                "Énergie : ≤32 EU/paquet",
+                "Tampon : 12 EU"
               ]
             },
             {
@@ -848,14 +848,14 @@
             {
               "type": "text",
               "title": "Câble en étain",
-              "text": "Le câble LV le moins cher et presque sans perte ; tant que l'énergie circule réellement, le fil nu électrocute les joueurs au contact."
+              "text": "Le câble LV le moins cher et presque sans perte ; tant que l’énergie circule réellement, le fil nu électrocute les joueurs au contact."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : ≤8 EU/paquet",
-                "Tampon : 8 EU"
+                "Énergie : ≤8 EU/paquet",
+                "Tampon : 8 EU"
               ]
             },
             {
@@ -886,14 +886,14 @@
             {
               "type": "text",
               "title": "Câble en électrum",
-              "text": "Un câble HV nu en lingots d'électrum avec une âme en poudre de diamant — le câble le plus large de la gamme et le moins déperditif, au prix d'une recette coûteuse."
+              "text": "Un câble HV nu en lingots d’électrum avec une âme en poudre de diamant — le câble le plus large de la gamme et le moins déperditif, au prix d’une recette coûteuse."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : ≤512 EU/paquet",
-                "Tampon : 192 EU"
+                "Énergie : ≤512 EU/paquet",
+                "Tampon : 192 EU"
               ]
             },
             {
@@ -924,7 +924,7 @@
             {
               "type": "text",
               "title": "Terre irradiée",
-              "text": "La marque que laisse un accident nucléaire : un sol empoisonné par l'explosion d'un réacteur. Il irradie un cran en dessous de l'uranium — même depuis un sac à dos — et s'estompe de lui-même en quatre paliers, plus vite sous l'eau. Se creuse et se transporte comme n'importe quel bloc, mais ne se fabrique jamais."
+              "text": "La marque que laisse un accident nucléaire : un sol empoisonné par l’explosion d’un réacteur. Il irradie un cran en dessous de l’uranium — même depuis un sac à dos — et s’estompe de lui-même en quatre paliers, plus vite sous l’eau. Se creuse et se transporte comme n’importe quel bloc, mais ne se fabrique jamais."
             }
           ]
         },
@@ -936,13 +936,13 @@
             {
               "type": "text",
               "title": "Contrôleur de réacteur",
-              "text": "Le cerveau d'un réacteur : il inspecte l'enveloppe, dit ce qui ne va pas et exactement où, mène la réaction et fournit des EU. La salle est facultative — sans elle, il tourne plus faiblement et fait fondre les alentours."
+              "text": "Le cerveau d’un réacteur : il inspecte l’enveloppe, dit ce qui ne va pas et exactement où, mène la réaction et fournit des EU. La salle est facultative — sans elle, il tourne plus faiblement et fait fondre les alentours."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Tampon : 200 000 EU"
+                "Tampon : 200 000 EU"
               ]
             },
             {
@@ -973,7 +973,7 @@
             {
               "type": "text",
               "title": "Gaine de barre",
-              "text": "La gaine d'une barre de combustible, sans uranium : fabriquée en 3x3, remplie d'un seul uranium enrichi, et rendue par la colonne dès que la barre est épuisée."
+              "text": "La gaine d’une barre de combustible, sans uranium : fabriquée en 3x3, remplie d’un seul uranium enrichi, et rendue par la colonne dès que la barre est épuisée."
             },
             {
               "type": "recipe",
@@ -1003,7 +1003,7 @@
             {
               "type": "text",
               "title": "Buse à vapeur",
-              "text": "Le bout du circuit de refroidissement : elle prend la vapeur d'un tuyau, la relâche dans l'air en panache et la détruit — 100 mB/t par buse."
+              "text": "Le bout du circuit de refroidissement : elle prend la vapeur d’un tuyau, la relâche dans l’air en panache et la détruit — 100 mB/t par buse."
             },
             {
               "type": "recipe",
@@ -1033,7 +1033,7 @@
             {
               "type": "text",
               "title": "Colonne de réacteur",
-              "text": "Un râtelier transparent pour quatre barres, avec deux réservoirs — eau et vapeur : rempli au clic droit, il use ensemble toutes les barres chargées, et le niveau de combustible comme celui du caloporteur se lisent d'un bout à l'autre de la salle, sans le moindre menu."
+              "text": "Un râtelier transparent pour quatre barres, avec deux réservoirs — eau et vapeur : rempli au clic droit, il use ensemble toutes les barres chargées, et le niveau de combustible comme celui du caloporteur se lisent d’un bout à l’autre de la salle, sans le moindre menu."
             },
             {
               "type": "recipe",
@@ -1063,13 +1063,13 @@
             {
               "type": "text",
               "title": "Entrée de réacteur",
-              "text": "Le seul endroit où un fluide peut traverser une enveloppe scellée : un passage de 50 mB/t qui fonctionne dans les deux sens — l'eau entre, la vapeur sort — tout en restant un morceau de mur à part entière."
+              "text": "Le seul endroit où un fluide peut traverser une enveloppe scellée : un passage de 50 mB/t qui fonctionne dans les deux sens — l’eau entre, la vapeur sort — tout en restant un morceau de mur à part entière."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Tampon : 0 EU"
+                "Tampon : 0 EU"
               ]
             },
             {
@@ -1100,13 +1100,13 @@
             {
               "type": "text",
               "title": "Sortie de réacteur",
-              "text": "Une prise encastrée dans l'enveloppe de la salle : le contrôleur est emmuré et n'a aucune face qu'un câble puisse atteindre, donc le courant sort par un morceau de mur prévu pour cela — un tampon de 512 EU qui donne sur chaque face et que le contrôleur réalimente."
+              "text": "Une prise encastrée dans l’enveloppe de la salle : le contrôleur est emmuré et n’a aucune face qu’un câble puisse atteindre, donc le courant sort par un morceau de mur prévu pour cela — un tampon de 512 EU qui donne sur chaque face et que le contrôleur réalimente."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Tampon : 512 EU"
+                "Tampon : 512 EU"
               ]
             },
             {
@@ -1131,19 +1131,19 @@
         },
         {
           "id": "reactor_lever",
-          "title": "Levier du réacteur",
+          "title": "Levier de réacteur",
           "icon": "alaindustrial:reactor_lever",
           "pages": [
             {
               "type": "text",
-              "title": "Levier du réacteur",
-              "text": "Un levier en alliage de blindage : un signal maintenu depuis l'intérieur d'une salle scellée — l'arrêt d'urgence du réacteur, qui ne rompt ni le blindage de la salle ni ne fond avec son contenu."
+              "title": "Levier de réacteur",
+              "text": "Un levier en alliage de blindage : un signal maintenu depuis l’intérieur d’une salle scellée — l’arrêt d’urgence du réacteur, qui ne rompt ni le blindage de la salle ni ne fond avec son contenu."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Tampon : 0 EU"
+                "Tampon : 0 EU"
               ]
             },
             {
@@ -1174,7 +1174,7 @@
             {
               "type": "text",
               "title": "Barre de combustible",
-              "text": "Le combustible du réacteur : de l'uranium enrichi dans une chemise de fer sur un socle de blindage. Elle contient 144 000 EU, montre ce qu'il en reste sous forme de durabilité et laisse une gaine vide lorsqu'elle s'épuise."
+              "text": "Le combustible du réacteur : de l’uranium enrichi dans une chemise de fer sur un socle de blindage. Elle contient 144 000 EU, montre ce qu’il en reste sous forme de durabilité et laisse une gaine vide lorsqu’elle s’épuise."
             },
             {
               "type": "recipe",
@@ -1205,20 +1205,20 @@
       "entries": [
         {
           "id": "vulcanizer",
-          "title": "Vulcaniseur",
+          "title": "Vulcanisateur",
           "icon": "alaindustrial:vulcanizer",
           "pages": [
             {
               "type": "text",
-              "title": "Vulcaniseur",
+              "title": "Vulcanisateur",
               "text": "Une machine LV qui combine du caoutchouc brut et de la poudre de soufre pour produire du caoutchouc. Elle nécessite des EU et de la chaleur par-dessous ; une source plus puissante augmente le rendement."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 400 EU/op",
-                "Tampon : 800 EU"
+                "Énergie : 400 EU/op",
+                "Tampon : 800 EU"
               ]
             },
             {
@@ -1255,8 +1255,8 @@
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 300 EU/op",
-                "Tampon : 800 EU"
+                "Énergie : 300 EU/op",
+                "Tampon : 800 EU"
               ]
             },
             {
@@ -1323,8 +1323,8 @@
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 260 EU/op",
-                "Tampon : 800 EU"
+                "Énergie : 260 EU/op",
+                "Tampon : 800 EU"
               ]
             },
             {
@@ -1355,14 +1355,14 @@
             {
               "type": "text",
               "title": "Machine à conserves",
-              "text": "Une machine LV qui réduit n'importe quelle nourriture en rations identiques. Les rations s'empilent quelle que soit leur origine : une douzaine d'emplacements de restes se ramène à un seul."
+              "text": "Une machine LV qui réduit n’importe quelle nourriture en rations identiques. Les rations s’empilent quelle que soit leur origine : une douzaine d’emplacements de restes se ramène à un seul."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 200 EU/ration",
-                "Tampon : 800 EU"
+                "Énergie : 200 EU/ration",
+                "Tampon : 800 EU"
               ]
             },
             {
@@ -1393,14 +1393,14 @@
             {
               "type": "text",
               "title": "Scierie",
-              "text": "Scie n'importe quel bois en planches, bâtons, dalles ou escaliers avec un meilleur rendement qu'à la main. Quatre modes commutables, fonctionne aux EU."
+              "text": "Scie n’importe quel bois en planches, bâtons, dalles ou escaliers avec un meilleur rendement qu’à la main. Quatre modes commutables, fonctionne aux EU."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 160 EU/op",
-                "Tampon : 800 EU"
+                "Énergie : 160 EU/op",
+                "Tampon : 800 EU"
               ]
             },
             {
@@ -1431,14 +1431,14 @@
             {
               "type": "text",
               "title": "Polymériseur",
-              "text": "Distille le pétrole en caoutchouc brut — un réservoir de 10 seaux, un seau par cycle. Le caoutchouc est ensuite combiné au soufre dans un Vulcaniseur."
+              "text": "Distille le pétrole en caoutchouc brut — un réservoir de 10 seaux, un seau par cycle. Le caoutchouc est ensuite combiné au soufre dans un Vulcanisateur."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 400 EU/op",
-                "Tampon : 800 EU"
+                "Énergie : 400 EU/op",
+                "Tampon : 800 EU"
               ]
             },
             {
@@ -1469,14 +1469,14 @@
             {
               "type": "text",
               "title": "Établi de réparation",
-              "text": "Remet en état un rotor d'éolienne ou une roue à eau usés contre un objet et un peu d'EU — mais chaque réparation abaisse définitivement le plafond de durabilité de la pièce."
+              "text": "Remet en état un rotor d’éolienne ou une roue à eau usés contre un objet et un peu d’EU — mais chaque réparation abaisse définitivement le plafond de durabilité de la pièce."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 9600–28800 EU/op",
-                "Tampon : 800 EU"
+                "Énergie : 9600–28800 EU/op",
+                "Tampon : 800 EU"
               ]
             },
             {
@@ -1501,20 +1501,20 @@
         },
         {
           "id": "assembler",
-          "title": "Assembleuse",
+          "title": "Assembleur",
           "icon": "alaindustrial:assembler",
           "pages": [
             {
               "type": "text",
-              "title": "Assembleuse",
+              "title": "Assembleur",
               "text": "Produit en continu des recettes d’établi à partir de plans, contre des EU, en puisant les matériaux dans son propre stock modulaire. Garde une file de trois plans."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 480 EU/op",
-                "Tampon : 12000 EU"
+                "Énergie : 480 EU/op",
+                "Tampon : 12000 EU"
               ]
             },
             {
@@ -1545,14 +1545,14 @@
             {
               "type": "text",
               "title": "Four à alliages",
-              "text": "Une machine LV dotée de trois emplacements d'entrée interchangeables qui fond plusieurs métaux en un seul alliage. L'ordre de chargement n'a aucune importance ; le cuivre, l'étain, le fer, le nickel, l'or et l'argent deviennent du bronze, de l'invar, du cupronickel et de l'électrum."
+              "text": "Une machine LV dotée de trois emplacements d’entrée interchangeables qui fond plusieurs métaux en un seul alliage. L’ordre de chargement n’a aucune importance ; le cuivre, l’étain, le fer, le nickel, l’or et l’argent deviennent du bronze, de l’invar, du cupronickel et de l’électrum."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 1200 EU/op",
-                "Tampon : 800 EU"
+                "Énergie : 1200 EU/op",
+                "Tampon : 800 EU"
               ]
             },
             {
@@ -1583,14 +1583,14 @@
             {
               "type": "text",
               "title": "Centrifugeuse thermique",
-              "text": "Une machine LV avec une montée en régime : un signal de redstone lance le rotor, et un chauffage brûlant en dessous lui permet de couper la poudre d'uranium en deux — le second doublement de minerai après le broyeur."
+              "text": "Une machine LV avec une montée en régime : un signal de redstone lance le rotor, et un chauffage brûlant en dessous lui permet de couper la poudre d’uranium en deux — le second doublement de minerai après le broyeur."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 800 EU/op",
-                "Tampon : 800 EU"
+                "Énergie : 800 EU/op",
+                "Tampon : 800 EU"
               ]
             },
             {
@@ -1621,14 +1621,14 @@
             {
               "type": "text",
               "title": "Recycleur",
-              "text": "Broie n'importe quel déchet en briquettes de scorie. La qualité ne dépend pas de la quantité mais de la variété : une fournée d'une seule sorte donne du lest, un bon mélange donne de la scorie riche."
+              "text": "Broie n’importe quel déchet en briquettes de scorie. La qualité ne dépend pas de la quantité mais de la variété : une fournée d’une seule sorte donne du lest, un bon mélange donne de la scorie riche."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 8 EU/t",
-                "Tampon : 800 EU"
+                "Énergie : 8 EU/t",
+                "Tampon : 800 EU"
               ]
             },
             {
@@ -1665,8 +1665,8 @@
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 240 EU/op",
-                "Tampon : 800 EU"
+                "Énergie : 240 EU/op",
+                "Tampon : 800 EU"
               ]
             },
             {
@@ -1697,13 +1697,13 @@
             {
               "type": "text",
               "title": "Bain galvanique",
-              "text": "Machine de galvanoplastie BT : elle transforme fibre et poudre d'argent en fil de flux dans un bain d'eau — l'entrée vers la gamme de tissu de flux et l'armure EU."
+              "text": "Machine de galvanoplastie BT : elle transforme fibre et poudre d’argent en fil de flux dans un bain d’eau — l’entrée vers la gamme de tissu de flux et l’armure EU."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Tampon : 800 EU"
+                "Tampon : 800 EU"
               ]
             },
             {
@@ -1734,14 +1734,14 @@
             {
               "type": "text",
               "title": "Chauffage électrique",
-              "text": "Un bloc d'appoint LV qui se place sous le vulcanisateur. Il doit d'abord monter en température ; une fois chaud, il donne la chaleur maximale x3. À froid, ce n'est pas du tout une source de chaleur."
+              "text": "Un bloc d’appoint LV qui se place sous le vulcanisateur. Il doit d’abord monter en température ; une fois chaud, il donne la chaleur maximale x3. À froid, ce n’est pas du tout une source de chaleur."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 6 EU/t",
-                "Tampon : 2400 EU"
+                "Énergie : 6 EU/t",
+                "Tampon : 2400 EU"
               ]
             },
             {
@@ -1772,14 +1772,14 @@
             {
               "type": "text",
               "title": "Four électrique",
-              "text": "Fond tout ce que fait le four vanilla, plus les poudres du mod en lingots. Fonctionne aux EU plutôt qu'au carburant."
+              "text": "Fond tout ce que fait le four vanilla, plus les poudres du mod en lingots. Fonctionne aux EU plutôt qu’au carburant."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 200 EU/op",
-                "Tampon : 800 EU"
+                "Énergie : 200 EU/op",
+                "Tampon : 800 EU"
               ]
             },
             {
@@ -1810,14 +1810,14 @@
             {
               "type": "text",
               "title": "Fermenteur",
-              "text": "Une machine LV qui fermente de la matière organique avec de l'eau en biocarburant (un fluide, toujours) et biomasse (un objet, de temps en temps). Le premier carburant du mod qui se cultive au lieu d'être pompé : chaque lot coûte pareil, et le rendement ne dépend que de ce qu'on lui donne — de l'herbe à la carotte dorée."
+              "text": "Une machine LV qui fermente de la matière organique avec de l’eau en biocarburant (un fluide, toujours) et biomasse (un objet, de temps en temps). Le premier carburant du mod qui se cultive au lieu d’être pompé : chaque lot coûte pareil, et le rendement ne dépend que de ce qu’on lui donne — de l’herbe à la carotte dorée."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 600 EU/op",
-                "Tampon : 800 EU"
+                "Énergie : 600 EU/op",
+                "Tampon : 800 EU"
               ]
             },
             {
@@ -1848,13 +1848,13 @@
             {
               "type": "text",
               "title": "Pompe",
-              "text": "Une pompe LV qui aspire le fluide du monde ou des réservoirs adjacents dans son réservoir interne de 10 seaux et le transmet aux récepteurs ; échange du fluide avec les capsules et les conteneurs d'autres mods."
+              "text": "Une pompe LV qui aspire le fluide du monde ou des réservoirs adjacents dans son réservoir interne de 10 seaux et le transmet aux récepteurs ; échange du fluide avec les capsules et les conteneurs d’autres mods."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Tampon : 4000 EU"
+                "Tampon : 4000 EU"
               ]
             },
             {
@@ -1891,8 +1891,8 @@
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 400 EU/op",
-                "Tampon : 800 EU"
+                "Énergie : 400 EU/op",
+                "Tampon : 800 EU"
               ]
             },
             {
@@ -1924,12 +1924,12 @@
       "entries": [
         {
           "id": "item_pipe",
-          "title": "Tuyau d'objets",
+          "title": "Tuyau d’objets",
           "icon": "alaindustrial:item_pipe",
           "pages": [
             {
               "type": "text",
-              "title": "Tuyau d'objets",
+              "title": "Tuyau d’objets",
               "text": "Tuyau multipièce passif qui transfère des objets entre inventaires."
             },
             {
@@ -1960,7 +1960,7 @@
             {
               "type": "text",
               "title": "Tuyau à objets avancé",
-              "text": "Tuyau à objets de deuxième niveau : le double de débit ; une ligne va à la vitesse de son tronçon le plus lent."
+              "text": "Tuyau à objets de deuxième niveau : le double de débit ; une ligne va à la vitesse de son tronçon le plus lent."
             },
             {
               "type": "recipe",
@@ -2026,7 +2026,7 @@
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Capacité : 8 seaux"
+                "Capacité : 8 seaux"
               ]
             },
             {
@@ -2064,7 +2064,7 @@
             {
               "type": "text",
               "title": "Biomasse",
-              "text": "Le résidu solide de la fermentation — lâché par le fermenteur de temps en temps, plus la charge est riche, plus c'est probable. Il ne sert encore à rien : un marque-place délibéré, livré honnêtement, sans usage inventé."
+              "text": "Le résidu solide de la fermentation — lâché par le fermenteur de temps en temps, plus la charge est riche, plus c’est probable. Il ne sert encore à rien : un marque-place délibéré, livré honnêtement, sans usage inventé."
             }
           ]
         },
@@ -2076,7 +2076,7 @@
             {
               "type": "text",
               "title": "Biocarburant",
-              "text": "Un fluide olive trouble brassé dans le fermenteur — le premier carburant du mod qui se cultive au lieu d'être pompé. Il n'existe pas à l'état naturel ; une seconde distillation donne la solution nutritive que l'arroseur pulvérise."
+              "text": "Un fluide olive trouble brassé dans le fermenteur — le premier carburant du mod qui se cultive au lieu d’être pompé. Il n’existe pas à l’état naturel ; une seconde distillation donne la solution nutritive que l’arroseur pulvérise."
             }
           ]
         },
@@ -2088,7 +2088,7 @@
             {
               "type": "text",
               "title": "Bloc de fer trempé",
-              "text": "Un bloc compact de 9 lingots de fer trempé — stocke le métal dans un seul emplacement, se fabrique ou se défabrique à l'établi sans perte."
+              "text": "Un bloc compact de 9 lingots de fer trempé — stocke le métal dans un seul emplacement, se fabrique ou se défabrique à l’établi sans perte."
             },
             {
               "type": "recipe",
@@ -2118,7 +2118,7 @@
             {
               "type": "text",
               "title": "Lingot de bronze",
-              "text": "L'alliage cuivre-étain de production courante — trois lingots de cuivre plus un lingot d'étain donnent deux lingots de bronze dans le four à alliages."
+              "text": "L’alliage cuivre-étain de production courante — trois lingots de cuivre plus un lingot d’étain donnent deux lingots de bronze dans le four à alliages."
             }
           ]
         },
@@ -2136,13 +2136,13 @@
         },
         {
           "id": "invar_ingot",
-          "title": "Lingot d'invar",
+          "title": "Lingot d’invar",
           "icon": "alaindustrial:invar_ingot",
           "pages": [
             {
               "type": "text",
-              "title": "Lingot d'invar",
-              "text": "Un alliage fer-nickel produit un par un — deux lingots de fer plus un lingot de nickel donnent un seul lingot d'invar dans le four à alliages."
+              "title": "Lingot d’invar",
+              "text": "Un alliage fer-nickel produit un par un — deux lingots de fer plus un lingot de nickel donnent un seul lingot d’invar dans le four à alliages."
             }
           ]
         },
@@ -2172,13 +2172,13 @@
         },
         {
           "id": "netherite_alloy_ingot",
-          "title": "Lingot d'alliage de Netherite",
+          "title": "Lingot d’alliage de netherite",
           "icon": "alaindustrial:netherite_alloy_ingot",
           "pages": [
             {
               "type": "text",
-              "title": "Lingot d'alliage de Netherite",
-              "text": "L'alliage de fin de jeu du mod — un lingot de Netherite vanilla et deux lingots d'électrum donnent deux lingots d'alliage de Netherite dans le four à alliages."
+              "title": "Lingot d’alliage de netherite",
+              "text": "L’alliage de fin de jeu du mod — un lingot de netherite vanilla et deux lingots d’électrum donnent deux lingots d’alliage de netherite dans le four à alliages."
             }
           ]
         },
@@ -2190,7 +2190,7 @@
             {
               "type": "text",
               "title": "Pétrole",
-              "text": "Une ressource fossile liquide : des lacs finis dans le monde, récoltés au seau, à la capsule ou à la pompe ; visqueux, inflammable et le début de la chaîne du caoutchouc."
+              "text": "Une ressource fossile liquide : des lacs finis dans le monde, récoltés au seau, à la capsule ou à la pompe ; visqueux, inflammable et le début de la chaîne du caoutchouc."
             }
           ]
         },
@@ -2214,7 +2214,7 @@
             {
               "type": "text",
               "title": "Bardage en fer trempé",
-              "text": "Un bloc décoratif de 4 plaques de fer trempé — un panneau technique avec écran et lignes ; fabriqué et défait à l'établi sans perte."
+              "text": "Un bloc décoratif de 4 plaques de fer trempé — un panneau technique avec écran et lignes ; fabriqué et défait à l’établi sans perte."
             },
             {
               "type": "recipe",
@@ -2238,12 +2238,12 @@
         },
         {
           "id": "tin_ore",
-          "title": "Minerai d'étain",
+          "title": "Minerai d’étain",
           "icon": "alaindustrial:tin_ore",
           "pages": [
             {
               "type": "text",
-              "title": "Minerai d'étain",
+              "title": "Minerai d’étain",
               "text": "Un métal de début du mod — minerai dans le monde et la chaîne brut → poudre → lingot ; le matériau de base des fils et circuits LV."
             }
           ]
@@ -2262,13 +2262,13 @@
         },
         {
           "id": "steam",
-          "title": "La vapeur",
+          "title": "Vapeur",
           "icon": "alaindustrial:steam_nozzle",
           "pages": [
             {
               "type": "text",
-              "title": "La vapeur",
-              "text": "Le fluide de travail de la salle de réacteur. Le seul fluide du mod sans aucune forme dans le monde : ni flaque, ni bloc, ni seau — la vapeur n'existe qu'à l'intérieur des réservoirs et des tuyaux."
+              "title": "Vapeur",
+              "text": "Le fluide de travail de la salle de réacteur. Le seul fluide du mod sans aucune forme dans le monde : ni flaque, ni bloc, ni seau — la vapeur n’existe qu’à l’intérieur des réservoirs et des tuyaux."
             }
           ]
         },
@@ -2280,19 +2280,19 @@
             {
               "type": "text",
               "title": "Solution nutritive",
-              "text": "Le produit vert vif de la seconde distillation du biocarburant — le seul fluide du mod où rien ne brûle. Son unique consommateur est l'arroseur, qui accélère cultures et cristaux."
+              "text": "Le produit vert vif de la seconde distillation du biocarburant — le seul fluide du mod où rien ne brûle. Son unique consommateur est l’arroseur, qui accélère cultures et cristaux."
             }
           ]
         },
         {
           "id": "silver_plate_block",
-          "title": "Bardage d'argent",
+          "title": "Bardage d’argent",
           "icon": "alaindustrial:silver_plate_block",
           "pages": [
             {
               "type": "text",
-              "title": "Bardage d'argent",
-              "text": "Un bloc décoratif de 4 plaques d'argent : une tuile métallique boulonnée en 2×2 ; fabriqué et défait à l'établi sans perte."
+              "title": "Bardage d’argent",
+              "text": "Un bloc décoratif de 4 plaques d’argent : une tuile métallique boulonnée en 2×2 ; fabriqué et défait à l’établi sans perte."
             },
             {
               "type": "recipe",
@@ -2316,12 +2316,12 @@
         },
         {
           "id": "silver_ore",
-          "title": "Minerai d'argent",
+          "title": "Minerai d’argent",
           "icon": "alaindustrial:silver_ore",
           "pages": [
             {
               "type": "text",
-              "title": "Minerai d'argent",
+              "title": "Minerai d’argent",
               "text": "Un métal-minerai rare du mod — bloc de minerai et la chaîne brut → poudre → lingot ; le matériau des circuits et composants de milieu de gamme."
             }
           ]
@@ -2340,37 +2340,37 @@
         },
         {
           "id": "uranium_ore",
-          "title": "Minerai d'uranium",
+          "title": "Minerai d’uranium",
           "icon": "alaindustrial:uranium_ore",
           "pages": [
             {
               "type": "text",
-              "title": "Minerai d'uranium",
-              "text": "Le minerai le plus rare du mod — extrait avec une pioche en fer et transformé en poudre et lingot ; déjà utilisé dans la torche, le téléporteur et l'incubateur, puis dans les futures machines nucléaires."
+              "title": "Minerai d’uranium",
+              "text": "Le minerai le plus rare du mod — extrait avec une pioche en fer et transformé en poudre et lingot ; déjà utilisé dans la torche, le téléporteur et l’incubateur, puis dans les futures machines nucléaires."
             }
           ]
         },
         {
           "id": "shielding_alloy_ingot",
-          "title": "Lingot d'alliage de blindage",
+          "title": "Lingot d’alliage de blindage",
           "icon": "alaindustrial:shielding_alloy_ingot",
           "pages": [
             {
               "type": "text",
-              "title": "Lingot d'alliage de blindage",
-              "text": "Un alliage de palladium et de fer trempé — le seul matériau dont une salle de réacteur est bâtie : le lingot, la plaque de blindage et la plaque de blindage renforcée, qui réclame en plus de l'uranium appauvri."
+              "title": "Lingot d’alliage de blindage",
+              "text": "Un alliage de palladium et de fer trempé — le seul matériau dont une salle de réacteur est bâtie : le lingot, la plaque de blindage et la plaque de blindage renforcée, qui réclame en plus de l’uranium appauvri."
             }
           ]
         },
         {
           "id": "electrum_ingot",
-          "title": "Lingot d'électrum",
+          "title": "Lingot d’électrum",
           "icon": "alaindustrial:electrum_ingot",
           "pages": [
             {
               "type": "text",
-              "title": "Lingot d'électrum",
-              "text": "L'alliage le plus coûteux du mod en matériaux — un lingot d'or et un lingot d'argent donnent un seul lingot d'électrum dans le four à alliages."
+              "title": "Lingot d’électrum",
+              "text": "L’alliage le plus coûteux du mod en matériaux — un lingot d’or et un lingot d’argent donnent un seul lingot d’électrum dans le four à alliages."
             }
           ]
         },
@@ -2382,7 +2382,7 @@
             {
               "type": "text",
               "title": "Treillis",
-              "text": "Un support de deux blocs de haut pour plantes grimpantes — le coton y pousse aujourd'hui. Il se pose sur une terre labourée humide et se sème d'un clic droit. La plante s'enracine lentement une seule fois, puis fructifie en cycle sans fin : la récolte ne la détruit jamais."
+              "text": "Un support de deux blocs de haut pour plantes grimpantes — le coton y pousse aujourd’hui. Il se pose sur une terre labourée humide et se sème d’un clic droit. La plante s’enracine lentement une seule fois, puis fructifie en cycle sans fin : la récolte ne la détruit jamais."
             },
             {
               "type": "recipe",
@@ -2412,13 +2412,13 @@
             {
               "type": "text",
               "title": "Incubateur",
-              "text": "Multibloc 1×2 — un socle mécanique et un dôme de verre. Fait muter les objets par irradiation d'uranium et EU : il les duplique, les transforme ou en crée de nouveaux. Le mode se règle avec une puce, le résultat est probabiliste, avec quatre degrés de rareté."
+              "text": "Multibloc 1×2 — un socle mécanique et un dôme de verre. Fait muter les objets par irradiation d’uranium et EU : il les duplique, les transforme ou en crée de nouveaux. Le mode se règle avec une puce, le résultat est probabiliste, avec quatre degrés de rareté."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Tampon : 8000 EU"
+                "Tampon : 8000 EU"
               ]
             },
             {
@@ -2443,31 +2443,31 @@
         },
         {
           "id": "kok_sagyz",
-          "title": "Kok-sagyz",
+          "title": "Kok-Sagyz",
           "icon": "alaindustrial:kok_sagyz_seeds",
           "pages": [
             {
               "type": "text",
-              "title": "Kok-sagyz",
-              "text": "Un pissenlit à caoutchouc de la steppe kazakhe — du caoutchouc que l'on cultive. Fleur en haut, racine deux blocs plus bas : récoltez la pointe autant que vous voulez, la plante survit et la refait pousser."
+              "title": "Kok-Sagyz",
+              "text": "Un pissenlit à caoutchouc de la steppe kazakhe — du caoutchouc que l’on cultive. Fleur en haut, racine deux blocs plus bas : récoltez la pointe autant que vous voulez, la plante survit et la refait pousser."
             }
           ]
         },
         {
           "id": "sprinkler",
-          "title": "Arroseur",
+          "title": "Asperseur",
           "icon": "alaindustrial:sprinkler",
           "pages": [
             {
               "type": "text",
-              "title": "Arroseur",
-              "text": "Une tête tournante sur un mât qui pulvérise la solution nutritive sur tout ce qui pousse à moins de 4 blocs. La seule machine du mod qui ne consomme pas d'EU du tout — aucun câble ne s'y branche, elle fonctionne uniquement à la solution. Se monte au sol ou sous un plafond."
+              "title": "Asperseur",
+              "text": "Une tête tournante sur un mât qui pulvérise la solution nutritive sur tout ce qui pousse à moins de 4 blocs. La seule machine du mod qui ne consomme pas d’EU du tout — aucun câble ne s’y branche, elle fonctionne uniquement à la solution. Se monte au sol ou sous un plafond."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Tampon : 0 EU"
+                "Tampon : 0 EU"
               ]
             },
             {
@@ -2498,13 +2498,13 @@
             {
               "type": "text",
               "title": "Station de drone jardinier",
-              "text": "Une station LV à tampon d'EU d'où décolle un drone animé qui patrouille les champs dans un rayon de 4 blocs — il laboure la terre libre, plante les graines, fertilise les cultures immatures et rapporte la récolte mûre à la station."
+              "text": "Une station LV à tampon d’EU d’où décolle un drone animé qui patrouille les champs dans un rayon de 4 blocs — il laboure la terre libre, plante les graines, fertilise les cultures immatures et rapporte la récolte mûre à la station."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Tampon : 4000 EU"
+                "Tampon : 4000 EU"
               ]
             },
             {
@@ -2535,13 +2535,13 @@
             {
               "type": "text",
               "title": "Contrôleur de serre",
-              "text": "Une salle scellée de n'importe quelle forme dont les lits de semis éveillés font pousser de vrais buissons d'améthyste vanilla. Le contrôleur sature l'air intérieur : un dôme, une pyramide à degrés ou une aile en L font tous l'affaire, et une serre achevée le montre en perdant les coutures de sa coque. L'eau, les EU et un arroseur ne font qu'accélérer ; aucun des trois n'est requis."
+              "text": "Une salle scellée de n’importe quelle forme dont les lits de semis éveillés font pousser de vrais buissons d’améthyste vanilla. Le contrôleur sature l’air intérieur : un dôme, une pyramide à degrés ou une aile en L font tous l’affaire, et une serre achevée le montre en perdant les coutures de sa coque. L’eau, les EU et un arroseur ne font qu’accélérer ; aucun des trois n’est requis."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Tampon : 4000 EU"
+                "Tampon : 4000 EU"
               ]
             },
             {
@@ -2572,13 +2572,13 @@
             {
               "type": "text",
               "title": "Téléporteur",
-              "text": "Une station d'ancrage HV et une télécommande portable — liées par Maj+clic droit, téléportant le joueur vers une station pour un coût élevé en EU, avec un temps de chauffe, un atterrissage sûr et une protection de la vie privée."
+              "text": "Une station d’ancrage HV et une télécommande portable — liées par Maj+clic droit, téléportant le joueur vers une station pour un coût élevé en EU, avec un temps de chauffe, un atterrissage sûr et une protection de la vie privée."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Tampon : 500 000 EU"
+                "Tampon : 500 000 EU"
               ]
             },
             {
@@ -2616,13 +2616,13 @@
             {
               "type": "text",
               "title": "Bouton de réacteur",
-              "text": "Un bouton en alliage de blindage : le moyen d'envoyer une impulsion au sas depuis l'intérieur d'une salle scellée, construit exactement comme un bouton vanilla mais capable de survivre à ce pour quoi la salle existe."
+              "text": "Un bouton en alliage de blindage : le moyen d’envoyer une impulsion au sas depuis l’intérieur d’une salle scellée, construit exactement comme un bouton vanilla mais capable de survivre à ce pour quoi la salle existe."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Tampon : 0 EU"
+                "Tampon : 0 EU"
               ]
             },
             {
@@ -2653,13 +2653,13 @@
             {
               "type": "text",
               "title": "Lampe de réacteur",
-              "text": "Un bloc d'enveloppe qui ne s'allume qu'une fois la salle formée : la seule source de lumière dans une boîte scellée et, en même temps, un signe visible de l'extérieur que la construction a été acceptée."
+              "text": "Un bloc d’enveloppe qui ne s’allume qu’une fois la salle formée : la seule source de lumière dans une boîte scellée et, en même temps, un signe visible de l’extérieur que la construction a été acceptée."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Tampon : 0 EU"
+                "Tampon : 0 EU"
               ]
             },
             {
@@ -2690,13 +2690,13 @@
             {
               "type": "text",
               "title": "Châssis de réacteur",
-              "text": "Un panneau en alliage de blindage — le seul matériau dont l'enveloppe scellée d'une salle de réacteur puisse être bâtie."
+              "text": "Un panneau en alliage de blindage — le seul matériau dont l’enveloppe scellée d’une salle de réacteur puisse être bâtie."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Tampon : 0 EU"
+                "Tampon : 0 EU"
               ]
             },
             {
@@ -2727,13 +2727,13 @@
             {
               "type": "text",
               "title": "Verre de réacteur",
-              "text": "Un panneau d'enveloppe transparent : il compte comme mur exactement comme le blindage, mais 30 % au plus d'une enveloppe peuvent être en verre — au-delà, la salle cesse d'être un confinement pour devenir une vitrine."
+              "text": "Un panneau d’enveloppe transparent : il compte comme mur exactement comme le blindage, mais 30 % au plus d’une enveloppe peuvent être en verre — au-delà, la salle cesse d’être un confinement pour devenir une vitrine."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Tampon : 0 EU"
+                "Tampon : 0 EU"
               ]
             },
             {
@@ -2764,13 +2764,13 @@
             {
               "type": "text",
               "title": "Porte de sas du réacteur",
-              "text": "Le seul accès à une salle de réacteur : elle s'ouvre uniquement sur une impulsion de redstone, se referme deux secondes plus tard et ne se referme jamais sur qui se tient dans l'embrasure."
+              "text": "Le seul accès à une salle de réacteur : elle s’ouvre uniquement sur une impulsion de redstone, se referme deux secondes plus tard et ne se referme jamais sur qui se tient dans l’embrasure."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Tampon : 0 EU"
+                "Tampon : 0 EU"
               ]
             },
             {
@@ -2807,7 +2807,7 @@
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Capacité : 36 emplacements"
+                "Capacité : 36 emplacements"
               ]
             },
             {
@@ -2844,7 +2844,7 @@
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Capacité : 45 emplacements"
+                "Capacité : 45 emplacements"
               ]
             },
             {
@@ -2875,7 +2875,7 @@
             {
               "type": "text",
               "title": "Coffre en or",
-              "text": "Un coffre de 54 emplacements — le palier au-dessus de l'argent (une rangée de plus), avec un modèle 3D et un couvercle animé. Ne nécessite aucune énergie."
+              "text": "Un coffre de 54 emplacements — le palier au-dessus de l’argent (une rangée de plus), avec un modèle 3D et un couvercle animé. Ne nécessite aucune énergie."
             },
             {
               "type": "recipe",
@@ -2905,13 +2905,13 @@
             {
               "type": "text",
               "title": "Module de stockage",
-              "text": "Un bloc de stockage de 27 emplacements : les modules placés les uns contre les autres fonctionnent comme un seul entrepôt allant jusqu'à 108 emplacements derrière une seule fenêtre."
+              "text": "Un bloc de stockage de 27 emplacements : les modules placés les uns contre les autres fonctionnent comme un seul entrepôt allant jusqu’à 108 emplacements derrière une seule fenêtre."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Tampon : 0 EU"
+                "Tampon : 0 EU"
               ]
             },
             {
@@ -2942,13 +2942,13 @@
             {
               "type": "text",
               "title": "Coffre de protection",
-              "text": "Le seul conteneur qui arrête le rayonnement de son contenu : l'uranium à l'intérieur n'irradie personne. Capacité du coffre de fer (36 emplacements), ne nécessite aucune énergie."
+              "text": "Le seul conteneur qui arrête le rayonnement de son contenu : l’uranium à l’intérieur n’irradie personne. Capacité du coffre de fer (36 emplacements), ne nécessite aucune énergie."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Capacité : 36 emplacements"
+                "Capacité : 36 emplacements"
               ]
             },
             {
@@ -2979,14 +2979,14 @@
             {
               "type": "text",
               "title": "Grand répulsif",
-              "text": "Le palier maximal du champ de garde — 24 blocs de rayon pour 64 EU/t ; obtenu à partir du moyen avec un vase d'âmes."
+              "text": "Le palier maximal du champ de garde — 24 blocs de rayon pour 64 EU/t ; obtenu à partir du moyen avec un vase d’âmes."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 64 EU/t (champ)",
-                "Tampon : 32000 EU"
+                "Énergie : 64 EU/t (champ)",
+                "Tampon : 32000 EU"
               ]
             }
           ]
@@ -2999,7 +2999,7 @@
             {
               "type": "text",
               "title": "Établi industriel",
-              "text": "Le bloc de poste de travail du villageois Industriel — il achète les ressources du mod contre des émeraudes. Placez-le près d'un villageois sans emploi et il adoptera le métier."
+              "text": "Le bloc de poste de travail du villageois Industriel — il achète les ressources du mod contre des émeraudes. Placez-le près d’un villageois sans emploi et il adoptera le métier."
             },
             {
               "type": "recipe",
@@ -3029,7 +3029,7 @@
             {
               "type": "text",
               "title": "Guide",
-              "text": "Un livre-tutoriel en jeu qui couvre toutes les mécaniques du mod — remis automatiquement à la première connexion et ouvert d'un clic droit ; onglets, pages, liens. Aucune énergie."
+              "text": "Un livre-tutoriel en jeu qui couvre toutes les mécaniques du mod — remis automatiquement à la première connexion et ouvert d’un clic droit ; onglets, pages, liens. Aucune énergie."
             },
             {
               "type": "recipe",
@@ -3065,7 +3065,7 @@
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 1 000 EU de travail des machines = 1 point de maîtrise"
+                "Énergie : 1 000 EU de travail des machines = 1 point de maîtrise"
               ]
             }
           ]
@@ -3078,14 +3078,14 @@
             {
               "type": "text",
               "title": "Petit répulsif",
-              "text": "Un champ de garde à EU — tant qu'il est alimenté, les créatures hostiles fuient dans un rayon de 8 blocs et ne peuvent plus approcher. Passe aux paliers moyen et grand grâce au vase d'âmes."
+              "text": "Un champ de garde à EU — tant qu’il est alimenté, les créatures hostiles fuient dans un rayon de 8 blocs et ne peuvent plus approcher. Passe aux paliers moyen et grand grâce au vase d’âmes."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 8 EU/t (champ)",
-                "Tampon : 2000 EU"
+                "Énergie : 8 EU/t (champ)",
+                "Tampon : 2000 EU"
               ]
             },
             {
@@ -3110,13 +3110,13 @@
         },
         {
           "id": "enriched_uranium_torch",
-          "title": "Torche d'uranium enrichi",
+          "title": "Torche d’uranium enrichi",
           "icon": "alaindustrial:enriched_uranium_torch",
           "pages": [
             {
               "type": "text",
-              "title": "Torche d'uranium enrichi",
-              "text": "Une torche décorative à la flamme verte et au niveau de lumière 14 — elle brûle même sous l'eau. Ne nécessite aucune énergie."
+              "title": "Torche d’uranium enrichi",
+              "text": "Une torche décorative à la flamme verte et au niveau de lumière 14 — elle brûle même sous l’eau. Ne nécessite aucune énergie."
             },
             {
               "type": "recipe",
@@ -3180,14 +3180,14 @@
             {
               "type": "text",
               "title": "Station de travail",
-              "text": "Un ordinateur assemblé à partir de deux boîtiers empilés l'un sur l'autre. Il puise sur le réseau et sert de poste de travail au joueur."
+              "text": "Un ordinateur assemblé à partir de deux boîtiers empilés l’un sur l’autre. Il puise sur le réseau et sert de poste de travail au joueur."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 6 EU/t",
-                "Tampon : 40000 EU"
+                "Énergie : 6 EU/t",
+                "Tampon : 40000 EU"
               ]
             },
             {
@@ -3218,7 +3218,7 @@
             {
               "type": "text",
               "title": "Cadre indicateur de stock",
-              "text": "Un cadre que l'on accroche à un coffre — il affiche le nombre d'objets à l'intérieur, directement sur le cadre. Aucune énergie requise ; le nombre n'est visible qu'avec un objet-filtre placé dans le cadre."
+              "text": "Un cadre que l’on accroche à un coffre — il affiche le nombre d’objets à l’intérieur, directement sur le cadre. Aucune énergie requise ; le nombre n’est visible qu’avec un objet-filtre placé dans le cadre."
             },
             {
               "type": "recipe",
@@ -3248,14 +3248,14 @@
             {
               "type": "text",
               "title": "Répulsif moyen",
-              "text": "Le deuxième palier du champ de garde — 16 blocs de rayon pour 32 EU/t ; obtenu à partir du petit avec un vase d'âmes."
+              "text": "Le deuxième palier du champ de garde — 16 blocs de rayon pour 32 EU/t ; obtenu à partir du petit avec un vase d’âmes."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 32 EU/t (champ)",
-                "Tampon : 8000 EU"
+                "Énergie : 32 EU/t (champ)",
+                "Tampon : 8000 EU"
               ]
             }
           ]
@@ -3268,13 +3268,13 @@
             {
               "type": "text",
               "title": "Coffre en électrum",
-              "text": "Un coffre de 81 emplacements — le palier au-dessus de l'or. Neuf rangées derrière une fenêtre de six, avec une barre de défilement. Ne consomme aucune énergie."
+              "text": "Un coffre de 81 emplacements — le palier au-dessus de l’or. Neuf rangées derrière une fenêtre de six, avec une barre de défilement. Ne consomme aucune énergie."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Capacité : 81 emplacements"
+                "Capacité : 81 emplacements"
               ]
             },
             {
@@ -3306,13 +3306,13 @@
       "entries": [
         {
           "id": "overclocker_chip_i",
-          "title": "Puce d'overclocking I",
+          "title": "Puce d’overclocking I",
           "icon": "alaindustrial:overclocker_chip_i",
           "pages": [
             {
               "type": "text",
-              "title": "Puce d'overclocking I",
-              "text": "Une amélioration à trois paliers : chaque palier raccourcit l'opération et double la consommation. Se fabrique à partir de caillots d'énergie."
+              "title": "Puce d’overclocking I",
+              "text": "Une amélioration à trois paliers : chaque palier raccourcit l’opération et double la consommation. Se fabrique à partir de caillots d’énergie."
             },
             {
               "type": "recipe",
@@ -3372,7 +3372,7 @@
             {
               "type": "text",
               "title": "Puce de silence",
-              "text": "Une amélioration qui rend une machine totalement silencieuse — se place dans l'emplacement d'amélioration."
+              "text": "Une amélioration qui rend une machine totalement silencieuse — se place dans l’emplacement d’amélioration."
             },
             {
               "type": "recipe",
@@ -3402,13 +3402,13 @@
             {
               "type": "text",
               "title": "Batterie",
-              "text": "Le premier porteur d'EU — une batterie rechargeable de 2 000 EU qui s'empile par niveau de charge et rend son énergie au réseau ou à un autre objet."
+              "text": "Le premier porteur d’EU — une batterie rechargeable de 2 000 EU qui s’empile par niveau de charge et rend son énergie au réseau ou à un autre objet."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 2 000 EU"
+                "Énergie : 2 000 EU"
               ]
             },
             {
@@ -3439,7 +3439,7 @@
             {
               "type": "text",
               "title": "Fer trempé",
-              "text": "Un lingot fondu à partir d'un lingot de fer vanilla — le matériau de base des outils, de l'armure et du bloc du mod."
+              "text": "Un lingot fondu à partir d’un lingot de fer vanilla — le matériau de base des outils, de l’armure et du bloc du mod."
             },
             {
               "type": "recipe",
@@ -3469,7 +3469,7 @@
             {
               "type": "text",
               "title": "Roue à eau",
-              "text": "Roue de moulin à eau — à placer dans l'emplacement de roue d'un moulin à eau ; sans elle, aucune production. Trois qualités : une meilleure roue produit plus d'EU et dure bien plus longtemps. S'use pendant la production."
+              "text": "Roue de moulin à eau — à placer dans l’emplacement de roue d’un moulin à eau ; sans elle, aucune production. Trois qualités : une meilleure roue produit plus d’EU et dure bien plus longtemps. S’use pendant la production."
             },
             {
               "type": "recipe",
@@ -3499,7 +3499,7 @@
             {
               "type": "text",
               "title": "Cristal lapotron",
-              "text": "Un matériau d'artisanat qui ne se fabrique jamais directement : son ébauche absorbe 500 000 EU dans un emplacement de charge et devient le cristal fini, qui ne conserve aucune charge."
+              "text": "Un matériau d’artisanat qui ne se fabrique jamais directement : son ébauche absorbe 500 000 EU dans un emplacement de charge et devient le cristal fini, qui ne conserve aucune charge."
             },
             {
               "type": "recipe",
@@ -3619,7 +3619,7 @@
             {
               "type": "text",
               "title": "Puce de duplication",
-              "text": "Trois puces fixent le mode de l'incubateur — dupliquer, transformer ou créer. Elles ne se consomment jamais, mais sans l'une d'elles la machine ne démarre pas."
+              "text": "Trois puces fixent le mode de l’incubateur — dupliquer, transformer ou créer. Elles ne se consomment jamais, mais sans l’une d’elles la machine ne démarre pas."
             },
             {
               "type": "recipe",
@@ -3649,7 +3649,7 @@
             {
               "type": "text",
               "title": "Roulement simple",
-              "text": "Roulements simples et renforcés — des articulations rotatives pour la machinerie, faites de pièces qui n'avaient jusqu'ici presque aucune recette."
+              "text": "Roulements simples et renforcés — des articulations rotatives pour la machinerie, faites de pièces qui n’avaient jusqu’ici presque aucune recette."
             },
             {
               "type": "recipe",
@@ -3679,7 +3679,7 @@
             {
               "type": "text",
               "title": "Circuit avancé",
-              "text": "Le palier MV du circuit — la carte de base recâblée à l'or et scellée dans du caoutchouc."
+              "text": "Le palier MV du circuit — la carte de base recâblée à l’or et scellée dans du caoutchouc."
             },
             {
               "type": "recipe",
@@ -3739,7 +3739,7 @@
             {
               "type": "text",
               "title": "Éclat résonnant",
-              "text": "Des matériaux que seul l'incubateur produit : les quatre premiers barreaux des échelles d'évolution, plus l'uranium appauvri et la scorie irradiée."
+              "text": "Des matériaux que seul l’incubateur produit : les quatre premiers barreaux des échelles d’évolution, plus l’uranium appauvri et la scorie irradiée."
             }
           ]
         },
@@ -3751,7 +3751,7 @@
             {
               "type": "text",
               "title": "Puce vierge",
-              "text": "La base vierge des puces d'amélioration de machine ; sans effet par elle-même."
+              "text": "La base vierge des puces d’amélioration de machine ; sans effet par elle-même."
             },
             {
               "type": "recipe",
@@ -3781,7 +3781,7 @@
             {
               "type": "text",
               "title": "Caoutchouc",
-              "text": "Un matériau tiré du pétrole et du soufre — le Polymériseur produit du caoutchouc brut, puis un Vulcaniseur chauffé le transforme en caoutchouc."
+              "text": "Un matériau tiré du pétrole et du soufre — le Polymériseur produit du caoutchouc brut, puis un Vulcanisateur chauffé le transforme en caoutchouc."
             }
           ]
         },
@@ -3823,7 +3823,7 @@
             {
               "type": "text",
               "title": "Cristal résonant",
-              "text": "Un matériau d'artisanat qui ne se fabrique jamais directement : son ébauche absorbe 1 500 000 EU dans un emplacement de charge et devient le cristal fini, qui ne conserve aucune charge."
+              "text": "Un matériau d’artisanat qui ne se fabrique jamais directement : son ébauche absorbe 1 500 000 EU dans un emplacement de charge et devient le cristal fini, qui ne conserve aucune charge."
             },
             {
               "type": "recipe",
@@ -3853,7 +3853,7 @@
             {
               "type": "text",
               "title": "Rotor en bois",
-              "text": "Pales d'éolienne — à placer dans l'emplacement de rotor de n'importe quelle éolienne T1/T2 ; sans elles, aucune production. Trois qualités : un meilleur rotor produit plus d'EU et dure bien plus longtemps. S'use pendant la production."
+              "text": "Pales d’éolienne — à placer dans l’emplacement de rotor de n’importe quelle éolienne T1/T2 ; sans elles, aucune production. Trois qualités : un meilleur rotor produit plus d’EU et dure bien plus longtemps. S’use pendant la production."
             },
             {
               "type": "recipe",
@@ -3877,13 +3877,13 @@
         },
         {
           "id": "energy_clot_i",
-          "title": "Caillot d'énergie I",
+          "title": "Caillot d’énergie I",
           "icon": "alaindustrial:energy_clot_i",
           "pages": [
             {
               "type": "text",
-              "title": "Caillot d'énergie I",
-              "text": "Trois paliers de caillots — le surplus du réseau, figé par le condenseur d'énergie. Le seul ingrédient dont sont faites les puces d'overclocking."
+              "title": "Caillot d’énergie I",
+              "text": "Trois paliers de caillots — le surplus du réseau, figé par le condenseur d’énergie. Le seul ingrédient dont sont faites les puces d’overclocking."
             }
           ]
         },
@@ -3925,7 +3925,7 @@
             {
               "type": "text",
               "title": "Tissu de flux",
-              "text": "Les intermédiaires de l'armure à EU : le fil est plaqué dans le bain galvanique, quatre fils donnent une pièce de tissu de flux — et c'est le tissu qui répare la panoplie terminée."
+              "text": "Les intermédiaires de l’armure à EU : le fil est plaqué dans le bain galvanique, quatre fils donnent une pièce de tissu de flux — et c’est le tissu qui répare la panoplie terminée."
             },
             {
               "type": "recipe",
@@ -3955,19 +3955,19 @@
             {
               "type": "text",
               "title": "Poudre de fer",
-              "text": "La poudre et les intermédiaires associés (plaque, billette) — ce en quoi le broyeur et d'autres machines transforment les minerais."
+              "text": "La poudre et les intermédiaires associés (plaque, billette) — ce en quoi le broyeur et d’autres machines transforment les minerais."
             }
           ]
         },
         {
           "id": "alignment_chip_day",
-          "title": "Puce d'évolution solaire",
+          "title": "Puce d’évolution solaire",
           "icon": "alaindustrial:alignment_chip_day",
           "pages": [
             {
               "type": "text",
-              "title": "Puce d'évolution solaire",
-              "text": "Une paire de puces d'évolution — solaire (jour) et lunaire (nuit) — qui font évoluer les panneaux solaires et moulins à vent T1 de base en T2 par évolution, en conservant l'énergie NBT accumulée."
+              "title": "Puce d’évolution solaire",
+              "text": "Une paire de puces d’évolution — solaire (jour) et lunaire (nuit) — qui font évoluer les panneaux solaires et moulins à vent T1 de base en T2 par évolution, en conservant l’énergie NBT accumulée."
             },
             {
               "type": "recipe",
@@ -4021,13 +4021,13 @@
         },
         {
           "id": "energy_crystal",
-          "title": "Cristal d'énergie",
+          "title": "Cristal d’énergie",
           "icon": "alaindustrial:energy_crystal",
           "pages": [
             {
               "type": "text",
-              "title": "Cristal d'énergie",
-              "text": "Un matériau d'artisanat qui ne se fabrique jamais directement : son ébauche absorbe 100 000 EU dans un emplacement de charge et devient le cristal fini, qui ne conserve aucune charge."
+              "title": "Cristal d’énergie",
+              "text": "Un matériau d’artisanat qui ne se fabrique jamais directement : son ébauche absorbe 100 000 EU dans un emplacement de charge et devient le cristal fini, qui ne conserve aucune charge."
             },
             {
               "type": "recipe",
@@ -4057,7 +4057,7 @@
             {
               "type": "text",
               "title": "Anémomètre",
-              "text": "Mesure la vitesse du vent là où se tient le joueur, pour choisir la hauteur d'une éolienne."
+              "text": "Mesure la vitesse du vent là où se tient le joueur, pour choisir la hauteur d’une éolienne."
             },
             {
               "type": "recipe",
@@ -4093,7 +4093,7 @@
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 2 000 EU"
+                "Énergie : 2 000 EU"
               ]
             },
             {
@@ -4124,14 +4124,14 @@
             {
               "type": "text",
               "title": "Plastron de flux",
-              "text": "Le premier ensemble d'armure EU complet du mod — casque, plastron, jambières et bottes en tissu de flux ; la charge active des fonctions utilitaires sans jamais couper la protection."
+              "text": "Le premier ensemble d’armure EU complet du mod — casque, plastron, jambières et bottes en tissu de flux ; la charge active des fonctions utilitaires sans jamais couper la protection."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 15 000 EU",
-                "Tampon : 15 000 EU"
+                "Énergie : 15 000 EU",
+                "Tampon : 15 000 EU"
               ]
             },
             {
@@ -4168,7 +4168,7 @@
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Pièces : 4 pièces"
+                "Pièces : 4 pièces"
               ]
             },
             {
@@ -4199,7 +4199,7 @@
             {
               "type": "text",
               "title": "Capsule à vide",
-              "text": "Un conteneur de fluide d'un seau empilable — jusqu'à 16 capsules d'un même fluide par pile, remplies depuis le monde ou les réservoirs du mod."
+              "text": "Un conteneur de fluide d’un seau empilable — jusqu’à 16 capsules d’un même fluide par pile, remplies depuis le monde ou les réservoirs du mod."
             },
             {
               "type": "recipe",
@@ -4229,7 +4229,7 @@
             {
               "type": "text",
               "title": "Clé",
-              "text": "Configure les faces du tuyau d'objets et démonte les blocs du mod."
+              "text": "Configure les faces du tuyau d’objets et démonte les blocs du mod."
             },
             {
               "type": "recipe",
@@ -4259,13 +4259,13 @@
             {
               "type": "text",
               "title": "Jetpack",
-              "text": "Un équipement de vol à EU pour l'emplacement de plastron — poussée tant que saut est maintenu, plané doux sans énergie une fois déchargé."
+              "text": "Un équipement de vol à EU pour l’emplacement de plastron — poussée tant que saut est maintenu, plané doux sans énergie une fois déchargé."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Tampon : 30 000 EU"
+                "Tampon : 30 000 EU"
               ]
             },
             {
@@ -4326,13 +4326,13 @@
             {
               "type": "text",
               "title": "Sacoche de protection",
-              "text": "Le second palier de la sacoche à batteries, doublée de plomb : même poids 128 et 2000 EU, mais le contenu radioactif n'irradie plus personne — ni le porteur, ni les créatures alentour."
+              "text": "Le second palier de la sacoche à batteries, doublée de plomb : même poids 128 et 2000 EU, mais le contenu radioactif n’irradie plus personne — ni le porteur, ni les créatures alentour."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 2 000 EU"
+                "Énergie : 2 000 EU"
               ]
             }
           ]
@@ -4345,13 +4345,13 @@
             {
               "type": "text",
               "title": "Plastron isolant",
-              "text": "Une armure de cuir trempée dans la slime — capuche, veste, pantalon et bottes qui encaissent la décharge d'un câble nu et y perdent de la durabilité."
+              "text": "Une armure de cuir trempée dans la slime — capuche, veste, pantalon et bottes qui encaissent la décharge d’un câble nu et y perdent de la durabilité."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Pièces : 4 pièces"
+                "Pièces : 4 pièces"
               ]
             },
             {
@@ -4388,7 +4388,7 @@
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Pièces : 5 pièces"
+                "Pièces : 5 pièces"
               ]
             },
             {
@@ -4501,13 +4501,13 @@
             {
               "type": "text",
               "title": "Faux",
-              "text": "Un outil de zone qui élimine feuilles, herbe, fleurs et autre feuillage décoratif d'un seul coup, et avec Maj maintenu — une faucille de zone qui récolte les cultures mûres. Huit paliers de matériaux, du bois à la netherite. La récolte peut donner une graine supplémentaire, et cette chance augmente avec le palier de la faux."
+              "text": "Un outil de zone qui élimine feuilles, herbe, fleurs et autre feuillage décoratif d’un seul coup, et avec Maj maintenu — une faucille de zone qui récolte les cultures mûres. Huit paliers de matériaux, du bois à la netherite. La récolte peut donner une graine supplémentaire, et cette chance augmente avec le palier de la faux."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Paliers : 8 paliers"
+                "Paliers : 8 paliers"
               ]
             },
             {
@@ -4668,7 +4668,7 @@
             {
               "type": "text",
               "title": "Marteau de forge",
-              "text": "Un outil à main d'avant les machines : placez le marteau et un lingot dans la grille de fabrication pour obtenir une plaque de métal. Le marteau reste dans la grille et perd 1 de durabilité par plaque."
+              "text": "Un outil à main d’avant les machines : placez le marteau et un lingot dans la grille de fabrication pour obtenir une plaque de métal. Le marteau reste dans la grille et perd 1 de durabilité par plaque."
             },
             {
               "type": "recipe",
@@ -4722,13 +4722,13 @@
         },
         {
           "id": "soul_vessel",
-          "title": "Vase d'âmes",
+          "title": "Vase d’âmes",
           "icon": "alaindustrial:soul_vessel",
           "pages": [
             {
               "type": "text",
-              "title": "Vase d'âmes",
-              "text": "Un réservoir d'âmes qui améliore le répulsif — il ne se remplit que des créatures hostiles tuées par le joueur lui-même ; un vase plein est consommé pour faire évoluer le bloc."
+              "title": "Vase d’âmes",
+              "text": "Un réservoir d’âmes qui améliore le répulsif — il ne se remplit que des créatures hostiles tuées par le joueur lui-même ; un vase plein est consommé pour faire évoluer le bloc."
             },
             {
               "type": "recipe",
@@ -4758,7 +4758,7 @@
             {
               "type": "text",
               "title": "Compteur Geiger",
-              "text": "Cliquette près des radiations depuis n'importe quel emplacement d'inventaire — le seul retour que donnent les radiations."
+              "text": "Cliquette près des radiations depuis n’importe quel emplacement d’inventaire — le seul retour que donnent les radiations."
             },
             {
               "type": "recipe",
@@ -4788,13 +4788,13 @@
             {
               "type": "text",
               "title": "Électroaimant avancé",
-              "text": "Électroaimant de deuxième niveau : un rayon de 9 blocs au lieu de 5, et le seul à attirer aussi l’expérience."
+              "text": "Électroaimant de deuxième niveau : un rayon de 9 blocs au lieu de 5, et le seul à attirer aussi l’expérience."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Tampon : 5 000 EU"
+                "Tampon : 5 000 EU"
               ]
             },
             {
@@ -4831,7 +4831,7 @@
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Pièces : 4 pièces"
+                "Pièces : 4 pièces"
               ]
             },
             {
@@ -4862,13 +4862,13 @@
             {
               "type": "text",
               "title": "Foreuse électrique",
-              "text": "Une pioche de niveau diamant rechargeable qui fonctionne aux EU — mine comme le diamant tant qu'elle est chargée, dépense des EU par bloc et ne casse jamais."
+              "text": "Une pioche de niveau diamant rechargeable qui fonctionne aux EU — mine comme le diamant tant qu’elle est chargée, dépense des EU par bloc et ne casse jamais."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Tampon : 10 000 EU"
+                "Tampon : 10 000 EU"
               ]
             },
             {
@@ -4899,13 +4899,13 @@
             {
               "type": "text",
               "title": "Pelle électrique",
-              "text": "Une pelle électrique rechargeable — creuse la terre, le sable et le gravier tant qu'elle est chargée, consomme des EU par bloc et ne casse jamais."
+              "text": "Une pelle électrique rechargeable — creuse la terre, le sable et le gravier tant qu’elle est chargée, consomme des EU par bloc et ne casse jamais."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Tampon : 10 000 EU"
+                "Tampon : 10 000 EU"
               ]
             },
             {
@@ -4936,14 +4936,14 @@
             {
               "type": "text",
               "title": "Électroaimant",
-              "text": "Un objet rechargeable en EU dans n'importe quel emplacement d'inventaire qui attire vers le joueur les objets au sol à proximité, en dépensant de l'EU par objet."
+              "text": "Un objet rechargeable en EU dans n’importe quel emplacement d’inventaire qui attire vers le joueur les objets au sol à proximité, en dépensant de l’EU par objet."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Tampon : 5 000 EU",
-                "Rayon : 5 blocs"
+                "Tampon : 5 000 EU",
+                "Rayon : 5 blocs"
               ]
             },
             {
@@ -4974,13 +4974,13 @@
             {
               "type": "text",
               "title": "Houe électrique",
-              "text": "Une houe électrique rechargeable — laboure les champs et casse foin, feuilles et mousse plus vite qu'une houe en diamant, en consommant des 50 EU par utilisation, et ne casse jamais."
+              "text": "Une houe électrique rechargeable — laboure les champs et casse foin, feuilles et mousse plus vite qu’une houe en diamant, en consommant des 50 EU par utilisation, et ne casse jamais."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Tampon : 10 000 EU"
+                "Tampon : 10 000 EU"
               ]
             },
             {
@@ -5011,13 +5011,13 @@
             {
               "type": "text",
               "title": "Tronçonneuse électrique",
-              "text": "Une hache rechargeable alimentée en EU — coupe le bois et les feuilles tant qu'elle est chargée, consomme des EU par bloc et ne casse jamais."
+              "text": "Une hache rechargeable alimentée en EU — coupe le bois et les feuilles tant qu’elle est chargée, consomme des EU par bloc et ne casse jamais."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Tampon : 10 000 EU"
+                "Tampon : 10 000 EU"
               ]
             },
             {
@@ -5048,13 +5048,13 @@
             {
               "type": "text",
               "title": "Sabre électrique",
-              "text": "Une arme de mêlée rechargeable à EU : 12 de dégâts et un bloc de portée en plus tant que la lame est allumée ; 100 EU par coup, et la décharge ralentit la cible. Maj + clic droit l'éteint ; elle ne casse jamais."
+              "text": "Une arme de mêlée rechargeable à EU : 12 de dégâts et un bloc de portée en plus tant que la lame est allumée ; 100 EU par coup, et la décharge ralentit la cible. Maj + clic droit l’éteint ; elle ne casse jamais."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Tampon : 10 000 EU"
+                "Tampon : 10 000 EU"
               ]
             },
             {
@@ -5085,13 +5085,13 @@
             {
               "type": "text",
               "title": "Sac énergétique",
-              "text": "Un tampon d'EU portable dans l'emplacement de plastron — 20 000 EU qui gardent chargés les objets électriques de votre inventaire."
+              "text": "Un tampon d’EU portable dans l’emplacement de plastron — 20 000 EU qui gardent chargés les objets électriques de votre inventaire."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : 20 000 EU"
+                "Énergie : 20 000 EU"
               ]
             },
             {

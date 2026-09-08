@@ -1,0 +1,5120 @@
+{
+  "locale": "th_th",
+  "version": 1,
+  "generated_from": "OKF docs/blocks",
+  "tabs": [
+    {
+      "id": "getting_started",
+      "title": "เริ่มต้นใช้งาน",
+      "icon": "alaindustrial:guide_book",
+      "entries": [
+        {
+          "id": "welcome",
+          "title": "ยินดีต้อนรับ",
+          "icon": "alaindustrial:guide_book",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ยินดีต้อนรับ",
+              "text": "นี่คือคู่มือของ Ala Industrial — พลังงาน EU เครื่องกำเนิดไฟฟ้า เครื่องจักร และสายไฟ\n\nเลือกหมวดหมู่ทางด้านซ้าย พลิกหน้าด้วยลูกศร ปุ่ม «เปิดวิกิ» ด้านบนจะเปิดเว็บไซต์คู่มือฉบับเต็ม"
+            },
+            {
+              "type": "text",
+              "title": "ก้าวแรก",
+              "text": "1. ขุดแร่ของม็อด — เริ่มจากดีบุก\n2. วางแผงโซลาร์เซลล์ — เครื่องกำเนิดไฟฟ้าที่ง่ายที่สุด\n3. เดินสายทองแดงไปหามัน\n4. ต่อเครื่องจักรเครื่องแรกของคุณ — เครื่องบด\n\nรายละเอียดอยู่ในหมวดพลังงานและการแปรรูป"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "energy_basics",
+      "title": "พื้นฐานพลังงาน",
+      "icon": "alaindustrial:copper_cable",
+      "entries": [
+        {
+          "id": "eu_basics",
+          "title": "EU คืออะไร",
+          "icon": "alaindustrial:copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "พลังงาน EU",
+              "text": "EU (Energy Unit) คือหน่วยพลังงานของม็อดนี้ เครื่องกำเนิดไฟฟ้าผลิต EU สายไฟส่งต่อ ที่เก็บพลังงานเก็บสะสม ส่วนเครื่องจักรใช้จ่ายมันไป นี่เป็นระบบแยกต่างหากจากเรดสโตนดั้งเดิม"
+            },
+            {
+              "type": "text",
+              "title": "ระดับแรงดันไฟฟ้า",
+              "text": "พลังงานไหลเป็นแพ็กเก็ตที่ถูกจำกัดด้วยแรงดันไฟฟ้าต่อทิก:\n• LV — สูงสุด 32 EU ต่อทิก (บล็อกพื้นฐาน)\n• MV — สูงสุด 128 EU ต่อทิก\n• HV — สูงสุด 512 EU ต่อทิก\n\nขีดจำกัดของแต่ละระดับคืออัตราการส่งต่อทิก ไม่ใช่เกณฑ์ที่ทำให้พัง: บล็อกจะไม่ถูกทำลายด้วย «แรงดันเกิน»"
+            },
+            {
+              "type": "text",
+              "title": "สายไฟ",
+              "text": "สายไฟเชื่อมบล็อกต่าง ๆ เข้าเป็นโครงข่ายไฟฟ้าและลำเลียง EU สายทุกเส้นสูญเสียพลังงานตามระยะทาง — ยิ่งสายยาว ยิ่งสูญเสียมาก\n\nมีสามเกรด และแต่ละเกรดต่างกัน:\n• ดีบุก — แคบ (8 EU ต่อทิก) แต่แทบไม่สูญเสียเลย: เหมาะกับฟาร์มโซลาร์\n• ทองแดง — ตัวหลักที่ใช้ได้ทุกงาน (12 EU ต่อทิก)\n• ทอง — กว้างที่สุด (48 EU ต่อทิก) แต่สูญเสียมากกว่า\n\nอย่าผสมเกรดสายบนเส้นเดียวกัน: ทั้งโครงข่ายจะทำงานตามสายที่แรงที่สุดในนั้น รวมถึงการสูญเสียของมันด้วย"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "oil_basics",
+      "title": "น้ำมันดิบ",
+      "icon": "alaindustrial:oil_bucket",
+      "entries": [
+        {
+          "id": "oil_basics",
+          "title": "ทำความรู้จักน้ำมันดิบ",
+          "icon": "alaindustrial:oil_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "จะหาได้ที่ไหน",
+              "text": "น้ำมันดิบไม่สามารถคราฟต์หรือหลอมได้ — พบได้เท่านั้น ที่ไหนก็ได้ในโอเวอร์เวิลด์ แหล่งน้ำมันมีสี่ขนาด:\n\n• บ่อผิวดิน — หนึ่งแห่งต่อ 150 ชังก์ แค่พอลิ้มลอง\n• บ่อระดับขุดแร่ — Y -40..-8 หนึ่งแห่งต่อ 50 ชังก์: แหล่งหลักของคุณ\n• อ่างเก็บลึก — Y -50..-30 หนึ่งแห่งต่อ 40 ชังก์ กว้างกว่าสามเท่า\n• สายแร่น้ำมัน — หนึ่งแห่งต่อ 600 ชังก์ มองเห็นได้จากผิวดิน\n\nน้ำมันดิบไม่มีวันเกิดขึ้นในหมู่บ้าน เหมืองร้าง ป้อมปราการ หรือนครโบราณ"
+            },
+            {
+              "type": "text",
+              "title": "แหล่งน้ำมันมีจำกัด",
+              "text": "บล็อกน้ำมันที่คุณตักออกไปจะหายไปตลอดกาล — ไม่เหมือนน้ำ แหล่งน้ำมันจะไม่เติมเต็มขึ้นมาใหม่\n\nบ่อระดับขุดแร่มีประมาณ 160 ถัง อ่างเก็บลึกมีประมาณ 1300 ถัง ส่วนโดมของสายแร่มีเกือบสี่พันถัง หมดแหล่งหนึ่งก็ต้องไปหาแหล่งถัดไป ดังนั้นจงจดจำตำแหน่งไว้เมื่อเจอ\n\nตักด้วยถังใช้เวลานาน: วางเครื่องสูบไว้ข้าง ๆ แล้วมันจะดูดทั้งแหล่งเข้าไปในถังเก็บด้วยตัวเอง"
+            },
+            {
+              "type": "text",
+              "title": "อยู่ในน้ำมัน",
+              "text": "น้ำมันดิบข้น — คุณจะลุยผ่านมันมากกว่าว่ายน้ำ และการเคลื่อนที่จะช้าลงมาก\n\n• กดปุ่มกระโดดค้างไว้เพื่อลอยขึ้น ประมาณหนึ่งบล็อกต่อวินาที — ช้ากว่าน้ำและแม้แต่ลาวา\n• คุณหายใจไม่ได้: เมื่อหัวจมอยู่ อากาศจะลดลงเหมือนอยู่ใต้น้ำ และความเสียหายจะตามมา\n• ความเสียหายจากการตกจะถูกยกเลิกทั้งหมดขณะอยู่ในน้ำมัน\n• การมองเห็นแย่ลง: มีฟิล์มมืดบนหน้าจอ มองไม่เห็นอะไรเกินเก้าบล็อก\n\nวางแผนการลงไปตามปล่องของสายแร่จากปริมาณอากาศที่คุณมี ไม่ใช่จากความลึกของมัน"
+            },
+            {
+              "type": "text",
+              "title": "ไฟไหม้ได้",
+              "text": "น้ำมันดิบติดไฟได้ง่าย: แค่มีไฟอยู่ใกล้ ๆ ก็พอ — แม้จะอยู่ในแนวทแยงด้านล่างก็ตาม จากจุดนั้นเปลวไฟจะลามไปทั้งบ่อทีละบล็อก จนกว่าจะหมดทุกบล็อก รวมถึงบล็อกต้นกำเนิดด้วย หินเหล็กไฟจุดแหล่งน้ำมันติดไฟได้ทันทีเสมอ\n\nลาวาจะไม่จุดไฟน้ำมันดิบ — นี่เป็นการออกแบบโดยตั้งใจ: บ่อใต้ดินมักเกิดขึ้นติดกับบ่อลาวาพอดี\n\nเปลวไฟจะไม่ลามผ่านกำแพงทึบหนาหนึ่งบล็อก และถ้าคุณต้องการให้น้ำมันดิบอยู่ข้างโรงงานได้อย่างปลอดภัย ให้ปิดการตั้งค่า oilBurns ของม็อด แล้วมันจะเฉื่อยสมบูรณ์"
+            },
+            {
+              "type": "text",
+              "title": "กลายเป็นอะไรได้บ้าง",
+              "text": "น้ำมันดิบคือจุดเริ่มต้นของสายการผลิตยาง\n\n1. เก็บมัน — ด้วยถัง แคปซูลสุญญากาศ หรือเครื่องสูบ\n2. เครื่องพอลิเมอไรซ์: น้ำมันดิบ 1000 mB และ 400 EU ให้ยางดิบ\n3. เครื่องวัลคาไนซ์: ยางดิบ + ผงกำมะถัน + 400 EU\n4. วางกองไฟ (×1) ลาวา/แมกมา (×2) หรือเครื่องทำความร้อนไฟฟ้า (×3) ไว้ด้านล่าง\n\nความร้อนที่ดีกว่าช่วยประหยัดวัตถุดิบ: ทุกรอบการทำงานใช้ยางดิบหนึ่งชิ้นและผงกำมะถันสี่ชิ้นเสมอ"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nuclear_basics",
+      "title": "พลังงานนิวเคลียร์",
+      "icon": "alaindustrial:reactor_controller",
+      "entries": [
+        {
+          "id": "reactor_room",
+          "title": "ห้องเตาปฏิกรณ์",
+          "icon": "alaindustrial:reactor_casing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "มันคืออะไร",
+              "text": "เตาปฏิกรณ์นิวเคลียร์ไม่ใช่บล็อก — มันคือห้องที่คุณสร้างขึ้นเอง กล่องเปล่าที่ทำจากโครงเตาปฏิกรณ์ พร้อมคอลัมน์เชื้อเพลิงตั้งอยู่ข้างใน\n\nเปลือกห้องไม่ใช่ของตกแต่ง: มันคือสิ่งที่กักเก็บทุกอย่างที่เกิดขึ้นข้างในไว้"
+            },
+            {
+              "type": "text",
+              "title": "วิธีสร้าง",
+              "text": "1. วางกล่องปิดสนิทจากโครงเตาปฏิกรณ์ ขนาดภายใน: ตั้งแต่ 3x3x3 ไปจนถึง 12x12x12\n2. ติดตั้งตัวควบคุมไว้ในผนัง โดยหันหน้าออกด้านนอก\n3. ห้ามมีรูรั่วที่ไหนเลย — ตัวควบคุมจะบอกคุณว่ารอยรั่วอยู่ตรงไหน\n\nประตูเป็นทางเลือก: คุณอาจก่ออิฐปิดตัวเองไว้ข้างในแล้วขุดออกมาทีหลังก็ได้"
+            },
+            {
+              "type": "text",
+              "title": "ชิ้นส่วนของเปลือกห้อง",
+              "text": "- กระจกเตาปฏิกรณ์: หน้าต่าง แต่ต้องไม่เกินหนึ่งในสามของผนังทั้งหมด\n- ประตูกันอากาศเตาปฏิกรณ์: ห้องล็อกอากาศ เปิดด้วยเรดสโตนแล้วปิดตัวเอง\n- ช่องรับเข้าเตาปฏิกรณ์: จุดที่ท่อน้ำผ่านทะลุผนัง\n- ช่องจ่ายออกเตาปฏิกรณ์: จุดที่เสียบสายไฟ\n- หลอดไฟเตาปฏิกรณ์: ให้แสงสว่างเฉพาะในห้องเท่านั้น ไม่เคยส่องออกไปข้างนอก"
+            }
+          ]
+        },
+        {
+          "id": "reactor_fuel",
+          "title": "เชื้อเพลิง",
+          "icon": "alaindustrial:uranium_fuel_rod",
+          "pages": [
+            {
+              "type": "text",
+              "title": "สายการผลิตยูเรเนียม",
+              "text": "แร่ยูเรเนียม -> เครื่องบด -> เครื่องเหวี่ยงความร้อน -> เครื่องอัด\n\nเครื่องเหวี่ยงให้ยูเรเนียมเข้มข้น เครื่องอัดจะอัดยูเรเนียมเข้มข้นสองหน่วยให้กลายเป็นยูเรเนียมเสริมสมรรถนะ (U-235) หนึ่งหน่วย\n\nจากนั้นคราฟต์ปลอกแท่งเชื้อเพลิง แล้วใส่ยูเรเนียมเสริมสมรรถนะหนึ่งชิ้นลงไป"
+            },
+            {
+              "type": "text",
+              "title": "คอลัมน์เตาปฏิกรณ์",
+              "text": "วางคอลัมน์ไว้ในห้อง แล้วคลิกขวาใส่แท่งเชื้อเพลิงเข้าไป ได้สูงสุดสี่แท่ง มองเห็นได้ผ่านกระจก\n\nคอลัมน์วางซ้อนกันได้: หอคอยที่ต่อกันจะทำงานเสมือนเป็นภาชนะเดียวกัน"
+            },
+            {
+              "type": "text",
+              "title": "แท่งเชื้อเพลิงหมด",
+              "text": "ความทนทานของแท่งเชื้อเพลิงคือประจุที่เหลืออยู่ของมัน แท่งทุกแท่งในคอลัมน์เดียวกันจะสึกหรอไปพร้อมกันอย่างเท่าเทียม\n\nแท่งที่หมดแล้วจะกลายเป็นปลอกเปล่าและยังคงอยู่บนแท่นวาง หยิบมันออกด้วยมือแล้วเติมยูเรเนียมเสริมสมรรถนะหนึ่งชิ้นเข้าไปใหม่ — ไม่ต้องคราฟต์แท่งใหม่"
+            }
+          ]
+        },
+        {
+          "id": "reactor_run",
+          "title": "การเริ่มเดินเครื่อง",
+          "icon": "alaindustrial:reactor_controller",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ห้าขั้นตอน",
+              "text": "1. ห้องปิดสนิทแล้ว\n2. มีแท่งเชื้อเพลิงอยู่ในคอลัมน์\n3. มีสายไฟต่อกับช่องจ่ายออกเตาปฏิกรณ์\n4. สัญญาณเรดสโตนไปถึงตัวควบคุม\n5. ระดับความลึกไม่อยู่ที่ศูนย์: ตัวควบคุมมีปุ่มห้าปุ่ม — 0%, 25%, 50%, 75%, 100%"
+            },
+            {
+              "type": "text",
+              "title": "ถ้าไม่มีอะไรเกิดขึ้น",
+              "text": "เปิดตัวควบคุม: แถวกำลังผลิตจะบอกว่าขาดอะไร — ไม่มีแท่งเชื้อเพลิง ไม่มีสัญญาณ ถอนแท่งควบคุมออกแล้ว หรือบัฟเฟอร์เต็ม\n\nไม่มีสัญญาณคือการหยุดฉุกเฉิน ดึงคันโยกแล้วเตาปฏิกรณ์จะหยุดทำงาน"
+            },
+            {
+              "type": "text",
+              "title": "กำลังไฟ",
+              "text": "หนึ่งคอลัมน์ให้ 24 EU ต่อทิก ยิ่งใส่แท่งเชื้อเพลิงมากและวางชิดกัน ยิ่งได้มากขึ้น: คอลัมน์ที่อยู่ติดกันจะเสริมกำลังกันเอง\n\nเพดานสูงสุดคือ 512 EU ต่อทิก ปุ่มระดับความลึกที่เลือกจะแบ่งสัดส่วนทั้งกำลังไฟ ความร้อน และการใช้เชื้อเพลิงเท่ากัน"
+            }
+          ]
+        },
+        {
+          "id": "reactor_cooling",
+          "title": "การหล่อเย็น",
+          "icon": "alaindustrial:reactor_port",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ความร้อน",
+              "text": "เตาปฏิกรณ์ร้อนขึ้นเรื่อย ๆ และห้องจะระบายความร้อนออกไปเอง — ยิ่งร้อนมากยิ่งระบายเร็วขึ้น ดังนั้นเตาปฏิกรณ์แต่ละแห่งจะนิ่งอยู่ที่อุณหภูมิของตัวเองและคงอยู่แบบนั้น\n\nหนึ่งคอลัมน์อยู่ที่ประมาณ 15% สองคอลัมน์วางเคียงกันจะขึ้นไปถึงสองในสาม สามคอลัมน์ขึ้นไปห้องเดียวรับมือเองไม่ไหว"
+            },
+            {
+              "type": "text",
+              "title": "วงจรน้ำ",
+              "text": "น้ำไม่ใช่ตัวระบายความร้อน แต่เป็นระบบความปลอดภัย: มันเริ่มทำงานเมื่อมาตรวัดใกล้ถึงขีดสีเหลืองอำพัน และคอยกดเตาปฏิกรณ์ให้อยู่ต่ำกว่านั้น ดังนั้นสีเหลืองอำพันแปลว่าระบบหล่อเย็นกำลังตามไม่ทัน\n\nเครื่องสูบ -> ท่อ -> ช่องรับเข้าเตาปฏิกรณ์ -> คอลัมน์ ใช้ประแจตั้งค่าด้านของท่อที่ช่องรับเข้า: ดึงออกที่ด้านนอก ใส่เข้าที่ด้านใน คอลัมน์และหัวฉีดไม่ต้องใช้ประแจเลย — คอลัมน์รับเฉพาะน้ำเข้าและปล่อยเฉพาะไอน้ำออกเท่านั้น"
+            },
+            {
+              "type": "text",
+              "title": "ไอน้ำ",
+              "text": "น้ำที่เดือดจะกลายเป็นไอน้ำและสะสมอยู่ในคอลัมน์ มันต้องมีทางออก: ท่อจากด้านบนของคอลัมน์ -> ช่องรับเข้าเตาปฏิกรณ์ -> หัวฉีดไอน้ำด้านนอก\n\nหัวฉีดต้องหันหน้าออกสู่ที่โล่ง หากฝังอยู่ในผนัง มันจะระบายอะไรไม่ได้เลย และวงจรทั้งหมดข้างหลังก็จะค้าง"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "energy",
+      "title": "พลังงาน",
+      "icon": "alaindustrial:wind_mill",
+      "entries": [
+        {
+          "id": "wind_mill",
+          "title": "กังหันลม",
+          "icon": "alaindustrial:wind_mill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "กังหันลม",
+              "text": "กังหันลมพื้นฐานระดับ LV — ผลิต EU จากลมโดยไม่ต้องใช้เชื้อเพลิง สร้างให้สูงขึ้นและในสภาพอากาศเลวร้ายเพื่อกำลังไฟที่มากขึ้น"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 0–8 EU ต่อทิก",
+                "บัฟเฟอร์: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:copper_ingot",
+                "minecraft:oak_planks",
+                "minecraft:copper_ingot",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "minecraft:copper_ingot",
+                "minecraft:oak_planks",
+                "minecraft:copper_ingot"
+              ],
+              "result_id": "alaindustrial:wind_mill",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "water_mill",
+          "title": "กังหันน้ำ",
+          "icon": "alaindustrial:water_mill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "กังหันน้ำ",
+              "text": "เครื่องกำเนิดไฟฟ้าพาสซีฟระดับ LV — ผลิต EU จากกระแสน้ำที่ไหลอยู่ข้าง ๆ โดยไม่ต้องใช้เชื้อเพลิงหรือถังเก็บ"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 0–4 EU ต่อทิก",
+                "บัฟเฟอร์: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:copper_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:copper_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:water_mill",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "generator",
+          "title": "เครื่องกำเนิดไฟฟ้า",
+          "icon": "alaindustrial:generator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เครื่องกำเนิดไฟฟ้า",
+              "text": "เครื่องกำเนิดไฟฟ้าอย่างง่ายที่ใช้ถ่านหินและเชื้อเพลิงแข็ง — แหล่ง EU ระดับ LV แรกเริ่มสำหรับเครื่องจักรเครื่องแรกของคุณ"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 8 EU ต่อทิก",
+                "บัฟเฟอร์: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:furnace",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:cobblestone"
+              ],
+              "result_id": "alaindustrial:generator",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "geothermal_generator",
+          "title": "เครื่องกำเนิดไฟฟ้าความร้อนใต้พิภพ",
+          "icon": "alaindustrial:geothermal_generator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เครื่องกำเนิดไฟฟ้าความร้อนใต้พิภพ",
+              "text": "ผลิต EU จากลาวา — แรงกว่าเครื่องกำเนิดไฟฟ้าถ่านหิน และต้องเติมเชื้อเพลิงน้อยกว่ามาก"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 16 EU ต่อทิก",
+                "บัฟเฟอร์: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "alaindustrial:generator",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:smooth_stone"
+              ],
+              "result_id": "alaindustrial:geothermal_generator",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "lightning_rod_generator",
+          "title": "เครื่องกำเนิดไฟฟ้าสายล่อฟ้า",
+          "icon": "alaindustrial:lightning_rod_generator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เครื่องกำเนิดไฟฟ้าสายล่อฟ้า",
+              "text": "จับฟ้าผ่าและเก็บสะสมไว้ที่ปลายตัวนำ — พลังงานก้อนใหญ่ที่หายากแต่คุ้มค่า หากที่เก็บยังเต็มอยู่ ฟ้าผ่าครั้งนั้นจะสูญเปล่า"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 16–24 EU ต่อทิกขณะปล่อยประจุ",
+                "บัฟเฟอร์: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "",
+                "minecraft:lightning_rod",
+                "",
+                "alaindustrial:copper_cable",
+                "alaindustrial:machine_casing",
+                "alaindustrial:copper_cable",
+                "",
+                "alaindustrial:electronic_circuit",
+                ""
+              ],
+              "result_id": "alaindustrial:lightning_rod_generator",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "daylight_solar_panel",
+          "title": "แผงโซลาร์เซลล์แสงกลางวัน",
+          "icon": "alaindustrial:daylight_solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "แผงโซลาร์เซลล์แสงกลางวัน",
+              "text": "แผงกลางวันระดับ T2 — แรงกว่าแผงพื้นฐานถึงสี่เท่า ทำงานในเวลากลางวันใต้ท้องฟ้าเปิด ได้มาจากการวิวัฒนาการเท่านั้น"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 4 EU ต่อทิก (กลางวัน)",
+                "บัฟเฟอร์: 8000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "moonlit_solar_panel",
+          "title": "แผงโซลาร์เซลล์แสงจันทร์",
+          "icon": "alaindustrial:moonlit_solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "แผงโซลาร์เซลล์แสงจันทร์",
+              "text": "แผงกลางคืนระดับ T2 — ผลิต EU ในเวลากลางคืนใต้ท้องฟ้าเปิด และยังผลิตได้บ้างแม้ในสภาพอากาศเลวร้าย ได้มาจากการวิวัฒนาการเท่านั้น"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 3 EU ต่อทิก (กลางคืน)",
+                "บัฟเฟอร์: 8000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "solar_panel",
+          "title": "แผงโซลาร์เซลล์",
+          "icon": "alaindustrial:solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "แผงโซลาร์เซลล์",
+              "text": "แหล่งพลังงานแรกของม็อดนี้ — ผลิต EU ในเวลากลางวันใต้ท้องฟ้าเปิด จุดเริ่มต้นของสายการผลิตพลังงานทั้งหมด"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 1 EU ต่อทิก (กลางวัน)",
+                "บัฟเฟอร์: 8000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:redstone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:redstone",
+                "minecraft:iron_ingot",
+                "alaindustrial:copper_cable",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:solar_panel",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "charge_pad",
+          "title": "สถานีชาร์จ",
+          "icon": "alaindustrial:charge_pad",
+          "pages": [
+            {
+              "type": "text",
+              "title": "สถานีชาร์จ",
+              "text": "แผ่นพื้นที่ชาร์จทุกสิ่งที่ใช้พลังงานของผู้เล่นที่ยืนอยู่บนมัน — ทั้งในกระเป๋าเป้ มือรอง และอุปกรณ์ที่สวมใส่อยู่ — โดยไม่ต้องคลิกแม้แต่ครั้งเดียว"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 20,000 EU",
+                "บัฟเฟอร์: 20,000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:iron_plate",
+                "alaindustrial:battery",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:charge_pad",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "energy_condenser",
+          "title": "เครื่องควบแน่นพลังงาน",
+          "icon": "alaindustrial:energy_condenser",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เครื่องควบแน่นพลังงาน",
+              "text": "ดักจับพลังงานส่วนเกินของโครงข่ายและอัดมันเป็นก้อนพลังงาน ระดับที่คุณจะได้ขึ้นอยู่กับจังหวะที่คุณหยิบมันออก"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: รับเข้า 128 EU ต่อทิก"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:gold_ingot",
+                "alaindustrial:iron_plate",
+                "minecraft:gold_ingot",
+                "alaindustrial:battery",
+                "minecraft:gold_ingot",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:energy_condenser",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "cesu",
+          "title": "ที่เก็บพลังงานเสริมแรง",
+          "icon": "alaindustrial:cesu",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ที่เก็บพลังงานเสริมแรง",
+              "text": "บล็อกที่เก็บพลังงานระดับ MV — เก็บได้ 100,000 EU มากกว่าบัฟเฟอร์เริ่มต้นห้าเท่า และส่งพลังงานเร็วกว่าสี่เท่าที่ 128 EU ต่อทิก"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 100,000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:battery_box",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:electrum_ingot"
+              ],
+              "result_id": "alaindustrial:cesu",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "battery_box",
+          "title": "กล่องแบตเตอรี่",
+          "icon": "alaindustrial:battery_box",
+          "pages": [
+            {
+              "type": "text",
+              "title": "กล่องแบตเตอรี่",
+              "text": "บล็อกที่เก็บพลังงานระดับ LV แรกเริ่ม — เก็บได้ 20,000 EU สะสมส่วนเกินจากเครื่องกำเนิดไฟฟ้าและจ่ายให้เครื่องจักรที่ 32 EU ต่อทิก"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 20,000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:oak_planks",
+                "alaindustrial:battery",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "minecraft:redstone",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "alaindustrial:battery",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:battery_box",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "gold_cable",
+          "title": "สายทอง",
+          "icon": "alaindustrial:gold_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "สายทอง",
+              "text": "สายเปลือยระดับ MV ที่กว้าง มีการสูญเสียสูงและช็อตอย่างรุนแรงเมื่อสัมผัสขณะมีพลังงานไหลผ่านอยู่จริง"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: ≤128 EU ต่อแพ็กเก็ต",
+                "บัฟเฟอร์: 48 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:gold_cable",
+              "result_count": 3
+            }
+          ]
+        },
+        {
+          "id": "insulated_gold_cable",
+          "title": "สายทองหุ้มฉนวน",
+          "icon": "alaindustrial:insulated_gold_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "สายทองหุ้มฉนวน",
+              "text": "สายทองระดับ MV หุ้มด้วยยาง สูญเสียพลังงานเหลือครึ่งเดียวและปลอดภัยจากไฟช็อตเมื่อสัมผัสอย่างสมบูรณ์"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: ≤128 EU ต่อแพ็กเก็ต",
+                "บัฟเฟอร์: 48 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable"
+              ],
+              "result_id": "alaindustrial:insulated_gold_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "insulated_copper_cable",
+          "title": "สายทองแดงหุ้มฉนวน",
+          "icon": "alaindustrial:insulated_copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "สายทองแดงหุ้มฉนวน",
+              "text": "สายทองแดงระดับ LV หุ้มด้วยยาง สูญเสียพลังงานเหลือครึ่งเดียวและปลอดภัยจากไฟช็อตเมื่อสัมผัสอย่างสมบูรณ์"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: ≤32 EU ต่อแพ็กเก็ต",
+                "บัฟเฟอร์: 12 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable"
+              ],
+              "result_id": "alaindustrial:insulated_copper_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "insulated_tin_cable",
+          "title": "สายดีบุกหุ้มฉนวน",
+          "icon": "alaindustrial:insulated_tin_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "สายดีบุกหุ้มฉนวน",
+              "text": "สายดีบุกระดับ LV หุ้มด้วยยาง สูญเสียพลังงานน้อยที่สุดและปลอดภัยจากไฟช็อตเมื่อสัมผัสอย่างสมบูรณ์"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: ≤8 EU ต่อแพ็กเก็ต",
+                "บัฟเฟอร์: 8 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable"
+              ],
+              "result_id": "alaindustrial:insulated_tin_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "insulated_electrum_cable",
+          "title": "สายอิเล็กตรัมหุ้มฉนวน",
+          "icon": "alaindustrial:insulated_electrum_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "สายอิเล็กตรัมหุ้มฉนวน",
+              "text": "สายอิเล็กตรัมระดับ HV หุ้มด้วยยาง: สูญเสียพลังงานต่ำที่สุดในม็อดนี้ และปลอดภัยจากไฟช็อตเมื่อสัมผัสอย่างสมบูรณ์"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: ≤512 EU ต่อแพ็กเก็ต",
+                "บัฟเฟอร์: 192 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable"
+              ],
+              "result_id": "alaindustrial:insulated_electrum_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "copper_cable",
+          "title": "สายทองแดง",
+          "icon": "alaindustrial:copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "สายทองแดง",
+              "text": "สายระดับ LV ราคาถูกที่ใช้งานได้ทุกวัน สายเปลือยจะช็อตผู้เล่นเมื่อมีไฟจากโครงข่ายที่มีพลังงานไหลอยู่"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: ≤32 EU ต่อแพ็กเก็ต",
+                "บัฟเฟอร์: 12 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:copper_cable",
+              "result_count": 3
+            }
+          ]
+        },
+        {
+          "id": "tin_cable",
+          "title": "สายดีบุก",
+          "icon": "alaindustrial:tin_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "สายดีบุก",
+              "text": "สายระดับ LV ที่ถูกที่สุดและแทบไม่สูญเสียพลังงานเลย ขณะที่มีพลังงานไหลผ่านอยู่จริง สายเปลือยจะช็อตผู้เล่นเมื่อสัมผัส"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: ≤8 EU ต่อแพ็กเก็ต",
+                "บัฟเฟอร์: 8 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tin_cable",
+              "result_count": 3
+            }
+          ]
+        },
+        {
+          "id": "electrum_cable",
+          "title": "สายอิเล็กตรัม",
+          "icon": "alaindustrial:electrum_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "สายอิเล็กตรัม",
+              "text": "สายเปลือยระดับ HV ที่ทำจากแท่งอิเล็กตรัมพร้อมแกนผงเพชร — สายที่กว้างที่สุดในบันไดระดับและสูญเสียพลังงานน้อยที่สุด แลกมาด้วยสูตรคราฟต์ที่แพงมาก"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: ≤512 EU ต่อแพ็กเก็ต",
+                "บัฟเฟอร์: 192 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot"
+              ],
+              "result_id": "alaindustrial:electrum_cable",
+              "result_count": 3
+            }
+          ]
+        },
+        {
+          "id": "irradiated_soil",
+          "title": "ดินปนเปื้อนรังสี",
+          "icon": "alaindustrial:irradiated_soil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ดินปนเปื้อนรังสี",
+              "text": "รอยแผลที่อุบัติเหตุนิวเคลียร์ทิ้งไว้: พื้นดินที่ปนเปื้อนจากการระเบิดของเตาปฏิกรณ์ มันแผ่รังสีน้อยกว่ายูเรเนียมอยู่หนึ่งขั้น — แม้อยู่ในกระเป๋าก็ยังแผ่รังสีได้ — และจะจางหายไปเองผ่านสี่ขั้น เร็วขึ้นเมื่ออยู่ใต้น้ำ ขุดและพกพาได้เหมือนบล็อกทั่วไป แต่ไม่สามารถคราฟต์ได้"
+            }
+          ]
+        },
+        {
+          "id": "reactor_controller",
+          "title": "ตัวควบคุมเตาปฏิกรณ์",
+          "icon": "alaindustrial:reactor_controller",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ตัวควบคุมเตาปฏิกรณ์",
+              "text": "สมองของเตาปฏิกรณ์: มันสแกนเปลือกห้อง บอกว่าอะไรผิดพลาดและอยู่ตรงไหน ควบคุมปฏิกิริยาและส่งจ่าย EU ห้องเป็นทางเลือก — ถ้าไม่มีห้อง มันจะทำงานอ่อนลงและหลอมทิวทัศน์รอบข้าง"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "บัฟเฟอร์: 200,000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:reactor_circuit",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:control_rod_drive",
+                "alaindustrial:shielding_alloy_plate"
+              ],
+              "result_id": "alaindustrial:reactor_controller",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "empty_fuel_rod",
+          "title": "ปลอกแท่งเชื้อเพลิง",
+          "icon": "alaindustrial:empty_fuel_rod",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ปลอกแท่งเชื้อเพลิง",
+              "text": "ปลอกของแท่งเชื้อเพลิงที่ยังไม่มียูเรเนียมอยู่ข้างใน: คราฟต์แบบ 3x3 เติมยูเรเนียมเสริมสมรรถนะหนึ่งชิ้นลงไป และคอลัมน์จะคืนปลอกนี้กลับมาเมื่อแท่งเชื้อเพลิงหมด"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:iron_nugget",
+                "minecraft:iron_ingot",
+                "minecraft:iron_nugget",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:iron_ingot",
+                "minecraft:iron_nugget",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:iron_nugget"
+              ],
+              "result_id": "alaindustrial:empty_fuel_rod",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "steam_nozzle",
+          "title": "หัวฉีดไอน้ำ",
+          "icon": "alaindustrial:steam_nozzle",
+          "pages": [
+            {
+              "type": "text",
+              "title": "หัวฉีดไอน้ำ",
+              "text": "ปลายสุดของวงจรหล่อเย็น: มันรับไอน้ำจากท่อ ปล่อยออกสู่อากาศเป็นลำควันแล้วทำลายมันทิ้ง — 100 mB ต่อทิกต่อหัวฉีด"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:iron_ingot",
+                "alaindustrial:fluid_pipe",
+                "minecraft:iron_ingot",
+                "",
+                "alaindustrial:machine_casing",
+                ""
+              ],
+              "result_id": "alaindustrial:steam_nozzle",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "fuel_rod_assembly",
+          "title": "คอลัมน์เตาปฏิกรณ์",
+          "icon": "alaindustrial:fuel_rod_assembly",
+          "pages": [
+            {
+              "type": "text",
+              "title": "คอลัมน์เตาปฏิกรณ์",
+              "text": "แท่นวางโปร่งใสสำหรับแท่งเชื้อเพลิงสี่แท่ง พร้อมถังสองใบ — น้ำและไอน้ำ: เติมด้วยการคลิกขวา มันจะทำให้แท่งเชื้อเพลิงทุกแท่งที่ใส่ไว้สึกหรอไปพร้อมกัน และทั้งระดับเชื้อเพลิงและสารหล่อเย็นอ่านค่าได้จากอีกฝั่งของห้อง โดยไม่ต้องเปิดเมนูเลย"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:iron_ingot",
+                "alaindustrial:reactor_glass",
+                "minecraft:iron_ingot",
+                "alaindustrial:reactor_glass",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:reactor_glass",
+                "minecraft:iron_ingot",
+                "alaindustrial:reactor_glass",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:fuel_rod_assembly",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_port",
+          "title": "ช่องรับเข้าเตาปฏิกรณ์",
+          "icon": "alaindustrial:reactor_port",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ช่องรับเข้าเตาปฏิกรณ์",
+              "text": "จุดเดียวที่ของเหลวจะผ่านทะลุเปลือกห้องที่ปิดสนิทได้: จุดผ่านทะลุ 50 mB ต่อทิกที่ทำงานได้สองทาง — น้ำเข้า ไอน้ำออก — และยังคงเป็นชิ้นส่วนผนังเต็มรูปแบบ"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "บัฟเฟอร์: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:rubber",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:rubber",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:reactor_casing",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:rubber",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:rubber"
+              ],
+              "result_id": "alaindustrial:reactor_port",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "reactor_outlet",
+          "title": "ช่องจ่ายออกเตาปฏิกรณ์",
+          "icon": "alaindustrial:reactor_outlet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ช่องจ่ายออกเตาปฏิกรณ์",
+              "text": "ช่องเสียบที่ฝังอยู่ในเปลือกของห้องเตาปฏิกรณ์: ตัวควบคุมถูกล้อมอยู่ในผนังและไม่มีด้านไหนที่สายไฟจะเข้าถึงได้ ดังนั้นพลังงานจึงออกผ่านชิ้นส่วนผนังที่สร้างขึ้นมาเพื่อการนี้โดยเฉพาะ — บัฟเฟอร์ 512 EU ที่จ่ายออกได้ทุกด้านและถูกเติมเต็มโดยตัวควบคุม"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "บัฟเฟอร์: 512 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:rubber",
+                "alaindustrial:copper_cable",
+                "alaindustrial:rubber",
+                "minecraft:iron_ingot",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:iron_ingot",
+                "alaindustrial:rubber",
+                "alaindustrial:copper_cable",
+                "alaindustrial:rubber"
+              ],
+              "result_id": "alaindustrial:reactor_outlet",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lever",
+          "title": "คันโยกเตาปฏิกรณ์",
+          "icon": "alaindustrial:reactor_lever",
+          "pages": [
+            {
+              "type": "text",
+              "title": "คันโยกเตาปฏิกรณ์",
+              "text": "คันโยกที่ทำจากโลหะผสมกำบังรังสี: สัญญาณที่กดค้างไว้จากภายในห้องที่ปิดสนิท — ปุ่มหยุดฉุกเฉินของเตาปฏิกรณ์ ที่ไม่ทำลายเกราะกำบังของห้องและไม่หลอมละลายไปพร้อมกับสิ่งที่อยู่ข้างในนั้น"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "บัฟเฟอร์: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบไม่มีรูปแบบ",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:lever",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_lever",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "uranium_fuel_rod",
+          "title": "แท่งเชื้อเพลิง",
+          "icon": "alaindustrial:uranium_fuel_rod",
+          "pages": [
+            {
+              "type": "text",
+              "title": "แท่งเชื้อเพลิง",
+              "text": "เชื้อเพลิงของเตาปฏิกรณ์: ยูเรเนียมเสริมสมรรถนะในปลอกเหล็กบนฐานกำบังรังสี มันเก็บได้ 144,000 EU แสดงส่วนที่เหลือของมันเป็นค่าความทนทาน และทิ้งปลอกเปล่าไว้เมื่อเชื้อเพลิงหมด"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบไม่มีรูปแบบ",
+              "grid": [
+                "alaindustrial:empty_fuel_rod",
+                "alaindustrial:refined_uranium",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:uranium_fuel_rod",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "processing",
+      "title": "การแปรรูป",
+      "icon": "alaindustrial:vulcanizer",
+      "entries": [
+        {
+          "id": "vulcanizer",
+          "title": "เครื่องวัลคาไนซ์",
+          "icon": "alaindustrial:vulcanizer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เครื่องวัลคาไนซ์",
+              "text": "เครื่องจักรระดับ LV ที่รวมยางดิบกับผงกำมะถันเข้าด้วยกันเพื่อทำยาง ต้องการทั้ง EU และความร้อนจากด้านล่าง แหล่งความร้อนที่แรงกว่าจะเพิ่มผลผลิต"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 400 EU ต่อรอบ",
+                "บัฟเฟอร์: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:sulfur_dust",
+                "minecraft:iron_ingot",
+                "alaindustrial:sulfur_dust",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:vulcanizer",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "macerator",
+          "title": "เครื่องบด",
+          "icon": "alaindustrial:macerator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เครื่องบด",
+              "text": "บดแร่ (ทั้งบล็อกแร่และแร่ดิบ) ให้เป็นผงสองหน่วย โดยใช้ EU ในระดับ LV"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 300 EU ต่อรอบ",
+                "บัฟเฟอร์: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:flint",
+                "minecraft:flint",
+                "minecraft:flint",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:macerator",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_furnace",
+          "title": "เตาเผาเหล็ก",
+          "icon": "alaindustrial:iron_furnace",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เตาเผาเหล็ก",
+              "text": "เตาเผาเชื้อเพลิงระดับกลางระหว่างเตาเผาดั้งเดิมกับเตาเผาไฟฟ้า — เร็วกว่าเตาเผาดั้งเดิม แต่ยังใช้เชื้อเพลิงอยู่ ไม่ใช้ EU"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:furnace",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:iron_furnace",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "compressor",
+          "title": "เครื่องอัด",
+          "icon": "alaindustrial:compressor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เครื่องอัด",
+              "text": "บีบอัดวัตถุดิบให้กลายเป็นรูปแบบที่หนาแน่นขึ้น — ผงโลหะเป็นแท่ง ผงถ่านหิน/พลอยกลับเป็นไอเทม น้ำแข็งเป็นน้ำแข็งอัด/น้ำแข็งสีฟ้า อ้อยเป็นกระดาษ ปิดวงจรการเพิ่มผลผลิตสองเท่าสำหรับวัสดุที่ไม่ใช่โลหะ"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 260 EU ต่อรอบ",
+                "บัฟเฟอร์: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:piston",
+                "minecraft:iron_ingot",
+                "minecraft:piston",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:compressor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "canning_machine",
+          "title": "เครื่องบรรจุกระป๋อง",
+          "icon": "alaindustrial:canning_machine",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เครื่องบรรจุกระป๋อง",
+              "text": "เครื่องจักรระดับ LV ที่แปรรูปอาหารใดก็ได้ให้กลายเป็นอาหารกระป๋องที่เหมือนกันหมด อาหารกระป๋องซ้อนกองรวมกันได้ไม่ว่าจะทำจากอะไร ดังนั้นเศษอาหารหลากหลายชนิดนับสิบช่องจึงยุบรวมเหลือช่องเดียว"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 200 EU ต่ออาหารกระป๋องหนึ่งกระป๋อง",
+                "บัฟเฟอร์: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:tin_plate",
+                "minecraft:piston",
+                "alaindustrial:tin_plate",
+                "alaindustrial:tin_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:tin_plate",
+                "alaindustrial:tin_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tin_plate"
+              ],
+              "result_id": "alaindustrial:canning_machine",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "sawmill",
+          "title": "โรงเลื่อย",
+          "icon": "alaindustrial:sawmill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "โรงเลื่อย",
+              "text": "เลื่อยไม้ชนิดใดก็ได้ให้กลายเป็นไม้กระดาน ไม้แท่ง แผ่นหินครึ่งก้อน หรือบันได ให้ผลผลิตสูงกว่าการคราฟต์ด้วยมือ มีสี่โหมดให้สลับ ทำงานด้วย EU"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 160 EU ต่อรอบ",
+                "บัฟเฟอร์: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:electronic_circuit",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "alaindustrial:silver_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:sawmill",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "polymerizer",
+          "title": "เครื่องพอลิเมอไรซ์",
+          "icon": "alaindustrial:polymerizer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เครื่องพอลิเมอไรซ์",
+              "text": "ต้มน้ำมันดิบให้กลายเป็นยางดิบ — ถังเก็บสิบถัง ใช้หนึ่งถังต่อการทำงานหนึ่งรอบ จากนั้นยางดิบจะถูกรวมกับกำมะถันในเครื่องวัลคาไนซ์"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 400 EU ต่อรอบ",
+                "บัฟเฟอร์: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:polymerizer",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "component_repair_bench",
+          "title": "โต๊ะซ่อมชิ้นส่วน",
+          "icon": "alaindustrial:component_repair_bench",
+          "pages": [
+            {
+              "type": "text",
+              "title": "โต๊ะซ่อมชิ้นส่วน",
+              "text": "ซ่อมใบพัดกังหันลมหรือกงล้อกังหันน้ำที่สึกหรอ ด้วยไอเทมหนึ่งชิ้นและ EU จำนวนหนึ่ง — แต่ทุกครั้งที่ซ่อม เพดานความทนทานสูงสุดของชิ้นส่วนนั้นจะลดลงอย่างถาวร"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 9600–28800 EU ต่อรอบ",
+                "บัฟเฟอร์: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:component_repair_bench",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "assembler",
+          "title": "เครื่องประกอบ",
+          "icon": "alaindustrial:assembler",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เครื่องประกอบ",
+              "text": "ประทับสูตรคราฟต์จากโต๊ะคราฟต์ตามพิมพ์เขียวออกมาต่อเนื่องด้วย EU โดยดึงวัตถุดิบจากคลังเก็บแบบโมดูลของตัวเอง เก็บคิวพิมพ์เขียวได้สามใบ"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 480 EU ต่อรอบ",
+                "บัฟเฟอร์: 12,000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:iron_gear",
+                "minecraft:crafting_table",
+                "alaindustrial:iron_gear",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_gear",
+                "alaindustrial:storage_module",
+                "alaindustrial:iron_gear"
+              ],
+              "result_id": "alaindustrial:assembler",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "alloy_smelter",
+          "title": "เตาหลอมโลหะผสม",
+          "icon": "alaindustrial:alloy_smelter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เตาหลอมโลหะผสม",
+              "text": "เครื่องจักรระดับ LV ที่มีช่องใส่วัตถุดิบสามช่องสลับกันได้ หลอมโลหะหลายชนิดให้กลายเป็นโลหะผสมชนิดเดียว ลำดับการใส่ไม่สำคัญ ทองแดง ดีบุก เหล็ก นิกเกิล ทอง และเงิน จะกลายเป็นสำริด อินวาร์ คิวโปรนิกเกิล และอิเล็กตรัม"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 1200 EU ต่อรอบ",
+                "บัฟเฟอร์: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:alloy_smelter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "thermal_centrifuge",
+          "title": "เครื่องเหวี่ยงความร้อน",
+          "icon": "alaindustrial:thermal_centrifuge",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เครื่องเหวี่ยงความร้อน",
+              "text": "เครื่องจักรระดับ LV ที่ต้องเร่งรอบก่อนทำงาน: สัญญาณเรดสโตนจะเร่งโรเตอร์ให้ได้ความเร็ว และเครื่องทำความร้อนที่ร้อนอยู่ด้านล่างจะทำให้มันแยกผงยูเรเนียมออกเป็นสองเท่า — เป็นการเพิ่มผลผลิตแร่ครั้งที่สองต่อจากเครื่องบด"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 800 EU ต่อรอบ",
+                "บัฟเฟอร์: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "minecraft:iron_ingot",
+                "alaindustrial:tempered_iron",
+                "minecraft:redstone",
+                "alaindustrial:machine_casing",
+                "minecraft:redstone",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:thermal_centrifuge",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "recycler",
+          "title": "เครื่องรีไซเคิล",
+          "icon": "alaindustrial:recycler",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เครื่องรีไซเคิล",
+              "text": "บดขยะชนิดใดก็ได้ให้กลายเป็นแท่งตะกรันอัด เกรดที่ได้ไม่ได้ขึ้นอยู่กับปริมาณขยะที่ใส่เข้าไป แต่ขึ้นอยู่กับความหลากหลายของมัน — ชุดวัตถุดิบแบบเดียวล้วนให้แค่ตะกรันคุณภาพต่ำ ส่วนของผสมที่หลากหลายจริง ๆ จะให้ตะกรันคุณภาพสูง"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 8 EU ต่อทิก",
+                "บัฟเฟอร์: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:iron_ingot",
+                "alaindustrial:recycler_blades_iron",
+                "minecraft:iron_ingot",
+                "alaindustrial:recycler_blades_iron",
+                "alaindustrial:machine_casing",
+                "alaindustrial:recycler_blades_iron",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:recycler",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "extractor",
+          "title": "เครื่องสกัด",
+          "icon": "alaindustrial:extractor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เครื่องสกัด",
+              "text": "ดึงวัตถุดิบที่มีประโยชน์ออกจากของดิบ — สีย้อม×2 จากดอกไม้ เมล็ดพันธุ์เพิ่มขึ้นจากฟักทอง/แตงโม ผงเบลซจากแท่งเบลซ หินเหล็กไฟจากกรวด สะดวกมากสำหรับฟาร์มอัตโนมัติที่ป้อนด้วยฮอปเปอร์"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 240 EU ต่อรอบ",
+                "บัฟเฟอร์: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:hopper",
+                "minecraft:iron_ingot",
+                "minecraft:hopper",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:extractor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "galvanic_bath",
+          "title": "อ่างชุบไฟฟ้า",
+          "icon": "alaindustrial:galvanic_bath",
+          "pages": [
+            {
+              "type": "text",
+              "title": "อ่างชุบไฟฟ้า",
+              "text": "เครื่องชุบไฟฟ้าระดับ LV: มันเปลี่ยนเส้นใยและผงเงินให้กลายเป็นเส้นด้ายฟลักซ์ในอ่างน้ำ — เส้นทางสู่สายผลิตภัณฑ์ฟลักซ์วีฟและชุดเกราะ EU"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "บัฟเฟอร์: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:silver_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:silver_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:silver_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:silver_plate"
+              ],
+              "result_id": "alaindustrial:galvanic_bath",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_heater",
+          "title": "เครื่องทำความร้อนไฟฟ้า",
+          "icon": "alaindustrial:electric_heater",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เครื่องทำความร้อนไฟฟ้า",
+              "text": "บล็อกสนับสนุนระดับ LV ที่วางอยู่ใต้เครื่องวัลคาไนซ์ ต้องอุ่นเครื่องก่อน เมื่อร้อนแล้วจะให้ความร้อนสูงสุด ×3 ขณะที่ยังเย็นอยู่ มันไม่ใช่แหล่งความร้อนเลย"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 6 EU ต่อทิก",
+                "บัฟเฟอร์: 2400 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:redstone",
+                "minecraft:gold_ingot",
+                "minecraft:redstone",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:electric_heater",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_furnace",
+          "title": "เตาเผาไฟฟ้า",
+          "icon": "alaindustrial:electric_furnace",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เตาเผาไฟฟ้า",
+              "text": "หลอมได้ทุกอย่างที่เตาเผาดั้งเดิมทำได้ บวกกับผงของม็อดนี้ให้กลายเป็นแท่งโลหะ ทำงานด้วย EU แทนเชื้อเพลิง"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 200 EU ต่อรอบ",
+                "บัฟเฟอร์: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_furnace",
+                "alaindustrial:battery",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:electric_furnace",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fermenter",
+          "title": "ถังหมัก",
+          "icon": "alaindustrial:fermenter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ถังหมัก",
+              "text": "เครื่องจักรระดับ LV ที่หมักสารอินทรีย์กับน้ำให้กลายเป็นเชื้อเพลิงชีวภาพ (ของเหลว ได้แน่นอนเสมอ) และชีวมวล (ไอเทม ได้ตามโอกาส) เชื้อเพลิงชนิดแรกของม็อดนี้ที่ปลูกได้แทนที่จะสูบเอา: ทุกชุดใช้ต้นทุนเท่ากัน และผลผลิตขึ้นอยู่กับสิ่งที่ป้อนเข้าไปเท่านั้น — ตั้งแต่หญ้าไปจนถึงแครอทสีทอง"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 600 EU ต่อรอบ",
+                "บัฟเฟอร์: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:bucket",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:copper_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:fermenter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "pump",
+          "title": "เครื่องสูบ",
+          "icon": "alaindustrial:pump",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เครื่องสูบ",
+              "text": "เครื่องสูบระดับ LV ที่ดูดของเหลวจากโลกหรือถังที่อยู่ติดกันเข้าสู่ถังภายในขนาด 10 ถังของมัน แล้วส่งต่อไปยังตัวรับ แลกเปลี่ยนของเหลวกับแคปซูลและภาชนะของม็อดอื่นได้ด้วย"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "บัฟเฟอร์: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:pump",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "distillation_column",
+          "title": "หอกลั่น",
+          "icon": "alaindustrial:distillation_column",
+          "pages": [
+            {
+              "type": "text",
+              "title": "หอกลั่น",
+              "text": "หอสูง 1×1×3 ที่กลั่นแยกน้ำมันดิบให้กลายเป็นดีเซลและน้ำมันเตา มัลติบล็อกแรกของม็อดนี้ — ประกอบด้วยมือจากสามส่วน ส่วนที่เบากว่าจะออกที่ด้านบน ส่วนที่หนักกว่าออกที่ด้านล่าง และฐานจะรักษาของเหลวของมันไว้แม้ตอนถอดประกอบ"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 400 EU ต่อรอบ",
+                "บัฟเฟอร์: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:distillation_column",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "logistics",
+      "title": "การขนส่ง",
+      "icon": "alaindustrial:item_pipe",
+      "entries": [
+        {
+          "id": "item_pipe",
+          "title": "ท่อลำเลียงของ",
+          "icon": "alaindustrial:item_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ท่อลำเลียงของ",
+              "text": "ท่อพาสซีฟหลายส่วนที่ลำเลียงไอเทมระหว่างที่เก็บของ"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:iron_gear",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:item_pipe",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "item_pipe_advanced",
+          "title": "ท่อลำเลียงของขั้นสูง",
+          "icon": "alaindustrial:item_pipe_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ท่อลำเลียงของขั้นสูง",
+              "text": "ท่อลำเลียงของระดับสอง — ลำเลียงได้เร็วเป็นสองเท่า สายท่อจะวิ่งด้วยความเร็วของท่อที่ช้าที่สุดในสายนั้น"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:item_pipe",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:item_pipe",
+                "alaindustrial:silver_plate",
+                "alaindustrial:item_pipe",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:item_pipe",
+                "alaindustrial:cupronickel_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:item_pipe_advanced",
+              "result_count": 4
+            }
+          ]
+        },
+        {
+          "id": "fluid_pipe",
+          "title": "ท่อของเหลว",
+          "icon": "alaindustrial:fluid_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ท่อของเหลว",
+              "text": "ท่อพาสซีฟหลายส่วนที่ลำเลียงของเหลวระหว่างถังเก็บกับเครื่องจักร"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "minecraft:glass",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:fluid_pipe",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "fluid_tank",
+          "title": "ถังของเหลวแบบพกพา",
+          "icon": "alaindustrial:fluid_tank",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ถังของเหลวแบบพกพา",
+              "text": "ถังพาสซีฟขนาด 8 ถังที่มองเห็นระดับของเหลวได้ เข้าถึงของเหลวได้ทั้งหกด้าน และเก็บของเหลวไว้ได้แม้ย้ายที่วาง"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "ความจุ: 8 ถัง"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:iron_gear",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:fluid_tank",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "world_automation",
+      "title": "โลกและระบบอัตโนมัติ",
+      "icon": "alaindustrial:biomass",
+      "entries": [
+        {
+          "id": "biomass",
+          "title": "ชีวมวล",
+          "icon": "alaindustrial:biomass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ชีวมวล",
+              "text": "ของเหลือแข็งจากการหมัก — หล่นออกมาจากถังหมักตามโอกาส ยิ่งวัตถุดิบที่ป้อนเข้ามีคุณภาพมากเท่าไร โอกาสก็ยิ่งสูงขึ้น มันยังไม่มีประโยชน์ใด ๆ: เป็นตัวสำรองที่จงใจปล่อยไว้อย่างซื่อตรง ไม่ได้แต่งเรื่องเหตุผลการมีอยู่ขึ้นมา"
+            }
+          ]
+        },
+        {
+          "id": "biofuel",
+          "title": "เชื้อเพลิงชีวภาพ",
+          "icon": "alaindustrial:biofuel_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เชื้อเพลิงชีวภาพ",
+              "text": "ของเหลวสีเขียวมะกอกขุ่นที่หมักในถังหมัก — เชื้อเพลิงชนิดแรกของม็อดนี้ที่ปลูกได้แทนที่จะสูบเอา มันไม่เกิดขึ้นเองในโลก การกลั่นมันซ้ำเป็นครั้งที่สองจะให้สารละลายธาตุอาหารที่สปริงเกลอร์ใช้ฉีดพ่น"
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron_block",
+          "title": "บล็อกเหล็กชุบแข็ง",
+          "icon": "alaindustrial:tempered_iron_block",
+          "pages": [
+            {
+              "type": "text",
+              "title": "บล็อกเหล็กชุบแข็ง",
+              "text": "บล็อกอัดแน่นจากแท่งเหล็กชุบแข็ง 9 แท่ง — เก็บโลหะไว้ในช่องเดียว คราฟต์หรือแยกกลับได้ที่โต๊ะคราฟต์โดยไม่สูญเสียเลย"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:tempered_iron_block",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "bronze_ingot",
+          "title": "แท่งสำริด",
+          "icon": "alaindustrial:bronze_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "แท่งสำริด",
+              "text": "โลหะผสมทองแดง-ดีบุกปริมาณมาก — แท่งทองแดงสามแท่งบวกแท่งดีบุกหนึ่งแท่งให้แท่งสำริดสองแท่งในเตาหลอมโลหะผสม"
+            }
+          ]
+        },
+        {
+          "id": "diesel",
+          "title": "ดีเซล",
+          "icon": "alaindustrial:diesel_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ดีเซล",
+              "text": "ส่วนเบาจากการกลั่นน้ำมันดิบ — ของเหลวสีเหลืองทอง ผลผลิตหลักของหอกลั่น เชื้อเพลิงในอนาคตของเครื่องกำเนิดไฟฟ้าเชื้อเพลิงเหลว (12 EU ต่อทิก)"
+            }
+          ]
+        },
+        {
+          "id": "invar_ingot",
+          "title": "แท่งอินวาร์",
+          "icon": "alaindustrial:invar_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "แท่งอินวาร์",
+              "text": "โลหะผสมเหล็ก-นิกเกิลที่ได้ทีละแท่ง — แท่งเหล็กสองแท่งบวกแท่งนิกเกิลหนึ่งแท่งให้แท่งอินวาร์เพียงแท่งเดียวในเตาหลอมโลหะผสม"
+            }
+          ]
+        },
+        {
+          "id": "cupronickel_ingot",
+          "title": "แท่งคิวโปรนิกเกิล",
+          "icon": "alaindustrial:cupronickel_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "แท่งคิวโปรนิกเกิล",
+              "text": "โลหะผสมทองแดง-นิกเกิลอัตราส่วนหนึ่งต่อหนึ่ง ได้ทีละแท่ง — วิธีที่ประหยัดวัตถุดิบที่สุดในการนำนิกเกิลไปใช้งาน"
+            }
+          ]
+        },
+        {
+          "id": "fuel_oil",
+          "title": "น้ำมันเตา",
+          "icon": "alaindustrial:fuel_oil_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "น้ำมันเตา",
+              "text": "กากหนักจากการกลั่นน้ำมันดิบ — ของเหลวสีน้ำตาลเข้มข้น เป็นเชื้อเพลิงที่ให้พลังงานน้อยกว่าดีเซล (6 EU ต่อทิก) แต่ไม่มีอะไรสูญเปล่า — เผาไหม้ได้หมด"
+            }
+          ]
+        },
+        {
+          "id": "netherite_alloy_ingot",
+          "title": "แท่งโลหะผสมเนเธอไรต์",
+          "icon": "alaindustrial:netherite_alloy_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "แท่งโลหะผสมเนเธอไรต์",
+              "text": "โลหะผสมระดับปลายเกมของม็อดนี้ — แท่งเนเธอไรต์ดั้งเดิมหนึ่งแท่งและแท่งอิเล็กตรัมสองแท่งให้แท่งโลหะผสมเนเธอไรต์สองแท่งในเตาหลอมโลหะผสม"
+            }
+          ]
+        },
+        {
+          "id": "oil",
+          "title": "น้ำมันดิบ",
+          "icon": "alaindustrial:oil_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "น้ำมันดิบ",
+              "text": "ทรัพยากรฟอสซิลเหลว — บ่อในโลกที่มีจำกัด เก็บได้ด้วยถัง แคปซูล หรือเครื่องสูบ ข้นหนืด ติดไฟง่าย และเป็นจุดเริ่มต้นของสายการผลิตยาง"
+            }
+          ]
+        },
+        {
+          "id": "nickel_ore",
+          "title": "แร่นิกเกิล",
+          "icon": "alaindustrial:nickel_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "แร่นิกเกิล",
+              "text": "โลหะที่หายากที่สุดของม็อดนี้ — มีแร่ในโลกและสายการผลิต ดิบ → ผง → แท่ง วัตถุดิบสำหรับโลหะผสมระดับ MV และโครงเครื่องจักร"
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron_plate_block",
+          "title": "บล็อกหุ้มแผ่นเหล็กชุบแข็ง",
+          "icon": "alaindustrial:tempered_iron_plate_block",
+          "pages": [
+            {
+              "type": "text",
+              "title": "บล็อกหุ้มแผ่นเหล็กชุบแข็ง",
+              "text": "บล็อกตกแต่งจากแผ่นเหล็กชุบแข็ง 4 แผ่น — แผงเทคโนโลยีที่มีหน้าจอและเส้นลวดลาย คราฟต์และแยกกลับได้ที่โต๊ะคราฟต์โดยไม่สูญเสีย"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_plate_block",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tin_ore",
+          "title": "แร่ดีบุก",
+          "icon": "alaindustrial:tin_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "แร่ดีบุก",
+              "text": "โลหะแรกเริ่มของม็อดนี้ — มีแร่ในโลกและสายการผลิต ดิบ → ผง → แท่ง วัตถุดิบพื้นฐานสำหรับสายไฟและวงจรระดับ LV"
+            }
+          ]
+        },
+        {
+          "id": "palladium_ore",
+          "title": "แร่แพลเลเดียม",
+          "icon": "alaindustrial:palladium_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "แร่แพลเลเดียม",
+              "text": "แร่เนเธอร์ชนิดเดียวของม็อดนี้ — ซ่อนอยู่ในเนเธอร์แร็ก บะซอลต์ และแบล็กสโตน ต้องใช้อีเต้อเพชรในการขุด และแปรรูปเป็นผง แท่ง และแผ่นได้"
+            }
+          ]
+        },
+        {
+          "id": "steam",
+          "title": "ไอน้ำ",
+          "icon": "alaindustrial:steam_nozzle",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ไอน้ำ",
+              "text": "ของเหลวทำงานของห้องเตาปฏิกรณ์ ของเหลวชนิดเดียวของม็อดนี้ที่ไม่มีรูปแบบในโลกเลย: ไม่มีบ่อ ไม่มีบล็อก ไม่มีถัง — ไอน้ำมีชีวิตอยู่ได้เฉพาะในถังเก็บและท่อเท่านั้น"
+            }
+          ]
+        },
+        {
+          "id": "nutrient_solution",
+          "title": "สารละลายธาตุอาหาร",
+          "icon": "alaindustrial:nutrient_solution_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "สารละลายธาตุอาหาร",
+              "text": "ผลผลิตสีเขียวสดจากการกลั่นเชื้อเพลิงชีวภาพซ้ำเป็นครั้งที่สอง — ของเหลวชนิดเดียวของม็อดนี้ที่ไม่มีอะไรเผาไหม้ได้เลย ผู้ใช้งานเพียงรายเดียวคือสปริงเกลอร์ ซึ่งช่วยเร่งการเติบโตของพืชผลและคริสตัล"
+            }
+          ]
+        },
+        {
+          "id": "silver_plate_block",
+          "title": "บล็อกหุ้มแผ่นเงิน",
+          "icon": "alaindustrial:silver_plate_block",
+          "pages": [
+            {
+              "type": "text",
+              "title": "บล็อกหุ้มแผ่นเงิน",
+              "text": "บล็อกตกแต่งจากแผ่นเงิน 4 แผ่น — กระเบื้องโลหะขนาด 2x2 ที่ยึดด้วยสลัก คราฟต์และแยกกลับได้ที่โต๊ะคราฟต์โดยไม่สูญเสีย"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:silver_plate",
+                "alaindustrial:silver_plate",
+                "",
+                "alaindustrial:silver_plate",
+                "alaindustrial:silver_plate",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:silver_plate_block",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "silver_ore",
+          "title": "แร่เงิน",
+          "icon": "alaindustrial:silver_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "แร่เงิน",
+              "text": "โลหะแร่หายากของม็อดนี้ — มีบล็อกแร่และสายการผลิต ดิบ → ผง → แท่ง วัตถุดิบสำหรับวงจรและชิ้นส่วนระดับกลาง"
+            }
+          ]
+        },
+        {
+          "id": "sulfur_ore",
+          "title": "แร่กำมะถัน",
+          "icon": "alaindustrial:sulfur_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "แร่กำมะถัน",
+              "text": "กำมะถันธรรมชาติ — อโลหะที่ขุดได้ แปรรูปเป็นผงสำหรับการวัลคาไนซ์ยาง"
+            }
+          ]
+        },
+        {
+          "id": "uranium_ore",
+          "title": "แร่ยูเรเนียม",
+          "icon": "alaindustrial:uranium_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "แร่ยูเรเนียม",
+              "text": "แร่ที่หายากที่สุดของม็อดนี้ — ขุดด้วยอีเต้อเหล็ก แปรรูปเป็นผงและแท่ง ใช้ได้ตั้งแต่คบเพลิง เครื่องเทเลพอร์ต และตู้ฟัก ไปจนถึงเครื่องจักรนิวเคลียร์ในภายหลัง"
+            }
+          ]
+        },
+        {
+          "id": "shielding_alloy_ingot",
+          "title": "แท่งโลหะผสมกำบังรังสี",
+          "icon": "alaindustrial:shielding_alloy_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "แท่งโลหะผสมกำบังรังสี",
+              "text": "โลหะผสมของแพลเลเดียมกับเหล็กชุบแข็ง — วัสดุชนิดเดียวที่ใช้สร้างห้องเตาปฏิกรณ์: ทั้งแท่ง แผ่นกำบังรังสี และแผ่นกำบังรังสีเสริมแรงที่ต้องใช้ยูเรเนียมด้อยสมรรถนะเพิ่มด้วย"
+            }
+          ]
+        },
+        {
+          "id": "electrum_ingot",
+          "title": "แท่งอิเล็กตรัม",
+          "icon": "alaindustrial:electrum_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "แท่งอิเล็กตรัม",
+              "text": "โลหะผสมที่แพงที่สุดของม็อดนี้เมื่อคิดตามวัตถุดิบ — แท่งทองหนึ่งแท่งและแท่งเงินหนึ่งแท่งให้แท่งอิเล็กตรัมเพียงแท่งเดียวในเตาหลอมโลหะผสม"
+            }
+          ]
+        },
+        {
+          "id": "trellis",
+          "title": "ค้างไม้เลื้อย",
+          "icon": "alaindustrial:trellis",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ค้างไม้เลื้อย",
+              "text": "โครงสูงสองบล็อกสำหรับพืชเลื้อย — ตอนนี้ปลูกฝ้ายได้บนมัน วางบนดินเพาะปลูกที่ชื้น หว่านเมล็ดด้วยการคลิกขวา พืชจะหยั่งรากอย่างช้า ๆ เพียงครั้งเดียว จากนั้นออกผลเป็นวงจรไม่สิ้นสุด: การเก็บเกี่ยวไม่ทำลายมัน"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:trellis",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "incubator",
+          "title": "ตู้ฟัก",
+          "icon": "alaindustrial:incubator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ตู้ฟัก",
+              "text": "มัลติบล็อกขนาด 1×2 — ฐานเครื่องกลพร้อมโดมกระจก กลายพันธุ์ไอเทมด้วยการฉายรังสียูเรเนียมและ EU: ทำสำเนา แปรสภาพ หรือสร้างไอเทมใหม่ โหมดกำหนดด้วยชิป ผลลัพธ์เป็นไปตามความน่าจะเป็นในสี่ระดับความหายาก"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "บัฟเฟอร์: 8000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "alaindustrial:uranium_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:uranium_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:incubator",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "kok_sagyz",
+          "title": "ค็อกซากีซ",
+          "icon": "alaindustrial:kok_sagyz_seeds",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ค็อกซากีซ",
+              "text": "ดอกแดนดิไลออนให้ยางจากทุ่งหญ้าสเตปป์คาซัค — ยางที่คุณปลูกเองได้ ดอกอยู่ด้านบน รากอยู่ลึกลงไปสองบล็อก: ขุดปลายรากได้ไม่มีที่สิ้นสุด ต้นไม้จะยังมีชีวิตอยู่และงอกรากขึ้นมาใหม่"
+            }
+          ]
+        },
+        {
+          "id": "sprinkler",
+          "title": "สปริงเกลอร์",
+          "icon": "alaindustrial:sprinkler",
+          "pages": [
+            {
+              "type": "text",
+              "title": "สปริงเกลอร์",
+              "text": "หัวหมุนบนเสาที่ฉีดพ่นสารละลายธาตุอาหารไปทั่วทุกอย่างที่กำลังเติบโตในรัศมี 4 บล็อก เครื่องจักรเดียวในม็อดนี้ที่ไม่ใช้ EU เลย — ไม่มีสายไฟต่อเข้ากับมัน และทำงานด้วยสารละลายเพียงอย่างเดียว ติดตั้งได้ทั้งบนพื้นหรือใต้เพดาน"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "บัฟเฟอร์: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:copper_plate",
+                "alaindustrial:gold_gear",
+                "alaindustrial:copper_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:sprinkler",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "garden_drone_station",
+          "title": "สถานีโดรนสวน",
+          "icon": "alaindustrial:garden_drone_station",
+          "pages": [
+            {
+              "type": "text",
+              "title": "สถานีโดรนสวน",
+              "text": "สถานีระดับ LV ที่มีบัฟเฟอร์ EU ซึ่งโดรน (วาดด้วย BER) จะบินขึ้นจากมันเพื่อลาดตระเวนพื้นที่เพาะปลูกในรัศมี 4 บล็อก — ไถดินเปล่า ปลูกเมล็ดพันธุ์ ใส่ปุ๋ยพืชที่ยังไม่โต และขนพืชผลที่สุกแล้วกลับมาที่สถานี"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "บัฟเฟอร์: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:copper_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:copper_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:garden_drone_station",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "crystal_farm_controller",
+          "title": "ตัวควบคุมเรือนกระจก",
+          "icon": "alaindustrial:crystal_farm_controller",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ตัวควบคุมเรือนกระจก",
+              "text": "ห้องปิดสนิทรูปทรงใดก็ได้ ที่แปลงเพาะที่ปลุกขึ้นมาจะปลูกกลุ่มอเมทิสต์ดั้งเดิมของแท้ได้ ตัวควบคุมจะเติมเต็มอากาศภายในทั้งหมด ดังนั้นไม่ว่าจะเป็นโดม พีระมิดขั้นบันได หรือปีกรูปตัวแอล ก็นับได้หมด และเรือนกระจกที่สร้างสำเร็จจะแสดงผลด้วยการที่รอยต่อในเปลือกหายไป น้ำ EU และสปริงเกลอร์ช่วยให้เร็วขึ้นเท่านั้น ไม่มีสิ่งใดในสามอย่างนี้ที่จำเป็นต้องมี"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "บัฟเฟอร์: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:crystal_farm_floor",
+                "minecraft:amethyst_shard",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:crystal_farm_floor",
+                "alaindustrial:crystal_farm_floor"
+              ],
+              "result_id": "alaindustrial:crystal_farm_controller",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "teleporter",
+          "title": "เครื่องเทเลพอร์ต",
+          "icon": "alaindustrial:teleporter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เครื่องเทเลพอร์ต",
+              "text": "สถานีจุดยึดระดับ HV คู่กับรีโมตพกพา — ผูกกันด้วย Shift + คลิกขวา เทเลพอร์ตผู้เล่นไปยังสถานีโดยใช้ EU จำนวนมาก มีช่วงอุ่นเครื่อง ลงจอดอย่างปลอดภัย และการป้องกันความเป็นส่วนตัว"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "บัฟเฟอร์: 500,000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:electronic_circuit",
+                "minecraft:ender_eye",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil",
+                "minecraft:diamond_block",
+                "alaindustrial:copper_coil",
+                "alaindustrial:uranium_ingot",
+                "alaindustrial:uranium_ingot",
+                "alaindustrial:uranium_ingot"
+              ],
+              "result_id": "alaindustrial:teleporter",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "other",
+      "title": "อื่น ๆ",
+      "icon": "alaindustrial:reactor_button",
+      "entries": [
+        {
+          "id": "reactor_button",
+          "title": "ปุ่มเตาปฏิกรณ์",
+          "icon": "alaindustrial:reactor_button",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ปุ่มเตาปฏิกรณ์",
+              "text": "ปุ่มที่ทำจากโลหะผสมกำบังรังสี: วิธีส่งสัญญาณเปิดประตูกันอากาศจากภายในห้องที่ปิดสนิท สร้างขึ้นเหมือนปุ่มดั้งเดิมทุกประการ แต่ทนต่อสิ่งที่ห้องนี้มีไว้รับมือได้"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "บัฟเฟอร์: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบไม่มีรูปแบบ",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:stone_button",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:reactor_button",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_lamp",
+          "title": "หลอดไฟเตาปฏิกรณ์",
+          "icon": "alaindustrial:reactor_lamp",
+          "pages": [
+            {
+              "type": "text",
+              "title": "หลอดไฟเตาปฏิกรณ์",
+              "text": "บล็อกเปลือกห้องที่จะสว่างขึ้นก็ต่อเมื่อห้องถูกสร้างสำเร็จเท่านั้น: แหล่งกำเนิดแสงเดียวภายในกล่องที่ปิดสนิท และในขณะเดียวกันก็เป็นสัญลักษณ์ที่มองเห็นได้จากภายนอกว่าโครงสร้างได้รับการยอมรับแล้ว"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "บัฟเฟอร์: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "minecraft:glass",
+                "minecraft:glowstone",
+                "minecraft:glass",
+                "minecraft:iron_ingot",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:reactor_lamp",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "reactor_casing",
+          "title": "โครงเตาปฏิกรณ์",
+          "icon": "alaindustrial:reactor_casing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "โครงเตาปฏิกรณ์",
+              "text": "แผงโลหะผสมกำบังรังสี — วัสดุชนิดเดียวที่ใช้สร้างเปลือกปิดสนิทของห้องเตาปฏิกรณ์ได้"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "บัฟเฟอร์: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reactor_casing",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_glass",
+          "title": "กระจกเตาปฏิกรณ์",
+          "icon": "alaindustrial:reactor_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "กระจกเตาปฏิกรณ์",
+              "text": "แผงเปลือกห้องแบบโปร่งใส: นับเป็นผนังเหมือนโครงเตาปฏิกรณ์ทุกประการ แต่กระจกต้องไม่เกิน 30% ของเปลือกทั้งหมด — เกินกว่านั้นห้องจะไม่ใช่ที่กักเก็บอีกต่อไป แต่กลายเป็นตู้โชว์"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "บัฟเฟอร์: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "alaindustrial:shielding_alloy_plate",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass"
+              ],
+              "result_id": "alaindustrial:reactor_glass",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reactor_door",
+          "title": "ประตูกันอากาศเตาปฏิกรณ์",
+          "icon": "alaindustrial:reactor_door",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ประตูกันอากาศเตาปฏิกรณ์",
+              "text": "ทางเข้าเดียวสู่ห้องเตาปฏิกรณ์: เปิดได้ด้วยสัญญาณเรดสโตนเท่านั้น ปิดตัวเองอีกสองวินาทีถัดมา และจะไม่มีวันปิดทับใครก็ตามที่ยืนอยู่ในช่องประตู"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "บัฟเฟอร์: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:reactor_glass",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:insulated_copper_cable",
+                "minecraft:iron_door",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:control_rod_drive",
+                "alaindustrial:shielding_alloy_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:reactor_door",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_chest",
+          "title": "หีบเหล็ก",
+          "icon": "alaindustrial:iron_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "หีบเหล็ก",
+              "text": "หีบขนาด 36 ช่อง — มากกว่าหีบดั้งเดิมหนึ่งแถว มีโมเดล 3 มิติ ฝาที่เคลื่อนไหวได้ และเสียงเฉพาะของตัวเอง ไม่ต้องใช้พลังงาน"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "ความจุ: 36 ช่อง"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:copper_chest",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:iron_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "silver_chest",
+          "title": "หีบเงิน",
+          "icon": "alaindustrial:silver_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "หีบเงิน",
+              "text": "หีบขนาด 45 ช่อง — ระดับที่สูงกว่าหีบเหล็ก (เพิ่มอีกหนึ่งแถว) มีโมเดล 3 มิติและฝาที่เคลื่อนไหวได้ ไม่ต้องใช้พลังงาน"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "ความจุ: 45 ช่อง"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:iron_chest",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:silver_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "gold_chest",
+          "title": "หีบทอง",
+          "icon": "alaindustrial:gold_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "หีบทอง",
+              "text": "หีบขนาด 54 ช่อง — ระดับที่สูงกว่าหีบเงิน (เพิ่มอีกหนึ่งแถว) มีโมเดล 3 มิติและฝาที่เคลื่อนไหวได้ ไม่ต้องใช้พลังงาน"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "alaindustrial:silver_chest",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot"
+              ],
+              "result_id": "alaindustrial:gold_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "storage_module",
+          "title": "โมดูลจัดเก็บ",
+          "icon": "alaindustrial:storage_module",
+          "pages": [
+            {
+              "type": "text",
+              "title": "โมดูลจัดเก็บ",
+              "text": "บล็อกจัดเก็บขนาด 27 ช่อง: โมดูลที่วางติดกันจะทำงานเป็นคลังเก็บของเดียวกัน รวมได้สูงสุด 108 ช่องหลังหน้าต่างเดียว"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "บัฟเฟอร์: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "minecraft:chest",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate",
+                ""
+              ],
+              "result_id": "alaindustrial:storage_module",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "shielding_chest",
+          "title": "หีบกำบังรังสี",
+          "icon": "alaindustrial:shielding_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "หีบกำบังรังสี",
+              "text": "ภาชนะเดียวที่หยุดยั้งรังสีของสิ่งที่อยู่ข้างในได้: ยูเรเนียมที่อยู่ในนั้นจะไม่แผ่รังสีใส่ใครเลย ความจุเท่าหีบเหล็ก (36 ช่อง) ไม่ต้องใช้พลังงาน"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "ความจุ: 36 ช่อง"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:iron_chest",
+                "alaindustrial:shielding_alloy_plate",
+                "",
+                "alaindustrial:shielding_alloy_plate",
+                ""
+              ],
+              "result_id": "alaindustrial:shielding_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "mob_repeller_hv",
+          "title": "เครื่องไล่ม็อบขนาดใหญ่",
+          "icon": "alaindustrial:mob_repeller_hv",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เครื่องไล่ม็อบขนาดใหญ่",
+              "text": "ระดับสูงสุดของสนามป้องกัน — รัศมี 24 บล็อกที่ 64 EU ต่อทิก อัปเกรดมาจากขนาดกลางด้วยภาชนะวิญญาณ"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 64 EU ต่อทิก (ขณะเปิดสนาม)",
+                "บัฟเฟอร์: 32,000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "industrial_workbench",
+          "title": "โต๊ะทำงานอุตสาหกรรม",
+          "icon": "alaindustrial:industrial_workbench",
+          "pages": [
+            {
+              "type": "text",
+              "title": "โต๊ะทำงานอุตสาหกรรม",
+              "text": "บล็อกสถานที่ทำงานของชาวบ้านนักอุตสาหกรรม — รับซื้อทรัพยากรของม็อดนี้ด้วยมรกต วางไว้ใกล้ชาวบ้านที่ยังไม่มีอาชีพ แล้วเขาจะรับอาชีพนี้ไปเอง"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                ""
+              ],
+              "result_id": "alaindustrial:industrial_workbench",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "guide_book",
+          "title": "หนังสือคู่มือ",
+          "icon": "alaindustrial:guide_book",
+          "pages": [
+            {
+              "type": "text",
+              "title": "หนังสือคู่มือ",
+              "text": "หนังสือสอนการเล่นในเกมที่ครอบคลุมกลไกทุกอย่างของม็อดนี้ — มอบให้อัตโนมัติเมื่อผู้เล่นเข้าเกมครั้งแรก เปิดด้วยการคลิกขวา มีแท็บ หน้า และลิงก์ ไม่ต้องใช้พลังงาน"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบไม่มีรูปแบบ",
+              "grid": [
+                "minecraft:book",
+                "alaindustrial:wooden_gear",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:guide_book",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "player_profile",
+          "title": "โปรไฟล์ผู้เล่น",
+          "icon": "minecraft:player_head",
+          "pages": [
+            {
+              "type": "text",
+              "title": "โปรไฟล์ผู้เล่น",
+              "text": "หน้าจอโปรไฟล์ที่แสดงสถิติสะสมการเล่นม็อดนี้และความก้าวหน้าของความชำนาญ (40 ระดับ 8 ยศ) ซึ่งเลื่อนระดับได้จากงานของเครื่องจักร และช้ากว่ามากจากผลผลิตของเครื่องกำเนิดไฟฟ้า"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: เครื่องจักรทำงาน 1,000 EU = แต้มความชำนาญ 1 แต้ม"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "mob_repeller",
+          "title": "เครื่องไล่ม็อบขนาดเล็ก",
+          "icon": "alaindustrial:mob_repeller",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เครื่องไล่ม็อบขนาดเล็ก",
+              "text": "สนามป้องกันที่ใช้ EU — ขณะมีไฟ ม็อบศัตรูจะหนีออกจากรัศมี 8 บล็อกและเข้าใกล้ไม่ได้ อัปเกรดเป็นระดับกลางและระดับใหญ่ได้ด้วยภาชนะวิญญาณ"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 8 EU ต่อทิก (ขณะเปิดสนาม)",
+                "บัฟเฟอร์: 2000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:silver_plate",
+                "minecraft:soul_lantern",
+                "alaindustrial:silver_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:copper_coil",
+                "alaindustrial:silver_plate",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:silver_plate"
+              ],
+              "result_id": "alaindustrial:mob_repeller",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "enriched_uranium_torch",
+          "title": "คบเพลิงยูเรเนียมเสริมสมรรถนะ",
+          "icon": "alaindustrial:enriched_uranium_torch",
+          "pages": [
+            {
+              "type": "text",
+              "title": "คบเพลิงยูเรเนียมเสริมสมรรถนะ",
+              "text": "คบเพลิงตกแต่งที่มีเปลวไฟสีเขียวและระดับแสง 14 — ติดไฟได้แม้อยู่ใต้น้ำ ไม่ต้องใช้พลังงาน"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:uranium_dust",
+                "",
+                "",
+                "minecraft:coal",
+                "",
+                "",
+                "minecraft:stick",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:enriched_uranium_torch",
+              "result_count": 4,
+              "variants": [
+                {
+                  "grid": [
+                    "alaindustrial:uranium_dust",
+                    "",
+                    "",
+                    "minecraft:coal",
+                    "",
+                    "",
+                    "minecraft:stick",
+                    "",
+                    ""
+                  ],
+                  "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+                  "result_id": "alaindustrial:enriched_uranium_torch",
+                  "result_count": 4
+                },
+                {
+                  "grid": [
+                    "minecraft:torch",
+                    "alaindustrial:uranium_dust",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    ""
+                  ],
+                  "recipe_type": "การคราฟต์แบบไม่มีรูปแบบ",
+                  "result_id": "alaindustrial:enriched_uranium_torch",
+                  "result_count": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "workstation",
+          "title": "สถานีทำงาน",
+          "icon": "alaindustrial:workstation",
+          "pages": [
+            {
+              "type": "text",
+              "title": "สถานีทำงาน",
+              "text": "คอมพิวเตอร์ที่ประกอบจากโครงเครื่องจักรสองชิ้นวางซ้อนกัน ดึงไฟจากโครงข่ายและทำหน้าที่เป็นสถานีทำงานส่วนตัวของผู้เล่น"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 6 EU ต่อทิก",
+                "บัฟเฟอร์: 40,000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "#c:glass_panes",
+                "alaindustrial:resonant_crystal",
+                "#c:glass_panes",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:reactor_circuit",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:reinforced_bearing",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:reinforced_bearing"
+              ],
+              "result_id": "alaindustrial:workstation",
+              "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "stock_display_frame",
+          "title": "กรอบแสดงสินค้าคงคลัง",
+          "icon": "alaindustrial:stock_display_frame",
+          "pages": [
+            {
+              "type": "text",
+              "title": "กรอบแสดงสินค้าคงคลัง",
+              "text": "กรอบที่คุณแขวนไว้บนหีบ — มันแสดงจำนวนไอเทมที่อยู่ข้างในไว้บนกรอบเลย ไม่ต้องใช้พลังงาน แต่ตัวเลขจะแสดงก็ต่อเมื่อมีไอเทมตัวกรองวางอยู่ในกรอบเท่านั้น"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:gold_dust",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:gold_dust",
+                "alaindustrial:silver_ingot",
+                "minecraft:item_frame",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:gold_dust",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:gold_dust"
+              ],
+              "result_id": "alaindustrial:stock_display_frame",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "mob_repeller_mv",
+          "title": "เครื่องไล่ม็อบขนาดกลาง",
+          "icon": "alaindustrial:mob_repeller_mv",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เครื่องไล่ม็อบขนาดกลาง",
+              "text": "ระดับที่สองของสนามป้องกัน — รัศมี 16 บล็อกที่ 32 EU ต่อทิก อัปเกรดมาจากขนาดเล็กด้วยภาชนะวิญญาณ"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 32 EU ต่อทิก (ขณะเปิดสนาม)",
+                "บัฟเฟอร์: 8000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "electrum_chest",
+          "title": "หีบอิเล็กตรัม",
+          "icon": "alaindustrial:electrum_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "หีบอิเล็กตรัม",
+              "text": "หีบขนาด 81 ช่อง — ระดับที่สูงกว่าหีบทอง เก้าแถวซ่อนอยู่หลังหน้าต่างที่แสดงหกแถวพร้อมแถบเลื่อน ไม่ต้องใช้พลังงาน"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "ความจุ: 81 ช่อง"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:gold_chest",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:electrum_ingot"
+              ],
+              "result_id": "alaindustrial:electrum_chest",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "items",
+      "title": "ไอเทม",
+      "icon": "alaindustrial:overclocker_chip_i",
+      "entries": [
+        {
+          "id": "overclocker_chip_i",
+          "title": "ชิปเร่งความเร็ว I",
+          "icon": "alaindustrial:overclocker_chip_i",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ชิปเร่งความเร็ว I",
+              "text": "อัปเกรดสามระดับ: แต่ละระดับย่นระยะเวลาทำงานลงและเพิ่มการใช้พลังงานเป็นสองเท่า ทำจากก้อนพลังงาน"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "",
+                "alaindustrial:energy_clot_i",
+                "",
+                "minecraft:gold_ingot",
+                "alaindustrial:empty_chip",
+                "minecraft:gold_ingot",
+                "",
+                "minecraft:redstone",
+                ""
+              ],
+              "result_id": "alaindustrial:overclocker_chip_i",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "stats_chip",
+          "title": "ชิปสถิติ",
+          "icon": "alaindustrial:stats_chip",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ชิปสถิติ",
+              "text": "อัปเกรดที่ทำให้เครื่องจักรบันทึกการทำงานของตัวเอง — เวลา พลังงาน และไอเทมที่แปรรูปไป"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "",
+                "alaindustrial:copper_coil",
+                "",
+                "#c:glass_panes",
+                "alaindustrial:empty_chip",
+                "#c:glass_panes",
+                "",
+                "minecraft:redstone",
+                ""
+              ],
+              "result_id": "alaindustrial:stats_chip",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "mute_chip",
+          "title": "ชิปเก็บเสียง",
+          "icon": "alaindustrial:mute_chip",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ชิปเก็บเสียง",
+              "text": "อัปเกรดที่ทำให้เครื่องจักรเงียบสนิท — ใส่ในช่องอัปเกรด"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:white_wool",
+                "minecraft:white_wool",
+                "minecraft:white_wool",
+                "minecraft:white_wool",
+                "alaindustrial:empty_chip",
+                "minecraft:white_wool",
+                "minecraft:white_wool",
+                "minecraft:white_wool",
+                "minecraft:white_wool"
+              ],
+              "result_id": "alaindustrial:mute_chip",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "battery",
+          "title": "แบตเตอรี่",
+          "icon": "alaindustrial:battery",
+          "pages": [
+            {
+              "type": "text",
+              "title": "แบตเตอรี่",
+              "text": "ตัวพา EU ชิ้นแรก — แบตเตอรี่ชาร์จซ้ำได้ขนาด 2,000 EU ที่ซ้อนกองตามระดับประจุ และคืนพลังงานกลับสู่โครงข่ายหรือไอเทมอื่นได้"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 2,000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "",
+                "alaindustrial:copper_cable",
+                "",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:battery",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron",
+          "title": "เหล็กชุบแข็ง",
+          "icon": "alaindustrial:tempered_iron",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เหล็กชุบแข็ง",
+              "text": "แท่งโลหะที่หลอมจากแท่งเหล็กดั้งเดิม — วัตถุดิบพื้นฐานสำหรับเครื่องมือ ชุดเกราะ และบล็อกของม็อดนี้"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบไม่มีรูปแบบ",
+              "grid": [
+                "alaindustrial:tempered_iron_block",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron",
+              "result_count": 9
+            }
+          ]
+        },
+        {
+          "id": "water_mill_wheel",
+          "title": "กงล้อกังหันน้ำ",
+          "icon": "alaindustrial:water_mill_wheel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "กงล้อกังหันน้ำ",
+              "text": "กงล้อของกังหันน้ำ — วางในช่องกงล้อของกังหันน้ำ ถ้าไม่มีมันจะไม่ผลิตไฟเลย มีสามเกรด: กงล้อที่ดีกว่าให้ EU มากกว่าและใช้งานได้นานกว่ามาก สึกหรอไปขณะที่ผลิตไฟ"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:copper_ingot",
+                "minecraft:oak_planks",
+                "minecraft:stick",
+                "alaindustrial:wooden_gear",
+                "minecraft:stick",
+                "minecraft:oak_planks",
+                "minecraft:copper_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:water_mill_wheel",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "lapotron_crystal",
+          "title": "คริสตัลลาโพทรอน",
+          "icon": "alaindustrial:lapotron_crystal",
+          "pages": [
+            {
+              "type": "text",
+              "title": "คริสตัลลาโพทรอน",
+              "text": "วัตถุดิบคราฟต์ที่ไม่มีวันคราฟต์ได้โดยตรง: ตัวเปล่าของมันจะดูดซับ 500,000 EU ในช่องชาร์จ แล้วกลายเป็นคริสตัลที่สมบูรณ์ ซึ่งไม่มีประจุของตัวเองเลย"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:energy_crystal",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:energy_clot_ii",
+                "alaindustrial:advanced_circuit"
+              ],
+              "result_id": "alaindustrial:lapotron_crystal_blank",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "machine_casing",
+          "title": "โครงเครื่องจักร",
+          "icon": "alaindustrial:machine_casing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "โครงเครื่องจักร",
+              "text": "บล็อกฐานทรงลูกบาศก์เต็มสำหรับสร้างเครื่องจักร — ทำจากแผ่นเหล็ก 8 แผ่น เครื่องจักรระดับ LV (เครื่องบด เครื่องสกัด เครื่องอัด) คราฟต์ต่อยอดจากมัน"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:machine_casing",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "copper_coil",
+          "title": "ขดลวดทองแดง",
+          "icon": "alaindustrial:copper_coil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ขดลวดทองแดง",
+              "text": "ส่วนประกอบคราฟต์ — สายทองแดงพันรอบแกนดีบุก เป็นด่านให้ผ่านก่อนคราฟต์สว่านไฟฟ้าได้"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:copper_cable",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:copper_cable"
+              ],
+              "result_id": "alaindustrial:copper_coil",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_gear",
+          "title": "เฟืองเหล็ก",
+          "icon": "alaindustrial:iron_gear",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เฟืองเหล็ก",
+              "text": "ตระกูลเฟือง — หิน เหล็ก ทอง และเงิน ส่วนประกอบคราฟต์สำหรับเครื่องจักรที่กำลังจะมาในอนาคต"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:iron_ingot",
+                "alaindustrial:wooden_gear",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:iron_ingot",
+                ""
+              ],
+              "result_id": "alaindustrial:iron_gear",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "mutation_chip_duplicate",
+          "title": "ชิปทำสำเนา",
+          "icon": "alaindustrial:mutation_chip_duplicate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ชิปทำสำเนา",
+              "text": "ชิปสามแบบกำหนดโหมดของตู้ฟัก — ทำสำเนา แปรสภาพ หรือสร้าง ชิปเหล่านี้ไม่ถูกใช้หมดไป แต่ถ้าไม่มีชิปเลย เครื่องจักรจะไม่เริ่มทำงาน"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:amethyst_shard",
+                "alaindustrial:empty_chip",
+                "minecraft:amethyst_shard",
+                "",
+                "alaindustrial:uranium_plate",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:mutation_chip_duplicate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "basic_bearing",
+          "title": "ตลับลูกปืนพื้นฐาน",
+          "icon": "alaindustrial:basic_bearing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ตลับลูกปืนพื้นฐาน",
+              "text": "ตลับลูกปืนพื้นฐานและเสริมแรง — ข้อต่อหมุนสำหรับเครื่องจักร ทำจากชิ้นส่วนที่จนถึงตอนนี้แทบไม่มีสูตรคราฟต์ที่ใช้พวกมันเลย"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:nickel_plate",
+                "minecraft:iron_nugget",
+                "alaindustrial:nickel_plate",
+                "minecraft:iron_nugget",
+                "alaindustrial:stone_gear",
+                "minecraft:iron_nugget",
+                "alaindustrial:nickel_plate",
+                "minecraft:iron_nugget",
+                "alaindustrial:nickel_plate"
+              ],
+              "result_id": "alaindustrial:basic_bearing",
+              "result_count": 4
+            }
+          ]
+        },
+        {
+          "id": "advanced_circuit",
+          "title": "วงจรขั้นสูง",
+          "icon": "alaindustrial:advanced_circuit",
+          "pages": [
+            {
+              "type": "text",
+              "title": "วงจรขั้นสูง",
+              "text": "วงจรระดับ MV — แผงวงจรพื้นฐานที่เดินสายใหม่ด้วยทองและปิดผนึกด้วยยาง"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:rubber",
+                "alaindustrial:gold_plate",
+                "alaindustrial:rubber",
+                "alaindustrial:gold_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:gold_plate",
+                "alaindustrial:rubber",
+                "alaindustrial:gold_plate",
+                "alaindustrial:rubber"
+              ],
+              "result_id": "alaindustrial:advanced_circuit",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "advanced_machine_casing",
+          "title": "โครงเครื่องจักรขั้นสูง",
+          "icon": "alaindustrial:advanced_machine_casing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "โครงเครื่องจักรขั้นสูง",
+              "text": "บล็อกฐานทรงลูกบาศก์เต็มสำหรับเครื่องจักรระดับ MV — โครงเครื่องจักรธรรมดาพร้อมวงจรขั้นสูงสองชิ้น หุ้มด้วยแผ่นเหล็กชุบแข็ง 6 แผ่น"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:advanced_machine_casing",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "resonant_shard",
+          "title": "เศษคริสตัลกำทอน",
+          "icon": "alaindustrial:resonant_shard",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เศษคริสตัลกำทอน",
+              "text": "วัตถุดิบที่ได้จากตู้ฟักเท่านั้น: สี่ขั้นแรกของบันไดวิวัฒนาการ บวกยูเรเนียมด้อยสมรรถนะและตะกรันปนเปื้อนรังสี"
+            }
+          ]
+        },
+        {
+          "id": "empty_chip",
+          "title": "ชิปเปล่า",
+          "icon": "alaindustrial:empty_chip",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ชิปเปล่า",
+              "text": "ฐานเปล่าสำหรับชิปอัปเกรดเครื่องจักร ไม่มีผลใด ๆ ด้วยตัวมันเอง"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass"
+              ],
+              "result_id": "alaindustrial:empty_chip",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "rubber",
+          "title": "ยาง",
+          "icon": "alaindustrial:rubber",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ยาง",
+              "text": "วัสดุที่ทำจากน้ำมันดิบและกำมะถัน — เครื่องพอลิเมอไรซ์ทำยางดิบ จากนั้นเครื่องวัลคาไนซ์ที่ร้อนอยู่จะเปลี่ยนมันให้กลายเป็นยาง"
+            }
+          ]
+        },
+        {
+          "id": "rtp_chip",
+          "title": "ชิปกระโดดสุ่ม",
+          "icon": "alaindustrial:rtp_chip",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ชิปกระโดดสุ่ม",
+              "text": "คริสตัลเชิงพื้นที่ ขดลวดกำทอน และชิปกระโดดสุ่ม — สามขั้นตอนที่ปลดล็อกการกระโดดแบบสุ่มของเครื่องเทเลพอร์ต"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "",
+                "minecraft:chorus_fruit",
+                "",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:empty_chip",
+                "alaindustrial:resonance_coil",
+                "",
+                "minecraft:redstone",
+                ""
+              ],
+              "result_id": "alaindustrial:rtp_chip",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "resonant_crystal",
+          "title": "คริสตัลกำทอน",
+          "icon": "alaindustrial:resonant_crystal",
+          "pages": [
+            {
+              "type": "text",
+              "title": "คริสตัลกำทอน",
+              "text": "วัตถุดิบคราฟต์ที่ไม่มีวันคราฟต์ได้โดยตรง: ตัวเปล่าของมันจะดูดซับ 1,500,000 EU ในช่องชาร์จ แล้วกลายเป็นคริสตัลที่สมบูรณ์ ซึ่งไม่มีประจุของตัวเองเลย"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:resonant_shard",
+                "alaindustrial:spatial_crystal",
+                "alaindustrial:resonant_shard",
+                "alaindustrial:spatial_crystal",
+                "alaindustrial:lapotron_crystal",
+                "alaindustrial:spatial_crystal",
+                "alaindustrial:resonant_shard",
+                "alaindustrial:energy_clot_iii",
+                "alaindustrial:resonant_shard"
+              ],
+              "result_id": "alaindustrial:resonant_crystal_blank",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "windmill_rotor",
+          "title": "ใบพัดไม้",
+          "icon": "alaindustrial:windmill_rotor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ใบพัดไม้",
+              "text": "ใบพัดของกังหันลม — วางในช่องใบพัดของกังหันลม T1/T2 แบบใดก็ได้ ถ้าไม่มีจะไม่ผลิตไฟเลย มีสามเกรด: ใบพัดที่ดีกว่าให้ EU มากกว่าและใช้งานได้นานกว่ามาก สึกหรอไปขณะที่ผลิตไฟ"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:windmill_rotor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "energy_clot_i",
+          "title": "ก้อนพลังงาน I",
+          "icon": "alaindustrial:energy_clot_i",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ก้อนพลังงาน I",
+              "text": "ก้อนพลังงานสามระดับ — ส่วนเกินของโครงข่ายที่ถูกอัดแน่นโดยเครื่องควบแน่นพลังงาน วัตถุดิบชนิดเดียวที่ใช้ทำชิปเร่งความเร็ว"
+            }
+          ]
+        },
+        {
+          "id": "network_analyzer",
+          "title": "เครื่องวิเคราะห์เครือข่าย",
+          "icon": "alaindustrial:network_analyzer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เครื่องวิเคราะห์เครือข่าย",
+              "text": "เครื่องมือวินิจฉัยแบบถือในมือ — คลิกขวาที่สายไฟเพื่อดูสถิติของโครงข่ายไฟฟ้านั้นและไฮไลต์มันในโลก"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tin_ingot",
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot"
+              ],
+              "result_id": "alaindustrial:network_analyzer",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_cloth",
+          "title": "ผ้าฟลักซ์วีฟ",
+          "icon": "alaindustrial:fluxweave_cloth",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ผ้าฟลักซ์วีฟ",
+              "text": "วัตถุดิบขั้นกลางของชุดเกราะ EU: เส้นด้ายถูกชุบในอ่างชุบไฟฟ้า สี่เส้นด้ายทำเป็นผ้าหนึ่งม้วน — และผ้านี่เองที่ใช้ซ่อมชุดเกราะที่สำเร็จแล้ว"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:flux_thread",
+                "alaindustrial:flux_thread",
+                "",
+                "alaindustrial:flux_thread",
+                "alaindustrial:flux_thread",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:fluxweave_cloth",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_dust",
+          "title": "ผงเหล็ก",
+          "icon": "alaindustrial:iron_dust",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ผงเหล็ก",
+              "text": "ผงและวัตถุดิบขั้นกลางที่เกี่ยวข้อง (แผ่น แท่งดิบ) — สิ่งที่เครื่องบดและเครื่องจักรอื่น ๆ เปลี่ยนแร่ให้กลายเป็น"
+            }
+          ]
+        },
+        {
+          "id": "alignment_chip_day",
+          "title": "ชิปวิวัฒนาการสุริยะ",
+          "icon": "alaindustrial:alignment_chip_day",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ชิปวิวัฒนาการสุริยะ",
+              "text": "ชิปวิวัฒนาการคู่หนึ่ง — สุริยะ (กลางวัน) และจันทรา (กลางคืน) — ที่วิวัฒน์แผงโซลาร์เซลล์และกังหันลมพื้นฐาน T1 ให้กลายเป็น T2 ผ่านกระบวนการวิวัฒนาการ พร้อมนำพลังงาน NBT ที่สะสมไว้ติดไปด้วย"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:nickel_ingot",
+                "minecraft:glowstone",
+                "alaindustrial:nickel_ingot",
+                "minecraft:glowstone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:glowstone",
+                "alaindustrial:nickel_ingot",
+                "minecraft:glowstone",
+                "alaindustrial:nickel_ingot"
+              ],
+              "result_id": "alaindustrial:alignment_chip_day",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electronic_circuit",
+          "title": "วงจรอิเล็กทรอนิกส์",
+          "icon": "alaindustrial:electronic_circuit",
+          "pages": [
+            {
+              "type": "text",
+              "title": "วงจรอิเล็กทรอนิกส์",
+              "text": "ส่วนประกอบคราฟต์พื้นฐาน — «สมอง» ของเครื่องจักรและบล็อกเก็บพลังงานระดับ LV เกือบทุกชิ้น"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:nickel_ingot",
+                "alaindustrial:silver_ingot",
+                "minecraft:quartz",
+                "minecraft:emerald",
+                "minecraft:quartz",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:nickel_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:electronic_circuit",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "energy_crystal",
+          "title": "คริสตัลพลังงาน",
+          "icon": "alaindustrial:energy_crystal",
+          "pages": [
+            {
+              "type": "text",
+              "title": "คริสตัลพลังงาน",
+              "text": "วัตถุดิบคราฟต์ที่ไม่มีวันคราฟต์ได้โดยตรง: ตัวเปล่าของมันจะดูดซับ 100,000 EU ในช่องชาร์จ แล้วกลายเป็นคริสตัลที่สมบูรณ์ ซึ่งไม่มีประจุของตัวเองเลย"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:diamond_dust",
+                "minecraft:redstone",
+                "alaindustrial:diamond_dust",
+                "minecraft:redstone",
+                "alaindustrial:tempered_iron",
+                "minecraft:redstone",
+                "alaindustrial:diamond_dust",
+                "minecraft:redstone",
+                "alaindustrial:diamond_dust"
+              ],
+              "result_id": "alaindustrial:energy_crystal_blank",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "wind_gauge",
+          "title": "เครื่องวัดลม",
+          "icon": "alaindustrial:wind_gauge",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เครื่องวัดลม",
+              "text": "วัดความเร็วลมตรงจุดที่ผู้เล่นยืนอยู่ เพื่อช่วยเลือกความสูงของกังหันลม"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:stick",
+                "minecraft:glass_pane",
+                "minecraft:stick",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:tin_ingot",
+                "",
+                "alaindustrial:wooden_gear",
+                ""
+              ],
+              "result_id": "alaindustrial:wind_gauge",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "battery_pouch",
+          "title": "ถุงแบตเตอรี่",
+          "icon": "alaindustrial:battery_pouch",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ถุงแบตเตอรี่",
+              "text": "ถุงเก็บไอเทมที่ชาร์จได้ — รับน้ำหนักได้ 128 หน่วย ทำงานด้วยแบตเตอรี่ 2000 EU ในตัว และล็อกเมื่อประจุหมด"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 2,000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:leather",
+                "alaindustrial:tin_ingot",
+                "minecraft:leather",
+                "minecraft:leather",
+                "minecraft:bundle",
+                "minecraft:leather",
+                "minecraft:leather",
+                "alaindustrial:electronic_circuit",
+                "minecraft:leather"
+              ],
+              "result_id": "alaindustrial:battery_pouch",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_chestplate",
+          "title": "เสื้อเกราะฟลักซ์วีฟ",
+          "icon": "alaindustrial:fluxweave_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เสื้อเกราะฟลักซ์วีฟ",
+              "text": "ชุดเกราะ EU เต็มชุดแรกของม็อดนี้ — หมวก เสื้อเกราะ กางเกง และรองเท้าฟลักซ์วีฟ ประจุจะเปิดใช้ชุดอุปกรณ์เสริมโดยไม่เคยปิดการป้องกันเลย"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 15,000 EU",
+                "บัฟเฟอร์: 15,000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:fluxweave_cloth",
+                "",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:battery",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:fluxweave_chestplate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron_chestplate",
+          "title": "เสื้อเกราะเหล็กชุบแข็ง",
+          "icon": "alaindustrial:tempered_iron_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เสื้อเกราะเหล็กชุบแข็ง",
+              "text": "ชุดเกราะเหล็กชุบแข็งเต็มชุด — หมวก เสื้อเกราะ กางเกง และรองเท้า ทนทานกว่าเหล็ก ซ่อมด้วยเหล็กชุบแข็ง"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "ชิ้นส่วน: 4 ชิ้น"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:tempered_iron_chestplate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "vacuum_capsule",
+          "title": "แคปซูลสุญญากาศ",
+          "icon": "alaindustrial:vacuum_capsule",
+          "pages": [
+            {
+              "type": "text",
+              "title": "แคปซูลสุญญากาศ",
+              "text": "ภาชนะบรรจุของเหลวหนึ่งถังที่ซ้อนกองได้ — สูงสุด 16 แคปซูลของของเหลวชนิดเดียวกันต่อกอง เติมได้จากในโลกหรือจากถังเก็บของม็อดนี้"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:copper_cable",
+                "minecraft:redstone"
+              ],
+              "result_id": "alaindustrial:vacuum_capsule",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "wrench",
+          "title": "ประแจ",
+          "icon": "alaindustrial:wrench",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ประแจ",
+              "text": "ตั้งค่าด้านของท่อลำเลียงของ และถอดบล็อกของม็อดนี้ออก"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "",
+                "alaindustrial:iron_gear",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:wrench",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "jetpack",
+          "title": "เจ็ตแพ็ก",
+          "icon": "alaindustrial:jetpack",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เจ็ตแพ็ก",
+              "text": "อุปกรณ์บินที่ใช้ EU สวมในช่องเสื้อเกราะ — เร่งแรงขับเคลื่อนขณะกดปุ่มกระโดดค้างไว้ ร่อนลงอย่างนุ่มนวลโดยไม่มีแรงขับเมื่อพลังงานหมด"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "บัฟเฟอร์: 30,000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "alaindustrial:energy_pack",
+                "alaindustrial:battery",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:copper_coil",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:jetpack",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron_pickaxe",
+          "title": "อีเต้อเหล็กชุบแข็ง",
+          "icon": "alaindustrial:tempered_iron_pickaxe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "อีเต้อเหล็กชุบแข็ง",
+              "text": "อีเต้อเหล็กชุบแข็งแบบถือในมือ — ดีกว่าเหล็กดั้งเดิมเล็กน้อยในทุกค่าสถานะ แต่ขุดบล็อกระดับเพชรไม่ได้"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "minecraft:stick",
+                "",
+                "",
+                "minecraft:stick",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_pickaxe",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "shielding_pouch",
+          "title": "ถุงกำบังรังสี",
+          "icon": "alaindustrial:shielding_pouch",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ถุงกำบังรังสี",
+              "text": "ระดับที่สองของถุงแบตเตอรี่ บุด้วยตะกั่ว: รับน้ำหนักและพลังงาน 128 หน่วยกับ 2000 EU เท่ากัน แต่สิ่งของกัมมันตรังสีที่อยู่ข้างในจะไม่แผ่รังสีใส่ใครเลย — ทั้งผู้ถือและม็อบรอบข้าง"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 2,000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "insulated_chestplate",
+          "title": "เสื้อเกราะหุ้มฉนวน",
+          "icon": "alaindustrial:insulated_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เสื้อเกราะหุ้มฉนวน",
+              "text": "เกราะหนังที่ชุบในสไลม์ — หมวกคลุม เสื้อ กางเกง และรองเท้าที่ดูดซับไฟช็อตจากสายเปลือย โดยแลกกับความทนทานที่ลดลง"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "ชิ้นส่วน: 4 ชิ้น"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบไม่มีรูปแบบ",
+              "grid": [
+                "minecraft:leather_chestplate",
+                "minecraft:slime_ball",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:insulated_chestplate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron_tools",
+          "title": "เครื่องมือเหล็กชุบแข็ง",
+          "icon": "alaindustrial:tempered_iron_axe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เครื่องมือเหล็กชุบแข็ง",
+              "text": "ชุดเครื่องมือถือในมือห้าชิ้นที่ทำจากเหล็กชุบแข็ง — อีเต้อ ขวาน จอบ พลั่ว และดาบ ดีกว่าเหล็กดั้งเดิมเล็กน้อย แต่ขุดบล็อกระดับเพชรไม่ได้"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "ชิ้นส่วน: 5 ชิ้น"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "minecraft:stick",
+                "",
+                "",
+                "minecraft:stick",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_pickaxe",
+              "result_count": 1,
+              "variants": [
+                {
+                  "grid": [
+                    "alaindustrial:tempered_iron",
+                    "alaindustrial:tempered_iron",
+                    "alaindustrial:tempered_iron",
+                    "",
+                    "minecraft:stick",
+                    "",
+                    "",
+                    "minecraft:stick",
+                    ""
+                  ],
+                  "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+                  "result_id": "alaindustrial:tempered_iron_pickaxe",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:tempered_iron",
+                    "alaindustrial:tempered_iron",
+                    "",
+                    "alaindustrial:tempered_iron",
+                    "minecraft:stick",
+                    "",
+                    "",
+                    "minecraft:stick",
+                    ""
+                  ],
+                  "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+                  "result_id": "alaindustrial:tempered_iron_axe",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:tempered_iron",
+                    "alaindustrial:tempered_iron",
+                    "",
+                    "",
+                    "minecraft:stick",
+                    "",
+                    "",
+                    "minecraft:stick",
+                    ""
+                  ],
+                  "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+                  "result_id": "alaindustrial:tempered_iron_hoe",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "",
+                    "alaindustrial:tempered_iron",
+                    "",
+                    "",
+                    "minecraft:stick",
+                    "",
+                    "",
+                    "minecraft:stick",
+                    ""
+                  ],
+                  "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+                  "result_id": "alaindustrial:tempered_iron_shovel",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "",
+                    "alaindustrial:tempered_iron",
+                    "",
+                    "",
+                    "alaindustrial:tempered_iron",
+                    "",
+                    "",
+                    "minecraft:stick",
+                    ""
+                  ],
+                  "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+                  "result_id": "alaindustrial:tempered_iron_sword",
+                  "result_count": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "scythe",
+          "title": "เคียว",
+          "icon": "alaindustrial:scythe_iron",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เคียว",
+              "text": "เครื่องมือกวาดพื้นที่ที่เคลียร์ใบไม้ หญ้า ดอกไม้ และพืชตกแต่งอื่น ๆ ได้ในการฟันครั้งเดียว และเมื่อกด Shift ค้างไว้ — จะกลายเป็นเคียวกวาดพื้นที่ที่เก็บเกี่ยวพืชผลที่สุกแล้ว การเก็บเกี่ยวมีโอกาสได้เมล็ดพันธุ์เพิ่ม และโอกาสนั้นเพิ่มขึ้นตามระดับของเคียว มีแปดระดับวัสดุ ตั้งแต่ไม้ไปจนถึงเนเธอไรต์"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "ระดับ: 8 ระดับ"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "",
+                "",
+                "minecraft:stick",
+                "minecraft:oak_planks",
+                "",
+                "minecraft:stick",
+                ""
+              ],
+              "result_id": "alaindustrial:scythe_wood",
+              "result_count": 1,
+              "variants": [
+                {
+                  "grid": [
+                    "minecraft:oak_planks",
+                    "minecraft:oak_planks",
+                    "",
+                    "",
+                    "minecraft:stick",
+                    "minecraft:oak_planks",
+                    "",
+                    "minecraft:stick",
+                    ""
+                  ],
+                  "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+                  "result_id": "alaindustrial:scythe_wood",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:cobblestone",
+                    "minecraft:cobblestone",
+                    "",
+                    "",
+                    "minecraft:stick",
+                    "minecraft:cobblestone",
+                    "",
+                    "minecraft:stick",
+                    ""
+                  ],
+                  "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+                  "result_id": "alaindustrial:scythe_stone",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:copper_ingot",
+                    "minecraft:copper_ingot",
+                    "",
+                    "",
+                    "minecraft:stick",
+                    "minecraft:copper_ingot",
+                    "",
+                    "minecraft:stick",
+                    ""
+                  ],
+                  "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+                  "result_id": "alaindustrial:scythe_copper",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:iron_ingot",
+                    "minecraft:iron_ingot",
+                    "",
+                    "",
+                    "minecraft:stick",
+                    "minecraft:iron_ingot",
+                    "",
+                    "minecraft:stick",
+                    ""
+                  ],
+                  "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+                  "result_id": "alaindustrial:scythe_iron",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:gold_ingot",
+                    "minecraft:gold_ingot",
+                    "",
+                    "",
+                    "minecraft:stick",
+                    "minecraft:gold_ingot",
+                    "",
+                    "minecraft:stick",
+                    ""
+                  ],
+                  "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+                  "result_id": "alaindustrial:scythe_gold",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:tempered_iron",
+                    "alaindustrial:tempered_iron",
+                    "",
+                    "",
+                    "minecraft:stick",
+                    "alaindustrial:tempered_iron",
+                    "",
+                    "minecraft:stick",
+                    ""
+                  ],
+                  "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+                  "result_id": "alaindustrial:scythe_tempered_iron",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:diamond",
+                    "minecraft:diamond",
+                    "",
+                    "",
+                    "minecraft:stick",
+                    "minecraft:diamond",
+                    "",
+                    "minecraft:stick",
+                    ""
+                  ],
+                  "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+                  "result_id": "alaindustrial:scythe_diamond",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:netherite_ingot",
+                    "minecraft:netherite_ingot",
+                    "",
+                    "",
+                    "minecraft:stick",
+                    "minecraft:netherite_ingot",
+                    "",
+                    "minecraft:stick",
+                    ""
+                  ],
+                  "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+                  "result_id": "alaindustrial:scythe_netherite",
+                  "result_count": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "forge_hammer",
+          "title": "ค้อนตีเหล็ก",
+          "icon": "alaindustrial:forge_hammer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ค้อนตีเหล็ก",
+              "text": "เครื่องมือถือในมือก่อนยุคเครื่องจักร: วางค้อนและแท่งโลหะบนตารางคราฟต์เพื่อให้ได้แผ่นโลหะ ค้อนจะยังอยู่ในตารางและเสียความทนทาน 1 หน่วยต่อแผ่นที่ได้"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "",
+                "minecraft:stick",
+                ""
+              ],
+              "result_id": "alaindustrial:forge_hammer",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "teleporter_remote",
+          "title": "รีโมตเครื่องเทเลพอร์ต",
+          "icon": "alaindustrial:teleporter_remote",
+          "pages": [
+            {
+              "type": "text",
+              "title": "รีโมตเครื่องเทเลพอร์ต",
+              "text": "รีโมตบีคอนแบบพกพา — ผูกกับสถานีเทเลพอร์ตด้วย Shift + คลิกขวา และสั่งกระโดดไปยังสถานีนั้นโดยใช้ EU ที่สถานีเป็นผู้จ่าย"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "",
+                "minecraft:ender_pearl",
+                "",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tempered_iron",
+                "",
+                "alaindustrial:tempered_iron",
+                ""
+              ],
+              "result_id": "alaindustrial:teleporter_remote",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "soul_vessel",
+          "title": "ภาชนะวิญญาณ",
+          "icon": "alaindustrial:soul_vessel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ภาชนะวิญญาณ",
+              "text": "แหล่งเก็บวิญญาณที่ใช้อัปเกรดเครื่องไล่ม็อบ — เติมได้เฉพาะจากการที่ผู้เล่นสังหารม็อบศัตรูด้วยตัวเองเท่านั้น ภาชนะที่เต็มแล้วจะถูกใช้ไปเพื่อวิวัฒน์บล็อก"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:silver_plate",
+                "minecraft:glass",
+                "alaindustrial:silver_plate",
+                "minecraft:glass",
+                "minecraft:soul_sand",
+                "minecraft:glass",
+                "alaindustrial:silver_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:silver_plate"
+              ],
+              "result_id": "alaindustrial:soul_vessel",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "geiger_counter",
+          "title": "เครื่องวัดไกเกอร์",
+          "icon": "alaindustrial:geiger_counter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เครื่องวัดไกเกอร์",
+              "text": "ดังติ๊กเมื่ออยู่ใกล้รังสี ไม่ว่ารังสีจะอยู่ในช่องไหนของกระเป๋าเป้ก็ตาม — เป็นการตอบสนองเดียวที่รังสีมี"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "",
+                "minecraft:glass_pane",
+                "",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:geiger_counter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electromagnet_advanced",
+          "title": "แม่เหล็กไฟฟ้าขั้นสูง",
+          "icon": "alaindustrial:electromagnet_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "แม่เหล็กไฟฟ้าขั้นสูง",
+              "text": "แม่เหล็กไฟฟ้าระดับสอง — รัศมี 9 บล็อกแทนที่จะเป็น 5 และเป็นชิ้นเดียวที่ดูดค่าประสบการณ์ได้ด้วย"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "บัฟเฟอร์: 5,000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:electrum_reinforced_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electrum_reinforced_plate",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:electromagnet",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:electrum_reinforced_plate",
+                "alaindustrial:energy_crystal",
+                "alaindustrial:electrum_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:electromagnet_advanced",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "shielding_chestplate",
+          "title": "เสื้อเกราะกำบังรังสี",
+          "icon": "alaindustrial:shielding_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เสื้อเกราะกำบังรังสี",
+              "text": "ชุดต้านรังสี — หมวกคลุม เสื้อ กางเกง และรองเท้าที่ทำจากหนัง ยาง และสีย้อมเหลือง มันช่วยลดปริมาณรังสีที่ได้รับ โดยแลกกับความทนทาน และปิดผนึกผู้สวมใส่ไว้อย่างสมบูรณ์"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "ชิ้นส่วน: 4 ชิ้น"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:leather",
+                "minecraft:yellow_dye",
+                "minecraft:leather",
+                "alaindustrial:rubber",
+                "minecraft:leather",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "minecraft:leather",
+                "alaindustrial:rubber"
+              ],
+              "result_id": "alaindustrial:shielding_chestplate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_drill",
+          "title": "สว่านไฟฟ้า",
+          "icon": "alaindustrial:electric_drill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "สว่านไฟฟ้า",
+              "text": "อีเต้อระดับเพชรที่ชาร์จซ้ำได้และทำงานด้วย EU — ขุดได้เหมือนอีเต้อเพชรเมื่อมีประจุ ใช้ EU ต่อบล็อก ไม่มีวันพัง"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "บัฟเฟอร์: 10,000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_pickaxe",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_drill",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_shovel",
+          "title": "พลั่วไฟฟ้า",
+          "icon": "alaindustrial:electric_shovel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "พลั่วไฟฟ้า",
+              "text": "พลั่วที่ชาร์จซ้ำได้และทำงานด้วย EU — ขุดดิน ทราย และกรวดได้เมื่อมีประจุ ใช้ EU ต่อบล็อก ไม่มีวันพัง"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "บัฟเฟอร์: 10,000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_shovel",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_shovel",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electromagnet",
+          "title": "แม่เหล็กไฟฟ้า",
+          "icon": "alaindustrial:electromagnet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "แม่เหล็กไฟฟ้า",
+              "text": "ไอเทมที่ชาร์จซ้ำได้ด้วย EU ในช่องไหนของกระเป๋าเป้ก็ได้ ที่ดูดของตกที่อยู่ใกล้ ๆ เข้าหาผู้เล่น โดยใช้ EU ต่อไอเทมหนึ่งชิ้น"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "บัฟเฟอร์: 5,000 EU",
+                "รัศมี: 5 บล็อก"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:redstone",
+                "",
+                "minecraft:lapis_lazuli",
+                "minecraft:iron_ingot",
+                "alaindustrial:copper_coil",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:electromagnet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_hoe",
+          "title": "จอบไฟฟ้า",
+          "icon": "alaindustrial:electric_hoe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "จอบไฟฟ้า",
+              "text": "จอบที่ชาร์จซ้ำได้และทำงานด้วย EU — ไถดินและทำลายฟาง ใบไม้ และมอสได้เร็วกว่าจอบเพชร ใช้ 50 EU ต่อครั้ง ไม่มีวันพัง"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "บัฟเฟอร์: 10,000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_hoe",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_hoe",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_chainsaw",
+          "title": "เลื่อยโซ่ไฟฟ้า",
+          "icon": "alaindustrial:electric_chainsaw",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เลื่อยโซ่ไฟฟ้า",
+              "text": "ขวานที่ชาร์จซ้ำได้และทำงานด้วย EU — ตัดไม้และใบไม้ได้เมื่อมีประจุ ใช้ EU ต่อบล็อก ไม่มีวันพัง"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "บัฟเฟอร์: 10,000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_axe",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_chainsaw",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_saber",
+          "title": "ดาบไฟฟ้า",
+          "icon": "alaindustrial:electric_saber",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ดาบไฟฟ้า",
+              "text": "อาวุธประชิดตัวที่ชาร์จซ้ำได้ด้วย EU — สร้างความเสียหาย 12 หน่วยและมีระยะเพิ่มอีกหนึ่งบล็อกขณะที่ใบดาบสว่างอยู่ ใช้ 100 EU ต่อการฟันหนึ่งครั้ง และแรงปล่อยประจุจะทำให้เป้าหมายเสียหลัก Shift + คลิกขวาเพื่อปิด ไม่มีวันพัง"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "บัฟเฟอร์: 10,000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_sword",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_saber",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "energy_pack",
+          "title": "ชุดพลังงาน",
+          "icon": "alaindustrial:energy_pack",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ชุดพลังงาน",
+              "text": "บัฟเฟอร์ EU แบบสวมใส่ในช่องเสื้อเกราะ — 20,000 EU ที่คอยเติมพลังงานให้ไอเทมที่ใช้ไฟในกระเป๋าเป้ของคุณอยู่เสมอ"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 20,000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:leather",
+                "alaindustrial:electronic_circuit",
+                "minecraft:leather",
+                "alaindustrial:battery",
+                "alaindustrial:battery",
+                "alaindustrial:battery",
+                "minecraft:leather",
+                "alaindustrial:tin_ingot",
+                "minecraft:leather"
+              ],
+              "result_id": "alaindustrial:energy_pack",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

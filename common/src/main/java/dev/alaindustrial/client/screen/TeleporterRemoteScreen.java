@@ -56,11 +56,26 @@ public class TeleporterRemoteScreen extends AbstractContainerScreen<TeleporterRe
 	 * Buttons along the bottom. Delete is narrowed from 92 to make room for its padlock, and all three
 	 * were narrowed again in MOD-116 so the random jump could stand beside the ordinary one — the two
 	 * ways of leaving belong on the same row, and the panel has no second row to give.
+	 *
+	 * <p>The widths below are shared out by measured label width, not by eye, and the row is full: the
+	 * three buttons plus the padlock plus three 3px gaps come to exactly the 190px between the panel's
+	 * margins, so a pixel given to one button is taken from another. A vanilla button draws its label
+	 * between {@code x+2} and {@code x+width-2} ({@code AbstractButton#extractDefaultLabel}), so it
+	 * carries {@code width-4} px of text and marquee-scrolls anything longer.
+	 *
+	 * <p>No split fits every language. Measured across the shipped translations, the widest labels are
+	 * Teleport 83 ("Teletransportar", es/pt), Delete 62 ("Verwijderen", nl) and Random 61 (hi) — 87 +
+	 * 66 + 65 = 218px of button, before the padlock and the gaps, into a row of 190. This split is the
+	 * one that leaves the fewest scrolling labels, and it takes none away: every language that read a
+	 * label statically still does, except nl, which trades a scrolling Teleport for a scrolling
+	 * Random. What still scrolls: Teleport in bn/de/es/hi/it/pt, Delete in nl, Random in bn/hi/nl/vi.
+	 * Widening one button by hand without re-measuring the other two only moves the problem to another
+	 * language.
 	 */
 	private static final int BTN_ROW_Y = 162, BTN_H = 20;
-	private static final int DELETE_X = 5, DELETE_W = 58;
-	private static final int TELEPORT_X = 80, TELEPORT_W = 57;
-	private static final int RTP_X = 140, RTP_W = 55;
+	private static final int DELETE_X = 5, DELETE_W = 54;
+	private static final int TELEPORT_X = 75, TELEPORT_W = 65;
+	private static final int RTP_X = 143, RTP_W = 52;
 
 	/**
 	 * The padlock guarding Delete — the same two sprites, at the same atlas coordinates, as the

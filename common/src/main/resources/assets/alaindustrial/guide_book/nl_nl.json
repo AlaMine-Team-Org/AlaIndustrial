@@ -918,12 +918,12 @@
         },
         {
           "id": "irradiated_soil",
-          "title": "Bestralde aarde",
+          "title": "Bestraalde aarde",
           "icon": "alaindustrial:irradiated_soil",
           "pages": [
             {
               "type": "text",
-              "title": "Bestralde aarde",
+              "title": "Bestraalde aarde",
               "text": "Het litteken van een nucleair ongeluk: grond vergiftigd door een reactorexplosie. Straalt een stap onder uranium — ook vanuit een rugzak — en vervaagt uit zichzelf in vier stappen, onder water sneller. Graaft en draagt als elke blok, maar wordt nooit vervaardigd."
             }
           ]
@@ -1501,12 +1501,12 @@
         },
         {
           "id": "assembler",
-          "title": "Assembleur",
+          "title": "Assemblagemachine",
           "icon": "alaindustrial:assembler",
           "pages": [
             {
               "type": "text",
-              "title": "Assembleur",
+              "title": "Assemblagemachine",
               "text": "Stampt werkbankrecepten continu uit volgens blauwdruk, tegen EU, en haalt het materiaal uit zijn eigen modulaire opslag. Houdt een wachtrij van drie blauwdrukken."
             },
             {
@@ -1804,12 +1804,12 @@
         },
         {
           "id": "fermenter",
-          "title": "Fermenteerder",
+          "title": "Fermentor",
           "icon": "alaindustrial:fermenter",
           "pages": [
             {
               "type": "text",
-              "title": "Fermenteerder",
+              "title": "Fermentor",
               "text": "Een LV-machine die organisch materiaal met water fermenteert tot biobrandstof (altijd een vloeistof) en biomassa (soms een item). De eerste brandstof van de mod die geteeld wordt in plaats van gepompt: elke batch kost hetzelfde, en de opbrengst hangt alleen af van wat je erin stopt — van gras tot een gouden wortel."
             },
             {
@@ -2172,12 +2172,12 @@
         },
         {
           "id": "netherite_alloy_ingot",
-          "title": "Netheriet-legeringsstaaf",
+          "title": "Netherietlegeringsstaaf",
           "icon": "alaindustrial:netherite_alloy_ingot",
           "pages": [
             {
               "type": "text",
-              "title": "Netheriet-legeringsstaaf",
+              "title": "Netherietlegeringsstaaf",
               "text": "De eindgame-legering van de mod — één vanilla Netherietstaaf en twee Elektrumstaven geven in de Legeringsoven twee Netheriet-legeringsstaven."
             }
           ]
@@ -2443,12 +2443,12 @@
         },
         {
           "id": "kok_sagyz",
-          "title": "Kok-sagyz",
+          "title": "Kok-Sagyz",
           "icon": "alaindustrial:kok_sagyz_seeds",
           "pages": [
             {
               "type": "text",
-              "title": "Kok-sagyz",
+              "title": "Kok-Sagyz",
               "text": "Een rubberhoudende paardenbloem uit de Kazachse steppe — rubber dat je kunt telen. De bloem bovenaan, de wortel twee blokken lager: oogst de top zo vaak je wilt, de plant overleeft en laat hem weer groeien."
             }
           ]
@@ -2529,12 +2529,12 @@
         },
         {
           "id": "crystal_farm_controller",
-          "title": "Kassenregelaar",
+          "title": "Kasbesturing",
           "icon": "alaindustrial:crystal_farm_controller",
           "pages": [
             {
               "type": "text",
-              "title": "Kassenregelaar",
+              "title": "Kasbesturing",
               "text": "Een verzegelde ruimte van elke vorm waarvan de gewekte zaaibedden echte vanilla amethistclusters laten groeien. De regelaar doordrenkt de lucht binnenin, dus een koepel, een trappiramide of een L-vleugel tellen allemaal, en een voltooid kassencomplex laat dat zien doordat de naden van zijn bolster verdwijnen. Water, EU en een sproeier maken het alleen sneller; geen van de drie is vereist."
             },
             {
@@ -4156,12 +4156,12 @@
         },
         {
           "id": "tempered_iron_chestplate",
-          "title": "Tempered Iron Chestplate",
+          "title": "Gehard ijzeren harnas",
           "icon": "alaindustrial:tempered_iron_chestplate",
           "pages": [
             {
               "type": "text",
-              "title": "Tempered Iron Chestplate",
+              "title": "Gehard ijzeren harnas",
               "text": "Een volledige set wapenrusting van gehard ijzer — helm, borstplaat, beenstukken en laarzen; steviger dan ijzer, gerepareerd met gehard ijzer."
             },
             {
@@ -4290,12 +4290,12 @@
         },
         {
           "id": "tempered_iron_pickaxe",
-          "title": "Geharde IJzeren Houweel",
+          "title": "Gehard IJzeren Houweel",
           "icon": "alaindustrial:tempered_iron_pickaxe",
           "pages": [
             {
               "type": "text",
-              "title": "Geharde IJzeren Houweel",
+              "title": "Gehard IJzeren Houweel",
               "text": "Een draagbaar houweel van gehard ijzer — op elk vlak iets beter dan gewoon ijzer, maar kan geen blokken van diamantniveau delven."
             },
             {

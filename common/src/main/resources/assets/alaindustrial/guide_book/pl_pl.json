@@ -89,7 +89,7 @@
             {
               "type": "text",
               "title": "W co się zmienia",
-              "text": "Ropa to początek łańcucha gumy.\n\n1. Zbierz ją — wiadrem, Kapsułą próżniową albo Pompą\n2. Polimeryzator: 1000 mB ropy i 400 EU dają surowy kauczuk\n3. Wulkanizator: surowy kauczuk + pył siarkowy + 400 EU\n4. Umieść pod nim ognisko (×1), lawę/magmę (×2) albo Grzałkę elektryczną (×3)\n\nLepsze ciepło oszczędza materiały: każda operacja zawsze zużywa jeden surowy kauczuk i cztery pyły siarkowe."
+              "text": "Ropa to początek łańcucha gumy.\n\n1. Zbierz ją — wiadrem, Kapsułą próżniową albo Pompą\n2. Polimeryzator: 1000 mB ropy i 400 EU dają surowy kauczuk\n3. Wulkanizator: surowy kauczuk + pył siarkowy + 400 EU\n4. Umieść pod nim ognisko (×1), lawę/magmę (×2) albo Grzejnik elektryczny (×3)\n\nLepsze ciepło oszczędza materiały: każda operacja zawsze zużywa jeden surowy kauczuk i cztery pyły siarkowe."
             }
           ]
         }
@@ -1501,12 +1501,12 @@
         },
         {
           "id": "assembler",
-          "title": "Montownia",
+          "title": "Automat montażowy",
           "icon": "alaindustrial:assembler",
           "pages": [
             {
               "type": "text",
-              "title": "Montownia",
+              "title": "Automat montażowy",
               "text": "Bez przerwy wytwarza receptury ze stołu rzemieślniczego według schematów, zużywając EU i pobierając materiały z własnego magazynu modułowego. Trzyma kolejkę trzech schematów."
             },
             {
@@ -1728,12 +1728,12 @@
         },
         {
           "id": "electric_heater",
-          "title": "Grzałka elektryczna",
+          "title": "Grzejnik elektryczny",
           "icon": "alaindustrial:electric_heater",
           "pages": [
             {
               "type": "text",
-              "title": "Grzałka elektryczna",
+              "title": "Grzejnik elektryczny",
               "text": "Blok wspomagający LV, który stoi pod wulkanizatorem. Najpierw musi się rozgrzać; gorący daje maksymalne ciepło x3. Zimny nie jest źródłem ciepła w ogóle."
             },
             {
@@ -1804,12 +1804,12 @@
         },
         {
           "id": "fermenter",
-          "title": "Fermentator",
+          "title": "Fermentor",
           "icon": "alaindustrial:fermenter",
           "pages": [
             {
               "type": "text",
-              "title": "Fermentator",
+              "title": "Fermentor",
               "text": "Maszyna LV, która fermentuje materię organiczną z wodą na biopaliwo (zawsze płyn) i biomasę (przedmiot, czasami). Pierwsze paliwo moda pozyskiwane uprawą, a nie pompą: każda partia kosztuje tyle samo, a wydajność zależy tylko od tego, czym ją karmisz — od trawy do złotej marchewki."
             },
             {
@@ -2064,7 +2064,7 @@
             {
               "type": "text",
               "title": "Biomasa",
-              "text": "Stała pozostałość fermentacji — wyrzucana przez fermentator z szansą, im bogatszy surowiec, tym większa szansa. Nie ma jeszcze zastosowania: celowy placeholder dostarczony uczciwie, bez wymyślonego przeznaczenia."
+              "text": "Stała pozostałość fermentacji — wyrzucana przez fermentor z szansą, im bogatszy surowiec, tym większa szansa. Nie ma jeszcze zastosowania: celowy placeholder dostarczony uczciwie, bez wymyślonego przeznaczenia."
             }
           ]
         },
@@ -2076,7 +2076,7 @@
             {
               "type": "text",
               "title": "Biopaliwo",
-              "text": "Mętna oliwkowa ciecz warzona w fermentatorze — pierwsze paliwo moda pozyskiwane uprawą, a nie pompą. Nie występuje w świecie; druga destylacja daje roztwór odżywczy, który zrasza zraszacz."
+              "text": "Mętna oliwkowa ciecz warzona w fermentorze — pierwsze paliwo moda pozyskiwane uprawą, a nie pompą. Nie występuje w świecie; druga destylacja daje roztwór odżywczy, który zrasza zraszacz."
             }
           ]
         },
@@ -2124,12 +2124,12 @@
         },
         {
           "id": "diesel",
-          "title": "Olej napędowy",
+          "title": "Diesel",
           "icon": "alaindustrial:diesel_bucket",
           "pages": [
             {
               "type": "text",
-              "title": "Olej napędowy",
+              "title": "Diesel",
               "text": "Lekka frakcja destylacji ropy — złocistożółty płyn, docelowy produkt kolumny. Przyszłe paliwo generatora na paliwo ciekłe (12 EU/t)."
             }
           ]
@@ -2166,7 +2166,7 @@
             {
               "type": "text",
               "title": "Mazut",
-              "text": "Ciężka pozostałość po destylacji ropy — gęsty, ciemnobrązowy płyn. Słabsze paliwo niż olej napędowy (6 EU/t), ale nic się nie marnuje — spala się wszystko."
+              "text": "Ciężka pozostałość po destylacji ropy — gęsty, ciemnobrązowy płyn. Słabsze paliwo niż diesel (6 EU/t), ale nic się nie marnuje — spala się wszystko."
             }
           ]
         },
@@ -2443,12 +2443,12 @@
         },
         {
           "id": "kok_sagyz",
-          "title": "Kok-sagiz",
+          "title": "Kok-Sagyz",
           "icon": "alaindustrial:kok_sagyz_seeds",
           "pages": [
             {
               "type": "text",
-              "title": "Kok-sagiz",
+              "title": "Kok-Sagyz",
               "text": "Mniszek kauczukodajny ze stepu kazachskiego — kauczuk, który da się uprawiać. Kwiat na górze, korzeń dwa bloki niżej: zrywaj wierzchołek do woli, roślina przeżyje i odrośnie."
             }
           ]
@@ -3961,13 +3961,13 @@
         },
         {
           "id": "alignment_chip_day",
-          "title": "Chip ewolucji solarnej",
+          "title": "Chip ewolucji Słońca",
           "icon": "alaindustrial:alignment_chip_day",
           "pages": [
             {
               "type": "text",
-              "title": "Chip ewolucji solarnej",
-              "text": "Para chipów ewolucji — solarny (dzień) i księżycowy (noc) — które przez ewolucję rozwijają podstawowe panele słoneczne i wiatraki T1 w T2, przenosząc zgromadzoną energię."
+              "title": "Chip ewolucji Słońca",
+              "text": "Para chipów ewolucji — Słońca (dzień) i Księżyca (noc) — które przez ewolucję rozwijają podstawowe panele słoneczne i wiatraki T1 w T2, przenosząc zgromadzoną energię."
             },
             {
               "type": "recipe",
@@ -4124,7 +4124,7 @@
             {
               "type": "text",
               "title": "Napierśnik fluksowy",
-              "text": "Pierwszy pełny zestaw zbroi EU w modzie — hełm, napierśnik, nagolenniki i buty z tkaniny fluksowej; ładunek włącza funkcje pomocnicze, nigdy nie wyłączając ochrony."
+              "text": "Pierwszy pełny zestaw zbroi EU w modzie — hełm, napierśnik, nogawice i buty z tkaniny fluksowej; ładunek włącza funkcje pomocnicze, nigdy nie wyłączając ochrony."
             },
             {
               "type": "stats",
@@ -4156,12 +4156,12 @@
         },
         {
           "id": "tempered_iron_chestplate",
-          "title": "Tempered Iron Chestplate",
+          "title": "Napierśnik z hartowanego żelaza",
           "icon": "alaindustrial:tempered_iron_chestplate",
           "pages": [
             {
               "type": "text",
-              "title": "Tempered Iron Chestplate",
+              "title": "Napierśnik z hartowanego żelaza",
               "text": "Pełny komplet zbroi z hartowanego żelaza — hełm, napierśnik, nogawice i buty; wytrzymalszy od żelaza, naprawiany hartowanym żelazem."
             },
             {
@@ -4290,12 +4290,12 @@
         },
         {
           "id": "tempered_iron_pickaxe",
-          "title": "Kilof z utwardzonego żelaza",
+          "title": "Kilof z hartowanego żelaza",
           "icon": "alaindustrial:tempered_iron_pickaxe",
           "pages": [
             {
               "type": "text",
-              "title": "Kilof z utwardzonego żelaza",
+              "title": "Kilof z hartowanego żelaza",
               "text": "Ręczny kilof z hartowanego żelaza — nieco lepszy od zwykłego żelaznego w każdej statystyce, ale nie wydobywa bloków wymagających poziomu diamentu."
             },
             {
@@ -4376,12 +4376,12 @@
         },
         {
           "id": "tempered_iron_tools",
-          "title": "Narzędzia z utwardzonego żelaza",
+          "title": "Narzędzia z hartowanego żelaza",
           "icon": "alaindustrial:tempered_iron_axe",
           "pages": [
             {
               "type": "text",
-              "title": "Narzędzia z utwardzonego żelaza",
+              "title": "Narzędzia z hartowanego żelaza",
               "text": "Zestaw pięciu narzędzi ręcznych z hartowanego żelaza — kilof, siekiera, motyka, łopata i miecz; nieco lepsze od zwykłego żelaza, ale nie wydobywają bloków wymagających poziomu diamentu."
             },
             {

@@ -1131,12 +1131,12 @@
         },
         {
           "id": "reactor_lever",
-          "title": "Palanca del reactor",
+          "title": "Palanca de reactor",
           "icon": "alaindustrial:reactor_lever",
           "pages": [
             {
               "type": "text",
-              "title": "Palanca del reactor",
+              "title": "Palanca de reactor",
               "text": "Una palanca de aleación de blindaje: una señal mantenida desde el interior de una sala sellada — el paro de emergencia del reactor, que ni rompe el blindaje de la sala ni se funde con su contenido."
             },
             {
@@ -1501,12 +1501,12 @@
         },
         {
           "id": "assembler",
-          "title": "Ensambladora",
+          "title": "Ensamblador",
           "icon": "alaindustrial:assembler",
           "pages": [
             {
               "type": "text",
-              "title": "Ensambladora",
+              "title": "Ensamblador",
               "text": "Fabrica sin parar recetas de mesa de trabajo a partir de planos, gastando EU y sacando los materiales de su propio almacén modular. Mantiene una cola de tres planos."
             },
             {
@@ -2160,12 +2160,12 @@
         },
         {
           "id": "fuel_oil",
-          "title": "Fuelóleo",
+          "title": "Fueloil",
           "icon": "alaindustrial:fuel_oil_bucket",
           "pages": [
             {
               "type": "text",
-              "title": "Fuelóleo",
+              "title": "Fueloil",
               "text": "El residuo pesado de la destilación del petróleo — un fluido espeso de color marrón oscuro. Combustible más débil que el diésel (6 EU/t), pero nada se desperdicia: todo arde."
             }
           ]
@@ -2443,12 +2443,12 @@
         },
         {
           "id": "kok_sagyz",
-          "title": "Kok sagyz",
+          "title": "Kok-Sagyz",
           "icon": "alaindustrial:kok_sagyz_seeds",
           "pages": [
             {
               "type": "text",
-              "title": "Kok sagyz",
+              "title": "Kok-Sagyz",
               "text": "Un diente de león con caucho de la estepa kazaja: caucho que puedes cultivar. La flor arriba, la raíz dos bloques más abajo; corta la punta siempre que quieras, la planta sobrevive y la vuelve a echar."
             }
           ]

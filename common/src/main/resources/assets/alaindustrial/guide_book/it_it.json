@@ -183,7 +183,7 @@
             },
             {
               "type": "text",
-              "title": "Il vapore",
+              "title": "Vapore",
               "text": "L'acqua portata a bollore diventa vapore e si accumula nella colonna. Va fatto uscire: un tubo dalla faccia superiore della colonna → ingresso del reattore → un ugello del vapore all'esterno.\n\nL'ugello deve dare sull'aria aperta. Sepolto in una parete non scarica niente, e il circuito dietro si blocca."
             }
           ]
@@ -1501,12 +1501,12 @@
         },
         {
           "id": "assembler",
-          "title": "Assemblatrice",
+          "title": "Assemblatore",
           "icon": "alaindustrial:assembler",
           "pages": [
             {
               "type": "text",
-              "title": "Assemblatrice",
+              "title": "Assemblatore",
               "text": "Sforna di continuo ricette da banco da lavoro seguendo i progetti, consumando EU e attingendo al proprio magazzino modulare. Tiene una coda di tre progetti."
             },
             {
@@ -2172,13 +2172,13 @@
         },
         {
           "id": "netherite_alloy_ingot",
-          "title": "Lingotto di lega di Netherite",
+          "title": "Lingotto di lega di netherite",
           "icon": "alaindustrial:netherite_alloy_ingot",
           "pages": [
             {
               "type": "text",
-              "title": "Lingotto di lega di Netherite",
-              "text": "La lega dell'endgame del mod — un lingotto di Netherite vanilla e due lingotti di elettro danno due lingotti di lega di Netherite nella fornace per leghe."
+              "title": "Lingotto di lega di netherite",
+              "text": "La lega dell'endgame del mod — un lingotto di netherite vanilla e due lingotti di elettro danno due lingotti di lega di netherite nella fornace per leghe."
             }
           ]
         },
@@ -2262,12 +2262,12 @@
         },
         {
           "id": "steam",
-          "title": "Il vapore",
+          "title": "Vapore",
           "icon": "alaindustrial:steam_nozzle",
           "pages": [
             {
               "type": "text",
-              "title": "Il vapore",
+              "title": "Vapore",
               "text": "Il fluido di lavoro della sala reattore. L'unico fluido della mod senza alcuna forma nel mondo: niente pozza, niente blocco, niente secchio — il vapore esiste solo dentro serbatoi e tubi."
             }
           ]
@@ -2443,12 +2443,12 @@
         },
         {
           "id": "kok_sagyz",
-          "title": "Kok sagyz",
+          "title": "Kok-Sagyz",
           "icon": "alaindustrial:kok_sagyz_seeds",
           "pages": [
             {
               "type": "text",
-              "title": "Kok sagyz",
+              "title": "Kok-Sagyz",
               "text": "Un dente di leone gommifero della steppa kazaka: gomma che puoi coltivare. Il fiore in alto, la radice due blocchi più sotto; raccogli la cima quanto vuoi, la pianta sopravvive e la rifà."
             }
           ]
@@ -2529,12 +2529,12 @@
         },
         {
           "id": "crystal_farm_controller",
-          "title": "Controllore di serra",
+          "title": "Controllore della serra",
           "icon": "alaindustrial:crystal_farm_controller",
           "pages": [
             {
               "type": "text",
-              "title": "Controllore di serra",
+              "title": "Controllore della serra",
               "text": "Una stanza sigillata di qualsiasi forma i cui letti di semina risvegliati fanno crescere veri gruppi di ametista vanilla. Il controllore inonda l'aria interna, quindi una cupola, una piramide a gradoni o un'ala a L vanno tutti bene, e una serra finita lo dimostra perdendo le giunture del proprio guscio. Acqua, EU e un irrigatore servono solo ad accelerare; nessuno dei tre è richiesto."
             },
             {
@@ -4156,12 +4156,12 @@
         },
         {
           "id": "tempered_iron_chestplate",
-          "title": "Tempered Iron Chestplate",
+          "title": "Corazza di ferro temprato",
           "icon": "alaindustrial:tempered_iron_chestplate",
           "pages": [
             {
               "type": "text",
-              "title": "Tempered Iron Chestplate",
+              "title": "Corazza di ferro temprato",
               "text": "Un set completo di armatura in ferro temprato — elmo, pettorale, gambali e stivali; più resistente del ferro, si ripara con ferro temprato."
             },
             {
@@ -4290,13 +4290,13 @@
         },
         {
           "id": "tempered_iron_pickaxe",
-          "title": "Piccone in ferro temperato",
+          "title": "Piccone di ferro temprato",
           "icon": "alaindustrial:tempered_iron_pickaxe",
           "pages": [
             {
               "type": "text",
-              "title": "Piccone in ferro temperato",
-              "text": "Un piccone in ferro temperato — leggermente migliore del ferro vanilla in ogni statistica, ma non può estrarre blocchi di livello diamante."
+              "title": "Piccone di ferro temprato",
+              "text": "Un piccone di ferro temprato — leggermente migliore del ferro vanilla in ogni statistica, ma non può estrarre blocchi di livello diamante."
             },
             {
               "type": "recipe",
@@ -4376,13 +4376,13 @@
         },
         {
           "id": "tempered_iron_tools",
-          "title": "Attrezzi in ferro temperato",
+          "title": "Attrezzi in ferro temprato",
           "icon": "alaindustrial:tempered_iron_axe",
           "pages": [
             {
               "type": "text",
-              "title": "Attrezzi in ferro temperato",
-              "text": "Un set di cinque attrezzi in ferro temperato — piccone, ascia, zappa, pala e spada; leggermente migliori del ferro vanilla, ma non possono estrarre blocchi di livello diamante."
+              "title": "Attrezzi in ferro temprato",
+              "text": "Un set di cinque attrezzi in ferro temprato — piccone, ascia, zappa, pala e spada; leggermente migliori del ferro vanilla, ma non possono estrarre blocchi di livello diamante."
             },
             {
               "type": "stats",

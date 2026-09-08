@@ -89,7 +89,7 @@
             {
               "type": "text",
               "title": "Nó biến thành gì",
-              "text": "Dầu mỏ là khởi đầu của chuỗi cao su.\n\n1. Thu dầu — bằng xô, Viên nang chân không hoặc Máy bơm\n2. Máy Trùng Hợp: 1000 mB dầu và 400 EU cho ra cao su thô\n3. Máy Lưu Hóa: cao su thô + bột lưu huỳnh + 400 EU\n4. Đặt lửa trại (×1), dung nham/khối magma (×2) hoặc Máy sưởi điện (×3) bên dưới\n\nNhiệt tốt hơn giúp tiết kiệm vật liệu: mỗi lượt luôn tiêu thụ một cao su thô và bốn bột lưu huỳnh."
+              "text": "Dầu mỏ là khởi đầu của chuỗi cao su.\n\n1. Thu dầu — bằng xô, Viên nang chân không hoặc Máy bơm\n2. Máy Trùng Hợp: 1000 mB dầu và 400 EU cho ra cao su thô\n3. Máy Lưu Hóa: cao su thô + bột lưu huỳnh + 400 EU\n4. Đặt lửa trại (×1), dung nham/khối magma (×2) hoặc Máy gia nhiệt điện (×3) bên dưới\n\nNhiệt tốt hơn giúp tiết kiệm vật liệu: mỗi lượt luôn tiêu thụ một cao su thô và bốn bột lưu huỳnh."
             }
           ]
         }
@@ -918,12 +918,12 @@
         },
         {
           "id": "irradiated_soil",
-          "title": "Đất nhiễm phóng xạ",
+          "title": "Đất nhiễm xạ",
           "icon": "alaindustrial:irradiated_soil",
           "pages": [
             {
               "type": "text",
-              "title": "Đất nhiễm phóng xạ",
+              "title": "Đất nhiễm xạ",
               "text": "Dấu vết một vụ tai nạn hạt nhân: đất bị nhiễm độc bởi vụ nổ lò phản ứng. Nó phát phóng xạ thấp hơn uranium một nấc — cả khi nằm trong ba lô — và tự phai qua bốn giai đoạn, nhanh hơn dưới nước. Đào và mang như mọi khối, nhưng không bao giờ chế tạo được."
             }
           ]
@@ -1131,13 +1131,13 @@
         },
         {
           "id": "reactor_lever",
-          "title": "Đòn Bẩy Lò Phản Ứng",
+          "title": "Cần gạt lò phản ứng",
           "icon": "alaindustrial:reactor_lever",
           "pages": [
             {
               "type": "text",
-              "title": "Đòn Bẩy Lò Phản Ứng",
-              "text": "Đòn bẩy bằng hợp kim che chắn: tín hiệu được giữ từ bên trong căn phòng kín — phanh khẩn cấp của lò phản ứng, không phá lớp che chắn của phòng cũng không chảy ra cùng nội dung bên trong."
+              "title": "Cần gạt lò phản ứng",
+              "text": "Cần gạt bằng hợp kim che chắn: tín hiệu được giữ từ bên trong căn phòng kín — phanh khẩn cấp của lò phản ứng, không phá lớp che chắn của phòng cũng không chảy ra cùng nội dung bên trong."
             },
             {
               "type": "stats",
@@ -1728,12 +1728,12 @@
         },
         {
           "id": "electric_heater",
-          "title": "Máy sưởi điện",
+          "title": "Máy gia nhiệt điện",
           "icon": "alaindustrial:electric_heater",
           "pages": [
             {
               "type": "text",
-              "title": "Máy sưởi điện",
+              "title": "Máy gia nhiệt điện",
               "text": "Khối phụ trợ LV đặt dưới máy lưu hóa. Nó phải nóng lên đã; khi nóng thì cho mức nhiệt tối đa x3. Còn lạnh thì nó chẳng phải nguồn nhiệt nào cả."
             },
             {
@@ -1879,12 +1879,12 @@
         },
         {
           "id": "distillation_column",
-          "title": "Tháp Chưng Cất",
+          "title": "Tháp chưng cất",
           "icon": "alaindustrial:distillation_column",
           "pages": [
             {
               "type": "text",
-              "title": "Tháp Chưng Cất",
+              "title": "Tháp chưng cất",
               "text": "Tháp 1×1×3 chưng cất dầu thô thành dầu diesel và dầu mazut. Khối đa phần đầu tiên của mod — lắp thủ công từ ba khối; phần nhẹ thoát ra ở đỉnh, phần nặng ở đáy, và phần đế giữ lại chất lỏng khi tháo dỡ."
             },
             {
@@ -2076,7 +2076,7 @@
             {
               "type": "text",
               "title": "Nhiên liệu sinh học",
-              "text": "Chất lỏng ô liu đục được ủ trong máy lên men — nhiên liệu đầu tiên của mod được trồng thay vì bơm. Không xuất hiện tự nhiên trong thế giới; chưng cất lần thứ hai cho ra dung dịch dinh dưỡng mà vòi tưới phun ra."
+              "text": "Chất lỏng ô liu đục được ủ trong máy lên men — nhiên liệu đầu tiên của mod được trồng thay vì bơm. Không xuất hiện tự nhiên trong thế giới; chưng cất lần thứ hai cho ra dung dịch dinh dưỡng mà vòi phun tưới xịt ra."
             }
           ]
         },
@@ -2124,12 +2124,12 @@
         },
         {
           "id": "diesel",
-          "title": "Dầu Diesel",
+          "title": "Dầu diesel",
           "icon": "alaindustrial:diesel_bucket",
           "pages": [
             {
               "type": "text",
-              "title": "Dầu Diesel",
+              "title": "Dầu diesel",
               "text": "Phân đoạn nhẹ của quá trình chưng cất dầu — chất lỏng màu vàng óng, sản phẩm chính của tháp. Nhiên liệu tương lai của máy phát điện nhiên liệu lỏng (12 EU/t)."
             }
           ]
@@ -2160,12 +2160,12 @@
         },
         {
           "id": "fuel_oil",
-          "title": "Dầu Mazut",
+          "title": "Dầu mazut",
           "icon": "alaindustrial:fuel_oil_bucket",
           "pages": [
             {
               "type": "text",
-              "title": "Dầu Mazut",
+              "title": "Dầu mazut",
               "text": "Cặn nặng của quá trình chưng cất dầu — chất lỏng sệt màu nâu sẫm. Nhiên liệu yếu hơn dầu diesel (6 EU/t), nhưng không gì bị lãng phí — tất cả đều cháy được."
             }
           ]
@@ -2280,7 +2280,7 @@
             {
               "type": "text",
               "title": "Dung dịch dinh dưỡng",
-              "text": "Sản phẩm xanh rực từ việc chưng cất nhiên liệu sinh học lần thứ hai — chất lỏng duy nhất của mod mà không gì cháy được. Đối tượng tiêu thụ duy nhất của nó là vòi tưới, giúp cây trồng và tinh thể mọc nhanh hơn."
+              "text": "Sản phẩm xanh rực từ việc chưng cất nhiên liệu sinh học lần thứ hai — chất lỏng duy nhất của mod mà không gì cháy được. Đối tượng tiêu thụ duy nhất của nó là vòi phun tưới, giúp cây trồng và tinh thể mọc nhanh hơn."
             }
           ]
         },
@@ -2455,12 +2455,12 @@
         },
         {
           "id": "sprinkler",
-          "title": "Vòi tưới",
+          "title": "Vòi phun tưới",
           "icon": "alaindustrial:sprinkler",
           "pages": [
             {
               "type": "text",
-              "title": "Vòi tưới",
+              "title": "Vòi phun tưới",
               "text": "Đầu quay trên cột phun dung dịch dinh dưỡng lên mọi thứ đang mọc trong phạm vi 4 khối. Cỗ máy duy nhất trong mod không tiêu thụ EU chút nào — không cáp nào nối vào nó, và nó chạy hoàn toàn bằng dung dịch. Lắp trên sàn hoặc dưới trần."
             },
             {
@@ -2535,7 +2535,7 @@
             {
               "type": "text",
               "title": "Bộ Điều Khiển Nhà Kính",
-              "text": "Một căn phòng kín hình dạng bất kỳ, các luống gieo hạt đã thức dậy của nó mọc ra các chùm amethyst vanilla thật. Bộ điều khiển làm đầy không khí bên trong, nên vòm, kim tự tháp bậc thang hay cánh hình chữ L đều được tính, và nhà kính hoàn thành thể hiện điều đó bằng cách các mối nối trên vỏ biến mất. Nước, EU và vòi tưới chỉ làm nhanh hơn; cả ba đều không bắt buộc."
+              "text": "Một căn phòng kín hình dạng bất kỳ, các luống gieo hạt đã thức dậy của nó mọc ra các chùm amethyst vanilla thật. Bộ điều khiển làm đầy không khí bên trong, nên vòm, kim tự tháp bậc thang hay cánh hình chữ L đều được tính, và nhà kính hoàn thành thể hiện điều đó bằng cách các mối nối trên vỏ biến mất. Nước, EU và vòi phun tưới chỉ làm nhanh hơn; cả ba đều không bắt buộc."
             },
             {
               "type": "stats",
@@ -3961,12 +3961,12 @@
         },
         {
           "id": "alignment_chip_day",
-          "title": "Chip tiến hóa năng lượng mặt trời",
+          "title": "Chip tiến hóa Mặt trời",
           "icon": "alaindustrial:alignment_chip_day",
           "pages": [
             {
               "type": "text",
-              "title": "Chip tiến hóa năng lượng mặt trời",
+              "title": "Chip tiến hóa Mặt trời",
               "text": "Một cặp chip tiến hóa — mặt trời (ngày) và mặt trăng (đêm) — giúp tiến hóa tấm năng lượng mặt trời và cối gió T1 cơ bản lên T2, mang theo cả năng lượng NBT đã tích lũy."
             },
             {
@@ -4290,13 +4290,13 @@
         },
         {
           "id": "tempered_iron_pickaxe",
-          "title": "Cuốc Sắt Tôi",
+          "title": "Cuốc Chim Sắt Tôi",
           "icon": "alaindustrial:tempered_iron_pickaxe",
           "pages": [
             {
               "type": "text",
-              "title": "Cuốc Sắt Tôi",
-              "text": "Cuốc Sắt Tôi cầm tay — nhỉnh hơn cuốc sắt gốc ở mọi thông số, nhưng không thể đào các khối cấp kim cương."
+              "title": "Cuốc Chim Sắt Tôi",
+              "text": "Cuốc Chim Sắt Tôi cầm tay — nhỉnh hơn cuốc chim sắt gốc ở mọi thông số, nhưng không thể đào các khối cấp kim cương."
             },
             {
               "type": "recipe",
