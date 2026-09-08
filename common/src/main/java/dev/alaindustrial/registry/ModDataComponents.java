@@ -3,6 +3,7 @@ package dev.alaindustrial.registry;
 import com.mojang.serialization.Codec;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.item.tool.AnalyzerMode;
+import dev.alaindustrial.item.tool.DrillUpgrades;
 import dev.alaindustrial.item.fluid.FluidTankContents;
 import dev.alaindustrial.item.misc.MutationGrades;
 import dev.alaindustrial.item.tool.NetworkScanData;
@@ -67,6 +68,8 @@ public final class ModDataComponents {
 	public static final Identifier SOUL_VESSEL_KILLS_ID = Industrialization.id("soul_vessel_kills");
 	public static final Identifier REPAIR_COUNT_ID = Industrialization.id("repair_count");
 	public static final Identifier GEIGER_ALERT_ID = Industrialization.id("geiger_alert");
+	public static final Identifier DRILL_UPGRADES_ID = Industrialization.id("drill_upgrades");
+	public static final Identifier DRILL_COLUMN_ENABLED_ID = Industrialization.id("drill_column_enabled");
 
 	/** Rarity grade rolled by the incubator on a successful mutation (MOD-118). */
 	public static final Identifier MUTATION_GRADE_ID = Industrialization.id("mutation_grade");
@@ -234,6 +237,47 @@ public final class ModDataComponents {
 
 	/** Build the {@code magnet_enabled} type both loaders register (MOD-132). */
 	public static DataComponentType<Boolean> createMagnetEnabled() {
+		return DataComponentType.<Boolean>builder()
+				.persistent(Codec.BOOL)
+				.networkSynchronized(ByteBufCodecs.BOOL)
+				.build();
+	}
+
+	/**
+	 * Permanent upgrades installed on a drill by the Upgrade Table (MOD-482). Absent = nothing
+	 * installed, so a freshly crafted drill stays component-identical to every other one and only a
+	 * drill that has actually been through the table stops stacking with them.
+	 *
+	 * <p>Deliberately NOT {@code ignoreSwapAnimation}: the flag is for a component something rewrites
+	 * by itself on a timer ({@code pouch_energy} does, once a second, and without it a held pouch
+	 * visibly bobs). This one is written once, by the machine, while the drill sits in a slot — there
+	 * is no held stack to twitch.
+	 */
+	public static Supplier<DataComponentType<DrillUpgrades>> DRILL_UPGRADES = () -> {
+		throw new IllegalStateException("ModDataComponents.DRILL_UPGRADES read before its loader bound it");
+	};
+
+	/** Build the {@code drill_upgrades} type both loaders register (MOD-482). */
+	public static DataComponentType<DrillUpgrades> createDrillUpgrades() {
+		return DataComponentType.<DrillUpgrades>builder()
+				.persistent(DrillUpgrades.CODEC)
+				.networkSynchronized(DrillUpgrades.STREAM_CODEC)
+				.build();
+	}
+
+	/**
+	 * Whether the column bore is switched on (MOD-482). <b>Absent = ON</b>, unlike the mod's other
+	 * manual toggles: this one only ever matters on a drill that has been through the Upgrade Table,
+	 * and an upgrade the player has paid for should work the moment they take the drill out. The
+	 * component is written only when they switch it <i>off</i>, which also keeps every drill that has
+	 * never been toggled component-identical.
+	 */
+	public static Supplier<DataComponentType<Boolean>> DRILL_COLUMN_ENABLED = () -> {
+		throw new IllegalStateException("ModDataComponents.DRILL_COLUMN_ENABLED read before its loader bound it");
+	};
+
+	/** Build the {@code drill_column_enabled} type both loaders register (MOD-482). */
+	public static DataComponentType<Boolean> createDrillColumnEnabled() {
 		return DataComponentType.<Boolean>builder()
 				.persistent(Codec.BOOL)
 				.networkSynchronized(ByteBufCodecs.BOOL)
@@ -560,5 +604,7 @@ public final class ModDataComponents {
 			new ComponentDef<>(GEIGER_ALERT_ID, ModDataComponents::createGeigerAlert, c -> GEIGER_ALERT = c),
 			new ComponentDef<>(MUTATION_GRADE_ID, ModDataComponents::createMutationGrade, c -> MUTATION_GRADE = c),
 			new ComponentDef<>(TELEPORTER_OWNER_ID, ModDataComponents::createTeleporterOwner, c -> TELEPORTER_OWNER = c),
-			new ComponentDef<>(TELEPORTER_POINTS_ID, ModDataComponents::createTeleporterPoints, c -> TELEPORTER_POINTS = c));
+			new ComponentDef<>(TELEPORTER_POINTS_ID, ModDataComponents::createTeleporterPoints, c -> TELEPORTER_POINTS = c),
+			new ComponentDef<>(DRILL_UPGRADES_ID, ModDataComponents::createDrillUpgrades, c -> DRILL_UPGRADES = c),
+			new ComponentDef<>(DRILL_COLUMN_ENABLED_ID, ModDataComponents::createDrillColumnEnabled, c -> DRILL_COLUMN_ENABLED = c));
 }

@@ -52,4 +52,31 @@ public final class ModChat {
 				.append(Component.literal(" "))
 				.append(body);
 	}
+
+	/** The louder tag the mod's world-load announcements wear — the whole bracket group in gold. */
+	private static final ChatFormatting LOAD_TAG = ChatFormatting.GOLD;
+
+	/**
+	 * {@code [Ala Industrial] <body>} in the world-load palette: the tag whole and gold rather than
+	 * grey-bracketed aqua.
+	 *
+	 * <p><b>Why the mod signs itself two ways.</b> {@link #line} is the machinery talking to a player
+	 * who is already playing — a greenhouse, a reactor, a tool — and it stays quiet on purpose, because
+	 * it lands in the middle of a busy chat column. This one is for the handful of lines that arrive
+	 * when a world opens, where chat is empty and the message is the mod introducing itself. The look
+	 * is not invented here: the Ore Vein Miner compat line has printed exactly this gold tag from a
+	 * datapack {@code tellraw} since it shipped, a {@code .mcfunction} cannot call this class, and the
+	 * owner asked for the greeting to match the line he actually sees on load.
+	 *
+	 * <p>The body's colour is the caller's, not this method's — the tag is the signature, the sentence
+	 * is the message.
+	 */
+	public static MutableComponent loadLine(Component body) {
+		return Component.empty()
+				.append(Component.literal("[").withStyle(LOAD_TAG))
+				.append(Component.translatable("command.alaindustrial.name").withStyle(LOAD_TAG))
+				.append(Component.literal("]").withStyle(LOAD_TAG))
+				.append(Component.literal(" "))
+				.append(body);
+	}
 }

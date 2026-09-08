@@ -1,0 +1,20 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "equipment",
+	"key": {
+		"T": "alaindustrial:core_barrel",
+		"D": "alaindustrial:irradiated_diamond",
+		"K": "alaindustrial:choke_reinforced",
+		"C": "alaindustrial:advanced_circuit",
+		"I": "alaindustrial:invar_reinforced_plate",
+		"B": "alaindustrial:reinforced_bearing"
+	},
+	"pattern": [
+		"TDT",
+		"KCK",
+		"IBI"
+	],
+	"result": {
+		"id": "alaindustrial:drill_column_module"
+	}
+}

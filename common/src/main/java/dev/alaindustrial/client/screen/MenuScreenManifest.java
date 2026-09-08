@@ -102,6 +102,7 @@ public final class MenuScreenManifest {
 			screen(() -> ModContent.COMPRESSOR_MENU.get(), CompressorScreen::new),
 			screen(() -> ModContent.RECYCLER_MENU.get(), RecyclerScreen::new),
 			screen(() -> ModContent.COMPONENT_REPAIR_BENCH_MENU.get(), ComponentRepairBenchScreen::new),
+			screen(() -> ModContent.UPGRADE_TABLE_MENU.get(), UpgradeTableScreen::new),
 			screen(() -> ModContent.CANNING_MACHINE_MENU.get(), CanningMachineScreen::new),
 			screen(() -> ModContent.SAWMILL_MENU.get(), SawmillScreen::new),
 			screen(() -> ModContent.ASSEMBLER_MENU.get(), AssemblerScreen::new),

@@ -312,6 +312,12 @@ pitest {
             // tests (CeramicScenarios): the press pays more than a hand quench, and an unpowered or
             // waterless press pays nothing at all.
             'dev.alaindustrial.core.ceramic.QuenchPress',
+            // MOD-596: the per-world "already greeted" flag. It is a SavedData subclass whose whole
+            // surface is Codec/SavedDataType/setDirty — net.minecraft types common/'s test classpath
+            // does not carry, so every mutant of it would be a guaranteed NO_COVERAGE. There is also
+            // nothing to mutate: one boolean and a claim() that flips it once. The rule it serves —
+            // greeted once per world, never twice — is a property of the join hook, not of the flag.
+            'dev.alaindustrial.core.WelcomeMessageState',
             // MOD-584: the mixin-side accessor for the per-frame root snapshot. Its own code
             // names no net.minecraft type, but both abstract operations are typed by
             // RootInspection.Frame (BlockPos/BlockState), so L1 cannot call it — the same

@@ -18,26 +18,22 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
 
 /**
- * Splitting a carbon briquette into ceramic plates (MOD-590) — two ways, and what each asks for.
+ * Splitting a carbon briquette into ceramic plates (MOD-590) — one way, and what it asks for.
  *
  * <p><b>There is deliberately no crafting recipe.</b> One briquette in a grid and plates out is exactly
- * what this replaced: it asked the player nothing. Plates now come only out of water.
+ * what this replaced: it asked the player nothing. Plates come only out of the press.
  *
- * <ul>
- *   <li><b>Press</b> ({@link Config#ceramicPlatesFromPress}) — a water source with a piston aimed into
- *       it, plus a briquette and {@link Config#ceramicPressRedstoneCost} redstone dust floating in that
- *       water. Fires on the piston, automatable with a dropper, an observer and a hopper, and the only
- *       path that pays in full.</li>
- *   <li><b>Hand quench</b> ({@link Config#ceramicPlatesFromWater}) — right-click a water source with the
- *       briquette. No build and no redstone, one plate less.</li>
- * </ul>
+ * <p><b>The press</b> ({@link Config#ceramicPlatesFromPress}) is a water source with a piston aimed
+ * into it, plus a briquette and {@link Config#ceramicPressRedstoneCost} redstone dust floating in that
+ * water. It fires on the piston and automates with a dropper, an observer and a hopper.
  *
- * <p>Water is everywhere, so the hand quench is never out of reach. What the press buys is the fourth
- * plate and the ability to run without a player standing there — and four plates make one block, so the
- * choice is worth a quarter of the coal that went into every block.
+ * <p>MOD-590 also shipped a second path — a bare right-click on any water source for one plate less —
+ * and MOD-594 took it away. It was reachable everywhere, needed no build and no redstone, and next to
+ * it the press was a way to earn one extra plate rather than the way plates are made. Building the
+ * press is now the price of ceramic, and four plates make one block.
  *
- * <p>Pure of any piston/mixin types on purpose, so the same code serves the item's right-click path,
- * the piston hook and the gametests.
+ * <p>Pure of any piston/mixin types on purpose, so the same code serves the piston hook and the
+ * gametests.
  */
 public final class QuenchPress {
 
@@ -50,11 +46,6 @@ public final class QuenchPress {
 	/** Plates one briquette yields when quenched under a piston. */
 	public static int pressYield() {
 		return Config.ceramicPlatesFromPress;
-	}
-
-	/** Plates one briquette yields when quenched by hand in water. */
-	public static int waterYield() {
-		return Config.ceramicPlatesFromWater;
 	}
 
 	/** Whether this position holds a still water source — the only fluid that quenches. */

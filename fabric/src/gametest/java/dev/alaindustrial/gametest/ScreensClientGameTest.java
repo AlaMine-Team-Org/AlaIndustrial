@@ -162,7 +162,11 @@ public class ScreensClientGameTest implements FabricClientGameTest {
             // default output, slot empty — because that is the state the stand can produce with a
             // right click and nothing else, and it already carries every control the panel owns:
             // the switch, the three presets, the readout, the slider and the charge slot.
-            new Screen("creative_energy_source", "creative_energy_source", "Creative Energy Source"));
+            new Screen("creative_energy_source", "creative_energy_source", "Creative Energy Source"),
+            // MOD-482: the upgrade table. Shot as a bare frame — the bench is hidden from players
+            // until its final model lands, so there is nothing to stage in its slots yet, and the
+            // frame is what the catalogue owes: every menu in the manifest has a picture.
+            new Screen("upgrade_table", "upgrade_table", "Upgrade Table"));
 
     /**
      * Screens re-shot under a long locale. Russian labels run noticeably longer than English ones, so a

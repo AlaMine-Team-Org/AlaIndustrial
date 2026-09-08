@@ -1,0 +1,16 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"key": {
+		"I": "alaindustrial:invar_reinforced_plate",
+		"K": "alaindustrial:choke"
+	},
+	"pattern": [
+		"III",
+		"K K",
+		"III"
+	],
+	"result": {
+		"id": "alaindustrial:core_barrel"
+	}
+}

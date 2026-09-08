@@ -329,10 +329,13 @@ public final class IndustrializationNeoForge {
 					dev.alaindustrial.core.radiation.GeigerTicker.forget(event.getEntity().getUUID());
 				});
 		// MOD-067: auto-give the Guide Book on first join (game-bus event; once per player).
+		// MOD-596: and greet the world, once per world — the same two calls, in the same order, as the
+		// Fabric hook. Both bodies are one line each into common/, which is what keeps them equal.
 		NeoForge.EVENT_BUS.addListener(
 				(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent event) -> {
 					if (event.getEntity() instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
 						dev.alaindustrial.core.guide.GuideBookGiver.giveIfNeeded(serverPlayer);
+						dev.alaindustrial.chat.WelcomeMessage.sendIfNeeded(serverPlayer);
 					}
 				});
 		// MOD-401: one sweep over everything that holds per-level state, instead of naming managers

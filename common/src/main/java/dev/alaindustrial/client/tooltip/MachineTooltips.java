@@ -31,6 +31,7 @@ import dev.alaindustrial.mutation.MutationGrade;
 import dev.alaindustrial.item.tool.AnalyzerMode;
 import dev.alaindustrial.item.tool.ElectricChainsawDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricChainsawItem;
+import dev.alaindustrial.item.tool.DrillUpgrades;
 import dev.alaindustrial.item.tool.ElectricDrillDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricDrillNetheriteTipItem;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
@@ -355,7 +356,21 @@ public final class MachineTooltips {
 	 * is the one thing worth checking on a powered tool.
 	 */
 	private static void addElectricDrillTooltip(ItemStack stack, List<Component> lines) {
-		lines.add(Component.translatable("tooltip.alaindustrial.electric_drill.usage", Config.electricDrillEuPerBlock)
+		// The usage line names the tier's own reference tool. It used to be one shared string saying
+		// "mines like a diamond pickaxe", which on the netherite-tipped drill read as a downgrade
+		// (MOD-482 bug report). The mining TIER really is diamond on all three — 26.2 has nothing above
+		// it, and a netherite pickaxe unlocks no extra blocks — so each tier now names the pickaxe it is
+		// actually faster than instead of the tier it shares. Netherite is checked FIRST: it is a
+		// subclass of the diamond tip, and the other order would label the top tier as the one below it.
+		String usageKey;
+		if (stack.getItem() instanceof ElectricDrillNetheriteTipItem) {
+			usageKey = "tooltip.alaindustrial.electric_drill_netherite_tip.usage";
+		} else if (stack.getItem() instanceof ElectricDrillDiamondTipItem) {
+			usageKey = "tooltip.alaindustrial.electric_drill_diamond_tip.usage";
+		} else {
+			usageKey = "tooltip.alaindustrial.electric_drill.usage";
+		}
+		lines.add(Component.translatable(usageKey, Config.electricDrillEuPerBlock)
 				.withStyle(ChatFormatting.GRAY));
 		// MOD-321: the upgraded drill adds its switchable Silk Touch mode. The line is worth showing in
 		// both states: vanilla already lists "Silk Touch I" while the mode is on, but with it off nothing
@@ -374,6 +389,16 @@ public final class MachineTooltips {
 					? "tooltip.alaindustrial.electric_drill_diamond_tip.silk_on"
 					: "tooltip.alaindustrial.electric_drill_diamond_tip.silk_off")
 					.withStyle(silk ? ChatFormatting.AQUA : ChatFormatting.GRAY));
+		}
+		// MOD-482: the column bore. One key/one line for all three tiers — unlike Silk Touch, the mode is
+		// installed rather than inherent, so a drill that has never been to the Upgrade Table says nothing:
+		// a stat that cannot happen is noise (same rule as the scythe's zero-chance seed line).
+		if (DrillUpgrades.has(stack, DrillUpgrades.COLUMN_BORE)) {
+			boolean column = ElectricDrillItem.isColumnEnabled(stack);
+			lines.add(Component.translatable(column
+					? "tooltip.alaindustrial.electric_drill.column_on"
+					: "tooltip.alaindustrial.electric_drill.column_off")
+					.withStyle(column ? ChatFormatting.AQUA : ChatFormatting.GRAY));
 		}
 		long eu = ItemEnergy.get(stack);
 		long cap = ItemEnergy.capacity(stack);

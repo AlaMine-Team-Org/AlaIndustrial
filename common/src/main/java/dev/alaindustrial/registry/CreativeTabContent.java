@@ -437,6 +437,8 @@ public final class CreativeTabContent {
 		show(out, ModContent.REINFORCED_BEARING);
 		show(out, ModContent.NETHERITE_DRILL_HEAD);
 		show(out, ModContent.NETHERITE_DRILL_UPGRADE_SMITHING_TEMPLATE);
+		show(out, ModContent.CORE_BARREL);
+		show(out, ModContent.DRILL_COLUMN_MODULE);
 	}
 
 	public static void buildingBlocks(Sink out) {
@@ -661,6 +663,8 @@ public final class CreativeTabContent {
 		show(out, ModContent.REINFORCED_BEARING);
 		show(out, ModContent.NETHERITE_DRILL_HEAD);
 		show(out, ModContent.NETHERITE_DRILL_UPGRADE_SMITHING_TEMPLATE);
+		show(out, ModContent.CORE_BARREL);
+		show(out, ModContent.DRILL_COLUMN_MODULE);
 		// The rubber and cloth chains, each from raw to finished.
 		show(out, ModContent.RAW_RUBBER);
 		show(out, ModContent.BIOMASS);

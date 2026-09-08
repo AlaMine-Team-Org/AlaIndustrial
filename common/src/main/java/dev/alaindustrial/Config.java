@@ -921,6 +921,26 @@ public final class Config {
 	@Knob(section = Section.TOOLS, min = 1,
 			doc = "Netherite-Tipped Electric Drill EU buffer (the two tiers below share electricDrillBuffer).")
 	public static int electricDrillNetheriteTipBuffer = 15_000;
+	/** EU drained for each EXTRA block a column-bore drill breaks above and below the one it hit (MOD-482).
+	 * Half again {@link #electricDrillEuPerBlock}, so a column stroke costs 50 + 75 + 75 = 200 against the
+	 * plain 50 — three blocks for four blocks' worth of energy. The surcharge is the point: the upgrade
+	 * buys speed of digging, not free work, and it keeps a charge worth ~50 strokes instead of ~200. A
+	 * drill that cannot afford the whole column breaks one block instead of stopping halfway. */
+	@Knob(section = Section.TOOLS, min = 1,
+			doc = "EU the drill spends per extra block of a column bore (the block above and below the one hit).")
+	public static int electricDrillColumnEuPerBlock = 75;
+
+	// --- Upgrade Table (MOD-482, fits permanent upgrades onto powered tools) ---
+	/** EU/t the Upgrade Table draws while fitting a module. Four times the shared machine rate: the
+	 * table rewrites a tool rather than converting an item, and it should be felt on the grid. */
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "EU/t the Upgrade Table draws while fitting a module.")
+	public static int upgradeTableEuPerTick = 8;
+	/** Ticks one installation takes at {@link #upgradeTableEuPerTick}. 200 ticks (10 s) x 8 EU/t =
+	 * 1 600 EU per upgrade — a visible piece of work next to a 200 EU smelt, but not a wait. */
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "Ticks the Upgrade Table takes to fit one module.")
+	public static int upgradeTableDuration = 200;
 
 	// --- Electric Chainsaw (MOD-337, the drill's wood-side counterpart) ---
 	/** Electric Chainsaw EU buffer — the same reservoir as the drill, so the two tools of the LV hand-tool
@@ -1214,16 +1234,14 @@ public final class Config {
 	public static int recyclerBladesDiamondMaxDamage = 2048;
 
 	/**
-	 * The quench press (MOD-590). A carbon briquette becomes ceramic plates, and HOW it is broken
-	 * decides how many. Four plates make one block, so this ladder is a straight doubling of the coal
-	 * price: one stack of coal per block through the press, two stacks if every briquette is broken dry.
+	 * The quench press (MOD-590, narrowed by MOD-594). A carbon briquette becomes ceramic plates, and
+	 * the press is the only thing that breaks one — the bare hand-quench against any water source was
+	 * removed, along with its own knob, because a path that needs no build made the press optional.
+	 * Four plates make one block, so this is one stack of coal per block.
 	 */
 	@Knob(section = Section.MACHINES, min = 1,
 			doc = "Plates one carbon briquette yields when a piston fires into the water it floats in.")
 	public static int ceramicPlatesFromPress = 4;
-	@Knob(section = Section.MACHINES, min = 1,
-			doc = "Plates one carbon briquette yields when quenched by hand in a water source.")
-	public static int ceramicPlatesFromWater = 3;
 	@Knob(section = Section.MACHINES, min = 1,
 			doc = "Redstone dust the press consumes per briquette, alongside the briquette itself.")
 	public static int ceramicPressRedstoneCost = 2;
@@ -2574,6 +2592,23 @@ public final class Config {
 	@Knob(section = Section.MACHINES, min = 1,
 			doc = "Personal hostile kills to evolve the MV repeller into HV; also the vessel hard cap.")
 	public static int mobRepellerEvolveKillsHv = 250;
+
+	// --- Welcome message (MOD-596) ---
+	/**
+	 * Whether the mod greets a world the first time anyone joins it, with two chat lines and a link to
+	 * our Discord.
+	 *
+	 * <p>The switch exists for one reader: somebody running a public server on our mod who would rather
+	 * not point their players at somebody else's community. It turns the whole greeting off rather than
+	 * offering a field to put their own link in — a signed line from this mod advertising another server
+	 * would be the mod lying about who is talking.
+	 *
+	 * <p>Off changes nothing else: the world is still never marked as greeted, so turning it back on
+	 * greets the world on the next join.
+	 */
+	@Knob(section = Section.WORLD,
+			doc = "When true, the mod writes a two-line welcome with its Discord link the first time anyone joins a world.")
+	public static boolean welcomeMessageEnabled = true;
 
 	// --- Cotton trellis (MOD-280): the mod's first crop. ---
 	/**

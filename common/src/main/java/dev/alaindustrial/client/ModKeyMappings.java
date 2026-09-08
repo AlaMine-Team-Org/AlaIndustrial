@@ -3,6 +3,7 @@ package dev.alaindustrial.client;
 import com.mojang.blaze3d.platform.InputConstants;
 import dev.alaindustrial.Industrialization;
 import net.minecraft.client.KeyMapping;
+import dev.alaindustrial.network.DrillColumnTogglePayload;
 import dev.alaindustrial.network.FluxweaveStepAssistPayload;
 import dev.alaindustrial.network.NetworkDispatcher;
 import net.minecraft.client.Minecraft;
@@ -61,6 +62,16 @@ public final class ModKeyMappings {
 			GLFW.GLFW_KEY_G,
 			CATEGORY);
 
+	/** Toggle the column bore on the held drill (MOD-482). Default: L — free in vanilla, and the next
+	 * letter of the G/H/J/K row this mod already occupies. It is a key rather than a click because both
+	 * right-click gestures on the drill line are taken: a plain one places a torch on all three tiers,
+	 * sneak switches Silk Touch on the two tipped ones. */
+	public static final KeyMapping TOGGLE_DRILL_COLUMN = new KeyMapping(
+			"key.alaindustrial.toggle_drill_column",
+			InputConstants.Type.KEYSYM,
+			GLFW.GLFW_KEY_L,
+			CATEGORY);
+
 	private ModKeyMappings() {
 	}
 
@@ -97,6 +108,14 @@ public final class ModKeyMappings {
 			// server has to be told explicitly. The reply (message + click) comes back from the handler.
 			if (player != null) {
 				NetworkDispatcher.get().sendToServer(new FluxweaveStepAssistPayload());
+			}
+		}
+		while (TOGGLE_DRILL_COLUMN.consumeClick()) {
+			// Same reason as the step assist above: the mode lives in a component on the server's copy of
+			// the stack, and a custom KeyMapping is not part of vanilla's input sync. The reply (message +
+			// sound) comes back from the handler.
+			if (player != null) {
+				NetworkDispatcher.get().sendToServer(new DrillColumnTogglePayload());
 			}
 		}
 		while (OPEN_PROFILE.consumeClick()) {

@@ -10,6 +10,7 @@ import dev.alaindustrial.block.CanningMachineBlock;
 import dev.alaindustrial.block.CesuBlock;
 import dev.alaindustrial.block.ChargePadBlock;
 import dev.alaindustrial.block.ComponentRepairBenchBlock;
+import dev.alaindustrial.block.UpgradeTableBlock;
 import dev.alaindustrial.block.CompressorBlock;
 import dev.alaindustrial.block.RecyclerBlock;
 import dev.alaindustrial.block.CreativeEnergySourceBlock;
@@ -101,6 +102,7 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.component.Consumable;
 import dev.alaindustrial.block.entity.EnergyCondenserBlockEntity;
 import dev.alaindustrial.block.entity.ComponentRepairBenchBlockEntity;
+import dev.alaindustrial.block.entity.UpgradeTableBlockEntity;
 import dev.alaindustrial.block.entity.CompressorBlockEntity;
 import dev.alaindustrial.block.entity.RecyclerBlockEntity;
 import dev.alaindustrial.block.entity.DaylightSolarPanelBlockEntity;
@@ -205,6 +207,7 @@ import dev.alaindustrial.menu.CesuMenu;
 import dev.alaindustrial.menu.ChargePadMenu;
 import dev.alaindustrial.menu.ElectricHeaterMenu;
 import dev.alaindustrial.menu.ComponentRepairBenchMenu;
+import dev.alaindustrial.menu.UpgradeTableMenu;
 import dev.alaindustrial.menu.CompressorMenu;
 import dev.alaindustrial.menu.RecyclerMenu;
 import dev.alaindustrial.menu.DaylightSolarPanelMenu;
@@ -361,6 +364,7 @@ public final class ContentManifest {
 			menu("recycler", RecyclerMenu::new, s -> ModContent.RECYCLER_MENU = s),
 			menu("component_repair_bench", ComponentRepairBenchMenu::new,
 					s -> ModContent.COMPONENT_REPAIR_BENCH_MENU = s),
+			menu("upgrade_table", UpgradeTableMenu::new, s -> ModContent.UPGRADE_TABLE_MENU = s),
 			menu("canning_machine", CanningMachineMenu::new, s -> ModContent.CANNING_MACHINE_MENU = s),
 			menu("sawmill", SawmillMenu::new, s -> ModContent.SAWMILL_MENU = s),
 			// MOD-275 — the assembler: blueprint queue, ghost pattern grid, six-slot output.
@@ -564,6 +568,10 @@ public final class ContentManifest {
 	public static final BlockDef<ComponentRepairBenchBlock> COMPONENT_REPAIR_BENCH =
 			block("component_repair_bench", ComponentRepairBenchBlock::new,
 					s -> ModContent.COMPONENT_REPAIR_BENCH = s);
+
+	/** Upgrade Table (MOD-482) — fits permanent upgrades onto powered tools. Two casings stacked. */
+	public static final BlockDef<UpgradeTableBlock> UPGRADE_TABLE =
+			block("upgrade_table", UpgradeTableBlock::new, s -> ModContent.UPGRADE_TABLE = s);
 	public static final BlockDef<CanningMachineBlock> CANNING_MACHINE =
 			block("canning_machine", CanningMachineBlock::new, s -> ModContent.CANNING_MACHINE = s);
 	public static final BlockDef<SawmillBlock> SAWMILL =
@@ -839,7 +847,9 @@ public final class ContentManifest {
 			// MOD-483 — the workstation's casing, appended at the tail: replay order is load-bearing.
 			WORKSTATION,
 			// MOD-590 — carbon ceramic, appended at the tail for the same reason.
-			CARBON_CERAMIC);
+			CARBON_CERAMIC,
+			// MOD-482 — the upgrade table's casing, appended at the tail for the same reason.
+			UPGRADE_TABLE);
 
 	/**
 	 * Wraps a machine/ore/material block's {@code strength/sound/…} chain with the shared base every such
@@ -906,6 +916,7 @@ public final class ContentManifest {
 			Map.entry("extractor", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("compressor", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("component_repair_bench", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
+			Map.entry("upgrade_table", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("canning_machine", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("sawmill", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			// MOD-064: the smelter glows through its crucible windows while melting, so it lights like
@@ -1512,6 +1523,10 @@ public final class ContentManifest {
 			plain("reinforced_bearing", s -> ModContent.REINFORCED_BEARING = s),
 			// MOD-534: the assembled drill bit and the smithing template that gates it.
 			plain("netherite_drill_head", s -> ModContent.NETHERITE_DRILL_HEAD = s),
+			// MOD-482: the column bore. Same reasoning as the bearings above — the barrel is built from
+			// reinforced invar plate and palladium, neither of which had a consumer recipe at all.
+			plain("core_barrel", s -> ModContent.CORE_BARREL = s),
+			plain("drill_column_module", s -> ModContent.DRILL_COLUMN_MODULE = s),
 			// Netherite Drill Upgrade smithing template (MOD-534) — the mod's first smithing template, and the
 			// gate on its top drill tier. Built on vanilla's own SmithingTemplateItem rather than a plain Item
 			// so the smithing screen shows what goes in which slot and greys the empty slots with the right
@@ -1912,7 +1927,9 @@ public final class ContentManifest {
 			plain("carbon_rod", s -> ModContent.CARBON_ROD = s),
 			plain("carbon_rod_double", s -> ModContent.CARBON_ROD_DOUBLE = s),
 			item("carbon_briquette", CarbonBriquetteItem::new, s -> ModContent.CARBON_BRIQUETTE = s),
-			plain("ceramic_plate", s -> ModContent.CERAMIC_PLATE = s));
+			plain("ceramic_plate", s -> ModContent.CERAMIC_PLATE = s),
+			// MOD-482 — appended at the very tail; the order of this list is the registration order.
+			blockItem("upgrade_table", s -> ModContent.UPGRADE_TABLE_ITEM = s));
 
 	// ─────────────────────────────────────────────────────────────────────────────────────────
 	// BlockEntity types (MOD-307)
@@ -2050,6 +2067,7 @@ public final class ContentManifest {
 			blockEntity("fluid_pipe", FluidPipeBlockEntity.class, FluidPipeBlockEntity::new, s -> ModContent.FLUID_PIPE_BE = s, "fluid_pipe"),
 			blockEntity("macerator", MaceratorBlockEntity.class, MaceratorBlockEntity::new, s -> ModContent.MACERATOR_BE = s, "macerator"),
 			blockEntity("component_repair_bench", ComponentRepairBenchBlockEntity.class, ComponentRepairBenchBlockEntity::new, s -> ModContent.COMPONENT_REPAIR_BENCH_BE = s, "component_repair_bench"),
+			blockEntity("upgrade_table", UpgradeTableBlockEntity.class, UpgradeTableBlockEntity::new, s -> ModContent.UPGRADE_TABLE_BE = s, "upgrade_table"),
 			blockEntity("battery_box", BatteryBoxBlockEntity.class, BatteryBoxBlockEntity::new, s -> ModContent.BATTERY_BOX_BE = s, "battery_box"),
 			blockEntity("cesu", CesuBlockEntity.class, CesuBlockEntity::new, s -> ModContent.CESU_BE = s, "cesu"),
 			blockEntity("teleporter", TeleporterBlockEntity.class, TeleporterBlockEntity::new, s -> ModContent.TELEPORTER_BE = s, "teleporter"),

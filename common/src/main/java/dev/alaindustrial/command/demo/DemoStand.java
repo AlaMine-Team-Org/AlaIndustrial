@@ -23,6 +23,7 @@ import dev.alaindustrial.block.entity.GalvanicBathBlockEntity;
 import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
 import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
 import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
+import dev.alaindustrial.block.entity.UpgradeTableBlockEntity;
 import dev.alaindustrial.block.entity.WorkstationBlockEntity;
 import dev.alaindustrial.block.CrystalSeedbedBlock;
 import net.minecraft.world.level.block.AmethystClusterBlock;
@@ -39,6 +40,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import dev.alaindustrial.block.TrellisBlock;
 import dev.alaindustrial.block.HorizontalMachineBlock;
+import dev.alaindustrial.block.UpgradeTableBlock;
 import dev.alaindustrial.block.WorkstationBlock;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -457,6 +459,18 @@ public final class DemoStand {
 		if (level.getBlockEntity(origin.offset(25, 1, 12)) instanceof WorkstationBlockEntity station) {
 			station.getEnergyStorage().setAmountUntracked(station.getEnergyStorage().getCapacity());
 			station.setChangedQuietly();
+		}
+		// Upgrade Table (MOD-482): the same 1x2 pattern, shown assembled and powered next to the
+		// workstation it is built like. x=27 for the same reason x=25 was chosen — the neighbouring
+		// cells in this row are already spoken for, and a second set on one cell silently drops the
+		// first block.
+		BlockState upgradeTableCasing = ModContent.UPGRADE_TABLE.get().defaultBlockState();
+		level.setBlockAndUpdate(origin.offset(27, 1, 12), upgradeTableCasing);
+		level.setBlockAndUpdate(origin.offset(27, 2, 12), upgradeTableCasing);
+		UpgradeTableBlock.tryAssemble(level, origin.offset(27, 2, 12));
+		if (level.getBlockEntity(origin.offset(27, 1, 12)) instanceof UpgradeTableBlockEntity table) {
+			table.getEnergyStorage().setAmountUntracked(table.getEnergyStorage().getCapacity());
+			table.setChangedQuietly();
 		}
 		// Assembler (MOD-275): the first MV machine. Row z=10 is full from x=2 to x=41 (machines then
 		// the misc zone), so it opens a second machines row one block further south, in front of the

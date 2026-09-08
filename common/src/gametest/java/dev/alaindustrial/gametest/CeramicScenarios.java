@@ -42,9 +42,9 @@ public final class CeramicScenarios {
 	/**
 	 * The press pays its full yield, and eats the briquette doing it.
 	 *
-	 * <p>Mutation check: hand {@code waterYield()} to the mixin instead of {@code pressYield()} and this
-	 * reddens with "the press paid 3 plates" — the entire reason to build the contraption is that it
-	 * pays more than quenching by hand.
+	 * <p>Mutation check: return any other number from {@code pressYield()} and this reddens naming the
+	 * count it actually paid. Since MOD-594 the press is the ONLY way to split a briquette, so that
+	 * number is not a comparison against an easier path any more — it is the whole yield of ceramic.
 	 */
 	public static void quenchPressSplitsFloatingBriquettes(GameTestHelper helper) {
 		buildPress(helper);

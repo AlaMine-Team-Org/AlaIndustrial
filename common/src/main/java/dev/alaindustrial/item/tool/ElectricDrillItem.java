@@ -6,6 +6,7 @@ import dev.alaindustrial.item.wearable.EnergyPackItem;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.registry.ModContent;
+import dev.alaindustrial.registry.ModDataComponents;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -146,6 +147,108 @@ public class ElectricDrillItem extends Item {
 		return 1.0f;
 	}
 
+	// --- column bore (MOD-482): the block hit, plus the one above and the one below ---------------
+
+	/**
+	 * Whether this thread is already inside a column the drill is breaking for itself.
+	 *
+	 * <p>Without it the feature is an infinite loop, not a bug that shows up later:
+	 * {@code ServerPlayerGameMode.destroyBlock} calls {@code ItemStack.mineBlock}, which calls
+	 * {@link #mineBlock} — so every extra block would ask for its own column and one stroke would
+	 * become 1 → 3 → 9 → 27. {@code ScytheItem} never meets this because its area breaking lives in
+	 * {@code useOn} and its {@code mineBlock} is a stub; the drill cannot copy that, because
+	 * {@code mineBlock} is exactly where its EU is spent.
+	 *
+	 * <p>It is also the price switch: an extra block costs {@link Config#electricDrillColumnEuPerBlock},
+	 * the one the player aimed at costs {@link Config#electricDrillEuPerBlock}, and the recursive entry
+	 * is the only thing that can tell them apart.
+	 */
+	private static final ThreadLocal<Boolean> BREAKING_COLUMN = ThreadLocal.withInitial(() -> Boolean.FALSE);
+
+	/** Is the column bore installed on this drill, and switched on? Both must hold for a column. */
+	public static boolean isColumnActive(ItemStack stack) {
+		return DrillUpgrades.has(stack, DrillUpgrades.COLUMN_BORE) && isColumnEnabled(stack);
+	}
+
+	/**
+	 * The column mode's switch. <b>Absent means on</b> (see {@code ModDataComponents.DRILL_COLUMN_ENABLED}):
+	 * an upgrade the player paid the Upgrade Table for should work the moment they take the drill out,
+	 * and only switching it off writes anything onto the stack.
+	 */
+	public static boolean isColumnEnabled(ItemStack stack) {
+		return stack.getOrDefault(ModDataComponents.DRILL_COLUMN_ENABLED.get(), Boolean.TRUE);
+	}
+
+	/** Switching back on REMOVES the component rather than writing {@code true}, so a drill that has been
+	 * toggled twice is component-identical to one that never was. */
+	public static void setColumnEnabled(ItemStack stack, boolean enabled) {
+		if (enabled) {
+			stack.remove(ModDataComponents.DRILL_COLUMN_ENABLED.get());
+		} else {
+			stack.set(ModDataComponents.DRILL_COLUMN_ENABLED.get(), Boolean.FALSE);
+		}
+	}
+
+	/**
+	 * Breaks the block above and the one below the block just mined.
+	 *
+	 * <p>Each of them goes through {@code player.gameMode.destroyBlock(pos)} — the canonical "a player
+	 * mined this" path, and the only one that gets the rest right for free: loot is rolled with the real
+	 * stack, so the tips' Silk Touch mode and any Fortune apply to the extra blocks with no code here;
+	 * {@code blockActionRestricted} covers adventure mode and spawn protection; and both loaders fire
+	 * their block-break events there, so a protection mod can still veto each block one at a time.
+	 * {@code Level.destroyBlock} would drop loot with an empty stack and skip all of it.
+	 *
+	 * <p>The extra blocks are <b>not charged here</b>. Each one re-enters {@link #mineBlock} through that
+	 * same call and pays for itself, at the column price, which also means the creative exemption and the
+	 * skill discount apply per block with nothing duplicated. Charging here as well would bill twice.
+	 *
+	 * <p>Affordability is checked for the WHOLE column before the first extra block, at the raw config
+	 * price (the discount is applied inside {@code ItemEnergy.spend}, exactly as the torch gate does):
+	 * a drill that cannot pay for both extras breaks the one block the player aimed at rather than
+	 * digging half a corridor and stopping.
+	 *
+	 * <p>Only {@code #minecraft:mineable/pickaxe} blocks join a column — aiming at gravel with a drill
+	 * does not clear the stone over it — and only from the main hand, which is the only hand vanilla
+	 * breaks blocks with anyway.
+	 */
+	private static void mineColumn(ItemStack stack, Level level, BlockState state, BlockPos pos,
+			LivingEntity owner) {
+		// The block the player aimed at has to be one a pickaxe takes, not just the two extras.
+		// Without this, boring through a dirt layer quietly took the stone above and below it —
+		// behaviour MOD-482's acceptance criteria and the shipped spec both say does not happen.
+		if (!state.is(BlockTags.MINEABLE_WITH_PICKAXE)) {
+			return;
+		}
+		if (!(owner instanceof ServerPlayer player) || player.getMainHandItem() != stack) {
+			return;
+		}
+		if (!isColumnActive(stack)) {
+			return;
+		}
+		long wholeColumn = 2L * Config.electricDrillColumnEuPerBlock;
+		if (!player.getAbilities().instabuild && ItemEnergy.get(stack) < wholeColumn) {
+			return;
+		}
+		BREAKING_COLUMN.set(Boolean.TRUE);
+		try {
+			for (BlockPos extra : new BlockPos[] {pos.above(), pos.below()}) {
+				if (level.isOutsideBuildHeight(extra)) {
+					continue;
+				}
+				// Re-read every time: breaking the block above can drop gravel into the one below.
+				BlockState extraState = level.getBlockState(extra);
+				if (extraState.isAir() || !extraState.is(BlockTags.MINEABLE_WITH_PICKAXE)
+						|| extraState.getDestroySpeed(level, extra) < 0.0f) {
+					continue;
+				}
+				player.gameMode.destroyBlock(extra);
+			}
+		} finally {
+			BREAKING_COLUMN.set(Boolean.FALSE);
+		}
+	}
+
 	/**
 	 * Drains EU for the block just broken. Two guards mirror vanilla's durability gate
 	 * ({@code Item.mineBlock}): {@code !isClientSide} because {@code mineBlock} runs on both sides and
@@ -163,9 +266,17 @@ public class ElectricDrillItem extends Item {
 	 */
 	@Override
 	public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity owner) {
-		if (!level.isClientSide() && state.getDestroySpeed(level, pos) != 0.0f
-				&& ItemEnergy.get(stack) >= Config.electricDrillEuPerBlock) {
-			ItemEnergy.spend(stack, Config.electricDrillEuPerBlock, owner);
+		if (!level.isClientSide() && state.getDestroySpeed(level, pos) != 0.0f) {
+			// An extra block of a column pays the column price; the block the player aimed at pays the
+			// plain one. Nothing else can tell the two apart — see BREAKING_COLUMN.
+			boolean extraBlock = BREAKING_COLUMN.get();
+			int cost = extraBlock ? Config.electricDrillColumnEuPerBlock : Config.electricDrillEuPerBlock;
+			if (ItemEnergy.get(stack) >= cost) {
+				ItemEnergy.spend(stack, cost, owner);
+			}
+			if (!extraBlock) {
+				mineColumn(stack, level, state, pos, owner);
+			}
 		}
 		return super.mineBlock(stack, level, state, pos, owner);
 	}

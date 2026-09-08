@@ -4,6 +4,7 @@
   "package": "dev.alaindustrial.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
+    "ColumnBoreCrackMixin",
     "FuelValuesMixin",
     "FurnaceFuelSlotMixin",
     "LivingEntityOilDrowningMixin",

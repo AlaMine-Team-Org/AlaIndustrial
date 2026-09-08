@@ -179,6 +179,7 @@ public final class IndustrializationNeoForgeClient {
 			event.register(ModKeyMappings.TOGGLE_DRILL_HUD);
 			event.register(ModKeyMappings.OPEN_PROFILE);
 			event.register(ModKeyMappings.TOGGLE_STEP_ASSIST); // MOD-133 player dashboard
+			event.register(ModKeyMappings.TOGGLE_DRILL_COLUMN); // MOD-482 column bore
 		});
 		modBus.addListener((RegisterGuiLayersEvent event) -> {
 			event.registerAboveAll(Industrialization.id("root_inspection"), dev.alaindustrial.client.render.RootInspection::renderHud);

@@ -336,6 +336,14 @@ public class IndustrializationFabric implements ModInitializer {
 				dev.alaindustrial.network.FluxweaveStepAssistPayload.TYPE,
 				(payload, context) -> context.server().execute(
 						() -> dev.alaindustrial.network.FluxweaveStepAssistPayload.handle(payload, context.player())));
+		// MOD-482: the column bore's on/off switch. Serverbound only — the reply is an action-bar line.
+		PayloadTypeRegistry.serverboundPlay().register(
+				dev.alaindustrial.network.DrillColumnTogglePayload.TYPE,
+				dev.alaindustrial.network.DrillColumnTogglePayload.CODEC);
+		net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.registerGlobalReceiver(
+				dev.alaindustrial.network.DrillColumnTogglePayload.TYPE,
+				(payload, context) -> context.server().execute(
+						() -> dev.alaindustrial.network.DrillColumnTogglePayload.handle(payload, context.player())));
 		// MOD-483: the upgrade tree needs no clientbound half — the skills attachment syncs itself to its
 		// owner, so this one payload carries every purchase and every reset.
 		PayloadTypeRegistry.serverboundPlay().register(
@@ -405,8 +413,12 @@ public class IndustrializationFabric implements ModInitializer {
 			dev.alaindustrial.core.radiation.GeigerTicker.forget(handler.player.getUUID());
 		});
 		// MOD-067: auto-give the Guide Book on first join (once per player; SavedData ledger).
-		net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.JOIN.register((handler, sender, server) ->
-				dev.alaindustrial.core.guide.GuideBookGiver.giveIfNeeded(handler.player));
+		// MOD-596: and greet the world, once per world — both are loader-neutral logic in common/,
+		// riding the same join event so the order is fixed rather than accidental.
+		net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+			dev.alaindustrial.core.guide.GuideBookGiver.giveIfNeeded(handler.player);
+			dev.alaindustrial.chat.WelcomeMessage.sendIfNeeded(handler.player);
+		});
 		// MOD-401: one sweep over everything that holds per-level state, instead of naming managers
 		// here. The by-name list is what leaked: the fluid manager was never added to it, so every
 		// unloaded ServerLevel stayed reachable as a key in its map for the life of the process.
