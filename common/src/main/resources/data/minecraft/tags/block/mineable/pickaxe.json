@@ -100,6 +100,10 @@
 		"alaindustrial:upgrade_table",
 		"alaindustrial:recycler",
 		"alaindustrial:carbon_ceramic",
-		"alaindustrial:slag_block"
+		"alaindustrial:slag_block",
+		"alaindustrial:smart_wire",
+		"alaindustrial:monitor_core",
+		"alaindustrial:monitor_panel",
+		"alaindustrial:diamond_chest"
 	]
 }

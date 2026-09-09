@@ -103,6 +103,10 @@ public class IndustrializationFabric implements ModInitializer {
 		// MOD-104: item-pipe endpoint lookup. The common pipe graph stays loader-neutral; this
 		// adapter resolves the neighbouring inventory through Fabric Transfer API.
 		ItemLookup.install(new FabricItemLookup());
+		// MOD-480: read-only counterpart of the lookup above — the monitoring wall counts what is in a
+		// neighbour's storage and never moves any of it.
+		dev.alaindustrial.core.monitor.ItemViewLookup.install(
+				new dev.alaindustrial.core.fabric.FabricItemViewLookup());
 		// MOD-084: install the item-energy bridge seam, so the worn Energy Pack can charge other mods'
 		// powered items through EnergyStorage.ITEM without common code importing Team Reborn types.
 		ItemEnergyBridge.install(new FabricItemEnergyBridge());
@@ -369,6 +373,7 @@ public class IndustrializationFabric implements ModInitializer {
 				NetworkManager.tickAll(lvl);
 				ItemNetworkManager.tickAll(lvl);
 				dev.alaindustrial.core.fluid.FluidNetworkManager.tickAll(lvl);
+				dev.alaindustrial.core.monitor.MonitorNetworkManager.tickAll(lvl);
 			}
 			// Teleport warmups are per-player, not per-level, so they tick once per server tick
 			// (MOD-092) rather than once per level.

@@ -557,6 +557,8 @@ public final class CreativeTabContent {
 		show(out, ModContent.SILVER_CHEST_ITEM);
 		show(out, ModContent.GOLD_CHEST_ITEM);
 		show(out, ModContent.ELECTRUM_CHEST_ITEM);
+		// MOD-599: the diamond tier, directly after the electrum one it upgrades from.
+		show(out, ModContent.DIAMOND_CHEST_ITEM);
 		// MOD-474 — not a rung of the ladder above, so it sits after it: same 36 slots as the iron
 		// chest, bought for the shielding.
 		show(out, ModContent.SHIELDING_CHEST_ITEM);

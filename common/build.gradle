@@ -306,6 +306,16 @@ pitest {
     // (HudSmootherTest, LevelMathTest, GuidePaginatorTest, TemperedGearRollTest) invisible to PIT.
     targetTests = ['dev.alaindustrial.*Test']
     excludedClasses = [
+            // MOD-480: the monitoring wall's server side. Every one of these takes a ServerLevel,
+            // a BlockPos or an ItemStack — the network walks block entities, the scan resolves
+            // containers, the tally compares stacks — so `common/`'s Minecraft-free test classpath
+            // cannot construct a single call and every mutant would be NO_COVERAGE. Their behaviour
+            // is covered where it lives, in the both-lane game tests.
+            'dev.alaindustrial.core.monitor.ContainerScan',
+            'dev.alaindustrial.core.monitor.ItemViewLookup',
+            'dev.alaindustrial.core.monitor.MonitorNetwork',
+            'dev.alaindustrial.core.monitor.MonitorNetworkManager',
+            'dev.alaindustrial.core.monitor.StockTally',
             // MOD-590: the quench press. Every operation it has takes a ServerLevel/BlockPos and works
             // on ItemEntity, so L1 cannot construct a single call — its mutants would all be
             // NO_COVERAGE. The behaviour is covered where it actually lives, in the both-lane game

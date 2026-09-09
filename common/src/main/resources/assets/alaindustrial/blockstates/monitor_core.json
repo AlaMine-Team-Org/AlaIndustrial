@@ -1,0 +1,169 @@
+{
+	"variants": {
+		"cards=0,facing=north": {
+			"model": "alaindustrial:block/monitor_core_0"
+		},
+		"cards=0,facing=east": {
+			"model": "alaindustrial:block/monitor_core_0",
+			"y": 90
+		},
+		"cards=0,facing=south": {
+			"model": "alaindustrial:block/monitor_core_0",
+			"y": 180
+		},
+		"cards=0,facing=west": {
+			"model": "alaindustrial:block/monitor_core_0",
+			"y": 270
+		},
+		"cards=1,facing=north": {
+			"model": "alaindustrial:block/monitor_core_1"
+		},
+		"cards=1,facing=east": {
+			"model": "alaindustrial:block/monitor_core_1",
+			"y": 90
+		},
+		"cards=1,facing=south": {
+			"model": "alaindustrial:block/monitor_core_1",
+			"y": 180
+		},
+		"cards=1,facing=west": {
+			"model": "alaindustrial:block/monitor_core_1",
+			"y": 270
+		},
+		"cards=2,facing=north": {
+			"model": "alaindustrial:block/monitor_core_2"
+		},
+		"cards=2,facing=east": {
+			"model": "alaindustrial:block/monitor_core_2",
+			"y": 90
+		},
+		"cards=2,facing=south": {
+			"model": "alaindustrial:block/monitor_core_2",
+			"y": 180
+		},
+		"cards=2,facing=west": {
+			"model": "alaindustrial:block/monitor_core_2",
+			"y": 270
+		},
+		"cards=3,facing=north": {
+			"model": "alaindustrial:block/monitor_core_3"
+		},
+		"cards=3,facing=east": {
+			"model": "alaindustrial:block/monitor_core_3",
+			"y": 90
+		},
+		"cards=3,facing=south": {
+			"model": "alaindustrial:block/monitor_core_3",
+			"y": 180
+		},
+		"cards=3,facing=west": {
+			"model": "alaindustrial:block/monitor_core_3",
+			"y": 270
+		},
+		"cards=4,facing=north": {
+			"model": "alaindustrial:block/monitor_core_4"
+		},
+		"cards=4,facing=east": {
+			"model": "alaindustrial:block/monitor_core_4",
+			"y": 90
+		},
+		"cards=4,facing=south": {
+			"model": "alaindustrial:block/monitor_core_4",
+			"y": 180
+		},
+		"cards=4,facing=west": {
+			"model": "alaindustrial:block/monitor_core_4",
+			"y": 270
+		},
+		"cards=5,facing=north": {
+			"model": "alaindustrial:block/monitor_core_5"
+		},
+		"cards=5,facing=east": {
+			"model": "alaindustrial:block/monitor_core_5",
+			"y": 90
+		},
+		"cards=5,facing=south": {
+			"model": "alaindustrial:block/monitor_core_5",
+			"y": 180
+		},
+		"cards=5,facing=west": {
+			"model": "alaindustrial:block/monitor_core_5",
+			"y": 270
+		},
+		"cards=6,facing=north": {
+			"model": "alaindustrial:block/monitor_core_6"
+		},
+		"cards=6,facing=east": {
+			"model": "alaindustrial:block/monitor_core_6",
+			"y": 90
+		},
+		"cards=6,facing=south": {
+			"model": "alaindustrial:block/monitor_core_6",
+			"y": 180
+		},
+		"cards=6,facing=west": {
+			"model": "alaindustrial:block/monitor_core_6",
+			"y": 270
+		},
+		"cards=7,facing=north": {
+			"model": "alaindustrial:block/monitor_core_7"
+		},
+		"cards=7,facing=east": {
+			"model": "alaindustrial:block/monitor_core_7",
+			"y": 90
+		},
+		"cards=7,facing=south": {
+			"model": "alaindustrial:block/monitor_core_7",
+			"y": 180
+		},
+		"cards=7,facing=west": {
+			"model": "alaindustrial:block/monitor_core_7",
+			"y": 270
+		},
+		"cards=8,facing=north": {
+			"model": "alaindustrial:block/monitor_core_8"
+		},
+		"cards=8,facing=east": {
+			"model": "alaindustrial:block/monitor_core_8",
+			"y": 90
+		},
+		"cards=8,facing=south": {
+			"model": "alaindustrial:block/monitor_core_8",
+			"y": 180
+		},
+		"cards=8,facing=west": {
+			"model": "alaindustrial:block/monitor_core_8",
+			"y": 270
+		},
+		"cards=9,facing=north": {
+			"model": "alaindustrial:block/monitor_core_9"
+		},
+		"cards=9,facing=east": {
+			"model": "alaindustrial:block/monitor_core_9",
+			"y": 90
+		},
+		"cards=9,facing=south": {
+			"model": "alaindustrial:block/monitor_core_9",
+			"y": 180
+		},
+		"cards=9,facing=west": {
+			"model": "alaindustrial:block/monitor_core_9",
+			"y": 270
+		},
+		"cards=10,facing=north": {
+			"model": "alaindustrial:block/monitor_core_10"
+		},
+		"cards=10,facing=east": {
+			"model": "alaindustrial:block/monitor_core_10",
+			"y": 90
+		},
+		"cards=10,facing=south": {
+			"model": "alaindustrial:block/monitor_core_10",
+			"y": 180
+		},
+		"cards=10,facing=west": {
+			"model": "alaindustrial:block/monitor_core_10",
+			"y": 270
+		}
+	}
+}

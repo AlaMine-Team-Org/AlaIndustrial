@@ -1176,6 +1176,34 @@ public final class Config {
 			doc = "How often (ticks) a Stock Display Frame rescans the container behind it.")
 	public static int stockFrameScanIntervalTicks = 20;
 
+	// --- Monitoring wall (MOD-480) ---
+	/** How often (ticks) a monitor core re-reads every container wired to it. One pass per interval
+	 * for the whole wall, however many panels read the result. */
+	@Knob(section = Section.LOGISTICS, min = 1,
+			doc = "How often (ticks) a Monitor Core re-reads the containers wired to it.")
+	public static int monitorScanIntervalTicks = 20;
+
+	/** Upkeep of a monitor core itself, before any panel shows anything. */
+	@Knob(section = Section.LOGISTICS, min = 0,
+			doc = "EU per tick a Monitor Core costs on its own, with no panel showing a number.")
+	public static int monitorCoreIdleEuPerTick = 2;
+
+	/** Added upkeep per panel that is actually showing a number; an empty panel costs nothing. */
+	@Knob(section = Section.LOGISTICS, min = 0,
+			doc = "EU per tick added for each panel that is actually displaying a count.")
+	public static int monitorPanelEuPerTick = 1;
+
+	/** Types a core tracks with no card fitted at all. One, so a freshly built wall shows something
+	 * immediately and the cards are an upgrade rather than a prerequisite nobody is told about. */
+	@Knob(section = Section.LOGISTICS, min = 0,
+			doc = "How many item types a Monitor Core tracks with no capacity card fitted.")
+	public static int monitorBaseTrackedTypes = 4;
+
+	/** How many different item types one capacity card lets the wall watch at once. */
+	@Knob(section = Section.LOGISTICS, min = 0,
+			doc = "How many distinct item types one Capacity Card lets a monitoring wall track.")
+	public static int monitorCardTrackedTypes = 6;
+
 	// --- Scythe bonus seed drop (MOD-315) ---
 	/**
 	 * Global multiplier on the scythe's per-tier bonus-seed chance. The per-tier base lives in

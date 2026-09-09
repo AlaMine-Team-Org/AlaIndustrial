@@ -144,6 +144,8 @@ public class ScreensClientGameTest implements FabricClientGameTest {
             // worth having precisely because of that: it must show the scrollbar ACTIVE (nine rows
             // behind a six-row panel), unlike every other single-chest frame above it.
             new Screen("electrum_chest", "electrum_chest", "Electrum Chest"),
+            // MOD-599: the diamond tier — the same scrolling window over twelve rows instead of nine.
+            new Screen("diamond_chest", "diamond_chest", "Diamond Chest"),
             // MOD-474: the shielding chest opens the iron chest's four-row window under its own menu
             // type. The frame guards the pair — a menu registered without a screen shows as vanilla
             // grey nothing, and the panel is shared art, so nothing else would notice.

@@ -1,6 +1,7 @@
 package dev.alaindustrial.client;
 
 import dev.alaindustrial.block.entity.CableBlockEntity;
+import dev.alaindustrial.block.entity.DiamondChestBlockEntity;
 import dev.alaindustrial.block.entity.ElectrumChestBlockEntity;
 import dev.alaindustrial.block.entity.EnergyCondenserBlockEntity;
 import dev.alaindustrial.block.entity.FluidTankBlockEntity;
@@ -145,6 +146,9 @@ public final class ClientContentManifest {
 			// MOD-474 — the shielding chest: same chest geometry, its own lead-and-hazard texture.
 			renderer(ContentManifest.blockEntity("shielding_chest", ShieldingChestBlockEntity.class),
 					ChestBlockEntityRenderer::shielding),
+			// MOD-599 — the diamond chest: same chest geometry, its own atlas.
+			renderer(ContentManifest.blockEntity("diamond_chest", DiamondChestBlockEntity.class),
+					ChestBlockEntityRenderer::diamond),
 			renderer(ContentManifest.blockEntity("water_mill", WaterMillBlockEntity.class),
 					WaterMillWheelBlockEntityRenderer::new),
 			// MOD-546: the crystal inside the condenser frame — which of its three shapes is drawn says
@@ -186,7 +190,11 @@ public final class ClientContentManifest {
 			// Insulating stand under a bare cable (MOD-279). All cable grades share one BlockEntityType,
 			// so this single registration covers every grade.
 			renderer(ContentManifest.blockEntity("copper_cable", CableBlockEntity.class),
-					CableAccessoryBlockEntityRenderer::new));
+					CableAccessoryBlockEntityRenderer::new),
+			// MOD-480 — the monitoring panel's face: the watched item and its count.
+			renderer(ContentManifest.blockEntity("monitor_panel",
+							dev.alaindustrial.block.entity.MonitorPanelBlockEntity.class),
+					dev.alaindustrial.client.render.MonitorPanelBlockEntityRenderer::new));
 
 	// ─────────────────────────────────────────────────────────────────────────────────────────
 	// Model layers
@@ -210,6 +218,7 @@ public final class ClientContentManifest {
 			new ModelLayerDef(ChestBlockEntityRenderer.GOLD_CHEST_LAYER, ChestModel::createSingleBodyLayer),
 			new ModelLayerDef(ChestBlockEntityRenderer.ELECTRUM_CHEST_LAYER, ChestModel::createSingleBodyLayer),
 			new ModelLayerDef(ChestBlockEntityRenderer.SHIELDING_CHEST_LAYER, ChestModel::createSingleBodyLayer),
+			new ModelLayerDef(ChestBlockEntityRenderer.DIAMOND_CHEST_LAYER, ChestModel::createSingleBodyLayer),
 			// …and MOD-391's double-chest halves: the 15-wide vanilla left/right bodies, per tier.
 			new ModelLayerDef(ChestBlockEntityRenderer.IRON_CHEST_LEFT_LAYER, ChestModel::createDoubleBodyLeftLayer),
 			new ModelLayerDef(ChestBlockEntityRenderer.IRON_CHEST_RIGHT_LAYER, ChestModel::createDoubleBodyRightLayer),
@@ -221,6 +230,8 @@ public final class ClientContentManifest {
 			new ModelLayerDef(ChestBlockEntityRenderer.ELECTRUM_CHEST_RIGHT_LAYER, ChestModel::createDoubleBodyRightLayer),
 			new ModelLayerDef(ChestBlockEntityRenderer.SHIELDING_CHEST_LEFT_LAYER, ChestModel::createDoubleBodyLeftLayer),
 			new ModelLayerDef(ChestBlockEntityRenderer.SHIELDING_CHEST_RIGHT_LAYER, ChestModel::createDoubleBodyRightLayer),
+			new ModelLayerDef(ChestBlockEntityRenderer.DIAMOND_CHEST_LEFT_LAYER, ChestModel::createDoubleBodyLeftLayer),
+			new ModelLayerDef(ChestBlockEntityRenderer.DIAMOND_CHEST_RIGHT_LAYER, ChestModel::createDoubleBodyRightLayer),
 			new ModelLayerDef(WaterMillWheelBlockEntityRenderer.MODEL_LAYER,
 					WaterMillWheelBlockEntityRenderer::createLayer),
 			new ModelLayerDef(GardenDroneBlockEntityRenderer.MODEL_LAYER,

@@ -17,6 +17,7 @@ import dev.alaindustrial.menu.CompressorMenu;
 import dev.alaindustrial.menu.RecyclerMenu;
 import dev.alaindustrial.menu.DaylightSolarPanelMenu;
 import dev.alaindustrial.menu.DistillationColumnMenu;
+import dev.alaindustrial.menu.DiamondChestMenu;
 import dev.alaindustrial.menu.ElectrumChestMenu;
 import dev.alaindustrial.menu.DoubleChestMenu;
 import dev.alaindustrial.menu.ElectricFurnaceMenu;
@@ -145,6 +146,10 @@ public final class ModContent {
 	public static Supplier<Block> ITEM_PIPE = unbound("ITEM_PIPE");
 	public static Supplier<Block> ITEM_PIPE_ADVANCED = unbound("ITEM_PIPE_ADVANCED");
 	public static Supplier<Block> FLUID_PIPE = unbound("FLUID_PIPE");
+	// Monitoring wall (MOD-480) — wire reads containers, core pays and allows, panels display.
+	public static Supplier<Block> SMART_WIRE = unbound("SMART_WIRE");
+	public static Supplier<Block> MONITOR_CORE = unbound("MONITOR_CORE");
+	public static Supplier<Block> MONITOR_PANEL = unbound("MONITOR_PANEL");
 	public static Supplier<Block> MACERATOR = unbound("MACERATOR");
 	public static Supplier<Block> BATTERY_BOX = unbound("BATTERY_BOX");
 	/** MV Reinforced Energy Storage (MOD-351) — second step of the storage line. */
@@ -258,6 +263,8 @@ public final class ModContent {
 	// Shielding Chest (MOD-474) — 36 slots like the iron chest, and no more: it is bought for the
 	// one thing an inventory cannot show, that radioactive contents stop irradiating the room.
 	public static Supplier<Block> SHIELDING_CHEST = unbound("SHIELDING_CHEST");
+	// Diamond Chest (MOD-599) — top storage tier: 108 slots, blast resistant.
+	public static Supplier<Block> DIAMOND_CHEST = unbound("DIAMOND_CHEST");
 	// Tempered Iron Block — a "block of X" material block (9 ingots ↔ 1 block), like
 	// vanilla iron block. Pure material/decorative block, no BE, single texture on all 6 faces.
 	public static Supplier<Block> TEMPERED_IRON_BLOCK = unbound("TEMPERED_IRON_BLOCK");
@@ -318,6 +325,9 @@ public final class ModContent {
 	public static Supplier<Item> ASSEMBLY_BLUEPRINT = unbound("ASSEMBLY_BLUEPRINT");
 	// Copper Coil — a crafting component (copper cable wound on a tin core); gates the Electric Drill.
 	public static Supplier<Item> COPPER_COIL = unbound("COPPER_COIL");
+	// Capacity Card (MOD-480): fitted into a Monitor Core's rack, it raises how many different item
+	// types the monitoring wall may watch at once. It stores nothing.
+	public static Supplier<Item> CAPACITY_CARD = unbound("CAPACITY_CARD");
 	// Choke (MOD-589): the line-smoothing part, in three tiers. Same silhouette family as the
 	// coils above - a laminated core with windings - so it reads as their neighbour on the bench.
 	public static Supplier<Item> CHOKE = unbound("CHOKE");
@@ -667,6 +677,9 @@ public final class ModContent {
 	public static Supplier<BlockItem> ITEM_PIPE_ITEM = unbound("ITEM_PIPE_ITEM");
 	public static Supplier<BlockItem> ITEM_PIPE_ADVANCED_ITEM = unbound("ITEM_PIPE_ADVANCED_ITEM");
 	public static Supplier<BlockItem> FLUID_PIPE_ITEM = unbound("FLUID_PIPE_ITEM");
+	public static Supplier<BlockItem> SMART_WIRE_ITEM = unbound("SMART_WIRE_ITEM");
+	public static Supplier<BlockItem> MONITOR_CORE_ITEM = unbound("MONITOR_CORE_ITEM");
+	public static Supplier<BlockItem> MONITOR_PANEL_ITEM = unbound("MONITOR_PANEL_ITEM");
 	public static Supplier<BlockItem> MACERATOR_ITEM = unbound("MACERATOR_ITEM");
 	public static Supplier<BlockItem> BATTERY_BOX_ITEM = unbound("BATTERY_BOX_ITEM");
 	public static Supplier<BlockItem> CESU_ITEM = unbound("CESU_ITEM");
@@ -745,6 +758,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> GOLD_CHEST_ITEM = unbound("GOLD_CHEST_ITEM");
 	public static Supplier<BlockItem> ELECTRUM_CHEST_ITEM = unbound("ELECTRUM_CHEST_ITEM");
 	public static Supplier<BlockItem> SHIELDING_CHEST_ITEM = unbound("SHIELDING_CHEST_ITEM");
+	public static Supplier<BlockItem> DIAMOND_CHEST_ITEM = unbound("DIAMOND_CHEST_ITEM");
 	public static Supplier<BlockItem> TEMPERED_IRON_BLOCK_ITEM = unbound("TEMPERED_IRON_BLOCK_ITEM");
 	// MOD-225 block-items.
 	public static Supplier<BlockItem> MACHINE_CASING_ITEM = unbound("MACHINE_CASING_ITEM");
@@ -773,6 +787,9 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> COPPER_CABLE_BE = unbound("COPPER_CABLE_BE");
 	public static Supplier<BlockEntityType<?>> ITEM_PIPE_BE = unbound("ITEM_PIPE_BE");
 	public static Supplier<BlockEntityType<?>> FLUID_PIPE_BE = unbound("FLUID_PIPE_BE");
+	public static Supplier<BlockEntityType<?>> SMART_WIRE_BE = unbound("SMART_WIRE_BE");
+	public static Supplier<BlockEntityType<?>> MONITOR_CORE_BE = unbound("MONITOR_CORE_BE");
+	public static Supplier<BlockEntityType<?>> MONITOR_PANEL_BE = unbound("MONITOR_PANEL_BE");
 	public static Supplier<BlockEntityType<?>> MACERATOR_BE = unbound("MACERATOR_BE");
 	public static Supplier<BlockEntityType<?>> BATTERY_BOX_BE = unbound("BATTERY_BOX_BE");
 	public static Supplier<BlockEntityType<?>> CESU_BE = unbound("CESU_BE");
@@ -824,6 +841,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> GOLD_CHEST_BE = unbound("GOLD_CHEST_BE");
 	public static Supplier<BlockEntityType<?>> ELECTRUM_CHEST_BE = unbound("ELECTRUM_CHEST_BE");
 	public static Supplier<BlockEntityType<?>> SHIELDING_CHEST_BE = unbound("SHIELDING_CHEST_BE");
+	public static Supplier<BlockEntityType<?>> DIAMOND_CHEST_BE = unbound("DIAMOND_CHEST_BE");
 
 	// --- Menu types ---
 	// Each slot carries its concrete menu class (MOD-198), not MenuType<?>. That generic is what ties a
@@ -904,6 +922,8 @@ public final class ModContent {
 	public static Supplier<MenuType<StorageMenu6>> STORAGE_MODULE_MENU_6 = unbound("STORAGE_MODULE_MENU_6");
 	public static Supplier<MenuType<SilverChestMenu>> SILVER_CHEST_MENU = unbound("SILVER_CHEST_MENU");
 	public static Supplier<MenuType<GoldChestMenu>> GOLD_CHEST_MENU = unbound("GOLD_CHEST_MENU");
+	public static Supplier<MenuType<DiamondChestMenu>> DIAMOND_CHEST_MENU =
+			unbound("DIAMOND_CHEST_MENU");
 	public static Supplier<MenuType<ElectrumChestMenu>> ELECTRUM_CHEST_MENU = unbound("ELECTRUM_CHEST_MENU");
 	public static Supplier<MenuType<ShieldingChestMenu>> SHIELDING_CHEST_MENU = unbound("SHIELDING_CHEST_MENU");
 	// MOD-391 — one double-chest window for all three tiers: the visible size is always 6 rows and

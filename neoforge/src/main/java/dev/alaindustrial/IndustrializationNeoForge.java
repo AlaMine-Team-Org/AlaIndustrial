@@ -106,6 +106,10 @@ public final class IndustrializationNeoForge {
 		// MOD-104: common item pipes resolve neighbouring inventories through the 26.2
 		// Capabilities.Item.BLOCK transfer API at this loader seam.
 		ItemLookup.install(new NeoForgeItemLookup());
+		// MOD-480: read-only counterpart of the lookup above — the monitoring wall counts what is in a
+		// neighbour's storage and never moves any of it.
+		dev.alaindustrial.core.monitor.ItemViewLookup.install(
+				new dev.alaindustrial.core.neoforge.NeoForgeItemViewLookup());
 		// MOD-084: install the item-energy bridge seam, so the worn Energy Pack can charge other mods'
 		// powered items through Capabilities.Energy.ITEM without common code importing NeoForge types.
 		ItemEnergyBridge.install(new dev.alaindustrial.core.neoforge.NeoForgeItemEnergyBridge());
@@ -286,6 +290,7 @@ public final class IndustrializationNeoForge {
 				NetworkManager.tickAll(lvl);
 				ItemNetworkManager.tickAll(lvl);
 				dev.alaindustrial.core.fluid.FluidNetworkManager.tickAll(lvl);
+				dev.alaindustrial.core.monitor.MonitorNetworkManager.tickAll(lvl);
 			}
 			// Teleport warmups are per-player, not per-level (MOD-092).
 			dev.alaindustrial.teleporter.TeleportWarmupManager.tickAll(event.getServer());

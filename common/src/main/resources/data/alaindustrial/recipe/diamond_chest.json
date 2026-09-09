@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "C": "alaindustrial:electrum_chest",
+    "D": "minecraft:diamond"
+  },
+  "pattern": [
+    "DDD",
+    "DCD",
+    "DDD"
+  ],
+  "result": {
+    "id": "alaindustrial:diamond_chest"
+  }
+}

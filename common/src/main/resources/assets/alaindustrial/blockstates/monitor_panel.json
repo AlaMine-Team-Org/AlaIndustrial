@@ -1,0 +1,19 @@
+{
+	"variants": {
+		"facing=north": {
+			"model": "alaindustrial:block/monitor_panel"
+		},
+		"facing=east": {
+			"model": "alaindustrial:block/monitor_panel",
+			"y": 90
+		},
+		"facing=south": {
+			"model": "alaindustrial:block/monitor_panel",
+			"y": 180
+		},
+		"facing=west": {
+			"model": "alaindustrial:block/monitor_panel",
+			"y": 270
+		}
+	}
+}

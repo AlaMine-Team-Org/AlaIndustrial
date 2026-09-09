@@ -570,6 +570,11 @@ public final class DemoStand {
 		// eye, and a stand showing only one proves nothing about that. One level up rather than one row
 		// back: DEPTH is 27, so z=26 is the last row this zone has.
 		for (int x = 17; x <= 21; x++) set(level, origin, x, 2, 26, ModContent.ITEM_PIPE_ADVANCED.get());
+		// MOD-480: the monitoring wall, one level above the pipes — a wire run into a core with a panel
+		// on it. Level 3 of this row was empty; the two rows below are the pipe grades.
+		for (int x = 17; x <= 19; x++) set(level, origin, x, 3, 26, ModContent.SMART_WIRE.get());
+		set(level, origin, 20, 3, 26, ModContent.MONITOR_CORE.get());
+		set(level, origin, 21, 3, 26, ModContent.MONITOR_PANEL.get());
 		set(level, origin, 22, 1, 26, ModContent.IRON_CHEST.get());
 
 		// The fluid line continues the same row (DEPTH is 27, so z=26 is the last one available):
@@ -623,6 +628,10 @@ public final class DemoStand {
 		// a progression. The tempered iron block it displaced moved to the free cell at x=28 rather
 		// than sharing a cell — two `set` calls on one cell silently drop one block (MOD-292).
 		set(level, origin, 33, 1, 10, ModContent.ELECTRUM_CHEST.get());
+		// MOD-599: the diamond tier, directly ABOVE the electrum one rather than beside it —
+		// (34, 1, 10) is the pump's cell, and two `set` calls on one cell silently drop a block
+		// (MOD-292/MOD-597). (33, 2, 10) is the workbench, so this sits at x=34 one level up.
+		set(level, origin, 34, 2, 10, ModContent.DIAMOND_CHEST.get());
 		set(level, origin, 28, 1, 10, ModContent.TEMPERED_IRON_BLOCK.get());
 		// MOD-287: two storage modules side by side on the shelf above the plate blocks — adjacent on
 		// purpose, so the stand shows them merged into one warehouse rather than two separate ones.

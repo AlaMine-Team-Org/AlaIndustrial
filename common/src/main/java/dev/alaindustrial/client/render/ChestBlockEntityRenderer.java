@@ -97,6 +97,12 @@ public class ChestBlockEntityRenderer<T extends AbstractChestBlockEntity>
 			new ModelLayerLocation(Industrialization.id("electrum_chest_left"), "main");
 	public static final ModelLayerLocation ELECTRUM_CHEST_RIGHT_LAYER =
 			new ModelLayerLocation(Industrialization.id("electrum_chest_right"), "main");
+	public static final ModelLayerLocation DIAMOND_CHEST_LAYER =
+			new ModelLayerLocation(Industrialization.id("diamond_chest"), "main");
+	public static final ModelLayerLocation DIAMOND_CHEST_LEFT_LAYER =
+			new ModelLayerLocation(Industrialization.id("diamond_chest_left"), "main");
+	public static final ModelLayerLocation DIAMOND_CHEST_RIGHT_LAYER =
+			new ModelLayerLocation(Industrialization.id("diamond_chest_right"), "main");
 	public static final ModelLayerLocation SHIELDING_CHEST_LAYER =
 			new ModelLayerLocation(Industrialization.id("shielding_chest"), "main");
 	public static final ModelLayerLocation SHIELDING_CHEST_LEFT_LAYER =
@@ -108,6 +114,7 @@ public class ChestBlockEntityRenderer<T extends AbstractChestBlockEntity>
 	private static final MultiblockChestResources<SpriteId> SILVER_SPRITES = sprites("silver");
 	private static final MultiblockChestResources<SpriteId> GOLD_SPRITES = sprites("gold");
 	private static final MultiblockChestResources<SpriteId> ELECTRUM_SPRITES = sprites("electrum");
+	private static final MultiblockChestResources<SpriteId> DIAMOND_SPRITES = sprites("diamond");
 	// NOTE the argument is the bare tier name, NOT the block id: it names the PNG under
 	// textures/entity/chest/, while the ModelLayerLocations above carry the "_chest" id.
 	private static final MultiblockChestResources<SpriteId> SHIELDING_SPRITES = sprites("shielding");
@@ -154,6 +161,14 @@ public class ChestBlockEntityRenderer<T extends AbstractChestBlockEntity>
 				new MultiblockChestResources<>(ELECTRUM_CHEST_LAYER, ELECTRUM_CHEST_LEFT_LAYER,
 						ELECTRUM_CHEST_RIGHT_LAYER),
 				ELECTRUM_SPRITES);
+	}
+
+	public static ChestBlockEntityRenderer<dev.alaindustrial.block.entity.DiamondChestBlockEntity> diamond(
+			BlockEntityRendererProvider.Context context) {
+		return new ChestBlockEntityRenderer<>(context,
+				new MultiblockChestResources<>(DIAMOND_CHEST_LAYER, DIAMOND_CHEST_LEFT_LAYER,
+						DIAMOND_CHEST_RIGHT_LAYER),
+				DIAMOND_SPRITES);
 	}
 
 	public static ChestBlockEntityRenderer<ShieldingChestBlockEntity> shielding(

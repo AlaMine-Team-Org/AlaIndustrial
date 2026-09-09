@@ -31,6 +31,7 @@ import dev.alaindustrial.block.GalvanicBathBlock;
 import dev.alaindustrial.block.GardenDroneStationBlock;
 import dev.alaindustrial.block.GeneratorBlock;
 import dev.alaindustrial.block.GeothermalGeneratorBlock;
+import dev.alaindustrial.block.DiamondChestBlock;
 import dev.alaindustrial.block.ElectrumChestBlock;
 import dev.alaindustrial.block.GoldChestBlock;
 import dev.alaindustrial.block.HighAltitudeWindMillBlock;
@@ -47,6 +48,9 @@ import dev.alaindustrial.block.entity.KokSagyzRootBlockEntity;
 import dev.alaindustrial.block.KokSagyzRootBlock;
 import dev.alaindustrial.block.AdvancedItemPipeBlock;
 import dev.alaindustrial.block.ItemPipeBlock;
+import dev.alaindustrial.block.MonitorCoreBlock;
+import dev.alaindustrial.block.MonitorPanelBlock;
+import dev.alaindustrial.block.SmartWireBlock;
 import dev.alaindustrial.block.MaceratorBlock;
 import dev.alaindustrial.block.MoonlitSolarPanelBlock;
 import dev.alaindustrial.block.ModLiquidBlock;
@@ -119,6 +123,7 @@ import dev.alaindustrial.block.entity.GalvanicBathBlockEntity;
 import dev.alaindustrial.block.entity.GardenDroneStationBlockEntity;
 import dev.alaindustrial.block.entity.GeneratorBlockEntity;
 import dev.alaindustrial.block.entity.GeothermalGeneratorBlockEntity;
+import dev.alaindustrial.block.entity.DiamondChestBlockEntity;
 import dev.alaindustrial.block.entity.ElectrumChestBlockEntity;
 import dev.alaindustrial.block.entity.GoldChestBlockEntity;
 import dev.alaindustrial.block.entity.HighAltitudeWindMillBlockEntity;
@@ -130,6 +135,9 @@ import dev.alaindustrial.block.entity.IncubatorMode;
 import dev.alaindustrial.block.entity.IronChestBlockEntity;
 import dev.alaindustrial.block.entity.IronFurnaceBlockEntity;
 import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
+import dev.alaindustrial.block.entity.MonitorCoreBlockEntity;
+import dev.alaindustrial.block.entity.MonitorPanelBlockEntity;
+import dev.alaindustrial.block.entity.SmartWireBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.block.entity.MoonlitSolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.Overclockable;
@@ -217,6 +225,7 @@ import dev.alaindustrial.menu.ElectricFurnaceMenu;
 import dev.alaindustrial.menu.ExtractorMenu;
 import dev.alaindustrial.menu.GeneratorMenu;
 import dev.alaindustrial.menu.GeothermalGeneratorMenu;
+import dev.alaindustrial.menu.DiamondChestMenu;
 import dev.alaindustrial.menu.ElectrumChestMenu;
 import dev.alaindustrial.menu.GoldChestMenu;
 import dev.alaindustrial.menu.HighAltitudeWindMillMenu;
@@ -411,6 +420,7 @@ public final class ContentManifest {
 			// is a single chest wearing the warehouse/double-chest machinery rather than a taller panel.
 			menu("electrum_chest", ElectrumChestMenu::new, s -> ModContent.ELECTRUM_CHEST_MENU = s),
 			// MOD-474 — the shielding chest's window: the iron chest's four rows, its own menu type.
+			menu("diamond_chest", DiamondChestMenu::new, s -> ModContent.DIAMOND_CHEST_MENU = s),
 			menu("shielding_chest", ShieldingChestMenu::new, s -> ModContent.SHIELDING_CHEST_MENU = s),
 			// MOD-391 — the double chest's 6-row scrolling window, one type for every tier.
 			menu("double_chest", DoubleChestMenu::new, s -> ModContent.DOUBLE_CHEST_MENU = s),
@@ -538,6 +548,15 @@ public final class ContentManifest {
 			block("item_pipe_advanced", AdvancedItemPipeBlock::new, s -> ModContent.ITEM_PIPE_ADVANCED = s);
 	public static final BlockDef<FluidPipeBlock> FLUID_PIPE =
 			block("fluid_pipe", FluidPipeBlock::new, s -> ModContent.FLUID_PIPE = s);
+	public static final BlockDef<SmartWireBlock> SMART_WIRE =
+			block("smart_wire", SmartWireBlock::new,
+					s -> ModContent.SMART_WIRE = s);
+	public static final BlockDef<MonitorCoreBlock> MONITOR_CORE =
+			block("monitor_core", MonitorCoreBlock::new,
+					s -> ModContent.MONITOR_CORE = s);
+	public static final BlockDef<MonitorPanelBlock> MONITOR_PANEL =
+			block("monitor_panel", MonitorPanelBlock::new,
+					s -> ModContent.MONITOR_PANEL = s);
 	public static final BlockDef<MaceratorBlock> MACERATOR =
 			block("macerator", MaceratorBlock::new, s -> ModContent.MACERATOR = s);
 	public static final BlockDef<BatteryBoxBlock> BATTERY_BOX =
@@ -738,6 +757,8 @@ public final class ContentManifest {
 	// Shielding Chest (MOD-474) — NOT a rung of the storage ladder above: it holds the same 36 slots
 	// as the iron chest and is bought for what it stops, not for what it fits. It is the only place
 	// radioactive material can sit without irradiating everything around it.
+	public static final BlockDef<DiamondChestBlock> DIAMOND_CHEST =
+			block("diamond_chest", DiamondChestBlock::new, s -> ModContent.DIAMOND_CHEST = s);
 	public static final BlockDef<ShieldingChestBlock> SHIELDING_CHEST =
 			block("shielding_chest", ShieldingChestBlock::new, s -> ModContent.SHIELDING_CHEST = s);
 	// Material / decorative full cubes: cube_all model, one texture per block.
@@ -849,7 +870,12 @@ public final class ContentManifest {
 			// MOD-590 — carbon ceramic, appended at the tail for the same reason.
 			CARBON_CERAMIC,
 			// MOD-482 — the upgrade table's casing, appended at the tail for the same reason.
-			UPGRADE_TABLE);
+			UPGRADE_TABLE,
+			// MOD-599 — the diamond chest, the top storage tier.
+			DIAMOND_CHEST,
+			// MOD-480 — the monitoring wall: the wire that reads containers, the core that pays for the
+			// wall and holds its capacity cards, and the panel the numbers appear on.
+			SMART_WIRE, MONITOR_CORE, MONITOR_PANEL);
 
 	/**
 	 * Wraps a machine/ore/material block's {@code strength/sound/…} chain with the shared base every such
@@ -905,6 +931,11 @@ public final class ContentManifest {
 			Map.entry("item_pipe_advanced",
 					machine(p -> p.strength(0.3f, 0.6f).sound(SoundType.COPPER).noOcclusion())),
 			Map.entry("fluid_pipe", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion())),
+			// MOD-480 — the monitoring wall. The wire is as fragile as the other conduits; the core and
+			// the panels are machine casings.
+			Map.entry("smart_wire", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion())),
+			Map.entry("monitor_core", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
+			Map.entry("monitor_panel", machine(p -> p.strength(2.0f, 4.0f).sound(SoundType.METAL))),
 			Map.entry("macerator", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("battery_box", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.WOOD))),
 			// Metal, and tougher than the LV box it is built from — this tier is a steel shell, not a crate.
@@ -1093,6 +1124,11 @@ public final class ContentManifest {
 			Map.entry("gold_chest", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion())),
 			Map.entry("electrum_chest", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion())),
 			// MOD-474 — same stats as the storage chests: the shielding is a radiation rule, not armour.
+			// MOD-599: 1200 is the ancient-debris figure — an explosion ray spends its whole budget on
+			// the first block, so TNT and creepers leave the chest and its contents alone. Hardness stays
+			// at the chest family's 3.0 — this is a safe, not a slower block to mine.
+			Map.entry("diamond_chest", machine(p -> p.strength(3.0f, 1200.0f)
+					.sound(SoundType.METAL).noOcclusion())),
 			Map.entry("shielding_chest", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion())),
 			Map.entry("recycler", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("slag_block", machine(p -> p.strength(2.5f, 6.0f).sound(SoundType.STONE))),
@@ -1893,6 +1929,7 @@ public final class ContentManifest {
 			blockItem("gold_chest", s -> ModContent.GOLD_CHEST_ITEM = s),
 			blockItem("electrum_chest", s -> ModContent.ELECTRUM_CHEST_ITEM = s),
 			blockItem("shielding_chest", s -> ModContent.SHIELDING_CHEST_ITEM = s),
+			blockItem("diamond_chest", s -> ModContent.DIAMOND_CHEST_ITEM = s),
 			blockItem("tempered_iron_block", s -> ModContent.TEMPERED_IRON_BLOCK_ITEM = s),
 			// MOD-225 block-items.
 			blockItem("machine_casing", s -> ModContent.MACHINE_CASING_ITEM = s),
@@ -1929,7 +1966,13 @@ public final class ContentManifest {
 			item("carbon_briquette", CarbonBriquetteItem::new, s -> ModContent.CARBON_BRIQUETTE = s),
 			plain("ceramic_plate", s -> ModContent.CERAMIC_PLATE = s),
 			// MOD-482 — appended at the very tail; the order of this list is the registration order.
-			blockItem("upgrade_table", s -> ModContent.UPGRADE_TABLE_ITEM = s));
+			blockItem("upgrade_table", s -> ModContent.UPGRADE_TABLE_ITEM = s),
+			// MOD-480 — the monitoring wall, likewise appended at the tail.
+			blockItem("smart_wire", s -> ModContent.SMART_WIRE_ITEM = s),
+			blockItem("monitor_core", s -> ModContent.MONITOR_CORE_ITEM = s),
+			blockItem("monitor_panel", s -> ModContent.MONITOR_PANEL_ITEM = s),
+			item("capacity_card", dev.alaindustrial.item.misc.CapacityCardItem::new,
+					s -> ModContent.CAPACITY_CARD = s));
 
 	// ─────────────────────────────────────────────────────────────────────────────────────────
 	// BlockEntity types (MOD-307)
@@ -2065,6 +2108,15 @@ public final class ContentManifest {
 			blockEntity("item_pipe", ItemPipeBlockEntity.class, ItemPipeBlockEntity::new,
 					s -> ModContent.ITEM_PIPE_BE = s, "item_pipe", "item_pipe_advanced"),
 			blockEntity("fluid_pipe", FluidPipeBlockEntity.class, FluidPipeBlockEntity::new, s -> ModContent.FLUID_PIPE_BE = s, "fluid_pipe"),
+			blockEntity("smart_wire", SmartWireBlockEntity.class,
+					SmartWireBlockEntity::new,
+					s -> ModContent.SMART_WIRE_BE = s, "smart_wire"),
+			blockEntity("monitor_core", MonitorCoreBlockEntity.class,
+					MonitorCoreBlockEntity::new,
+					s -> ModContent.MONITOR_CORE_BE = s, "monitor_core"),
+			blockEntity("monitor_panel", MonitorPanelBlockEntity.class,
+					MonitorPanelBlockEntity::new,
+					s -> ModContent.MONITOR_PANEL_BE = s, "monitor_panel"),
 			blockEntity("macerator", MaceratorBlockEntity.class, MaceratorBlockEntity::new, s -> ModContent.MACERATOR_BE = s, "macerator"),
 			blockEntity("component_repair_bench", ComponentRepairBenchBlockEntity.class, ComponentRepairBenchBlockEntity::new, s -> ModContent.COMPONENT_REPAIR_BENCH_BE = s, "component_repair_bench"),
 			blockEntity("upgrade_table", UpgradeTableBlockEntity.class, UpgradeTableBlockEntity::new, s -> ModContent.UPGRADE_TABLE_BE = s, "upgrade_table"),
@@ -2109,6 +2161,8 @@ public final class ContentManifest {
 			blockEntity("silver_chest", SilverChestBlockEntity.class, SilverChestBlockEntity::new, s -> ModContent.SILVER_CHEST_BE = s, "silver_chest"),
 			blockEntity("gold_chest", GoldChestBlockEntity.class, GoldChestBlockEntity::new, s -> ModContent.GOLD_CHEST_BE = s, "gold_chest"),
 			blockEntity("electrum_chest", ElectrumChestBlockEntity.class, ElectrumChestBlockEntity::new, s -> ModContent.ELECTRUM_CHEST_BE = s, "electrum_chest"),
+			blockEntity("diamond_chest", DiamondChestBlockEntity.class, DiamondChestBlockEntity::new,
+					s -> ModContent.DIAMOND_CHEST_BE = s, "diamond_chest"),
 			blockEntity("shielding_chest", ShieldingChestBlockEntity.class, ShieldingChestBlockEntity::new, s -> ModContent.SHIELDING_CHEST_BE = s, "shielding_chest"),
 			blockEntity("mob_repeller", MobRepellerBlockEntity.class, MobRepellerBlockEntity::new, s -> ModContent.MOB_REPELLER_BE = s, "mob_repeller"),
 			blockEntity("mob_repeller_mv", MobRepellerMvBlockEntity.class, MobRepellerMvBlockEntity::new, s -> ModContent.MOB_REPELLER_MV_BE = s, "mob_repeller_mv"),
