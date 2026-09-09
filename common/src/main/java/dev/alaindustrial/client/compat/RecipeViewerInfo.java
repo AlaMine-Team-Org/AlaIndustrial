@@ -190,6 +190,22 @@ public final class RecipeViewerInfo {
 								() -> Config.kokSagyzSandGrowthPercent)))));
 	}
 
+	/**
+	 * Items whose real path is a hand-built press rather than a recipe (MOD-600).
+	 *
+	 * <p>The ceramic plate has exactly one recipe in the game — "plate back out of a ceramic block" —
+	 * so a player who opens the recipe viewer to ask "where do I get my FIRST plate" is shown a circle.
+	 * The answer is a quench press assembled from vanilla blocks, which no recipe can express; this
+	 * page is the only place the viewer can state it.
+	 */
+	public static List<Entry> pressMadeEntries() {
+		return List.of(
+				new Entry(ModContent.CERAMIC_PLATE, "item.alaindustrial.ceramic_plate", List.of(
+						Line.of("jei.alaindustrial.ceramic_plate.line1"),
+						Line.of("jei.alaindustrial.ceramic_plate.line2"),
+						Line.of("jei.alaindustrial.ceramic_plate.line3"))));
+	}
+
 	private static Entry crystalPage(Supplier<? extends ItemLike> crystal, String id) {
 		return new Entry(crystal, "item.alaindustrial." + id, List.of(
 				Line.of("jei.alaindustrial.crystal.line1"),

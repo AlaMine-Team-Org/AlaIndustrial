@@ -97,6 +97,9 @@ public final class MachineTooltips {
 			addPouchTooltip(stack, lines, detailed);
 			return;
 		}
+		if (appendStorageCapacity(stack, lines, detailed)) {
+			return;
+		}
 		if (stack.getItem() instanceof BatteryItem) {
 			addBatteryTooltip(stack, lines);
 			return;
@@ -251,6 +254,67 @@ public final class MachineTooltips {
 				.withStyle(ChatFormatting.GREEN));
 		lines.add(Component.translatable("tooltip.alaindustrial.shielding_pouch.not_a_suit")
 				.withStyle(ChatFormatting.YELLOW));
+	}
+
+	/**
+	 * Capacity of the mod's storage blocks, under [SHIFT] (MOD-600).
+	 *
+	 * <p>A chest tier tells the player nothing about its size until it is placed and opened, and the
+	 * ladder now runs from 36 to 108 — a difference worth knowing before you carry one home.
+	 *
+	 * <p><b>The numbers come from the block entities themselves</b>, never from a literal here: a
+	 * tooltip that states a capacity the container does not have is worse than no tooltip, and this is
+	 * exactly the kind of second copy that goes stale silently.
+	 *
+	 * @return whether this stack was one of the storage blocks (and the tooltip is therefore done)
+	 */
+	private static boolean appendStorageCapacity(ItemStack stack, List<Component> lines, boolean detailed) {
+		int slots = storageSlots(stack);
+		if (slots <= 0) {
+			return false;
+		}
+		if (!detailed) {
+			lines.add(Component.translatable("tooltip.alaindustrial.hold_shift")
+					.withStyle(ChatFormatting.DARK_GRAY));
+			return true;
+		}
+		lines.add(Component.translatable("tooltip.alaindustrial.storage_slots", slots)
+				.withStyle(ChatFormatting.GRAY));
+		if (stack.is(ModContent.STORAGE_MODULE_ITEM.get())) {
+			// A module's number is misleading on its own: touching modules pool into one warehouse.
+			lines.add(Component.translatable("tooltip.alaindustrial.storage_module_merges")
+					.withStyle(ChatFormatting.DARK_GRAY));
+		} else {
+			lines.add(Component.translatable("tooltip.alaindustrial.storage_slots_double", slots * 2)
+					.withStyle(ChatFormatting.DARK_GRAY));
+		}
+		return true;
+	}
+
+	/** Slots of the storage block behind {@code stack}, or 0 when it is not one of ours. */
+	private static int storageSlots(ItemStack stack) {
+		if (stack.is(ModContent.IRON_CHEST_ITEM.get())) {
+			return dev.alaindustrial.block.entity.IronChestBlockEntity.CONTAINER_SIZE;
+		}
+		if (stack.is(ModContent.SILVER_CHEST_ITEM.get())) {
+			return dev.alaindustrial.block.entity.SilverChestBlockEntity.CONTAINER_SIZE;
+		}
+		if (stack.is(ModContent.GOLD_CHEST_ITEM.get())) {
+			return dev.alaindustrial.block.entity.GoldChestBlockEntity.CONTAINER_SIZE;
+		}
+		if (stack.is(ModContent.ELECTRUM_CHEST_ITEM.get())) {
+			return dev.alaindustrial.block.entity.ElectrumChestBlockEntity.CONTAINER_SIZE;
+		}
+		if (stack.is(ModContent.DIAMOND_CHEST_ITEM.get())) {
+			return dev.alaindustrial.block.entity.DiamondChestBlockEntity.CONTAINER_SIZE;
+		}
+		if (stack.is(ModContent.SHIELDING_CHEST_ITEM.get())) {
+			return dev.alaindustrial.block.entity.ShieldingChestBlockEntity.CONTAINER_SIZE;
+		}
+		if (stack.is(ModContent.STORAGE_MODULE_ITEM.get())) {
+			return dev.alaindustrial.block.entity.StorageModuleBlockEntity.CONTAINER_SIZE;
+		}
+		return 0;
 	}
 
 	private static void addPouchTooltip(ItemStack stack, List<Component> lines, boolean detailed) {

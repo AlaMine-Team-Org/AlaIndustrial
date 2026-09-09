@@ -157,6 +157,14 @@ public class AlaJeiPlugin implements IModPlugin {
 			registration.addIngredientInfo((ItemLike) entry.owner().get(),
 					description.toArray(new Component[0]));
 		}
+		// MOD-600: the ceramic plate — made by a hand-built quench press, which no recipe can express.
+		for (RecipeViewerInfo.Entry entry : RecipeViewerInfo.pressMadeEntries()) {
+			List<Component> description = new ArrayList<>();
+			description.add(RecipeViewerInfo.title(entry));
+			description.addAll(RecipeViewerInfo.buildLines(entry));
+			registration.addIngredientInfo((ItemLike) entry.owner().get(),
+					description.toArray(new Component[0]));
+		}
 
 		// MOD-118: the incubator's rarity grades — a second roll on top of every success, which no
 		// recipe card has room for.
