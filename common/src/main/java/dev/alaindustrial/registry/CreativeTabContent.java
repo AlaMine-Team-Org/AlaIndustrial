@@ -909,12 +909,15 @@ public final class CreativeTabContent {
 		show(out, ModContent.ALLOY_SMELTER_ITEM);
 		show(out, ModContent.CANNING_MACHINE_ITEM);
 		show(out, ModContent.ELECTRIC_HEATER_ITEM);
-		show(out, ModContent.INCUBATOR_ITEM);
 		// MOD-275 - the first MV machine, last of the cubes because it sits a tier above the rest.
 		show(out, ModContent.ASSEMBLER_ITEM);
 		// --- shaped models close the group (MOD-574); the family itself stays here, one row down.
 		// MOD-424 - the centrifuge stands ON the heater above and does nothing without one.
 		show(out, ModContent.THERMAL_CENTRIFUGE_ITEM);
+		// Agriculture opens with the incubator: MOD-604 gave it a volumetric model, so it is no longer
+		// a cube and cannot stand among them (creative_tab_shape_check). It also heads the farming run
+		// that follows, which is where it belonged by theme all along.
+		show(out, ModContent.INCUBATOR_ITEM);
 		// Agriculture: the station and the drone it flies, kept adjacent.
 		show(out, ModContent.GARDEN_DRONE_STATION_ITEM);
 		show(out, ModContent.GARDEN_DRONE);

@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
@@ -31,10 +32,27 @@ public class IncubatorDomeBlock extends Block {
 	public static final MapCodec<IncubatorDomeBlock> CODEC = simpleCodec(IncubatorDomeBlock::new);
 
 	/**
-	 * One box covering the silhouette. The model tapers towards the top, but a simplified shape keeps
-	 * clicks from slipping between the frame ribs — the same call the fluid tank makes.
+	 * The chamber's stepped silhouette, measured off the model rather than approximated (MOD-604).
+	 *
+	 * <p>It used to be one straight box from 1 to 15 over the full height, on the reasoning that a
+	 * simplified shape keeps clicks from slipping between the frame ribs. The redesigned chamber
+	 * steps inward four times on its way up and ends in a lid barely a third of the block wide, so
+	 * that box left a tall invisible corner above the glass for the player to walk into and to click
+	 * on. The ribs it was protecting are gone with the old model.
+	 *
+	 * <p>Assembled ONCE at class load, not inside {@code getShape}: the engine asks a block for its
+	 * shape about twenty times per state, and an {@code or} chain there is paid every one of them
+	 * (ADR-023).
 	 */
-	private static final VoxelShape SHAPE = Block.box(1, 0, 1, 15, 16, 15);
+	private static final VoxelShape SHAPE = buildShape();
+
+	private static VoxelShape buildShape() {
+		VoxelShape shape = Shapes.empty();
+		for (double[] step : IncubatorDomeGeometry.STEPS) {
+			shape = Shapes.or(shape, Block.box(step[0], step[1], step[2], step[3], step[4], step[5]));
+		}
+		return shape;
+	}
 
 	public IncubatorDomeBlock(Properties properties) {
 		super(properties);

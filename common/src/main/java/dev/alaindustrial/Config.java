@@ -2521,6 +2521,28 @@ public final class Config {
 	@Knob(section = Section.MACHINES, min = 1,
 			doc = "Ticks an incubator create attempt takes at 1.0 speed.")
 	public static int mutationDurationCreate = 1000;
+	/**
+	 * MOD-605 — mB of water one incubator attempt drinks from its nutrient bath.
+	 *
+	 * <p>Not part of the recipe JSON for the same reason the galvanic bath's water is not: no recipe
+	 * family in this mod puts items and a fluid on one side. 1000 mB is a bucket per attempt, so the
+	 * eight-bucket tank covers eight attempts — enough that a bucket by hand is a real option and a
+	 * pipe is the answer once the machine runs unattended.
+	 */
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "mB of water an incubator attempt drinks (not part of the recipe JSON).")
+	public static int incubatorWaterPerOp = 1000;
+	/**
+	 * MOD-605 — per cent faster while the bath has water for the attempt about to start.
+	 *
+	 * <p>Water is deliberately NOT a requirement: an incubator already standing in a player's world
+	 * keeps working exactly as before, and the pipe is an upgrade rather than an entry ticket. 50 %
+	 * turns a 500-tick duplicate into 333 ticks — worth plumbing for, not so large that running dry
+	 * feels broken. Set to 0 to switch the bath off without touching the tank or the pipe.
+	 */
+	@Knob(section = Section.MACHINES, min = 0,
+			doc = "Per cent faster an incubator runs while its nutrient bath has water (0 disables).")
+	public static int incubatorWaterSpeedBonus = 50;
 	/** Uranium ingots are spent as a charge: one ingot powers this many attempts, then becomes ash. */
 	@Knob(section = Section.MACHINES, min = 1,
 			doc = "Mutation attempts one uranium ingot powers before it burns to ash.")

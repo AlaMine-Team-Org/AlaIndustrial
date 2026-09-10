@@ -3,6 +3,11 @@ package dev.alaindustrial.block.entity;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.IncubatorBlock;
 import dev.alaindustrial.core.energy.EnergyRole;
+import dev.alaindustrial.core.fluid.FluidAmounts;
+import dev.alaindustrial.core.fluid.FluidHolder;
+import dev.alaindustrial.core.fluid.FluidPort;
+import dev.alaindustrial.core.fluid.FluidPortHost;
+import dev.alaindustrial.core.fluid.FluidTank;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.item.misc.MutationGrades;
 import dev.alaindustrial.menu.IncubatorMenu;
@@ -29,6 +34,7 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.MenuProvider;
@@ -51,7 +57,7 @@ import org.jetbrains.annotations.Nullable;
  *     a small share of misses yields slag; the rest consume the input for nothing.</li>
  * </ul>
  */
-public final class IncubatorBlockEntity extends MachineBlockEntity implements Overclockable, MenuProvider {
+public final class IncubatorBlockEntity extends MachineBlockEntity implements Overclockable, FluidPortHost, MenuProvider {
 
 	public static final int CHIP_SLOT = 0;
 	public static final int FUEL_SLOT = 1;
@@ -59,6 +65,33 @@ public final class IncubatorBlockEntity extends MachineBlockEntity implements Ov
 	public static final int OUTPUT_SLOT = 3;
 	public static final int ASH_SLOT = 4;
 	public static final int SLOT_COUNT = 5;
+
+	/**
+	 * The nutrient bath (MOD-605): eight buckets, so a full tank covers eight attempts at the shipped
+	 * price. Water is an UPGRADE here, not a requirement — an incubator already standing in a player's
+	 * world keeps working dry, exactly as it did before this tank existed.
+	 */
+	public static final long TANK_CAPACITY = FluidAmounts.BUCKET * 8;
+
+	/**
+	 * Water-only, insertable from any side, never extractable (R-CON-08 — the machine drinks its own
+	 * feedstock). Only the <em>source</em> fluid is taken: {@code Fluids.FLOWING_WATER} is a different
+	 * object, and a single-variant tank that let a splash of it in could never be topped up again.
+	 */
+	public final FluidTank fluidTank = new FluidTank(TANK_CAPACITY,
+			IncubatorBlockEntity::isWater,
+			fluid -> false,
+			() -> {
+				setChanged();
+				// The level is drawn ON THE BLOCK, so it has to reach every client watching the chunk —
+				// and setChanged() sends no packet at all, by its own contract. Without this the gauge
+				// only ever moved when something else (an item landing in a slot) happened to push an
+				// update, which read as "the water shows up only while the machine runs".
+				syncBlockEntityToClient();
+				// A neighbour that just filled the bath must restart an idle machine on the next tick,
+				// rather than wait out the idle-sleep window it went to sleep for.
+				wake();
+			});
 
 	/** ContainerData channels beyond the base four; -1 in DATA_MODE means "no chip inserted". */
 	public static final int DATA_MODE = 4;
@@ -106,6 +139,14 @@ public final class IncubatorBlockEntity extends MachineBlockEntity implements Ov
 	private MutationGrade pendingGrade = MutationGrade.COMMON;
 	/** Set by a creative break of the dome so its removal hook hands nothing back. */
 	private boolean suppressDomeDrop;
+	/**
+	 * Whether the attempt in progress paid for the bath and therefore runs short.
+	 *
+	 * <p>Persisted: an attempt that bought its speed keeps it across an unload. Decided ONCE, when the
+	 * attempt starts — re-deciding every tick would let a tank running dry stretch a cycle the player
+	 * already watched shorten, and the water is spent either way.
+	 */
+	private boolean waterBoosted;
 
 	@SuppressWarnings("unchecked")
 	private static RecipeManager.CachedCheck<ProcessingRecipeInput, AlaProcessingRecipe>[] newChecks() {
@@ -121,6 +162,22 @@ public final class IncubatorBlockEntity extends MachineBlockEntity implements Ov
 	public IncubatorBlockEntity(BlockPos pos, BlockState state) {
 		super(ModContent.INCUBATOR_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT,
 				Config.incubatorBuffer, EnergyTier.LV.maxVoltage(), 0L);
+	}
+
+	private static boolean isWater(FluidHolder fluid) {
+		return !fluid.isEmpty() && fluid.fluid() == Fluids.WATER;
+	}
+
+	/**
+	 * Every face accepts water into the same bath.
+	 *
+	 * <p>The model draws the inlet on the back, next to the sight glass, and that is where a player
+	 * will naturally run the pipe — but refusing the other five faces would only turn a cosmetic cue
+	 * into a build puzzle. Same choice the galvanic bath makes.
+	 */
+	@Override
+	public FluidPort fluidPort(Direction side) {
+		return fluidTank;
 	}
 
 	// ---------------------------------------------------------------- mode + structure
@@ -179,9 +236,10 @@ public final class IncubatorBlockEntity extends MachineBlockEntity implements Ov
 				: null;
 
 		int euPerTick = euPerTick();
-		this.maxProgress = mode == null
-				? effectiveDuration(Config.mutationDurationTransform)
-				: effectiveDuration(durationOf(mode, recipe, euPerTick));
+		int baseDuration = mode == null
+				? Config.mutationDurationTransform
+				: durationOf(mode, recipe, euPerTick);
+		this.maxProgress = effectiveDuration(withBath(baseDuration));
 
 		if (recipe == null) {
 			pendingOutcome = null;
@@ -212,6 +270,13 @@ public final class IncubatorBlockEntity extends MachineBlockEntity implements Ov
 		}
 
 		energy.drainInternal(euPerTick);
+		if (progress == 0) {
+			// An attempt begins. The bath is charged once, here, and this attempt keeps the length it
+			// just bought — recomputing it every tick would make a tank that ran dry halfway stretch a
+			// cycle the player already watched shorten.
+			waterBoosted = drawBath();
+			this.maxProgress = effectiveDuration(withBath(baseDuration));
+		}
 		progress++;
 		if (progress >= maxProgress) {
 			// The dice are thrown here, at the end of a cycle that has already been paid for — never
@@ -230,6 +295,40 @@ public final class IncubatorBlockEntity extends MachineBlockEntity implements Ov
 		}
 		setChanged();
 		return 0;
+	}
+
+	/**
+	 * Charge the bath for the attempt about to start.
+	 *
+	 * @return whether the water was there and was taken — a dry bath is not a failure, only a slower
+	 *         attempt, so the caller runs either way.
+	 */
+	private boolean drawBath() {
+		long price = Config.incubatorWaterPerOp;
+		if (Config.incubatorWaterSpeedBonus <= 0 || fluidTank.amount < price) {
+			return false;
+		}
+		// The machine consuming its own feedstock bypasses the tank's canExtract guard (false, so a
+		// neighbour cannot siphon the water back out) by mutating the field, the same internal path
+		// the galvanic bath and the polymerizer use. Clearing the fluid at zero is this mutator's job.
+		fluidTank.amount = Math.max(0L, fluidTank.amount - price);
+		if (fluidTank.amount == 0) {
+			fluidTank.fluid = FluidHolder.EMPTY;
+		}
+		setChanged();
+		// Same reason as the tank's own callback: the level the player watches is on the block, not in
+		// a menu, so spending water has to be broadcast and not merely saved.
+		syncBlockEntityToClient();
+		return true;
+	}
+
+	/** The attempt's length once the bath has had its say; unchanged when it ran dry. */
+	private int withBath(int ticks) {
+		int bonus = Config.incubatorWaterSpeedBonus;
+		if (!waterBoosted || bonus <= 0) {
+			return ticks;
+		}
+		return Math.max(1, (int) ((long) ticks * 100L / (100L + bonus)));
 	}
 
 	/**
@@ -569,6 +668,10 @@ public final class IncubatorBlockEntity extends MachineBlockEntity implements Ov
 		super.saveAdditional(output);
 		output.putInt("Charge", charge);
 		output.putBoolean("Formed", formed);
+		// The tank writes itself (MOD-556); the flag rides with it so a reload does not silently
+		// re-price an attempt that was already paid for.
+		fluidTank.save(output, "FluidTank");
+		output.putBoolean("WaterBoosted", waterBoosted);
 		output.store("DomeSource", BlockState.CODEC, domeSource);
 		// A held outcome outlives an unload on purpose. The base class persists progress, so without
 		// this a player waiting on a blocked slot could leave, come back to a cycle still standing at
@@ -584,6 +687,10 @@ public final class IncubatorBlockEntity extends MachineBlockEntity implements Ov
 		super.loadAdditional(input);
 		charge = input.getIntOr("Charge", 0);
 		formed = input.getBooleanOr("Formed", false);
+		// Absent in every world saved before MOD-605: the tank loads empty and the flag false, which is
+		// exactly the machine those worlds already had.
+		fluidTank.load(input, "FluidTank");
+		waterBoosted = input.getBooleanOr("WaterBoosted", false);
 		domeSource = input.read("DomeSource", BlockState.CODEC)
 				.orElse(Blocks.GLASS.defaultBlockState());
 		pendingOutcome = input.getString("PendingOutcome").map(IncubatorBlockEntity::outcomeByName)

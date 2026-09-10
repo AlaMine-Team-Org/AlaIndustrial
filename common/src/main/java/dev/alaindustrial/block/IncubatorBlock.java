@@ -2,6 +2,10 @@ package dev.alaindustrial.block;
 
 import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.IncubatorBlockEntity;
+import dev.alaindustrial.core.energy.EnergyTransactions;
+import dev.alaindustrial.core.fluid.FluidAmounts;
+import dev.alaindustrial.core.fluid.FluidHolder;
+import dev.alaindustrial.item.fluid.BucketFluids;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModParticles;
 import dev.alaindustrial.registry.ModSounds;
@@ -11,7 +15,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUtils;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
@@ -20,6 +29,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -41,6 +53,40 @@ public class IncubatorBlock extends LitMachineBlock implements MachineHumProvide
 	@Override
 	protected MapCodec<? extends BaseEntityBlock> codec() {
 		return CODEC;
+	}
+
+	/**
+	 * A water bucket in hand tops up the nutrient bath (MOD-605); anything else falls through to the
+	 * menu.
+	 *
+	 * <p>The fallback is {@code TRY_WITH_EMPTY_HAND}, not {@code PASS}: in 26.2 a PASS here does NOT
+	 * fall through to {@code useWithoutItem}, so the incubator's screen would become unreachable
+	 * whenever the player held anything at all — which is most of the time. The sprinkler and the fuel
+	 * rod assembly carry the same note for the same reason. This also leaves dome assembly alone: the
+	 * player still sneak-places the glass on top, exactly as before.
+	 */
+	@Override
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
+			Player player, InteractionHand hand, BlockHitResult hit) {
+		if (!(level.getBlockEntity(pos) instanceof IncubatorBlockEntity incubator)) {
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
+		}
+		Fluid incoming = BucketFluids.content(stack);
+		if (incoming != Fluids.WATER) {
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
+		}
+		if (level.isClientSide()) {
+			return InteractionResult.SUCCESS;
+		}
+		boolean[] moved = {false};
+		EnergyTransactions.get().runCommitting(txn ->
+				moved[0] = incubator.fluidTank.insert(FluidHolder.of(incoming), FluidAmounts.BUCKET, txn)
+						== FluidAmounts.BUCKET);
+		if (moved[0]) {
+			player.setItemInHand(hand,
+					ItemUtils.createFilledResult(stack, player, new ItemStack(Items.BUCKET)));
+		}
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
