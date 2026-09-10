@@ -34,6 +34,13 @@ public final class AlaClientConfig {
 	 * 85 leaves the terrain, horizon and sky faintly readable — enough to keep your bearings.
 	 */
 	public static int rootInspectionDim = 85;
+
+	/**
+	 * Whether the Mirror Concentrator's assembly schematic is drawn (MOD-603). On by default: it is
+	 * how a player finds out the machine can be grown at all, and it only appears while the crosshair
+	 * is on the machine itself.
+	 */
+	public static boolean concentratorSchematicEnabled = true;
 	/** Dragged offset of the upgrade panel from its docked position (MOD-080). Persisted between sessions. */
 	public static int upgradePanelDX = 0;
 	public static int upgradePanelDY = 0;
@@ -90,6 +97,8 @@ public final class AlaClientConfig {
 					energyHudEnabled = GsonHelper.getAsBoolean(o, "energyHudEnabled", energyHudEnabled);
 					drillHudEnabled = GsonHelper.getAsBoolean(o, "drillHudEnabled", drillHudEnabled);
 					rootInspectionDim = clamp(GsonHelper.getAsInt(o, "rootInspectionDim", rootInspectionDim), 10, 95);
+					concentratorSchematicEnabled = GsonHelper.getAsBoolean(o, "concentratorSchematicEnabled",
+							concentratorSchematicEnabled);
 					upgradePanelDX = GsonHelper.getAsInt(o, "upgradePanelDX", upgradePanelDX);
 					upgradePanelDY = GsonHelper.getAsInt(o, "upgradePanelDY", upgradePanelDY);
 					statsPanelDX = GsonHelper.getAsInt(o, "statsPanelDX", statsPanelDX);
@@ -129,6 +138,7 @@ public final class AlaClientConfig {
 		o.addProperty("energyHudEnabled", snapshot.energyHudEnabled());
 		o.addProperty("drillHudEnabled", snapshot.drillHudEnabled());
 		o.addProperty("rootInspectionDim", rootInspectionDim);
+		o.addProperty("concentratorSchematicEnabled", concentratorSchematicEnabled);
 		o.addProperty("upgradePanelDX", upgradePanelDX);
 		o.addProperty("upgradePanelDY", upgradePanelDY);
 		o.addProperty("statsPanelDX", statsPanelDX);

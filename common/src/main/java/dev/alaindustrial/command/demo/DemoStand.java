@@ -1,64 +1,66 @@
 package dev.alaindustrial.command.demo;
 
+import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.block.ConcentratorPart;
+import dev.alaindustrial.block.ConcentratorStructure;
+import dev.alaindustrial.block.CrystalSeedbedBlock;
 import dev.alaindustrial.block.FuelRodAssemblyBlock;
+import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.IrradiatedSoilBlock;
-import dev.alaindustrial.block.SteamNozzleBlock;
 import dev.alaindustrial.block.ReactorDoorBlock;
-import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
-import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.block.state.properties.AttachFace;
-import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
-import dev.alaindustrial.block.entity.LightningRodGeneratorBlockEntity;
-import dev.alaindustrial.block.entity.MachineBlockEntity;
-import dev.alaindustrial.block.entity.FluidTankBlockEntity;
-import dev.alaindustrial.core.fluid.FluidHolder;
+import dev.alaindustrial.block.SteamNozzleBlock;
+import dev.alaindustrial.block.TrellisBlock;
+import dev.alaindustrial.block.UpgradeTableBlock;
+import dev.alaindustrial.block.WorkstationBlock;
+import dev.alaindustrial.block.entity.AlloySmelterBlockEntity;
 import dev.alaindustrial.block.entity.CanningMachineBlockEntity;
 import dev.alaindustrial.block.entity.ComponentRepairBenchBlockEntity;
-import dev.alaindustrial.block.entity.IncubatorBlockEntity;
-import dev.alaindustrial.block.entity.AlloySmelterBlockEntity;
 import dev.alaindustrial.block.entity.FermenterBlockEntity;
-import dev.alaindustrial.block.entity.SprinklerBlockEntity;
+import dev.alaindustrial.block.entity.FluidTankBlockEntity;
+import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
 import dev.alaindustrial.block.entity.GalvanicBathBlockEntity;
+import dev.alaindustrial.block.entity.IncubatorBlockEntity;
+import dev.alaindustrial.block.entity.LightningRodGeneratorBlockEntity;
+import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
-import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
-import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
-import dev.alaindustrial.block.entity.UpgradeTableBlockEntity;
-import dev.alaindustrial.block.entity.WorkstationBlockEntity;
-import dev.alaindustrial.block.CrystalSeedbedBlock;
-import net.minecraft.world.level.block.AmethystClusterBlock;
-import net.minecraft.world.level.block.DoorBlock;
 import dev.alaindustrial.block.entity.RecyclerBlockEntity;
+import dev.alaindustrial.block.entity.SprinklerBlockEntity;
+import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
+import dev.alaindustrial.block.entity.UpgradeTableBlockEntity;
+import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
+import dev.alaindustrial.block.entity.WorkstationBlockEntity;
+import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.registry.ModContent;
-import dev.alaindustrial.Industrialization;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import dev.alaindustrial.block.TrellisBlock;
-import dev.alaindustrial.block.HorizontalMachineBlock;
-import dev.alaindustrial.block.UpgradeTableBlock;
-import dev.alaindustrial.block.WorkstationBlock;
-import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.GlowItemFrame;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.DoublePlantBlock;
-import net.minecraft.world.level.block.FarmlandBlock;
-import net.minecraft.world.level.block.WallTorchBlock;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.AmethystClusterBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.DoublePlantBlock;
+import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
+import net.minecraft.world.level.block.FarmlandBlock;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.WallTorchBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.AttachFace;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.server.level.ServerLevel;
 
 /**
  * The MOD-058 demo stand: a generated showcase of every mod block, "alive" where possible
@@ -251,11 +253,28 @@ public final class DemoStand {
 
 		int x = 8;
 		for (Block solar : new Block[] {ModContent.SOLAR_PANEL.get(),
-				ModContent.DAYLIGHT_SOLAR_PANEL.get(), ModContent.MOONLIT_SOLAR_PANEL.get()}) {
+				ModContent.DAYLIGHT_SOLAR_PANEL.get(), ModContent.MOONLIT_SOLAR_PANEL.get(),
+				ModContent.RADIANT_SOLAR_PANEL.get()}) {
 			set(level, origin, x, 1, 4, solar);
 			set(level, origin, x, 1, 5, ModContent.BATTERY_BOX.get());
 			x += 3;
 		}
+
+		// MOD-603: the concentrator grown out into its two-by-two-by-two form, standing next to the
+		// one-block version three cells to its left so the size difference is the first thing seen.
+		// Built the way a player builds it — a grown panel plus seven loose sections — and then handed
+		// to the real assembler, so the stand cannot show a structure the game could not produce.
+		BlockPos structureCore = origin.offset(x, 1, 4);
+		level.setBlockAndUpdate(structureCore,
+				ModContent.RADIANT_SOLAR_PANEL.get().defaultBlockState());
+		for (ConcentratorPart part : ConcentratorPart.CELLS) {
+			if (part == ConcentratorPart.CORE) {
+				continue;
+			}
+			level.setBlockAndUpdate(structureCore.offset(part.worldOffset(Direction.NORTH)),
+					ModContent.CONCENTRATOR_SECTION.get().defaultBlockState());
+		}
+		ConcentratorStructure.tryAssemble(level, structureCore);
 
 		// Water mill driven by a real CURRENT (MOD-188): only FLOWING water turns the wheel — a still
 		// source powers nothing. The mill faces NORTH, so its wheel hangs in the whole z=3 plane:

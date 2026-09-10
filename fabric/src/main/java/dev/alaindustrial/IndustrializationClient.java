@@ -27,6 +27,7 @@ public class IndustrializationClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		HudElementRegistry.addLast(Industrialization.id("root_inspection"), dev.alaindustrial.client.render.RootInspection::renderHud);
+		HudElementRegistry.addLast(Industrialization.id("concentrator_assembly"), dev.alaindustrial.client.render.ConcentratorSchematicRenderer::renderHud);
 		dev.alaindustrial.client.RootSoilModels.init();
 		initClientConfig();
 		registerFluidRendering();

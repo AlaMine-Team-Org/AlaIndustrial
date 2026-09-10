@@ -28,8 +28,11 @@ import net.minecraft.world.level.block.Block;
  * mute chip in a field block would be a dead promise, same reasoning as the Energy Condenser
  * (MOD-393). The client-side dummy is sized to the machine slot alone accordingly.
  *
- * <p>The dome toggle button is NOT here: showing the personal radius dome is a client-only affair
- * (see {@code RepellerDomeClientState}) — the screen flips local state directly, no menu channel.
+ * <p>The dome toggle rides the vanilla container-button channel, not a payload of our own: the
+ * screen ({@code AbstractMobRepellerScreen}) sends {@link #BUTTON_TOGGLE_DOME} through
+ * {@code handleInventoryButtonClick}, and {@link #clickMenuButton} answers the asking player — and
+ * only them — with a personal {@link RepellerDomePayload}. Server-authoritative is the radius; WHICH
+ * domes a player currently sees is client-only state, held by {@code RepellerDomeRenderer}.
  */
 public class MobRepellerMenu extends MachineMenu {
 

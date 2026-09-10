@@ -20,7 +20,9 @@ import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * LV Moonlit (Lunar) Solar Panel — produces EU from moonlight. Night, under open sky, in the
- * Overworld: 2 EU/t; rain/thunder and day: 0 (MOD-003). Buffer 8000, LV output (20).
+ * Overworld: 3 EU/t ({@link Config#moonlitEuPerTick}); rain/thunder: a flat 1 EU/t trickle
+ * ({@link Config#moonlitWeatherEuPerTick}) rather than the day panels' zero; daytime: 0 (MOD-003).
+ * Buffer 8000, LV output (20).
  *
  * <p>The night-mirror of {@link SolarPanelBlockEntity}: where the day panel uses
  * {@code level.isBrightOutside()} as its sunlight test, the moonlit panel negates it.

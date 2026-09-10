@@ -1,5 +1,6 @@
 package dev.alaindustrial.client;
 
+import dev.alaindustrial.client.render.ConcentratorSchematicRenderer;
 import dev.alaindustrial.client.render.RepellerDomeRenderer;
 import dev.alaindustrial.network.MachineStatsPayload;
 import dev.alaindustrial.network.NetworkAnalyzerPayload;
@@ -40,6 +41,11 @@ public final class NetworkVisualizationClient {
 		NetworkOverlayRenderer.submitFrame(context.submitNodeCollector(),
 				context.levelState().cameraRenderState);
 		RepellerDomeRenderer.submitFrame(context.submitNodeCollector(),
+				context.levelState().cameraRenderState);
+
+		// MOD-603: the concentrator's assembly schematic rides the same frame point — it is a
+		// per-frame read of the world in front of the player, with no state of its own.
+		ConcentratorSchematicRenderer.submitFrame(context.submitNodeCollector(),
 				context.levelState().cameraRenderState);
 	}
 }

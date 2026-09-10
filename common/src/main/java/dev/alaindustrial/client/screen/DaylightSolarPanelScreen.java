@@ -3,6 +3,7 @@ package dev.alaindustrial.client.screen;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.DaylightSolarPanelBlockEntity;
 import dev.alaindustrial.menu.DaylightSolarPanelMenu;
+import dev.alaindustrial.registry.ModContent;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -14,7 +15,11 @@ import net.minecraft.world.entity.player.Inventory;
  *
  * <p>Same service-area blit model as {@link SolarPanelScreen}: the static background blit
  * provides borders and tick marks; dynamic fills come from UV x≥176 so tick marks show through.
- * No chip slot and no evolution bar (panel is already evolved).
+ *
+ * <p>Since MOD-602 the panel is no longer the end of its branch: it carries a resonance-chip slot
+ * and an evolution bar of its own, drawn from the same service-area tiles as the T1 panel's. The
+ * bar takes the yellow tile — this is the day branch, and the colour is the only thing on the
+ * screen that says so.
  */
 public class DaylightSolarPanelScreen extends MachineScreen<DaylightSolarPanelMenu> {
 
@@ -28,6 +33,14 @@ public class DaylightSolarPanelScreen extends MachineScreen<DaylightSolarPanelMe
     private static final int   SUN_FRAME_H = 7;
     private static final float SUN_UV_X    = 176.0F;
     private static final float SUN_UV_Y    = 65.0F;
+
+    // Evolution bar — same geometry and service-area tile as the T1 panel's (MOD-602).
+    private static final int   EVO_X        = 55;
+    private static final int   EVO_Y        = 58;
+    private static final int   EVO_MAX_W    = 75;
+    private static final int   EVO_H        = 7;
+    private static final float EVO_UV_X     = 176.0F;
+    private static final float EVO_UV_Y_DAY = 48.0F;
 
     public DaylightSolarPanelScreen(DaylightSolarPanelMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
@@ -64,6 +77,21 @@ public class DaylightSolarPanelScreen extends MachineScreen<DaylightSolarPanelMe
                     TEX_SIZE, TEX_SIZE);
         }
 
+        // Evolution bar fill (left to right), blitted from the service area.
+        int evoMax  = this.menu.getEvolveMax();
+        int evoProg = this.menu.getEvolveProgress();
+        if (evoMax > 0 && evoProg > 0) {
+            // At least one pixel the moment accumulation starts: with a 33 600-tick threshold the
+            // proportional fill floors to zero for the first ~22 s and reads as "not working", while
+            // evoProg > 0 already means the server counted a qualifying tick.
+            int evoFill = Math.max(1, Math.min(evoProg * EVO_MAX_W / evoMax, EVO_MAX_W));
+            graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE,
+                    x + EVO_X, y + EVO_Y,
+                    EVO_UV_X, EVO_UV_Y_DAY,
+                    evoFill, EVO_H,
+                    TEX_SIZE, TEX_SIZE);
+        }
+
         // Text overlay
         graphics.text(this.font, Component.translatable("gui.alaindustrial.energy", energy, capacity),
                 x + 30, y + 22, GuiStyle.TEXT, false);
@@ -71,6 +99,16 @@ public class DaylightSolarPanelScreen extends MachineScreen<DaylightSolarPanelMe
                 x + 30, y + 34, GuiStyle.TEXT, false);
         graphics.text(this.font, Component.translatable("gui.alaindustrial.mode", modeLabel(mode)),
                 x + 30, y + 46, GuiStyle.TEXT_DIM, false);
+    }
+
+    /**
+     * The chip slot answers "what goes here" by itself: an empty slot shows a translucent chip.
+     * One answer only, unlike the T1 panel's fork — by this rung the branch is already decided.
+     */
+    @Override
+    protected void drawGhostHints(GuiGraphicsExtractor graphics) {
+        ghostHint(graphics, DaylightSolarPanelBlockEntity.CHIP_SLOT,
+                ModContent.RESONANCE_CHIP.get().getDefaultInstance());
     }
 
     private static Component modeLabel(int mode) {

@@ -16,6 +16,7 @@ import dev.alaindustrial.menu.CanningMachineMenu;
 import dev.alaindustrial.menu.CompressorMenu;
 import dev.alaindustrial.menu.RecyclerMenu;
 import dev.alaindustrial.menu.DaylightSolarPanelMenu;
+import dev.alaindustrial.menu.RadiantSolarPanelMenu;
 import dev.alaindustrial.menu.DistillationColumnMenu;
 import dev.alaindustrial.menu.DiamondChestMenu;
 import dev.alaindustrial.menu.ElectrumChestMenu;
@@ -124,6 +125,10 @@ public final class ModContent {
 	public static Supplier<Block> SOLAR_PANEL = unbound("SOLAR_PANEL");
 	public static Supplier<Block> MOONLIT_SOLAR_PANEL = unbound("MOONLIT_SOLAR_PANEL");
 	public static Supplier<Block> DAYLIGHT_SOLAR_PANEL = unbound("DAYLIGHT_SOLAR_PANEL");
+	public static Supplier<Block> RADIANT_SOLAR_PANEL = unbound("RADIANT_SOLAR_PANEL");
+
+	/** Filler cell of the assembled Mirror Concentrator (MOD-603). */
+	public static Supplier<Block> CONCENTRATOR_SECTION = unbound("CONCENTRATOR_SECTION");
 	public static Supplier<Block> GEOTHERMAL_GENERATOR = unbound("GEOTHERMAL_GENERATOR");
 	public static Supplier<Block> WATER_MILL = unbound("WATER_MILL");
 	public static Supplier<Block> WIND_MILL = unbound("WIND_MILL");
@@ -344,6 +349,7 @@ public final class ModContent {
 	/** MOD-116 — fitted to a teleporter station by hand, it unlocks the station's random jump. */
 	public static Supplier<Item> RTP_CHIP = unbound("RTP_CHIP");
 	public static Supplier<Item> ALIGNMENT_CHIP_DAY = unbound("ALIGNMENT_CHIP_DAY");
+	public static Supplier<Item> RESONANCE_CHIP = unbound("RESONANCE_CHIP");
 	public static Supplier<Item> ALIGNMENT_CHIP_NIGHT = unbound("ALIGNMENT_CHIP_NIGHT");
 	// Upgrade chips (MOD-080): EMPTY_CHIP is the inert blank/base; MUTE_CHIP is the first functional
 	// upgrade — dropped into a machine's active upgrade slot it silences the block (see isMuted()).
@@ -666,6 +672,10 @@ public final class ModContent {
 	public static Supplier<BlockItem> SOLAR_PANEL_ITEM = unbound("SOLAR_PANEL_ITEM");
 	public static Supplier<BlockItem> MOONLIT_SOLAR_PANEL_ITEM = unbound("MOONLIT_SOLAR_PANEL_ITEM");
 	public static Supplier<BlockItem> DAYLIGHT_SOLAR_PANEL_ITEM = unbound("DAYLIGHT_SOLAR_PANEL_ITEM");
+	public static Supplier<BlockItem> RADIANT_SOLAR_PANEL_ITEM = unbound("RADIANT_SOLAR_PANEL_ITEM");
+
+	/** Block item of the Concentrator Section (MOD-603). */
+	public static Supplier<BlockItem> CONCENTRATOR_SECTION_ITEM = unbound("CONCENTRATOR_SECTION_ITEM");
 	public static Supplier<BlockItem> COPPER_CABLE_ITEM = unbound("COPPER_CABLE_ITEM");
 	public static Supplier<BlockItem> TIN_CABLE_ITEM = unbound("TIN_CABLE_ITEM");
 	public static Supplier<BlockItem> GOLD_CABLE_ITEM = unbound("GOLD_CABLE_ITEM");
@@ -784,6 +794,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> SOLAR_PANEL_BE = unbound("SOLAR_PANEL_BE");
 	public static Supplier<BlockEntityType<?>> MOONLIT_SOLAR_PANEL_BE = unbound("MOONLIT_SOLAR_PANEL_BE");
 	public static Supplier<BlockEntityType<?>> DAYLIGHT_SOLAR_PANEL_BE = unbound("DAYLIGHT_SOLAR_PANEL_BE");
+	public static Supplier<BlockEntityType<?>> RADIANT_SOLAR_PANEL_BE = unbound("RADIANT_SOLAR_PANEL_BE");
 	public static Supplier<BlockEntityType<?>> COPPER_CABLE_BE = unbound("COPPER_CABLE_BE");
 	public static Supplier<BlockEntityType<?>> ITEM_PIPE_BE = unbound("ITEM_PIPE_BE");
 	public static Supplier<BlockEntityType<?>> FLUID_PIPE_BE = unbound("FLUID_PIPE_BE");
@@ -900,6 +911,8 @@ public final class ModContent {
 			unbound("TELEPORTER_REMOTE_MENU");
 	public static Supplier<MenuType<DaylightSolarPanelMenu>> DAYLIGHT_SOLAR_PANEL_MENU =
 			unbound("DAYLIGHT_SOLAR_PANEL_MENU");
+	public static Supplier<MenuType<RadiantSolarPanelMenu>> RADIANT_SOLAR_PANEL_MENU =
+			unbound("RADIANT_SOLAR_PANEL_MENU");
 	public static Supplier<MenuType<GeothermalGeneratorMenu>> GEOTHERMAL_GENERATOR_MENU =
 			unbound("GEOTHERMAL_GENERATOR_MENU");
 	public static Supplier<MenuType<PumpMenu>> PUMP_MENU = unbound("PUMP_MENU");

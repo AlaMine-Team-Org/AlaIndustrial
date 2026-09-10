@@ -4,6 +4,7 @@ import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.DiamondChestBlockEntity;
 import dev.alaindustrial.block.entity.ElectrumChestBlockEntity;
 import dev.alaindustrial.block.entity.EnergyCondenserBlockEntity;
+import dev.alaindustrial.block.entity.RadiantSolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.FluidTankBlockEntity;
 import dev.alaindustrial.block.entity.GardenDroneStationBlockEntity;
 import dev.alaindustrial.block.entity.GoldChestBlockEntity;
@@ -22,6 +23,7 @@ import dev.alaindustrial.block.entity.WorkstationBlockEntity;
 import dev.alaindustrial.client.render.CableAccessoryBlockEntityRenderer;
 import dev.alaindustrial.client.render.ChestBlockEntityRenderer;
 import dev.alaindustrial.client.render.EnergyCondenserBlockEntityRenderer;
+import dev.alaindustrial.client.render.RadiantSolarPanelBlockEntityRenderer;
 import dev.alaindustrial.client.render.FluidPipeTint;
 import dev.alaindustrial.client.render.FluidTankBlockEntityRenderer;
 import dev.alaindustrial.client.render.GardenDroneBlockEntityRenderer;
@@ -155,6 +157,10 @@ public final class ClientContentManifest {
 			// which clot the block is holding.
 			renderer(ContentManifest.blockEntity("energy_condenser", EnergyCondenserBlockEntity.class),
 					EnergyCondenserBlockEntityRenderer::new),
+			// MOD-602: the concentrator's two mirror wings, which fold over the collector when the
+			// block cannot work. Everything else about it stands still and lives in the chunk mesh.
+			renderer(ContentManifest.blockEntity("radiant_solar_panel", RadiantSolarPanelBlockEntity.class),
+					RadiantSolarPanelBlockEntityRenderer::new),
 			// MOD-483: the workstation's fans and the screens that fold out. One renderer for all
 			// three parts of the block — the lower half draws the fans, the upper the screens, a
 			// loose casing nothing.

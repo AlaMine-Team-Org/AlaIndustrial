@@ -63,6 +63,8 @@ public class SolarPanelBlockEntity extends AbstractGeneratorBlockEntity implemen
 	}
 
 	private int evolveProgress;
+	/** Which chip the counter above belongs to; see {@link MachineBlockEntity#saveEvolveChip}. */
+	private int evolveChip = EVOLVE_CHIP_NONE;
 
 	public SolarPanelBlockEntity(BlockPos pos, BlockState state) {
 		super(ModContent.SOLAR_PANEL_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT, Config.solarBuffer, MAX_EXTRACT);
@@ -84,6 +86,20 @@ public class SolarPanelBlockEntity extends AbstractGeneratorBlockEntity implemen
 		ItemStack chip = items.get(CHIP_SLOT);
 		boolean dayChip = chip.is(ModContent.ALIGNMENT_CHIP_DAY.get());
 		boolean nightChip = chip.is(ModContent.ALIGNMENT_CHIP_NIGHT.get());
+		// The counter belongs to the chip that earned it (MOD-601). Take the chip out, or swap the
+		// branch, and that run is abandoned rather than banked for the next chip: progress the player
+		// can see draining away is the honest reading of "the chip is what does this".
+		int chipNow = evolveChipOf(chip);
+		if (chipNow != evolveChip) {
+			// An UNATTRIBUTED counter is adopted, not cleared: that is the state of a save written
+			// before the marker existed, and of a counter seeded directly by a test rig. Only a
+			// counter that already belongs to a chip can be abandoned by removing or swapping it.
+			if (evolveChip != EVOLVE_CHIP_NONE) {
+				evolveProgress = 0;
+			}
+			evolveChip = chipNow;
+			setChanged();
+		}
 		if ((dayChip || nightChip) && overworldSky && (dayChip == bright)) {
 			evolveProgress++;
 			if (evolveProgress >= Config.solarEvolveTicks) {
@@ -119,6 +135,11 @@ public class SolarPanelBlockEntity extends AbstractGeneratorBlockEntity implemen
 					}
 				}
 			}
+		} else if (overworldSky && SolarSky.isClockDaytime(level) && level.isThundering()) {
+			// A daytime thunderstorm darkens the sky past isBrightOutside(), so the branch above is
+			// never entered and the mode used to stay NIGHT — at noon (MOD-602). Output is honestly
+			// zero; only the label was wrong, and the player can see it is wrong out of the window.
+			mode = MODE_WEATHER;
 		}
 		this.maxProgress = mode;
 		return production;
@@ -233,11 +254,13 @@ public class SolarPanelBlockEntity extends AbstractGeneratorBlockEntity implemen
 	protected void saveAdditional(ValueOutput output) {
 		super.saveAdditional(output);
 		saveEvolve(output, evolveProgress);
+		saveEvolveChip(output, evolveChip);
 	}
 
 	@Override
 	protected void loadAdditional(ValueInput input) {
 		super.loadAdditional(input);
 		evolveProgress = loadEvolve(input);
+		evolveChip = loadEvolveChip(input);
 	}
 }

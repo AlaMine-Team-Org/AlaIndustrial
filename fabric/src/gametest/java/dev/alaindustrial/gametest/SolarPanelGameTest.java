@@ -54,6 +54,30 @@ public class SolarPanelGameTest {
 		SolarPanelScenarios.tcSolar001Sta03_thunderFlagsWeatherMode(helper);
 	}
 
+	/** @implements MOD-602 — snow blacks the concentrator out while the daylight panel keeps its trickle. */
+	@GameTest(skyAccess = true, maxTicks = 60)
+	public void mod602_snowBlacksOutConcentratorButNotDaylightPanel(GameTestHelper helper) {
+		SolarPanelScenarios.mod602_snowBlacksOutConcentratorButNotDaylightPanel(helper);
+	}
+
+	/** @implements MOD-602 — the noon window lifts the concentrator's output, and only inside it. */
+	@GameTest(skyAccess = true, maxTicks = 60)
+	public void mod602_noonWindowLiftsOutput(GameTestHelper helper) {
+		SolarPanelScenarios.mod602_noonWindowLiftsOutput(helper);
+	}
+
+	/** @implements MOD-602 — the daylight panel's slot takes the resonance chip and nothing else. */
+	@GameTest(skyAccess = true, maxTicks = 40)
+	public void mod602_daylightPanelTakesResonanceChipOnly(GameTestHelper helper) {
+		SolarPanelScenarios.mod602_daylightPanelTakesResonanceChipOnly(helper);
+	}
+
+	/** @implements MOD-602 — the daylight panel grows into the concentrator, carrying its energy. */
+	@GameTest(skyAccess = true, maxTicks = 60)
+	public void mod602_daylightPanelEvolvesIntoConcentrator(GameTestHelper helper) {
+		SolarPanelScenarios.mod602_daylightPanelEvolvesIntoConcentrator(helper);
+	}
+
 	/** @implements TC-SOLAR-001-FUN02 — a day evolution chip evolves the panel into the daylight panel,
 	 *     carrying the stored EU and consuming the chip (the shared evolveInto helper, MOD-166 #4). */
 	@GameTest(skyAccess = true, maxTicks = 40)
@@ -82,6 +106,24 @@ public class SolarPanelGameTest {
 	@GameTest(skyAccess = true, maxTicks = 40)
 	public void solarPanel_evolutionConsumesOneChipNotTheStack(GameTestHelper helper) {
 		SolarPanelScenarios.solarPanel_evolutionConsumesOneChipNotTheStack(helper);
+	}
+
+	/**
+	 * Pulling the chip out abandons the evolution progress it earned (MOD-601). Regression guard:
+	 * without the ownership check the counter merely freezes and the assertion sees it non-zero.
+	 */
+	@GameTest(skyAccess = true, maxTicks = 60)
+	public void solarPanel_removingChipClearsEvolutionProgress(GameTestHelper helper) {
+		SolarPanelScenarios.solarPanel_removingChipClearsEvolutionProgress(helper);
+	}
+
+	/**
+	 * Swapping the chip's branch restarts the counter (MOD-601) — the case an empty-slot check cannot
+	 * catch, because a one-click swap never leaves the slot empty.
+	 */
+	@GameTest(skyAccess = true, maxTicks = 60)
+	public void solarPanel_swappingChipBranchClearsEvolutionProgress(GameTestHelper helper) {
+		SolarPanelScenarios.solarPanel_swappingChipBranchClearsEvolutionProgress(helper);
 	}
 
 	// ── NEG: base panel must produce 0 EU when sky/time conditions are wrong ─────────

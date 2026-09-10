@@ -1,0 +1,38 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_1": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:machine_casing"
+          }
+        ]
+      }
+    },
+    "has_item_2": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:radiant_solar_panel"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_item_1"
+    ],
+    [
+      "has_item_2"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:concentrator_section"
+    ]
+  }
+}

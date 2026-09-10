@@ -172,6 +172,23 @@ public final class NeoForgeGameTests {
 		// NeoForge world lane's first recipe-processing case.
 		// MOD-062 Industrialist: the per-loader seams (POI state map via registry callback, the
 		// profession's data-driven trade sets, the server-start village pool injection).
+		// MOD-603: the Mirror Concentrator's two-by-two-by-two assembly — same bodies as the Fabric lane.
+		registerTest(event, "concentrator_assembles_in_filled_box", 100, true,
+				dev.alaindustrial.gametest.ConcentratorStructureScenarios::assemblesInTheBoxThatWasFilled);
+		registerTest(event, "concentrator_refuses_incomplete_box", 40, true,
+				dev.alaindustrial.gametest.ConcentratorStructureScenarios::refusesToAssembleWithACellMissing);
+		registerTest(event, "concentrator_breaking_any_cell_disassembles", 120, true,
+				dev.alaindustrial.gametest.ConcentratorStructureScenarios::breakingAnyCellDisassemblesAll);
+		registerTest(event, "concentrator_only_core_carries_energy", 40, true,
+				dev.alaindustrial.gametest.ConcentratorStructureScenarios::onlyTheCoreCarriesEnergy);
+		registerTest(event, "concentrator_any_covered_column_stops", 100, true,
+				dev.alaindustrial.gametest.ConcentratorStructureScenarios::anyCoveredColumnStopsTheMachine);
+		registerTest(event, "concentrator_canonical_mapping", 40, true,
+				dev.alaindustrial.gametest.ConcentratorStructureScenarios::canonicalMappingLandsOnTheCells);
+		registerTest(event, "concentrator_structure_centre", 40, true,
+				dev.alaindustrial.gametest.ConcentratorStructureScenarios::structureCentreMatchesItsCells);
+		registerTest(event, "concentrator_assembly_not_a_downgrade", 40, true,
+				dev.alaindustrial.gametest.ConcentratorStructureScenarios::assembledOutputIsNeverADowngrade);
 		registerTest(event, "industrialist_workbench_poi_mapping", 40, true,
 				dev.alaindustrial.gametest.IndustrialistScenarios::workbenchStateMapsToPoi);
 		registerTest(event, "industrialist_trade_sets_resolve", 40, true,
@@ -591,10 +608,23 @@ public final class NeoForgeGameTests {
 				SolarPanelScenarios::tcSolar001Sta02_rainFlagsWeatherMode);
 		registerTest(event, "solar_thunder_flags_weather_mode", 40, true, RIG_STRUCTURE, true,
 				SolarPanelScenarios::tcSolar001Sta03_thunderFlagsWeatherMode);
+		registerTest(event, "mod602_snow_blacks_out_concentrator_but_not_daylight_panel", 60, true,
+				RIG_STRUCTURE, true,
+				SolarPanelScenarios::mod602_snowBlacksOutConcentratorButNotDaylightPanel);
+		registerTest(event, "mod602_noon_window_lifts_output", 60, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::mod602_noonWindowLiftsOutput);
+		registerTest(event, "mod602_daylight_panel_takes_resonance_chip_only", 40, true,
+				SolarPanelScenarios::mod602_daylightPanelTakesResonanceChipOnly);
+		registerTest(event, "mod602_daylight_panel_evolves_into_concentrator", 60, true, RIG_STRUCTURE,
+				true, SolarPanelScenarios::mod602_daylightPanelEvolvesIntoConcentrator);
 		registerTest(event, "solar_automation_cannot_stack_second_chip", 100, true,
 				SolarPanelScenarios::solarPanel_automationCannotStackSecondChip);
 		registerTest(event, "solar_evolution_consumes_one_chip_not_the_stack", 40, true, RIG_STRUCTURE, true,
 				SolarPanelScenarios::solarPanel_evolutionConsumesOneChipNotTheStack);
+		registerTest(event, "solar_removing_chip_clears_evolution_progress", 60, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::solarPanel_removingChipClearsEvolutionProgress);
+		registerTest(event, "solar_swapping_chip_branch_clears_evolution_progress", 60, true, RIG_STRUCTURE, true,
+				SolarPanelScenarios::solarPanel_swappingChipBranchClearsEvolutionProgress);
 		registerTest(event, "solar_rain_yields_zero_eu", 40, true, RIG_STRUCTURE, true,
 				SolarPanelScenarios::tcSolar001Neg02_rainYieldsZeroEu);
 		registerTest(event, "solar_opaque_block_above_yields_zero", 40, true, RIG_STRUCTURE, true,

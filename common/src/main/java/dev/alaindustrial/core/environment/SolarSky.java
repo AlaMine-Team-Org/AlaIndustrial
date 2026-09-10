@@ -125,4 +125,40 @@ public final class SolarSky {
 		}
 		return classify(level, pos) != Access.BLOCKED;
 	}
+
+	/** A full Minecraft day on the overworld clock. */
+	private static final long DAY_LENGTH = 24000L;
+	/** Sunset on that clock: past this the world is in its night half. */
+	private static final long DUSK = 12000L;
+
+	/**
+	 * Whether the overworld clock says it is day, no matter how dark the storm made the sky (MOD-602).
+	 *
+	 * <p>{@code Level#isBrightOutside()} cannot answer this and was never meant to: a daytime
+	 * thunderstorm pushes sky darkness to 5 and that method turns false. Reading it as "night" is what
+	 * made the day panels report the mode as night at noon. Output during such a storm is honestly
+	 * zero — this predicate only decides what the player is TOLD.
+	 */
+	public static boolean isClockDaytime(Level level) {
+		return Math.floorMod(level.getOverworldClockTime(), DAY_LENGTH) < DUSK;
+	}
+
+	/**
+	 * Whether the Mirror Concentrator (day branch, third rung) is currently producing (MOD-602).
+	 *
+	 * <p>Stricter than {@link #isDaylitActive} in exactly one place: <b>snow silences it</b>. The two
+	 * panels below spread their cells flat and keep a floored trickle under a dusting; this one focuses
+	 * light with mirrors, and a snowed-over mirror reflects nothing. The same verdict drives both the
+	 * ambient hum and the folding wings, so the block never hums with its optics shut or sits open
+	 * earning nothing.
+	 */
+	public static boolean isConcentratorActive(Level level, BlockPos pos) {
+		if (!level.dimension().equals(Level.OVERWORLD) || !level.isBrightOutside()) {
+			return false;
+		}
+		if (classify(level, pos) == Access.BLOCKED) {
+			return false;
+		}
+		return classifyWeather(level, pos) == Weather.NONE;
+	}
 }

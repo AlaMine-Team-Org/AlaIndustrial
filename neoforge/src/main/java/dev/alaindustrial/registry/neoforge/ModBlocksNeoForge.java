@@ -12,6 +12,7 @@ import dev.alaindustrial.block.ComponentRepairBenchBlock;
 import dev.alaindustrial.block.CompressorBlock;
 import dev.alaindustrial.block.CreativeEnergySourceBlock;
 import dev.alaindustrial.block.DaylightSolarPanelBlock;
+import dev.alaindustrial.block.RadiantSolarPanelBlock;
 import dev.alaindustrial.block.DistillationColumnBlock;
 import dev.alaindustrial.block.DistillationColumnMiddleBlock;
 import dev.alaindustrial.block.DistillationColumnTopBlock;
@@ -125,6 +126,8 @@ public final class ModBlocksNeoForge {
 			handle(ContentManifest.MOONLIT_SOLAR_PANEL);
 	public static final DeferredBlock<DaylightSolarPanelBlock> DAYLIGHT_SOLAR_PANEL =
 			handle(ContentManifest.DAYLIGHT_SOLAR_PANEL);
+	public static final DeferredBlock<RadiantSolarPanelBlock> RADIANT_SOLAR_PANEL =
+			handle(ContentManifest.RADIANT_SOLAR_PANEL);
 	public static final DeferredBlock<GeothermalGeneratorBlock> GEOTHERMAL_GENERATOR =
 			handle(ContentManifest.GEOTHERMAL_GENERATOR);
 	public static final DeferredBlock<WaterMillBlock> WATER_MILL = handle(ContentManifest.WATER_MILL);

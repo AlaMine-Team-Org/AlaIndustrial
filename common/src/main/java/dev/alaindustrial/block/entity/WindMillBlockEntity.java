@@ -111,6 +111,8 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 	private int effectiveRate = 0;
 
 	private int evolveProgress;
+	/** Which chip the counter above belongs to; see {@link MachineBlockEntity#saveEvolveChip}. */
+	private int evolveChip = EVOLVE_CHIP_NONE;
 
 	public WindMillBlockEntity(BlockPos pos, BlockState state) {
 		super(ModContent.WIND_MILL_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT, Config.windMillBuffer, MAX_EXTRACT);
@@ -209,6 +211,21 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 		ItemStack chip = items.get(CHIP_SLOT);
 		boolean dayChip = chip.is(ModContent.ALIGNMENT_CHIP_DAY.get());
 		boolean nightChip = chip.is(ModContent.ALIGNMENT_CHIP_NIGHT.get());
+		// Same rule as the solar panel (MOD-601): the counter belongs to the chip that earned it, so
+		// removing the chip or swapping the branch abandons the run. Note the difference from the
+		// environment freezes above — an obstructed or interfered mill KEEPS its progress, because
+		// the chip is still in the slot and the player has not changed their mind about the branch.
+		int chipNow = evolveChipOf(chip);
+		if (chipNow != evolveChip) {
+			// An UNATTRIBUTED counter is adopted, not cleared: that is the state of a save written
+			// before the marker existed, and of a counter seeded directly by a test rig. Only a
+			// counter that already belongs to a chip can be abandoned by removing or swapping it.
+			if (evolveChip != EVOLVE_CHIP_NONE) {
+				evolveProgress = 0;
+			}
+			evolveChip = chipNow;
+			setChanged();
+		}
 		if ((dayChip || nightChip) && sky && !obstructed && !cachedInterfered) {
 			evolveProgress++;
 			if (evolveProgress >= Config.windMillEvolveTicks) {
@@ -377,11 +394,13 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 	protected void saveAdditional(ValueOutput output) {
 		super.saveAdditional(output);
 		saveEvolve(output, evolveProgress);
+		saveEvolveChip(output, evolveChip);
 	}
 
 	@Override
 	protected void loadAdditional(ValueInput input) {
 		super.loadAdditional(input);
 		evolveProgress = loadEvolve(input);
+		evolveChip = loadEvolveChip(input);
 	}
 }

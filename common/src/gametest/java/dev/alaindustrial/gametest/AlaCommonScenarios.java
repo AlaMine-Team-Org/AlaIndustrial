@@ -285,7 +285,12 @@ public final class AlaCommonScenarios {
 			//
 			// MOD-505 adds the greenhouse's glazing on identical grounds: a farm walled in glass that
 			// occluded would cull away the very crystals it exists to show.
-			if (id.getPath().equals("reactor_glass") || id.getPath().equals("crystal_farm_glass")) {
+			// MOD-603 joins them: the concentrator section is a metal cage round a glass core. It fills
+			// its block (the bars reach the boundary, so the shape has to), and it must not occlude —
+			// a section that did would cull away the sections next to it while the player is still
+			// building the machine, and the glass core would show nothing.
+			if (id.getPath().equals("reactor_glass") || id.getPath().equals("crystal_farm_glass")
+					|| id.getPath().equals("concentrator_section")) {
 				continue;
 			}
 			Block block = BuiltInRegistries.BLOCK.getValue(id);

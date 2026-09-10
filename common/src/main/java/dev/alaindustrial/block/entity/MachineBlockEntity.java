@@ -413,6 +413,51 @@ public abstract class MachineBlockEntity extends EnergyBlockEntity implements Wo
 		return input.getIntOr("EvolveProgress", 0);
 	}
 
+	/** No chip is earning the evolution counter right now. */
+	public static final int EVOLVE_CHIP_NONE = 0;
+	/** The counter belongs to a day alignment chip. */
+	public static final int EVOLVE_CHIP_DAY = 1;
+	/** The counter belongs to a night alignment chip. */
+	public static final int EVOLVE_CHIP_NIGHT = 2;
+	/**
+	 * The counter belongs to a resonance chip (MOD-602) — the one chip that serves BOTH branches on
+	 * the second rung, since by then the panel already knows which branch it is.
+	 */
+	public static final int EVOLVE_CHIP_RESONANCE = 3;
+
+	/**
+	 * Which chip the evolution counter belongs to, persisted next to the counter itself.
+	 *
+	 * <p>Without it the counter is anonymous, and an anonymous counter cannot be abandoned: a player
+	 * who pulls the chip out keeps the progress it earned, and one who swaps a day chip for a night
+	 * chip carries progress across the fork the chip is supposed to decide. The slot cannot answer
+	 * this on its own — a swap performed in a single click never leaves it empty for a tick to see.
+	 */
+	protected static void saveEvolveChip(ValueOutput output, int evolveChip) {
+		output.putInt("EvolveChip", evolveChip);
+	}
+
+	/**
+	 * Read the chip marker written by {@link #saveEvolveChip}. Absent in saves written before the
+	 * marker existed; {@link #EVOLVE_CHIP_NONE} there means the first tick simply re-attributes the
+	 * counter to whatever chip is in the slot, which is exactly the old behaviour for that one tick
+	 * and costs an existing player nothing.
+	 */
+	protected static int loadEvolveChip(ValueInput input) {
+		return input.getIntOr("EvolveChip", EVOLVE_CHIP_NONE);
+	}
+
+	/** Classify the stack in an evolution chip slot into one of the {@code EVOLVE_CHIP_*} codes. */
+	protected static int evolveChipOf(ItemStack chip) {
+		if (chip.is(ModContent.ALIGNMENT_CHIP_DAY.get())) {
+			return EVOLVE_CHIP_DAY;
+		}
+		if (chip.is(ModContent.ALIGNMENT_CHIP_NIGHT.get())) {
+			return EVOLVE_CHIP_NIGHT;
+		}
+		return chip.is(ModContent.RESONANCE_CHIP.get()) ? EVOLVE_CHIP_RESONANCE : EVOLVE_CHIP_NONE;
+	}
+
 	// --- Container over `items` ---
 
 	@Override

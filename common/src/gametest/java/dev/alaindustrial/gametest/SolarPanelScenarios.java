@@ -4,6 +4,7 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.AbstractGeneratorBlockEntity;
 import dev.alaindustrial.block.entity.DaylightSolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.MoonlitSolarPanelBlockEntity;
+import dev.alaindustrial.block.entity.RadiantSolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.SolarPanelBlockEntity;
 import dev.alaindustrial.core.energy.EnergyPort;
 import dev.alaindustrial.core.energy.EnergyPortHost;
@@ -134,7 +135,27 @@ public final class SolarPanelScenarios {
 	}
 
 	/**
-	 * A thunderstorm also flags MODE_WEATHER (thunder always co-occurs with rain).
+	 * A storm flags MODE_WEATHER and stops the panel dead.
+	 *
+	 * <p><b>What this scenario does NOT cover, and why it cannot (MOD-602).</b> In a real daytime
+	 * thunderstorm the sky darkens far enough that {@code isBrightOutside()} turns false, and that is
+	 * the case the mode used to answer with "night" at noon. It cannot be staged here, and both
+	 * reasons were measured with a probe run rather than guessed:
+	 *
+	 * <ul>
+	 *   <li>Every scenario in this batch shares ONE {@code ServerLevel}, and weather is global to it.
+	 *       Neighbouring bodies call {@code setClearDay}, which switches rain and thunder off — a probe
+	 *       that set a storm and read the world thirty ticks later found {@code isThundering=false}.
+	 *       Holding a storm across a delay is therefore not possible in this suite.</li>
+	 *   <li>Without a delay the sky cannot darken at all: {@code isBrightOutside()} reads
+	 *       {@code skyDarken}, which {@code updateSkyBrightness()} derives from
+	 *       {@code EnvironmentAttributes.SKY_LIGHT_LEVEL} — an attribute the level folds the weather
+	 *       into on ITS tick, not when a caller flips a flag.</li>
+	 * </ul>
+	 *
+	 * <p>So the daytime-thunder label is verified in the dev client, not here. The rule itself is one
+	 * line in {@code produce()} guarded by {@code SolarSky.isClockDaytime}; if this ever becomes
+	 * testable, the honest shape is a scenario in its own batch, not a delay bolted onto this one.
 	 * Mirrors: SolarPanelGameTest.tcSolar001Sta03_thunderFlagsWeatherMode
 	 */
 	public static void tcSolar001Sta03_thunderFlagsWeatherMode(GameTestHelper helper) {
@@ -146,6 +167,10 @@ public final class SolarPanelScenarios {
 		int mode = panel.getDataAccess().get(3);
 		if (mode != SolarPanelBlockEntity.MODE_WEATHER) {
 			helper.fail("thunderstorm did not flag MODE_WEATHER, got mode " + mode);
+		}
+		if (panel.getDataAccess().get(2) != 0) {
+			helper.fail("a storm must stop a day panel dead, got "
+					+ panel.getDataAccess().get(2) + " EU/t");
 		}
 		helper.succeed();
 	}
@@ -191,6 +216,57 @@ public final class SolarPanelScenarios {
 		ItemStack left = evolved.getItem(SolarPanelBlockEntity.CHIP_SLOT);
 		if (left.getCount() != 7 || !left.is(ModContent.ALIGNMENT_CHIP_DAY.get())) {
 			helper.fail("evolution destroyed the chip stack: expected 7 chips left, got " + left);
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * Pulling the chip out abandons the progress it earned — the counter belongs to the chip, not to
+	 * the block. Before MOD-601 the counter simply froze, so a player could farm most of an evolution,
+	 * take the chip back and keep the progress for free.
+	 */
+	public static void solarPanel_removingChipClearsEvolutionProgress(GameTestHelper helper) {
+		helper.setBlock(POS, ModContent.SOLAR_PANEL.get());
+		setClearDay(helper);
+		SolarPanelBlockEntity panel = panelAt(helper);
+		BlockPos abs = panel.getBlockPos();
+		panel.setItem(SolarPanelBlockEntity.CHIP_SLOT, new ItemStack(ModContent.ALIGNMENT_CHIP_DAY.get()));
+		for (int i = 0; i < 40; i++) {
+			panel.serverTick(helper.getLevel(), abs, helper.getLevel().getBlockState(abs));
+		}
+		if (panel.getEvolveProgressTicks() <= 0) {
+			helper.fail("the day chip earned no progress under a clear sky - the rig is wrong, not the fix");
+		}
+		panel.setItem(SolarPanelBlockEntity.CHIP_SLOT, ItemStack.EMPTY);
+		panel.serverTick(helper.getLevel(), abs, helper.getLevel().getBlockState(abs));
+		if (panel.getEvolveProgressTicks() != 0) {
+			helper.fail("progress survived the chip being removed: " + panel.getEvolveProgressTicks());
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * Swapping a day chip for a night one starts the night run from zero. This is the case the slot
+	 * cannot report by itself: a swap done in a single click never leaves the slot empty for a tick to
+	 * observe, so the counter has to remember which chip earned it.
+	 */
+	public static void solarPanel_swappingChipBranchClearsEvolutionProgress(GameTestHelper helper) {
+		helper.setBlock(POS, ModContent.SOLAR_PANEL.get());
+		setClearDay(helper);
+		SolarPanelBlockEntity panel = panelAt(helper);
+		BlockPos abs = panel.getBlockPos();
+		panel.setItem(SolarPanelBlockEntity.CHIP_SLOT, new ItemStack(ModContent.ALIGNMENT_CHIP_DAY.get()));
+		for (int i = 0; i < 40; i++) {
+			panel.serverTick(helper.getLevel(), abs, helper.getLevel().getBlockState(abs));
+		}
+		int earned = panel.getEvolveProgressTicks();
+		if (earned <= 0) {
+			helper.fail("the day chip earned no progress under a clear sky - the rig is wrong, not the fix");
+		}
+		panel.setItem(SolarPanelBlockEntity.CHIP_SLOT, new ItemStack(ModContent.ALIGNMENT_CHIP_NIGHT.get()));
+		panel.serverTick(helper.getLevel(), abs, helper.getLevel().getBlockState(abs));
+		if (panel.getEvolveProgressTicks() != 0) {
+			helper.fail("day progress carried over to the night chip: " + panel.getEvolveProgressTicks());
 		}
 		helper.succeed();
 	}
@@ -988,6 +1064,151 @@ public final class SolarPanelScenarios {
 			if (panel.getEnergyStorage().getAmount() > Config.solarBuffer) {
 				helper.fail("panel buffer exceeded cap after resuming delivery");
 			}
+		}
+		helper.succeed();
+	}
+
+	// --- Mirror Concentrator, the day branch's third rung (MOD-602) ---
+
+	private static RadiantSolarPanelBlockEntity concentratorAt(GameTestHelper helper) {
+		return helper.getLevel().getBlockEntity(helper.absolutePos(POS))
+				instanceof RadiantSolarPanelBlockEntity p ? p : null;
+	}
+
+	private static DaylightSolarPanelBlockEntity daylightAt(GameTestHelper helper) {
+		return helper.getLevel().getBlockEntity(helper.absolutePos(POS))
+				instanceof DaylightSolarPanelBlockEntity d ? d : null;
+	}
+
+	private static void driveConcentrator(RadiantSolarPanelBlockEntity be, GameTestHelper helper, int ticks) {
+		for (int i = 0; i < ticks; i++) {
+			be.serverTick(helper.getLevel(), be.getBlockPos(), helper.getLevel().getBlockState(be.getBlockPos()));
+		}
+	}
+
+	private static void driveDaylight(DaylightSolarPanelBlockEntity be, GameTestHelper helper, int ticks) {
+		for (int i = 0; i < ticks; i++) {
+			be.serverTick(helper.getLevel(), be.getBlockPos(), helper.getLevel().getBlockState(be.getBlockPos()));
+		}
+	}
+
+	/**
+	 * Snow blacks the concentrator OUT, where the panels below it keep a floored trickle.
+	 *
+	 * <p>That difference is the whole point of the block: flat cells under a dusting still catch
+	 * something, a snowed-over mirror reflects nothing. Both halves are asserted here — a change that
+	 * gave the concentrator the family's 1 EU/t floor back would otherwise stay green.
+	 */
+	public static void mod602_snowBlacksOutConcentratorButNotDaylightPanel(GameTestHelper helper) {
+		helper.setBlock(POS, ModContent.RADIANT_SOLAR_PANEL.get());
+		setClearDay(helper);
+		helper.setBlock(POS.above(), Blocks.SNOW);
+		RadiantSolarPanelBlockEntity concentrator = concentratorAt(helper);
+		driveConcentrator(concentrator, helper, 2);
+		int mode = concentrator.getDataAccess().get(3);
+		int rate = concentrator.getDataAccess().get(2);
+		if (mode != RadiantSolarPanelBlockEntity.MODE_DAY_SNOW) {
+			helper.fail("snow should flag MODE_DAY_SNOW ("
+					+ RadiantSolarPanelBlockEntity.MODE_DAY_SNOW + "), got " + mode);
+		}
+		if (rate != 0) {
+			helper.fail("snow must stop the concentrator dead, got " + rate + " EU/t");
+		}
+
+		helper.setBlock(POS, ModContent.DAYLIGHT_SOLAR_PANEL.get());
+		helper.setBlock(POS.above(), Blocks.SNOW);
+		DaylightSolarPanelBlockEntity daylight = daylightAt(helper);
+		driveDaylight(daylight, helper, 2);
+		if (daylight.getDataAccess().get(2) <= 0) {
+			helper.fail("the daylight panel must keep its trickle under snow, got "
+					+ daylight.getDataAccess().get(2) + " EU/t");
+		}
+		helper.setBlock(POS.above(), Blocks.AIR);
+		helper.succeed();
+	}
+
+	/**
+	 * The noon window lifts output, and outside the window it does not.
+	 *
+	 * <p>Both ends are checked: "noon is higher" alone would also pass for code that lifted output all
+	 * day long.
+	 */
+	public static void mod602_noonWindowLiftsOutput(GameTestHelper helper) {
+		helper.setBlock(POS, ModContent.RADIANT_SOLAR_PANEL.get());
+		var level = helper.getLevel();
+		var server = level.getServer();
+		setClearDay(helper);
+		server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "time set noon");
+		level.updateSkyBrightness();
+		RadiantSolarPanelBlockEntity concentrator = concentratorAt(helper);
+		driveConcentrator(concentrator, helper, 2);
+		int noonMode = concentrator.getDataAccess().get(3);
+		int noonRate = concentrator.getDataAccess().get(2);
+		if (noonMode != RadiantSolarPanelBlockEntity.MODE_DAY_PEAK) {
+			helper.fail("at noon expected MODE_DAY_PEAK ("
+					+ RadiantSolarPanelBlockEntity.MODE_DAY_PEAK + "), got " + noonMode);
+		}
+
+		server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "time set day");
+		level.updateSkyBrightness();
+		driveConcentrator(concentrator, helper, 2);
+		int dayRate = concentrator.getDataAccess().get(2);
+		if (concentrator.getDataAccess().get(3) != RadiantSolarPanelBlockEntity.MODE_DAY) {
+			helper.fail("outside the noon window expected MODE_DAY, got "
+					+ concentrator.getDataAccess().get(3));
+		}
+		if (noonRate <= dayRate) {
+			helper.fail("noon must beat plain day: noon " + noonRate + " EU/t against " + dayRate);
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * The daylight panel takes the resonance chip and refuses an alignment chip.
+	 *
+	 * <p>The refusal is the half that matters: a slot that swallows any chip looks like it is working,
+	 * and the player then waits a day for an evolution that will never come.
+	 */
+	public static void mod602_daylightPanelTakesResonanceChipOnly(GameTestHelper helper) {
+		helper.setBlock(POS, ModContent.DAYLIGHT_SOLAR_PANEL.get());
+		DaylightSolarPanelBlockEntity panel = daylightAt(helper);
+		ItemStack resonance = new ItemStack(ModContent.RESONANCE_CHIP.get());
+		ItemStack alignment = new ItemStack(ModContent.ALIGNMENT_CHIP_DAY.get());
+		if (!panel.canPlaceItemThroughFace(DaylightSolarPanelBlockEntity.CHIP_SLOT, resonance, Direction.UP)) {
+			helper.fail("the daylight panel refused a resonance chip in an empty slot");
+		}
+		if (panel.canPlaceItemThroughFace(DaylightSolarPanelBlockEntity.CHIP_SLOT, alignment, Direction.UP)) {
+			helper.fail("the daylight panel took an alignment chip — that one belongs a rung lower "
+					+ "and evolves nothing here");
+		}
+		panel.setItem(DaylightSolarPanelBlockEntity.CHIP_SLOT, resonance.copy());
+		if (panel.canPlaceItemThroughFace(DaylightSolarPanelBlockEntity.CHIP_SLOT, resonance, Direction.UP)) {
+			helper.fail("automation stacked a second chip into an occupied slot");
+		}
+		helper.succeed();
+	}
+
+	/** The daylight panel grows into the concentrator and carries its stored energy across. */
+	public static void mod602_daylightPanelEvolvesIntoConcentrator(GameTestHelper helper) {
+		helper.setBlock(POS, ModContent.DAYLIGHT_SOLAR_PANEL.get());
+		setClearDay(helper);
+		DaylightSolarPanelBlockEntity panel = daylightAt(helper);
+		panel.setItem(DaylightSolarPanelBlockEntity.CHIP_SLOT,
+				new ItemStack(ModContent.RESONANCE_CHIP.get()));
+		panel.getEnergyStorage().setAmountUntracked(500);
+		// One tick short of the threshold: the transform must land on the next one.
+		panel.setEvolveProgressTicks(Config.solarEvolveTicks - 1);
+		driveDaylight(panel, helper, 2);
+		if (helper.getLevel().getBlockState(helper.absolutePos(POS)).getBlock()
+				!= ModContent.RADIANT_SOLAR_PANEL.get()) {
+			helper.fail("the panel did not become a concentrator at the threshold");
+		}
+		RadiantSolarPanelBlockEntity grown = concentratorAt(helper);
+		if (grown == null) {
+			helper.fail("no concentrator block entity after the transform");
+		}
+		if (grown.getEnergyStorage().getAmount() <= 0) {
+			helper.fail("the transform lost the stored energy");
 		}
 		helper.succeed();
 	}
