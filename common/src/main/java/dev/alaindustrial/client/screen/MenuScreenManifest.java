@@ -124,6 +124,7 @@ public final class MenuScreenManifest {
 			screen(() -> ModContent.TELEPORTER_STATION_MENU.get(), TeleporterStationScreen::new),
 			screen(() -> ModContent.TELEPORTER_REMOTE_MENU.get(), TeleporterRemoteScreen::new),
 			screen(() -> ModContent.DAYLIGHT_SOLAR_PANEL_MENU.get(), DaylightSolarPanelScreen::new),
+			screen(() -> ModContent.RADIANT_SOLAR_PANEL_MENU.get(), RadiantSolarPanelScreen::new),
 			screen(() -> ModContent.GEOTHERMAL_GENERATOR_MENU.get(), GeothermalGeneratorScreen::new),
 			screen(() -> ModContent.PUMP_MENU.get(), PumpScreen::new),
 			screen(() -> ModContent.GARDEN_DRONE_STATION_MENU.get(), GardenDroneStationScreen::new),

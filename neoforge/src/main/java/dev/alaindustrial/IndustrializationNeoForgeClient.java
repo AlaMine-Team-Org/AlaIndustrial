@@ -183,6 +183,7 @@ public final class IndustrializationNeoForgeClient {
 		});
 		modBus.addListener((RegisterGuiLayersEvent event) -> {
 			event.registerAboveAll(Industrialization.id("root_inspection"), dev.alaindustrial.client.render.RootInspection::renderHud);
+			event.registerAboveAll(Industrialization.id("concentrator_assembly"), dev.alaindustrial.client.render.ConcentratorSchematicRenderer::renderHud);
 			// Teleport screen fade (MOD-106) — counterpart to the Fabric HudElementRegistry entry; the
 			// drawing itself is loader-neutral (TeleportFadeHud). Registered before the readouts so they
 			// stay legible over it.

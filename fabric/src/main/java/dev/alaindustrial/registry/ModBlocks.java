@@ -47,6 +47,7 @@ public final class ModBlocks {
 	public static final Block SOLAR_PANEL = handle(ContentManifest.SOLAR_PANEL);
 	public static final Block MOONLIT_SOLAR_PANEL = handle(ContentManifest.MOONLIT_SOLAR_PANEL);
 	public static final Block DAYLIGHT_SOLAR_PANEL = handle(ContentManifest.DAYLIGHT_SOLAR_PANEL);
+	public static final Block RADIANT_SOLAR_PANEL = handle(ContentManifest.RADIANT_SOLAR_PANEL);
 	public static final Block GEOTHERMAL_GENERATOR = handle(ContentManifest.GEOTHERMAL_GENERATOR);
 	public static final Block WATER_MILL = handle(ContentManifest.WATER_MILL);
 	public static final Block WIND_MILL = handle(ContentManifest.WIND_MILL);

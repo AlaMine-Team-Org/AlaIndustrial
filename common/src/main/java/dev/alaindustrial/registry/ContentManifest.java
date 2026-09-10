@@ -2,6 +2,7 @@ package dev.alaindustrial.registry;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.block.AdvancedItemPipeBlock;
 import dev.alaindustrial.block.AlloySmelterBlock;
 import dev.alaindustrial.block.AssemblerBlock;
 import dev.alaindustrial.block.BatteryBoxBlock;
@@ -10,174 +11,161 @@ import dev.alaindustrial.block.CanningMachineBlock;
 import dev.alaindustrial.block.CesuBlock;
 import dev.alaindustrial.block.ChargePadBlock;
 import dev.alaindustrial.block.ComponentRepairBenchBlock;
-import dev.alaindustrial.block.UpgradeTableBlock;
 import dev.alaindustrial.block.CompressorBlock;
-import dev.alaindustrial.block.RecyclerBlock;
+import dev.alaindustrial.block.ConcentratorSectionBlock;
 import dev.alaindustrial.block.CreativeEnergySourceBlock;
+import dev.alaindustrial.block.CrystalFarmControllerBlock;
+import dev.alaindustrial.block.CrystalFarmDoorBlock;
+import dev.alaindustrial.block.CrystalFarmShellBlock;
+import dev.alaindustrial.block.CrystalSeedbedBlock;
 import dev.alaindustrial.block.DaylightSolarPanelBlock;
+import dev.alaindustrial.block.DiamondChestBlock;
 import dev.alaindustrial.block.DistillationColumnBlock;
 import dev.alaindustrial.block.DistillationColumnMiddleBlock;
 import dev.alaindustrial.block.DistillationColumnTopBlock;
 import dev.alaindustrial.block.ElectricFurnaceBlock;
 import dev.alaindustrial.block.ElectricHeaterBlock;
+import dev.alaindustrial.block.ElectrumChestBlock;
 import dev.alaindustrial.block.EnergyCondenserBlock;
 import dev.alaindustrial.block.EnrichedUraniumTorchBlock;
 import dev.alaindustrial.block.EnrichedUraniumWallTorchBlock;
 import dev.alaindustrial.block.ExtractorBlock;
+import dev.alaindustrial.block.FermenterBlock;
 import dev.alaindustrial.block.FluidPipeBlock;
 import dev.alaindustrial.block.FluidTankBlock;
-import dev.alaindustrial.block.FermenterBlock;
+import dev.alaindustrial.block.FuelRodAssemblyBlock;
 import dev.alaindustrial.block.GalvanicBathBlock;
 import dev.alaindustrial.block.GardenDroneStationBlock;
 import dev.alaindustrial.block.GeneratorBlock;
 import dev.alaindustrial.block.GeothermalGeneratorBlock;
-import dev.alaindustrial.block.DiamondChestBlock;
-import dev.alaindustrial.block.ElectrumChestBlock;
 import dev.alaindustrial.block.GoldChestBlock;
 import dev.alaindustrial.block.HighAltitudeWindMillBlock;
 import dev.alaindustrial.block.IncubatorBlock;
+import dev.alaindustrial.block.IncubatorDomeBlock;
+import dev.alaindustrial.block.IronChestBlock;
+import dev.alaindustrial.block.IronFurnaceBlock;
+import dev.alaindustrial.block.IrradiatedSoilBlock;
+import dev.alaindustrial.block.ItemPipeBlock;
+import dev.alaindustrial.block.KokSagyzBlock;
+import dev.alaindustrial.block.KokSagyzRootBlock;
+import dev.alaindustrial.block.LightningRodGeneratorBlock;
+import dev.alaindustrial.block.MaceratorBlock;
 import dev.alaindustrial.block.MobRepellerBlock;
 import dev.alaindustrial.block.MobRepellerHvBlock;
 import dev.alaindustrial.block.MobRepellerMvBlock;
-import dev.alaindustrial.block.IncubatorDomeBlock;
-import dev.alaindustrial.block.IrradiatedSoilBlock;
-import dev.alaindustrial.block.IronChestBlock;
-import dev.alaindustrial.block.IronFurnaceBlock;
-import dev.alaindustrial.block.KokSagyzBlock;
-import dev.alaindustrial.block.entity.KokSagyzRootBlockEntity;
-import dev.alaindustrial.block.KokSagyzRootBlock;
-import dev.alaindustrial.block.AdvancedItemPipeBlock;
-import dev.alaindustrial.block.ItemPipeBlock;
+import dev.alaindustrial.block.ModLiquidBlock;
 import dev.alaindustrial.block.MonitorCoreBlock;
 import dev.alaindustrial.block.MonitorPanelBlock;
-import dev.alaindustrial.block.SmartWireBlock;
-import dev.alaindustrial.block.MaceratorBlock;
 import dev.alaindustrial.block.MoonlitSolarPanelBlock;
-import dev.alaindustrial.block.ModLiquidBlock;
 import dev.alaindustrial.block.OilLiquidBlock;
 import dev.alaindustrial.block.PolymerizerBlock;
 import dev.alaindustrial.block.PumpBlock;
-import dev.alaindustrial.block.RectificationSectionBlock;
-import dev.alaindustrial.block.SawmillBlock;
-import dev.alaindustrial.block.ShieldingChestBlock;
-import dev.alaindustrial.block.SilverChestBlock;
-import dev.alaindustrial.block.SolarPanelBlock;
-import dev.alaindustrial.block.StorageModuleBlock;
-import dev.alaindustrial.block.LightningRodGeneratorBlock;
-import dev.alaindustrial.block.StormWindMillBlock;
-import dev.alaindustrial.block.TeleporterBlock;
-import dev.alaindustrial.block.CrystalFarmControllerBlock;
-import dev.alaindustrial.block.CrystalFarmDoorBlock;
-import dev.alaindustrial.block.CrystalFarmShellBlock;
-import dev.alaindustrial.block.CrystalSeedbedBlock;
-import dev.alaindustrial.block.ReactorShellBlock;
-import dev.alaindustrial.block.SteamNozzleBlock;
-import dev.alaindustrial.block.ReactorLeverBlock;
-import dev.alaindustrial.block.ReactorOutletBlock;
-import dev.alaindustrial.block.ReactorPortBlock;
-import dev.alaindustrial.block.ReactorLampBlock;
-import dev.alaindustrial.block.FuelRodAssemblyBlock;
+import dev.alaindustrial.block.RadiantSolarPanelBlock;
 import dev.alaindustrial.block.ReactorButtonBlock;
 import dev.alaindustrial.block.ReactorControllerBlock;
 import dev.alaindustrial.block.ReactorDoorBlock;
-import dev.alaindustrial.block.ThermalCentrifugeBlock;
+import dev.alaindustrial.block.ReactorLampBlock;
+import dev.alaindustrial.block.ReactorLeverBlock;
+import dev.alaindustrial.block.ReactorOutletBlock;
+import dev.alaindustrial.block.ReactorPortBlock;
+import dev.alaindustrial.block.ReactorShellBlock;
+import dev.alaindustrial.block.RectificationSectionBlock;
+import dev.alaindustrial.block.RecyclerBlock;
+import dev.alaindustrial.block.SawmillBlock;
+import dev.alaindustrial.block.ShieldingChestBlock;
+import dev.alaindustrial.block.SilverChestBlock;
+import dev.alaindustrial.block.SmartWireBlock;
+import dev.alaindustrial.block.SolarPanelBlock;
 import dev.alaindustrial.block.SprinklerBlock;
+import dev.alaindustrial.block.SteamNozzleBlock;
+import dev.alaindustrial.block.StorageModuleBlock;
+import dev.alaindustrial.block.StormWindMillBlock;
+import dev.alaindustrial.block.TeleporterBlock;
+import dev.alaindustrial.block.ThermalCentrifugeBlock;
 import dev.alaindustrial.block.TrellisBlock;
+import dev.alaindustrial.block.UpgradeTableBlock;
 import dev.alaindustrial.block.VulcanizerBlock;
 import dev.alaindustrial.block.WaterMillBlock;
 import dev.alaindustrial.block.WindMillBlock;
 import dev.alaindustrial.block.WorkstationBlock;
-import dev.alaindustrial.block.entity.CreativeEnergySourceBlockEntity;
-import dev.alaindustrial.core.energy.CableType;
+import dev.alaindustrial.block.entity.AlloySmelterBlockEntity;
 import dev.alaindustrial.block.entity.AssemblerBlockEntity;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
-import dev.alaindustrial.block.entity.CesuBlockEntity;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.CanningMachineBlockEntity;
+import dev.alaindustrial.block.entity.CesuBlockEntity;
 import dev.alaindustrial.block.entity.ChargePadBlockEntity;
-import dev.alaindustrial.core.food.CanningMath;
-import dev.alaindustrial.menu.CanningMachineMenu;
-import dev.alaindustrial.menu.CreativeEnergySourceMenu;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.ItemUseAnimation;
-import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.component.Consumable;
-import dev.alaindustrial.block.entity.EnergyCondenserBlockEntity;
 import dev.alaindustrial.block.entity.ComponentRepairBenchBlockEntity;
-import dev.alaindustrial.block.entity.UpgradeTableBlockEntity;
 import dev.alaindustrial.block.entity.CompressorBlockEntity;
-import dev.alaindustrial.block.entity.RecyclerBlockEntity;
+import dev.alaindustrial.block.entity.CreativeEnergySourceBlockEntity;
+import dev.alaindustrial.block.entity.CrystalFarmControllerBlockEntity;
 import dev.alaindustrial.block.entity.DaylightSolarPanelBlockEntity;
+import dev.alaindustrial.block.entity.DiamondChestBlockEntity;
 import dev.alaindustrial.block.entity.DistillationColumnBlockEntity;
 import dev.alaindustrial.block.entity.DistillationColumnSegmentBlockEntity;
 import dev.alaindustrial.block.entity.ElectricFurnaceBlockEntity;
 import dev.alaindustrial.block.entity.ElectricHeaterBlockEntity;
+import dev.alaindustrial.block.entity.ElectrumChestBlockEntity;
+import dev.alaindustrial.block.entity.EnergyCondenserBlockEntity;
 import dev.alaindustrial.block.entity.ExtractorBlockEntity;
+import dev.alaindustrial.block.entity.FermenterBlockEntity;
 import dev.alaindustrial.block.entity.FluidPipeBlockEntity;
 import dev.alaindustrial.block.entity.FluidTankBlockEntity;
-import dev.alaindustrial.block.entity.FermenterBlockEntity;
-import dev.alaindustrial.block.entity.SprinklerBlockEntity;
+import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
 import dev.alaindustrial.block.entity.GalvanicBathBlockEntity;
 import dev.alaindustrial.block.entity.GardenDroneStationBlockEntity;
 import dev.alaindustrial.block.entity.GeneratorBlockEntity;
 import dev.alaindustrial.block.entity.GeothermalGeneratorBlockEntity;
-import dev.alaindustrial.block.entity.DiamondChestBlockEntity;
-import dev.alaindustrial.block.entity.ElectrumChestBlockEntity;
 import dev.alaindustrial.block.entity.GoldChestBlockEntity;
 import dev.alaindustrial.block.entity.HighAltitudeWindMillBlockEntity;
 import dev.alaindustrial.block.entity.IncubatorBlockEntity;
-import dev.alaindustrial.block.entity.MobRepellerBlockEntity;
-import dev.alaindustrial.block.entity.MobRepellerHvBlockEntity;
-import dev.alaindustrial.block.entity.MobRepellerMvBlockEntity;
 import dev.alaindustrial.block.entity.IncubatorMode;
 import dev.alaindustrial.block.entity.IronChestBlockEntity;
 import dev.alaindustrial.block.entity.IronFurnaceBlockEntity;
 import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
+import dev.alaindustrial.block.entity.KokSagyzRootBlockEntity;
+import dev.alaindustrial.block.entity.LightningRodGeneratorBlockEntity;
+import dev.alaindustrial.block.entity.MaceratorBlockEntity;
+import dev.alaindustrial.block.entity.MobRepellerBlockEntity;
+import dev.alaindustrial.block.entity.MobRepellerHvBlockEntity;
+import dev.alaindustrial.block.entity.MobRepellerMvBlockEntity;
 import dev.alaindustrial.block.entity.MonitorCoreBlockEntity;
 import dev.alaindustrial.block.entity.MonitorPanelBlockEntity;
-import dev.alaindustrial.block.entity.SmartWireBlockEntity;
-import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.block.entity.MoonlitSolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.Overclockable;
 import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
 import dev.alaindustrial.block.entity.PumpBlockEntity;
-import dev.alaindustrial.block.entity.SawmillBlockEntity;
-import dev.alaindustrial.block.entity.ShieldingChestBlockEntity;
-import dev.alaindustrial.block.entity.SilverChestBlockEntity;
-import dev.alaindustrial.block.entity.SolarPanelBlockEntity;
-import dev.alaindustrial.block.entity.StorageModuleBlockEntity;
-import dev.alaindustrial.block.entity.LightningRodGeneratorBlockEntity;
-import dev.alaindustrial.block.entity.StormWindMillBlockEntity;
-import dev.alaindustrial.block.entity.TeleporterBlockEntity;
-import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
-import dev.alaindustrial.block.entity.CrystalFarmControllerBlockEntity;
+import dev.alaindustrial.block.entity.RadiantSolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.ReactorControllerBlockEntity;
 import dev.alaindustrial.block.entity.ReactorDoorBlockEntity;
 import dev.alaindustrial.block.entity.ReactorOutletBlockEntity;
-import dev.alaindustrial.core.structure.FuelRodMath;
 import dev.alaindustrial.block.entity.ReactorPortBlockEntity;
+import dev.alaindustrial.block.entity.RecyclerBlockEntity;
+import dev.alaindustrial.block.entity.SawmillBlockEntity;
+import dev.alaindustrial.block.entity.ShieldingChestBlockEntity;
+import dev.alaindustrial.block.entity.SilverChestBlockEntity;
+import dev.alaindustrial.block.entity.SmartWireBlockEntity;
+import dev.alaindustrial.block.entity.SolarPanelBlockEntity;
+import dev.alaindustrial.block.entity.SprinklerBlockEntity;
 import dev.alaindustrial.block.entity.SteamNozzleBlockEntity;
+import dev.alaindustrial.block.entity.StorageModuleBlockEntity;
+import dev.alaindustrial.block.entity.StormWindMillBlockEntity;
+import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
-import dev.alaindustrial.block.entity.AlloySmelterBlockEntity;
+import dev.alaindustrial.block.entity.UpgradeTableBlockEntity;
 import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
 import dev.alaindustrial.block.entity.WorkstationBlockEntity;
+import dev.alaindustrial.core.energy.CableType;
+import dev.alaindustrial.core.food.CanningMath;
+import dev.alaindustrial.core.structure.FuelRodMath;
+import dev.alaindustrial.entity.StockDisplayFrameEntity;
 import dev.alaindustrial.item.CarbonBriquetteItem;
+import dev.alaindustrial.item.assembler.AssemblyBlueprintItem;
 import dev.alaindustrial.item.energy.BatteryItem;
 import dev.alaindustrial.item.energy.CrystalBlankItem;
 import dev.alaindustrial.item.energy.CrystalTier;
-import dev.alaindustrial.item.misc.DurableComponentItem;
-import dev.alaindustrial.item.misc.HintItem;
-import dev.alaindustrial.item.misc.MutationChipItem;
-import dev.alaindustrial.item.misc.OverclockerChipItem;
-import dev.alaindustrial.item.misc.ShieldingPouchItem;
-import dev.alaindustrial.item.misc.SoulVesselItem;
-import dev.alaindustrial.item.teleport.RtpChipItem;
-import dev.alaindustrial.entity.StockDisplayFrameEntity;
-import dev.alaindustrial.item.assembler.AssemblyBlueprintItem;
 import dev.alaindustrial.item.energy.PouchItem;
 import dev.alaindustrial.item.fluid.FilledCapsuleItem;
 import dev.alaindustrial.item.fluid.FluidTankBlockItem;
@@ -185,10 +173,17 @@ import dev.alaindustrial.item.fluid.VacuumCapsuleItem;
 import dev.alaindustrial.item.material.ModArmorMaterials;
 import dev.alaindustrial.item.material.ModToolMaterials;
 import dev.alaindustrial.item.material.TemperedIronToolStats;
+import dev.alaindustrial.item.misc.DurableComponentItem;
 import dev.alaindustrial.item.misc.FluidPipeBlockItem;
 import dev.alaindustrial.item.misc.GuideBookItem;
+import dev.alaindustrial.item.misc.HintItem;
 import dev.alaindustrial.item.misc.ItemPipeBlockItem;
+import dev.alaindustrial.item.misc.MutationChipItem;
+import dev.alaindustrial.item.misc.OverclockerChipItem;
+import dev.alaindustrial.item.misc.ShieldingPouchItem;
+import dev.alaindustrial.item.misc.SoulVesselItem;
 import dev.alaindustrial.item.misc.StockDisplayFrameItem;
+import dev.alaindustrial.item.teleport.RtpChipItem;
 import dev.alaindustrial.item.teleport.TeleporterRemoteItem;
 import dev.alaindustrial.item.tool.ElectricChainsawDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricChainsawItem;
@@ -196,68 +191,71 @@ import dev.alaindustrial.item.tool.ElectricDrillDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
 import dev.alaindustrial.item.tool.ElectricDrillNetheriteTipItem;
 import dev.alaindustrial.item.tool.ElectricSaberItem;
+import dev.alaindustrial.item.tool.GeigerCounterItem;
 import dev.alaindustrial.item.tool.MagnetItem;
 import dev.alaindustrial.item.tool.MagnetTier;
 import dev.alaindustrial.item.tool.NetworkAnalyzerItem;
 import dev.alaindustrial.item.tool.ScytheItem;
 import dev.alaindustrial.item.tool.ScytheTier;
 import dev.alaindustrial.item.tool.ScytheTiers;
-import dev.alaindustrial.item.tool.GeigerCounterItem;
 import dev.alaindustrial.item.tool.WindGaugeItem;
 import dev.alaindustrial.item.tool.WrenchItem;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
 import dev.alaindustrial.item.wearable.FluxweaveArmorItem;
 import dev.alaindustrial.item.wearable.JetpackItem;
+import dev.alaindustrial.menu.AlloySmelterMenu;
 import dev.alaindustrial.menu.AssemblerMenu;
 import dev.alaindustrial.menu.BatteryBoxMenu;
-import dev.alaindustrial.menu.EnergyCondenserMenu;
+import dev.alaindustrial.menu.CanningMachineMenu;
 import dev.alaindustrial.menu.CesuMenu;
 import dev.alaindustrial.menu.ChargePadMenu;
-import dev.alaindustrial.menu.ElectricHeaterMenu;
 import dev.alaindustrial.menu.ComponentRepairBenchMenu;
-import dev.alaindustrial.menu.UpgradeTableMenu;
 import dev.alaindustrial.menu.CompressorMenu;
-import dev.alaindustrial.menu.RecyclerMenu;
+import dev.alaindustrial.menu.CreativeEnergySourceMenu;
 import dev.alaindustrial.menu.DaylightSolarPanelMenu;
+import dev.alaindustrial.menu.DiamondChestMenu;
 import dev.alaindustrial.menu.DistillationColumnMenu;
 import dev.alaindustrial.menu.DoubleChestMenu;
 import dev.alaindustrial.menu.ElectricFurnaceMenu;
+import dev.alaindustrial.menu.ElectricHeaterMenu;
+import dev.alaindustrial.menu.ElectrumChestMenu;
+import dev.alaindustrial.menu.EnergyCondenserMenu;
 import dev.alaindustrial.menu.ExtractorMenu;
+import dev.alaindustrial.menu.FermenterMenu;
+import dev.alaindustrial.menu.GalvanicBathMenu;
+import dev.alaindustrial.menu.GardenDroneStationMenu;
 import dev.alaindustrial.menu.GeneratorMenu;
 import dev.alaindustrial.menu.GeothermalGeneratorMenu;
-import dev.alaindustrial.menu.DiamondChestMenu;
-import dev.alaindustrial.menu.ElectrumChestMenu;
 import dev.alaindustrial.menu.GoldChestMenu;
 import dev.alaindustrial.menu.HighAltitudeWindMillMenu;
-import dev.alaindustrial.menu.IronChestMenu;
-import dev.alaindustrial.menu.StorageMenu3;
-import dev.alaindustrial.menu.StorageMenu6;
-import dev.alaindustrial.menu.MaceratorMenu;
-import dev.alaindustrial.menu.MoonlitSolarPanelMenu;
-import dev.alaindustrial.menu.PolymerizerMenu;
-import dev.alaindustrial.menu.GardenDroneStationMenu;
-import dev.alaindustrial.menu.PumpMenu;
 import dev.alaindustrial.menu.IncubatorMenu;
+import dev.alaindustrial.menu.IronChestMenu;
+import dev.alaindustrial.menu.LightningRodGeneratorMenu;
+import dev.alaindustrial.menu.MaceratorMenu;
 import dev.alaindustrial.menu.MobRepellerHvMenu;
 import dev.alaindustrial.menu.MobRepellerMenu;
 import dev.alaindustrial.menu.MobRepellerMvMenu;
+import dev.alaindustrial.menu.MoonlitSolarPanelMenu;
+import dev.alaindustrial.menu.PolymerizerMenu;
+import dev.alaindustrial.menu.PumpMenu;
+import dev.alaindustrial.menu.RadiantSolarPanelMenu;
+import dev.alaindustrial.menu.ReactorControllerMenu;
+import dev.alaindustrial.menu.RecyclerMenu;
 import dev.alaindustrial.menu.SawmillMenu;
 import dev.alaindustrial.menu.ShieldingChestMenu;
 import dev.alaindustrial.menu.SilverChestMenu;
 import dev.alaindustrial.menu.SolarPanelMenu;
-import dev.alaindustrial.menu.LightningRodGeneratorMenu;
+import dev.alaindustrial.menu.SprinklerMenu;
+import dev.alaindustrial.menu.StorageMenu3;
+import dev.alaindustrial.menu.StorageMenu6;
 import dev.alaindustrial.menu.StormWindMillMenu;
 import dev.alaindustrial.menu.TeleporterRemoteMenu;
 import dev.alaindustrial.menu.TeleporterStationMenu;
-import dev.alaindustrial.menu.ReactorControllerMenu;
 import dev.alaindustrial.menu.ThermalCentrifugeMenu;
+import dev.alaindustrial.menu.UpgradeTableMenu;
+import dev.alaindustrial.menu.VulcanizerMenu;
 import dev.alaindustrial.menu.WaterMillMenu;
 import dev.alaindustrial.menu.WindMillMenu;
-import dev.alaindustrial.menu.AlloySmelterMenu;
-import dev.alaindustrial.menu.VulcanizerMenu;
-import dev.alaindustrial.menu.FermenterMenu;
-import dev.alaindustrial.menu.SprinklerMenu;
-import dev.alaindustrial.menu.GalvanicBathMenu;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -268,29 +266,32 @@ import java.util.function.Function;
 import java.util.function.IntSupplier;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.SmithingTemplateItem;
-import net.minecraft.core.Direction;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.HoeItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.ShovelItem;
+import net.minecraft.world.item.SmithingTemplateItem;
 import net.minecraft.world.item.StandingAndWallBlockItem;
+import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.item.equipment.ArmorMaterial;
 import net.minecraft.world.item.equipment.ArmorType;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.FlowingFluid;
-import org.jetbrains.annotations.Nullable;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
@@ -298,8 +299,11 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Loader-neutral content manifest (MOD-190). The single ordered list of the mod's registrable content,
@@ -401,6 +405,7 @@ public final class ContentManifest {
 			menu("teleporter_station", TeleporterStationMenu::new, s -> ModContent.TELEPORTER_STATION_MENU = s),
 			menu("teleporter_remote", TeleporterRemoteMenu::new, s -> ModContent.TELEPORTER_REMOTE_MENU = s),
 			menu("daylight_solar_panel", DaylightSolarPanelMenu::new, s -> ModContent.DAYLIGHT_SOLAR_PANEL_MENU = s),
+			menu("radiant_solar_panel", RadiantSolarPanelMenu::new, s -> ModContent.RADIANT_SOLAR_PANEL_MENU = s),
 			menu("geothermal_generator", GeothermalGeneratorMenu::new, s -> ModContent.GEOTHERMAL_GENERATOR_MENU = s),
 			menu("pump", PumpMenu::new, s -> ModContent.PUMP_MENU = s),
 			menu("garden_drone_station", GardenDroneStationMenu::new,
@@ -493,6 +498,13 @@ public final class ContentManifest {
 			block("moonlit_solar_panel", MoonlitSolarPanelBlock::new, s -> ModContent.MOONLIT_SOLAR_PANEL = s);
 	public static final BlockDef<DaylightSolarPanelBlock> DAYLIGHT_SOLAR_PANEL =
 			block("daylight_solar_panel", DaylightSolarPanelBlock::new, s -> ModContent.DAYLIGHT_SOLAR_PANEL = s);
+	/** MOD-602 — the day branch's third rung, grown from the daylight panel. */
+	public static final BlockDef<RadiantSolarPanelBlock> RADIANT_SOLAR_PANEL =
+			block("radiant_solar_panel", RadiantSolarPanelBlock::new, s -> ModContent.RADIANT_SOLAR_PANEL = s);
+
+	/** Filler cell of the assembled Mirror Concentrator (MOD-603) — inert on its own. */
+	public static final BlockDef<ConcentratorSectionBlock> CONCENTRATOR_SECTION =
+			block("concentrator_section", ConcentratorSectionBlock::new, s -> ModContent.CONCENTRATOR_SECTION = s);
 	public static final BlockDef<GeothermalGeneratorBlock> GEOTHERMAL_GENERATOR =
 			block("geothermal_generator", GeothermalGeneratorBlock::new, s -> ModContent.GEOTHERMAL_GENERATOR = s);
 	public static final BlockDef<WaterMillBlock> WATER_MILL =
@@ -822,7 +834,9 @@ public final class ContentManifest {
 	 * fields already declared textually above it (otherwise "illegal forward reference").
 	 */
 	public static final List<BlockDef<?>> BLOCKS = List.of(
-			GENERATOR, SOLAR_PANEL, MOONLIT_SOLAR_PANEL, DAYLIGHT_SOLAR_PANEL, GEOTHERMAL_GENERATOR,
+			GENERATOR, SOLAR_PANEL, MOONLIT_SOLAR_PANEL, DAYLIGHT_SOLAR_PANEL, RADIANT_SOLAR_PANEL,
+			CONCENTRATOR_SECTION,
+			GEOTHERMAL_GENERATOR,
 			WATER_MILL, WIND_MILL, HIGH_ALTITUDE_WIND_MILL, STORM_WIND_MILL, PUMP, GARDEN_DRONE_STATION,
 			FLUID_TANK, COPPER_CABLE, TIN_CABLE, GOLD_CABLE, ELECTRUM_CABLE, INSULATED_COPPER_CABLE,
 			INSULATED_TIN_CABLE, INSULATED_GOLD_CABLE, INSULATED_ELECTRUM_CABLE, ITEM_PIPE,
@@ -901,6 +915,12 @@ public final class ContentManifest {
 			Map.entry("solar_panel", machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.GLASS).noOcclusion())),
 			Map.entry("moonlit_solar_panel", machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.GLASS).noOcclusion())),
 			Map.entry("daylight_solar_panel", machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.GLASS).noOcclusion())),
+			// MOD-602 — a raised collector with folding wings, nowhere near a full cube, so noOcclusion is
+			// mandatory (R-PHY-05). Metal rather than glass: most of what you touch is the chassis.
+			Map.entry("radiant_solar_panel", machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL).noOcclusion())),
+			// Seven of its eight states are thin slices of the structure, so it must not occlude; the
+			// loose state is inset by a pixel for the same reason (R-PHY-05 wants the two to agree).
+			Map.entry("concentrator_section", machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL).noOcclusion())),
 			Map.entry("geothermal_generator", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
 					.lightLevel(ModBlockProperties::litLight))),
 			Map.entry("water_mill", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
@@ -1482,6 +1502,9 @@ public final class ContentManifest {
 				"item.alaindustrial.rtp_chip.hint2"), s -> ModContent.RTP_CHIP = s),
 			plain("alignment_chip_day", s -> ModContent.ALIGNMENT_CHIP_DAY = s),
 			plain("alignment_chip_night", s -> ModContent.ALIGNMENT_CHIP_NIGHT = s),
+			// MOD-602 — one chip for BOTH solar branches: the panel already knows whether it is a day
+			// or a night one, so a second line of crafting would only cost the player bench space.
+			plain("resonance_chip", s -> ModContent.RESONANCE_CHIP = s),
 			// Upgrade chips (MOD-080): empty blank + the mute upgrade. Each shows a gray hint line.
 			hint("empty_chip", s -> ModContent.EMPTY_CHIP = s),
 			// Incubator (MOD-118): mode chips, by-products and the tier-1 evolution materials.
@@ -1831,6 +1854,8 @@ public final class ContentManifest {
 			blockItem("solar_panel", s -> ModContent.SOLAR_PANEL_ITEM = s),
 			blockItem("moonlit_solar_panel", s -> ModContent.MOONLIT_SOLAR_PANEL_ITEM = s),
 			blockItem("daylight_solar_panel", s -> ModContent.DAYLIGHT_SOLAR_PANEL_ITEM = s),
+			blockItem("radiant_solar_panel", s -> ModContent.RADIANT_SOLAR_PANEL_ITEM = s),
+			blockItem("concentrator_section", s -> ModContent.CONCENTRATOR_SECTION_ITEM = s),
 			blockItem("copper_cable", s -> ModContent.COPPER_CABLE_ITEM = s),
 			blockItem("tin_cable", s -> ModContent.TIN_CABLE_ITEM = s),
 			blockItem("gold_cable", s -> ModContent.GOLD_CABLE_ITEM = s),
@@ -2104,6 +2129,7 @@ public final class ContentManifest {
 			blockEntity("solar_panel", SolarPanelBlockEntity.class, SolarPanelBlockEntity::new, s -> ModContent.SOLAR_PANEL_BE = s, "solar_panel"),
 			blockEntity("moonlit_solar_panel", MoonlitSolarPanelBlockEntity.class, MoonlitSolarPanelBlockEntity::new, s -> ModContent.MOONLIT_SOLAR_PANEL_BE = s, "moonlit_solar_panel"),
 			blockEntity("daylight_solar_panel", DaylightSolarPanelBlockEntity.class, DaylightSolarPanelBlockEntity::new, s -> ModContent.DAYLIGHT_SOLAR_PANEL_BE = s, "daylight_solar_panel"),
+			blockEntity("radiant_solar_panel", RadiantSolarPanelBlockEntity.class, RadiantSolarPanelBlockEntity::new, s -> ModContent.RADIANT_SOLAR_PANEL_BE = s, "radiant_solar_panel"),
 			blockEntity("copper_cable", CableBlockEntity.class, CableBlockEntity::new, s -> ModContent.COPPER_CABLE_BE = s, "copper_cable", "tin_cable", "gold_cable", "electrum_cable", "insulated_copper_cable", "insulated_tin_cable", "insulated_gold_cable", "insulated_electrum_cable"),
 			blockEntity("item_pipe", ItemPipeBlockEntity.class, ItemPipeBlockEntity::new,
 					s -> ModContent.ITEM_PIPE_BE = s, "item_pipe", "item_pipe_advanced"),

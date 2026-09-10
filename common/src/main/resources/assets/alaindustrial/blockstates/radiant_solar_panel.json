@@ -1,0 +1,31 @@
+{
+  "variants": {
+    "assembled=false,facing=south": {
+      "model": "alaindustrial:block/radiant_solar_panel"
+    },
+    "assembled=true,facing=south": {
+      "model": "alaindustrial:block/radiant_solar_panel_core",
+      "y": 180
+    },
+    "assembled=false,facing=west": {
+      "model": "alaindustrial:block/radiant_solar_panel"
+    },
+    "assembled=true,facing=west": {
+      "model": "alaindustrial:block/radiant_solar_panel_core",
+      "y": 270
+    },
+    "assembled=false,facing=north": {
+      "model": "alaindustrial:block/radiant_solar_panel"
+    },
+    "assembled=true,facing=north": {
+      "model": "alaindustrial:block/radiant_solar_panel_core"
+    },
+    "assembled=false,facing=east": {
+      "model": "alaindustrial:block/radiant_solar_panel"
+    },
+    "assembled=true,facing=east": {
+      "model": "alaindustrial:block/radiant_solar_panel_core",
+      "y": 90
+    }
+  }
+}

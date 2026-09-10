@@ -7,6 +7,7 @@ import dev.alaindustrial.registry.ModContent;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
+import java.util.List;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -106,6 +107,19 @@ public class SolarPanelScreen extends MachineScreen<SolarPanelMenu> {
                 x + 30, y + 34, GuiStyle.TEXT, false);
         graphics.text(this.font, Component.translatable("gui.alaindustrial.mode", modeLabel(mode)),
                 x + 30, y + 46, GuiStyle.TEXT_DIM, false);
+    }
+
+    /**
+     * The chip slot answers "what goes here" by itself: an empty slot shows a translucent chip.
+     * Both chips are equally valid answers — the slot is the fork between the day branch and the
+     * night one — so the hint cycles between them rather than freezing on one and reading as
+     * "only this one fits".
+     */
+    @Override
+    protected void drawGhostHints(GuiGraphicsExtractor graphics) {
+        ghostHint(graphics, SolarPanelBlockEntity.CHIP_SLOT,
+                cyclingHint(List.of(ModContent.ALIGNMENT_CHIP_DAY.get(),
+                        ModContent.ALIGNMENT_CHIP_NIGHT.get())));
     }
 
     private static Component modeLabel(int mode) {

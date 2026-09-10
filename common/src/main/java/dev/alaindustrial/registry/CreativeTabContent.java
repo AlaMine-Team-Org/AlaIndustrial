@@ -405,6 +405,7 @@ public final class CreativeTabContent {
 		show(out, ModContent.RTP_CHIP);
 		show(out, ModContent.ALIGNMENT_CHIP_DAY);
 		show(out, ModContent.ALIGNMENT_CHIP_NIGHT);
+		show(out, ModContent.RESONANCE_CHIP);
 		show(out, ModContent.EMPTY_CHIP);
 		show(out, ModContent.MUTE_CHIP);
 		show(out, ModContent.STATS_CHIP);
@@ -621,6 +622,10 @@ public final class CreativeTabContent {
 		show(out, ModContent.EMPTY_CHIP);
 		show(out, ModContent.ALIGNMENT_CHIP_DAY);
 		show(out, ModContent.ALIGNMENT_CHIP_NIGHT);
+		// MOD-602: the second-tier evolution chip belongs beside the two that precede it — it was in
+		// the flat list from the start, but not in this group, which is where a player looking for a
+		// chip actually looks.
+		show(out, ModContent.RESONANCE_CHIP);
 		show(out, ModContent.MUTATION_CHIP_TRANSFORM);
 		show(out, ModContent.MUTATION_CHIP_DUPLICATE);
 		show(out, ModContent.MUTATION_CHIP_CREATE);
@@ -879,6 +884,8 @@ public final class CreativeTabContent {
 		// --- shaped: the panels draw a flat GUI sprite of their own, the rod is a mast.
 		show(out, ModContent.SOLAR_PANEL_ITEM);
 		show(out, ModContent.DAYLIGHT_SOLAR_PANEL_ITEM);
+		show(out, ModContent.RADIANT_SOLAR_PANEL_ITEM);
+		show(out, ModContent.CONCENTRATOR_SECTION_ITEM);
 		show(out, ModContent.MOONLIT_SOLAR_PANEL_ITEM);
 		show(out, ModContent.LIGHTNING_ROD_GENERATOR_ITEM);
 	}

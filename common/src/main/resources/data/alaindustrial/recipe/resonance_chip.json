@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "SPS",
+    "EDE",
+    "GCG"
+  ],
+  "key": {
+    "S": "alaindustrial:resonant_shard",
+    "P": "alaindustrial:spatial_crystal",
+    "E": "alaindustrial:electrum_reinforced_plate",
+    "D": "alaindustrial:alignment_chip_day",
+    "G": "alaindustrial:silver_gear",
+    "C": "alaindustrial:energy_crystal"
+  },
+  "result": {
+    "id": "alaindustrial:resonance_chip",
+    "count": 1
+  }
+}

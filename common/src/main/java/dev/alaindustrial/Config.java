@@ -56,6 +56,38 @@ public final class Config {
 	@Knob(section = Section.GENERATORS, min = 0,
 			doc = "Evolved daylight-panel output in EU/t during the day.")
 	public static int daylightEuPerTick = 4;
+
+	/**
+	 * Mirror Concentrator output in EU/t during the day, before the noon window lifts it by half
+	 * (MOD-602). Twice the daylight panel, the same step the wind mill takes between its tiers, and
+	 * still under the water mill once a full day is averaged out.
+	 */
+	@Knob(section = Section.GENERATORS, min = 0,
+			doc = "Mirror Concentrator output in EU/t during the day, before the noon peak.")
+	public static int radiantEuPerTick = 8;
+
+	/**
+	 * Mirror Concentrator output in EU/t once seven sections have grown it into the two-by-two-by-two
+	 * structure (MOD-603), before the noon window lifts it by half.
+	 *
+	 * <p><b>The same figure as the one-block form, and that is the design, not an oversight.</b>
+	 * Assembling is a change of SHAPE, not a rung of the ladder: the concentrator is drawn as a large
+	 * installation, and the structure is that installation at its proper size. The owner chose this
+	 * deliberately over making it stronger — the solar branch already steps 1, 4, 8, and hanging a
+	 * fourth rung off a building step would let a player skip the tier that step belongs to.
+	 *
+	 * <p>So the seven sections buy appearance, not power, and a player who only wants energy is
+	 * better off with four separate panels on the same ground — they would make four times as much.
+	 * That is stated here rather than hidden because it is exactly the kind of number a later reader
+	 * would "fix" as a bug.
+	 *
+	 * <p>The knob stays separate from {@link #radiantEuPerTick} even at the same value: it is the one
+	 * place a future balance pass can make the structure worth building without touching the block
+	 * every player already has.
+	 */
+	@Knob(section = Section.GENERATORS, min = 0,
+			doc = "Assembled Mirror Concentrator output in EU/t during the day, before the noon peak.")
+	public static int radiantAssembledEuPerTick = 8;
 	@Knob(section = Section.GENERATORS, min = 0,
 			doc = "Evolved moonlit-panel output in EU/t at night under clear sky.")
 	public static int moonlitEuPerTick = 3;
@@ -660,6 +692,11 @@ public final class Config {
 	@Knob(section = Section.GENERATORS, min = 1,
 			doc = "Solar panel EU buffer. Applies to newly placed blocks.")
 	public static int solarBuffer = 8000;
+
+	/** Mirror Concentrator buffer (MOD-602) — twice the panels below it. */
+	@Knob(section = Section.GENERATORS, min = 1,
+			doc = "Mirror Concentrator EU buffer. Applies to newly placed blocks.")
+	public static int radiantBuffer = 16000;
 	/**
 	 * Per-cable working EU buffer (MOD-070). A cable is a real transport segment with a small live
 	 * buffer: energy flows segment-to-segment through these buffers (inertia) instead of teleporting

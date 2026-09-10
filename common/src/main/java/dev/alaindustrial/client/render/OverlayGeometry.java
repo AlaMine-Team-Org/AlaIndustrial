@@ -209,6 +209,18 @@ final class OverlayGeometry {
 	 * <p>Any colour with {@code alpha < 255} is routed to vanilla's translucent gizmo group
 	 * automatically, so the fill needs no extra setup here.
 	 */
+	/**
+	 * Just the six faces of a box, with no wireframe.
+	 *
+	 * <p>For ghosts built out of MANY small boxes — the concentrator's assembly schematic draws a
+	 * whole section's cage per cell — where outlining every one of them would turn the shape into a
+	 * thicket of lines and hide the very silhouette it is meant to show.
+	 */
+	static void addBoxFill(DrawableGizmoPrimitives gizmos, AABB box, int color) {
+		addBox(gizmos, box.getCenter(), box.getXsize() / 2, box.getYsize() / 2, box.getZsize() / 2,
+				color);
+	}
+
 	public static void addBoxOutline(DrawableGizmoPrimitives gizmos, AABB box, int fillColor,
 			int edgeColor, float edgeWidth) {
 		Vec3 center = box.getCenter();

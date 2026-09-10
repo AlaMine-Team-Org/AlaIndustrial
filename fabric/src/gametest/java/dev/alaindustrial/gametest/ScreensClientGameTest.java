@@ -130,6 +130,7 @@ public class ScreensClientGameTest implements FabricClientGameTest {
             // and only through data injection. Listed here so it is opened the real way like the rest.
             new Screen("geothermal_generator", "geothermal_generator", "Geothermal Generator"),
             new Screen("daylight_solar_panel", "daylight_solar_panel", "Daylight Solar Panel"),
+            new Screen("radiant_solar_panel", "radiant_solar_panel", "Mirror Concentrator"),
             new Screen("pump", "pump", "Pump"),
             new Screen("garden_drone_station", "garden_drone_station", "Garden Drone Station"),
             new Screen("water_mill", "water_mill", "Water Mill"),
