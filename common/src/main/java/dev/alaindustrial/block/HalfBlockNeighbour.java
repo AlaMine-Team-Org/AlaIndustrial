@@ -29,9 +29,17 @@ public final class HalfBlockNeighbour {
 	 * Whether the block at {@code neighborPos} is low enough to take a dropped arm. Empty shapes
 	 * (air, fluids) are not low: there is nothing there to hug. {@link LevelReader} extends
 	 * {@link BlockGetter}, so it satisfies {@link BlockState#getShape(BlockGetter, BlockPos)}.
+	 *
+	 * <p>A block that asks a cable to carry its arm on past the cell edge ({@link CableArmReach},
+	 * MOD-609) is met low too, whatever its height: its housing starts at the base, set back from the
+	 * edge, and the dropped sleeve is what meets it there — the way a slab is met.
 	 */
 	public static boolean isLow(LevelReader level, BlockPos neighborPos) {
-		VoxelShape shape = level.getBlockState(neighborPos).getShape(level, neighborPos);
+		BlockState state = level.getBlockState(neighborPos);
+		if (state.getBlock() instanceof CableArmReach reach && !reach.cableArmReach(state).isEmpty()) {
+			return true;
+		}
+		VoxelShape shape = state.getShape(level, neighborPos);
 		return !shape.isEmpty() && shape.bounds().maxY <= LOW_NEIGHBOUR_THRESHOLD;
 	}
 }

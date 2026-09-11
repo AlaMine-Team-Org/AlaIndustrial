@@ -1,6 +1,7 @@
 package dev.alaindustrial.block;
 
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -234,6 +235,45 @@ public final class ConcentratorStructure {
 			return null;
 		}
 		return pos.subtract(part.worldOffset(facing));
+	}
+
+	/**
+	 * The core whose energy a cell offers through {@code face}, or {@code null} when that face offers
+	 * none (MOD-608).
+	 *
+	 * <p>The whole bottom tier is the machine's socket: any face of a bottom cell that leads OUT of the
+	 * structure — its outward sides and its underside — reaches the core. The top tier carries the
+	 * mirrors, and the owner ruled that a cable does not attach there. A face pointing at another cell
+	 * answers {@code null} too: nothing can stand there but the structure itself, and answering the core
+	 * would let the core find its own port next door and count itself as a neighbour.
+	 */
+	@Nullable
+	public static BlockPos energyHostThrough(BlockState state, BlockPos pos, Direction face) {
+		ConcentratorPart part = partOf(state);
+		Direction facing = assembledFacing(state);
+		if (part == null || facing == null) {
+			return null;
+		}
+		Vec3i cell = part.canonicalOffset();
+		if (cell == null || cell.getY() != 0 || neighbourPart(part, facing, face) != null) {
+			return null;
+		}
+		return pos.subtract(part.worldOffset(facing));
+	}
+
+	/**
+	 * How a cable arm meeting this cell continues into it, or nothing (MOD-609).
+	 *
+	 * <p>The bottom tier is the machine's socket, and its housing stands back from the cell edge: a
+	 * cable meets it low, the way it meets a solar panel, and carries the dropped sleeve on until it
+	 * touches the base step and the housing. The bands are measured from the model by the asset
+	 * generator. The top tier takes no cable and a loose section is a full casing, so both answer
+	 * nothing.
+	 */
+	public static List<CableArmReach.Band> cableArmReach(BlockState state) {
+		ConcentratorPart part = partOf(state);
+		Vec3i cell = part == null ? null : part.canonicalOffset();
+		return cell != null && cell.getY() == 0 ? ConcentratorCellGeometry.CABLE_ARM_BANDS : List.of();
 	}
 
 	/** Every cell position of the structure anchored at {@code core}, the core included. */

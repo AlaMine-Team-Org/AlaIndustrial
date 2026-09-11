@@ -3,6 +3,7 @@ package dev.alaindustrial.block;
 import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.RadiantSolarPanelBlockEntity;
 import dev.alaindustrial.core.environment.SolarSky;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -46,7 +47,7 @@ import org.jspecify.annotations.Nullable;
  * a volume no honest hitbox could follow. The machine — model, mirrors and all — belongs to the
  * assembled structure.
  */
-public class RadiantSolarPanelBlock extends AbstractSolarPanelBlock {
+public class RadiantSolarPanelBlock extends AbstractSolarPanelBlock implements CableArmReach {
 	public static final MapCodec<RadiantSolarPanelBlock> CODEC = simpleCodec(RadiantSolarPanelBlock::new);
 
 	/** True once seven sections have closed around this block and it drives the whole structure. */
@@ -101,6 +102,16 @@ public class RadiantSolarPanelBlock extends AbstractSolarPanelBlock {
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		return new RadiantSolarPanelBlockEntity(pos, state);
+	}
+
+	/**
+	 * Assembled, the core is a bottom-tier cell like the sections around it and a cable reaches in to
+	 * its housing (MOD-609). Standing alone it is a full-width slab, met at the edge like the panels
+	 * it grew from — {@link ConcentratorStructure#cableArmReach} answers nothing for it.
+	 */
+	@Override
+	public List<CableArmReach.Band> cableArmReach(BlockState state) {
+		return ConcentratorStructure.cableArmReach(state);
 	}
 
 	/**

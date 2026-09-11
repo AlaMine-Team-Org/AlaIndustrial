@@ -1,6 +1,7 @@
 package dev.alaindustrial.core.energy;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -31,8 +32,16 @@ import net.minecraft.core.Direction;
  * <p>Package-private — part of the {@code EnergyNetwork} implementation; not a public API.
  */
 final class EnergyLineDistributor {
-	/** A live producer endpoint resolved for this tick: its pos (for self-churn checks) and storage. */
-	record LiveProducer(BlockPos pos, EnergyPort storage) {
+	/**
+	 * A live producer endpoint resolved for this tick: its pos (for self-churn checks), its storage, and
+	 * the host whose buffer that storage is — its own pos unless it is a multiblock cell lending a core's
+	 * port (MOD-608), in which case the per-source packet cap is shared with every cell of that host.
+	 */
+	record LiveProducer(BlockPos pos, EnergyPort storage, BlockPos host) {
+		/** An ordinary producer: its own host. Cable buffers and storage sources are always this. */
+		LiveProducer(BlockPos pos, EnergyPort storage) {
+			this(pos, storage, pos);
+		}
 	}
 
 	/** A live consumer endpoint resolved for this tick: its pos, storage and free room. */
@@ -340,6 +349,12 @@ final class EnergyLineDistributor {
 	 * propagation side. Rotating keeps every source's long-run share equal without capping how many of them
 	 * may feed in one tick: the loop still visits ALL sources, so N sources on one cable still inject N
 	 * packets in a single tick.
+	 *
+	 * <p>MOD-608: the cap is kept per HOST, not per endpoint. The cells of a multiblock that lend one
+	 * core's port are separate endpoints holding one buffer, and a fresh {@code fromThis} for each of them
+	 * would let a machine touched through three cells push three packets a tick. Keyed by host, it pushes
+	 * one — exactly what a one-block machine with three cables on it does. For every ordinary source the
+	 * host is its own position, so nothing else changes.
 	 */
 	private long chargeLineFrom(List<LiveProducer> sources, long packetCap, long totalBudget,
 			EnergyPort.Txn tx, int rotation) {
@@ -348,12 +363,13 @@ final class EnergyLineDistributor {
 			return 0;
 		}
 		long drawn = 0;
+		Map<BlockPos, Long> drawnByHost = new LinkedHashMap<>();
 		for (int s = 0; s < sourceCount; s++) {
 			if (drawn >= totalBudget) {
 				break;
 			}
 			LiveProducer prod = sources.get(Math.floorMod(rotation + s, sourceCount));
-			long fromThis = 0; // per-source throughput this tick, capped at packetCap
+			long fromThis = drawnByHost.getOrDefault(prod.host(), 0L); // per-host throughput, capped at packetCap
 			for (int d = 0; d < DIRECTIONS.length; d++) {
 				if (fromThis >= packetCap || drawn >= totalBudget) {
 					break;
@@ -379,6 +395,7 @@ final class EnergyLineDistributor {
 					drawn += got;
 				}
 			}
+			drawnByHost.put(prod.host(), fromThis);
 		}
 		return drawn;
 	}

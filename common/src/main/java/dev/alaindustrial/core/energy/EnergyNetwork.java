@@ -248,13 +248,17 @@ public final class EnergyNetwork {
 	 * co-located as both producer and consumer can't trade with itself, so on its own it contributes
 	 * nothing deliverable). Without this, a lone BatteryBox would report nonzero supply *and* nonzero
 	 * demand even though {@link #tick()} can never move EU between it and itself.
+	 *
+	 * <p>Each host is summed once (MOD-608), the same rule {@link #tick()} applies to its generator
+	 * supply: the cells of a multiblock are several endpoints over one buffer.
 	 */
 	private long dryRunSum(List<EnergyTopologyCache.Endpoint> from, List<EnergyTopologyCache.Endpoint> against,
 			boolean extracting) {
 		return EnergyTransactions.get().simulate(sim -> {
 			long total = 0;
+			Set<BlockPos> countedHosts = new LinkedHashSet<>();
 			for (EnergyTopologyCache.Endpoint ep : from) {
-				if (!hasOtherPosition(against, ep.pos())) {
+				if (!hasOtherPosition(against, ep.pos()) || !countedHosts.add(ep.host())) {
 					continue;
 				}
 				EnergyPort st = storageAt(ep);
@@ -483,6 +487,10 @@ public final class EnergyNetwork {
 		// into this very line from an ordinary consumer (ADR-002: a node that donates must not also be
 		// served, or it drinks its own discharge back out of the neighbouring cable).
 		Set<BlockPos> storageSourcePositions = new LinkedHashSet<>();
+		// Hosts whose supply is already in genSupply (MOD-608): the cells of one multiblock are separate
+		// endpoints over ONE buffer, and summing each of them would promise the storage stage energy that
+		// exists once — batteries would then sit idle while machines go short.
+		Set<BlockPos> countedHosts = new LinkedHashSet<>();
 		for (EnergyTopologyCache.Endpoint ep : producers) {
 			EnergyPort st = storageAt(ep);
 			if (st == null || !st.supportsExtraction()) {
@@ -492,9 +500,11 @@ public final class EnergyNetwork {
 				storageSources.add(new EnergyLineDistributor.LiveProducer(ep.pos(), st));
 				storageSourcePositions.add(ep.pos());
 			} else {
-				generators.add(new EnergyLineDistributor.LiveProducer(ep.pos(), st));
+				generators.add(new EnergyLineDistributor.LiveProducer(ep.pos(), st, ep.host()));
 				long supply = EnergyTransactions.get().simulate(sim -> st.extract(Long.MAX_VALUE, sim));
-				genSupply += supply;
+				if (countedHosts.add(ep.host())) {
+					genSupply += supply;
+				}
 				// Which producers actually HOLD EU this tick, decided here — outside the committing
 				// transaction opened below. The flow field is seeded from these, not from every face
 				// capable of extraction (ADR-003, point 2).

@@ -40,7 +40,7 @@ public final class OilScreenEffects {
 	}
 
 	/**
-	 * Whether the entity's eyes are inside oil — see {@link OilPhysics#isEyeInOil}. Kept as a
+	 * Whether the entity's eyes are inside oil — see {@link FluidImmersion#atEyes}. Kept as a
 	 * delegating alias because the fog environment and the overlay both read it, and because since
 	 * MOD-250 the very same test also drives drowning, which is server-side and cannot live in a
 	 * client class.

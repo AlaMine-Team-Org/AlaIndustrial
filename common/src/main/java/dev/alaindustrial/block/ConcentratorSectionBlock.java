@@ -1,10 +1,15 @@
 package dev.alaindustrial.block;
 
 import com.mojang.serialization.MapCodec;
+import dev.alaindustrial.core.energy.EnergyHostRedirect;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -19,6 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.redstone.Orientation;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.Nullable;
@@ -28,15 +34,19 @@ import org.jspecify.annotations.Nullable;
  * from one block into a two-by-two-by-two machine.
  *
  * <p>Loose, it is an inert casing: no block entity, no energy, no inventory. Claimed by a structure,
- * it becomes one of seven eighths of the concentrator's model and nothing else — the machine's
- * buffer, its ticking and its energy face all stay on the core, exactly as the Workstation's upper
- * half is energy-inert. That is why there is no block entity here at all: seven of them would be
- * seven objects with nothing to remember.
+ * it becomes one of seven eighths of the concentrator's model — and still holds nothing: the machine's
+ * buffer and its ticking stay on the core. That is why there is no block entity here at all: seven of
+ * them would be seven objects with nothing to remember.
+ *
+ * <p><b>But the structure answers as one machine (MOD-608).</b> A right-click on any cell opens the
+ * core's screen, and every outward face of the bottom tier lends the core's energy port, so a cable
+ * attaches along the whole base instead of at the one cell the panel used to occupy. Neither needs a
+ * block entity: the click and the port both find the core by offset, from the block state alone.
  *
  * <p>Assembly and the rule that takes it apart both live in {@link ConcentratorStructure}; this
- * class only wires the three hooks every way of changing the world arrives through.
+ * class only wires the hooks every way of changing the world arrives through.
  */
-public class ConcentratorSectionBlock extends Block {
+public class ConcentratorSectionBlock extends Block implements EnergyHostRedirect, CableArmReach {
 	public static final MapCodec<ConcentratorSectionBlock> CODEC =
 			simpleCodec(ConcentratorSectionBlock::new);
 
@@ -88,6 +98,44 @@ public class ConcentratorSectionBlock extends Block {
 	protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos,
 			CollisionContext context) {
 		return state.getValue(PART).shape(state.getValue(FACING));
+	}
+
+	/**
+	 * Any cell of an assembled machine opens the core's screen (MOD-608) — the structure has no screen
+	 * of its own, so this is the only screen there is, reachable from wherever the player happens to be
+	 * looking. The Workstation's upper half does the same for its lower half.
+	 *
+	 * <p><b>A loose section passes the click through, and that is load-bearing.</b> Consuming it would
+	 * stop vanilla from falling through to block placement (MOD-039), and building this machine is
+	 * nothing but placing sections against sections.
+	 */
+	@Override
+	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos,
+			Player player, BlockHitResult hit) {
+		BlockPos core = ConcentratorStructure.coreOf(state, pos);
+		if (core == null) {
+			return InteractionResult.PASS;
+		}
+		if (level.getBlockEntity(core) instanceof MenuProvider provider) {
+			if (!level.isClientSide()) {
+				player.openMenu(provider);
+			}
+			return InteractionResult.SUCCESS;
+		}
+		return InteractionResult.PASS;
+	}
+
+	/** Every outward face of the bottom tier lends the core's port; see {@link ConcentratorStructure#energyHostThrough}. */
+	@Override
+	@Nullable
+	public BlockPos energyHost(BlockState state, BlockPos pos, Direction face) {
+		return ConcentratorStructure.energyHostThrough(state, pos, face);
+	}
+
+	/** A cable meets the bottom tier low and reaches in to the housing; see {@link ConcentratorStructure#cableArmReach}. */
+	@Override
+	public List<CableArmReach.Band> cableArmReach(BlockState state) {
+		return ConcentratorStructure.cableArmReach(state);
 	}
 
 	@Override

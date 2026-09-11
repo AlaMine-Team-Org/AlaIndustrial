@@ -3,17 +3,26 @@ package dev.alaindustrial.client.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.alaindustrial.block.AbstractMachineBlock;
+import dev.alaindustrial.block.CableArmReach;
+import dev.alaindustrial.block.CableBlock;
 import dev.alaindustrial.block.entity.CableBlockEntity;
+import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.core.energy.ShockGuardMaterial;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import net.minecraft.client.renderer.FaceInfo;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -24,6 +33,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.CardinalLighting;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -135,6 +145,30 @@ public final class CableAccessoryBlockEntityRenderer
 	private static final SpriteId BREAKER_LAMP =
 			Sheets.BLOCKS_MAPPER.apply(Identifier.fromNamespaceAndPath("alaindustrial", "cable_breaker_lamp"));
 
+	/**
+	 * The texture of each cable grade, indexed by {@link CableType#ordinal()} — the {@code #all} texture
+	 * of that grade's arm models, {@code alaindustrial:block/<grade>_cable}. The continuation of a
+	 * dropped arm (MOD-609) is drawn with it, so a bare wire stays bare and an insulated one insulated.
+	 */
+	private static final SpriteId[] CABLE_SPRITES = cableSprites();
+
+	/**
+	 * Faces every band of an arm continuation carries over its whole length: both sides and the end. Top
+	 * and bottom are drawn only where no neighbouring band covers them, and the face toward the cable is
+	 * left out.
+	 */
+	private static final Direction[] BAND_FACES = {Direction.WEST, Direction.EAST, Direction.NORTH};
+
+	private static SpriteId[] cableSprites() {
+		CableType[] types = CableType.values();
+		SpriteId[] out = new SpriteId[types.length];
+		for (CableType type : types) {
+			out[type.ordinal()] = Sheets.BLOCKS_MAPPER.apply(
+					Identifier.fromNamespaceAndPath("alaindustrial", type.serializedName() + "_cable"));
+		}
+		return out;
+	}
+
 	private final SpriteGetter sprites;
 
 	public CableAccessoryBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
@@ -163,6 +197,43 @@ public final class CableAccessoryBlockEntityRenderer
 		state.breakerAxis = state.hasBreaker ? runAxis(entity) : Direction.Axis.X;
 		state.breakerJunction = state.hasBreaker && isJunction(entity);
 		state.breakerStubs = state.hasBreaker ? runNeighbourMask(entity) : 0;
+		extractArmReach(entity, blockState, state);
+	}
+
+	/**
+	 * How each dropped arm has to continue into a neighbour whose model stands back from the edge
+	 * (MOD-609, {@link CableArmReach}).
+	 *
+	 * <p>Only an arm that is both connected and dropped can need it — the neighbour asking for reach is
+	 * exactly what made it drop — so the world is read for those faces alone. Almost every cable has
+	 * none, and pays for four property reads a frame.
+	 */
+	private static void extractArmReach(CableBlockEntity entity, BlockState blockState, State state) {
+		state.anyReach = false;
+		Collections.fill(state.reach, List.of());
+		var level = entity.getLevel();
+		if (level == null) {
+			return;
+		}
+		BlockPos pos = entity.getBlockPos();
+		for (Direction dir : Direction.Plane.HORIZONTAL) {
+			var low = CableBlock.lowFlagFor(dir);
+			if (!connected(blockState, dir) || low == null || !blockState.hasProperty(low) || !blockState.getValue(low)) {
+				continue;
+			}
+			BlockState neighbour = level.getBlockState(pos.relative(dir));
+			if (neighbour.getBlock() instanceof CableArmReach arm) {
+				List<CableArmReach.Band> bands = arm.cableArmReach(neighbour);
+				if (!bands.isEmpty()) {
+					state.reach.set(dir.get2DDataValue(), bands);
+					state.anyReach = true;
+				}
+			}
+		}
+		if (state.anyReach) {
+			state.cableSprite = CABLE_SPRITES[entity.cableType().ordinal()];
+			state.shading = level instanceof BlockAndTintGetter tint ? tint.cardinalLighting() : CardinalLighting.DEFAULT;
+		}
 	}
 
 	/**
@@ -248,6 +319,7 @@ public final class CableAccessoryBlockEntityRenderer
 	public void submit(State state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector,
 			CameraRenderState camera) {
 		submitBreaker(state, poseStack, submitNodeCollector);
+		submitArmReach(state, poseStack, submitNodeCollector);
 		SpriteId spriteId = state.sprite;
 		if (spriteId == null) {
 			return;
@@ -264,6 +336,149 @@ public final class CableAccessoryBlockEntityRenderer
 		float z1 = state.extendSouth ? 1.0F : 1.0F - INSET;
 		submitNodeCollector.submitCustomGeometry(poseStack, renderType,
 				(pose, consumer) -> renderPlate(pose, consumer, sprite, light, x0, x1, z0, z1));
+	}
+
+	/**
+	 * The continuation of each dropped arm into an inset neighbour (MOD-609): the arm's own dropped
+	 * sleeve, carried on past the cell edge until it ends inside the neighbour's housing.
+	 *
+	 * <p>Drawn as if the sleeve element of the arm model were simply longer — the same section
+	 * ({@link CableBlock#SLEEVE_MIN}..{@link CableBlock#SLEEVE_MAX} across,
+	 * {@link CableBlock#LOW_SLEEVE_BOTTOM}..{@link CableBlock#LOW_SLEEVE_TOP} high), the same texture,
+	 * vanilla's own face layout ({@link FaceInfo}) and UV rule, and turned with the arm the way the
+	 * blockstate turns the baked one. Each texture strip starts where the baked sleeve's leaves off, so
+	 * the pattern runs on across the cell edge.
+	 *
+	 * <p>The sleeve steps with the neighbour's own surface: each of its {@link CableArmReach.Band}s ends
+	 * on the surface in front of it. That is what keeps the seam still — run past a surface, the sleeve's
+	 * sides would lie in the plane of that surface's sides, and two faces in one plane facing the same way
+	 * flicker as the camera moves. Where a band's end lies flat on the neighbour's face, the two face each
+	 * other; the block pipeline culls back faces, so only one of the pair is ever drawn.
+	 *
+	 * <p><b>Why the block pipeline and not the item sheet the other accessories use.</b> The item sheet
+	 * lights a face by its normal; a baked block has its shading multiplied into the vertex colour
+	 * instead. Next to a baked arm the item sheet would show the seam as a step in brightness, so this
+	 * goes through {@link RenderTypes#cutoutMovingBlock()} — the pipeline vanilla draws pushed blocks
+	 * with — carrying the level's own cardinal shading in the colour, exactly as the baked arm does.
+	 */
+	private void submitArmReach(State state, PoseStack poseStack, SubmitNodeCollector collector) {
+		if (!state.anyReach || state.cableSprite == null) {
+			return;
+		}
+		TextureAtlasSprite sprite = sprites.get(state.cableSprite);
+		int light = state.lightCoords;
+		List<List<CableArmReach.Band>> reach = List.copyOf(state.reach); // the lambda may run after this state is reused
+		CardinalLighting shading = state.shading;
+		collector.submitCustomGeometry(poseStack, RenderTypes.cutoutMovingBlock(), (pose, consumer) -> {
+			for (Direction toward : Direction.Plane.HORIZONTAL) {
+				List<CableArmReach.Band> bands = reach.get(toward.get2DDataValue());
+				if (!bands.isEmpty()) {
+					continuation(pose, consumer, sprite, light, shading, toward, bands);
+				}
+			}
+		});
+	}
+
+	/**
+	 * One arm continuation leaving the cell toward {@code toward}, band by band from the bottom up.
+	 *
+	 * <p>Built in the NORTH frame — the frame the arm models are written in — in block pixels, and then
+	 * turned a quarter at a time clockwise seen from above, which is what a blockstate {@code y} does:
+	 * the point {@code (x, z)} goes to {@code (1 - z, x)}. Each face is shaded by the side it ends up
+	 * facing.
+	 */
+	private static void continuation(PoseStack.Pose pose, VertexConsumer consumer, TextureAtlasSprite sprite,
+			int light, CardinalLighting shading, Direction toward, List<CableArmReach.Band> bands) {
+		float x0 = (float) CableBlock.SLEEVE_MIN;
+		float x1 = (float) CableBlock.SLEEVE_MAX;
+		int quarters = switch (toward) {
+			case EAST -> 1;
+			case SOUTH -> 2;
+			case WEST -> 3;
+			default -> 0;
+		};
+		for (int i = 0; i < bands.size(); i++) {
+			CableArmReach.Band band = bands.get(i);
+			float bottom = band.bottom();
+			float top = band.top();
+			float depth = band.depth();
+			float below = i == 0 ? 0.0F : bands.get(i - 1).depth();
+			float above = i + 1 == bands.size() ? 0.0F : bands.get(i + 1).depth();
+			for (Direction face : BAND_FACES) {
+				sleeveFace(pose, consumer, sprite, light, shading, quarters, face,
+						continuationUv(face, 0.0F, depth, bottom, top), x0, bottom, -depth, x1, top, 0.0F);
+			}
+			// Top and bottom only where they are not the inside of the next band.
+			if (depth > above) {
+				sleeveFace(pose, consumer, sprite, light, shading, quarters, Direction.UP,
+						continuationUv(Direction.UP, above, depth, bottom, top), x0, bottom, -depth, x1, top, -above);
+			}
+			if (depth > below) {
+				sleeveFace(pose, consumer, sprite, light, shading, quarters, Direction.DOWN,
+						continuationUv(Direction.DOWN, below, depth, bottom, top), x0, bottom, -depth, x1, top, -below);
+			}
+		}
+	}
+
+	/**
+	 * One face of the box {@code (x0, y0, z0)..(x1, y1, z1)} — block pixels, NORTH frame — laid out the way
+	 * vanilla lays out a model element's face, turned {@code quarters} times and shaded by the side it
+	 * ends up facing.
+	 */
+	private static void sleeveFace(PoseStack.Pose pose, VertexConsumer consumer, TextureAtlasSprite sprite,
+			int light, CardinalLighting shading, int quarters, Direction face, float[] uv,
+			float x0, float y0, float z0, float x1, float y1, float z1) {
+		Direction faces = face;
+		for (int q = 0; q < quarters && faces.getAxis().isHorizontal(); q++) {
+			faces = faces.getClockWise();
+		}
+		int grey = Math.min(255, Math.round(255.0F * shading.byFace(faces)));
+		int color = 0xFF000000 | grey << 16 | grey << 8 | grey;
+		FaceInfo info = FaceInfo.fromFacing(face);
+		for (int i = 0; i < 4; i++) {
+			FaceInfo.VertexInfo corner = info.getVertexInfo(i);
+			float x = corner.xFace().select(x0, y0, z0, x1, y1, z1) / 16.0F;
+			float y = corner.yFace().select(x0, y0, z0, x1, y1, z1) / 16.0F;
+			float z = corner.zFace().select(x0, y0, z0, x1, y1, z1) / 16.0F;
+			for (int q = 0; q < quarters; q++) {
+				float turned = 1.0F - z;
+				z = x;
+				x = turned;
+			}
+			// Vanilla's UV rule (CuboidFace.UVs): corners 0 and 1 take the minimum U, corners 0 and 3 the
+			// minimum V.
+			float u = i == 0 || i == 1 ? uv[0] : uv[2];
+			float v = i == 0 || i == 3 ? uv[1] : uv[3];
+			vertex(pose, consumer, x, y, z, sprite.getU(u / 16.0F), sprite.getV(v / 16.0F), light, color,
+					faces.getStepX(), faces.getStepY(), faces.getStepZ());
+		}
+	}
+
+	/**
+	 * UV rectangle of one face of the continuation, in sprite pixels {@code {minU, minV, maxU, maxV}}, for
+	 * the part of it that runs from {@code near} to {@code far} pixels past the cell edge and from
+	 * {@code bottom} to {@code top} high, picking up where the baked sleeve leaves off at the cell edge.
+	 *
+	 * <p>The numbers are the sleeve element's own UVs in {@code *_cable_arm_low.json} (the same in all
+	 * eight grades): {@code [5, 0, 11, 2]} on top and bottom, {@code [0, 2, 2, 8]} on the sides,
+	 * {@code [5, 2, 11, 8]} on the end. They are texture rows, not heights — which is why they are
+	 * written out here rather than derived from the section. Each strip is laid so that at the cell
+	 * edge it carries the value the baked sleeve has there: vanilla's layout puts the edge at the far
+	 * corner pair on the top and west faces, where 16 continues a strip that began at 0. A band takes its
+	 * own slice of the same strips, so the stepped sleeve is textured as one piece. A band stays under
+	 * half a cell deep ({@link CableArmReach.Band}), so every strip stays on the sprite.
+	 */
+	private static float[] continuationUv(Direction face, float near, float far, float bottom, float top) {
+		// The sides and the end carry rows 2..8 from the sleeve's top down to its bottom.
+		float rowTop = 2.0F + (float) CableBlock.LOW_SLEEVE_TOP - top;
+		float rowBottom = 2.0F + (float) CableBlock.LOW_SLEEVE_TOP - bottom;
+		return switch (face) {
+			case UP -> new float[] {5.0F, 16.0F - far, 11.0F, 16.0F - near};
+			case DOWN -> new float[] {5.0F, 2.0F + near, 11.0F, 2.0F + far};
+			case WEST -> new float[] {16.0F - far, rowTop, 16.0F - near, rowBottom};
+			case EAST -> new float[] {2.0F + near, rowTop, 2.0F + far, rowBottom};
+			default -> new float[] {5.0F, rowTop, 11.0F, rowBottom};
+		};
 	}
 
 	/**
@@ -475,6 +690,17 @@ public final class CableAccessoryBlockEntityRenderer
 		private boolean breakerJunction;
 		/** Bitmask of directions that get a severed-end stub while the switch is open. */
 		private int breakerStubs;
+		/**
+		 * How each dropped arm continues into an inset neighbour, indexed by
+		 * {@code Direction.get2DDataValue()}; empty where it does not (MOD-609).
+		 */
+		private final List<List<CableArmReach.Band>> reach = new ArrayList<>(Collections.nCopies(4, List.of()));
+		private boolean anyReach;
+		/** This cable grade's texture, set only when some arm continues. */
+		@Nullable
+		private SpriteId cableSprite;
+		/** The level's per-face shading, the same the baked arm is multiplied by. */
+		private CardinalLighting shading = CardinalLighting.DEFAULT;
 
 		/**
 		 * The block texture that represents {@code block}, by the vanilla naming convention

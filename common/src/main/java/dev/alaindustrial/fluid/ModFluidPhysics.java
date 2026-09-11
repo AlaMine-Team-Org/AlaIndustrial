@@ -23,7 +23,7 @@ import net.minecraft.world.level.material.Fluid;
  *
  * <p><b>Why the air path is the correct answer and not merely the old one.</b> The mod's fluid
  * behaviour is built on top of air physics on purpose, on both loaders: the drag and ascent numbers
- * in {@link OilPhysics} are derived from air drag 0.98 combined with {@link OilFluid}'s own 0.72,
+ * in {@link FluidImmersion} are derived from air drag 0.98 combined with {@link OilFluid}'s own 0.72,
  * and {@link OilFluid#entityInside} — a vanilla hook that fires on both sides and on both loaders —
  * is where sinking, damping and the held-jump ascent live. Letting NeoForge route these fluids
  * through its own movement path would not just break them, it would break them differently from

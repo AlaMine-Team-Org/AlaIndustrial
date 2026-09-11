@@ -26,6 +26,14 @@ import net.minecraft.world.phys.Vec3;
  * is what let a second and third fluid ship without it, so it now lives here, per fluid, and a new
  * fluid without an entry fails loudly in {@link #of} rather than silently behaving like a wall.
  *
+ * <p><b>Why the fluids are not simply put in {@code #minecraft:water}.</b> That shortcut would hand
+ * us swimming and drowning for free and was checked against the 26.2 sources before being rejected
+ * (MOD-250): 114 places read that tag, and two of them are fatal here — {@code LavaFluid} turns
+ * anything tagged as water into stone or obsidian on contact, which would delete the entire burning
+ * mechanic wherever a deposit meets lava, and {@code FarmlandBlock} would treat a pool of crude as
+ * irrigation. The tag also grants water's swim speed, the opposite of what a viscous fluid should
+ * feel like.
+ *
  * <p><b>How the numbers relate.</b> Vertical drag is the whole model. An entity inside one of these
  * fluids stays on vanilla's AIR path (see {@code LivingEntityModFluidTravelMixin}, MOD-495), so per
  * tick its vertical speed is multiplied by air drag 0.98, then by {@link #verticalDrag}, with gravity

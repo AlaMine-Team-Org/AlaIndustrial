@@ -179,8 +179,20 @@ public final class NeoForgeGameTests {
 				dev.alaindustrial.gametest.ConcentratorStructureScenarios::refusesToAssembleWithACellMissing);
 		registerTest(event, "concentrator_breaking_any_cell_disassembles", 120, true,
 				dev.alaindustrial.gametest.ConcentratorStructureScenarios::breakingAnyCellDisassemblesAll);
-		registerTest(event, "concentrator_only_core_carries_energy", 40, true,
-				dev.alaindustrial.gametest.ConcentratorStructureScenarios::onlyTheCoreCarriesEnergy);
+		// MOD-608: the assembled machine answers as one — the core's screen and port from its other cells.
+		registerTest(event, "concentrator_bottom_tier_lends_core_port", 40, true,
+				dev.alaindustrial.gametest.ConcentratorStructureScenarios::bottomTierLendsTheCorePort);
+		registerTest(event, "concentrator_any_cell_opens_core_screen", 40, true,
+				dev.alaindustrial.gametest.ConcentratorStructureScenarios::anyCellOpensTheCoreScreen);
+		registerTest(event, "concentrator_section_only_cable_carries_energy", 40, true,
+				dev.alaindustrial.gametest.ConcentratorStructureScenarios::sectionOnlyCableCarriesTheCoreEnergy);
+		registerTest(event, "concentrator_one_machine_pushes_one_packet", 40, true,
+				dev.alaindustrial.gametest.ConcentratorStructureScenarios::oneMachinePushesOnePacket);
+		registerTest(event, "concentrator_one_machine_counts_once_for_backup", 40, true,
+				dev.alaindustrial.gametest.ConcentratorStructureScenarios::oneMachineCountsOnceForBackupPower);
+		// MOD-609: a cable drops to the bottom tier the way it drops to a solar panel, then reaches in.
+		registerTest(event, "concentrator_cable_drops_to_bottom_tier", 40, true,
+				dev.alaindustrial.gametest.ConcentratorStructureScenarios::cableDropsToTheBottomTier);
 		registerTest(event, "concentrator_any_covered_column_stops", 100, true,
 				dev.alaindustrial.gametest.ConcentratorStructureScenarios::anyCoveredColumnStopsTheMachine);
 		registerTest(event, "concentrator_canonical_mapping", 40, true,

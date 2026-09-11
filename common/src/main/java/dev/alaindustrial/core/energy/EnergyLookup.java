@@ -23,9 +23,20 @@ public interface EnergyLookup {
 
 	EnergyLookup[] INSTANCE = new EnergyLookup[1];
 
-	/** Install the loader's implementation (called once from the loader entrypoint at mod init). */
+	/**
+	 * Install the loader's implementation (called once from the loader entrypoint at mod init).
+	 *
+	 * <p>Wrapped so that a block lending another block's port ({@link EnergyHostRedirect}, MOD-608) is
+	 * resolved here, once, for every caller: the network's endpoint scan, its per-tick face checks, the
+	 * direct push and the statistics panel. Resolving it inside each loader's lookup would be two copies
+	 * of one rule, and NeoForge's copy would have to run before its fallback, which reads a bare
+	 * capability as {@link EnergyRole#BOTH}.
+	 */
 	static void install(EnergyLookup impl) {
-		INSTANCE[0] = impl;
+		INSTANCE[0] = (level, pos, side) -> {
+			BlockPos host = EnergyHostRedirect.hostOf(level, pos, side);
+			return host == null ? null : impl.find(level, host, side);
+		};
 	}
 
 	/** The installed loader implementation. Throws if the entrypoint has not installed one yet. */

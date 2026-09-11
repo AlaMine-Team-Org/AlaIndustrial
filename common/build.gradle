@@ -450,6 +450,10 @@ pitest {
             'dev.alaindustrial.core.radiation.RadiationSources',
             'dev.alaindustrial.core.radiation.RadiationTicker',
             'dev.alaindustrial.core.energy.EnergyLookup',
+            // MOD-608: the multiblock-cell redirect. Its one body, hostOf, reads a BlockState from a
+            // Level and asks the Level whether the host is loaded, so every mutant it has is a
+            // NO_COVERAGE in the MC-free run. Covered by the concentrator scenarios on both loaders.
+            'dev.alaindustrial.core.energy.EnergyHostRedirect',
             'dev.alaindustrial.core.energy.DirectAdjacencyDistributor', // was EnergyNet (renamed MOD-168 #7)
             'dev.alaindustrial.core.energy.EnergyNetwork',
             'dev.alaindustrial.core.energy.EnergyPortHost',

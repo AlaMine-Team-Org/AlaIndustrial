@@ -32,8 +32,13 @@ import net.minecraft.server.level.ServerLevel;
  * <p>Package-private — part of the {@code EnergyNetwork} implementation; not a public API.
  */
 final class EnergyTopologyCache {
-	/** A cached neighbour storage endpoint: the position it lives at and the side the cable touches it. */
-	record Endpoint(BlockPos pos, Direction side) {
+	/**
+	 * A cached neighbour storage endpoint: the position it lives at, the side the cable touches it, and
+	 * the {@code host} whose energy it really is — {@code pos} itself for an ordinary block, the core of a
+	 * multiblock for a cell that lends the core's port ({@link EnergyHostRedirect}, MOD-608). Resolved
+	 * here, at refresh, so the per-tick pass counts each machine once without reading the world again.
+	 */
+	record Endpoint(BlockPos pos, Direction side, BlockPos host) {
 	}
 
 	/** Cached once — {@link Direction#values()} clones its array on every call (hot-path GC hygiene). */
@@ -414,11 +419,15 @@ final class EnergyTopologyCache {
 				if (storage == null) {
 					continue;
 				}
+				// The lookup already resolved the same host to find this port, so this is non-null here;
+				// the fallback only keeps a racing block change from turning into a null key downstream.
+				BlockPos host = EnergyHostRedirect.hostOf(level, np, dir.getOpposite());
+				Endpoint endpoint = new Endpoint(np, dir.getOpposite(), host != null ? host : np);
 				if (storage.supportsExtraction() && seenProducer.add(np)) {
-					producers.add(new Endpoint(np, dir.getOpposite()));
+					producers.add(endpoint);
 				}
 				if (storage.supportsInsertion() && seenConsumer.add(np)) {
-					consumers.add(new Endpoint(np, dir.getOpposite()));
+					consumers.add(endpoint);
 				}
 			}
 		}

@@ -1,23 +1,39 @@
 package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.block.CableArmReach;
+import dev.alaindustrial.block.CableBlock;
 import dev.alaindustrial.block.ConcentratorPart;
 import dev.alaindustrial.block.ConcentratorSectionBlock;
 import dev.alaindustrial.block.ConcentratorStructure;
+import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.RadiantSolarPanelBlock;
+import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
+import dev.alaindustrial.block.entity.CableBlockEntity;
+import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.block.entity.RadiantSolarPanelBlockEntity;
+import dev.alaindustrial.core.energy.CableType;
+import dev.alaindustrial.core.energy.EnergyLookup;
 import dev.alaindustrial.core.energy.EnergyPort;
-import dev.alaindustrial.core.energy.EnergyPortHost;
+import dev.alaindustrial.core.energy.NetworkManager;
+import dev.alaindustrial.menu.RadiantSolarPanelMenu;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 
 /**
- * The Mirror Concentrator's two-by-two-by-two assembly (MOD-603).
+ * The Mirror Concentrator's two-by-two-by-two assembly (MOD-603), and the assembled machine answering
+ * as one: its screen from any cell, its energy port along the whole bottom tier (MOD-608).
  *
  * <p><b>Why these scenarios call the assembler directly.</b> Programmatic placement reaches neither
  * {@code setPlacedBy} nor the neighbour update a real placement causes (MOD-015), so a test that
@@ -150,42 +166,384 @@ public final class ConcentratorStructureScenarios {
 	}
 
 	/**
-	 * Energy stays on the core. The seven sections have no block entity at all, so a cable reaching
-	 * one of them finds nothing to draw from — the machine has exactly one face, wherever the player
-	 * happens to tap it.
+	 * The buffer stays on the core, and the whole bottom tier lends it. No section grows a block entity,
+	 * yet every outward face of a bottom cell exposes the core's own port, and the cable arm is drawn on
+	 * exactly those faces — the arm and the port read one rule, so they are asserted together. The top
+	 * tier and every inner face lend nothing, and neither does a section that is not part of a machine.
 	 *
-	 * @implements MOD-603 — only the core carries energy
+	 * <p>Replaces MOD-603's "only the core carries energy": a cable run around the whole base connected
+	 * at one cell out of four, and the owner ruled the bottom tier the machine's socket.
+	 *
+	 * @implements MOD-608 — the bottom tier lends the core's port and draws the cable arm; the top tier does not
 	 */
-	public static void onlyTheCoreCarriesEnergy(GameTestHelper helper) {
+	public static void bottomTierLendsTheCorePort(GameTestHelper helper) {
 		clearArea(helper);
 		placeCore(helper);
 		placeSections(helper, Direction.NORTH, null);
+
+		// Before assembly the sections are casings: no port, no arm, on any face.
+		for (ConcentratorPart part : ConcentratorPart.CELLS) {
+			if (part == ConcentratorPart.CORE) {
+				continue;
+			}
+			BlockPos cell = helper.absolutePos(CORE.offset(part.worldOffset(Direction.NORTH)));
+			for (Direction face : Direction.values()) {
+				if (EnergyLookup.get().find(helper.getLevel(), cell, face) != null
+						|| CableBlock.shouldConnectTo(helper.getLevel(), cell.relative(face), face.getOpposite())) {
+					helper.fail("loose section " + part + " offers energy or an arm on its " + face + " face");
+					return;
+				}
+			}
+		}
+
 		assemble(helper);
 		assertAssembled(helper, Direction.NORTH);
-
 		if (!(helper.getLevel().getBlockEntity(helper.absolutePos(CORE))
 				instanceof RadiantSolarPanelBlockEntity core)) {
 			helper.fail("the assembled core lost its block entity");
 			return;
 		}
-		if (!(core instanceof EnergyPortHost host)) {
-			helper.fail("the assembled core is no longer an energy host");
-			return;
-		}
-		// A side face, not the top: the top of a solar panel is the working surface and never emits,
-		// assembled or not (the one-block scenarios assert that rule directly).
-		EnergyPort side = host.energyPort(Direction.NORTH);
-		if (side == null || !side.supportsExtraction()) {
-			helper.fail("the core stopped emitting EU once assembled");
-		}
+		// A marker charge: a lent port must read the core's own buffer, not a copy or an empty stand-in.
+		long marker = 1234L;
+		core.getEnergyStorage().setAmountUntracked(marker);
+
 		for (ConcentratorPart part : ConcentratorPart.CELLS) {
 			if (part == ConcentratorPart.CORE) {
-				continue;
+				continue; // the core answers with its own one-block rules, asserted by the solar scenarios
 			}
+			BlockPos cell = helper.absolutePos(CORE.offset(part.worldOffset(Direction.NORTH)));
+			if (helper.getLevel().getBlockEntity(cell) != null) {
+				helper.fail("cell " + part + " has a block entity — the structure's buffer lives on the core");
+				return;
+			}
+			Vec3i offset = part.canonicalOffset();
+			boolean bottom = offset != null && offset.getY() == 0;
+			for (Direction face : Direction.values()) {
+				boolean outward = ConcentratorStructure.neighbourPart(part, Direction.NORTH, face) == null;
+				boolean expected = bottom && outward;
+				EnergyPort port = EnergyLookup.get().find(helper.getLevel(), cell, face);
+				boolean arm = CableBlock.shouldConnectTo(helper.getLevel(), cell.relative(face), face.getOpposite());
+				if ((port != null) != expected) {
+					helper.fail(part + " " + face + ": expected " + (expected ? "the core's port" : "no port")
+							+ " but the lookup found " + port);
+					return;
+				}
+				if (arm != expected) {
+					helper.fail(part + " " + face + ": the cable arm (" + arm + ") disagrees with the port ("
+							+ expected + ") — the two must read one rule");
+					return;
+				}
+				if (port != null && (!port.supportsExtraction() || port.getAmount() != marker)) {
+					helper.fail(part + " " + face + ": the lent port is not the core's buffer (holds "
+							+ port.getAmount() + ", extracts " + port.supportsExtraction() + ")");
+					return;
+				}
+			}
+		}
+
+		// Taking the machine apart takes the lending with it: a former bottom cell is a casing again.
+		helper.setBlock(CORE.offset(ConcentratorPart.TOP_BACK_RIGHT.worldOffset(Direction.NORTH)), Blocks.AIR);
+		for (ConcentratorPart part : new ConcentratorPart[] {
+				ConcentratorPart.RIGHT, ConcentratorPart.BACK, ConcentratorPart.BACK_RIGHT}) {
+			BlockPos cell = helper.absolutePos(CORE.offset(part.worldOffset(Direction.NORTH)));
+			for (Direction face : Direction.values()) {
+				if (EnergyLookup.get().find(helper.getLevel(), cell, face) != null
+						|| CableBlock.shouldConnectTo(helper.getLevel(), cell.relative(face), face.getOpposite())) {
+					helper.fail("former " + part + " still offers the core's energy on its " + face
+							+ " face after the machine was taken apart");
+					return;
+				}
+			}
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * A right-click on any of the eight cells opens the core's screen, and a loose section lets the
+	 * click through so the next section can be placed against it (MOD-039).
+	 *
+	 * @implements MOD-608 — the core's screen opens from any cell of the assembled machine
+	 */
+	public static void anyCellOpensTheCoreScreen(GameTestHelper helper) {
+		clearArea(helper);
+		placeCore(helper);
+		placeSections(helper, Direction.NORTH, null);
+		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
+
+		BlockPos looseCell = CORE.offset(ConcentratorPart.TOP_BACK_RIGHT.worldOffset(Direction.NORTH));
+		if (click(helper, player, looseCell) != InteractionResult.PASS) {
+			helper.fail("a loose section consumed the click — sections could not be placed against it");
+			return;
+		}
+
+		assemble(helper);
+		assertAssembled(helper, Direction.NORTH);
+		for (ConcentratorPart part : ConcentratorPart.CELLS) {
+			player.closeContainer();
 			BlockPos cell = CORE.offset(part.worldOffset(Direction.NORTH));
-			if (helper.getLevel().getBlockEntity(helper.absolutePos(cell)) != null) {
-				helper.fail("cell " + part + " has a block entity — sections must be inert");
+			InteractionResult result = click(helper, player, cell);
+			if (result != InteractionResult.SUCCESS) {
+				helper.fail("a click on " + part + " returned " + result + " instead of opening the screen");
+				return;
 			}
+			if (!(player.containerMenu instanceof RadiantSolarPanelMenu)) {
+				helper.fail("a click on " + part + " opened " + player.containerMenu
+						+ " instead of the concentrator's screen");
+				return;
+			}
+		}
+		player.closeContainer();
+		helper.succeed();
+	}
+
+	/** An empty-hand right-click on the top face of {@code cell}, the way the server delivers it. */
+	private static InteractionResult click(GameTestHelper helper, ServerPlayer player, BlockPos cell) {
+		BlockPos absolute = helper.absolutePos(cell);
+		BlockHitResult hit = new BlockHitResult(Vec3.atCenterOf(absolute), Direction.UP, absolute, false);
+		return stateAt(helper, cell).useWithoutItem(helper.getLevel(), player, hit);
+	}
+
+	// ── MOD-608: energy through the cells ───────────────────────────────────────────────────────────
+	//
+	// The rig below is laid out for the NORTH box (cells at x 3..4, z 3..4): every cable touches a
+	// SECTION of the bottom tier and none touches the core, so the only way in is the lent port.
+
+	/** Cables along the east and south sides of the bottom tier, touching RIGHT, BACK_RIGHT and BACK. */
+	private static final BlockPos[] SIDE_LINE = {
+		new BlockPos(5, 2, 3), new BlockPos(5, 2, 4), new BlockPos(5, 2, 5),
+		new BlockPos(4, 2, 5), new BlockPos(3, 2, 5),
+	};
+
+	/** Clear the rig's cells outside the structure's own box. */
+	private static void clearRig(GameTestHelper helper) {
+		for (int x = 2; x <= 7; x++) {
+			for (int z = 2; z <= 7; z++) {
+				if (x <= 4 && z <= 4) {
+					continue; // the structure's neighbourhood, cleared by clearArea
+				}
+				helper.setBlock(new BlockPos(x, 2, z), Blocks.AIR);
+			}
+		}
+	}
+
+	/** Build the assembled NORTH machine with its core charged and no cable anywhere near the core. */
+	private static RadiantSolarPanelBlockEntity buildChargedMachine(GameTestHelper helper, long charge) {
+		clearArea(helper);
+		clearRig(helper);
+		placeCore(helper);
+		placeSections(helper, Direction.NORTH, null);
+		assemble(helper);
+		assertAssembled(helper, Direction.NORTH);
+		if (!(helper.getLevel().getBlockEntity(helper.absolutePos(CORE))
+				instanceof RadiantSolarPanelBlockEntity core)) {
+			throw new IllegalStateException("the assembled core lost its block entity");
+		}
+		core.getEnergyStorage().setAmountUntracked(charge);
+		return core;
+	}
+
+	private static long cableAmount(GameTestHelper helper, BlockPos cable) {
+		return EnergyScenarioSupport.be(helper, cable) instanceof CableBlockEntity c
+				? c.getEnergyStorage().getAmount() : -1L;
+	}
+
+	/**
+	 * One machine pushes one packet a tick, however many of its cells a line touches. Three bottom
+	 * sections touch the same copper line, and their four neighbouring cables have more room between
+	 * them than one packet: counted per cell, the machine would fill them all in a single tick.
+	 *
+	 * <p>The line has no consumer, so everything the machine gives in the first tick is still in the
+	 * cables afterwards; measuring the cables rather than the core keeps the machine's own production
+	 * out of the number.
+	 *
+	 * @implements MOD-608 — the per-source packet cap holds per machine, not per touching cell
+	 */
+	public static void oneMachinePushesOnePacket(GameTestHelper helper) {
+		buildChargedMachine(helper, 10_000L);
+		for (BlockPos c : SIDE_LINE) {
+			helper.setBlock(c, ModContent.COPPER_CABLE.get());
+		}
+		for (BlockPos c : SIDE_LINE) {
+			EnergyScenarioSupport.tick(helper, EnergyScenarioSupport.be(helper, c)); // lazy registration
+		}
+		NetworkManager.tickAll(helper.getLevel());
+
+		long packetCap = CableType.COPPER.packetCap();
+		long touchingRoom = 4L * CableType.COPPER.segmentBuffer(); // four cables touch a section
+		if (touchingRoom <= packetCap) {
+			helper.fail("rig misconfigured: the touching cables (" + touchingRoom + " EU of room) must"
+					+ " exceed one packet (" + packetCap + ") or a per-cell cap cannot show");
+			return;
+		}
+		long inLine = 0;
+		for (BlockPos c : SIDE_LINE) {
+			inLine += cableAmount(helper, c);
+		}
+		if (inLine != packetCap) {
+			helper.fail("the machine put " + inLine + " EU into the line in one tick; one packet is "
+					+ packetCap + " — " + (inLine > packetCap ? "each touching cell pushed its own packet"
+					: "the lent port did not feed the line"));
+			return;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * A machine touched through three cells is counted once when the network decides whether batteries
+	 * must cover the machines. Counted per cell, the concentrator would promise three times the energy
+	 * it can give, the backup stage would see no shortfall, and a charged Energy Storage on the same
+	 * line would sit idle while a hungry macerator stayed short.
+	 *
+	 * <p>The macerator takes a full LV packet a tick and the concentrator offers one extract's worth, so
+	 * a correct count leaves a shortfall the box must cover; any EU leaving the box proves it did.
+	 *
+	 * @implements MOD-608 — a multiblock's supply is counted once, so storage still backs up the machines
+	 */
+	public static void oneMachineCountsOnceForBackupPower(GameTestHelper helper) {
+		buildChargedMachine(helper, 10_000L);
+		for (BlockPos c : SIDE_LINE) {
+			helper.setBlock(c, ModContent.COPPER_CABLE.get());
+		}
+		// Front (inert) pointing away from the line, so the west face is a real input.
+		BlockPos macerator = new BlockPos(6, 2, 4);
+		helper.setBlock(macerator, ModContent.MACERATOR.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.EAST));
+		// FACING = EAST puts the box's OUT face on its west side, against the cable at (5, 2, 5).
+		BlockPos box = new BlockPos(6, 2, 5);
+		helper.setBlock(box, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.EAST));
+		long boxStart = Config.batteryBoxBuffer / 2L;
+		if (EnergyScenarioSupport.be(helper, box) instanceof BatteryBoxBlockEntity bb) {
+			bb.getEnergyStorage().setAmountUntracked(boxStart);
+		}
+		if (EnergyScenarioSupport.be(helper, macerator) instanceof MaceratorBlockEntity mac) {
+			mac.getEnergyStorage().setAmountUntracked(0L); // no input item: its buffer only fills
+		}
+		for (int i = 0; i < 20; i++) {
+			for (BlockPos c : SIDE_LINE) {
+				EnergyScenarioSupport.tick(helper, EnergyScenarioSupport.be(helper, c));
+			}
+			NetworkManager.tickAll(helper.getLevel());
+			EnergyScenarioSupport.tick(helper, EnergyScenarioSupport.be(helper, macerator));
+			EnergyScenarioSupport.tick(helper, EnergyScenarioSupport.be(helper, box));
+		}
+		long boxEnd = EnergyScenarioSupport.be(helper, box) instanceof BatteryBoxBlockEntity bb
+				? bb.getEnergyStorage().getAmount() : -1L;
+		if (boxEnd >= boxStart) {
+			helper.fail("the Energy Storage never backed the macerator up (" + boxEnd + " of " + boxStart
+					+ " EU left) — the concentrator's supply was counted once per touching cell");
+			return;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * A cable meets the bottom tier low, the way it meets a solar panel, and the cell tells it how far
+	 * to carry the dropped arm on into the housing. The top tier asks for nothing, and neither does a
+	 * section once the machine is taken apart — the cable then stops dropping toward it.
+	 *
+	 * <p>The continuation itself is drawn by the cable's client renderer and cannot be seen from a
+	 * server test; what is asserted here is everything that decides whether it is drawn and how long.
+	 *
+	 * @implements MOD-609 — a cable drops to the bottom tier and reaches into its housing
+	 */
+	public static void cableDropsToTheBottomTier(GameTestHelper helper) {
+		buildChargedMachine(helper, 0L);
+		BlockPos cell = CORE.offset(ConcentratorPart.BACK_RIGHT.worldOffset(Direction.NORTH));
+		BlockPos cable = cell.east();
+		helper.setBlock(cable, ModContent.COPPER_CABLE.get());
+		// Programmatic placement skips getStateForPlacement; the first tick re-derives the arms, exactly
+		// as it does for a cable loaded from disk.
+		EnergyScenarioSupport.tick(helper, EnergyScenarioSupport.be(helper, cable));
+
+		BlockState cableState = stateAt(helper, cable);
+		if (!cableState.getValue(PipeBlock.PROPERTY_BY_DIRECTION.get(Direction.WEST))) {
+			helper.fail("the cable drew no arm toward the bottom tier");
+			return;
+		}
+		if (!cableState.getValue(CableBlock.lowFlagFor(Direction.WEST))) {
+			helper.fail("the arm toward the bottom tier did not drop — it would meet the housing at mid-height");
+			return;
+		}
+		BlockState cellState = stateAt(helper, cell);
+		List<CableArmReach.Band> bands = cellState.getBlock() instanceof CableArmReach arm
+				? arm.cableArmReach(cellState) : List.of();
+		if (bands.isEmpty()) {
+			helper.fail("the bottom tier asks for no continuation — the dropped arm would stop short of the housing");
+			return;
+		}
+		// The renderer draws the bands as one stepped sleeve: stacked without a gap over the dropped
+		// sleeve's full height, each reaching in, none past half the cell.
+		float height = (float) CableBlock.LOW_SLEEVE_BOTTOM;
+		for (CableArmReach.Band band : bands) {
+			if (band.bottom() != height || band.top() <= band.bottom()
+					|| band.depth() <= 0.0F || band.depth() >= 8.0F) {
+				helper.fail("the bottom tier's continuation " + bands + " is not one stepped sleeve from "
+						+ CableBlock.LOW_SLEEVE_BOTTOM + " to " + CableBlock.LOW_SLEEVE_TOP
+						+ " px high, reaching in less than half the cell");
+				return;
+			}
+			height = band.top();
+		}
+		if (height != (float) CableBlock.LOW_SLEEVE_TOP) {
+			helper.fail("the bottom tier's continuation " + bands + " stops below the top of the dropped sleeve");
+			return;
+		}
+		BlockState coreState = stateAt(helper, CORE);
+		if (!ConcentratorStructure.cableArmReach(coreState).equals(bands)) {
+			helper.fail("the core asks for " + ConcentratorStructure.cableArmReach(coreState)
+					+ ", the sections for " + bands + " — the bottom tier is one housing");
+			return;
+		}
+		BlockPos topCell = CORE.offset(ConcentratorPart.TOP_BACK_RIGHT.worldOffset(Direction.NORTH));
+		if (!ConcentratorStructure.cableArmReach(stateAt(helper, topCell)).isEmpty()) {
+			helper.fail("a top cell asks for a cable continuation — the top tier takes no cable");
+			return;
+		}
+
+		// Take the machine apart: the section is a full casing again, met at the edge like any block.
+		helper.setBlock(topCell, Blocks.AIR);
+		BlockState loose = stateAt(helper, cell);
+		if (!ConcentratorStructure.cableArmReach(loose).isEmpty()) {
+			helper.fail("a taken-apart section still asks for a cable continuation");
+			return;
+		}
+		if (stateAt(helper, cable).getValue(CableBlock.lowFlagFor(Direction.WEST))) {
+			helper.fail("the cable still drops toward a section that is no longer part of a machine");
+			return;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * A consumer wired only to a section — no cable anywhere near the core — is fed from the core's
+	 * buffer. This is the defect the owner found: a cable run around the whole base was connected at
+	 * the one cell the panel used to stand in.
+	 *
+	 * @implements MOD-608 — energy leaves the machine through a cable that touches only a section
+	 */
+	public static void sectionOnlyCableCarriesTheCoreEnergy(GameTestHelper helper) {
+		buildChargedMachine(helper, 10_000L);
+		BlockPos cable = new BlockPos(5, 2, 4); // touches BACK_RIGHT's east face only
+		helper.setBlock(cable, ModContent.COPPER_CABLE.get());
+		// FACING = WEST puts the box's IN face on its west side, against the cable.
+		BlockPos box = new BlockPos(6, 2, 4);
+		helper.setBlock(box, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
+		if (EnergyScenarioSupport.be(helper, box) instanceof BatteryBoxBlockEntity bb) {
+			bb.getEnergyStorage().setAmountUntracked(0L);
+		}
+		for (int i = 0; i < 20; i++) {
+			EnergyScenarioSupport.tick(helper, EnergyScenarioSupport.be(helper, cable));
+			NetworkManager.tickAll(helper.getLevel());
+			EnergyScenarioSupport.tick(helper, EnergyScenarioSupport.be(helper, box));
+		}
+		long got = EnergyScenarioSupport.be(helper, box) instanceof BatteryBoxBlockEntity bb
+				? bb.getEnergyStorage().getAmount() : -1L;
+		if (got <= 0L) {
+			helper.fail("a box wired only to a section got " + got + " EU — the section does not lend the"
+					+ " core's port");
+			return;
 		}
 		helper.succeed();
 	}

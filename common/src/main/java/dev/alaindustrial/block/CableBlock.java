@@ -6,6 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.core.energy.CableType;
+import dev.alaindustrial.core.energy.EnergyHostRedirect;
 import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.core.energy.ShockGuardMaterial;
 import dev.alaindustrial.core.energy.ShockInsulation;
@@ -118,20 +119,31 @@ public class CableBlock extends AbstractMachineBlock {
 	 * 3px would float in the air above a 0.5-block surface. These drop the sleeve to Y=0..5 so it
 	 * hugs the base/side of the slab — same 6px cross-section, lowered. See {@link #LOW_FLAGS}.
 	 */
+	/**
+	 * The dropped sleeve's section where it leaves the cell, in block pixels: {@code SLEEVE_MIN..SLEEVE_MAX}
+	 * across the arm and {@code LOW_SLEEVE_BOTTOM..LOW_SLEEVE_TOP} in height. {@link #ARMS_LOW} is built
+	 * from them, and so is the continuation the cable's renderer draws into an inset neighbour
+	 * ({@link CableArmReach}, MOD-609) — one set of numbers, so the two cannot drift apart (MOD-195).
+	 */
+	public static final double SLEEVE_MIN = 5.0;
+	public static final double SLEEVE_MAX = 11.0;
+	public static final double LOW_SLEEVE_BOTTOM = 2.0;
+	public static final double LOW_SLEEVE_TOP = 8.0;
+
 	private static final Map<Direction, VoxelShape> ARMS_LOW = new EnumMap<>(Direction.class);
 	static {
 		ARMS_LOW.put(Direction.NORTH, Shapes.or(
 				Block.box(5, 5, 2, 11, 11, 5),
-				Block.box(5, 2, 0, 11, 8, 2)));
+				Block.box(SLEEVE_MIN, LOW_SLEEVE_BOTTOM, 0, SLEEVE_MAX, LOW_SLEEVE_TOP, 2)));
 		ARMS_LOW.put(Direction.SOUTH, Shapes.or(
 				Block.box(5, 5, 11, 11, 11, 14),
-				Block.box(5, 2, 14, 11, 8, 16)));
+				Block.box(SLEEVE_MIN, LOW_SLEEVE_BOTTOM, 14, SLEEVE_MAX, LOW_SLEEVE_TOP, 16)));
 		ARMS_LOW.put(Direction.WEST, Shapes.or(
 				Block.box(2, 5, 5, 5, 11, 11),
-				Block.box(0, 2, 5, 2, 8, 11)));
+				Block.box(0, LOW_SLEEVE_BOTTOM, SLEEVE_MIN, 2, LOW_SLEEVE_TOP, SLEEVE_MAX)));
 		ARMS_LOW.put(Direction.EAST, Shapes.or(
 				Block.box(11, 5, 5, 14, 11, 11),
-				Block.box(14, 2, 5, 16, 8, 11)));
+				Block.box(14, LOW_SLEEVE_BOTTOM, SLEEVE_MIN, 16, LOW_SLEEVE_TOP, SLEEVE_MAX)));
 	}
 
 	/**
@@ -680,6 +692,11 @@ public class CableBlock extends AbstractMachineBlock {
 		Block block = neighborState.getBlock();
 		if (block instanceof AbstractMachineBlock machine) {
 			return machine.isCableConnectable(neighborState, dir.getOpposite());
+		}
+		// A multiblock cell that lends its core's port (MOD-608). The arm asks the very method the network's
+		// lookup asks, so it cannot show a joint the network does not use, or hide one it does.
+		if (block instanceof EnergyHostRedirect redirect) {
+			return redirect.energyHost(neighborState, pos.relative(dir), dir.getOpposite()) != null;
 		}
 		// The reactor outlet is the one non-machine a cable may join. It cannot extend
 		// AbstractMachineBlock — it has to be a ReactorShellBlock to carry the room's formed/edge

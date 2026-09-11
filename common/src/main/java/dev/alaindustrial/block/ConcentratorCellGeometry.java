@@ -1,5 +1,7 @@
 package dev.alaindustrial.block;
 
+import java.util.List;
+
 /**
  * Geometry of the assembled Mirror Concentrator — GENERATED, do not edit by hand.
  *
@@ -79,6 +81,18 @@ final class ConcentratorCellGeometry {
 			{2, 0, 0, 16, 5.6, 11},  // TOP_BACK_RIGHT
 		},
 	};
+
+	/**
+	 * How a cable's dropped arm continues past the cell edge into a bottom-tier cell, in block
+	 * pixels (MOD-609): bands stacked from the sleeve's bottom up, each carried to the surface
+	 * in front of it — the base step, the housing — and not a hair further. Measured from the
+	 * model. One depth for the whole sleeve would have pushed its sides through the step, and
+	 * two faces in one plane facing the same way flicker; the generator refuses any such pair
+	 * that can be seen.
+	 */
+	static final List<CableArmReach.Band> CABLE_ARM_BANDS = List.of(
+			new CableArmReach.Band(2f, 3f, 5f),
+			new CableArmReach.Band(3f, 8f, 6f));
 
 	/**
 	 * Blockstate {@code y} rotation of the structure, indexed by

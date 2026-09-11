@@ -1,15 +1,15 @@
-## 0.1.160
+## 0.1.161
 
-<p><img alt="Ala Industrial 0.1.160 - the incubator before and after, with its nutrient bath" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.160/release-media/v0.1.160/changelog.png" width="720"></p>
+<p><img alt="Cables running into the base of an assembled Mirror Concentrator" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.161/release-media/v0.1.161/changelog.png" width="720"></p>
 
-The incubator was rebuilt — and it now drinks water.
+The assembled Mirror Concentrator now works as one machine, from every side.
 
-### New
+### Fixed
 
-- **A nutrient bath.** Pipe water into the incubator from any side, or top it up with a bucket by hand. It stands in the glass chamber, and a sight glass on the back shows how much is left.
-- **Water makes it quicker.** An attempt runs faster while the bath has water. No water, no change — incubators already standing in your world keep working exactly as before.
+- **Open it from any block.** A right-click on any of its eight blocks opens the concentrator's screen.
+- **Wire it anywhere on the base.** A cable connects to any side or the underside of the bottom tier, not only to the block the panel grew in. However many blocks touch the line, it still counts as one machine.
+- **Cables plug in cleanly.** A cable dips down to the base and runs into the housing, just like on a solar panel — no gap, no flicker, and a bare wire stays bare.
 
 ### Improved
 
-- **A machine, not a painted cube.** A technical plinth with a screen, a cartridge and vents, under a see-through chamber.
-- **The panel is alive.** The equaliser on the front moves while an attempt is running.
+- **The inventory icon matches the block.** The concentrator's icon is now drawn from the same model as the placed machine.
