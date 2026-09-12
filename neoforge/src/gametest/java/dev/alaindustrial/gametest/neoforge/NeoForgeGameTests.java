@@ -2390,6 +2390,8 @@ public final class NeoForgeGameTests {
 				FluidTankScenarios::tcFluidTank001Safe01_filledItemIsAtomicAndUnstackable);
 		registerTest(event, "tc_fluid_tank001_bva01_component_amount_clamps_to_capacity", 40, true,
 				FluidTankScenarios::tcFluidTank001Bva01_componentAmountClampsToCapacity);
+		registerTest(event, "fluid_tank_tc_fluid_tank002_fun01_advanced_grade_holds_twice_as_much", 40, true,
+				FluidTankScenarios::tcFluidTank002Fun01_advancedGradeHoldsTwiceAsMuch);
 		registerTest(event, "tc_fluid_tank001_per02_placing_a_filled_tank_keeps_its_contents", 40, true,
 				FluidTankScenarios::tcFluidTank001Per02_placingAFilledTankKeepsItsContents);
 		registerTest(event, "tc_fluid_tank001_fun01_bucket_and_capsule_use_real_click_routing", 40, true,
@@ -2443,6 +2445,8 @@ public final class NeoForgeGameTests {
 				DemoStandScenarios::demoStandRebuildIsIdempotent);
 		registerTest(event, "demo_stand_showcase_covers_items", 100, true, DEMO_STAND_STRUCTURE, true,
 				DemoStandScenarios::demoStandShowcaseCoversItems);
+		registerTest(event, "demo_stand_writes_each_cell_once", 100, true, DEMO_STAND_STRUCTURE, true,
+				DemoStandScenarios::demoStandWritesEachCellOnce);
 
 		// ── MOD-445 — scenarios the lane-parity gate found registered on Fabric only ─────────────
 		// docs/tools/gametest_lane_parity_check.py compares the common scenario set with both lanes;
@@ -2596,6 +2600,10 @@ public final class NeoForgeGameTests {
 				MachineScenarios::tcComp001Neg07_compressorRejectsPartialGlowstoneBatch);
 		registerTest(event, "machine_tc_comp001_neg08_compressor_rejects_partial_redstone_batch", 40, true,
 				MachineScenarios::tcComp001Neg08_compressorRejectsPartialRedstoneBatch);
+		registerTest(event, "machine_tc_comp001_fun17_compressor_compacts_coal_dust_into_carbon_rod", 40, true,
+				MachineScenarios::tcComp001Fun17_compressorCompactsCoalDustIntoCarbonRod);
+		registerTest(event, "machine_tc_comp001_neg09_compressor_rejects_partial_coal_dust_batch", 40, true,
+				MachineScenarios::tcComp001Neg09_compressorRejectsPartialCoalDustBatch);
 		registerTest(event, "machine_tc_comp001_gui06_compressor_reports_partial_batch", 40, true,
 				MachineScenarios::tcComp001Gui06_compressorReportsPartialBatch);
 		registerTest(event, "machine_tc_comp001_gui07_compressor_reports_wrong_item_and_jammed_output", 40, true,

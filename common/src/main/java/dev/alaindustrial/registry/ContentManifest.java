@@ -532,6 +532,13 @@ public final class ContentManifest {
 			block("garden_drone_station", GardenDroneStationBlock::new, s -> ModContent.GARDEN_DRONE_STATION = s);
 	public static final BlockDef<FluidTankBlock> FLUID_TANK =
 			block("fluid_tank", FluidTankBlock::new, s -> ModContent.FLUID_TANK = s);
+	/**
+	 * The second grade (MOD-612). Same block class: the tank has no behaviour that differs by grade —
+	 * the capacity comes from {@link dev.alaindustrial.core.fluid.FluidTankTier}, which reads the
+	 * block. A subclass would exist only to carry a number.
+	 */
+	public static final BlockDef<FluidTankBlock> FLUID_TANK_ADVANCED =
+			block("fluid_tank_advanced", FluidTankBlock::new, s -> ModContent.FLUID_TANK_ADVANCED = s);
 	// Cables (MOD-219 / MOD-259): each grade passes its CableType; rubber insulation keeps the
 	// conductor's tier/cap/buffer and halves its attenuation.
 	public static final BlockDef<CableBlock> COPPER_CABLE =
@@ -838,7 +845,7 @@ public final class ContentManifest {
 			CONCENTRATOR_SECTION,
 			GEOTHERMAL_GENERATOR,
 			WATER_MILL, WIND_MILL, HIGH_ALTITUDE_WIND_MILL, STORM_WIND_MILL, PUMP, GARDEN_DRONE_STATION,
-			FLUID_TANK, COPPER_CABLE, TIN_CABLE, GOLD_CABLE, ELECTRUM_CABLE, INSULATED_COPPER_CABLE,
+			FLUID_TANK, FLUID_TANK_ADVANCED, COPPER_CABLE, TIN_CABLE, GOLD_CABLE, ELECTRUM_CABLE, INSULATED_COPPER_CABLE,
 			INSULATED_TIN_CABLE, INSULATED_GOLD_CABLE, INSULATED_ELECTRUM_CABLE, ITEM_PIPE,
 			ITEM_PIPE_ADVANCED, FLUID_PIPE,
 			MACERATOR, BATTERY_BOX, CESU, TELEPORTER, ELECTRIC_FURNACE, IRON_FURNACE, EXTRACTOR,
@@ -939,6 +946,11 @@ public final class ContentManifest {
 			Map.entry("garden_drone_station",
 					machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion())),
 			Map.entry("fluid_tank", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion())),
+			// MOD-612: the advanced grade is harder to break and twice as hard to blow up. A tank of lava
+			// next to a creeper is the way this block is actually lost, so resistance is a real upgrade
+			// and not a decorative number.
+			Map.entry("fluid_tank_advanced",
+					machine(p -> p.strength(4.0f, 12.0f).sound(SoundType.METAL).noOcclusion())),
 			Map.entry("copper_cable", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion())),
 			Map.entry("tin_cable", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion())),
 			Map.entry("gold_cable", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion())),
@@ -1930,6 +1942,13 @@ public final class ContentManifest {
 			plain("garden_drone", s -> ModContent.GARDEN_DRONE = s),
 			blockItem("fluid_tank", p -> new FluidTankBlockItem(registeredBlock("fluid_tank"),
 					p.useBlockDescriptionPrefix()), s -> ModContent.FLUID_TANK_ITEM = s),
+			// MOD-612 — fireResistant: the advanced tank does not burn when dropped in lava. It is the
+			// one lever vanilla hands out for free that matches what this block is for: the player who
+			// loses a tank loses it while hauling lava.
+			blockItem("fluid_tank_advanced", p -> new FluidTankBlockItem(
+					registeredBlock("fluid_tank_advanced"),
+					p.useBlockDescriptionPrefix().fireResistant()),
+					s -> ModContent.FLUID_TANK_ADVANCED_ITEM = s),
 			blockItem("water_mill", s -> ModContent.WATER_MILL_ITEM = s),
 			blockItem("wind_mill", s -> ModContent.WIND_MILL_ITEM = s),
 			blockItem("high_altitude_wind_mill", s -> ModContent.HIGH_ALTITUDE_WIND_MILL_ITEM = s),
@@ -2177,7 +2196,10 @@ public final class ContentManifest {
 			blockEntity("incubator", IncubatorBlockEntity.class, IncubatorBlockEntity::new, s -> ModContent.INCUBATOR_BE = s, "incubator"),
 			blockEntity("pump", PumpBlockEntity.class, PumpBlockEntity::new, s -> ModContent.PUMP_BE = s, "pump"),
 			blockEntity("garden_drone_station", GardenDroneStationBlockEntity.class, GardenDroneStationBlockEntity::new, s -> ModContent.GARDEN_DRONE_STATION_BE = s, "garden_drone_station"),
-			blockEntity("fluid_tank", FluidTankBlockEntity.class, FluidTankBlockEntity::new, s -> ModContent.FLUID_TANK_BE = s, "fluid_tank"),
+			// MOD-612: ONE block-entity type for both grades — it holds a fluid and nothing else, and the
+			// capacity is a function of the block it sits in. A second type would add two hand-kept
+			// literals to loader_parity_check and buy nothing.
+			blockEntity("fluid_tank", FluidTankBlockEntity.class, FluidTankBlockEntity::new, s -> ModContent.FLUID_TANK_BE = s, "fluid_tank", "fluid_tank_advanced"),
 			blockEntity("water_mill", WaterMillBlockEntity.class, WaterMillBlockEntity::new, s -> ModContent.WATER_MILL_BE = s, "water_mill"),
 			blockEntity("wind_mill", WindMillBlockEntity.class, WindMillBlockEntity::new, s -> ModContent.WIND_MILL_BE = s, "wind_mill"),
 			blockEntity("high_altitude_wind_mill", HighAltitudeWindMillBlockEntity.class, HighAltitudeWindMillBlockEntity::new, s -> ModContent.HIGH_ALTITUDE_WIND_MILL_BE = s, "high_altitude_wind_mill"),

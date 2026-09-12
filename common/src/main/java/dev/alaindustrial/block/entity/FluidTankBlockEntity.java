@@ -1,6 +1,5 @@
 package dev.alaindustrial.block.entity;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.core.fluid.FluidPort;
 import dev.alaindustrial.core.fluid.FluidPortHost;
@@ -34,11 +33,14 @@ import net.minecraft.world.level.storage.ValueOutput;
  * registries publish it through their native fluid capability.
  */
 public final class FluidTankBlockEntity extends BlockEntity implements FluidPortHost {
-	public final FluidTank fluidTank = new FluidTank(Config.fluidTankCapacity,
-			fluid -> !fluid.isEmpty(), fluid -> true, this::tankChanged);
+	public final FluidTank fluidTank;
 
 	public FluidTankBlockEntity(BlockPos pos, BlockState state) {
 		super(ModContent.FLUID_TANK_BE.get(), pos, state);
+		// MOD-612: the capacity is the grade's, not a constant. Read from the state rather than stored,
+		// because one block-entity type serves both tanks.
+		this.fluidTank = new FluidTank(dev.alaindustrial.block.FluidTankBlock.tierOf(state.getBlock()).capacity(),
+				fluid -> !fluid.isEmpty(), fluid -> true, this::tankChanged);
 	}
 
 	@Override
@@ -73,7 +75,9 @@ public final class FluidTankBlockEntity extends BlockEntity implements FluidPort
 	}
 
 	private void applyStored(Fluid fluid, long amount) {
-		long clamped = Math.max(0L, Math.min(Config.fluidTankCapacity, amount));
+		// MOD-612: clamp to THIS tank's capacity. Clamping to the basic knob would silently spill half
+		// an advanced tank on every world load.
+		long clamped = Math.max(0L, Math.min(fluidTank.capacity, amount));
 		if (fluid == null || fluid == Fluids.EMPTY || clamped == 0) {
 			fluidTank.fluid = FluidHolder.EMPTY;
 			fluidTank.amount = 0;

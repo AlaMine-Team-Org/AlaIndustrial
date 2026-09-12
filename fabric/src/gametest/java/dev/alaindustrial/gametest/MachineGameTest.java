@@ -366,6 +366,23 @@ public class MachineGameTest {
 	}
 
 	/**
+	 * @implements TC-COMP-001-FUN17 — the carbon rod recipe itself: the {@code #c:dusts/coal} tag
+	 *     resolves and the sixteen-dust price holds (MOD-591).
+	 */
+	@GameTest
+	public void tcComp001Fun17_compressorCompactsCoalDustIntoCarbonRod(GameTestHelper helper) {
+		MachineScenarios.tcComp001Fun17_compressorCompactsCoalDustIntoCarbonRod(helper);
+	}
+
+	/**
+	 * @implements TC-COMP-001-NEG09 — fifteen coal dust is one short of the rod's price (MOD-591).
+	 */
+	@GameTest
+	public void tcComp001Neg09_compressorRejectsPartialCoalDustBatch(GameTestHelper helper) {
+		MachineScenarios.tcComp001Neg09_compressorRejectsPartialCoalDustBatch(helper);
+	}
+
+	/**
 	 * @implements TC-COMP-001-GUI06 — a partial batch (3 of 4 dust, 1 of 9 redstone) reports
 	 *     NOT_ENOUGH_INPUT on the readout channel, and clears to READY the moment it is topped up.
 	 * @covers R-GUI-03

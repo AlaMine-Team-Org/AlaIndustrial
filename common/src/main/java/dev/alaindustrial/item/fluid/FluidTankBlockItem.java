@@ -25,12 +25,17 @@ public final class FluidTankBlockItem extends BlockItem {
 			Consumer<Component> adder, TooltipFlag flag) {
 		FluidTankContents contents = stack.get(dev.alaindustrial.registry.ModDataComponents.FLUID_TANK_CONTENTS.get());
 		if (contents == null) {
-			adder.accept(Component.translatable("tooltip.alaindustrial.fluid_tank.empty")
+			adder.accept(Component.translatable("tooltip.alaindustrial.fluid_tank.empty_capacity",
+							dev.alaindustrial.block.FluidTankBlock.tierOf(getBlock()).capacity())
 					.withStyle(ChatFormatting.GRAY));
 			return;
 		}
+		// MOD-612 — the capacity comes from THIS item's block, never from the basic tank's knob. The
+		// mod has shipped a tier-2 tooltip describing tier 1 twice (advanced pipe 0.1.149, advanced
+		// magnet 0.1.148), both times because a number was written at the call site.
 		adder.accept(Component.translatable("tooltip.alaindustrial.fluid_tank.contents",
-						fluidName(contents), contents.amount(), dev.alaindustrial.Config.fluidTankCapacity)
+						fluidName(contents), contents.amount(),
+						dev.alaindustrial.block.FluidTankBlock.tierOf(getBlock()).capacity())
 				.withStyle(ChatFormatting.AQUA));
 	}
 
@@ -49,11 +54,13 @@ public final class FluidTankBlockItem extends BlockItem {
 	@Override
 	public int getBarWidth(ItemStack stack) {
 		FluidTankContents contents = stack.get(dev.alaindustrial.registry.ModDataComponents.FLUID_TANK_CONTENTS.get());
-		if (contents == null || dev.alaindustrial.Config.fluidTankCapacity <= 0) {
+		// MOD-612 — the bar measures against THIS grade's capacity: on the advanced tank the basic
+		// knob would draw a full bar at half full.
+		int capacity = dev.alaindustrial.block.FluidTankBlock.tierOf(getBlock()).capacity();
+		if (contents == null || capacity <= 0) {
 			return 0;
 		}
-		return (int) Math.min(MAX_BAR_WIDTH,
-				MAX_BAR_WIDTH * contents.amount() / dev.alaindustrial.Config.fluidTankCapacity);
+		return (int) Math.min(MAX_BAR_WIDTH, MAX_BAR_WIDTH * contents.amount() / capacity);
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package dev.alaindustrial.block;
 
 import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.FluidTankBlockEntity;
+import dev.alaindustrial.core.fluid.FluidTankTier;
 import dev.alaindustrial.item.fluid.FluidTankBucketInteractions;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
@@ -52,6 +53,19 @@ public final class FluidTankBlock extends BaseEntityBlock {
 
 	public FluidTankBlock(Properties properties) {
 		super(properties);
+	}
+
+	/**
+	 * The grade of a tank block — {@link FluidTankTier#BASIC} for anything that is not the advanced
+	 * tank (MOD-612).
+	 *
+	 * <p>Keyed on the block rather than on a block-state property: the two tanks are separate blocks
+	 * with separate recipes, loot and textures, and a property would have to be carried through
+	 * placement, loot and the item form for no gain. Lives here rather than on the enum so the enum
+	 * stays Minecraft-free and unit-testable.
+	 */
+	public static FluidTankTier tierOf(Block block) {
+		return block == ModContent.FLUID_TANK_ADVANCED.get() ? FluidTankTier.ADVANCED : FluidTankTier.BASIC;
 	}
 
 	@Override

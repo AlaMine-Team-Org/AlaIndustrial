@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "C": "alaindustrial:cupronickel_reinforced_plate",
+    "S": "alaindustrial:silver_plate",
+    "T": "alaindustrial:fluid_tank"
+  },
+  "pattern": [
+    "CSC",
+    "STS",
+    "CSC"
+  ],
+  "result": {
+    "id": "alaindustrial:fluid_tank_advanced"
+  }
+}

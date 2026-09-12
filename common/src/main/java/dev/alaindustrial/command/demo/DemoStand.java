@@ -33,7 +33,9 @@ import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.registry.ModContent;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -94,8 +96,28 @@ public final class DemoStand {
 	/** Blocks above the floor layer that belong to the stand (wind-mill pillars are tallest). */
 	public static final int HEIGHT = 9;
 
+	/**
+	 * Cells the stand owns BELOW its floor (MOD-597). The stand digs: the water mill's wheel plane is
+	 * a walled channel two levels deep, and every sunken fluid basin has a pan under it.
+	 *
+	 * <p>It was not declared anywhere until now, and that is exactly what made it a hole. Both the
+	 * builder and its gametests stopped at {@code y = 0}: {@code clear} restored grass and left the
+	 * channel and the pans buried under it forever, and the scans that would have noticed started at
+	 * {@code y = -1} or {@code y = 0}, so the code and the test agreed on the same wrong bound. It is
+	 * the same defect as MOD-584 (a column written past {@code WIDTH}), turned ninety degrees.
+	 */
+	public static final int DEPTH_BELOW = 2;
+
 	/** Floor material — also the datum marker {@link #findOrigin} recognises for idempotent rebuilds. */
 	private static final Block FLOOR = Blocks.SMOOTH_STONE;
+
+	/**
+	 * What fills the {@link #DEPTH_BELOW} layers under the floor — ordinary subsoil, the thing that
+	 * sits under grass. Written blanket on every build and every clear, exactly like the floor above
+	 * it, so what the stand digs is always dug out of a known slab rather than out of whatever the
+	 * previous version of the layout happened to leave there.
+	 */
+	public static final Block SUBSOIL = Blocks.DIRT;
 
 	/** Showcase wall (MOD-294): the back-edge row z, columns x=1..40, rows y=1..9 (360 slots). */
 	private static final int SHOWCASE_WALL_Z = 25;
@@ -161,26 +183,43 @@ public final class DemoStand {
 		// level with a wheel in its slot, and replacing its block is what spills that wheel — the
 		// y>=1 machines spill during clearAbove, so this one sweep catches both waves.
 		killLooseEntities(level, origin);
-		buildTierZone(level, origin);
-		buildGeneratorRow(level, origin);
-		buildWindMills(level, origin);
-		buildMachines(level, origin);
-		buildCableRuns(level, origin);
-		buildOreWall(level, origin);
-		buildMisc(level, origin);
-		buildLossLane(level, origin);
-		buildFarms(level, origin);
-		buildReactorZone(level, origin);
-		buildCrystalGreenhouse(level, origin);
-		buildReactorRoom(level, origin);
-		buildShowcase(level, origin);
+		// From here on every write is recorded: the floor pass above legitimately covers the whole
+		// footprint, the zones below own one cell each (MOD-597, see #lastBuildProblems).
+		openLedger();
+		try {
+			buildTierZone(level, origin);
+			buildGeneratorRow(level, origin);
+			buildWindMills(level, origin);
+			buildMachines(level, origin);
+			buildCableRuns(level, origin);
+			buildOreWall(level, origin);
+			buildMisc(level, origin);
+			buildLossLane(level, origin);
+			buildFarms(level, origin);
+			buildReactorZone(level, origin);
+			buildCrystalGreenhouse(level, origin);
+			buildReactorRoom(level, origin);
+			buildShowcase(level, origin);
+		} finally {
+			closeLedger();
+		}
 	}
 
-	/** Remove the stand: air above, entities gone, and the floor layer reverts to grass. */
+	/**
+	 * Remove the stand: air above, entities gone, the floor layer reverts to grass — and the
+	 * {@link #DEPTH_BELOW} layers under it are filled back in (MOD-597).
+	 *
+	 * <p>Filling them blanket, rather than only where the stand dug, for the same reason the floor is
+	 * laid blanket: nothing remembers which cells a previous build carved, and a clear that restores
+	 * grass over an open water channel leaves a trap under the lawn.
+	 */
 	public static void clear(ServerLevel level, BlockPos origin) {
 		clearAbove(level, origin);
 		for (int x = 0; x < WIDTH; x++) {
 			for (int z = 0; z < DEPTH; z++) {
+				for (int y = -DEPTH_BELOW; y < 0; y++) {
+					set(level, origin, x, y, z, SUBSOIL);
+				}
 				set(level, origin, x, 0, z, Blocks.GRASS_BLOCK);
 			}
 		}
@@ -219,9 +258,17 @@ public final class DemoStand {
 		}
 	}
 
+	/**
+	 * The floor slab, and the subsoil under it the zones dig into (MOD-597). Both are blanket writes
+	 * of the whole footprint, which is why they run BEFORE the ledger opens: the zones carve this
+	 * slab, and carving is not a collision.
+	 */
 	private static void buildFloor(ServerLevel level, BlockPos origin) {
 		for (int x = 0; x < WIDTH; x++) {
 			for (int z = 0; z < DEPTH; z++) {
+				for (int y = -DEPTH_BELOW; y < 0; y++) {
+					set(level, origin, x, y, z, SUBSOIL);
+				}
 				set(level, origin, x, 0, z, FLOOR);
 			}
 		}
@@ -251,7 +298,13 @@ public final class DemoStand {
 		fillSlot(level, origin, 5, 1, 4, 0, new ItemStack(Items.LAVA_BUCKET));
 		set(level, origin, 5, 1, 5, ModContent.BATTERY_BOX.get());
 
-		int x = 8;
+		// x=6, not 8 (MOD-597): with the run starting at 8 the fourth panel landed at x=17, which is
+		// the middle of the water channel below — and the channel's dam puts a smooth-stone block at
+		// (17, 2, 4), directly ON TOP of it. A roofed solar panel produces nothing, and nothing was
+		// ever going to say so: the cell is not a collision (the dam is one level up), the coverage
+		// scan finds the panel exactly where it expects it, and the liveness sweep deliberately does
+		// not assert solar output. Starting at 6 ends the run at 15, clear of the dam's 16..18.
+		int x = 6;
 		for (Block solar : new Block[] {ModContent.SOLAR_PANEL.get(),
 				ModContent.DAYLIGHT_SOLAR_PANEL.get(), ModContent.MOONLIT_SOLAR_PANEL.get(),
 				ModContent.RADIANT_SOLAR_PANEL.get()}) {
@@ -260,18 +313,24 @@ public final class DemoStand {
 			x += 3;
 		}
 
-		// MOD-603: the concentrator grown out into its two-by-two-by-two form, standing next to the
-		// one-block version three cells to its left so the size difference is the first thing seen.
+		// MOD-603: the concentrator grown out into its two-by-two-by-two form — the first clear pair of
+		// columns east of the water channel, so it reads as the next item of the generator row.
 		// Built the way a player builds it — a grown panel plus seven loose sections — and then handed
 		// to the real assembler, so the stand cannot show a structure the game could not produce.
-		BlockPos structureCore = origin.offset(x, 1, 4);
-		level.setBlockAndUpdate(structureCore,
+		//
+		// x=20 is written out rather than taken from the loop counter above (MOD-597): riding the
+		// counter put the structure wherever the last panel happened to leave it, and the wind-mill row
+		// below — which starts from a literal — drove a smooth-stone pillar straight through its core
+		// and its top cell. Two zones, two literals, one cell, and the survivor still ticked every box
+		// the coverage scan has.
+		BlockPos structureCore = origin.offset(20, 1, 4);
+		place(level, origin, structureCore,
 				ModContent.RADIANT_SOLAR_PANEL.get().defaultBlockState());
 		for (ConcentratorPart part : ConcentratorPart.CELLS) {
 			if (part == ConcentratorPart.CORE) {
 				continue;
 			}
-			level.setBlockAndUpdate(structureCore.offset(part.worldOffset(Direction.NORTH)),
+			place(level, origin, structureCore.offset(part.worldOffset(Direction.NORTH)),
 					ModContent.CONCENTRATOR_SECTION.get().defaultBlockState());
 		}
 		ConcentratorStructure.tryAssemble(level, structureCore);
@@ -323,7 +382,9 @@ public final class DemoStand {
 	private static void buildWindMills(ServerLevel level, BlockPos origin) {
 		Block[] mills = {ModContent.WIND_MILL.get(),
 				ModContent.HIGH_ALTITUDE_WIND_MILL.get(), ModContent.STORM_WIND_MILL.get()};
-		int x = 20;
+		// x=23, not 20 (MOD-597): the concentrator's 2x2x2 owns x 20..21 on this row, and the first
+		// pillar was being driven straight through it.
+		int x = 23;
 		for (Block mill : mills) {
 			for (int y = 1; y <= 4; y++) {
 				set(level, origin, x, y, 4, FLOOR);
@@ -334,6 +395,12 @@ public final class DemoStand {
 		}
 		// MOD-386: the lightning rod shares this weather row — same mast-on-a-pillar shape, and a
 		// conductor tip pre-installed so the stand shows the configured block rather than an inert one.
+		//
+		// Its column is a literal instead of the loop counter (MOD-597): carried on, the counter put the
+		// mast at x=35, which is the middle of the ore wall two zones later — and since the ore wall is
+		// built after the mills, the pillar's bottom two blocks were quietly replaced by silver ore. The
+		// wall owns x 34..39, so the weather row ends past it.
+		x = 41;
 		for (int y = 1; y <= 4; y++) {
 			set(level, origin, x, y, 4, FLOOR);
 		}
@@ -469,23 +536,28 @@ public final class DemoStand {
 		// Workstation (MOD-483): the 1x2 multiblock, shown assembled and powered so the stand carries a
 		// lit one rather than two loose casings. Both cells are written by hand and the assembly hook is
 		// then called explicitly — a programmatic setBlock never runs setPlacedBy, the same reason the
-		// airlock's halves are placed cell by cell. x=25 is clear in this row: the fermenter sits at 20
-		// and the nutrient pool at 22, and a second set on one cell silently drops the first block.
+		// airlock's halves are placed cell by cell.
+		//
+		// x=26, not 25 (MOD-597): x=25 belongs to the carbon ceramic block, which is written LATER in
+		// this same method and therefore won its half of the argument in silence — the station's lower
+		// casing was replaced, the upper half lost its partner and degraded back to a casing, and the
+		// stand showed a loose casing floating over a ceramic block. Nothing went red: the coverage scan
+		// still found a workstation casing, and the stocking block below simply fell through its
+		// instanceof. The ledger in #lastBuildProblems is what now says this out loud.
 		BlockState workstationCasing = ModContent.WORKSTATION.get().defaultBlockState();
-		level.setBlockAndUpdate(origin.offset(25, 1, 12), workstationCasing);
-		level.setBlockAndUpdate(origin.offset(25, 2, 12), workstationCasing);
-		WorkstationBlock.tryAssemble(level, origin.offset(25, 2, 12));
-		if (level.getBlockEntity(origin.offset(25, 1, 12)) instanceof WorkstationBlockEntity station) {
+		place(level, origin, origin.offset(26, 1, 12), workstationCasing);
+		place(level, origin, origin.offset(26, 2, 12), workstationCasing);
+		WorkstationBlock.tryAssemble(level, origin.offset(26, 2, 12));
+		if (level.getBlockEntity(origin.offset(26, 1, 12)) instanceof WorkstationBlockEntity station) {
 			station.getEnergyStorage().setAmountUntracked(station.getEnergyStorage().getCapacity());
 			station.setChangedQuietly();
 		}
-		// Upgrade Table (MOD-482): the same 1x2 pattern, shown assembled and powered next to the
-		// workstation it is built like. x=27 for the same reason x=25 was chosen — the neighbouring
-		// cells in this row are already spoken for, and a second set on one cell silently drops the
-		// first block.
+		// Upgrade Table (MOD-482): the same 1x2 pattern, shown assembled and powered directly beside
+		// the workstation it is built like. Both are 1x2 and assemble VERTICALLY, so standing them
+		// shoulder to shoulder at 26 and 27 costs nothing — neither scan looks sideways.
 		BlockState upgradeTableCasing = ModContent.UPGRADE_TABLE.get().defaultBlockState();
-		level.setBlockAndUpdate(origin.offset(27, 1, 12), upgradeTableCasing);
-		level.setBlockAndUpdate(origin.offset(27, 2, 12), upgradeTableCasing);
+		place(level, origin, origin.offset(27, 1, 12), upgradeTableCasing);
+		place(level, origin, origin.offset(27, 2, 12), upgradeTableCasing);
 		UpgradeTableBlock.tryAssemble(level, origin.offset(27, 2, 12));
 		if (level.getBlockEntity(origin.offset(27, 1, 12)) instanceof UpgradeTableBlockEntity table) {
 			table.getEnergyStorage().setAmountUntracked(table.getEnergyStorage().getCapacity());
@@ -511,7 +583,8 @@ public final class DemoStand {
 				new ItemStack(Items.COBBLESTONE, 64));
 		set(level, origin, 24, 1, 12, ModContent.SLAG_BLOCK.get());
 		// MOD-590 — carbon ceramic beside the slag block it is fired with: the two blocks the Recycler
-		// feeds, standing next to each other.
+		// feeds, standing next to each other. 23-24-25 is that story (machine, slag, ceramic) and it is
+		// why the workstation moved to 26 rather than this block moving away from the slag.
 		set(level, origin, 25, 1, 12, ModContent.CARBON_CERAMIC.get());
 		// Iron furnace (MOD-115): fuel-burning, not EU — so it is loaded with input + coal instead of a
 		// pre-charged buffer, and lights itself on the first tick like a vanilla furnace.
@@ -567,7 +640,7 @@ public final class DemoStand {
 				// output face to meet the cables. Placed with the default state (FACING=NORTH) it would emit
 				// southward into thin air, the cables would not connect, and the whole row would sit dead
 				// (MOD-103) — the same fix pattern as the misc zone's teleporter box.
-				level.setBlockAndUpdate(origin.offset(x0, 1, z), ModContent.BATTERY_BOX.get().defaultBlockState()
+				place(level, origin, origin.offset(x0, 1, z), ModContent.BATTERY_BOX.get().defaultBlockState()
 						.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 				chargeBuffer(level, origin, x0, 1, z);
 				for (int x = x0 + 1; x <= x0 + 6; x++) {
@@ -605,10 +678,20 @@ public final class DemoStand {
 				instanceof dev.alaindustrial.block.entity.FluidTankBlockEntity tank) {
 			tank.fluidTank.fluid =
 					dev.alaindustrial.core.fluid.FluidHolder.of(net.minecraft.world.level.material.Fluids.WATER);
-			tank.fluidTank.amount = dev.alaindustrial.Config.fluidTankCapacity;
+			tank.fluidTank.amount = tank.fluidTank.capacity;
 		}
 		for (int x = 26; x <= 30; x++) set(level, origin, x, 1, 26, ModContent.FLUID_PIPE.get());
 		set(level, origin, 31, 1, 26, ModContent.FLUID_TANK.get());
+		// MOD-612: the advanced grade stands next to the basic one, both filled to their OWN capacity —
+		// side by side the taller fluid column and the belt around the frame are the whole point of the
+		// tier, and a stand that filled both to 8000 would hide it.
+		set(level, origin, 33, 1, 26, ModContent.FLUID_TANK_ADVANCED.get());
+		if (level.getBlockEntity(origin.offset(33, 1, 26))
+				instanceof dev.alaindustrial.block.entity.FluidTankBlockEntity advanced) {
+			advanced.fluidTank.fluid =
+					dev.alaindustrial.core.fluid.FluidHolder.of(net.minecraft.world.level.material.Fluids.WATER);
+			advanced.fluidTank.amount = advanced.fluidTank.capacity;
+		}
 	}
 
 	/**
@@ -707,8 +790,7 @@ public final class DemoStand {
 		// its most recognisable stage, with the soil it actually needs. Placed via the vanilla two-block
 		// helper so both halves appear; the age is written to BOTH halves, since the upper one carries it
 		// only to keep its model in step with the lower.
-		set(level, origin, 41, 0, 10, FLOOR);
-		level.setBlockAndUpdate(origin.offset(41, 0, 10),
+		place(level, origin, origin.offset(41, 0, 10),
 				Blocks.FARMLAND.defaultBlockState().setValue(FarmlandBlock.MOISTURE, FarmlandBlock.MAX_MOISTURE));
 		DoublePlantBlock.placeAt(level, ModContent.TRELLIS.get().defaultBlockState(),
 				origin.offset(41, 1, 10), 3);
@@ -722,22 +804,22 @@ public final class DemoStand {
 		// Kok-sagyz column (MOD-537): shown as an exposed soil cross-section beside the trellis —
 		// tip at the bottom, upper root above it, mature puff on top — so the stand answers "where
 		// does the rubber come from" the way the plant itself does: dig the bottom block.
-		level.setBlockAndUpdate(origin.offset(41, 0, 9), ModContent.KOK_SAGYZ_ROOT.get().defaultBlockState()
+		place(level, origin, origin.offset(41, 0, 9), ModContent.KOK_SAGYZ_ROOT.get().defaultBlockState()
 				.setValue(dev.alaindustrial.block.KokSagyzRootBlock.TIP, true));
-		level.setBlockAndUpdate(origin.offset(41, 1, 9), ModContent.KOK_SAGYZ_ROOT.get().defaultBlockState());
-		level.setBlockAndUpdate(origin.offset(41, 2, 9), ModContent.KOK_SAGYZ.get().defaultBlockState()
+		place(level, origin, origin.offset(41, 1, 9), ModContent.KOK_SAGYZ_ROOT.get().defaultBlockState());
+		place(level, origin, origin.offset(41, 2, 9), ModContent.KOK_SAGYZ.get().defaultBlockState()
 				.setValue(dev.alaindustrial.block.KokSagyzBlock.AGE, dev.alaindustrial.block.KokSagyzBlock.AGE_MATURE));
 		// MOD-584: a short harvestable root beside the full column, both in their original soil.
 		// x=40, not 42: WIDTH is 42, so column 42 lies OUTSIDE the stand — `clearAbove` and `clear`
 		// both stop at x < WIDTH, and this trio would have stood on the grass forever after a clear.
 		// Row z=9 holds nothing else, so the pair sits together with the full column at x=41.
 		set(level, origin, 40, 0, 9, FLOOR);
-		level.setBlockAndUpdate(origin.offset(40, 1, 9), ModContent.KOK_SAGYZ_ROOT.get().defaultBlockState()
+		place(level, origin, origin.offset(40, 1, 9), ModContent.KOK_SAGYZ_ROOT.get().defaultBlockState()
 				.setValue(dev.alaindustrial.block.KokSagyzRootBlock.TIP, true));
 		if (level.getBlockEntity(origin.offset(40, 1, 9)) instanceof dev.alaindustrial.block.entity.KokSagyzRootBlockEntity root) {
 			root.setSoil(Blocks.SAND.defaultBlockState());
 		}
-		level.setBlockAndUpdate(origin.offset(40, 2, 9), ModContent.KOK_SAGYZ.get().defaultBlockState()
+		place(level, origin, origin.offset(40, 2, 9), ModContent.KOK_SAGYZ.get().defaultBlockState()
 				.setValue(dev.alaindustrial.block.KokSagyzBlock.AGE, dev.alaindustrial.block.KokSagyzBlock.AGE_MATURE));
 		// Garden Drone Station (MOD-277): the dock beside the trellis plot, charged so its status light
 		// reads "powered" rather than "no EU". Placed next to farmland on purpose — the stand should show
@@ -757,7 +839,7 @@ public final class DemoStand {
 		set(level, origin, 39, 1, 10, ModContent.ENERGY_CONDENSER.get());
 		chargeBuffer(level, origin, 39, 1, 10);
 		set(level, origin, 39, 2, 10, FLOOR);
-		level.setBlockAndUpdate(origin.offset(38, 2, 10),
+		place(level, origin, origin.offset(38, 2, 10),
 				ModContent.ENRICHED_URANIUM_WALL_TORCH.get().defaultBlockState()
 						.setValue(WallTorchBlock.FACING, Direction.WEST));
 		// Teleporter station (MOD-091): a charged battery box feeds it through a cable, so the stand
@@ -771,7 +853,7 @@ public final class DemoStand {
 		// WEST for its output face to meet it. Placed with the default state (FACING=NORTH) it would
 		// emit southward into thin air, the cable would not even connect, and the station would sit
 		// there dead next to a full battery.
-		level.setBlockAndUpdate(origin.offset(30, 1, 12), ModContent.BATTERY_BOX.get().defaultBlockState()
+		place(level, origin, origin.offset(30, 1, 12), ModContent.BATTERY_BOX.get().defaultBlockState()
 				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 		chargeBuffer(level, origin, 30, 1, 12);
 		set(level, origin, 31, 1, 12, ModContent.COPPER_CABLE.get());
@@ -791,13 +873,13 @@ public final class DemoStand {
 	 */
 	private static void buildTierZone(ServerLevel level, BlockPos origin) {
 		// LV: battery box, buffer charged full → tin cable → a macerator actually grinding.
-		level.setBlockAndUpdate(origin.offset(2, 1, 1), ModContent.BATTERY_BOX.get().defaultBlockState()
+		place(level, origin, origin.offset(2, 1, 1), ModContent.BATTERY_BOX.get().defaultBlockState()
 				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 		chargeBuffer(level, origin, 2, 1, 1);
 		set(level, origin, 3, 1, 1, ModContent.TIN_CABLE.get());
 		placeWorkingMachine(level, origin, 4, 1, ModContent.MACERATOR.get(), new ItemStack(Items.RAW_IRON, 64));
 		// MV: CESU, buffer charged full → gold cable → the assembler, charged and idle (first MV machine).
-		level.setBlockAndUpdate(origin.offset(12, 1, 1), ModContent.CESU.get().defaultBlockState()
+		place(level, origin, origin.offset(12, 1, 1), ModContent.CESU.get().defaultBlockState()
 				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 		chargeBuffer(level, origin, 12, 1, 1);
 		set(level, origin, 13, 1, 1, ModContent.GOLD_CABLE.get());
@@ -805,7 +887,7 @@ public final class DemoStand {
 		chargeBuffer(level, origin, 14, 1, 1);
 		// HV stub: an LV battery feeding a teleporter over HV wiring is legal (packet ceiling, not
 		// floor) and keeps the row honest — no fake HV source stands in for content that is not built.
-		level.setBlockAndUpdate(origin.offset(22, 1, 1), ModContent.BATTERY_BOX.get().defaultBlockState()
+		place(level, origin, origin.offset(22, 1, 1), ModContent.BATTERY_BOX.get().defaultBlockState()
 				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 		chargeBuffer(level, origin, 22, 1, 1);
 		set(level, origin, 23, 1, 1, ModContent.ELECTRUM_CABLE.get());
@@ -820,7 +902,7 @@ public final class DemoStand {
 	 * distance from the box.
 	 */
 	private static void buildLossLane(ServerLevel level, BlockPos origin) {
-		level.setBlockAndUpdate(origin.offset(2, 1, 7), ModContent.BATTERY_BOX.get().defaultBlockState()
+		place(level, origin, origin.offset(2, 1, 7), ModContent.BATTERY_BOX.get().defaultBlockState()
 				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 		chargeBuffer(level, origin, 2, 1, 7);
 		for (int x = 3; x <= 38; x++) {
@@ -843,7 +925,7 @@ public final class DemoStand {
 		// no state juggling — the cable simply meets the panel's OUT face.
 		set(level, origin, 2, 1, 23, ModContent.SOLAR_PANEL.get());
 		set(level, origin, 3, 1, 23, ModContent.COPPER_CABLE.get());
-		level.setBlockAndUpdate(origin.offset(4, 1, 23), ModContent.BATTERY_BOX.get().defaultBlockState()
+		place(level, origin, origin.offset(4, 1, 23), ModContent.BATTERY_BOX.get().defaultBlockState()
 				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 		chargeBuffer(level, origin, 4, 1, 23);
 		set(level, origin, 5, 1, 23, ModContent.COPPER_CABLE.get());
@@ -854,7 +936,7 @@ public final class DemoStand {
 		// Farm B — fluid line: battery box → pump over a sunken water cell → fluid pipes → empty tank
 		// that visibly fills. The pump's IN faces are everything but its intake (PumpBlock), so the
 		// box's east output face meets one directly.
-		level.setBlockAndUpdate(origin.offset(11, 1, 23), ModContent.BATTERY_BOX.get().defaultBlockState()
+		place(level, origin, origin.offset(11, 1, 23), ModContent.BATTERY_BOX.get().defaultBlockState()
 				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 		chargeBuffer(level, origin, 11, 1, 23);
 		set(level, origin, 12, -1, 23, FLOOR);
@@ -902,8 +984,7 @@ public final class DemoStand {
 				new ItemStack(ModContent.URANIUM_INGOT.get(), 16));
 		fillSlot(level, origin, 33, 1, 23, IncubatorBlockEntity.INPUT_SLOT,
 				new ItemStack(Items.SWEET_BERRIES, 64));
-		set(level, origin, 35, 0, 23, FLOOR);
-		level.setBlockAndUpdate(origin.offset(35, 0, 23),
+		place(level, origin, origin.offset(35, 0, 23),
 				Blocks.FARMLAND.defaultBlockState().setValue(FarmlandBlock.MOISTURE, FarmlandBlock.MAX_MOISTURE));
 		DoublePlantBlock.placeAt(level, ModContent.TRELLIS.get().defaultBlockState(),
 				origin.offset(35, 1, 23), 3);
@@ -973,7 +1054,7 @@ public final class DemoStand {
 
 		// Controller in the north wall, panel outward — FACING names the way it looks OUT, and the
 		// scan walks inward along the opposite.
-		level.setBlockAndUpdate(origin.offset(bx + 1, by + 1, bz),
+		refit(level, origin, origin.offset(bx + 1, by + 1, bz),
 				ModContent.CRYSTAL_FARM_CONTROLLER.get().defaultBlockState()
 						.setValue(HorizontalDirectionalBlock.FACING, Direction.NORTH));
 
@@ -981,12 +1062,12 @@ public final class DemoStand {
 		// leaf, does not run for a programmatic setBlock.
 		BlockState door = ModContent.CRYSTAL_FARM_DOOR.get().defaultBlockState()
 				.setValue(DoorBlock.FACING, Direction.SOUTH);
-		level.setBlockAndUpdate(origin.offset(bx + 3, by + 1, bz), door);
-		level.setBlockAndUpdate(origin.offset(bx + 3, by + 2, bz),
+		refit(level, origin, origin.offset(bx + 3, by + 1, bz), door);
+		refit(level, origin, origin.offset(bx + 3, by + 2, bz),
 				door.setValue(DoorBlock.HALF, DoubleBlockHalf.UPPER));
 
 		// Water in the corner: the free half of the growth bonus, and the panel reports it.
-		level.setBlockAndUpdate(origin.offset(bx + 3, by + 1, bz + 3),
+		place(level, origin, origin.offset(bx + 3, by + 1, bz + 3),
 				Blocks.WATER.defaultBlockState());
 
 		// Three beds on the floor: one dead as crafted, two awake and carrying vanilla amethyst at
@@ -996,9 +1077,9 @@ public final class DemoStand {
 		int lx = 2;
 		for (Block stage : stages) {
 			BlockPos bed = origin.offset(bx + lx, by + 1, bz + 2);
-			level.setBlockAndUpdate(bed, ModContent.CRYSTAL_SEEDBED.get().defaultBlockState()
+			place(level, origin, bed, ModContent.CRYSTAL_SEEDBED.get().defaultBlockState()
 					.setValue(CrystalSeedbedBlock.CHARGES, CrystalSeedbedBlock.MAX_CHARGES));
-			level.setBlockAndUpdate(bed.above(), stage.defaultBlockState()
+			place(level, origin, bed.above(), stage.defaultBlockState()
 					.setValue(AmethystClusterBlock.FACING, Direction.UP));
 			lx++;
 		}
@@ -1014,7 +1095,7 @@ public final class DemoStand {
 
 		// The button needs something to hang on, so it gets its own casing block to sit against.
 		set(level, origin, 7, 1, z, ModContent.REACTOR_CASING.get());
-		level.setBlockAndUpdate(origin.offset(7, 2, z),
+		place(level, origin, origin.offset(7, 2, z),
 				ModContent.REACTOR_BUTTON.get().defaultBlockState()
 						.setValue(FaceAttachedHorizontalDirectionalBlock.FACE, AttachFace.FLOOR)
 						.setValue(HorizontalDirectionalBlock.FACING, Direction.SOUTH));
@@ -1022,7 +1103,7 @@ public final class DemoStand {
 		// The lever (MOD-514) stands beside the button it twins, on its own casing block, so the two
 		// control blocks can be told apart at a glance: one pulses, one latches.
 		set(level, origin, 8, 1, z, ModContent.REACTOR_CASING.get());
-		level.setBlockAndUpdate(origin.offset(8, 2, z),
+		place(level, origin, origin.offset(8, 2, z),
 				ModContent.REACTOR_LEVER.get().defaultBlockState()
 						.setValue(FaceAttachedHorizontalDirectionalBlock.FACE, AttachFace.FLOOR)
 						.setValue(HorizontalDirectionalBlock.FACING, Direction.SOUTH));
@@ -1031,22 +1112,22 @@ public final class DemoStand {
 		// normally raises the upper half) does not run for a programmatic setBlock.
 		BlockState door = ModContent.REACTOR_DOOR.get().defaultBlockState()
 				.setValue(ReactorDoorBlock.FACING, Direction.SOUTH);
-		level.setBlockAndUpdate(origin.offset(9, 1, z), door);
-		level.setBlockAndUpdate(origin.offset(9, 2, z),
+		place(level, origin, origin.offset(9, 1, z), door);
+		place(level, origin, origin.offset(9, 2, z),
 				door.setValue(ReactorDoorBlock.HALF, DoubleBlockHalf.UPPER));
 
-		level.setBlockAndUpdate(origin.offset(11, 1, z),
+		place(level, origin, origin.offset(11, 1, z),
 				ModContent.REACTOR_CONTROLLER.get().defaultBlockState()
 						.setValue(HorizontalDirectionalBlock.FACING, Direction.SOUTH));
 
 		// The exhaust, facing south into open air — a nozzle pointing at a block vents nothing, and a
 		// stand that showed one buried in a wall would be showing a broken installation.
-		level.setBlockAndUpdate(origin.offset(15, 1, z),
+		place(level, origin, origin.offset(15, 1, z),
 				ModContent.STEAM_NOZZLE.get().defaultBlockState()
 						.setValue(SteamNozzleBlock.FACING, Direction.SOUTH));
 
 		// Loaded to four rods, so the stand shows the state the fill level exists to communicate.
-		level.setBlockAndUpdate(origin.offset(13, 1, z),
+		place(level, origin, origin.offset(13, 1, z),
 				ModContent.FUEL_ROD_ASSEMBLY.get().defaultBlockState()
 						.setValue(FuelRodAssemblyBlock.RODS, FuelRodAssemblyBlock.MAX_RODS));
 		if (level.getBlockEntity(origin.offset(13, 1, z))
@@ -1113,44 +1194,46 @@ public final class DemoStand {
 		}
 
 		// Windows in the north wall — five cells, far under the 30 % glass cap the scan enforces.
-		set(level, origin, bx + 1, by + 2, bz, ModContent.REACTOR_GLASS.get());
-		set(level, origin, bx + 2, by + 2, bz, ModContent.REACTOR_GLASS.get());
-		set(level, origin, bx + 1, by + 3, bz, ModContent.REACTOR_GLASS.get());
-		set(level, origin, bx + 2, by + 3, bz, ModContent.REACTOR_GLASS.get());
-		set(level, origin, bx + 3, by + 3, bz, ModContent.REACTOR_GLASS.get());
+		// From here to the door, every write is a `refit`: it is a fitting punched into the casing
+		// shell laid above, which is a replacement the author means (MOD-597).
+		refit(level, origin, bx + 1, by + 2, bz, ModContent.REACTOR_GLASS.get());
+		refit(level, origin, bx + 2, by + 2, bz, ModContent.REACTOR_GLASS.get());
+		refit(level, origin, bx + 1, by + 3, bz, ModContent.REACTOR_GLASS.get());
+		refit(level, origin, bx + 2, by + 3, bz, ModContent.REACTOR_GLASS.get());
+		refit(level, origin, bx + 3, by + 3, bz, ModContent.REACTOR_GLASS.get());
 
 		// Plumbing and power crossings, one per side wall.
-		set(level, origin, bx + edge - 1, by + 1, bz + 2, ModContent.REACTOR_PORT.get());
-		set(level, origin, bx, by + 1, bz + 2, ModContent.REACTOR_OUTLET.get());
-		set(level, origin, bx + 2, by + edge - 1, bz + 2, ModContent.REACTOR_LAMP.get());
+		refit(level, origin, bx + edge - 1, by + 1, bz + 2, ModContent.REACTOR_PORT.get());
+		refit(level, origin, bx, by + 1, bz + 2, ModContent.REACTOR_OUTLET.get());
+		refit(level, origin, bx + 2, by + edge - 1, bz + 2, ModContent.REACTOR_LAMP.get());
 
 		// Controller in the north wall, front outward.
-		level.setBlockAndUpdate(origin.offset(bx + 2, by + 1, bz),
+		refit(level, origin, origin.offset(bx + 2, by + 1, bz),
 				ModContent.REACTOR_CONTROLLER.get().defaultBlockState()
 						.setValue(HorizontalDirectionalBlock.FACING, Direction.NORTH));
 
 		// Airlock, both halves by hand: setPlacedBy does not run for a programmatic setBlock.
 		BlockState door = ModContent.REACTOR_DOOR.get().defaultBlockState()
 				.setValue(ReactorDoorBlock.FACING, Direction.SOUTH);
-		level.setBlockAndUpdate(origin.offset(bx + 3, by + 1, bz), door);
-		level.setBlockAndUpdate(origin.offset(bx + 3, by + 2, bz),
+		refit(level, origin, origin.offset(bx + 3, by + 1, bz), door);
+		refit(level, origin, origin.offset(bx + 3, by + 2, bz),
 				door.setValue(ReactorDoorBlock.HALF, DoubleBlockHalf.UPPER));
 
 		// Control post outside the door: one casing block, and the button on its west face.
 		set(level, origin, bx + 4, by + 1, bz - 1, ModContent.REACTOR_CASING.get());
-		level.setBlockAndUpdate(origin.offset(bx + 3, by + 1, bz - 1),
+		place(level, origin, origin.offset(bx + 3, by + 1, bz - 1),
 				ModContent.REACTOR_BUTTON.get().defaultBlockState()
 						.setValue(FaceAttachedHorizontalDirectionalBlock.FACE, AttachFace.WALL)
 						.setValue(HorizontalDirectionalBlock.FACING, Direction.WEST));
 
 		// Exhaust on the west side, venting into open air — a nozzle facing a block vents nothing.
-		level.setBlockAndUpdate(origin.offset(bx - 1, by + 1, bz + 2),
+		place(level, origin, origin.offset(bx - 1, by + 1, bz + 2),
 				ModContent.STEAM_NOZZLE.get().defaultBlockState()
 						.setValue(SteamNozzleBlock.FACING, Direction.WEST));
 
 		// Interior: the core, and the signal that lets it run.
 		set(level, origin, bx + 2, by + 1, bz + 1, Blocks.REDSTONE_BLOCK);
-		level.setBlockAndUpdate(origin.offset(bx + 2, by + 1, bz + 2),
+		place(level, origin, origin.offset(bx + 2, by + 1, bz + 2),
 				ModContent.FUEL_ROD_ASSEMBLY.get().defaultBlockState()
 						.setValue(FuelRodAssemblyBlock.RODS, FuelRodAssemblyBlock.MAX_RODS));
 		if (level.getBlockEntity(origin.offset(bx + 2, by + 1, bz + 2))
@@ -1161,20 +1244,28 @@ public final class DemoStand {
 			assembly.setTank(true, assembly.waterTank.capacity / 2);
 		}
 
-		// MOD-474 — the shielding chest, stocked with the fuel it is there to make safe, parked
-		// OUTSIDE the shell at x=8: the room owns x 2..6 and the cable rows start at x=16, so this
-		// gap is free (checking the LOOPS, not the literals — see the note at the top of this method).
-		// Its place in the story is exactly here: the only spot on the stand where refined uranium can
-		// sit in the open without dosing whoever walks past it.
-		set(level, origin, 8, by, bz + 2, ModContent.SHIELDING_CHEST.get());
-		fillSlot(level, origin, 8, by, bz + 2, 0, new ItemStack(ModContent.REFINED_URANIUM.get(), 64));
-		fillSlot(level, origin, 8, by, bz + 2, 1, new ItemStack(ModContent.URANIUM_FUEL_ROD.get()));
+		// MOD-474 — the shielding chest, stocked with the fuel it is there to make safe, parked outside
+		// the shell. Its place in the story is exactly here: the only spot on the stand where refined
+		// uranium can sit in the open without dosing whoever walks past it.
+		//
+		// x=14, not 8 (MOD-597). x=8 was free when this was written and stopped being free when the
+		// crystal greenhouse (MOD-505) took x 8..12 — so the chest was being set into the greenhouse's
+		// own perimeter, punching a hole in a shell whose whole point is that it seals. Nothing went
+		// red: no test asks the greenhouse to form. x=14 is the last free column before the cable rows
+		// start at 16, with the greenhouse ending at 12.
+		set(level, origin, 14, by, bz + 2, ModContent.SHIELDING_CHEST.get());
+		fillSlot(level, origin, 14, by, bz + 2, 0, new ItemStack(ModContent.REFINED_URANIUM.get(), 64));
+		fillSlot(level, origin, 14, by, bz + 2, 1, new ItemStack(ModContent.URANIUM_FUEL_ROD.get()));
 		// MOD-471 — the scar an accident leaves. Shown as the four decay stages side by side, because
 		// the whole point of the intensity is that a player can read how clean a patch is at a glance,
-		// and a single sample would show them one colour with nothing to compare it against. Placed on
-		// the far side of the chest, still clear of the cable rows that start at x=16.
+		// and a single sample would show them one colour with nothing to compare it against. Runs south
+		// from the chest down the same free column.
+		//
+		// x=14 for the same reason as the chest, and this strip had hit TWO zones from x=8 (MOD-597):
+		// its first stage landed in the greenhouse's floor and its third replaced the casing post the
+		// reactor row's lever stands on.
 		for (int stage = 0; stage <= IrradiatedSoilBlock.MAX_INTENSITY; stage++) {
-			level.setBlockAndUpdate(origin.offset(8, by, bz + 4 + stage),
+			place(level, origin, origin.offset(14, by, bz + 4 + stage),
 					ModContent.IRRADIATED_SOIL.get().defaultBlockState()
 							.setValue(IrradiatedSoilBlock.INTENSITY, stage));
 		}
@@ -1243,8 +1334,111 @@ public final class DemoStand {
 		return items;
 	}
 
+	// --- the write ledger: one cell, one owner (MOD-597) ---
+
+	/**
+	 * Every cell the zone pass has written, and what wrote it. Keyed by the cell's coordinates
+	 * RELATIVE to the origin, so the ledger reads the same in the command's world and in the
+	 * gametest rig.
+	 *
+	 * <p>Static rather than passed down, and that is safe for exactly one reason: {@link #buildAll}
+	 * is synchronous and runs on the server thread — a whole build completes inside one tick, so two
+	 * gametests ticking the same server can never interleave their builds. It is NOT safe to call the
+	 * zone builders directly from anywhere else.
+	 */
+	private static final Map<BlockPos, String> WRITTEN = new LinkedHashMap<>();
+
+	/** What went wrong in the last build, in the order it happened — empty when the stand is healthy. */
+	private static final List<String> PROBLEMS = new ArrayList<>();
+
+	/** Whether {@link #place} is currently recording: the zone pass yes, the base passes no. */
+	private static boolean recording;
+
+	/**
+	 * What the last {@link #buildAll} overwrote — one line per cell written twice by the zone pass.
+	 *
+	 * <p>Two kinds of problem land here: a cell written twice, and a stocking call that found no
+	 * block entity to stock. They are one list because they are one incident seen from both ends — the
+	 * block that lost its cell, and the inventory that was then filled into nothing.
+	 *
+	 * <p>This exists because the failure it reports is <b>silent</b>: a second write on a cell drops
+	 * the first block without a word, the block-coverage scan still ticks its box (the lost block is
+	 * almost always somewhere else on the stand too), and the stocking helpers below fall through
+	 * their {@code instanceof} in silence. It has happened at least five times — MOD-292, MOD-275,
+	 * MOD-145, MOD-599, MOD-597 — and every time the answer was another comment telling the next
+	 * author to check the neighbouring cells by hand. This is that comment turned into a check.
+	 *
+	 * <p><b>Only what goes through {@link #place}.</b> Blocks written by a vanilla or mod helper the
+	 * stand calls ({@code DoublePlantBlock.placeAt}, {@code DistillationColumnBlock.placeTower},
+	 * {@code ConcentratorStructure.tryAssemble}) place their own cells and are invisible here; so is
+	 * the floor pass, which legitimately writes every cell of the stand before the zones carve it.
+	 */
+	public static List<String> lastBuildProblems() {
+		return List.copyOf(PROBLEMS);
+	}
+
+	/** Start recording: the base passes are done, the zones are about to write. */
+	private static void openLedger() {
+		WRITTEN.clear();
+		PROBLEMS.clear();
+		recording = true;
+	}
+
+	/** Stop recording and shout about anything the zones overwrote. */
+	private static void closeLedger() {
+		recording = false;
+		WRITTEN.clear();
+		for (String problem : PROBLEMS) {
+			Industrialization.LOGGER.warn("demo stand: {}", problem);
+		}
+	}
+
+	/**
+	 * The one way the stand writes a block. Records the cell first, so a second write on it is
+	 * reported rather than swallowed, then places it exactly as before.
+	 */
+	private static void place(ServerLevel level, BlockPos origin, BlockPos pos, BlockState state) {
+		write(level, origin, pos, state, false);
+	}
+
+	/**
+	 * Replace a cell this same zone has just filled — a fitting punched into a shell it built itself:
+	 * the reactor room lays five walls of casing and then sets the glass, the controller and the door
+	 * into them, and the greenhouse does the same with its glass.
+	 *
+	 * <p>It is a separate call rather than an entry in an allow-list somewhere because the intent
+	 * belongs at the site that has it, and because the claim is <b>checked</b>: a refit of a cell
+	 * nobody built is reported exactly like a collision. An author who reaches for this to silence the
+	 * ledger on a cell another zone owns gets the same red they were trying to avoid.
+	 */
+	private static void refit(ServerLevel level, BlockPos origin, BlockPos pos, BlockState state) {
+		write(level, origin, pos, state, true);
+	}
+
+	/** {@code refit}'s int-coordinate twin, for the zones that write in local coordinates. */
+	private static void refit(ServerLevel level, BlockPos origin, int x, int y, int z, Block block) {
+		refit(level, origin, origin.offset(x, y, z), block.defaultBlockState());
+	}
+
+	private static void write(ServerLevel level, BlockPos origin, BlockPos pos, BlockState state,
+			boolean expectedToReplace) {
+		if (recording) {
+			BlockPos local = pos.subtract(origin);
+			String owner = BuiltInRegistries.BLOCK.getKey(state.getBlock()).toString();
+			String previous = WRITTEN.put(local, owner);
+			String cell = "cell (" + local.getX() + ", " + local.getY() + ", " + local.getZ() + ")";
+			if (previous != null && !expectedToReplace) {
+				PROBLEMS.add(cell + " written twice — " + previous + " overwritten by " + owner);
+			} else if (previous == null && expectedToReplace) {
+				PROBLEMS.add(cell + " is a refit of a cell no zone built — " + owner
+						+ " expected to replace something and replaced nothing");
+			}
+		}
+		level.setBlockAndUpdate(pos, state);
+	}
+
 	private static void set(ServerLevel level, BlockPos origin, int x, int y, int z, Block block) {
-		level.setBlockAndUpdate(origin.offset(x, y, z), block.defaultBlockState());
+		place(level, origin, origin.offset(x, y, z), block.defaultBlockState());
 	}
 
 	/** Place a processing machine with a full EU buffer and an input stack — it starts working immediately. */
@@ -1255,17 +1449,40 @@ public final class DemoStand {
 		fillSlot(level, origin, x, 1, z, 0, input);
 	}
 
+	/**
+	 * Stock one slot of the block at a cell — and say so when there is nothing there to stock.
+	 *
+	 * <p>The silent {@code if (instanceof)} this used to be is the other half of every overwrite
+	 * incident on this stand: the block that owned the cell is gone, its inventory is filled into
+	 * nothing, and the build finishes green. Now the miss is recorded next to the overwrite that
+	 * caused it (MOD-597).
+	 */
 	private static void fillSlot(ServerLevel level, BlockPos origin, int x, int y, int z, int slot, ItemStack stack) {
 		if (level.getBlockEntity(origin.offset(x, y, z)) instanceof Container container) {
 			container.setItem(slot, stack);
+			return;
 		}
+		missed(level, origin, x, y, z, "has no container to stock");
 	}
 
+	/** Fill a machine's EU buffer — and say so when the cell holds no machine (see {@link #fillSlot}). */
 	private static void chargeBuffer(ServerLevel level, BlockPos origin, int x, int y, int z) {
 		if (level.getBlockEntity(origin.offset(x, y, z)) instanceof MachineBlockEntity machine) {
 			machine.getEnergyStorage().setAmountUntracked(machine.getEnergyStorage().getCapacity());
 			machine.setChangedQuietly();
 			machine.wake();
+			return;
 		}
+		missed(level, origin, x, y, z, "has no machine to charge");
+	}
+
+	/** Record a stocking call that found nothing, naming the block that actually stands there. */
+	private static void missed(ServerLevel level, BlockPos origin, int x, int y, int z, String what) {
+		if (!recording) {
+			return;
+		}
+		String actual = BuiltInRegistries.BLOCK.getKey(
+				level.getBlockState(origin.offset(x, y, z)).getBlock()).toString();
+		PROBLEMS.add("cell (" + x + ", " + y + ", " + z + ") " + what + " — it holds " + actual);
 	}
 }

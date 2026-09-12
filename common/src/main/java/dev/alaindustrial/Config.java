@@ -524,6 +524,19 @@ public final class Config {
 			doc = "Portable fluid tank capacity in mB (1000 mB = 1 bucket). Applies to newly placed tanks.")
 	public static int fluidTankCapacity = 8000;
 
+	/**
+	 * Advanced portable tank capacity (MOD-612): 16 buckets — twice the basic grade.
+	 *
+	 * <p>Twice, not four times. The mod already sets that ratio for a logistics tier (the advanced
+	 * item pipe moves 4 items where the basic moves 2), and the reason is written down with it: a
+	 * bigger multiplier obsoletes the grade below on the day the new one becomes craftable. Sixteen
+	 * buckets does put this above a machine tank's ten, and that is the point — the basic tank is
+	 * deliberately smaller than a machine, the advanced one is what you build to beat it.
+	 */
+	@Knob(section = Section.LOGISTICS, min = 1,
+			doc = "Advanced fluid tank capacity in mB (1000 mB = 1 bucket). Applies to newly placed tanks.")
+	public static int fluidTankAdvancedCapacity = 16000;
+
 	// --- Teleporter (HV anchor station, MOD-091) ---
 	/** Teleporter station EU buffer. Oversized (×25 the battery box) because a jump is paid in one
 	 * lump sum by the TARGET station: at ~10 000–20 000 EU for a typical "home from the mine" jump

@@ -81,6 +81,10 @@ def main() -> int:
         "minecraft": "26.2",
         "artifacts": entries,
     }
+    # The documented local invocation writes into $PUB/build/, which a fresh clone does not
+    # have: the root project builds nothing of its own. CI writes into the workspace root and
+    # so never saw this, and the failure landed only on the release runbook (MOD-585).
+    args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     print(f"OK artifacts validated; manifest written to {args.output}")
     return 0

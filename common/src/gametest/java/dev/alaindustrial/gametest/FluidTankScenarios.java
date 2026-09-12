@@ -57,6 +57,40 @@ public final class FluidTankScenarios {
 	}
 
 	/**
+	 * MOD-612 — the advanced grade really holds twice as much, asked of the placed block.
+	 *
+	 * <p>The unit test next door pins the RELATION between the two grades; this asks the question the
+	 * unit test cannot: does the block that gets placed in the world actually take the grade's
+	 * capacity? The tank builds its {@code FluidTank} in the constructor from the block it sits in, so
+	 * a wrong lookup there — or a block entity bound to the wrong block — shows up here and nowhere
+	 * else. Filling past the brim is what proves it: the tank accepts exactly its own capacity and
+	 * stops, so a tier-two tank that silently kept the tier-one number fails on the amount.
+	 */
+	public static void tcFluidTank002Fun01_advancedGradeHoldsTwiceAsMuch(GameTestHelper helper) {
+		helper.setBlock(POS, ModContent.FLUID_TANK.get());
+		FluidTankBlockEntity basic = helper.getBlockEntity(POS, FluidTankBlockEntity.class);
+		BlockPos advancedPos = POS.offset(2, 0, 0);
+		helper.setBlock(advancedPos, ModContent.FLUID_TANK_ADVANCED.get());
+		FluidTankBlockEntity advanced = helper.getBlockEntity(advancedPos, FluidTankBlockEntity.class);
+
+		if (advanced.fluidTank.capacity != 2L * basic.fluidTank.capacity) {
+			helper.fail("the advanced tank holds " + advanced.fluidTank.capacity + " mB against the "
+					+ "basic tank's " + basic.fluidTank.capacity + " — the second grade must hold twice "
+					+ "as much, and it takes that number from the block it is placed in");
+		}
+
+		long[] poured = {0};
+		dev.alaindustrial.core.energy.EnergyTransactions.get().runCommitting(txn ->
+				poured[0] = advanced.fluidTank.insert(FluidHolder.of(Fluids.WATER),
+						advanced.fluidTank.capacity + 5_000L, txn));
+		if (poured[0] != advanced.fluidTank.capacity) {
+			helper.fail("pouring past the brim moved " + poured[0] + " mB into a tank of "
+					+ advanced.fluidTank.capacity + " — the tank must accept its own capacity and stop");
+		}
+		helper.succeed();
+	}
+
+	/**
 	 * A click aimed at a glass wall must stop at the tank. The baked model is only the frame — the
 	 * glass is drawn by the renderer — so a shape built from the frame left the wall open to a trace:
 	 * players aiming at the tank hit the block behind it and emptied buckets of lava onto the floor.

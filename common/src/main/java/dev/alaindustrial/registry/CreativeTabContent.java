@@ -524,6 +524,8 @@ public final class CreativeTabContent {
 		show(out, ModContent.FERMENTER_ITEM);
 		// --- shaped: the tank and the two pipes draw flat sprites, the tower is a tall model.
 		show(out, ModContent.FLUID_TANK_ITEM);
+		// MOD-612: the two grades stand together — a player looking for "the tank" finds both.
+		show(out, ModContent.FLUID_TANK_ADVANCED_ITEM);
 		show(out, ModContent.FLUID_PIPE_ITEM);
 		// The item pipe sits next to the fluid pipe: the two carriers are one idea, and a player looking
 		// for "the pipe" should find both without scrolling to another group.

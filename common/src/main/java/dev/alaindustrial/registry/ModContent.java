@@ -140,6 +140,7 @@ public final class ModContent {
 	public static Supplier<Block> PUMP = unbound("PUMP");
 	public static Supplier<Block> GARDEN_DRONE_STATION = unbound("GARDEN_DRONE_STATION");
 	public static Supplier<Block> FLUID_TANK = unbound("FLUID_TANK");
+	public static Supplier<Block> FLUID_TANK_ADVANCED = unbound("FLUID_TANK_ADVANCED");
 	public static Supplier<Block> COPPER_CABLE = unbound("COPPER_CABLE");
 	public static Supplier<Block> TIN_CABLE = unbound("TIN_CABLE");
 	public static Supplier<Block> GOLD_CABLE = unbound("GOLD_CABLE");
@@ -750,6 +751,7 @@ public final class ModContent {
 	/** The drone itself — an item that lives in the station's dock slot (MOD-277). */
 	public static Supplier<Item> GARDEN_DRONE = unbound("GARDEN_DRONE");
 	public static Supplier<BlockItem> FLUID_TANK_ITEM = unbound("FLUID_TANK_ITEM");
+	public static Supplier<BlockItem> FLUID_TANK_ADVANCED_ITEM = unbound("FLUID_TANK_ADVANCED_ITEM");
 	public static Supplier<BlockItem> TIN_ORE_ITEM = unbound("TIN_ORE_ITEM");
 	public static Supplier<BlockItem> DEEPSLATE_TIN_ORE_ITEM = unbound("DEEPSLATE_TIN_ORE_ITEM");
 	public static Supplier<BlockItem> SILVER_ORE_ITEM = unbound("SILVER_ORE_ITEM");

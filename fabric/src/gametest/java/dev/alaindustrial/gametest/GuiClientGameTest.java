@@ -47,6 +47,8 @@ import net.minecraft.world.level.gamerules.GameRules;
  *   <li>MOD-275  — {@link AssemblerGuiStands}                          — the Assembler window: tabs, queue, blueprint preview
  *   <li>MOD-275  — {@link BlueprintIconStands}                         — a recorded blueprint's own icon carries its product
  *   <li>MOD-287  — {@link StorageModuleStands#checkStorageModuleSeams} — storage-module connected textures
+ *   <li>MOD-607  — {@link ThaiGuideBookStand#checkThaiLineBreaks}      — guide-book line breaks in Thai:
+ *       no line may begin with a combining mark; mid-word breaks are counted, not enforced
  * </ul>
  *
  * <p>Screenshots land in {@code build/run/clientGameTest/screenshots/}.
@@ -117,6 +119,10 @@ public class GuiClientGameTest implements FabricClientGameTest {
             // on would quietly shoot every later frame (this class's tail and ScreensClientGameTest)
             // in Arabic too.
             RtlGuiStands.shootArabicScreens(context);
+
+            // ── MOD-607: how the book breaks lines in Thai, a script with no spaces between words ──
+            // A gate on orphaned combining marks plus a measurement of mid-word breaks; restores en_us.
+            ThaiGuideBookStand.checkThaiLineBreaks(context);
 
             // Leave the world the way a player leaves it: with no container open. The last frame of this
             // lane is a GUI, and closing the world while the server still believes a container is open

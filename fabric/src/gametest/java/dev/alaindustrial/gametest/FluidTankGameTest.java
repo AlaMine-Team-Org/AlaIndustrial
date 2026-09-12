@@ -57,6 +57,15 @@ public final class FluidTankGameTest {
 	}
 
 	/**
+	 * @implements TC-FLUIDTANK-002-FUN01 — the advanced grade holds twice as much, and takes that
+	 *     number from the block it is placed in (MOD-612).
+	 */
+	@GameTest
+	public void tcFluidTank002Fun01_advancedGradeHoldsTwiceAsMuch(GameTestHelper helper) {
+		FluidTankScenarios.tcFluidTank002Fun01_advancedGradeHoldsTwiceAsMuch(helper);
+	}
+
+	/**
 	 * Placed locally rather than through {@code FluidTankScenarios.place} on purpose: the
 	 * {@code gametest-bodies-live-in-common} rule in {@code docs/tools/arch_check.py} counts
 	 * {@code …Scenarios.method(…)} calls against the number of {@code @GameTest} methods, so borrowing

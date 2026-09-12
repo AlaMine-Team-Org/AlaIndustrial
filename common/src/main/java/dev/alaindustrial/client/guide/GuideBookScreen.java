@@ -68,6 +68,18 @@ public final class GuideBookScreen extends Screen {
 		}
 	}
 
+	/**
+	 * Width of the text column, as a function of the screen width alone (MOD-607).
+	 *
+	 * <p>Extracted from {@link #init} so the line-break audit can ask for the very number the book
+	 * renders with instead of re-deriving it: a second copy of this arithmetic would answer the
+	 * question about a column that does not exist the day anyone moves a margin.
+	 */
+	public static int contentWidth(int screenWidth) {
+		int panel = Math.min(screenWidth - 32, 500);
+		return panel - TAB_W - 28;   // 8 left gutter + TAB_W + 10 + 10 right gutter
+	}
+
 	@Override
 	protected void init() {
 		panelW = Math.min(this.width - 32, 500);
@@ -81,6 +93,7 @@ public final class GuideBookScreen extends Screen {
 		contentRight = panelX + panelW - 10;
 		contentBottom = panelY + panelH - 10;
 		contentW = contentRight - contentX;
+		assert contentW == contentWidth(this.width) : "contentWidth() drifted from init()";
 		listIcons.clear();
 
 		// Header buttons (right side): Close, and a compact icon Wiki button to its left.
@@ -239,7 +252,9 @@ public final class GuideBookScreen extends Screen {
 						if (para.isBlank()) {
 							continue;
 						}
-						for (FormattedCharSequence l : this.font.split(Component.literal(para), contentW)) {
+						// GuideText, not font.split: vanilla breaks on whatever character the width ran out
+						// on, which in a script without spaces lands inside a letter (MOD-607).
+						for (FormattedCharSequence l : GuideText.split(this.font, para, contentW)) {
 							rows.add(line(l, GuiStyle.TEXT, lh));
 						}
 						rows.add(new Row(Kind.GAP, null, 0, null, 4)); // paragraph spacing

@@ -577,6 +577,31 @@ public final class MachineScenarios {
 				Config.compressorDuration);
 	}
 
+	/**
+	 * TC-COMP-001-FUN17 (MOD-591): the carbon rod — the mod's largest batch, sixteen coal dust for one.
+	 *
+	 * <p><b>This pins the RECIPE, not the mechanic.</b> The batch mechanic is already covered from both
+	 * sides by glowstone and redstone above, and re-testing it here would only add a scenario that can
+	 * never be the first to redden. What has no coverage at all is this recipe's own data: its
+	 * ingredient is a TAG ({@code #c:dusts/coal}), which lives in a JSON file and survives a rename in
+	 * silence, and its price is the number 16, which nothing but the game ever reads. Mutate either —
+	 * retag the ingredient, or edit {@code input_counts} to 15 — and this is what goes red while the
+	 * MOD-455 scenarios stay green, which is the sign that it earns its place instead of echoing them.
+	 *
+	 * <p>Seventeen dust rather than sixteen, so the assertion tells "consumed the batch" apart from
+	 * "consumed the slot": a leftover of exactly one proves the machine took 16 and stopped.
+	 */
+	public static void tcComp001Fun17_compressorCompactsCoalDustIntoCarbonRod(GameTestHelper helper) {
+		assertConsumesBatchPerOperation(helper, compressor(), ModContent.COAL_DUST.get(), 17, 16,
+				Config.compressorDuration, ModContent.CARBON_ROD.get(), 1);
+	}
+
+	/** TC-COMP-001-NEG09 (MOD-591): 15 coal dust is one short — no rod, no loss, no progress. */
+	public static void tcComp001Neg09_compressorRejectsPartialCoalDustBatch(GameTestHelper helper) {
+		assertPartialBatchProducesNothing(helper, compressor(), new ItemStack(ModContent.COAL_DUST.get(), 15),
+				Config.compressorDuration);
+	}
+
 	// ── Status channel (MOD-458): the machine says WHY it is stalled ───────────────────────────────
 
 	private static AbstractProcessingMachineBlockEntity processing(GameTestHelper helper, Block block) {

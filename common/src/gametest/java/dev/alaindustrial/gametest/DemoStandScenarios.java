@@ -5,6 +5,8 @@ import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.ElectricFurnaceBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.Config;
+import dev.alaindustrial.core.structure.CrystalFarmRoom;
+import dev.alaindustrial.core.structure.RoomFill;
 import dev.alaindustrial.core.structure.RoomScan;
 import dev.alaindustrial.core.structure.RoomValidator;
 import dev.alaindustrial.registry.ModContent;
@@ -61,8 +63,16 @@ public final class DemoStandScenarios {
 	private DemoStandScenarios() {
 	}
 
-	/** Stand origin inside the structure envelope: 1-block margin on every axis. */
-	private static final BlockPos ORIGIN = new BlockPos(1, 1, 1);
+	/**
+	 * Stand origin inside the structure envelope: a 1-block margin horizontally, and
+	 * {@code DemoStand.DEPTH_BELOW + 1} vertically.
+	 *
+	 * <p>The vertical margin used to be 1 as well, and that was wrong in a way no test could see: the
+	 * stand digs two levels below its floor (the water-mill channel, the basin pans), so with the
+	 * origin at y=1 those writes landed at structure y=-1 — OUTSIDE the rig, where nothing scans and
+	 * nothing is reset between tests (MOD-597).
+	 */
+	private static final BlockPos ORIGIN = new BlockPos(1, DemoStand.DEPTH_BELOW + 1, 1);
 
 	public static void demoStandBuildsCoversAndRuns(GameTestHelper helper) {
 		BlockPos origin = helper.absolutePos(ORIGIN);
@@ -103,6 +113,28 @@ public final class DemoStandScenarios {
 			}
 		}
 
+		// --- MOD-597: the crystal greenhouse the stand builds actually SEALS ---
+		// Blind in exactly the way the reactor room was until MOD-470, and it cost a real defect: the
+		// shielding chest and the irradiated-soil strip were placed at x=8 back when x=8 was empty, and
+		// kept being placed there after the greenhouse claimed x 8..12 — two holes punched straight
+		// through a shell whose entire point is that it closes. Every block of it is also somewhere else
+		// on the stand, so the coverage scan below never noticed.
+		BlockPos farmController = origin.offset(9, 2, 15);
+		BlockState farmState = helper.getLevel().getBlockState(farmController);
+		if (!farmState.is(ModContent.CRYSTAL_FARM_CONTROLLER.get())) {
+			helper.fail("the demo stand's greenhouse controller is missing from its north wall");
+		} else {
+			RoomFill.Result greenhouse = CrystalFarmRoom.scan(helper.getLevel(), farmController,
+					farmState.getValue(HorizontalDirectionalBlock.FACING),
+					Math.max(1, Config.crystalFarmRoomMinCells),
+					Math.max(1, Config.crystalFarmRoomMaxCells),
+					Math.max(1, Config.crystalFarmRoomMaxSpan));
+			if (!greenhouse.sealed()) {
+				helper.fail("the demo stand's crystal greenhouse does not seal: " + greenhouse.status()
+						+ " at " + greenhouse.x() + "," + greenhouse.y() + "," + greenhouse.z());
+			}
+		}
+
 		// --- coverage: every registered mod block is somewhere in the stand envelope ---
 		Set<Identifier> missing = new HashSet<>();
 		for (Identifier id : BuiltInRegistries.BLOCK.keySet()) {
@@ -112,7 +144,7 @@ public final class DemoStandScenarios {
 		}
 		for (int x = 0; x < DemoStand.WIDTH; x++) {
 			for (int z = 0; z < DemoStand.DEPTH; z++) {
-				for (int y = -1; y <= DemoStand.HEIGHT; y++) {
+				for (int y = -DemoStand.DEPTH_BELOW; y <= DemoStand.HEIGHT; y++) {
 					missing.remove(BuiltInRegistries.BLOCK.getKey(
 							helper.getLevel().getBlockState(origin.offset(x, y, z)).getBlock()));
 				}
@@ -211,6 +243,17 @@ public final class DemoStandScenarios {
 						helper.fail("clear left a block at local (" + x + ", " + y + ", " + z + ")");
 					}
 				}
+				// MOD-597: the stand digs below its floor, so "cleared" has to mean filled back in.
+				// A clear that only lays grass over the water-mill channel leaves a two-deep trap
+				// under the lawn — and the scan above, which starts at y=1, could never see it.
+				for (int y = -DemoStand.DEPTH_BELOW; y < 0; y++) {
+					if (!helper.getLevel().getBlockState(origin.offset(x, y, z)).is(DemoStand.SUBSOIL)) {
+						helper.fail("clear left the stand's own excavation at local (" + x + ", " + y
+								+ ", " + z + "): expected " + BuiltInRegistries.BLOCK.getKey(DemoStand.SUBSOIL)
+								+ ", found " + BuiltInRegistries.BLOCK.getKey(
+										helper.getLevel().getBlockState(origin.offset(x, y, z)).getBlock()));
+					}
+				}
 			}
 		}
 		// The showcase frames are entities — a clear that leaves them hanging in the air over the
@@ -268,11 +311,12 @@ public final class DemoStandScenarios {
 	 * The ring's local coordinates. The rig is 44x14x28 with {@link #ORIGIN} at (1,1,1), so local
 	 * x=-1..42 and z=-1..26 exist while the stand occupies x=0..41 and z=0..26 — a testable margin on
 	 * three sides. The floor row (y=0) is included: {@code clear} restores grass only for x &lt; WIDTH,
-	 * so a floor block set one column out survives exactly like the column above it.
+	 * so a floor block set one column out survives exactly like the column above it — and since
+	 * MOD-597 so are the {@code DEPTH_BELOW} dug levels, for exactly the same reason one level down.
 	 */
 	private static List<BlockPos> ringCells() {
 		List<BlockPos> cells = new ArrayList<>();
-		for (int y = 0; y <= DemoStand.HEIGHT; y++) {
+		for (int y = -DemoStand.DEPTH_BELOW; y <= DemoStand.HEIGHT; y++) {
 			for (int z = -1; z < DemoStand.DEPTH; z++) {
 				cells.add(new BlockPos(-1, y, z));
 				cells.add(new BlockPos(DemoStand.WIDTH, y, z));
@@ -347,6 +391,32 @@ public final class DemoStandScenarios {
 		helper.succeed();
 	}
 
+	/**
+	 * MOD-597: the zone pass writes every cell it writes exactly once, and every stocking call finds
+	 * something to stock.
+	 *
+	 * <p>The bug this exists for is invisible to every other check on this page. Two zones write one
+	 * cell, the second wins, and the loser is almost always registered somewhere else on the stand —
+	 * so the coverage scan stays green, the stocking call for the lost block falls through its
+	 * {@code instanceof} without a word, and the stand quietly shows a machine that is not there. It
+	 * happened in MOD-292, MOD-275, MOD-145, MOD-599 and MOD-597, and each time the fix was another
+	 * comment in {@code DemoStand} asking the next author to check the neighbours by hand.
+	 *
+	 * <p>Deliberate layering is not reported: the floor and subsoil slabs are laid before the ledger
+	 * opens, precisely so that carving a basin out of them is not a collision.
+	 */
+	public static void demoStandWritesEachCellOnce(GameTestHelper helper) {
+		BlockPos origin = helper.absolutePos(ORIGIN);
+		DemoStand.buildAll(helper.getLevel(), origin);
+		List<String> problems = DemoStand.lastBuildProblems();
+		if (!problems.isEmpty()) {
+			helper.fail("the demo stand's zones stepped on each other " + problems.size()
+					+ " time(s): " + String.join("; ", problems)
+					+ " — give each block its own cell in DemoStand");
+		}
+		helper.succeed();
+	}
+
 	/** The stand envelope as an entity query box — 1 block of slack on every horizontal side. */
 	private static AABB envelope(BlockPos origin) {
 		return AABB.encapsulatingFullBlocks(origin.offset(-1, 0, -1),
@@ -357,7 +427,7 @@ public final class DemoStandScenarios {
 		Map<Integer, Integer> counts = new HashMap<>();
 		for (int x = 0; x < DemoStand.WIDTH; x++) {
 			for (int z = 0; z < DemoStand.DEPTH; z++) {
-				for (int y = -1; y <= DemoStand.HEIGHT; y++) {
+				for (int y = -DemoStand.DEPTH_BELOW; y <= DemoStand.HEIGHT; y++) {
 					BlockState state = helper.getLevel().getBlockState(origin.offset(x, y, z));
 					counts.merge(Block.getId(state), 1, Integer::sum);
 				}

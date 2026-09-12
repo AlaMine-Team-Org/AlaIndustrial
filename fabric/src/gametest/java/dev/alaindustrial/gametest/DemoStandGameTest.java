@@ -29,6 +29,12 @@ public class DemoStandGameTest {
 		DemoStandScenarios.demoStandRebuildIsIdempotent(helper);
 	}
 
+	/** MOD-597: no cell of the stand is written twice, and no stocking call lands on nothing. */
+	@GameTest(structure = "alaindustrial:demo_stand_area", maxTicks = 100, skyAccess = true)
+	public void demoStandWritesEachCellOnce(GameTestHelper helper) {
+		DemoStandScenarios.demoStandWritesEachCellOnce(helper);
+	}
+
 	/** MOD-294 item showcase: every registry item hangs in a glow frame. */
 	@GameTest(structure = "alaindustrial:demo_stand_area", maxTicks = 100, skyAccess = true)
 	public void demoStandShowcaseCoversItems(GameTestHelper helper) {
