@@ -61,3 +61,7 @@ tools/tts/_dub/
 # token/chat id (already covered by the .env rule above); history.json is local
 # accumulated state, not source.
 tools/mod_stats/history.json
+
+# Written locally by verify-artifacts.py and published as a Release asset by CI;
+# a committed copy would carry the hashes of a build nobody downloads.
+release-manifest.json
