@@ -1,5 +1,5 @@
 {
-  "locale": "es_es",
+  "locale": "es_mx",
   "version": 1,
   "generated_from": "OKF docs/blocks",
   "tabs": [
@@ -21,7 +21,7 @@
             {
               "type": "text",
               "title": "Primeros pasos",
-              "text": "1. Extrae la mena del mod: empieza por el estaño.\n2. Coloca un panel solar, el generador más sencillo.\n3. Tiende un cable de cobre hasta él.\n4. Conecta tu primera máquina: el triturador.\n\nEncontrarás los detalles en las secciones Energía y Procesamiento."
+              "text": "1. Extrae el mineral del mod: empieza por el estaño.\n2. Coloca un panel solar, el generador más sencillo.\n3. Tiende un cable de cobre hasta él.\n4. Conecta tu primera máquina: el triturador.\n\nEncontrarás los detalles en las secciones Energía y Procesamiento."
             }
           ]
         }
@@ -69,12 +69,12 @@
             {
               "type": "text",
               "title": "Dónde buscarlo",
-              "text": "El petróleo no se fabrica ni se funde: solo se encuentra, en cualquier parte del mundo superior. Los yacimientos vienen en cuatro tamaños:\n\n• Mancha superficial: uno cada 150 chunks, apenas para probar\n• Lago de mina: Y -40..-8, uno cada 50 chunks; tu fuente principal\n• Yacimiento profundo: Y -50..-30, uno cada 40 chunks, tres veces más ancho\n• Veta de petróleo: una cada 600 chunks, visible desde la superficie\n\nEl petróleo nunca se genera dentro de aldeas, minas abandonadas, fortalezas ni la Ciudad Antigua."
+              "text": "El petróleo no se fabrica ni se funde: solo se encuentra, en cualquier parte de la superficie. Los yacimientos vienen en cuatro tamaños:\n\n• Mancha superficial: uno cada 150 chunks, apenas para probar\n• Lago de mina: Y -40..-8, uno cada 50 chunks; tu fuente principal\n• Yacimiento profundo: Y -50..-30, uno cada 40 chunks, tres veces más ancho\n• Veta de petróleo: una cada 600 chunks, visible desde la superficie\n\nEl petróleo nunca se genera dentro de aldeas, minas abandonadas, fortalezas ni la Ciudad Antigua."
             },
             {
               "type": "text",
               "title": "El yacimiento se agota",
-              "text": "Cada bloque de petróleo que recoges desaparece para siempre: a diferencia del agua, el yacimiento no se rellena.\n\nUn lago de mina da unos 160 cubos, un yacimiento profundo unos 1300, y la cúpula de una veta casi cuatro mil. Cuando vacías uno toca buscar el siguiente, así que marca el sitio en cuanto lo encuentres.\n\nRecogerlo a cubos lleva su tiempo: pon una bomba al lado y ella sola vaciará todo el yacimiento en un tanque."
+              "text": "Cada bloque de petróleo que recoges desaparece para siempre: a diferencia del agua, el yacimiento no se rellena.\n\nUn lago de mina da unas 160 cubetas, un yacimiento profundo unas 1300, y la cúpula de una veta casi cuatro mil. Cuando vacías uno toca buscar el siguiente, así que marca el sitio en cuanto lo encuentres.\n\nRecogerlo a cubetas lleva su tiempo: pon una bomba al lado y ella sola vaciará todo el yacimiento en un tanque."
             },
             {
               "type": "text",
@@ -84,12 +84,12 @@
             {
               "type": "text",
               "title": "Arde",
-              "text": "El petróleo prende con facilidad: basta con que haya fuego cerca, incluso en diagonal por debajo. Desde ahí la llama recorre el charco bloque a bloque hasta consumirlo entero, fuentes incluidas. El mechero enciende un yacimiento al instante, siempre.\n\nLa lava NO prende el petróleo: es algo intencionado, porque los lagos subterráneos suelen generarse justo pegados a los de lava.\n\nLa llama no cruza una pared maciza de un bloque. Y si necesitas que el petróleo esté a salvo junto a tu fábrica, desactiva el ajuste oilBurns del mod y se volverá completamente inerte."
+              "text": "El petróleo prende con facilidad: basta con que haya fuego cerca, incluso en diagonal por debajo. Desde ahí la llama recorre el charco bloque a bloque hasta consumirlo entero, fuentes incluidas. El encendedor enciende un yacimiento al instante, siempre.\n\nLa lava NO prende el petróleo: es algo intencionado, porque los lagos subterráneos suelen generarse justo pegados a los de lava.\n\nLa llama no cruza una pared maciza de un bloque. Y si necesitas que el petróleo esté a salvo junto a tu fábrica, desactiva el ajuste oilBurns del mod y se volverá completamente inerte."
             },
             {
               "type": "text",
               "title": "En qué se convierte",
-              "text": "El petróleo es el comienzo de la cadena del caucho.\n\n1. Recógelo: con un cubo, una Cápsula de vacío o una Bomba\n2. Polimerizador: 1000 mB de petróleo y 400 EU producen caucho en bruto\n3. Vulcanizador: caucho en bruto + polvo de azufre + 400 EU\n4. Coloca debajo una hoguera (×1), lava/magma (×2) o un Calentador eléctrico (×3)\n\nUn calor mejor ahorra materiales: cada operación siempre consume un caucho en bruto y cuatro polvos de azufre."
+              "text": "El petróleo es el comienzo de la cadena del caucho.\n\n1. Recógelo: con una cubeta, una Cápsula de vacío o una Bomba\n2. Polimerizador: 1000 mB de petróleo y 400 EU producen caucho en bruto\n3. Vulcanizador: caucho en bruto + polvo de azufre + 400 EU\n4. Coloca debajo una fogata (×1), lava/magma (×2) o un Calentador eléctrico (×3)\n\nUn calor mejor ahorra materiales: cada operación siempre consume un caucho en bruto y cuatro polvos de azufre."
             }
           ]
         }
@@ -130,7 +130,7 @@
             {
               "type": "text",
               "title": "La cadena del uranio",
-              "text": "Mena de uranio -> triturador -> centrifugadora térmica -> compresor.\n\nLa centrifugadora da concentrado de uranio; el compresor prensa dos de ellos en un uranio enriquecido (U-235).\n\nLuego fabrica una vaina de barra de combustible y mete dentro un uranio enriquecido."
+              "text": "Mineral de uranio -> triturador -> centrifugadora térmica -> compresor.\n\nLa centrifugadora da concentrado de uranio; el compresor prensa dos de ellos en un uranio enriquecido (U-235).\n\nLuego fabrica una vaina de barra de combustible y mete dentro un uranio enriquecido."
             },
             {
               "type": "text",
@@ -1249,7 +1249,7 @@
             {
               "type": "text",
               "title": "Triturador",
-              "text": "Tritura la mena (tanto bloques como mena en bruto) en dos polvos, consumiendo EU en el nivel LV."
+              "text": "Tritura el mineral (tanto bloques como mineral en bruto) en dos polvos, consumiendo EU en el nivel LV."
             },
             {
               "type": "stats",
@@ -1317,7 +1317,7 @@
             {
               "type": "text",
               "title": "Compresor",
-              "text": "Comprime materiales en bruto en formas más densas: polvo de metal en lingotes, polvo de carbón o de gemas de vuelta en objetos, hielo en hielo compacto o azul, caña de azúcar en papel. Cierra el ciclo de duplicación de los no metales."
+              "text": "Comprime materiales en bruto en formas más densas: polvo de metal en lingotes, polvo de carbón o de gemas de vuelta en ítems, hielo en hielo comprimido o azul, caña de azúcar en papel. Cierra el ciclo de duplicación de los no metales."
             },
             {
               "type": "stats",
@@ -1431,7 +1431,7 @@
             {
               "type": "text",
               "title": "Polimerizador",
-              "text": "Destila el petróleo hasta convertirlo en caucho en bruto: un tanque de 10 cubos, un cubo por operación. Después, el caucho se combina con azufre en un Vulcanizador."
+              "text": "Destila el petróleo hasta convertirlo en caucho en bruto: un tanque de 10 cubetas, una cubeta por operación. Después, el caucho se combina con azufre en un Vulcanizador."
             },
             {
               "type": "stats",
@@ -1469,7 +1469,7 @@
             {
               "type": "text",
               "title": "Banco de reparación de componentes",
-              "text": "Repara un rotor de molino de viento o una rueda hidráulica gastados por un objeto y algo de EU, pero cada reparación baja para siempre el tope de durabilidad de esa pieza."
+              "text": "Repara un rotor de molino de viento o una rueda hidráulica gastados por un ítem y algo de EU, pero cada reparación baja para siempre el tope de durabilidad de esa pieza."
             },
             {
               "type": "stats",
@@ -1583,7 +1583,7 @@
             {
               "type": "text",
               "title": "Centrifugadora térmica",
-              "text": "Una máquina LV que arranca poco a poco: una señal de redstone pone el rotor a régimen y un calentador encendido debajo le permite partir en dos el polvo de uranio — la segunda duplicación de mena después del triturador."
+              "text": "Una máquina LV que arranca poco a poco: una señal de redstone pone el rotor a régimen y un calentador encendido debajo le permite partir en dos el polvo de uranio — la segunda duplicación de mineral después del triturador."
             },
             {
               "type": "stats",
@@ -1810,7 +1810,7 @@
             {
               "type": "text",
               "title": "Fermentador",
-              "text": "Una máquina LV que fermenta materia orgánica con agua en biocombustible (un fluido, siempre) y biomasa (un objeto, a veces). El primer combustible del mod que se cultiva en lugar de bombearse: cada lote cuesta lo mismo y el rendimiento depende solo de lo que le eches — desde hierba hasta una zanahoria dorada."
+              "text": "Una máquina LV que fermenta materia orgánica con agua en biocombustible (un fluido, siempre) y biomasa (un ítem, a veces). El primer combustible del mod que se cultiva en lugar de bombearse: cada lote cuesta lo mismo y el rendimiento depende solo de lo que le eches — desde pasto hasta una zanahoria de oro."
             },
             {
               "type": "stats",
@@ -1848,7 +1848,7 @@
             {
               "type": "text",
               "title": "Bomba",
-              "text": "Una bomba LV que extrae fluido del mundo o de tanques adyacentes hacia su tanque interno de 10 cubos y lo envía a los receptores; intercambia fluido con cápsulas y contenedores de otros mods."
+              "text": "Una bomba LV que extrae fluido del mundo o de tanques adyacentes hacia su tanque interno de 10 cubetas y lo envía a los receptores; intercambia fluido con cápsulas y contenedores de otros mods."
             },
             {
               "type": "stats",
@@ -1924,13 +1924,13 @@
       "entries": [
         {
           "id": "item_pipe",
-          "title": "Tubería de objetos",
+          "title": "Tubería de ítems",
           "icon": "alaindustrial:item_pipe",
           "pages": [
             {
               "type": "text",
-              "title": "Tubería de objetos",
-              "text": "Tubería multiparte pasiva que transfiere objetos entre inventarios."
+              "title": "Tubería de ítems",
+              "text": "Tubería multiparte pasiva que transfiere ítems entre inventarios."
             },
             {
               "type": "recipe",
@@ -1954,13 +1954,13 @@
         },
         {
           "id": "item_pipe_advanced",
-          "title": "Tubería de objetos avanzada",
+          "title": "Tubería de ítems avanzada",
           "icon": "alaindustrial:item_pipe_advanced",
           "pages": [
             {
               "type": "text",
-              "title": "Tubería de objetos avanzada",
-              "text": "Tubería de objetos de segundo nivel: el doble de capacidad; una línea va a la velocidad de su tramo más lento."
+              "title": "Tubería de ítems avanzada",
+              "text": "Tubería de ítems de segundo nivel: el doble de capacidad; una línea va a la velocidad de su tramo más lento."
             },
             {
               "type": "recipe",
@@ -2020,13 +2020,13 @@
             {
               "type": "text",
               "title": "Tanque de fluidos portátil",
-              "text": "Un tanque pasivo de 8 cubos con nivel de fluido visible, acceso a fluidos por las seis caras y contenido conservado al moverlo."
+              "text": "Un tanque pasivo de 8 cubetas con nivel de fluido visible, acceso a fluidos por las seis caras y contenido conservado al moverlo."
             },
             {
               "type": "stats",
               "title": "Estadísticas",
               "lines": [
-                "Capacidad: 8 cubos"
+                "Capacidad: 8 cubetas"
               ]
             },
             {
@@ -2166,7 +2166,7 @@
             {
               "type": "text",
               "title": "Fueloil",
-              "text": "El residuo pesado de la destilación del petróleo — un fluido espeso de color marrón oscuro. Combustible más débil que el diésel (6 EU/t), pero nada se desperdicia: todo arde."
+              "text": "El residuo pesado de la destilación del petróleo — un fluido espeso de color café oscuro. Combustible más débil que el diésel (6 EU/t), pero nada se desperdicia: todo arde."
             }
           ]
         },
@@ -2190,19 +2190,19 @@
             {
               "type": "text",
               "title": "Petróleo",
-              "text": "Un recurso fósil líquido: lagos finitos en el mundo, recogidos con un cubo, una cápsula o una bomba; denso, inflamable y el comienzo de la cadena del caucho."
+              "text": "Un recurso fósil líquido: lagos finitos en el mundo, recogidos con una cubeta, una cápsula o una bomba; denso, inflamable y el comienzo de la cadena del caucho."
             }
           ]
         },
         {
           "id": "nickel_ore",
-          "title": "Mena de níquel",
+          "title": "Mineral de níquel",
           "icon": "alaindustrial:nickel_ore",
           "pages": [
             {
               "type": "text",
-              "title": "Mena de níquel",
-              "text": "El más raro de los metales del mod: mena en el mundo y la cadena bruto → polvo → lingote; el material para aleaciones MV y carcasas de máquinas."
+              "title": "Mineral de níquel",
+              "text": "El más raro de los metales del mod: mineral en el mundo y la cadena bruto → polvo → lingote; el material para aleaciones MV y carcasas de máquinas."
             }
           ]
         },
@@ -2238,25 +2238,25 @@
         },
         {
           "id": "tin_ore",
-          "title": "Mena de estaño",
+          "title": "Mineral de estaño",
           "icon": "alaindustrial:tin_ore",
           "pages": [
             {
               "type": "text",
-              "title": "Mena de estaño",
-              "text": "Un metal temprano del mod: mena en el mundo y la cadena bruto → polvo → lingote; el material base para cables y circuitos LV."
+              "title": "Mineral de estaño",
+              "text": "Un metal temprano del mod: mineral en el mundo y la cadena bruto → polvo → lingote; el material base para cables y circuitos LV."
             }
           ]
         },
         {
           "id": "palladium_ore",
-          "title": "Mena de paladio",
+          "title": "Mineral de paladio",
           "icon": "alaindustrial:palladium_ore",
           "pages": [
             {
               "type": "text",
-              "title": "Mena de paladio",
-              "text": "La única mena del Nether del mod: escondida en netherrack, basalto y piedra negra, exige un pico de diamante y se procesa en polvo, lingote y placa."
+              "title": "Mineral de paladio",
+              "text": "El único mineral del Nether del mod: escondido en netherrack, basalto y piedra negra, exige un pico de diamante y se procesa en polvo, lingote y placa."
             }
           ]
         },
@@ -2268,7 +2268,7 @@
             {
               "type": "text",
               "title": "Vapor",
-              "text": "El fluido de trabajo de la sala de reactor. El único fluido del mod sin forma alguna en el mundo: ni charco, ni bloque, ni cubo — el vapor solo existe dentro de depósitos y tuberías."
+              "text": "El fluido de trabajo de la sala de reactor. El único fluido del mod sin forma alguna en el mundo: ni charco, ni bloque, ni cubeta — el vapor solo existe dentro de depósitos y tuberías."
             }
           ]
         },
@@ -2316,37 +2316,37 @@
         },
         {
           "id": "silver_ore",
-          "title": "Mena de plata",
+          "title": "Mineral de plata",
           "icon": "alaindustrial:silver_ore",
           "pages": [
             {
               "type": "text",
-              "title": "Mena de plata",
-              "text": "Un metal de mena raro del mod: bloque de mena y la cadena bruto → polvo → lingote; el material para circuitos y componentes de nivel medio."
+              "title": "Mineral de plata",
+              "text": "Un metal raro del mod: bloque de mineral y la cadena bruto → polvo → lingote; el material para circuitos y componentes de nivel medio."
             }
           ]
         },
         {
           "id": "sulfur_ore",
-          "title": "Mena de azufre",
+          "title": "Mineral de azufre",
           "icon": "alaindustrial:sulfur_ore",
           "pages": [
             {
               "type": "text",
-              "title": "Mena de azufre",
+              "title": "Mineral de azufre",
               "text": "Azufre nativo: un no metal extraíble que se procesa en polvo para vulcanizar caucho."
             }
           ]
         },
         {
           "id": "uranium_ore",
-          "title": "Mena de uranio",
+          "title": "Mineral de uranio",
           "icon": "alaindustrial:uranium_ore",
           "pages": [
             {
               "type": "text",
-              "title": "Mena de uranio",
-              "text": "La mena más rara del mod: se extrae con un pico de hierro y se procesa en polvo y lingote; ya se usa en la antorcha, el teletransportador y la incubadora, y más adelante en máquinas nucleares."
+              "title": "Mineral de uranio",
+              "text": "El mineral más raro del mod: se extrae con un pico de hierro y se procesa en polvo y lingote; ya se usa en la antorcha, el teletransportador y la incubadora, y más adelante en máquinas nucleares."
             }
           ]
         },
@@ -2412,7 +2412,7 @@
             {
               "type": "text",
               "title": "Incubadora",
-              "text": "Multibloque de 1×2: base mecánica más una cúpula de vidrio. Muta objetos mediante irradiación de uranio y EU: los duplica, los transforma o crea otros nuevos. El modo se elige con un chip y el resultado es probabilístico, con cuatro grados de rareza."
+              "text": "Multibloque de 1×2: base mecánica más una cúpula de vidrio. Muta ítems mediante irradiación de uranio y EU: los duplica, los transforma o crea otros nuevos. El modo se elige con un chip y el resultado es probabilístico, con cuatro grados de rareza."
             },
             {
               "type": "stats",
@@ -2535,7 +2535,7 @@
             {
               "type": "text",
               "title": "Controlador de invernadero",
-              "text": "Una sala sellada de cualquier forma cuyos semilleros despertados hacen crecer cúmulos de amatista vanilla auténticos. El controlador inunda el aire interior, así que una cúpula, una pirámide escalonada o un ala en L cuentan igual, y un invernadero terminado lo demuestra perdiendo las juntas de su cáscara. El agua, los EU y un aspersor solo lo aceleran; ninguno de los tres es necesario."
+              "text": "Una sala sellada de cualquier forma cuyos semilleros despertados hacen crecer racimos de amatista vanilla auténticos. El controlador inunda el aire interior, así que una cúpula, una pirámide escalonada o un ala en L cuentan igual, y un invernadero terminado lo demuestra perdiendo las juntas de su cáscara. El agua, los EU y un aspersor solo lo aceleran; ninguno de los tres es necesario."
             },
             {
               "type": "stats",
@@ -2572,7 +2572,7 @@
             {
               "type": "text",
               "title": "Teletransportador",
-              "text": "Una estación de anclaje HV y un mando de mano: se vinculan con shift+clic derecho y teletransportan al jugador a una estación por un gran coste de EU, con calentamiento, aterrizaje seguro y protección de privacidad."
+              "text": "Una estación de anclaje HV y un control de mano: se vinculan con shift+clic derecho y teletransportan al jugador a una estación por un gran costo de EU, con calentamiento, aterrizaje seguro y protección de privacidad."
             },
             {
               "type": "stats",
@@ -2727,7 +2727,7 @@
             {
               "type": "text",
               "title": "Vidrio de reactor",
-              "text": "Un panel de carcasa transparente: cuenta como pared igual que el blindaje, pero no más del 30 % de una carcasa puede ser cristal; pasado ese punto la sala deja de ser contención y se convierte en vitrina."
+              "text": "Un panel de carcasa transparente: cuenta como pared igual que el blindaje, pero no más del 30 % de una carcasa puede ser vidrio; pasado ese punto la sala deja de ser contención y se convierte en vitrina."
             },
             {
               "type": "stats",
@@ -3180,7 +3180,7 @@
             {
               "type": "text",
               "title": "Estación de trabajo",
-              "text": "Un ordenador montado con dos carcasas apiladas una sobre otra. Consume de la red y sirve al jugador como su propio puesto de trabajo."
+              "text": "Una computadora montada con dos carcasas apiladas una sobre otra. Consume de la red y sirve al jugador como su propio puesto de trabajo."
             },
             {
               "type": "stats",
@@ -3218,7 +3218,7 @@
             {
               "type": "text",
               "title": "Marco indicador de existencias",
-              "text": "Un marco que cuelgas de un cofre: muestra la cantidad de objetos que hay dentro, en el propio marco. No necesita energía; el número solo se ve si colocas un objeto de filtro en el marco."
+              "text": "Un marco que cuelgas de un cofre: muestra la cantidad de ítems que hay dentro, en el propio marco. No necesita energía; el número solo se ve si colocas un ítem de filtro en el marco."
             },
             {
               "type": "recipe",
@@ -3301,7 +3301,7 @@
     },
     {
       "id": "items",
-      "title": "Objetos",
+      "title": "Ítems",
       "icon": "alaindustrial:overclocker_chip_i",
       "entries": [
         {
@@ -3342,7 +3342,7 @@
             {
               "type": "text",
               "title": "Chip de estadísticas",
-              "text": "Una mejora que hace que la máquina lleve el registro de su trabajo: tiempo, energía y objetos procesados."
+              "text": "Una mejora que hace que la máquina lleve el registro de su trabajo: tiempo, energía y ítems procesados."
             },
             {
               "type": "recipe",
@@ -3402,7 +3402,7 @@
             {
               "type": "text",
               "title": "Batería",
-              "text": "El primer portador de EU — una batería recargable de 2 000 EU que se apila por nivel de carga y devuelve su energía a la red o a otro objeto."
+              "text": "El primer portador de EU — una batería recargable de 2 000 EU que se apila por nivel de carga y devuelve su energía a la red o a otro ítem."
             },
             {
               "type": "stats",
@@ -3955,7 +3955,7 @@
             {
               "type": "text",
               "title": "Polvo de hierro",
-              "text": "Polvo e intermedios relacionados (placa, tocho): aquello en lo que el triturador y otras máquinas convierten las menas."
+              "text": "Polvo e intermedios relacionados (placa, tocho): aquello en lo que el triturador y otras máquinas convierten los minerales."
             }
           ]
         },
@@ -4087,7 +4087,7 @@
             {
               "type": "text",
               "title": "Bolsa de batería",
-              "text": "Una bolsa de objetos recargable: aguanta 128 de peso, funciona con una batería integrada de 2000 EU y se bloquea cuando se queda sin carga."
+              "text": "Una bolsa de ítems recargable: aguanta 128 de peso, funciona con una batería integrada de 2000 EU y se bloquea cuando se queda sin carga."
             },
             {
               "type": "stats",
@@ -4118,13 +4118,13 @@
         },
         {
           "id": "fluxweave_chestplate",
-          "title": "Peto de flujo",
+          "title": "Pechera de flujo",
           "icon": "alaindustrial:fluxweave_chestplate",
           "pages": [
             {
               "type": "text",
-              "title": "Peto de flujo",
-              "text": "El primer conjunto completo de armadura EU del mod: casco, peto, grebas y botas de tejido de flujo; la carga activa utilidades sin desactivar nunca la protección."
+              "title": "Pechera de flujo",
+              "text": "El primer conjunto completo de armadura EU del mod: yelmo, pechera, grebas y botas de tejido de flujo; la carga activa utilidades sin desactivar nunca la protección."
             },
             {
               "type": "stats",
@@ -4156,13 +4156,13 @@
         },
         {
           "id": "tempered_iron_chestplate",
-          "title": "Peto de hierro templado",
+          "title": "Pechera de hierro templado",
           "icon": "alaindustrial:tempered_iron_chestplate",
           "pages": [
             {
               "type": "text",
-              "title": "Peto de hierro templado",
-              "text": "Un conjunto completo de armadura de hierro templado: casco, peto, grebas y botas; más resistente que el hierro, se repara con hierro templado."
+              "title": "Pechera de hierro templado",
+              "text": "Un conjunto completo de armadura de hierro templado: yelmo, pechera, grebas y botas; más resistente que el hierro, se repara con hierro templado."
             },
             {
               "type": "stats",
@@ -4199,7 +4199,7 @@
             {
               "type": "text",
               "title": "Cápsula de vacío",
-              "text": "Un contenedor de fluidos apilable de un cubo: hasta 16 cápsulas de un mismo fluido por pila, se llena desde el mundo o los tanques del mod."
+              "text": "Un contenedor de fluidos apilable de una cubeta: hasta 16 cápsulas de un mismo fluido por pila, se llena desde el mundo o los tanques del mod."
             },
             {
               "type": "recipe",
@@ -4229,7 +4229,7 @@
             {
               "type": "text",
               "title": "Llave inglesa",
-              "text": "Configura las caras de la tubería de objetos y desmonta los bloques del mod."
+              "text": "Configura las caras de la tubería de ítems y desmonta los bloques del mod."
             },
             {
               "type": "recipe",
@@ -4259,7 +4259,7 @@
             {
               "type": "text",
               "title": "Mochila propulsora",
-              "text": "Un dispositivo de vuelo EU para la ranura del peto: empuje mientras se mantiene saltar y un planeo suave sin energía al descargarse."
+              "text": "Un dispositivo de vuelo EU para la ranura de la pechera: empuje mientras se mantiene saltar y un planeo suave sin energía al descargarse."
             },
             {
               "type": "stats",
@@ -4339,12 +4339,12 @@
         },
         {
           "id": "insulated_chestplate",
-          "title": "Peto aislante",
+          "title": "Pechera aislante",
           "icon": "alaindustrial:insulated_chestplate",
           "pages": [
             {
               "type": "text",
-              "title": "Peto aislante",
+              "title": "Pechera aislante",
               "text": "Armadura de cuero bañada en slime: capucha, chaqueta, pantalón y botas que absorben la descarga de un cable desnudo y gastan durabilidad al hacerlo."
             },
             {
@@ -4501,7 +4501,7 @@
             {
               "type": "text",
               "title": "Guadaña",
-              "text": "Una herramienta de área que corta hojas, hierba, flores y otra vegetación decorativa de un solo golpe y, con Shift pulsado, una hoz de área que cosecha cultivos maduros. Ocho niveles de material, de la madera a la netherita. Al cosechar existe la probabilidad de obtener una semilla extra, y esa probabilidad aumenta con el nivel de la guadaña."
+              "text": "Una herramienta de área que corta hojas, pasto, flores y otra vegetación decorativa de un solo golpe y, con Shift presionado, una hoz de área que cosecha cultivos maduros. Ocho niveles de material, de la madera a la netherita. Al cosechar existe la probabilidad de obtener una semilla extra, y esa probabilidad aumenta con el nivel de la guadaña."
             },
             {
               "type": "stats",
@@ -4692,13 +4692,13 @@
         },
         {
           "id": "teleporter_remote",
-          "title": "Mando de teletransporte",
+          "title": "Control de teletransporte",
           "icon": "alaindustrial:teleporter_remote",
           "pages": [
             {
               "type": "text",
-              "title": "Mando de teletransporte",
-              "text": "Un mando de mano: se vincula a una estación de teletransporte con shift+clic derecho y activa un salto hasta ella por un coste de EU que paga la estación."
+              "title": "Control de teletransporte",
+              "text": "Un control de mano: se vincula a una estación de teletransporte con shift+clic derecho y activa un salto hasta ella por un costo de EU que paga la estación."
             },
             {
               "type": "recipe",
@@ -4819,12 +4819,12 @@
         },
         {
           "id": "shielding_chestplate",
-          "title": "Peto de blindaje",
+          "title": "Pechera de blindaje",
           "icon": "alaindustrial:shielding_chestplate",
           "pages": [
             {
               "type": "text",
-              "title": "Peto de blindaje",
+              "title": "Pechera de blindaje",
               "text": "El equipo antirradiación: capucha, chaqueta, pantalón y botas de cuero, caucho y tinte amarillo; reduce la dosis, gasta durabilidad al hacerlo y sella por completo a quien lo lleva."
             },
             {
@@ -4936,7 +4936,7 @@
             {
               "type": "text",
               "title": "Electroimán",
-              "text": "Un objeto recargable con EU en cualquier ranura del inventario que atrae los objetos sueltos cercanos hacia el jugador, gastando EU por objeto."
+              "text": "Un ítem recargable con EU en cualquier ranura del inventario que atrae los ítems sueltos cercanos hacia el jugador, gastando EU por ítem."
             },
             {
               "type": "stats",
@@ -5085,7 +5085,7 @@
             {
               "type": "text",
               "title": "Mochila de energía",
-              "text": "Un búfer de EU que se lleva en la ranura del peto: 20 000 EU que mantienen cargados los objetos eléctricos de tu inventario."
+              "text": "Un búfer de EU que se lleva en la ranura de la pechera: 20 000 EU que mantienen cargados los ítems eléctricos de tu inventario."
             },
             {
               "type": "stats",
