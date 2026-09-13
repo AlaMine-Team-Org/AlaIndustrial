@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="es_es" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>Player Profile — Ala Industrial — Guía</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../../assets/guide-site.js" defer></script>
+
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="Abrir menú" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../../assets/item/guide_book_3d.png" alt="">Todo el contenido</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/ky7cFDF8JD" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="Buscar en la wiki…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="Buscar en la guía" autocomplete="off" spellcheck="false" data-index="../search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;Resultados de la búsqueda&quot;,&quot;one&quot;:&quot;página encontrada&quot;,&quot;few&quot;:&quot;páginas encontradas&quot;,&quot;many&quot;:&quot;páginas encontradas&quot;,&quot;loading&quot;:&quot;Cargando el índice de búsqueda…&quot;,&quot;nothing&quot;:&quot;Nada encontrado&quot;}"></search>
+    <details class="language-menu"><summary aria-label="Language">ES</summary><div class="language-popover"><span>ES</span><a href="../../en/utility/player_profile.html">EN</a><a href="../../ru/utility/player_profile.html">RU</a><a href="../../uk/utility/player_profile.html">UA</a><a href="../../zh_cn/utility/player_profile.html">中文</a><a href="../../ja_jp/utility/player_profile.html">日本語</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">Explorar</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../../assets/item/tempered_iron_pickaxe.png" alt=""><span>Primeros pasos</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>Recetas</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>Perfil del jugador</span></a>
+<div class="group-title">Energía</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>Generadores</span><span class="cat-count" aria-label="12 páginas">12</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>Almacenamiento de energía</span><span class="cat-count" aria-label="4 páginas">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Transferencia de energía</span><span class="cat-count" aria-label="8 páginas">8</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Energía nuclear</span><span class="cat-count" aria-label="15 páginas">15</span></a>
+<div class="group-title">Procesamiento</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Máquinas</span><span class="cat-count" aria-label="16 páginas">16</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Máquinas de fluidos</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<div class="group-title">Logística</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Transporte de objetos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Transporte de fluidos</span><span class="cat-count" aria-label="1 página">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Almacenamiento de fluidos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
+<div class="group-title">Mundo y automatización</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Materiales</span><span class="cat-count" aria-label="23 páginas">23</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>Agricultura</span><span class="cat-count" aria-label="6 páginas">6</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>Máquinas avanzadas</span><span class="cat-count" aria-label="1 página">1</span></a>
+<div class="group-title">Otros</div>
+<a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>Utilidades</span><span class="cat-count" aria-label="18 páginas">18</span></a>
+<div class="group-title">Objetos</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>Mejoras</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>Componentes</span><span class="cat-count" aria-label="29 páginas">29</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>Objetos</span><span class="cat-count" aria-label="25 páginas">25</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">Inicio</a><span class="sep">/</span><a href="../utility/index.html">Utilidades</a><span class="sep">/</span><span>Player Profile</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../../assets/vanilla/item/player_head.png" alt="Player Profile" width="64" height="64">
+    <div class="info">
+      <h1>Player Profile</h1>
+      <div class="block-id">alaindustrial:player_profile</div>
+      <div class="tags"><span class="tag cat" style="background:#14b8a6">Utilidades</span><span class="tag lifecycle" style="background:#22c55e">Implementado</span><span class="tag">gui</span><span class="tag">stats</span><span class="tag">progression</span><span class="tag">xp</span><span class="tag">qol</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="resumen">Resumen</h2>
+
+<p>El <strong>perfil del jugador</strong> es una pantalla de carrera personal. Las estadísticas vainilla te dirán «42 picos fabricados», pero no pueden ver tu carrera <em>en el mod</em> — cuánta EU/FE generó tu red, cuánta mena procesaron tus máquinas. El perfil recoge esa actividad del mod y la convierte en una <strong>progresión de carrera</strong>: un sistema de puntos de maestría de 40 niveles agrupados en 8 rangos temáticos (Aprendiz → Leyenda).</p>
+
+<p>Ábrelo con el <strong>atajo <code>K</code></strong> (reconfigurable en Controles; el juego vainilla ya usa <code>P</code> para Interacciones sociales en multijugador) o con el <strong>botón de la esquina superior derecha de tu inventario</strong>. Muestra tu rango y subnivel actuales (<code>Ingeniero III</code>), una barra de maestría hacia el siguiente nivel, contadores de EU/FE de carrera (producida / consumida de forma útil), tu tiempo de «actividad en el mod» y un desglose de producción por tipo de generador.</p>
+
+<blockquote><strong>No hay que confundirlo con</strong> los logros vainilla (hitos únicos) ni las estadísticas vainilla (una tabla plana). El perfil es un conjunto de medidores de carrera <em>acumulativos</em> más una progresión de rangos.</blockquote>
+
+<h2 id="progresión">Progresión</h2>
+
+<p><strong>La fuente principal es el trabajo de las máquinas.</strong> La maestría se acredita al dueño de una máquina en el momento en que <strong>completa una operación</strong> (fundir, triturar, extraer, comprimir), por el coste completo en EU/FE de esa operación. Una operación abortada por un mecanismo de redstone quema EU/FE pero no gana maestría — esa es la regla anti-AFK.</p>
+
+<p><strong>La segunda fuente es la producción de los generadores, pero 20 veces más débil.</strong> Un generador trabaja sin ti, así que su contribución es deliberadamente simbólica: no te dejará dormir el camino hasta Leyenda, pero evita que una gran granja de energía se sienta del todo infructuosa. Solo cuenta la EU/FE <strong>realmente acreditada en el búfer</strong> — un generador girando hacia un búfer lleno no gana nada en absoluto.</p>
+
+<p>Cargar bloques de almacenamiento, los saltos del teletransportador y <strong>bombear fluido</strong> no ganan maestría alguna. Una bomba funciona sin atención y un yacimiento de petróleo guarda miles de cubos: con un punto por cubo, una sola sesión AFK se saltaría uno o dos rangos, así que la extracción en bruto no cuenta como «trabajo útil» — procesar lo que bombearon sí.</p>
+
+<p><strong>«No gana maestría» no es «no se contabiliza».</strong> El contador <strong>Consumido</strong> responde a «adónde fue mi energía», no a «qué me dio puntos», así que es más amplio que la progresión: cubre el trabajo de las máquinas <strong>y el precio de los saltos de teletransporte</strong>. Un jugador que vivía del teletransportador antes veía ahí un cero plano junto a una cifra saludable de Producción — la estación vacía su búfer directamente, saltándose el ciclo de la máquina, y ese gasto nunca llegaba al perfil. Un salto se imputa a <strong>quien saltó</strong> (no al dueño de la estación, así que un salto a la estación pública de otro sí aparece en tu propio perfil), una sola vez y solo con éxito: un calentamiento abortado o un rechazo por falta de energía no anota nada.</p>
+
+<table><thead><tr><th>Parámetro</th><th>Valor</th><th>Config</th></tr></thead><tbody><tr><td>Tasa EU/FE→maestría (máquinas)</td><td>1 000 EU/FE de trabajo = 1 punto de maestría</td><td></td></tr><tr><td>Tasa EU/FE→maestría (generadores)</td><td>20 000 EU/FE producidas = 1 punto</td><td></td></tr><tr><td>Curva de niveles</td><td>exponencial, ×1.18 por nivel</td><td>,</td></tr><tr><td>Niveles</td><td>40 (8 rangos × 5 subniveles)</td><td>—</td></tr><tr><td>Subnivel</td><td>números romanos (I…V)</td><td>—</td></tr><tr><td>Aviso de subida de nivel</td><td>solo sonido</td><td>—</td></tr></tbody></table>
+
+<p>La maestría es un valor <strong>derivado</strong>: se calcula a partir de los dos contadores de EU/FE de carrera en lugar de guardarse aparte, así que reajustar las tasas en la configuración nunca puede comerse la maestría ya ganada. Un rango alcanzado jamás te lo quita un cambio de balance: se recuerda el nivel más alto alcanzado.</p>
+
+<h3 id="escalafón-de-rangos">Escalafón de rangos</h3>
+
+<table><thead><tr><th>Subniveles</th><th>Rango</th></tr></thead><tbody><tr><td>1–5</td><td>Aprendiz</td></tr><tr><td>6–10</td><td>Oficial</td></tr><tr><td>11–15</td><td>Técnico</td></tr><tr><td>16–20</td><td>Operador</td></tr><tr><td>21–25</td><td>Ingeniero</td></tr><tr><td>26–30</td><td>Arquitecto</td></tr><tr><td>31–35</td><td>Magnate</td></tr><tr><td>36–40</td><td>Leyenda</td></tr></tbody></table>
+
+<h2 id="atribución-y-privacidad">Atribución y privacidad</h2>
+
+<p>Las estadísticas se siguen <strong>por dueño de cada máquina</strong> — quien la colocó (reasignado volviéndola a colocar). Si un amigo carga mena en tu máquina, la maestría es tuya. El perfil es <strong>por jugador y privado</strong>: en un servidor solo ves tu propia carrera. El crédito se acumula solo mientras el dueño está <strong>conectado</strong> y <strong>no en creativo</strong> (la EU/FE en creativo es gratis y no debe convertirse en carrera); una máquina sin dueño (una estructura, el stand de demostración) no acredita a nadie.</p>
+
+<p><strong>Máquinas colocadas por la automatización de otros mods.</strong> La regla del «dueño conectado» también cubre las máquinas colocadas por un jugador falso de otro mod (autoconstructores, robots). No existe un mecanismo aparte para ellos, ni hace falta: tal jugador nunca está entre los conectados, así que su UUID no corresponde a nadie y nadie gana maestría. Cuando la automatización actúa en cambio bajo la identidad de un jugador real (un enfoque común para que los permisos y las reclamaciones de terreno vean al dueño), el trabajo se acredita a ese jugador — y solo mientras esté conectado, igual que con una máquina colocada a mano. Es comportamiento deliberado, no un hueco.</p>
+
+<h2 id="almacenamiento">Almacenamiento</h2>
+
+<p>El perfil vive en un <strong>dato adjunto por jugador</strong>. Sobrevive al cierre de sesión y a la muerte, y solo se sincroniza con su dueño. La acumulación del lado del servidor se agrupa en memoria y se vuelca al almacenamiento cada pocos segundos (y al salir / parar el servidor) — nunca se escribe tick a tick.</p>
+
+<h2 id="propiedades-del-bloque">Propiedades del bloque</h2>
+
+<p>El perfil del jugador es una <strong>pura pantalla (GUI)</strong>, no un bloque ni un objeto: no se coloca nada en el mundo y no tiene forma ni colisión. Su «punto de entrada» no es un objeto físico sino un atajo de teclado y un botón en el inventario vainilla (véase «Puntos de acceso»). Los datos viven en un dato adjunto por jugador en el servidor; la pantalla es del lado del cliente.</p>
+
+<table><thead><tr><th>Campo</th><th>Valor</th></tr></thead><tbody><tr><td>Tipo</td><td>pantalla (GUI), no un bloque ni un objeto</td></tr><tr><td>Colocación en el mundo</td><td>ninguna</td></tr><tr><td>Forma / colisión</td><td>ninguna</td></tr><tr><td>Apertura</td><td>atajo <code>K</code> o el botón de la esquina superior derecha del inventario (lado cliente)</td></tr><tr><td>Almacenamiento de datos</td><td>dato adjunto por jugador (servidor)</td></tr></tbody></table>
+
+<h2 id="puntos-de-acceso">Puntos de acceso</h2>
+
+<p><strong>Atajo <code>K</code></strong> (Perfil) — el predeterminado, reconfigurable en Controles. <strong>Botón</strong> en la esquina superior derecha del inventario (ausente en el inventario creativo — el atajo funciona en todas partes). <strong><code>/ala profile show|set &lt;xp&gt;</code></strong> — un comando de utilidad de operador (depuración de progresión / QA).</p>
+
+<h2 id="más-allá-de-la-primera-versión">Más allá de la primera versión</h2>
+
+<p>Un sistema de misiones. <strong>Las mejoras por nivel llegaron en </strong> y viven en la Estación de trabajo: las ramas de Ingeniero de energía y Liquidador actúan sobre el propio jugador (equipo portado, dosis, descarga), mientras que Mecánico y Agrónomo actúan sobre sus máquinas y solo mientras el dueño está en el mundo. La vieja restricción — solo máquinas y red, nunca el jugador — quedó levantada: se mantuvo mientras nada portaba la elección, y la estación se convirtió en ese portador. Los atributos vainilla del jugador siguen intactos: una habilidad se lee en el momento de la acción, así que la muerte y el cierre de sesión no pierden nada. Las mejoras por hito (cuando lleguen), una tarjeta de perfil compartible de servidor y categorías de estadísticas más amplias (fabricación, minería por mena, un desglose del gasto por finalidad) son tareas futuras aparte. El teletransporte ya salió de esa lista: los saltos cuentan para Consumido, simplemente no tienen su propia fila en la pantalla.</p>
+
+
+  </main>
+</div>
+
+</body>
+</html>

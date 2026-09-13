@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="es_es" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>Controlador de invernadero — Ala Industrial — Guía</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="Abrir menú" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../../assets/item/guide_book_3d.png" alt="">Todo el contenido</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/ky7cFDF8JD" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="Buscar en la wiki…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="Buscar en la guía" autocomplete="off" spellcheck="false" data-index="../search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;Resultados de la búsqueda&quot;,&quot;one&quot;:&quot;página encontrada&quot;,&quot;few&quot;:&quot;páginas encontradas&quot;,&quot;many&quot;:&quot;páginas encontradas&quot;,&quot;loading&quot;:&quot;Cargando el índice de búsqueda…&quot;,&quot;nothing&quot;:&quot;Nada encontrado&quot;}"></search>
+    <details class="language-menu"><summary aria-label="Language">ES</summary><div class="language-popover"><span>ES</span><a href="../../en/agriculture/crystal_farm.html">EN</a><a href="../../ru/agriculture/crystal_farm.html">RU</a><a href="../../uk/agriculture/crystal_farm.html">UA</a><a href="../../zh_cn/agriculture/crystal_farm.html">中文</a><a href="../../ja_jp/agriculture/crystal_farm.html">日本語</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">Explorar</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../../assets/item/tempered_iron_pickaxe.png" alt=""><span>Primeros pasos</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>Recetas</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>Perfil del jugador</span></a>
+<div class="group-title">Energía</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>Generadores</span><span class="cat-count" aria-label="12 páginas">12</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>Almacenamiento de energía</span><span class="cat-count" aria-label="4 páginas">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Transferencia de energía</span><span class="cat-count" aria-label="8 páginas">8</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Energía nuclear</span><span class="cat-count" aria-label="15 páginas">15</span></a>
+<div class="group-title">Procesamiento</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Máquinas</span><span class="cat-count" aria-label="16 páginas">16</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Máquinas de fluidos</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<div class="group-title">Logística</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Transporte de objetos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Transporte de fluidos</span><span class="cat-count" aria-label="1 página">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Almacenamiento de fluidos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
+<div class="group-title">Mundo y automatización</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Materiales</span><span class="cat-count" aria-label="23 páginas">23</span></a>
+<a class="cat-link active" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>Agricultura</span><span class="cat-count" aria-label="6 páginas">6</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>Máquinas avanzadas</span><span class="cat-count" aria-label="1 página">1</span></a>
+<div class="group-title">Otros</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>Utilidades</span><span class="cat-count" aria-label="18 páginas">18</span></a>
+<div class="group-title">Objetos</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>Mejoras</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>Componentes</span><span class="cat-count" aria-label="29 páginas">29</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>Objetos</span><span class="cat-count" aria-label="25 páginas">25</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">Inicio</a><span class="sep">/</span><a href="../agriculture/index.html">Agricultura</a><span class="sep">/</span><span>Controlador de invernadero</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../../assets/item/crystal_farm_controller_3d.png" alt="Controlador de invernadero" width="64" height="64">
+    <div class="info">
+      <h1>Controlador de invernadero</h1>
+      <div class="block-id">alaindustrial:crystal_farm_controller</div>
+      <div class="tags"><span class="tag cat" style="background:#22c55e">Agricultura</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">Implementado</span><span class="tag">agriculture</span><span class="tag">crystal</span><span class="tag">amethyst</span><span class="tag">multiblock</span><span class="tag">greenhouse</span><span class="tag">farming</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="resumen">Resumen</h2>
+
+<p>El <strong>Invernadero de cristal</strong> hace renovable la amatista sin cancelar el viaje a un geodo: convierte un geodo que hayas encontrado en una fuente. Antes de él, toda la rama de cristales del mod se estrangulaba en el fragmento de amatista vainilla: el fragmento resonante y el Cristal espacial se fabrican con él, y estos a su vez alimentan la Bobina de resonancia, el chip de teletransporte, el Cristal de lapotrón y el Cristal resonante. No había dónde conseguir un fragmento excepto arrancándolo de un geodo.</p>
+
+<p>El invernadero es una construcción, no una máquina. El jugador levanta él mismo la sala sellada, pone dentro <strong>semilleros de cristal</strong>, los alimenta con fragmentos — y empiezan a producir <strong>racimos de amatista vainilla de verdad</strong>. No imitaciones, los mismos bloques: se ven igual, suenan igual, se rompen igual y responden igual a Fortuna, porque la caída la decide la tabla de botín vainilla.</p>
+
+<p><strong>Lo que lo distingue de la incubadora.</strong> La incubadora va de probabilidad y resultado inmediato: lo metes, pagas en uranio y EU/FE, lo sacas. El invernadero va de esperar y observar: el resultado es determinista y el precio es tiempo. Son dos géneros distintos de máquina, y deliberadamente no se solapan.</p>
+
+<h2 id="construir-la-sala">Construir la sala</h2>
+
+<p>El invernadero se compone de cinco bloques, pero solo dos son obligatorios — el <strong>Suelo de invernadero</strong> y el <strong>Controlador de invernadero</strong>:</p>
+
+<table><thead><tr><th>Bloque</th><th>Papel</th></tr></thead><tbody><tr><td>Suelo de invernadero</td><td>casco: suelo, paredes, techo — todo lo que no es cristal</td></tr><tr><td>Vidrio de invernadero</td><td>casco: el acristalado, que se fusiona en una sola lámina cuando la sala se forma</td></tr><tr><td>Puerta de invernadero</td><td>la entrada; se cierra sola detrás del jugador</td></tr><tr><td>Controlador de invernadero</td><td>el cerebro: escanea la sala, impulsa el crecimiento, informa de qué va mal</td></tr><tr><td>Semillero de cristal</td><td>se coloca dentro; en él crecen los racimos</td></tr></tbody></table>
+
+<p>El controlador se <strong>encastra en una pared</strong> con su panel mirando hacia afuera: el interior de la sala queda en el lado opuesto a la cara que mira. Un controlador en el suelo o en el techo no vale: es un panel pensado para ser leído.</p>
+
+<h3 id="cualquier-forma-cerrada">Cualquier forma cerrada</h3>
+
+<p>La sala <strong>no tiene por qué ser una caja</strong>. El controlador inunda de aire el interior y acepta cualquier cosa que contenga ese aire: una cúpula, una pirámide escalonada, un ala en L, un invernadero de dos plantas con una abertura entre pisos. Los únicos límites son de volumen:</p>
+
+<table><thead><tr><th>Parámetro</th><th>Valor</th><th>clave de config</th></tr></thead><tbody><tr><td>Volumen mínimo</td><td>27 bloques</td><td></td></tr><tr><td>Volumen máximo</td><td>4096 bloques</td><td></td></tr><tr><td>Distancia máxima al controlador</td><td>24 bloques</td><td></td></tr><tr><td>Intervalo de reescaneo</td><td>40 ticks (2 s)</td><td></td></tr></tbody></table>
+
+<p>Volumen, no longitud de arista: «tres bloques de lado a lado» no significa nada para una cúpula.</p>
+
+<p><strong>El límite de distancia</strong> es la segunda salvaguardia, más dura, junto al tope de volumen. No va de balance: una sala sin sellar arrastraría el relleno por inundación decenas de bloques hacia un lado, leyendo chunks que quizá no estén cargados.</p>
+
+<p>Vale <strong>cualquier</strong> cristal — vainilla, tintado, de otro mod a través de <code>#c:glass_blocks</code>. Un invernadero de cristal tintado sale de ahí solo; no hay código aparte para él. También se acepta cualquier puerta vainilla, no solo la del mod.</p>
+
+<h3 id="qué-ve-el-jugador-mientras-construye">Qué ve el jugador mientras construye</h3>
+
+<p>El escaneo es invisible, así que la formación se muestra de tres maneras a la vez:</p>
+
+<ul><li><strong>el casco pierde sus juntas</strong> — el suelo y el vidrio tienen cada uno una segunda textura sin</li></ul>
+<p>marco, y una sala terminada se lee como una sola superficie en vez de una pila de cajas; a lo largo del contorno el marco se queda, dibujando la silueta;</p>
+<ul><li><strong>un sonido</strong> — un acorde en el momento de cerrarse, solo en la transición;</li><li><strong>partículas</strong> — un destello a lo largo de la junta del suelo.</li></ul>
+
+<p>Deshaz una pared y el casco vuelve de golpe a su aspecto quebradizo.</p>
+
+<h3 id="cuando-la-sala-no-se-cierra">Cuando la sala no se cierra</h3>
+
+<p>Haz clic derecho en el controlador y reporta al chat qué va mal. Si el invernadero se había formado antes, el mensaje incluye las coordenadas del <strong>bloque que falta</strong>, y de él sube humo cada dos segundos.</p>
+
+<p>La línea va firmada <code>[Ala Industrial]</code>: el chat es una columna compartida con el servidor y todos los demás mods, y sin firma es adivinar quién habla. El veredicto llega antes de terminar de leer la frase — verde para cerrado, rojo para no —, y los números y coordenadas se recortan del texto corriente en blanco, porque son lo que el jugador va a buscar.</p>
+
+<table><thead><tr><th>Estado</th><th>Qué se informa</th></tr></thead><tbody><tr><td>Formado</td><td>volumen, número de semilleros, si hay agua</td></tr><tr><td>Sin cerrar</td><td>coordenadas del bloque que falta si se pueden deducir; si no, solo «sin cerrar»</td></tr><tr><td>Demasiado pequeña</td><td>sin coordenadas</td></tr><tr><td>Controlador no está en una pared</td><td>las coordenadas del controlador</td></tr><tr><td>Segundo controlador</td><td>las coordenadas del otro controlador</td></tr></tbody></table>
+
+<p><strong>Las coordenadas no siempre se muestran, y es deliberado.</strong> El relleno por inundación no puede decir por dónde fuga: sale por el agujero y sigue hasta chocar con el límite de distancia. Así que el agujero se busca no por el relleno, sino por la lista de celdas del casco recordada de la última formación exitosa: el bloque que falta es la de ellas que dejó de ser bloque de casco. Un invernadero que nunca se ha formado no tiene con qué comparar, y entonces las coordenadas <strong>no se muestran en absoluto</strong>: mandar al jugador a mirar al sitio equivocado es peor que decir con honestidad «sin cerrar».</p>
+
+<h2 id="el-semillero">El semillero</h2>
+
+<p>Se fabrica <strong>muerto</strong> — la misma piedra cristalina que la amatista en floración vainilla, solo que sin color. Dale un fragmento de amatista (clic derecho), y se llena de color y empieza a producir.</p>
+
+<ul><li><strong>Un fragmento por clic.</strong> La carga se muestra en la línea sobre la barra rápida, y el tono del</li></ul>
+<p>sonido sube a medida que se llena.</p>
+<ul><li><strong>Un bloque de amatista</strong> cuenta como cuatro fragmentos — exactamente lo que la vainilla pone en</li></ul>
+<p>su receta.</p>
+<ul><li><strong>Puedes rellenarlo en cualquier momento</strong>, sin esperar a que se agote la carga.</li><li>El techo son <strong>16 yemas</strong> en la cola. Un bloque de amatista es <strong>rechazado</strong> por un semillero</li></ul>
+<p>casi lleno: da cuatro yemas de golpe, y aceptarlo por una sola hueco libre quemaría en silencio tres cuartos de un objeto escaso. Los fragmentos siempre pueden rellenar.</p>
+
+<p>Los racimos crecen en las caras libres del semillero, pasando por las etapas vainilla <code>yema pequeña → mediana → grande → racimo</code>. Un racimo terminado se tumba con un <strong>pico</strong> y da <strong>4 fragmentos</strong> (tabla vainilla, Fortuna aplica). Una yema verde no da nada — igual que en la vainilla.</p>
+
+<p><strong>Un semillero fuera de un invernadero lo dice con honestidad.</strong> Puedes cargarlo en cualquier parte y el contador subirá exactamente igual — y no crecerá nada. Así que cuando alimentas a un bloque que ningún invernadero formado está vigilando, aparece una advertencia en lugar del contador.</p>
+
+<h2 id="energía">Energía</h2>
+
+<table><thead><tr><th>Campo</th><th>Valor</th></tr></thead><tbody><tr><td>Papel</td><td>consumidor con búfer, <strong>opcional</strong></td></tr><tr><td>Búfer (EU/FE)</td><td>4000</td></tr><tr><td>Entrada máxima (EU/FE/tick)</td><td>32 (LV)</td></tr><tr><td>EU/FE por evento de crecimiento</td><td>64</td></tr></tbody></table>
+
+<p>Aquí la energía es un acelerador, no una condición. Un invernadero sin un solo cable funciona, solo que despacio. El EU/FE se gasta <strong>solo en un evento de crecimiento que de verdad ocurrió</strong>: la energía compra cristales, no tiradas de dados.</p>
+
+<h2 id="crecimiento-y-balance">Crecimiento y balance</h2>
+
+<p>El crecimiento es probabilístico, como la amatista vainilla: cada ticks cada semillero tira un dado. Cada semillero tiene su propio dado — una tirada compartida haría crecer todo el invernadero al unísono, y eso se leería como una máquina y no como algo vivo.</p>
+
+<p>Un cristal cuesta <strong>cuatro eventos</strong>: la yema tiene que aparecer y luego crecer tres veces.</p>
+
+<p>Hay <strong>tres</strong> aceleradores y se multiplican: agua, energía y el aspersor. Ninguno es obligatorio.</p>
+
+<table><thead><tr><th>Condiciones</th><th>Divisor</th><th>Tiempo real</th><th>Días de Minecraft</th></tr></thead><tbody><tr><td>Nada</td><td>270</td><td>≈ 1 h 30 min</td><td>4.5</td></tr><tr><td>Solo energía</td><td>135</td><td>≈ 45 min</td><td>2.25</td></tr><tr><td>Solo aspersor</td><td>135</td><td>≈ 45 min</td><td>2.25</td></tr><tr><td>Solo agua</td><td>90</td><td>≈ 30 min</td><td>1.5</td></tr><tr><td>Agua y energía</td><td>45</td><td>≈ 15 min</td><td>0.75</td></tr><tr><td>Agua y aspersor</td><td>45</td><td>≈ 15 min</td><td>0.75</td></tr><tr><td>Energía y aspersor</td><td>67</td><td>≈ 22 min</td><td>1.1</td></tr><tr><td>Los tres</td><td>22</td><td>≈ 7 min</td><td>0.37</td></tr></tbody></table>
+
+<p>Un día de Minecraft son 20 minutos reales; la última columna está convertida a esa tasa. La división es entera, y por eso el conjunto completo da 22 y no 22.5.</p>
+
+<p><strong>Ese es el tiempo para UN semillero, no para el invernadero.</strong> Los semilleros crecen en paralelo, cada uno con su dado, así que una nave de 25 entrega un cristal cada 3.6 minutos aproximadamente sin un solo acelerador, y cada 18 segundos con el conjunto completo. Aquí la escala compra más que los aceleradores: un invernadero está pensado para crecer hacia afuera.</p>
+
+<p><strong>El tercer acelerador es el <a href="sprinkler.html">aspersor</a></strong>. Pon uno dentro de una sala ensamblada con solución nutritiva en su tanque y el controlador lo encontrará solo en el siguiente escaneo. El aura del propio aspersor no tiene nada que ver: los semilleros no reaccionan al harina de hueso ni tienen tick propio, así que lo que actúa aquí es el eje del controlador. La solución se cobra <strong>por cristal realmente producido</strong>, no por intento — exactamente igual que el EU/FE.</p>
+
+<table><thead><tr><th>Parámetro</th><th>Valor</th><th>clave de config</th></tr></thead><tbody><tr><td>Intervalo de intento de crecimiento</td><td>100 ticks (5 s)</td><td></td></tr><tr><td>Divisor base</td><td>270</td><td></td></tr><tr><td>Aceleración por agua</td><td>÷3</td><td></td></tr><tr><td>Aceleración por energía</td><td>÷2</td><td></td></tr><tr><td>Aceleración por el aspersor</td><td>÷2</td><td></td></tr><tr><td>Solución por evento de crecimiento</td><td>50 mB</td><td></td></tr><tr><td>Yemas por fragmento</td><td>1</td><td></td></tr></tbody></table>
+
+<p><strong>La economía.</strong> Entra un fragmento — sale un cristal — vuelven cuatro fragmentos. El retorno es <strong>cuatruplicado</strong>, pagado con una hora y media. Una carga completa de semillero (16 yemas) cuesta 16 fragmentos y devuelve 64 a lo largo de aproximadamente un día de chunk cargado.</p>
+
+<p>Los números los custodia el test L1 <code>CrystalGrowthTest</code>: comprueba tanto que un fragmento vuelva valiendo más que él mismo como que el retorno no se haya disparado — una granja que imprime amatista rompe la rama con la misma fiabilidad que una que se la come.</p>
+
+<h2 id="la-puerta">La puerta</h2>
+
+<p>Una puerta vainilla corriente en sus mecánicas — bisagras, dos mitades, redstone — con una adición: <strong>se cierra sola</strong>.</p>
+
+<table><thead><tr><th>Parámetro</th><th>Valor</th><th>clave de config</th></tr></thead><tbody><tr><td>Retardo de autocierre</td><td>100 ticks (5 s)</td><td></td></tr><tr><td>Recomprobación de hueco bloqueado</td><td>10 ticks</td><td></td></tr></tbody></table>
+
+<p><strong>Una puerta abierta NO rompe el sellado del invernadero.</strong> El escáner mira qué <em>es</em> un bloque, no si está entreabierta — exactamente igual que con la esclusa del reactor —, así que un invernadero con la puerta de par en par sigue creciendo. Esta página decía lo contrario; una auditoría descubrió que nunca fue cierto.</p>
+
+<p>La variante «una puerta abierta rompe el sellado» se consideró y se rechazó: es honesta, pero entonces cada entrada al interior borraría todo el casco y lo repintaría cinco segundos después — un invernadero del tamaño de una nave parpadearía dos veces por visita, y eso son miles de actualizaciones de bloque en cada sentido.</p>
+
+<p>Así que la puerta se cierra no por la mecánica, sino porque un invernadero quedado abierto de par en par luce mal, y porque la sala está por lo demás sellada — una puerta dejada abierta es justamente la puerta por la que entran los mobs.</p>
+
+<ul><li><strong>Nada mantiene la puerta abierta, la redstone incluida.</strong> Una señal solía significar «esta se</li></ul>
+<p>mantiene abierta a propósito» y el temporizador se retiraba; el invernadero ahora se cierra sin condiciones. El coste se nombra en vez de esconderse: bajo una palanca dejada arriba la puerta se abre una vez, se cierra a los cinco segundos y no vuelve a abrirse hasta que la señal conmute — el cierre deliberadamente no limpia <code>POWERED</code>, o la vainilla abriría la puerta en la siguiente actualización vecina y estaría aleteando mientras la palanca esté arriba. Una bahía movida por el pulso de un botón no se ve afectada.</p>
+<ul><li><strong>La puerta no se cerrará sobre nadie que esté en el hueco</strong> — la comprobación cubre ambas</li></ul>
+<p>mitades y cuenta solo criaturas vivas: un fragmento caído a los pies no retiene la puerta. Desde que la redstone dejó de retenerla, esto es lo único entre el temporizador y una puerta cerrada en las narices de alguien.</p>
+
+<h2 id="propiedades-del-bloque">Propiedades del bloque</h2>
+
+<table><thead><tr><th>Bloque</th><th>Dureza</th><th>Explosión</th><th>Herramienta</th><th>Nota</th></tr></thead><tbody><tr><td>Suelo de invernadero</td><td>3.0</td><td>6.0</td><td>pico</td><td>propiedades <code>formed</code>/<code>edge</code></td></tr><tr><td>Vidrio de invernadero</td><td>3.0</td><td>6.0</td><td>pico</td><td>, propiedades <code>formed</code>/<code>edge</code></td></tr><tr><td>Puerta de invernadero</td><td>3.0</td><td>6.0</td><td>pico</td><td>, rompible por un pistón</td></tr><tr><td>Controlador</td><td>3.0</td><td>6.0</td><td>pico</td><td>propiedad <code>formed</code>, <code>facing</code> horizontal</td></tr><tr><td>Semillero</td><td>3.0</td><td>6.0</td><td>pico</td><td>sonido de amatista, propiedades <code>charges</code>/<code>tended</code></td></tr></tbody></table>
+
+<p>El semillero <strong>siempre vuelve muerto</strong>: la carga es tiempo gastado, y un semillero funcionando no debe meterse en tu bolsillo.</p>
+
+<h2 id="recetas">Recetas</h2>
+
+<table><thead><tr><th>Qué</th><th>Patrón</th><th>Salida</th></tr></thead><tbody><tr><td>Suelo de invernadero</td><td><code>TGT</code> / <code>GTG</code> / <code>TGT</code> — T: placa de hierro templado, G: cristal</td><td>4</td></tr><tr><td>Vidrio de invernadero</td><td><code>GGG</code> / <code>GTG</code> / <code>GGG</code></td><td>8</td></tr><tr><td>Puerta de invernadero</td><td><code>GG</code> / <code>GG</code> / <code>TT</code> — G: vidrio de invernadero</td><td>2</td></tr><tr><td>Controlador</td><td><code>KAK</code> / <code>CMC</code> / <code>KKK</code> — K: suelo de invernadero, A: fragmento de amatista, C: circuito electrónico, M: carcasa de máquina</td><td>1</td></tr><tr><td>Semillero</td><td><code>QSQ</code> / <code>SAS</code> / <code>QSQ</code> — Q: cuarzo, S: basalto liso, A: <strong>bloque de amatista</strong></td><td>1</td></tr></tbody></table>
+
+<p>El semillero se construye <strong>alrededor de un bloque de amatista</strong> — igual que la amatista en floración vainilla es amatista. Al mismo tiempo, ninguna receta del invernadero pide aquello para lo que existe el invernadero: los fragmentos van a alimentar, no a construir, o la granja tendría que pagarse con la escasez misma que remienda.</p>
+
+<h2 id="progresión">Progresión</h2>
+
+<ul><li>Nivel: LV, y hasta eso es opcional.</li><li>Despierta la rama: <code>resonant_shard</code>, <code>spatial_crystal</code> y, a través de ellos, la Bobina de</li></ul>
+<p>resonancia, el chip de teletransporte, el Cristal de lapotrón y el Cristal resonante.</p>
+<ul><li>Exige haber encontrado antes un geodo — de allí salen los primeros fragmentos. El invernadero</li></ul>
+<p>hace renovable la fuente; no la saca de la nada.</p>
+
+<h2 id="rendimiento">Rendimiento</h2>
+
+<p>El único objeto con tick en un invernadero es el <strong>controlador</strong>. Ni los semilleros ni los racimos que crecen en ellos tienen entidad de bloque ni tick aleatorio: una granja de cien semilleros añade un único objeto con tick al mundo. Eso es también lo que hace que la regla «solo crece en una sala formada» sea cierta por construcción y no por una comprobación que alguien pueda olvidar.</p>
+
+<h2 id="relacionado">Relacionado</h2>
+
+<ul><li><a href="incubator.html">Incubadora</a> — el género vecino: mutación instantánea probabilística contra</li></ul>
+<p>crecimiento determinista a lo largo del tiempo.</p>
+<ul><li><a href="trellis.html">Espaldera</a> — el precedente de crecimiento perenne sin entidad de bloque.</li><li><a href="../nuclear/reactor_controller.html">Controlador de reactor</a> — el multibloque vecino; lo único que</li></ul>
+<p>comparten es la geometría del casco, los escáneres difieren (una caja contra un relleno por inundación de volumen).</p>
+
+<h2>Fabricación</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="controlador de invernadero alaindustrial:crystal_farm_controller" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Suelo de invernadero"><img src="../../assets/item/crystal_farm_floor_3d.png" alt="Suelo de invernadero" width="32" height="32"></div> <div class="cell" title="Amethyst Shard"><img src="../../assets/item/amethyst_shard_3d.png" alt="Amethyst Shard" width="32" height="32"></div> <div class="cell" title="Suelo de invernadero"><img src="../../assets/item/crystal_farm_floor_3d.png" alt="Suelo de invernadero" width="32" height="32"></div> <div class="cell" title="Circuito electrónico"><img src="../../assets/item/electronic_circuit_3d.png" alt="Circuito electrónico" width="32" height="32"></div> <div class="cell" title="Carcasa de máquina"><img src="../../assets/item/machine_casing_3d.png" alt="Carcasa de máquina" width="32" height="32"></div> <div class="cell" title="Circuito electrónico"><img src="../../assets/item/electronic_circuit_3d.png" alt="Circuito electrónico" width="32" height="32"></div> <div class="cell" title="Suelo de invernadero"><img src="../../assets/item/crystal_farm_floor_3d.png" alt="Suelo de invernadero" width="32" height="32"></div> <div class="cell" title="Suelo de invernadero"><img src="../../assets/item/crystal_farm_floor_3d.png" alt="Suelo de invernadero" width="32" height="32"></div> <div class="cell" title="Suelo de invernadero"><img src="../../assets/item/crystal_farm_floor_3d.png" alt="Suelo de invernadero" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Controlador de invernadero"><img src="../../assets/item/crystal_farm_controller_3d.png" alt="Controlador de invernadero" width="32" height="32"></div><div class="result-name">Controlador de invernadero</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

@@ -420,10 +420,11 @@
     const nf = new Intl.NumberFormat(locale);
     const fmtDate = iso => new Date(iso + 'T00:00:00Z')
       .toLocaleDateString(locale, { day: 'numeric', month: 'short', timeZone: 'UTC' });
-    /* Russian and Ukrainian need three forms of the word "download"; the other
-       locales supply the same string in all three slots. */
+    /* Russian and Ukrainian need three forms of the word "download"; Spanish
+       supplies two (1 / 2+); English-like locales supply a single string. */
     const plural = n => {
       const f = L.dl_forms;
+      if (f.length === 2) return n === 1 ? f[0] : f[1];
       if (f.length < 3) return f[0];
       const n10 = n % 10, n100 = n % 100;
       if (n10 === 1 && n100 !== 11) return f[0];

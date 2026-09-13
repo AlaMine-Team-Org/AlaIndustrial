@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="es_es" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>Cofre de oro — Ala Industrial — Guía</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="Abrir menú" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../../assets/item/guide_book_3d.png" alt="">Todo el contenido</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/ky7cFDF8JD" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="Buscar en la wiki…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="Buscar en la guía" autocomplete="off" spellcheck="false" data-index="../search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;Resultados de la búsqueda&quot;,&quot;one&quot;:&quot;página encontrada&quot;,&quot;few&quot;:&quot;páginas encontradas&quot;,&quot;many&quot;:&quot;páginas encontradas&quot;,&quot;loading&quot;:&quot;Cargando el índice de búsqueda…&quot;,&quot;nothing&quot;:&quot;Nada encontrado&quot;}"></search>
+    <details class="language-menu"><summary aria-label="Language">ES</summary><div class="language-popover"><span>ES</span><a href="../../en/utility/gold_chest.html">EN</a><a href="../../ru/utility/gold_chest.html">RU</a><a href="../../uk/utility/gold_chest.html">UA</a><a href="../../zh_cn/utility/gold_chest.html">中文</a><a href="../../ja_jp/utility/gold_chest.html">日本語</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">Explorar</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../../assets/item/tempered_iron_pickaxe.png" alt=""><span>Primeros pasos</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>Recetas</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>Perfil del jugador</span></a>
+<div class="group-title">Energía</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>Generadores</span><span class="cat-count" aria-label="12 páginas">12</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>Almacenamiento de energía</span><span class="cat-count" aria-label="4 páginas">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Transferencia de energía</span><span class="cat-count" aria-label="8 páginas">8</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Energía nuclear</span><span class="cat-count" aria-label="15 páginas">15</span></a>
+<div class="group-title">Procesamiento</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Máquinas</span><span class="cat-count" aria-label="16 páginas">16</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Máquinas de fluidos</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<div class="group-title">Logística</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Transporte de objetos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Transporte de fluidos</span><span class="cat-count" aria-label="1 página">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Almacenamiento de fluidos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
+<div class="group-title">Mundo y automatización</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Materiales</span><span class="cat-count" aria-label="23 páginas">23</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>Agricultura</span><span class="cat-count" aria-label="6 páginas">6</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>Máquinas avanzadas</span><span class="cat-count" aria-label="1 página">1</span></a>
+<div class="group-title">Otros</div>
+<a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>Utilidades</span><span class="cat-count" aria-label="18 páginas">18</span></a>
+<div class="group-title">Objetos</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>Mejoras</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>Componentes</span><span class="cat-count" aria-label="29 páginas">29</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>Objetos</span><span class="cat-count" aria-label="25 páginas">25</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">Inicio</a><span class="sep">/</span><a href="../utility/index.html">Utilidades</a><span class="sep">/</span><span>Cofre de oro</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../../assets/item/gold_chest_3d.png" alt="Cofre de oro" width="64" height="64">
+    <div class="info">
+      <h1>Cofre de oro</h1>
+      <div class="block-id">alaindustrial:gold_chest</div>
+      <div class="tags"><span class="tag cat" style="background:#14b8a6">Utilidades</span><span class="tag lifecycle" style="background:#22c55e">Implementado</span><span class="tag">storage</span><span class="tag">chest</span><span class="tag">utility</span><span class="tag">gold</span><span class="tag">tier</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="resumen">Resumen</h2>
+
+<p>El <strong>Cofre de oro</strong> es un bloque de almacenamiento con <strong>54 espacios</strong> (6 filas de 9) — una fila entera más que el <a href="silver_chest.html">Cofre de plata</a>. No usa energía; es el nivel «civil» de la línea de almacenamiento, el escalón por encima de la plata. Fábrialo poniendo un cofre de plata en el centro de una mesa de trabajo y rodeándolo con 8 lingotes de oro.</p>
+
+<p>Parece un cofre 3D de verdad con <strong>tapa animada</strong> (misma forma que los cofres de madera, hierro y plata del juego base, pero dorado) y el mismo sonido metálico de apertura y cierre que el cofre de hierro.</p>
+
+<p>Como los niveles inferiores, es un bloque puramente de contenido sin conexión de energía — solo almacenamiento dentro.</p>
+
+<h2 id="inventario">Inventario</h2>
+
+<p>El cofre acepta cualquier objeto — 54 espacios en 6 filas de 9. Tu inventario se muestra debajo, como siempre. El shift-clic mueve objetos entre el cofre y tu inventario.</p>
+
+<table><thead><tr><th>Espacios</th><th>Acepta</th><th>Cantidad</th></tr></thead><tbody><tr><td>Almacenamiento</td><td>cualquier objeto</td><td>54 (6 filas × 9)</td></tr><tr><td>Inventario del jugador</td><td>—</td><td>27 + 9 (barra rápida), dibujados desde la textura</td></tr></tbody></table>
+
+<h2 id="interfaz">Interfaz</h2>
+
+<p>Una ventana de contenedor normal — sin barras de energía ni de progreso (el cofre no es una máquina). La ventana es más alta que la del cofre de plata por la sexta fila; ambas etiquetas — «Cofre de oro» sobre la rejilla del cofre e «Inventario» debajo — van a la izquierda.</p>
+
+<p>Atlas de GUI: (256×256, área visible 176×220 — más alta que las 202 de la plata por la 6.ª fila). Sin barras de energía/progreso (el cofre no es una máquina). <strong>Ambas etiquetas a la izquierda:</strong> el título «Cofre de oro» sobre la rejilla del cofre y la etiqueta «Inventario» en el hueco entre el cofre y el inventario del jugador.</p>
+
+<h2 id="renderizado-y-animación">Renderizado y animación</h2>
+
+<p>En el mundo es un cofre 3D volumétrico con su propia textura, con una tapa que se abre y cierra suavemente — exactamente como el cofre de madera del juego base y los niveles anteriores del mod, solo que dorado. El icono del inventario también es volumétrico.</p>
+
+<p><strong>Modelo 3D:</strong> reutiliza el modelo de cofre del juego base (tapa / cerradura / cuerpo), horneado desde su propia capa. <strong>Textura</strong> — (64×64, distribución <code>entity/chest/normal</code> del juego base). Pasa por la misma ruta que los cofres del juego base — profundidad, culling y mipmaps correctos (sin borde blanco). <strong>Animación de la tapa:</strong> la apertura la interpola suavemente el ticker del cliente; la curva de suavizado coincide con la del juego base (<code>1 - (1-open)³</code>). <strong>Rotación de orientación:</strong> el cofre gira para mirar al jugador al colocarse (yaw alrededor del centro superior). <strong>Icono de objeto</strong> — render 3D del cofre.</p>
+
+<h2 id="sonido">Sonido</h2>
+
+<p>Los sonidos de apertura y cierre <strong>reutilizan las muestras del cofre de hierro</strong> (<code>iron_chest_open</code> / <code>iron_chest_close</code>) — el sonido metálico es común a todos los niveles, igual que el sonido de madera del juego base es común a todas las variantes de madera. No hay eventos <code>gold_chest_open/close</code> separados, así que los subtítulos muestran «Cofre de hierro se abre/se cierra».</p>
+
+<p>Volumen <strong>0.42</strong> (como los niveles anteriores — más bajo que el 0.5 del juego base), tono aleatorio 0.9–1.0. Sonidos: los de apertura y cierre del cofre de hierro (sin claves propias de oro).</p>
+
+<h2 id="cofre-doble">Cofre doble</h2>
+
+<p>Dos cofres de oro colocados lado a lado, mirando al mismo lado, <strong>se fusionan en un cofre doble de 108 espacios</strong> — siguiendo exactamente las reglas de colocación del juego base: sin agacharse, el cofre nuevo se une solo a un vecino compatible; hacer clic agachado en el lateral de un vecino solitario lo acopla deliberadamente, y colocarse agachado en cualquier otro sitio lo deja simple. Los niveles distintos nunca se fusionan.</p>
+
+<p><strong>La ventana del doble</strong> muestra 6 filas; el resto se alcanza con la barra de desplazamiento de la derecha (como la ventana del almacén del módulo de almacenamiento). El shift-clic también alcanza las filas ocultas. <strong>La tapa y el sonido se comparten</strong>: ambas mitades levantan la tapa a la vez y el sonido de apertura suena una sola vez, desde la costura. <strong>La automatización ve el doble como un solo contenedor</strong>: un embudo, dropper o tubería de objetos que da con una mitad llena continúa en la otra. <strong>Romper una mitad</strong> devuelve la otra a un cofre simple; cada mitad derrama solo su propio contenido. Una ventana doble abierta se cierra al romperse cualquiera de las mitades. Un marco indicador de existencias en cualquiera de las mitades muestra el total combinado.</p>
+
+<p>Junto con los dobles, todos los niveles ganaron dos comodidades del juego base: un <strong>comparador</strong> lee el llenado del cofre (un doble se lee combinado, igual desde cualquiera de las mitades), y el cofre puede <strong>sumergirse en agua</strong> como uno del juego base.</p>
+
+<h2 id="propiedades-del-bloque">Propiedades del bloque</h2>
+
+<p>El cofre es achaparrado — no un cubo completo, sino una columna de 14×14×14 (como todos los cofres del juego base y los niveles anteriores). Se rompe con cualquier pico, se suelta a sí mismo al destruirse y derrama todo su contenido. Las propiedades del bloque son idénticas a los cofres de hierro y plata (misma forma, misma dureza).</p>
+
+<table><thead><tr><th>Campo</th><th>Valor</th></tr></thead><tbody><tr><td>Forma</td><td>columna achaparrada de 14×14×14 (no un cubo completo, como los cofres del juego base); los vecinos no cullean sus caras contra él — el render es correcto, sin «rayos X»</td></tr><tr><td>Dureza</td><td>3.0</td></tr><tr><td>Resistencia a explosiones</td><td>6.0</td></tr><tr><td>Herramienta</td><td>pico (sin requisito de nivel — cualquiera)</td></tr><tr><td>Orientación</td><td>horizontal, girado para mirar al jugador al colocarse</td></tr><tr><td>Forma de render</td><td><code>MODEL</code> (un cofre 3D se dibuja sobre el bloque)</td></tr><tr><td>Soltado</td><td>a sí mismo vía tabla de botín; el contenido del inventario se derrama al romperse</td></tr><tr><td>Sonidos</td><td><code>iron_chest_open</code> / <code>iron_chest_close</code> (reutilizados, véase §Sonido)</td></tr></tbody></table>
+
+<h2 id="recetas">Recetas</h2>
+
+<p>Se fabrica en una mesa de trabajo: un cofre de plata en el centro, rodeado de 8 lingotes de oro — el mismo patrón «nivel anterior + 8 lingotes» que los niveles inferiores (cobre + 8 hierro → hierro, hierro + 8 plata → plata).</p>
+
+<p>Tipo: <code>minecraft:crafting_shaped</code>, categoría <code>redstone</code>. <code>C</code>, <code>Gminecraft:gold_ingot</code>.</p>
+
+<h2 id="progresión">Progresión</h2>
+
+<p>Línea de cofres: <code>copper_chest</code> del juego base (27) → <strong>Cofre de hierro (36)</strong> → <strong>Cofre de plata (45)</strong> → <strong>Cofre de oro (54)</strong> → <a href="electrum_chest.html">Cofre de electro</a> (81).</p>
+
+<h2 id="relacionado">Relacionado</h2>
+
+<p><a href="silver_chest.html">Cofre de plata</a> — el nivel anterior, la plantilla de este bloque. <a href="iron_chest.html">Cofre de hierro</a> — la implementación de referencia para todos los niveles de cofre. <a href="../energy-storage/battery_box.html">Almacén de energía</a> — el otro bloque de «almacenamiento» del mod, pero de energía.</p>
+
+<h2>Fabricación</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="cofre de oro alaindustrial:gold_chest" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Gold Ingot"><img src="../../assets/item/gold_ingot_3d.png" alt="Any Gold Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Gold Ingot"><img src="../../assets/item/gold_ingot_3d.png" alt="Any Gold Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Gold Ingot"><img src="../../assets/item/gold_ingot_3d.png" alt="Any Gold Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Gold Ingot"><img src="../../assets/item/gold_ingot_3d.png" alt="Any Gold Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Cofre de plata"><img src="../../assets/item/silver_chest_3d.png" alt="Cofre de plata" width="32" height="32"></div> <div class="cell" title="Any Gold Ingot"><img src="../../assets/item/gold_ingot_3d.png" alt="Any Gold Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Gold Ingot"><img src="../../assets/item/gold_ingot_3d.png" alt="Any Gold Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Gold Ingot"><img src="../../assets/item/gold_ingot_3d.png" alt="Any Gold Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Gold Ingot"><img src="../../assets/item/gold_ingot_3d.png" alt="Any Gold Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Cofre de oro"><img src="../../assets/item/gold_chest_3d.png" alt="Cofre de oro" width="32" height="32"></div><div class="result-name">Cofre de oro</div></div></div></div></div>
+<h2>Se usa en</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="cofre de electro alaindustrial:electrum_chest" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Lingote de electro"><img src="../../assets/item/electrum_ingot_3d.png" alt="Lingote de electro" width="32" height="32"></div> <div class="cell" title="Lingote de electro"><img src="../../assets/item/electrum_ingot_3d.png" alt="Lingote de electro" width="32" height="32"></div> <div class="cell" title="Lingote de electro"><img src="../../assets/item/electrum_ingot_3d.png" alt="Lingote de electro" width="32" height="32"></div> <div class="cell" title="Lingote de electro"><img src="../../assets/item/electrum_ingot_3d.png" alt="Lingote de electro" width="32" height="32"></div> <div class="cell" title="Cofre de oro"><img src="../../assets/item/gold_chest_3d.png" alt="Cofre de oro" width="32" height="32"></div> <div class="cell" title="Lingote de electro"><img src="../../assets/item/electrum_ingot_3d.png" alt="Lingote de electro" width="32" height="32"></div> <div class="cell" title="Lingote de electro"><img src="../../assets/item/electrum_ingot_3d.png" alt="Lingote de electro" width="32" height="32"></div> <div class="cell" title="Lingote de electro"><img src="../../assets/item/electrum_ingot_3d.png" alt="Lingote de electro" width="32" height="32"></div> <div class="cell" title="Lingote de electro"><img src="../../assets/item/electrum_ingot_3d.png" alt="Lingote de electro" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Cofre de electro"><img src="../../assets/item/electrum_chest_3d.png" alt="Cofre de electro" width="32" height="32"></div><div class="result-name">Cofre de electro</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

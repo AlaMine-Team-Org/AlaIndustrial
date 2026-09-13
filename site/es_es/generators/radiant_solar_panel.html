@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="es_es" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>Concentrador de espejos — Ala Industrial — Guía</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="Abrir menú" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../../assets/item/guide_book_3d.png" alt="">Todo el contenido</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/ky7cFDF8JD" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="Buscar en la wiki…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="Buscar en la guía" autocomplete="off" spellcheck="false" data-index="../search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;Resultados de la búsqueda&quot;,&quot;one&quot;:&quot;página encontrada&quot;,&quot;few&quot;:&quot;páginas encontradas&quot;,&quot;many&quot;:&quot;páginas encontradas&quot;,&quot;loading&quot;:&quot;Cargando el índice de búsqueda…&quot;,&quot;nothing&quot;:&quot;Nada encontrado&quot;}"></search>
+    <details class="language-menu"><summary aria-label="Language">ES</summary><div class="language-popover"><span>ES</span><a href="../../en/generators/radiant_solar_panel.html">EN</a><a href="../../ru/generators/radiant_solar_panel.html">RU</a><a href="../../uk/generators/radiant_solar_panel.html">UA</a><a href="../../zh_cn/generators/radiant_solar_panel.html">中文</a><a href="../../ja_jp/generators/radiant_solar_panel.html">日本語</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">Explorar</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../../assets/item/tempered_iron_pickaxe.png" alt=""><span>Primeros pasos</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>Recetas</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>Perfil del jugador</span></a>
+<div class="group-title">Energía</div>
+<a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>Generadores</span><span class="cat-count" aria-label="12 páginas">12</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>Almacenamiento de energía</span><span class="cat-count" aria-label="4 páginas">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Transferencia de energía</span><span class="cat-count" aria-label="8 páginas">8</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Energía nuclear</span><span class="cat-count" aria-label="15 páginas">15</span></a>
+<div class="group-title">Procesamiento</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Máquinas</span><span class="cat-count" aria-label="16 páginas">16</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Máquinas de fluidos</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<div class="group-title">Logística</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Transporte de objetos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Transporte de fluidos</span><span class="cat-count" aria-label="1 página">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Almacenamiento de fluidos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
+<div class="group-title">Mundo y automatización</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Materiales</span><span class="cat-count" aria-label="23 páginas">23</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>Agricultura</span><span class="cat-count" aria-label="6 páginas">6</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>Máquinas avanzadas</span><span class="cat-count" aria-label="1 página">1</span></a>
+<div class="group-title">Otros</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>Utilidades</span><span class="cat-count" aria-label="18 páginas">18</span></a>
+<div class="group-title">Objetos</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>Mejoras</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>Componentes</span><span class="cat-count" aria-label="29 páginas">29</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>Objetos</span><span class="cat-count" aria-label="25 páginas">25</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">Inicio</a><span class="sep">/</span><a href="../generators/index.html">Generadores</a><span class="sep">/</span><span>Concentrador de espejos</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../../assets/item/radiant_solar_panel_3d.png" alt="Concentrador de espejos" width="64" height="64">
+    <div class="info">
+      <h1>Concentrador de espejos</h1>
+      <div class="block-id">alaindustrial:radiant_solar_panel</div>
+      <div class="tags"><span class="tag cat" style="background:#f0b429">Generadores</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">Implementado</span><span class="tag">tier-lv</span><span class="tag">energy</span><span class="tag">solar</span><span class="tag">tier3</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="resumen">Resumen</h2>
+
+<p>El <strong>Concentrador de espejos</strong> es el tercer peldaño de la rama diurna, cultivado a partir del <a href="daylight_solar_panel.html">Panel solar diurno</a>. Es el doble de potente que ese panel, y durante las dos horas centrales del día de juego entrega además mitad más.</p>
+
+<p>No es plano como los dos paneles anteriores: el colector va sobre un mástil elevado, con un espejo a cada lado para llevar la luz hacia el centro. Cuando no hay nada que recolectar — de noche, con lluvia, tormenta o bajo nieve — los espejos se levantan y se pliegan sobre el colector, guardando la óptica. Puedes distinguir a distancia si está trabajando o no.</p>
+
+<p>Un concentrador cultivado funciona por sí solo, pero parece una instalación grande comprimida en un solo bloque. Siete <strong>Secciones de panel solar</strong> colocadas alrededor ensamblan una máquina de dos por dos por dos: la misma, en su tamaño correcto.</p>
+
+<blockquote><strong>Mini ejemplo:</strong> 8 EU/FE/t en un día despejado, 12 al mediodía. Dos de ellos en un tejado mantienen un taller funcionando y llenan un Almacén de energía para la tarde. La máquina ensamblada entrega lo mismo: ensamblar va del aspecto, no de la potencia.</blockquote>
+
+<h2 id="energía">Energía</h2>
+
+<table><thead><tr><th>Campo</th><th>Valor</th></tr></thead><tbody><tr><td>Rol</td><td>productor con búfer</td></tr><tr><td>Búfer (EU/FE)</td><td>16000</td></tr><tr><td>Entrada máxima</td><td>n/d (no acepta energía)</td></tr><tr><td>Salida máxima (EU/FE/t)</td><td>20 (LV)</td></tr><tr><td>EU/FE/t (base)</td><td>8 de día bajo cielo abierto</td></tr><tr><td>EU/FE/t (mediodía)</td><td>12</td></tr><tr><td>EU/FE/t ensamblado</td><td>los mismos 8 y 12: ensamblar cambia el tamaño, no el nivel</td></tr></tbody></table>
+
+<p>El nivel sigue siendo LV: incluso los 12 EU/FE/t del mediodía están muy por debajo del techo de LV, así que no hay nada que subir.</p>
+
+<h2 id="generación">Generación</h2>
+
+<p>Funciona solo en el Overworld, de día, con el cielo abierto encima.</p>
+
+<table><thead><tr><th>Campo</th><th>Valor</th></tr></thead><tbody><tr><td>Fuente</td><td>luz del sol</td></tr><tr><td>Condición de trabajo</td><td>día Y cielo abierto sobre el bloque</td></tr><tr><td>Dimensiones</td><td>minecraft:overworld</td></tr><tr><td>Día despejado</td><td>8</td></tr><tr><td>Mediodía</td><td>12</td></tr><tr><td>A través de hojas</td><td>4 (la mitad de la salida actual)</td></tr><tr><td>Lluvia y tormenta</td><td>0</td></tr><tr><td>Nieve</td><td>0</td></tr><tr><td>Noche</td><td>0</td></tr></tbody></table>
+
+<p><strong>La nieve lo apaga por completo</strong>, a diferencia de los dos paneles inferiores, que conservan un leve goteo bajo la nieve. La razón está en cómo está construido: aquellos captan la luz con celdas planas, mientras que este la recoge con espejos, y un espejo enterrado en nieve no refleja nada.</p>
+
+<p>El mediodía no es una curva suave sino una ventana: dos mil ticks alrededor de la mitad del día. El número que el jugador ve en la interfaz se mantiene fijo durante toda ella.</p>
+
+<h2 id="ensamblaje-de-dos-por-dos-por-dos">Ensamblaje de dos por dos por dos</h2>
+
+<p>El concentrador se dibuja como una instalación grande pero ocupa un solo bloque. Siete secciones lo corrigen: la máquina crece hasta un cubo de dos por dos por dos — cuatro bloques abajo, cuatro arriba.</p>
+
+<p><strong>Cómo se hace.</strong> Pon el concentrador cultivado donde va a estar. Míralo, y a su alrededor aparece un esquema fantasma de siete celdas: eso es lo que falta por entregar. Rodea la máquina y el esquema salta a tu lado: <strong>la dirección la eliges con dónde construyes</strong>, no hay botón para ello. Fabrica siete secciones, colócalas sobre el esquema, y con la séptima la máquina se ensambla sola, sin clic derecho ni comando.</p>
+
+<p>Una celda con algo ya dentro se remarca en ámbar en lugar de azul: ese espacio está ocupado y ninguna sección irá ahí.</p>
+
+<p><strong>Qué cambia en las cifras: nada.</strong> La máquina ensamblada produce los mismos 8 EU/FE/t, y los mismos 12 al mediodía.</p>
+
+<p>Es una decisión, no un número olvidado. Ensamblar cambia el TAMAÑO, no el peldaño: la rama ya pasa por 1, 4, 8, y un cuarto peldaño colgado de un paso de construcción dejaría al jugador saltarse el nivel al que pertenece.</p>
+
+<p>Dicho claro: <strong>un jugador que solo quiere energía sale mejor con cuatro paneles separados</strong> — en el mismo terreno producirían cuatro veces más. Las siete secciones compran el aspecto y tres chips de resonancia ahorrados, no potencia.</p>
+
+<p><strong>Desmontarlo.</strong> Rompe cualquiera de las ocho celdas. La estructura se deshace entera: el concentrador vuelve a ser una máquina de un bloque y sigue funcionando, y el resto vuelve a ser secciones corrientes. No se pierde nada ni se duplica nada; el búfer y su carga se quedan con el concentrador. Una sola regla cubre todas las maneras de romperlo: pico, explosión, pistón y comando.</p>
+
+<p><strong>Conexión a lo largo de toda la base.</strong> La máquina tiene un solo búfer, y vive en el propio concentrador — el bloque del que lo cultivaste. Pero puedes conectarte en cualquier punto del nivel inferior: un cable tendido hacia cualquier cara lateral o hacia la parte inferior de las cuatro celdas de abajo extrae la energía del concentrador. El nivel superior, donde están los espejos, no admite cable, y hacia él no se dibuja ningún brazo. Por muchas celdas toquen la misma línea, es una sola máquina: no pone más de un paquete por tick en la línea.</p>
+
+<p>El cuerpo del nivel inferior se retrae hacia dentro del bloque, así que el cable lo encuentra como encuentra un panel solar corriente: el brazo baja hasta la base y entra directo en el cuerpo. El cable sigue siendo él mismo: uno desnudo desnudo, uno aislado aislado.</p>
+
+<h2 id="interfaz">Interfaz</h2>
+
+<p>Una pantalla muestra el nivel del búfer, la salida actual y el estado del cielo. No hay hueco de chip: el concentrador es la cima de la rama diurna, no hay a dónde crecer más. En la máquina ensamblada, un clic derecho en cualquiera de las ocho celdas la abre.</p>
+
+<h2 id="propiedades-del-bloque">Propiedades del bloque</h2>
+
+<p>Ni bloque completo ni losa: el cuerpo ocupa casi todo el bloque en anchura y sube hasta tres cuartos de su altura. Los espejos sobresalen de esa forma a propósito: se pliegan, y una caja de colisión que viajara con ellos cambiaría bajo el cursor del jugador mientras aún se mueven.</p>
+
+<table><thead><tr><th>Qué</th><th>Valor</th></tr></thead><tbody><tr><td>Forma</td><td>cuerpo con colector elevado, 14×11×14</td></tr><tr><td>Dureza / explosión</td><td>5.0 / 6.0</td></tr><tr><td>Herramienta</td><td>pico</td></tr><tr><td>Conserva la carga al romperse</td><td>sí</td></tr></tbody></table>
+
+<h2 id="sonido">Sonido</h2>
+
+<p>El mismo zumbido suave que los paneles inferiores: suena solo mientras el concentrador recoge luz, y calla cuando los espejos se pliegan.</p>
+
+<h2 id="recetas">Recetas</h2>
+
+<p>No se fabrica. La única manera de conseguirlo es cultivarlo a partir del <a href="daylight_solar_panel.html">Panel solar diurno</a>: pon un <strong>Chip de resonancia</strong> en su hueco y deja que el panel trabaje unos días despejados. La energía almacenada se conserva; el chip se consume.</p>
+
+<p>El Chip de resonancia llena toda la rejilla de fabricación: un chip de alineación <strong>solar</strong> en el centro y, alrededor, fragmentos resonantes, un cristal espacial, un cristal de energía, placas de electro reforzadas y engranajes de plata. Ver los <a href="../components/alignment_chips.html">chips de evolución</a>.</p>
+
+<p><strong>Una Sección de panel solar</strong> se fabrica de la manera corriente, de dos en dos: cuatro placas de hierro templado en las esquinas, cuatro cristales en los bordes y una carcasa de máquina en el centro. Una máquina completa necesita siete secciones, que son cuatro tandas.</p>
+
+<h2 id="progresión">Progresión</h2>
+
+<p>El tercer peldaño de la rama diurna. Crece del <a href="daylight_solar_panel.html">Panel solar diurno</a> y está destinado a crecer hasta el Panel solar cénit; ese sigue siendo un concepto. El espejo de la rama nocturna en este peldaño es el Panel solar umbral, también aún un concepto.</p>
+
+<h2 id="relacionado">Relacionado</h2>
+
+<p><a href="daylight_solar_panel.html">Panel solar diurno</a> — el T2 del que se cultiva. <a href="../components/alignment_chips.html">Chips de evolución</a> — el Chip de resonancia para este paso. <a href="solar_panel.html">Panel solar</a> — el T1 neutro, la raíz de la rama. <a href="../energy-storage/battery_box.html">Almacén de energía</a> · <a href="../energy-transfer/copper_cable.html">Cable de cobre</a></p>
+
+<h2>Cómo conseguirlo</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="concentrador de espejos" data-type="evolution"><div class="recipe-header"><span class="recipe-type">Evolution</span><span class="recipe-energy">~28 min of active output</span></div><div class="recipe-body"><div class="recipe-grid evolution-grid"><div class="cell" title="Panel solar diurno"><img src="../../assets/item/daylight_solar_panel_3d.png" alt="Panel solar diurno" width="32" height="32"></div><div class="cell" title="Chip de resonancia"><img src="../../assets/item/resonance_chip_3d.png" alt="Chip de resonancia" width="32" height="32"></div></div><div class="recipe-process"><div class="arrow" aria-label="Evolves into">▶</div></div><div class="recipe-result"><div class="cell result" title="Concentrador de espejos"><img src="../../assets/item/radiant_solar_panel_3d.png" alt="Concentrador de espejos" width="32" height="32"></div><div class="result-name">Concentrador de espejos</div></div></div></div></div>
+
+  </main>
+</div>
+
+</body>
+</html>

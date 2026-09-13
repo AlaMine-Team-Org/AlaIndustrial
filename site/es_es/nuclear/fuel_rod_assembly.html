@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="es_es" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>Columna del reactor — Ala Industrial — Guía</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="Abrir menú" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../../assets/item/guide_book_3d.png" alt="">Todo el contenido</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/ky7cFDF8JD" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="Buscar en la wiki…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="Buscar en la guía" autocomplete="off" spellcheck="false" data-index="../search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;Resultados de la búsqueda&quot;,&quot;one&quot;:&quot;página encontrada&quot;,&quot;few&quot;:&quot;páginas encontradas&quot;,&quot;many&quot;:&quot;páginas encontradas&quot;,&quot;loading&quot;:&quot;Cargando el índice de búsqueda…&quot;,&quot;nothing&quot;:&quot;Nada encontrado&quot;}"></search>
+    <details class="language-menu"><summary aria-label="Language">ES</summary><div class="language-popover"><span>ES</span><a href="../../en/nuclear/fuel_rod_assembly.html">EN</a><a href="../../ru/nuclear/fuel_rod_assembly.html">RU</a><a href="../../uk/nuclear/fuel_rod_assembly.html">UA</a><a href="../../zh_cn/nuclear/fuel_rod_assembly.html">中文</a><a href="../../ja_jp/nuclear/fuel_rod_assembly.html">日本語</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">Explorar</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../../assets/item/tempered_iron_pickaxe.png" alt=""><span>Primeros pasos</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>Recetas</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>Perfil del jugador</span></a>
+<div class="group-title">Energía</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>Generadores</span><span class="cat-count" aria-label="12 páginas">12</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>Almacenamiento de energía</span><span class="cat-count" aria-label="4 páginas">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Transferencia de energía</span><span class="cat-count" aria-label="8 páginas">8</span></a>
+<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Energía nuclear</span><span class="cat-count" aria-label="15 páginas">15</span></a>
+<div class="group-title">Procesamiento</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Máquinas</span><span class="cat-count" aria-label="16 páginas">16</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Máquinas de fluidos</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<div class="group-title">Logística</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Transporte de objetos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Transporte de fluidos</span><span class="cat-count" aria-label="1 página">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Almacenamiento de fluidos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
+<div class="group-title">Mundo y automatización</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Materiales</span><span class="cat-count" aria-label="23 páginas">23</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>Agricultura</span><span class="cat-count" aria-label="6 páginas">6</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>Máquinas avanzadas</span><span class="cat-count" aria-label="1 página">1</span></a>
+<div class="group-title">Otros</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>Utilidades</span><span class="cat-count" aria-label="18 páginas">18</span></a>
+<div class="group-title">Objetos</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>Mejoras</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>Componentes</span><span class="cat-count" aria-label="29 páginas">29</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>Objetos</span><span class="cat-count" aria-label="25 páginas">25</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">Inicio</a><span class="sep">/</span><a href="../nuclear/index.html">Energía nuclear</a><span class="sep">/</span><span>Columna del reactor</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../../assets/item/fuel_rod_assembly_3d.png" alt="Columna del reactor" width="64" height="64">
+    <div class="info">
+      <h1>Columna del reactor</h1>
+      <div class="block-id">alaindustrial:fuel_rod_assembly</div>
+      <div class="tags"><span class="tag cat" style="background:#ef4444">Energía nuclear</span><span class="tag lifecycle" style="background:#22c55e">Implementado</span><span class="tag">nuclear</span><span class="tag">reactor</span><span class="tag">multiblock</span><span class="tag">fuel</span><span class="tag">uranium</span><span class="tag">steam</span><span class="tag">fluid-transport</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="resumen">Resumen</h2>
+
+<p>La <strong>Columna del reactor</strong> es con lo que se carga el reactor, y lo que lo enfría. Una pila transparente para <strong>cuatro</strong> barras se levanta dentro de una <a href="reactor_controller.html">sala de reactor</a>, se llena con clic derecho con una <a href="uranium_fuel_rod.html">barra de combustible</a> en la mano, y se vacía con la mano vacía. No tiene menú en absoluto.</p>
+
+<p>Desde la etapa 3 también tiene <strong>dos tanques</strong> — agua y vapor. El agua llega por tubería, hierve y se lleva el calor; el vapor sale por tubería. El nivel del agua, igual que el número de barras, es visible <strong>desde fuera</strong>, en el propio modelo.</p>
+
+<p>Esta es la decisión central de la etapa 2 del epic: el combustible no está en una ranura, <strong>está de pie en la sala</strong>. Una pila vacía y una llena se distinguen desde el otro extremo de la sala, «rellenar el reactor» es una acción en el mundo y no en una ventana, y un núcleo medio gastado se ve de un vistazo y no como un número en una interfaz.</p>
+
+<h2 id="guarda-objetos-no-un-contador">Guarda objetos, no un contador</h2>
+
+<p>Antes de la etapa 4 la pila guardaba un <strong>número</strong> de barras y un «cuánto queda en la que arde» compartido. De ahí seguían exactamente dos cosas, y un jugador se topaba con ambas en la primera hora: una barra empezada se <strong>destruía</strong> al sacarla (no había dónde apuntar lo que le quedaba), y una agotada <strong>desaparecía</strong> — así que cada recarga costaba una placa de blindaje nueva, y por tanto paladio.</p>
+
+<p>Ahora la pila guarda <strong>cuatro objetos</strong>. Ambas consecuencias se fueron con su causa:</p>
+
+<table><thead><tr><th>Antes</th><th>Ahora</th></tr></thead><tbody><tr><td>Una barra medio quemada se perdía</td><td>vuelve con su durabilidad y continúa desde el mismo punto</td></tr><tr><td>Una barra agotada desaparecía</td><td>se convierte en <a href="empty_fuel_rod.html">vaina de barra</a> y se queda de pie en la pila</td></tr><tr><td>Un contador de quemado compartido</td><td>cada barra lleva su propia durabilidad (ver la <a href="uranium_fuel_rod.html">especificación de la barra</a>)</td></tr></tbody></table>
+
+<h2 id="cómo-se-usa">Cómo se usa</h2>
+
+<table><thead><tr><th>Acción</th><th>Qué ocurre</th></tr></thead><tbody><tr><td>Clic derecho con una <a href="uranium_fuel_rod.html">barra</a> en la mano</td><td>la barra entra en el primer hueco libre, sonido metálico; en creativo el objeto no se consume</td></tr><tr><td>Clic derecho con una <a href="empty_fuel_rod.html">vaina</a> en la mano</td><td>lo mismo: una carcasa puede aparcar en la pila para después</td></tr><tr><td>Clic derecho en una pila llena</td><td>no se toma nada — el objeto se queda en la mano</td></tr><tr><td>Clic derecho con la mano vacía</td><td>la pila devuelve una barra, <strong>primero las carcasas gastadas</strong></td></tr><tr><td>Clic derecho con <strong>cualquier otro objeto</strong></td><td>cae en la misma rama que la mano vacía: se saca una barra igualmente</td></tr><tr><td>Romper el bloque</td><td>se suelta <strong>todo</strong> lo cargado, entero y medio quemado por igual</td></tr></tbody></table>
+
+<p>La quinta fila no es un desliz sino una decisión forzada: en 26.2 un <code>InteractionResult.PASS</code> de <strong>no</strong> cae a, así que «sacar una barra con un pico en la mano» de otro modo no haría nada, en silencio. Devuelve <code>TRY_WITH_EMPTY_HAND</code>.</p>
+
+<h3 id="las-carcasas-gastadas-salen-primero">Las carcasas gastadas salen primero</h3>
+
+<p>Ese orden es toda la interacción. Un jugador se acerca a una columna agotada por las <strong>carcasas</strong>, para recargarlas, y lo último que quiere es sacar primero las barras vivas que metió hace diez minutos. El orden es fijo: primero las vacías, y solo cuando no quedan, las cargadas, de arriba abajo.</p>
+
+<p>La caída al retirarla la maneja y no un gancho de rotura exclusivo del jugador: que un creeper abra la pila es justo el momento en que perder el contenido más dolería.</p>
+
+<h2 id="el-desgaste-se-aplica-a-todas-las-barras-cargadas-a-la-vez">El desgaste se aplica a todas las barras cargadas a la vez</h2>
+
+<p>El controlador cobra EU/FE a la columna, y la columna los convierte en puntos de durabilidad — <strong>en todas las barras cargadas a la vez, un punto por ronda</strong>.</p>
+
+<pre><code class="lang-">precio de una ronda = 144 EU/FE x (cuántas barras llevan uranio)</code></pre>
+
+<p>Mientras lo cobrado acumulado no llega a una ronda entera, se <strong>arrastra</strong> al siguiente tick ; en cuanto alcanza, cada barra cargada sufre +1 de daño. Una barra que llega a 1000 se sustituye por una vacía allí mismo, en su hueco.</p>
+
+<p>Funciona así porque «una a la vez» era sencillamente falso: cuatro barras están en el mismo flujo de neutrones y las cuatro producen energía, y sin embargo solo una envejecía. El jugador veía cuatro barras trabajando y una sola barra drenándose. La aritmética no se desvió por ello: la columna sigue gastando exactamente lo que vale una barra de energía por barra, solo que lo toma de todas a la vez.</p>
+
+<p>La consecuencia práctica: <strong>una columna de cuatro barras se agota toda de golpe.</strong> Durante veinte minutos (en una pila solitaria) las cuatro están llenas, luego las cuatro se convierten en carcasas juntas. Una pila cargada a trozos también se compensa: una barra fresca sobrevive a sus vecinas medio gastadas, porque la ronda se les cobra a todas y las que caen dejan de pagar.</p>
+
+<p><strong>El combustible solo se gasta cuando se quiere la energía.</strong> Si el búfer del controlador está lleno y nada consume, las pilas no se desgastan en absoluto — el mismo principio por el que la <a href="../energy-storage/charge_pad.html">estación de carga</a> gasta EU/FE por transferencia y no por tick.</p>
+
+<h2 id="el-nivel-de-llenado-se-ve-desde-fuera">El nivel de llenado se ve desde fuera</h2>
+
+<p>El blockstate lleva <strong>dos</strong> contadores, no uno:</p>
+
+<table><thead><tr><th>Propiedad</th><th>Qué significa</th><th>Cómo se dibuja</th></tr></thead><tbody><tr><td><code>rods</code> = 0…4</td><td>cuántas barras hay en ella <strong>en total</strong>, carcasas incluidas</td><td>huecos ocupados</td></tr><tr><td><code>fuelled</code> = 0…4</td><td>cuántas de esas <strong>llevan uranio</strong></td><td>barras encendidas; el resto, carcasas oscuras</td></tr></tbody></table>
+
+<p>Hacen falta dos propiedades no porque quede más bonito. Con un solo contador que contara solo combustible, una columna agotada daría cero — y las carcasas dentro serían no solo invisibles sino <strong>inalcanzables</strong>: el código de interacción leía el blockstate para decidir si había algo que sacar. Una pila así no podía vaciarse ni recargarse, solo romperse.</p>
+
+<p>El bloque de entidad cuenta su propio contenido y pone el blockstate en línea en cada cambio (<code>syncRods</code>), así que el modelo no puede contradecir lo que hay dentro.</p>
+
+<h3 id="las-pilas-se-unen-en-vertical">Las pilas se unen en vertical</h3>
+
+<p>Dos estados booleanos extra — <code>up</code> y <code>down</code> — se activan cuando otra pila está directamente encima o debajo. Las pilas unidas pierden el tapa y la placa de base entre ellas y la junura la rellena una pieza de conexión, así que una columna de tres ensamblajes se lee como <strong>una pila alta</strong> y no como tres cajas apiladas. El mismo truco que usa un cable o una tubería en este mod.</p>
+
+<p>La unión <strong>no</strong> es puramente cosmética: los fluidos la recorren (ver «Una pila vertical es un solo recipiente»). No afecta a la salida ni al calor — eso lo hace la <strong>adyacencia</strong>, y el controlador la cuenta en los tres ejes sin importar el aspecto del ensamblaje.</p>
+
+<p>La silueta sigue al modelo: una pila solitaria es 12x14x12, una unida por arriba es 12x16x12. Si no, la caja de selección de un ensamblaje apilado sobresaldría dos píxeles por debajo de la geometría que el jugador ve.</p>
+
+<p>Los estados se recalculan en y no en: ese es el gancho de la vanilla exactamente para esto, y también se ejecuta en ediciones del mundo y colocación de estructuras.</p>
+
+<h2 id="agua-y-vapor">Agua y vapor</h2>
+
+<p>Desde la etapa 3 la columna tiene dos tanques, y juntos son la mitad del circuito de refrigeración del reactor.</p>
+
+<table><thead><tr><th>Tanque</th><th>Capacidad</th><th>Qué acepta</th><th>Qué da hacia fuera</th></tr></thead><tbody><tr><td>Agua</td><td><strong>4000 mB</strong> (4 cubos)</td><td>solo agua</td><td><strong>nada</strong></td></tr><tr><td>Vapor</td><td><strong>4000 mB</strong></td><td><strong>nada</strong></td><td>vapor</td></tr></tbody></table>
+
+<p>Los tanques son asimétricos a propósito. El agua solo se puede <strong>verter</strong>: el refrigerante del reactor no es una reserva de la que tomar prestado. Permite que una bomba lo saque y un jugador aparcaba una bomba sobre un núcleo caliente y recuperaba el refrigerante, que es vapor gratis y una fusión a petición. El vapor, al contrario, solo se puede <strong>tomar</strong>: nada puede empujarlo a una columna desde fuera.</p>
+
+<h3 id="la-regla-de-las-caras-vapor-solo-arriba-agua-en-todas-las-demás">La regla de las caras: vapor solo arriba, agua en todas las demás</h3>
+
+<table><thead><tr><th>Cara</th><th>Qué se publica ahí</th></tr></thead><tbody><tr><td>Arriba</td><td>el tanque de <strong>vapor</strong></td></tr><tr><td>Las otras cinco</td><td>el tanque de <strong>agua</strong></td></tr></tbody></table>
+
+<p>Así una tubería siempre es inequívoca: una cara, un fluido, una dirección. Y la regla sobrevive al apilado, cosa que «el vapor sale por el techo de cada columna» no haría: las columnas inferiores de una pila no tienen ninguna cara superior libre.</p>
+
+<p>Una tubería que recoge vapor debe estar <strong>encima</strong> de la columna en modo extracción; una tubería que suministra agua va en cualquier otra cara, en modo inserción.</p>
+
+<h3 id="una-pila-vertical-es-un-solo-recipiente-la-columna-de-al-lado-es-otro">Una pila vertical es un solo recipiente; la columna de al lado es otro</h3>
+
+<p>El puerto al que habla una tubería responde <strong>por toda la pila vertical</strong>, no por un bloque: cantidad total, capacidad total, llenado de abajo arriba, vapor tomado de arriba abajo. Cada tick el controlador además <strong>reasienta</strong> el contenido de la pila — el agua se hunde, el vapor sube.</p>
+
+<p>Sin esto una columna de dos bloques sencillamente no se llenaría: el agua se hunde en el bloque inferior, ese bloque alcanza su capacidad primero, y una tubería que pregunta «¿hay sitio?» recibía un «no» de un recipiente medio vacío, y paraba.</p>
+
+<blockquote>⚠️ <strong>Las columnas colocadas una al lado de otra son recipientes separados.</strong> El controlador antes equilibraba los tanques de la <strong>sala entera</strong>, y una sola tubería regaba todo el pabellón. Era cómodo y falso: que aparezca refrigerante dentro de una pila a la que nada está conectado se lee como un fallo por útil que sea. Pon tubería a las columnas que quieras frías; lo más fácil es construirlas en pilas y conectar una tubería a un bloque de cada una.</blockquote>
+
+<h3 id="ebullición">Ebullición</h3>
+
+<p>La columna no hierve el agua por sí misma — lo hace el controlador, y <strong>solo cuando el reactor ha pasado el objetivo del circuito de refrigeración (60 % de la escala)</strong>. Por debajo, la carcasa disipa todo su calor sola y el circuito no gasta nada: el agua es un sistema de seguridad, no un radiador. El objetivo está deliberadamente por debajo de la banda ámbar (= 70 %), así que un reactor sano refrigerado por agua se lee verde y el ámbar vuelve a significar «algo va mal».</p>
+
+<p>Un milicubo de agua se lleva = <strong>2 unidades de calor</strong> y se convierte en <strong>1 mB de vapor</strong> — uno a uno en volumen.</p>
+
+<p>La ebullición choca con <strong>dos</strong> límites a la vez: cuánta agua contiene la columna y cuánto sitio queda en ella para el vapor. Un circuito atascado de vapor deja de enfriar con la misma seguridad que un tanque de agua seco — el agua está, el indicador está lleno, y la temperatura sube. No es un fallo; es la única y exclusiva razón por la que el escape (<a href="steam_nozzle.html">boquilla de vapor</a>) es obligatorio.</p>
+
+<h3 id="el-nivel-del-agua-se-ve-desde-fuera">El nivel del agua se ve desde fuera</h3>
+
+<p>El blockstate lleva <code>water</code> = 0…4 — cuartos del tanque, una parte aparte del modelo multipart. La regla de redondeo es especial: <strong>cualquier cosa por encima de cero muestra al menos un cuarto.</strong> Una columna con un sorbo de agua restante no debe parecerse a una seca — las reacciones que piden esos dos estados son completamente distintas.</p>
+
+<h2 id="no-tiene-tick-propio">No tiene tick propio</h2>
+
+<p>El ensamblaje tiene bloque de entidad, pero <strong>ningún tick propio</strong>. El reactor es una sola máquina, no un suelo cubierto de máquinas: el <a href="reactor_controller.html">controlador</a> mueve cada ensamblaje de su sala desde un único tick, así que un pabellón con treinta pilas le cuesta al servidor lo que cuesta un bloque de entidad, no treinta.</p>
+
+<p>El reparto de papeles: la pila es <strong>estado y las reglas para cambiarlo</strong> (qué está en los huecos, cuánto queda en las barras, qué devolver al romperse); el controlador es el <strong>horario</strong>.</p>
+
+<p>Una consecuencia práctica que conviene conocer: el controlador barre la sala no cada tick sino una vez cada = <strong>40 ticks (2 s)</strong>. Una barra insertada a mano entra en el cálculo en el siguiente barrido — hasta dos segundos de retraso, imperceptible junto a una barra que arde durante minutos.</p>
+
+<p><strong>Una pila vacía ya no se cae del cálculo.</strong> Todas las columnas entran en la lista del controlador, no solo las cargadas: una columna es parte de la máquina porque está en la sala, no porque alguien la haya cargado todavía. El viejo filtro de combustible dejaba una pila descargada sin refrigeración y fuera del pase de asentamiento, y por eso el agua bombeada al fondo de una pila nunca subía más allá de la primera columna cargada. La adyacencia se sigue contando <strong>por combustible</strong>: dos pilas vacías juntas no aceleran nada.</p>
+
+<h2 id="cómo-lo-quema-el-reactor">Cómo lo quema el reactor</h2>
+
+<table><thead><tr><th>Paso</th><th>Qué hace el controlador</th></tr></thead><tbody><tr><td>Cada 2 s</td><td>barre el interior de la sala, recoge <strong>todas</strong> las columnas, suma las barras cargadas, cuenta los pares adyacentes</td></tr><tr><td>Cada tick de producción</td><td>reparte la salida entre columnas <strong>en proporción a las barras cargadas</strong> de cada una</td></tr><tr><td>Dentro de una columna</td><td>la parte se convierte en puntos de durabilidad y se cobra a <strong>todas</strong> las barras cargadas a la vez</td></tr><tr><td>Cada tick</td><td>reasienta los fluidos dentro de cada pila vertical</td></tr></tbody></table>
+
+<p>El resto de la división va a la primera columna con combustible en vez de perderse: una sala cuyo número de barras no divide la salida uniformemente paga igualmente cada EU/FE que produjo.</p>
+
+<h2 id="propiedades-del-bloque">Propiedades del bloque</h2>
+
+<table><thead><tr><th>Campo</th><th>Valor</th></tr></thead><tbody><tr><td>Forma</td><td>una pila 12x14x12 (sola), 12x16x12 (unida por arriba) — <strong>no</strong> es un cubo completo</td></tr><tr><td>Oclusión</td><td>— la carcasa es transparente y las barras de dentro deben dibujarse</td></tr><tr><td>Dureza</td><td>3.0</td></tr><tr><td>Resistencia a explosiones</td><td>6.0</td></tr><tr><td>Herramienta</td><td>pico</td></tr><tr><td>Sonido</td><td>metal</td></tr><tr><td>Blockstates</td><td><code>rods</code> = 0…4, <code>fuelled</code> = 0…4, <code>water</code> = 0…4, <code>up</code>, <code>down</code></td></tr><tr><td>BlockEntity</td><td>sí, <strong>sin tick propio</strong></td></tr><tr><td>NBT</td><td>el contenido de la pila como objetos, <code>CarriedEu</code> (consumo aún no cobrado), <code>Water</code>, <code>Steam</code> (contenido de los tanques, mB)</td></tr></tbody></table>
+
+<p>La durabilidad de las barras vive <strong>en los propios objetos</strong>, así que el NBT de la pila no tiene campo para ella — y no puede haber desacuerdo entre «cuánto queda» y «qué está ahí de pie». De los tanques solo se guardan <strong>cantidades</strong>: cada tanque contiene exactamente un fluido por construcción, y un campo de «cuál» solo podría contradecir al código.</p>
+
+<p>La dureza del bloque es deliberadamente inferior a la de la carcasa (5.0 / 30.0): el ensamblaje vive <strong>dentro</strong> de una sala protegida y no necesita armadura propia — a un reactor hay que abrirlo por la pared de todos modos.</p>
+
+<h2 id="sonido">Sonido</h2>
+
+<p>Un núcleo en marcha zumba grave y constante — el bucle — y el sonido viene de las propias columnas cargadas, no del controlador: un pabellón de reactor se oye como una sala, no como un panel en la pared. No todas las columnas suenan a la vez, solo unas cuantas; si no, un pabellón denso se volvería un muro de ruido. Dentro de la sala el zumbido se oye a plena fuerza, fuera la carcasa lo amortigua, y por una esclusa abierta se derrama. Un reactor parado es silencioso incluidas las columnas que aún contienen combustible.</p>
+
+<h2 id="recetas">Recetas</h2>
+
+<p>Fabricación — <strong>x2</strong> por vez.</p>
+
+<pre><code class="lang-">I G I I = lingote de hierro x4
+G S G G = vidrio de reactor x4
+I G I S = placa de blindaje x1</code></pre>
+
+<p>La receta describe el objeto: paredes de cristal para ver la carga a través, un bastidor de hierro, y una placa de blindaje en el núcleo. Dos por fabricación, porque las pilas hacen falta a docenas y una receta de una en una convertiría cargar un pabellón en una tarea de mesa de trabajo.</p>
+
+<h2 id="progresión">Progresión</h2>
+
+<p>Nivel: ninguno (el bloque no tiene energía en absoluto). Necesita: <a href="reactor_glass.html">vidrio de reactor</a> y una placa de blindaje — eso es paladio, y por tanto el Nether. Desbloquea: que el <a href="reactor_controller.html">controlador de reactor</a> produzca energía. Sin un solo ensamblaje cargado, una sala sellada sigue siendo un aparato de diagnóstico.</p>
+
+<h2 id="relacionado">Relacionado</h2>
+
+<p><a href="uranium_fuel_rod.html">Barra de combustible</a> — lo que entra en ella. <a href="empty_fuel_rod.html">Vaina de barra</a> — lo que devuelve. <a href="reactor_controller.html">Controlador de reactor</a> — lo que la quema y cuenta su adyacencia. <a href="reactor_port.html">Entrada del reactor</a> — cómo entra el agua en la sala y sale el vapor. <a href="steam_nozzle.html">Boquilla de vapor</a> — a dónde va el vapor, y por qué la ebullición se para sin ella. <a href="../materials/steam.html">Vapor</a> — lo que aparece en el tanque superior de la columna. <a href="reactor_glass.html">Vidrio de reactor</a> — la mitad de la receta y la misma idea de «ver lo que hay dentro». <a href="reactor_casing.html">Carcasa de reactor</a> — las paredes donde se levanta la pila.</p>
+
+<h2>Fabricación</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="columna del reactor alaindustrial:fuel_rod_assembly" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Iron Ingot"><img src="../../assets/item/iron_ingot_3d.png" alt="Iron Ingot" width="32" height="32"></div> <div class="cell" title="Vidrio de reactor"><img src="../../assets/item/reactor_glass_3d.png" alt="Vidrio de reactor" width="32" height="32"></div> <div class="cell" title="Iron Ingot"><img src="../../assets/item/iron_ingot_3d.png" alt="Iron Ingot" width="32" height="32"></div> <div class="cell" title="Vidrio de reactor"><img src="../../assets/item/reactor_glass_3d.png" alt="Vidrio de reactor" width="32" height="32"></div> <div class="cell" title="Placa de blindaje"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="Placa de blindaje" width="32" height="32"></div> <div class="cell" title="Vidrio de reactor"><img src="../../assets/item/reactor_glass_3d.png" alt="Vidrio de reactor" width="32" height="32"></div> <div class="cell" title="Iron Ingot"><img src="../../assets/item/iron_ingot_3d.png" alt="Iron Ingot" width="32" height="32"></div> <div class="cell" title="Vidrio de reactor"><img src="../../assets/item/reactor_glass_3d.png" alt="Vidrio de reactor" width="32" height="32"></div> <div class="cell" title="Iron Ingot"><img src="../../assets/item/iron_ingot_3d.png" alt="Iron Ingot" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Columna del reactor"><img src="../../assets/item/fuel_rod_assembly_3d.png" alt="Columna del reactor" width="32" height="32"><span class="count">×2</span></div><div class="result-name">Columna del reactor</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

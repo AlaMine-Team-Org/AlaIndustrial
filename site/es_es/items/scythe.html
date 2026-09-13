@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es_es" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>Scythe — Ala Industrial — Guía</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../../assets/guide-site.js" defer></script>
+
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="Abrir menú" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../../assets/item/guide_book_3d.png" alt="">Todo el contenido</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/ky7cFDF8JD" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="Buscar en la wiki…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="Buscar en la guía" autocomplete="off" spellcheck="false" data-index="../search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;Resultados de la búsqueda&quot;,&quot;one&quot;:&quot;página encontrada&quot;,&quot;few&quot;:&quot;páginas encontradas&quot;,&quot;many&quot;:&quot;páginas encontradas&quot;,&quot;loading&quot;:&quot;Cargando el índice de búsqueda…&quot;,&quot;nothing&quot;:&quot;Nada encontrado&quot;}"></search>
+    <details class="language-menu"><summary aria-label="Language">ES</summary><div class="language-popover"><span>ES</span><a href="../../en/items/scythe.html">EN</a><a href="../../ru/items/scythe.html">RU</a><a href="../../uk/items/scythe.html">UA</a><a href="../../zh_cn/items/scythe.html">中文</a><a href="../../ja_jp/items/scythe.html">日本語</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">Explorar</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../../assets/item/tempered_iron_pickaxe.png" alt=""><span>Primeros pasos</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>Recetas</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>Perfil del jugador</span></a>
+<div class="group-title">Energía</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>Generadores</span><span class="cat-count" aria-label="12 páginas">12</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>Almacenamiento de energía</span><span class="cat-count" aria-label="4 páginas">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Transferencia de energía</span><span class="cat-count" aria-label="8 páginas">8</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Energía nuclear</span><span class="cat-count" aria-label="15 páginas">15</span></a>
+<div class="group-title">Procesamiento</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Máquinas</span><span class="cat-count" aria-label="16 páginas">16</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Máquinas de fluidos</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<div class="group-title">Logística</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Transporte de objetos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Transporte de fluidos</span><span class="cat-count" aria-label="1 página">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Almacenamiento de fluidos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
+<div class="group-title">Mundo y automatización</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Materiales</span><span class="cat-count" aria-label="23 páginas">23</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>Agricultura</span><span class="cat-count" aria-label="6 páginas">6</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>Máquinas avanzadas</span><span class="cat-count" aria-label="1 página">1</span></a>
+<div class="group-title">Otros</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>Utilidades</span><span class="cat-count" aria-label="18 páginas">18</span></a>
+<div class="group-title">Objetos</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>Mejoras</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>Componentes</span><span class="cat-count" aria-label="29 páginas">29</span></a>
+<a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>Objetos</span><span class="cat-count" aria-label="25 páginas">25</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">Inicio</a><span class="sep">/</span><a href="../items/index.html">Objetos</a><span class="sep">/</span><span>Scythe</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../../assets/item/scythe_iron_3d.png" alt="Scythe" width="64" height="64">
+    <div class="info">
+      <h1>Scythe</h1>
+      <div class="block-id">alaindustrial:scythe</div>
+      <div class="tags"><span class="tag cat" style="background:#d97706">Objetos</span><span class="tag lifecycle" style="background:#22c55e">Implementado</span><span class="tag">tool</span><span class="tag">scythe</span><span class="tag">aoe</span><span class="tag">foliage</span><span class="tag">crops</span><span class="tag">sickle</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="resumen">Resumen</h2>
+
+<p>La <strong>Guadaña</strong> es una herramienta de mano para despejar rápido la vegetación decorativa y cosechar cultivos maduros. Un clic derecho en un bloque corta toda planta elegible — hojas, hierba, flores, helechos, setas, enredaderas, raíces, arbolitos — en una zona plana frente a ti, soltando el botín normal, exactamente como si rompieras cada bloque a mano. Mantener <strong>Shift</strong> al hacer clic derecho cambia al modo cosecha: la misma AOE en vez de eso corta solo los cultivos <strong>maduros</strong> (trigo, zanahorias, patatas, remolacha, el cultivo de torchflower, bayas dulces, el cultivo de pitcher, cactus y caña de azúcar), dejando intactas la decoración y los cultivos verdes.</p>
+
+<p>Viene en <strong>ocho niveles de material</strong> (madera → piedra → cobre → hierro → oro → hierro templado → diamante → netherita); cuanto mejor el nivel, más ancha la franja y más bloques puede cortar un solo golpe. Es una herramienta de calidad de vida para construir y decorar — <strong>no</strong> sustituye al hacha, a la azada ni a una granja automática.</p>
+
+<blockquote><strong>Miniejemplo:</strong> ¿has construido una base en el bosque y estás cansado de limpiar hojas una por una? Una guadaña de diamante despeja un parche de 5×5 con un solo clic derecho, soltando todos los arbolitos y palos que obtendrías a mano — muy útil para ordenar una obra sin la hoguera de sílex y acero.</blockquote>
+
+<h2 id="parámetros">Parámetros</h2>
+
+<p>La zona cortada es una caja plana frente a ti: la profundidad corre hacia delante en tu dirección de mira, la anchura es el eje perpendicular (siempre impar, con una línea central sobre el bloque que clicaste) y la altura es siempre 3 (la capa clicada más una arriba y una abajo). El bloque que clicas es el centro.</p>
+
+<table><thead><tr><th>Nivel</th><th>Zona (ancho × fondo)</th><th>Máx. bloques por golpe</th><th>Durabilidad</th><th>Prob. de semilla extra</th></tr></thead><tbody><tr><td>Madera</td><td>3 × 2</td><td>12</td><td>59</td><td>—</td></tr><tr><td>Piedra</td><td>3 × 3</td><td>18</td><td>131</td><td>5 %</td></tr><tr><td>Cobre</td><td>3 × 3</td><td>24</td><td>190</td><td>8 %</td></tr><tr><td>Hierro</td><td>5 × 3</td><td>30</td><td>250</td><td>12 %</td></tr><tr><td>Oro</td><td>5 × 3</td><td>30</td><td>32</td><td>20 %</td></tr><tr><td>Hierro templado</td><td>5 × 4</td><td>40</td><td>350</td><td>18 %</td></tr><tr><td>Diamante</td><td>5 × 5</td><td>50</td><td>1 561</td><td>25 %</td></tr><tr><td>Netherita</td><td>7 × 5</td><td>70</td><td>2 031</td><td>35 %</td></tr></tbody></table>
+
+<p><strong>El oro</strong> es un side-grade deliberado: una zona como la de hierro, pero frágil (32 de durabilidad) y muy encantable — la filosofía vanilla del oro, donde brilla con Irrompibilidad y Reparación. Por eso también lleva el bonus de semillas más generoso por debajo de diamante y netherita: una guadaña con suerte pero de vida corta, donde los 32 de durabilidad son su propio límite de cuánto puedes cosechar con ella. <strong>El cobre</strong> es un paso modesto entre piedra y hierro. <strong>El hierro templado</strong> se sitúa entre hierro y diamante. <strong>La netherita</strong> resiste el fuego, como todo el equipo de netherita. La guadaña <strong>de madera</strong> no da ningún bonus de semillas — la mejora de rendimiento empieza un nivel más arriba.</p>
+
+<h2 id="comportamiento">Comportamiento</h2>
+
+<p><strong>Disparo:</strong> un clic derecho, solo desde la <strong>mano principal</strong>. Agacharse o usar la mano secundaria no hace nada especial — tu interacción normal sigue funcionando. <strong>Qué se corta:</strong> las plantas decorativas de la lista de abajo. Cada bloque suelta lo que soltaría si lo rompieras a mano — así que <strong>Fortuna y Toque de seda funcionan</strong> (la rotura se trata como consciente de la herramienta). <strong>Semillas extra (modo cosecha):</strong> además del botín habitual, la guadaña tiene una probabilidad por nivel de dar <strong>una semilla extra</strong> del cultivo que acaba de cortar (ver la tabla de arriba). Solo se aplica al cosechar con Shift mantenido, y solo a cultivos de verdad — trigo, zanahorias, patatas, remolacha y el cultivo de torchflower. Las bayas dulces, el cactus, la caña de azúcar y el cultivo de pitcher no tienen semilla propia, así que nunca la otorgan. El bonus es <strong>independiente de Fortuna</strong> y se acumula con ella: Fortuna mejora el botín principal, el bonus cae encima. <strong>Durabilidad:</strong> los bloques blandos sin dureza — hierba corta, helechos, flores — se rompen gratis y no cuestan durabilidad; los más duros, como las hojas, cuestan 1 cada uno. Puedes cortar hierba común para siempre; las hojas muerden la barra de durabilidad. <strong>Límite por golpe:</strong> nunca más del «máx. bloques por golpe» del nivel. Los candidatos se cortan del más cercano en adelante, así que lo que clicas siempre se rompe primero. Si la herramienta se queda sin durabilidad a mitad de golpe, la pasada se detiene ahí. <strong>Encantamientos:</strong> al ser una herramienta tipo azada, acepta Eficiencia, Irrompibilidad, Fortuna, Toque de seda y Reparación en la mesa de encantamiento y el yunque. Fortuna mejora el botín; Eficiencia no hace la zona instantánea más rápida. <strong>Sonido y floritura:</strong> un sonido de corte por golpe con éxito (no por bloque), y una floritura de partículas de barrido se extiende por la zona despejada.</p>
+
+<h2 id="qué-corta-y-qué-no">Qué corta (y qué no)</h2>
+
+<p>Despeja la vegetación decorativa — ese es todo su trabajo:</p>
+
+<p><strong>Hojas y flores</strong> — incluidas las flores pequeñas y los nuevos arbustos y hierbas secas. <strong>Arbolitos</strong> y lianas de cueva. <strong>Hierba y helechos</strong> — hierba corta y alta, helechos y helechos grandes, arbusto muerto, hojarasca. <strong>Setas, alfombras de musgo, enredaderas, liquen luminoso, raíces colgantes</strong> y las plantas de raíz del Nether.</p>
+
+<p>En este modo simple (decorativo) deliberadamente <strong>no</strong> toca los cultivos — para eso está Shift + clic derecho (modo cosecha, arriba) — ni los tallos de calabaza y melón, el bambú, las algas, los troncos, la tierra ni el bloque de musgo. El cactus y la caña de azúcar también quedan intactos en modo decorativo; el modo cosecha solo toma el bloque o bloques por encima de su base, dejando la base viva para rebrotar. Los tallos de melón y calabaza nunca se cosechan en ningún modo — no son el cultivo en sí, sino una enredadera en crecimiento que fructifica en un bloque vecino.</p>
+
+<h2 id="qué-recoge-el-modo-con-shift-la-hoz-de-aoe">Qué recoge el modo con Shift (la hoz de AOE)</h2>
+
+<p>Mantener <strong>shift</strong> cambia la guadaña al modo cosecha. En ese modo toma <strong>cultivos maduros y nada más</strong>:</p>
+
+<p><strong>Cualquier cosa de <code>#minecraft:crops</code> en el valor máximo de su propiedad <code>AGE</code></strong> — trigo, zanahorias, patatas, remolacha, cultivo de torchflower, cultivo de pitcher y demás. Los brotes verdes se quedan creciendo. <strong>Arbustos de bayas dulces</strong> — solo los maduros (edad 2 o superior, las etapas que de verdad llevan bayas). <strong>Cactus y caña de azúcar</strong> — solo los bloques <strong>por encima del bloque base</strong> que está sobre el suelo. La base sigue creciendo, exactamente igual que al cortar la cima a mano.</p>
+
+<p>El modo cosecha deliberadamente <strong>no</strong> toma:</p>
+
+<p><strong>Los tallos de melón y calabaza</strong> — un tallo no es un cultivo sino una enredadera en crecimiento que produce su fruta en el bloque vecino, así que se deja en paz. Cultivos y arbustos de bayas verdes — se les da tiempo a terminar de crecer. Vegetación decorativa, tierra, troncos, agua y todo lo demás. Ese es el trabajo del modo decorativo (clic derecho simple), y los dos modos nunca se solapan.</p>
+
+<p>La durabilidad se gasta por bloque realmente cortado, igual que en modo decorativo, y el límite de bloques por golpe del nivel sigue aplicándose.</p>
+
+<h2 id="propiedades-del-bloque">Propiedades del bloque</h2>
+
+<p>No aplica (objeto).</p>
+
+<h2 id="recetas">Recetas</h2>
+
+<p>Los ocho niveles se fabrican en una mesa de trabajo con la misma forma personalizada — tres piezas del material del nivel más dos palos, una forma deliberadamente distinta de la azada vanilla, ya que la guadaña es más fuerte y cubre un área:</p>
+
+<pre><code class="lang-">MM.
+.SM
+.S.</code></pre>
+
+<p><code>M</code> es el material del nivel (tablones, adoquín, lingote de cobre, lingote de hierro, lingote de oro, hierro templado, diamante o lingote de netherita) y <code>S</code> es un palo. La receta de cada nivel aparece en tu libro de recetas en cuanto recoges su material. Repara una guadaña con el material de su nivel en un yunque, como harías con una azada.</p>
+
+<h2 id="progresión">Progresión</h2>
+
+<p>Una herramienta de mano — no está ligada a los niveles de energía del mod. Los ocho escalones de material siguen a las azadas vanilla; en creativo, cada guadaña va justo después de la azada de su nivel en la pestaña de herramientas. El área y el límite por golpe crecen con el nivel; el oro es el side-grade frágil y encantable, el hierro templado el paso entre hierro y diamante.</p>
+
+<h2 id="relacionado">Relacionado</h2>
+
+<p><a href="tempered_iron_tools.html">Herramientas de hierro templado</a> — la familia de herramientas propias del mod y el material de hierro templado del que está hecho un nivel de guadaña. <a href="tempered_iron_pickaxe.html">Pico de hierro templado</a> — otra herramienta de hierro templado. Las azadas vanilla — la línea base de material sobre la que se construyen los niveles de guadaña.</p>
+
+
+  </main>
+</div>
+
+</body>
+</html>

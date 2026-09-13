@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="es_es" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>Salida del reactor — Ala Industrial — Guía</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="Abrir menú" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../../assets/item/guide_book_3d.png" alt="">Todo el contenido</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/ky7cFDF8JD" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="Buscar en la wiki…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="Buscar en la guía" autocomplete="off" spellcheck="false" data-index="../search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;Resultados de la búsqueda&quot;,&quot;one&quot;:&quot;página encontrada&quot;,&quot;few&quot;:&quot;páginas encontradas&quot;,&quot;many&quot;:&quot;páginas encontradas&quot;,&quot;loading&quot;:&quot;Cargando el índice de búsqueda…&quot;,&quot;nothing&quot;:&quot;Nada encontrado&quot;}"></search>
+    <details class="language-menu"><summary aria-label="Language">ES</summary><div class="language-popover"><span>ES</span><a href="../../en/nuclear/reactor_outlet.html">EN</a><a href="../../ru/nuclear/reactor_outlet.html">RU</a><a href="../../uk/nuclear/reactor_outlet.html">UA</a><a href="../../zh_cn/nuclear/reactor_outlet.html">中文</a><a href="../../ja_jp/nuclear/reactor_outlet.html">日本語</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">Explorar</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../../assets/item/tempered_iron_pickaxe.png" alt=""><span>Primeros pasos</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>Recetas</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>Perfil del jugador</span></a>
+<div class="group-title">Energía</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>Generadores</span><span class="cat-count" aria-label="12 páginas">12</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>Almacenamiento de energía</span><span class="cat-count" aria-label="4 páginas">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Transferencia de energía</span><span class="cat-count" aria-label="8 páginas">8</span></a>
+<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Energía nuclear</span><span class="cat-count" aria-label="15 páginas">15</span></a>
+<div class="group-title">Procesamiento</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Máquinas</span><span class="cat-count" aria-label="16 páginas">16</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Máquinas de fluidos</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<div class="group-title">Logística</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Transporte de objetos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Transporte de fluidos</span><span class="cat-count" aria-label="1 página">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Almacenamiento de fluidos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
+<div class="group-title">Mundo y automatización</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Materiales</span><span class="cat-count" aria-label="23 páginas">23</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>Agricultura</span><span class="cat-count" aria-label="6 páginas">6</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>Máquinas avanzadas</span><span class="cat-count" aria-label="1 página">1</span></a>
+<div class="group-title">Otros</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>Utilidades</span><span class="cat-count" aria-label="18 páginas">18</span></a>
+<div class="group-title">Objetos</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>Mejoras</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>Componentes</span><span class="cat-count" aria-label="29 páginas">29</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>Objetos</span><span class="cat-count" aria-label="25 páginas">25</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">Inicio</a><span class="sep">/</span><a href="../nuclear/index.html">Energía nuclear</a><span class="sep">/</span><span>Salida del reactor</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../../assets/item/reactor_outlet_3d.png" alt="Salida del reactor" width="64" height="64">
+    <div class="info">
+      <h1>Salida del reactor</h1>
+      <div class="block-id">alaindustrial:reactor_outlet</div>
+      <div class="tags"><span class="tag cat" style="background:#ef4444">Energía nuclear</span><span class="tag tier">HV</span><span class="tag lifecycle" style="background:#22c55e">Implementado</span><span class="tag">nuclear</span><span class="tag">reactor</span><span class="tag">multiblock</span><span class="tag">shielding</span><span class="tag">energy-transfer</span><span class="tag">tier-hv</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="resumen">Resumen</h2>
+
+<p>La <strong>Salida del reactor</strong> es el enchufe al que se conecta un cable. Es la contrapartida de la <a href="reactor_port.html">entrada del reactor</a>: allí entra el agua, aquí sale la energía.</p>
+
+<p>El bloque existe no por ganas de añadir un bloque más, sino porque sin él el reactor no podía <strong>conectarse a nada</strong>. Por construcción, el <a href="reactor_controller.html">controlador</a> está <strong>en una pared</strong>, lo que le deja cuatro caras enterradas en la carcasa, una quinta abriéndose a una sala sellada de la que un cable jamás podría salir, y una sexta — la frontal — que la convención de máquinas del mod reserva para el panel del jugador y mantiene energéticamente inerte (<code>R-NRG-03</code>: un cable jamás debe cruzar un brazo por la interfaz). El resultado antes de la etapa 3: un reactor que funcionaba perfecto, reportaba su salida en el panel, llenaba su búfer — y no tenía a dónde conectarse.</p>
+
+<p>La respuesta es la que ya usa el circuito de agua: <strong>si algo tiene que cruzar una carcasa sellada, cruza a través de una pieza de esa carcasa hecha a propósito</strong>. El agua por la entrada, la energía por la salida.</p>
+
+<h2 id="qué-hace">Qué hace</h2>
+
+<table><thead><tr><th>Propiedad</th><th>Valor</th></tr></thead><tbody><tr><td>Búfer</td><td>= <strong>512 EU/FE</strong> — exactamente un tick de HV</td></tr><tr><td>Nivel</td><td>HV</td></tr><tr><td>Papeles de cara</td><td><strong>fuente (OUT) en las seis</strong> — ninguna cara está reservada</td></tr><tr><td>EU/FE aceptados desde fuera</td><td><strong>0</strong> — un cable no puede empujar energía, solo tomarla</td></tr><tr><td>Salida</td><td>hasta <strong>512 EU/FE/t</strong> (el techo de tensión de HV)</td></tr><tr><td>Quién la llena</td><td>el <a href="reactor_controller.html">controlador</a>, cada tick, desde su propio búfer</td></tr><tr><td>Bloque de entidad</td><td>sí, <strong>sin tick propio</strong></td></tr><tr><td>Para el escaneo de la sala</td><td>carcasa — no es brecha, y queda fuera del límite de vidrio</td></tr></tbody></table>
+
+<p><strong>Un enchufe, no una batería.</strong> Su capacidad es un tick de HV — la misma decisión de dimensionado, y por la misma razón, que la entrada de fluidos vecina: el bloque debe portarse como un agujero en la pared a través del cual pasa la energía, no como un sitio que valga la pena atesorar. El almacén es el reactor mismo: 200 000 EU/FE.</p>
+
+<h3 id="el-controlador-empuja-la-salida-jamás-tira">El controlador empuja; la salida jamás tira</h3>
+
+<p>Hay una dirección y es fija: <strong>el controlador empuja, la salida recibe</strong>. Una salida no sabe a qué sala pertenece, y enseñarle a buscarla significaría una búsqueda desde cada enchufe cada tick. El controlador ya recorre su propia carcasa cuando escanea la sala — ahí es donde recoge sus salidas. Un dueño, una dirección, y ninguna referencia inversa que mantener válida cuando se reconstruye una pared.</p>
+
+<p>El reparto es <strong>equitativo y no por orden de llegada</strong>: corre por rondas, cada ronda entrega a cada enchufe una parte igual de lo que queda en el búfer, y las rondas paran en cuanto una no cambia nada. Si no, una sala con dos enchufes en paredes opuestas dejaría morir de hambre al que el escaneo alcanzara segundo, cada vez que el búfer anduviera corto. Un beneficio colateral: una sala con todos los enchufes llenos cuesta una sola pasada.</p>
+
+<p>El relleno ocurre <strong>cada tick y le importe o no si el reactor está en marcha</strong>: cortar la señal de redstone para la reacción, pero no detiene que lo ya acumulado en el búfer se siga repartiendo.</p>
+
+<p>La lista de salidas se reconstruye <strong>en el escaneo</strong>, no al colocar un bloque: = 40 ticks (2 s). Un enchufe empotrado en una pared se une a la sala dentro de esos dos segundos, no al instante.</p>
+
+<h3 id="cuántas-salidas-necesitas">Cuántas salidas necesitas</h3>
+
+<p>Una salida da hasta 512 EU/FE/t — exactamente lo que produce el reactor al techo de HV. Lo que tienes que contar no es el enchufe sino el <strong>cable</strong>: una salida empotrada en una pared lisa tiene <strong>una</strong> cara hacia fuera, y un solo segmento de <a href="../energy-transfer/electrum_cable.html">cable de electro</a> lleva = <strong>192 EU/FE/t</strong> (el rendimiento de un cable es el búfer de su segmento — la lección de.</p>
+
+<table><thead><tr><th>Qué consumes</th><th>Líneas de cable</th><th>Salidas en la pared</th></tr></thead><tbody><tr><td>hasta 192 EU/FE/t</td><td>1</td><td><strong>1</strong></td></tr><tr><td>hasta 384 EU/FE/t</td><td>2</td><td><strong>2</strong></td></tr><tr><td>los 512 EU/FE/t completos</td><td>3</td><td><strong>3</strong></td></tr></tbody></table>
+
+<p>El mismo principio que el circuito de agua: <strong>cinco entradas dentro, cinco fuera, tres enchufes para la energía</strong>. Los números difieren (el agua está limitada a 50 mB/t por línea, la energía a 192 EU/FE/t) pero la regla es una — el cuello de botella de la estación está en la pared, y cada línea cuesta una celda de carcasa.</p>
+
+<p>Una salida en un <strong>canto o esquina</strong> de la carcasa tiene dos o tres caras expuestas y puede llevar varios cables, hasta su propio techo de 512 EU/FE/t. Es una forma legítima de arreglárselas con menos enchufes, pero ata todo el tendido eléctrico a una esquina de la sala.</p>
+
+<h2 id="la-sala-sigue-sellada">La sala sigue sellada</h2>
+
+<p>La salida es un bloque de carcasa, y el escáner la lee como carcasa — no como puerto y no como vidrio. Tres consecuencias prácticas:</p>
+
+<p><strong>jamás es una brecha</strong> — un enchufe puede ir en cualquier celda de pared, suelo o techo; <strong>está fuera del límite = 30 %</strong> — puede colocarse cualquier número, y la carcasa no pierde nada por ello, ni dureza ni posición ante el escáner; <strong>lleva <code>formed</code>/<code>edge</code></strong> y cambia a la textura sin borde con el resto de la pared cuando el controlador acepta la sala (ver <a href="reactor_casing.html">«El aspecto continuo»</a>).</p>
+
+<p>Solo el precio te limita — eso, y que cada enchufe se come una celda que pudo ser carcasa.</p>
+
+<h2 id="energía">Energía</h2>
+
+<table><thead><tr><th>Campo</th><th>Valor</th></tr></thead><tbody><tr><td>Papel</td><td>fuente (OUT) en las seis caras</td></tr><tr><td>Búfer (EU/FE)</td><td>= <strong>512</strong></td></tr><tr><td>Entrada máx. (EU/FE/tick)</td><td><strong>0</strong> — nunca se carga desde fuera</td></tr><tr><td>Salida máx. (EU/FE/tick)</td><td><strong>512</strong> — el techo de tensión de HV</td></tr></tbody></table>
+
+<p>El único camino al búfer es, llamado por el controlador. Devuelve lo que de verdad tomó, así que el controlador puede poner el resto en otro enchufe en vez de descartarlo.</p>
+
+<p>Ninguna cara está reservada: una máquina tiene un frente para mantener alejado un cable, una salida no tiene frente — todo el sentido del bloque es que la cara que sobresalga de la pared es la que trabaja.</p>
+
+<h2 id="propiedades-del-bloque">Propiedades del bloque</h2>
+
+<table><thead><tr><th>Campo</th><th>Valor</th></tr></thead><tbody><tr><td>Forma</td><td>cubo completo 16³ (oclusor)</td></tr><tr><td>Dureza</td><td>5.0</td></tr><tr><td>Resistencia a explosiones</td><td>30.0</td></tr><tr><td>Herramienta</td><td>pico (necesario para el botín)</td></tr><tr><td>Sonido</td><td>metal</td></tr><tr><td>Blockstates</td><td><code>formed</code>, <code>edge</code> — cosméticos, como en el resto de la carcasa</td></tr><tr><td>Bloque de entidad</td><td>sí — un búfer y nada más, sin tick</td></tr></tbody></table>
+
+<p>Los números siguen al resto de la carcasa: el enchufe no debe ser el punto donde la pared sea más fácil de abrir.</p>
+
+<h2 id="recetas">Recetas</h2>
+
+<p>Fabricación — <strong>×2</strong> por vez.</p>
+
+<pre><code class="lang-">P I P P = placa de blindaje ×4
+I C I I = lingote de hierro ×4
+P I P C = cable de cobre ×1</code></pre>
+
+<p>El cable de cobre del centro no es un conductor sino una declaración de intenciones: esto es una pieza de pared con un contacto sacado a través de ella. Las placas de blindaje en las esquinas mantienen la misma línea que el resto de la carcasa, y el hierro es relleno barato que mantiene el precio lejos del paladio.</p>
+
+<h2 id="progresión">Progresión</h2>
+
+<p>Nivel: HV (el enchufe entrega al techo de HV). Necesita: placas de blindaje y un <a href="../energy-transfer/copper_cable.html">cable de cobre</a> — la rama del paladio y la tecnológica energética más básica. Desbloquea: conectar el reactor a una red. Sin una salida, un reactor es un edificio cerrado sobre sí mismo: el combustible arde, el búfer se llena, y nada puede sacar la energía.</p>
+
+<h2 id="relacionado">Relacionado</h2>
+
+<p><a href="reactor_controller.html">Controlador de reactor</a> — lo que llena los enchufes, y por qué no puede ser él mismo el punto de conexión. <a href="reactor_port.html">Entrada del reactor</a> — la misma idea para fluido: el único sitio donde el agua y el vapor cruzan la carcasa. <a href="reactor_casing.html">Carcasa de reactor</a> — el resto de la carcasa, la geometría, el aspecto continuo y la cadena de fabricación. <a href="../energy-transfer/electrum_cable.html">Cable de electro</a> — con lo que se saca el HV; sus 192 EU/FE/t son lo que fija el número de enchufes. <a href="../energy-transfer/copper_cable.html">Cable de cobre</a> — lo que va en el centro de la receta.</p>
+
+<h2>Fabricación</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="salida del reactor alaindustrial:reactor_outlet" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Caucho"><img src="../../assets/item/rubber_3d.png" alt="Caucho" width="32" height="32"></div> <div class="cell" title="Cable de cobre"><img src="../../assets/item/copper_cable_3d.png" alt="Cable de cobre" width="32" height="32"></div> <div class="cell" title="Caucho"><img src="../../assets/item/rubber_3d.png" alt="Caucho" width="32" height="32"></div> <div class="cell" title="Iron Ingot"><img src="../../assets/item/iron_ingot_3d.png" alt="Iron Ingot" width="32" height="32"></div> <div class="cell" title="Placa de blindaje"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="Placa de blindaje" width="32" height="32"></div> <div class="cell" title="Iron Ingot"><img src="../../assets/item/iron_ingot_3d.png" alt="Iron Ingot" width="32" height="32"></div> <div class="cell" title="Caucho"><img src="../../assets/item/rubber_3d.png" alt="Caucho" width="32" height="32"></div> <div class="cell" title="Cable de cobre"><img src="../../assets/item/copper_cable_3d.png" alt="Cable de cobre" width="32" height="32"></div> <div class="cell" title="Caucho"><img src="../../assets/item/rubber_3d.png" alt="Caucho" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Salida del reactor"><img src="../../assets/item/reactor_outlet_3d.png" alt="Salida del reactor" width="32" height="32"><span class="count">×2</span></div><div class="result-name">Salida del reactor</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

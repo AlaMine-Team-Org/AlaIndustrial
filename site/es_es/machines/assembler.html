@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="es_es" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>Ensamblador — Ala Industrial — Guía</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="Abrir menú" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../../assets/item/guide_book_3d.png" alt="">Todo el contenido</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/ky7cFDF8JD" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="Buscar en la wiki…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="Buscar en la guía" autocomplete="off" spellcheck="false" data-index="../search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;Resultados de la búsqueda&quot;,&quot;one&quot;:&quot;página encontrada&quot;,&quot;few&quot;:&quot;páginas encontradas&quot;,&quot;many&quot;:&quot;páginas encontradas&quot;,&quot;loading&quot;:&quot;Cargando el índice de búsqueda…&quot;,&quot;nothing&quot;:&quot;Nada encontrado&quot;}"></search>
+    <details class="language-menu"><summary aria-label="Language">ES</summary><div class="language-popover"><span>ES</span><a href="../../en/machines/assembler.html">EN</a><a href="../../ru/machines/assembler.html">RU</a><a href="../../uk/machines/assembler.html">UA</a><a href="../../zh_cn/machines/assembler.html">中文</a><a href="../../ja_jp/machines/assembler.html">日本語</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">Explorar</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../../assets/item/tempered_iron_pickaxe.png" alt=""><span>Primeros pasos</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>Recetas</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>Perfil del jugador</span></a>
+<div class="group-title">Energía</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>Generadores</span><span class="cat-count" aria-label="12 páginas">12</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>Almacenamiento de energía</span><span class="cat-count" aria-label="4 páginas">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Transferencia de energía</span><span class="cat-count" aria-label="8 páginas">8</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Energía nuclear</span><span class="cat-count" aria-label="15 páginas">15</span></a>
+<div class="group-title">Procesamiento</div>
+<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Máquinas</span><span class="cat-count" aria-label="16 páginas">16</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Máquinas de fluidos</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<div class="group-title">Logística</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Transporte de objetos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Transporte de fluidos</span><span class="cat-count" aria-label="1 página">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Almacenamiento de fluidos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
+<div class="group-title">Mundo y automatización</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Materiales</span><span class="cat-count" aria-label="23 páginas">23</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>Agricultura</span><span class="cat-count" aria-label="6 páginas">6</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>Máquinas avanzadas</span><span class="cat-count" aria-label="1 página">1</span></a>
+<div class="group-title">Otros</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>Utilidades</span><span class="cat-count" aria-label="18 páginas">18</span></a>
+<div class="group-title">Objetos</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>Mejoras</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>Componentes</span><span class="cat-count" aria-label="29 páginas">29</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>Objetos</span><span class="cat-count" aria-label="25 páginas">25</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">Inicio</a><span class="sep">/</span><a href="../machines/index.html">Máquinas</a><span class="sep">/</span><span>Ensamblador</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../../assets/item/assembler_3d.png" alt="Ensamblador" width="64" height="64">
+    <div class="info">
+      <h1>Ensamblador</h1>
+      <div class="block-id">alaindustrial:assembler</div>
+      <div class="tags"><span class="tag cat" style="background:#ff7a45">Máquinas</span><span class="tag tier">MV</span><span class="tag lifecycle" style="background:#22c55e">Implementado</span><span class="tag">tier-mv</span><span class="tag">processing</span><span class="tag">automation</span><span class="tag">assembler</span><span class="tag">blueprint</span><span class="tag">crafting</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="resumen">Resumen</h2>
+
+<p>El <strong>Ensamblador</strong> es la primera máquina MV del mod y el fin de fabricar a mano 64 pilas de golpe. Recuerda recetas de mesa de trabajo — guardadas en un Plano de ensamblaje y las estampa sin parar mientras duren los materiales y la carga. No necesita redstone; la máquina funciona por sí sola.</p>
+
+<p>Toma materiales <strong>ni de su propio inventario ni de tuberías</strong>, sino de su almacén propio construido con <a href="../utility/storage_module.html">Módulos de almacenamiento</a>. Los objetos terminados van a una zona de salida aparte, así el producto nunca se mezcla con la materia prima.</p>
+
+<p>A diferencia del Crafter de vanilla, que resuelve la cuadrícula en cada pulso de redstone y no recuerda nada, el Ensamblador mantiene una <strong>cola de tres planos</strong> y cambia entre ellos por sí mismo.</p>
+
+<h2 id="energía">Energía</h2>
+
+<table><thead><tr><th>Campo</th><th>Valor</th></tr></thead><tbody><tr><td>Papel</td><td>consumidor</td></tr><tr><td>Búfer (EU/FE)</td><td>12000</td></tr><tr><td>Entrada máxima (EU/FE/tick)</td><td>128 (MV)</td></tr><tr><td>Salida máxima (EU/FE/tick)</td><td>n/d</td></tr><tr><td>EU/FE/tick</td><td>12</td></tr></tbody></table>
+
+<p>Funciona con los generadores existentes a través de un <a href="../energy-transfer/gold_cable.html">Cable de oro</a> (transporte MV, 48 EU/FE/t) — no hace falta un generador MV dedicado ni un transformador para ponerlo en marcha. Un cable de cobre LV (12 EU/FE/t) llega justo: la máquina necesita exactamente 12 EU/FE/t.</p>
+
+<p>La energía se gasta <strong>solo en un tick de trabajo</strong>. Estar inactivo por cualquier motivo — sin plano, sin ingredientes, sin sitio en la zona de salida — no cuesta ni un EU/FE.</p>
+
+<h2 id="procesamiento">Procesamiento</h2>
+
+<table><thead><tr><th>Campo</th><th>Valor</th></tr></thead><tbody><tr><td>Qué puede ensamblar</td><td>cualquier receta de mesa de trabajo, con forma o sin forma</td></tr><tr><td>Duración (ticks)</td><td>40</td></tr><tr><td>Coste por operación (EU/FE)</td><td>480</td></tr><tr><td>Autoexpulsión</td><td>no</td></tr></tbody></table>
+
+<p><strong>El Ensamblador no tiene un tipo de receta propio.</strong> Resuelve recetas corrientes de mesa de trabajo contra las recetas corrientes de mesa de trabajo, lo que significa que soporta automáticamente las recetas de vanilla, las recetas propias del mod (se declaran como <code>minecraft:crafting_shaped</code> corrientes), recetas de <strong>cualquier mod de terceros</strong> y datapacks. Las etiquetas vienen gratis: <code>#minecraft:planks</code> en una receta significa «cualquier tablón», exactamente igual que en una mesa de trabajo.</p>
+
+<p>Las recetas propias de las máquinas del mod (triturar, fundir, extraer) <strong>no</strong> las ejecuta el Ensamblador — son tipos de receta separados y máquinas separadas.</p>
+
+<h3 id="elegir-un-plano-de-la-cola">Elegir un plano de la cola</h3>
+
+<p>Los planos se consultan por turnos (<strong>round-robin</strong>) y la posición del cursor persiste entre ciclos. Un plano se salta si se cumple cualquiera de estas condiciones:</p>
+
+<p>al almacén le falta un ingrediente; no hay sitio para el resultado en la zona de salida; la receta del plano ya no existe (p. ej., tras un cambio de datapack).</p>
+
+<p>Si ningún plano está listo, la máquina duerme y despierta cuando cambian el almacén o la carga.</p>
+
+<p>El round-robin se eligió a propósito frente a una prioridad estricta de arriba abajo: con prioridad estricta, el primer plano con un suministro interminable jamás cedería la cola a los demás.</p>
+
+<h3 id="orden-de-una-sola-operación">Orden de una sola operación</h3>
+
+<p>El orden es estricto; desviarse rompe el resultado o la devolución de restos:</p>
+
+<ol><li>Construye la entrada desde la cuadrícula del plano y comprueba cada ingrediente contra el almacén.</li><li>Comprueba que el resultado cabe en la zona de salida <strong>y que los restos caben en el almacén</strong>. Si</li></ol>
+<p>no, la operación ni siquiera empieza — esto es lo que protege contra la pérdida de objetos.</p>
+<ol><li>Gasta EU/FE y avanza el progreso.</li><li>Al completar: toma el resultado de la receta, luego los restos, y solo entonces consume los</li></ol>
+<p>ingredientes.</p>
+
+<p>Los pasos 1–2 se ejecutan sobre <strong>copias</strong> del almacén y de la zona de salida: una operación o se resuelve por completo o no empieza, y lo que se escribe de vuelta al mundo son exactamente los arrays sobre los que corrió la comprobación de encaje. La comprobación y el acto son el mismo código, así que «cabe» y «se colocó» no pueden divergir.</p>
+
+<p>La planificación ocurre <strong>dos veces por operación</strong> — una para decidir si empezar, otra al final (el almacén puede haber cambiado en cuarenta ticks) — y no en los cuarenta ticks intermedios. Si el plan ya no se sostiene al final (el almacén se agotó, la receta desapareció), la máquina se estaciona en la meta: el progreso y los EU/FE ya gastados se conservan, y completa en cuanto el plan vuelve a sostenerse.</p>
+
+<h3 id="sustitución-de-ingredientes">Sustitución de ingredientes</h3>
+
+<p>Por defecto el Ensamblador toma <strong>exactamente los objetos grabados en el plano</strong>, comparando por objeto e ignorando los componentes (la misma comparación que hace el <code>Ingredient</code> estándar). Una herramienta gastada, por tanto, satisface un plano escrito con una nueva.</p>
+
+<p><strong>El interruptor de sustitución</strong> — el botón de flecha cuadrada a la derecha de «Grabar» — invierte esto para <strong>el plano que esté mostrando la ventana</strong>, es decir, el marcado con un anillo en la cola. El ajuste vive en el propio objeto del plano: muévelo a otro Ensamblador y allí también sustituye.</p>
+
+<p>Con la sustitución activada, el orden es:</p>
+
+<ol><li><strong>El objeto que grabó el jugador va primero.</strong> Mientras el almacén lo tenga, eso es lo que se</li></ol>
+<p>toma. Refined Storage no hace esto, y es una queja constante de los jugadores.</p>
+<ol><li><strong>Si está agotado, los candidatos salen del <code>Ingredient</code> de esa ranura concreta de la receta</strong>, en</li></ol>
+<p>el orden propio de la receta. Nunca «de la etiqueta en general»: una receta escrita como <code>#minecraft:planks</code> (palos, mesa de trabajo, cuenco) tiene doce candidatos, mientras que <code>oak_stairs</code>, cuyo ingrediente es literalmente <code>minecraft:oak_planks</code>, no tiene ninguno y jamás sustituye. La situación «cualquier tablón en el plano, roble y abedul en el almacén, ¿qué escaleras salen?» <strong>no puede darse</strong>: las recetas familiares de vanilla son por especie.</p>
+<ol><li><strong>Un sustituto se acepta solo si reensamblar da el mismo resultado</strong> — la receta sigue coincidiendo</li></ol>
+<p>y la pila ensamblada equivale a lo que promete el plano en su descripción, componentes y cantidad incluidos. Si no, la operación nunca empieza: ni EU/FE gastados, nada tomado del almacén.</p>
+
+<p>Las posiciones salen de <code>Recipe.placementInfoslotsToIngredientIndex</code> es una lista paralela a las ranuras de colocación de la receta cuyo valor indexa <code>ingredients</code> (o −1 para una celda que la receta deja vacía). Para una <code>ShapedRecipe</code> esas ranuras son las celdas del patrón, así que el índice se proyecta sobre la cuadrícula 3×3 con el mismo recorte — y, para una coincidencia espejada, la misma reflexión — que la devolución de restos. Todo lo que no sea una <code>ShapedRecipe</code> (sobre todo lo sin forma) no tiene posiciones por definición; allí cada ingrediente de la receta se ofrece para cada celda llena, y el paso 3 es lo que mantiene eso honesto.</p>
+
+<p><strong>Por qué está desactivado por defecto.</strong> El <code>Ingredient</code> estándar compara objetos e ignora componentes, así que con la sustitución activada puede tomarse un libro encantado donde se grabó uno corriente, o una herramienta gastada donde había una nueva. La descripción del botón lo advierte, y un plano con la sustitución activada lleva una línea extra propia.</p>
+
+<p>Los materiales de otros mods (cobre, estaño, plata) funcionan exactamente hasta donde los ingredientes de las recetas estén escritos con etiquetas <code>c:</code> comunes — ese es un trabajo aparte, no una propiedad de la máquina.</p>
+
+<h3 id="objetos-restantes">Objetos restantes</h3>
+
+<p>Las recetas con contenedores (el cubo en un pastel, una botella) devuelven el objeto. Un resto vuelve <strong>a la misma ranura del almacén de la que salió su ingrediente</strong>; si esa ranura no puede recibirlo, a cualquier ranura libre del almacén; si el almacén está lleno, a la zona de salida; y si esa también está llena, la operación nunca empezó (paso 2).</p>
+
+<p>Devolverlo a casa no es cosmético: es lo que hace que el Martillo de forja se quede en su sitio y simplemente pierda un punto de durabilidad en lugar de arrastrarse por el almacén una fabricación tras otra. También es la razón por la que hay que deshacer el recorte del <code>CraftingInput</code> — la lista de restos llega en coordenadas de cuadrícula <strong>recortadas</strong>, y sin mapearlas de vuelta la «ranura de casa» se calcularía mal.</p>
+
+<p>Los restos dependientes de la pila (el martillo de este mod, que pierde un punto de durabilidad en lugar de desaparecer) funcionan automáticamente, porque los restos se toman a través de la receta y no directamente del objeto.</p>
+
+<h2 id="inventario">Inventario</h2>
+
+<table><thead><tr><th>Ranura</th><th>Acepta</th><th>Cantidad</th></tr></thead><tbody><tr><td>Planos</td><td>Plano de ensamblaje con una receta grabada</td><td>3</td></tr><tr><td>Zona de salida</td><td>solo salida (la máquina la llena, tú la vacías)</td><td>6</td></tr><tr><td>Ranura en blanco</td><td>un plano de ensamblaje en blanco — sobre lo que «Grabar» estampa</td><td>1</td></tr><tr><td>Mejoras</td><td>módulos de mejora</td><td>4 (el primero está activo)</td></tr><tr><td>Almacén</td><td>cualquier objeto</td><td>27, más 27 por <a href="../utility/storage_module.html">módulo</a>, con tope de 108</td></tr></tbody></table>
+
+<p>La cuadrícula de receta <strong>no es un inventario</strong>: son nueve celdas fantasma cuyos objetos ni se consumen ni se guardan — solo muestran lo que se escribirá en el plano.</p>
+
+<p>Una zona de salida de 6 ranuras es una elección deliberada: una única ranura de salida es una causa bien conocida de máquinas que se atascan en cuanto el resultado llena la única celda disponible.</p>
+
+<p>Automatización exterior: una tubería de objetos llena el <strong>almacén</strong> y vacía la <strong>zona de salida</strong>. Alimentar ingredientes directamente a la máquina por tubería no es necesario ni está soportado.</p>
+
+<h2 id="interfaz">Interfaz</h2>
+
+<p>La <strong>ventana de la máquina</strong> (clic derecho sobre el Ensamblador) tiene <strong>dos pestañas</strong>: «Trabajo» y «Grabar». Un bloque, una ventana — solo cambia lo que se muestra.</p>
+
+<p>La ventana solía hacer dos trabajos sin relación uno al lado del otro: la cuadrícula 3×3 donde se <strong>redacta</strong> una receta sentaba junto al estado de producción en vivo de la máquina, y semejante ventana no te decía qué se había grabado, qué se estaba fabricando en ese momento ni qué cuadrícula era cuál. Grabar y producir son trabajos distintos; cada uno tiene ahora su pestaña, y no comparten ni un píxel de pantalla.</p>
+
+<p><strong>Cambiar de pestaña es un cambio de vista, no de modo.</strong> La máquina sigue fabricando mientras estás en la pestaña de grabado: la pestaña no toca ni la cola, ni el progreso, ni la energía. No hay deliberadamente ningún modo que detenga la producción mientras grabas — convertiría «quiero grabar una receta más» en parar la línea.</p>
+
+<h3 id="la-pestaña-trabajo">La pestaña «Trabajo»</h3>
+
+<p>Lo que la máquina está haciendo ahora mismo:</p>
+
+<p>tres ranuras de planos — la cola, la activa marcada con un anillo; <strong>la disposición 3×3 del plano activo y su producto</strong> — solo vista (ver más abajo); la zona de salida de 6 ranuras; una barra de energía y una barra de progreso; una línea de estado: <em>trabajando / sin plano / faltan materiales / salida llena / sin energía / receta no encontrada</em>. Debes poder distinguir los motivos — si no, «la máquina está inactiva» es indistinguible de «la máquina está rota».</p>
+
+<h3 id="la-pestaña-grabar">La pestaña «Grabar»</h3>
+
+<p>Lo que implica redactar una receta:</p>
+
+<p>una cuadrícula 3×3 de celdas fantasma; una vista previa del resultado — lo que esa disposición fabrica; una ranura para un plano en blanco; un botón «Grabar» — convierte el blanco en un plano grabado; el botón de flecha cuadrada a la izquierda de «Grabar» — el <a href="#sustitución-de-ingredientes">interruptor de sustitución</a> para el plano en exhibición: flechas grises para desactivado, verdes para activado.</p>
+
+<p>Las celdas de la cuadrícula se rellenan con clics: pasa el cursor sobre una celda y haz clic sosteniendo un objeto en el cursor y una copia cae en la celda; hacer clic con el cursor vacío la limpia. No se consume nada — la cuadrícula muestra una disposición, no la guarda.</p>
+
+<p>El blanco vive <strong>aquí y no en la cola de planos</strong>, y eso se sigue de la misma decisión: la pestaña de grabado debe valerse por sí sola. Si «Grabar» tomara su blanco de la cola, tendrías que visitar la pestaña Trabajo para grabar una receta, y los dos trabajos volverían a enredarse. El plano grabado aparece donde estaba el blanco; de ahí lo recoges y lo pones en la cola en la pestaña Trabajo. Grabar no es poner en cola, y el orden de operaciones lo dice en voz alta.</p>
+
+<h3 id="las-ranuras-de-una-pestaña-oculta-están-fuera-de-alcance">Las ranuras de una pestaña oculta están fuera de alcance</h3>
+
+<p>Una ranura perteneciente a la pestaña que no está en pantalla no se puede ni llenar ni vaciar — ni con clics, ni con shift-clic, ni arrastrando, ni con un doble clic de «recoger todo». Una pestaña oculta no es solo que no se dibuje: mientras está oculta, sus ranuras no existen en lo que al juego respeta.</p>
+
+<p>La pestaña es estado de ventana, no de máquina: nunca se guarda, y dos jugadores en un mismo Ensamblador pueden estar en pestañas distintas sin estorbarse.</p>
+
+<h3 id="mostrar-el-plano-activo">Mostrar el plano activo</h3>
+
+<p>La pestaña Trabajo <strong>muestra la disposición de un plano de la cola</strong> — el que la máquina está ejecutando, o el primero grabado mientras está inactiva. Sin eso, una máquina trabajando se veía así: estado «Ensamblando», la salida llenándose y una ventana vacía. El producto del plano se dibuja bajo la zona de salida que está llenando.</p>
+
+<p>La disposición mostrada está marcada como <strong>prestada y no editable</strong>: los objetos aparecen atenuados, y al pasar el cursor por una celda se añade la línea «Disposición del plano N — solo vista». Un anillo cian pálido rodea la ranura del plano de la que salió la disposición, para que quede claro cuál de los tres está en exhibición.</p>
+
+<p>No puede confundirse con tu propia disposición: el plano mostrado solo está <strong>dibujado</strong> sobre el arte de la pestaña, y en esa zona no hay ranuras — no hay nada que sacar de ella en ningún cliente. Tu propia disposición vive en la otra pestaña y no afecta a esta: mientras dispones una receta, la pestaña Trabajo sigue mostrando lo que hace la máquina. (Antes de las pestañas era al revés — tu disposición primaba sobre la pantalla y la de la máquina desaparecía bajo tus pies.)</p>
+
+<p>Los dos anillos de la cola significan cosas distintas: <strong>naranja</strong> es el plano del que corre la operación actual, <strong>cian pálido</strong> es aquel cuya disposición está en exhibición. Normalmente el mismo plano, y ahí gana el naranja.</p>
+
+<p>Encima de eso, cada plano grabado <strong>lleva su producto en el propio icono del objeto</strong> — ver el Plano de ensamblaje. Tres planos en cola se distinguen sin pasar el cursor por nada, y lo mismo tres en un cofre.</p>
+
+<p>La <strong>ventana de almacenamiento</strong> es la ventana propia del <a href="../utility/storage_module.html">Módulo de almacenamiento</a>, abierta con clic derecho sobre un módulo y no mediante un</p>
+
+<p>la cuadrícula de almacenamiento compartida, de 3 a 12 filas según cuántos módulos estén conectados; sin desplazamiento, sin barra de desplazamiento, sin búsqueda — el tope de 108 ranuras se eligió para que todo quepa en una pantalla.</p>
+
+<p>La ventana de almacenamiento es exactamente la misma que abre el módulo de almacenamiento.</p>
+
+<p>Sin ningún almacén conectado, el Ensamblador se comporta exactamente como con uno vacío: la línea de estado dice «faltan materiales», no se gasta ni un EU/FE y nada se rompe.</p>
+
+<h2 id="propiedades-del-bloque">Propiedades del bloque</h2>
+
+<table><thead><tr><th>Campo</th><th>Valor</th></tr></thead><tbody><tr><td>Forma</td><td>cubo completo 16³</td></tr><tr><td>Dureza</td><td>3,0</td></tr><tr><td>Resistencia a explosiones</td><td>6,0</td></tr><tr><td>Herramienta</td><td>pico</td></tr><tr><td>Suelta con NBT de energía</td><td>no</td></tr></tbody></table>
+
+<p>Romper el Ensamblador suelta los planos de sus ranuras y el contenido de la zona de salida. El contenido del almacén <strong>se queda en los módulos</strong> — solo se pierde la conectividad, y los módulos quedan inactivos hasta que se coloca un nuevo ensamblador. Fijado por <code>TC-ASM-026</code>: las gotas se cuentan con exactitud, así que tanto un plano perdido (que no se puede re-fabricar) como una zona de salida duplicada quedan a la vista.</p>
+
+<p>La cola de planos, el progreso y el cursor round-robin sobreviven a una recarga — <code>TC-ASM-027</code> pasa la máquina por NBT, el mismo camino que un guardado y carga de chunk. El cursor es el único campo sin síntoma visible: si se perdiera, la rotación reiniciaría en silencio en el primer plano y la equidad para la que existe dejaría silenciosamente de funcionar.</p>
+
+<p>La cara frontal está marcada y, como en las demás máquinas del mod, queda fuera de la automatización: una tubería empujada contra el frente no verá ranura alguna.</p>
+
+<h2 id="recetas">Recetas</h2>
+
+<p>Sin recetas de procesamiento — la máquina usa <code>minecraft:crafting</code> de vanilla</p>
+
+<p>La composición sigue el patrón del género — una carcasa de nivel, dos circuitos, una pieza de «identidad» y una pieza de «almacenamiento», con las cuatro esquinas tomadas por la mecánica que</p>
+
+<p>En el centro senta la <a href="../components/advanced_machine_casing.html">Carcasa de máquina avanzada</a> — el corazón y el nivel al que pertenece la máquina. Encima una mesa de trabajo, que es lo que hace la máquina; debajo un <a href="../utility/storage_module.html">Módulo de almacenamiento</a>, de donde toma sus piezas. A izquierda y derecha de la carcasa, dos <a href="../components/electronic_circuit.html">Circuitos electrónicos</a>, la lógica que lee un plano. Las cuatro esquinas son <a href="../components/metal_gears.html">Engranajes de hierro</a> — los brazos que mueven una pieza a la cuadrícula.</p>
+
+<p>Las esquinas son <a href="../components/metal_gears.html">Engranajes de hierro</a> y no más revestimiento: el ensamblador es la primera máquina del mod que mueve piezas por sí sola, y el engranaje es la pieza que este mod ya gasta exactamente en eso — el <a href="../fluid-storage/fluid_tank.html">Tanque de fluidos</a> y la <a href="../item-transport/item_pipe.html">Tubería de objetos</a> se leen igual. Llenar las nueve celdas además pone la fabricación en línea con las demás máquinas del mod, donde una esquina vacía es la excepción.</p>
+
+<h2 id="progresión">Progresión</h2>
+
+<p>Nivel: MV — la <strong>primera máquina MV del mod</strong>, el ancla de la fase MV. Requiere: un <a href="../utility/storage_module.html">Módulo de almacenamiento</a> (sin almacén la máquina no tiene de dónde sacar) y un Plano de ensamblaje. Desde también requiere una línea de petróleo terminada — no directamente, sino a través de la <a href="../components/advanced_machine_casing.html">Carcasa de máquina avanzada</a>, que ahora asienta 2 <a href="../components/advanced_circuit.html">Circuitos avanzados</a>, cada uno con un coste de 4 caucho. La cuadrícula de fabricación del propio ensamblador no cambia, pero su coste total creció con esos 2 circuitos, y ya no puede construirse antes de un <a href="polymerizer.html">Polimerizador</a> y un <a href="vulcanizer.html">Vulcanizador</a>. Mejora hacia: nada. La autofabricación bajo demanda (ordenar «haz 64 X» con un árbol de sub-fabricaciones) es un sistema futuro aparte, no una mejora de esta máquina.</p>
+
+<h2 id="relacionado">Relacionado</h2>
+
+<p><a href="../utility/storage_module.html">Módulo de almacenamiento</a> — el almacén del que tira el Ensamblador. Plano de ensamblaje — el objeto que guarda una receta. <a href="../energy-transfer/gold_cable.html">Cable de oro</a> — alimentar una máquina MV. <a href="../item-transport/item_pipe.html">Tubería de objetos</a> — llena el almacén, vacía la salida. <a href="sawmill.html">Aserradero</a> — referencia de una máquina con modos conmutables en su GUI.</p>
+
+<h2>Fabricación</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="ensamblador alaindustrial:assembler" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Engranaje de hierro"><img src="../../assets/item/iron_gear_3d.png" alt="Engranaje de hierro" width="32" height="32"></div> <div class="cell" title="Crafting Table"><img src="../../assets/item/crafting_table_3d.png" alt="Crafting Table" width="32" height="32"></div> <div class="cell" title="Engranaje de hierro"><img src="../../assets/item/iron_gear_3d.png" alt="Engranaje de hierro" width="32" height="32"></div> <div class="cell" title="Circuito electrónico"><img src="../../assets/item/electronic_circuit_3d.png" alt="Circuito electrónico" width="32" height="32"></div> <div class="cell" title="Carcasa de máquina avanzada"><img src="../../assets/item/advanced_machine_casing_3d.png" alt="Carcasa de máquina avanzada" width="32" height="32"></div> <div class="cell" title="Circuito electrónico"><img src="../../assets/item/electronic_circuit_3d.png" alt="Circuito electrónico" width="32" height="32"></div> <div class="cell" title="Engranaje de hierro"><img src="../../assets/item/iron_gear_3d.png" alt="Engranaje de hierro" width="32" height="32"></div> <div class="cell" title="Módulo de almacenamiento"><img src="../../assets/item/storage_module_3d.png" alt="Módulo de almacenamiento" width="32" height="32"></div> <div class="cell" title="Engranaje de hierro"><img src="../../assets/item/iron_gear_3d.png" alt="Engranaje de hierro" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Ensamblador"><img src="../../assets/item/assembler_3d.png" alt="Ensamblador" width="32" height="32"></div><div class="result-name">Ensamblador</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

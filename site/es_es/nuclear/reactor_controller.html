@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="es_es" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>Controlador de reactor — Ala Industrial — Guía</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="Abrir menú" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../../assets/item/guide_book_3d.png" alt="">Todo el contenido</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/ky7cFDF8JD" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="Buscar en la wiki…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="Buscar en la guía" autocomplete="off" spellcheck="false" data-index="../search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;Resultados de la búsqueda&quot;,&quot;one&quot;:&quot;página encontrada&quot;,&quot;few&quot;:&quot;páginas encontradas&quot;,&quot;many&quot;:&quot;páginas encontradas&quot;,&quot;loading&quot;:&quot;Cargando el índice de búsqueda…&quot;,&quot;nothing&quot;:&quot;Nada encontrado&quot;}"></search>
+    <details class="language-menu"><summary aria-label="Language">ES</summary><div class="language-popover"><span>ES</span><a href="../../en/nuclear/reactor_controller.html">EN</a><a href="../../ru/nuclear/reactor_controller.html">RU</a><a href="../../uk/nuclear/reactor_controller.html">UA</a><a href="../../zh_cn/nuclear/reactor_controller.html">中文</a><a href="../../ja_jp/nuclear/reactor_controller.html">日本語</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">Explorar</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../../assets/item/tempered_iron_pickaxe.png" alt=""><span>Primeros pasos</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>Recetas</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>Perfil del jugador</span></a>
+<div class="group-title">Energía</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>Generadores</span><span class="cat-count" aria-label="12 páginas">12</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>Almacenamiento de energía</span><span class="cat-count" aria-label="4 páginas">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Transferencia de energía</span><span class="cat-count" aria-label="8 páginas">8</span></a>
+<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Energía nuclear</span><span class="cat-count" aria-label="15 páginas">15</span></a>
+<div class="group-title">Procesamiento</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Máquinas</span><span class="cat-count" aria-label="16 páginas">16</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Máquinas de fluidos</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<div class="group-title">Logística</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Transporte de objetos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Transporte de fluidos</span><span class="cat-count" aria-label="1 página">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Almacenamiento de fluidos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
+<div class="group-title">Mundo y automatización</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Materiales</span><span class="cat-count" aria-label="23 páginas">23</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>Agricultura</span><span class="cat-count" aria-label="6 páginas">6</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>Máquinas avanzadas</span><span class="cat-count" aria-label="1 página">1</span></a>
+<div class="group-title">Otros</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>Utilidades</span><span class="cat-count" aria-label="18 páginas">18</span></a>
+<div class="group-title">Objetos</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>Mejoras</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>Componentes</span><span class="cat-count" aria-label="29 páginas">29</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>Objetos</span><span class="cat-count" aria-label="25 páginas">25</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">Inicio</a><span class="sep">/</span><a href="../nuclear/index.html">Energía nuclear</a><span class="sep">/</span><span>Controlador de reactor</span></div>
+<div class="block-card" data-hero-alt="Every block and item of the Ala Industrial reactor room in item frames: casing, glass, door, lamp, inlet, outlet, controller, column, fuel rod and its cladding." style="background-image:linear-gradient(180deg,rgba(22,22,26,.55) 0%,rgba(22,22,26,.92) 100%),url(../../assets/screenshots/nuclear_reactor_block_set.png);background-size:cover;background-position:center center;background-repeat:no-repeat;">
+  <div class="card-head">
+    <img class="icon" src="../../assets/item/reactor_controller_3d.png" alt="Controlador de reactor" width="64" height="64">
+    <div class="info">
+      <h1>Controlador de reactor</h1>
+      <div class="block-id">alaindustrial:reactor_controller</div>
+      <div class="tags"><span class="tag cat" style="background:#ef4444">Energía nuclear</span><span class="tag tier">HV</span><span class="tag lifecycle" style="background:#22c55e">Implementado</span><span class="tag">nuclear</span><span class="tag">reactor</span><span class="tag">multiblock</span><span class="tag">shielding</span><span class="tag">automation</span><span class="tag">tier-hv</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="resumen">Resumen</h2>
+
+<p>El <strong>Controlador de reactor</strong> es el único bloque inteligente de la carcasa y la única máquina de la sala. Mientras la sala se construye, encuentra la carcasa a su alrededor, la comprueba y dice qué está mal y dónde. Cuando la carcasa se cierra, se convierte en el reactor: recoge los ensamblajes de combustible, calcula salida y calor, hierve el refrigerante, reasienta los fluidos dentro de cada pila de columnas, desgasta las barras y empuja EU/FE hacia fuera.</p>
+
+<p>El controlador va <strong>en el sitio de un bloque de carcasa en una pared vertical</strong>, mirando hacia fuera: la cara frontal lleva la pantalla que lee el jugador, y la redstone va al mismo lado. El cable va en cualquier otra cara. Una sala con dos controladores no se forma — una sala tiene exactamente un cerebro.</p>
+
+<p>El controlador <strong>no necesita una sala para funcionar</strong>. Sin ella cae en el modo desnudo: encuentra las pilas a su alrededor con un escaneo por radio, entrega una salida notablemente recortada, y lo paga fundiendo bloques alrededor de las propias pilas a intervalos regulares. Es una elección del jugador, no un fallo — los detalles están en <a href="#modo-desnudo-un-reactor-sin-sala">«Modo desnudo»</a>.</p>
+
+<blockquote><strong>Lo que el reactor aún no tiene.</strong> El indicador de calor sube hasta el 100 % y se detiene: pasada la marca la sala empieza a fundir su propio contenido, pero en lo más alto de la escala todavía no hay <strong>explosión</strong> — eso es trabajo aparte. La radiación alrededor de un núcleo en marcha ya existe y vive separada de la fusión.</blockquote>
+
+<h2 id="dónde-tiene-que-estar">Dónde tiene que estar</h2>
+
+<table><thead><tr><th>Requisito</th><th>Por qué</th></tr></thead><tbody><tr><td>En una pared vertical (no el suelo, no el techo)</td><td>la cara frontal es un panel para leer, y el cable llega allí en la etapa 2; en un techo no lo ve nadie</td></tr><tr><td>No en un canto ni una esquina de la carcasa</td><td>una celda en un canto no tiene lado interior al que asomarse</td></tr><tr><td>Mirando hacia fuera</td><td>el interior de la sala queda <strong>detrás</strong> del controlador; gíralo al revés y obtienes «Controlador no está en una pared»</td></tr><tr><td>Exactamente uno por sala</td><td>un segundo controlador en la misma carcasa da «Segundo controlador» junto con su posición</td></tr></tbody></table>
+
+<p>Las cuatro condiciones las comprueba el mismo escaneo y producen la misma clase de respuesta — un estado más un sitio. No hay un «modo configuración» aparte: colócalo, lee la pantalla, arregla lo que toque.</p>
+
+<h2 id="el-escaneo">El escaneo</h2>
+
+<p>El escáner trabaja en dos pasadas, y eso no es un detalle de implementación sino la razón de que sus mensajes sirvan de algo.</p>
+
+<ol><li><strong>Seis rayos</strong> desde la celda frente al controlador — por ±X, ±Y, ±Z, hasta el primer bloque de</li></ol>
+<p>carcasa. Un rayo que no encuentra nada significa «la sala no tiene límite en esta dirección» — o es demasiado grande, o hay en la pared un agujero por el que podrías volar. El rayo informa dónde se rindió, para que el jugador sepa al menos hacia dónde mirar.</p>
+<ol><li><strong>Un recorrido de todo el perímetro</strong> que esos seis hits definen. Esta es la pasada que</li></ol>
+<p>encuentra una única celda que falte en cualquier punto de una carcasa de 14³ y nombra sus coordenadas. El mismo recorrido cuenta controladores, recuerda las celdas de puerta y suma la proporción de vidrio — una pasada responde las cuatro preguntas.</p>
+
+<p>Un rayo alcanza + <strong>1</strong> pasos, no exactamente el límite. El paso extra no es holgura sino la condición para que «demasiado grande» pueda existir como estado: un rayo cortado exactamente en el límite jamás vería la pared lejana de una sala un bloque demasiado ancha, así que toda sala sobredimensionada daría «sin límite». Con el paso extra, «la construiste un bloque demasiado ancha» y «allí no hay pared» siguen siendo respuestas distintas.</p>
+
+<p>Por qué no un simple relleno por inundación: un flood fill no distingue «esta sala es demasiado grande» de «esta sala tiene fugas» — ambos simplemente corren hasta el tope. Dos pasadas dan dos respuestas distintas a dos preguntas distintas.</p>
+
+<p>El orden de las comprobaciones también es una decisión de usabilidad y no de código:</p>
+
+<ol><li>colocación del controlador (¿hay una celda abierta frente a su cara?);</li><li>límites — los seis rayos;</li><li>tamaño (<code>TOO_SMALL</code>, luego <code>TOO_LARGE</code>);</li><li>sellado — la primera celda que no es carcasa en el recorrido (<code>BREACH</code>, el recorrido se detiene</li></ol>
+<p>ahí);</p>
+<ol><li>el propio controlador hallado como celda de pared y no de canto;</li><li>un segundo controlador;</li><li>una puerta con hueco de puerta;</li><li>la proporción de vidrio.</li></ol>
+
+<p>Cada respuesta es accionable por sí sola, y el jugador arregla una cosa cada vez en vez de recibir una lista. El tope de vidrio va al final a propósito: es el único problema «blando» — una sala que lo alcanza está sellada y bien construida, simplemente no cuenta como contención — y reportarlo antes de un agujero real sería el orden de prioridades equivocado.</p>
+
+<table><thead><tr><th>Cuándo reescanea</th><th>Condición</th></tr></thead><tbody><tr><td>Periódicamente</td><td>cada (por defecto <strong>40 ticks = 2 s</strong>)</td></tr><tr><td>Al cambiar un vecino</td><td>de inmediato: una pared rota cerca, una entrada colocada, una puerta volada</td></tr></tbody></table>
+
+<p>La pasada periódica es obligatoria: solo se dispara para los seis bloques que tocan al controlador, y una sala puede medir 14 bloques de lado. Un bloque picado en la pared lejana no es vecino de nadie aquí, y sin su propio temporizador el controlador jamás se enteraría. Por la misma razón, el controlador nunca se duerme.</p>
+
+<h2 id="estados">Estados</h2>
+
+<p>Nueve estados. Ocho son un trabajo por hacer; el noveno es «hecho».</p>
+
+<table><thead><tr><th>Estado</th><th>Significado</th><th>Muestra un sitio</th><th>Muestra un tamaño</th></tr></thead><tbody><tr><td><code>FORMED</code></td><td>sellado y dentro de los límites de tamaño</td><td>—</td><td>sí</td></tr><tr><td><code>CONTROLLER_NOT_IN_WALL</code></td><td>el controlador está en el suelo o el techo, en un canto, enterrado o girado al revés</td><td>sí</td><td>—</td></tr><tr><td><code>ROOM_UNBOUNDED</code></td><td>un rayo pasó del límite sin encontrar pared</td><td>—</td><td>—</td></tr><tr><td><code>TOO_SMALL</code></td><td>interior por debajo de en algún eje</td><td>—</td><td>sí</td></tr><tr><td><code>TOO_LARGE</code></td><td>interior por encima de en algún eje</td><td>—</td><td>sí</td></tr><tr><td><code>BREACH</code></td><td>una celda del perímetro no es bloque de carcasa</td><td>sí</td><td>—</td></tr><tr><td><code>NO_DOORWAY</code></td><td>hay puerta pero no hueco de puerta (no hay dos celdas de puerta apiladas a nivel del suelo)</td><td>—</td><td>—</td></tr><tr><td><code>SECOND_CONTROLLER</code></td><td>otro controlador está en la misma carcasa</td><td>sí</td><td>—</td></tr><tr><td><code>TOO_MUCH_GLASS</code></td><td>el vidrio supera (30 %) de las celdas de la carcasa</td><td>sí</td><td>—</td></tr></tbody></table>
+
+<p><code>TOO_MUCH_GLASS</code> se añadió al final del enum en vez de colocarse junto a <code>BREACH</code>, donde le corresponde por significado, y eso no es dejadez: el orden de las constantes <strong>es</strong> el formato de cable — lo que viaja a la pantalla es un ordinal. Insertar en medio renombraría cada estado posterior.</p>
+
+<p>La posición que reporta <code>TOO_MUCH_GLASS</code> no es una celda «culpable» — la culpa es de la proporción, no de un bloque concreto — sino la primera celda de vidrio en orden de recorrido. Está para que el humo lleve al jugador a la parte acristalada de la carcasa: una sala de 14×14 es grande, y «demasiado vidrio» sin una dirección es un mensaje sin acción adjunta.</p>
+
+<h2 id="cómo-dirige-el-reactor">Cómo dirige el reactor</h2>
+
+<p>Una sala terminada es una sola máquina, y el controlador ejecuta su tick entero. Los ensamblajes de combustible no tienen ningún tick propio: un pabellón con treinta pilas le cuesta al servidor lo que cuesta un bloque de entidad.</p>
+
+<h3 id="recoger-las-columnas">Recoger las columnas</h3>
+
+<p>En el mismo barrido que la comprobación de la carcasa (una vez cada = 40 ticks), el controlador recorre el <strong>interior</strong> de la sala y registra <strong>todas</strong> las columnas del reactor — cargadas y vacías por igual. La misma pasada suma las barras que llevan uranio y cuenta los pares adyacentes.</p>
+
+<p>Las columnas vacías entran en la lista deliberadamente. Filtrar por combustible parecía inofensivo y no lo era: una pila vacía caía fuera del circuito de agua y fuera del pase de asentamiento de la pila, y por eso el agua bombeada al fondo de una columna nunca subía más allá del primer ensamblaje cargado. Una columna es parte de la máquina porque está en la sala, no porque alguien la haya cargado todavía.</p>
+
+<p>La adyacencia, en cambio, se cuenta <strong>por combustible</strong>: dos pilas vacías juntas no aceleran nada, o el bono se pagaría por andamiaje.</p>
+
+<p>Barrer un interior de 12³ son 1728 lecturas de bloque: absurdo sesenta veces por segundo, barato una vez cada dos segundos. El precio es la latencia: una barra insertada a mano entra en el cálculo en el siguiente barrido, es decir, a lo sumo dos segundos. Junto a una barra que arde durante minutos, eso es invisible.</p>
+
+<p>Los pares adyacentes se cuentan por <code>+X</code>, <code>+Y</code>, <code>+Z</code> — cada par exactamente una vez — pero <strong>ambas</strong> pilas del par reciben el bono, de ahí el x2 en la fórmula de salida.</p>
+
+<h3 id="salida-combustible-y-calor">Salida, combustible y calor</h3>
+
+<table><thead><tr><th>Magnitud</th><th>Cómo se calcula</th></tr></thead><tbody><tr><td>Potencial (al 100 %)</td><td><code>barras x 6 EU/FE x Me</code>, donde <code>Me = 1 + 0.5 x pares</code></td></tr><tr><td>Salida</td><td>x profundidad‰ / 1000`, pero nunca más de lo que queda en el búfer</td></tr><tr><td>Calor</td><td><code>calor pleno x salida / potencial</code>, donde calor pleno <code>barras x 4 x Mh</code>, <code>Mh = 1 + 0.8 x pares</code></td></tr><tr><td>Combustible gastado</td><td>exactamente <code>salida</code> EU/FE por tick, repartidos entre columnas en proporción a sus barras</td></tr><tr><td>Escala de calor</td><td><code>calor + producido − hervido − pérdidas</code>, acotado a 0…10 000 (el indicador completo)</td></tr></tbody></table>
+
+<p><strong>El techo se aplica antes del regulador, no después.</strong> El potencial se recorta a 512 EU/FE/t primero, y solo después se escala por profundidad. El otro orden parecía equivalente y no lo era: en cualquier núcleo cuyo potencial ya superara 512, cada posición del regulador daba los mismos 512 EU/FE/t — el control no hacía precisamente nada en la escala exacta para la que fue construido.</p>
+
+<p><strong>El combustible se cuenta en EU/FE, no en tiempo.</strong> El controlador cobra a las columnas exactamente la energía que produjo, y una columna la convierte en puntos de durabilidad de sus barras (144 EU/FE por punto; los detalles están en la <a href="uranium_fuel_rod.html">especificación de la barra</a>). De ahí la propiedad central del modelo: <strong>una barra vale 144 000 EU/FE en todas partes</strong>, y ningún diseño abarata el uranio.</p>
+
+<p>No siempre fue así. Antes de la etapa 4 el combustible lo movía una «profundidad efectiva» — la fracción de su potencial que la sala entregaba de verdad — y en una sala grande esa fracción se truncaba a su suelo de 1 ‰. De la misma línea salían dos absurdos: una barra duraba unos mil días reales, y el calor se volvía <code>calor pleno / 1000</code> y crecía sin techo al crecer la sala (un pabellón de 12x12x12 daba aproximadamente 105 000 calor por tick — más refrigerante del que la carcasa tiene superficie para admitir).</p>
+
+<p><strong>El calor tiene coeficiente de adyacencia propio, y es el mayor</strong> — = <strong>40 %</strong> contra = 25 %. Ese es el número clave de la etapa 3: un núcleo denso se calienta más rápido de lo que se refuerza, así que un diseño que sube la potencia sube con ella el <strong>precio de la refrigeración</strong>. La regla de la etapa 2 «calor = salida / 3» ya no vale: son dos tercios en una columna solitaria, 0.79 en dos adyacentes, y se acerca a <strong>1.07</strong> en un núcleo muy denso — al techo de HV una sala produce más unidades de calor que EU/FE.</p>
+
+<p>Esa misma división es también lo que <strong>acota</strong> el calor por arriba. Ambos términos llevan las mismas barras y las mismas adyacencias, así que la razón calor-por-EU/FE converge al crecer la sala en vez de</p>
+
+<pre><code class="lang-">calor en el techo de HV -&gt; 512 x (4 x 0.8) / (6 x 0.5 = 546 unidades/t</code></pre>
+
+<p>Una sala densa al techo va entre 500 y 546 calor por tick (seis columnas en bloque 2x3 hacen 500, un pabellón de 12x12x12, 546), y ninguna corre más caliente que <strong>546</strong>: cuanto más dispersas estén las columnas, menos calor cuesta el mismo techo.</p>
+
+<blockquote><strong>Una sala grande compra autonomía, no potencia.</strong> Todo lo que pasa de 512 EU/FE/t entrega los mismos 512 EU/FE/t; lo que crece es el tiempo entre recargas, porque el mismo caudal se reparte entre más barras. El apetito de la sala es <strong>idéntico</strong> para todo diseño que alcance el techo: 256 barras = 128 menas de uranio a la hora. Las cifras por diseño están en</blockquote>
+
+<p>El calor se asienta <strong>cada tick</strong>, incluso con el reactor apagado: la refrigeración tiene que funcionar, o «parada de emergencia y esperar» no sería una salida. Una escala completa se vacía a cero en <strong>395 ticks (19.8 s)</strong>. Pasada la marca la sala empieza a fundir su propio contenido — ver <a href="#fusión-el-precio-del-sobrecalentamiento">«Fusión»</a>; lo más alto de la escala sigue sin consecuencia propia, eso es.</p>
+
+<h3 id="controles-redstone-y-profundidad">Controles: redstone y profundidad</h3>
+
+<table><thead><tr><th>Control</th><th>Qué hace</th></tr></thead><tbody><tr><td>Señal de redstone en el controlador</td><td><strong>presente</strong> — el reactor corre; <strong>retirada</strong> — parada de emergencia. Una palanca junto a la puerta mata el núcleo sin desmontar nada</td></tr><tr><td>Regulador de profundidad</td><td>cinco posiciones, 0 / 25 / 50 / 75 / 100 %; el 0 % es la misma posición, desde dentro de la pantalla</td></tr></tbody></table>
+
+<p>No hay deliberadamente otros controles: dos son exactamente cuantos caben en la cabeza de un jugador de pie en un pabellón humeante.</p>
+
+<p>El regulador va por el canal de la vanilla de botones de contenedor, como el interruptor de cúpula del <a href="../utility/mob_repeller_hv.html">repelente</a>: el id del botón <strong>es</strong> la profundidad pedida en por ciento, así que no hace falta carga útil propia. El valor se recorta en el servidor, no en la pantalla.</p>
+
+<p>El regulador funciona <strong>a toda escala</strong>: recorta una cifra ya recortada, así que el 50 % en una capa 3x3 da 256 EU/FE/t — y exactamente la mitad del calor, la mitad del agua y la mitad del uranio por hora. En la etapa 2 no era así (el techo se aplicaba al final, y por encima de él toda posición era idéntica); la discrepancia se cerró en la etapa 3.</p>
+
+<h3 id="refrigeración-la-carcasa-sola-agua-solo-pasado-el-umbral">Refrigeración: la carcasa sola, agua solo pasado el umbral</h3>
+
+<p>La curva de refrigeración tiene dos términos, y el segundo es el importante:</p>
+
+<pre><code class="lang-">pérdidas = 4 + calor x 8 / 1000</code></pre>
+
+<p>El término proporcional es lo que le da al reactor <strong>un equilibrio en vez de un interruptor</strong>. Con una pérdida plana un núcleo tenía exactamente dos desenlaces: producción por debajo de ella y el indicador no sale de cero, por encima y el indicador sube hasta arriba y se queda. Lo primero era lo que parecía el primer reactor de un jugador, y parecía roto. Ahora todo núcleo se asienta donde la producción y las pérdidas se cruzan:</p>
+
+<pre><code class="lang-">equilibrio = (calor producido − 4) x 1000 / 8</code></pre>
+
+<table><thead><tr><th>Núcleo</th><th>Calor, unidades/t</th><th>Equilibrio</th><th>Indicador</th><th>Agua</th></tr></thead><tbody><tr><td>1 columna (4 barras)</td><td>16</td><td>1500</td><td>15 %</td><td>innecesaria</td></tr><tr><td>2 columnas juntas</td><td>57</td><td>6625 en seco</td><td>66 % en seco, 60 % con agua</td><td>opcional (3 mB/t si hay tubería)</td></tr><tr><td>3 en fila (12 barras)</td><td>124</td><td>por encima del techo</td><td>60 % con agua</td><td><strong>necesaria</strong></td></tr></tbody></table>
+
+<p><strong>El techo de la carcasa es 84 unidades/t</strong> (<code>4 + 10000 x 8 / 1000</code>). Todo lo que produzca menos se sostiene solo; por encima, empieza el circuito.</p>
+
+<p>El agua es un <strong>sistema de seguridad, no un radiador</strong>. Solo entra pasado el objetivo del propio circuito — el objetivo del refrigerante (60 % del indicador = 6000 unidades) — y se lleva dos cosas: la entrada de este tick, y una vigésima parte del exceso ya acumulado. El objetivo está deliberadamente <strong>por debajo</strong> de la banda ámbar (= 70 %): el circuito tiene que devolver el reactor al verde, no estacionarlo en un aviso.</p>
+
+<pre><code class="lang-">objetivo = 10 000 x 60 % = 6000
+exceso = calor &lt; objetivo ? 0: (producido − pérdidas) + (calor − objetivo) / 20
+agua, mB = ceil(exceso / 2) (redondeado HACIA ARRIBA)
+eliminado = hervido x 2</code></pre>
+
+<p>El primer término mantiene la línea, el segundo vuelve hacia ella. Sin el segundo, un núcleo desbocado se congelaría justo donde lo pillaron — indistinguible de un circuito que no hace nada. Sin el primero, el circuito tendría que deshacer todo el en un tick: una versión temprana exigía mil quinientos milicubos por tick y vaciaba la sala en ocho.</p>
+
+<p>Redondear hacia arriba y no hacia abajo es deliberado: el truncamiento devolvía 0 para cualquier calor por debajo del tipo de cambio, y un reactor al ralentí justo bajo el umbral habría mantenido su temperatura sin agua en absoluto.</p>
+
+<p><strong>Un reactor de arranque no necesita fontanería.</strong> Una columna de cuatro barras hace 16 calor por tick y se asienta en el 15 % de la escala, en seco. Dos adyacentes (57/t) ya superan el objetivo del circuito — que responde a partir de 52/t — pero de todos modos se asientan solas en el 66 %, por debajo de la banda ámbar; una tubería las mantiene en el 60 % con 3 mB/t. El circuito de agua se vuelve realmente obligatorio con la <strong>tercera</strong> columna (124/t, 36 mB/t): la carcasa no disipa más de 84/t, y todo lo que pase de ahí sube hasta el tope de la escala. Nada fuerza tuberías pronto; lo hace la escala.</p>
+
+<blockquote><strong>Un reactor refrigerado por agua se queda en el 60 % de la escala</strong> — su barra de calor está en verde, y la banda ámbar vuelve a significar «algo va mal»: el suministro no da abasto, el escape está obstruido, o el núcleo fue apretado sin circuito. Antes de la etapa 4 el circuito apuntaba a la propia línea de aviso, y un reactor sano brillaba en ámbar para siempre.</blockquote>
+
+<p>El controlador hierve, no la columna: recorre su lista de columnas y a cada una le pide todo lo que aún no ha recogido. Lo que no pudo hervirse se queda como calor y entra en la escala. Ese es todo el modo de fallo de un circuito desabastecido: no un mensaje de error, una barra que sube.</p>
+
+<h3 id="reasentar-las-pilas">Reasentar las pilas</h3>
+
+<p>Cada tick el controlador ordena los fluidos <strong>dentro de cada pila vertical intacta</strong> de columnas: toda el agua se junta abajo, todo el vapor arriba. Una pila se comporta así como un solo recipiente, y una tubería conectada a cualquier bloque suyo la llena entera.</p>
+
+<p>Sin esto una pila sencillamente no se llenaría: el agua se hunde, el bloque inferior alcanza su capacidad primero, y una tubería que pregunta «¿hay sitio?» recibía un «no» de un recipiente medio vacío.</p>
+
+<blockquote>⚠️ <strong>Las columnas colocadas una al lado de la otra no están conectadas.</strong> El controlador antes equilibraba los tanques de toda la sala, y una sola tubería regaba todo el pabellón. Era cómodo y falso: que aparezca refrigerante dentro de una pila a la que nada está conectado se lee como un fallo por útil que sea. Pon tubería a las columnas que quieras frías — lo más fácil es construirlas en pilas.</blockquote>
+
+<h3 id="modo-desnudo-un-reactor-sin-sala">Modo desnudo: un reactor sin sala</h3>
+
+<p>Un controlador cuya sala nunca llegó a cuajar <strong>no se queda parado</strong>. Si hay pilas cargadas físicamente pegadas a él, se pone a moverlas directamente. Es un segundo modo de trabajo completo, no un estado de fallo.</p>
+
+<p><strong>El enlace tiene que ser físico.</strong> El controlador sale de sí hacia fuera a través de <strong>pilas</strong> y <strong>bloques de aleación de blindaje</strong> que toca — a través de una carcasa a medio construir, también. El terreno abierto no conduce la reacción: una columna a tres bloques, al otro lado de un hueco, no forma parte del reactor, por grande que sea. es una cota sobre la longitud de ese paseo, no un radio de búsqueda.</p>
+
+<blockquote>La regla salió de un playtest: la búsqueda antes iba por radio, y un controlador en tierra desnuda se encendía desde una columna al otro lado de un hueco. Parecía energía entregada a través del aire. El contacto funciona, y esa es exactamente la sensación que debe dar.</blockquote>
+
+<p><strong>Un búfer lleno no apaga el peligro.</strong> El combustible solo se gasta cuando se quiere la energía (y así debe ser), pero la reacción corre haya o no quien compre la corriente. Así que el daño de bloques depende de «el reactor no está parado y tiene combustible» y no de la salida de este tick — si no, bastaría desenchufar los consumidores para apagarlo. La radiación se comporta igual, y siempre lo ha hecho.</p>
+
+<table><thead><tr><th></th><th>Sala sellada</th><th>Modo desnudo</th></tr></thead><tbody><tr><td>Cómo encuentra las pilas</td><td>el recorrido de la pared; la sala pone los límites</td><td>un paseo por pilas y bloques de aleación de blindaje que se tocan</td></tr><tr><td>Salida</td><td>completa, y crece con la sala</td><td>de lo que el mismo diseño produciría, y nunca por encima de</td></tr><tr><td>Calor y agua</td><td>el modelo térmico completo, el circuito de refrigeración</td><td>nada de eso: un reactor desnudo no tiene nada que enfriar, y su panel no lleva indicador de calor ni de refrigerante</td></tr><tr><td>Regulador de profundidad</td><td>funciona</td><td>ignorado — las barras están siempre a fondo</td></tr><tr><td>A dónde van los EU/FE</td><td>fuera por los enchufes <code>reactor_outlet</code> de la pared</td><td><strong>directamente por las propias caras del controlador</strong> — la salida está muerta en modo desnudo</td></tr><tr><td>El peligro</td><td>el contenido se funde pasada la marca de sobrecalentamiento</td><td>funde el decorado mientras esté en marcha</td></tr><tr><td>Radiación</td><td>las paredes la contienen</td><td>golpea los alrededores sin obstáculo</td></tr></tbody></table>
+
+<p>El único control al que obedece un reactor desnudo es la <strong>redstone</strong>. Cortar la señal lo apaga por completo, y esa es una táctica válida: para terminar la carcasa alrededor de un núcleo vivo y en paz, acciona la palanca.</p>
+
+<p><strong>El regulador de profundidad deliberadamente no se muestra ni se respeta.</strong> Un regulador trabajando fuera de la vista sería una trampa: una sala con las barras recogidas que luego perdiera una pared se quedaría muda y no diría nada de por qué.</p>
+
+<p><strong>La salida se recorta dos veces — por una parte y por un tope — y hacen falta ambos límites.</strong> La parte hace a un reactor desnudo más débil que uno construido; el tope impide que el jugador responda simplemente apilando más barras. Sin tope, un montón bastante grande produciría más que una sala, y la carcasa con su circuito de refrigeración se volvería decoración.</p>
+
+<h4 id="de-quién-es-cada-pila">De quién es cada pila</h4>
+
+<p>Dos controladores junto al mismo montón de pilas contarían cada uno el montón entero — energía del aire. Hay dos reglas, y un solo escaneo resuelve ambas sin contabilidad en disco:</p>
+
+<p><strong>Las pilas dentro de la sala sellada de otro son invisibles desde fuera.</strong> Un controlador desnudo plantado junto a un reactor en marcha no puede alimentarse de él. <strong>Entre dos controladores desnudos, una pila va al más cercano.</strong> El empate se rompe por coordenadas y no solo por distancia: una regla que cada lado calcula por su cuenta le entregaría la misma pila a ambos.</p>
+
+<blockquote>Un hueco conocido: un controlador en un chunk sin cargar es invisible, así que una pila en el borde lejano de una frontera de chunks puede contarse dos veces un instante. Son unos pocos EU/FE por tick hasta que el vecino carga; cerrarlo precargando chunks sería un remedio peor que la enfermedad.</blockquote>
+
+<h3 id="fusión-el-precio-del-sobrecalentamiento">Fusión: el precio del sobrecalentamiento</h3>
+
+<p>Pasada la marca, una sala sellada empieza a <strong>fundir su propio contenido</strong>: el suelo, las tuberías corrientes y todo lo que el jugador hubiera metido dentro. La primera en irse siempre es una tubería de fluidos corriente, esté donde esté: es la pieza montada con lo que ya había a mano, y por eso es la que mejor explica qué salió mal.</p>
+
+<p><strong>La propia carcasa queda entera.</strong> Carcasa, vidrio, puerta, entrada, salida y controlador están todos en el anillo exterior al interior y jamás entran en la selección. Eso es exactamente para lo que se construyó la sala: el accidente se queda dentro.</p>
+
+<p><strong>Las pilas de combustible también salen enteras.</strong> Se ensamblan alrededor de una placa de blindaje, y una pieza fabricada para sobrevivir al reactor sobrevive también a su accidente. El uranio de dentro no se pierde — una fusión se lleva los enseres y el tiempo del jugador, no su reserva de combustible.</p>
+
+<p>Cada bloque fundido se lleva de calor, así que una fusión se <strong>autolimita</strong> — la sala se come sus propias tripas y se enfría por el camino. El jugador pierde el contenido y el combustible que había dentro, pero se queda una carcasa que puede reequiparse y no un cráter.</p>
+
+<p>Mientras ocurre, el titular del panel dice <strong>«Fusión»</strong> en vez del veredicto geométrico: una carcasa perfectamente intacta está diciendo la verdad en ese momento, y es la menos útil de las verdades disponibles.</p>
+
+<h3 id="fundir-bloques-cómo-se-ve">Fundir bloques: cómo se ve</h3>
+
+<p>Ambos modos destruyen bloques igual, y ambos avisan primero — <strong>señalando al propio bloque</strong>.</p>
+
+<ol><li>Se elige un bloque. En él estallan llama y humo, y hay un siseo.</li><li>Pasan (dos segundos). Ponerse a salvo a tiempo, o quitar lo que esté</li></ol>
+<p>encima, es exactamente la diferencia entre un peligro y un castigo.</p>
+<ol><li>El bloque se convierte en una <strong>fuente</strong> de lava. La elección prefiere celdas con **aire</li></ol>
+<p>encima**: la esfera alrededor de una pila va media bajo tierra, y sin esta regla la mayor parte del daño ahuecaba en silencio la roca bajo los pies mientras la cicatriz visible parecía tener la mitad del radio anunciado. Si el jugador lo picó mientras tanto, no ocurre nada: la elección se recomprueba y no se ejecuta a ciegas.</p>
+
+<p>Lo que <strong>jamás</strong> se funde en ninguno de los dos modos: el aire, cualquier cosa con un fluido dentro (bloques anegados incluidos — el agua detiene la lava en todas partes, e inundar el sitio es una táctica legítima), y cualquier cosa indestructible — comprobado contra la propiedad del propio bloque y no contra una lista de nombres, así que la bedrock de otro mod se respeta gratis.</p>
+
+<p>Lo que <strong>no</strong> se funde en ningún lugar, jamás: todo lo hecho de <strong>aleación de blindaje</strong>. Es decir, los bloques propios del reactor — carcasa, vidrio, puerta, entrada, salida, lámpara, botón, pilas y controlador — <strong>y el Cofre de blindaje</strong>. La regla es exactamente esa: «hecho de aleación de blindaje no se funde», no «pertenece al reactor». La lista vive en la etiqueta de bloque , y un datapack puede ampliarla. Sin eso, «una estación desnuda como estrategia a largo plazo» no sería una elección sino un fusible. Todo lo demás dentro del radio — los cables del jugador, sus tuberías, cofres y el suelo bajo los pies — es un blanco legítimo, y ese es precisamente el precio de la esquina que se cortó.</p>
+
+<p><strong>En modo desnudo el radio se mide desde cada pila cargada, no desde el controlador.</strong> El controlador es el cerebro; lo peligroso es el combustible, y la radiación ya lo cuenta así, de modo que ambas mecánicas responden igual a «a qué distancia es peligroso». Medir desde el controlador era un error visible desde el lado opuesto del reactor: está en una pared, media esfera se la come el propio cuerpo intocable del reactor, y todo el daño caía en el lado al que mira.</p>
+
+<blockquote>⚠️ <strong>La lava fluye.</strong> Un bloque fundido se convierte en fuente de lava, y la lava se extiende por las reglas de la vanilla — hasta tres bloques de lado y hacia abajo sin límite. Un bloque fundido no es una pérdida: es un charco, y por los agujeros de una carcasa inacabada se derrama dentro. La dureza es deliberada, pero construir una estación desnuda pegada a algo que echarías de menos es mala idea.</blockquote>
+
+<blockquote>⚠️ <strong>El bloque bajo un jugador o un mob no está protegido.</strong> La dureza es deliberada: morir por despiste en mitad de un accidente ya en marcha es posible, y ninguna posición se salta por seguridad.</blockquote>
+
+<p>Todo esto lo apaga. Apagado deja <strong>todos</strong> los avisos en su sitio — el sonido, las partículas, el estado — pero no cambia ni un bloque: la tecla protege el mundo, no esconde el estado del reactor.</p>
+
+<h2 id="el-accidente-al-cien-por-cien">El accidente al cien por cien</h2>
+
+<p>Un indicador de calor que llega arriba ya no se queda quieto — <strong>arranca una cuenta atrás</strong>. El titular del panel cambia a FUSIÓN INMINENTE, bajo él aparece una barra roja que se vacía, y la sirena sigue hasta el final.</p>
+
+<p>La barra no lleva cifra, a propósito. La duración se tira por accidente, <strong>entre dos y tres minutos</strong>: un retraso fijo se memorizaría en una semana y el panel dejaría de leerse. La barra dice honestamente «se acaba el tiempo» y no dice cuánto queda.</p>
+
+<p><strong>Se puede cancelar hasta el último tick — no hay punto de no retorno.</strong> Tres caminos, y los tres se reducen a lo mismo: <strong>el indicador tiene que bajar del cien y mantenerse fuera de él cinco segundos</strong>.</p>
+
+<ul><li>alimentar el circuito con <strong>agua</strong>;</li><li>accionar la <strong>palanca</strong> (la parada de emergencia);</li><li><strong>abrir una brecha en la pared</strong> — la sala deja de ser sala, y el reactor cae suavemente en modo</li></ul>
+<p>desnudo.</p>
+
+<p>Los cinco segundos no son pedantería, cierran un resquicio obvio. El calor está acotado arriba del todo, así que un solo tick sin señal basta para que el indicador lea 99 %. Mientras la cuenta atrás se limpiara con esa lectura instantánea, un reloj de repetidores con un tick apagado de cada veinte le daba al reactor un noventa y cinco por cien de servicio y total inmunidad. Ahora la cuenta atrás se <strong>pausa</strong> mientras el núcleo está bajo la línea y solo se limpia si se mantiene dentro de la ventana entera; un tick de vuelta al tope pierde todo lo acumulado. Todo arreglo honesto la limpia con margen, y hacer parpadear la señal no compra nada.</p>
+
+<p><strong>Un búfer lleno no está en esa lista.</strong> Un reactor sin dónde poner su energía no se para: la reacción corre, el indicador sube, y sin refrigerante llega a la explosión igual. Solo cambia una cosa — no se gasta uranio, porque el combustible se cobra contra la energía realmente <strong>entregada</strong>. Un reactor dejado encendido con el búfer lleno se calienta gratis y explota por nada.</p>
+
+<p><strong>La potencia de la explosión crece con el número de barras</strong> y se detiene en un techo. Los números lo contiene la sala entera — todo lo de dentro queda calcinado, ni un bloque de fuera cambia — y una estación grande no. Para eso cuestan las paredes lo que cuestan.</p>
+
+<p>Lo que queda después es un cráter, lava en el epicentro, uranio esparcido desde las pilas y <a href="irradiated_soil.html">tierra irradiada</a> — pero solo donde la explosión llegó de verdad. El interruptor elimina el accidente entero y conserva la cuenta atrás, el sonido y el panel.</p>
+
+<h2 id="la-inestabilidad-de-un-reactor-desnudo">La inestabilidad de un reactor desnudo</h2>
+
+<p>Un reactor sin sala no tiene ni calor ni agua — lo que tiene es <strong>inestabilidad</strong>, mostrada en el panel en una fila propia. Crece con el número de barras del montón y decae sola, así que cada</p>
+
+<table><thead><tr><th>Pilas en el montón</th><th>Dónde se asienta</th><th>Qué significa</th></tr></thead><tbody><tr><td>1</td><td>~29 %</td><td>aguanta para siempre</td></tr><tr><td>2</td><td>~59 %</td><td>aguanta para siempre</td></tr><tr><td>3</td><td>~89 %</td><td>el límite: corre para siempre, panel en rojo</td></tr><tr><td>4 o más</td><td>sin punto de reposo</td><td>se desboca hasta cien y la misma cuenta atrás</td></tr></tbody></table>
+
+<p>De ahí la regla de la granja de lava: <strong>tres pilas es el máximo</strong> que puede dejarse corriendo sin vigilar. La cuarta convierte la granja en una bomba, y el panel lo dice por adelantado.</p>
+
+<h2 id="interfaz">Interfaz</h2>
+
+<p>Tipo: una pantalla sin una sola ranura — el controlador se lee, no se carga. La falta de inventario es deliberada: las ranuras vacías invitarían a poner embudos en un bloque que no tiene nada que guardar. Sin panel de mejoras: el controlador no es una máquina de procesado, y cuatro ranuras de mejora ocultas prometerían lo que no puede hacer. Sin flecha de progreso: el reactor no tiene una operación que «corra».</p>
+
+<p><strong>Hay dos disposiciones, y nunca se muestran juntas.</strong> El panel del controlador es mucho más alto que el de la familia (176x228 en vez de 176x166): el arte dibuja dos cajas enmarcadas — la lectura hasta y = 87 y el marco propio del regulador desde y = 96 — con la etiqueta de inventario en y = 116. Dentro caben una línea de estado, las filas de datos, dos indicadores y cinco botones del regulador; junto con el diagnóstico de la carcasa no caben en absoluto. Además responden preguntas distintas en momentos distintos: mientras la carcasa está abierta el reactor no tiene números, y una vez cerrada la línea de fallos no tiene nada que decir.</p>
+
+<table><thead><tr><th>Disposición</th><th>Cuándo</th><th>Filas</th></tr></thead><tbody><tr><td><strong>Construcción</strong></td><td>cualquier estado salvo <code>FORMED</code></td><td>el estado; «Sala» — el tamaño interior <code>X × Y × Z</code>; «Problema» — la dirección a la celda conflictiva (solo para los estados que señalan una); el <strong>indicador de carga</strong></td></tr><tr><td><strong>Modo desnudo</strong></td><td>no <code>FORMED</code> <strong>y</strong> el escaneo halló pilas</td><td>todo lo anterior <strong>más</strong> tres filas: «Modo» — «MODO DESNUDO»; «Barras»; «Salida» en EU/FE/t</td></tr><tr><td><strong>En marcha</strong></td><td><code>FORMED</code></td><td>el estado; «Barras»; «Salida» en EU/FE/t; un <strong>indicador de calor</strong>; un <strong>indicador de refrigerante</strong> con el ritmo de ebullición en su etiqueta; el regulador de profundidad en cinco botones; el <strong>indicador de carga</strong></td></tr></tbody></table>
+
+<p><strong>El modo desnudo no sustituye al diagnóstico de construcción, se añade debajo.</strong> Es una cuestión de principio: ambos estados se disparan con el mismo «no <code>FORMED</code>», y una disposición que cambiara uno por el otro le quitaría el tamaño, el fallo y la dirección del agujero al jugador que de verdad está construyendo una sala — en beneficio del que nunca pensó construirla. Las filas del modo desnudo aparecen solo cuando el escaneo ha hallado pilas de verdad; hasta entonces, el panel queda exactamente como estaba.</p>
+
+<p>No hay deliberadamente indicadores de calor y refrigerante en modo desnudo. Dibujarlos en cero sería peor que no dibujarlos: una barra de temperatura vacía se lee «el reactor está frío» en vez de «aquí no hay termómetro», e invita al jugador a poner tubería a un circuito que jamás se activará.</p>
+
+<p>La disposición en marcha, de arriba abajo: el titular de estado (<code>STATUS_Y</code> = 21), dos filas de texto (<code>ROW_TOP</code> = 35, paso 12), dos indicadores (<code>GAUGE_TOP</code> = 61, paso 13), la tira del regulador (<code>THROTTLE_Y</code> = 98, cinco botones de 28 px) y el indicador de carga (<code>ENERGY_Y</code> = 116).</p>
+
+<p><strong>El indicador de carga del búfer se dibuja en ambas disposiciones</strong> — el único elemento que sí. Un reactor al que han hecho la parada de emergencia, y una sala recién abierta, siguen guardando lo que acumularon, y ese es justo el momento en que un jugador quiere saber cuánto queda. También responde «a dónde va la energía»: el reactor guarda lo que nada consume, y hasta que existió esta barra un reactor en marcha no daba señal de ello en ningún punto del panel.</p>
+
+<p>La barra de carga ocupa todo el ancho del área de contenido y la cifra va escrita <strong>sobre</strong> ella y no al lado. Al lado fue el primer intento, y se rompió con su propio éxito: a 200 000 EU/FE la etiqueta desbordó su columna y se metió bajo el indicador. Un número que solo se porta mal cuando al reactor le va bien es el peor tipo de número.</p>
+
+<p><strong>Por qué calor y refrigerante son barras y no filas.</strong> Cinco filas de texto, tres barras y un regulador no caben, y los números que quieren vigilancia continua se leen mejor como una barra que se llena que como una cifra que descifrar.</p>
+
+<p><strong>La fila «Salida» jamás muestra un guion.</strong> Un reactor sellado, cargado y en silencio es el peor estado en que puede estar esta máquina, y cada causa tiene un arreglo distinto, así que en vez de un cero imprime en rojo el <strong>motivo del reposo</strong>: sin sellar, sin combustible, barras recogidas, sin redstone, búfer lleno. Un guion dejaba al jugador adivinando entre cinco fallos distintos.</p>
+
+<p>La etiqueta del refrigerante lleva <strong>el nivel y el ritmo</strong>: «Refrigerante 62 % · 243 mB/t». El nivel dice si el circuito aguanta, el ritmo dice a qué debe responder una línea de entrada, y un jugador que dimensiona su fontanería necesita ambos a la vez. No hay fila aparte para el ritmo.</p>
+
+<p>La barra de calor es verde mientras hay margen, ámbar desde (70 %) y roja a mitad de camino de ahí a cien (85 %). El umbral viene de la configuración y no está grabado en la pantalla: si no, el indicador contradiría a la máquina que muestra.</p>
+
+<p><strong>El color de la barra de refrigerante es el indicador de escape obstruido.</strong> La regla es corta y</p>
+
+<table><thead><tr><th>Color</th><th>Cuándo</th><th>Qué significa</th></tr></thead><tbody><tr><td>verde azulado</td><td>agua por encima de cero, vapor por debajo del 90 %</td><td>el circuito gira</td></tr><tr><td><strong>ámbar</strong></td><td>vapor <strong>≥ 90 %</strong></td><td>el vapor no tiene a dónde ir: falta el escape, está obstruido, o la boquilla mira a una pared</td></tr><tr><td>rojo</td><td>agua a <strong>cero</strong></td><td>el circuito está seco: el suministro no da abasto, o se ha parado</td></tr></tbody></table>
+
+<p>El caso ámbar es el único que vale el código. Con el escape bloqueado, la barra de refrigerante se queda tranquilamente llena mientras la temperatura sube: el agua está, y no hay dónde hervirla. Sin la pista eso se lee como un mod roto y no como un error de fontanería. El porcentaje de vapor no se muestra como número en ningún sitio — no cabe en el panel y sería un indicador de más — pero el canal de sincronización lo lleva precisamente para este color.</p>
+
+<p>No hay forma de tocar el regulador en la disposición de construcción — allí no se dibuja, y un clic no puede mover barras de control que el jugador no ve.</p>
+
+<p>Ambas disposiciones van como tabla «etiqueta → valor» y no como líneas sueltas. Las columnas son fijas: las etiquetas empiezan en <code>LABEL_X = 24</code> (justo fuera del pictograma de sala de 11 píxeles horneado en el atlas en x = 8), los valores y las barras en <code>VALUE_XBAR_X</code> = 98 (las barras son 70×5). Es consecuencia directa de la primera versión de esta pantalla, donde etiqueta y valor eran una sola cadena y el texto ruso se metía dentro del pictograma. Columnas separadas quitan la dependencia del diseño respecto a la longitud traducida — por larga que salga una etiqueta, el valor empieza siempre en el mismo sitio.</p>
+
+<p>Un valor que no cabe en su columna se <strong>encoge</strong>, no se recorta: recortar escondería justamente la parte por la que se lee la línea (el número de bloques o la dirección). El mismo truco lleva tiempo usándolo la línea de estado de la familia de máquinas.</p>
+
+<p><strong>Un guion en vez de ceros.</strong> Mientras la sala no se ha medido, la fila de tamaño muestra «—», no «0 × 0 × 0». El cero también es una medida, y mostrar una donde no hubo medición es mentir; un guion dice honestamente «nada que mostrar». Lo mismo vale para la fila de problema: una dirección solo se imprime en los estados que de verdad señalan un bloque (<code>BREACH</code>, <code>SECOND_CONTROLLER</code>, <code>CONTROLLER_NOT_IN_WALL</code>, <code>TOO_MUCH_GLASS</code>); para <code>NO_DOORWAY</code> el «sitio» es el propio controlador, y un desplazamiento sería ruido.</p>
+
+<p><code>ROOM_UNBOUNDED</code> no muestra <strong>ninguna</strong> dirección, aunque técnicamente tiene posición. Es una corrección post-playtest: su «sitio» es dondequiera que el rayo se rindió, hasta 13 bloques campo traviesa, y un controlador solitario echando humo a una ladera resultó peor que el silencio. Señalaba un punto donde no hay nada que arreglar.</p>
+
+<p><strong>La ubicación es una dirección, no coordenadas.</strong> El desplazamiento se mide desde el propio controlador y se lee como «4 al este, 2 arriba»: el jugador que lee la pantalla está junto al controlador, y esa frase lo lleva al bloque correcto más rápido que tres números. Los ejes sin desplazamiento se omiten — una brecha justo encima se lee «2 arriba» y no «0 este, 2 arriba, 0 sur». Técnicamente es además la única opción: un canal de sincronización de menú lleva un número con signo de 16 bits, una coordenada absoluta del mundo no cabe, mientras que un desplazamiento es como mucho ±14 por construcción.</p>
+
+<p>El estado también se ve desde fuera: en una sala formada la cara frontal del controlador está encendida (el blockstate <code>formed</code>), en una sin formar, apagada. La construcción puede comprobarse sin abrir la pantalla.</p>
+
+<h2 id="respuesta-en-el-mundo">Respuesta en el mundo</h2>
+
+<p>El texto solo no basta en una construcción de mil bloques, así que el controlador también responde con sonido y partículas. Un multibloque que empieza a funcionar en silencio deja al jugador preguntándose si lo hizo.</p>
+
+<table><thead><tr><th>Evento</th><th>Qué ocurre</th></tr></thead><tbody><tr><td>La sala cuajó (no formada → formada)</td><td><code>ANVIL_LAND</code> (0.6, tono 1.6) en el controlador + 12 partículas <code>END_ROD</code> sobre él</td></tr><tr><td>La sala se rompió (formada → no formada)</td><td><code>BEACON_DEACTIVATE</code> (0.5, tono 1.4) <strong>en la brecha</strong>, exactamente una vez</td></tr><tr><td>Mientras el problema sigue sin arreglarse</td><td>16 partículas de humo en la celda conflictiva en cada escaneo</td></tr></tbody></table>
+
+<p>El sonido de fallo suena <strong>solo en la transición</strong>, nunca en bucle, y eso importa. El escaneo corre cada dos segundos; una alarma repitiéndose cada dos segundos hasta que el jugador encuentre el bloque convierte una pista en un castigo. Hace falta una vez porque a una pared normalmente la abre un creeper, y en ese momento el jugador está mirando a otra parte. Después trabajan las partículas: son discretas y se ven al segundo en que el jugador se da la vuelta.</p>
+
+<p>El humo es ahora la única partícula que recibe una brecha. Antes venía con bocanadas de aldeano enfadado, y la sesión de juego las echó: sobre una pared se leían como nubes de dibujo animado y no como marca de avería.</p>
+
+<p>El sonido de ensamblaje es el mismo <code>ANVIL_LAND</code> que toca la <a href="../fluid-machines/distillation_column.html">columna de destilación</a> cuando su torre se forma. Es deliberado: «un multibloque cuajó» debe sonar igual en todo el mod, sea cual sea el multibloque.</p>
+
+<h2 id="pintar-la-bandera-formed">Pintar la bandera <code>formed</code></h2>
+
+<p>El controlador es lo único que pone los blockstates <code>formed</code> y <code>edge</code>, y los pone en <strong>toda</strong> la carcasa, no solo en sí mismo. También enciende las luces de la sala (detalles en <a href="reactor_casing.html">«El aspecto continuo»</a> y en la especificación de la <a href="reactor_lamp.html">lámpara</a>).</p>
+
+<table><thead><tr><th>Campo</th><th>Valor</th></tr></thead><tbody><tr><td>Qué se recorre</td><td>las celdas del perímetro de una caja dada <strong>explícitamente</strong></td></tr><tr><td>Qué caja en caso de éxito</td><td>la que midió este escaneo; también se recuerda</td></tr><tr><td>Qué caja en caso de fallo</td><td>la última <strong>recordada</strong> — la que el controlador aceptó en su día</td></tr><tr><td>Qué se escribe</td><td>solo celdas cuyo valor cambió de verdad</td></tr><tr><td><code>edge</code></td><td>puesto a <code>formed &amp;&amp; la celda queda fuera de la caja en más de un eje</code></td></tr><tr><td>Luz</td><td>aparece un <code>minecraft:light</code> de nivel 15 en cada celda interior que mira a una lámpara (y se retira al desmontar)</td></tr><tr><td>Bandera de</td><td>2</td></tr></tbody></table>
+
+<p><strong>Por qué la caja se pasa como argumento y no se toma del resultado del escaneo.</strong> Un escaneo fallido no mide ninguna caja — su <code>maxX &lt; minX</code>. Un barrido guiado por el resultado por tanto solo podría, físicamente, encender la bandera: una pared abierta dejaba la sala continua e iluminada como si nada. La primera sesión de juego encontró exactamente eso. El controlador ahora recuerda la última caja que aceptó y la limpia cuando un escaneo falla. La caja se escribe en NBT (<code>BoxMinX</code>…<code>BoxMaxZ</code>): un chunk puede descargarse entero y recargarse con un agujero, y un controlador que olvidara su caja dejaría la carcasa con aspecto de «formada» para siempre.</p>
+
+<p>El guardado no es una microoptimización: el barrido corre en <strong>cada</strong> escaneo, es decir cada dos segundos por cada controlador del mundo. Leer mil blockstates es barato, reescribir mil no, y un innecesario dispararía además actualizaciones de vecinos en cada pasada. La bandera 2 sin la 1 se elige por lo mismo: las propiedades son cosméticas, así que el cliente debe enterarse y ningún vecino necesita despertar.</p>
+
+<h2 id="energía">Energía</h2>
+
+<table><thead><tr><th>Campo</th><th>Valor</th></tr></thead><tbody><tr><td>Papel</td><td>productor, nivel <strong>HV</strong></td></tr><tr><td>Búfer (EU/FE)</td><td>= <strong>200 000</strong></td></tr><tr><td>Entrada máx. (EU/FE/tick)</td><td><strong>0</strong> — a un reactor no se le carga desde fuera</td></tr><tr><td>Salida máx. (EU/FE/tick)</td><td><strong>512</strong> = el techo de HV</td></tr><tr><td>Caras</td><td>todas las caras menos la frontal empujan hacia fuera (→ <code>OUT</code>); la frontal es <code>NONE</code></td></tr></tbody></table>
+
+<p>La cara frontal es energéticamente inerte por la regla R-NRG-03: lleva el panel que lee el jugador, y un cable saliendo de en medio de una interfaz estropearía el aspecto y el sentido.</p>
+
+<p>El búfer de 200 000 EU/FE es un amortiguador y no un almacén: una red que no puede tomar la energía en este instante no debe frenar el núcleo a mitad de tick. Al techo, eso son 391 ticks (19.5 s) de salida, y exactamente lo mismo en llenarse desde vacío. Un <a href="../energy-transfer/electrum_cable.html">cable de electro</a> lleva 192 EU/FE/t por segmento, así que un reactor al techo se vacía con <strong>tres</strong> líneas independientes o con máquinas pegadas a sus caras.</p>
+
+<h2 id="propiedades-del-bloque">Propiedades del bloque</h2>
+
+<table><thead><tr><th>Campo</th><th>Valor</th></tr></thead><tbody><tr><td>Forma</td><td>cubo completo 16³ (oclusor)</td></tr><tr><td>Dureza</td><td>5.0</td></tr><tr><td>Resistencia a explosiones</td><td>30.0</td></tr><tr><td>Herramienta</td><td>pico (necesario para el botín)</td></tr><tr><td>Sonido</td><td>metal</td></tr><tr><td>Blockstates</td><td><code>facing</code> (horizontal), <code>formed</code></td></tr><tr><td>Bloque de entidad</td><td>sí (el escaneo, el reactor y el canal de sincronización)</td></tr></tbody></table>
+
+<p>El <strong>veredicto</strong> no se escribe en disco: la sala <strong>es</strong> la partida guardada. Tras cargar el mundo, el primer escaneo rederiva el estado de lo que esté alrededor. Un veredicto almacenado podría sobrevivir a una edición del mundo que se llevara las paredes, y entonces estaría mintiendo.</p>
+
+<p>En NBT vive solo lo que no puede rederivarse del mundo: los <strong>límites de la última caja aceptada</strong> (<code>BoxMinX</code>…<code>BoxMaxZ</code>), el <strong>calor</strong> acumulado y la <strong>posición del regulador</strong>. La caja no es un veredicto sino una dirección: es lo que le da al siguiente escaneo fallido algo que limpiar (ver «Pintar las banderas»), y no puede mentir — si está caducada, el barrido solo limpia banderas donde no las había. Calor y profundidad son estado de máquina: un reactor que los olvidara al descargarse el chunk se enfriaría gratis y volvería a plena potencia solo.</p>
+
+<h2 id="sonido">Sonido</h2>
+
+<p>En cuanto el calor pasa el umbral de aviso, el controlador suena una sirena exactamente una vez. Ni las paredes ni una esclusa cerrada la amortiguan: llega mucho más allá de la sala, porque va dirigida a quien no está en la sala. Vuelve a sonar solo cuando la refrigeración ha devuelto el núcleo claramente bajo el umbral — una alarma que se dispara con cada bamboleo del indicador deja de ser alarma.</p>
+
+<p>Un indicador clavado arriba es otra conversación. Mientras el calor se quede al cien por ciento la sirena sigue, repitiéndose cada tres a cinco segundos en intervalos irregulares, y para solo cuando la temperatura empieza a bajar. Un solo toque allí sería lo peor de ambos mundos: un reactor en su estado más peligroso quedaría más callado que uno que solo está caliente.</p>
+
+<p>Un reactor parando por cualquier motivo — redstone retirada, combustible agotado, barras subidas, carcasa abierta — responde con su propio sonido de caída, la energía desaguándose . El carillón corto de una sala recién formada y el sonido de una brecha se describen arriba, en «Respuesta en el mundo».</p>
+
+<h2 id="recetas">Recetas</h2>
+
+<p>Fabricación — <strong>×1</strong> por vez.</p>
+
+<pre><code class="lang-">S C S S = placa de blindaje ×4
+R A R R = placa de blindaje reforzada ×2
+S D S C = circuito de control del reactor ×1
+A = carcasa de máquina avanzada ×1
+D = accionamiento de barras de control ×1</code></pre>
+
+<p>El circuito de control es un objeto aparte: 4 placas de paladio, una <strong>bobina de resonancia</strong>, 2 circuitos avanzados, un circuito electrónico y redstone</p>
+
+<p>La bobina tomó el sitio del isótopo inestable que estaba aquí en la primera versión. El isótopo es producto de la <a href="../agriculture/incubator.html">Incubadora</a>, y la rama de la incubadora se ha soltado de los requisitos del reactor: mandaba al jugador al ala biológica del mod por un solo objeto y hacía de la rama nuclear rehén de una cadena ajena. La <a href="../components/resonance_chain.html">bobina de resonancia</a> encaja mejor en el papel — ya está en el peldaño de la «electrónica de final de partida», a ella lleva la centrifugadora térmica, y en progreso exigido equivale al isótopo.</p>
+
+<h2 id="progresión">Progresión</h2>
+
+<p>Nivel: <strong>HV</strong> — un productor de hasta 512 EU/FE/tick. Necesita: placas de blindaje y placas de blindaje reforzadas (la cadena se describe en la <a href="reactor_casing.html">carcasa</a>), una <a href="../components/advanced_machine_casing.html">carcasa de máquina avanzada</a>, <a href="../components/advanced_circuit.html">circuitos avanzados</a>, placas de paladio, una <a href="../components/resonance_chain.html">bobina de resonancia</a>. Desbloquea: la sala de reactor en sí — sin controlador, una pila de bloques sigue siendo una pila de bloques.</p>
+
+<h2 id="relacionado">Relacionado</h2>
+
+<p><a href="reactor_casing.html">Carcasa de reactor</a> — de qué escanea la sala, la geometría y la cadena de fabricación. <a href="reactor_door.html">Puerta de esclusa</a> — la entrada prevista de la sala; si hay una en la carcasa, tiene que formar un hueco de puerta de verdad. <a href="reactor_glass.html">Vidrio de reactor</a>, la <a href="reactor_lamp.html">Lámpara</a> y la <a href="reactor_port.html">Entrada del reactor</a> — los otros bloques que el escáner cuenta como pared. <a href="fuel_rod_assembly.html">Columna del reactor</a> — lo que quema, hierve y reasienta. <a href="uranium_fuel_rod.html">Barra de combustible</a> y la <a href="empty_fuel_rod.html">Vaina de barra</a> el combustible que desgasta y la carcasa que queda. <a href="../materials/steam.html">Vapor</a> — el fluido de trabajo del circuito. <a href="steam_nozzle.html">Boquilla de vapor</a> — el final del circuito; hasta que funciona, la barra de refrigerante se vuelve ámbar y el calor sube. <a href="reactor_button.html">Botón de reactor</a> — el único bloque del conjunto que el escáner <strong>no</strong> cuenta como pared. <a href="../components/resonance_chain.html">Cadena de resonancia</a> — de dónde viene la bobina del circuito de control. <a href="../fluid-machines/distillation_column.html">Columna de destilación</a> e <a href="../agriculture/incubator.html">Incubadora</a> — los dos multibloques anteriores del mod; ambos comprueban una forma fija, y el escáner volumétrico se escribió aquí por primera vez.</p>
+
+<h2>Fabricación</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="controlador de reactor alaindustrial:reactor_controller" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Placa de blindaje"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="Placa de blindaje" width="32" height="32"></div> <div class="cell" title="Circuito de control del reactor"><img src="../../assets/item/reactor_circuit_3d.png" alt="Circuito de control del reactor" width="32" height="32"></div> <div class="cell" title="Placa de blindaje"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="Placa de blindaje" width="32" height="32"></div> <div class="cell" title="Placa de blindaje reforzada"><img src="../../assets/item/shielding_alloy_reinforced_plate_3d.png" alt="Placa de blindaje reforzada" width="32" height="32"></div> <div class="cell" title="Carcasa de máquina avanzada"><img src="../../assets/item/advanced_machine_casing_3d.png" alt="Carcasa de máquina avanzada" width="32" height="32"></div> <div class="cell" title="Placa de blindaje reforzada"><img src="../../assets/item/shielding_alloy_reinforced_plate_3d.png" alt="Placa de blindaje reforzada" width="32" height="32"></div> <div class="cell" title="Placa de blindaje"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="Placa de blindaje" width="32" height="32"></div> <div class="cell" title="Accionamiento de barras de control"><img src="../../assets/item/control_rod_drive_3d.png" alt="Accionamiento de barras de control" width="32" height="32"></div> <div class="cell" title="Placa de blindaje"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="Placa de blindaje" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Controlador de reactor"><img src="../../assets/item/reactor_controller_3d.png" alt="Controlador de reactor" width="32" height="32"></div><div class="result-name">Controlador de reactor</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

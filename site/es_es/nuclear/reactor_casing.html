@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="es_es" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>Carcasa de reactor — Ala Industrial — Guía</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="Abrir menú" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../../assets/item/guide_book_3d.png" alt="">Todo el contenido</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/ky7cFDF8JD" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="Buscar en la wiki…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="Buscar en la guía" autocomplete="off" spellcheck="false" data-index="../search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;Resultados de la búsqueda&quot;,&quot;one&quot;:&quot;página encontrada&quot;,&quot;few&quot;:&quot;páginas encontradas&quot;,&quot;many&quot;:&quot;páginas encontradas&quot;,&quot;loading&quot;:&quot;Cargando el índice de búsqueda…&quot;,&quot;nothing&quot;:&quot;Nada encontrado&quot;}"></search>
+    <details class="language-menu"><summary aria-label="Language">ES</summary><div class="language-popover"><span>ES</span><a href="../../en/nuclear/reactor_casing.html">EN</a><a href="../../ru/nuclear/reactor_casing.html">RU</a><a href="../../uk/nuclear/reactor_casing.html">UA</a><a href="../../zh_cn/nuclear/reactor_casing.html">中文</a><a href="../../ja_jp/nuclear/reactor_casing.html">日本語</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">Explorar</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../../assets/item/tempered_iron_pickaxe.png" alt=""><span>Primeros pasos</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>Recetas</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>Perfil del jugador</span></a>
+<div class="group-title">Energía</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>Generadores</span><span class="cat-count" aria-label="12 páginas">12</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>Almacenamiento de energía</span><span class="cat-count" aria-label="4 páginas">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Transferencia de energía</span><span class="cat-count" aria-label="8 páginas">8</span></a>
+<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Energía nuclear</span><span class="cat-count" aria-label="15 páginas">15</span></a>
+<div class="group-title">Procesamiento</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Máquinas</span><span class="cat-count" aria-label="16 páginas">16</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Máquinas de fluidos</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<div class="group-title">Logística</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Transporte de objetos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Transporte de fluidos</span><span class="cat-count" aria-label="1 página">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Almacenamiento de fluidos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
+<div class="group-title">Mundo y automatización</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Materiales</span><span class="cat-count" aria-label="23 páginas">23</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>Agricultura</span><span class="cat-count" aria-label="6 páginas">6</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>Máquinas avanzadas</span><span class="cat-count" aria-label="1 página">1</span></a>
+<div class="group-title">Otros</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>Utilidades</span><span class="cat-count" aria-label="18 páginas">18</span></a>
+<div class="group-title">Objetos</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>Mejoras</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>Componentes</span><span class="cat-count" aria-label="29 páginas">29</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>Objetos</span><span class="cat-count" aria-label="25 páginas">25</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">Inicio</a><span class="sep">/</span><a href="../nuclear/index.html">Energía nuclear</a><span class="sep">/</span><span>Carcasa de reactor</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../../assets/item/reactor_casing_3d.png" alt="Carcasa de reactor" width="64" height="64">
+    <div class="info">
+      <h1>Carcasa de reactor</h1>
+      <div class="block-id">alaindustrial:reactor_casing</div>
+      <div class="tags"><span class="tag cat" style="background:#ef4444">Energía nuclear</span><span class="tag lifecycle" style="background:#22c55e">Implementado</span><span class="tag">nuclear</span><span class="tag">reactor</span><span class="tag">multiblock</span><span class="tag">shielding</span><span class="tag">palladium</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="resumen">Resumen</h2>
+
+<p>La <strong>Carcasa de reactor</strong> es la pared, el suelo y el techo de una sala de reactor. No es un bloque decorativo ni «piedra reforzada»: la sala de un <a href="reactor_controller.html">reactor nuclear</a> no es un bloque con una rejilla de ranuras, sino un edificio que levantas de verdad, y la carcasa es aquello con lo que lo levantas. La piedra corriente, un bloque de hierro y el cristal de la vanilla leen al escáner de la sala exactamente igual que el aire — un agujero.</p>
+
+<h2 id="de-qué-está-hecha-la-carcasa">De qué está hecha la carcasa</h2>
+
+<p>La carcasa son las seis caras de una caja alineada con los ejes. Cada una de sus celdas debe ser uno de <strong>siete</strong> bloques; cualquier otro bloque, y cualquier aire, es una brecha:</p>
+
+<table><thead><tr><th>Bloque</th><th>Papel en la carcasa</th><th>Cuántos</th></tr></thead><tbody><tr><td>Carcasa de reactor</td><td>pared / suelo / techo</td><td>todo lo demás</td></tr><tr><td><a href="reactor_lamp.html">Lámpara de reactor</a></td><td>luz desde dentro; para el escáner, carcasa corriente</td><td>cualquier número, cero incluido</td></tr><tr><td><a href="reactor_glass.html">Vidrio de reactor</a></td><td>una ventana que sigue siendo pared</td><td>como máximo (30 %) de la carcasa</td></tr><tr><td><a href="reactor_door.html">Puerta de esclusa</a></td><td>la única entrada</td><td><strong>al menos una</strong></td></tr><tr><td><a href="reactor_port.html">Entrada del reactor</a></td><td>donde una tubería cruza la pared: agua dentro, vapor fuera</td><td>cualquier número, cero incluido</td></tr><tr><td><a href="reactor_outlet.html">Salida del reactor</a></td><td>el enchufe al que se conecta un cable; carcasa en lo que al escaneo respecta</td><td>cualquier número, cero incluido</td></tr><tr><td><a href="reactor_controller.html">Controlador</a></td><td>el cerebro de la sala</td><td><strong>exactamente uno</strong>, solo pared vertical</td></tr></tbody></table>
+
+<p>La carcasa es el único de los siete sin condiciones propias: encaja en cualquier celda de cualquier cara, incluidos los bordes y esquinas que la puerta y el controlador tienen vedados. La lámpara hereda exactamente esas propiedades — el escáner la clasifica como carcasa — y por eso <strong>no</strong> cuenta contra el tope de vidrio: iluminar una sala no es lo mismo que gastar su presupuesto de ventanas.</p>
+
+<p>El <a href="reactor_button.html">botón de reactor</a> está aparte: <strong>no</strong> forma parte de la carcasa y no ocupa ninguna celda — cuelga de una pared por dentro y existe solo para enviar un pulso a la puerta. Ponerlo donde corresponde un bloque de carcasa no funciona; el escáner lee esa celda como una brecha.</p>
+
+<h2 id="tamaño-de-la-sala">Tamaño de la sala</h2>
+
+<p>Los límites son del <strong>interior</strong> — aquello en lo que camina el jugador, no la huella de la</p>
+
+<table><thead><tr><th>Campo</th><th>Valor</th></tr></thead><tbody><tr><td>Mínimo (interior)</td><td>3×3×3, carcasa 5×5×5 = <strong>98</strong> bloques</td></tr><tr><td>Máximo (interior)</td><td>12×12×12, carcasa 14×14×14 = <strong>1016</strong> bloques</td></tr><tr><td>Forma</td><td>solo una caja alineada con los ejes</td></tr></tbody></table>
+
+<p>Las formas en L, las salas escalonadas y las cúpulas no están soportadas — no porque estén «prohibidas», sino porque dondequiera que la pared deja de ir recta hay un bloque que no es carcasa, y el escáner honestamente llama a eso una brecha y nombra sus coordenadas.</p>
+
+<p>Agrandar una sala significa desmontarla y levantar una mayor. No hay mejora in situ — tampoco pérdida: cada bloque de carcasa se suelta a sí mismo al picarlo con pico. Son propiedad del jugador, no segmentos consumibles de estructura como las secciones de la <a href="../fluid-machines/distillation_column.html">Columna de destilación</a>.</p>
+
+<h2 id="el-aspecto-continuo">El aspecto continuo</h2>
+
+<p>Carcasa, vidrio, entrada del reactor, lámpara, puerta y controlador llevan un blockstate <code>formed</code>, y los cuatro primeros llevan también <code>edge</code>. Mientras la sala está sin terminar se dibujan con un borde brillante a lo largo del canto, así que cada bloque individual se ve. En el momento en que el <a href="reactor_controller.html">controlador</a> acepta la carcasa, la repinta <strong>toda</strong>, y la pared empieza a leerse como una sola superficie y no como una pila de cajas.</p>
+
+<table><thead><tr><th>Celda de una carcasa formada</th><th><code>formed</code></th><th><code>edge</code></th><th>Cómo se ve</th></tr></thead><tbody><tr><td>Una cara (una coordenada fuera de la caja)</td><td>sí</td><td>no</td><td>sin borde — un panel continuo</td></tr><tr><td>Un canto o esquina (dos o tres fuera)</td><td>sí</td><td><strong>sí</strong></td><td>el borde se queda</td></tr><tr><td>Cualquier celda de una carcasa sin formar</td><td>no</td><td>no</td><td>borde en cada bloque</td></tr></tbody></table>
+
+<p>Que los cantos conserven su borde no es una excepción sino la otra mitad de la idea. Una pared de 14×14 sin una sola junta se convierte en una losa sin rasgos; el borde a lo largo de los cantos dibuja el <strong>contorno</strong> de la construcción, y la sala se lee como un solo objeto con esquinas definidas y no como una mancha.</p>
+
+<table><thead><tr><th>Qué</th><th>Cómo se hace</th></tr></thead><tbody><tr><td>Quién pone las banderas</td><td>solo el controlador; el bloque jamás las toca</td></tr><tr><td>Qué se reescribe</td><td>solo las celdas cuyo valor cambió de verdad</td></tr><tr><td>Bandera de actualización</td><td>2 — las propiedades son cosméticas, ningún vecino necesita despertar</td></tr><tr><td>Qué caja se limpia</td><td>la que el controlador <strong>recordó</strong>, no la que midió el escaneo actual (ver abajo)</td></tr><tr><td>Caras compartidas</td><td>eliminadas entre bloques del <strong>mismo</strong> tipo, así que una ventana grande no dibuja rejilla interior</td></tr></tbody></table>
+
+<p>El renderer de la vanilla no tiene texturas conectadas, así que la junta se quita en el propio arte: cada bloque de carcasa tiene tres variantes de textura — sin formar, cara formada, canto formado. El borde es lo que dibuja la rejilla, así que quitarlo en las caras y conservarlo en los cantos es lo que pega la pared y le traza el contorno.</p>
+
+<p><strong>Por qué se recuerda la caja.</strong> Un escaneo fallido no mide nada, así que un barrido guiado por el resultado del escaneo actual solo podría encender la bandera: haz un agujero en una sala terminada y se queda continua e iluminada. Eso fue exactamente lo que encontró la primera sesión de juego. El controlador guarda la última caja que aceptó (y la escribe en NBT para que sobreviva a la descarga del chunk) y, cuando un escaneo falla, limpia exactamente esa caja.</p>
+
+<p>El asunto va más allá de lo cosmético: <code>formed</code> es también un indicador exterior. Una sala terminada se ve desde el otro extremo de la base sin abrir pantalla, y con la misma bandera la <a href="reactor_lamp.html">lámpara</a> enciende la luz dentro. La puerta también lleva la bandera (el controlador la escribe en cada celda de la carcasa) pero su modelo no cambia con ella, y ni la puerta ni el controlador tienen <code>edge</code> en absoluto — el efecto continuo cubre cuatro bloques: carcasa, vidrio, entrada del reactor y lámpara.</p>
+
+<h2 id="energía">Energía</h2>
+
+<table><thead><tr><th>Campo</th><th>Valor</th></tr></thead><tbody><tr><td>Papel</td><td>ninguno</td></tr><tr><td>Búfer (EU/FE)</td><td>0</td></tr><tr><td>Entrada / salida máx. (EU/FE/tick)</td><td>n/a</td></tr></tbody></table>
+
+<p>La carcasa ni transporta ni almacena energía. Un cable que llega a la pared se detiene ahí; meter energía dentro es para lo que existe la <a href="reactor_port.html">Entrada del reactor</a>.</p>
+
+<h2 id="propiedades-del-bloque">Propiedades del bloque</h2>
+
+<p>Un cubo completo y un oclusor: una pared de cientos de bloques no debe hacer que el cliente dibuje sus caras interiores.</p>
+
+<table><thead><tr><th>Campo</th><th>Valor</th></tr></thead><tbody><tr><td>Forma</td><td>cubo completo 16³ (oclusor)</td></tr><tr><td>Dureza</td><td>5.0</td></tr><tr><td>Resistencia a explosiones</td><td>30.0</td></tr><tr><td>Herramienta</td><td>pico (necesario para el botín)</td></tr><tr><td>Sonido</td><td>metal</td></tr><tr><td>Blockstates</td><td><code>formed</code>, <code>edge</code> — ambos cosméticos, ver «El aspecto continuo»</td></tr></tbody></table>
+
+<p>La resistencia a explosiones de 30.0 está deliberadamente muy por encima de los 6.0 de la familia de máquinas. La sala es lo que se interpone entre una fusión y el resto del mundo; si un creeper bajo la pared pudiera abrir la carcasa, toda la mecánica de sellado descansaría en la suerte.</p>
+
+<h2 id="recetas">Recetas</h2>
+
+<p>Fabricación — <strong>×8</strong> por vez.</p>
+
+<pre><code class="lang-">T T T T = #c:plates/tempered_iron ×6
+S C S S = placa de blindaje ×2
+T T T C = carcasa de máquina ×1</code></pre>
+
+<p>Un bloque cuesta la octava parte de esa rejilla: <strong>un cuarto</strong> de placa de blindaje, tres cuartos de placa de hierro templado y un octavo de <a href="../components/machine_casing.html">carcasa de máquina</a>.</p>
+
+<p>No siempre fue así: la primera versión de la receta pedía 4 placas de blindaje por 4 bloques — una placa entera por bloque. La primera sesión de juego mostró que a ese ritmo nadie llega a una sala que valga la pena: la caja más pequeña se comía unos 44 lingotes de paladio (hoy son 19), casi todo en pared en blanco que no hace nada en el juego. El paladio escaso se ha trasladado adonde se lee como la sustancia de la construcción (puerta, controlador, entrada del reactor), y la masa de la pared se paga en hierro templado barato.</p>
+
+<h2 id="la-cadena-de-materiales">La cadena de materiales</h2>
+
+<p>La carcasa es cara no en sí misma sino a través de una aleación que el mod no tenía antes de</p>
+
+<pre><code class="lang-">mena de paladio (solo el Nether, pico de diamante) ──triturador──▶ 2 polvos ──horno──▶ lingote de paladio
+lingote de hierro ──horno──▶ hierro templado
+
+1 lingote de paladio + 3 hierro templado ──horno de aleaciones, 1200 EU/FE──▶ 3 lingotes de aleación de blindaje
+lingote ──martillo de forja / compresor 260 EU/FE──▶ placa de blindaje
+2 placas + 1 uranio empobrecido ──martillo de forja──▶ placa de blindaje reforzada</code></pre>
+
+<p>La placa reforzada es el único eslabón de la cadena que la aleación por sí sola no cubre: su tercer ingrediente es <strong>uranio empobrecido</strong>, un subproducto de la cadena nuclear (la ranura de ceniza de la <a href="../agriculture/incubator.html">Incubadora</a>, o la <a href="../machines/thermal_centrifuge.html">Centrifugadora térmica</a>, 800 EU/FE por dos unidades). La placa reforzada no entra en la carcasa misma — solo en la <a href="reactor_door.html">puerta de esclusa</a> y el <a href="reactor_controller.html">controlador</a>.</p>
+
+<p>. La placa reforzada es el único eslabón de la cadena sin ruta por máquina: su receta de compresión pedía dos ingredientes mientras la máquina tiene una sola ranura de entrada, así que nunca encajó y se ha eliminado. No hay camino de vuelta a polvo, como con toda aleación del mod.</p>
+
+<p>La cadena no necesita ni una máquina nueva: el <a href="../machines/macerator.html">Triturador</a>, el <a href="../machines/alloy_smelter.html">Horno de aleaciones</a>, el <a href="../machines/compressor.html">Compresor</a> y el <a href="../items/forge_hammer.html">Martillo de forja</a> están aquí desde hace mucho. Lo que el reactor exige no es equipo sino un viaje al Nether.</p>
+
+<h2 id="progresión">Progresión</h2>
+
+<p>Nivel: ninguno (un bloque pasivo). Necesita: <a href="../materials/palladium.html">paladio</a>, <a href="../components/tempered_iron.html">hierro templado</a>, una <a href="../components/machine_casing.html">carcasa de máquina</a>. Desbloquea: la sala de reactor en sí — el <a href="reactor_controller.html">Controlador</a> no tiene nada que escanear hasta que hay algo de lo que construir la carcasa.</p>
+
+<p>Un efecto colateral que importa: antes de el paladio se extraía «para luego», sin un solo consumidor. La aleación de blindaje es su primero, e inmediatamente su principal.</p>
+
+<h2 id="relacionado">Relacionado</h2>
+
+<p><a href="reactor_controller.html">Reactor nuclear</a> — la sala como conjunto y cómo funciona. <a href="reactor_glass.html">Vidrio de reactor</a> — la ventana y su tope del 30 % de la carcasa. <a href="reactor_lamp.html">Lámpara de reactor</a> — la misma carcasa, pero brilla hacia dentro. <a href="reactor_door.html">Puerta de esclusa</a> — una parte obligatoria de la carcasa. <a href="reactor_button.html">Botón de reactor</a> — no es parte de la carcasa, pero sin él no hay salida. <a href="reactor_port.html">Entrada del reactor</a> — cómo cruzan la pared las tuberías y el cable. <a href="../materials/palladium.html">Paladio</a> — el material por el que se viaja al Nether.</p>
+
+<h2>Fabricación</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="carcasa de reactor alaindustrial:reactor_casing" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Tempered Iron Plate"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="Any Tempered Iron Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Tempered Iron Plate"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="Any Tempered Iron Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Tempered Iron Plate"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="Any Tempered Iron Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Placa de blindaje"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="Placa de blindaje" width="32" height="32"></div> <div class="cell" title="Carcasa de máquina"><img src="../../assets/item/machine_casing_3d.png" alt="Carcasa de máquina" width="32" height="32"></div> <div class="cell" title="Placa de blindaje"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="Placa de blindaje" width="32" height="32"></div> <div class="cell" title="Any Tempered Iron Plate"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="Any Tempered Iron Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Tempered Iron Plate"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="Any Tempered Iron Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Tempered Iron Plate"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="Any Tempered Iron Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Carcasa de reactor"><img src="../../assets/item/reactor_casing_3d.png" alt="Carcasa de reactor" width="32" height="32"><span class="count">×8</span></div><div class="result-name">Carcasa de reactor</div></div></div></div></div>
+<h2>Se usa en</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="entrada del reactor alaindustrial:reactor_port" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Caucho"><img src="../../assets/item/rubber_3d.png" alt="Caucho" width="32" height="32"></div> <div class="cell" title="Tubería de fluidos"><img src="../../assets/item/fluid_pipe_3d.png" alt="Tubería de fluidos" width="32" height="32"></div> <div class="cell" title="Caucho"><img src="../../assets/item/rubber_3d.png" alt="Caucho" width="32" height="32"></div> <div class="cell" title="Placa de blindaje"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="Placa de blindaje" width="32" height="32"></div> <div class="cell" title="Carcasa de reactor"><img src="../../assets/item/reactor_casing_3d.png" alt="Carcasa de reactor" width="32" height="32"></div> <div class="cell" title="Placa de blindaje"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="Placa de blindaje" width="32" height="32"></div> <div class="cell" title="Caucho"><img src="../../assets/item/rubber_3d.png" alt="Caucho" width="32" height="32"></div> <div class="cell" title="Tubería de fluidos"><img src="../../assets/item/fluid_pipe_3d.png" alt="Tubería de fluidos" width="32" height="32"></div> <div class="cell" title="Caucho"><img src="../../assets/item/rubber_3d.png" alt="Caucho" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Entrada del reactor"><img src="../../assets/item/reactor_port_3d.png" alt="Entrada del reactor" width="32" height="32"></div><div class="result-name">Entrada del reactor</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

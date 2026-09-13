@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="es_es" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>Taladro eléctrico — Ala Industrial — Guía</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="Abrir menú" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../../assets/item/guide_book_3d.png" alt="">Todo el contenido</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/ky7cFDF8JD" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="Buscar en la wiki…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="Buscar en la guía" autocomplete="off" spellcheck="false" data-index="../search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;Resultados de la búsqueda&quot;,&quot;one&quot;:&quot;página encontrada&quot;,&quot;few&quot;:&quot;páginas encontradas&quot;,&quot;many&quot;:&quot;páginas encontradas&quot;,&quot;loading&quot;:&quot;Cargando el índice de búsqueda…&quot;,&quot;nothing&quot;:&quot;Nada encontrado&quot;}"></search>
+    <details class="language-menu"><summary aria-label="Language">ES</summary><div class="language-popover"><span>ES</span><a href="../../en/items/electric_drill.html">EN</a><a href="../../ru/items/electric_drill.html">RU</a><a href="../../uk/items/electric_drill.html">UA</a><a href="../../zh_cn/items/electric_drill.html">中文</a><a href="../../ja_jp/items/electric_drill.html">日本語</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">Explorar</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../../assets/item/tempered_iron_pickaxe.png" alt=""><span>Primeros pasos</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>Recetas</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>Perfil del jugador</span></a>
+<div class="group-title">Energía</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>Generadores</span><span class="cat-count" aria-label="12 páginas">12</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>Almacenamiento de energía</span><span class="cat-count" aria-label="4 páginas">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Transferencia de energía</span><span class="cat-count" aria-label="8 páginas">8</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Energía nuclear</span><span class="cat-count" aria-label="15 páginas">15</span></a>
+<div class="group-title">Procesamiento</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Máquinas</span><span class="cat-count" aria-label="16 páginas">16</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Máquinas de fluidos</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<div class="group-title">Logística</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Transporte de objetos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Transporte de fluidos</span><span class="cat-count" aria-label="1 página">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Almacenamiento de fluidos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
+<div class="group-title">Mundo y automatización</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Materiales</span><span class="cat-count" aria-label="23 páginas">23</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>Agricultura</span><span class="cat-count" aria-label="6 páginas">6</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>Máquinas avanzadas</span><span class="cat-count" aria-label="1 página">1</span></a>
+<div class="group-title">Otros</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>Utilidades</span><span class="cat-count" aria-label="18 páginas">18</span></a>
+<div class="group-title">Objetos</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>Mejoras</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>Componentes</span><span class="cat-count" aria-label="29 páginas">29</span></a>
+<a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>Objetos</span><span class="cat-count" aria-label="25 páginas">25</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">Inicio</a><span class="sep">/</span><a href="../items/index.html">Objetos</a><span class="sep">/</span><span>Taladro eléctrico</span></div>
+<div class="block-card" data-hero-alt="The Diamond-Tipped Electric Drill held in a cave — the drill glows with Silk Touch mode on, and three mined coal ore blocks lie on the floor." style="background-image:linear-gradient(180deg,rgba(22,22,26,.55) 0%,rgba(22,22,26,.92) 100%),url(../../assets/screenshots/electric_drill_diamond_tip_silk_touch.png);background-size:cover;background-position:center center;background-repeat:no-repeat;">
+  <div class="card-head">
+    <img class="icon" src="../../assets/item/electric_drill_3d.png" alt="Taladro eléctrico" width="64" height="64">
+    <div class="info">
+      <h1>Taladro eléctrico</h1>
+      <div class="block-id">alaindustrial:electric_drill</div>
+      <div class="tags"><span class="tag cat" style="background:#d97706">Objetos</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">Implementado</span><span class="tag">item</span><span class="tag">energy</span><span class="tag">tool</span><span class="tag">pickaxe</span><span class="tag">drill</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="resumen">Resumen</h2>
+
+<p>El <strong>Taladro eléctrico</strong> es la primera herramienta eléctrica de mano del mod: un pico de nivel diamante que funciona con EU/FE en lugar de durabilidad. Con carga mina <strong>un poco más rápido que un pico de diamante</strong> y gasta <strong>50 EU/FE por bloque</strong>. Un búfer lleno son <strong>10 000 EU/FE</strong>: unos <strong>200 bloques</strong> con una carga.</p>
+
+<blockquote><strong>Miniejemplo:</strong> mina ~200 bloques por carga; cuando se queda sin carga no se detiene, simplemente mina a velocidad de mano hasta que la recargues. Mismo nivel de minería y mismas gotas todo el tiempo, solo más lento.</blockquote>
+
+<p>Como los demás objetos con EU/FE del mod, el taladro <strong>no tiene durabilidad</strong> y nunca se rompe: la barra bajo el icono muestra la carga de EU/FE (dorado), no el desgaste. Se carga donde se carga la <a href="energy_pack.html">Mochila de energía</a>: en la ranura de carga del <a href="../energy-storage/battery_box.html">Almacén de energía</a> y desde una mochila puesta.</p>
+
+<p>El taladro tiene un segundo nivel: el <strong>Taladro eléctrico con punta de diamante</strong>: la misma herramienta, pero excava más rápido y puede conmutar sus gotas a Toque de seda. Ver <a href="#punta-de-diamante-mejora">Punta de diamante (mejora)</a> más abajo.</p>
+
+<p>Lo sigue un tercer y último nivel: el <strong>Taladro eléctrico con punta de netherita</strong>: aún más rápido, golpeando más fuerte y con un cincuenta por ciento más de carga. Ver <a href="#punta-de-netherita-mejora">Punta de netherita (mejora)</a> más abajo.</p>
+
+<h2 id="energía">Energía</h2>
+
+<p>Su propio búfer de EU/FE, fuera de la red de energía. Se carga en la ranura del Almacén de energía y desde una mochila puesta; gasta carga minando.</p>
+
+<table><thead><tr><th>Qué</th><th>Valor</th></tr></thead><tbody><tr><td>Búfer</td><td>10 000 EU/FE</td></tr><tr><td>Carga de energía</td><td>Ranura del Almacén de energía / mochila puesta, se llena en ~16 s</td></tr><tr><td>Coste</td><td>50 EU/FE por bloque roto</td></tr><tr><td>Consumo pasivo</td><td>ninguno</td></tr></tbody></table>
+
+<p>Los bloques de rotura instantánea (hierba, antorchas, flores) son <strong>gratis</strong>, igual que nunca desgastan una herramienta vainilla. En creativo los bloques no sueltan nada y no se gasta EU/FE.</p>
+
+<h2 id="cómo-se-comporta">Cómo se comporta</h2>
+
+<p><strong>Minería (con carga):</strong> mina todo lo que un pico debe minar, un poco más rápido que diamante. Mena de diamante, obsidiana, incluso restos antiguos: las gotas coinciden con un pico de diamante. Cada bloque cuesta 50 EU/FE. <strong>Minería (sin carga):</strong> por debajo de 50 EU/FE mina a velocidad de mano, pero conserva el nivel de minería y las gotas, y no gasta EU/FE. <strong>Carga de energía:</strong> la ranura de carga del Almacén de energía y una Mochila de energía puesta lo aceptan automáticamente. <strong>Combate:</strong> golpea un poco más fuerte que un pico de diamante (6 de daño), pero los ataques no gastan EU/FE. <strong>Encantamientos:</strong> la mesa de encantar y el yunque lo tratan como un pico de diamante: Eficiencia, Fortuna, Toque de seda, Inquebrantable, Reparación. (Inquebrantable/Reparación son inofensivos pero inútiles en una herramienta irrompible.) <strong>Colocación de antorchas:</strong> con el taladro en la mano principal y antorchas en el inventario, hacer clic derecho en un bloque coloca una antorcha: el taladro se queda en tu barra de acceso y la antorcha sale de tu inventario (se consume una). Prefiere la Antorcha de uranio enriquecido (que sigue encendida bajo el agua) y, si no, una antorcha normal. Cada colocación gasta <strong>5 EU/FE</strong>. Si la carga está por debajo de eso, la antorcha <strong>no</strong> se coloca: el taladro muestra un mensaje sobre tu barra de acceso, ninguna antorcha sale de tu inventario y la carga queda intacta: la antorcha va con energía, no es gratis (todavía puedes colocar una a mano gratis moviéndola a tu barra de acceso). Ese mensaje solo aparece donde un taladro cargado habría colocado algo de verdad: donde una antorcha no puede ir de todos modos (sin soporte, o agua para una antorcha normal), un taladro sin carga no se interpone en absoluto: sin mensaje, y el clic pasa al objeto de tu otra mano como si el taladro no estuviera en ella. Colocar una antorcha así suena exactamente igual que colocarla a mano, para ti y para cualquiera cerca. Donde una antorcha no puede ir no pasa nada y no se gasta nada. En creativo no se consume ni la antorcha ni el EU/FE y la comprobación de carga no se aplica. Sin antorchas en el inventario no hace nada (una antorcha en tu otra mano sigue funcionando con normalidad). Sin tiempo de reutilización. <strong>En creativo:</strong> no se gasta carga, ni minando ni con antorchas, igual que un pico vainilla no sufre desgaste en creativo. La regla cubre toda la familia eléctrica; ver la Mochila de energía y la Bolsa de batería. <strong>HUD:</strong> mientras está en la mano, un icono + porcentaje de carga + barra (verde → dorado → rojo) arriba a la izquierda. La misma tecla <strong>H</strong> lo alterna que en la Mochila de energía.</p>
+
+<h2 id="inventario">Inventario</h2>
+
+<p>No aplica: el taladro no tiene almacenamiento interno de objetos (stack de 1).</p>
+
+<h2 id="propiedades-del-bloque">Propiedades del bloque</h2>
+
+<p>No aplica (objeto).</p>
+
+<h2 id="recetas">Recetas</h2>
+
+<p>Se construye en una mesa de trabajo <strong>alrededor de un pico de diamante terminado</strong>: va en el centro y le da al taladro su nivel de minería de diamante (el taladro en sí excava un poco más rápido, 8.5 contra el 8.0 de un pico de diamante). Dos baterías lo flanquean, un circuito electrónico va abajo entre dos bobinas de cobre, y un cuerpo de hierro remata arriba. Todos los componentes energéticos sitúan el taladro tras la infraestructura LV. La carga de las baterías pasa al taladro terminado.</p>
+
+<h2 id="punta-de-diamante-mejora">Punta de diamante (mejora)</h2>
+
+<p>El <strong>Taladro eléctrico con punta de diamante</strong> (es el segundo nivel del taladro. Solo dos cosas difieren del taladro base; todo lo demás se hereda sin cambios.</p>
+
+<p><strong>1. Excava más rápido.</strong> Velocidad de minería <strong>10.0</strong> contra el 8.5 del taladro base (y el 9.0 de un pico de netherita). El <strong>nivel de minería no cambia</strong>: sigue siendo diamante, exactamente igual que el taladro base: la mejora acelera el trabajo, no desbloquea bloques nuevos.</p>
+
+<p><strong>2. Toque de seda conmutable.</strong> Mayús + clic derecho alterna el modo de gotas:</p>
+
+<p><strong>modo normal</strong> (en el que empieza un taladro recién fabricado): gotas exactamente iguales al taladro base, así que la mena sale como materia prima y sigue alimentando el <a href="../machines/macerator.html">Triturador</a> para duplicarla; <strong>modo Toque de seda</strong>: el bloque se suelta tal cual: la mena como mena, el cristal como cristal, las hojas como hojas.</p>
+
+<p>Por qué conmutable y no permanente: al taladro base ya se le puede dar Toque de seda en una mesa de encantar, pero un encantamiento vainilla es de ida única: bloquea Fortuna para siempre (son mutuamente excluyentes) y rompe la cadena de duplicación de mena, porque la mena deja de caer como materia prima. Un conmutador resuelve ambas cosas.</p>
+
+<p>El modo se ve sin adivinaciones: mientras está activo, el objeto lleva el brillo del encantamiento y lista «Toque de seda I» en su descripción (el modo <em>es</em> el encantamiento vainilla real, no un flag paralelo aparte), y una línea dedicada de la descripción muestra el estado y te recuerda el control de Mayús + clic derecho. El cambio reproduce un clic y muestra una línea sobre la barra de acceso.</p>
+
+<p>La inversa también se cumple: si encantas la mejora con Toque de seda tú mismo en una mesa, el taladro informa con honestidad de «modo activado», y el conmutador lo apagará. Hay un solo estado, no dos que puedan contradecirse.</p>
+
+<p><strong>Heredado sin cambios:</strong> el búfer de 10 000 EU/FE, 50 EU/FE por bloque, la entrada de 32 EU/FE/t, los mismos sitios de carga, la colocación de antorchas con clic derecho al mismo precio de 5 EU/FE, la ausencia de durabilidad, la minería a velocidad de mano sin carga y el comportamiento en creativo. La única diferencia de control: <strong>Mayús + clic derecho en un bloque conmuta el modo en lugar de colocar una antorcha</strong>: las antorchas se colocan con un clic derecho simple.</p>
+
+<p><strong>Receta:</strong>: el taladro base en el centro, una fila de tres <a href="../components/material_forms.html">polvos de diamante</a> encima (el propio «recubrimiento de la punta»), dos <a href="../materials/invar.html">lingotes de invar</a> a los lados (el cuerpo) y un <a href="../components/metal_gears.html">engranaje de plata</a> abajo (la transmisión del cabezal). Ninguno de esos tres materiales se consumía antes en ningún punto del mod: la mejora les da su primer uso.</p>
+
+<p><strong>La carga del taladro pasa a la mejora</strong>. No hace falta agotar el taladro antes: los EU/FE que tuviera, los tiene la mejora al salir. Ambos comparten el mismo búfer de 10 000 EU/FE, así que no se pierde nada por el camino y un taladro lleno da una mejora llena. Esta es la regla general del mod —la energía pasa al resultado en lugar de quemarse— y toda receta cuyo resultado tiene su propio búfer de EU/FE se comporta igual (ver la batería).</p>
+
+<blockquote><strong>Coloca el taladro en la rejilla a mano.</strong> La receta acepta un taladro en cualquier estado —vacío, cargado, encantado— y montar la rejilla tú mismo siempre funciona. El botón de <strong>autorelleno</strong>, en cambio (el libro de recetas y el «+» de visores como REI/JEI), <strong>no encontrará un taladro cargado</strong> e informará de que faltan materiales. Es una limitación de Minecraft más que del mod: el autorelleno busca un objeto cuyos componentes coincidan exactamente con el stack de muestra de la receta, y la muestra muestra un taladro vacío. Es la misma razón por la que el autorelleno nunca recoge objetos encantados o renombrados, en cualquier receta del juego. Montar la rejilla a mano lleva un par de segundos y funciona con cualquier taladro.</blockquote>
+
+<h2 id="punta-de-netherita-mejora">Punta de netherita (mejora)</h2>
+
+<p>El <strong>Taladro eléctrico con punta de netherita</strong> (es el tercer y último nivel de la línea. Solo tres cosas difieren de la punta de diamante; todo lo demás se hereda sin cambios, el Toque de seda conmutable incluido.</p>
+
+<p><strong>1. Excava más rápido.</strong> Velocidad de minería <strong>12.0</strong> contra el 10.0 de la punta de diamante (y el 9.0 de un pico de netherita). El <strong>nivel de minería no cambia</strong>: sigue siendo diamante, exactamente igual que los dos niveles inferiores. La vanilla 26.2 no tiene ningún nivel por encima de diamante, así que «netherita» aquí va de la rapidez del trabajo, no de bloques nuevos: la misma relación que un pico de netherita vainilla tiene con uno de diamante.</p>
+
+<p><strong>2. Golpea más fuerte.</strong> Daño de ataque <strong>7</strong> contra 6 en los dos niveles inferiores: el paso que la vanilla da a la netherita sobre el diamante. La velocidad de ataque no cambia, y atacar sigue sin gastar EU/FE.</p>
+
+<p><strong>3. Guarda más carga.</strong> Un búfer de <strong>15 000 EU/FE</strong> contra los 10 000 que comparten los dos primeros niveles. Con un <strong>coste por bloque igual de 50 EU/FE</strong>, eso son ~300 bloques por carga en lugar de ~200. El coste por bloque sube a propósito junto con el búfer: no: el nivel se paga en su receta (netherita), no cobrando más EU/FE por el mismo trabajo.</p>
+
+<p><strong>Heredado sin cambios:</strong> el modo Toque de seda conmutable (Mayús + clic derecho), la colocación de antorchas con clic derecho simple a 5 EU/FE, la entrada de 32 EU/FE/t, la ausencia de durabilidad, la minería a velocidad de mano sin carga y el comportamiento en creativo.</p>
+
+<p><strong>La fabricación lleva dos pasos, y el segundo es en una mesa de herrería</strong>, como toda mejora de netherita funciona en vanilla.</p>
+
+<p><strong>Paso 1: montar el cabezal (mesa de trabajo).</strong> Tres fragmentos de netherita en la fila superior, luego un <a href="../materials/netherite_alloy.html">lingote de aleación de netherita</a>, un <a href="../components/metal_gears.html">engranaje de electro</a> y un segundo lingote de aleación debajo. Eso da el <strong>Cabezal de taladro de netherita</strong>. El paso existe por una razón mecánica: una mesa de herrería solo tiene tres ranuras, y cuatro componentes no caben en ellas: el cabezal los pliega en una sola pieza.</p>
+
+<p><strong>Paso 2: montar el cabezal (mesa de herrería).</strong> Plantilla + el taladro con punta de diamante + el cabezal de taladro. La plantilla <strong>no se consume</strong>, exactamente igual que la vainilla de netherita.</p>
+
+<p><strong>La plantilla —la Plantilla de herrería: taladro de netherita—</strong> se encuentra en cofres de <strong>restos de bastión</strong>, en las mismas cuatro tablas de botín en las que la vanilla esconde su propia plantilla de netherita, con un 20 % de probabilidad por cofre. Como la vainilla, <strong>se duplica en una mesa</strong>: 7 diamantes + 1 netherrack alrededor de la plantilla devuelven dos. Solo hace falta encontrarla una vez.</p>
+
+<p><strong>La carga y el modo pasan ambos.</strong> En 26.2 una mesa de herrería ensambla su resultado a través de <code>TransmuteRecipe.createWithOriginalComponents</code>, que copia el mapa de componentes <strong>completo</strong> de la base. Así que el taladro de netherita hereda no solo los EU/FE de la punta de diamante (el búfer del resultado es mayor, así que no se recorta nada), sino también sus encantamientos y su modo Toque de seda con ellos. Eso es más amplio que la transferencia de carga de un nivel más abajo, y sale gratis: no interviene ningún serializador de recetas del mod.</p>
+
+<p>También zanja de paso la vieja queja de: la nota sobre montar la rejilla a mano no se aplica a una mesa de herrería, que no tiene autorelleno que tropiece con un taladro cargado.</p>
+
+<h2 id="progresión">Progresión</h2>
+
+<p>La primera herramienta eléctrica del mod: un puente entre la progresión de energía y la minería a mano. Disponible tras el <a href="../energy-storage/battery_box.html">Almacén de energía</a> y la <a href="energy_pack.html">Mochila de energía</a>. Su segundo nivel es la mejora de punta de diamante de arriba, tras el <a href="../machines/alloy_smelter.html">Horno de aleaciones</a> (invar) y el <a href="../machines/macerator.html">Triturador</a> (polvo de diamante). Su tercero y último es la punta de netherita: más rápido, golpeando más fuerte y durando más, tras un viaje al Nether por la netherita más ese mismo Horno de aleaciones para la <a href="../materials/netherite_alloy.html">aleación de netherita</a>. Otras herramientas eléctricas (motosierra/azada/sable) son trabajo futuro.</p>
+
+<h2 id="relacionado">Relacionado</h2>
+
+<p><a href="energy_pack.html">Mochila de energía</a>: carga el taladro en tu inventario. <a href="../energy-storage/battery_box.html">Almacén de energía</a>: carga el taladro. <a href="tempered_iron_pickaxe.html">Pico de hierro templado</a>: la alternativa no eléctrica más atrás en la línea.</p>
+
+<h2>Fabricación</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="taladro eléctrico alaindustrial:electric_drill" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Iron Ingot"><img src="../../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Batería"><img src="../../assets/item/battery_3d.png" alt="Batería" width="32" height="32"></div> <div class="cell" title="Diamond Pickaxe"><img src="../../assets/item/diamond_pickaxe_3d.png" alt="Diamond Pickaxe" width="32" height="32"></div> <div class="cell" title="Batería"><img src="../../assets/item/battery_3d.png" alt="Batería" width="32" height="32"></div> <div class="cell" title="Bobina de cobre"><img src="../../assets/item/copper_coil_3d.png" alt="Bobina de cobre" width="32" height="32"></div> <div class="cell" title="Circuito electrónico"><img src="../../assets/item/electronic_circuit_3d.png" alt="Circuito electrónico" width="32" height="32"></div> <div class="cell" title="Bobina de cobre"><img src="../../assets/item/copper_coil_3d.png" alt="Bobina de cobre" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Taladro eléctrico"><img src="../../assets/item/electric_drill_3d.png" alt="Taladro eléctrico" width="32" height="32"></div><div class="result-name">Taladro eléctrico</div></div></div></div></div>
+<h2>Se usa en</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="taladro eléctrico con punta de diamante alaindustrial:electric_drill_diamond_tip" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Polvo de diamante"><img src="../../assets/item/diamond_dust_3d.png" alt="Polvo de diamante" width="32" height="32"></div> <div class="cell" title="Polvo de diamante"><img src="../../assets/item/diamond_dust_3d.png" alt="Polvo de diamante" width="32" height="32"></div> <div class="cell" title="Polvo de diamante"><img src="../../assets/item/diamond_dust_3d.png" alt="Polvo de diamante" width="32" height="32"></div> <div class="cell" title="Lingote de invar"><img src="../../assets/item/invar_ingot_3d.png" alt="Lingote de invar" width="32" height="32"></div> <div class="cell" title="Taladro eléctrico"><img src="../../assets/item/electric_drill_3d.png" alt="Taladro eléctrico" width="32" height="32"></div> <div class="cell" title="Lingote de invar"><img src="../../assets/item/invar_ingot_3d.png" alt="Lingote de invar" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="Engranaje de plata"><img src="../../assets/item/silver_gear_3d.png" alt="Engranaje de plata" width="32" height="32"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Taladro eléctrico con punta de diamante"><img src="../../assets/item/electric_drill_diamond_tip_3d.png" alt="Taladro eléctrico con punta de diamante" width="32" height="32"></div><div class="result-name">Taladro eléctrico con punta de diamante</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

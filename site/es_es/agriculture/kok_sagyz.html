@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="es_es" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>Kok-Sagyz — Ala Industrial — Guía</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../../assets/guide-site.js" defer></script>
+
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="Abrir menú" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../../assets/item/guide_book_3d.png" alt="">Todo el contenido</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/ky7cFDF8JD" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="Buscar en la wiki…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="Buscar en la guía" autocomplete="off" spellcheck="false" data-index="../search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;Resultados de la búsqueda&quot;,&quot;one&quot;:&quot;página encontrada&quot;,&quot;few&quot;:&quot;páginas encontradas&quot;,&quot;many&quot;:&quot;páginas encontradas&quot;,&quot;loading&quot;:&quot;Cargando el índice de búsqueda…&quot;,&quot;nothing&quot;:&quot;Nada encontrado&quot;}"></search>
+    <details class="language-menu"><summary aria-label="Language">ES</summary><div class="language-popover"><span>ES</span><a href="../../en/agriculture/kok_sagyz.html">EN</a><a href="../../ru/agriculture/kok_sagyz.html">RU</a><a href="../../uk/agriculture/kok_sagyz.html">UA</a><a href="../../zh_cn/agriculture/kok_sagyz.html">中文</a><a href="../../ja_jp/agriculture/kok_sagyz.html">日本語</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">Explorar</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../../assets/item/tempered_iron_pickaxe.png" alt=""><span>Primeros pasos</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>Recetas</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>Perfil del jugador</span></a>
+<div class="group-title">Energía</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>Generadores</span><span class="cat-count" aria-label="12 páginas">12</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>Almacenamiento de energía</span><span class="cat-count" aria-label="4 páginas">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Transferencia de energía</span><span class="cat-count" aria-label="8 páginas">8</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Energía nuclear</span><span class="cat-count" aria-label="15 páginas">15</span></a>
+<div class="group-title">Procesamiento</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Máquinas</span><span class="cat-count" aria-label="16 páginas">16</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Máquinas de fluidos</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<div class="group-title">Logística</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Transporte de objetos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Transporte de fluidos</span><span class="cat-count" aria-label="1 página">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Almacenamiento de fluidos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
+<div class="group-title">Mundo y automatización</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Materiales</span><span class="cat-count" aria-label="23 páginas">23</span></a>
+<a class="cat-link active" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>Agricultura</span><span class="cat-count" aria-label="6 páginas">6</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>Máquinas avanzadas</span><span class="cat-count" aria-label="1 página">1</span></a>
+<div class="group-title">Otros</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>Utilidades</span><span class="cat-count" aria-label="18 páginas">18</span></a>
+<div class="group-title">Objetos</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>Mejoras</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>Componentes</span><span class="cat-count" aria-label="29 páginas">29</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>Objetos</span><span class="cat-count" aria-label="25 páginas">25</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">Inicio</a><span class="sep">/</span><a href="../agriculture/index.html">Agricultura</a><span class="sep">/</span><span>Kok-Sagyz</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../../assets/item/kok_sagyz_seeds_3d.png" alt="Kok-Sagyz" width="64" height="64">
+    <div class="info">
+      <h1>Kok-Sagyz</h1>
+      <div class="block-id">alaindustrial:kok_sagyz</div>
+      <div class="tags"><span class="tag cat" style="background:#22c55e">Agricultura</span><span class="tag lifecycle" style="background:#22c55e">Implementado</span><span class="tag">agriculture</span><span class="tag">rubber</span><span class="tag">crop</span><span class="tag">perennial</span><span class="tag">root</span><span class="tag">farming</span><span class="tag">tier-lv</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="plant-growth-h2">Cómo crece</h2>
+<section class="pg" id="plant-growth">
+  <div class="pg-stages">
+    <figure class="pg-stage"><img src="../../assets/block/kok_sagyz_stage0.png" alt="" width="48" height="48" loading="lazy"><figcaption>Roseta</figcaption></figure>
+    <span class="pg-arrow" aria-hidden="true">-&gt;</span>
+    <figure class="pg-stage"><img src="../../assets/block/kok_sagyz_stage1.png" alt="" width="48" height="48" loading="lazy"><figcaption>Brote</figcaption></figure>
+    <span class="pg-arrow" aria-hidden="true">-&gt;</span>
+    <figure class="pg-stage"><img src="../../assets/block/kok_sagyz_stage2.png" alt="" width="48" height="48" loading="lazy"><figcaption>Flor</figcaption></figure>
+    <span class="pg-arrow" aria-hidden="true">-&gt;</span>
+    <figure class="pg-stage"><img src="../../assets/block/kok_sagyz_stage3.png" alt="" width="48" height="48" loading="lazy"><figcaption>Cabeza de semillas</figcaption></figure>
+  </div>
+  <div class="pg-column">
+    <div class="pg-label">Sobre el suelo</div>
+    <div class="pg-row pg-air"><img src="../../assets/block/kok_sagyz_stage3.png" alt="" width="40" height="40" loading="lazy"><p><b>Flor</b>: la única parte que puede matar la planta. Rómpela y podrás conseguir semillas.</p></div>
+    <div class="pg-label">Bajo tierra</div>
+    <div class="pg-row pg-soil"><img src="../../assets/block/kok_sagyz_root_side.png" alt="" width="40" height="40" loading="lazy"><p><b>Raíz superior</b>: cávala para conseguir semillas. La flor se queda y vuelve a arraigar en el hueco.</p></div>
+    <div class="pg-row pg-soil"><img src="../../assets/block/kok_sagyz_root_tip_side.png" alt="" width="40" height="40" loading="lazy"><p><b>Punta de la raíz</b>: cávala para conseguir la raíz. La planta sobrevive y echa una nueva punta.</p></div>
+  </div>
+  <p class="pg-hint">La planta mide tres bloques de alto y solo se ve el de arriba. Todo lo que merece la pena cavar está bajo tus pies.</p>
+</section>
+<h2 id="resumen">Resumen</h2>
+
+<p><strong>El kok sagyz es caucho que puedes cultivar.</strong> Un pozo de petróleo se agota; un campo, no. Una sola siembra te mantiene en caucho todo el tiempo que estés dispuesto a cavar.</p>
+
+<p>La pega es que la cosecha se esconde bajo tus pies. Lo que sobresale del suelo es un diente de león; lo valioso es la <strong>raíz, dos bloques hacia abajo</strong>. Cavas el bloque inferior — la <strong>punta</strong> — y suelta la raíz mientras la planta sigue viva y echa una punta nueva. Nunca vuelves a plantar.</p>
+
+<p>Solo hay una manera de matarla: romper la flor. Hagas lo que hagas bajo tierra, el diente de león lo aguanta.</p>
+
+<h2 id="prototipo-del-mundo-real">Prototipo del mundo real</h2>
+
+<p><em>Taraxacum kok-saghyz</em> es un diente de león de la estepa kazaja y de las estribaciones de la cordillera de Karatau. El nombre es kazajo — «kök-sağız», «goma verde»: el látex de su raíz se masticaba aquí mucho antes de que alguien fabricara neumáticos con él. El caucho está <strong>solo en la raíz</strong>, hasta un cuarto de su peso seco; la prueba de campo es simple — parte una raíz seca y mira los hilos de caucho estirarse a través de la rotura. El azúcar de esa misma raíz, la <strong>inulina</strong>, también sale del triturador aquí.</p>
+
+<h2 id="obtención">Obtención</h2>
+
+<p><strong>Búscala en el mundo.</strong> Los dientes de león maduros aparecen de vez en cuando en sabanas, en praderas de montaña y colinas de grava batidas por el viento — aproximadamente uno de cada 48 chunks lleva tres flores, es decir, una flor por cada 64×64 bloques de bioma adecuado. Las plantas silvestres echan sus propias raíces, así que la primera que encuentras ya es una columna terminada. <strong>Solo en chunks nuevos:</strong> el kok sagyz no aparecerá en tierra que ya hayas explorado.</p>
+
+<p><strong>Plántala.</strong> Una semilla va en <strong>cualquier bloque de suelo suelto</strong> — hierba, tierra, arena, tierra de cultivo arada o suelo de mod etiquetado <code>#minecraft:supports_crops</code>. No hace falta cavar hoyo: la raíz se adapta. Dos bloques de suelo hacen crecer una columna de dos de profundidad; un bloque suelto de tierra sobre piedra deja la punta justo bajo la flor, y cavas una vez en lugar de dos.</p>
+
+<h2 id="ciclo-de-vida">Ciclo de vida</h2>
+
+<p>Crece en ticks aleatorios con nivel de luz <strong>9 o superior</strong>, como los cultivos vainilla: roseta → botón → flor amarilla → cabezuela de semillas. Una flor madura entonces arraiga: el suelo debajo se convierte en tierra enraizada y la raíz baja hasta la profundidad dos.</p>
+
+<table><thead><tr><th>Fase</th><th>Tiempo en tierra de cultivo</th></tr></thead><tbody><tr><td>Sobre el suelo, roseta → cabezuela</td><td>~3.4 min</td></tr><tr><td>Raíz, dos bloques abajo</td><td>otros ~2.3 min</td></tr><tr><td>Lo mismo en suelo silvestre (no cultivado)</td><td>el doble</td></tr></tbody></table>
+
+<p>Cada paso de crecimiento es un tick aleatorio. Con <code>randomTickSpeed 3</code> el juego elige tres posiciones al azar por sección y por tick, así que un bloque dado recibe un tick cada ~<strong>68 segundos</strong> — con independencia de sus vecinos. La espera es geométrica y su dispersión iguala a su media: con divisor 1, una décima parte de las plantas da un paso en 7 segundos y otra décima espera más de 157. Un campo, por tanto, madura desigual todo solo, como el trigo; las cifras de abajo son <strong>medias, no temporizadores</strong>.</p>
+
+<p>Los pasos cuestan cantidades distintas: el primero es barato, los siguientes más caros, y el más largo es el que paga una raíz. De todos los suelos solo la <strong>arena</strong> lo acelera — un paso allí tarda el 75 % del tiempo habitual.</p>
+
+<table><thead><tr><th>Paso</th><th>Qué pasa</th><th>Divisor</th><th>Suelo ordinario</th><th>En arena</th></tr></thead><tbody><tr><td><code>age 0 → 1</code></td><td>roseta → botón</td><td>1</td><td>~1.1 min</td><td>~0.9 min</td></tr><tr><td><code>age 1 → 2</code></td><td>botón → flor amarilla</td><td>2</td><td>~2.3 min</td><td>~1.7 min</td></tr><tr><td><code>age 2 → 3</code></td><td>flor → cabezuela (madura)</td><td>3</td><td>~3.4 min</td><td>~2.6 min</td></tr><tr><td><strong>Total sobre el suelo</strong></td><td>plantación → madurez</td><td>—</td><td><strong>~6.8 min</strong></td><td><strong>~5.1 min</strong></td></tr><tr><td>Raíz intermedia</td><td>suelo bajo la flor → raíz</td><td>6</td><td>~6.8 min</td><td>~5.1 min</td></tr><tr><td>Punta</td><td>la raíz cosechable, a cualquier profundidad</td><td>9</td><td>~10.2 min</td><td>~7.7 min</td></tr><tr><td><strong>Total de raíz</strong></td><td>madurez → columna completa</td><td>—</td><td><strong>~17.1 min</strong></td><td><strong>~12.8 min</strong></td></tr><tr><td><strong>Todo</strong></td><td>semilla → dos bloques listos de raíz</td><td>—</td><td><strong>~23.9 min</strong></td><td><strong>~17.9 min</strong></td></tr></tbody></table>
+
+<p><strong>La punta cuesta lo mismo a cualquier profundidad</strong>: el precio está indexado a lo que crece, no al número del paso. Si no, el suelo somero (un bloque de tierra sobre piedra) sacaría su punta al precio barato del primer paso y rendiría más que una columna completa. El suelo somero solo llega a la primera cosecha <strong>antes</strong> (~17.1 min contra ~23.9); después rinde al mismo ritmo.</p>
+
+<p><strong>Arar no sirve de nada.</strong> Este no es un cultivo de azada sino una maleza esteparia con raíz pivotante: tierra, hierba, podsol, micelio, barro y tierra de cultivo arada lo hacen crecer al mismo ritmo. Solo la arena y la arena roja son más rápidas — es el elemento de la planta real, un suelo arenoso bien drenado donde sus plántulas se establecen mejor que en el limo, y una raíz pivotante sencillamente viaja con más facilidad por suelo suelto, razón por la que las zanahorias también se siembran en arena.</p>
+
+<p>El ritmo se lee por la propia raíz de la planta: un segmento ocupado por raíz recuerda el suelo que reemplazó, así que una columna hundida en arena conserva el ritmo de la arena hasta abajo.</p>
+
+<p><strong>Recrecimiento tras una cosecha</strong> (la flor queda madura — no tiene que madurar otra vez):</p>
+
+<table><thead><tr><th>Qué cavaste</th><th>La espera</th></tr></thead><tbody><tr><td>La punta (la parte que paga raíz)</td><td>~10.2 min en suelo, ~7.7 min en arena — el ciclo de trabajo de la granja</td></tr><tr><td>La raíz intermedia</td><td>~6.8 min en suelo, ~5.1 min en arena</td></tr><tr><td>Ambas</td><td>~17.1 min en suelo, ~12.8 min en arena</td></tr></tbody></table>
+
+<p>El rendimiento sostenido es de unas <strong>6 raíces por hora por planta</strong> en suelo ordinario y <strong>8 en arena</strong>. Una plantación de veinte plantas da aproximadamente de dos a tres raíces por minuto.</p>
+
+<p><strong>La harina de hueso</strong> y el <strong>aspersor</strong> compran cada uno exactamente un paso — una etapa o un bloque de raíz. Puedes comprar velocidad; no puedes comprar pasar por encima de la oscuridad o de una columna sin sitio donde crecer.</p>
+
+<p><strong>La planta puede ser pisoteada.</strong> Saltar o caer sobre la flor desde arriba le cuesta una etapa de crecimiento: cabezuela → flor → botón → roseta, y nunca por debajo de la roseta. Cruzarla caminando a ras de suelo es seguro, y el sigilo también la respeta — la misma tecla abre la inspección de raíz, así que asomarte a leer una planta jamás puede dañarla. El pisoteo nunca toca lo que ya está bajo tierra: la raíz conserva su profundidad, pero no crece más hasta que la flor vuelva a madurar. Se desactiva con.</p>
+
+<h2 id="inspección-de-la-raíz">Inspección de la raíz</h2>
+
+<p>Acércate a una flor y mantén la tecla de sigilo (<strong>Mayús</strong> por defecto). La raíz aparece bajo tierra como una forma sólida dentro de una envoltura clara con la textura de su suelo original. Los bordes de las celdas muestran la profundidad en bloques. Suelta la tecla y la vista se desvanece. La tecla nombrada en el rótulo sigue tu propia configuración.</p>
+
+<p>El fondo queda atenuado pero no apagado: el terreno, el horizonte y el cielo siguen legibles para que no pierdas la orientación bajo tierra. Cuánto se oscurece lo fija el ajuste de cliente (porcentaje, 85 por defecto, se permite 10–95).</p>
+
+<p>La inspección muestra hasta ocho de las plantas visibles más cercanas en un radio de cinco bloques. Las paredes las ocultan; las menas y cuevas vecinas no se revelan. Mirar una planta añade su estado: la raíz aún no ha crecido, sigue creciendo, está lista para cosechar, o el crecimiento está bloqueado.</p>
+
+<p><strong>Un bloque no siempre significa lista.</strong> En suelo profundo es la primera etapa de crecimiento. En suelo sobre piedra se forma de inmediato una punta corta lista. Dos bloques hacen la raíz larga. Si el segmento superior ha sido excavado, el inferior restante se muestra solo, sin conexión inventada.</p>
+
+<p>Las cuatro etapas sobre el suelo y ambas raíces usan los modelos originales del diseñador. La inspección corre en el cliente y no cambia ningún bloque, luz, colisión ni ritmo de crecimiento.</p>
+
+<h2 id="cosecha">Cosecha</h2>
+
+<p>Una sola regla: <strong>cava la punta, no recojas la flor.</strong></p>
+
+<table><thead><tr><th>Acción</th><th>Resultado</th></tr></thead><tbody><tr><td>Cavar la <strong>punta</strong> (el bloque de raíz inferior)</td><td><strong>1 × raíz</strong> + 35 % de probabilidad de semillas; el suelo original se restaura, la planta vive y regenera la punta</td></tr><tr><td>Cavar el bloque de raíz <strong>superior</strong></td><td>35 % de probabilidad de semillas, sin raíz; la flor sigue en pie y vuelve a arraigar en el hueco</td></tr><tr><td>Romper la <strong>flor</strong></td><td>la planta muere; 35 % de probabilidad de semillas</td></tr><tr><td>La raíz tras morir la planta</td><td>se queda en el suelo — aún puedes cavarla, pero ya no queda nada que la regenere</td></tr><tr><td>Clic derecho en la cabezuela</td><td>nada: el caucho está en el suelo, no en el vilano</td></tr></tbody></table>
+
+<p>Las semillas vuelven por probabilidad de cada cosecha, así que una parcela se mantiene sola en stock de siembra.</p>
+
+<h2 id="procesamiento">Procesamiento</h2>
+
+<p>La raíz va al <strong>triturador</strong> — la cadena no necesita máquinas nuevas:</p>
+
+<table><thead><tr><th>Ingredientes</th><th>Resultado</th><th>EU/FE</th></tr></thead><tbody><tr><td>2 × raíz de kok sagyz</td><td>1 × <strong>caucho en bruto</strong> + 1 × <strong>inulina</strong></td><td>300</td></tr></tbody></table>
+
+<p>La inulina no se apila con el caucho, así que el triturador <strong>la escupe por arriba</strong>: pon un embudo o una tubería encima y el subproducto se va solo sin obstruir la máquina. Desde ahí, todo como siempre: el vulcanizador convierte caucho en bruto y azufre en caucho por 400 EU/FE.</p>
+
+<h2 id="automatización">Automatización</h2>
+
+<ul><li>La <strong>guadaña</strong> (mayús + clic derecho en una planta madura) cava una punta lista a uno o dos</li></ul>
+<p>bloques de profundidad, sin matar la planta.</p>
+<ul><li>El <strong>dron jardinero</strong> no alcanza la raíz: sobrevuela el campo, y la raíz está dos bloques</li></ul>
+<p>abajo. Su trabajo es el otro: cortar flores maduras, guardar las semillas y replantarlas. Eso hace una granja automática de semillas; las raíces siguen siendo tuyas y de la guadaña. El dron también siembra kok sagyz en suelo sin arar.</p>
+<ul><li>El <strong>aspersor</strong> acelera el crecimiento paso a paso.</li></ul>
+
+<h2 id="mundos-antiguos">Mundos antiguos</h2>
+
+<p>Las raíces nuevas guardan el estado del suelo original por separado para cada segmento: la arena sigue siendo arena, la arena roja sigue arena roja, la tierra de cultivo conserva su humedad registrada. Mientras un segmento está ocupado por una raíz sigue siendo un bloque de raíz: el comportamiento del suelo original (arena que cae, cambios de humedad) no hace tick. La cosecha restaura el estado guardado y vuelven a aplicarse las reglas ordinarias. El suelo con entidad de bloque propia nunca se reemplaza: sus datos no caben en un BlockState y se perderían. La consecuencia: en tal suelo la flor se planta y madura, pero nunca crecerá raíz debajo. Ningún bloque vainilla es así; solo afecta a suelos de mod con entidad de bloque. Los segmentos viejos, guardados antes de que el suelo se almacenara, se muestran y restauran como tierra; su id y su propiedad <code>tip</code> se conservan.</p>
+
+<p>Las plantas silvestres llegan <strong>solo con chunks nuevos</strong>: la estepa poblada no brotará dientes de león. Con una sola semilla basta para siempre, eso sí — de otro mundo, de un amigo o de un viaje bastante lejos — después la parcela se alimenta sola.</p>
+
+<h2 id="propiedades-del-bloque">Propiedades del bloque</h2>
+
+<table><thead><tr><th>Propiedad</th><th>Valor</th></tr></thead><tbody><tr><td>Flor</td><td>modelo sólido, sin colisión, <code>age</code> 0..3, ticks aleatorios</td></tr><tr><td>Bloque de raíz</td><td>cubo completo con el aspecto del suelo que reemplazó, propiedad <code>tip</code>, entidad de bloque sin tick que retiene ese suelo</td></tr><tr><td>Columna</td><td>1×3: flor + 2 bloques de raíz</td></tr><tr><td>Suelo</td><td><code>#minecraft:dirt</code>, hierba/podsol/micelio/barro, <code>#minecraft:sand</code>, <code>#minecraft:supports_crops</code>; basta un bloque</td></tr></tbody></table>
+
+<h2 id="progresión">Progresión</h2>
+
+<p>Esta es la entrada al caucho renovable en la era LV: el aislamiento de cables, los circuitos avanzados y la malla de armadura ya son cultivables. El logro <strong>«Raíces profundas»</strong> se sitúa entre <code>first_oil</code> y <code>rubber_production</code> — el jugador que bombea petróleo y el que cava un campo llegan al mismo caucho desde direcciones opuestas.</p>
+
+<h2 id="relacionado">Relacionado</h2>
+
+<ul><li>Triturador — macera la raíz en caucho con inulina.</li><li>Vulcanizador — caucho en bruto + azufre → caucho.</li><li>Incubadora — la duplicación de caucho como vía de emergencia.</li><li>Caucho — el material y qué lo necesita.</li><li>Aspersor, Estación de dron jardinero, Guadaña — automatización de crecimiento y cosecha.</li></ul>
+
+
+  </main>
+</div>
+
+</body>
+</html>
