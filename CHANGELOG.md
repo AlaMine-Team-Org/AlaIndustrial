@@ -1,9 +1,9 @@
-## 0.1.165
+## 0.1.166
 
-<p><img alt="Ala Industrial 0.1.165 reactor room tab before and after" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.165/release-media/v0.1.165/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial 0.1.166 reactor core tab on three cores" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.166/release-media/v0.1.166/changelog.png" width="720"></p>
 
 1 update in this release.
 
 ### New
 
-- **Room tab on the reactor controller** — a top-down map of the shell with every hole marked, and the room scan as a checklist of what passed and what to fix. A room still being built opens right on it, and holes in the ceiling now read as holes instead of a missing wall.
+- **Core tab on the reactor controller** — the core seen from above, one slot per stack of columns with its fuel rods, wear and column count. Click a stack to see its rods, wear, energy left, water and steam; the tab names the stack to replace first and marks the densest one, where the neighbour bonus builds up.

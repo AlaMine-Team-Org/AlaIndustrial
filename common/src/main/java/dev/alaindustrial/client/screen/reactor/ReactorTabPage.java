@@ -43,4 +43,9 @@ public interface ReactorTabPage {
 
 	/** A mouse release the screen passes on, so a drag begun on this page always ends. */
 	void mouseReleased(MouseButtonEvent event);
+
+	/** A left click on the panel, offered before the widgets see it; returns whether the page took it. */
+	default boolean mouseClicked(MouseButtonEvent event) {
+		return false;
+	}
 }

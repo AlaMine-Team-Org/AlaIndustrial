@@ -8,10 +8,15 @@ import dev.alaindustrial.block.entity.ReactorRoomStatus;
 import dev.alaindustrial.client.screen.ReactorControllerScreen;
 import dev.alaindustrial.client.screen.reactor.ConsoleTabPage;
 import dev.alaindustrial.client.screen.reactor.RoomTabPage;
+import dev.alaindustrial.client.screen.reactor.ZoneTabPage;
+import dev.alaindustrial.core.structure.ReactorZone;
+import dev.alaindustrial.network.ReactorZonePayload;
 import dev.alaindustrial.gametest.visual.ShotRecorder;
 import dev.alaindustrial.menu.ReactorControllerMenu;
 import dev.alaindustrial.registry.ModContent;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.function.Consumer;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -21,7 +26,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * The reactor controller's screen in the states a player meets: the «Console» tab in seven (MOD-618, MOD-623)
- * and the «Room» tab in four (MOD-619).
+ * the «Room» tab in four (MOD-619) and the «Core» tab in four (MOD-620).
  *
  * <p><b>Built on the client's own menu</b>, like the water mill's stand: a real controller rescans and
  * re-sends its channels on its own timer, so a value injected into a menu with a server behind it
@@ -158,19 +163,129 @@ public final class ReactorConsoleGuiStand {
 		assertChecklistDiffers("too small vs no doorway", small, doorway, noise);
 		assertChecklistDiffers("no doorway vs sealed", doorway, formed, noise);
 
-		// The last two frames picked the Room tab by hand, which the screen remembers. Hand the console back, or
-		// the next stand to open a controller would photograph the Room tab where it expects the Console.
+		// The last two frames picked the Room tab by hand, which the screen remembers.
+		rememberConsoleTab(context);
+	}
+
+	/**
+	 * Photographs the «Core» tab in four states and proves its detail panel follows both the zone and the stack a
+	 * player picks (MOD-620). The zone arrives the way the server sends it — a {@link ReactorZonePayload} handed to
+	 * the client menu — so the page draws exactly what a real snapshot would make it draw.
+	 */
+	public static void shootZone(ClientGameTestContext context) {
+		int zoneTab = ReactorControllerScreen.PAGE_ZONE;
+		Path formed = shoot(context, "zone_formed",
+				"Sealed room core, 6x6: nine stacks in the middle as inventory slots with green rod pips and a durability "
+						+ "bar each, the centre stack two columns tall with a small count and the red densest mark, the "
+						+ "north-east stack holding a spent casing shown in detail on the right with its amber row, the "
+						+ "summary, the amber replace-first line naming that stack, the legend and the hint",
+				Reading.running(), RoomBox.ROOM_6X4X6, zoneTab, screen -> screen.getMenu().acceptZone(ZONE_FORMED));
+		Path formedAgain = shoot(context, "zone_formed_again",
+				"The same frame shot a second time: the noise floor for the gates below",
+				Reading.running(), RoomBox.ROOM_6X4X6, zoneTab, screen -> screen.getMenu().acceptZone(ZONE_FORMED));
+		Path picked = shoot(context, "zone_selected",
+				"The same core with the centre stack picked: a gold outline on it and the detail panel showing two "
+						+ "columns, eight rods, eight fuelled neighbours",
+				Reading.running(), RoomBox.ROOM_6X4X6, zoneTab, screen -> {
+					screen.getMenu().acceptZone(ZONE_FORMED);
+					((ZoneTabPage) screen.page(zoneTab)).pick(2, 2);
+				});
+		shoot(context, "zone_bare",
+				"Racks burning with no room: a 3x2 grid over their own footprint, three stacks, the BARE MODE chip",
+				Reading.bare(), RoomBox.NONE, zoneTab, screen -> screen.getMenu().acceptZone(ZONE_BARE));
+		Path hall = shoot(context, "zone_hall_12",
+				"The largest default hall, 12x12 with a stack on every cell: the whole grid inside its frame, seven-pixel "
+						+ "cells each filled green with a one-pixel wear line, a dark cell for the rack of spent casings, "
+						+ "a small red densest mark on the stack in the middle, and the gold outline on the stack to "
+						+ "replace first",
+				Reading.running(), RoomBox.NONE, zoneTab, screen -> screen.getMenu().acceptZone(hall(false)));
+		Path hallEmpty = shoot(context, "zone_hall_12_empty",
+				"The same 12x12 hall with every column empty: light slots with no fill and no wear lines - the picture the "
+						+ "gate below requires the full hall to differ from",
+				Reading.running(), RoomBox.NONE, zoneTab, screen -> screen.getMenu().acceptZone(hall(true)));
+		Path empty = shoot(context, "zone_empty",
+				"A sealed room with no columns: a 6x6 grid of dark empty slots and the detail panel saying the room has "
+						+ "no columns",
+				Reading.running(), RoomBox.ROOM_6X4X6, zoneTab,
+				screen -> screen.getMenu().acceptZone(new ReactorZonePayload(0, 1, -3, 6, 6, List.of())));
+
+		int noise = detailBandDelta(formed, formedAgain);
+		LOG.info("[GUITEST][MOD-620] detail band noise floor: {} px", noise);
+		assertDetailDiffers("default stack vs picked stack", formed, picked, noise);
+		assertDetailDiffers("a core vs an empty room", formed, empty, noise);
+		// The grid itself (review, MOD-620): a grid that drew nothing kept both detail gates green.
+		int gridNoise = gridBandDelta(formed, formedAgain);
+		assertGridDiffers("a core vs an empty room", formed, empty, gridNoise);
+		assertGridDiffers("a full 12x12 hall vs one of empty columns", hall, hallEmpty, gridNoise);
+		rememberConsoleTab(context);
+	}
+
+	/** Hands the console tab back, or the next stand to open a controller would photograph whatever was picked last. */
+	private static void rememberConsoleTab(ClientGameTestContext context) {
 		context.runOnClient(mc -> {
 			MenuScreens.create(ModContent.REACTOR_CONTROLLER_MENU.get(), mc, 0,
 					Component.translatable("block.alaindustrial.reactor_controller"));
 			if (mc.gui.screen() instanceof ReactorControllerScreen screen) {
+				screen.selectPage(ReactorControllerScreen.PAGE_ROOM);
 				screen.selectPage(ReactorControllerScreen.PAGE_CONSOLE);
 			}
 		});
 	}
 
+	private static ReactorZone.Stack stack(int x, int z, int columns, int fuelled, int spent, int averageWear,
+			int worstWear, int neighbours, int water, int steam) {
+		long remaining = (long) fuelled * (1000 - Math.min(1000, averageWear)) * 144;
+		return new ReactorZone.Stack(x, z, columns, fuelled, spent, averageWear, worstWear, remaining, neighbours, water,
+				steam);
+	}
+
+	/** A 6x6 core: a 3x3 block of stacks, the centre two columns tall and the densest, one rack holding a casing. */
+	private static final ReactorZonePayload ZONE_FORMED = new ReactorZonePayload(0, 1, -3, 6, 6, List.of(
+			stack(1, 1, 1, 4, 0, 300, 320, 2, 80, 20),
+			stack(2, 1, 1, 4, 0, 310, 330, 3, 78, 22),
+			stack(3, 1, 1, 3, 1, 480, 1000, 2, 70, 30),
+			stack(1, 2, 2, 8, 0, 250, 270, 5, 82, 18),
+			stack(2, 2, 2, 8, 0, 260, 280, 8, 84, 16),
+			stack(3, 2, 1, 4, 0, 300, 300, 3, 79, 21),
+			stack(1, 3, 1, 4, 0, 200, 210, 2, 81, 19),
+			stack(2, 3, 1, 4, 0, 220, 230, 3, 80, 20),
+			stack(3, 3, 1, 2, 0, 500, 510, 1, 76, 24)));
+
+	/**
+	 * A 12x12 hall with a stack on every cell (MOD-620): the size at which cells shrink below the pips, which a 6x6
+	 * frame never reaches. Wear grows towards the south-east, the middle stack is the densest, one rack holds only
+	 * spent casings.
+	 */
+	private static ReactorZonePayload hall(boolean emptyColumns) {
+		List<ReactorZone.Stack> stacks = new java.util.ArrayList<>();
+		for (int z = 0; z < 12; z++) {
+			for (int x = 0; x < 12; x++) {
+				boolean spentOnly = x == 10 && z == 2;
+				boolean middle = x == 6 && z == 6;
+				int wear = (x + z) * 40;
+				stacks.add(emptyColumns ? stack(x, z, 1, 0, 0, 0, 0, 0, 0, 0)
+						: spentOnly
+						? stack(x, z, 1, 0, 4, 1000, 1000, 0, 60, 30)
+						: stack(x, z, middle ? 3 : 1, middle ? 12 : 4, 0, wear, wear + 20, middle ? 12 : 4, 70, 25));
+			}
+		}
+		return new ReactorZonePayload(0, 1, -6, 12, 12, stacks);
+	}
+
+	/** Three bare racks over a 3x2 footprint. */
+	private static final ReactorZonePayload ZONE_BARE = new ReactorZonePayload(0, -1, 1, 3, 2, List.of(
+			stack(0, 0, 1, 4, 0, 100, 110, 1, 0, 0),
+			stack(1, 0, 1, 4, 0, 120, 130, 2, 0, 0),
+			stack(2, 1, 1, 4, 0, 90, 100, 0, 0, 0)));
+
 	private static Path shoot(ClientGameTestContext context, String state, String checks, Reading reading,
 			RoomBox box, int page) {
+		return shoot(context, state, checks, reading, box, page, screen -> {
+		});
+	}
+
+	private static Path shoot(ClientGameTestContext context, String state, String checks, Reading reading,
+			RoomBox box, int page, Consumer<ReactorControllerScreen> before) {
 		LOG.info("[GUITEST][MOD-618] opening reactor_controller/{}", state);
 		context.runOnClient(mc -> {
 			MenuScreens.create(ModContent.REACTOR_CONTROLLER_MENU.get(), mc, 0,
@@ -191,6 +306,7 @@ public final class ReactorConsoleGuiStand {
 			if (page != SCREEN_CHOOSES) {
 				screen.selectPage(page);
 			}
+			before.accept(screen);
 			var pos = (dev.alaindustrial.mixin.client.AbstractContainerScreenAccessor) (AbstractContainerScreen<?>) screen;
 			windowBox = new int[] {
 					pos.alaindustrial$getLeftPos(),
@@ -255,6 +371,47 @@ public final class ReactorConsoleGuiStand {
 					+ "the same checks for two different scans, or none at all. Band: "
 					+ VisualStandSupport.describeBand(RoomTabPage.LIST_X - 2, ConsoleTabPage.CONTENT_RIGHT,
 							RoomTabPage.INSIDE_Y, checklistBandHeight())
+					+ ". Compare " + first.getFileName() + " with " + second.getFileName() + ".");
+		}
+	}
+
+	/** The Core tab's grid, inside its frame. */
+	private static int gridBandDelta(Path first, Path second) {
+		return VisualStandSupport.differingPixelsInBand(first, second, windowBox,
+				ZoneTabPage.GRID_X, ZoneTabPage.GRID_X + ZoneTabPage.GRID_SIZE, ZoneTabPage.GRID_Y, ZoneTabPage.GRID_SIZE);
+	}
+
+	private static void assertGridDiffers(String what, Path first, Path second, int noise) {
+		int delta = gridBandDelta(first, second);
+		int required = Math.max(4 * noise, MIN_BAND_DELTA);
+		LOG.info("[GUITEST][MOD-620] grid: {}: delta={} px, noise={} px, required>{}", what, delta, noise, required);
+		if (delta < required) {
+			throw new AssertionError("[GUITEST][MOD-620] grid: " + what + " changed only " + delta
+					+ " px in the grid (noise " + noise + " px, required > " + required + ") - the cells drew the same "
+					+ "picture for two different zones, or nothing at all. Band: "
+					+ VisualStandSupport.describeBand(ZoneTabPage.GRID_X, ZoneTabPage.GRID_X + ZoneTabPage.GRID_SIZE,
+							ZoneTabPage.GRID_Y, ZoneTabPage.GRID_SIZE)
+					+ ". Compare " + first.getFileName() + " with " + second.getFileName() + ".");
+		}
+	}
+
+	/** The Core tab's detail panel: what the selected stack holds. */
+	private static int detailBandDelta(Path first, Path second) {
+		return VisualStandSupport.differingPixelsInBand(first, second, windowBox,
+				ZoneTabPage.DETAIL_X, ConsoleTabPage.CONTENT_RIGHT, ZoneTabPage.DETAIL_Y,
+				ZoneTabPage.DETAIL_BOTTOM - ZoneTabPage.DETAIL_Y);
+	}
+
+	private static void assertDetailDiffers(String what, Path first, Path second, int noise) {
+		int delta = detailBandDelta(first, second);
+		int required = Math.max(4 * noise, MIN_BAND_DELTA);
+		LOG.info("[GUITEST][MOD-620] {}: delta={} px, noise={} px, required>{}", what, delta, noise, required);
+		if (delta < required) {
+			throw new AssertionError("[GUITEST][MOD-620] " + what + " changed only " + delta
+					+ " px in the detail panel (noise " + noise + " px, required > " + required + ") - the tab showed "
+					+ "the same stack for two different picks, or nothing at all. Band: "
+					+ VisualStandSupport.describeBand(ZoneTabPage.DETAIL_X, ConsoleTabPage.CONTENT_RIGHT,
+							ZoneTabPage.DETAIL_Y, ZoneTabPage.DETAIL_BOTTOM - ZoneTabPage.DETAIL_Y)
 					+ ". Compare " + first.getFileName() + " with " + second.getFileName() + ".");
 		}
 	}

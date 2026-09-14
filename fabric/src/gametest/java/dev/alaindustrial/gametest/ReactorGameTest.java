@@ -117,4 +117,10 @@ public class ReactorGameTest {
 	public void consoleChannelsCarryTheServersHeatMarks(GameTestHelper helper) {
 		ReactorScenarios.consoleChannelsCarryTheServersHeatMarks(helper);
 	}
+
+	// MOD-620 — the Core tab's snapshot matches the racks standing in the world.
+	@GameTest(maxTicks = 100)
+	public void zoneSnapshotMatchesTheRacks(GameTestHelper helper) {
+		ReactorScenarios.zoneSnapshotMatchesTheRacks(helper);
+	}
 }

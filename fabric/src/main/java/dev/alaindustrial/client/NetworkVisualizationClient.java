@@ -34,6 +34,9 @@ public final class NetworkVisualizationClient {
 		// MOD-125: machine statistics for the open screen's panel.
 		ClientPlayNetworking.registerGlobalReceiver(MachineStatsPayload.TYPE,
 				(payload, context) -> MachineStatsClient.receive(payload));
+		// MOD-620: the reactor controller's «Core» tab.
+		ClientPlayNetworking.registerGlobalReceiver(dev.alaindustrial.network.ReactorZonePayload.TYPE,
+				(payload, context) -> ReactorZoneClient.receive(payload));
 		LevelRenderEvents.AFTER_TRANSLUCENT_FEATURES.register(NetworkVisualizationClient::render);
 	}
 

@@ -228,6 +228,26 @@ public class FuelRodAssemblyBlockEntity extends BlockEntity implements FluidPort
 	}
 
 
+	/**
+	 * This column for the reactor's «Core» tab (MOD-620): each fuelled rod's damage, the spent casings still racked
+	 * and both tanks. The controller folds these into stacks; nothing here decides what the tab shows.
+	 */
+	public dev.alaindustrial.core.structure.ReactorZone.Column zoneColumn() {
+		int[] damage = new int[getRods()];
+		int fuelled = 0;
+		int spent = 0;
+		for (ItemStack stack : rack) {
+			if (isFuelled(stack)) {
+				damage[fuelled++] = stack.getDamageValue();
+			} else if (stack.is(ModContent.EMPTY_FUEL_ROD.get())) {
+				spent++;
+			}
+		}
+		return new dev.alaindustrial.core.structure.ReactorZone.Column(worldPosition.getX(), worldPosition.getY(),
+				worldPosition.getZ(), damage, spent, waterTank.amount, waterTank.capacity, steamTank.amount,
+				steamTank.capacity);
+	}
+
 	private static boolean isFuelled(ItemStack stack) {
 		return stack.is(ModContent.URANIUM_FUEL_ROD.get()) && stack.getDamageValue() < stack.getMaxDamage();
 	}

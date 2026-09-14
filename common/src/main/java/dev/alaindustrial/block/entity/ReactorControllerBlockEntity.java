@@ -242,6 +242,12 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 	 */
 	private boolean bare;
 
+	/**
+	 * Every rack the bare sweep reached that nobody else claims, fuelled or not — what the «Core» tab shows while there
+	 * is no sealed room (MOD-620). {@link #bareRacks} is what burns; a rack of spent casings is only here.
+	 */
+	private final List<BlockPos> bareShown = new ArrayList<>();
+
 	/** Whether the room is melting its own contents right now — the panel's "Meltdown" line. */
 	private boolean meltingDown;
 
@@ -1102,6 +1108,7 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 	 */
 	private void rescanBare(Level level, BlockPos pos) {
 		bareRacks.clear();
+		bareShown.clear();
 		if (!(level instanceof ServerLevel serverLevel)) {
 			bare = false;
 			return;
@@ -1109,6 +1116,7 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		BareReactorScan.Result found = BareReactorScan.scan(serverLevel, pos,
 				Config.reactorBareSearchRadius);
 		bareRacks.addAll(found.racks());
+		bareShown.addAll(found.shown());
 		rods = found.rods();
 		bare = !found.isEmpty();
 	}
@@ -1417,6 +1425,7 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		if (result.formed()) {
 			bare = false;
 			bareRacks.clear();
+			bareShown.clear();
 			collectAssemblies(level, result);
 		} else {
 			// Silence the racks BEFORE forgetting where they are (MOD-472). The drone is painted onto the
@@ -1498,6 +1507,58 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		return boxMaxX != Integer.MIN_VALUE
 				&& (boxMinX != result.minX() || boxMinY != result.minY() || boxMinZ != result.minZ()
 						|| boxMaxX != result.maxX() || boxMaxY != result.maxY() || boxMaxZ != result.maxZ());
+	}
+
+	/**
+	 * The core as the «Core» tab shows it (MOD-620): one entry per stack of columns, counted from the sealed room's
+	 * north-west interior corner — or, with no sealed room, from the corner of the reachable racks' own footprint.
+	 *
+	 * <p>Built from what the last scan found, so the tab shows the columns that belong to this controller: a rack
+	 * outside the room, or one another controller claims, is not on it. With no sealed room that is every reachable
+	 * rack, including one holding only spent casings — it burns nothing, but it is the rack that needs a player.
+	 */
+	public dev.alaindustrial.network.ReactorZonePayload zoneSnapshot(int containerId) {
+		boolean sealed = status == ReactorRoomStatus.FORMED;
+		List<BlockPos> racks = sealed ? assemblies : bareShown;
+		List<dev.alaindustrial.core.structure.ReactorZone.Column> columns = new ArrayList<>();
+		if (level != null) {
+			for (BlockPos at : racks) {
+				if (level.getBlockEntity(at) instanceof FuelRodAssemblyBlockEntity rack) {
+					columns.add(rack.zoneColumn());
+				}
+			}
+		}
+		int originX = 0;
+		int originZ = 0;
+		int width = 0;
+		int depth = 0;
+		if (sealed && boxMaxX != Integer.MIN_VALUE) {
+			originX = boxMinX;
+			originZ = boxMinZ;
+			width = boxMaxX - boxMinX + 1;
+			depth = boxMaxZ - boxMinZ + 1;
+		} else if (!columns.isEmpty()) {
+			int minX = Integer.MAX_VALUE;
+			int minZ = Integer.MAX_VALUE;
+			int maxX = Integer.MIN_VALUE;
+			int maxZ = Integer.MIN_VALUE;
+			for (dev.alaindustrial.core.structure.ReactorZone.Column column : columns) {
+				minX = Math.min(minX, column.x());
+				minZ = Math.min(minZ, column.z());
+				maxX = Math.max(maxX, column.x());
+				maxZ = Math.max(maxZ, column.z());
+			}
+			originX = minX;
+			originZ = minZ;
+			width = maxX - minX + 1;
+			depth = maxZ - minZ + 1;
+		}
+		width = Math.min(width, dev.alaindustrial.core.structure.ReactorZone.MAX_SPAN);
+		depth = Math.min(depth, dev.alaindustrial.core.structure.ReactorZone.MAX_SPAN);
+		return new dev.alaindustrial.network.ReactorZonePayload(containerId, originX - worldPosition.getX(),
+				originZ - worldPosition.getZ(), width, depth,
+				dev.alaindustrial.core.structure.ReactorZone.stacks(columns, originX, originZ, width, depth,
+						ReactorCore.rodEnergy(Config.reactorEuPerRod, Config.reactorRodBurnTicks)));
 	}
 
 	private void rememberBox(RoomScan.Result result) {

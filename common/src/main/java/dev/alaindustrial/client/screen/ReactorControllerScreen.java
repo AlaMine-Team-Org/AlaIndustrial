@@ -5,6 +5,7 @@ import dev.alaindustrial.client.screen.reactor.ConsoleTabPage;
 import dev.alaindustrial.client.screen.reactor.ReactorConsole;
 import dev.alaindustrial.client.screen.reactor.ReactorTabPage;
 import dev.alaindustrial.client.screen.reactor.RoomTabPage;
+import dev.alaindustrial.client.screen.reactor.ZoneTabPage;
 import dev.alaindustrial.menu.ReactorControllerMenu;
 import java.util.List;
 import net.minecraft.client.gui.Font;
@@ -64,6 +65,7 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 	/** The tabs, in the strip's order. */
 	public static final int PAGE_CONSOLE = 0;
 	public static final int PAGE_ROOM = 1;
+	public static final int PAGE_ZONE = 2;
 
 	private static final Identifier TAB_TOP = Identifier.withDefaultNamespace("advancements/tab_left_top");
 	private static final Identifier TAB_TOP_SELECTED =
@@ -92,7 +94,7 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 
 	public ReactorControllerScreen(ReactorControllerMenu menu, Inventory inventory, Component title) {
 		super(menu, inventory, title, IMAGE_WIDTH, IMAGE_HEIGHT);
-		this.pages = List.of(new ConsoleTabPage(this), new RoomTabPage(this));
+		this.pages = List.of(new ConsoleTabPage(this), new RoomTabPage(this), new ZoneTabPage(this));
 		this.selected = Math.min(lastPage, this.pages.size() - 1);
 	}
 
@@ -252,6 +254,9 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 				selectPage(tab);
 				return true;
 			}
+			if (pages.get(selected).mouseClicked(event)) {
+				return true;
+			}
 		}
 		return super.mouseClicked(event, doubleClick);
 	}
@@ -322,7 +327,12 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 		showSelected();
 	}
 
-	/** The open tab — {@link #PAGE_CONSOLE}, {@link #PAGE_ROOM}. */
+	/** One of the tabs, for a stand that drives a page directly. */
+	public ReactorTabPage page(int index) {
+		return pages.get(index);
+	}
+
+	/** The open tab — {@link #PAGE_CONSOLE}, {@link #PAGE_ROOM}, {@link #PAGE_ZONE}. */
 	public int selectedPage() {
 		return selected;
 	}

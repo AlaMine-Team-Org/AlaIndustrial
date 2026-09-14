@@ -39,6 +39,7 @@ public class ReactorControllerMenu extends MachineMenu {
 		super(ModContent.REACTOR_CONTROLLER_MENU.get(), syncId, playerInventory, be, be.getDataAccess(),
 				access, ModContent.REACTOR_CONTROLLER.get());
 		this.controller = be instanceof ReactorControllerBlockEntity c ? c : null;
+		this.viewer = playerInventory.player;
 	}
 
 	/** Client side. The stub container is empty — no slots, and no upgrade block appended. */
@@ -47,6 +48,53 @@ public class ReactorControllerMenu extends MachineMenu {
 				new SimpleContainerData(ReactorControllerBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL,
 				ModContent.REACTOR_CONTROLLER.get());
 		this.controller = null;
+		this.viewer = playerInventory.player;
+	}
+
+	/**
+	 * Ticks between two zone snapshots for one open screen (MOD-620). One second: rods wear slowly and water moves a
+	 * little each tick. A column placed or broken shows once the room scan has seen it, on that scan's own timer.
+	 */
+	private static final int ZONE_SYNC_INTERVAL_TICKS = 20;
+
+	/** The player this menu is open for — the address of the zone packet. */
+	private final Player viewer;
+
+	/** Server side: when the next zone snapshot is due, and whether it changed since the last one sent. */
+	private final dev.alaindustrial.core.ThrottledSnapshot<dev.alaindustrial.network.ReactorZonePayload> zoneSync =
+			new dev.alaindustrial.core.ThrottledSnapshot<>(ZONE_SYNC_INTERVAL_TICKS);
+
+	/** Client side: the latest zone snapshot, or {@code null} before the first one lands. */
+	private dev.alaindustrial.network.@org.jspecify.annotations.Nullable ReactorZonePayload zone;
+
+	/**
+	 * Pushes the core, stack by stack, to this screen's viewer (MOD-620) — at most once a second, and only when it
+	 * changed. A closed screen sends nothing: vanilla calls this only for an open menu. The client menu has no
+	 * controller behind it and falls through.
+	 */
+	@Override
+	public void broadcastChanges() {
+		super.broadcastChanges();
+		if (controller == null || !(viewer instanceof net.minecraft.server.level.ServerPlayer player)
+				|| !zoneSync.due()) {
+			return;
+		}
+		dev.alaindustrial.network.ReactorZonePayload next = controller.zoneSnapshot(containerId);
+		if (zoneSync.changed(next)) {
+			dev.alaindustrial.network.NetworkDispatcher.get().sendToPlayer(player, next);
+		}
+	}
+
+	/** Client side: accepts a zone snapshot addressed to THIS menu; one for another screen is dropped. */
+	public void acceptZone(dev.alaindustrial.network.ReactorZonePayload payload) {
+		if (payload.containerId() == containerId) {
+			this.zone = payload;
+		}
+	}
+
+	/** Client side: the latest zone snapshot, or {@code null} before the first one arrives. */
+	public dev.alaindustrial.network.@org.jspecify.annotations.Nullable ReactorZonePayload zone() {
+		return zone;
 	}
 
 	/**

@@ -42,5 +42,18 @@ public final class FuelRodMath {
 		return (rodEnergy + ROD_DURABILITY - 1) / ROD_DURABILITY;
 	}
 
+	/**
+	 * EU a rod still holds at {@code damage} (MOD-620): the points left on its bar, each worth
+	 * {@link #euPerPoint}. The same arithmetic the burn spends them by, so the «Core» tab cannot promise
+	 * energy a rack will not deliver.
+	 */
+	public static long remainingEnergy(int damage, long rodEnergy) {
+		return Math.max(0, ROD_DURABILITY - Math.max(0, damage)) * euPerPoint(rodEnergy);
+	}
+
+	/** How far down its bar a rod is, in thousandths — 0 fresh, 1000 spent. */
+	public static int wearPermille(int damage) {
+		return (int) ((long) Math.max(0, Math.min(ROD_DURABILITY, damage)) * 1000 / ROD_DURABILITY);
+	}
 
 }

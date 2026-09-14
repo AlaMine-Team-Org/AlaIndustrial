@@ -58,10 +58,16 @@ public final class BareReactorScan {
 	private BareReactorScan() {
 	}
 
-	/** What a bare controller found: the racks it owns and the live rods in them. */
-	public record Result(List<BlockPos> racks, int rods) {
+	/**
+	 * What a bare controller found: the racks it owns and burns, the live rods in them, and every rack it reached
+	 * that nobody else claims — fuelled or not.
+	 *
+	 * @param shown the racks the «Core» tab shows (MOD-620). A rack of spent casings burns nothing, so it is not in
+	 *              {@code racks}; left off the tab too, it vanished at exactly the moment it needed servicing.
+	 */
+	public record Result(List<BlockPos> racks, int rods, List<BlockPos> shown) {
 
-		public static final Result EMPTY = new Result(List.of(), 0);
+		public static final Result EMPTY = new Result(List.of(), 0, List.of());
 
 		public boolean isEmpty() {
 			return racks.isEmpty();
@@ -82,6 +88,7 @@ public final class BareReactorScan {
 		// controller drive racks standing three blocks away across open ground, which read to the player
 		// as power teleporting (playtest, 2026-08-26).
 		List<BlockPos> racks = new ArrayList<>();
+		List<BlockPos> shown = new ArrayList<>();
 		int rods = 0;
 		Set<BlockPos> seen = new HashSet<>();
 		Deque<BlockPos> queue = new ArrayDeque<>();
@@ -104,14 +111,18 @@ public final class BareReactorScan {
 					continue;
 				}
 				queue.add(next);
-				if (level.getBlockEntity(next) instanceof FuelRodAssemblyBlockEntity fuelled
-						&& fuelled.hasFuel() && !claimedByAnother(next, controller, rivals, radius)) {
-					racks.add(next.immutable());
-					rods += fuelled.getRods();
+				if (level.getBlockEntity(next) instanceof FuelRodAssemblyBlockEntity column
+						&& !claimedByAnother(next, controller, rivals, radius)) {
+					shown.add(next.immutable());
+					if (column.hasFuel()) {
+						racks.add(next.immutable());
+						rods += column.getRods();
+					}
 				}
 			}
 		}
-		return racks.isEmpty() ? Result.EMPTY : new Result(List.copyOf(racks), rods);
+		return racks.isEmpty() && shown.isEmpty() ? Result.EMPTY
+				: new Result(List.copyOf(racks), rods, List.copyOf(shown));
 	}
 
 	/** Every other reactor controller near enough to contest a rack, in loaded chunks only. */

@@ -14,8 +14,11 @@ import dev.alaindustrial.block.entity.ReactorOutletBlockEntity;
 import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.core.structure.ReactorCore;
+import dev.alaindustrial.core.structure.FuelRodMath;
 import dev.alaindustrial.core.structure.ReactorMeltdown;
+import dev.alaindustrial.core.structure.ReactorZone;
 import dev.alaindustrial.menu.ReactorControllerMenu;
+import dev.alaindustrial.network.ReactorZonePayload;
 import dev.alaindustrial.registry.ModContent;
 import java.util.ArrayList;
 import java.util.List;
@@ -492,6 +495,31 @@ public final class ReactorScenarios {
 			if (wire.getEnergyStorage().getAmount() <= 0) {
 				helper.fail("a cable on a bare reactor received nothing — bare power cannot be plugged in");
 			}
+			// The Core tab shows a rack of spent casings too (review, MOD-620). It burns nothing, so it is not among
+			// the racks the reactor drives, and a tab built from those alone lost the rack exactly when it needed a
+			// player. Checked in this phase, where nothing melts; the cell is stone again before phase two counts lava.
+			BlockPos spentAt = BARE_RACK.north();
+			placeColumnAt(helper, spentAt).insertRod(new ItemStack(ModContent.EMPTY_FUEL_ROD.get()));
+			driveAt(helper, brain, BARE_CONTROLLER, Config.reactorScanIntervalTicks + 1);
+			ReactorZonePayload zone = brain.zoneSnapshot(3);
+			if (zone.stacks().size() != 2 || zone.width() != 1 || zone.depth() != 2) {
+				helper.fail("a bare pile of a fuelled rack and a rack of spent casings is a 1 x 2 zone of two stacks, got "
+						+ zone.width() + " x " + zone.depth() + " with " + zone.stacks().size() + " stack(s)");
+				return;
+			}
+			ReactorZone.Stack spent = zone.stacks().get(0);
+			if (spent.fuelledRods() != 0 || spent.spentRods() != 1) {
+				helper.fail("the northern stack should be the spent casing, got " + spent.fuelledRods() + " fuelled and "
+						+ spent.spentRods() + " spent");
+			}
+			if (zone.originDx() != spentAt.getX() - BARE_CONTROLLER.getX()
+					|| zone.originDz() != spentAt.getZ() - BARE_CONTROLLER.getZ()) {
+				helper.fail("bare zone corner is " + zone.originDx() + ", " + zone.originDz()
+						+ " from the controller; the spent rack stands at " + (spentAt.getX() - BARE_CONTROLLER.getX())
+						+ ", " + (spentAt.getZ() - BARE_CONTROLLER.getZ()));
+			}
+			helper.setBlock(spentAt, Blocks.STONE.defaultBlockState());
+			driveAt(helper, brain, BARE_CONTROLLER, Config.reactorScanIntervalTicks + 1);
 
 			// ── phase two: the switch is on ──
 			Config.reactorMeltdownMeltsBlocks = true;
@@ -1690,6 +1718,91 @@ public final class ReactorScenarios {
 				helper.makeMockPlayer(GameType.SURVIVAL).getInventory());
 		if (!clientMenu.slots.isEmpty()) {
 			helper.fail("client menu carries " + clientMenu.slots.size() + " slots, expected none");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * The «Core» tab's snapshot tells the truth about the racks in the world (MOD-620).
+	 *
+	 * <p>A two-high stack — a fresh rod and a worn one below, a spent casing above — and some water. What the
+	 * snapshot reports is compared with what the racks hold, read back from the racks themselves, so the scenario
+	 * pins the fold into stacks rather than restating its own literals. The reactor has no redstone signal, so the
+	 * rods keep the wear this scenario gave them.
+	 */
+	public static void zoneSnapshotMatchesTheRacks(GameTestHelper helper) {
+		buildRoom(helper);
+		ReactorControllerBlockEntity brain = controller(helper);
+		FuelRodAssemblyBlockEntity low = placeColumn(helper);
+		FuelRodAssemblyBlockEntity high = placeColumnAt(helper, COLUMN.above());
+		ItemStack worn = new ItemStack(ModContent.URANIUM_FUEL_ROD.get());
+		worn.setDamageValue(400);
+		low.insertRod(new ItemStack(ModContent.URANIUM_FUEL_ROD.get()));
+		low.insertRod(worn);
+		high.insertRod(new ItemStack(ModContent.EMPTY_FUEL_ROD.get()));
+		low.setTank(true, 2000);
+		drive(helper, brain, Config.reactorScanIntervalTicks + 1);
+		if (brain.getStatus() != ReactorRoomStatus.FORMED) {
+			helper.fail("room did not seal, so there is no core to snapshot: " + brain.getStatus());
+		}
+
+		ReactorZonePayload zone = brain.zoneSnapshot(7);
+		int inner = SHELL_MAX - 1;
+		if (zone.containerId() != 7 || zone.width() != inner || zone.depth() != inner) {
+			helper.fail("snapshot is for container " + zone.containerId() + ", " + zone.width() + " x " + zone.depth()
+					+ "; expected 7 and the " + inner + " x " + inner + " interior");
+		}
+		if (zone.originDx() != 1 - CONTROLLER.getX() || zone.originDz() != 1 - CONTROLLER.getZ()) {
+			helper.fail("zone corner is " + zone.originDx() + ", " + zone.originDz() + " from the controller; the "
+					+ "interior starts at " + (1 - CONTROLLER.getX()) + ", " + (1 - CONTROLLER.getZ()));
+		}
+		if (zone.stacks().size() != 1) {
+			helper.fail("two columns on one spot are one stack, got " + zone.stacks().size());
+		}
+		ReactorZone.Stack stack = zone.stacks().get(0);
+		long rodEnergy = ReactorCore.rodEnergy(Config.reactorEuPerRod, Config.reactorRodBurnTicks);
+		int fuelled = 0;
+		int spent = 0;
+		long wearSum = 0;
+		int worst = 0;
+		long remaining = 0;
+		List<ItemStack> racked = new ArrayList<>(low.contents());
+		racked.addAll(high.contents());
+		for (ItemStack rod : racked) {
+			if (rod.is(ModContent.URANIUM_FUEL_ROD.get())) {
+				fuelled++;
+				int wear = FuelRodMath.wearPermille(rod.getDamageValue());
+				wearSum += wear;
+				worst = Math.max(worst, wear);
+				remaining += FuelRodMath.remainingEnergy(rod.getDamageValue(), rodEnergy);
+			} else {
+				spent++;
+				wearSum += 1000;
+				worst = 1000;
+			}
+		}
+		int average = (int) (wearSum / racked.size());
+		if (stack.x() != COLUMN.getX() - 1 || stack.z() != COLUMN.getZ() - 1) {
+			helper.fail("stack at " + stack.x() + ", " + stack.z() + " of the interior; the column stands at "
+					+ (COLUMN.getX() - 1) + ", " + (COLUMN.getZ() - 1));
+		}
+		if (stack.columns() != 2 || stack.fuelledRods() != fuelled || stack.spentRods() != spent) {
+			helper.fail("stack holds " + stack.columns() + " columns, " + stack.fuelledRods() + " fuelled, "
+					+ stack.spentRods() + " spent; the racks hold 2, " + fuelled + ", " + spent);
+		}
+		if (stack.averageWearPermille() != average || stack.worstWearPermille() != worst
+				|| stack.remainingEu() != remaining) {
+			helper.fail("stack wear " + stack.averageWearPermille() + "/" + stack.worstWearPermille() + " and "
+					+ stack.remainingEu() + " EU left; the rods say " + average + "/" + worst + " and " + remaining);
+		}
+		if (stack.neighbours() != 0) {
+			helper.fail("a spent casing is not a fuelled neighbour, got " + stack.neighbours());
+		}
+		long held = low.waterTank.amount + high.waterTank.amount;
+		long capacity = low.waterTank.capacity + high.waterTank.capacity;
+		int water = (int) ((held * 200 + capacity) / (capacity * 2));
+		if (stack.waterPercent() != water) {
+			helper.fail("stack water " + stack.waterPercent() + "%, the tanks hold " + water + "%");
 		}
 		helper.succeed();
 	}

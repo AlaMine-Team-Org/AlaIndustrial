@@ -75,4 +75,9 @@ public final class NeoForgeNetworkClient {
 	public static void receiveMachineStats(MachineStatsPayload payload) {
 		MachineStatsClient.receive(payload);
 	}
+
+	/** MOD-620: the reactor controller's «Core» tab, through the same loader-neutral landing point Fabric uses. */
+	public static void receiveReactorZone(dev.alaindustrial.network.ReactorZonePayload payload) {
+		dev.alaindustrial.client.ReactorZoneClient.receive(payload);
+	}
 }
