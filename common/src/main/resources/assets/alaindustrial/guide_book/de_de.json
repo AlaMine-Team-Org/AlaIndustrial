@@ -151,8 +151,8 @@
           "pages": [
             {
               "type": "text",
-              "title": "Fünf Schritte",
-              "text": "1. Der Raum ist dicht\n2. In den Säulen stecken Brennstäbe\n3. Am Reaktorauslass hängt ein Kabel\n4. Ein Redstone-Signal erreicht die Steuerung\n5. Die Tiefe steht nicht auf null: die Steuerung hat fünf Schaltflächen — 0 %, 25 %, 50 %, 75 %, 100 %"
+              "title": "Sechs Schritte",
+              "text": "1. Der Raum ist dicht\n2. In den Säulen stecken Brennstäbe\n3. Wasser wird in die Säulen geleitet und der Dampf abgeführt\n4. Am Reaktorauslass hängt ein Kabel\n5. Ein Redstone-Signal erreicht die Steuerung\n6. Die Tiefe steht nicht auf null: stelle sie mit dem Schieberegler in der Steuerung ein"
             },
             {
               "type": "text",
@@ -162,7 +162,7 @@
             {
               "type": "text",
               "title": "Leistung",
-              "text": "Eine Säule gibt 24 EU/t. Mehr Stäbe und enger gestellte Säulen geben mehr: Nachbarsäulen verstärken einander.\n\nDie Decke liegt bei 512 EU/t. Die gewählte Tiefen-Schaltfläche teilt Leistung, Hitze und Brennstoffverbrauch gleichermaßen."
+              "text": "Eine Säule gibt 24 EU/t. Mehr Stäbe und enger gestellte Säulen geben mehr: Nachbarsäulen verstärken einander.\n\nDie Decke liegt bei 512 EU/t. Die Stabtiefe teilt Leistung, Wärme, Wasser- und Brennstoffverbrauch gleichermaßen."
             }
           ]
         },
@@ -174,12 +174,12 @@
             {
               "type": "text",
               "title": "Hitze",
-              "text": "Der Reaktor heizt auf, der Raum gibt Wärme von allein ab — und umso schneller, je heißer er ist. Deshalb findet jeder Reaktor seine eigene Temperatur und bleibt dort.\n\nEine Säule liegt bei etwa 15%. Zwei nebeneinander erreichen zwei Drittel. Drei und mehr hält der Raum nicht mehr allein."
+              "text": "Ein laufender Reaktor heizt nur auf: Solange die Stäbe arbeiten, gibt der Raum von allein keine Wärme ab. Das Wasser führt die Wärme ab; ohne Wasser steigt die Anzeige bis ganz oben, und der Störfall-Countdown beginnt.\n\nSobald die Reaktion stoppt — der Hebel ist umgelegt —, kühlt der Raum von selbst ab."
             },
             {
               "type": "text",
               "title": "Der Wasserkreislauf",
-              "text": "Wasser ist kein Kühler, sondern ein Sicherheitssystem: Es setzt ein, sobald die Anzeige der gelben Marke nahe kommt, und hält den Reaktor darunter. Gelb bedeutet also, dass die Kühlung nicht mehr mitkommt.\n\nPumpe -> Rohr -> Reaktoreinlass -> Säule. Stelle die Rohrseiten am Einlass mit dem Schraubenschlüssel ein: außen entnehmen, innen einspeisen. Säule und Düse brauchen keinen Schlüssel — eine Säule nimmt Wasser nur auf und gibt Dampf nur ab."
+              "text": "Wasser führt die Wärme ab. Ein Reaktor mit genug Wasser bleibt nahe am unteren Ende der Anzeige, und Gelb bedeutet, dass das Wasser nicht mehr mitkommt.\n\nPumpe -> Rohr -> Reaktoreinlass -> Säule. Stelle die Rohrseiten am Einlass mit dem Schraubenschlüssel ein: außen entnehmen, innen einspeisen. Säule und Düse brauchen keinen Schlüssel — eine Säule nimmt Wasser nur auf und gibt Dampf nur ab."
             },
             {
               "type": "text",

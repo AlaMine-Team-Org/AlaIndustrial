@@ -151,8 +151,8 @@
           "pages": [
             {
               "type": "text",
-              "title": "Cinco pasos",
-              "text": "1. La sala está sellada\n2. Hay barras en las columnas\n3. Hay un cable en la salida del reactor\n4. Una señal de redstone llega al controlador\n5. La profundidad no está a cero: el controlador tiene cinco botones — 0 %, 25 %, 50 %, 75 %, 100 %"
+              "title": "Seis pasos",
+              "text": "1. La sala está sellada\n2. Hay barras en las columnas\n3. El agua llega por tubería a las columnas y el vapor tiene salida\n4. Hay un cable en la salida del reactor\n5. Una señal de redstone llega al controlador\n6. La profundidad no está a cero: ajústala con el control deslizante del controlador"
             },
             {
               "type": "text",
@@ -162,7 +162,7 @@
             {
               "type": "text",
               "title": "Potencia",
-              "text": "Una columna da 24 EU/t. Más barras y columnas más juntas dan más: las columnas vecinas se refuerzan entre sí.\n\nEl techo son 512 EU/t. El botón de profundidad elegido divide por igual potencia, calor y consumo de combustible."
+              "text": "Una columna da 24 EU/t. Más barras y columnas más juntas dan más: las columnas vecinas se refuerzan entre sí.\n\nEl techo son 512 EU/t. La profundidad de las barras divide por igual potencia, calor, agua y consumo de combustible."
             }
           ]
         },
@@ -174,12 +174,12 @@
             {
               "type": "text",
               "title": "Calor",
-              "text": "El reactor se calienta y la sala disipa calor por su cuenta, tanto más rápido cuanto más caliente está. Por eso cada reactor encuentra su temperatura y se queda ahí.\n\nUna columna se queda cerca del 15%. Dos juntas llegan a dos tercios. Con tres o más la sala ya no aguanta sola."
+              "text": "Un reactor en funcionamiento solo se calienta: mientras las barras trabajan, la sala no disipa nada por su cuenta. El agua se lleva el calor; sin ella, el indicador sube hasta arriba y empieza la cuenta regresiva del accidente.\n\nEn cuanto la reacción se detiene —al bajar la palanca—, la sala se enfría sola."
             },
             {
               "type": "text",
               "title": "El circuito de agua",
-              "text": "El agua no es un radiador, es un sistema de seguridad: entra en juego cuando el indicador se acerca a la marca ámbar y mantiene el reactor por debajo de ella. Por eso el ámbar significa que la refrigeración se está quedando corta.\n\nBomba -> tubería -> entrada del reactor -> columna. Ajusta las caras de la tubería en la entrada con la llave inglesa: extraer por fuera, insertar por dentro. La columna y la boquilla no necesitan llave: una columna solo admite agua y solo entrega vapor."
+              "text": "El agua se lleva el calor. Un reactor con agua suficiente se queda cerca de la parte baja del indicador, y el ámbar significa que el agua se está quedando corta.\n\nBomba -> tubería -> entrada del reactor -> columna. Ajusta las caras de la tubería en la entrada con la llave inglesa: extraer por fuera, insertar por dentro. La columna y la boquilla no necesitan llave: una columna solo admite agua y solo entrega vapor."
             },
             {
               "type": "text",

@@ -151,8 +151,8 @@
           "pages": [
             {
               "type": "text",
-              "title": "Cinq étapes",
-              "text": "1. La salle est étanche\n2. Il y a des barres dans les colonnes\n3. Un câble est sur la sortie de réacteur\n4. Un signal de redstone atteint le contrôleur\n5. La profondeur n’est pas à zéro : le contrôleur a cinq boutons — 0 %, 25 %, 50 %, 75 %, 100 %"
+              "title": "Six étapes",
+              "text": "1. La salle est étanche\n2. Il y a des barres dans les colonnes\n3. L’eau est amenée dans les colonnes et la vapeur est évacuée\n4. Un câble est sur la sortie de réacteur\n5. Un signal de redstone atteint le contrôleur\n6. La profondeur n’est pas à zéro : réglez-la avec le curseur du contrôleur"
             },
             {
               "type": "text",
@@ -162,7 +162,7 @@
             {
               "type": "text",
               "title": "Puissance",
-              "text": "Une colonne donne 24 EU/t. Plus de barres et des colonnes plus serrées donnent davantage : les colonnes voisines se renforcent entre elles.\n\nLe plafond est de 512 EU/t. Le bouton de profondeur choisi divise à parts égales la puissance, la chaleur et la consommation de combustible."
+              "text": "Une colonne donne 24 EU/t. Plus de barres et des colonnes plus serrées donnent davantage : les colonnes voisines se renforcent entre elles.\n\nLe plafond est de 512 EU/t. L’insertion des barres divise à parts égales la puissance, la chaleur et la consommation d’eau et de combustible."
             }
           ]
         },
@@ -174,12 +174,12 @@
             {
               "type": "text",
               "title": "La chaleur",
-              "text": "Le réacteur chauffe et la salle évacue la chaleur toute seule — d’autant plus vite qu’elle est chaude. Chaque réacteur trouve donc sa température et s’y tient.\n\nUne colonne se stabilise vers 15%. Deux côte à côte atteignent les deux tiers. Trois ou plus, la salle ne tient plus toute seule."
+              "text": "Un réacteur en marche ne fait que chauffer : tant que les barres fonctionnent, la salle n’évacue rien d’elle-même. L’eau emporte la chaleur ; sans elle, la jauge monte jusqu’en haut et le compte à rebours de l’accident commence.\n\nUne fois la réaction arrêtée — le levier baissé —, la salle refroidit d’elle-même."
             },
             {
               "type": "text",
               "title": "Le circuit d’eau",
-              "text": "L’eau n’est pas un radiateur mais un système de sécurité : elle s’enclenche dès que la jauge approche de la zone ambre et maintient le réacteur en dessous. L’ambre signifie donc que le refroidissement ne suit plus.\n\nPompe -> tuyau -> entrée du réacteur -> colonne. Réglez les faces du tuyau à l’entrée avec la clé : extraction à l’extérieur, insertion à l’intérieur. La colonne et la buse n’ont pas besoin de clé — une colonne ne prend que de l’eau et ne rend que de la vapeur."
+              "text": "L’eau emporte la chaleur. Un réacteur qui a assez d’eau reste près du bas de la jauge, et l’ambre signifie que l’eau ne suit plus.\n\nPompe -> tuyau -> entrée du réacteur -> colonne. Réglez les faces du tuyau à l’entrée avec la clé : extraction à l’extérieur, insertion à l’intérieur. La colonne et la buse n’ont pas besoin de clé — une colonne ne prend que de l’eau et ne rend que de la vapeur."
             },
             {
               "type": "text",

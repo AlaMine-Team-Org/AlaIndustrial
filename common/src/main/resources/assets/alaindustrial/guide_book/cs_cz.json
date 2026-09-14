@@ -151,8 +151,8 @@
           "pages": [
             {
               "type": "text",
-              "title": "Pět kroků",
-              "text": "1. Komora je utěsněná\n2. V kolonách jsou tyče\n3. Na výstupu reaktoru je kabel\n4. K ovladači vede redstonový signál\n5. Hloubka není na nule: ovladač má pět tlačítek — 0 %, 25 %, 50 %, 75 %, 100 %"
+              "title": "Šest kroků",
+              "text": "1. Komora je utěsněná\n2. V kolonách jsou tyče\n3. Do kolon vede potrubím voda a pára má kudy unikat\n4. Na výstupu reaktoru je kabel\n5. K ovladači vede redstonový signál\n6. Hloubka není na nule: nastav ji posuvníkem v ovladači"
             },
             {
               "type": "text",
@@ -162,7 +162,7 @@
             {
               "type": "text",
               "title": "Výkon",
-              "text": "Jedna kolona dává 24 EU/t. Víc tyčí a těsnější uspořádání dávají víc: sousední kolony se navzájem posilují.\n\nStrop je 512 EU/t. Zvolené tlačítko hloubky dělí výkon, teplo i spotřebu paliva stejnou měrou."
+              "text": "Jedna kolona dává 24 EU/t. Víc tyčí a těsnější uspořádání dávají víc: sousední kolony se navzájem posilují.\n\nStrop je 512 EU/t. Hloubka tyčí dělí výkon, teplo, vodu i spotřebu paliva stejnou měrou."
             }
           ]
         },
@@ -174,12 +174,12 @@
             {
               "type": "text",
               "title": "Teplo",
-              "text": "Reaktor se zahřívá a komora sama odvádí teplo — tím rychleji, čím je teplejší. Každý reaktor se tak ustálí na své vlastní teplotě a na ní zůstane.\n\nJedna kolona se drží kolem 15 %. Dvě vedle sebe dosáhnou dvou třetin. Tři a víc už komora sama neudrží."
+              "text": "Pracující reaktor se jen zahřívá: dokud tyče pracují, komora sama žádné teplo neodvádí. Teplo odvádí voda; bez ní ukazatel vystoupá až nahoru a začne odpočet havárie.\n\nJakmile reakci zastavíš stažením páky, komora sama vychladne."
             },
             {
               "type": "text",
               "title": "Vodní okruh",
-              "text": "Voda není radiátor, je to bezpečnostní systém: zapojí se, jakmile se ukazatel přiblíží k oranžové značce, a drží reaktor pod ní — oranžová tedy znamená, že chlazení prohrává.\n\nČerpadlo -> trubka -> vstup reaktoru -> kolona. Montážním klíčem nastav strany trubky u vstupu: venku odebírání, uvnitř vkládání. Kolona a tryska klíč nepotřebují — kolona vodu jen přijímá a páru jen vydává."
+              "text": "Teplo odvádí voda. Reaktor s dostatkem vody se drží u spodku ukazatele a oranžová znamená, že voda nestačí.\n\nČerpadlo -> trubka -> vstup reaktoru -> kolona. Montážním klíčem nastav strany trubky u vstupu: venku odebírání, uvnitř vkládání. Kolona a tryska klíč nepotřebují — kolona vodu jen přijímá a páru jen vydává."
             },
             {
               "type": "text",

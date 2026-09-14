@@ -146,6 +146,63 @@ public final class ReactorCore {
 	}
 
 	/**
+	 * Heat this tick's reaction puts into a sealed room (MOD-623).
+	 *
+	 * <p>At least one unit whenever the reaction is asked for anything. One rack on its shallowest rods can
+	 * want a whole EU while its heat rounds down to nothing, and a reaction that heats nothing would run
+	 * dry for ever — the one thing a reactor with no water may no longer do.
+	 */
+	public static long reactionHeat(long produced, long wanted) {
+		return wanted <= 0 ? 0 : Math.max(1, produced);
+	}
+
+	/**
+	 * Heat the shell sheds by itself this tick (MOD-623): nothing while the reaction runs, the ordinary
+	 * {@link #naturalCooling} curve once it has stopped.
+	 *
+	 * <p><b>Water is the only cooling a working reactor has.</b> The shell used to shed up to 84 heat a tick
+	 * at any time, so every core producing less than that settled at its own temperature — two columns at
+	 * 66 %, eight rods on 65 % depth at 40 % — and a player could run a reactor for ever without the loop it
+	 * is built around (playtest, MOD-618). With no loss while the rods work, a dry reactor always climbs to
+	 * the top and into the countdown; how fast depends on how hard it runs. A scrammed core still cools on
+	 * its own, or "pull the lever and wait" would stop being a way out.
+	 */
+	public static long shellCooling(long heat, boolean reactionRunning, int passiveCooling, int lossPermille) {
+		return reactionRunning ? 0 : naturalCooling(heat, passiveCooling, lossPermille);
+	}
+
+	/**
+	 * Water to boil this tick, in mB (MOD-623): the reaction's whole heat, plus a twentieth of the heat the
+	 * core has already stored.
+	 *
+	 * <p>The second term is what brings a core that ran dry back down once water returns: without it the
+	 * gauge would stay wherever the drought left it for as long as the rods worked, because the shell sheds
+	 * nothing while they do. It is rounded up so the gauge reaches zero rather than parking a few units
+	 * above it.
+	 *
+	 * <p><b>No threshold on either term.</b> The loop used to engage only at the coolant target and to remove
+	 * heat in steps of two, so a core resting on the line crossed it every few ticks and the gauge flickered
+	 * between 59 and 60 % (playtest, MOD-618).
+	 */
+	public static long waterDemand(long reactionHeat, long heat, int heatPerWater) {
+		long recovery = heat <= 0 ? 0 : (heat + 19) / 20;
+		return waterForHeat(Math.max(0, reactionHeat) + recovery, heatPerWater);
+	}
+
+	/**
+	 * Share of the reaction's heat the water carried, 0…100 — the figure the console quotes (MOD-623).
+	 *
+	 * <p>A hundred when there is no reaction heat to carry: a stopped reactor is not short of water, and
+	 * reading zero there would make every scrammed room look dry.
+	 */
+	public static int coolantSharePercent(long reactionHeat, long carriedHeat) {
+		if (reactionHeat <= 0) {
+			return 100;
+		}
+		return (int) (Math.min(Math.max(0, carriedHeat), reactionHeat) * 100 / reactionHeat);
+	}
+
+	/**
 	 * Whether the overheat alarm should sound this tick, given whether it has already sounded (MOD-472).
 	 *
 	 * <p><b>Why this needs a deadband and cannot be a plain {@code heat >= warn} test.</b> A reactor with

@@ -78,8 +78,22 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 		this.player = playerInventory.player;
 		addMachineSlots();
 		addUpgradeSlots();
-		addPlayerInventory(playerInventory);
+		if (hasPlayerInventory()) {
+			addPlayerInventory(playerInventory);
+		}
 		addDataSlots(data);
+	}
+
+	/**
+	 * Whether this menu carries the player's inventory. Default true; a readout with nothing to hold
+	 * overrides it (MOD-618, the reactor controller). Must answer identically on client and server — the
+	 * slot indices depend on it.
+	 *
+	 * <p>Parking the rows below the panel through {@link #playerInventoryY()} is not the same thing: the
+	 * slots stay active, so a click past the frame still lands in them.
+	 */
+	protected boolean hasPlayerInventory() {
+		return true;
 	}
 
 	/** Add the machine's own slots (slot indices 0..machineSize-1). */

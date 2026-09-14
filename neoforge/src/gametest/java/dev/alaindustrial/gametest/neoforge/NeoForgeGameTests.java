@@ -273,6 +273,9 @@ public final class NeoForgeGameTests {
 				ReactorScenarios::reactorMilestonesReachTheControllersOwner);
 		registerTest(event, "reactor_unowned_awards_nobody", 400, true,
 				ReactorScenarios::anUnownedReactorAwardsNobody);
+		// MOD-618 — the console's heat marks come from this server, and its menu carries no slots.
+		registerTest(event, "reactor_console_channels_and_no_slots", 100, true,
+				ReactorScenarios::consoleChannelsCarryTheServersHeatMarks);
 		// MOD-022 data-component seam: a charged battery box carries STORED_ENERGY on drop (frozen-registry
 		// fix — ModDataComponentsNeoForge). Fabric covers this via BatteryBoxGameTest; NeoForge world lane's first.
 		registerTest(event, "battery_box_drop_carries_energy", 40, true,

@@ -151,8 +151,8 @@
           "pages": [
             {
               "type": "text",
-              "title": "Năm bước",
-              "text": "1. Phòng đã kín\n2. Trong các cột có thanh\n3. Có cáp gắn ở cổng ra lò phản ứng\n4. Tín hiệu đá đỏ tới được bộ điều khiển\n5. Độ sâu không ở mức không: bộ điều khiển có năm nút — 0%, 25%, 50%, 75%, 100%"
+              "title": "Sáu bước",
+              "text": "1. Phòng đã kín\n2. Trong các cột có thanh\n3. Nước được dẫn vào các cột và hơi được xả ra\n4. Có cáp gắn ở cổng ra lò phản ứng\n5. Tín hiệu đá đỏ tới được bộ điều khiển\n6. Độ sâu không ở mức không: chỉnh bằng thanh trượt trong bộ điều khiển"
             },
             {
               "type": "text",
@@ -162,7 +162,7 @@
             {
               "type": "text",
               "title": "Công suất",
-              "text": "Một cột cho 24 EU/t. Càng nhiều thanh và các cột đặt càng sát thì càng nhiều: cột kề nhau tăng cường cho nhau.\n\nTrần là 512 EU/t. Nút độ sâu đã chọn chia đều cả công suất, nhiệt lẫn mức tiêu hao nhiên liệu."
+              "text": "Một cột cho 24 EU/t. Càng nhiều thanh và các cột đặt càng sát thì càng nhiều: cột kề nhau tăng cường cho nhau.\n\nTrần là 512 EU/t. Độ sâu thanh chia đều cả công suất, nhiệt, nước lẫn mức tiêu hao nhiên liệu."
             }
           ]
         },
@@ -174,12 +174,12 @@
             {
               "type": "text",
               "title": "Nhiệt",
-              "text": "Lò nóng lên còn căn phòng tự tỏa nhiệt — càng nóng thì tỏa càng nhanh. Vì thế mỗi lò đều tìm ra nhiệt độ riêng rồi dừng lại ở đó.\n\nMột cột dừng quanh 15%. Hai cột cạnh nhau lên tới hai phần ba. Ba cột trở lên thì căn phòng không tự gánh nổi."
+              "text": "Lò đang chạy chỉ nóng lên: khi các thanh còn hoạt động, căn phòng không tự tỏa nhiệt chút nào. Nước mang nhiệt đi; không có nước thì thanh đo leo lên tới đỉnh và bắt đầu đếm ngược sự cố.\n\nKhi phản ứng dừng — gạt cần xuống — căn phòng tự nguội đi."
             },
             {
               "type": "text",
               "title": "Vòng nước",
-              "text": "Nước không phải bộ tản nhiệt mà là hệ thống an toàn: nó vào cuộc khi thanh đo tiến gần vạch vàng và giữ lò ở dưới vạch đó. Vì vậy màu vàng nghĩa là việc làm mát đang đuối.\n\nBơm -> ống -> cổng vào lò -> cột. Dùng cờ lê chỉnh các mặt ống ở cổng vào: bên ngoài rút ra, bên trong đưa vào. Cột và vòi phun không cần cờ lê — cột chỉ nhận nước và chỉ trả hơi."
+              "text": "Nước mang nhiệt đi. Lò có đủ nước sẽ nằm gần đáy thanh đo, còn màu vàng nghĩa là nước không theo kịp.\n\nBơm -> ống -> cổng vào lò -> cột. Dùng cờ lê chỉnh các mặt ống ở cổng vào: bên ngoài rút ra, bên trong đưa vào. Cột và vòi phun không cần cờ lê — cột chỉ nhận nước và chỉ trả hơi."
             },
             {
               "type": "text",

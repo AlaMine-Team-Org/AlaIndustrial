@@ -151,8 +151,8 @@
           "pages": [
             {
               "type": "text",
-              "title": "Beş adım",
-              "text": "1. Oda sızdırmaz\n2. Kolonlarda çubuk var\n3. Reaktör çıkışında kablo var\n4. Kontrol ünitesine kırmızı taş sinyali geliyor\n5. Derinlik sıfırda değil: kontrol ünitesinde beş düğme var — %0, %25, %50, %75, %100"
+              "title": "Altı adım",
+              "text": "1. Oda sızdırmaz\n2. Kolonlarda çubuk var\n3. Kolonlara boruyla su geliyor ve buhar dışarı çıkabiliyor\n4. Reaktör çıkışında kablo var\n5. Kontrol ünitesine kırmızı taş sinyali geliyor\n6. Derinlik sıfırda değil: kontrol ünitesindeki kaydırıcıyla ayarla"
             },
             {
               "type": "text",
@@ -162,7 +162,7 @@
             {
               "type": "text",
               "title": "Güç",
-              "text": "Bir kolon 24 EU/t verir. Daha çok çubuk ve daha sık dizilmiş kolonlar daha fazlasını verir: komşu kolonlar birbirini güçlendirir.\n\nTavan 512 EU/t. Seçilen derinlik düğmesi gücü, ısıyı ve yakıt tüketimini aynı oranda böler."
+              "text": "Bir kolon 24 EU/t verir. Daha çok çubuk ve daha sık dizilmiş kolonlar daha fazlasını verir: komşu kolonlar birbirini güçlendirir.\n\nTavan 512 EU/t. Çubuk derinliği gücü, ısıyı, suyu ve yakıt tüketimini aynı oranda böler."
             }
           ]
         },
@@ -174,12 +174,12 @@
             {
               "type": "text",
               "title": "Isı",
-              "text": "Reaktör ısınır, oda ısıyı kendiliğinden atar — hem de ne kadar sıcaksa o kadar hızlı. Bu yüzden her reaktör kendi sıcaklığını bulur ve orada kalır.\n\nBir kolon 15% civarında durur. Yan yana iki tanesi üçte ikiye çıkar. Üç ve fazlasını oda tek başına tutamaz."
+              "text": "Çalışan bir reaktör yalnızca ısınır: çubuklar çalıştığı sürece oda kendiliğinden hiç ısı atmaz. Isıyı su alıp götürür; su yoksa gösterge en tepeye tırmanır ve kaza geri sayımı başlar.\n\nReaksiyon durunca — kol indirilince — oda kendiliğinden soğur."
             },
             {
               "type": "text",
               "title": "Su devresi",
-              "text": "Su bir radyatör değil, bir güvenlik sistemidir: gösterge sarı işarete yaklaşınca devreye girer ve reaktörü onun altında tutar; dolayısıyla sarı, soğutmanın yetişemediği anlamına gelir.\n\nPompa -> boru -> reaktör girişi -> kolon. Girişteki boru yüzlerini İngiliz anahtarıyla ayarla: dışarıda çekme, içeride verme. Kolon ve nozul anahtar istemez — kolon suyu yalnızca alır, buharı yalnızca verir."
+              "text": "Isıyı su alıp götürür. Yeterince suyu olan bir reaktör göstergenin alt kısmında durur; sarı ise suyun yetişemediği anlamına gelir.\n\nPompa -> boru -> reaktör girişi -> kolon. Girişteki boru yüzlerini İngiliz anahtarıyla ayarla: dışarıda çekme, içeride verme. Kolon ve nozul anahtar istemez — kolon suyu yalnızca alır, buharı yalnızca verir."
             },
             {
               "type": "text",

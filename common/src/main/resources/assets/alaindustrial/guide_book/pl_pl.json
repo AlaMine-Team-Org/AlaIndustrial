@@ -151,8 +151,8 @@
           "pages": [
             {
               "type": "text",
-              "title": "Pięć kroków",
-              "text": "1. Komora jest szczelna\n2. W kolumnach są pręty\n3. Na wyjściu reaktora jest kabel\n4. Sygnał redstone dochodzi do sterownika\n5. Głębokość nie stoi na zerze: sterownik ma pięć przycisków — 0%, 25%, 50%, 75%, 100%"
+              "title": "Sześć kroków",
+              "text": "1. Komora jest szczelna\n2. W kolumnach są pręty\n3. Do kolumn doprowadzona jest woda, a para ma ujście\n4. Na wyjściu reaktora jest kabel\n5. Sygnał redstone dochodzi do sterownika\n6. Głębokość nie stoi na zerze: ustaw ją suwakiem w sterowniku"
             },
             {
               "type": "text",
@@ -162,7 +162,7 @@
             {
               "type": "text",
               "title": "Moc",
-              "text": "Jedna kolumna daje 24 EU/t. Więcej prętów i ciaśniej ustawione kolumny dają więcej: sąsiednie kolumny wzmacniają się nawzajem.\n\nSufit to 512 EU/t. Wybrany przycisk głębokości dzieli po równo moc, ciepło i zużycie paliwa."
+              "text": "Jedna kolumna daje 24 EU/t. Więcej prętów i ciaśniej ustawione kolumny dają więcej: sąsiednie kolumny wzmacniają się nawzajem.\n\nSufit to 512 EU/t. Głębokość prętów dzieli po równo moc, ciepło, zużycie wody i paliwa."
             }
           ]
         },
@@ -174,12 +174,12 @@
             {
               "type": "text",
               "title": "Ciepło",
-              "text": "Reaktor się grzeje, a komora sama oddaje ciepło — tym szybciej, im jest gorętsza. Dlatego każdy reaktor znajduje własną temperaturę i przy niej zostaje.\n\nJedna kolumna trzyma się okolic 15%. Dwie obok siebie dochodzą do dwóch trzecich. Trzech i więcej komora sama już nie utrzyma."
+              "text": "Pracujący reaktor tylko się grzeje: póki pracują pręty, komora sama nie oddaje ciepła. Ciepło odprowadza woda; bez niej wskaźnik wspina się na sam szczyt i rusza odliczanie do awarii.\n\nGdy reakcja stanie — dźwignia zrzucona — komora sama stygnie."
             },
             {
               "type": "text",
               "title": "Obieg wodny",
-              "text": "Woda nie jest chłodnicą, lecz układem bezpieczeństwa: włącza się, gdy wskaźnik zbliża się do żółtej strefy, i trzyma reaktor poniżej niej. Żółty oznacza więc, że chłodzenie przestaje nadążać.\n\nPompa -> rura -> wlot reaktora -> kolumna. Ustaw ściany rury przy wlocie kluczem: na zewnątrz pobieranie, wewnątrz podawanie. Kolumna i dysza klucza nie potrzebują — kolumna tylko przyjmuje wodę i tylko oddaje parę."
+              "text": "Woda odprowadza ciepło. Reaktor z wystarczającą ilością wody trzyma się przy dole wskaźnika, a żółty oznacza, że woda nie nadąża.\n\nPompa -> rura -> wlot reaktora -> kolumna. Ustaw ściany rury przy wlocie kluczem: na zewnątrz pobieranie, wewnątrz podawanie. Kolumna i dysza klucza nie potrzebują — kolumna tylko przyjmuje wodę i tylko oddaje parę."
             },
             {
               "type": "text",

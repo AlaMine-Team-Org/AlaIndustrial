@@ -323,7 +323,12 @@ pitest {
                      // MOD-483: the skill tree's rules and the wheel's coordinate maths are
                      // Minecraft-free on purpose and covered by L1 tests, so they mutate like the core.
                      'dev.alaindustrial.skill.*',
-                     'dev.alaindustrial.client.skill.SkillWheelLayout'
+                     'dev.alaindustrial.client.skill.SkillWheelLayout',
+                     // MOD-618: the reactor console's verdict, advice, throttle grid and heat trend.
+                     // The glob reaches its nested HeatTrend; nothing else in the package starts with
+                     // this name, and the tab page next to it (ConsoleTabPage) is Minecraft-bound on
+                     // purpose. Its L1 suite is ReactorConsoleTest.
+                     'dev.alaindustrial.client.screen.reactor.ReactorConsole*'
             ]
     // The MC-coupled classes are excluded from MUTATION (the bytecode PIT rewrites). But PIT's
     // JUnit discovery also walks every class under `targetTests` via reflection to find @Test

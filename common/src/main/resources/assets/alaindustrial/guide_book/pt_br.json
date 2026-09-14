@@ -151,8 +151,8 @@
           "pages": [
             {
               "type": "text",
-              "title": "Cinco passos",
-              "text": "1. A sala está vedada\n2. Há barras nas colunas\n3. Há um cabo na saída do reator\n4. Um sinal de redstone chega ao controlador\n5. A profundidade não está no zero: o controlador tem cinco botões — 0%, 25%, 50%, 75%, 100%"
+              "title": "Seis passos",
+              "text": "1. A sala está vedada\n2. Há barras nas colunas\n3. A água chega às colunas por tubo e o vapor tem por onde sair\n4. Há um cabo na saída do reator\n5. Um sinal de redstone chega ao controlador\n6. A profundidade não está no zero: ajuste-a com o controle deslizante do controlador"
             },
             {
               "type": "text",
@@ -162,7 +162,7 @@
             {
               "type": "text",
               "title": "Potência",
-              "text": "Uma coluna dá 24 EU/t. Mais barras e colunas mais juntas dão mais: colunas vizinhas se reforçam.\n\nO teto é 512 EU/t. O botão de profundidade escolhido divide igualmente potência, calor e consumo de combustível."
+              "text": "Uma coluna dá 24 EU/t. Mais barras e colunas mais juntas dão mais: colunas vizinhas se reforçam.\n\nO teto é 512 EU/t. A profundidade das barras divide igualmente potência, calor, água e consumo de combustível."
             }
           ]
         },
@@ -174,12 +174,12 @@
             {
               "type": "text",
               "title": "Calor",
-              "text": "O reator esquenta e a sala dissipa calor sozinha — e mais rápido quanto mais quente estiver. Por isso todo reator encontra a própria temperatura e fica nela.\n\nUma coluna para perto dos 15%. Duas lado a lado chegam a dois terços. Com três ou mais a sala não aguenta sozinha."
+              "text": "Um reator em operação só esquenta: enquanto as barras trabalham, a sala não dissipa nada sozinha. A água leva o calor embora; sem ela, o medidor sobe até o topo e começa a contagem regressiva do acidente.\n\nAssim que a reação para — alavanca desligada — a sala esfria sozinha."
             },
             {
               "type": "text",
               "title": "O circuito de água",
-              "text": "A água não é um radiador, é um sistema de segurança: ela entra em ação quando o medidor se aproxima da faixa âmbar e mantém o reator abaixo dela. Ou seja, âmbar significa que a refrigeração está perdendo.\n\nBomba -> tubo -> entrada do reator -> coluna. Ajuste as faces do tubo na entrada com a chave inglesa: extrair do lado de fora, inserir do lado de dentro. Coluna e bocal dispensam chave — uma coluna só aceita água e só devolve vapor."
+              "text": "A água leva o calor embora. Um reator com água suficiente fica perto da base do medidor, e âmbar significa que a água não está dando conta.\n\nBomba -> tubo -> entrada do reator -> coluna. Ajuste as faces do tubo na entrada com a chave inglesa: extrair do lado de fora, inserir do lado de dentro. Coluna e bocal dispensam chave — uma coluna só aceita água e só devolve vapor."
             },
             {
               "type": "text",

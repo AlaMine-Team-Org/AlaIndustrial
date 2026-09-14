@@ -15,6 +15,7 @@ import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.core.structure.ReactorCore;
 import dev.alaindustrial.core.structure.ReactorMeltdown;
+import dev.alaindustrial.menu.ReactorControllerMenu;
 import dev.alaindustrial.registry.ModContent;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,10 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
@@ -93,13 +97,54 @@ public final class ReactorScenarios {
 		if (brain.getIdleReason() != ReactorIdleReason.RUNNING) {
 			helper.fail("reactor idle: " + brain.getIdleReason());
 		}
-		if (brain.getLastOutput() <= 0) {
-			helper.fail("sealed, fuelled and powered reactor produced nothing");
-		}
 		// Four rods with no neighbours: 4 x Config.reactorEuPerRod, and nothing may inflate that.
 		int expected = 4 * Config.reactorEuPerRod;
 		if (brain.getLastOutput() != expected) {
 			helper.fail("expected " + expected + " EU/t from four lone rods, got " + brain.getLastOutput());
+		}
+
+		// Dry, it works — and it heats (MOD-623). While the rods work the shell sheds nothing, so a core with
+		// no water has no settle point below the top; one column used to park at 15 % for ever.
+		ContainerData data = brain.getDataAccess();
+		long dryHeat = brain.getHeat();
+		drive(helper, brain, 20);
+		if (brain.getHeat() <= dryHeat) {
+			helper.fail("a dry working room stopped heating at " + brain.getHeat());
+		}
+		if (data.get(ReactorControllerBlockEntity.DATA_COOLANT_SHARE) != 0) {
+			helper.fail("a room with no water reported carrying "
+					+ data.get(ReactorControllerBlockEntity.DATA_COOLANT_SHARE) + "% of its heat");
+		}
+
+		// Water: the gauge comes all the way down while the output holds, and then the readouts hold still.
+		// The loop used to switch on at the coolant target and boil in steps of two, so a core resting there
+		// read 59 and 60 in turn (playtest, MOD-618).
+		column.setTank(true, column.waterTank.capacity);
+		long heat = brain.getHeat();
+		for (int i = 0; i < 200; i++) {
+			drive(helper, brain, 1);
+			if (brain.getHeat() > heat || brain.getLastOutput() != expected) {
+				helper.fail("tick " + i + " with water: heat " + brain.getHeat() + " (was " + heat + "), output "
+						+ brain.getLastOutput());
+			}
+			heat = brain.getHeat();
+		}
+		if (heat != 0) {
+			helper.fail("two hundred ticks of water left the gauge at " + heat);
+		}
+		int rate = data.get(ReactorControllerBlockEntity.DATA_WATER_RATE);
+		for (int i = 0; i < 40; i++) {
+			drive(helper, brain, 1);
+			if (brain.getHeat() != 0 || brain.getLastOutput() != expected
+					|| data.get(ReactorControllerBlockEntity.DATA_WATER_RATE) != rate) {
+				helper.fail("tick " + i + " of a cooled room moved: heat " + brain.getHeat() + ", output "
+						+ brain.getLastOutput() + ", water " + data.get(ReactorControllerBlockEntity.DATA_WATER_RATE)
+						+ " mB/t (was " + rate + ")");
+			}
+		}
+		if (data.get(ReactorControllerBlockEntity.DATA_COOLANT_SHARE) != 100) {
+			helper.fail("a column with water to spare carried only "
+					+ data.get(ReactorControllerBlockEntity.DATA_COOLANT_SHARE) + "% of its heat");
 		}
 		helper.succeed();
 	}
@@ -171,8 +216,8 @@ public final class ReactorScenarios {
 			}
 			driveUnderLoad(helper, brain, 1);
 		}
-		// Held, not cooled to nothing: the loop is a safety system that stops the climb, and the shell's
-		// own losses bring the rest down slowly. Anything at or under the ceiling means it caught.
+		// Caught: the water carries the reaction's whole heat and pulls the overheat back down (MOD-623), so
+		// the core comes off the top within ticks. Anything at or under the ceiling means it caught.
 		if (brain.getHeat() >= Config.reactorHeatCapacity) {
 			helper.fail("coolant did not hold the core: still at " + brain.getHeat());
 		}
@@ -831,9 +876,6 @@ public final class ReactorScenarios {
 		ReactorControllerBlockEntity brain = controller(helper);
 		brain.setOwner(owner.getUUID(), owner.getName().getString());
 
-		// Three loaded columns, the same core the coolant scenario uses: one or two settle at a safe
-		// temperature with no plumbing at all, so the loop would never boil and the steam step could
-		// never be reached.
 		List<FuelRodAssemblyBlockEntity> row = new ArrayList<>();
 		for (int x = 1; x <= 3; x++) {
 			FuelRodAssemblyBlockEntity column = placeColumnAt(helper, new BlockPos(x, 1, 2));
@@ -844,8 +886,7 @@ public final class ReactorScenarios {
 		}
 		helper.setBlock(CONTROLLER.west(), Blocks.REDSTONE_BLOCK.defaultBlockState());
 
-		// Long enough to clear the scan interval (the room is not FORMED before the first sweep) and to
-		// run the core past the coolant target, which is what makes the loop boil.
+		// Long enough to clear the scan interval: the room is not FORMED before the first sweep.
 		driveUnderLoad(helper, brain, 1000);
 		if (brain.getStatus() != ReactorRoomStatus.FORMED) {
 			helper.fail("room did not seal: " + brain.getStatus());
@@ -853,8 +894,8 @@ public final class ReactorScenarios {
 		assertEarned(helper, owner, "reactor_room");
 		assertEarned(helper, owner, "reactor_power");
 
-		// The steam step needs coolant to exist. Kept topped up and drained, exactly as a plumbed loop
-		// behaves — see coolantCatchesACoreTheShellCannotHold for why filling once measures tank size.
+		// The steam step needs coolant to exist. Kept topped up and drained, exactly as a plumbed loop behaves
+		// — see coolantCatchesACoreTheShellCannotHold for why filling once measures tank size.
 		for (int i = 0; i < 200; i++) {
 			for (FuelRodAssemblyBlockEntity column : row) {
 				column.setTank(true, column.waterTank.capacity);
@@ -1135,6 +1176,29 @@ public final class ReactorScenarios {
 					+ "the second one breaks the rod-is-an-amount-of-energy invariant the fuel cycle "
 					+ "rests on.");
 		}
+
+		// Now plumbed, buffer still full (MOD-623): the water carries the heat and the core comes down, but
+		// nothing is sold, so the reason stays BUFFER_FULL and the rods still do not wear.
+		for (int tick = 0; tick < 200; tick++) {
+			for (FuelRodAssemblyBlockEntity column : row) {
+				column.setTank(true, column.waterTank.capacity);
+				column.setTank(false, 0);
+			}
+			brain.getEnergyStorage().setAmountUntracked(brain.getEnergyStorage().getCapacity());
+			brain.serverTick(helper.getLevel(), absolute, helper.getBlockState(CONTROLLER));
+		}
+		if (brain.getIdleReason() != ReactorIdleReason.BUFFER_FULL) {
+			helper.fail("a plumbed room with a full buffer reported " + brain.getIdleReason()
+					+ " instead of BUFFER_FULL");
+		}
+		int wearPlumbed = 0;
+		for (FuelRodAssemblyBlockEntity column : row) {
+			wearPlumbed += totalDamage(column.contents());
+		}
+		if (wearPlumbed != wearBefore) {
+			helper.fail("uranium was spent by a plumbed room whose buffer was full: wear moved from "
+					+ wearBefore + " to " + wearPlumbed);
+		}
 		// Left safe: an armed countdown in a shared world is how a test grows a blast radius nobody
 		// asked for.
 		helper.setBlock(CONTROLLER.west(), Blocks.AIR.defaultBlockState());
@@ -1236,6 +1300,10 @@ public final class ReactorScenarios {
 		if (settled <= 0) {
 			helper.fail("a working bare reactor showed no instability at all — the scale is not running");
 		}
+		// One rack settles well under the warning line, so the siren has had nothing to say.
+		if (brain.hasSoundedOverheatAlarm()) {
+			helper.fail("a single rack at " + settled + "% instability sounded the warning siren");
+		}
 		// Now make the pile too big. Three more racks stacked on the first, still inside the melt cube
 		// so nothing new leaves the rig.
 		for (BlockPos at : BARE_EXTRA_RACKS) {
@@ -1256,6 +1324,11 @@ public final class ReactorScenarios {
 					+ "% instability on " + brain.getRods() + " rods and never armed — a bare pile would "
 					+ "have no limit at all. A figure BELOW the one-rack settle means the reactor was "
 					+ "switched off for part of the run, not that the scale is mistuned.");
+		}
+		// The playtest finding (MOD-623): the siren read the room's heat, which a bare pile does not have, so
+		// the one reactor with no walls counted down to its accident in silence.
+		if (!brain.hasSoundedOverheatAlarm()) {
+			helper.fail("a bare pile armed its countdown without ever sounding the warning siren");
 		}
 		// Wound back down before the scenario ends: the countdown is armed, and leaving a live one in a
 		// shared world is how a test grows a blast radius nobody asked for.
@@ -1551,6 +1624,52 @@ public final class ReactorScenarios {
 
 	/** The longest a scenario here holds a pinned core; the countdown must outlast it. */
 	private static final int PINNED_RUN_TICKS = 1400;
+
+	/**
+	 * The heat marks the console draws travel on the menu's channels from THIS server's Config, and the
+	 * controller's menu carries no slots — not even the player's inventory (MOD-618).
+	 *
+	 * <p><b>Read at the defaults instead of after moving Config.</b> Scenarios in a batch tick at the same
+	 * time, so a threshold moved here would move for every other reactor running beside this one. The two
+	 * defaults differ from each other, which is what still catches a swapped index — and the scenario says
+	 * so out loud if a future balance pass ever makes two of them equal.
+	 */
+	public static void consoleChannelsCarryTheServersHeatMarks(GameTestHelper helper) {
+		buildRoom(helper);
+		ReactorControllerBlockEntity brain = controller(helper);
+		if (Config.reactorHeatWarnPercent == Config.reactorMeltdownStartPercent) {
+			helper.fail("the two heat thresholds share a default, so a swapped channel would pass unseen");
+		}
+		ContainerData data = brain.getDataAccess();
+		if (data.getCount() != ReactorControllerBlockEntity.DATA_COUNT) {
+			helper.fail("controller bridge is " + data.getCount() + " wide, expected " + ReactorControllerBlockEntity.DATA_COUNT);
+		}
+		// A reaction that never ran is not short of water: the share reads full, not a stale threshold.
+		expectChannel(helper, data, ReactorControllerBlockEntity.DATA_COOLANT_SHARE, 100, "coolant share");
+		expectChannel(helper, data, ReactorControllerBlockEntity.DATA_HEAT_WARN,
+				Config.reactorHeatWarnPercent, "warning line");
+		expectChannel(helper, data, ReactorControllerBlockEntity.DATA_HEAT_MELTDOWN,
+				Config.reactorMeltdownStartPercent, "meltdown line");
+
+		ReactorControllerMenu serverMenu = new ReactorControllerMenu(0,
+				helper.makeMockPlayer(GameType.SURVIVAL).getInventory(), brain, ContainerLevelAccess.NULL);
+		if (!serverMenu.slots.isEmpty()) {
+			helper.fail("server menu carries " + serverMenu.slots.size() + " slots, expected none");
+		}
+		ReactorControllerMenu clientMenu = new ReactorControllerMenu(0,
+				helper.makeMockPlayer(GameType.SURVIVAL).getInventory());
+		if (!clientMenu.slots.isEmpty()) {
+			helper.fail("client menu carries " + clientMenu.slots.size() + " slots, expected none");
+		}
+		helper.succeed();
+	}
+
+	private static void expectChannel(GameTestHelper helper, ContainerData data, int index, int expected,
+			String what) {
+		if (data.get(index) != expected) {
+			helper.fail(what + " channel " + index + " reads " + data.get(index) + ", Config says " + expected);
+		}
+	}
 
 	// --- rig ---
 

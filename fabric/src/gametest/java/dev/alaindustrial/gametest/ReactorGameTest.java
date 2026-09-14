@@ -111,4 +111,10 @@ public class ReactorGameTest {
 	public void anUnownedReactorAwardsNobody(GameTestHelper helper) {
 		ReactorScenarios.anUnownedReactorAwardsNobody(helper);
 	}
+
+	// MOD-618 — the console's heat marks come from this server, and its menu carries no slots.
+	@GameTest(maxTicks = 100)
+	public void consoleChannelsCarryTheServersHeatMarks(GameTestHelper helper) {
+		ReactorScenarios.consoleChannelsCarryTheServersHeatMarks(helper);
+	}
 }

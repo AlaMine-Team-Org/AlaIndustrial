@@ -1159,10 +1159,11 @@ public final class DemoStand {
 	 * <ul>
 	 * <li>the <b>controller faces north</b> (outward). {@code RoomScan} demands that the cell behind its
 	 * face be interior, not shell — a controller facing into the wall reports CONTROLLER_NOT_IN_WALL;</li>
-	 * <li>the <b>redstone block sits inside</b>, against the controller's back. The reactor runs only
-	 * while {@code hasNeighborSignal} is true, and every outside cell adjacent to the controller is
-	 * either shell (which would be a breach) or directly in front of its face (which would cover the
-	 * screen the demo is there to show);</li>
+	 * <li>the room has <b>no redstone signal</b>, on purpose. It used to have a redstone block inside,
+	 * against the controller's back, and ran on half a column of water — harmless while the shell shed a
+	 * lone rack's heat by itself. Since MOD-623 the shell sheds nothing while the rods work, so that stand
+	 * would boil its water dry, climb to the top and blow itself up some minutes after every
+	 * {@code /ala demo}. It stands sealed, fuelled and scrammed; a lever on the controller starts it;</li>
 	 * <li>the <b>button needs its own post</b>. A button must hang on a solid block, and no shell cell
 	 * next to the doorway is available without punching a hole in the room, so a single casing block
 	 * outside carries it. Its cell is adjacent to the door's lower half, which is what
@@ -1231,8 +1232,7 @@ public final class DemoStand {
 				ModContent.STEAM_NOZZLE.get().defaultBlockState()
 						.setValue(SteamNozzleBlock.FACING, Direction.WEST));
 
-		// Interior: the core, and the signal that lets it run.
-		set(level, origin, bx + 2, by + 1, bz + 1, Blocks.REDSTONE_BLOCK);
+		// Interior: the core, left without a signal — see the class note on why the stand no longer runs it.
 		place(level, origin, origin.offset(bx + 2, by + 1, bz + 2),
 				ModContent.FUEL_ROD_ASSEMBLY.get().defaultBlockState()
 						.setValue(FuelRodAssemblyBlock.RODS, FuelRodAssemblyBlock.MAX_RODS));

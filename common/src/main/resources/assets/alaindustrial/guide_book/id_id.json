@@ -151,8 +151,8 @@
           "pages": [
             {
               "type": "text",
-              "title": "Lima langkah",
-              "text": "1. Ruangan sudah rapat\n2. Ada batang di dalam kolom\n3. Ada kabel di keluaran reaktor\n4. Sinyal redstone sampai ke pengendali\n5. Kedalaman tidak di angka nol: pengendali punya lima tombol — 0%, 25%, 50%, 75%, 100%"
+              "title": "Enam langkah",
+              "text": "1. Ruangan sudah rapat\n2. Ada batang di dalam kolom\n3. Air dialirkan ke kolom dan uapnya dikeluarkan\n4. Ada kabel di keluaran reaktor\n5. Sinyal redstone sampai ke pengendali\n6. Kedalaman tidak di angka nol: atur dengan penggeser di pengendali"
             },
             {
               "type": "text",
@@ -162,7 +162,7 @@
             {
               "type": "text",
               "title": "Daya",
-              "text": "Satu kolom memberi 24 EU/t. Lebih banyak batang dan kolom yang dirapatkan memberi lebih: kolom bertetangga saling menguatkan.\n\nBatas atasnya 512 EU/t. Tombol kedalaman yang dipilih membagi daya, panas, dan pemakaian bahan bakar sama rata."
+              "text": "Satu kolom memberi 24 EU/t. Lebih banyak batang dan kolom yang dirapatkan memberi lebih: kolom bertetangga saling menguatkan.\n\nBatas atasnya 512 EU/t. Kedalaman batang membagi daya, panas, serta pemakaian air dan bahan bakar sama rata."
             }
           ]
         },
@@ -174,12 +174,12 @@
             {
               "type": "text",
               "title": "Panas",
-              "text": "Reaktor memanas dan ruangan membuang panas dengan sendirinya — makin panas, makin cepat. Karena itu setiap reaktor menemukan suhunya sendiri lalu bertahan di situ.\n\nSatu kolom berhenti di sekitar 15%. Dua berdampingan mencapai dua pertiga. Tiga atau lebih tidak sanggup ditahan ruangan sendirian."
+              "text": "Reaktor yang bekerja hanya memanas: selama batang bekerja, ruangan tidak membuang panas dengan sendirinya. Airlah yang membawa panas pergi; tanpa air, penunjuk naik sampai puncak dan hitung mundur kecelakaan dimulai.\n\nBegitu reaksi berhenti — tuas diturunkan — ruangan mendingin dengan sendirinya."
             },
             {
               "type": "text",
               "title": "Sirkuit air",
-              "text": "Air bukan radiator, melainkan sistem keselamatan: ia bekerja begitu penunjuk mendekati tanda kuning dan menahan reaktor di bawahnya. Jadi warna kuning berarti pendinginan mulai kewalahan.\n\nPompa -> pipa -> saluran masuk reaktor -> kolom. Atur sisi pipa di saluran masuk dengan kunci pas: di luar menarik, di dalam memasukkan. Kolom dan nosel tidak butuh kunci pas — kolom hanya menerima air dan hanya mengeluarkan uap."
+              "text": "Air membawa panas pergi. Reaktor dengan air yang cukup berada di dekat bagian bawah penunjuk, dan warna kuning berarti air tidak sanggup mengimbangi.\n\nPompa -> pipa -> saluran masuk reaktor -> kolom. Atur sisi pipa di saluran masuk dengan kunci pas: di luar menarik, di dalam memasukkan. Kolom dan nosel tidak butuh kunci pas — kolom hanya menerima air dan hanya mengeluarkan uap."
             },
             {
               "type": "text",

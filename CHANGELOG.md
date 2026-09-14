@@ -1,17 +1,10 @@
-## 0.1.163
+## 0.1.164
 
-<p><img alt="Ala Industrial 0.1.163 - two new languages, 24 in total" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.163/release-media/v0.1.163/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial 0.1.164 reactor console states" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.164/release-media/v0.1.164/changelog.png" width="720"></p>
 
-Two new languages — Czech and Mexican Spanish — and a cleaner Spanish translation.
+2 updates in this release.
 
-### New
+### Improved
 
-- **The mod now speaks Czech.** Every screen, every tooltip and the whole guide book.
-- **And Mexican Spanish.** Pick Español (México) and the mod no longer falls back to English — ores,
-  buckets and the Overworld use the same words as your version of the game.
-
-### Fixed
-
-- **A cleaner Spanish guide book.** "Vanilla" no longer means the flavour, slime is no longer "silt",
-  a made-up "BV" voltage now reads LV, and missing accents are back.
-- **Spanish recharge hints** for the energy pack and the jetpack now name the real energy storage block.
+- **New reactor console** — heat with its warning and meltdown marks, output, buffer, water and steam on one tab, rod depth in 5% steps with a STOP button, and advice on what to do in every state.
+- **Water now cools the reactor** — a running reactor without water heats up all the way to an accident, so give existing dry reactors water after updating. With water the heat gauge holds still, reactors without a room sound the siren too, and the hum no longer stops on a full buffer.

@@ -1604,9 +1604,9 @@ public final class Config {
 	 * and therefore the reactor's thirst.
 	 *
 	 * <p>Heat is bounded above by the tier ceiling — a core at 512 EU/t cannot exceed 546 heat a tick
-	 * however large it grows — so the loop's demand tops out at 247 mB/t, which no single
-	 * {@link #reactorPortThroughput} inlet can deliver: five feed the water and five more carry the
-	 * steam back out. Needing more than one is the point: "hook up an infinite source and forget" was
+	 * however large it grows — and since MOD-623 the water carries all of it, so a working loop drinks at
+	 * most 273 mB/t, which no single {@link #reactorPortThroughput} inlet can deliver: six feed the water
+	 * and six more carry the steam back out. Needing more than one is the point: "hook up an infinite source and forget" was
 	 * the thing to design against.
 	 */
 	@Knob(section = Section.MACHINES, min = 1,
@@ -1643,7 +1643,8 @@ public final class Config {
 			doc = "Steam a nozzle holds, in mB.")
 	public static int reactorNozzleBuffer = 500;
 	/**
-	 * Heat the shell sheds every tick no matter how cold it is — the floor of the cooling curve.
+	 * Heat a stopped room's shell sheds every tick no matter how cold it is — the floor of the cooling
+	 * curve. While the reaction runs the shell sheds nothing and the water is the only cooling (MOD-623).
 	 *
 	 * <p>Small on purpose. It used to be 30, larger than everything a starter reactor produced, so a
 	 * single column sat at exactly 0% forever: the temperature gauge on a working reactor never moved,
@@ -1651,20 +1652,18 @@ public final class Config {
 	 * for the part that actually shapes the curve.
 	 */
 	@Knob(section = Section.MACHINES, min = 0,
-			doc = "Heat units that bleed away on their own each tick regardless of temperature.")
+			doc = "Heat units a stopped reactor room bleeds away on its own each tick regardless of temperature; a running one sheds nothing but what its water carries.")
 	public static int reactorPassiveCooling = 4;
 	/**
 	 * Extra heat shed per tick as thousandths of the CURRENT temperature — a hot shell loses heat
 	 * faster than a warm one, as any real one does.
 	 *
-	 * <p>This is what gives the reactor an equilibrium instead of a switch. With a flat loss the
-	 * temperature had only two outcomes: production below it pinned the gauge at zero, production above
-	 * it climbed to the top and stayed. Now every core settles at the temperature where its output and
-	 * its losses balance — one column near 15%, two near two thirds, and anything larger climbing past
-	 * the warning line and into the coolant loop.
+	 * <p>Applies only once the reaction has stopped (MOD-623). It used to apply always, which gave every
+	 * core an equilibrium — one column near 15 %, two near two thirds — and let a small reactor run for
+	 * ever with no water. Now it is how a scrammed room cools: the full scale drains in about 20 seconds.
 	 */
 	@Knob(section = Section.MACHINES, min = 0,
-			doc = "Extra heat shed per tick, in thousandths of the current temperature.")
+			doc = "Extra heat a stopped reactor room sheds per tick, in thousandths of the current temperature.")
 	public static int reactorHeatLossPermille = 8;
 	/** Heat scale maximum. Above {@code reactorHeatWarnPercent} of it the controller warns. */
 	@Knob(section = Section.MACHINES, min = 1,
@@ -1675,16 +1674,17 @@ public final class Config {
 			doc = "Percentage of the heat scale above which the reactor reports running hot.")
 	public static int reactorHeatWarnPercent = 70;
 	/**
-	 * Percentage of the scale the coolant loop holds a reactor at. Deliberately BELOW
-	 * {@link #reactorHeatWarnPercent}.
+	 * Percentage of the scale the warning siren must fall below before it can sound again. Deliberately
+	 * BELOW {@link #reactorHeatWarnPercent}, so a core wobbling on the line does not re-sound every tick.
 	 *
-	 * <p>The loop used to engage at the warning line itself, which meant it parked every reactor
-	 * larger than two columns exactly there — a perfectly healthy installation showed an amber gauge
-	 * for ever, and amber stopped meaning "look at me". Aiming lower gives the warning colour its job
-	 * back: a working loop sits green, and amber now says the coolant is losing.
+	 * <p>It used to be the temperature the coolant loop held a running reactor at, and the loop engaged
+	 * only above it — which parked a healthy core on the line and made the gauge flicker 59/60 %. Since
+	 * MOD-623 the water carries the reaction's whole heat at any temperature and a plumbed reactor sits
+	 * near zero, so the siren's re-arm floor is the one job this number has left. The key keeps its name
+	 * so existing config files keep their value.
 	 */
 	@Knob(section = Section.MACHINES, min = 0,
-			doc = "Percentage of the heat scale the coolant loop holds the reactor at; below the warning threshold on purpose.")
+			doc = "Percentage of the heat scale the reactor must fall below before the warning siren can sound again; below the warning threshold on purpose.")
 	public static int reactorCoolantTargetPercent = 60;
 	/** EU the controller can bank. Sized to a few seconds of full output so the grid can lag behind. */
 	@Knob(section = Section.MACHINES, min = 1,

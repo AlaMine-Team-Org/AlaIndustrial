@@ -151,8 +151,8 @@
           "pages": [
             {
               "type": "text",
-              "title": "Cinque passi",
-              "text": "1. La sala è a tenuta\n2. Nelle colonne ci sono le barre\n3. Sull'uscita del reattore c'è un cavo\n4. Un segnale di redstone arriva al controllore\n5. La profondità non è a zero: il controllore ha cinque pulsanti — 0%, 25%, 50%, 75%, 100%"
+              "title": "Sei passi",
+              "text": "1. La sala è a tenuta\n2. Nelle colonne ci sono le barre\n3. Nelle colonne arriva l'acqua e il vapore viene fatto uscire\n4. Sull'uscita del reattore c'è un cavo\n5. Un segnale di redstone arriva al controllore\n6. La profondità non è a zero: regolala con il cursore nel controllore"
             },
             {
               "type": "text",
@@ -162,7 +162,7 @@
             {
               "type": "text",
               "title": "Potenza",
-              "text": "Una colonna dà 24 EU/t. Più barre e colonne più vicine danno di più: le colonne adiacenti si rinforzano a vicenda.\n\nIl tetto è 512 EU/t. Il pulsante di profondità scelto divide in parti uguali potenza, calore e consumo di combustibile."
+              "text": "Una colonna dà 24 EU/t. Più barre e colonne più vicine danno di più: le colonne adiacenti si rinforzano a vicenda.\n\nIl tetto è 512 EU/t. La profondità delle barre divide in parti uguali potenza, calore, consumo d'acqua e di combustibile."
             }
           ]
         },
@@ -174,12 +174,12 @@
             {
               "type": "text",
               "title": "Il calore",
-              "text": "Il reattore si scalda e la sala smaltisce calore da sola, tanto più in fretta quanto più è calda. Per questo ogni reattore trova la sua temperatura e ci resta.\n\nUna colonna si assesta intorno al 15%. Due affiancate arrivano ai due terzi. Con tre o più la sala da sola non regge."
+              "text": "Un reattore in funzione si scalda soltanto: finché le barre lavorano, la sala da sola non smaltisce nulla. L'acqua porta via il calore; senza acqua l'indicatore sale fino in cima e parte il conto alla rovescia dell'incidente.\n\nQuando la reazione si ferma — leva abbassata — la sala si raffredda da sola."
             },
             {
               "type": "text",
               "title": "Il circuito dell'acqua",
-              "text": "L'acqua non è un radiatore ma un sistema di sicurezza: entra in funzione quando l'indicatore si avvicina alla zona ambra e tiene il reattore al di sotto. L'ambra significa quindi che il raffreddamento non ce la fa più.\n\nPompa -> tubo -> ingresso del reattore -> colonna. Regola le facce del tubo all'ingresso con la chiave inglese: estrazione all'esterno, immissione all'interno. Colonna e ugello non richiedono chiave: una colonna prende solo acqua e restituisce solo vapore."
+              "text": "L'acqua porta via il calore. Un reattore con abbastanza acqua resta vicino al fondo dell'indicatore, e l'ambra significa che l'acqua non ce la fa più.\n\nPompa -> tubo -> ingresso del reattore -> colonna. Regola le facce del tubo all'ingresso con la chiave inglese: estrazione all'esterno, immissione all'interno. Colonna e ugello non richiedono chiave: una colonna prende solo acqua e restituisce solo vapore."
             },
             {
               "type": "text",

@@ -1,12 +1,19 @@
 package dev.alaindustrial.client.screen;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
-import dev.alaindustrial.block.entity.ReactorRoomStatus;
+import dev.alaindustrial.client.screen.reactor.ConsoleTabPage;
+import dev.alaindustrial.client.screen.reactor.ReactorConsole;
+import dev.alaindustrial.client.screen.reactor.ReactorTabPage;
 import dev.alaindustrial.menu.ReactorControllerMenu;
-import net.minecraft.ChatFormatting;
+import java.util.List;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -14,114 +21,72 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Inventory;
 
 /**
- * Screen for the Reactor Controller (MOD-468) — the room's build assistant while it is being put
- * together, its control desk once it runs.
+ * Screen for the Reactor Controller — a panel with tabs down its left side (MOD-617).
  *
- * <p><b>The panel shows one of two layouts, never both.</b> The usable strip ends where the art's
- * boxes end (see {@link #CONTENT_BOTTOM}), and the first version tried to fit a
- * status line, four data rows, a heat gauge and five throttle buttons into it. They overlapped into
- * an unreadable mess. They also answer different questions at different times: while the shell is
- * open the player needs to know what is missing and where, and none of the reactor's numbers exist
- * yet; once it is sealed the fault line has nothing to say and the numbers are the whole point. So
- * the screen picks the layout that matches the state, and each one has room to breathe.
+ * <p><b>The screen owns the frame, the pages own the rest.</b> The panel, the tab strip, the status chip
+ * and the accident countdown are the same on every tab, because the questions they answer — which tab am
+ * I on, is the reactor all right, how long have I got — do not depend on which tab is open. Everything
+ * under the header belongs to the selected {@link ReactorTabPage}.
  *
- * <p><b>Every row is label-column plus value-column</b>, so nothing depends on how long a translated
- * label turns out to be — an earlier version put label and value in one string and Russian ran into
- * the pictogram. Values that do not fit are scaled down rather than clipped, the rule the machine
- * family's status line has always used.
+ * <p><b>The tabs are the game's own.</b> They are blitted from the vanilla advancement screen's left-side
+ * sprites by id at run time, with an item for an icon, so the strip reads as a Minecraft screen rather
+ * than a lookalike. The sprites are referenced, never copied.
  *
- * <p><b>The throttle rides the vanilla container-button channel</b> ({@code handleInventoryButtonClick}
- * → {@link ReactorControllerMenu#clickMenuButton}), like the repeller's dome toggle: the request
- * carries no data beyond "this container, this number", so no payload of our own is needed. The
- * button id IS the requested depth in percent.
+ * <p><b>No player inventory.</b> The controller holds nothing, so {@link ReactorControllerMenu} carries
+ * no slots at all, and the panel is free for the reactor.
  */
 public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu> {
 
 	private static final Identifier TEXTURE =
 			Industrialization.id("textures/gui/container/reactor_controller.png");
 
-	/*
-	 * Layout metrics. Public for symmetry with the rest of the screen family; the reactor has no
-	 * text-row stand of its own, so nothing outside this class reads these numbers today. Should one be
-	 * added, it must measure the strip from here rather than from a copy that would drift the first time
-	 * the layout moves.
-	 *
-	 * The hard bound is CONTENT_BOTTOM, and it comes from the art rather than from the inventory
-	 * label: vanilla draws that label at {@code imageHeight - 94}, which on this 228-tall panel is
-	 * y=134 — far below anything here. Every constant is checked against the frame lines instead.
-	 */
+	/** Panel size; must match {@code tools/gen_reactor_controller_gui.py}. */
+	public static final int IMAGE_WIDTH = 236;
+	public static final int IMAGE_HEIGHT = 184;
+
+	/** The vanilla left tab: 32×28, overlapping the window by four pixels (AdvancementTabType.LEFT). */
+	public static final int TAB_W = 32;
+	public static final int TAB_H = 28;
+	public static final int TAB_OVERLAP = 4;
+	private static final int TAB_ICON_X = 10;
+	private static final int TAB_ICON_Y = 5;
+
+	public static final int TITLE_X = 8;
+	public static final int TITLE_Y = 6;
+	public static final int CHIP_RIGHT = 228;
+	public static final int CHIP_Y = 4;
+	public static final int CHIP_H = 11;
+	/** The accident countdown: a bar with no figure on it, under the header on every tab. */
+	public static final int COUNTDOWN_Y = 17;
+	public static final int COUNTDOWN_H = 2;
+
+	private static final Identifier TAB_TOP = Identifier.withDefaultNamespace("advancements/tab_left_top");
+	private static final Identifier TAB_TOP_SELECTED =
+			Identifier.withDefaultNamespace("advancements/tab_left_top_selected");
+	private static final Identifier TAB_MIDDLE = Identifier.withDefaultNamespace("advancements/tab_left_middle");
+	private static final Identifier TAB_MIDDLE_SELECTED =
+			Identifier.withDefaultNamespace("advancements/tab_left_middle_selected");
+
+	private static final int TITLE_COLOUR = 0xFF404040;
+	private static final int CHIP_BACK = 0xFF2A2D33;
+	private static final int CHIP_ALARM_DIM = 0xFF7A2A22;
+	private static final int COUNTDOWN_TRACK = 0xFF2A2D33;
+	private static final int COUNTDOWN_FILL = 0xFFD63A2A;
+	private static final int BADGE_EDGE = 0xFF000000;
 
 	/**
-	 * The art now draws TWO framed boxes, and the numbers below are read off it rather than chosen:
-	 * the readout box runs to its border at y=87 and the throttle has a box of its own from y=96.
-	 * Elements are placed inside those borders, not merely above the
-	 * inventory — the previous version fitted the space and still looked wrong, because the coolant
-	 * row was sitting on top of a frame line.
+	 * The tab a player last had open, for the next time they open a controller. Client-only by
+	 * construction — this class never loads on a dedicated server.
 	 */
-	public static final int CONTENT_BOTTOM = 86;
+	private static int lastPage;
 
-	/** {@link #LABEL_X} clears the room pictogram baked into the atlas at x=8. */
-	public static final int LABEL_X = 24;
-	public static final int VALUE_X = 98;
-	public static final int VALUE_RIGHT = 168;
-
-	/** The status headline, first thing on the panel in both layouts. */
-	public static final int STATUS_Y = 21;
-	/**
-	 * The accident countdown bar, in the gap the headline leaves above the first data row.
-	 *
-	 * <p>Three pixels tall and full width: it has to be visible from the corner of the eye while the
-	 * player is reading the rows below it, and it carries no text, so it needs no more height than that.
-	 */
-	public static final int COUNTDOWN_Y = 31;
-	public static final int COUNTDOWN_H = 3;
-
-	/** Where the data rows begin, below the headline. */
-	public static final int ROW_TOP = 35;
-	public static final int ROW_STEP = 12;
-
-	/**
-	 * The two gauges — heat and coolant — sit below the text rows on the same grid.
-	 *
-	 * <p>Both are bars rather than more text rows, and that is a space decision as much as a design
-	 * one: five text rows, a full-width bar and the throttle do not fit in seventy pixels, and the two
-	 * numbers that want watching continuously are exactly the two that read better as a filling bar
-	 * than as a figure to parse.
-	 */
-	public static final int GAUGE_TOP = 61;
-	public static final int GAUGE_STEP = 13;
-	public static final int BAR_X = 98;
-	public static final int BAR_W = 70;
-	public static final int BAR_H = 6;
-
-	/**
-	 * Throttle strip along the bottom of the content area: five stops, 28 px each. Inside the throttle's
-	 * own frame (y 96…113), centred in it rather than aligned to the text.
-	 */
-	public static final int THROTTLE_Y = 98;
-	public static final int THROTTLE_X = 16;
-	public static final int THROTTLE_W = 28;
-	public static final int THROTTLE_H = 12;
-
-	/**
-	 * The charge gauge, in the strip the art leaves between the throttle's frame and the inventory
-	 * label. It is the answer to "where does the energy go": the reactor banks what nothing is drawing,
-	 * and until this row existed a player watching a working reactor had no sign of it anywhere.
-	 */
-	public static final int ENERGY_Y = 116;
-	/** Tall enough to carry its own label — see {@code drawStoredEnergy}. */
-	public static final int CHARGE_BAR_H = 11;
-	private static final int[] THROTTLE_STOPS = {0, 25, 50, 75, 100};
-
-	/** Stands in for a value the controller cannot report in the current state. */
-	private static final String DASH = "—";
-
-	/** Panel size. Taller than the family default: the reactor has more to say than a machine does. */
-	public static final int IMAGE_WIDTH = 176;
-	public static final int IMAGE_HEIGHT = 228;
+	private final List<ReactorTabPage> pages;
+	private int selected;
 
 	public ReactorControllerScreen(ReactorControllerMenu menu, Inventory inventory, Component title) {
 		super(menu, inventory, title, IMAGE_WIDTH, IMAGE_HEIGHT);
+		this.pages = List.of(new ConsoleTabPage(this));
+		this.selected = Math.min(lastPage, this.pages.size() - 1);
 	}
 
 	@Override
@@ -129,332 +94,226 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 		return TEXTURE;
 	}
 
+	/**
+	 * No statistics tab. The controller has no upgrade panel, so the chip that feeds the statistics can
+	 * never be fitted and the tab would only ever ask for one — and it sat on top of this screen's own tab
+	 * strip, which is how the playtest found it.
+	 */
+	@Override
+	protected boolean hasStatsTab() {
+		return false;
+	}
+
+	@Override
+	protected void init() {
+		super.init();
+		for (ReactorTabPage page : pages) {
+			page.init();
+		}
+		showSelected();
+	}
+
+	private void showSelected() {
+		for (int i = 0; i < pages.size(); i++) {
+			pages.get(i).setShown(i == selected);
+		}
+	}
+
+	@Override
+	protected void containerTick() {
+		super.containerTick();
+		for (ReactorTabPage page : pages) {
+			page.tick();
+		}
+	}
+
+	/** Only the open tab's name. No block title and no "Inventory" — there is no inventory. */
+	@Override
+	protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+		graphics.text(this.font, pages.get(selected).title(), TITLE_X, TITLE_Y, TITLE_COLOUR, false);
+	}
+
 	@Override
 	protected void drawMachineFrame(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		blitStaticFrame(graphics);
-
-		ReactorRoomStatus status = this.menu.getStatus();
-		drawStatusHeadline(graphics, status);
+		drawTabs(graphics);
+		drawChip(graphics);
 		drawCountdown(graphics);
-		if (status == ReactorRoomStatus.FORMED) {
-			drawRunningLayout(graphics);
-		} else {
-			// The building diagnostics come FIRST and are never replaced (MOD-469). Bare mode fires on
-			// exactly the same condition as an unfinished shell — "not FORMED" — so a layout that swapped
-			// one for the other would take the size, the fault and the direction-to-the-hole away from the
-			// player who is genuinely still building, in order to serve the player who never intended to.
-			// The bare readout is added BELOW that, and only once racks have actually been found.
-			int row = drawBuildingLayout(graphics, status);
-			if (this.menu.isBare()) {
-				drawBareLayout(graphics, row);
+		pages.get(selected).draw(graphics, mouseX, mouseY);
+	}
+
+	/**
+	 * The strip, drawn over the panel's left edge the way the advancement screen draws its tabs over its
+	 * window, so the selected tab's sprite merges into the frame.
+	 *
+	 * <p>Vanilla shows the strip only once there are two tabs. It is shown from the first here, because the
+	 * tabs arrive one task at a time and the frame they share is part of what each one ships.
+	 */
+	private void drawTabs(GuiGraphicsExtractor graphics) {
+		for (int i = 0; i < pages.size(); i++) {
+			int x = tabX();
+			int y = tabY(i);
+			boolean isSelected = i == selected;
+			Identifier sprite = i == 0
+					? (isSelected ? TAB_TOP_SELECTED : TAB_TOP)
+					: (isSelected ? TAB_MIDDLE_SELECTED : TAB_MIDDLE);
+			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, x, y, TAB_W, TAB_H);
+			graphics.item(pages.get(i).icon(), x + TAB_ICON_X, y + TAB_ICON_Y);
+			int badge = isSelected ? 0 : pages.get(i).badgeColour();
+			if (badge != 0) {
+				graphics.fill(x + 3, y + 3, x + 9, y + 9, BADGE_EDGE);
+				graphics.fill(x + 4, y + 4, x + 8, y + 8, badge);
 			}
-			drawStoredEnergy(graphics);
 		}
 	}
 
-	/**
-	 * The verdict, centred at the top of the panel — the one thing shown in every layout.
-	 *
-	 * <p>A room melting its own contents says so HERE rather than in a row of its own, and overrides the
-	 * geometric verdict while it does. A shell that is still perfectly sealed is telling the truth when
-	 * it reports itself assembled, and it is the least useful true thing the panel could be saying at
-	 * that moment.
-	 */
-	private void drawStatusHeadline(GuiGraphicsExtractor graphics, ReactorRoomStatus status) {
-		if (this.menu.getBlastPercent() > 0) {
-			// Above the meltdown line, and above everything else. A room that is melting its contents is
-			// in trouble; a room counting down has minutes to live, and nothing else on the panel is worth
-			// reading first.
-			drawFittedStatus(graphics,
-					Component.translatable("gui.alaindustrial.reactor_controller.status.blast")
-							.withStyle(ChatFormatting.DARK_RED),
-					STATUS_Y, STATUS_ROW_LEFT, STATUS_ROW_RIGHT, 0xFF8A1010);
-			return;
+	/** The reactor's state in one word, right-aligned in the header. An alarm blinks. */
+	private void drawChip(GuiGraphicsExtractor graphics) {
+		ReactorConsole.Verdict verdict = ReactorConsole.verdict(ConsoleTabPage.readout(this.menu));
+		Component label = Component.translatable(verdict.translationKey());
+		int right = this.leftPos + CHIP_RIGHT;
+		int left = right - this.font.width(label) - 14;
+		int top = this.topPos + CHIP_Y;
+		int colour = toneColour(verdict.tone());
+		if (verdict.tone() == ReactorConsole.Tone.ALARM && (System.currentTimeMillis() / 500L) % 2L == 1L) {
+			colour = CHIP_ALARM_DIM;
 		}
-		if (this.menu.isMeltingDown()) {
-			drawFittedStatus(graphics,
-					Component.translatable("gui.alaindustrial.reactor_controller.status.meltdown")
-							.withStyle(ChatFormatting.DARK_RED),
-					STATUS_Y, STATUS_ROW_LEFT, STATUS_ROW_RIGHT, 0xFF7A2020);
-			return;
-		}
-		if (this.menu.isBare()) {
-			// Amber, not red, and it replaces the geometric verdict rather than sitting under it. A bare
-			// reactor standing in open ground reports CONTROLLER_NOT_IN_WALL, which is perfectly true and
-			// reads as a fault the player is expected to fix — when in fact they chose this. Saying BARE
-			// MODE instead names the state as a state. It also buys the row the readout needs: the panel's
-			// content band ends at y=86, and status headline + two building rows + three bare rows would
-			// have run the last line past the frame.
-			drawFittedStatus(graphics,
-					Component.translatable("gui.alaindustrial.reactor_controller.mode.bare")
-							.withStyle(ChatFormatting.GOLD),
-					STATUS_Y, STATUS_ROW_LEFT, STATUS_ROW_RIGHT, 0xFF7A5A20);
-			return;
-		}
-		Component headline = Component.translatable(status.translationKey())
-				.withStyle(status.needsAttention() ? ChatFormatting.DARK_RED : ChatFormatting.DARK_GREEN);
-		drawFittedStatus(graphics, headline, STATUS_Y, STATUS_ROW_LEFT, STATUS_ROW_RIGHT,
-				status.needsAttention() ? 0xFF7A2020 : 0xFF1F6B2A);
+		graphics.fill(left, top, right, top + CHIP_H, CHIP_BACK);
+		graphics.fill(left + 3, top + 3, left + 8, top + 8, colour);
+		graphics.text(this.font, label, left + 11, top + 2, colour, false);
 	}
 
 	/**
-	 * The bare reactor's readout: what it found and what it is making (MOD-469).
-	 *
-	 * <p>No heat gauge, no coolant gauge, no throttle — a bare core tracks no temperature, has nothing
-	 * plumbed to it and ignores the control rods entirely. Drawing those as zeroes would be worse than
-	 * leaving them out: a temperature bar sitting at nothing reads as a cold reactor rather than as a
-	 * reactor with no thermometer, and it would invite a player to plumb a loop that can never engage.
-	 *
-	 * <p>Two rows, not three: the mode itself is announced by the headline, which both frees the row
-	 * that would have pushed the last line out of the content band and puts the word where a player
-	 * looks first.
-	 *
-	 * @param row the first free row under whatever the building diagnostics printed
-	 */
-	private void drawBareLayout(GuiGraphicsExtractor graphics, int row) {
-		drawRow(graphics, row++,
-				Component.translatable("gui.alaindustrial.reactor_controller.label.rods"),
-				Component.literal(Integer.toString(this.menu.getRods())));
-		drawRow(graphics, row++,
-				Component.translatable("gui.alaindustrial.reactor_controller.label.output"),
-				this.menu.getOutput() > 0
-						? Component.translatable("gui.alaindustrial.reactor_controller.eu_per_tick",
-								this.menu.getOutput())
-						: Component.translatable(this.menu.getIdleReason().translationKey())
-								.withStyle(ChatFormatting.DARK_RED));
-		// MOD-471. MOD-469 deliberately gave the bare layout no gauges, because a bare core tracked no
-		// temperature and a bar sitting at zero would have read as a cold reactor rather than as a
-		// reactor with no thermometer. That reasoning inverts the moment a scale exists: a hidden scale
-		// that kills you is exactly what MOD-469 refused to do with the throttle. So the pile's
-		// instability is shown, and the four-rack cliff becomes something the player can see coming.
-		int instability = Math.min(100, Math.max(0, this.menu.getInstabilityPercent()));
-		drawRow(graphics, row,
-				Component.translatable("gui.alaindustrial.reactor_controller.label.instability"),
-				Component.translatable("gui.alaindustrial.reactor_controller.percent", instability)
-						.withStyle(instability >= 100 ? ChatFormatting.DARK_RED
-								: instability >= 80 ? ChatFormatting.GOLD : ChatFormatting.DARK_GREEN));
-	}
-
-	/**
-	 * The accident countdown: a bar that empties, with no figure on it.
-	 *
-	 * <p><b>The missing number is the feature.</b> Every accident rolls its own length between two and
-	 * three minutes, so that a player cannot learn "half a minute" once and stop reading the panel.
-	 * Printing the seconds would hand that knowledge straight back and make the roll pointless. A
-	 * draining bar says "you are running out of time" — which is the true and useful part — without
-	 * saying how much is left.
-	 *
-	 * <p>Drawn in every layout, because the accident does not care which one is up: a breached room
-	 * running bare can be counting down just as a sealed one can.
+	 * The accident countdown: a bar that empties, with no figure on it. Every accident rolls its own length
+	 * so a player cannot learn it; printing the seconds would hand that knowledge straight back.
 	 */
 	private void drawCountdown(GuiGraphicsExtractor graphics) {
-		int percent = this.menu.getBlastPercent();
+		int percent = Math.min(100, this.menu.getBlastPercent());
 		if (percent <= 0) {
 			return;
 		}
-		int left = this.leftPos + LABEL_X;
+		int left = this.leftPos + ConsoleTabPage.CONTENT_LEFT;
 		int top = this.topPos + COUNTDOWN_Y;
-		int width = VALUE_RIGHT - LABEL_X;
-		graphics.fill(left, top, left + width, top + COUNTDOWN_H, 0xFF2A2D33);
-		int filled = width * Math.min(100, percent) / 100;
-		if (filled > 0) {
-			graphics.fill(left, top, left + filled, top + COUNTDOWN_H, 0xFFD63A2A);
-		}
+		int width = ConsoleTabPage.CONTENT_RIGHT - ConsoleTabPage.CONTENT_LEFT;
+		graphics.fill(left, top, left + width, top + COUNTDOWN_H, COUNTDOWN_TRACK);
+		graphics.fill(left, top, left + width * percent / 100, top + COUNTDOWN_H, COUNTDOWN_FILL);
 	}
 
-	/**
-	 * While the shell is unfinished: what was measured and where the problem is. The reactor's own
-	 * numbers are deliberately absent — there is no reactor yet, and printing zeroes for it would read
-	 * as measurement rather than as absence.
-	 */
-	private int drawBuildingLayout(GuiGraphicsExtractor graphics, ReactorRoomStatus status) {
-		int row = 0;
-		drawRow(graphics, row++,
-				Component.translatable("gui.alaindustrial.reactor_controller.label.room"),
-				status.hasSize() && this.menu.getSizeX() > 0
-						? Component.translatable("gui.alaindustrial.reactor_controller.size",
-								this.menu.getSizeX(), this.menu.getSizeY(), this.menu.getSizeZ())
-						: Component.literal(DASH));
-		if (status.hasLocation()) {
-			drawRow(graphics, row++,
-					Component.translatable("gui.alaindustrial.reactor_controller.label.where"),
-					describeOffset());
-		}
-		return row;
+	/** A tone's colour on the dark chip and advice box — the only two backgrounds it is drawn on. */
+	public static int toneColour(ReactorConsole.Tone tone) {
+		return switch (tone) {
+			case GOOD -> 0xFF7FD08A;
+			case WARN -> 0xFFE8B04A;
+			case ALARM -> 0xFFFF6B5A;
+			case IDLE -> 0xFFB9C0C7;
+		};
 	}
 
-	/** Once it runs: what it is doing, and the throttle to change it. */
-	private void drawRunningLayout(GuiGraphicsExtractor graphics) {
-		int row = 0;
-		drawRow(graphics, row++,
-				Component.translatable("gui.alaindustrial.reactor_controller.label.rods"),
-				Component.literal(Integer.toString(this.menu.getRods())));
-		drawRow(graphics, row++,
-				Component.translatable("gui.alaindustrial.reactor_controller.label.output"),
-				this.menu.getOutput() > 0
-						? Component.translatable("gui.alaindustrial.reactor_controller.eu_per_tick",
-								this.menu.getOutput())
-						// Not a dash: a sealed, fuelled, silent reactor is the state that most needs an
-						// explanation, and every cause has a different fix.
-						: Component.translatable(this.menu.getIdleReason().translationKey())
-								.withStyle(ChatFormatting.DARK_RED));
-
-		int heat = Math.min(100, Math.max(0, this.menu.getHeatPercent()));
-		drawGauge(graphics, 0,
-				Component.translatable("gui.alaindustrial.reactor_controller.label.heat", heat),
-				heat, heatColour(heat));
-
-		// The coolant gauge carries the boil rate in its label, not in a row of its own: the level says
-		// whether the loop is holding, the rate says what an inlet has to keep up with, and a player
-		// sizing their plumbing needs both at once.
-		int water = Math.min(100, Math.max(0, this.menu.getWaterPercent()));
-		drawGauge(graphics, 1,
-				Component.translatable("gui.alaindustrial.reactor_controller.label.water",
-						water, this.menu.getWaterRate()),
-				water, coolantColour(water, this.menu.getSteamPercent()));
-
-		drawThrottle(graphics);
-		drawStoredEnergy(graphics);
-	}
-
-	/**
-	 * Buffer charge: label with the figure on the left, a filling bar on the right.
-	 *
-	 * <p>Drawn in BOTH layouts, unlike everything else here — a reactor that has been scrammed, or whose
-	 * room has just been breached, still holds whatever it banked, and that is exactly when a player
-	 * wants to know how much is left.
-	 */
-	private void drawStoredEnergy(GuiGraphicsExtractor graphics) {
-		int percent = Math.min(100, Math.max(0, this.menu.getStoredPercent()));
-		// Full width, with the figure written ON the bar rather than beside it. Beside it was the first
-		// try and it broke on its own success: at 200 000 EU the label outgrew its column and ran under
-		// the gauge. A number that only misbehaves once the reactor is full is the worst kind.
-		int left = this.leftPos + LABEL_X;
-		int top = this.topPos + ENERGY_Y;
-		int width = VALUE_RIGHT - LABEL_X;
-		graphics.fill(left, top, left + width, top + CHARGE_BAR_H, 0xFF2A2D33);
-		int filled = width * percent / 100;
-		if (filled > 0) {
-			graphics.fill(left, top, left + filled, top + CHARGE_BAR_H, 0xFFD9A33A);
-		}
-		Component label = Component.translatable("gui.alaindustrial.reactor_controller.label.stored",
-				percent, this.menu.getStoredEu());
-		int textWidth = this.font.width(label);
-		// Drawn with a shadow: the strip is amber on the left and near-black on the right, and no flat
-		// colour reads over both.
-		graphics.text(this.font, label, left + (width - textWidth) / 2,
-				top + (CHARGE_BAR_H - 8) / 2, 0xFFF2F4F5, true);
-	}
-
-	/** One gauge: its label on the left, a filling bar in the value column. */
-	private void drawGauge(GuiGraphicsExtractor graphics, int index, Component label, int percent,
-			int colour) {
-		int y = GAUGE_TOP + index * GAUGE_STEP;
-		drawFittedStatus(graphics, label, y, LABEL_X, BAR_X - 4, GuiStyle.TEXT_DIM);
-		int left = this.leftPos + BAR_X;
-		int top = this.topPos + y;
-		graphics.fill(left, top, left + BAR_W, top + BAR_H, 0xFF2A2D33);
-		int filled = BAR_W * percent / 100;
-		if (filled > 0) {
-			graphics.fill(left, top, left + filled, top + BAR_H, colour);
-		}
-	}
-
-	/**
-	 * Green while there is head room, amber as it climbs, red near the top — an incandescence ramp
-	 * rather than a cool-to-warm one, for the reason the heater's thermometer documents: the straight
-	 * line from blue to orange runs through grey and reads as dirty rather than as warm.
-	 *
-	 * <p>The amber step is {@code Config.reactorHeatWarnPercent} — the same number the block entity
-	 * treats as "running hot". It was hardcoded at 60, which made the config key decorative and let the
-	 * gauge disagree with the machine it displays.
-	 */
-	/**
-	 * Teal while the loop turns over, amber once the steam has nowhere to go, red when the columns
-	 * are dry. The amber case is the one worth the code: with the exhaust blocked the coolant gauge
-	 * sits reassuringly full while the temperature climbs, and nothing else on the panel says why.
-	 */
-	private static int coolantColour(int water, int steam) {
-		if (water == 0) {
-			return 0xFFD63A2A;
-		}
-		return steam >= 90 ? 0xFFD9A33A : 0xFF3E8FA8;
-	}
-
-	private static int heatColour(int percent) {
-		int warn = Config.reactorHeatWarnPercent;
-		int critical = Math.min(100, warn + (100 - warn) / 2);
-		return percent >= critical ? 0xFFD63A2A : percent >= warn ? 0xFFD9A33A : 0xFF4E9E52;
-	}
-
-	/** Five throttle stops; the active one is lit, so the current setting is obvious at a glance. */
-	private void drawThrottle(GuiGraphicsExtractor graphics) {
-		int depth = this.menu.getDepthPercent();
-		for (int i = 0; i < THROTTLE_STOPS.length; i++) {
-			int bx = this.leftPos + THROTTLE_X + i * (THROTTLE_W + 1);
-			int by = this.topPos + THROTTLE_Y;
-			boolean active = THROTTLE_STOPS[i] == depth;
-			graphics.fill(bx, by, bx + THROTTLE_W, by + THROTTLE_H, active ? 0xFF2E6E7A : 0xFF3A3E45);
-			Component label = Component.literal(THROTTLE_STOPS[i] + "%");
-			int tw = this.font.width(label);
-			graphics.text(this.font, label, bx + (THROTTLE_W - tw) / 2, by + 2,
-					active ? 0xFFE8F6F8 : 0xFFB9C0C7, false);
-		}
-	}
+	// ── Input ────────────────────────────────────────────────────────────────────────────────────
 
 	@Override
 	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-		// Only while the reactor exists: the throttle is not drawn in the building layout, so a click
-		// there must not silently move control rods the player cannot see.
-		if (event.button() == 0 && this.menu.getStatus() == ReactorRoomStatus.FORMED
-				&& this.minecraft != null && this.minecraft.gameMode != null) {
-			for (int i = 0; i < THROTTLE_STOPS.length; i++) {
-				int bx = this.leftPos + THROTTLE_X + i * (THROTTLE_W + 1);
-				int by = this.topPos + THROTTLE_Y;
-				if (event.x() >= bx && event.x() < bx + THROTTLE_W
-						&& event.y() >= by && event.y() < by + THROTTLE_H) {
-					this.minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId,
-							THROTTLE_STOPS[i]);
-					this.minecraft.getSoundManager().play(
-							SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-					return true;
+		// Not under an open statistics panel: it can be dragged over the strip, and a click on it belongs to it.
+		if (event.button() == 0 && !this.menu.isStatsPanelOpen()) {
+			int tab = tabAt(event.x(), event.y());
+			if (tab >= 0) {
+				if (tab != selected) {
+					selected = tab;
+					lastPage = tab;
+					showSelected();
+					this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 				}
+				return true;
 			}
 		}
 		return super.mouseClicked(event, doubleClick);
 	}
 
-	/**
-	 * Turns the offset into words: "4 east, 2 up, 3 south". Axes with no offset are dropped, so a
-	 * breach straight above reads "2 up" rather than "0 east, 2 up, 0 south".
-	 */
-	private Component describeOffset() {
-		int dx = this.menu.getBreachDx();
-		int dy = this.menu.getBreachDy();
-		int dz = this.menu.getBreachDz();
-		Component result = null;
-		result = append(result, dx, "east", "west");
-		result = append(result, dy, "up", "down");
-		result = append(result, dz, "south", "north");
-		return result == null
-				? Component.translatable("gui.alaindustrial.reactor_controller.here")
-				: result;
+	@Override
+	public boolean mouseReleased(MouseButtonEvent event) {
+		boolean handled = super.mouseReleased(event);
+		pages.get(selected).mouseReleased(event);
+		return handled;
 	}
 
-	private Component append(Component soFar, int amount, String positiveKey, String negativeKey) {
-		if (amount == 0) {
-			return soFar;
+	@Override
+	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+		if (!this.menu.isStatsPanelOpen()) {
+			int tab = tabAt(mouseX, mouseY);
+			if (tab >= 0) {
+				graphics.setTooltipForNextFrame(this.font, pages.get(tab).title(), mouseX, mouseY);
+				return;
+			}
+			if (pages.get(selected).tooltip(graphics, mouseX, mouseY)) {
+				return;
+			}
 		}
-		Component piece = Component.translatable(
-				"gui.alaindustrial.reactor_controller.dir." + (amount > 0 ? positiveKey : negativeKey),
-				Math.abs(amount));
-		return soFar == null ? piece : soFar.copy().append(", ").append(piece);
+		super.extractTooltip(graphics, mouseX, mouseY);
 	}
 
-	/** One table row: a dim label in its column, the value shrunk to fit in its own. */
-	private void drawRow(GuiGraphicsExtractor graphics, int row, Component label, Component value) {
-		int rowY = ROW_TOP + row * ROW_STEP;
-		graphics.text(this.font, label, this.leftPos + LABEL_X, this.topPos + rowY, GuiStyle.TEXT_DIM, false);
-		drawFittedStatus(graphics, value, rowY, VALUE_X, VALUE_RIGHT, GuiStyle.TEXT);
+	/** The strip sticks out to the left of the frame, where JEI and REI park their bookmarks. */
+	@Override
+	public List<Rect2i> extraGuiAreas() {
+		List<Rect2i> areas = super.extraGuiAreas();
+		areas.add(new Rect2i(tabX(), this.topPos, TAB_W - TAB_OVERLAP, TAB_H * pages.size()));
+		return areas;
+	}
+
+	private int tabX() {
+		return this.leftPos - TAB_W + TAB_OVERLAP;
+	}
+
+	private int tabY(int index) {
+		return this.topPos + index * TAB_H;
+	}
+
+	/** The tab under the mouse, or -1. Only the part outside the panel counts: the overlap is the frame's. */
+	private int tabAt(double mouseX, double mouseY) {
+		int x = tabX();
+		if (mouseX < x || mouseX >= x + TAB_W - TAB_OVERLAP) {
+			return -1;
+		}
+		for (int i = 0; i < pages.size(); i++) {
+			int y = tabY(i);
+			if (mouseY >= y && mouseY < y + TAB_H) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	// ── What a page may use ─────────────────────────────────────────────────────────────────────────
+
+	public int left() {
+		return this.leftPos;
+	}
+
+	public int top() {
+		return this.topPos;
+	}
+
+	public Font font() {
+		return this.font;
+	}
+
+	public <T extends GuiEventListener & Renderable & NarratableEntry> T addPageWidget(T widget) {
+		return addRenderableWidget(widget);
+	}
+
+	/** {@link MachineScreen#drawFittedStatus}, for a page. */
+	public void drawFitted(GuiGraphicsExtractor graphics, Component label, int y, int bandLeft, int bandRight,
+			int colour) {
+		drawFittedStatus(graphics, label, y, bandLeft, bandRight, colour);
+	}
+
+	/**
+	 * Presses a container button on the server. The throttle rides this vanilla channel: the id is the
+	 * requested depth in percent, and {@link ReactorControllerMenu#clickMenuButton} clamps nothing it did
+	 * not send.
+	 */
+	public void sendButton(int id) {
+		if (this.minecraft != null && this.minecraft.gameMode != null) {
+			this.minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, id);
+		}
 	}
 }

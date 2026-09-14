@@ -88,6 +88,7 @@ public final class RtlGuiStands {
             new MenuEntry("mob_repeller_hv", "block.alaindustrial.mob_repeller_hv", dev.alaindustrial.registry.ModContent.MOB_REPELLER_HV_MENU),
             new MenuEntry("cesu", "block.alaindustrial.cesu", dev.alaindustrial.registry.ModContent.CESU_MENU),
             new MenuEntry("charge_pad", "block.alaindustrial.charge_pad", dev.alaindustrial.registry.ModContent.CHARGE_PAD_MENU),
+            new MenuEntry("reactor_controller", "block.alaindustrial.reactor_controller", dev.alaindustrial.registry.ModContent.REACTOR_CONTROLLER_MENU),
             new MenuEntry("teleporter_station", "block.alaindustrial.teleporter", dev.alaindustrial.registry.ModContent.TELEPORTER_STATION_MENU),
             new MenuEntry("teleporter_remote", "item.alaindustrial.teleporter_remote", dev.alaindustrial.registry.ModContent.TELEPORTER_REMOTE_MENU),
             new MenuEntry("geothermal_generator", "block.alaindustrial.geothermal_generator", dev.alaindustrial.registry.ModContent.GEOTHERMAL_GENERATOR_MENU),

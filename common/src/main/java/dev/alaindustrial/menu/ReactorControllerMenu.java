@@ -16,7 +16,8 @@ import net.minecraft.world.item.ItemStack;
  *
  * <p>It carries no slots at all, following the two existing slotless machine menus (the charging
  * station and the electric heater): the controller is something the player reads, and giving it an
- * inventory would invite hoppers into a block that has nothing to hold.
+ * inventory would invite hoppers into a block that has nothing to hold. Since MOD-618 it carries no
+ * player inventory either — see {@link #hasPlayerInventory()}.
  */
 public class ReactorControllerMenu extends MachineMenu {
 
@@ -62,18 +63,13 @@ public class ReactorControllerMenu extends MachineMenu {
 	}
 
 	/**
-	 * The panel is 16 px taller than the family default, so the player's inventory sits that much
-	 * lower. The two numbers keep vanilla's own 58 px gap between the backpack and the hotbar — the
-	 * art was drawn that way, and the slots are placed from here rather than read from the picture.
+	 * No player inventory (MOD-618). The controller holds nothing, so the rows had nothing to trade with:
+	 * they took the lower half of the old panel and every click on them did nothing. Removed rather than
+	 * parked off the panel, because a parked slot is still an active one.
 	 */
 	@Override
-	protected int playerInventoryY() {
-		return 146;
-	}
-
-	@Override
-	protected int hotbarY() {
-		return 204;
+	protected boolean hasPlayerInventory() {
+		return false;
 	}
 
 	/** None — see the class doc. */
@@ -190,6 +186,21 @@ public class ReactorControllerMenu extends MachineMenu {
 	/** A bare core's instability, 0…100. Zero for a sealed room, which runs on heat instead. */
 	public int getInstabilityPercent() {
 		return data.get(ReactorControllerBlockEntity.DATA_INSTABILITY);
+	}
+
+	/** Share of the reaction's heat the water carried last tick, 0…100 — the share of power paid (MOD-623). */
+	public int getCoolantSharePercent() {
+		return data.get(ReactorControllerBlockEntity.DATA_COOLANT_SHARE);
+	}
+
+	/** Heat from which the reactor reports running hot, in percent — this server's setting (MOD-618). */
+	public int getHeatWarnPercent() {
+		return data.get(ReactorControllerBlockEntity.DATA_HEAT_WARN);
+	}
+
+	/** Heat from which a sealed room melts its contents, in percent — this server's setting (MOD-618). */
+	public int getMeltdownStartPercent() {
+		return data.get(ReactorControllerBlockEntity.DATA_HEAT_MELTDOWN);
 	}
 
 	/** Whether the room is melting its own contents right now (MOD-469). */

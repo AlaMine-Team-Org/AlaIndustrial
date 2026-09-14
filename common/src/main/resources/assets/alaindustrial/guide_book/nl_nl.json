@@ -151,8 +151,8 @@
           "pages": [
             {
               "type": "text",
-              "title": "Vijf stappen",
-              "text": "1. De ruimte is dicht\n2. Er zitten staven in de kolommen\n3. Er hangt een kabel aan de reactoruitlaat\n4. Een redstonesignaal bereikt de besturing\n5. De diepte staat niet op nul: de besturing heeft vijf knoppen — 0%, 25%, 50%, 75%, 100%"
+              "title": "Zes stappen",
+              "text": "1. De ruimte is dicht\n2. Er zitten staven in de kolommen\n3. Water wordt de kolommen in geleid en de stoom wordt afgevoerd\n4. Er hangt een kabel aan de reactoruitlaat\n5. Een redstonesignaal bereikt de besturing\n6. De diepte staat niet op nul: stel die in met de schuifregelaar in de besturing"
             },
             {
               "type": "text",
@@ -162,7 +162,7 @@
             {
               "type": "text",
               "title": "Vermogen",
-              "text": "Eén kolom geeft 24 EU/t. Meer staven en dichter opeen gezette kolommen geven meer: buurkolommen versterken elkaar.\n\nHet plafond is 512 EU/t. De gekozen diepteknop deelt vermogen, hitte en brandstofverbruik gelijk op."
+              "text": "Eén kolom geeft 24 EU/t. Meer staven en dichter opeen gezette kolommen geven meer: buurkolommen versterken elkaar.\n\nHet plafond is 512 EU/t. De staafdiepte deelt vermogen, warmte, water- en brandstofverbruik gelijk op."
             }
           ]
         },
@@ -174,12 +174,12 @@
             {
               "type": "text",
               "title": "Hitte",
-              "text": "De reactor warmt op en de ruimte staat warmte vanzelf af — sneller naarmate hij heter is. Daarom vindt elke reactor zijn eigen temperatuur en blijft daar.\n\nEén kolom blijft rond de 15% hangen. Twee naast elkaar halen tweederde. Drie of meer houdt de ruimte niet meer alleen."
+              "text": "Een werkende reactor warmt alleen op: zolang de staven werken, staat de ruimte vanzelf niets af. Water voert de warmte af; zonder water klimt de meter tot helemaal bovenaan en begint de aftelling naar het ongeval.\n\nZodra de reactie stopt — hendel om — koelt de ruimte vanzelf af."
             },
             {
               "type": "text",
               "title": "Het watercircuit",
-              "text": "Water is geen radiator maar een veiligheidssysteem: het slaat aan zodra de meter de amberzone nadert en houdt de reactor eronder. Amber betekent dus dat de koeling het niet meer bijhoudt.\n\nPomp -> buis -> reactorinlaat -> kolom. Zet de buiszijden bij de inlaat met de moersleutel: buiten onttrekken, binnen invoeren. Kolom en mondstuk hebben geen sleutel nodig — een kolom neemt alleen water op en geeft alleen stoom af."
+              "text": "Water voert de warmte af. Een reactor met genoeg water blijft onderaan de meter, en amber betekent dat het water het niet bijhoudt.\n\nPomp -> buis -> reactorinlaat -> kolom. Zet de buiszijden bij de inlaat met de moersleutel: buiten onttrekken, binnen invoeren. Kolom en mondstuk hebben geen sleutel nodig — een kolom neemt alleen water op en geeft alleen stoom af."
             },
             {
               "type": "text",

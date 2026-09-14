@@ -151,8 +151,8 @@
           "pages": [
             {
               "type": "text",
-              "title": "Fem steg",
-              "text": "1. Rummet är tätt\n2. Det sitter stavar i pelarna\n3. En kabel sitter på reaktoruttaget\n4. En rödstenssignal når styrenheten\n5. Djupet står inte på noll: styrenheten har fem knappar — 0 %, 25 %, 50 %, 75 %, 100 %"
+              "title": "Sex steg",
+              "text": "1. Rummet är tätt\n2. Det sitter stavar i pelarna\n3. Vatten leds in i pelarna och ångan släpps ut\n4. En kabel sitter på reaktoruttaget\n5. En rödstenssignal når styrenheten\n6. Djupet står inte på noll: ställ in det med reglaget i styrenheten"
             },
             {
               "type": "text",
@@ -162,7 +162,7 @@
             {
               "type": "text",
               "title": "Effekt",
-              "text": "En pelare ger 24 EU/t. Fler stavar och tätare ställda pelare ger mer: grannpelare förstärker varandra.\n\nTaket ligger på 512 EU/t. Den valda djupknappen delar effekt, värme och bränsleåtgång lika."
+              "text": "En pelare ger 24 EU/t. Fler stavar och tätare ställda pelare ger mer: grannpelare förstärker varandra.\n\nTaket ligger på 512 EU/t. Stavdjupet delar effekt, värme, vatten- och bränsleåtgång lika."
             }
           ]
         },
@@ -174,12 +174,12 @@
             {
               "type": "text",
               "title": "Värme",
-              "text": "Reaktorn värms upp och rummet gör sig av med värme av sig självt — och desto snabbare ju hetare det är. Därför hittar varje reaktor sin egen temperatur och stannar där.\n\nEn pelare lägger sig kring 15%. Två bredvid varandra når två tredjedelar. Tre eller fler klarar rummet inte på egen hand."
+              "text": "En reaktor i drift blir bara varmare: medan stavarna arbetar gör sig rummet inte av med någon värme av sig självt. Vattnet för bort värmen; utan det klättrar mätaren ända upp och nedräkningen till haveriet börjar.\n\nNär reaktionen har stoppats — spaken är avslagen — svalnar rummet av sig självt."
             },
             {
               "type": "text",
               "title": "Vattenkretsen",
-              "text": "Vatten är ingen kylare utan ett säkerhetssystem: det slår till när mätaren närmar sig det gula fältet och håller reaktorn under det. Gult betyder alltså att kylningen inte hänger med.\n\nPump -> rör -> reaktorintag -> kolonn. Ställ in rörets sidor vid intaget med skiftnyckeln: uttag på utsidan, inmatning på insidan. Kolonnen och munstycket behöver ingen nyckel — en kolonn tar bara emot vatten och ger bara ifrån sig ånga."
+              "text": "Vattnet för bort värmen. En reaktor med tillräckligt med vatten ligger nära botten av mätaren, och gult betyder att vattnet inte hänger med.\n\nPump -> rör -> reaktorintag -> kolonn. Ställ in rörets sidor vid intaget med skiftnyckeln: uttag på utsidan, inmatning på insidan. Kolonnen och munstycket behöver ingen nyckel — en kolonn tar bara emot vatten och ger bara ifrån sig ånga."
             },
             {
               "type": "text",

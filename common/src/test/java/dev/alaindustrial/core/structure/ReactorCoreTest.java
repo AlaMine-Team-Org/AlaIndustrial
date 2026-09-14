@@ -116,6 +116,62 @@ class ReactorCoreTest {
 		assertEquals(0, ReactorCore.heatRemovedByWater(-4, HEAT_PER_WATER));
 	}
 
+	// ── MOD-623: water is the only cooling a working room has ──
+
+	@Test
+	void aRunningReactionAlwaysPutsHeatIntoTheRoom() {
+		assertEquals(0, ReactorCore.reactionHeat(16, 0));
+		assertEquals(16, ReactorCore.reactionHeat(16, 24));
+		// One rack on its shallowest rods wants a whole EU while its heat rounds down to nothing; a reaction
+		// that heated nothing could run dry for ever.
+		assertEquals(1, ReactorCore.reactionHeat(0, 1));
+	}
+
+	/**
+	 * While the rods work the shell sheds nothing, so no dry core has a settle point below the top. Two
+	 * columns used to park at 66 % on the shell alone. The curve returns the moment the reaction stops —
+	 * "pull the lever and wait" still works.
+	 */
+	@Test
+	void theShellShedsNothingWhileTheRodsWork() {
+		assertEquals(0, ReactorCore.shellCooling(6625, true, 4, 8));
+		assertEquals(0, ReactorCore.shellCooling(0, true, 4, 8));
+		assertEquals(57, ReactorCore.shellCooling(6625, false, 4, 8));
+		assertEquals(84, ReactorCore.shellCooling(10000, false, 4, 8));
+	}
+
+	/**
+	 * The loop carries the whole reaction, from the first tick, at any temperature. The version before this
+	 * one waited for the coolant target and boiled in steps of two — the source of the 59/60 % flicker.
+	 */
+	@Test
+	void theLoopCarriesTheWholeReactionWithNoThreshold() {
+		assertEquals(8, ReactorCore.waterDemand(16, 0, HEAT_PER_WATER));
+		assertEquals(273, ReactorCore.waterDemand(546, 0, HEAT_PER_WATER));
+		assertEquals(0, ReactorCore.waterDemand(0, 0, HEAT_PER_WATER));
+	}
+
+	@Test
+	void waterBringsStoredHeatAllTheWayDown() {
+		// 10 000 stored heat: 500 of recovery on top of the reaction's 124.
+		assertEquals(312, ReactorCore.waterDemand(124, 10000, HEAT_PER_WATER));
+		// A scrammed core with water is brought down as well.
+		assertEquals(250, ReactorCore.waterDemand(0, 10000, HEAT_PER_WATER));
+		// Rounded up, so the last few units go too instead of parking the gauge just above zero.
+		assertEquals(1, ReactorCore.waterDemand(0, 1, HEAT_PER_WATER));
+	}
+
+	@Test
+	void theCoolantShareIsBoundedAndSafeAtTheEdges() {
+		assertEquals(100, ReactorCore.coolantSharePercent(124, 126));
+		assertEquals(50, ReactorCore.coolantSharePercent(124, 62));
+		assertEquals(99, ReactorCore.coolantSharePercent(124, 123));
+		assertEquals(0, ReactorCore.coolantSharePercent(124, 0));
+		assertEquals(0, ReactorCore.coolantSharePercent(124, -4));
+		// Nothing reacting is not nothing cooling: a stopped room is not short of water.
+		assertEquals(100, ReactorCore.coolantSharePercent(0, 0));
+	}
+
 	/**
 	 * Rounding up the demand and back down through the exchange must never remove MORE heat than was
 	 * produced — otherwise a reactor cools itself below zero and the gauge reads a temperature the

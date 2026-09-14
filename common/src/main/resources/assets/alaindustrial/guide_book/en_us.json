@@ -151,8 +151,8 @@
           "pages": [
             {
               "type": "text",
-              "title": "Five steps",
-              "text": "1. The room is sealed\n2. There are rods in the columns\n3. A cable is on the reactor outlet\n4. A redstone signal reaches the controller\n5. Depth is off zero: the controller has five buttons — 0%, 25%, 50%, 75%, 100%"
+              "title": "Six steps",
+              "text": "1. The room is sealed\n2. There are rods in the columns\n3. Water is piped into the columns and the steam is let out\n4. A cable is on the reactor outlet\n5. A redstone signal reaches the controller\n6. Depth is off zero: set it with the slider in the controller"
             },
             {
               "type": "text",
@@ -162,7 +162,7 @@
             {
               "type": "text",
               "title": "Power",
-              "text": "One column gives 24 EU/t. More rods and tighter packing give more: adjacent columns boost each other.\n\nThe ceiling is 512 EU/t. The chosen depth button divides power, heat and fuel use alike."
+              "text": "One column gives 24 EU/t. More rods and tighter packing give more: adjacent columns boost each other.\n\nThe ceiling is 512 EU/t. Rod depth divides power, heat, water and fuel use alike."
             }
           ]
         },
@@ -174,12 +174,12 @@
             {
               "type": "text",
               "title": "Heat",
-              "text": "The reactor heats up and the room sheds heat on its own — faster the hotter it is. So every reactor settles at its own temperature and stays there.\n\nOne column sits near 15%. Two side by side reach two thirds. Three or more the room cannot hold alone."
+              "text": "A working reactor only heats up: while the rods work, the room sheds nothing on its own. Water carries the heat away; without it the gauge climbs to the top and the accident countdown starts.\n\nOnce the reaction stops — the lever pulled — the room cools down by itself."
             },
             {
               "type": "text",
               "title": "The water loop",
-              "text": "Water is not a radiator, it is a safety system: it engages once the gauge nears the amber mark and holds the reactor under it, so amber means the cooling is losing.\n\nPump -> pipe -> reactor inlet -> column. Wrench the pipe faces at the inlet: extract on the outside, insert on the inside. The column and the nozzle need no wrench — a column takes water only in and gives steam only out."
+              "text": "Water carries the heat away. A reactor with enough water sits near the bottom of the gauge, and amber means the water is not keeping up.\n\nPump -> pipe -> reactor inlet -> column. Wrench the pipe faces at the inlet: extract on the outside, insert on the inside. The column and the nozzle need no wrench — a column takes water only in and gives steam only out."
             },
             {
               "type": "text",

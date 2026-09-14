@@ -350,7 +350,9 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 		// is content, and content wins — otherwise the gear printed over the statistics panel's text (and
 		// the statistics tab over the upgrade panel's art). The upgrade panel keeps a transparent corner
 		// exactly so its own gear still shows through it.
-		drawStatsTab(graphics);
+		if (hasStatsTab()) {
+			drawStatsTab(graphics);
+		}
 		// Overlay pass — above the GUI's slots, items and labels.
 		if (this.menu.hasUpgradePanel() && this.menu.isPanelOpen()) {
 			drawPanel(graphics, mouseX, mouseY);
@@ -596,6 +598,15 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 		return y + STAT_ROW_H;
 	}
 
+	/**
+	 * Whether this screen shows the statistics tab. Default true. A screen whose machine can never hold a
+	 * statistics chip — no upgrade panel to fit it in — overrides it: the tab would only ever ask for a chip
+	 * there is nowhere to put. Without the tab the panel cannot be opened, so nothing else needs a guard.
+	 */
+	protected boolean hasStatsTab() {
+		return true;
+	}
+
 	private void drawStatsTab(GuiGraphicsExtractor graphics) {
 		int bx = statsPanel.tabX(this.leftPos);
 		int by = statsPanel.tabY(this.topPos);
@@ -648,7 +659,7 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 			graphics.setTooltipForNextFrame(this.font, lines, mouseX, mouseY);
 			return;
 		}
-		if (statsPanel.isOverTab(mouseX, mouseY, this.leftPos, this.topPos)) {
+		if (hasStatsTab() && statsPanel.isOverTab(mouseX, mouseY, this.leftPos, this.topPos)) {
 			graphics.setTooltipForNextFrame(this.font,
 					Component.translatable("gui.alaindustrial.stats.title"), mouseX, mouseY);
 			return;
@@ -700,7 +711,9 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 		if (this.menu.isPanelOpen()) {
 			areas.add(panel.panelArea(this.leftPos, this.topPos));
 		}
-		areas.add(statsPanel.tabArea(this.leftPos, this.topPos));
+		if (hasStatsTab()) {
+			areas.add(statsPanel.tabArea(this.leftPos, this.topPos));
+		}
 		if (this.menu.isStatsPanelOpen()) {
 			areas.add(statsPanel.panelArea(this.leftPos, this.topPos));
 		}
@@ -718,8 +731,8 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 			panel.onGearClick();
 			return true;
 		}
-		// MOD-125: the statistics tab. No opt-out check — every machine has statistics to show.
-		if (btn == 0 && statsPanel.isOverTab(event.x(), event.y(), this.leftPos, this.topPos)) {
+		// MOD-125: the statistics tab, on every machine that shows one (see hasStatsTab).
+		if (btn == 0 && hasStatsTab() && statsPanel.isOverTab(event.x(), event.y(), this.leftPos, this.topPos)) {
 			statsPanel.onTabClick();
 			return true;
 		}

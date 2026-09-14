@@ -64,8 +64,11 @@ import net.minecraft.world.phys.Vec3;
  */
 public class ReactorControllerBlockEntity extends MachineBlockEntity implements MenuProvider {
 
-	/** Base four plus: status, breach (3), size (3), heat/rods/depth/output (4), water/steam/idle/energy (5), meltdown, blast, instability. */
-	public static final int DATA_COUNT = MachineBlockEntity.DATA_COUNT + 20;
+	/**
+	 * Base four plus: status, breach (3), size (3), heat/rods/depth/output (4), water/steam/idle/energy (5),
+	 * meltdown, blast, instability, the coolant share and the two heat marks (MOD-618, MOD-623).
+	 */
+	public static final int DATA_COUNT = MachineBlockEntity.DATA_COUNT + 23;
 	public static final int DATA_STATUS = 4;
 	public static final int DATA_BREACH_DX = 5;
 	public static final int DATA_BREACH_DY = 6;
@@ -131,9 +134,35 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 	 * still on the clock.
 	 */
 	public static final int DATA_INSTABILITY = 23;
+	/**
+	 * Share of the reaction's heat the water carried last tick, 0…100 (MOD-623). A hundred while nothing
+	 * reacts: a stopped room is not short of water.
+	 *
+	 * <p>It took the coolant target's slot. The target was a mark on the heat bar where a running loop held
+	 * the room; since the water carries the reaction's whole heat, a well-plumbed room sits near zero and the
+	 * mark stopped describing anything a player could see.
+	 */
+	public static final int DATA_COOLANT_SHARE = 24;
+	/**
+	 * The two heat marks the console draws — warning and start of meltdown — in percent of the scale
+	 * (MOD-618).
+	 *
+	 * <p><b>Sent rather than read on the client.</b> {@code Config} is not synced, so a screen that read its
+	 * own copy drew the lines where its local file put them rather than where this server's reactor acts —
+	 * and the old gauge did exactly that with its amber step. A channel costs nothing while the value holds
+	 * still: vanilla only resends a channel that changed.
+	 */
+	public static final int DATA_HEAT_WARN = 25;
+	public static final int DATA_HEAT_MELTDOWN = 26;
 
-	/** Coolant boiled on the last tick, in mB. Zero while the reactor is cold or idle. */
+	/** Coolant boiled on the last tick, in mB. Zero while nothing reacts and no overheat is left to bring down. */
 	private int lastWater;
+
+	/**
+	 * Share of the reaction's heat the water carried on the last tick — see {@link #DATA_COOLANT_SHARE}.
+	 * Starts full: a controller that has not ticked yet is not short of water.
+	 */
+	private int coolantShare = 100;
 
 	/**
 	 * Why the reactor produced nothing this tick, as an {@link ReactorIdleReason} ordinal.
@@ -410,6 +439,8 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		// learn that the slider they left at 0% is why. Bare rods are always fully lowered.
 		boolean allowed = (sealed ? depthPermille > 0 : bare) && level.hasNeighborSignal(pos);
 		long produced = 0;
+		// What the reaction is asked for this tick, in EU/t.
+		long wanted = 0;
 		// Resolved ONCE per tick and handed to all three passes. Burning, boiling and levelling each
 		// used to walk `assemblies` and call getBlockEntity themselves, which in a room packed to the
 		// 12-block limit is several hundred chunk lookups a tick for a machine that ticks every tick.
@@ -449,7 +480,7 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 			// A bare core is scaled and capped instead of throttled. Both ceilings still apply above it,
 			// so the bare cap can only ever make the figure smaller — it is a floor on how bad the
 			// shortcut is, never a way around the tier.
-			long wanted = bare
+			wanted = bare
 					? ReactorCore.bareOutput(ceiling, Config.reactorBarePowerPercent,
 							Config.reactorBarePowerCap)
 					: ceiling * depthPermille / ReactorCore.FULL_DEPTH;
@@ -482,8 +513,35 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 					Config.reactorHeatPerRod, Config.reactorHeatNeighbourBonusPercent,
 					ReactorCore.FULL_DEPTH);
 			produced = ReactorCore.heatForOutput(heatFull, wanted, full);
+		}
 
-			long output = Math.min(wanted, energy.getCapacity() - energy.getAmount());
+		// ── Water is the only cooling a working room has (MOD-623). ──
+		//
+		// The reaction pays out whether or not there is water; what the water decides is the temperature.
+		// While the rods work the shell sheds nothing, so every unit of heat the water did not carry stays
+		// on the gauge, and a dry room climbs to the top and into the countdown however small it is. The
+		// shell used to shed up to 84 heat a tick by itself, and a player kept the rods shallow, left the
+		// plumbing out and ran a reactor that never heated (playtest, MOD-618). Once the reaction stops, the
+		// shell cools the room as it always did.
+		long cooling = ReactorCore.shellCooling(heat, reacting && !bare, Config.reactorPassiveCooling,
+				Config.reactorHeatLossPermille);
+		long heatIn = produced;
+		long carried = 0;
+		if (bare) {
+			// The coolant loop and the stack settling are the ROOM's plumbing. A bare rack has no shell
+			// to plumb and makes no heat to answer, and running them anyway would quietly boil away water
+			// a player had poured into a column for the room they are still building around it.
+			lastWater = 0;
+			coolantShare = 100;
+		} else {
+			heatIn = ReactorCore.reactionHeat(produced, wanted);
+			carried = ReactorCore.heatRemovedByWater(coolWithWater(columns, heatIn), Config.reactorHeatPerWater);
+			coolantShare = ReactorCore.coolantSharePercent(heatIn, carried);
+		}
+
+		if (allowed && liveRods > 0) {
+			long room = energy.getCapacity() - energy.getAmount();
+			long output = Math.min(wanted, room);
 			if (output > 0) {
 				energy.setAmountUntracked(energy.getAmount() + output);
 				burnFuel(columns, output);
@@ -501,25 +559,19 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 				// since MOD-472 — keep the room's drone alive on a core banking nothing. The reactor is
 				// still burning, and the temperature above says so; this row is about the sale.
 				lastOutput = 0;
-				idleReason = ReactorIdleReason.BUFFER_FULL.ordinal();
+				// A full buffer, or a reaction too weak to pay a whole EU. The old version reported the second as
+				// "buffer full" on a buffer that was empty (audit, MOD-623).
+				idleReason = (room <= 0 ? ReactorIdleReason.BUFFER_FULL : ReactorIdleReason.RUNNING).ordinal();
 			}
 		} else {
 			lastOutput = 0;
 			idleReason = idleReasonFor(level, pos, sealed).ordinal();
 		}
 
-		long cooling = ReactorCore.naturalCooling(heat, Config.reactorPassiveCooling,
-				Config.reactorHeatLossPermille);
-		if (bare) {
-			// The coolant loop and the stack settling are the ROOM's plumbing. A bare rack has no shell
-			// to plumb and makes no heat to answer, and running them anyway would quietly boil away water
-			// a player had poured into a column for the room they are still building around it.
-			lastWater = 0;
-		} else {
-			produced = coolWithWater(columns, produced, cooling);
-		}
-
-		long settled = ReactorCore.settleHeat(heat, produced, cooling, Config.reactorHeatCapacity);
+		// May go NEGATIVE, and must: the recovery term boils more than this tick's heat so a core that ran
+		// away comes back down. Clamping it at zero threw that surplus away — the loop drank the water and
+		// the temperature did not move. settleHeat clamps the temperature at zero, the right place for the floor.
+		long settled = ReactorCore.settleHeat(heat, heatIn - carried, cooling, Config.reactorHeatCapacity);
 		if (settled != heat || produced > 0) {
 			heat = settled;
 			setChanged();
@@ -806,14 +858,14 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 	/**
 	 * Keeps the room's drone in step with what the reactor is doing (MOD-472).
 	 *
-	 * <p>The signal is {@code lastOutput > 0}, not {@code idleReason}: the idle reason can read
-	 * {@code RUNNING} on a room making nothing at all, because it is derived from {@code rods}, which the
-	 * periodic scan refreshes only every {@code reactorScanIntervalTicks} while output is recomputed
-	 * every tick. A core whose last rod just burnt out would have gone on announcing itself for two
-	 * seconds.
+	 * <p>The signal is {@link #reacting} — the reaction, counted from the live rods every tick. It used to
+	 * be {@code lastOutput > 0}, which is the sale: a room whose buffer filled up went silent and played the
+	 * spin-down while its core kept burning (audit, MOD-623). A hum that stops on a reactor still heating
+	 * tells the player the one thing that is not true. Not {@code idleReason} either: it reads {@code RUNNING} on a reaction
+	 * too weak to pay a whole EU.
 	 */
 	private void updateVoice(Level level, BlockPos pos, List<FuelRodAssemblyBlockEntity> columns) {
-		if (lastOutput > 0) {
+		if (reacting) {
 			voiceLatch = VOICE_LATCH_TICKS;
 		} else if (voiceLatch > 0) {
 			voiceLatch--;
@@ -821,9 +873,9 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		boolean voiced = voiceLatch > 0;
 		paintVoicedColumns(level, columns, voiced);
 		if (wasVoiced && !voiced && level instanceof ServerLevel serverLevel) {
-			// The core going quiet gets its own cue. It covers every way a reactor stops — the lever
-			// pulled, the last rod spent, the throttle wound shut, the shell breached — because all four
-			// arrive here as the same thing: power that was being made a moment ago and is not now.
+			// The core going quiet gets its own cue. It covers every way a reaction stops — the lever
+			// pulled, the last rod spent, the throttle wound shut — because all three arrive here as the
+			// same thing: a reaction that was running a moment ago and is not now.
 			serverLevel.playSound(null, pos, ModSounds.REACTOR_SPINDOWN.get(), SoundSource.BLOCKS, 0.7f, 1.0f);
 		}
 		wasVoiced = voiced;
@@ -924,7 +976,11 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 	 * entire job is reaching somebody who is not in the room.
 	 */
 	private void warnOnOverheat(Level level, BlockPos pos) {
-		int percent = ReactorCore.heatPercent(heat, Config.reactorHeatCapacity);
+		// The scale the reactor is judged on, not the room's heat alone. A bare pile makes no heat — its
+		// danger is instability — so reading heat here left the one reactor with no walls silent through its
+		// whole countdown (playtest, MOD-623). Now both scales sound the same way: one blast crossing the
+		// warning line, then the siren for as long as the scale sits at the top.
+		int percent = criticalPercent();
 		if (ReactorCore.shouldSoundAlarm(percent, Config.reactorHeatWarnPercent,
 				Config.reactorCoolantTargetPercent, overheatWarned)
 				&& level instanceof ServerLevel serverLevel) {
@@ -1080,42 +1136,22 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 	}
 
 	/**
-	 * Boils as much coolant as this tick's heat calls for and returns the heat left over.
+	 * Boils the water this tick calls for and returns how much boiled, in mB (MOD-623).
 	 *
-	 * <p><b>A starter reactor needs no plumbing at all.</b> The shell sheds up to 84 heat a tick by
-	 * itself (a flat 4 plus 8‰ of the current temperature), and anything under that simply settles at
-	 * its own temperature: one column near 15% of the scale, two side by side near two thirds (dry —
-	 * plumbed, they sit at the coolant target instead). The loop
-	 * becomes necessary at the third column, which is exactly where the player should meet it. Nothing
-	 * here forces plumbing early; scale does.
+	 * <p><b>Every running room needs its loop.</b> The water carries the reaction's whole heat — nothing else
+	 * cools a working room — plus a twentieth of the heat already stored, which is what brings a core that
+	 * ran dry back down within a few seconds. Neither term waits for a threshold any more;
+	 * {@link ReactorCore#waterDemand} says why.
 	 *
-	 * <p>Whatever the columns could not boil stays in {@code produced} and goes on the heat scale. That
-	 * is the entire failure mode of a starved loop: not an error message, a rising gauge.
+	 * <p>Whatever the columns could not boil stays on the heat scale. That is
+	 * the entire failure mode of a starved loop: not an error message, a rising gauge.
 	 */
-	private long coolWithWater(List<FuelRodAssemblyBlockEntity> columns, long produced, long cooling) {
-		// The coolant loop is a SAFETY system, not a radiator: it engages at its own target, which sits
-		// DELIBERATELY BELOW the warning line, and takes only the heat that would carry the core past it.
-		// Aiming at the warning line itself parked every healthy reactor on amber, so amber stopped
-		// meaning "look at me". Below the target the shell sheds everything by itself, so a small reactor
-		// runs warm, steady and dry — which is what makes the loop a thing the player builds when they
-		// scale up rather than a tax on their first one.
-		long coolantTarget = (long) Config.reactorHeatCapacity * Config.reactorCoolantTargetPercent / 100;
-		// The INFLOW this tick, not the overshoot accumulated so far. Asking the loop to undo the whole
-		// backlog in one tick demanded fifteen hundred millibuckets a tick and drained a flooded core in
-		// eight of them — the loop looked useless precisely when it was needed. Countering the ongoing
-		// gain instead holds the core at the coolant target and costs tens of millibuckets, which is a
-		// rate a pipe can actually sustain.
-		// Two terms: hold the line, then walk back to it. The first counters this tick's inflow, which
-		// is what keeps a hot core from climbing. The second takes a twentieth of however far past the
-		// target it already is, so a core that ran away before the loop was plumbed comes down over a few
-		// seconds instead of sitting at the top forever — countering the inflow alone froze it exactly
-		// where it was, which looks identical to a loop that does nothing.
-		long excess = heat < coolantTarget ? 0 : (produced - cooling) + (heat - coolantTarget) / 20;
-		if (excess <= 0 || columns.isEmpty()) {
+	private long coolWithWater(List<FuelRodAssemblyBlockEntity> columns, long reactionHeat) {
+		long wanted = ReactorCore.waterDemand(reactionHeat, heat, Config.reactorHeatPerWater);
+		if (wanted <= 0 || columns.isEmpty()) {
 			lastWater = 0;
-			return produced;
+			return 0;
 		}
-		long wanted = ReactorCore.waterForHeat(excess, Config.reactorHeatPerWater);
 		long boiled = 0;
 		for (FuelRodAssemblyBlockEntity column : columns) {
 			if (boiled >= wanted) {
@@ -1131,13 +1167,9 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 			steamMilestoneOffered = true;
 			awardMilestone(level, ReactorMilestone.STEAM);
 		}
-		// May go NEGATIVE, and must: the recovery term deliberately boils more than this tick's heat so a
-		// core that ran away comes back down. Clamping the result at zero threw that surplus away — the
-		// loop drank the water, the temperature did not move, and the coolant looked useless at exactly
-		// the moment it was working hardest. settleHeat clamps the temperature at zero, which is the
-		// right place for the floor.
-		return produced - ReactorCore.heatRemovedByWater(boiled, Config.reactorHeatPerWater);
+		return boiled;
 	}
+
 
 	/**
 	 * Settles fluid inside each vertical run of columns.
@@ -1578,6 +1610,9 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 						? 0 : Math.max(1, blastCountdown * 100 / blastCountdownTotal);
 				case DATA_INSTABILITY -> bare
 						? ReactorCore.heatPercent(instability, Config.reactorBareInstabilityCapacity) : 0;
+				case DATA_COOLANT_SHARE -> coolantShare;
+				case DATA_HEAT_WARN -> Config.reactorHeatWarnPercent;
+				case DATA_HEAT_MELTDOWN -> Config.reactorMeltdownStartPercent;
 				default -> ReactorControllerBlockEntity.this.dataAccess.get(index);
 			};
 		}
@@ -1722,6 +1757,11 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 	/** A bare core's instability on its own 0…capacity scale. Always zero for a sealed room. */
 	public long getInstability() {
 		return instability;
+	}
+
+	/** Whether the warning siren has sounded and not re-armed yet, on whichever scale is live (MOD-623). */
+	public boolean hasSoundedOverheatAlarm() {
+		return overheatWarned;
 	}
 
 	public boolean sealedBoxContains(BlockPos at) {
