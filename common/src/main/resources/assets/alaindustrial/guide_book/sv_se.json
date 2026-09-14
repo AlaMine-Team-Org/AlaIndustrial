@@ -406,6 +406,26 @@
           ]
         },
         {
+          "id": "radiant_solar_panel",
+          "title": "Spegelkoncentrator",
+          "icon": "alaindustrial:radiant_solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Spegelkoncentrator",
+              "text": "Dagsgrenens tredje steg — dubbelt så mycket som dagsljussolpanelen och vid middagstid hälften till; speglarna fälls ihop när det inte finns något att samla."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Energi: 8 EU/t (dag)",
+                "Buffert: 16 000 EU"
+              ]
+            }
+          ]
+        },
+        {
           "id": "moonlit_solar_panel",
           "title": "Månbelyst solpanel",
           "icon": "alaindustrial:moonlit_solar_panel",
@@ -2048,6 +2068,43 @@
               "result_count": 1
             }
           ]
+        },
+        {
+          "id": "fluid_tank_advanced",
+          "title": "Avancerad vätsketank",
+          "icon": "alaindustrial:fluid_tank_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Avancerad vätsketank",
+              "text": "Den bärbara tankens andra nivå — 16 hinkar i stället för åtta, silverbeslag, ett förstärkningsband och ett föremål som inte brinner i lava."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Kapacitet: 16 hinkar"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:fluid_tank",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_tank_advanced",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },
@@ -2335,6 +2392,36 @@
               "type": "text",
               "title": "Svavelmalm",
               "text": "Naturligt svavel — en brytbar icke-metall som bearbetas till stoft för vulkanisering av gummi."
+            }
+          ]
+        },
+        {
+          "id": "carbon_ceramic",
+          "title": "Kolkeramik",
+          "icon": "alaindustrial:carbon_ceramic",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kolkeramik",
+              "text": "Ett block av fyra keramikplattor — slutet på kolkedjan, en sprängtålig vägg och materialets kompakta lagringsform."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:ceramic_plate",
+                "",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:ceramic_plate",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:carbon_ceramic",
+              "result_count": 1
             }
           ]
         },
@@ -2972,6 +3059,43 @@
           ]
         },
         {
+          "id": "diamond_chest",
+          "title": "Diamantkista",
+          "icon": "alaindustrial:diamond_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Diamantkista",
+              "text": "En kista med 108 platser — den högsta lagringsnivån. Tolv rader bakom ett fönster för sex, med rullningslist, och explosioner biter inte på den. Behöver ingen energi."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Kapacitet: 108 platser"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "alaindustrial:electrum_chest",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond"
+              ],
+              "result_id": "alaindustrial:diamond_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "mob_repeller_hv",
           "title": "Stor monsteravvisare",
           "icon": "alaindustrial:mob_repeller_hv",
@@ -3261,6 +3385,43 @@
           ]
         },
         {
+          "id": "upgrade_table",
+          "title": "Uppgraderingsbänk",
+          "icon": "alaindustrial:upgrade_table",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Uppgraderingsbänk",
+              "text": "En bänk som sätter permanenta uppgraderingar på eldrivna verktyg. Byggd av två höljen staplade på varandra."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Energi: 8 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:anvil",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:upgrade_table",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "electrum_chest",
           "title": "Elektrumkista",
           "icon": "alaindustrial:electrum_chest",
@@ -3432,6 +3593,36 @@
           ]
         },
         {
+          "id": "choke",
+          "title": "Drosselspole",
+          "icon": "alaindustrial:choke",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Drosselspole",
+              "text": "Drosselspolen i tre nivåer — en lindning på en laminerad kärna som jämnar ut spänningstoppar i ledningen; varje nivå byggs kring nivån under."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate"
+              ],
+              "result_id": "alaindustrial:choke",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron",
           "title": "Härdat järn",
           "icon": "alaindustrial:tempered_iron",
@@ -3462,6 +3653,36 @@
           ]
         },
         {
+          "id": "ceramic_plate",
+          "title": "Keramikplatta",
+          "icon": "alaindustrial:ceramic_plate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Keramikplatta",
+              "text": "Klyvs ur en kolbrikett, fyra åt gången; fyra plattor sätts ihop till ett block kolkeramik."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formlös tillverkning",
+              "grid": [
+                "alaindustrial:carbon_ceramic",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:ceramic_plate",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "water_mill_wheel",
           "title": "Vattenhjul",
           "icon": "alaindustrial:water_mill_wheel",
@@ -3487,6 +3708,36 @@
                 "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:water_mill_wheel",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "core_barrel",
+          "title": "Kärnrör",
+          "icon": "alaindustrial:core_barrel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kärnrör",
+              "text": "Kärnröret och pelarborrmodulen — delarna som en uppgradering byggs av, som får en borr att gräva tre block högt."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:choke",
+                "",
+                "alaindustrial:choke",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:core_barrel",
               "result_count": 1
             }
           ]
@@ -3918,6 +4169,44 @@
           ]
         },
         {
+          "id": "carbon_briquette",
+          "title": "Kolbrikett",
+          "icon": "alaindustrial:carbon_briquette",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kolbrikett",
+              "text": "Bränns i legeringsugnen av två dubbla kolstavar och slagg; delas till plattor på bara ett sätt — i härdpressen."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Energi: 1200 EU per brikett"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "carbon_rod",
+          "title": "Kolstav",
+          "icon": "alaindustrial:carbon_rod",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kolstav",
+              "text": "Sexton koldamm under kompressorn; två stavar under smideshammaren blir en dubbel — keramikkedjans två första steg."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Energi: 260 EU per stav"
+              ]
+            }
+          ]
+        },
+        {
           "id": "fluxweave_cloth",
           "title": "Fluxväv",
           "icon": "alaindustrial:fluxweave_cloth",
@@ -3967,7 +4256,7 @@
             {
               "type": "text",
               "title": "Solutvecklingschip",
-              "text": "Ett par utvecklingschip — sol (dag) och måne (natt) — som utvecklar grundläggande T1-solpaneler och vindkvarnar till T2 genom utveckling, och för över ackumulerad NBT-energi."
+              "text": "Tre utvecklingschip — sol (dag), måne (natt) och resonans (tredje steget) — som utvecklar grundläggande solpaneler och vindkvarnar till T2 och T2-dagpanelen vidare genom utveckling, och för över ackumulerad NBT-energi."
             },
             {
               "type": "recipe",

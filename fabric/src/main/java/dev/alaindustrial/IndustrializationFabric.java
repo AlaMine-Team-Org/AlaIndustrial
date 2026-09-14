@@ -316,6 +316,9 @@ public class IndustrializationFabric implements ModInitializer {
 		// MOD-620: the reactor's core, stack by stack, pushed from an open controller screen at most once a second.
 		PayloadTypeRegistry.clientboundPlay().register(dev.alaindustrial.network.ReactorZonePayload.TYPE,
 				dev.alaindustrial.network.ReactorZonePayload.CODEC);
+		// MOD-622: the reactor's event log, pushed from an open controller screen at most twice a second.
+		PayloadTypeRegistry.clientboundPlay().register(dev.alaindustrial.network.ReactorLogPayload.TYPE,
+				dev.alaindustrial.network.ReactorLogPayload.CODEC);
 		// Teleport screen-fade level (MOD-106) — sent every tick of a jump's last second; the client
 		// clears itself when the levels stop, so a cancel needs no packet of its own.
 		PayloadTypeRegistry.clientboundPlay().register(

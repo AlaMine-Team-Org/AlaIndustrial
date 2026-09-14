@@ -406,6 +406,26 @@
           ]
         },
         {
+          "id": "radiant_solar_panel",
+          "title": "Koncentrator lustrzany",
+          "icon": "alaindustrial:radiant_solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Koncentrator lustrzany",
+              "text": "Trzeci szczebel gałęzi dziennej — dwa razy więcej niż dzienny panel słoneczny, a w południe jeszcze o połowę więcej; lustra składają się, gdy nie ma czego zbierać."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Energia: 8 EU/t (dzień)",
+                "Bufor: 16 000 EU"
+              ]
+            }
+          ]
+        },
+        {
           "id": "moonlit_solar_panel",
           "title": "Księżycowy panel słoneczny",
           "icon": "alaindustrial:moonlit_solar_panel",
@@ -2048,6 +2068,43 @@
               "result_count": 1
             }
           ]
+        },
+        {
+          "id": "fluid_tank_advanced",
+          "title": "Ulepszony zbiornik na płyny",
+          "icon": "alaindustrial:fluid_tank_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ulepszony zbiornik na płyny",
+              "text": "Drugi poziom przenośnego zbiornika — 16 wiader zamiast ośmiu, srebrne okucia, pas wzmacniający i przedmiot, który nie płonie w lawie."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Pojemność: 16 wiader"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:fluid_tank",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_tank_advanced",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },
@@ -2335,6 +2392,36 @@
               "type": "text",
               "title": "Ruda siarki",
               "text": "Rodzima siarka — wydobywalny niemetal przerabiany na pył do wulkanizacji gumy."
+            }
+          ]
+        },
+        {
+          "id": "carbon_ceramic",
+          "title": "Ceramika węglowa",
+          "icon": "alaindustrial:carbon_ceramic",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ceramika węglowa",
+              "text": "Blok z czterech płyt ceramicznych — koniec łańcucha węglowego, ściana odporna na wybuchy i zwarta forma przechowywania materiału."
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:ceramic_plate",
+                "",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:ceramic_plate",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:carbon_ceramic",
+              "result_count": 1
             }
           ]
         },
@@ -2972,6 +3059,43 @@
           ]
         },
         {
+          "id": "diamond_chest",
+          "title": "Diamentowa skrzynia",
+          "icon": "alaindustrial:diamond_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Diamentowa skrzynia",
+              "text": "Skrzynia na 108 slotów — najwyższy poziom przechowywania. Dwanaście rzędów za oknem na sześć, z paskiem przewijania, a wybuchy nic jej nie robią. Nie potrzebuje energii."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Pojemność: 108 slotów"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "alaindustrial:electrum_chest",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond"
+              ],
+              "result_id": "alaindustrial:diamond_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "mob_repeller_hv",
           "title": "Duży odstraszacz",
           "icon": "alaindustrial:mob_repeller_hv",
@@ -3261,6 +3385,43 @@
           ]
         },
         {
+          "id": "upgrade_table",
+          "title": "Stół ulepszeń",
+          "icon": "alaindustrial:upgrade_table",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Stół ulepszeń",
+              "text": "Stół, który montuje trwałe ulepszenia w narzędziach elektrycznych. Składa się go z dwóch obudów postawionych jedna na drugiej."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Energia: 8 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:anvil",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:upgrade_table",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "electrum_chest",
           "title": "Elektrumowa skrzynia",
           "icon": "alaindustrial:electrum_chest",
@@ -3432,6 +3593,36 @@
           ]
         },
         {
+          "id": "choke",
+          "title": "Dławik",
+          "icon": "alaindustrial:choke",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Dławik",
+              "text": "Dławik w trzech poziomach — uzwojenie na rdzeniu z blach, które wygładza skoki w linii; każdy poziom buduje się wokół poprzedniego."
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate"
+              ],
+              "result_id": "alaindustrial:choke",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron",
           "title": "Hartowane żelazo",
           "icon": "alaindustrial:tempered_iron",
@@ -3462,6 +3653,36 @@
           ]
         },
         {
+          "id": "ceramic_plate",
+          "title": "Płyta ceramiczna",
+          "icon": "alaindustrial:ceramic_plate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Płyta ceramiczna",
+              "text": "Wycinana z brykietu węglowego, po cztery naraz; cztery płyty składają się w blok ceramiki węglowej."
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie bez wzoru",
+              "grid": [
+                "alaindustrial:carbon_ceramic",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:ceramic_plate",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "water_mill_wheel",
           "title": "Koło wodne",
           "icon": "alaindustrial:water_mill_wheel",
@@ -3487,6 +3708,36 @@
                 "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:water_mill_wheel",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "core_barrel",
+          "title": "Rura rdzeniowa",
+          "icon": "alaindustrial:core_barrel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Rura rdzeniowa",
+              "text": "Rura rdzeniowa i moduł wiercenia kolumnowego — części, z których buduje się ulepszenie pozwalające wiertłu kopać na wysokość trzech bloków."
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:choke",
+                "",
+                "alaindustrial:choke",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:core_barrel",
               "result_count": 1
             }
           ]
@@ -3918,6 +4169,44 @@
           ]
         },
         {
+          "id": "carbon_briquette",
+          "title": "Brykiet węglowy",
+          "icon": "alaindustrial:carbon_briquette",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Brykiet węglowy",
+              "text": "Wypalany w piecu stopowym z dwóch podwójnych prętów węglowych i żużla; na płyty rozłupuje się go tylko w jeden sposób — prasą hartowniczą."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Energia: 1200 EU na brykiet"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "carbon_rod",
+          "title": "Pręt węglowy",
+          "icon": "alaindustrial:carbon_rod",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Pręt węglowy",
+              "text": "Szesnaście porcji pyłu węgla pod kompresorem; dwa pręty pod młotem kowalskim dają podwójny — pierwsze dwa szczeble łańcucha ceramicznego."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Energia: 260 EU na pręt"
+              ]
+            }
+          ]
+        },
+        {
           "id": "fluxweave_cloth",
           "title": "Tkanina fluksowa",
           "icon": "alaindustrial:fluxweave_cloth",
@@ -3967,7 +4256,7 @@
             {
               "type": "text",
               "title": "Chip ewolucji Słońca",
-              "text": "Para chipów ewolucji — Słońca (dzień) i Księżyca (noc) — które przez ewolucję rozwijają podstawowe panele słoneczne i wiatraki T1 w T2, przenosząc zgromadzoną energię."
+              "text": "Trzy chipy ewolucji — Słońca (dzień), Księżyca (noc) i rezonansowy (trzeci szczebel) — które przez ewolucję rozwijają podstawowe panele słoneczne i wiatraki w T2, a dzienny panel T2 jeszcze dalej, przenosząc zgromadzoną energię."
             },
             {
               "type": "recipe",

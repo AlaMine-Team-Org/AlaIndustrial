@@ -406,6 +406,26 @@
           ]
         },
         {
+          "id": "radiant_solar_panel",
+          "title": "Ayna Yoğunlaştırıcısı",
+          "icon": "alaindustrial:radiant_solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ayna Yoğunlaştırıcısı",
+              "text": "Gündüz dalının üçüncü basamağı — Gün Işığı Güneş Panelinin iki katı, öğlen buna yarısı kadar daha eklenir; toplanacak bir şey olmadığında aynalar katlanır."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 8 EU/t (gündüz)",
+                "Tampon: 16 000 EU"
+              ]
+            }
+          ]
+        },
+        {
           "id": "moonlit_solar_panel",
           "title": "Ay Işığı Güneş Paneli",
           "icon": "alaindustrial:moonlit_solar_panel",
@@ -2048,6 +2068,43 @@
               "result_count": 1
             }
           ]
+        },
+        {
+          "id": "fluid_tank_advanced",
+          "title": "Gelişmiş Sıvı Tankı",
+          "icon": "alaindustrial:fluid_tank_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Gelişmiş Sıvı Tankı",
+              "text": "Taşınabilir tankın ikinci kademesi — sekiz yerine 16 kova, gümüş süsleme, bir takviye kuşağı ve lavda yanmayan bir eşya."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Kapasite: 16 kova"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:fluid_tank",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_tank_advanced",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },
@@ -2335,6 +2392,36 @@
               "type": "text",
               "title": "Kükürt Cevheri",
               "text": "Doğal kükürt — kauçuk vulkanizasyonu için toza dönüştürülen, çıkarılabilir bir ametal."
+            }
+          ]
+        },
+        {
+          "id": "carbon_ceramic",
+          "title": "Karbon seramik",
+          "icon": "alaindustrial:carbon_ceramic",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Karbon seramik",
+              "text": "Dört seramik plakadan bir blok — kömür zincirinin sonu, patlamaya dayanıklı bir duvar ve malzemenin yoğun depolama biçimi."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:ceramic_plate",
+                "",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:ceramic_plate",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:carbon_ceramic",
+              "result_count": 1
             }
           ]
         },
@@ -2972,6 +3059,43 @@
           ]
         },
         {
+          "id": "diamond_chest",
+          "title": "Elmas Sandık",
+          "icon": "alaindustrial:diamond_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Elmas Sandık",
+              "text": "108 yuvalı bir sandık — en üst depolama kademesi. Altı sıralık pencerenin ardında on iki sıra, kaydırma çubuğuyla; patlamalar ona işlemez. Enerji istemez."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Kapasite: 108 yuva"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "alaindustrial:electrum_chest",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond"
+              ],
+              "result_id": "alaindustrial:diamond_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "mob_repeller_hv",
           "title": "Büyük Yaratık Kovucu",
           "icon": "alaindustrial:mob_repeller_hv",
@@ -3261,6 +3385,43 @@
           ]
         },
         {
+          "id": "upgrade_table",
+          "title": "Yükseltme tezgâhı",
+          "icon": "alaindustrial:upgrade_table",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Yükseltme tezgâhı",
+              "text": "Elektrikli aletlere kalıcı yükseltmeler takan bir tezgâh. Üst üste konmuş iki gövdeden kurulur."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 8 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:anvil",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:upgrade_table",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "electrum_chest",
           "title": "Elektrum Sandık",
           "icon": "alaindustrial:electrum_chest",
@@ -3432,6 +3593,36 @@
           ]
         },
         {
+          "id": "choke",
+          "title": "Şok Bobini",
+          "icon": "alaindustrial:choke",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Şok Bobini",
+              "text": "Üç kademeli şok bobini — lamine çekirdek üzerinde, hattaki dalgalanmaları yumuşatan bir sargı; her kademe bir alttakinin etrafına kurulur."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate"
+              ],
+              "result_id": "alaindustrial:choke",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron",
           "title": "Su Verilmiş Demir",
           "icon": "alaindustrial:tempered_iron",
@@ -3462,6 +3653,36 @@
           ]
         },
         {
+          "id": "ceramic_plate",
+          "title": "Seramik plaka",
+          "icon": "alaindustrial:ceramic_plate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Seramik plaka",
+              "text": "Bir karbon briketinden dörder dörder kesilir; dört plaka bir karbon seramik bloğu oluşturur."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilsiz Üretim",
+              "grid": [
+                "alaindustrial:carbon_ceramic",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:ceramic_plate",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "water_mill_wheel",
           "title": "Su çarkı",
           "icon": "alaindustrial:water_mill_wheel",
@@ -3487,6 +3708,36 @@
                 "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:water_mill_wheel",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "core_barrel",
+          "title": "Karot borusu",
+          "icon": "alaindustrial:core_barrel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Karot borusu",
+              "text": "Karot borusu ve sütun delme modülü — bir matkabın üç blok yüksekliğinde kazmasını sağlayan yükseltmenin yapıldığı parçalar."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:choke",
+                "",
+                "alaindustrial:choke",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:core_barrel",
               "result_count": 1
             }
           ]
@@ -3918,6 +4169,44 @@
           ]
         },
         {
+          "id": "carbon_briquette",
+          "title": "Karbon briketi",
+          "icon": "alaindustrial:carbon_briquette",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Karbon briketi",
+              "text": "Alaşım Fırınında iki çift karbon çubuk ve cüruftan pişirilir; plakalara yalnızca tek bir yolla ayrılır — su verme presiyle."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: briket başına 1200 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "carbon_rod",
+          "title": "Karbon çubuk",
+          "icon": "alaindustrial:carbon_rod",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Karbon çubuk",
+              "text": "Sıkıştırıcı altında on altı Kömür Tozu; Demirci Çekici altında iki çubuk bir çift çubuk yapar — seramik zincirinin ilk iki basamağı."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: çubuk başına 260 EU"
+              ]
+            }
+          ]
+        },
+        {
           "id": "fluxweave_cloth",
           "title": "Fluks kumaşı",
           "icon": "alaindustrial:fluxweave_cloth",
@@ -3967,7 +4256,7 @@
             {
               "type": "text",
               "title": "Güneş Evrim Çipi",
-              "text": "Bir çift evrim çipi — güneş (gündüz) ve ay (gece) — temel T1 güneş panellerini ve rüzgar türbinlerini evrimle T2'ye dönüştürür ve biriken NBT enerjisini aktarır."
+              "text": "Üç evrim çipi — güneş (gündüz), ay (gece) ve rezonans (üçüncü basamak) — temel güneş panellerini ve rüzgar türbinlerini evrimle T2'ye, T2 gündüz panelini de daha ileriye dönüştürür ve biriken NBT enerjisini aktarır."
             },
             {
               "type": "recipe",

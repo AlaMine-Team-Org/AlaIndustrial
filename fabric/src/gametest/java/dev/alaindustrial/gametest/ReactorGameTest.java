@@ -123,4 +123,10 @@ public class ReactorGameTest {
 	public void zoneSnapshotMatchesTheRacks(GameTestHelper helper) {
 		ReactorScenarios.zoneSnapshotMatchesTheRacks(helper);
 	}
+
+	// MOD-622 — the Log tab's server half: one line per transition, kept across a reload, read per player.
+	@GameTest(maxTicks = 100)
+	public void theEventLogRecordsEachTransitionOnce(GameTestHelper helper) {
+		ReactorScenarios.theEventLogRecordsEachTransitionOnce(helper);
+	}
 }

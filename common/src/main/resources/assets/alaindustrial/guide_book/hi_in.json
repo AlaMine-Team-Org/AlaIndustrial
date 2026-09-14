@@ -406,6 +406,26 @@
           ]
         },
         {
+          "id": "radiant_solar_panel",
+          "title": "दर्पण कंसंट्रेटर",
+          "icon": "alaindustrial:radiant_solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "दर्पण कंसंट्रेटर",
+              "text": "दिन वाली शाखा का तीसरा पायदान — दिन के सौर पैनल से दोगुना, दोपहर में उससे भी डेढ़ गुना; जब इकट्ठा करने को कुछ न हो तो दर्पण सिमट जाते हैं।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 8 EU/t (दिन)",
+                "बफ़र: 16 000 EU"
+              ]
+            }
+          ]
+        },
+        {
           "id": "moonlit_solar_panel",
           "title": "चंद्र सौर पैनल",
           "icon": "alaindustrial:moonlit_solar_panel",
@@ -2048,6 +2068,43 @@
               "result_count": 1
             }
           ]
+        },
+        {
+          "id": "fluid_tank_advanced",
+          "title": "उन्नत द्रव टंकी",
+          "icon": "alaindustrial:fluid_tank_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "उन्नत द्रव टंकी",
+              "text": "पोर्टेबल टैंक का दूसरा स्तर — आठ की जगह 16 बाल्टी, चाँदी की किनारी, मज़बूती देने वाली पट्टी, और ऐसी वस्तु जो लावा में नहीं जलती।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "क्षमता: 16 बाल्टी"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:fluid_tank",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_tank_advanced",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },
@@ -2335,6 +2392,36 @@
               "type": "text",
               "title": "गंधक अयस्क",
               "text": "प्राकृतिक गंधक — खनन योग्य अधातु, जिसे रबर वल्कनीकरण के लिए धूल में बदला जाता है।"
+            }
+          ]
+        },
+        {
+          "id": "carbon_ceramic",
+          "title": "कार्बन सिरेमिक",
+          "icon": "alaindustrial:carbon_ceramic",
+          "pages": [
+            {
+              "type": "text",
+              "title": "कार्बन सिरेमिक",
+              "text": "चार सिरेमिक प्लेटों का ब्लॉक — कोयला श्रृंखला का अंत, विस्फोट-रोधी दीवार और सामग्री को सघन रूप में रखने का तरीका।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:ceramic_plate",
+                "",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:ceramic_plate",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:carbon_ceramic",
+              "result_count": 1
             }
           ]
         },
@@ -2972,6 +3059,43 @@
           ]
         },
         {
+          "id": "diamond_chest",
+          "title": "हीरे का संदूक",
+          "icon": "alaindustrial:diamond_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "हीरे का संदूक",
+              "text": "108 स्लॉट का संदूक — भंडारण का सबसे ऊँचा स्तर। छह पंक्तियों की स्क्रॉल होने वाली खिड़की के पीछे बारह पंक्तियाँ, और विस्फोटों का इस पर कोई असर नहीं होता। ऊर्जा नहीं चाहिए।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "क्षमता: 108 स्लॉट"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "alaindustrial:electrum_chest",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond"
+              ],
+              "result_id": "alaindustrial:diamond_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "mob_repeller_hv",
           "title": "बड़ा जीव प्रतिकर्षक",
           "icon": "alaindustrial:mob_repeller_hv",
@@ -3261,6 +3385,43 @@
           ]
         },
         {
+          "id": "upgrade_table",
+          "title": "उन्नयन मेज",
+          "icon": "alaindustrial:upgrade_table",
+          "pages": [
+            {
+              "type": "text",
+              "title": "उन्नयन मेज",
+              "text": "एक मेज जो बिजली के औज़ारों पर स्थायी उन्नयन लगाती है। एक के ऊपर एक रखे दो केसिंग से बनती है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 8 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:anvil",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:upgrade_table",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "electrum_chest",
           "title": "इलेक्ट्रम चेस्ट",
           "icon": "alaindustrial:electrum_chest",
@@ -3432,6 +3593,36 @@
           ]
         },
         {
+          "id": "choke",
+          "title": "चोक कुंडली",
+          "icon": "alaindustrial:choke",
+          "pages": [
+            {
+              "type": "text",
+              "title": "चोक कुंडली",
+              "text": "तीन स्तरों वाली चोक कुंडली — परतदार कोर पर लिपटी वाइंडिंग जो लाइन में आने वाले उछाल को समतल करती है; हर स्तर अपने नीचे वाले स्तर के इर्द-गिर्द बनाया जाता है।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate"
+              ],
+              "result_id": "alaindustrial:choke",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron",
           "title": "टेम्पर्ड लोहा",
           "icon": "alaindustrial:tempered_iron",
@@ -3462,6 +3653,36 @@
           ]
         },
         {
+          "id": "ceramic_plate",
+          "title": "सिरेमिक प्लेट",
+          "icon": "alaindustrial:ceramic_plate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "सिरेमिक प्लेट",
+              "text": "कार्बन ब्रिकेट से एक बार में चार काटी जाती हैं; चार प्लेटें जुड़कर कार्बन सिरेमिक का एक ब्लॉक बनाती हैं।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "बिना आकार की क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:carbon_ceramic",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:ceramic_plate",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "water_mill_wheel",
           "title": "जलचक्र",
           "icon": "alaindustrial:water_mill_wheel",
@@ -3487,6 +3708,36 @@
                 "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:water_mill_wheel",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "core_barrel",
+          "title": "कोर बैरल",
+          "icon": "alaindustrial:core_barrel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "कोर बैरल",
+              "text": "कोर बैरल और स्तंभ खनन मॉड्यूल — वे पुर्ज़े जिनसे वह उन्नयन बनता है जो ड्रिल को तीन ब्लॉक ऊँचा खोदने देता है।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:choke",
+                "",
+                "alaindustrial:choke",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:core_barrel",
               "result_count": 1
             }
           ]
@@ -3918,6 +4169,44 @@
           ]
         },
         {
+          "id": "carbon_briquette",
+          "title": "कार्बन ब्रिकेट",
+          "icon": "alaindustrial:carbon_briquette",
+          "pages": [
+            {
+              "type": "text",
+              "title": "कार्बन ब्रिकेट",
+              "text": "मिश्रधातु भट्ठी में दो दोहरी कार्बन छड़ों और धातुमल से पकाया जाता है; प्लेटों में सिर्फ़ एक ही तरीके से बँटता है — क्वेंच प्रेस।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 1200 EU प्रति ब्रिकेट"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "carbon_rod",
+          "title": "कार्बन छड़",
+          "icon": "alaindustrial:carbon_rod",
+          "pages": [
+            {
+              "type": "text",
+              "title": "कार्बन छड़",
+              "text": "कंप्रेसर में सोलह कोयले का चूरा; लोहार के हथौड़े से दो छड़ें मिलकर एक दोहरी छड़ बनती हैं — सिरेमिक श्रृंखला के पहले दो पायदान।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 260 EU प्रति छड़"
+              ]
+            }
+          ]
+        },
+        {
           "id": "fluxweave_cloth",
           "title": "फ्लक्स कपड़ा",
           "icon": "alaindustrial:fluxweave_cloth",
@@ -3967,7 +4256,7 @@
             {
               "type": "text",
               "title": "सौर विकास चिप",
-              "text": "विकास चिपों की एक जोड़ी — सौर (दिन) और चंद्र (रात) — जो बुनियादी T1 सौर पैनलों और पवन चक्कियों को विकास द्वारा T2 में विकसित करती है, संचित NBT ऊर्जा को साथ ले जाते हुए।"
+              "text": "तीन विकास चिप — सौर (दिन), चंद्र (रात) और अनुनाद (तीसरा पायदान) — जो बुनियादी सौर पैनलों और पवन चक्कियों को T2 में, और T2 दिन के सौर पैनल को उससे आगे विकसित करती हैं, संचित NBT ऊर्जा को साथ ले जाते हुए।"
             },
             {
               "type": "recipe",

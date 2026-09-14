@@ -68,16 +68,22 @@ public class UpgradeTableBlock extends HorizontalMachineBlock {
 	 * Silhouettes, built once per geometry at class-init and read by lookup — assembling a shape inside
 	 * {@code getShape} is paid twenty times per state while vanilla fills its state cache (ADR-023).
 	 *
-	 * <p>The lower half is the cabinet: a full-width box, because that is what it is. The upper half is
-	 * ONE box hugging the worktop and the rack above it rather than a union of their pieces: a union
-	 * draws the player a separate wireframe around every piece, which reads as a pile of parts instead
-	 * of one bench.
+	 * <p>The lower half is the cabinet with its worktop: a full-width box, because that is what it is.
+	 * The upper half follows the assembly-jig model (tools/model_sources/upgrade_table/) with three
+	 * boxes and no more: the jig with the drill and module lying in it, the gantry across the back, and
+	 * the press carriage hanging between them. Finer pieces (piston, lamps, screen) stay inside those
+	 * boxes, so the player gets one outline per mass rather than a wireframe around every part.
 	 */
 	private static final Map<Direction, VoxelShape> LOWER_SHAPES =
 			Shapes.rotateHorizontal(Block.box(0.0, 0.0, 0.0, 16.0, 16.0, 16.0));
 
-	private static final Map<Direction, VoxelShape> UPPER_SHAPES =
-			Shapes.rotateHorizontal(Block.box(0.0, 0.0, 0.0, 16.0, 13.0, 16.0));
+	private static final Map<Direction, VoxelShape> UPPER_SHAPES = Shapes.rotateHorizontal(Shapes.or(
+			// jig blocks, drill and the module on it: x 0.5..13.5, y 0..6, z 4.5..9.5
+			Block.box(0.5, 0.0, 4.5, 13.5, 6.0, 9.5),
+			// uprights, beam, conduit and beacon: x 0.5..15.5, y 0..16, z 9.2..14
+			Block.box(0.5, 0.0, 9.2, 15.5, 16.0, 14.0),
+			// press carriage with its lamp, piston and die: x 5.5..9.5, y 6..11, z 4.8..11
+			Block.box(5.5, 6.0, 4.8, 9.5, 11.0, 11.0)));
 
 	public UpgradeTableBlock(Properties properties) {
 		super(properties);
@@ -135,6 +141,24 @@ public class UpgradeTableBlock extends HorizontalMachineBlock {
 			case LOWER -> LOWER_SHAPES.get(state.getValue(FACING));
 			case UPPER -> UPPER_SHAPES.get(state.getValue(FACING));
 		};
+	}
+
+	/**
+	 * What the table hides of its neighbours' faces: nothing, once assembled.
+	 *
+	 * <p>By default the occlusion shape IS the outline shape, and the lower half's outline is a full
+	 * cube. A neighbour then stopped drawing its face toward the table — but the model is inset from
+	 * the block edge, so through that gap the player saw straight through the neighbour (reported from
+	 * the game). The upper half is mostly open air and would do the same wherever its outline touches.
+	 *
+	 * <p>{@code noOcclusion()} is not the answer, for the reason the Workstation documents: the default
+	 * state is the loose casing, a real full cube, and R-PHY-05 reads exactly that state. The occlusion
+	 * shape is per state, so the casing keeps occluding like any solid block and only the assembled
+	 * halves stop.
+	 */
+	@Override
+	protected VoxelShape getOcclusionShape(BlockState state) {
+		return state.getValue(PART).assembled() ? Shapes.empty() : Shapes.block();
 	}
 
 	/**

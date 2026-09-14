@@ -822,6 +822,8 @@ public final class CreativeTabContent {
 		// MOD-483 — the workstation, listed in the mod's own tab as well as in vanilla's Functional
 		// Blocks for the same reason as the repellers above.
 		show(out, ModContent.WORKSTATION_ITEM);
+		// MOD-482 — the upgrade table's casing, beside the workstation it is built like.
+		show(out, ModContent.UPGRADE_TABLE_ITEM);
 		// --- shaped last (MOD-574): the torch is a sprite among cubes.
 		show(out, ModContent.ENRICHED_URANIUM_TORCH_ITEM);
 	}
@@ -868,6 +870,8 @@ public final class CreativeTabContent {
 		// MOD-483 — the workstation's casing. One item for the whole machine: two of them stacked
 		// assemble it, so there is nothing else to list.
 		show(out, ModContent.WORKSTATION_ITEM);
+		// MOD-482 — the upgrade table's casing, listed for the same reason.
+		show(out, ModContent.UPGRADE_TABLE_ITEM);
 	}
 
 	private static void generators(Sink out) {

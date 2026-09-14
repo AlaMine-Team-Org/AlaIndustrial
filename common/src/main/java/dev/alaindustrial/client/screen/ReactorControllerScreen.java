@@ -3,6 +3,7 @@ package dev.alaindustrial.client.screen;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.client.screen.reactor.ConsoleTabPage;
 import dev.alaindustrial.client.screen.reactor.CoolantTabPage;
+import dev.alaindustrial.client.screen.reactor.LogTabPage;
 import dev.alaindustrial.client.screen.reactor.ReactorConsole;
 import dev.alaindustrial.client.screen.reactor.ReactorTabPage;
 import dev.alaindustrial.client.screen.reactor.RoomTabPage;
@@ -69,6 +70,7 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 	public static final int PAGE_ROOM = 1;
 	public static final int PAGE_ZONE = 2;
 	public static final int PAGE_COOLANT = 3;
+	public static final int PAGE_LOG = 4;
 
 	private static final Identifier TAB_TOP = Identifier.withDefaultNamespace("advancements/tab_left_top");
 	private static final Identifier TAB_TOP_SELECTED =
@@ -100,7 +102,7 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 	public ReactorControllerScreen(ReactorControllerMenu menu, Inventory inventory, Component title) {
 		super(menu, inventory, title, IMAGE_WIDTH, IMAGE_HEIGHT);
 		this.pages = List.of(new ConsoleTabPage(this), new RoomTabPage(this), new ZoneTabPage(this),
-				new CoolantTabPage(this));
+				new CoolantTabPage(this), new LogTabPage(this));
 		this.selected = Math.min(lastPage, this.pages.size() - 1);
 	}
 
@@ -137,10 +139,12 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 	@Override
 	protected void containerTick() {
 		super.containerTick();
+		// The opening tab is decided before the pages tick (MOD-622): the «Log» tab marks what it shows as read, and on a
+		// room that opens on «Room» it must not do so for the one tick it was still the remembered tab.
+		settleOpeningPage();
 		for (ReactorTabPage page : pages) {
 			page.tick();
 		}
-		settleOpeningPage();
 	}
 
 	/**
@@ -274,6 +278,15 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 		return handled;
 	}
 
+	/** The wheel goes to the open tab first — the «Log» tab scrolls its list with it (MOD-622). */
+	@Override
+	public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+		if (pages.get(selected).mouseScrolled(mouseX, mouseY, scrollY)) {
+			return true;
+		}
+		return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
+	}
+
 	@Override
 	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		if (!this.menu.isStatsPanelOpen()) {
@@ -338,9 +351,14 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 		return pages.get(index);
 	}
 
-	/** The open tab — {@link #PAGE_CONSOLE}, {@link #PAGE_ROOM}, {@link #PAGE_ZONE}, {@link #PAGE_COOLANT}. */
+	/** The open tab — {@link #PAGE_CONSOLE}, {@link #PAGE_ROOM}, {@link #PAGE_ZONE}, {@link #PAGE_COOLANT}, {@link #PAGE_LOG}. */
 	public int selectedPage() {
 		return selected;
+	}
+
+	/** Whether the opening tab has been decided — until then the open tab is not yet the one the player looks at. */
+	public boolean openingPageSettled() {
+		return pageSettled;
 	}
 
 	/** The grid of stacks, and the stack picked on it, that the «Core» and «Coolant» tabs share. */

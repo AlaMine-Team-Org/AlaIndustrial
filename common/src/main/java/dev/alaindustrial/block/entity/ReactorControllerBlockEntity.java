@@ -8,6 +8,7 @@ import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.structure.BareReactorScan;
 import dev.alaindustrial.core.structure.ReactorBlast;
 import dev.alaindustrial.core.structure.ReactorCore;
+import dev.alaindustrial.core.structure.ReactorLog;
 import dev.alaindustrial.core.structure.ReactorMeltdown;
 import dev.alaindustrial.core.structure.RoomScan;
 import dev.alaindustrial.core.structure.RoomValidator;
@@ -369,6 +370,41 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 	 */
 	private boolean overheatWarned;
 
+	// ── MOD-622: the event log ──
+	/** The last hundred things that happened to this reactor, persisted — see {@link ReactorLog}. */
+	private final ReactorLog log = new ReactorLog();
+
+	/**
+	 * Whether a room scan has run since this block entity was loaded. Until one has, {@link #status} and {@link #bare}
+	 * are defaults rather than findings, and the log would read a running reactor as one that had just stopped.
+	 */
+	private boolean scannedSinceLoad;
+
+	/**
+	 * The states the log last recorded, persisted with it. Comparing against these rather than against the live
+	 * fields — most of which are deliberately not saved — is what keeps a chunk reload from writing "started" and
+	 * "bare mode" again for a reactor that never changed, while a change made while the chunk was away is still
+	 * written once.
+	 */
+	private boolean loggedRunning;
+	private boolean loggedBare;
+	private boolean loggedMelting;
+
+	/** Blocks the current meltdown has melted; persisted, so an episode that spans a reload is counted whole. */
+	private int episodeMelts;
+
+	/** Ticks the room has spent under the melt line since the current meltdown last had it above. */
+	private int meltCalmTicks;
+
+	/** Why the reaction last stopped, taken on the tick it did; a reload forgets it and the log says "stopped". */
+	private ReactorLog.Kind stopCause = ReactorLog.Kind.REACTION_STOPPED;
+
+	/** Rods with fuel in them, counted by this tick's reaction pass — the number a "started" line reports. */
+	private int lastLiveRods;
+
+	/** Throttle clicks by one player within this many ticks fold into one line of the log. */
+	private static final int DEPTH_MERGE_TICKS = 100;
+
 	/**
 	 * Ticks until the critical alarm sounds again, while the core sits at the top of the scale.
 	 *
@@ -492,11 +528,16 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		// periodic scan, so for up to reactorScanIntervalTicks after a column was pulled the remaining
 		// ones went on being paid a neighbour bonus for a rack that was no longer there — free EU, and
 		// exactly the kind that is invisible because it is small and brief.
+		lastLiveRods = liveRods;
 		int pairs = countNeighbourPairs(columns);
 		// Recorded before the buffer is consulted: this is "the reaction is running", not "we sold power".
 		boolean nowReacting = allowed && liveRods > 0;
 		if (nowReacting != reacting) {
 			reacting = nowReacting;
+			// Only this tick still knows why a reaction stopped (MOD-622). The line itself is written on the drone's
+			// latch, forty ticks on, so a redstone clock or a full buffer does not log a stop every second.
+			stopCause = nowReacting ? ReactorLog.Kind.REACTION_STOPPED
+					: stopCauseFor(sealed, liveRods, level.hasNeighborSignal(pos));
 			setChanged();
 		}
 
@@ -702,6 +743,12 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 			blastBelowTicks = after.belowTicks();
 			setChanged();
 		}
+		// Armed and disarmed are the log's lines (MOD-622); a pause under the line is not — it flickers with a
+		// redstone clock. The timer is persisted, so a reload repeats neither.
+		if (before.armed() != after.armed()) {
+			logEvent(after.armed() ? ReactorLog.Kind.COUNTDOWN_ARMED
+					: critical ? ReactorLog.Kind.COUNTDOWN_EXPIRED : ReactorLog.Kind.COUNTDOWN_CANCELLED, 0, 0, 0, "");
+		}
 		if (after.armed()) {
 			if (critical) {
 				ReactorBlast.telegraphCountdown(level, pos, after.remaining(), after.total());
@@ -819,6 +866,7 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 				awardMilestone(level, ReactorMilestone.MELTDOWN);
 			}
 		}
+		logMeltdown(melting);
 		// The scenery hazard runs on the REACTION, not on this tick's output. A core whose buffer is full
 		// has stopped selling power and has not stopped being a reactor — hanging the danger on output let
 		// a player switch it off by unplugging their machines (playtest finding 1). The redstone scram is
@@ -841,6 +889,7 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 				// one-way trip: the room eats its own contents and cools as it does, and the player is
 				// left with a wrecked interior inside a shell they can refit.
 				heat = ReactorCore.heatAfterMelt(heat, Config.reactorMeltdownHeatRelief);
+				episodeMelts++;
 				setChanged();
 			}
 			return;
@@ -905,6 +954,7 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 			voiceLatch--;
 		}
 		boolean voiced = voiceLatch > 0;
+		logRunning(voiced);
 		paintVoicedColumns(level, columns, voiced);
 		if (wasVoiced && !voiced && level instanceof ServerLevel serverLevel) {
 			// The core going quiet gets its own cue. It covers every way a reaction stops — the lever
@@ -1019,6 +1069,9 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 				Config.reactorCoolantTargetPercent, overheatWarned)
 				&& level instanceof ServerLevel serverLevel) {
 			serverLevel.playSound(null, pos, ModSounds.REACTOR_ALARM.get(), SoundSource.BLOCKS, 0.8f, 1.0f);
+			// The siren's one blast is the log's line (MOD-622): its latch is persisted, so a reload does not repeat it.
+			// A bare pile's scale is instability rather than heat, and the line says so.
+			logEvent(ReactorLog.Kind.OVERHEAT, percent, bare ? 1 : 0, 0, "");
 		}
 		boolean latched = ReactorCore.alarmStaysLatched(percent, Config.reactorHeatWarnPercent,
 				Config.reactorCoolantTargetPercent, overheatWarned);
@@ -1441,6 +1494,7 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 			rods = 0;
 			rescanBare(level, pos);
 		}
+		logRoom(result, wasFormed);
 
 		if (level instanceof ServerLevel serverLevel) {
 			if (result.formed() && !wasFormed) {
@@ -1628,6 +1682,11 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		output.putInt("Depth", depthPermille);
 		output.putInt("BlastCountdown", blastCountdown);
 		output.putInt("BlastCountdownTotal", blastCountdownTotal);
+		ReactorLogStorage.save(output, log);
+		output.putBoolean(ReactorLogStorage.RUNNING, loggedRunning);
+		output.putBoolean(ReactorLogStorage.BARE, loggedBare);
+		output.putBoolean(ReactorLogStorage.MELTING, loggedMelting);
+		output.putInt(ReactorLogStorage.EPISODE_MELTS, episodeMelts);
 	}
 
 	@Override
@@ -1644,6 +1703,141 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		depthPermille = input.getIntOr("Depth", ReactorCore.FULL_DEPTH);
 		blastCountdown = input.getIntOr("BlastCountdown", 0);
 		blastCountdownTotal = input.getIntOr("BlastCountdownTotal", 0);
+		ReactorLogStorage.load(input, log);
+		loggedRunning = input.getBooleanOr(ReactorLogStorage.RUNNING, false);
+		loggedBare = input.getBooleanOr(ReactorLogStorage.BARE, false);
+		loggedMelting = input.getBooleanOr(ReactorLogStorage.MELTING, false);
+		episodeMelts = input.getIntOr(ReactorLogStorage.EPISODE_MELTS, 0);
+	}
+
+	/**
+	 * What chunk loading and status syncs send to every player nearby, minus the event log (MOD-622): the log reaches
+	 * a player only through the controller's screen, while it is open.
+	 */
+	@Override
+	public net.minecraft.nbt.CompoundTag getUpdateTag(net.minecraft.core.HolderLookup.Provider provider) {
+		net.minecraft.nbt.CompoundTag tag = super.getUpdateTag(provider);
+		ReactorLogStorage.stripFromUpdateTag(tag);
+		return tag;
+	}
+
+	/**
+	 * Writes one line of the event log (MOD-622). Game time stamps it for "how long ago"; the log's own sequence
+	 * number orders it, because several events can share one tick.
+	 */
+	private void logEvent(ReactorLog.Kind kind, int a, int b, int c, String actor) {
+		if (level == null) {
+			return;
+		}
+		log.append(level.getGameTime(), kind, a, b, c, actor);
+		setChanged();
+	}
+
+	/**
+	 * The room's lines, on the scan that finds them (MOD-622). Sealed and unsealed key on the blockstate's
+	 * {@code FORMED} flag, which the chunk saves, never on {@link #status}, which is not saved and reads "not in a wall"
+	 * on the first scan after every load. Bare mode keys on what the log last recorded, for the same reason.
+	 */
+	private void logRoom(RoomScan.Result result, boolean wasFormed) {
+		if (result.formed() && !wasFormed) {
+			logEvent(ReactorLog.Kind.ROOM_SEALED, result.sizeX(), result.sizeY(), result.sizeZ(), "");
+		} else if (!result.formed() && wasFormed) {
+			logEvent(ReactorLog.Kind.ROOM_UNSEALED, 0, 0, 0, "");
+		}
+		if (bare != loggedBare) {
+			loggedBare = bare;
+			logEvent(bare ? ReactorLog.Kind.BARE_ENTERED : ReactorLog.Kind.BARE_LEFT, bare ? bareRacks.size() : 0, 0, 0, "");
+		}
+		scannedSinceLoad = true;
+	}
+
+	/**
+	 * Started and stopped, on the drone's latch rather than on {@link #reacting} (MOD-622): a redstone clock or a buffer
+	 * filling tick by tick would otherwise write a line a second. Waits for the first scan after a load, before which
+	 * the room reads as unsealed and the reaction as stopped.
+	 */
+	private void logRunning(boolean running) {
+		if (!scannedSinceLoad || running == loggedRunning) {
+			return;
+		}
+		loggedRunning = running;
+		if (running) {
+			logEvent(ReactorLog.Kind.REACTION_STARTED, lastLiveRods, bare ? 100 : depthPermille / 10, 0, "");
+		} else {
+			logEvent(stopCause, 0, 0, 0, "");
+		}
+	}
+
+	/** Why a reaction that was running is not, judged on the tick it stopped. A broken room is already its own line. */
+	private ReactorLog.Kind stopCauseFor(boolean sealed, int liveRods, boolean signal) {
+		if (!sealed && !bare) {
+			return ReactorLog.Kind.REACTION_STOPPED;
+		}
+		if (liveRods == 0) {
+			return ReactorLog.Kind.OUT_OF_FUEL;
+		}
+		if (sealed && depthPermille <= 0) {
+			return ReactorLog.Kind.RODS_WITHDRAWN;
+		}
+		return signal ? ReactorLog.Kind.REACTION_STOPPED : ReactorLog.Kind.REACTION_SCRAMMED;
+	}
+
+	/**
+	 * One line when a meltdown starts and one when it is over, with the blocks it took (MOD-622). The melt line has no
+	 * gap — every melted block carries heat out and drops the room back under it — so "over" waits until the room has
+	 * stayed under the line for a whole melt cycle rather than flickering with each block, AND has cooled below the
+	 * warning line. The second condition is not a nicety: a slow core — one rod, a low throttle, a trickle of water —
+	 * spends minutes under the line between two melts and climbs back over it, and without it the log wrote a start
+	 * and an end every twenty seconds and pushed the rest of its history out in a quarter of an hour.
+	 */
+	private void logMeltdown(boolean melting) {
+		if (!scannedSinceLoad) {
+			return;
+		}
+		if (melting) {
+			meltCalmTicks = 0;
+			if (!loggedMelting) {
+				loggedMelting = true;
+				episodeMelts = 0;
+				logEvent(ReactorLog.Kind.MELTDOWN_STARTED, ReactorCore.heatPercent(heat, Config.reactorHeatCapacity), 0, 0,
+						"");
+			}
+			return;
+		}
+		if (!loggedMelting) {
+			return;
+		}
+		meltCalmTicks = Math.min(meltCalmTicks + 1, Integer.MAX_VALUE - 1);
+		boolean calm = meltCalmTicks >= Math.max(1, Config.reactorMeltdownIntervalTicks)
+				+ Math.max(0, Config.reactorMeltWarnTicks);
+		boolean cooled = ReactorCore.heatPercent(heat, Config.reactorHeatCapacity)
+				< Math.min(Config.reactorHeatWarnPercent, Config.reactorMeltdownStartPercent);
+		if (calm && cooled) {
+			loggedMelting = false;
+			meltCalmTicks = 0;
+			logEvent(ReactorLog.Kind.MELTDOWN_ENDED, episodeMelts, 0, 0, "");
+			episodeMelts = 0;
+		}
+	}
+
+	/** The event log, oldest first — for the menu and for tests. */
+	public java.util.List<ReactorLog.Entry> logEntries() {
+		return log.entries();
+	}
+
+	/** The «Log» tab's snapshot for one viewer: every entry, and how far that player has read. */
+	public dev.alaindustrial.network.ReactorLogPayload logSnapshot(int containerId, java.util.UUID viewer) {
+		return new dev.alaindustrial.network.ReactorLogPayload(containerId, log.seenBy(viewer), log.entries());
+	}
+
+	/**
+	 * Records that a player has seen the log up to {@code seq} — the newest entry their screen was actually sent,
+	 * never "now": an alarm written after that send has not reached them and must keep their badge lit.
+	 */
+	public void markLogSeen(java.util.UUID viewer, int seq) {
+		if (log.markSeen(viewer, Math.min(seq, log.newestSeq()))) {
+			setChanged();
+		}
 	}
 
 	/**
@@ -1790,10 +1984,22 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 				: dev.alaindustrial.core.energy.EnergyRole.OUT;
 	}
 
-	/** Moves the throttle. Called from the menu's button handler, clamped here rather than there. */
+	/** Moves the throttle with nobody to name in the log. */
 	public void setDepthPermille(int value) {
+		setDepthPermille(value, "");
+	}
+
+	/**
+	 * Moves the throttle. Called from the menu's button handler, clamped here rather than there. The log names the
+	 * player who moved it (MOD-622) — on a server with several players, the question the log is asked most.
+	 */
+	public void setDepthPermille(int value, String actor) {
 		int clamped = Math.min(ReactorCore.FULL_DEPTH, Math.max(0, value));
 		if (clamped != depthPermille) {
+			if (level != null) {
+				log.appendOrMerge(level.getGameTime(), ReactorLog.Kind.DEPTH_CHANGED, depthPermille / 10, clamped / 10, 0,
+						actor, DEPTH_MERGE_TICKS);
+			}
 			depthPermille = clamped;
 			setChanged();
 			syncBlockEntityToClient();

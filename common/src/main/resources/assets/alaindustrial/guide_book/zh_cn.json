@@ -406,6 +406,26 @@
           ]
         },
         {
+          "id": "radiant_solar_panel",
+          "title": "镜面聚光器",
+          "icon": "alaindustrial:radiant_solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "镜面聚光器",
+              "text": "白天分支的第三级——发电量是日光太阳能板的两倍，正午时再多一半；没有光可收集时，镜面会折叠收起。"
+            },
+            {
+              "type": "stats",
+              "title": "属性",
+              "lines": [
+                "能量：8 EU/t（白天）",
+                "缓冲：16 000 EU"
+              ]
+            }
+          ]
+        },
+        {
           "id": "moonlit_solar_panel",
           "title": "月光太阳能板",
           "icon": "alaindustrial:moonlit_solar_panel",
@@ -2048,6 +2068,43 @@
               "result_count": 1
             }
           ]
+        },
+        {
+          "id": "fluid_tank_advanced",
+          "title": "高级流体储罐",
+          "icon": "alaindustrial:fluid_tank_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "高级流体储罐",
+              "text": "便携式流体储罐的第二级——容量 16 桶而非 8 桶，带银色包边和加固箍，物品形态掉进熔岩也不会烧毁。"
+            },
+            {
+              "type": "stats",
+              "title": "属性",
+              "lines": [
+                "容量：16 桶"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:fluid_tank",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_tank_advanced",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },
@@ -2335,6 +2392,36 @@
               "type": "text",
               "title": "硫磺矿石",
               "text": "天然硫磺——一种可开采的非金属，可加工成粉末用于橡胶硫化。"
+            }
+          ]
+        },
+        {
+          "id": "carbon_ceramic",
+          "title": "碳陶瓷",
+          "icon": "alaindustrial:carbon_ceramic",
+          "pages": [
+            {
+              "type": "text",
+              "title": "碳陶瓷",
+              "text": "由四块陶瓷板组成的方块——煤炭链的终点，一面抗爆的墙，也是这种材料的紧凑存储形态。"
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:ceramic_plate",
+                "",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:ceramic_plate",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:carbon_ceramic",
+              "result_count": 1
             }
           ]
         },
@@ -2972,6 +3059,43 @@
           ]
         },
         {
+          "id": "diamond_chest",
+          "title": "钻石箱子",
+          "icon": "alaindustrial:diamond_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "钻石箱子",
+              "text": "108 格的箱子——最高存储等级。六行滚动窗口背后共有十二行，且无惧爆炸。无需能量。"
+            },
+            {
+              "type": "stats",
+              "title": "属性",
+              "lines": [
+                "容量：108 格"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "alaindustrial:electrum_chest",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond"
+              ],
+              "result_id": "alaindustrial:diamond_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "mob_repeller_hv",
           "title": "大型生物驱逐器",
           "icon": "alaindustrial:mob_repeller_hv",
@@ -3261,6 +3385,43 @@
           ]
         },
         {
+          "id": "upgrade_table",
+          "title": "升级台",
+          "icon": "alaindustrial:upgrade_table",
+          "pages": [
+            {
+              "type": "text",
+              "title": "升级台",
+              "text": "为电动工具装上永久升级的工作台。由两个上下叠放的外壳组装而成。"
+            },
+            {
+              "type": "stats",
+              "title": "属性",
+              "lines": [
+                "能量：8 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:anvil",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:upgrade_table",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "electrum_chest",
           "title": "琥珀金箱子",
           "icon": "alaindustrial:electrum_chest",
@@ -3432,6 +3593,36 @@
           ]
         },
         {
+          "id": "choke",
+          "title": "扼流圈",
+          "icon": "alaindustrial:choke",
+          "pages": [
+            {
+              "type": "text",
+              "title": "扼流圈",
+              "text": "共三级的扼流圈——绕在叠片铁芯上的线圈，用于平滑线路中的浪涌；每一级都以下一级为基础制作。"
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate"
+              ],
+              "result_id": "alaindustrial:choke",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron",
           "title": "回火铁",
           "icon": "alaindustrial:tempered_iron",
@@ -3462,6 +3653,36 @@
           ]
         },
         {
+          "id": "ceramic_plate",
+          "title": "陶瓷板",
+          "icon": "alaindustrial:ceramic_plate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "陶瓷板",
+              "text": "由碳压块切割而成，每次 4 块；4 块陶瓷板可组合成一个碳陶瓷方块。"
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "无序合成",
+              "grid": [
+                "alaindustrial:carbon_ceramic",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:ceramic_plate",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "water_mill_wheel",
           "title": "水轮",
           "icon": "alaindustrial:water_mill_wheel",
@@ -3487,6 +3708,36 @@
                 "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:water_mill_wheel",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "core_barrel",
+          "title": "取芯筒",
+          "icon": "alaindustrial:core_barrel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "取芯筒",
+              "text": "取芯筒与柱状开采模块——组成让电钻挖掘三格高的升级所需的部件。"
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:choke",
+                "",
+                "alaindustrial:choke",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:core_barrel",
               "result_count": 1
             }
           ]
@@ -3918,6 +4169,44 @@
           ]
         },
         {
+          "id": "carbon_briquette",
+          "title": "碳压块",
+          "icon": "alaindustrial:carbon_briquette",
+          "pages": [
+            {
+              "type": "text",
+              "title": "碳压块",
+              "text": "在合金熔炉中用两根双联碳棒和炉渣烧制而成；拆成陶瓷板只有一种途径——淬火压机。"
+            },
+            {
+              "type": "stats",
+              "title": "属性",
+              "lines": [
+                "能量：1200 EU/块碳压块"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "carbon_rod",
+          "title": "碳棒",
+          "icon": "alaindustrial:carbon_rod",
+          "pages": [
+            {
+              "type": "text",
+              "title": "碳棒",
+              "text": "16 份煤粉放进压缩机即得碳棒；用锻造锤将两根碳棒合成双联碳棒——陶瓷链的前两级。"
+            },
+            {
+              "type": "stats",
+              "title": "属性",
+              "lines": [
+                "能量：260 EU/根碳棒"
+              ]
+            }
+          ]
+        },
+        {
           "id": "fluxweave_cloth",
           "title": "通量织物",
           "icon": "alaindustrial:fluxweave_cloth",
@@ -3967,7 +4256,7 @@
             {
               "type": "text",
               "title": "日光进化芯片",
-              "text": "一对进化芯片——太阳（白天）和月亮（夜晚）——通过进化将基础 T1 太阳能板和风车进化为 T2，并保留累积的 NBT 能量。"
+              "text": "三种进化芯片——太阳（白天）、月亮（夜晚）和共振（第三级）——将基础太阳能板和风力涡轮机进化为 T2，并将 T2 日光太阳能板继续向上进化，同时保留累积的 NBT 能量。"
             },
             {
               "type": "recipe",

@@ -37,6 +37,9 @@ public final class NetworkVisualizationClient {
 		// MOD-620: the reactor controller's «Core» tab.
 		ClientPlayNetworking.registerGlobalReceiver(dev.alaindustrial.network.ReactorZonePayload.TYPE,
 				(payload, context) -> ReactorZoneClient.receive(payload));
+		// MOD-622: the reactor controller's «Log» tab.
+		ClientPlayNetworking.registerGlobalReceiver(dev.alaindustrial.network.ReactorLogPayload.TYPE,
+				(payload, context) -> ReactorLogClient.receive(payload));
 		LevelRenderEvents.AFTER_TRANSLUCENT_FEATURES.register(NetworkVisualizationClient::render);
 	}
 

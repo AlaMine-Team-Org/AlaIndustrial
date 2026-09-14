@@ -121,6 +121,8 @@ public final class MachineGuiStands {
         ReactorConsoleGuiStand.shootZone(context);
         // ── … and the Coolant tab: water and steam stack by stack, and what to fix (MOD-621) ──
         ReactorConsoleGuiStand.shootCoolant(context);
+        // ── … and the Log tab: what happened, newest first, and the marker for an unread alarm (MOD-622) ──
+        ReactorConsoleGuiStand.shootLog(context);
 
         // ── Machines without custom screens (one shot each) ──────────────────────────
         shootMenu(context, "gui_moonlit_solar_panel", ModContent.MOONLIT_SOLAR_PANEL_MENU.get(), "Moonlit Solar Panel");

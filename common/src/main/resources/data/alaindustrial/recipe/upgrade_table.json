@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "PAP",
+    "CMC",
+    "PPP"
+  ],
+  "key": {
+    "P": "alaindustrial:tempered_iron_plate",
+    "A": "minecraft:anvil",
+    "C": "alaindustrial:electronic_circuit",
+    "M": "alaindustrial:machine_casing"
+  },
+  "result": {
+    "id": "alaindustrial:upgrade_table",
+    "count": 2
+  }
+}

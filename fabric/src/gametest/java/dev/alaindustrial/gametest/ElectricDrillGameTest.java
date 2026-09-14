@@ -165,4 +165,37 @@ public class ElectricDrillGameTest {
 	public void tcDrill001Fun14_netheriteTipUpgradeCarriesCharge(GameTestHelper helper) {
 		ElectricDrillScenarios.fun14NetheriteTipUpgradeCarriesCharge(helper);
 	}
+
+	/**
+	 * @implements TC-DRILL-001-FUN15 — the column bore bills each extra block at the column price, the
+	 *     aimed block at the plain price; a switched-off column bills the aimed block alone.
+	 */
+	@GameTest
+	public void tcDrill001Fun15_columnChargesEachExtraBlock(GameTestHelper helper) {
+		ElectricDrillScenarios.fun15ColumnChargesEachExtraBlock(helper);
+	}
+
+	/** @implements TC-DRILL-001-FUN16 — Silk Touch mode applies to the column's extra blocks. */
+	@GameTest
+	public void tcDrill001Fun16_columnSilkTouchReachesExtraBlocks(GameTestHelper helper) {
+		ElectricDrillScenarios.fun16ColumnSilkTouchReachesExtraBlocks(helper);
+	}
+
+	/**
+	 * @implements TC-DRILL-001-FUN17 — a drill that cannot pay for the whole column breaks only the aimed
+	 *     block; exactly a full stroke of charge bores the whole column.
+	 */
+	@GameTest
+	public void tcDrill001Fun17_dischargedDrillBoresNoColumn(GameTestHelper helper) {
+		ElectricDrillScenarios.fun17DischargedDrillBoresNoColumn(helper);
+	}
+
+	/**
+	 * @implements TC-DRILL-001-FUN18 — a protected (adventure CAN_BREAK) or unbreakable extra block stays
+	 *     and is not billed while the rest of the column goes.
+	 */
+	@GameTest
+	public void tcDrill001Fun18_columnSparesProtectedExtraBlock(GameTestHelper helper) {
+		ElectricDrillScenarios.fun18ColumnSparesProtectedExtraBlock(helper);
+	}
 }

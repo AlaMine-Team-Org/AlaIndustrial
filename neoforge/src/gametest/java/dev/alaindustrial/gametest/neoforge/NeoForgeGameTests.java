@@ -279,6 +279,9 @@ public final class NeoForgeGameTests {
 		// MOD-620 — the Core tab's snapshot matches the racks standing in the world.
 		registerTest(event, "reactor_zone_snapshot_matches_racks", 100, true,
 				ReactorScenarios::zoneSnapshotMatchesTheRacks);
+		// MOD-622 — the Log tab's server half: one line per transition, kept across a reload, read per player.
+		registerTest(event, "reactor_event_log_records_each_transition_once", 100, true,
+				ReactorScenarios::theEventLogRecordsEachTransitionOnce);
 		// MOD-022 data-component seam: a charged battery box carries STORED_ENERGY on drop (frozen-registry
 		// fix — ModDataComponentsNeoForge). Fabric covers this via BatteryBoxGameTest; NeoForge world lane's first.
 		registerTest(event, "battery_box_drop_carries_energy", 40, true,
@@ -1260,6 +1263,11 @@ public final class NeoForgeGameTests {
 		registerTest(event, "drill_upgrade_recipe_any_state", 40, true, ElectricDrillScenarios::fun12UpgradeRecipeAcceptsAnyDrillState);
 		registerTest(event, "drill_netherite_tip_speed_tier_and_buffer", 40, true, ElectricDrillScenarios::fun13NetheriteTipSpeedTierAndBuffer);
 		registerTest(event, "drill_netherite_tip_upgrade_carries_charge", 40, true, ElectricDrillScenarios::fun14NetheriteTipUpgradeCarriesCharge);
+		// MOD-482: the column bore module.
+		registerTest(event, "drill_column_charges_each_extra_block", 40, true, ElectricDrillScenarios::fun15ColumnChargesEachExtraBlock);
+		registerTest(event, "drill_column_silk_touch_reaches_extra_blocks", 40, true, ElectricDrillScenarios::fun16ColumnSilkTouchReachesExtraBlocks);
+		registerTest(event, "drill_discharged_drill_bores_no_column", 40, true, ElectricDrillScenarios::fun17DischargedDrillBoresNoColumn);
+		registerTest(event, "drill_column_spares_protected_extra_block", 40, true, ElectricDrillScenarios::fun18ColumnSparesProtectedExtraBlock);
 
 		// MOD-374 (TC-CHAINSAW-001-FUN01..03): the chainsaw's diamond-tipped upgrade cuts faster at the
 		// same tier, its sneak-toggled Silk Touch mode flips the real leaf loot table both ways, and the

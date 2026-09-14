@@ -29,6 +29,19 @@ public class ReactorControllerMenu extends MachineMenu {
 	public static final int BUTTON_DEPTH_BASE = 0;
 	public static final int BUTTON_DEPTH_MAX = 100;
 
+	/**
+	 * Base of the button ids the «Log» tab presses once it has shown its player the log (MOD-622): the id is this plus
+	 * the newest entry the screen holds. Carrying the number is the point — a click that arrives after the server has
+	 * sent a newer snapshot must not mark the lines that snapshot added, which the player has not seen. Far outside the
+	 * throttle's range, and the button packet carries its id as a VAR_INT, so the sum arrives whole.
+	 */
+	public static final int BUTTON_LOG_SEEN_BASE = 1000;
+
+	/** The button id that reports the log seen up to {@code seq}. */
+	public static int logSeenButton(int seq) {
+		return BUTTON_LOG_SEEN_BASE + Math.max(0, Math.min(seq, Integer.MAX_VALUE - BUTTON_LOG_SEEN_BASE));
+	}
+
 	/** Set on the server side only; the client stub has no block entity to act on. */
 	@org.jspecify.annotations.Nullable
 	private final ReactorControllerBlockEntity controller;
@@ -67,22 +80,71 @@ public class ReactorControllerMenu extends MachineMenu {
 	/** Client side: the latest zone snapshot, or {@code null} before the first one lands. */
 	private dev.alaindustrial.network.@org.jspecify.annotations.Nullable ReactorZonePayload zone;
 
+	/** Ticks between two log snapshots for one open screen (MOD-622): a new line reaches an open log within half a second. */
+	private static final int LOG_SYNC_INTERVAL_TICKS = 10;
+
+	/** Server side: when the next log snapshot is due, and whether it changed since the last one sent. */
+	private final dev.alaindustrial.core.ThrottledSnapshot<dev.alaindustrial.network.ReactorLogPayload> logSync =
+			new dev.alaindustrial.core.ThrottledSnapshot<>(LOG_SYNC_INTERVAL_TICKS);
+
+	/** Server side: the newest entry the last log snapshot sent to this viewer carried — all "seen" can honestly mean. */
+	private int lastSentLogSeq;
+
+	/** Client side: the latest log snapshot, or {@code null} before the first one lands. */
+	private dev.alaindustrial.network.@org.jspecify.annotations.Nullable ReactorLogPayload log;
+
 	/**
-	 * Pushes the core, stack by stack, to this screen's viewer (MOD-620) — at most once a second, and only when it
-	 * changed. A closed screen sends nothing: vanilla calls this only for an open menu. The client menu has no
-	 * controller behind it and falls through.
+	 * Pushes the core, stack by stack (MOD-620), and the event log (MOD-622) to this screen's viewer — each on its own
+	 * timer, and only when it changed. A closed screen sends nothing: vanilla calls this only for an open menu, so two
+	 * players watching one controller get their own snapshots and a player who closed it gets none. The client menu has
+	 * no controller behind it and falls through.
 	 */
 	@Override
 	public void broadcastChanges() {
 		super.broadcastChanges();
-		if (controller == null || !(viewer instanceof net.minecraft.server.level.ServerPlayer player)
-				|| !zoneSync.due()) {
+		if (controller == null || !(viewer instanceof net.minecraft.server.level.ServerPlayer player)) {
 			return;
 		}
-		dev.alaindustrial.network.ReactorZonePayload next = controller.zoneSnapshot(containerId);
-		if (zoneSync.changed(next)) {
-			dev.alaindustrial.network.NetworkDispatcher.get().sendToPlayer(player, next);
+		if (zoneSync.due()) {
+			dev.alaindustrial.network.ReactorZonePayload next = controller.zoneSnapshot(containerId);
+			if (zoneSync.changed(next)) {
+				dev.alaindustrial.network.NetworkDispatcher.get().sendToPlayer(player, next);
+			}
 		}
+		dev.alaindustrial.network.ReactorLogPayload log = pollLogSnapshot(player.getUUID());
+		if (log != null) {
+			dev.alaindustrial.network.NetworkDispatcher.get().sendToPlayer(player, log);
+		}
+	}
+
+	/**
+	 * Server side: the log snapshot this screen's viewer is due, or {@code null} when none is — not yet time, or nothing
+	 * changed since the last one (MOD-622). What it returns is recorded as sent, and that record is what a "seen" click
+	 * is capped by, so the caller must send it.
+	 */
+	public dev.alaindustrial.network.@org.jspecify.annotations.Nullable ReactorLogPayload pollLogSnapshot(
+			java.util.UUID viewer) {
+		if (controller == null || !logSync.due()) {
+			return null;
+		}
+		dev.alaindustrial.network.ReactorLogPayload next = controller.logSnapshot(containerId, viewer);
+		if (!logSync.changed(next)) {
+			return null;
+		}
+		lastSentLogSeq = next.newestSeq();
+		return next;
+	}
+
+	/** Client side: accepts a log snapshot addressed to THIS menu; one for another screen is dropped. */
+	public void acceptLog(dev.alaindustrial.network.ReactorLogPayload payload) {
+		if (payload.containerId() == containerId) {
+			this.log = payload;
+		}
+	}
+
+	/** Client side: the latest log snapshot, or {@code null} before the first one arrives. */
+	public dev.alaindustrial.network.@org.jspecify.annotations.Nullable ReactorLogPayload log() {
+		return log;
 	}
 
 	/** Client side: accepts a zone snapshot addressed to THIS menu; one for another screen is dropped. */
@@ -98,15 +160,27 @@ public class ReactorControllerMenu extends MachineMenu {
 	}
 
 	/**
-	 * Moves the control rods. The id is the requested depth in percent; anything outside 0…100 is
-	 * ignored rather than clamped, because a value off that scale did not come from our screen.
+	 * Moves the control rods, or marks the log seen. A depth id is the requested depth in percent; anything outside
+	 * 0…100 and below {@link #BUTTON_LOG_SEEN_BASE} is ignored rather than clamped, because a value off that scale did
+	 * not come from our screen.
+	 *
+	 * <p>"Seen" is the lower of the entry the screen reports and the newest entry this menu has SENT to the player
+	 * (MOD-622), never whatever the log holds by the time the click arrives: a line written in between has not reached
+	 * their screen, and it must keep their badge lit — as must a line sent after a click that was still on its way.
 	 */
 	@Override
 	public boolean clickMenuButton(Player player, int id) {
-		if (controller == null || id < BUTTON_DEPTH_BASE || id > BUTTON_DEPTH_MAX) {
+		if (controller == null) {
 			return false;
 		}
-		controller.setDepthPermille(id * 10);
+		if (id >= BUTTON_LOG_SEEN_BASE) {
+			controller.markLogSeen(player.getUUID(), Math.min(id - BUTTON_LOG_SEEN_BASE, lastSentLogSeq));
+			return true;
+		}
+		if (id < BUTTON_DEPTH_BASE || id > BUTTON_DEPTH_MAX) {
+			return false;
+		}
+		controller.setDepthPermille(id * 10, player.getName().getString());
 		return true;
 	}
 

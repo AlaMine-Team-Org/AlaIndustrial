@@ -406,6 +406,26 @@
           ]
         },
         {
+          "id": "radiant_solar_panel",
+          "title": "Spiegelkonzentrator",
+          "icon": "alaindustrial:radiant_solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Spiegelkonzentrator",
+              "text": "Die dritte Sprosse des Tageszweigs — doppelt so viel wie das Tageslicht-Solarpanel, zur Mittagszeit noch einmal die Hälfte mehr; die Spiegel klappen ein, wenn es nichts zu sammeln gibt."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 8 EU/t (Tag)",
+                "Puffer: 16 000 EU"
+              ]
+            }
+          ]
+        },
+        {
           "id": "moonlit_solar_panel",
           "title": "Mondlicht-Solarpanel",
           "icon": "alaindustrial:moonlit_solar_panel",
@@ -2048,6 +2068,43 @@
               "result_count": 1
             }
           ]
+        },
+        {
+          "id": "fluid_tank_advanced",
+          "title": "Verbesserter Flüssigkeitstank",
+          "icon": "alaindustrial:fluid_tank_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Verbesserter Flüssigkeitstank",
+              "text": "Die zweite Stufe des tragbaren Tanks — 16 Eimer statt acht, Silberbeschläge, ein verstärkender Gurt und ein Gegenstand, der in Lava nicht verbrennt."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Kapazität: 16 Eimer"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:fluid_tank",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_tank_advanced",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },
@@ -2335,6 +2392,36 @@
               "type": "text",
               "title": "Schwefelerz",
               "text": "Natürlicher Schwefel — ein abbaubares Nichtmetall, das für die Vulkanisierung von Gummi zu Staub verarbeitet wird."
+            }
+          ]
+        },
+        {
+          "id": "carbon_ceramic",
+          "title": "Kohlenstoffkeramik",
+          "icon": "alaindustrial:carbon_ceramic",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kohlenstoffkeramik",
+              "text": "Ein Block aus vier Keramikplatten — das Ende der Kohlekette, eine explosionsfeste Wand und die kompakte Lagerform des Materials."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:ceramic_plate",
+                "",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:ceramic_plate",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:carbon_ceramic",
+              "result_count": 1
             }
           ]
         },
@@ -2972,6 +3059,43 @@
           ]
         },
         {
+          "id": "diamond_chest",
+          "title": "Diamanttruhe",
+          "icon": "alaindustrial:diamond_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Diamanttruhe",
+              "text": "Eine Truhe mit 108 Plätzen — die höchste Lagerstufe. Zwölf Reihen hinter einem Fenster für sechs mit Bildlaufleiste, und Explosionen steckt sie einfach weg. Braucht keine Energie."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Kapazität: 108 Plätze"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "alaindustrial:electrum_chest",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond"
+              ],
+              "result_id": "alaindustrial:diamond_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "mob_repeller_hv",
           "title": "Große Monsterabwehr",
           "icon": "alaindustrial:mob_repeller_hv",
@@ -3261,6 +3385,43 @@
           ]
         },
         {
+          "id": "upgrade_table",
+          "title": "Aufrüstungstisch",
+          "icon": "alaindustrial:upgrade_table",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Aufrüstungstisch",
+              "text": "Ein Tisch, der Elektrowerkzeugen dauerhafte Aufrüstungen verpasst. Aus zwei aufeinandergestapelten Gehäusen gebaut."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 8 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:anvil",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:upgrade_table",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "electrum_chest",
           "title": "Elektrumtruhe",
           "icon": "alaindustrial:electrum_chest",
@@ -3432,6 +3593,36 @@
           ]
         },
         {
+          "id": "choke",
+          "title": "Drosselspule",
+          "icon": "alaindustrial:choke",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Drosselspule",
+              "text": "Die Drosselspule in drei Stufen — eine Wicklung auf einem geblechten Kern, die Spannungsspitzen in der Leitung glättet; jede Stufe wird um die darunterliegende herum gebaut."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate"
+              ],
+              "result_id": "alaindustrial:choke",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron",
           "title": "Gehärtetes Eisen",
           "icon": "alaindustrial:tempered_iron",
@@ -3462,6 +3653,36 @@
           ]
         },
         {
+          "id": "ceramic_plate",
+          "title": "Keramikplatte",
+          "icon": "alaindustrial:ceramic_plate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Keramikplatte",
+              "text": "Aus einem Kohlenstoffbrikett geschnitten, vier auf einmal; vier Platten ergeben einen Block Kohlenstoffkeramik."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Formloses Handwerk",
+              "grid": [
+                "alaindustrial:carbon_ceramic",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:ceramic_plate",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "water_mill_wheel",
           "title": "Wasserrad",
           "icon": "alaindustrial:water_mill_wheel",
@@ -3487,6 +3708,36 @@
                 "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:water_mill_wheel",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "core_barrel",
+          "title": "Kernrohr",
+          "icon": "alaindustrial:core_barrel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kernrohr",
+              "text": "Das Kernrohr und das Säulenbohrmodul — die Teile, aus denen ein Upgrade gebaut wird, mit dem ein Bohrer drei Blöcke hoch gräbt."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:choke",
+                "",
+                "alaindustrial:choke",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:core_barrel",
               "result_count": 1
             }
           ]
@@ -3918,6 +4169,44 @@
           ]
         },
         {
+          "id": "carbon_briquette",
+          "title": "Kohlenstoffbrikett",
+          "icon": "alaindustrial:carbon_briquette",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kohlenstoffbrikett",
+              "text": "Im Legierungsofen aus zwei doppelten Kohlenstoffstäben und Schlacke gebrannt; in Platten spalten lässt es sich nur auf eine Weise — mit der Abschreckpresse."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 1200 EU pro Brikett"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "carbon_rod",
+          "title": "Kohlenstoffstab",
+          "icon": "alaindustrial:carbon_rod",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kohlenstoffstab",
+              "text": "Sechzehn Kohlestaub unter die Presse; zwei Stäbe unter dem Schmiedehammer ergeben einen doppelten — die ersten beiden Sprossen der Keramikkette."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 260 EU pro Stab"
+              ]
+            }
+          ]
+        },
+        {
           "id": "fluxweave_cloth",
           "title": "Fluxgewebe",
           "icon": "alaindustrial:fluxweave_cloth",
@@ -3967,7 +4256,7 @@
             {
               "type": "text",
               "title": "Solar-Evolutionschip",
-              "text": "Ein Paar Evolutionschips — Solar (Tag) und Mond (Nacht) — die einfache T1-Solarpanels und Windturbinen per Weiterentwicklung zu T2 machen und die gespeicherte NBT-Energie übernehmen."
+              "text": "Drei Evolutionschips — Solar (Tag), Mond (Nacht) und Resonanz (die dritte Sprosse) — die einfache Solarpanels und Windturbinen zu T2 und das T2-Tagespanel weiter entwickeln und die gespeicherte NBT-Energie übernehmen."
             },
             {
               "type": "recipe",

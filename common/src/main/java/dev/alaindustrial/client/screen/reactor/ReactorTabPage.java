@@ -48,4 +48,9 @@ public interface ReactorTabPage {
 	default boolean mouseClicked(MouseButtonEvent event) {
 		return false;
 	}
+
+	/** A mouse wheel turn over the panel; returns whether the page took it (MOD-622). */
+	default boolean mouseScrolled(double mouseX, double mouseY, double scrollY) {
+		return false;
+	}
 }

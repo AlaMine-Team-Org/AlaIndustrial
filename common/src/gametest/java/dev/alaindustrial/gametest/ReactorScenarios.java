@@ -14,6 +14,7 @@ import dev.alaindustrial.block.entity.ReactorOutletBlockEntity;
 import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.core.structure.ReactorCore;
+import dev.alaindustrial.core.structure.ReactorLog;
 import dev.alaindustrial.core.structure.FuelRodMath;
 import dev.alaindustrial.core.structure.ReactorMeltdown;
 import dev.alaindustrial.core.structure.ReactorZone;
@@ -25,9 +26,12 @@ import java.util.List;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
@@ -39,6 +43,7 @@ import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
 import net.minecraft.world.level.block.LeverBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
+import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.phys.AABB;
 
 /**
@@ -622,6 +627,14 @@ public final class ReactorScenarios {
 				helper.fail("bare output " + brain.getLastOutput() + " was not below the sealed "
 						+ sealedOutput + " — the breach cost the player nothing");
 			}
+			// MOD-622: the fall is one line for the wall and one for bare mode, and the reaction never stopped.
+			if (logCount(brain, ReactorLog.Kind.ROOM_UNSEALED) != 1 || logCount(brain, ReactorLog.Kind.BARE_ENTERED) != 1
+					|| logCount(brain, ReactorLog.Kind.REACTION_STARTED) != 1 || brain.logEntries().stream()
+							.anyMatch(e -> e.kind() == ReactorLog.Kind.REACTION_STOPPED
+									|| e.kind() == ReactorLog.Kind.REACTION_SCRAMMED)) {
+				helper.fail("the breach logged " + logKinds(brain)
+						+ "; expected one unsealed, one bare-mode line and no stop");
+			}
 			helper.succeed();
 		} finally {
 			Config.reactorMeltdownMeltsBlocks = meltsBefore;
@@ -765,6 +778,11 @@ public final class ReactorScenarios {
 					+ "% of the heat scale did not report melting down");
 		}
 		assertEarned(helper, owner, "reactor_meltdown");
+		// MOD-622: one line for the meltdown, however often a melted block drops the room back under the line.
+		if (logCount(brain, ReactorLog.Kind.MELTDOWN_STARTED) != 1 || logCount(brain, ReactorLog.Kind.OVERHEAT) != 1) {
+			helper.fail("sixty ticks of meltdown logged " + logKinds(brain)
+					+ "; expected one overheat and one meltdown line");
+		}
 
 		driveUnderLoad(helper, brain, 340);
 		if (!helper.getBlockState(pipe).is(Blocks.LAVA)) {
@@ -781,6 +799,10 @@ public final class ReactorScenarios {
 		}
 		if (!helper.getBlockState(CONTROLLER).is(ModContent.REACTOR_CONTROLLER.get())) {
 			helper.fail("the meltdown ate its own controller");
+		}
+		// MOD-622: every melted block drops the room back under the line; it is still one meltdown until the room cools.
+		if (logCount(brain, ReactorLog.Kind.MELTDOWN_STARTED) != 1) {
+			helper.fail("four hundred ticks of one meltdown logged " + logKinds(brain));
 		}
 		helper.succeed();
 	}
@@ -1093,6 +1115,12 @@ public final class ReactorScenarios {
 			}
 			assertNotEarned(helper, owner, "reactor_blast",
 					"by a countdown that ran out with the blast switch off");
+			// MOD-622: armed, then ran out — written even with the switch off, since that is the state an operator reads.
+			List<ReactorLog.Kind> phaseOne = logKinds(brain);
+			if (!phaseOne.contains(ReactorLog.Kind.COUNTDOWN_ARMED) || !phaseOne.contains(ReactorLog.Kind.COUNTDOWN_EXPIRED)
+					|| phaseOne.indexOf(ReactorLog.Kind.COUNTDOWN_ARMED) > phaseOne.indexOf(ReactorLog.Kind.COUNTDOWN_EXPIRED)) {
+				helper.fail("a countdown that armed and ran out logged " + phaseOne);
+			}
 
 			// Phase two: pull the lever. The gauge comes off a hundred and the countdown must clear — this
 			// is the promise that there is no point of no return.
@@ -1105,6 +1133,13 @@ public final class ReactorScenarios {
 				helper.fail("scramming the reactor and holding it cool for "
 						+ (Config.reactorBlastReleaseTicks + 40) + " ticks left the countdown running at "
 						+ brain.getBlastCountdown());
+			}
+			List<ReactorLog.Kind> phaseTwo = logKinds(brain).stream()
+					.filter(k -> k == ReactorLog.Kind.COUNTDOWN_ARMED || k == ReactorLog.Kind.COUNTDOWN_CANCELLED
+							|| k == ReactorLog.Kind.COUNTDOWN_EXPIRED)
+					.toList();
+			if (phaseTwo.isEmpty() || phaseTwo.get(phaseTwo.size() - 1) != ReactorLog.Kind.COUNTDOWN_CANCELLED) {
+				helper.fail("a countdown called off by a scram logged " + phaseTwo);
 			}
 
 			// Phase three: switch the damage back on, re-arm, and let it finish.
@@ -1829,6 +1864,130 @@ public final class ReactorScenarios {
 			helper.fail("a stack with no water left does not read as dry");
 		}
 		helper.succeed();
+	}
+
+	/**
+	 * The «Log» tab's server half (MOD-622): one line per transition, a burst of throttle clicks folded into one line
+	 * naming the player, a save that round-trips without a false line, and each player's progress kept apart.
+	 *
+	 * <p><b>The reload is the point.</b> Most of what the controller knows is not saved and reads as a default until
+	 * its first scan, so a log keyed on the live fields would write "stopped" and "started" again for a reactor that
+	 * never changed. The reloaded block entity here is built from the saved tag alone and driven on, and the log must
+	 * come out of it exactly as it went in. No config is touched: a room, one rod and a redstone block are enough.
+	 */
+	public static void theEventLogRecordsEachTransitionOnce(GameTestHelper helper) {
+		buildRoom(helper);
+		ReactorControllerBlockEntity brain = controller(helper);
+		FuelRodAssemblyBlockEntity column = placeColumn(helper);
+		column.insertRod(new ItemStack(ModContent.URANIUM_FUEL_ROD.get()));
+		helper.setBlock(CONTROLLER.west(), Blocks.REDSTONE_BLOCK.defaultBlockState());
+		drive(helper, brain, 120);
+		expectLog(helper, brain, "a room that sealed and started",
+				ReactorLog.Kind.ROOM_SEALED, ReactorLog.Kind.REACTION_STARTED);
+		int inner = SHELL_MAX - 1;
+		ReactorLog.Entry sealed = brain.logEntries().get(0);
+		ReactorLog.Entry started = brain.logEntries().get(1);
+		if (sealed.a() != inner || sealed.b() != inner || sealed.c() != inner) {
+			helper.fail("the sealed line reads " + sealed.a() + "x" + sealed.b() + "x" + sealed.c() + ", the interior is "
+					+ inner + " on every side");
+		}
+		if (started.a() != 1 || started.b() != 100) {
+			helper.fail("the started line reads " + started.a() + " rods at " + started.b() + "%; one rod went in at 100%");
+		}
+
+		// Two clicks by one player inside the merge window are one decision: one line, from where the burst began.
+		ServerPlayer operator = AlaGameTestHelper.survivalPlayer(helper);
+		ServerPlayer visitor = AlaGameTestHelper.survivalPlayer(helper);
+		if (operator.getUUID().equals(visitor.getUUID())) {
+			helper.fail("the two mock players share a UUID, so their progress cannot be told apart");
+		}
+		ReactorControllerMenu operatorMenu =
+				new ReactorControllerMenu(0, operator.getInventory(), brain, ContainerLevelAccess.NULL);
+		operatorMenu.clickMenuButton(operator, 60);
+		operatorMenu.clickMenuButton(operator, 70);
+		expectLog(helper, brain, "two throttle clicks",
+				ReactorLog.Kind.ROOM_SEALED, ReactorLog.Kind.REACTION_STARTED, ReactorLog.Kind.DEPTH_CHANGED);
+		ReactorLog.Entry depth = brain.logEntries().get(2);
+		if (depth.a() != 100 || depth.b() != 70 || !depth.actor().equals(operator.getName().getString())) {
+			helper.fail("the throttle line reads " + depth.a() + "% -> " + depth.b() + "% by '" + depth.actor()
+					+ "'; expected 100% -> 70% by " + operator.getName().getString());
+		}
+
+		// Seen is per player, and only as far as a screen was actually sent: a menu that never pushed the log to its
+		// viewer cannot mark it read, and a click claiming more than was sent is capped at what was.
+		ReactorControllerMenu visitorMenu =
+				new ReactorControllerMenu(1, visitor.getInventory(), brain, ContainerLevelAccess.NULL);
+		visitorMenu.clickMenuButton(visitor, ReactorControllerMenu.logSeenButton(depth.seq()));
+		// The snapshot is taken as the menu's own broadcast takes it, without the send: a mock player's connection has no
+		// channels to receive it on.
+		if (operatorMenu.pollLogSnapshot(operator.getUUID()) == null) {
+			helper.fail("a screen that has never been sent the log was not due its first snapshot");
+		}
+		operatorMenu.clickMenuButton(operator, ReactorControllerMenu.logSeenButton(depth.seq() + 5));
+		if (brain.logSnapshot(0, operator.getUUID()).seenSeq() != depth.seq()
+				|| brain.logSnapshot(1, visitor.getUUID()).seenSeq() != 0) {
+			helper.fail("seen reads " + brain.logSnapshot(0, operator.getUUID()).seenSeq() + " for the operator and "
+					+ brain.logSnapshot(1, visitor.getUUID()).seenSeq() + " for a visitor never sent the log; expected "
+					+ depth.seq() + " and 0");
+		}
+
+		// The save carries the log; the tag every nearby player receives with the chunk does not.
+		RegistryAccess registries = helper.getLevel().registryAccess();
+		CompoundTag saved = brain.saveCustomOnly(registries);
+		CompoundTag update = brain.getUpdateTag(registries);
+		for (String key : List.of("Log", "LogNextSeq", "LogReaders", "LogRunning")) {
+			if (!saved.contains(key)) {
+				helper.fail("the saved controller has no '" + key + "'");
+			}
+			if (update.contains(key)) {
+				helper.fail("the update tag sent to every nearby player carries '" + key + "'");
+			}
+		}
+
+		BlockPos absolute = helper.absolutePos(CONTROLLER);
+		ReactorControllerBlockEntity reloaded =
+				new ReactorControllerBlockEntity(absolute, helper.getLevel().getBlockState(absolute));
+		reloaded.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, saved));
+		reloaded.setLevel(helper.getLevel());
+		List<ReactorLog.Entry> before = brain.logEntries();
+		drive(helper, reloaded, 60);
+		if (!reloaded.logEntries().equals(before)) {
+			helper.fail("a reload of a running reactor changed its log: " + before + " became " + reloaded.logEntries());
+		}
+		if (reloaded.logSnapshot(0, operator.getUUID()).seenSeq() != depth.seq()) {
+			helper.fail("the operator's progress did not survive the reload");
+		}
+
+		// A stop is written once the drone falls silent, with the reason taken on the tick the reaction stopped, and
+		// numbered after the saved lines — never reusing one.
+		helper.setBlock(CONTROLLER.west(), Blocks.AIR.defaultBlockState());
+		drive(helper, reloaded, 5);
+		if (reloaded.logEntries().size() != before.size()) {
+			helper.fail("a stop was logged before the drone's latch ran out: " + reloaded.logEntries());
+		}
+		drive(helper, reloaded, 60);
+		List<ReactorLog.Entry> after = reloaded.logEntries();
+		ReactorLog.Entry stop = after.get(after.size() - 1);
+		if (after.size() != before.size() + 1 || stop.kind() != ReactorLog.Kind.REACTION_SCRAMMED
+				|| stop.seq() != depth.seq() + 1) {
+			helper.fail("after the signal went: " + after + "; expected one REACTION_SCRAMMED numbered " + (depth.seq() + 1));
+		}
+		helper.succeed();
+	}
+
+	private static List<ReactorLog.Kind> logKinds(ReactorControllerBlockEntity brain) {
+		return brain.logEntries().stream().map(ReactorLog.Entry::kind).toList();
+	}
+
+	private static long logCount(ReactorControllerBlockEntity brain, ReactorLog.Kind kind) {
+		return logKinds(brain).stream().filter(k -> k == kind).count();
+	}
+
+	private static void expectLog(GameTestHelper helper, ReactorControllerBlockEntity brain, String when,
+			ReactorLog.Kind... kinds) {
+		if (!logKinds(brain).equals(List.of(kinds))) {
+			helper.fail(when + ": the log reads " + logKinds(brain) + ", expected " + List.of(kinds));
+		}
 	}
 
 	private static void expectChannel(GameTestHelper helper, ContainerData data, int index, int expected,

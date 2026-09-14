@@ -406,6 +406,26 @@
           ]
         },
         {
+          "id": "radiant_solar_panel",
+          "title": "Spiegelconcentrator",
+          "icon": "alaindustrial:radiant_solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Spiegelconcentrator",
+              "text": "De derde trede van de dagtak — twee keer het Daglichtzonnepaneel, rond het middaguur nog de helft meer; de spiegels klappen in als er niets te verzamelen valt."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 8 EU/t (dag)",
+                "Buffer: 16 000 EU"
+              ]
+            }
+          ]
+        },
+        {
           "id": "moonlit_solar_panel",
           "title": "Maanverlicht zonnepaneel",
           "icon": "alaindustrial:moonlit_solar_panel",
@@ -2048,6 +2068,43 @@
               "result_count": 1
             }
           ]
+        },
+        {
+          "id": "fluid_tank_advanced",
+          "title": "Geavanceerde vloeistoftank",
+          "icon": "alaindustrial:fluid_tank_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Geavanceerde vloeistoftank",
+              "text": "Het tweede niveau van de draagbare tank — 16 emmers in plaats van acht, zilveren beslag, een versterkingsband en een voorwerp dat niet verbrandt in lava."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Capaciteit: 16 emmers"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:fluid_tank",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_tank_advanced",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },
@@ -2335,6 +2392,36 @@
               "type": "text",
               "title": "Zwavelerts",
               "text": "Natuurlijke zwavel — een winbaar niet-metaal dat tot stof wordt verwerkt voor de vulkanisatie van rubber."
+            }
+          ]
+        },
+        {
+          "id": "carbon_ceramic",
+          "title": "Koolstofkeramiek",
+          "icon": "alaindustrial:carbon_ceramic",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Koolstofkeramiek",
+              "text": "Een blok van vier keramische platen — het einde van de steenkoolketen, een explosiebestendige muur en de compacte opslagvorm van het materiaal."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:ceramic_plate",
+                "",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:ceramic_plate",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:carbon_ceramic",
+              "result_count": 1
             }
           ]
         },
@@ -2972,6 +3059,43 @@
           ]
         },
         {
+          "id": "diamond_chest",
+          "title": "Diamanten kist",
+          "icon": "alaindustrial:diamond_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Diamanten kist",
+              "text": "Een kist met 108 sleuven — het hoogste opslagniveau. Twaalf rijen achter een venster van zes, met schuifbalk, en explosies deren hem niet. Heeft geen energie nodig."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Capaciteit: 108 sleuven"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "alaindustrial:electrum_chest",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond"
+              ],
+              "result_id": "alaindustrial:diamond_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "mob_repeller_hv",
           "title": "Grote monsterafweer",
           "icon": "alaindustrial:mob_repeller_hv",
@@ -3261,6 +3385,43 @@
           ]
         },
         {
+          "id": "upgrade_table",
+          "title": "Upgradetafel",
+          "icon": "alaindustrial:upgrade_table",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Upgradetafel",
+              "text": "Een tafel die blijvende upgrades op elektrisch gereedschap zet. Je bouwt hem uit twee op elkaar gestapelde behuizingen."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 8 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:anvil",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:upgrade_table",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "electrum_chest",
           "title": "Elektrumkist",
           "icon": "alaindustrial:electrum_chest",
@@ -3432,6 +3593,36 @@
           ]
         },
         {
+          "id": "choke",
+          "title": "Smoorspoel",
+          "icon": "alaindustrial:choke",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Smoorspoel",
+              "text": "De smoorspoel in drie niveaus — een wikkeling op een gelamineerde kern die pieken in de leiding afvlakt; elk niveau wordt rond het niveau eronder gebouwd."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate"
+              ],
+              "result_id": "alaindustrial:choke",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron",
           "title": "Gehard ijzer",
           "icon": "alaindustrial:tempered_iron",
@@ -3462,6 +3653,36 @@
           ]
         },
         {
+          "id": "ceramic_plate",
+          "title": "Keramische plaat",
+          "icon": "alaindustrial:ceramic_plate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Keramische plaat",
+              "text": "Uit een koolstofbriket gesneden, vier tegelijk; vier platen vormen samen een blok koolstofkeramiek."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Vormloos vervaardigen",
+              "grid": [
+                "alaindustrial:carbon_ceramic",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:ceramic_plate",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "water_mill_wheel",
           "title": "Waterrad",
           "icon": "alaindustrial:water_mill_wheel",
@@ -3487,6 +3708,36 @@
                 "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:water_mill_wheel",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "core_barrel",
+          "title": "Kernbuis",
+          "icon": "alaindustrial:core_barrel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kernbuis",
+              "text": "De kernbuis en de kolomboormodule — de onderdelen waaruit een upgrade wordt gebouwd waarmee een boor drie blokken hoog graaft."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:choke",
+                "",
+                "alaindustrial:choke",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:core_barrel",
               "result_count": 1
             }
           ]
@@ -3918,6 +4169,44 @@
           ]
         },
         {
+          "id": "carbon_briquette",
+          "title": "Koolstofbriket",
+          "icon": "alaindustrial:carbon_briquette",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Koolstofbriket",
+              "text": "Gebakken in de Legeringsoven uit twee dubbele koolstofstaven en slak; tot platen gesplitst op maar één manier — de hardingspers."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 1200 EU per briket"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "carbon_rod",
+          "title": "Koolstofstaaf",
+          "icon": "alaindustrial:carbon_rod",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Koolstofstaaf",
+              "text": "Zestien steenkoolstof onder de Compressor; twee staven onder de Smeedhamer maken een dubbele — de eerste twee treden van de keramiekketen."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 260 EU per staaf"
+              ]
+            }
+          ]
+        },
+        {
           "id": "fluxweave_cloth",
           "title": "Fluxweefsel",
           "icon": "alaindustrial:fluxweave_cloth",
@@ -3967,7 +4256,7 @@
             {
               "type": "text",
               "title": "Zonne-evolutiechip",
-              "text": "Een paar evolutiechips — zonne (dag) en maan (nacht) — die basis-T1-zonnepanelen en -windmolens via evolutie tot T2 laten evolueren, waarbij de opgeslagen energie behouden blijft."
+              "text": "Drie evolutiechips — zonne (dag), maan (nacht) en resonantie (de derde trede) — die basiszonnepanelen en -windmolens via evolutie tot T2 laten evolueren en het T2-dagpaneel nog verder, waarbij de opgeslagen energie behouden blijft."
             },
             {
               "type": "recipe",

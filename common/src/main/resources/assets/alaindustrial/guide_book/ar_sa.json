@@ -406,6 +406,26 @@
           ]
         },
         {
+          "id": "radiant_solar_panel",
+          "title": "مركّز المرايا",
+          "icon": "alaindustrial:radiant_solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "مركّز المرايا",
+              "text": "الدرجة الثالثة من فرع النهار — ضعف اللوحة الشمسية النهارية، ويزيد نصفا آخر عند الظهيرة؛ وتنطوي المرايا حين لا يكون هناك ما تجمعه."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "الطاقة: 8 EU/t (نهار)",
+                "الاحتياطي: 16 000 EU"
+              ]
+            }
+          ]
+        },
+        {
           "id": "moonlit_solar_panel",
           "title": "لوحة شمسية قمرية",
           "icon": "alaindustrial:moonlit_solar_panel",
@@ -2048,6 +2068,43 @@
               "result_count": 1
             }
           ]
+        },
+        {
+          "id": "fluid_tank_advanced",
+          "title": "خزان سوائل متطور",
+          "icon": "alaindustrial:fluid_tank_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "خزان سوائل متطور",
+              "text": "الدرجة الثانية من الخزان المحمول — 16 دلوا بدلا من ثمانية، وحواف فضية، وحزام تقوية، وعنصر لا يحترق في الحمم."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "السعة: 16 دلوا"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:fluid_tank",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_tank_advanced",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },
@@ -2335,6 +2392,36 @@
               "type": "text",
               "title": "خام الكبريت",
               "text": "كبريت طبيعي — لافلز يعدن ويعالج إلى مسحوق لفلكنة المطاط."
+            }
+          ]
+        },
+        {
+          "id": "carbon_ceramic",
+          "title": "سيراميك كربوني",
+          "icon": "alaindustrial:carbon_ceramic",
+          "pages": [
+            {
+              "type": "text",
+              "title": "سيراميك كربوني",
+              "text": "كتلة من أربعة ألواح سيراميك — نهاية سلسلة الفحم، وجدار مقاوم للانفجارات، والصورة المكثفة لتخزين المادة."
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:ceramic_plate",
+                "",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:ceramic_plate",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:carbon_ceramic",
+              "result_count": 1
             }
           ]
         },
@@ -2972,6 +3059,43 @@
           ]
         },
         {
+          "id": "diamond_chest",
+          "title": "صندوق ماسي",
+          "icon": "alaindustrial:diamond_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "صندوق ماسي",
+              "text": "صندوق بـ 108 خانة — أعلى درجات التخزين. اثنا عشر صفا خلف نافذة تمرير من ستة صفوف، ولا تؤثر فيه الانفجارات. ولا يحتاج إلى طاقة."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "السعة: 108 خانة"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "alaindustrial:electrum_chest",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond"
+              ],
+              "result_id": "alaindustrial:diamond_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "mob_repeller_hv",
           "title": "طارد وحوش كبير",
           "icon": "alaindustrial:mob_repeller_hv",
@@ -3261,6 +3385,43 @@
           ]
         },
         {
+          "id": "upgrade_table",
+          "title": "طاولة الترقية",
+          "icon": "alaindustrial:upgrade_table",
+          "pages": [
+            {
+              "type": "text",
+              "title": "طاولة الترقية",
+              "text": "طاولة تركّب ترقيات دائمة على الأدوات الكهربائية. تُجمَّع من هيكلين موضوعين أحدهما فوق الآخر."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "الطاقة: 8 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:anvil",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:upgrade_table",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "electrum_chest",
           "title": "صندوق إلكتروم",
           "icon": "alaindustrial:electrum_chest",
@@ -3432,6 +3593,36 @@
           ]
         },
         {
+          "id": "choke",
+          "title": "ملف خانق",
+          "icon": "alaindustrial:choke",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ملف خانق",
+              "text": "الملف الخانق بثلاث درجات — لفائف على قلب مصفح تخمد اندفاعات التيار في الخط؛ وكل درجة تبنى حول الدرجة التي تحتها."
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate"
+              ],
+              "result_id": "alaindustrial:choke",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron",
           "title": "حديد مقسى",
           "icon": "alaindustrial:tempered_iron",
@@ -3462,6 +3653,36 @@
           ]
         },
         {
+          "id": "ceramic_plate",
+          "title": "لوح سيراميك",
+          "icon": "alaindustrial:ceramic_plate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "لوح سيراميك",
+              "text": "يقطع من قالب كربوني، أربعة في كل مرة؛ وتجمع أربعة ألواح في كتلة سيراميك كربوني."
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع غير مرتب",
+              "grid": [
+                "alaindustrial:carbon_ceramic",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:ceramic_plate",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "water_mill_wheel",
           "title": "عجلة ماء",
           "icon": "alaindustrial:water_mill_wheel",
@@ -3487,6 +3708,36 @@
                 "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:water_mill_wheel",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "core_barrel",
+          "title": "أنبوب اللب",
+          "icon": "alaindustrial:core_barrel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "أنبوب اللب",
+              "text": "أنبوب اللب ووحدة الحفر العمودي — القطع التي تبنى منها الترقية التي تجعل المثقاب يحفر بارتفاع ثلاث كتل."
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:choke",
+                "",
+                "alaindustrial:choke",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:core_barrel",
               "result_count": 1
             }
           ]
@@ -3918,6 +4169,44 @@
           ]
         },
         {
+          "id": "carbon_briquette",
+          "title": "قالب كربوني",
+          "icon": "alaindustrial:carbon_briquette",
+          "pages": [
+            {
+              "type": "text",
+              "title": "قالب كربوني",
+              "text": "يحرق في فرن السبائك من قضيبين كربونيين مزدوجين وخبث؛ ولا يقسم إلى ألواح إلا بطريقة واحدة — مكبس التبريد."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "الطاقة: 1200 EU لكل قالب"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "carbon_rod",
+          "title": "قضيب كربوني",
+          "icon": "alaindustrial:carbon_rod",
+          "pages": [
+            {
+              "type": "text",
+              "title": "قضيب كربوني",
+              "text": "ستة عشر مسحوق فحم في الضاغط؛ وقضيبان مع مطرقة الحداد يصنعان قضيبا مزدوجا — أول درجتين في سلسلة السيراميك."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "الطاقة: 260 EU لكل قضيب"
+              ]
+            }
+          ]
+        },
+        {
           "id": "fluxweave_cloth",
           "title": "قماش تدفق",
           "icon": "alaindustrial:fluxweave_cloth",
@@ -3967,7 +4256,7 @@
             {
               "type": "text",
               "title": "رقاقة تطور شمسي",
-              "text": "زوج من رقاقات التطور — شمسية (نهار) وقمرية (ليل) — تطوران الألواح الشمسية وعنفات الرياح الأساسية من الفئة T1 إلى الفئة T2، مع نقل الطاقة المتراكمة فيها."
+              "text": "ثلاث رقاقات تطور — شمسية (نهار) وقمرية (ليل) ورنين (الدرجة الثالثة) — تطور الألواح الشمسية وعنفات الرياح الأساسية إلى الفئة T2، واللوحة الشمسية النهارية من الفئة T2 إلى ما بعدها، مع نقل الطاقة المتراكمة فيها."
             },
             {
               "type": "recipe",

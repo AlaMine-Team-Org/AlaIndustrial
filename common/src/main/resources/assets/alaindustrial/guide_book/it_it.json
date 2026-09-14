@@ -406,6 +406,26 @@
           ]
         },
         {
+          "id": "radiant_solar_panel",
+          "title": "Concentratore a specchi",
+          "icon": "alaindustrial:radiant_solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Concentratore a specchi",
+              "text": "Il terzo gradino del ramo diurno — il doppio del pannello solare diurno, e metà in più a mezzogiorno; gli specchi si ripiegano quando non c'è nulla da raccogliere."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiche",
+              "lines": [
+                "Energia: 8 EU/t (giorno)",
+                "Buffer: 16 000 EU"
+              ]
+            }
+          ]
+        },
+        {
           "id": "moonlit_solar_panel",
           "title": "Pannello solare al chiaro di luna",
           "icon": "alaindustrial:moonlit_solar_panel",
@@ -2048,6 +2068,43 @@
               "result_count": 1
             }
           ]
+        },
+        {
+          "id": "fluid_tank_advanced",
+          "title": "Serbatoio per fluidi avanzato",
+          "icon": "alaindustrial:fluid_tank_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Serbatoio per fluidi avanzato",
+              "text": "Il secondo livello del serbatoio portatile — 16 secchi invece di otto, finiture d'argento, una fascia di rinforzo e un oggetto che non brucia nella lava."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiche",
+              "lines": [
+                "Capacità: 16 secchi"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:fluid_tank",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_tank_advanced",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },
@@ -2335,6 +2392,36 @@
               "type": "text",
               "title": "Minerale di zolfo",
               "text": "Zolfo nativo — un non metallo estraibile che viene trasformato in polvere per vulcanizzare la gomma."
+            }
+          ]
+        },
+        {
+          "id": "carbon_ceramic",
+          "title": "Ceramica al carbonio",
+          "icon": "alaindustrial:carbon_ceramic",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ceramica al carbonio",
+              "text": "Un blocco di quattro piastre in ceramica — la fine della filiera del carbone, un muro resistente alle esplosioni e la forma compatta per immagazzinare il materiale."
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:ceramic_plate",
+                "",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:ceramic_plate",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:carbon_ceramic",
+              "result_count": 1
             }
           ]
         },
@@ -2972,6 +3059,43 @@
           ]
         },
         {
+          "id": "diamond_chest",
+          "title": "Baule di diamante",
+          "icon": "alaindustrial:diamond_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Baule di diamante",
+              "text": "Un baule da 108 slot — il livello di stoccaggio più alto. Dodici file dietro una finestra da sei con scorrimento, e le esplosioni non lo scalfiscono. Non consuma energia."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiche",
+              "lines": [
+                "Capacità: 108 slot"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "alaindustrial:electrum_chest",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond"
+              ],
+              "result_id": "alaindustrial:diamond_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "mob_repeller_hv",
           "title": "Repellente grande",
           "icon": "alaindustrial:mob_repeller_hv",
@@ -3261,6 +3385,43 @@
           ]
         },
         {
+          "id": "upgrade_table",
+          "title": "Banco di potenziamento",
+          "icon": "alaindustrial:upgrade_table",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Banco di potenziamento",
+              "text": "Un banco che monta potenziamenti permanenti sugli utensili elettrici. Si assembla con due telai impilati uno sull'altro."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiche",
+              "lines": [
+                "Energia: 8 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:anvil",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:upgrade_table",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "electrum_chest",
           "title": "Baule di elettro",
           "icon": "alaindustrial:electrum_chest",
@@ -3432,6 +3593,36 @@
           ]
         },
         {
+          "id": "choke",
+          "title": "Bobina d'arresto",
+          "icon": "alaindustrial:choke",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Bobina d'arresto",
+              "text": "La bobina d'arresto in tre livelli — un avvolgimento su un nucleo lamellare che smorza i picchi nella linea; ogni livello si costruisce attorno a quello inferiore."
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate"
+              ],
+              "result_id": "alaindustrial:choke",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron",
           "title": "Ferro temprato",
           "icon": "alaindustrial:tempered_iron",
@@ -3462,6 +3653,36 @@
           ]
         },
         {
+          "id": "ceramic_plate",
+          "title": "Piastra in ceramica",
+          "icon": "alaindustrial:ceramic_plate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Piastra in ceramica",
+              "text": "Ricavate da una mattonella di carbonio, quattro alla volta; quattro piastre formano un blocco di ceramica al carbonio."
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione non sagomata",
+              "grid": [
+                "alaindustrial:carbon_ceramic",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:ceramic_plate",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "water_mill_wheel",
           "title": "Ruota idraulica",
           "icon": "alaindustrial:water_mill_wheel",
@@ -3487,6 +3708,36 @@
                 "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:water_mill_wheel",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "core_barrel",
+          "title": "Carotiere",
+          "icon": "alaindustrial:core_barrel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Carotiere",
+              "text": "Il carotiere e il modulo di perforazione a colonna — i pezzi di un potenziamento che fa scavare a un trapano tre blocchi in altezza."
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:choke",
+                "",
+                "alaindustrial:choke",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:core_barrel",
               "result_count": 1
             }
           ]
@@ -3918,6 +4169,44 @@
           ]
         },
         {
+          "id": "carbon_briquette",
+          "title": "Mattonella di carbonio",
+          "icon": "alaindustrial:carbon_briquette",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Mattonella di carbonio",
+              "text": "Cotta nella fornace per leghe da due barre di carbonio doppie e scoria; si spacca in piastre in un solo modo — la pressa di tempra."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiche",
+              "lines": [
+                "Energia: 1200 EU per mattonella"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "carbon_rod",
+          "title": "Barra di carbonio",
+          "icon": "alaindustrial:carbon_rod",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Barra di carbonio",
+              "text": "Sedici polveri di carbone sotto la pressa; due barre sotto il martello da fucina ne danno una doppia — i primi due gradini della filiera della ceramica."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiche",
+              "lines": [
+                "Energia: 260 EU per barra"
+              ]
+            }
+          ]
+        },
+        {
           "id": "fluxweave_cloth",
           "title": "Tessuto di flusso",
           "icon": "alaindustrial:fluxweave_cloth",
@@ -3967,7 +4256,7 @@
             {
               "type": "text",
               "title": "Chip di evoluzione solare",
-              "text": "Una coppia di chip di evoluzione — solare (giorno) e lunare (notte) — che fanno evolvere pannelli solari e turbine eoliche T1 di base in T2 tramite evoluzione, trasferendo l'energia NBT accumulata."
+              "text": "Tre chip di evoluzione — solare (giorno), lunare (notte) e di risonanza (il terzo gradino) — che fanno evolvere pannelli solari e turbine eoliche di base in T2 e il pannello diurno T2 ancora oltre, trasferendo l'energia NBT accumulata."
             },
             {
               "type": "recipe",

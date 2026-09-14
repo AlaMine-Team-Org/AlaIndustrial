@@ -406,6 +406,26 @@
           ]
         },
         {
+          "id": "radiant_solar_panel",
+          "title": "거울 집광기",
+          "icon": "alaindustrial:radiant_solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "거울 집광기",
+              "text": "낮 계열의 세 번째 단계 — 햇빛 태양광 패널의 두 배, 정오에는 거기서 절반을 더 냅니다. 모을 것이 없으면 거울이 접힙니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 8 EU/t (낮)",
+                "버퍼: 16 000 EU"
+              ]
+            }
+          ]
+        },
+        {
           "id": "moonlit_solar_panel",
           "title": "달빛 태양광 패널",
           "icon": "alaindustrial:moonlit_solar_panel",
@@ -2048,6 +2068,43 @@
               "result_count": 1
             }
           ]
+        },
+        {
+          "id": "fluid_tank_advanced",
+          "title": "고급 유체 탱크",
+          "icon": "alaindustrial:fluid_tank_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "고급 유체 탱크",
+              "text": "휴대용 유체 탱크의 두 번째 등급 — 양동이 8개 대신 16개, 은색 테두리와 보강 띠를 둘렀고, 아이템은 용암에 타지 않습니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "용량: 양동이 16개"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:fluid_tank",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_tank_advanced",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },
@@ -2335,6 +2392,36 @@
               "type": "text",
               "title": "유황 광석",
               "text": "천연 유황 — 채굴 가능한 비금속으로, 고무 가황에 쓰는 가루로 가공합니다."
+            }
+          ]
+        },
+        {
+          "id": "carbon_ceramic",
+          "title": "탄소 세라믹",
+          "icon": "alaindustrial:carbon_ceramic",
+          "pages": [
+            {
+              "type": "text",
+              "title": "탄소 세라믹",
+              "text": "세라믹 판 네 장으로 된 블록 — 석탄 계열의 끝이자 폭발에 강한 벽이며, 이 재료를 촘촘하게 보관하는 형태입니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:ceramic_plate",
+                "",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:ceramic_plate",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:carbon_ceramic",
+              "result_count": 1
             }
           ]
         },
@@ -2972,6 +3059,43 @@
           ]
         },
         {
+          "id": "diamond_chest",
+          "title": "다이아몬드 상자",
+          "icon": "alaindustrial:diamond_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "다이아몬드 상자",
+              "text": "108칸 상자 — 최상위 보관 등급. 6줄 스크롤 창 뒤에 12줄이 있고, 폭발에도 끄떡없습니다. 에너지가 필요 없습니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "용량: 108칸"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "alaindustrial:electrum_chest",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond"
+              ],
+              "result_id": "alaindustrial:diamond_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "mob_repeller_hv",
           "title": "대형 몹 퇴치기",
           "icon": "alaindustrial:mob_repeller_hv",
@@ -3261,6 +3385,43 @@
           ]
         },
         {
+          "id": "upgrade_table",
+          "title": "업그레이드 작업대",
+          "icon": "alaindustrial:upgrade_table",
+          "pages": [
+            {
+              "type": "text",
+              "title": "업그레이드 작업대",
+              "text": "전동 도구에 영구 업그레이드를 장착하는 작업대입니다. 케이싱 두 개를 위아래로 쌓아 만듭니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 8 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:anvil",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:upgrade_table",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "electrum_chest",
           "title": "호박금 상자",
           "icon": "alaindustrial:electrum_chest",
@@ -3432,6 +3593,36 @@
           ]
         },
         {
+          "id": "choke",
+          "title": "초크 코일",
+          "icon": "alaindustrial:choke",
+          "pages": [
+            {
+              "type": "text",
+              "title": "초크 코일",
+              "text": "세 등급의 초크 코일 — 적층 철심에 감은 권선으로 선로의 서지를 완화합니다. 각 등급은 한 단계 아래 등급을 바탕으로 만듭니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate"
+              ],
+              "result_id": "alaindustrial:choke",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron",
           "title": "담금질된 철",
           "icon": "alaindustrial:tempered_iron",
@@ -3462,6 +3653,36 @@
           ]
         },
         {
+          "id": "ceramic_plate",
+          "title": "세라믹 판",
+          "icon": "alaindustrial:ceramic_plate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "세라믹 판",
+              "text": "탄소 연탄에서 한 번에 네 장씩 잘라냅니다. 판 네 장을 모으면 탄소 세라믹 블록이 됩니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "무정형 제작",
+              "grid": [
+                "alaindustrial:carbon_ceramic",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:ceramic_plate",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "water_mill_wheel",
           "title": "물레방아 바퀴",
           "icon": "alaindustrial:water_mill_wheel",
@@ -3487,6 +3708,36 @@
                 "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:water_mill_wheel",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "core_barrel",
+          "title": "코어 배럴",
+          "icon": "alaindustrial:core_barrel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "코어 배럴",
+              "text": "코어 배럴과 기둥 굴착 모듈 — 전동 드릴이 세 블록 높이로 파게 하는 업그레이드를 만드는 부품입니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:choke",
+                "",
+                "alaindustrial:choke",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:core_barrel",
               "result_count": 1
             }
           ]
@@ -3918,6 +4169,44 @@
           ]
         },
         {
+          "id": "carbon_briquette",
+          "title": "탄소 연탄",
+          "icon": "alaindustrial:carbon_briquette",
+          "pages": [
+            {
+              "type": "text",
+              "title": "탄소 연탄",
+              "text": "합금 제련기에서 이중 탄소 막대 두 개와 슬래그로 구워 냅니다. 판으로 쪼개는 방법은 단 하나 — 담금질 프레스입니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 1200 EU/연탄"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "carbon_rod",
+          "title": "탄소 막대",
+          "icon": "alaindustrial:carbon_rod",
+          "pages": [
+            {
+              "type": "text",
+              "title": "탄소 막대",
+              "text": "압축기에 석탄 가루 16개를 넣어 만들고, 대장장이 망치로 막대 두 개를 합치면 이중 탄소 막대가 됩니다 — 세라믹 계열의 첫 두 단계입니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 260 EU/막대"
+              ]
+            }
+          ]
+        },
+        {
           "id": "fluxweave_cloth",
           "title": "플럭스 천",
           "icon": "alaindustrial:fluxweave_cloth",
@@ -3967,7 +4256,7 @@
             {
               "type": "text",
               "title": "태양광 진화 칩",
-              "text": "진화 칩 한 쌍 — 태양(낮)과 달(밤) — 기본 T1 태양광 패널과 풍력 터빈을 진화로 T2로 진화시키며, 축적된 NBT 에너지를 그대로 이어받습니다."
+              "text": "진화 칩 세 종류 — 태양(낮), 달(밤), 공명(세 번째 단계) — 기본 태양광 패널과 풍력 터빈을 T2로, T2 햇빛 태양광 패널을 그 다음 단계로 진화시키며, 축적된 NBT 에너지를 그대로 이어받습니다."
             },
             {
               "type": "recipe",

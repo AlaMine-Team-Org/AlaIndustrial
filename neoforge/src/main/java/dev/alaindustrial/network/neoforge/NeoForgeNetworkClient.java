@@ -80,4 +80,9 @@ public final class NeoForgeNetworkClient {
 	public static void receiveReactorZone(dev.alaindustrial.network.ReactorZonePayload payload) {
 		dev.alaindustrial.client.ReactorZoneClient.receive(payload);
 	}
+
+	/** MOD-622: the reactor controller's «Log» tab, through the same loader-neutral landing point Fabric uses. */
+	public static void receiveReactorLog(dev.alaindustrial.network.ReactorLogPayload payload) {
+		dev.alaindustrial.client.ReactorLogClient.receive(payload);
+	}
 }

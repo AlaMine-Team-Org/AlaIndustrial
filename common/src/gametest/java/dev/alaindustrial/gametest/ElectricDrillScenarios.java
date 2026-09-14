@@ -7,7 +7,14 @@ import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import java.util.List;
 import java.util.Optional;
+import dev.alaindustrial.item.tool.DrillUpgrades;
 import dev.alaindustrial.item.tool.ElectricDrillDiamondTipItem;
+import net.minecraft.advancements.predicates.BlockPredicate;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.AdventureModePredicate;
+import net.minecraft.world.phys.AABB;
 import dev.alaindustrial.menu.BatteryBoxMenu;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
@@ -857,6 +864,232 @@ public final class ElectricDrillScenarios {
 			return;
 		}
 		helper.succeed();
+	}
+
+	// ── MOD-482 — column bore module ─────────────────────────────────────────────────────────────
+
+	/** The block the player aims at; the column adds {@link #COLUMN_ABOVE} and {@link #COLUMN_BELOW}. */
+	private static final BlockPos COLUMN_AIM = new BlockPos(1, 3, 2);
+	private static final BlockPos COLUMN_ABOVE = COLUMN_AIM.above();
+	private static final BlockPos COLUMN_BELOW = COLUMN_AIM.below();
+
+	/** Charge of one full stroke: the aimed block at the plain price plus two extras at the column price. */
+	private static long fullStrokeCost() {
+		return Config.electricDrillEuPerBlock + 2L * Config.electricDrillColumnEuPerBlock;
+	}
+
+	/** A drill of {@code item} carrying the column bore (enabled — absent toggle means on). */
+	private static ItemStack columnDrill(Item item, long eu) {
+		ItemStack stack = new ItemStack(item);
+		ItemEnergy.set(stack, eu);
+		if (!DrillUpgrades.install(stack, DrillUpgrades.COLUMN_BORE)
+				|| !dev.alaindustrial.item.tool.ElectricDrillItem.isColumnActive(stack)) {
+			throw new IllegalStateException("fixture error: the column bore did not install on " + item);
+		}
+		return stack;
+	}
+
+	/**
+	 * Breaks {@link #COLUMN_AIM} the way a player does — {@code ServerPlayerGameMode.destroyBlock}, the
+	 * path that calls {@code ItemStack.mineBlock} and rolls loot with the real main-hand stack — with
+	 * {@code drill} placed in the main hand first (the column only runs from the main hand).
+	 */
+	private static void mineColumnAim(GameTestHelper helper, ServerPlayer player, ItemStack drill) {
+		player.setItemInHand(InteractionHand.MAIN_HAND, drill);
+		if (!player.gameMode.destroyBlock(helper.absolutePos(COLUMN_AIM))) {
+			helper.fail("destroyBlock refused the aimed block — the rig is not testing the column");
+		}
+	}
+
+	private static void setColumn(GameTestHelper helper, Block above, Block aim, Block below) {
+		helper.setBlock(COLUMN_ABOVE, above);
+		helper.setBlock(COLUMN_AIM, aim);
+		helper.setBlock(COLUMN_BELOW, below);
+	}
+
+	private static void assertCharge(GameTestHelper helper, ItemStack drill, long expected, String what) {
+		long actual = ItemEnergy.get(drill);
+		if (actual != expected) {
+			helper.fail(what + ": expected " + expected + " EU left, got " + actual);
+		}
+	}
+
+	/**
+	 * TC-DRILL-001-FUN15 (MOD-482): every extra block of a column is billed on its own, at
+	 * {@code electricDrillColumnEuPerBlock}, while the aimed block keeps the plain price.
+	 *
+	 * <p>Three strokes pin the arithmetic from three sides, so no single wrong price can pass: a full
+	 * column (aim + 2 extras), a column with only ONE extra block to break (air above) — which is what
+	 * proves the charge is per block rather than a flat column fee — and the same column with the mode
+	 * switched off, which must bill the aimed block alone and leave both neighbours standing.
+	 */
+	public static void fun15ColumnChargesEachExtraBlock(GameTestHelper helper) {
+		ServerPlayer player = survivalPlayer(helper);
+		Item drillItem = ModContent.ELECTRIC_DRILL.get();
+		long full = Config.electricDrillBuffer;
+		if (Config.electricDrillColumnEuPerBlock == Config.electricDrillEuPerBlock) {
+			helper.fail("fixture error: the two prices are equal, so this test could not tell them apart");
+		}
+
+		// 1. Full column: aim + above + below.
+		setColumn(helper, Blocks.STONE, Blocks.STONE, Blocks.STONE);
+		ItemStack drill = columnDrill(drillItem, full);
+		mineColumnAim(helper, player, drill);
+		helper.assertBlockPresent(Blocks.AIR, COLUMN_AIM);
+		helper.assertBlockPresent(Blocks.AIR, COLUMN_ABOVE);
+		helper.assertBlockPresent(Blocks.AIR, COLUMN_BELOW);
+		assertCharge(helper, drill, full - Config.electricDrillEuPerBlock - 2L * Config.electricDrillColumnEuPerBlock,
+				"a full column stroke must cost electricDrillEuPerBlock + 2 x electricDrillColumnEuPerBlock");
+
+		// 2. Only one extra block exists: the stroke must cost exactly one column price, not two.
+		setColumn(helper, Blocks.AIR, Blocks.STONE, Blocks.STONE);
+		ItemStack oneExtra = columnDrill(drillItem, full);
+		mineColumnAim(helper, player, oneExtra);
+		helper.assertBlockPresent(Blocks.AIR, COLUMN_BELOW);
+		assertCharge(helper, oneExtra, full - Config.electricDrillEuPerBlock - Config.electricDrillColumnEuPerBlock,
+				"a column with one extra block must bill that one block only");
+
+		// 3. Mode switched off: a plain stroke, neighbours untouched.
+		setColumn(helper, Blocks.STONE, Blocks.STONE, Blocks.STONE);
+		ItemStack off = columnDrill(drillItem, full);
+		dev.alaindustrial.item.tool.ElectricDrillItem.setColumnEnabled(off, false);
+		mineColumnAim(helper, player, off);
+		helper.assertBlockPresent(Blocks.STONE, COLUMN_ABOVE);
+		helper.assertBlockPresent(Blocks.STONE, COLUMN_BELOW);
+		assertCharge(helper, off, full - Config.electricDrillEuPerBlock,
+				"with the column switched off only the aimed block may be billed");
+		helper.succeed();
+	}
+
+	/**
+	 * TC-DRILL-001-FUN16 (MOD-482): Silk Touch mode reaches the extra blocks of a column. The aimed block
+	 * is plain stone so every iron-ore drop in the rig can only have come from the two extras; both must
+	 * fall as the ore BLOCK and none as raw iron. Asserting the negative too is what catches loot rolled
+	 * with an empty tool ({@code Level.destroyBlock}), which drops raw iron and would still "break" the
+	 * column.
+	 */
+	public static void fun16ColumnSilkTouchReachesExtraBlocks(GameTestHelper helper) {
+		ServerPlayer player = survivalPlayer(helper);
+		setColumn(helper, Blocks.IRON_ORE, Blocks.STONE, Blocks.IRON_ORE);
+		ItemStack drill = columnDrill(ModContent.ELECTRIC_DRILL_DIAMOND_TIP.get(), Config.electricDrillBuffer);
+		EnchantmentHelper.updateEnchantments(drill,
+				mutable -> mutable.set(enchant(helper.getLevel(), Enchantments.SILK_TOUCH), 1));
+		if (!ElectricDrillDiamondTipItem.isSilkMode(drill)) {
+			helper.fail("fixture error: the drill is not in Silk Touch mode");
+		}
+
+		mineColumnAim(helper, player, drill);
+		helper.assertBlockPresent(Blocks.AIR, COLUMN_ABOVE);
+		helper.assertBlockPresent(Blocks.AIR, COLUMN_BELOW);
+		int ore = droppedCount(helper, Blocks.IRON_ORE.asItem());
+		int raw = droppedCount(helper, Items.RAW_IRON);
+		if (ore != 2 || raw != 0) {
+			helper.fail("in Silk Touch mode both extra iron ores must drop as the ore block: got "
+					+ ore + " iron_ore and " + raw + " raw_iron (expected 2 and 0)");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * TC-DRILL-001-FUN17 (MOD-482): a drill that cannot pay for the whole column bores no column.
+	 *
+	 * <p>What the code does, asserted as such: the aimed block ALWAYS breaks (vanilla
+	 * {@code destroyBlock} does not look at the charge — a flat drill is a slow hand, not a locked tool)
+	 * and is billed the plain price if the drill can afford it; the column then needs
+	 * {@code 2 x electricDrillColumnEuPerBlock} of what is LEFT, or it is skipped entirely — never half a
+	 * column. Three charges: zero (nothing billed), one EU short of a full stroke (aimed block billed,
+	 * column skipped), and exactly a full stroke (the boundary is inclusive — all three blocks, charge 0).
+	 */
+	public static void fun17DischargedDrillBoresNoColumn(GameTestHelper helper) {
+		ServerPlayer player = survivalPlayer(helper);
+		Item drillItem = ModContent.ELECTRIC_DRILL.get();
+
+		setColumn(helper, Blocks.STONE, Blocks.STONE, Blocks.STONE);
+		ItemStack flat = columnDrill(drillItem, 0);
+		mineColumnAim(helper, player, flat);
+		helper.assertBlockPresent(Blocks.AIR, COLUMN_AIM);
+		helper.assertBlockPresent(Blocks.STONE, COLUMN_ABOVE);
+		helper.assertBlockPresent(Blocks.STONE, COLUMN_BELOW);
+		assertCharge(helper, flat, 0, "a flat drill spends nothing");
+
+		long shortBy1 = fullStrokeCost() - 1;
+		setColumn(helper, Blocks.STONE, Blocks.STONE, Blocks.STONE);
+		ItemStack almost = columnDrill(drillItem, shortBy1);
+		mineColumnAim(helper, player, almost);
+		helper.assertBlockPresent(Blocks.AIR, COLUMN_AIM);
+		helper.assertBlockPresent(Blocks.STONE, COLUMN_ABOVE);
+		helper.assertBlockPresent(Blocks.STONE, COLUMN_BELOW);
+		assertCharge(helper, almost, shortBy1 - Config.electricDrillEuPerBlock,
+				"one EU short of a full stroke: only the aimed block is billed and no column is bored");
+
+		setColumn(helper, Blocks.STONE, Blocks.STONE, Blocks.STONE);
+		ItemStack exact = columnDrill(drillItem, fullStrokeCost());
+		mineColumnAim(helper, player, exact);
+		helper.assertBlockPresent(Blocks.AIR, COLUMN_ABOVE);
+		helper.assertBlockPresent(Blocks.AIR, COLUMN_BELOW);
+		assertCharge(helper, exact, 0, "exactly a full stroke of charge must bore the whole column");
+		helper.succeed();
+	}
+
+	/**
+	 * TC-DRILL-001-FUN18 (MOD-482): an extra block the player may not break stays, the rest of the
+	 * column still goes, and the protected block is not billed.
+	 *
+	 * <p>Two kinds of protection, because the drill relies on two different guards:
+	 * <ol>
+	 * <li><b>Adventure mode</b> — vanilla's {@code blockActionRestricted}, reached only because each extra
+	 * goes through {@code ServerPlayerGameMode.destroyBlock}. The drill may break stone
+	 * ({@code CAN_BREAK}) but not obsidian: obsidian above stays, stone below goes, one extra billed.</li>
+	 * <li><b>Unbreakable</b> — bedrock above, which vanilla {@code destroyBlock} itself would happily
+	 * remove; only the drill's own filter (pickaxe tag, negative hardness) keeps it. Nothing but the aimed
+	 * block may be billed.</li>
+	 * </ol>
+	 */
+	public static void fun18ColumnSparesProtectedExtraBlock(GameTestHelper helper) {
+		ServerPlayer player = survivalPlayer(helper);
+		Item drillItem = ModContent.ELECTRIC_DRILL.get();
+		long full = Config.electricDrillBuffer;
+
+		// 1. Adventure mode with a stone-only CAN_BREAK.
+		setColumn(helper, Blocks.OBSIDIAN, Blocks.STONE, Blocks.STONE);
+		ItemStack adventureDrill = columnDrill(drillItem, full);
+		adventureDrill.set(DataComponents.CAN_BREAK, new AdventureModePredicate(List.of(
+				BlockPredicate.Builder.block()
+						.of(helper.getLevel().registryAccess().lookupOrThrow(Registries.BLOCK), Blocks.STONE)
+						.build())));
+		if (!player.setGameMode(GameType.ADVENTURE) || player.mayBuild()) {
+			helper.fail("fixture error: the player did not switch to a build-restricted adventure mode");
+		}
+		mineColumnAim(helper, player, adventureDrill);
+		helper.assertBlockPresent(Blocks.AIR, COLUMN_AIM);
+		helper.assertBlockPresent(Blocks.OBSIDIAN, COLUMN_ABOVE);
+		helper.assertBlockPresent(Blocks.AIR, COLUMN_BELOW);
+		assertCharge(helper, adventureDrill, full - Config.electricDrillEuPerBlock - Config.electricDrillColumnEuPerBlock,
+				"a protected extra block must not be billed; the allowed one must");
+
+		// 2. Survival, unbreakable block in the column.
+		player.setGameMode(GameType.SURVIVAL);
+		player.getAbilities().instabuild = false;
+		setColumn(helper, Blocks.BEDROCK, Blocks.STONE, Blocks.AIR);
+		ItemStack survivalDrill = columnDrill(drillItem, full);
+		mineColumnAim(helper, player, survivalDrill);
+		helper.assertBlockPresent(Blocks.AIR, COLUMN_AIM);
+		helper.assertBlockPresent(Blocks.BEDROCK, COLUMN_ABOVE);
+		assertCharge(helper, survivalDrill, full - Config.electricDrillEuPerBlock,
+				"an unbreakable block in the column must be skipped and cost nothing");
+		helper.succeed();
+	}
+
+	/** Total count of dropped {@code item} within two blocks of the column's centre. */
+	private static int droppedCount(GameTestHelper helper, Item item) {
+		int total = 0;
+		for (ItemEntity entity : helper.getLevel().getEntities(EntityTypes.ITEM,
+				new AABB(helper.absolutePos(COLUMN_AIM)).inflate(2.0), ItemEntity::isAlive)) {
+			if (entity.getItem().is(item)) {
+				total += entity.getItem().getCount();
+			}
+		}
+		return total;
 	}
 
 	// ── helpers ────────────────────────────────────────────────────────────────────────────────────

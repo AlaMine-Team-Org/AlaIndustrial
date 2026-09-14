@@ -406,6 +406,26 @@
           ]
         },
         {
+          "id": "radiant_solar_panel",
+          "title": "দর্পণ কনসেনট্রেটর",
+          "icon": "alaindustrial:radiant_solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "দর্পণ কনসেনট্রেটর",
+              "text": "দিনের শাখার তৃতীয় ধাপ — দিবালোক সোলার প্যানেলের দ্বিগুণ, দুপুরে তারও দেড় গুণ; সংগ্রহ করার কিছু না থাকলে দর্পণগুলো গুটিয়ে যায়।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: 8 EU/t (দিন)",
+                "বাফার: 16 000 EU"
+              ]
+            }
+          ]
+        },
+        {
           "id": "moonlit_solar_panel",
           "title": "চাঁদনি সোলার প্যানেল",
           "icon": "alaindustrial:moonlit_solar_panel",
@@ -2048,6 +2068,43 @@
               "result_count": 1
             }
           ]
+        },
+        {
+          "id": "fluid_tank_advanced",
+          "title": "উন্নত তরল ট্যাঙ্ক",
+          "icon": "alaindustrial:fluid_tank_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "উন্নত তরল ট্যাঙ্ক",
+              "text": "বহনযোগ্য তরল ট্যাংকের দ্বিতীয় স্তর — আটের বদলে 16 বালতি, রুপালি কিনারা, মজবুত করার বেষ্টনী, আর এমন একটি আইটেম যা লাভায় পোড়ে না।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "ধারণক্ষমতা: 16 বালতি"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:fluid_tank",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_tank_advanced",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },
@@ -2335,6 +2392,36 @@
               "type": "text",
               "title": "সালফার আকরিক",
               "text": "প্রাকৃতিক সালফার — খননযোগ্য অধাতু, যা রাবার ভালকানাইজেশনের জন্য গুঁড়ায় পরিণত করা হয়।"
+            }
+          ]
+        },
+        {
+          "id": "carbon_ceramic",
+          "title": "কার্বন সিরামিক",
+          "icon": "alaindustrial:carbon_ceramic",
+          "pages": [
+            {
+              "type": "text",
+              "title": "কার্বন সিরামিক",
+              "text": "চারটি সিরামিক প্লেটের একটি ব্লক — কয়লা শৃঙ্খলের শেষ ধাপ, বিস্ফোরণ-প্রতিরোধী দেয়াল এবং উপাদানটির ঘন সংরক্ষণ রূপ।"
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:ceramic_plate",
+                "",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:ceramic_plate",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:carbon_ceramic",
+              "result_count": 1
             }
           ]
         },
@@ -2972,6 +3059,43 @@
           ]
         },
         {
+          "id": "diamond_chest",
+          "title": "হীরার সিন্দুক",
+          "icon": "alaindustrial:diamond_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "হীরার সিন্দুক",
+              "text": "108 স্লটের সিন্দুক — সংরক্ষণের সর্বোচ্চ ধাপ। ছয় সারির স্ক্রল করা যায় এমন জানালার পেছনে বারো সারি, আর বিস্ফোরণে এর কিছুই হয় না। বিদ্যুৎ লাগে না।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "ধারণক্ষমতা: 108 স্লট"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "alaindustrial:electrum_chest",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond"
+              ],
+              "result_id": "alaindustrial:diamond_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "mob_repeller_hv",
           "title": "বড় দানব প্রতিরোধক",
           "icon": "alaindustrial:mob_repeller_hv",
@@ -3261,6 +3385,43 @@
           ]
         },
         {
+          "id": "upgrade_table",
+          "title": "উন্নয়ন টেবিল",
+          "icon": "alaindustrial:upgrade_table",
+          "pages": [
+            {
+              "type": "text",
+              "title": "উন্নয়ন টেবিল",
+              "text": "একটি টেবিল, যা বৈদ্যুতিক যন্ত্রে স্থায়ী উন্নয়ন লাগায়। একটির উপর আরেকটি বসানো দুটি কেসিং দিয়ে গড়া।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: 8 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:anvil",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:upgrade_table",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "electrum_chest",
           "title": "ইলেকট্রাম চেস্ট",
           "icon": "alaindustrial:electrum_chest",
@@ -3432,6 +3593,36 @@
           ]
         },
         {
+          "id": "choke",
+          "title": "চোক কয়েল",
+          "icon": "alaindustrial:choke",
+          "pages": [
+            {
+              "type": "text",
+              "title": "চোক কয়েল",
+              "text": "তিন স্তরের চোক কয়েল — স্তরিত কোরের ওপর জড়ানো তার, যা লাইনের আকস্মিক ঢেউ মসৃণ করে; প্রতিটি স্তর তার নিচের স্তরটিকে ঘিরে বানানো হয়।"
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate"
+              ],
+              "result_id": "alaindustrial:choke",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron",
           "title": "টেম্পার্ড লোহা",
           "icon": "alaindustrial:tempered_iron",
@@ -3462,6 +3653,36 @@
           ]
         },
         {
+          "id": "ceramic_plate",
+          "title": "সিরামিক প্লেট",
+          "icon": "alaindustrial:ceramic_plate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "সিরামিক প্লেট",
+              "text": "কার্বন ব্রিকেট থেকে একবারে চারটি কাটা হয়; চারটি প্লেট জুড়ে কার্বন সিরামিকের একটি ব্লক হয়।"
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিহীন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:carbon_ceramic",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:ceramic_plate",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "water_mill_wheel",
           "title": "জলচাকা",
           "icon": "alaindustrial:water_mill_wheel",
@@ -3487,6 +3708,36 @@
                 "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:water_mill_wheel",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "core_barrel",
+          "title": "কোর ব্যারেল",
+          "icon": "alaindustrial:core_barrel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "কোর ব্যারেল",
+              "text": "কোর ব্যারেল ও স্তম্ভ খননের মডিউল — যে যন্ত্রাংশ দিয়ে সেই উন্নয়ন তৈরি হয়, যা ড্রিলকে তিন ব্লক উঁচু করে খুঁড়তে দেয়।"
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:choke",
+                "",
+                "alaindustrial:choke",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:core_barrel",
               "result_count": 1
             }
           ]
@@ -3918,6 +4169,44 @@
           ]
         },
         {
+          "id": "carbon_briquette",
+          "title": "কার্বন ব্রিকেট",
+          "icon": "alaindustrial:carbon_briquette",
+          "pages": [
+            {
+              "type": "text",
+              "title": "কার্বন ব্রিকেট",
+              "text": "সংকর ধাতু চুল্লিতে দুটি দ্বৈত কার্বন রড ও স্ল্যাগ থেকে পোড়ানো হয়; প্লেটে ভাগ করার উপায় একটাই — কোয়েঞ্চ প্রেস।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: প্রতি ব্রিকেটে 1200 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "carbon_rod",
+          "title": "কার্বন রড",
+          "icon": "alaindustrial:carbon_rod",
+          "pages": [
+            {
+              "type": "text",
+              "title": "কার্বন রড",
+              "text": "সংকোচক যন্ত্রে ষোলোটি কয়লার গুঁড়ো; কামারের হাতুড়িতে দুটি রড মিলে একটি দ্বৈত রড — সিরামিক শৃঙ্খলের প্রথম দুই ধাপ।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: প্রতি রডে 260 EU"
+              ]
+            }
+          ]
+        },
+        {
           "id": "fluxweave_cloth",
           "title": "ফ্লাক্স কাপড়",
           "icon": "alaindustrial:fluxweave_cloth",
@@ -3967,7 +4256,7 @@
             {
               "type": "text",
               "title": "সৌর বিবর্তন চিপ",
-              "text": "এক জোড়া বিবর্তন চিপ — সৌর (দিন) ও চান্দ্র (রাত) — যা মৌলিক T1 সোলার প্যানেল ও বায়ু চক্রকে বিবর্তনের মাধ্যমে T2-তে উন্নীত করে, জমা হওয়া NBT শক্তি বহন করে।"
+              "text": "তিনটি বিবর্তন চিপ — সৌর (দিন), চান্দ্র (রাত) ও অনুরণন (তৃতীয় ধাপ) — যা মৌলিক সোলার প্যানেল ও বায়ু চক্রকে T2-তে এবং T2 দিবালোক সোলার প্যানেলকে তারও পরের ধাপে উন্নীত করে, জমা হওয়া NBT শক্তি বহন করে।"
             },
             {
               "type": "recipe",

@@ -406,6 +406,26 @@
           ]
         },
         {
+          "id": "radiant_solar_panel",
+          "title": "Concentrador de espejos",
+          "icon": "alaindustrial:radiant_solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Concentrador de espejos",
+              "text": "El tercer peldaño de la rama diurna: el doble que el panel solar diurno y la mitad más al mediodía; los espejos se pliegan cuando no hay nada que captar."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Energía: 8 EU/t (día)",
+                "Búfer: 16 000 EU"
+              ]
+            }
+          ]
+        },
+        {
           "id": "moonlit_solar_panel",
           "title": "Panel solar lunar",
           "icon": "alaindustrial:moonlit_solar_panel",
@@ -2048,6 +2068,43 @@
               "result_count": 1
             }
           ]
+        },
+        {
+          "id": "fluid_tank_advanced",
+          "title": "Tanque de fluidos avanzado",
+          "icon": "alaindustrial:fluid_tank_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tanque de fluidos avanzado",
+              "text": "El segundo nivel del tanque portátil: 16 cubos en lugar de ocho, remates de plata, un cinturón de refuerzo y un objeto que no se quema en la lava."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Capacidad: 16 cubos"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:fluid_tank",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_tank_advanced",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },
@@ -2335,6 +2392,36 @@
               "type": "text",
               "title": "Mena de azufre",
               "text": "Azufre nativo: un no metal extraíble que se procesa en polvo para vulcanizar caucho."
+            }
+          ]
+        },
+        {
+          "id": "carbon_ceramic",
+          "title": "Cerámica de carbono",
+          "icon": "alaindustrial:carbon_ceramic",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cerámica de carbono",
+              "text": "Un bloque de cuatro placas de cerámica: el final de la cadena del carbón, un muro resistente a las explosiones y la forma compacta de almacenar el material."
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:ceramic_plate",
+                "",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:ceramic_plate",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:carbon_ceramic",
+              "result_count": 1
             }
           ]
         },
@@ -2972,6 +3059,43 @@
           ]
         },
         {
+          "id": "diamond_chest",
+          "title": "Cofre de diamante",
+          "icon": "alaindustrial:diamond_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cofre de diamante",
+              "text": "Un cofre de 108 ranuras, el nivel de almacenamiento más alto. Doce filas tras una ventana de seis con desplazamiento, y las explosiones ni lo inmutan. No necesita energía."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Capacidad: 108 ranuras"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "alaindustrial:electrum_chest",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond"
+              ],
+              "result_id": "alaindustrial:diamond_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "mob_repeller_hv",
           "title": "Repelente grande",
           "icon": "alaindustrial:mob_repeller_hv",
@@ -3261,6 +3385,43 @@
           ]
         },
         {
+          "id": "upgrade_table",
+          "title": "Mesa de mejoras",
+          "icon": "alaindustrial:upgrade_table",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Mesa de mejoras",
+              "text": "Una mesa que instala mejoras permanentes en herramientas eléctricas. Se monta con dos carcasas apiladas una sobre otra."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Energía: 8 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:anvil",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:upgrade_table",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "electrum_chest",
           "title": "Cofre de electro",
           "icon": "alaindustrial:electrum_chest",
@@ -3432,6 +3593,36 @@
           ]
         },
         {
+          "id": "choke",
+          "title": "Bobina de choque",
+          "icon": "alaindustrial:choke",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Bobina de choque",
+              "text": "La bobina de choque en tres niveles: un devanado sobre un núcleo laminado que suaviza los picos de la línea; cada nivel se construye alrededor del inferior."
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate"
+              ],
+              "result_id": "alaindustrial:choke",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron",
           "title": "Hierro templado",
           "icon": "alaindustrial:tempered_iron",
@@ -3462,6 +3653,36 @@
           ]
         },
         {
+          "id": "ceramic_plate",
+          "title": "Placa de cerámica",
+          "icon": "alaindustrial:ceramic_plate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Placa de cerámica",
+              "text": "Se cortan de una briqueta de carbono, cuatro a la vez; cuatro placas forman un bloque de cerámica de carbono."
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación sin forma",
+              "grid": [
+                "alaindustrial:carbon_ceramic",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:ceramic_plate",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "water_mill_wheel",
           "title": "Rueda hidráulica",
           "icon": "alaindustrial:water_mill_wheel",
@@ -3487,6 +3708,36 @@
                 "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:water_mill_wheel",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "core_barrel",
+          "title": "Tubo sacatestigos",
+          "icon": "alaindustrial:core_barrel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tubo sacatestigos",
+              "text": "El tubo sacatestigos y el módulo de perforación en columna: las piezas de una mejora que hace que un taladro excave tres bloques de alto."
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:choke",
+                "",
+                "alaindustrial:choke",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:core_barrel",
               "result_count": 1
             }
           ]
@@ -3918,6 +4169,44 @@
           ]
         },
         {
+          "id": "carbon_briquette",
+          "title": "Briqueta de carbono",
+          "icon": "alaindustrial:carbon_briquette",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Briqueta de carbono",
+              "text": "Se cuece en el horno de aleaciones con dos barras de carbono dobles y escoria; solo se parte en placas de una manera: la prensa de temple."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Energía: 1200 EU por briqueta"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "carbon_rod",
+          "title": "Barra de carbono",
+          "icon": "alaindustrial:carbon_rod",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Barra de carbono",
+              "text": "Dieciséis de polvo de carbón bajo la prensa; dos barras bajo el martillo de forja dan una doble: los dos primeros peldaños de la cadena de la cerámica."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Energía: 260 EU por barra"
+              ]
+            }
+          ]
+        },
+        {
           "id": "fluxweave_cloth",
           "title": "Tejido de flujo",
           "icon": "alaindustrial:fluxweave_cloth",
@@ -3967,7 +4256,7 @@
             {
               "type": "text",
               "title": "Chip de evolución solar",
-              "text": "Un par de chips de evolución —solar (día) y lunar (noche)— que evolucionan los paneles solares y aerogeneradores básicos T1 a T2, conservando la energía acumulada."
+              "text": "Tres chips de evolución —solar (día), lunar (noche) y de resonancia (el tercer peldaño)— que evolucionan los paneles solares y aerogeneradores básicos a T2 y el panel diurno T2 más allá, conservando la energía acumulada."
             },
             {
               "type": "recipe",

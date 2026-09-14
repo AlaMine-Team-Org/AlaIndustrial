@@ -276,6 +276,121 @@ public final class ReactorConsoleGuiStand {
 		rememberConsoleTab(context);
 	}
 
+	/**
+	 * Photographs the «Log» tab — empty, full of events, filtered to the alerts — and the red marker it puts on its tab
+	 * while another tab is open (MOD-622). The log arrives the way the server sends it: a {@link
+	 * dev.alaindustrial.network.ReactorLogPayload} handed to the client menu. Ages are whole minutes and hours, so a tick
+	 * passing between two frames cannot change a row.
+	 */
+	public static void shootLog(ClientGameTestContext context) {
+		// The cursor rests in the middle of the window, which is over the list: every frame would carry a row's tooltip
+		// over the rows it is meant to show. Moved left of the panel for these frames and back after, by the same
+		// distance, so the stands that follow are shot exactly as before.
+		context.getInput().moveCursor(-LOG_CURSOR_SHIFT, 0);
+		try {
+			shootLogFrames(context);
+		} finally {
+			context.getInput().moveCursor(LOG_CURSOR_SHIFT, 0);
+		}
+	}
+
+	/** How far left of the window's middle the cursor waits while the Log tab is photographed — clear of the tab strip. */
+	private static final double LOG_CURSOR_SHIFT = 500;
+
+	private static void shootLogFrames(ClientGameTestContext context) {
+		int logTab = ReactorControllerScreen.PAGE_LOG;
+		Path empty = shoot(context, "log_empty",
+				"A controller that has recorded nothing: the All button pressed and greyed, Alerts live, '0 events' on the "
+						+ "right of the buttons, and the dark list saying nothing has happened yet",
+				Reading.running(), RoomBox.ROOM_6X4X6, logTab, screen -> screen.getMenu().acceptLog(logOf(List.of())));
+		Path events = shoot(context, "log_events",
+				"Thirteen events newest first: twelve rows on alternating stripes with a grey, amber or red square each, "
+						+ "the newest reading bare mode with 4 racks, the red meltdown and countdown rows, Alex and Steve "
+						+ "named on their throttle rows, ages from 'now' to '2 h ago' right-aligned, a scroll thumb on the right",
+				Reading.running(), RoomBox.ROOM_6X4X6, logTab, screen -> screen.getMenu().acceptLog(logOf(LOG_EVENTS)));
+		Path eventsAgain = shoot(context, "log_events_again",
+				"The same frame shot a second time: the noise floor for the gates below",
+				Reading.running(), RoomBox.ROOM_6X4X6, logTab, screen -> screen.getMenu().acceptLog(logOf(LOG_EVENTS)));
+		Path alerts = shoot(context, "log_alerts_only",
+				"The same log with Alerts pressed: only the amber and red rows (room unsealed, bare mode, meltdown over, "
+						+ "countdown called off, countdown started, meltdown started, overheat siren), no scroll thumb",
+				Reading.running(), RoomBox.ROOM_6X4X6, logTab, screen -> {
+					screen.getMenu().acceptLog(logOf(LOG_EVENTS));
+					((dev.alaindustrial.client.screen.reactor.LogTabPage) screen.page(logTab)).showAttentionOnly(true);
+				});
+		shoot(context, "log_badge_on_console",
+				"The Console tab open while the log holds alarms this player has not read: a red square on the writable "
+						+ "book tab, fifth in the strip, and no marker on the Console tab itself",
+				Reading.running(), RoomBox.NONE, ReactorControllerScreen.PAGE_CONSOLE,
+				screen -> screen.getMenu().acceptLog(logOf(LOG_EVENTS)));
+
+		int noise = logListBandDelta(events, eventsAgain);
+		LOG.info("[GUITEST][MOD-622] list band noise floor: {} px", noise);
+		assertLogListDiffers("an empty log vs thirteen events", empty, events, noise);
+		assertLogListDiffers("every event vs only the alerts", events, alerts, noise);
+		rememberConsoleTab(context);
+	}
+
+	/** Thirteen events, oldest first, the way the server keeps them: one of every kind a player meets in a bad hour. */
+	private static final List<dev.alaindustrial.core.structure.ReactorLog.Entry> LOG_EVENTS = logEvents();
+
+	private static List<dev.alaindustrial.core.structure.ReactorLog.Entry> logEvents() {
+		record Line(int minutesAgo, dev.alaindustrial.core.structure.ReactorLog.Kind kind, int a, int b, int c,
+				String actor) {
+		}
+		List<Line> lines = List.of(
+				new Line(125, dev.alaindustrial.core.structure.ReactorLog.Kind.ROOM_SEALED, 6, 4, 6, ""),
+				new Line(124, dev.alaindustrial.core.structure.ReactorLog.Kind.REACTION_STARTED, 12, 100, 0, ""),
+				new Line(90, dev.alaindustrial.core.structure.ReactorLog.Kind.DEPTH_CHANGED, 100, 75, 0, "Alex"),
+				new Line(41, dev.alaindustrial.core.structure.ReactorLog.Kind.OVERHEAT, 71, 0, 0, ""),
+				new Line(38, dev.alaindustrial.core.structure.ReactorLog.Kind.MELTDOWN_STARTED, 92, 0, 0, ""),
+				new Line(37, dev.alaindustrial.core.structure.ReactorLog.Kind.COUNTDOWN_ARMED, 0, 0, 0, ""),
+				new Line(35, dev.alaindustrial.core.structure.ReactorLog.Kind.DEPTH_CHANGED, 75, 0, 0, "Steve"),
+				new Line(34, dev.alaindustrial.core.structure.ReactorLog.Kind.RODS_WITHDRAWN, 0, 0, 0, ""),
+				new Line(31, dev.alaindustrial.core.structure.ReactorLog.Kind.COUNTDOWN_CANCELLED, 0, 0, 0, ""),
+				new Line(30, dev.alaindustrial.core.structure.ReactorLog.Kind.MELTDOWN_ENDED, 3, 0, 0, ""),
+				new Line(12, dev.alaindustrial.core.structure.ReactorLog.Kind.ROOM_UNSEALED, 0, 0, 0, ""),
+				new Line(12, dev.alaindustrial.core.structure.ReactorLog.Kind.BARE_ENTERED, 4, 0, 0, ""),
+				new Line(0, dev.alaindustrial.core.structure.ReactorLog.Kind.REACTION_STARTED, 4, 100, 0, ""));
+		List<dev.alaindustrial.core.structure.ReactorLog.Entry> entries = new java.util.ArrayList<>();
+		for (int i = 0; i < lines.size(); i++) {
+			Line line = lines.get(i);
+			// Stored as minutes ago and turned into game time when the frame is taken, against the client's clock.
+			entries.add(new dev.alaindustrial.core.structure.ReactorLog.Entry(i + 1, -line.minutesAgo() * 1200L,
+					line.kind(), line.a(), line.b(), line.c(), line.actor()));
+		}
+		return entries;
+	}
+
+	/** A log as the server would send it to this screen, its times moved onto the client's clock; nothing read yet. */
+	private static dev.alaindustrial.network.ReactorLogPayload logOf(
+			List<dev.alaindustrial.core.structure.ReactorLog.Entry> entries) {
+		net.minecraft.client.Minecraft mc = net.minecraft.client.Minecraft.getInstance();
+		long now = mc.level == null ? 0 : mc.level.getGameTime();
+		return new dev.alaindustrial.network.ReactorLogPayload(0, 0, entries.stream()
+				.map(e -> new dev.alaindustrial.core.structure.ReactorLog.Entry(e.seq(), now + e.time(), e.kind(), e.a(),
+						e.b(), e.c(), e.actor()))
+				.toList());
+	}
+
+	/** The Log tab's list, from its top edge to its twelfth row. */
+	private static int logListBandDelta(Path first, Path second) {
+		return VisualStandSupport.differingPixelsInBand(first, second, windowBox,
+				ConsoleTabPage.CONTENT_LEFT, ConsoleTabPage.CONTENT_RIGHT, dev.alaindustrial.client.screen.reactor.LogTabPage.LIST_Y,
+				dev.alaindustrial.client.screen.reactor.LogTabPage.ROWS * dev.alaindustrial.client.screen.reactor.LogTabPage.ROW_H);
+	}
+
+	private static void assertLogListDiffers(String what, Path first, Path second, int noise) {
+		int delta = logListBandDelta(first, second);
+		int required = Math.max(4 * noise, MIN_BAND_DELTA);
+		LOG.info("[GUITEST][MOD-622] list: {}: delta={} px, noise={} px, required>{}", what, delta, noise, required);
+		if (delta < required) {
+			throw new AssertionError("[GUITEST][MOD-622] list: " + what + " changed only " + delta + " px (noise " + noise
+					+ " px, required > " + required + ") - the Log tab drew the same list for two different logs, or "
+					+ "nothing at all. Compare " + first.getFileName() + " with " + second.getFileName() + ".");
+		}
+	}
+
 	/** A snapshot with one stack swapped for another at the same place. */
 	private static ReactorZonePayload with(ReactorZonePayload zone, ReactorZone.Stack replacement) {
 		List<ReactorZone.Stack> stacks = new java.util.ArrayList<>(zone.stacks());

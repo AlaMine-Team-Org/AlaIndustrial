@@ -406,6 +406,26 @@
           ]
         },
         {
+          "id": "radiant_solar_panel",
+          "title": "ミラー集光器",
+          "icon": "alaindustrial:radiant_solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ミラー集光器",
+              "text": "昼ブランチの第3段 — 日光ソーラーパネルの2倍、正午にはさらにその半分増し。集めるものがないときはミラーが折りたたまれます。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 8 EU/t（昼）",
+                "バッファ: 16 000 EU"
+              ]
+            }
+          ]
+        },
+        {
           "id": "moonlit_solar_panel",
           "title": "月光ソーラーパネル",
           "icon": "alaindustrial:moonlit_solar_panel",
@@ -2048,6 +2068,43 @@
               "result_count": 1
             }
           ]
+        },
+        {
+          "id": "fluid_tank_advanced",
+          "title": "高性能液体タンク",
+          "icon": "alaindustrial:fluid_tank_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "高性能液体タンク",
+              "text": "携帯用流体タンクの第2グレード — バケツ8杯ではなく16杯、銀の縁取りと補強ベルト付きで、アイテムは溶岩で燃えません。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "容量: バケツ16杯"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:fluid_tank",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_tank_advanced",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },
@@ -2335,6 +2392,36 @@
               "type": "text",
               "title": "硫黄鉱石",
               "text": "天然硫黄 — 採掘できる非金属で、ゴムの加硫に使う粉へ加工します。"
+            }
+          ]
+        },
+        {
+          "id": "carbon_ceramic",
+          "title": "カーボンセラミック",
+          "icon": "alaindustrial:carbon_ceramic",
+          "pages": [
+            {
+              "type": "text",
+              "title": "カーボンセラミック",
+              "text": "セラミックプレート4枚のブロック — 石炭チェーンの終点であり、爆発に強い壁であり、この素材の高密度な保管形態です。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:ceramic_plate",
+                "",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:ceramic_plate",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:carbon_ceramic",
+              "result_count": 1
             }
           ]
         },
@@ -2972,6 +3059,43 @@
           ]
         },
         {
+          "id": "diamond_chest",
+          "title": "ダイヤモンドのチェスト",
+          "icon": "alaindustrial:diamond_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ダイヤモンドのチェスト",
+              "text": "108スロットのチェスト — 最上位の保管ティア。6行のスクロール窓の奥に12行があり、爆発をものともしません。エネルギーは不要です。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "容量: 108スロット"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "alaindustrial:electrum_chest",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond"
+              ],
+              "result_id": "alaindustrial:diamond_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "mob_repeller_hv",
           "title": "大型モブ忌避装置",
           "icon": "alaindustrial:mob_repeller_hv",
@@ -3261,6 +3385,43 @@
           ]
         },
         {
+          "id": "upgrade_table",
+          "title": "アップグレードテーブル",
+          "icon": "alaindustrial:upgrade_table",
+          "pages": [
+            {
+              "type": "text",
+              "title": "アップグレードテーブル",
+              "text": "電動工具に外せないアップグレードを取り付ける台。筐体を 2 つ積み重ねて組み立てます。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 8 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:anvil",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:upgrade_table",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "electrum_chest",
           "title": "エレクトラムのチェスト",
           "icon": "alaindustrial:electrum_chest",
@@ -3432,6 +3593,36 @@
           ]
         },
         {
+          "id": "choke",
+          "title": "チョークコイル",
+          "icon": "alaindustrial:choke",
+          "pages": [
+            {
+              "type": "text",
+              "title": "チョークコイル",
+              "text": "3ティアのチョークコイル — 積層鉄心に巻いた巻線で、ライン上のサージを平滑化します。各ティアは1つ下のティアを元に作られます。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate"
+              ],
+              "result_id": "alaindustrial:choke",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron",
           "title": "焼き入れ鉄",
           "icon": "alaindustrial:tempered_iron",
@@ -3462,6 +3653,36 @@
           ]
         },
         {
+          "id": "ceramic_plate",
+          "title": "セラミックプレート",
+          "icon": "alaindustrial:ceramic_plate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "セラミックプレート",
+              "text": "カーボン練炭から一度に4枚切り出します。プレート4枚でカーボンセラミックのブロックになります。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "不定形クラフト",
+              "grid": [
+                "alaindustrial:carbon_ceramic",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:ceramic_plate",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "water_mill_wheel",
           "title": "水車の車輪",
           "icon": "alaindustrial:water_mill_wheel",
@@ -3487,6 +3708,36 @@
                 "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:water_mill_wheel",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "core_barrel",
+          "title": "コアバレル",
+          "icon": "alaindustrial:core_barrel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "コアバレル",
+              "text": "コアバレルと柱状掘削モジュール — 電動ドリルに高さ3ブロック分を掘らせるアップグレードを組み立てる部品です。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:choke",
+                "",
+                "alaindustrial:choke",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:core_barrel",
               "result_count": 1
             }
           ]
@@ -3918,6 +4169,44 @@
           ]
         },
         {
+          "id": "carbon_briquette",
+          "title": "カーボン練炭",
+          "icon": "alaindustrial:carbon_briquette",
+          "pages": [
+            {
+              "type": "text",
+              "title": "カーボン練炭",
+              "text": "合金炉で二連カーボンロッド2本とスラグから焼成します。プレートに割る方法は1つだけ — 焼入れプレスです。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 1200 EU/練炭1個"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "carbon_rod",
+          "title": "カーボンロッド",
+          "icon": "alaindustrial:carbon_rod",
+          "pages": [
+            {
+              "type": "text",
+              "title": "カーボンロッド",
+              "text": "圧縮機で石炭の粉16個から作ります。鍛冶ハンマーでロッド2本を合わせると二連カーボンロッドになります — セラミックチェーンの最初の2段です。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 260 EU/ロッド1本"
+              ]
+            }
+          ]
+        },
+        {
           "id": "fluxweave_cloth",
           "title": "フラックス織布",
           "icon": "alaindustrial:fluxweave_cloth",
@@ -3967,7 +4256,7 @@
             {
               "type": "text",
               "title": "ソーラー進化チップ",
-              "text": "2種の進化チップ — ソーラー（昼）とルナ（夜）。基本のT1ソーラーパネルや風力タービンを進化でT2にし、蓄積されたNBTエネルギーを引き継ぎます。"
+              "text": "3種の進化チップ — ソーラー（昼）、ルナ（夜）、共振（第3段）。基本のソーラーパネルや風力タービンをT2に、さらにT2の日光ソーラーパネルをその先へ進化させ、蓄積されたNBTエネルギーを引き継ぎます。"
             },
             {
               "type": "recipe",

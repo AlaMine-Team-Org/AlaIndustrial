@@ -51,6 +51,11 @@ public final class NeoForgeNetwork {
 				dev.alaindustrial.network.ReactorZonePayload.CODEC,
 				(payload, context) -> context.enqueueWork(
 						() -> NeoForgeNetworkClient.receiveReactorZone(payload)));
+		// MOD-622: the reactor's event log, pushed from an open controller screen at most twice a second.
+		registrar.playToClient(dev.alaindustrial.network.ReactorLogPayload.TYPE,
+				dev.alaindustrial.network.ReactorLogPayload.CODEC,
+				(payload, context) -> context.enqueueWork(
+						() -> NeoForgeNetworkClient.receiveReactorLog(payload)));
 		// Teleport screen-fade level (MOD-106) — one float per tick of a jump's last second. The client
 		// clears itself once the levels stop arriving, so a cancelled warmup needs no packet of its own.
 		registrar.playToClient(TeleportFadePayload.TYPE, TeleportFadePayload.CODEC,

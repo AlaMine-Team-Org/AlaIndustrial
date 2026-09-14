@@ -406,6 +406,26 @@
           ]
         },
         {
+          "id": "radiant_solar_panel",
+          "title": "Дзеркальний концентратор",
+          "icon": "alaindustrial:radiant_solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Дзеркальний концентратор",
+              "text": "Третій щабель денної гілки — удвічі більше за денну сонячну панель, а опівдні ще на половину більше; дзеркала складаються, коли нічого збирати."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: 8 EU/t (день)",
+                "Буфер: 16 000 EU"
+              ]
+            }
+          ]
+        },
+        {
           "id": "moonlit_solar_panel",
           "title": "Місячна сонячна панель",
           "icon": "alaindustrial:moonlit_solar_panel",
@@ -2048,6 +2068,43 @@
               "result_count": 1
             }
           ]
+        },
+        {
+          "id": "fluid_tank_advanced",
+          "title": "Покращений бак для рідини",
+          "icon": "alaindustrial:fluid_tank_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Покращений бак для рідини",
+              "text": "Другий рівень переносного бака — 16 відер замість восьми, срібне оздоблення, посилювальний пояс і предмет, що не горить у лаві."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Місткість: 16 відер"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:fluid_tank",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate",
+                "alaindustrial:silver_plate",
+                "alaindustrial:cupronickel_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_tank_advanced",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },
@@ -2335,6 +2392,36 @@
               "type": "text",
               "title": "Сірчана руда",
               "text": "Самородна сірка — видобувний неметал, який переробляють на пил для вулканізації гуми."
+            }
+          ]
+        },
+        {
+          "id": "carbon_ceramic",
+          "title": "Вуглецева кераміка",
+          "icon": "alaindustrial:carbon_ceramic",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Вуглецева кераміка",
+              "text": "Блок із чотирьох керамічних пластин — кінець вугільного ланцюжка, вибухостійка стіна і щільна форма зберігання матеріалу."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:ceramic_plate",
+                "",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:ceramic_plate",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:carbon_ceramic",
+              "result_count": 1
             }
           ]
         },
@@ -2972,6 +3059,43 @@
           ]
         },
         {
+          "id": "diamond_chest",
+          "title": "Алмазна скриня",
+          "icon": "alaindustrial:diamond_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Алмазна скриня",
+              "text": "Скриня на 108 слотів — найвищий рівень зберігання. Дванадцять рядів за вікном на шість, зі смугою прокрутки, і вибухи їй не страшні. Енергії не потребує."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Місткість: 108 слотів"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "alaindustrial:electrum_chest",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond",
+                "minecraft:diamond"
+              ],
+              "result_id": "alaindustrial:diamond_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "mob_repeller_hv",
           "title": "Великий відлякувач",
           "icon": "alaindustrial:mob_repeller_hv",
@@ -3261,6 +3385,43 @@
           ]
         },
         {
+          "id": "upgrade_table",
+          "title": "Стіл покращень",
+          "icon": "alaindustrial:upgrade_table",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Стіл покращень",
+              "text": "Стіл, що встановлює на електроінструмент постійні покращення. Збирається з двох заготовок, поставлених одна на одну."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: 8 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:anvil",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:upgrade_table",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "electrum_chest",
           "title": "Електрумова скриня",
           "icon": "alaindustrial:electrum_chest",
@@ -3432,6 +3593,36 @@
           ]
         },
         {
+          "id": "choke",
+          "title": "Дросель",
+          "icon": "alaindustrial:choke",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Дросель",
+              "text": "Дросель у трьох рівнях — обмотка на шихтованому осерді, що згладжує стрибки в лінії; кожен рівень будується навколо попереднього."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:invar_plate"
+              ],
+              "result_id": "alaindustrial:choke",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron",
           "title": "Загартоване залізо",
           "icon": "alaindustrial:tempered_iron",
@@ -3462,6 +3653,36 @@
           ]
         },
         {
+          "id": "ceramic_plate",
+          "title": "Керамічна пластина",
+          "icon": "alaindustrial:ceramic_plate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Керамічна пластина",
+              "text": "Вирізається з вуглецевого брикету по чотири за раз; чотири пластини складаються в блок вуглецевої кераміки."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт без форми",
+              "grid": [
+                "alaindustrial:carbon_ceramic",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:ceramic_plate",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "water_mill_wheel",
           "title": "Водяне колесо",
           "icon": "alaindustrial:water_mill_wheel",
@@ -3487,6 +3708,36 @@
                 "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:water_mill_wheel",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "core_barrel",
+          "title": "Колонкова труба",
+          "icon": "alaindustrial:core_barrel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Колонкова труба",
+              "text": "Колонкова труба і модуль колонного буріння — деталі, з яких збирають покращення, що дає буру копати на три блоки у висоту."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:choke",
+                "",
+                "alaindustrial:choke",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate",
+                "alaindustrial:invar_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:core_barrel",
               "result_count": 1
             }
           ]
@@ -3918,6 +4169,44 @@
           ]
         },
         {
+          "id": "carbon_briquette",
+          "title": "Вуглецевий брикет",
+          "icon": "alaindustrial:carbon_briquette",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Вуглецевий брикет",
+              "text": "Випалюється у сплавильній печі з двох здвоєних вуглецевих стрижнів і шлаку; на пластини розколюється лише одним способом — гартувальним пресом."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: 1200 EU за брикет"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "carbon_rod",
+          "title": "Вуглецевий стрижень",
+          "icon": "alaindustrial:carbon_rod",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Вуглецевий стрижень",
+              "text": "Шістнадцять порцій вугільного пилу під компресором; два стрижні під ковальським молотом дають здвоєний — перші два щаблі керамічного ланцюжка."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: 260 EU за стрижень"
+              ]
+            }
+          ]
+        },
+        {
           "id": "fluxweave_cloth",
           "title": "Флюкс-тканина",
           "icon": "alaindustrial:fluxweave_cloth",
@@ -3967,7 +4256,7 @@
             {
               "type": "text",
               "title": "Сонячний еволюційний чип",
-              "text": "Пара еволюційних чипів — сонячний (день) і місячний (ніч) — еволюціонують базові сонячні панелі та вітряки T1 до T2, переносячи накопичену енергію."
+              "text": "Три еволюційні чипи — сонячний (день), місячний (ніч) і резонансний (третій щабель) — еволюціонують базові сонячні панелі та вітряки до T2, а денну панель T2 — ще далі, переносячи накопичену енергію."
             },
             {
               "type": "recipe",
