@@ -63,11 +63,6 @@ public enum ReactorRoomStatus {
 				|| this == TOO_MUCH_GLASS;
 	}
 
-	/** Whether the measured interior box is worth printing (the size statuses). */
-	public boolean hasSize() {
-		return this == FORMED || this == TOO_SMALL || this == TOO_LARGE;
-	}
-
 	public static ReactorRoomStatus byOrdinal(int ordinal) {
 		return ordinal >= 0 && ordinal < VALUES.length ? VALUES[ordinal] : CONTROLLER_NOT_IN_WALL;
 	}

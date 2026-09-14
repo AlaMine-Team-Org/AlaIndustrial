@@ -28,7 +28,8 @@ import org.jspecify.annotations.Nullable;
  * in — sealed and running, burning bare in the open, or a shell still being built — and adds what the
  * audit of that screen found missing: the heat marks the reactor acts on, the steam the exhaust is
  * choking on, labelled throttle steps, and a sentence telling the player what to do about the state on
- * the chip. Until the «Room» tab exists this tab also keeps the builder's diagnostics.
+ * the chip. A shell still being built gets only its verdict here: the map and the checklist are on the
+ * «Room» tab (MOD-619).
  *
  * <p><b>Every row is a label and a value measured separately</b>, the rule the old screen settled on
  * after Russian ran into its pictogram: the value is what the row is read for, so the value keeps its
@@ -56,9 +57,8 @@ public final class ConsoleTabPage implements ReactorTabPage {
 	public static final int RIGHT_COLUMN_X = 122;
 	public static final int ROW_BAR_OFFSET = 10;
 	public static final int ROW_BAR_H = 4;
-	/** The builder's two rows while the shell is open. */
-	public static final int BUILD_ROOM_Y = 35;
-	public static final int BUILD_WHERE_Y = 47;
+	/** While the shell is open: the button that leads to the «Room» tab. */
+	public static final int BUILD_LINK_Y = 36;
 	public static final int CONTROLS_Y = 104;
 	public static final int CONTROLS_H = 20;
 	public static final int SLIDER_W = 164;
@@ -68,30 +68,21 @@ public final class ConsoleTabPage implements ReactorTabPage {
 	public static final int ADVICE_BOTTOM = 178;
 
 	private static final int TRACK = 0xFF2A2D33;
-	private static final int FILL_GREEN = 0xFF4E9E52;
-	private static final int FILL_AMBER = 0xFFD9A33A;
-	private static final int FILL_RED = 0xFFD63A2A;
+	private static final int FILL_GREEN = ReactorPageText.FILL_GREEN;
+	private static final int FILL_AMBER = ReactorPageText.FILL_AMBER;
+	private static final int FILL_RED = ReactorPageText.FILL_RED;
 	private static final int FILL_TEAL = 0xFF3E8FA8;
 	private static final int FILL_STEAM = 0xFF98A3AB;
 	private static final int MARK_GLOW = 0xB0FFFFFF;
 	/** Darker cousins of the fills: the same colours legible as text on the light panel. */
 	private static final int INK_RED = 0xFFAA2A1A;
 	private static final int INK_AMBER = 0xFF8A5A00;
-	private static final int ADVICE_BACK = 0xFF2A2D33;
-	private static final int ADVICE_TEXT = 0xFFD7DBE0;
-	/** The tone badge in front of the advice title: a 10×10 plate with an 8×8 pixel glyph. */
-	private static final int BADGE_SIZE = 10;
-	private static final int BADGE_EDGE = 0xFF111316;
-	private static final int BADGE_GLYPH = 0xFFFFFFFF;
-	private static final int FILL_IDLE = 0xFF6B7178;
 
 	private static final float MARK_SCALE = 0.75f;
-	private static final float ADVICE_SCALE = 0.75f;
-	/** Below this a translated line is no longer readable at GUI scale 2, so it is clipped instead. */
-	private static final float MIN_SCALE = 0.6f;
-	private static final int LINE_H = 9;
+	private static final float ADVICE_SCALE = ReactorPageText.BODY_SCALE;
+	private static final float MIN_SCALE = ReactorPageText.MIN_SCALE;
+	private static final int LINE_H = ReactorPageText.LINE_H;
 	private static final int TOOLTIP_WIDTH = 200;
-	private static final String DASH = "—";
 
 	/**
 	 * How long a requested depth is held on screen without the server confirming it. Two seconds, then the
@@ -104,6 +95,7 @@ public final class ConsoleTabPage implements ReactorTabPage {
 	private final ReactorConsole.HeatTrend heatTrend = new ReactorConsole.HeatTrend();
 	private @Nullable DepthSlider slider;
 	private @Nullable Button stop;
+	private @Nullable Button roomLink;
 	private boolean shown;
 	/** A depth sent to the server and not yet echoed back in the menu. */
 	private @Nullable Integer pendingDepth;
@@ -154,6 +146,9 @@ public final class ConsoleTabPage implements ReactorTabPage {
 			commitDepth(0);
 		}).bounds(x + STOP_X, y + CONTROLS_Y, STOP_W, CONTROLS_H)
 				.tooltip(Tooltip.create(Component.translatable(KEY + "tooltip.stop"))).build());
+		roomLink = screen.addPageWidget(Button.builder(Component.translatable(KEY + "button.open_room"),
+				button -> screen.selectPage(ReactorControllerScreen.PAGE_ROOM))
+				.bounds(x + CONTENT_LEFT, y + BUILD_LINK_Y, CONTENT_RIGHT - CONTENT_LEFT, CONTROLS_H).build());
 		updateControls();
 	}
 
@@ -179,10 +174,17 @@ public final class ConsoleTabPage implements ReactorTabPage {
 
 	/**
 	 * The throttle is shown only for a sealed room. A bare reactor ignores the rods entirely, and a control
-	 * that looks live but does nothing is the trap MOD-469 refused to build.
+	 * that looks live but does nothing is the trap MOD-469 refused to build. The way to the «Room» tab is shown
+	 * only while the shell is being built.
 	 */
 	private void updateControls() {
-		boolean live = shown && readout(screen.getMenu()).formed();
+		ReactorConsole.Readout r = readout(screen.getMenu());
+		boolean live = shown && r.formed();
+		boolean building = shown && !r.formed() && !r.bare();
+		if (roomLink != null) {
+			roomLink.visible = building;
+			roomLink.active = building;
+		}
 		if (slider != null) {
 			slider.visible = live;
 			slider.active = live;
@@ -232,7 +234,7 @@ public final class ConsoleTabPage implements ReactorTabPage {
 		} else {
 			drawBuilding(graphics, r, menu);
 		}
-		drawAdvice(graphics, r, menu);
+		drawAdvice(graphics, r);
 	}
 
 	private void drawRunning(GuiGraphicsExtractor graphics, ReactorConsole.Readout r, ReactorControllerMenu menu) {
@@ -286,21 +288,13 @@ public final class ConsoleTabPage implements ReactorTabPage {
 				CONTENT_RIGHT - CONTENT_LEFT, CONTROLS_H, GuiStyle.TEXT_DIM);
 	}
 
-	/** A shell still being built: what is wrong, how big the room is, and which way to walk. */
+	/**
+	 * A shell still being built: the verdict and the buffer. What is wrong in detail — the map, the checklist and
+	 * where to walk — is the «Room» tab's, and the button under the verdict leads there (MOD-619).
+	 */
 	private void drawBuilding(GuiGraphicsExtractor graphics, ReactorConsole.Readout r, ReactorControllerMenu menu) {
 		screen.drawFitted(graphics, Component.translatable(r.status().translationKey()), HEADLINE_Y,
 				CONTENT_LEFT, CONTENT_RIGHT, INK_RED);
-		boolean measured = r.status().hasSize() && menu.getSizeX() > 0;
-		row(graphics, CONTENT_LEFT, BUILD_ROOM_Y, CONTENT_RIGHT - CONTENT_LEFT,
-				Component.translatable(KEY + "label.room"),
-				Component.literal(measured
-						? menu.getSizeX() + " × " + menu.getSizeY() + " × " + menu.getSizeZ()
-						: DASH),
-				GuiStyle.TEXT);
-		if (r.status().hasLocation()) {
-			row(graphics, CONTENT_LEFT, BUILD_WHERE_Y, CONTENT_RIGHT - CONTENT_LEFT,
-					Component.translatable(KEY + "label.where"), describeOffset(menu), GuiStyle.TEXT);
-		}
 		int stored = percent(menu.getStoredPercent());
 		row(graphics, CONTENT_LEFT, ROW_B_Y, COLUMN_W, Component.translatable(KEY + "label.buffer"),
 				Component.translatable(KEY + "percent", stored), GuiStyle.TEXT);
@@ -326,22 +320,8 @@ public final class ConsoleTabPage implements ReactorTabPage {
 	 * The box under the controls: a title in the advice's tone and the advice itself, shrunk as a whole if
 	 * a translation runs long rather than cut mid-sentence. An accident's three ways out are numbered.
 	 */
-	private void drawAdvice(GuiGraphicsExtractor graphics, ReactorConsole.Readout r, ReactorControllerMenu menu) {
+	private void drawAdvice(GuiGraphicsExtractor graphics, ReactorConsole.Readout r) {
 		ReactorConsole.Advice advice = ReactorConsole.advice(r);
-		Font font = screen.font();
-		int x = screen.left() + CONTENT_LEFT;
-		int y = screen.top() + ADVICE_Y;
-		int width = CONTENT_RIGHT - CONTENT_LEFT;
-		int height = ADVICE_BOTTOM - ADVICE_Y;
-		int accent = ReactorControllerScreen.toneColour(advice.tone());
-		graphics.fill(x, y, x + width, y + height, ADVICE_BACK);
-		drawToneBadge(graphics, x + 5, y + 3, advice.tone());
-
-		int textX = x + 6;
-		int textW = width - 10;
-		int titleX = x + 5 + BADGE_SIZE + 4;
-		scaledFit(graphics, Component.translatable(advice.titleKey()), titleX, y + 4, x + width - 4 - titleX, accent);
-
 		List<Component> paragraphs = new ArrayList<>();
 		paragraphs.add(advice.bodyArg() >= 0
 				? Component.translatable(advice.bodyKey(), advice.bodyArg())
@@ -349,91 +329,9 @@ public final class ConsoleTabPage implements ReactorTabPage {
 		for (int i = 0; i < advice.stepKeys().size(); i++) {
 			paragraphs.add(Component.literal((i + 1) + ". ").append(Component.translatable(advice.stepKeys().get(i))));
 		}
-		if (!r.formed() && !r.bare() && r.status().hasLocation()) {
-			paragraphs.add(Component.translatable(KEY + "label.where").append(" ").append(describeOffset(menu)));
-		}
-		int top = y + 16;
-		int room = y + height - 2 - top;
-		float scale = ADVICE_SCALE;
-		List<FormattedCharSequence> lines = split(font, paragraphs, textW, scale);
-		while (lines.size() * LINE_H * scale > room && scale > MIN_SCALE) {
-			scale = Math.max(MIN_SCALE, scale - 0.05f);
-			lines = split(font, paragraphs, textW, scale);
-		}
-		graphics.pose().pushMatrix();
-		graphics.pose().translate(textX, top);
-		graphics.pose().scale(scale, scale);
-		for (int i = 0; i < lines.size() && (i + 1) * LINE_H * scale <= room + 0.5f; i++) {
-			graphics.text(font, lines.get(i), 0, i * LINE_H, ADVICE_TEXT, false);
-		}
-		graphics.pose().popMatrix();
-	}
-
-	/**
-	 * The advice's tone as a small plate with a glyph: a tick when all is well, an exclamation mark for a
-	 * warning or an alarm, a pause sign for an idle reactor. It replaced a two-pixel stripe down the box's
-	 * left edge that the owner found untidy, and it carries the tone in a shape as well as a colour.
-	 */
-	private static void drawToneBadge(GuiGraphicsExtractor graphics, int x, int y, ReactorConsole.Tone tone) {
-		int plate = switch (tone) {
-			case GOOD -> FILL_GREEN;
-			case WARN -> FILL_AMBER;
-			case ALARM -> FILL_RED;
-			case IDLE -> FILL_IDLE;
-		};
-		String[] glyph = switch (tone) {
-			case GOOD -> GLYPH_TICK;
-			case WARN, ALARM -> GLYPH_EXCLAMATION;
-			case IDLE -> GLYPH_PAUSE;
-		};
-		graphics.fill(x, y, x + BADGE_SIZE, y + BADGE_SIZE, BADGE_EDGE);
-		graphics.fill(x + 1, y + 1, x + BADGE_SIZE - 1, y + BADGE_SIZE - 1, plate);
-		for (int row = 0; row < glyph.length; row++) {
-			for (int col = 0; col < glyph[row].length(); col++) {
-				if (glyph[row].charAt(col) == '#') {
-					graphics.fill(x + 1 + col, y + 1 + row, x + 2 + col, y + 2 + row, BADGE_GLYPH);
-				}
-			}
-		}
-	}
-
-	private static final String[] GLYPH_TICK = {
-			"........",
-			".......#",
-			"......##",
-			"#....##.",
-			"##..##..",
-			".####...",
-			"..##....",
-			"........",
-	};
-	private static final String[] GLYPH_EXCLAMATION = {
-			"...##...",
-			"...##...",
-			"...##...",
-			"...##...",
-			"...##...",
-			"........",
-			"...##...",
-			"........",
-	};
-	private static final String[] GLYPH_PAUSE = {
-			"........",
-			".##..##.",
-			".##..##.",
-			".##..##.",
-			".##..##.",
-			".##..##.",
-			".##..##.",
-			"........",
-	};
-
-	private static List<FormattedCharSequence> split(Font font, List<Component> paragraphs, int width, float scale) {
-		List<FormattedCharSequence> lines = new ArrayList<>();
-		for (Component paragraph : paragraphs) {
-			lines.addAll(font.split(paragraph, (int) (width / scale)));
-		}
-		return lines;
+		ReactorPageText.messageBox(graphics, screen.font(), screen.left() + CONTENT_LEFT, screen.top() + ADVICE_Y,
+				CONTENT_RIGHT - CONTENT_LEFT, ADVICE_BOTTOM - ADVICE_Y, advice.tone(),
+				Component.translatable(advice.titleKey()), paragraphs);
 	}
 
 	/** A tick on the heat bar where the reactor changes behaviour, with the number under it. */
@@ -501,9 +399,7 @@ public final class ConsoleTabPage implements ReactorTabPage {
 	}
 
 	private void scaledFit(GuiGraphicsExtractor graphics, Component text, int x, int y, int width, int colour) {
-		int textW = screen.font().width(text);
-		float scale = textW > width ? Math.max(MIN_SCALE, (float) width / textW) : 1.0f;
-		scaled(graphics, text, x, y, scale, colour);
+		ReactorPageText.scaledFit(graphics, screen.font(), text, x, y, width, colour);
 	}
 
 	/** A short paragraph wrapped at the advice scale inside a box, clipped at its height. */
@@ -521,17 +417,7 @@ public final class ConsoleTabPage implements ReactorTabPage {
 	}
 
 	private void scaled(GuiGraphicsExtractor graphics, Component text, int x, int y, float scale, int colour) {
-		Font font = screen.font();
-		if (scale >= 1.0f) {
-			graphics.text(font, text, x, y, colour, false);
-			return;
-		}
-		graphics.pose().pushMatrix();
-		// Centre the smaller glyphs on the line the full-size ones would sit on.
-		graphics.pose().translate(x, y + (font.lineHeight - 1) * (1.0f - scale) / 2.0f);
-		graphics.pose().scale(scale, scale);
-		graphics.text(font, text, 0, 0, colour, false);
-		graphics.pose().popMatrix();
+		ReactorPageText.scaled(graphics, screen.font(), text, x, y, scale, colour);
 	}
 
 	// ── Tooltips ─────────────────────────────────────────────────────────────────────────────────
@@ -592,27 +478,6 @@ public final class ConsoleTabPage implements ReactorTabPage {
 
 	private static int percent(int value) {
 		return Math.max(0, Math.min(100, value));
-	}
-
-	/**
-	 * Turns the offset into words: "4 east, 2 up, 3 south". Axes with no offset are dropped, so a breach
-	 * straight above reads "2 up" rather than "0 east, 2 up, 0 south".
-	 */
-	private static Component describeOffset(ReactorControllerMenu menu) {
-		Component result = null;
-		result = append(result, menu.getBreachDx(), "east", "west");
-		result = append(result, menu.getBreachDy(), "up", "down");
-		result = append(result, menu.getBreachDz(), "south", "north");
-		return result == null ? Component.translatable(KEY + "here") : result;
-	}
-
-	private static Component append(@Nullable Component soFar, int amount, String positiveKey, String negativeKey) {
-		if (amount == 0) {
-			return soFar;
-		}
-		Component piece = Component.translatable(KEY + "dir." + (amount > 0 ? positiveKey : negativeKey),
-				Math.abs(amount));
-		return soFar == null ? piece : soFar.copy().append(", ").append(piece);
 	}
 
 	/**

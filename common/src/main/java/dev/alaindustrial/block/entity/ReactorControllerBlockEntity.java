@@ -66,9 +66,10 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 
 	/**
 	 * Base four plus: status, breach (3), size (3), heat/rods/depth/output (4), water/steam/idle/energy (5),
-	 * meltdown, blast, instability, the coolant share and the two heat marks (MOD-618, MOD-623).
+	 * meltdown, blast, instability, the coolant share and the two heat marks (MOD-618, MOD-623), the box's
+	 * west and north edges, the three room limits, the hole count and the listed holes (MOD-619).
 	 */
-	public static final int DATA_COUNT = MachineBlockEntity.DATA_COUNT + 23;
+	public static final int DATA_COUNT = MachineBlockEntity.DATA_COUNT + 29 + 3 * RoomScan.MAX_LISTED_HOLES;
 	public static final int DATA_STATUS = 4;
 	public static final int DATA_BREACH_DX = 5;
 	public static final int DATA_BREACH_DY = 6;
@@ -154,6 +155,29 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 	 */
 	public static final int DATA_HEAT_WARN = 25;
 	public static final int DATA_HEAT_MELTDOWN = 26;
+	/**
+	 * Where the measured interior starts, as an offset from the controller: its west edge (smallest X) and
+	 * its north edge (smallest Z), in blocks (MOD-619). With the size channels this places the walls on the
+	 * «Room» tab's map. Zero while no box was measured — the size channels say which, being zero too.
+	 */
+	public static final int DATA_BOX_WEST = 27;
+	public static final int DATA_BOX_NORTH = 28;
+	/**
+	 * The limits the scan applies — smallest and largest interior edge, and the glass cap in percent — for the
+	 * «Room» tab's checklist (MOD-619). Sent for the reason the heat marks are: {@code Config} is not synced,
+	 * and a checklist reading its own copy would quote the local file's limits rather than this server's.
+	 */
+	public static final int DATA_ROOM_MIN_INNER = 29;
+	public static final int DATA_ROOM_MAX_INNER = 30;
+	public static final int DATA_ROOM_MAX_GLASS = 31;
+	/**
+	 * The holes of a breached shell (MOD-619): how many the scan found, then the first
+	 * {@link RoomScan#MAX_LISTED_HOLES} as offsets from the controller, three channels each — east, up and south.
+	 * Three channels rather than one packed short: the room limit has no ceiling in the config, and a packed
+	 * offset would wrap on a large room. The count is zero unless the verdict is a breach.
+	 */
+	public static final int DATA_HOLE_COUNT = 32;
+	public static final int DATA_HOLE_FIRST = 33;
 
 	/** Coolant boiled on the last tick, in mB. Zero while nothing reacts and no overheat is left to bring down. */
 	private int lastWater;
@@ -181,6 +205,10 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 	private int sizeX;
 	private int sizeY;
 	private int sizeZ;
+	private int boxWest;
+	private int boxNorth;
+	private int holeCount;
+	private final int[] holeOffsets = new int[3 * RoomScan.MAX_LISTED_HOLES];
 
 	// ── stage 2: the reactor itself ──
 	/** Heat on the 0…{@link Config#reactorHeatCapacity} scale. */
@@ -1339,10 +1367,21 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		breachDx = result.x() - pos.getX();
 		breachDy = result.y() - pos.getY();
 		breachDz = result.z() - pos.getZ();
-		boolean measured = scanned.hasSize();
+		// Every verdict the rays got far enough to measure carries its box (MOD-619): the «Room» tab draws the
+		// walls around a breach as well as around a sealed room.
+		boolean measured = result.maxX() >= result.minX();
 		sizeX = measured ? result.sizeX() : 0;
 		sizeY = measured ? result.sizeY() : 0;
 		sizeZ = measured ? result.sizeZ() : 0;
+		boxWest = measured ? result.minX() - pos.getX() : 0;
+		boxNorth = measured ? result.minZ() - pos.getZ() : 0;
+		holeCount = result.holeCount();
+		java.util.Arrays.fill(holeOffsets, 0);
+		for (int i = 0; i < result.listedHoles(); i++) {
+			holeOffsets[3 * i] = result.holeX(i) - pos.getX();
+			holeOffsets[3 * i + 1] = result.holeY(i) - pos.getY();
+			holeOffsets[3 * i + 2] = result.holeZ(i) - pos.getZ();
+		}
 
 		boolean wasFormed = state.getValue(ReactorControllerBlock.FORMED);
 		boolean changed = scanned != status;
@@ -1364,7 +1403,7 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 			}
 			rememberBox(result);
 		} else {
-			// Clear the box we last sealed — not the one this scan measured, which is empty. Without
+			// Clear the box we last sealed — not whatever this scan measured, which is empty or never sealed. Without
 			// this the shell would stay seamless and lit around a hole (playtest, 2026-08-19).
 			repainted = clearRememberedBox(level);
 		}
@@ -1402,6 +1441,11 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 				ModCriteria.fireReactorMilestone(serverLevel, getOwner(), ReactorMilestone.ROOM_SEALED);
 			} else if (!result.formed() && scanned.hasLocation()) {
 				markProblem(serverLevel, new BlockPos(result.x(), result.y(), result.z()), wasFormed);
+				// Every listed hole smokes, not only the first (playtest, MOD-619): a player with three holes to
+				// fill walks to three plumes. The first is the one above; the alarm sounds once, there.
+				for (int i = 1; i < result.listedHoles(); i++) {
+					markProblem(serverLevel, new BlockPos(result.holeX(i), result.holeY(i), result.holeZ(i)), false);
+				}
 			}
 		}
 	}
@@ -1613,7 +1657,15 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 				case DATA_COOLANT_SHARE -> coolantShare;
 				case DATA_HEAT_WARN -> Config.reactorHeatWarnPercent;
 				case DATA_HEAT_MELTDOWN -> Config.reactorMeltdownStartPercent;
-				default -> ReactorControllerBlockEntity.this.dataAccess.get(index);
+				case DATA_BOX_WEST -> boxWest;
+				case DATA_BOX_NORTH -> boxNorth;
+				case DATA_ROOM_MIN_INNER -> Config.reactorRoomMinInner;
+				case DATA_ROOM_MAX_INNER -> Config.reactorRoomMaxInner;
+				case DATA_ROOM_MAX_GLASS -> Config.reactorRoomMaxGlassPercent;
+				case DATA_HOLE_COUNT -> Math.min(Short.MAX_VALUE, holeCount);
+				default -> index >= DATA_HOLE_FIRST && index < DATA_HOLE_FIRST + holeOffsets.length
+						? holeOffsets[index - DATA_HOLE_FIRST]
+						: ReactorControllerBlockEntity.this.dataAccess.get(index);
 			};
 		}
 

@@ -99,17 +99,6 @@ class ReactorRoomStatusTest {
 				"a ray that found no wall has no offending block to send the player to");
 	}
 
-	/** The measured box is only meaningful where a box was actually measured. */
-	@Test
-	void onlySizeStatusesAdvertiseASize() {
-		EnumSet<ReactorRoomStatus> sized = EnumSet.of(
-				ReactorRoomStatus.FORMED, ReactorRoomStatus.TOO_SMALL, ReactorRoomStatus.TOO_LARGE);
-		for (ReactorRoomStatus status : ReactorRoomStatus.values()) {
-			assertEquals(sized.contains(status), status.hasSize(),
-					() -> status + ": hasSize() disagrees with the intended set");
-		}
-	}
-
 	/** Keys are derived, not hand-written, so they cannot drift from the constant they belong to. */
 	@Test
 	void translationKeysFollowTheConstantName() {

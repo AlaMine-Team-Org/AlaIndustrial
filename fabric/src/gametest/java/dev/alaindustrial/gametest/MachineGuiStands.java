@@ -113,8 +113,10 @@ public final class MachineGuiStands {
         // ── Wind Mills (T1 + both T2) — the same row, in every state it can DRAW (MOD-371) ──
         WindMillGuiStand.checkWindMillStatusRows(context);
 
-        // ── Reactor Controller — the Console tab in the six states a player meets (MOD-618) ──
+        // ── Reactor Controller — the Console tab in the states a player meets (MOD-618) ──
         ReactorConsoleGuiStand.shootConsole(context);
+        // ── … and the Room tab: a shell being built opens on it by itself (MOD-619) ──
+        ReactorConsoleGuiStand.shootRoom(context);
 
         // ── Machines without custom screens (one shot each) ──────────────────────────
         shootMenu(context, "gui_moonlit_solar_panel", ModContent.MOONLIT_SOLAR_PANEL_MENU.get(), "Moonlit Solar Panel");

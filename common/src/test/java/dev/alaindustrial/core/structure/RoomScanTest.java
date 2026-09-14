@@ -190,6 +190,103 @@ class RoomScanTest {
 		assertFalse(r.formed());
 	}
 
+	/**
+	 * A fault found after the rays carries the box it was found in (MOD-619): the «Room» tab draws the walls
+	 * around the hole, and a box thrown away at this point would leave it a controller and a red dot.
+	 */
+	@Test
+	void aBreachCarriesTheMeasuredBox() {
+		Room room = new Room(4, 3, 5).withControllerAndDoor();
+		room.put(3, 4, 2, ShellKind.OTHER);
+		Result r = room.scan();
+		assertEquals(Status.BREACH, r.status());
+		assertEquals(1, r.minX());
+		assertEquals(4, r.sizeX());
+		assertEquals(3, r.sizeY());
+		assertEquals(5, r.sizeZ());
+	}
+
+	/**
+	 * Two holes in the middle of the ceiling, one of them straight above the cell in front of the controller
+	 * (playtest, MOD-619). A single ray from that cell flew out through the hole and found nothing, and the room
+	 * was reported as having no wall at all. The neighbouring rays still hit the ceiling, so it is a breach — with
+	 * both holes named.
+	 */
+	@Test
+	void aHoleOnTheSeedsRayIsABreachNotAMissingWall() {
+		Room room = new Room(3, 3, 3).withControllerAndDoor();
+		room.put(1, 4, 1, ShellKind.OTHER);
+		room.put(2, 4, 2, ShellKind.OTHER);
+		Result r = room.scan();
+		assertEquals(Status.BREACH, r.status());
+		assertEquals(3, r.sizeY(), "the ceiling is where most of the rays found it");
+		assertEquals(2, r.holeCount());
+	}
+
+	/** Every hole is listed, not just the first one the walk trips over (playtest, MOD-619). */
+	@Test
+	void everyHoleInTheShellIsListed() {
+		Room room = new Room(4, 4, 4).withControllerAndDoor();
+		room.put(5, 2, 2, ShellKind.OTHER);
+		room.put(5, 3, 2, ShellKind.OTHER);
+		room.put(3, 2, 5, ShellKind.OTHER);
+		Result r = room.scan();
+		assertEquals(Status.BREACH, r.status());
+		assertEquals(3, r.holeCount());
+		assertEquals(3, r.listedHoles());
+		assertEquals(5, r.holeX(0), "the first hole is the reported position");
+		assertEquals(5, r.x());
+		java.util.Set<String> listed = new java.util.HashSet<>();
+		for (int i = 0; i < r.listedHoles(); i++) {
+			listed.add(r.holeX(i) + "," + r.holeY(i) + "," + r.holeZ(i));
+		}
+		assertEquals(java.util.Set.of("5,2,2", "5,3,2", "3,2,5"), listed);
+	}
+
+	/** A shell with its face knocked out lists as many holes as a screen can show, and counts every one. */
+	@Test
+	void theHoleListStopsAtItsCapButTheCountGoesOn() {
+		Room room = new Room(4, 4, 4).withControllerAndDoor();
+		int torn = 0;
+		for (int x = 0; x <= 5; x++) {
+			for (int y = 0; y <= 5; y++) {
+				// Four cells stay, straight ahead of the rays towards +Z, so the far wall is still found.
+				if ((x == 1 || x == 2) && (y == 1 || y == 2)) {
+					continue;
+				}
+				room.put(x, y, 5, ShellKind.OTHER);
+				torn++;
+			}
+		}
+		Result r = room.scan();
+		assertEquals(Status.BREACH, r.status());
+		assertEquals(torn, r.holeCount());
+		assertEquals(RoomScan.MAX_LISTED_HOLES, r.listedHoles());
+	}
+
+	/**
+	 * A stray casing block inside the room, on the column the vertical ray takes, used to stop that ray under
+	 * the real ceiling: the box shrank, and the walk then called the open interior a hole. The other rays
+	 * outvote it.
+	 */
+	@Test
+	void aStrayBlockOnTheSeedsRayDoesNotShrinkTheRoom() {
+		Room room = new Room(4, 4, 4).withControllerAndDoor();
+		room.put(1, 3, 1, ShellKind.CASING);
+		Result r = room.scan();
+		assertTrue(r.formed(), () -> "expected FORMED, got " + r.status());
+		assertEquals(4, r.sizeY());
+	}
+
+	/** Before the rays nothing is measured, and the box says so rather than inventing a room. */
+	@Test
+	void aControllerFacingSolidMeasuresNoBox() {
+		Room room = new Room(3, 3, 3).withControllerAndDoor();
+		room.put(1, 1, 1, ShellKind.CASING);
+		Result r = room.scan();
+		assertTrue(r.maxX() < r.minX(), "no box can have been measured before the rays ran");
+	}
+
 	/** A hole in a corner is still a hole — corners are load-bearing for the seal, not decoration. */
 	@Test
 	void cornerHoleIsABreach() {

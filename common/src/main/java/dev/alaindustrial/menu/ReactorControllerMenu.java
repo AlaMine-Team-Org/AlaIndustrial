@@ -122,6 +122,59 @@ public class ReactorControllerMenu extends MachineMenu {
 		return data.get(ReactorControllerBlockEntity.DATA_SIZE_Z);
 	}
 
+	/** Whether the last scan got far enough to measure the interior box — the rays found all six walls (MOD-619). */
+	public boolean isBoxMeasured() {
+		return getSizeX() > 0;
+	}
+
+	/** Offset from the controller to the interior's west edge (smallest X), in blocks; see {@link #isBoxMeasured}. */
+	public int getBoxWest() {
+		return data.get(ReactorControllerBlockEntity.DATA_BOX_WEST);
+	}
+
+	/** Offset from the controller to the interior's north edge (smallest Z), in blocks. */
+	public int getBoxNorth() {
+		return data.get(ReactorControllerBlockEntity.DATA_BOX_NORTH);
+	}
+
+	/** Smallest interior edge this server's scan accepts, in blocks. */
+	public int getRoomMinInner() {
+		return data.get(ReactorControllerBlockEntity.DATA_ROOM_MIN_INNER);
+	}
+
+	/** Largest interior edge this server's scan accepts, in blocks. */
+	public int getRoomMaxInner() {
+		return data.get(ReactorControllerBlockEntity.DATA_ROOM_MAX_INNER);
+	}
+
+	/** Largest share of the shell, in percent, this server's scan lets be glass. */
+	public int getRoomMaxGlassPercent() {
+		return data.get(ReactorControllerBlockEntity.DATA_ROOM_MAX_GLASS);
+	}
+
+	/** Every hole the last scan found in the shell; zero unless the verdict is a breach (MOD-619). */
+	public int getHoleCount() {
+		return data.get(ReactorControllerBlockEntity.DATA_HOLE_COUNT);
+	}
+
+	/** How many holes arrive by position — at most {@code RoomScan.MAX_LISTED_HOLES}. */
+	public int getListedHoles() {
+		return Math.max(0, Math.min(getHoleCount(), dev.alaindustrial.core.structure.RoomScan.MAX_LISTED_HOLES));
+	}
+
+	/** Offset from the controller to a listed hole, east/up/south positive. */
+	public int getHoleDx(int index) {
+		return data.get(ReactorControllerBlockEntity.DATA_HOLE_FIRST + 3 * index);
+	}
+
+	public int getHoleDy(int index) {
+		return data.get(ReactorControllerBlockEntity.DATA_HOLE_FIRST + 3 * index + 1);
+	}
+
+	public int getHoleDz(int index) {
+		return data.get(ReactorControllerBlockEntity.DATA_HOLE_FIRST + 3 * index + 2);
+	}
+
 	/** Heat as a percentage of the scale — what the gauge fills to. */
 	public int getHeatPercent() {
 		return data.get(ReactorControllerBlockEntity.DATA_HEAT_PERCENT);

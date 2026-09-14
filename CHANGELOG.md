@@ -1,10 +1,9 @@
-## 0.1.164
+## 0.1.165
 
-<p><img alt="Ala Industrial 0.1.164 reactor console states" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.164/release-media/v0.1.164/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial 0.1.165 reactor room tab before and after" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.165/release-media/v0.1.165/changelog.png" width="720"></p>
 
-2 updates in this release.
+1 update in this release.
 
-### Improved
+### New
 
-- **New reactor console** — heat with its warning and meltdown marks, output, buffer, water and steam on one tab, rod depth in 5% steps with a STOP button, and advice on what to do in every state.
-- **Water now cools the reactor** — a running reactor without water heats up all the way to an accident, so give existing dry reactors water after updating. With water the heat gauge holds still, reactors without a room sound the siren too, and the hum no longer stops on a full buffer.
+- **Room tab on the reactor controller** — a top-down map of the shell with every hole marked, and the room scan as a checklist of what passed and what to fix. A room still being built opens right on it, and holes in the ceiling now read as holes instead of a missing wall.

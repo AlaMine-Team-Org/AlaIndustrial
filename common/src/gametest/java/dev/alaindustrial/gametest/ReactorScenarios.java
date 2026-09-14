@@ -564,6 +564,29 @@ public final class ReactorScenarios {
 			if (!brain.isBare()) {
 				helper.fail("a breached room did not fall into bare mode — the shell stopped conducting");
 			}
+			// The box travels with the breach (MOD-619): the «Room» tab draws the walls around the hole.
+			ContainerData data = brain.getDataAccess();
+			int inner = SHELL_MAX - 1;
+			if (data.get(ReactorControllerBlockEntity.DATA_SIZE_X) != inner
+					|| data.get(ReactorControllerBlockEntity.DATA_SIZE_Y) != inner
+					|| data.get(ReactorControllerBlockEntity.DATA_SIZE_Z) != inner) {
+				helper.fail("a breached room did not report the box the hole was found in");
+			}
+			if (data.get(ReactorControllerBlockEntity.DATA_BOX_WEST) != 1 - CONTROLLER.getX()
+					|| data.get(ReactorControllerBlockEntity.DATA_BOX_NORTH) != 1 - CONTROLLER.getZ()) {
+				helper.fail("the box's edges read " + data.get(ReactorControllerBlockEntity.DATA_BOX_WEST) + " west, "
+						+ data.get(ReactorControllerBlockEntity.DATA_BOX_NORTH) + " north of the controller; expected "
+						+ (1 - CONTROLLER.getX()) + ", " + (1 - CONTROLLER.getZ()));
+			}
+			int holeDx = data.get(ReactorControllerBlockEntity.DATA_HOLE_FIRST);
+			int holeDy = data.get(ReactorControllerBlockEntity.DATA_HOLE_FIRST + 1);
+			int holeDz = data.get(ReactorControllerBlockEntity.DATA_HOLE_FIRST + 2);
+			if (data.get(ReactorControllerBlockEntity.DATA_HOLE_COUNT) != 1 || holeDx != 2 - CONTROLLER.getX()
+					|| holeDy != SHELL_MAX - CONTROLLER.getY() || holeDz != 2 - CONTROLLER.getZ()) {
+				helper.fail("the breach listed " + data.get(ReactorControllerBlockEntity.DATA_HOLE_COUNT)
+						+ " holes, the first at " + holeDx + ", " + holeDy + ", " + holeDz
+						+ " from the controller; expected the one hole in the ceiling");
+			}
 			if (brain.getLastOutput() <= 0) {
 				helper.fail("a breached reactor went dark instead of degrading; the fall must be SOFT");
 			}
@@ -1650,6 +1673,13 @@ public final class ReactorScenarios {
 				Config.reactorHeatWarnPercent, "warning line");
 		expectChannel(helper, data, ReactorControllerBlockEntity.DATA_HEAT_MELTDOWN,
 				Config.reactorMeltdownStartPercent, "meltdown line");
+		// The room limits the «Room» tab's checklist quotes, from the same Config the scan reads (MOD-619).
+		expectChannel(helper, data, ReactorControllerBlockEntity.DATA_ROOM_MIN_INNER,
+				Config.reactorRoomMinInner, "smallest room");
+		expectChannel(helper, data, ReactorControllerBlockEntity.DATA_ROOM_MAX_INNER,
+				Config.reactorRoomMaxInner, "largest room");
+		expectChannel(helper, data, ReactorControllerBlockEntity.DATA_ROOM_MAX_GLASS,
+				Config.reactorRoomMaxGlassPercent, "glass cap");
 
 		ReactorControllerMenu serverMenu = new ReactorControllerMenu(0,
 				helper.makeMockPlayer(GameType.SURVIVAL).getInventory(), brain, ContainerLevelAccess.NULL);

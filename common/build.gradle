@@ -328,7 +328,13 @@ pitest {
                      // The glob reaches its nested HeatTrend; nothing else in the package starts with
                      // this name, and the tab page next to it (ConsoleTabPage) is Minecraft-bound on
                      // purpose. Its L1 suite is ReactorConsoleTest.
-                     'dev.alaindustrial.client.screen.reactor.ReactorConsole*'
+                     'dev.alaindustrial.client.screen.reactor.ReactorConsole*',
+                     // MOD-619: the Room tab's checklist — which check a scan verdict fails and what the
+                     // others are marked — and its map layout. The glob reaches the nested Check and Mark
+                     // enums; RoomTabPage and ReactorPageText beside them are Minecraft-bound on purpose.
+                     // L1: RoomChecklistTest, RoomMapLayoutTest.
+                     'dev.alaindustrial.client.screen.reactor.RoomChecklist*',
+                     'dev.alaindustrial.client.screen.reactor.RoomMapLayout'
             ]
     // The MC-coupled classes are excluded from MUTATION (the bytecode PIT rewrites). But PIT's
     // JUnit discovery also walks every class under `targetTests` via reflection to find @Test

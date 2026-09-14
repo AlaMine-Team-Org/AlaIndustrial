@@ -4,6 +4,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.client.screen.reactor.ConsoleTabPage;
 import dev.alaindustrial.client.screen.reactor.ReactorConsole;
 import dev.alaindustrial.client.screen.reactor.ReactorTabPage;
+import dev.alaindustrial.client.screen.reactor.RoomTabPage;
 import dev.alaindustrial.menu.ReactorControllerMenu;
 import java.util.List;
 import net.minecraft.client.gui.Font;
@@ -60,6 +61,10 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 	public static final int COUNTDOWN_Y = 17;
 	public static final int COUNTDOWN_H = 2;
 
+	/** The tabs, in the strip's order. */
+	public static final int PAGE_CONSOLE = 0;
+	public static final int PAGE_ROOM = 1;
+
 	private static final Identifier TAB_TOP = Identifier.withDefaultNamespace("advancements/tab_left_top");
 	private static final Identifier TAB_TOP_SELECTED =
 			Identifier.withDefaultNamespace("advancements/tab_left_top_selected");
@@ -82,10 +87,12 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 
 	private final List<ReactorTabPage> pages;
 	private int selected;
+	/** Whether the opening tab has been decided — by the channels' first arrival or by the player. */
+	private boolean pageSettled;
 
 	public ReactorControllerScreen(ReactorControllerMenu menu, Inventory inventory, Component title) {
 		super(menu, inventory, title, IMAGE_WIDTH, IMAGE_HEIGHT);
-		this.pages = List.of(new ConsoleTabPage(this));
+		this.pages = List.of(new ConsoleTabPage(this), new RoomTabPage(this));
 		this.selected = Math.min(lastPage, this.pages.size() - 1);
 	}
 
@@ -124,6 +131,28 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 		super.containerTick();
 		for (ReactorTabPage page : pages) {
 			page.tick();
+		}
+		settleOpeningPage();
+	}
+
+	/**
+	 * Opens a room still being built on the «Room» tab (MOD-619) — the tab that says what to fix — unless the
+	 * player has already picked one.
+	 *
+	 * <p>Decided on the first tick the server's channels have arrived, not in the constructor: a menu fresh off
+	 * the wire reads all zeros, and zero is the ordinal of a sealed room. Arrival is told by the largest room the
+	 * scan accepts, which the server always sends and which is never zero. The player's last tab is left alone:
+	 * a room that needed building once does not make «Room» the tab they return to.
+	 */
+	private void settleOpeningPage() {
+		if (pageSettled || this.menu.getRoomMaxInner() <= 0) {
+			return;
+		}
+		pageSettled = true;
+		ReactorConsole.Readout r = ConsoleTabPage.readout(this.menu);
+		if (!r.formed() && !r.bare()) {
+			selected = PAGE_ROOM;
+			showSelected();
 		}
 	}
 
@@ -218,11 +247,9 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 			int tab = tabAt(event.x(), event.y());
 			if (tab >= 0) {
 				if (tab != selected) {
-					selected = tab;
-					lastPage = tab;
-					showSelected();
 					this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 				}
+				selectPage(tab);
 				return true;
 			}
 		}
@@ -283,6 +310,22 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 	}
 
 	// ── What a page may use ─────────────────────────────────────────────────────────────────────────
+
+	/** Opens a tab as the player's choice: it is remembered, and the opening tab is no longer decided for them. */
+	public void selectPage(int index) {
+		pageSettled = true;
+		if (index < 0 || index >= pages.size() || index == selected) {
+			return;
+		}
+		selected = index;
+		lastPage = index;
+		showSelected();
+	}
+
+	/** The open tab — {@link #PAGE_CONSOLE}, {@link #PAGE_ROOM}. */
+	public int selectedPage() {
+		return selected;
+	}
 
 	public int left() {
 		return this.leftPos;

@@ -1,5 +1,7 @@
 package dev.alaindustrial.core.structure;
 
+import java.util.Arrays;
+
 /**
  * MC-free geometry of the reactor room (MOD-468, stage 1) — the first <em>volumetric</em> multiblock
  * check in the mod. The two existing multiblocks scan fixed vertical offsets ({@code
@@ -18,17 +20,21 @@ package dev.alaindustrial.core.structure;
  * <p><b>Two phases, and why.</b> A plain flood fill cannot tell "this room is too large" from "this
  * room leaks" — both simply run until the cap. So:
  * <ol>
- *   <li><b>A — cast six rays</b> from the interior seed (±X, ±Y, ±Z) to the first shell block, at
- *       most {@code maxInner} steps. A ray that finds nothing means the room is unbounded in that
- *       direction (too large, or a hole big enough to fly through) and is reported with the position
- *       the ray gave up on, so the player is pointed the right way.</li>
- *   <li><b>B — walk the whole perimeter</b> implied by the six hits. This is what finds a one-block
+ *   <li><b>A — find the six walls</b> from the interior seed (±X, ±Y, ±Z), at most {@code maxInner} + 1
+ *       steps out. Each wall is found by a vote of up to nine parallel rays — the seed's and its
+ *       neighbours' across the direction — and the wall is where most of them stop. No ray at all
+ *       reaching one means the room is unbounded in that direction (too large, or a side knocked out).</li>
+ *   <li><b>B — walk the whole perimeter</b> implied by the six walls. This is what finds a one-block
  *       hole anywhere in a 14³ shell, with coordinates — searching that by hand is frustration, not
- *       gameplay, which is why the controller reports the spot.</li>
+ *       gameplay, which is why the controller reports the spot. Once a hole is found the walk goes on
+ *       counting holes, so a player who has three to fill is shown three.</li>
  * </ol>
- * A hole that happens to sit exactly on a ray's path inflates the box, and phase B then reports the
- * first perimeter cell that is not a shell. The coordinates are a real defect either way; only the
- * choice of <em>which</em> defect gets named changes.
+ *
+ * <p><b>Why a vote and not one ray (MOD-619).</b> One ray per direction was stopped by whatever stood on its
+ * single column. A hole there sent it out into the open, and two holes in the middle of a ceiling reported a
+ * room with no ceiling at all; a stray casing block inside the room stopped it short, and the box shrank under
+ * the real ceiling. The neighbouring rays outvote both. A tie goes to the seed's own ray, then to the nearer
+ * wall.
  *
  * <p><b>Order of checks is a UX decision</b>, not an implementation detail: controller placement →
  * bounds → breach → door. Each answer is actionable on its own, and the player fixes one thing at a
@@ -44,6 +50,14 @@ public final class RoomScan {
 
 	/** Largest share of the shell, in percent, that may be glass. */
 	public static final int DEFAULT_MAX_GLASS_PERCENT = 30;
+
+	/**
+	 * Most holes a breach lists by position (MOD-619). The count goes on past it: a face knocked out of a 14³
+	 * shell is two hundred holes, and no map draws two hundred markers usefully.
+	 */
+	public static final int MAX_LISTED_HOLES = 12;
+
+	private static final int[] NO_HOLES = {};
 
 	private RoomScan() {
 	}
@@ -86,13 +100,13 @@ public final class RoomScan {
 		 * looking into an interior — it sits in the floor, the ceiling, an edge, or faces the wrong way.
 		 */
 		CONTROLLER_NOT_IN_WALL,
-		/** A ray left the seed and found no shell within {@code maxInner} steps. */
+		/** No ray in some direction found shell within {@code maxInner} + 1 steps. */
 		ROOM_UNBOUNDED,
 		/** Interior edge below {@code minInner} along some axis. */
 		TOO_SMALL,
 		/** Interior edge above {@code maxInner} along some axis. */
 		TOO_LARGE,
-		/** A perimeter cell is not a shell block — the hole is at the reported position. */
+		/** A perimeter cell is not a shell block — the first hole is at the reported position. */
 		BREACH,
 		/**
 		 * A door exists but no doorway does: no wall column carries door cells at both the floor level
@@ -113,12 +127,22 @@ public final class RoomScan {
 	 * Outcome of a scan. On {@link Status#FORMED} the interior box is the answer; on every other
 	 * status {@code x/y/z} points at the offending block and the box holds whatever was measured so
 	 * far (useful for "12 × 4 × 7 — too large along X").
+	 *
+	 * @param holeCount on {@link Status#BREACH}, every hole the walk found; zero otherwise
+	 * @param holes     the first {@link #MAX_LISTED_HOLES} of them as {@code x, y, z} triples, in walk order
 	 */
 	public record Result(
 			Status status,
 			int x, int y, int z,
 			int minX, int minY, int minZ,
-			int maxX, int maxY, int maxZ) {
+			int maxX, int maxY, int maxZ,
+			int holeCount, int[] holes) {
+
+		/** A verdict with no holes. */
+		public Result(Status status, int x, int y, int z, int minX, int minY, int minZ, int maxX, int maxY,
+				int maxZ) {
+			this(status, x, y, z, minX, minY, minZ, maxX, maxY, maxZ, 0, NO_HOLES);
+		}
 
 		public boolean formed() {
 			return status == Status.FORMED;
@@ -139,6 +163,28 @@ public final class RoomScan {
 			return maxZ - minZ + 1;
 		}
 
+		/** How many holes are listed by position — at most {@link #MAX_LISTED_HOLES}. */
+		public int listedHoles() {
+			return holes.length / 3;
+		}
+
+		public int holeX(int index) {
+			return holes[3 * index];
+		}
+
+		public int holeY(int index) {
+			return holes[3 * index + 1];
+		}
+
+		public int holeZ(int index) {
+			return holes[3 * index + 2];
+		}
+
+		/**
+		 * A verdict reached before the rays measured anything: the box is left empty ({@code max < min}). Every
+		 * verdict found once they have — a size, a hole, a misplaced controller or door, the glass — carries the
+		 * box it was found in, so a screen can draw the walls around the fault (MOD-619).
+		 */
 		private static Result failure(Status status, int x, int y, int z) {
 			return new Result(status, x, y, z, 0, 0, 0, -1, -1, -1);
 		}
@@ -176,37 +222,37 @@ public final class RoomScan {
 			return Result.failure(Status.CONTROLLER_NOT_IN_WALL, seedX, seedY, seedZ);
 		}
 
-		// Phase A — six rays to the first shell block. They reach one block PAST the limit on purpose:
-		// a ray capped at exactly maxInner can never see the far wall of a room that is one block too
-		// big, so every oversized room would report ROOM_UNBOUNDED and TOO_LARGE would be dead code.
-		// With the extra step, "you built it one too wide" and "there is no wall there" stay distinct.
+		// Phase A — the six walls. Rays reach one block PAST the limit on purpose: a ray capped at exactly
+		// maxInner can never see the far wall of a room that is one block too big, so every oversized room
+		// would report ROOM_UNBOUNDED and TOO_LARGE would be dead code. With the extra step, "you built it one
+		// too wide" and "there is no wall there" stay distinct.
 		int reach = maxInner + 1;
-		int minX = castRay(probe, seedX, seedY, seedZ, -1, 0, 0, reach);
+		int minX = wall(probe, seedX, seedY, seedZ, -1, 0, 0, reach);
 		if (minX == RAY_MISS) {
 			return Result.failure(Status.ROOM_UNBOUNDED, seedX - reach, seedY, seedZ);
 		}
-		int maxX = castRay(probe, seedX, seedY, seedZ, 1, 0, 0, reach);
+		int maxX = wall(probe, seedX, seedY, seedZ, 1, 0, 0, reach);
 		if (maxX == RAY_MISS) {
 			return Result.failure(Status.ROOM_UNBOUNDED, seedX + reach, seedY, seedZ);
 		}
-		int minY = castRay(probe, seedX, seedY, seedZ, 0, -1, 0, reach);
+		int minY = wall(probe, seedX, seedY, seedZ, 0, -1, 0, reach);
 		if (minY == RAY_MISS) {
 			return Result.failure(Status.ROOM_UNBOUNDED, seedX, seedY - reach, seedZ);
 		}
-		int maxY = castRay(probe, seedX, seedY, seedZ, 0, 1, 0, reach);
+		int maxY = wall(probe, seedX, seedY, seedZ, 0, 1, 0, reach);
 		if (maxY == RAY_MISS) {
 			return Result.failure(Status.ROOM_UNBOUNDED, seedX, seedY + reach, seedZ);
 		}
-		int minZ = castRay(probe, seedX, seedY, seedZ, 0, 0, -1, reach);
+		int minZ = wall(probe, seedX, seedY, seedZ, 0, 0, -1, reach);
 		if (minZ == RAY_MISS) {
 			return Result.failure(Status.ROOM_UNBOUNDED, seedX, seedY, seedZ - reach);
 		}
-		int maxZ = castRay(probe, seedX, seedY, seedZ, 0, 0, 1, reach);
+		int maxZ = wall(probe, seedX, seedY, seedZ, 0, 0, 1, reach);
 		if (maxZ == RAY_MISS) {
 			return Result.failure(Status.ROOM_UNBOUNDED, seedX, seedY, seedZ + reach);
 		}
 
-		// Interior extents, derived from where the rays stopped (the hit is the shell cell itself).
+		// Interior extents, derived from where the walls stand (the hit is the shell cell itself).
 		int sizeX = maxX - minX + 1;
 		int sizeY = maxY - minY + 1;
 		int sizeZ = maxZ - minZ + 1;
@@ -234,6 +280,8 @@ public final class RoomScan {
 		int firstGlassX = 0;
 		int firstGlassY = 0;
 		int firstGlassZ = 0;
+		int holeCount = 0;
+		int[] holes = new int[3 * MAX_LISTED_HOLES];
 
 		for (int y = minY - 1; y <= maxY + 1; y++) {
 			for (int z = minZ - 1; z <= maxZ + 1; z++) {
@@ -254,7 +302,16 @@ public final class RoomScan {
 
 					ShellKind kind = probe.kindAt(x, y, z);
 					if (!kind.isShell()) {
-						return Result.failure(Status.BREACH, x, y, z);
+						if (holeCount < MAX_LISTED_HOLES) {
+							holes[3 * holeCount] = x;
+							holes[3 * holeCount + 1] = y;
+							holes[3 * holeCount + 2] = z;
+						}
+						holeCount++;
+						continue;
+					}
+					if (holeCount > 0) {
+						continue; // the shell leaks: the rest of the walk only looks for more holes
 					}
 					shellCells++;
 					if (kind == ShellKind.GLASS) {
@@ -275,7 +332,8 @@ public final class RoomScan {
 							// A vertical wall only: the controller is a panel the player reads and wires,
 							// so the floor and the ceiling are out even though the geometry would allow them.
 							if (y < minY || y > maxY) {
-								return Result.failure(Status.CONTROLLER_NOT_IN_WALL, cx, cy, cz);
+								return new Result(Status.CONTROLLER_NOT_IN_WALL, cx, cy, cz,
+										minX, minY, minZ, maxX, maxY, maxZ);
 							}
 							selfSeen = true;
 						} else {
@@ -296,15 +354,19 @@ public final class RoomScan {
 			}
 		}
 
+		if (holeCount > 0) {
+			return new Result(Status.BREACH, holes[0], holes[1], holes[2], minX, minY, minZ, maxX, maxY, maxZ,
+					holeCount, Arrays.copyOf(holes, 3 * Math.min(holeCount, MAX_LISTED_HOLES)));
+		}
 		// The scanning controller must itself have been walked as a *wall* cell. If it was not, it sits
 		// in an edge or a corner: the seed happened to be open (it was simply outside the room), the
 		// rays found a box, but this controller is not part of any of its walls.
 		if (!selfSeen) {
-			return Result.failure(Status.CONTROLLER_NOT_IN_WALL, cx, cy, cz);
+			return new Result(Status.CONTROLLER_NOT_IN_WALL, cx, cy, cz, minX, minY, minZ, maxX, maxY, maxZ);
 		}
 		if (foreignController) {
-			return Result.failure(Status.SECOND_CONTROLLER,
-					foreignControllerX, foreignControllerY, foreignControllerZ);
+			return new Result(Status.SECOND_CONTROLLER,
+					foreignControllerX, foreignControllerY, foreignControllerZ, minX, minY, minZ, maxX, maxY, maxZ);
 		}
 		// A door is OPTIONAL (player request, 2026-08-20). Walling yourself in and mining back out is a
 		// legitimate way to run a reactor — cheaper than an airlock, and the player who chooses it has
@@ -312,13 +374,14 @@ public final class RoomScan {
 		// your business. A door that IS present still has to form a real doorway, because a door lying
 		// in the floor is a mistake rather than a choice.
 		if (anyDoor && !doorway) {
-			return Result.failure(Status.NO_DOORWAY, cx, cy, cz);
+			return new Result(Status.NO_DOORWAY, cx, cy, cz, minX, minY, minZ, maxX, maxY, maxZ);
 		}
 		// Integer arithmetic on purpose: glassCells * 100 cannot overflow for a shell of at most 1016
 		// cells, and comparing scaled integers avoids a floating-point boundary that would make the cap
 		// behave differently on the two sides of an exact percentage.
 		if (shellCells > 0 && glassCells * 100 > maxGlassPercent * shellCells) {
-			return Result.failure(Status.TOO_MUCH_GLASS, firstGlassX, firstGlassY, firstGlassZ);
+			return new Result(Status.TOO_MUCH_GLASS, firstGlassX, firstGlassY, firstGlassZ,
+					minX, minY, minZ, maxX, maxY, maxZ);
 		}
 
 		return new Result(Status.FORMED, cx, cy, cz, minX, minY, minZ, maxX, maxY, maxZ);
@@ -329,8 +392,59 @@ public final class RoomScan {
 		return scan(probe, cx, cy, cz, inX, inY, inZ, DEFAULT_MIN_INNER, DEFAULT_MAX_INNER);
 	}
 
-	/** Returned by {@link #castRay} when no shell block stands within reach. */
+	/** Returned by {@link #castRay} and {@link #wall} when no shell block stands within reach. */
 	private static final int RAY_MISS = Integer.MIN_VALUE;
+
+	/**
+	 * The interior bound in one direction, by a vote of up to nine parallel rays: the seed's own and those of
+	 * the eight cells around it in the plane across the direction. A neighbour that is itself a shell block —
+	 * the controller's wall, the floor under the seed — has no room to cast from and does not vote.
+	 *
+	 * @return the bound most rays agree on (a tie goes to the seed's own ray, then to the nearer wall), or
+	 * 		{@link #RAY_MISS} if no ray reached shell
+	 */
+	private static int wall(ShellProbe probe, int x, int y, int z, int dx, int dy, int dz, int reach) {
+		int[] hits = new int[9];
+		int count = 0;
+		int seedHit = RAY_MISS;
+		for (int a = -1; a <= 1; a++) {
+			for (int b = -1; b <= 1; b++) {
+				// The two offsets span the plane the ray does not travel along.
+				int sx = x + (dx != 0 ? 0 : a);
+				int sy = y + (dy != 0 ? 0 : dx != 0 ? a : b);
+				int sz = z + (dz != 0 ? 0 : b);
+				boolean seed = a == 0 && b == 0;
+				if (!seed && probe.kindAt(sx, sy, sz).isShell()) {
+					continue;
+				}
+				int hit = castRay(probe, sx, sy, sz, dx, dy, dz, reach);
+				if (seed) {
+					seedHit = hit;
+				}
+				if (hit != RAY_MISS) {
+					hits[count++] = hit;
+				}
+			}
+		}
+		int direction = dx + dy + dz;
+		int best = RAY_MISS;
+		int bestVotes = 0;
+		for (int i = 0; i < count; i++) {
+			int votes = 0;
+			for (int j = 0; j < count; j++) {
+				if (hits[j] == hits[i]) {
+					votes++;
+				}
+			}
+			boolean tieWon = votes == bestVotes && hits[i] != best && best != seedHit
+					&& (hits[i] == seedHit || (direction > 0 ? hits[i] < best : hits[i] > best));
+			if (votes > bestVotes || tieWon) {
+				best = hits[i];
+				bestVotes = votes;
+			}
+		}
+		return best;
+	}
 
 	/**
 	 * Steps from the seed until a shell block is hit, at most {@code maxSteps} times.
