@@ -412,11 +412,11 @@
 
 <p>Steam is released into the block the nozzle faces. If that block cannot be replaced (a wall, the ground, another machine), the nozzle <strong>stalls</strong>: its tank stays full, the line behind it backs up, the columns stop boiling and the reactor's temperature climbs.</p>
 
-<p>There is no message about it and there will not be — a nozzle buried in a wall does nothing, exactly as a real one would. The consequence shows up where it matters instead: the coolant bar on the <a href="reactor_controller.html">controller</a> turns amber when the steam has nowhere to go, and the heat gauge rises.</p>
+<p>There is no message about it and there will not be — a nozzle buried in a wall does nothing, exactly as a real one would. The consequence shows up where it matters instead: on the <a href="reactor_controller.html">controller</a> the steam bar turns amber from 90 % and its label reads "exhaust blocked", and the heat gauge rises.</p>
 
 <h3 id="how-many-nozzles-you-need">How many nozzles you need</h3>
 
-<p>One nozzle vents 100 mB/t, one <a href="../fluid-transport/fluid_pipe.html">pipe</a> carries 50 mB/t , and one <a href="reactor_port.html">reactor inlet</a> also carries 50 mB/t. A room at the HV ceiling makes <strong>224…247 mB of steam a tick</strong>, so a reactor's full exhaust is <strong>five inlets out, five pipe runs and three nozzles</strong>. Per-layout figures are in</p>
+<p>One nozzle vents 100 mB/t, one <a href="../fluid-transport/fluid_pipe.html">pipe</a> carries 50 mB/t , and one <a href="reactor_port.html">reactor inlet</a> also carries 50 mB/t. Steam is born 1:1 from the water boiled, and a room at the HV ceiling makes <strong>250…273 mB of steam a tick</strong> (six columns in a 2×3 block — 250, a 12×12×12 hall — 273), so a reactor's full exhaust is <strong>six inlets out, six pipe runs and three nozzles</strong>. A reactor that gets its water back after a drought boils more for a while — up to 250 mB/t on top of that on a full gauge — and the surplus shrinks as the temperature falls. Per-layout figures are in</p>
 
 <p>The pipe running into a nozzle has to <strong>push</strong> into it: set that pipe face to insert mode with a wrench, as with any other fluid consumer.</p>
 

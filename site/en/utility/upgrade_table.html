@@ -8,7 +8,66 @@
 <title>Upgrade Table — Ala Industrial — Guide</title>
 <link rel="icon" href="../favicon.png" type="image/png">
 <script src="../../assets/guide-site.js" defer></script>
-
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
 <style>
   
   @font-face {
@@ -337,8 +396,6 @@
 </div>
 <h2 id="summary">Summary</h2>
 
-<blockquote><strong>Not available to players yet.</strong> The block is registered and works, but it has <strong>no recipe</strong> and is <strong>not in the creative tab</strong>: it is waiting on its final model. That is a decision, not a forgotten line — we would rather not show a bench with placeholder geometry. The recipe and the tab come back with the model.</blockquote>
-
 <p>The <strong>Upgrade Table</strong> is a two-block machine that fits permanent upgrades onto powered tools. Put a drill in the right slot and a module in the left; the table spends energy, eats the module and writes the upgrade onto <strong>that very tool</strong> — its charge, its enchantments and its Silk Touch mode all stay where they were.</p>
 
 <p>It assembles like the Workstation: two identical casings stacked one on the other turn into a machine with the sound of an anvil. Break either half and the other degrades back into a casing, so you always get back exactly what you put in. A tool left inside is not swallowed — it waits in the casing and drops when the casing is broken.</p>
@@ -351,6 +408,16 @@
 
 <table><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody><tr><td>ID</td><td></td></tr><tr><td>Hardness / blast resistance</td><td>3.0 / 6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Shape</td><td>1×1×2, three states: casing, lower, upper</td></tr><tr><td>Slots</td><td>tool, module + the upgrade panel</td></tr></tbody></table>
 
+<p><strong>What it looks like.</strong> The casing is a full cube with an unlit panel on the front. The assembled table is an assembly jig in dark gunmetal, like the Workstation: below, a cabinet on light corner posts, a front panel with a screen, three indicator lamps and a narrow warning strip, grilles on the sides and a socket at the back; on the worktop the drill lies in two V-blocks, above it stands a gantry of two uprights and a beam, and a press carriage comes down from the beam to press the brass module onto the drill. While the table is working it comes alive: a light runs along the three indicators in turn, the bars on the screens rise and fall, and the carriage lamp and the beacon on the beam pulse; when it is idle they go dark and still. <strong>Collision.</strong> The lower half is a full cube. The upper half is three volumes following the silhouette: the V-blocks with the drill at the front (6 pixels high), the gantry at the back at full height, and the carriage between them. The space above the V-blocks in front of the gantry is open — it looks empty and it does not take clicks. <strong>The assembled table hides no neighbour.</strong> The casing is a full cube and hides a neighbour's face like any solid block. The assembled halves hide nothing: the model sits inside the cell with gaps at the edges, and if it hid a neighbour's face the player would see straight through that neighbour into the gap. <strong>A cable</strong> connects to the sides and the back face of the lower half: the grilles and the socket sit right at the edge of the cell, so the wire reaches the housing without a gap.</p>
+
+<h2 id="recipes">Recipes</h2>
+
+<p>One craft at a crafting table gives <strong>two</strong> casings — exactly the set for one table, as with the Workstation.</p>
+
+<table><thead><tr><th>What</th><th>From</th></tr></thead><tbody><tr><td>Upgrade Table (2 casings)</td><td>5 × Tempered Iron Plate, 1 × Anvil, 2 × Electronic Circuit, 1 × Machine Casing</td></tr></tbody></table>
+
+<p>The table is deliberately cheaper than the module it installs: on its own it improves nothing, and the progression is held by the Column Bore Module.</p>
+
 <h2 id="why-this-is-not-a-recipe-machine">Why this is not a recipe machine</h2>
 
 <p>A recipe in this mod cannot hand back the same item: assembling a result ignores the input and builds the output from a static template, so any recipe-shaped answer would give the player a <strong>new</strong> drill and throw away its charge, its enchantments and its Silk Touch mode. The table therefore mutates the components of the very stack in the slot — the same trick the Component Repair Bench uses, and just as free of a <code>RecipeType</code> and of recipe JSON.</p>
@@ -359,7 +426,8 @@
 
 <p>Column Bore — the first module the table takes. Electric Drill — the tool it upgrades. Workstation — the same two-casing assembly.</p>
 
-
+<h2>Crafting</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="upgrade table alaindustrial:upgrade_table" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Tempered Iron Plate"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="Tempered Iron Plate" width="32" height="32"></div> <div class="cell placeholder" title="Anvil" aria-label="Anvil"><span>anvil</span></div> <div class="cell" title="Tempered Iron Plate"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="Tempered Iron Plate" width="32" height="32"></div> <div class="cell" title="Electronic Circuit"><img src="../../assets/item/electronic_circuit_3d.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Machine Casing"><img src="../../assets/item/machine_casing_3d.png" alt="Machine Casing" width="32" height="32"></div> <div class="cell" title="Electronic Circuit"><img src="../../assets/item/electronic_circuit_3d.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Tempered Iron Plate"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="Tempered Iron Plate" width="32" height="32"></div> <div class="cell" title="Tempered Iron Plate"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="Tempered Iron Plate" width="32" height="32"></div> <div class="cell" title="Tempered Iron Plate"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="Tempered Iron Plate" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Upgrade Table"><img src="../../assets/item/upgrade_table_3d.png" alt="Upgrade Table" width="32" height="32"><span class="count">×2</span></div><div class="result-name">Upgrade Table</div></div></div></div></div>
   </main>
 </div>
 

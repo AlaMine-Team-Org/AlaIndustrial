@@ -412,13 +412,15 @@
 
 <p>La entrada no filtra. La regla de «solo agua» vive donde es honesta — en la propia <a href="fuel_rod_assembly.html">columna del reactor</a>: una tubería con el fluido equivocado debe atascarse contra la máquina que no puede usarlo, no contra una pared.</p>
 
-<p>Consecuencia práctica: <strong>una entrada sirve a una dirección cada vez.</strong> Su tanque contiene un solo fluido, así que la línea de agua y la línea de vapor van por entradas distintas. Un reactor totalmente equipado al techo de HV significa <strong>cinco entradas dentro y cinco fuera</strong>.</p>
+<p>Consecuencia práctica: <strong>una entrada sirve a una dirección cada vez.</strong> Su tanque contiene un solo fluido, así que la línea de agua y la línea de vapor van por entradas distintas. Un reactor totalmente equipado al techo de HV significa <strong>seis entradas dentro y seis fuera</strong>.</p>
 
 <h3 id="cuántas-entradas-necesitas">Cuántas entradas necesitas</h3>
 
 <p>Una entrada lleva 50 mB/t; un segmento de <a href="../fluid-transport/fluid_pipe.html">tubería de fluidos</a> lleva exactamente lo mismo (= 50). Así que una entrada y el tramo que la alimenta son una línea de 50 mB/t, y pueden contarse juntos.</p>
 
-<table><thead><tr><th>Diseño del núcleo</th><th>Agua, mB/t</th><th>Entradas dentro</th><th>Entradas fuera</th></tr></thead><tbody><tr><td>1 columna (4 barras)</td><td>0</td><td><strong>0</strong></td><td><strong>0</strong></td></tr><tr><td>2 columnas adyacentes</td><td>3</td><td>1</td><td>1</td></tr><tr><td>3 en fila</td><td>36</td><td>1</td><td>1</td></tr><tr><td>4 en cuadro</td><td>108</td><td><strong>3</strong></td><td><strong>3</strong></td></tr><tr><td>sala 3×3×3 llena (techo de HV)</td><td>243</td><td><strong>5</strong></td><td><strong>5</strong></td></tr></tbody></table>
+<table><thead><tr><th>Diseño del núcleo</th><th>Agua, mB/t</th><th>Entradas dentro</th><th>Entradas fuera</th></tr></thead><tbody><tr><td>1 columna (4 barras)</td><td>8</td><td>1</td><td>1</td></tr><tr><td>2 columnas adyacentes</td><td>29</td><td>1</td><td>1</td></tr><tr><td>3 en fila</td><td>62</td><td><strong>2</strong></td><td><strong>2</strong></td></tr><tr><td>4 en cuadro</td><td>134</td><td><strong>3</strong></td><td><strong>3</strong></td></tr><tr><td>sala 3×3×3 llena</td><td>269</td><td><strong>6</strong></td><td><strong>6</strong></td></tr><tr><td>techo de HV — una sala de cualquier tamaño</td><td>≤ 273</td><td><strong>6</strong></td><td><strong>6</strong></td></tr></tbody></table>
+
+<p><strong>Toda</strong> sala en marcha necesita agua, desde una sola columna: mientras la reacción corre, la carcasa no disipa calor, y un reactor sin agua sube hasta el accidente. La tabla es para un reactor con agua que se mantiene cerca de cero en el indicador. Uno que recupera el agua tras una sequía bebe además una vigésima parte del calor acumulado — hasta 250 mB/t con el indicador lleno — y ese extra se reduce a medida que baja la temperatura. No se tienden líneas extra para él: si falta agua, el indicador simplemente baja más despacio.</p>
 
 
 <p>Eso es lo que significa el bloque para el juego: <strong>el cuello de botella está en la pared</strong>. Cada línea extra es otra celda de carcasa cedida a una entrada, otro tramo desde la bomba, y otra fabricación que cuesta cuatro placas de blindaje. Un reactor no se puede equipar con «una tubería desde el océano».</p>
@@ -460,7 +462,7 @@ C = carcasa de reactor ×1</code></pre>
 
 <h2 id="progresión">Progresión</h2>
 
-<p>Nivel: ninguno. Necesita: placas de blindaje y <a href="reactor_casing.html">carcasa de reactor</a>, una <a href="../fluid-transport/fluid_pipe.html">tubería de fluidos</a>, un <a href="../energy-transfer/insulated_copper_cable.html">cable de cobre aislado</a>. Desbloquea: agua dentro de la sala y vapor fuera — es decir, toda la etapa 3. Sin una entrada, un reactor se limita a lo que la carcasa disipa sola, lo que deja el núcleo en dos columnas adyacentes.</p>
+<p>Nivel: ninguno. Necesita: placas de blindaje y <a href="reactor_casing.html">carcasa de reactor</a>, una <a href="../fluid-transport/fluid_pipe.html">tubería de fluidos</a>, un <a href="../energy-transfer/insulated_copper_cable.html">cable de cobre aislado</a>. Desbloquea: agua dentro de la sala y vapor fuera — es decir, toda la etapa 3. Sin una entrada no hay forma de meter una tubería de agua, y un reactor en marcha sin agua no se enfría en absoluto: la carcasa no disipa calor, e incluso una sola columna sube hasta el accidente.</p>
 
 <h2 id="relacionado">Relacionado</h2>
 

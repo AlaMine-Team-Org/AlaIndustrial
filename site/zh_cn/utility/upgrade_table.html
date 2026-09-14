@@ -8,7 +8,66 @@
 <title>升级台 — Ala Industrial — 指南</title>
 <link rel="icon" href="../favicon.png" type="image/png">
 <script src="../../assets/guide-site.js" defer></script>
-
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
 <style>
   
   @font-face {
@@ -337,8 +396,6 @@
 </div>
 <h2 id="概要">概要</h2>
 
-<blockquote><strong>暂时不对玩家开放。</strong> 方块已注册且可以工作，但它<strong>没有配方</strong>，也<strong>不在创造模式物品栏里</strong>：它在等最终模型。这是决定，不是漏写的一行——我们不想让玩家看到还是草稿几何体的工作台。配方和物品栏会和模型一起回来。</blockquote>
-
 <p><strong>升级台</strong>是一台两格高的机器，把永久改造装到电动工具上。玩家把电钻放进右边的槽，模块放进左边；升级台消耗电力，吃掉模块，把改造写进<strong>那把工具本身</strong>：电量、附魔和精准采集的开关都原封不动。</p>
 
 <p>它的组装方式和工作站一样：两个相同的外壳上下叠放，伴着铁砧声变成机器。打掉任意一半，另一半会退回外壳，玩家拿回的正是自己放进去的东西。忘在里面的工具也不会消失：它留在外壳里，等外壳被打掉时掉出来。</p>
@@ -351,6 +408,16 @@
 
 <table><thead><tr><th>属性</th><th>数值</th></tr></thead><tbody><tr><td>ID</td><td></td></tr><tr><td>硬度 / 爆炸抗性</td><td>3.0 / 6.0</td></tr><tr><td>工具</td><td>镐</td></tr><tr><td>形状</td><td>1×1×2，三种状态：外壳、下半、上半</td></tr><tr><td>槽位</td><td>工具、模块 + 升级面板</td></tr></tbody></table>
 
+<p><strong>外观。</strong> 外壳是一个完整方块，正面有一块熄灭的面板。组装好的升级台是一座装配台架，和工作站一样用深色枪灰金属：下面是立在浅色角柱上的柜体，正面是带屏幕、三个指示灯和一条窄警示条的面板，两侧是格栅，背面是插座；台面上两个 V 形托架里躺着电钻，上方是由两根立柱和一根横梁组成的龙门，压力滑架从横梁上降下，把黄铜模块压到电钻上。升级台工作时会“活”起来：一点亮光依次跑过三个指示灯，屏幕上的柱条起伏变化，滑架灯和横梁上的信标一明一暗地闪烁；不工作时全部熄灭、静止。 <strong>碰撞箱。</strong> 下半是完整方块。上半是贴合轮廓的三个体积：前面是带电钻的托架（高 6 像素），后面是全高的龙门，两者之间是滑架。龙门前方、托架上方是空的——看得见是空的，也点不到东西。 <strong>组装好的升级台不会遮住相邻方块。</strong> 外壳是完整方块，会像任何实心方块一样遮住相邻方块的那一面。组装好的两半什么都不遮：模型位于格子内部、边缘留有空隙，如果它遮住了相邻方块的面，玩家就会透过那个相邻方块直接看到空隙。 <strong>导线</strong>可以连到下半的侧面和背面：格栅和插座紧贴格子边缘，所以导线接到机身时没有缝隙。</p>
+
+<h2 id="配方">配方</h2>
+
+<p>在工作台上合成一次得到<strong>两个</strong>外壳——正好够组装一台升级台，和工作站一样。</p>
+
+<table><thead><tr><th>产物</th><th>原料</th></tr></thead><tbody><tr><td>升级台（2 个外壳）</td><td>5 × 回火铁板、1 × 铁砧、2 × 电子电路、1 × 机器外壳</td></tr></tbody></table>
+
+<p>升级台故意比装在它上面的模块便宜：它本身什么也不改造，推进进度靠的是柱状开采模块。</p>
+
 <h2 id="为什么它不是配方机器">为什么它不是配方机器</h2>
 
 <p>这个模组里的配方无法把同一件物品还给你：结果的组装会忽略输入，用静态模板造出产物，所以任何走配方的做法都会给玩家一把<strong>新的</strong>电钻，并抹掉电量、附魔和精准采集的状态。因此升级台直接改写槽里那一摞的组件——和部件修理台同一个手法，同样不需要 <code>RecipeType</code>，也不需要任何配方 JSON。</p>
@@ -359,7 +426,8 @@
 
 <p>柱状开采 — 升级台接受的第一个模块。 电钻 — 被改造的工具。 工作站 — 同样的双外壳组装。</p>
 
-
+<h2>合成</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="升级台 alaindustrial:upgrade_table" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="回火铁板"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="回火铁板" width="32" height="32"></div> <div class="cell placeholder" title="Anvil" aria-label="Anvil"><span>anvil</span></div> <div class="cell" title="回火铁板"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="回火铁板" width="32" height="32"></div> <div class="cell" title="电子电路"><img src="../../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="机器外壳"><img src="../../assets/item/machine_casing_3d.png" alt="机器外壳" width="32" height="32"></div> <div class="cell" title="电子电路"><img src="../../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="回火铁板"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="回火铁板" width="32" height="32"></div> <div class="cell" title="回火铁板"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="回火铁板" width="32" height="32"></div> <div class="cell" title="回火铁板"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="回火铁板" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="升级台"><img src="../../assets/item/upgrade_table_3d.png" alt="升级台" width="32" height="32"><span class="count">×2</span></div><div class="result-name">升级台</div></div></div></div></div>
   </main>
 </div>
 

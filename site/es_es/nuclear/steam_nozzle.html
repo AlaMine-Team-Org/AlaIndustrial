@@ -412,11 +412,11 @@
 
 <p>El vapor se libera en el bloque al que mira la boquilla. Si ese bloque no puede reemplazarse (una pared, el suelo, otra máquina), la boquilla <strong>se atasca</strong>: su tanque se queda lleno, la línea tras ella se colapsa, las columnas dejan de hervir y la temperatura del reactor sube.</p>
 
-<p>No hay mensaje de ello ni lo habrá — una boquilla enterrada en una pared no hace nada, exactamente como una real. La consecuencia aparece donde importa: la barra de refrigerante del <a href="reactor_controller.html">controlador</a> se vuelve ámbar cuando el vapor no tiene a dónde ir, y el indicador de calor sube.</p>
+<p>No hay mensaje de ello ni lo habrá — una boquilla enterrada en una pared no hace nada, exactamente como una real. La consecuencia aparece donde importa: en el <a href="reactor_controller.html">controlador</a> la barra de vapor se vuelve ámbar desde el 90 % y su rótulo pasa a «escape bloqueado», y el indicador de calor sube.</p>
 
 <h3 id="cuántas-boquillas-necesitas">Cuántas boquillas necesitas</h3>
 
-<p>Una boquilla ventila 100 mB/t, una <a href="../fluid-transport/fluid_pipe.html">tubería</a> lleva 50 mB/t , y una <a href="reactor_port.html">entrada del reactor</a> también lleva 50 mB/t. Una sala al techo de HV produce <strong>224…247 mB de vapor por tick</strong>, así que el escape completo de un reactor son <strong>cinco entradas de salida, cinco tramos de tubería y tres boquillas</strong>. Las cifras por diseño están en</p>
+<p>Una boquilla ventila 100 mB/t, una <a href="../fluid-transport/fluid_pipe.html">tubería</a> lleva 50 mB/t , y una <a href="reactor_port.html">entrada del reactor</a> también lleva 50 mB/t. El vapor nace 1:1 del agua hervida, y una sala al techo de HV produce <strong>250…273 mB de vapor por tick</strong> (seis columnas en bloque 2×3 — 250, una nave de 12×12×12 — 273), así que el escape completo de un reactor son <strong>seis entradas de salida, seis tramos de tubería y tres boquillas</strong>. Un reactor que recupera el agua tras una sequía hierve más durante un rato — hasta 250 mB/t extra con el indicador lleno — y ese extra se reduce a medida que baja la temperatura. Las cifras por diseño están en</p>
 
 <p>La tubería que llega a una boquilla tiene que <strong>empujar</strong> hacia ella: pon esa cara de la tubería en modo inserción con la llave inglesa, como con cualquier otro consumidor de fluidos.</p>
 

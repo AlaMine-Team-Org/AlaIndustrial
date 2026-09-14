@@ -8,7 +8,66 @@
 <title>Стіл покращень — Ala Industrial — Гід</title>
 <link rel="icon" href="../favicon.png" type="image/png">
 <script src="../../assets/guide-site.js" defer></script>
-
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
 <style>
   
   @font-face {
@@ -337,8 +396,6 @@
 </div>
 <h2 id="зведення">Зведення</h2>
 
-<blockquote><strong>Поки недоступний гравцеві.</strong> Блок зареєстрований і працює, але в нього <strong>немає рецепта</strong> і його <strong>немає у творчій вкладці</strong>: він чекає на фінальну модель. Це рішення, а не забутий рядок — показувати верстак із чорновою геометрією ми не хочемо. Рецепт і вкладку повернемо разом із моделлю.</blockquote>
-
 <p><strong>Стіл покращень</strong> — двоблокова машина, що ставить на електроінструмент постійні покращення. Гравець кладе бур у правий слот, модуль — у лівий; стіл витрачає енергію, з'їдає модуль і записує покращення <strong>на той самий інструмент</strong>: заряд, чари та режим шовкового дотику лишаються на місці.</p>
 
 <p>Збирається як робоча станція: дві однакові заготовки, поставлені одна на одну, перетворюються на машину зі звуком ковадла. Зламай будь-яку половину — друга деградує назад у заготовку, і гравець отримує рівно те, що вклав. Інструмент, забутий усередині, не зникає: він лишається в заготовці й випадає, коли її ламають.</p>
@@ -351,6 +408,16 @@
 
 <table><thead><tr><th>Властивість</th><th>Значення</th></tr></thead><tbody><tr><td>ID</td><td></td></tr><tr><td>Міцність / вибухостійкість</td><td>3.0 / 6.0</td></tr><tr><td>Інструмент</td><td>кирка</td></tr><tr><td>Форма</td><td>1×1×2, три стани: заготовка, низ, верх</td></tr><tr><td>Слоти</td><td>інструмент, модуль + панель апгрейдів</td></tr></tbody></table>
 
+<p><strong>Як виглядає.</strong> Заготовка — повний куб із погашеною панеллю спереду. Зібраний стіл — складальний стапель із темного збройового металу, як робоча станція: унизу шафа на світлих кутових стійках, спереду панель з екраном, трьома індикаторами та вузькою попереджувальною смугою, з боків ґрати, ззаду розетка; на стільниці у двох V-подібних ложементах лежить бур, над ним портал із двох стійок із балкою, з балки опускається прес-каретка й притискає до бура латунний модуль. Поки стіл працює, він оживає: вогник біжить трьома індикаторами по черзі, стовпчики на екранах ростуть і опадають, лампа каретки й маяк на балці пульсують; без роботи все гасне й завмирає. <strong>Колізія.</strong> Нижня половина — повний куб. Верхня — три об'єми, що повторюють силует: ложементи з буром спереду (заввишки 6 пікселів), портал ззаду на всю висоту й каретка між ними. Перед порталом над ложементами вільно — це видно, і туди не клікається. <strong>Зібраний стіл не ховає сусідів.</strong> Заготовка — повний куб і закриває грань сусіда, як будь-який суцільний блок. Зібрані половини не закривають нічого: модель стоїть усередині клітинки із зазорами біля країв, і якби вона ховала грань сусіда, крізь цього сусіда було б видно зазор наскрізь. <strong>Кабель</strong> під'єднується до боків і задньої грані нижньої половини: ґрати й розетка стоять біля самого краю клітинки, тому провід доходить до корпусу без просвіту.</p>
+
+<h2 id="рецепти">Рецепти</h2>
+
+<p>Одне крафтування на верстаку дає <strong>дві</strong> заготовки — рівно комплект на один стіл, як у робочої станції.</p>
+
+<table><thead><tr><th>Що</th><th>З чого</th></tr></thead><tbody><tr><td>Стіл покращень (2 заготовки)</td><td>5 × Пластина із загартованого заліза, 1 × Ковадло, 2 × Електронна схема, 1 × Машинний корпус</td></tr></tbody></table>
+
+<p>Стіл навмисно дешевший за модуль, який на ньому ставлять: сам по собі він нічого не покращує, а прогресію тримає Модуль колонного буріння.</p>
+
 <h2 id="чому-це-не-машина-з-рецептами">Чому це не машина з рецептами</h2>
 
 <p>Рецепт у цьому моді не може повернути той самий предмет: збирання результату ігнорує вхід і будує вихід зі статичного шаблону, тож будь-який рецептний шлях віддав би гравцеві <strong>новий</strong> бур і стер заряд, чари та режим шовку. Тому стіл змінює компоненти просто на стеку в слоті — тим самим прийомом, що й верстак ремонту, і так само обходиться без <code>RecipeType</code> і без жодного JSON рецепта.</p>
@@ -359,7 +426,8 @@
 
 <p>Колонне буріння — перший модуль, який приймає стіл. Електробур — інструмент, який стіл покращує. Робоча станція — та сама схема збирання з двох заготовок.</p>
 
-
+<h2>Крафт</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="стіл покращень alaindustrial:upgrade_table" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаку</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Пластина із загартованого заліза"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="Пластина із загартованого заліза" width="32" height="32"></div> <div class="cell placeholder" title="Anvil" aria-label="Anvil"><span>anvil</span></div> <div class="cell" title="Пластина із загартованого заліза"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="Пластина із загартованого заліза" width="32" height="32"></div> <div class="cell" title="Електронна схема"><img src="../../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Машинний корпус"><img src="../../assets/item/machine_casing_3d.png" alt="Машинний корпус" width="32" height="32"></div> <div class="cell" title="Електронна схема"><img src="../../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Пластина із загартованого заліза"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="Пластина із загартованого заліза" width="32" height="32"></div> <div class="cell" title="Пластина із загартованого заліза"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="Пластина із загартованого заліза" width="32" height="32"></div> <div class="cell" title="Пластина із загартованого заліза"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="Пластина із загартованого заліза" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Стіл покращень"><img src="../../assets/item/upgrade_table_3d.png" alt="Стіл покращень" width="32" height="32"><span class="count">×2</span></div><div class="result-name">Стіл покращень</div></div></div></div></div>
   </main>
 </div>
 

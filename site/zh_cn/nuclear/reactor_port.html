@@ -412,13 +412,15 @@
 
 <p>入口不过滤流体。"这里只走水"这条规则待在它站得住脚的地方，也就是 <a href="fuel_rod_assembly.html">反应堆柱</a>本身：装着别种流体的管道，应该顶在不收它的机器上，而不是 顶在墙上。</p>
 
-<p>实际结果：<strong>一个入口一次只服务一个方向。</strong>它的储罐里只能有一种流体，所以水线和蒸汽线要走不同的 入口。在 HV 上限满负荷运转的反应堆，需要<strong>五个入口供水、五个出汽</strong>。</p>
+<p>实际结果：<strong>一个入口一次只服务一个方向。</strong>它的储罐里只能有一种流体，所以水线和蒸汽线要走不同的 入口。在 HV 上限满负荷运转的反应堆，需要<strong>六个入口供水、六个出汽</strong>。</p>
 
 <h3 id="需要多少个入口">需要多少个入口</h3>
 
 <p>入口每刻通 50 mB，<a href="../fluid-transport/fluid_pipe.html">流体管道</a>的一段也正好是 50 mB。所以入口连同 接到它的管道就是一条 50 mB/刻 的线路，可以合在一起数。</p>
 
-<table><thead><tr><th>活性区</th><th>水，mB/刻</th><th>供水入口</th><th>出汽入口</th></tr></thead><tbody><tr><td>1 根柱子（4 根燃料棒）</td><td>0</td><td><strong>0</strong></td><td><strong>0</strong></td></tr><tr><td>2 根相邻柱子</td><td>3</td><td>1</td><td>1</td></tr><tr><td>3 根一排</td><td>36</td><td>1</td><td>1</td></tr><tr><td>4 根成方</td><td>108</td><td><strong>3</strong></td><td><strong>3</strong></td></tr><tr><td>3×3×3 房间塞满（HV 上限）</td><td>243</td><td><strong>5</strong></td><td><strong>5</strong></td></tr></tbody></table>
+<table><thead><tr><th>活性区</th><th>水，mB/刻</th><th>供水入口</th><th>出汽入口</th></tr></thead><tbody><tr><td>1 根柱子（4 根燃料棒）</td><td>8</td><td>1</td><td>1</td></tr><tr><td>2 根相邻柱子</td><td>29</td><td>1</td><td>1</td></tr><tr><td>3 根一排</td><td>62</td><td><strong>2</strong></td><td><strong>2</strong></td></tr><tr><td>4 根成方</td><td>134</td><td><strong>3</strong></td><td><strong>3</strong></td></tr><tr><td>3×3×3 房间塞满</td><td>269</td><td><strong>6</strong></td><td><strong>6</strong></td></tr><tr><td>HV 上限——任意大小的房间</td><td>≤ 273</td><td><strong>6</strong></td><td><strong>6</strong></td></tr></tbody></table>
+
+<p>从一根柱子开始，<strong>任何</strong>运转中的房间都需要水：反应进行期间外壳不散热，没有水的反应堆会一路升温到 事故。表中数字针对的是有水、刻度停在零附近的反应堆。断水后重新来水的反应堆，除此之外还要多喝掉已积 热量的二十分之一——满刻度时最多 250 mB/刻——这部分会随温度下降而变少。不必为它多拉线路：水不够， 刻度只是降得慢一些。</p>
 
 
 <p>这就是这个方块对玩法的意义：<strong>瓶颈就在墙上</strong>。每多一条线路，就要多占一格外壳给入口，多拉一条从泵 过来的线，多做一次要花四块屏蔽板的合成。反应堆没法用"从海里接一根管子"来搞定。</p>
@@ -458,7 +460,7 @@ C = 反应堆外壳 ×1</code></pre>
 
 <h2 id="进阶">进阶</h2>
 
-<p>等级：无。 需要：屏蔽板和<a href="reactor_casing.html">反应堆外壳</a>、 <a href="../fluid-transport/fluid_pipe.html">流体管道</a>、 <a href="../energy-transfer/insulated_copper_cable.html">绝缘铜缆</a>。 解锁：往房间供水、把蒸汽排出去。没有入口，反应堆就只能靠外壳自己散掉的那点热，也就是两根相邻 柱子的上限。</p>
+<p>等级：无。 需要：屏蔽板和<a href="reactor_casing.html">反应堆外壳</a>、 <a href="../fluid-transport/fluid_pipe.html">流体管道</a>、 <a href="../energy-transfer/insulated_copper_cable.html">绝缘铜缆</a>。 解锁：往房间供水、把蒸汽排出去。没有入口，水管就接不进去，而运转中的反应堆没有水就完全不会降温： 外壳不散热，哪怕只有一根柱子也会升温到事故。</p>
 
 <h2 id="相关内容">相关内容</h2>
 

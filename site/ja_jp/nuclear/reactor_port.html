@@ -412,13 +412,15 @@
 
 <p>入口は流体を選り分けません。「ここは水だけ」という規則は、それが筋の通る場所—— <a href="fuel_rod_assembly.html">原子炉カラム</a>自身——にあります。違う流体を運ぶパイプは、壁ではなく、 それを受け取らない機械の前で止まるべきです。</p>
 
-<p>実務上の帰結: <strong>1 つの入口が一度に担うのは 1 方向だけです。</strong> タンクに入る流体は 1 種類なので、 水の系統と蒸気の系統は別々の入口に分けます。HV 上限で完全に配管した原子炉は、<strong>供給に 5 つ、排気に 5 つ</strong>の入口を要します。</p>
+<p>実務上の帰結: <strong>1 つの入口が一度に担うのは 1 方向だけです。</strong> タンクに入る流体は 1 種類なので、 水の系統と蒸気の系統は別々の入口に分けます。HV 上限で完全に配管した原子炉は、<strong>供給に 6 つ、排気に 6 つ</strong>の入口を要します。</p>
 
 <h3 id="入口はいくつ必要か">入口はいくつ必要か</h3>
 
 <p>入口は 50 mB/t を通し、<a href="../fluid-transport/fluid_pipe.html">流体パイプ</a>の 1 区間もちょうど同じ 50 mB/t です。つまり「入口とそこへ至るパイプ」で 50 mB/t の 1 系統なので、まとめて数えられます。</p>
 
-<table><thead><tr><th>活性領域</th><th>水 mB/t</th><th>供給の入口</th><th>排気の入口</th></tr></thead><tbody><tr><td>カラム 1 本（燃料棒 4 本）</td><td>0</td><td><strong>0</strong></td><td><strong>0</strong></td></tr><tr><td>隣り合うカラム 2 本</td><td>3</td><td>1</td><td>1</td></tr><tr><td>一列に 3 本</td><td>36</td><td>1</td><td>1</td></tr><tr><td>正方形に 4 本</td><td>108</td><td><strong>3</strong></td><td><strong>3</strong></td></tr><tr><td>3×3×3 を埋め尽くした部屋（HV 上限）</td><td>243</td><td><strong>5</strong></td><td><strong>5</strong></td></tr></tbody></table>
+<table><thead><tr><th>活性領域</th><th>水 mB/t</th><th>供給の入口</th><th>排気の入口</th></tr></thead><tbody><tr><td>カラム 1 本（燃料棒 4 本）</td><td>8</td><td>1</td><td>1</td></tr><tr><td>隣り合うカラム 2 本</td><td>29</td><td>1</td><td>1</td></tr><tr><td>一列に 3 本</td><td>62</td><td><strong>2</strong></td><td><strong>2</strong></td></tr><tr><td>正方形に 4 本</td><td>134</td><td><strong>3</strong></td><td><strong>3</strong></td></tr><tr><td>3×3×3 を埋め尽くした部屋</td><td>269</td><td><strong>6</strong></td><td><strong>6</strong></td></tr><tr><td>HV 上限 — どんな大きさの部屋でも</td><td>≤ 273</td><td><strong>6</strong></td><td><strong>6</strong></td></tr></tbody></table>
+
+<p>水はカラム 1 本から始めて、稼働する<strong>すべての</strong>部屋に要ります。反応が続くあいだシェルは熱を捨てず、 水の無い原子炉は事故まで熱くなっていきます。表の数字は、水があってゲージがゼロ付近にある原子炉の ものです。渇水のあとで水を取り戻した原子炉は、それに加えてためた熱の 20 分の 1 を飲みます—— 満ゲージで最大 250 mB/t——が、この上乗せは温度とともに小さくなります。そのための系統は足しません。 水が足りなければ、ゲージの下がり方が遅くなるだけです。</p>
 
 
 <p>ゲーム的な意味はここにあります。<strong>ボトルネックは壁の中にある</strong>、ということです。系統が 1 本増える たびに、シェルのマスが 1 つ入口に取られ、ポンプからの配管が 1 本増え、遮蔽板 4 枚ぶんのクラフトが 1 回増えます。原子炉を「海から引いた 1 本のパイプ」で賄うことはできません。</p>
@@ -458,7 +460,7 @@ C = 原子炉ケース ×1</code></pre>
 
 <h2 id="進行">進行</h2>
 
-<p>ティア: なし。 必要: 遮蔽板と<a href="reactor_casing.html">原子炉ケース</a>、 <a href="../fluid-transport/fluid_pipe.html">流体パイプ</a>、 <a href="../energy-transfer/insulated_copper_cable.html">絶縁銅ケーブル</a>。 解放: 部屋への給水と蒸気の排出。入口が無ければ、原子炉はシェルが自力で捨てられる熱——隣り合う カラム 2 本ぶん——が上限です。</p>
+<p>ティア: なし。 必要: 遮蔽板と<a href="reactor_casing.html">原子炉ケース</a>、 <a href="../fluid-transport/fluid_pipe.html">流体パイプ</a>、 <a href="../energy-transfer/insulated_copper_cable.html">絶縁銅ケーブル</a>。 解放: 部屋への給水と蒸気の排出。入口が無ければ水のパイプを中へ通せず、稼働中の原子炉は水無しでは まったく冷えません。シェルは熱を捨てないので、カラム 1 本でも事故に至ります。</p>
 
 <h2 id="関連項目">関連項目</h2>
 

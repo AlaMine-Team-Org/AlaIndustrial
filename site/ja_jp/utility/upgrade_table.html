@@ -8,7 +8,66 @@
 <title>アップグレードテーブル — Ala Industrial — ガイド</title>
 <link rel="icon" href="../favicon.png" type="image/png">
 <script src="../../assets/guide-site.js" defer></script>
-
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
 <style>
   
   @font-face {
@@ -337,8 +396,6 @@
 </div>
 <h2 id="概要">概要</h2>
 
-<blockquote><strong>まだプレイヤーには出していません。</strong> ブロックは登録済みで動作しますが、<strong>レシピがなく</strong>、<strong>クリエイティブタブにも出しません</strong>。最終的なモデル待ちです。書き忘れではなく判断です。仮の形のまま作業台を見せたくないからで、レシピとタブはモデルと一緒に戻します。</blockquote>
-
 <p><strong>アップグレードテーブル</strong>は、電動工具に恒久的な改造を取り付ける2ブロックの機械です。右のスロットにドリル、左にモジュールを入れると、テーブルは電力を使ってモジュールを消費し、<strong>その道具そのもの</strong>に改造を書き込みます。充電も、エンチャントも、シルクタッチの状態もそのままです。</p>
 
 <p>組み立てはワークステーションと同じで、同一のケーシング2個を積むと金床の音とともに機械になります。どちらかの半分を壊すと、もう片方はケーシングに戻るので、入れたものはそのまま返ります。中に忘れた道具も消えません。ケーシングの中で待ち、それを壊したときに落ちます。</p>
@@ -351,6 +408,16 @@
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>ID</td><td></td></tr><tr><td>硬さ / 爆発耐性</td><td>3.0 / 6.0</td></tr><tr><td>道具</td><td>ツルハシ</td></tr><tr><td>形</td><td>1×1×2、3状態：ケーシング、下、上</td></tr><tr><td>スロット</td><td>道具、モジュール＋アップグレードパネル</td></tr></tbody></table>
 
+<p><strong>見た目。</strong> ケーシングは正面に消灯したパネルのある完全なブロックです。組み立てたテーブルはワークステーションと同じ暗いガンメタルの組立治具で、下は明るい角柱に載ったキャビネット、正面に画面と3つのインジケーターと細い警告ストライプのあるパネル、側面にグリル、背面にソケットがあります。天板では2つのV字受けにドリルが寝ていて、その上に2本の柱と梁でできた門型フレームが立ち、梁からプレス台車が降りてきて真鍮のモジュールをドリルに押し当てます。稼働中はテーブルが動き出します。光が3つのインジケーターを順番に走り、画面のバーが上下し、台車のランプと梁のビーコンが明滅します。止まるとすべて消えて静止します。 <strong>当たり判定。</strong> 下半分は完全なブロックです。上半分はシルエットに沿った3つの立体で、前にドリルを載せたV字受け（高さ6ピクセル）、後ろに全高の門型フレーム、その間に台車です。門型フレームの手前、V字受けの上は空いていて、見たとおり何もなくクリックも当たりません。 <strong>組み立てたテーブルは隣のブロックを隠しません。</strong> ケーシングは完全なブロックで、ほかの固体ブロックと同じく隣のブロックの面を隠します。組み立てた上下の半分は何も隠しません。モデルはマスの内側にあって縁に隙間があるので、もし隣の面を隠すと、その隣のブロック越しに隙間が透けて見えてしまいます。 <strong>ケーブル</strong>は下半分の側面と背面につながります。グリルとソケットはマスの端いっぱいにあるので、線は隙間なく筐体まで届きます。</p>
+
+<h2 id="レシピ">レシピ</h2>
+
+<p>作業台で1回クラフトすると<strong>2個</strong>のケーシングができます。ワークステーションと同じく、ちょうどテーブル1台分です。</p>
+
+<table><thead><tr><th>何を</th><th>材料</th></tr></thead><tbody><tr><td>アップグレードテーブル（ケーシング2個）</td><td>5 × 焼き入れ鉄板、1 × 金床、2 × 電子回路、1 × マシンケース</td></tr></tbody></table>
+
+<p>テーブルは、その上で取り付けるモジュールより意図的に安くしてあります。テーブル自体は何も改造せず、進行を支えるのは柱状掘削モジュールだからです。</p>
+
 <h2 id="なぜレシピ機械ではないのか">なぜレシピ機械ではないのか</h2>
 
 <p>このモッドのレシピは同じ物を返せません。結果の組み立ては入力を無視し、静的なテンプレートから出力を作るので、レシピで書けば<strong>新しい</strong>ドリルが返り、充電もエンチャントもシルクタッチの状態も消えます。そのためテーブルはスロットにあるスタックのコンポーネントを直接書き換えます。部品修理台と同じ手で、同じく <code>RecipeType</code> もレシピJSONも要りません。</p>
@@ -359,7 +426,8 @@
 
 <p>柱状掘削 — テーブルが受け取る最初のモジュール。 電動ドリル — 改造される道具。 ワークステーション — 同じ2ケーシングの組み立て。</p>
 
-
+<h2>クラフト</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="アップグレードテーブル alaindustrial:upgrade_table" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="焼き入れ鉄板"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="焼き入れ鉄板" width="32" height="32"></div> <div class="cell placeholder" title="Anvil" aria-label="Anvil"><span>anvil</span></div> <div class="cell" title="焼き入れ鉄板"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="焼き入れ鉄板" width="32" height="32"></div> <div class="cell" title="電子回路"><img src="../../assets/item/electronic_circuit_3d.png" alt="電子回路" width="32" height="32"></div> <div class="cell" title="マシンケース"><img src="../../assets/item/machine_casing_3d.png" alt="マシンケース" width="32" height="32"></div> <div class="cell" title="電子回路"><img src="../../assets/item/electronic_circuit_3d.png" alt="電子回路" width="32" height="32"></div> <div class="cell" title="焼き入れ鉄板"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="焼き入れ鉄板" width="32" height="32"></div> <div class="cell" title="焼き入れ鉄板"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="焼き入れ鉄板" width="32" height="32"></div> <div class="cell" title="焼き入れ鉄板"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="焼き入れ鉄板" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="アップグレードテーブル"><img src="../../assets/item/upgrade_table_3d.png" alt="アップグレードテーブル" width="32" height="32"><span class="count">×2</span></div><div class="result-name">アップグレードテーブル</div></div></div></div></div>
   </main>
 </div>
 

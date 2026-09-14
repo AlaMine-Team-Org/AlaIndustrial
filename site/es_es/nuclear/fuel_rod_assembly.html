@@ -482,7 +482,7 @@
 
 <h3 id="ebullición">Ebullición</h3>
 
-<p>La columna no hierve el agua por sí misma — lo hace el controlador, y <strong>solo cuando el reactor ha pasado el objetivo del circuito de refrigeración (60 % de la escala)</strong>. Por debajo, la carcasa disipa todo su calor sola y el circuito no gasta nada: el agua es un sistema de seguridad, no un radiador. El objetivo está deliberadamente por debajo de la banda ámbar (= 70 %), así que un reactor sano refrigerado por agua se lee verde y el ámbar vuelve a significar «algo va mal».</p>
+<p>La columna no hierve el agua por sí misma — lo hace el controlador, <strong>cada tick mientras corre la reacción</strong>, sin umbral alguno: el agua se lleva todo el calor de la reacción y, además, una vigésima parte del ya acumulado. Mientras las barras trabajan, la carcasa de la sala no disipa calor, así que el agua de las columnas es lo único que enfría un reactor en marcha: sin ella la escala sube hasta el accidente. Un reactor al que le basta el agua se queda junto al cero de la escala, y el ámbar significa «el agua no da abasto».</p>
 
 <p>Un milicubo de agua se lleva = <strong>2 unidades de calor</strong> y se convierte en <strong>1 mB de vapor</strong> — uno a uno en volumen.</p>
 
@@ -507,6 +507,8 @@
 <table><thead><tr><th>Paso</th><th>Qué hace el controlador</th></tr></thead><tbody><tr><td>Cada 2 s</td><td>barre el interior de la sala, recoge <strong>todas</strong> las columnas, suma las barras cargadas, cuenta los pares adyacentes</td></tr><tr><td>Cada tick de producción</td><td>reparte la salida entre columnas <strong>en proporción a las barras cargadas</strong> de cada una</td></tr><tr><td>Dentro de una columna</td><td>la parte se convierte en puntos de durabilidad y se cobra a <strong>todas</strong> las barras cargadas a la vez</td></tr><tr><td>Cada tick</td><td>reasienta los fluidos dentro de cada pila vertical</td></tr></tbody></table>
 
 <p>El resto de la división va a la primera columna con combustible en vez de perderse: una sala cuyo número de barras no divide la salida uniformemente paga igualmente cada EU/FE que produjo.</p>
+
+<p><strong>En la pantalla del controlador</strong> la columna aparece en la pestaña «Núcleo» como parte de su pila vertical: cuántas barras cargadas y vainas vacías hay en la pila, el desgaste medio y el peor, la energía restante, el agua y el vapor. La energía restante son los puntos de durabilidad que le quedan a cada barra cargada multiplicados por los EU/FE por punto: la misma magnitud con la que la columna paga lo que produce. Una barra con 400 de daño sobre 1000 muestra exactamente 600 puntos de reserva.</p>
 
 <h2 id="propiedades-del-bloque">Propiedades del bloque</h2>
 

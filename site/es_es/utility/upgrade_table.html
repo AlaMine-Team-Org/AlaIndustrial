@@ -8,7 +8,66 @@
 <title>Mesa de mejoras — Ala Industrial — Guía</title>
 <link rel="icon" href="../favicon.png" type="image/png">
 <script src="../../assets/guide-site.js" defer></script>
-
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
 <style>
   
   @font-face {
@@ -337,8 +396,6 @@
 </div>
 <h2 id="resumen">Resumen</h2>
 
-<blockquote><strong>Todavía no disponible para los jugadores.</strong> El bloque está registrado y funciona, pero <strong>no tiene receta</strong> y <strong>no está en la pestaña creativa</strong>: espera su modelo final. Es una decisión, no una línea olvidada — preferimos no mostrar un banco con geometría provisional. La receta y la pestaña volverán con el modelo.</blockquote>
-
 <p>La <strong>Mesa de mejoras</strong> es una máquina de dos bloques que instala mejoras permanentes en las herramientas eléctricas. Pon un taladro en el hueco derecho y un módulo en el izquierdo; la mesa gasta energía, consume el módulo y escribe la mejora en <strong>esa misma herramienta</strong> — su carga, sus encantamientos y su modo de Toque de seda quedan donde estaban.</p>
 
 <p>Se ensambla como la Estación de trabajo: dos carcasas idénticas apiladas una sobre la otra se convierten en una máquina con sonido de yunque. Rompe cualquier mitad y la otra degrada de vuelta a carcasa, así que siempre recuperas exactamente lo que pusiste. Una herramienta dejada dentro no se traga — espera en la carcasa y cae al romper esta.</p>
@@ -351,6 +408,16 @@
 
 <table><thead><tr><th>Propiedad</th><th>Valor</th></tr></thead><tbody><tr><td>ID</td><td></td></tr><tr><td>Dureza / resistencia a explosiones</td><td>3.0 / 6.0</td></tr><tr><td>Herramienta</td><td>pico</td></tr><tr><td>Forma</td><td>1×1×2, tres estados: carcasa, inferior, superior</td></tr><tr><td>Huecos</td><td>herramienta, módulo + el panel de mejoras</td></tr></tbody></table>
 
+<p><strong>Cómo se ve.</strong> La carcasa es un cubo completo con un panel apagado en el frente. La mesa montada es una plantilla de montaje de metal pavonado oscuro, como la Estación de trabajo: abajo, un armario sobre postes de esquina claros, un panel frontal con una pantalla, tres indicadores y una franja de aviso estrecha, rejillas a los lados y un enchufe detrás; sobre la encimera, el taladro descansa en dos soportes en V, encima se alza un pórtico de dos columnas con una viga, y de la viga baja un carro de prensa que aprieta el módulo de latón contra el taladro. Mientras la mesa trabaja, cobra vida: una luz recorre los tres indicadores por turnos, las barras de las pantallas suben y bajan, y la lámpara del carro y la baliza de la viga palpitan; sin trabajo se apagan y quedan quietas. <strong>Colisión.</strong> La mitad inferior es un cubo completo. La superior son tres volúmenes que siguen la silueta: los soportes con el taladro delante (6 píxeles de alto), el pórtico detrás a toda la altura y el carro entre ambos. Delante del pórtico, por encima de los soportes, queda libre — se ve vacío y no recibe clics. <strong>La mesa montada no oculta a ningún vecino.</strong> La carcasa es un cubo completo y oculta la cara del vecino como cualquier bloque sólido. Las mitades montadas no ocultan nada: el modelo queda dentro de la celda con huecos en los bordes, y si ocultara la cara del vecino, el jugador vería a través de ese vecino, directamente al hueco. <strong>Un cable</strong> se conecta a los lados y a la cara trasera de la mitad inferior: las rejillas y el enchufe están justo en el borde de la celda, así que el cable llega a la carcasa sin hueco.</p>
+
+<h2 id="recetas">Recetas</h2>
+
+<p>Un crafteo en la mesa de trabajo da <strong>dos</strong> carcasas — justo el juego para una mesa, como con la Estación de trabajo.</p>
+
+<table><thead><tr><th>Qué</th><th>De qué</th></tr></thead><tbody><tr><td>Mesa de mejoras (2 carcasas)</td><td>5 × Placa de hierro templado, 1 × Yunque, 2 × Circuito electrónico, 1 × Carcasa de máquina</td></tr></tbody></table>
+
+<p>La mesa es deliberadamente más barata que el módulo que instala: por sí sola no mejora nada, y la progresión la sostiene el Módulo de perforación en columna.</p>
+
 <h2 id="por-qué-esto-no-es-una-máquina-de-recetas">Por qué esto no es una máquina de recetas</h2>
 
 <p>Una receta en este mod no puede devolver el mismo objeto: ensamblar un resultado ignora la entrada y construye la salida desde una plantilla estática, así que cualquier respuesta con forma de receta le daría al jugador un taladro <strong>nuevo</strong> y tiraría su carga, sus encantamientos y su modo de Toque de seda. La mesa por tanto muta los componentes de la misma pila del hueco — el mismo truco que usa el Banco de reparación de componentes, e igual de libre de un <code>RecipeType</code> y de JSON de recetas.</p>
@@ -359,7 +426,8 @@
 
 <p>Barrena de columna — el primer módulo que acepta la mesa. Taladro eléctrico — la herramienta que mejora. Estación de trabajo — el mismo ensamblaje de dos carcasas.</p>
 
-
+<h2>Fabricación</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="mesa de mejoras alaindustrial:upgrade_table" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Placa de hierro templado"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="Placa de hierro templado" width="32" height="32"></div> <div class="cell placeholder" title="Anvil" aria-label="Anvil"><span>anvil</span></div> <div class="cell" title="Placa de hierro templado"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="Placa de hierro templado" width="32" height="32"></div> <div class="cell" title="Circuito electrónico"><img src="../../assets/item/electronic_circuit_3d.png" alt="Circuito electrónico" width="32" height="32"></div> <div class="cell" title="Carcasa de máquina"><img src="../../assets/item/machine_casing_3d.png" alt="Carcasa de máquina" width="32" height="32"></div> <div class="cell" title="Circuito electrónico"><img src="../../assets/item/electronic_circuit_3d.png" alt="Circuito electrónico" width="32" height="32"></div> <div class="cell" title="Placa de hierro templado"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="Placa de hierro templado" width="32" height="32"></div> <div class="cell" title="Placa de hierro templado"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="Placa de hierro templado" width="32" height="32"></div> <div class="cell" title="Placa de hierro templado"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="Placa de hierro templado" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Mesa de mejoras"><img src="../../assets/item/upgrade_table_3d.png" alt="Mesa de mejoras" width="32" height="32"><span class="count">×2</span></div><div class="result-name">Mesa de mejoras</div></div></div></div></div>
   </main>
 </div>
 

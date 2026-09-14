@@ -412,13 +412,15 @@
 
 <p>The inlet does not filter. The "water only" rule lives where it is honest — on the <a href="fuel_rod_assembly.html">reactor column</a> itself: a pipe carrying the wrong fluid should stall against the machine that cannot use it, not against a wall.</p>
 
-<p>Practical consequence: <strong>one inlet serves one direction at a time.</strong> Its tank holds a single fluid, so the water line and the steam line go through different inlets. A fully plumbed reactor at the HV ceiling means <strong>five inlets in and five out</strong>.</p>
+<p>Practical consequence: <strong>one inlet serves one direction at a time.</strong> Its tank holds a single fluid, so the water line and the steam line go through different inlets. A fully plumbed reactor at the HV ceiling means <strong>six inlets in and six out</strong>.</p>
 
 <h3 id="how-many-inlets-you-need">How many inlets you need</h3>
 
 <p>An inlet carries 50 mB/t; a <a href="../fluid-transport/fluid_pipe.html">fluid pipe</a> segment carries exactly the same (= 50). So an inlet and the pipe run feeding it are one 50 mB/t line, and they can be counted together.</p>
 
-<table><thead><tr><th>Core layout</th><th>Water, mB/t</th><th>Inlets in</th><th>Inlets out</th></tr></thead><tbody><tr><td>1 column (4 rods)</td><td>0</td><td><strong>0</strong></td><td><strong>0</strong></td></tr><tr><td>2 adjacent columns</td><td>3</td><td>1</td><td>1</td></tr><tr><td>3 in a row</td><td>36</td><td>1</td><td>1</td></tr><tr><td>4 in a square</td><td>108</td><td><strong>3</strong></td><td><strong>3</strong></td></tr><tr><td>packed 3×3×3 room (HV ceiling)</td><td>243</td><td><strong>5</strong></td><td><strong>5</strong></td></tr></tbody></table>
+<table><thead><tr><th>Core layout</th><th>Water, mB/t</th><th>Inlets in</th><th>Inlets out</th></tr></thead><tbody><tr><td>1 column (4 rods)</td><td>8</td><td>1</td><td>1</td></tr><tr><td>2 adjacent columns</td><td>29</td><td>1</td><td>1</td></tr><tr><td>3 in a row</td><td>62</td><td><strong>2</strong></td><td><strong>2</strong></td></tr><tr><td>4 in a square</td><td>134</td><td><strong>3</strong></td><td><strong>3</strong></td></tr><tr><td>packed 3×3×3 room</td><td>269</td><td><strong>6</strong></td><td><strong>6</strong></td></tr><tr><td>HV ceiling — a room of any size</td><td>≤ 273</td><td><strong>6</strong></td><td><strong>6</strong></td></tr></tbody></table>
+
+<p><strong>Every</strong> working room needs water, down to a single column: while the reaction runs the shell sheds no heat, and a reactor without water climbs to the accident. The table is for a reactor on water sitting near zero on the gauge. One that gets its water back after a drought also drinks a twentieth of the heat it has stored — up to 250 mB/t on a full gauge — and that surplus shrinks as the temperature falls. No extra lines are laid for it: if the water runs short, the gauge simply comes down more slowly.</p>
 
 
 <p>That is what the block means for play: <strong>the bottleneck sits in the wall</strong>. Every extra line is another shell cell given up to an inlet, another run from the pump, and another craft costing four shielding plates. A reactor cannot be plumbed with "one pipe from the ocean".</p>
@@ -460,7 +462,7 @@ C = reactor casing ×1</code></pre>
 
 <h2 id="progression">Progression</h2>
 
-<p>Tier: none. Requires: shielding plates and <a href="reactor_casing.html">reactor casing</a>, a <a href="../fluid-transport/fluid_pipe.html">fluid pipe</a>, an <a href="../energy-transfer/insulated_copper_cable.html">insulated copper cable</a>. Unlocks: water into the room and steam out of it — that is, the whole of stage 3. Without an inlet a reactor is limited to what the shell sheds on its own, which caps the core at two adjacent columns.</p>
+<p>Tier: none. Requires: shielding plates and <a href="reactor_casing.html">reactor casing</a>, a <a href="../fluid-transport/fluid_pipe.html">fluid pipe</a>, an <a href="../energy-transfer/insulated_copper_cable.html">insulated copper cable</a>. Unlocks: water into the room and steam out of it — that is, the whole of stage 3. Without an inlet no water pipe gets inside, and a working reactor without water does not cool at all: the shell sheds no heat, and even a single column climbs to the accident.</p>
 
 <h2 id="related">Related</h2>
 

@@ -482,7 +482,7 @@
 
 <h3 id="boiling">Boiling</h3>
 
-<p>The column does not boil water by itself — the controller does, and <strong>only once the reactor has passed the coolant loop's target (60 % of the scale)</strong>. Below that the shell sheds all of its heat on its own and the loop spends nothing: water is a safety system, not a radiator. The target sits deliberately below the amber band (= 70 %), so a healthy water-cooled reactor reads green and amber means "something is wrong" again.</p>
+<p>The column does not boil water by itself — the controller does, <strong>every tick while the reaction runs</strong>, with no threshold at all: the water carries away all of the reaction's heat and, on top of that, a twentieth of what has already piled up. While the rods work the room's shell sheds no heat, so the water in the columns is the only thing that cools a running reactor: without it the gauge climbs to an accident. A reactor with enough water sits near zero on the gauge, and amber means "the water is not coping".</p>
 
 <p>One millibucket of water carries = <strong>2 units of heat</strong> away and turns into <strong>1 mB of steam</strong> — one to one by volume.</p>
 
@@ -507,6 +507,8 @@
 <table><thead><tr><th>Step</th><th>What the controller does</th></tr></thead><tbody><tr><td>Every 2 s</td><td>sweeps the room interior, collects <strong>all</strong> columns, sums the fuelled rods, counts adjacency pairs</td></tr><tr><td>Every producing tick</td><td>splits the output between columns <strong>in proportion to the fuelled rods</strong> in each</td></tr><tr><td>Inside a column</td><td>the share is converted into durability points and charged against <strong>all</strong> fuelled rods at once</td></tr><tr><td>Every tick</td><td>re-settles the fluids inside each vertical stack</td></tr></tbody></table>
 
 <p>The remainder of the division goes to the first column with fuel rather than being dropped: a room whose rod count does not divide the output evenly still pays for every EU/FE it made.</p>
+
+<p><strong>On the controller's screen</strong> the column shows up on the «Core» tab as part of its vertical stack: how many fuelled rods and spent casings the stack holds, average and worst wear, energy left, water and steam. The energy left is the remaining durability points of every fuelled rod multiplied by the EU/FE per point: the same quantity in which the column pays for its output. A rod at 400 damage out of 1000 shows exactly 600 points of reserve.</p>
 
 <h2 id="block-properties">Block properties</h2>
 
