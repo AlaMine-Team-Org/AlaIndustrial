@@ -334,7 +334,11 @@ pitest {
                      // enums; RoomTabPage and ReactorPageText beside them are Minecraft-bound on purpose.
                      // L1: RoomChecklistTest, RoomMapLayoutTest.
                      'dev.alaindustrial.client.screen.reactor.RoomChecklist*',
-                     'dev.alaindustrial.client.screen.reactor.RoomMapLayout'
+                     'dev.alaindustrial.client.screen.reactor.RoomMapLayout',
+                     // MOD-621: what the Coolant tab says about the water loop — which fault to name first and
+                     // how loud the badge is. The glob reaches the nested Survey and Advice records; StackGrid and
+                     // CoolantTabPage beside it are Minecraft-bound on purpose. L1: ReactorCoolantTest.
+                     'dev.alaindustrial.client.screen.reactor.ReactorCoolant*'
             ]
     // The MC-coupled classes are excluded from MUTATION (the bytecode PIT rewrites). But PIT's
     // JUnit discovery also walks every class under `targetTests` via reflection to find @Test

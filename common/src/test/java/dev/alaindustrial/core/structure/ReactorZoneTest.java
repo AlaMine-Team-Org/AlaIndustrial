@@ -2,8 +2,10 @@ package dev.alaindustrial.core.structure;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.alaindustrial.core.structure.ReactorZone.Column;
+import dev.alaindustrial.core.structure.ReactorZone.Coolant;
 import dev.alaindustrial.core.structure.ReactorZone.Stack;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +59,64 @@ class ReactorZoneTest {
 		assertEquals(1, ReactorZone.percent(5, 1000), "half a percent rounds up");
 		assertEquals(0, ReactorZone.percent(4, 1000));
 		assertEquals(0, ReactorZone.percent(0, 0), "no tanks, no share");
+	}
+
+	private static Coolant coolantOf(Column... columns) {
+		return stacks(List.of(columns), 0, 0).get(0).coolant();
+	}
+
+	/** Water and steam in millibuckets, summed over the stack: the numbers the «Coolant» tab prints (MOD-621). */
+	@Test
+	void aStackCarriesItsTanksInMillibuckets() {
+		Coolant coolant = coolantOf(new Column(0, 1, 0, new int[] {0}, 0, 3000, 4000, 0, 4000),
+				new Column(0, 2, 0, new int[] {0}, 0, 1000, 4000, 3900, 4000));
+		assertEquals(4000, coolant.water());
+		assertEquals(8000, coolant.waterCapacity());
+		assertEquals(3900, coolant.steam());
+		assertEquals(8000, coolant.steamCapacity());
+		assertFalse(coolant.dry());
+		assertFalse(coolant.blocked(), "3900 of 8000 mB is under the line");
+	}
+
+	/** The line is the «Console» tab's: from 90 % of the room a vessel's exhaust counts as blocked. */
+	@Test
+	void steamFromTheLineOnBlocksTheExhaust() {
+		assertTrue(coolantOf(new Column(0, 1, 0, new int[] {0}, 0, 1000, 4000, 3600, 4000)).blocked(), "exactly 90 %");
+		assertFalse(coolantOf(new Column(0, 1, 0, new int[] {0}, 0, 1000, 4000, 3599, 4000)).blocked(), "a millibucket under");
+	}
+
+	/** Dry means no water at all: a trickle still boils, and the tab must not send a player to fix it. */
+	@Test
+	void onlyAnEmptyVesselIsDry() {
+		assertTrue(coolantOf(new Column(0, 1, 0, new int[] {0}, 0, 0, 4000, 0, 4000)).dry());
+		assertFalse(coolantOf(new Column(0, 1, 0, new int[] {0}, 0, 1, 4000, 0, 4000)).dry());
+	}
+
+	/**
+	 * A vessel the reaction boiled empty lately is working, not dry (review, MOD-621). The controller drains columns in its
+	 * own list order and a pipe refills them on its own tick, so a stack with a line that keeps up can hold 0 mB at the
+	 * moment of the snapshot; sending the player to re-pipe it would be wrong.
+	 */
+	@Test
+	void aVesselBoiledEmptyLatelyIsNotDry() {
+		assertFalse(coolantOf(new Column(0, 1, 0, new int[] {0}, 0, 0, 4000, 0, 4000, true)).dry());
+		assertTrue(coolantOf(new Column(0, 1, 0, new int[] {0}, 0, 0, 4000, 0, 4000, false)).dry());
+		assertFalse(coolantOf(new Column(0, 1, 0, new int[] {0}, 0, 0, 4000, 0, 4000, false),
+				new Column(0, 2, 0, new int[] {0}, 0, 0, 4000, 0, 4000, true)).dry(), "one boiling column keeps its vessel");
+	}
+
+	/**
+	 * A gap in a stack's height makes two vessels, and each is judged on its own: summed, the full lower one would hide
+	 * the empty, choked one above it. Touching, the columns are one vessel and share the lower one's water.
+	 */
+	@Test
+	void aGapInAStackMakesTwoVesselsAndEachIsJudged() {
+		Column lowFull = new Column(0, 1, 0, new int[] {0}, 0, 4000, 4000, 0, 4000);
+		Coolant apart = coolantOf(new Column(0, 3, 0, new int[] {0}, 0, 0, 4000, 4000, 4000), lowFull);
+		assertTrue(apart.dry(), "the upper vessel holds no water");
+		assertTrue(apart.blocked(), "the upper vessel is full of steam");
+		Coolant touching = coolantOf(lowFull, new Column(0, 2, 0, new int[] {0}, 0, 0, 4000, 0, 4000));
+		assertFalse(touching.dry(), "one vessel: the water below is the column's above too");
 	}
 
 	/**

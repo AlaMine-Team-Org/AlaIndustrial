@@ -1804,6 +1804,30 @@ public final class ReactorScenarios {
 		if (stack.waterPercent() != water) {
 			helper.fail("stack water " + stack.waterPercent() + "%, the tanks hold " + water + "%");
 		}
+		// The «Coolant» tab's numbers (MOD-621): millibuckets as the tanks hold them, and the two faults judged from
+		// the same tanks. One touching pair is one vessel, so the lower column's water keeps the pair from reading dry.
+		ReactorZone.Coolant coolant = stack.coolant();
+		long steam = low.steamTank.amount + high.steamTank.amount;
+		long steamCapacity = low.steamTank.capacity + high.steamTank.capacity;
+		if (coolant.water() != held || coolant.waterCapacity() != capacity || coolant.steam() != steam
+				|| coolant.steamCapacity() != steamCapacity) {
+			helper.fail("stack tanks " + coolant.water() + "/" + coolant.waterCapacity() + " mB water, " + coolant.steam()
+					+ "/" + coolant.steamCapacity() + " mB steam; the columns hold " + held + "/" + capacity + " and "
+					+ steam + "/" + steamCapacity);
+		}
+		if (coolant.dry() || coolant.blocked()) {
+			helper.fail("a stack with water and an empty steam tank read dry=" + coolant.dry() + ", blocked="
+					+ coolant.blocked());
+		}
+		low.setTank(false, low.steamTank.capacity);
+		high.setTank(false, high.steamTank.capacity);
+		if (!brain.zoneSnapshot(7).stacks().get(0).coolant().blocked()) {
+			helper.fail("a stack whose steam tanks are full does not read as a blocked exhaust");
+		}
+		low.setTank(true, 0);
+		if (!brain.zoneSnapshot(7).stacks().get(0).coolant().dry()) {
+			helper.fail("a stack with no water left does not read as dry");
+		}
 		helper.succeed();
 	}
 

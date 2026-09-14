@@ -8,6 +8,7 @@ import dev.alaindustrial.block.entity.ReactorRoomStatus;
 import dev.alaindustrial.client.screen.ReactorControllerScreen;
 import dev.alaindustrial.client.screen.reactor.ConsoleTabPage;
 import dev.alaindustrial.client.screen.reactor.RoomTabPage;
+import dev.alaindustrial.client.screen.reactor.CoolantTabPage;
 import dev.alaindustrial.client.screen.reactor.ZoneTabPage;
 import dev.alaindustrial.core.structure.ReactorZone;
 import dev.alaindustrial.network.ReactorZonePayload;
@@ -220,6 +221,89 @@ public final class ReactorConsoleGuiStand {
 		rememberConsoleTab(context);
 	}
 
+	/**
+	 * Photographs the «Coolant» tab in the states a player meets and proves its advice and detail panel follow the loop
+	 * (MOD-621): in order, a blocked exhaust, a dry stack beside wet ones while the heat is left behind, a bare pile with
+	 * no loop, and a 12x12 hall at the smallest cells. The zone arrives as the server's snapshot would bring it.
+	 */
+	public static void shootCoolant(ClientGameTestContext context) {
+		int coolantTab = ReactorControllerScreen.PAGE_COOLANT;
+		Path normal = shoot(context, "coolant_normal",
+				"Sealed room loop, 6x6: nine stacks as slots each with a teal water bar on the left and a light steam bar "
+						+ "on the right, no marks, the first stack in detail with its water and steam in mB and In order, "
+						+ "the summary with no dry or blocked stacks and the water rate, the green In order advice",
+				Reading.running(), RoomBox.ROOM_6X4X6, coolantTab, screen -> screen.getMenu().acceptZone(ZONE_FORMED));
+		Path normalAgain = shoot(context, "coolant_normal_again",
+				"The same frame shot a second time: the noise floor for the gates below",
+				Reading.running(), RoomBox.ROOM_6X4X6, coolantTab, screen -> screen.getMenu().acceptZone(ZONE_FORMED));
+		Path blocked = shoot(context, "coolant_blocked",
+				"The same loop with the north-east stack's steam at 95 %: its steam bar amber with an amber corner mark, "
+						+ "the gold outline and the detail panel on it reading Exhaust blocked, one blocked in the summary, "
+						+ "and the amber advice naming stack 4, 2 and the Steam Nozzle above it",
+				Reading.running(), RoomBox.ROOM_6X4X6, coolantTab,
+				screen -> screen.getMenu().acceptZone(with(ZONE_FORMED, stack(3, 1, 1, 3, 1, 480, 1000, 2, 70, 95))));
+		Path dry = shoot(context, "coolant_dry",
+				"The same loop with the south-west stack holding no water while the room's water carries none of the heat: "
+						+ "that cell's water bar empty over a red floor with a red corner mark, the detail panel reading Dry, "
+						+ "and the red advice naming stack 2, 4 and saying columns side by side share no water",
+				Reading.running().water(0), RoomBox.ROOM_6X4X6, coolantTab,
+				screen -> screen.getMenu().acceptZone(with(ZONE_FORMED, stack(1, 3, 1, 4, 0, 200, 210, 2, 0, 19))));
+		shoot(context, "coolant_bare",
+				"Racks burning with no room: an empty grid saying there is no loop without a room, an empty detail panel, "
+						+ "and the grey advice that a bare pile heats no water and needs none",
+				Reading.bare(), RoomBox.NONE, coolantTab, screen -> screen.getMenu().acceptZone(ZONE_BARE));
+		Path hall = shoot(context, "coolant_hall_12",
+				"The largest default hall, 12x12 with a stack on every cell: seven-pixel cells each split into a water "
+						+ "and a steam bar, the whole grid inside its frame",
+				Reading.running(), RoomBox.NONE, coolantTab, screen -> screen.getMenu().acceptZone(hall(false)));
+		Path hallDry = shoot(context, "coolant_hall_12_empty",
+				"The same 12x12 hall with every column empty: no water or steam bars, a red floor under every water half "
+						+ "- the picture the grid gate below requires the full hall to differ from",
+				Reading.running(), RoomBox.NONE, coolantTab, screen -> screen.getMenu().acceptZone(hall(true)));
+
+		int adviceNoise = coolantAdviceBandDelta(normal, normalAgain);
+		LOG.info("[GUITEST][MOD-621] advice band noise floor: {} px", adviceNoise);
+		assertCoolantBandDiffers("advice", "a loop in order vs a blocked exhaust", normal, blocked, adviceNoise,
+				ReactorConsoleGuiStand::coolantAdviceBandDelta);
+		assertCoolantBandDiffers("advice", "a blocked exhaust vs a dry stack", blocked, dry, adviceNoise,
+				ReactorConsoleGuiStand::coolantAdviceBandDelta);
+		assertCoolantBandDiffers("detail", "the first stack in order vs the dry stack", normal, dry,
+				detailBandDelta(normal, normalAgain), ReactorConsoleGuiStand::detailBandDelta);
+		// The cells themselves (review, MOD-621): the advice and detail gates stay green over a grid that draws nothing.
+		// Both halls select their first stack, so only the bars and the red floors differ.
+		assertCoolantBandDiffers("grid", "a full 12x12 hall vs one of empty columns", hall, hallDry,
+				gridBandDelta(normal, normalAgain), ReactorConsoleGuiStand::gridBandDelta);
+		rememberConsoleTab(context);
+	}
+
+	/** A snapshot with one stack swapped for another at the same place. */
+	private static ReactorZonePayload with(ReactorZonePayload zone, ReactorZone.Stack replacement) {
+		List<ReactorZone.Stack> stacks = new java.util.ArrayList<>(zone.stacks());
+		stacks.replaceAll(stack -> stack.x() == replacement.x() && stack.z() == replacement.z() ? replacement : stack);
+		return new ReactorZonePayload(zone.containerId(), zone.originDx(), zone.originDz(), zone.width(), zone.depth(),
+				stacks);
+	}
+
+	/** The Coolant tab's advice box. */
+	private static int coolantAdviceBandDelta(Path first, Path second) {
+		return VisualStandSupport.differingPixelsInBand(first, second, windowBox,
+				ConsoleTabPage.CONTENT_LEFT, ConsoleTabPage.CONTENT_RIGHT, CoolantTabPage.ADVICE_Y,
+				CoolantTabPage.ADVICE_BOTTOM - CoolantTabPage.ADVICE_Y);
+	}
+
+	private static void assertCoolantBandDiffers(String band, String what, Path first, Path second, int noise,
+			java.util.function.ToIntBiFunction<Path, Path> delta) {
+		int changed = delta.applyAsInt(first, second);
+		int required = Math.max(4 * noise, MIN_BAND_DELTA);
+		LOG.info("[GUITEST][MOD-621] {}: {}: delta={} px, noise={} px, required>{}", band, what, changed, noise, required);
+		if (changed < required) {
+			throw new AssertionError("[GUITEST][MOD-621] " + band + ": " + what + " changed only " + changed
+					+ " px (noise " + noise + " px, required > " + required + ") - the Coolant tab drew the same " + band
+					+ " for two different loops, or nothing at all. Compare " + first.getFileName() + " with "
+					+ second.getFileName() + ".");
+		}
+	}
+
 	/** Hands the console tab back, or the next stand to open a controller would photograph whatever was picked last. */
 	private static void rememberConsoleTab(ClientGameTestContext context) {
 		context.runOnClient(mc -> {
@@ -235,8 +319,15 @@ public final class ReactorConsoleGuiStand {
 	private static ReactorZone.Stack stack(int x, int z, int columns, int fuelled, int spent, int averageWear,
 			int worstWear, int neighbours, int water, int steam) {
 		long remaining = (long) fuelled * (1000 - Math.min(1000, averageWear)) * 144;
-		return new ReactorZone.Stack(x, z, columns, fuelled, spent, averageWear, worstWear, remaining, neighbours, water,
-				steam);
+		return new ReactorZone.Stack(x, z, columns, fuelled, spent, averageWear, worstWear, remaining, neighbours,
+				coolant(columns, water, steam));
+	}
+
+	/** A stack's tanks from percentages, 4000 mB a column each, with the faults the server would judge from them. */
+	private static ReactorZone.Coolant coolant(int columns, int waterPercent, int steamPercent) {
+		long capacity = 4000L * columns;
+		return new ReactorZone.Coolant(capacity * waterPercent / 100, capacity, capacity * steamPercent / 100, capacity,
+				waterPercent == 0, steamPercent >= ReactorZone.STEAM_BLOCKED_PERCENT);
 	}
 
 	/** A 6x6 core: a 3x3 block of stacks, the centre two columns tall and the densest, one rack holding a casing. */

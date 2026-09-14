@@ -25,9 +25,9 @@ public final class ReactorConsole {
 	/**
 	 * Steam share from which the exhaust counts as blocked: the columns hold water, but it has nowhere to
 	 * boil to. The same line the old coolant bar turned amber on, so a player who learned that colour is
-	 * not re-taught anything.
+	 * not re-taught anything. One number with the «Coolant» tab's per-stack mark (MOD-621).
 	 */
-	public static final int STEAM_BLOCKED_PERCENT = 90;
+	public static final int STEAM_BLOCKED_PERCENT = dev.alaindustrial.core.structure.ReactorZone.STEAM_BLOCKED_PERCENT;
 
 	/**
 	 * Instability share the console calls the limit of a bare pile. Three racks settle just under 90, and

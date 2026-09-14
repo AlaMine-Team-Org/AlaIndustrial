@@ -31,6 +31,16 @@ public record ReactorZonePayload(int containerId, int originDx, int originDz, in
 
 	public static final Type<ReactorZonePayload> TYPE = new Type<>(Industrialization.id("reactor_zone"));
 
+	/** A stack's tanks and faults (MOD-621), its own codec so the stack's stays within the twelve fields a composite takes. */
+	private static final StreamCodec<ByteBuf, ReactorZone.Coolant> COOLANT_CODEC = StreamCodec.composite(
+			ByteBufCodecs.VAR_LONG, ReactorZone.Coolant::water,
+			ByteBufCodecs.VAR_LONG, ReactorZone.Coolant::waterCapacity,
+			ByteBufCodecs.VAR_LONG, ReactorZone.Coolant::steam,
+			ByteBufCodecs.VAR_LONG, ReactorZone.Coolant::steamCapacity,
+			ByteBufCodecs.BOOL, ReactorZone.Coolant::dry,
+			ByteBufCodecs.BOOL, ReactorZone.Coolant::blocked,
+			ReactorZone.Coolant::new);
+
 	private static final StreamCodec<ByteBuf, ReactorZone.Stack> STACK_CODEC = StreamCodec.composite(
 			ByteBufCodecs.VAR_INT, ReactorZone.Stack::x,
 			ByteBufCodecs.VAR_INT, ReactorZone.Stack::z,
@@ -41,8 +51,7 @@ public record ReactorZonePayload(int containerId, int originDx, int originDz, in
 			ByteBufCodecs.VAR_INT, ReactorZone.Stack::worstWearPermille,
 			ByteBufCodecs.VAR_LONG, ReactorZone.Stack::remainingEu,
 			ByteBufCodecs.VAR_INT, ReactorZone.Stack::neighbours,
-			ByteBufCodecs.VAR_INT, ReactorZone.Stack::waterPercent,
-			ByteBufCodecs.VAR_INT, ReactorZone.Stack::steamPercent,
+			COOLANT_CODEC, ReactorZone.Stack::coolant,
 			ReactorZone.Stack::new);
 
 	public static final StreamCodec<RegistryFriendlyByteBuf, ReactorZonePayload> CODEC = StreamCodec.composite(

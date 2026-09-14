@@ -1,6 +1,7 @@
 package dev.alaindustrial.core.structure;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,13 @@ public final class ReactorZone {
 	/** Most stacks a snapshot carries — a full {@link #MAX_SPAN} square. */
 	public static final int MAX_STACKS = MAX_SPAN * MAX_SPAN;
 
+	/**
+	 * Steam share of a vessel from which its exhaust counts as blocked: the water is there, but boiling it has almost
+	 * nowhere to go. The line the «Console» tab has drawn its steam bar amber on since MOD-618, so both tabs call the
+	 * same vessel blocked (MOD-621).
+	 */
+	public static final int STEAM_BLOCKED_PERCENT = 90;
+
 	private ReactorZone() {
 	}
 
@@ -46,7 +54,13 @@ public final class ReactorZone {
 	 * @param spentRods     spent casings still racked
 	 */
 	public record Column(int x, int y, int z, int[] fuelledDamage, int spentRods, long water, long waterCapacity,
-			long steam, long steamCapacity) {
+			long steam, long steamCapacity, boolean boiling) {
+
+		/** A column that has given no water to the reaction lately — what every column is outside a running room. */
+		public Column(int x, int y, int z, int[] fuelledDamage, int spentRods, long water, long waterCapacity, long steam,
+				long steamCapacity) {
+			this(x, y, z, fuelledDamage, spentRods, water, waterCapacity, steam, steamCapacity, false);
+		}
 	}
 
 	/**
@@ -58,11 +72,44 @@ public final class ReactorZone {
 	 * @param neighbours          fuelled neighbours of the stack's fuelled columns, in all six directions
 	 */
 	public record Stack(int x, int z, int columns, int fuelledRods, int spentRods, int averageWearPermille,
-			int worstWearPermille, long remainingEu, int neighbours, int waterPercent, int steamPercent) {
+			int worstWearPermille, long remainingEu, int neighbours, Coolant coolant) {
 
 		/** Whether any rod is racked here, fuelled or spent. */
 		public boolean hasRods() {
 			return fuelledRods + spentRods > 0;
+		}
+
+		public int waterPercent() {
+			return coolant.waterPercent();
+		}
+
+		public int steamPercent() {
+			return coolant.steamPercent();
+		}
+	}
+
+	/**
+	 * A stack's water and steam, summed over its columns in millibuckets, and the two faults the «Coolant» tab marks
+	 * (MOD-621).
+	 *
+	 * <p>The faults are judged per vessel, not over the sums: a vessel is a run of columns touching top to bottom, the
+	 * way the controller settles them, and a cell with a gap in its height holds two. Summed, a full lower vessel would
+	 * hide an empty or choked one above it.
+	 *
+	 * @param dry     some vessel in the stack holds no water and gave none to the reaction lately. A vessel the reaction
+	 *                boils empty every tick while its pipe refills it reads 0 mB at whatever moment it is looked at, and
+	 *                it is working, not dry (review, MOD-621)
+	 * @param blocked some vessel's steam fills at least {@link #STEAM_BLOCKED_PERCENT} of its room, so its water has
+	 *                nowhere to boil to
+	 */
+	public record Coolant(long water, long waterCapacity, long steam, long steamCapacity, boolean dry, boolean blocked) {
+
+		public int waterPercent() {
+			return percent(water, waterCapacity);
+		}
+
+		public int steamPercent() {
+			return percent(steam, steamCapacity);
 		}
 	}
 
@@ -164,6 +211,7 @@ public final class ReactorZone {
 		private long waterCapacity;
 		private long steam;
 		private long steamCapacity;
+		private final List<Column> members = new ArrayList<>();
 
 		private Tally(int x, int z) {
 			this.x = x;
@@ -171,6 +219,7 @@ public final class ReactorZone {
 		}
 
 		private void add(Column column, long rodEnergy, Set<Long> fuelled) {
+			members.add(column);
 			columns++;
 			fuelledRods += column.fuelledDamage().length;
 			spentRods += column.spentRods();
@@ -200,7 +249,37 @@ public final class ReactorZone {
 		private Stack stack() {
 			int racked = fuelledRods + spentRods;
 			return new Stack(x, z, columns, fuelledRods, spentRods, racked == 0 ? 0 : (int) (wearSum / racked), worst,
-					remainingEu, neighbours, percent(water, waterCapacity), percent(steam, steamCapacity));
+					remainingEu, neighbours, coolant());
+		}
+
+		/** The sums, and each fault judged vessel by vessel: runs of columns touching top to bottom. */
+		private Coolant coolant() {
+			List<Column> byHeight = new ArrayList<>(members);
+			byHeight.sort(Comparator.comparingInt(Column::y));
+			boolean dry = false;
+			boolean blocked = false;
+			int start = 0;
+			while (start < byHeight.size()) {
+				long runWater = 0;
+				long runWaterCapacity = 0;
+				long runSteam = 0;
+				long runSteamCapacity = 0;
+				boolean runBoiling = false;
+				int end = start;
+				do {
+					Column column = byHeight.get(end);
+					runBoiling |= column.boiling();
+					runWater += column.water();
+					runWaterCapacity += column.waterCapacity();
+					runSteam += column.steam();
+					runSteamCapacity += column.steamCapacity();
+					end++;
+				} while (end < byHeight.size() && byHeight.get(end).y() == byHeight.get(end - 1).y() + 1);
+				dry |= runWaterCapacity > 0 && runWater <= 0 && !runBoiling;
+				blocked |= runSteamCapacity > 0 && runSteam * 100 >= runSteamCapacity * STEAM_BLOCKED_PERCENT;
+				start = end;
+			}
+			return new Coolant(water, waterCapacity, steam, steamCapacity, dry, blocked);
 		}
 	}
 

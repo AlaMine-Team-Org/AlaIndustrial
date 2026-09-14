@@ -2,9 +2,11 @@ package dev.alaindustrial.client.screen;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.client.screen.reactor.ConsoleTabPage;
+import dev.alaindustrial.client.screen.reactor.CoolantTabPage;
 import dev.alaindustrial.client.screen.reactor.ReactorConsole;
 import dev.alaindustrial.client.screen.reactor.ReactorTabPage;
 import dev.alaindustrial.client.screen.reactor.RoomTabPage;
+import dev.alaindustrial.client.screen.reactor.StackGrid;
 import dev.alaindustrial.client.screen.reactor.ZoneTabPage;
 import dev.alaindustrial.menu.ReactorControllerMenu;
 import java.util.List;
@@ -66,6 +68,7 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 	public static final int PAGE_CONSOLE = 0;
 	public static final int PAGE_ROOM = 1;
 	public static final int PAGE_ZONE = 2;
+	public static final int PAGE_COOLANT = 3;
 
 	private static final Identifier TAB_TOP = Identifier.withDefaultNamespace("advancements/tab_left_top");
 	private static final Identifier TAB_TOP_SELECTED =
@@ -87,6 +90,8 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 	 */
 	private static int lastPage;
 
+	/** The grid of stacks the «Core» and «Coolant» tabs share, with the stack picked on either. */
+	private final StackGrid stackGrid = new StackGrid(this);
 	private final List<ReactorTabPage> pages;
 	private int selected;
 	/** Whether the opening tab has been decided — by the channels' first arrival or by the player. */
@@ -94,7 +99,8 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 
 	public ReactorControllerScreen(ReactorControllerMenu menu, Inventory inventory, Component title) {
 		super(menu, inventory, title, IMAGE_WIDTH, IMAGE_HEIGHT);
-		this.pages = List.of(new ConsoleTabPage(this), new RoomTabPage(this), new ZoneTabPage(this));
+		this.pages = List.of(new ConsoleTabPage(this), new RoomTabPage(this), new ZoneTabPage(this),
+				new CoolantTabPage(this));
 		this.selected = Math.min(lastPage, this.pages.size() - 1);
 	}
 
@@ -332,9 +338,14 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 		return pages.get(index);
 	}
 
-	/** The open tab — {@link #PAGE_CONSOLE}, {@link #PAGE_ROOM}, {@link #PAGE_ZONE}. */
+	/** The open tab — {@link #PAGE_CONSOLE}, {@link #PAGE_ROOM}, {@link #PAGE_ZONE}, {@link #PAGE_COOLANT}. */
 	public int selectedPage() {
 		return selected;
+	}
+
+	/** The grid of stacks, and the stack picked on it, that the «Core» and «Coolant» tabs share. */
+	public StackGrid stackGrid() {
+		return stackGrid;
 	}
 
 	public int left() {

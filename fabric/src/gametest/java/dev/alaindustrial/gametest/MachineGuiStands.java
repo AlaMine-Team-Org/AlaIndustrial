@@ -119,6 +119,8 @@ public final class MachineGuiStands {
         ReactorConsoleGuiStand.shootRoom(context);
         // ── … and the Core tab: the zone stack by stack, as the server's snapshot draws it (MOD-620) ──
         ReactorConsoleGuiStand.shootZone(context);
+        // ── … and the Coolant tab: water and steam stack by stack, and what to fix (MOD-621) ──
+        ReactorConsoleGuiStand.shootCoolant(context);
 
         // ── Machines without custom screens (one shot each) ──────────────────────────
         shootMenu(context, "gui_moonlit_solar_panel", ModContent.MOONLIT_SOLAR_PANEL_MENU.get(), "Moonlit Solar Panel");

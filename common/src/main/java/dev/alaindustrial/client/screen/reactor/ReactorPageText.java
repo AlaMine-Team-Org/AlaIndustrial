@@ -1,5 +1,6 @@
 package dev.alaindustrial.client.screen.reactor;
 
+import dev.alaindustrial.client.screen.GuiStyle;
 import dev.alaindustrial.client.screen.ReactorControllerScreen;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +58,32 @@ final class ReactorPageText {
 		int textW = font.width(text);
 		float scale = textW > width ? Math.max(MIN_SCALE, (float) width / textW) : 1.0f;
 		scaled(graphics, font, text, x, y, scale, colour);
+	}
+
+	/** The scale the stack tabs set their rows in. */
+	static final float SMALL = 0.75f;
+
+	/** One line at {@link #SMALL}, shrunk further only if it would not fit its width. */
+	static void small(GuiGraphicsExtractor graphics, Font font, Component text, int x, int y, int width, int colour) {
+		float fit = (float) width / Math.max(1, font.width(text));
+		scaled(graphics, font, text, x, y, Math.max(MIN_SCALE, Math.min(SMALL, fit)), colour);
+	}
+
+	/**
+	 * Label on the left, value on the right, both at {@link #SMALL}. The label shrinks further only if it would not
+	 * fit: at full size a short label ("Water") stood a size above its own value and above the long ones (MOD-620).
+	 */
+	static void row(GuiGraphicsExtractor graphics, Font font, int x, int y, int right, Component label,
+			Component value, int valueColour) {
+		int valueW = Math.round(font.width(value) * SMALL);
+		scaled(graphics, font, value, right - valueW, y, SMALL, valueColour);
+		small(graphics, font, label, x, y, Math.max(1, right - valueW - 3 - x), GuiStyle.TEXT_DIM);
+	}
+
+	/** One dim line centred in a width, for a panel with nothing to show yet. */
+	static void centred(GuiGraphicsExtractor graphics, Font font, Component text, int x, int y, int width) {
+		int shown = Math.min(width - 8, Math.round(font.width(text) * SMALL));
+		scaledFit(graphics, font, text, x + (width - shown) / 2, y, width - 8, GuiStyle.TEXT_DIM);
 	}
 
 	/**

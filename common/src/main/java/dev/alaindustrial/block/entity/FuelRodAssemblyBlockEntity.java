@@ -229,8 +229,9 @@ public class FuelRodAssemblyBlockEntity extends BlockEntity implements FluidPort
 
 
 	/**
-	 * This column for the reactor's «Core» tab (MOD-620): each fuelled rod's damage, the spent casings still racked
-	 * and both tanks. The controller folds these into stacks; nothing here decides what the tab shows.
+	 * This column for the reactor's «Core» and «Coolant» tabs (MOD-620, MOD-621): each fuelled rod's damage, the spent
+	 * casings still racked, both tanks, and whether it gave the reaction water within the last second. The controller
+	 * folds these into stacks; nothing here decides what the tabs show.
 	 */
 	public dev.alaindustrial.core.structure.ReactorZone.Column zoneColumn() {
 		int[] damage = new int[getRods()];
@@ -243,9 +244,10 @@ public class FuelRodAssemblyBlockEntity extends BlockEntity implements FluidPort
 				spent++;
 			}
 		}
+		boolean boiling = level != null && lastBoiledAt >= 0 && level.getGameTime() - lastBoiledAt <= BOILING_WINDOW_TICKS;
 		return new dev.alaindustrial.core.structure.ReactorZone.Column(worldPosition.getX(), worldPosition.getY(),
 				worldPosition.getZ(), damage, spent, waterTank.amount, waterTank.capacity, steamTank.amount,
-				steamTank.capacity);
+				steamTank.capacity, boiling);
 	}
 
 	private static boolean isFuelled(ItemStack stack) {
@@ -428,12 +430,25 @@ public class FuelRodAssemblyBlockEntity extends BlockEntity implements FluidPort
 		return side == Direction.UP ? stackSteam : stackWater;
 	}
 
+	/**
+	 * How long a column counts as boiling after it last gave the reaction water: the «Coolant» tab's snapshot interval
+	 * (MOD-621). The controller drains columns in its own order and a pipe refills them on its own tick, so a column
+	 * with a working line can read 0 mB at the moment it is looked at; within this window it is working, not dry.
+	 */
+	private static final int BOILING_WINDOW_TICKS = 20;
+
+	/** Game time this column last boiled any water, or -1 while it never has. Not saved: it describes the last second. */
+	private long lastBoiledAt = -1;
+
 	/** Boils {@code water} mB into the same amount of steam. Returns what was actually boiled. */
 	public long boil(long water) {
 		long room = steamTank.capacity - steamTank.amount;
 		long moved = Math.min(Math.min(water, waterTank.amount), room);
 		if (moved <= 0) {
 			return 0;
+		}
+		if (level != null) {
+			lastBoiledAt = level.getGameTime();
 		}
 		waterTank.amount -= moved;
 		steamTank.fluid = FluidHolder.of(ModContent.STEAM.get());
