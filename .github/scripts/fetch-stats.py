@@ -23,11 +23,11 @@ from __future__ import annotations
 
 import argparse
 import datetime
+import http.client
 import json
 import os
 import pathlib
 import sys
-import urllib.error
 import urllib.request
 
 # Hour (UTC) up to which a run may still rewrite yesterday's row. Both scheduled
@@ -39,6 +39,13 @@ MODRINTH_ID = "ACLWFBlU"
 CURSEFORGE_ID = 1597723
 UA = "Ma3auka/AlaIndustrial-stats (+https://github.com/AlaMine-Team-Org/AlaIndustrial)"
 TIMEOUT = 30
+
+# What a source that did not answer raises. URLError covers only a failure to CONNECT:
+# a server that accepts the connection and then stalls past TIMEOUT raises a bare
+# TimeoutError from the socket read, and a dropped connection an OSError or an
+# HTTPException. On 2026-09-14 cfwidget stalled that way and the uncaught
+# TimeoutError killed the whole run, so 2026-09-13 was never recorded.
+SOURCE_ERRORS = (OSError, http.client.HTTPException, KeyError, ValueError)
 
 
 def get_json(url: str, headers: dict | None = None):
@@ -179,11 +186,11 @@ def main() -> int:
     modrinth, cf_total, failures = None, None, []
     try:
         modrinth = fetch_modrinth()
-    except (urllib.error.URLError, KeyError, ValueError) as exc:
+    except SOURCE_ERRORS as exc:
         failures.append(f"modrinth: {exc}")
     try:
         cf_total = fetch_curseforge()
-    except (urllib.error.URLError, KeyError, ValueError) as exc:
+    except SOURCE_ERRORS as exc:
         failures.append(f"curseforge: {exc}")
 
     for message in failures:
@@ -227,7 +234,7 @@ def main() -> int:
     # already present and change nothing).
     try:
         series = backfill(series, fetch_modrinth_history(), now.date().isoformat())
-    except (urllib.error.URLError, KeyError, ValueError) as exc:
+    except SOURCE_ERRORS as exc:
         print(f"WARN  backfill skipped: {exc}", file=sys.stderr)
 
     totals = dict(previous.get("totals", {}))

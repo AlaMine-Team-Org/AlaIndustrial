@@ -130,6 +130,27 @@ def main() -> int:
     check("--force rewrites at any hour", data["series"][-1] == [YESTERDAY, 4800, 4300],
           str(data["series"][-1]))
 
+    print("a source that stalls past the timeout does not kill the run (2026-09-14)")
+    module = load(2)
+
+    def stalled():
+        raise TimeoutError("The read operation timed out")
+
+    module.fetch_curseforge = stalled
+    target = pathlib.Path(tempfile.mkdtemp()) / "stats.json"
+    target.write_text(json.dumps({"generated": "2026-08-26T02:10:50Z",
+                                  "totals": {"modrinth": 4568, "curseforge": 4146},
+                                  "series": list(only_before)}), encoding="utf-8")
+    sys.argv = ["fetch-stats.py", "--out", str(target)]
+    try:
+        code = module.main()
+    except Exception as exc:  # the regression itself: the error escaped main()
+        code = repr(exc)
+    check("exit 0", code == 0, str(code))
+    data = json.loads(target.read_text(encoding="utf-8"))
+    check("yesterday recorded, CurseForge carried over",
+          data["series"][-1] == [YESTERDAY, 4800, 4146], str(data["series"][-1]))
+
     print()
     if FAILURES:
         print("FAILED: " + ", ".join(FAILURES))
