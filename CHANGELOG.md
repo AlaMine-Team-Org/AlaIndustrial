@@ -1,17 +1,15 @@
-## 0.1.169
+## 0.1.170
 
-<p><img alt="A teleporter capsule of lime glass opening its sliding door" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.169/release-media/v0.1.169/changelog.webp" width="720"></p>
+<p><img alt="The teleporter remote&#39;s Stations tab with callouts explaining each part" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.170/release-media/v0.1.170/changelog.png" width="720"></p>
 
-The teleporter station now builds a glass capsule that you arrive inside.
+The teleporter remote gets a new screen, starting with its first tab: Stations.
 
 ### New
 
-- **Teleporter capsule** — put two blocks of any glass on a station and it becomes a capsule; jumps land you inside, facing the door.
-- **Sliding door** — click the glass: the front panels sink into the floor and rise again after 3 seconds, but never onto someone standing in the doorway.
-- **Your glass, your colour** — the capsule takes the colour of the lower glass: plain, stained or tinted.
+- **Stations tab** — the remote now lists every bound station with a status lamp and its coordinates.
+- **A lamp per station** — green is ready, amber has no capsule, red needs more power, grey is another dimension or someone else's private station.
+- **Ready or not** — the header shows whether the picked station will take you before you press Teleport.
 
 ### Changes
 
-- **Stations need their capsule** — a station without two glass blocks on top refuses jumps; its energy, owner and bound remotes are kept.
-- **Lush cotton trellis** — the cotton plant grows through seven 3D stages with a leafy crown, flowers and open bolls.
-- **Breaking a capsule** gives back exactly the glass it was built from.
+- **Refusals shown in full** — a long reason now wraps onto a second line instead of being cut off.

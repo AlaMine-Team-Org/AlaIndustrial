@@ -9,6 +9,7 @@ import dev.alaindustrial.client.screen.reactor.ReactorTabPage;
 import dev.alaindustrial.client.screen.reactor.RoomTabPage;
 import dev.alaindustrial.client.screen.reactor.StackGrid;
 import dev.alaindustrial.client.screen.reactor.ZoneTabPage;
+import dev.alaindustrial.client.screen.tabs.SideTabStrip;
 import dev.alaindustrial.menu.ReactorControllerMenu;
 import java.util.List;
 import net.minecraft.client.gui.Font;
@@ -18,7 +19,6 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.Rect2i;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -28,14 +28,13 @@ import net.minecraft.world.entity.player.Inventory;
 /**
  * Screen for the Reactor Controller — a panel with tabs down its left side (MOD-617).
  *
- * <p><b>The screen owns the frame, the pages own the rest.</b> The panel, the tab strip, the status chip
- * and the accident countdown are the same on every tab, because the questions they answer — which tab am
- * I on, is the reactor all right, how long have I got — do not depend on which tab is open. Everything
- * under the header belongs to the selected {@link ReactorTabPage}.
+ * <p><b>The screen owns the frame, the pages own the rest.</b> The panel, the tab strip, the status chip and
+ * the accident countdown are the same on every tab, because the questions they answer — which tab am I on, is
+ * the reactor all right, how long have I got — do not depend on which tab is open. Everything under the header
+ * belongs to the selected {@link ReactorTabPage}.
  *
- * <p><b>The tabs are the game's own.</b> They are blitted from the vanilla advancement screen's left-side
- * sprites by id at run time, with an item for an icon, so the strip reads as a Minecraft screen rather
- * than a lookalike. The sprites are referenced, never copied.
+ * <p><b>The tabs are the shared {@link SideTabStrip}</b> (MOD-628), flush with the panel's top: this screen has
+ * stood its first tab in the corner since it shipped.
  *
  * <p><b>No player inventory.</b> The controller holds nothing, so {@link ReactorControllerMenu} carries
  * no slots at all, and the panel is free for the reactor.
@@ -48,13 +47,6 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 	/** Panel size; must match {@code tools/gen_reactor_controller_gui.py}. */
 	public static final int IMAGE_WIDTH = 236;
 	public static final int IMAGE_HEIGHT = 184;
-
-	/** The vanilla left tab: 32×28, overlapping the window by four pixels (AdvancementTabType.LEFT). */
-	public static final int TAB_W = 32;
-	public static final int TAB_H = 28;
-	public static final int TAB_OVERLAP = 4;
-	private static final int TAB_ICON_X = 10;
-	private static final int TAB_ICON_Y = 5;
 
 	public static final int TITLE_X = 8;
 	public static final int TITLE_Y = 6;
@@ -72,19 +64,11 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 	public static final int PAGE_COOLANT = 3;
 	public static final int PAGE_LOG = 4;
 
-	private static final Identifier TAB_TOP = Identifier.withDefaultNamespace("advancements/tab_left_top");
-	private static final Identifier TAB_TOP_SELECTED =
-			Identifier.withDefaultNamespace("advancements/tab_left_top_selected");
-	private static final Identifier TAB_MIDDLE = Identifier.withDefaultNamespace("advancements/tab_left_middle");
-	private static final Identifier TAB_MIDDLE_SELECTED =
-			Identifier.withDefaultNamespace("advancements/tab_left_middle_selected");
-
 	private static final int TITLE_COLOUR = 0xFF404040;
 	private static final int CHIP_BACK = 0xFF2A2D33;
 	private static final int CHIP_ALARM_DIM = 0xFF7A2A22;
 	private static final int COUNTDOWN_TRACK = 0xFF2A2D33;
 	private static final int COUNTDOWN_FILL = 0xFFD63A2A;
-	private static final int BADGE_EDGE = 0xFF000000;
 
 	/**
 	 * The tab a player last had open, for the next time they open a controller. Client-only by
@@ -92,6 +76,7 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 	 */
 	private static int lastPage;
 
+	private final SideTabStrip tabs = new SideTabStrip(0);
 	/** The grid of stacks the «Core» and «Coolant» tabs share, with the stack picked on either. */
 	private final StackGrid stackGrid = new StackGrid(this);
 	private final List<ReactorTabPage> pages;
@@ -177,35 +162,10 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 	@Override
 	protected void drawMachineFrame(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		blitStaticFrame(graphics);
-		drawTabs(graphics);
+		tabs.draw(graphics, this.leftPos, this.topPos, pages, selected);
 		drawChip(graphics);
 		drawCountdown(graphics);
 		pages.get(selected).draw(graphics, mouseX, mouseY);
-	}
-
-	/**
-	 * The strip, drawn over the panel's left edge the way the advancement screen draws its tabs over its
-	 * window, so the selected tab's sprite merges into the frame.
-	 *
-	 * <p>Vanilla shows the strip only once there are two tabs. It is shown from the first here, because the
-	 * tabs arrive one task at a time and the frame they share is part of what each one ships.
-	 */
-	private void drawTabs(GuiGraphicsExtractor graphics) {
-		for (int i = 0; i < pages.size(); i++) {
-			int x = tabX();
-			int y = tabY(i);
-			boolean isSelected = i == selected;
-			Identifier sprite = i == 0
-					? (isSelected ? TAB_TOP_SELECTED : TAB_TOP)
-					: (isSelected ? TAB_MIDDLE_SELECTED : TAB_MIDDLE);
-			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, x, y, TAB_W, TAB_H);
-			graphics.item(pages.get(i).icon(), x + TAB_ICON_X, y + TAB_ICON_Y);
-			int badge = isSelected ? 0 : pages.get(i).badgeColour();
-			if (badge != 0) {
-				graphics.fill(x + 3, y + 3, x + 9, y + 9, BADGE_EDGE);
-				graphics.fill(x + 4, y + 4, x + 8, y + 8, badge);
-			}
-		}
 	}
 
 	/** The reactor's state in one word, right-aligned in the header. An alarm blinks. */
@@ -306,31 +266,12 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 	@Override
 	public List<Rect2i> extraGuiAreas() {
 		List<Rect2i> areas = super.extraGuiAreas();
-		areas.add(new Rect2i(tabX(), this.topPos, TAB_W - TAB_OVERLAP, TAB_H * pages.size()));
+		areas.add(tabs.area(this.leftPos, this.topPos, pages.size()));
 		return areas;
 	}
 
-	private int tabX() {
-		return this.leftPos - TAB_W + TAB_OVERLAP;
-	}
-
-	private int tabY(int index) {
-		return this.topPos + index * TAB_H;
-	}
-
-	/** The tab under the mouse, or -1. Only the part outside the panel counts: the overlap is the frame's. */
 	private int tabAt(double mouseX, double mouseY) {
-		int x = tabX();
-		if (mouseX < x || mouseX >= x + TAB_W - TAB_OVERLAP) {
-			return -1;
-		}
-		for (int i = 0; i < pages.size(); i++) {
-			int y = tabY(i);
-			if (mouseY >= y && mouseY < y + TAB_H) {
-				return i;
-			}
-		}
-		return -1;
+		return tabs.tabAt(mouseX, mouseY, this.leftPos, this.topPos, pages.size());
 	}
 
 	// ── What a page may use ─────────────────────────────────────────────────────────────────────────

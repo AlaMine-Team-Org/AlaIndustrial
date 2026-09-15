@@ -583,6 +583,12 @@ pitest {
             'dev.alaindustrial.core.fluid.FluidNetwork',
             'dev.alaindustrial.core.fluid.FluidNetworkManager',
             'dev.alaindustrial.core.heat.WorldHeatSources',
+            // MOD-628: MC-coupled TRANSITIVELY, like PlayerStatsClientCache above. Since the tab strip
+            // moved to client.screen.tabs, ReactorTabPage is an empty interface that only extends the
+            // shared TabPage, so its file names no Minecraft type — but every member it has is TabPage's,
+            // typed by GuiGraphicsExtractor, Component and ItemStack. There is no bytecode of its own to
+            // mutate, and L1 could not load it anyway.
+            'dev.alaindustrial.client.screen.reactor.ReactorTabPage',
             // NOTE: `dev.alaindustrial.Config` lived here as a deferred-coverage parking spot from
             // MOD-200 (135 mutants, only 35 killed) until MOD-204 wrote the full L1 suite
             // (ConfigSnapshotTest), which killed all 157 mutants it had at the time. It has moved to

@@ -6,12 +6,14 @@ import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.menu.TeleporterStationMenu;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDataComponents;
+import dev.alaindustrial.teleporter.TeleporterRegistry;
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -44,6 +46,17 @@ public class TeleporterBlockEntity extends MachineBlockEntity {
 	 * never returned, so there is nothing for a slot to hold anyway.
 	 */
 	private boolean hasRtpModule = false;
+
+	/**
+	 * How often charging reaches the {@link TeleporterRegistry}, at most, and by how much of the buffer the charge
+	 * must have moved (MOD-628). The energy commit is the network's hot path, called for every delivery; the
+	 * remote's screen needs a charge level, not a meter.
+	 */
+	private static final int REGISTRY_ENERGY_INTERVAL_TICKS = 100;
+	private static final int REGISTRY_ENERGY_STEP_DIVISOR = 100;
+	private static final long NEVER_RECORDED = Long.MIN_VALUE;
+	private long registryRecordedAt = NEVER_RECORDED;
+	private long registryEnergy = -1;
 
 	public TeleporterBlockEntity(BlockPos pos, BlockState state) {
 		// Consumer: HV in, nothing out. maxExtract = 0 — the network must never drain the station's
@@ -114,6 +127,7 @@ public class TeleporterBlockEntity extends MachineBlockEntity {
 	public void setPrivate(boolean value) {
 		this.isPrivate = value;
 		setChanged();
+		recordInRegistry();
 	}
 
 	/** True once a Random Jump Chip has been fitted; without one the station refuses random jumps. */
@@ -128,11 +142,73 @@ public class TeleporterBlockEntity extends MachineBlockEntity {
 	public void setRtpModule(boolean value) {
 		this.hasRtpModule = value;
 		setChanged();
+		recordInRegistry();
 	}
 
 	/** True when {@code player} may bind to / jump to this station: its owner, or anyone if public. */
 	public boolean allowsAccess(UUID player) {
 		return !isPrivate || getOwner() == null || getOwner().equals(player);
+	}
+
+	// --- the station registry (MOD-628) ---
+	//
+	// The station tells the registry about itself whenever something the remote's screen shows changes. Every
+	// hook below reads only this block entity's own fields, never the world, so none of them can re-enter the
+	// chunk operation it is called from.
+
+	/** Writes this station's current state to the {@link TeleporterRegistry}. Server side only; a no-op elsewhere. */
+	public void recordInRegistry() {
+		if (level instanceof ServerLevel serverLevel) {
+			TeleporterRegistry.record(serverLevel, this);
+			registryRecordedAt = serverLevel.getGameTime();
+			registryEnergy = energy.getAmount();
+		}
+	}
+
+	/**
+	 * A station entering the world — placed, or loaded with its chunk. {@code LevelChunk.setBlockEntity} calls
+	 * this on both loaders, which is how a station built before the registry existed gets its first record.
+	 */
+	@Override
+	public void clearRemoved() {
+		super.clearRemoved();
+		recordInRegistry();
+	}
+
+	/**
+	 * The capsule assembling or coming apart. Only the {@code FORMED} flag matters to the registry; the chunk calls
+	 * this for any change of the same block's state, including the ones {@code TeleporterBlock#updateShape} makes,
+	 * where the block itself cannot write.
+	 */
+	// Vanilla's own soft deprecation (MOD-498 kind A): marked in vanilla and the NeoForge patch alike, with no
+	// replacement, and vanilla overrides it itself (HopperBlockEntity). It is the one place a same-block state
+	// change reaches the block entity. The overridden method is what is deprecated, so the scope cannot narrow.
+	@SuppressWarnings("deprecation")
+	@Override
+	public void setBlockState(BlockState state) {
+		boolean wasFormed = dev.alaindustrial.block.TeleporterBlock.isFormed(getBlockState());
+		super.setBlockState(state);
+		if (wasFormed != dev.alaindustrial.block.TeleporterBlock.isFormed(state)) {
+			recordInRegistry();
+		}
+	}
+
+	/** Charging, throttled: see {@link #REGISTRY_ENERGY_INTERVAL_TICKS}. */
+	@Override
+	protected void onEnergyTransactionCommitted() {
+		super.onEnergyTransactionCommitted();
+		if (!(level instanceof ServerLevel serverLevel)) {
+			return;
+		}
+		if (registryRecordedAt != NEVER_RECORDED
+				&& serverLevel.getGameTime() - registryRecordedAt < REGISTRY_ENERGY_INTERVAL_TICKS) {
+			return;
+		}
+		long step = Math.max(1L, energy.getCapacity() / REGISTRY_ENERGY_STEP_DIVISOR);
+		if (Math.abs(energy.getAmount() - registryEnergy) < step) {
+			return;
+		}
+		recordInRegistry();
 	}
 
 	/**

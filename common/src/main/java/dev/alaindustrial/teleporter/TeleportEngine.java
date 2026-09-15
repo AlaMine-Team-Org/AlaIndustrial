@@ -183,6 +183,8 @@ public final class TeleportEngine {
 		player.setOnGround(true);
 		station.getEnergyStorage().drainInternal(cost);
 		station.setChanged();
+		// An internal drain fires no energy commit, so the registry is told about the spend here (MOD-628).
+		station.recordInRegistry();
 		// The jump is paid for; book it against the player who made it (MOD-361). The station drains its
 		// buffer straight from here rather than through a machine cycle, so nothing else would ever tell
 		// the dashboard this EU was spent — a player living on the teleporter saw "Consumed: 0 EU".
@@ -320,6 +322,8 @@ public final class TeleportEngine {
 		player.setOnGround(true);
 		station.getEnergyStorage().drainInternal(cost);
 		station.setChanged();
+		// An internal drain fires no energy commit, so the registry is told about the spend here (MOD-628).
+		station.recordInRegistry();
 		PlayerStatsTracker.get().recordSpending(level.getServer(), player.getUUID(), cost);
 		return true;
 	}

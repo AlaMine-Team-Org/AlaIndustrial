@@ -40,6 +40,9 @@ public final class NetworkVisualizationClient {
 		// MOD-622: the reactor controller's «Log» tab.
 		ClientPlayNetworking.registerGlobalReceiver(dev.alaindustrial.network.ReactorLogPayload.TYPE,
 				(payload, context) -> ReactorLogClient.receive(payload));
+		// MOD-628: the teleporter remote's stations.
+		ClientPlayNetworking.registerGlobalReceiver(dev.alaindustrial.network.TeleportStationsPayload.TYPE,
+				(payload, context) -> TeleportStationsClient.receive(payload));
 		LevelRenderEvents.AFTER_TRANSLUCENT_FEATURES.register(NetworkVisualizationClient::render);
 	}
 

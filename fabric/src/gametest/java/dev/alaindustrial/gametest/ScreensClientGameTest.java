@@ -577,7 +577,8 @@ public class ScreensClientGameTest implements FabricClientGameTest {
         }
         ShotRecorder.capture("gui_teleporter_remote_opened", ShotGroup.GUI, "teleporter_remote",
                 ShotRecorder.rules("R-GUI-01"),
-                "Remote opened from the hand: the (empty) point list, the buttons and the name field are present");
+                "Remote opened from the hand (MOD-628): the Stations tab below the panel's top corner, the NO STATIONS "
+                        + "chip, the free-slots and hint rows in the dark well, the name field and every button in frame");
         VisualWorld.awaitNoScreen(context);
     }
 

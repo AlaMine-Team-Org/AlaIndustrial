@@ -139,11 +139,28 @@ public class TeleporterBlock extends HorizontalMachineBlock {
 	@Override
 	public void setPlacedBy(Level level, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 		super.setPlacedBy(level, pos, state, placer, stack);
-		if (level.getBlockEntity(pos) instanceof TeleporterBlockEntity station && station.hasRtpModule()) {
-			showUpgraded(level, pos, state);
+		if (level.getBlockEntity(pos) instanceof TeleporterBlockEntity station) {
+			if (station.hasRtpModule()) {
+				showUpgraded(level, pos, state);
+			}
+			// The station recorded itself on entering the world, before the placer became its owner and before the
+			// item handed back its charge, privacy and chip; record what it is now (MOD-628).
+			station.recordInRegistry();
 		}
 		// Glass already waiting above — a player who built the capsule's glass first.
 		tryAssemble(level, pos);
+	}
+
+	/**
+	 * A station gone from the world leaves the registry (MOD-628). Called only when the block itself changed, never
+	 * for a change of this block's own state, so assembling the capsule does not reach here; the block entity is
+	 * already detached, which is fine — the registry is keyed by position.
+	 */
+	@Override
+	protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos,
+			boolean movedByPiston) {
+		dev.alaindustrial.teleporter.TeleporterRegistry.forget(level, pos);
+		super.affectNeighborsAfterRemoval(state, level, pos, movedByPiston);
 	}
 
 	@Override

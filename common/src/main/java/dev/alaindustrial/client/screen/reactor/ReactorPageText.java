@@ -24,7 +24,7 @@ final class ReactorPageText {
 	static final int FILL_IDLE = 0xFF6B7178;
 
 	/** Below this a translated line is no longer readable at GUI scale 2, so it is clipped instead. */
-	static final float MIN_SCALE = 0.6f;
+	static final float MIN_SCALE = dev.alaindustrial.client.screen.tabs.PageText.MIN_SCALE;
 	static final float BODY_SCALE = 0.75f;
 	static final int LINE_H = 9;
 
@@ -38,26 +38,16 @@ final class ReactorPageText {
 	private ReactorPageText() {
 	}
 
-	/** One line at a scale, centred on the line the full-size glyphs would sit on. */
+	/** One line at a scale — the shared {@code PageText.scaled} since the teleporter remote needed it too (MOD-628). */
 	static void scaled(GuiGraphicsExtractor graphics, Font font, Component text, int x, int y, float scale,
 			int colour) {
-		if (scale >= 1.0f) {
-			graphics.text(font, text, x, y, colour, false);
-			return;
-		}
-		graphics.pose().pushMatrix();
-		graphics.pose().translate(x, y + (font.lineHeight - 1) * (1.0f - scale) / 2.0f);
-		graphics.pose().scale(scale, scale);
-		graphics.text(font, text, 0, 0, colour, false);
-		graphics.pose().popMatrix();
+		dev.alaindustrial.client.screen.tabs.PageText.scaled(graphics, font, text, x, y, scale, colour);
 	}
 
 	/** One line, shrunk to fit a width — but never below {@link #MIN_SCALE}. */
 	static void scaledFit(GuiGraphicsExtractor graphics, Font font, Component text, int x, int y, int width,
 			int colour) {
-		int textW = font.width(text);
-		float scale = textW > width ? Math.max(MIN_SCALE, (float) width / textW) : 1.0f;
-		scaled(graphics, font, text, x, y, scale, colour);
+		dev.alaindustrial.client.screen.tabs.PageText.scaledFit(graphics, font, text, x, y, width, colour);
 	}
 
 	/** The scale the stack tabs set their rows in. */

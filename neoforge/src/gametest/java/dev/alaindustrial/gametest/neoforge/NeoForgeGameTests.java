@@ -91,6 +91,7 @@ import dev.alaindustrial.gametest.TeleporterGuiScenarios;
 import dev.alaindustrial.gametest.RtpScenarios;
 import dev.alaindustrial.gametest.TeleporterJumpScenarios;
 import dev.alaindustrial.gametest.TeleporterCapsuleScenarios;
+import dev.alaindustrial.gametest.TeleporterRegistryScenarios;
 import dev.alaindustrial.gametest.OreScenarios;
 import dev.alaindustrial.gametest.EnergyCondenserScenarios;
 import dev.alaindustrial.gametest.OverclockerEffectScenarios;
@@ -2305,6 +2306,26 @@ public final class NeoForgeGameTests {
 				TeleporterCapsuleScenarios::tcTele005Brk02_breakingTheStationFreesBothGlasses);
 		registerTest(event, "tc_tele005_sec01_station_without_capsule_refuses_jump", 40, true,
 				TeleporterCapsuleScenarios::tcTele005Sec01_stationWithoutCapsuleRefusesJump);
+
+		// Teleporter station registry (MOD-628): what the remote's screen reads instead of loading a chunk.
+		registerTest(event, "tc_tele006_fun01_placed_station_is_recorded", 40, true,
+				TeleporterRegistryScenarios::tcTele006Fun01_placedStationIsRecorded);
+		registerTest(event, "tc_tele006_fun02_capsule_is_recorded", 40, true,
+				TeleporterRegistryScenarios::tcTele006Fun02_capsuleIsRecorded);
+		registerTest(event, "tc_tele006_fun03_owner_privacy_and_chip_are_recorded", 40, true,
+				TeleporterRegistryScenarios::tcTele006Fun03_ownerPrivacyAndChipAreRecorded);
+		registerTest(event, "tc_tele006_fun04_entering_the_world_records_itself", 40, true,
+				TeleporterRegistryScenarios::tcTele006Fun04_enteringTheWorldRecordsItself);
+		registerTest(event, "tc_tele006_nrg01_charging_is_throttled", 260, true,
+				TeleporterRegistryScenarios::tcTele006Nrg01_chargingIsThrottled);
+		registerTest(event, "tc_tele006_nrg02_jump_spend_is_recorded", 40, true,
+				TeleporterRegistryScenarios::tcTele006Nrg02_jumpSpendIsRecorded);
+		registerTest(event, "tc_tele006_sec01_foreign_private_station_is_hidden", 40, true,
+				TeleporterRegistryScenarios::tcTele006Sec01_foreignPrivateStationIsHidden);
+		registerTest(event, "tc_tele006_fun05_snapshot_loads_no_chunk", 40, true,
+				TeleporterRegistryScenarios::tcTele006Fun05_snapshotLoadsNoChunk);
+		registerTest(event, "tc_tele006_brk01_removed_station_is_forgotten", 40, true,
+				TeleporterRegistryScenarios::tcTele006Brk01_removedStationIsForgotten);
 
 		// Teleporter random jump (MOD-116): the chip, the gate it opens, the energy accounting.
 		registerTest(event, "tc_tele004_fun01_chip_fits_once_and_is_consumed", 40, true,

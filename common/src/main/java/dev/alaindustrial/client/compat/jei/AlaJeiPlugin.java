@@ -285,6 +285,15 @@ public class AlaJeiPlugin implements IModPlugin {
 		}
 		// MOD-080: keep JEI's item grid clear of the upgrade panel + gear tab on every machine screen.
 		registration.addGuiContainerHandler((Class) MachineScreen.class, new AlaJeiGuiExtraAreasHandler());
+		// MOD-628: the teleporter remote is not a machine screen, but its tab strip sticks out the same way.
+		registration.addGuiContainerHandler(dev.alaindustrial.client.screen.TeleporterRemoteScreen.class,
+				new mezz.jei.api.gui.handlers.IGuiContainerHandler<>() {
+					@Override
+					public java.util.List<net.minecraft.client.renderer.Rect2i> getGuiExtraAreas(
+							dev.alaindustrial.client.screen.TeleporterRemoteScreen screen) {
+						return screen.extraGuiAreas();
+					}
+				});
 	}
 
 	@Override

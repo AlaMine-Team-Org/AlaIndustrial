@@ -85,4 +85,9 @@ public final class NeoForgeNetworkClient {
 	public static void receiveReactorLog(dev.alaindustrial.network.ReactorLogPayload payload) {
 		dev.alaindustrial.client.ReactorLogClient.receive(payload);
 	}
+
+	/** MOD-628: the teleporter remote's stations, through the same loader-neutral landing point Fabric uses. */
+	public static void receiveTeleportStations(dev.alaindustrial.network.TeleportStationsPayload payload) {
+		dev.alaindustrial.client.TeleportStationsClient.receive(payload);
+	}
 }

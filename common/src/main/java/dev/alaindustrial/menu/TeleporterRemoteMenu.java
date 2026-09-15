@@ -87,6 +87,46 @@ public class TeleporterRemoteMenu extends AbstractContainerMenu {
 		this.selected = index;
 	}
 
+	/** How often an open remote screen is sent its stations' state, at most (MOD-628). */
+	private static final int STATIONS_SYNC_INTERVAL_TICKS = 20;
+
+	/** Server side: when the next station snapshot is due, and whether it changed since the last one sent. */
+	private final dev.alaindustrial.core.ThrottledSnapshot<dev.alaindustrial.network.TeleportStationsPayload> stationsSync =
+			new dev.alaindustrial.core.ThrottledSnapshot<>(STATIONS_SYNC_INTERVAL_TICKS);
+
+	/** Client side: the latest station snapshot, or {@code null} before the first one lands. */
+	private dev.alaindustrial.network.@org.jspecify.annotations.Nullable TeleportStationsPayload stations;
+
+	/**
+	 * Pushes the stations' state to this screen's viewer (MOD-628). A closed screen sends nothing: vanilla calls this
+	 * only for an open menu. The price moves with the player's position and pack, so a moving player gets a snapshot
+	 * every interval; a player standing still gets none after the first.
+	 */
+	@Override
+	public void broadcastChanges() {
+		super.broadcastChanges();
+		if (!(player instanceof ServerPlayer serverPlayer) || !stationsSync.due()) {
+			return;
+		}
+		dev.alaindustrial.network.TeleportStationsPayload next =
+				dev.alaindustrial.teleporter.TeleportStationSnapshot.build(serverPlayer, points(), containerId);
+		if (stationsSync.changed(next)) {
+			NetworkDispatcher.get().sendToPlayer(serverPlayer, next);
+		}
+	}
+
+	/** Client side: accepts a snapshot addressed to THIS menu; one for another screen is dropped. */
+	public void acceptStations(dev.alaindustrial.network.TeleportStationsPayload payload) {
+		if (payload.containerId() == containerId) {
+			this.stations = payload;
+		}
+	}
+
+	/** Client side: the latest station snapshot, or {@code null} before the first one lands. */
+	public dev.alaindustrial.network.@org.jspecify.annotations.Nullable TeleportStationsPayload stations() {
+		return stations;
+	}
+
 	/**
 	 * Every button on this screen, over vanilla's own container-button packet.
 	 *

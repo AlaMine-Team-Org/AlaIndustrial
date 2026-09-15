@@ -124,6 +124,9 @@ public final class MachineGuiStands {
         // ── … and the Log tab: what happened, newest first, and the marker for an unread alarm (MOD-622) ──
         ReactorConsoleGuiStand.shootLog(context);
 
+        // ── Teleporter Remote — the Stations tab: every lamp, three chips and a wrapped refusal (MOD-628) ──
+        TeleporterRemoteGuiStand.shootStations(context);
+
         // ── Machines without custom screens (one shot each) ──────────────────────────
         shootMenu(context, "gui_moonlit_solar_panel", ModContent.MOONLIT_SOLAR_PANEL_MENU.get(), "Moonlit Solar Panel");
 

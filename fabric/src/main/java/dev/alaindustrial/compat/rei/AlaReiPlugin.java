@@ -220,6 +220,11 @@ public class AlaReiPlugin implements REIClientPlugin {
 		}
 		// MOD-080: keep REI's item grid clear of the upgrade panel + gear tab on every machine screen.
 		registry.exclusionZones().register((Class) MachineScreen.class, new AlaReiExclusionZones());
+		// MOD-628: the teleporter remote is not a machine screen, but its tab strip sticks out the same way.
+		registry.exclusionZones().register(dev.alaindustrial.client.screen.TeleporterRemoteScreen.class,
+				screen -> screen.extraGuiAreas().stream()
+						.map(r -> new me.shedaniel.math.Rectangle(r.getX(), r.getY(), r.getWidth(), r.getHeight()))
+						.toList());
 	}
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
