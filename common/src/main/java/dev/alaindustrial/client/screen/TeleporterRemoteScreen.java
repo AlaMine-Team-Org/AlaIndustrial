@@ -5,6 +5,7 @@ import dev.alaindustrial.client.hud.TeleportNotice;
 import dev.alaindustrial.client.screen.tabs.SideTabStrip;
 import dev.alaindustrial.client.screen.tabs.TabPage;
 import dev.alaindustrial.client.screen.teleporter.MapTabPage;
+import dev.alaindustrial.client.screen.teleporter.RandomTabPage;
 import dev.alaindustrial.client.screen.teleporter.StationsTabPage;
 import dev.alaindustrial.menu.TeleporterRemoteMenu;
 import dev.alaindustrial.network.NetworkDispatcher;
@@ -33,8 +34,8 @@ import net.minecraft.world.entity.player.Inventory;
  * <p><b>The screen owns the frame, the pages own the rest.</b> The panel, the tab strip, the selected tab's name and the
  * readiness chip are the same on every tab; everything under the header belongs to the selected {@link TabPage}.
  *
- * <p>The tabs ship one release at a time (MOD-627): «Map» (MOD-629) and «Stations» (MOD-628) so far. The selected
- * station is one for the whole screen — picking it on either tab picks it on both.
+ * <p>The tabs ship one release at a time (MOD-627): «Map» (MOD-629), «Random» (MOD-630) and «Stations» (MOD-628) so far.
+ * The selected station is one for the whole screen — picking it on any tab picks it on all of them.
  *
  * <p>Nothing here decides anything: a click sends the server an index and the server re-reads the real remote.
  */
@@ -65,8 +66,9 @@ public class TeleporterRemoteScreen extends AbstractContainerScreen<TeleporterRe
 
 	private final SideTabStrip tabs = new SideTabStrip(TAB_TOP);
 	private final MapTabPage map = new MapTabPage(this);
+	private final RandomTabPage random = new RandomTabPage(this);
 	private final StationsTabPage stations = new StationsTabPage(this);
-	private final List<TabPage> pages = List.of(map, stations);
+	private final List<TabPage> pages = List.of(map, random, stations);
 	private int selected;
 	/** Whether the opening tab has been chosen; {@code init} runs again on every resize and must not re-choose. */
 	private boolean pageChosen;
@@ -121,9 +123,13 @@ public class TeleporterRemoteScreen extends AbstractContainerScreen<TeleporterRe
 		pages.get(selected).draw(graphics, mouseX, mouseY);
 	}
 
-	/** The selected station's readiness in one word, right-aligned in the header — the reactor chip's shape. */
+	/**
+	 * The selected station's readiness in one word, right-aligned in the header — the reactor chip's shape. On «Random» it
+	 * is readiness for a random jump, which a station with no chip lacks however ready it is for a targeted one.
+	 */
 	private void drawChip(GuiGraphicsExtractor graphics) {
-		StationsTabPage.Chip chip = StationsTabPage.chip(this.menu);
+		StationsTabPage.Chip chip = pages.get(selected) == random ? RandomTabPage.chip(this.menu, this.minecraft)
+				: StationsTabPage.chip(this.menu);
 		if (chip == null) {
 			return;
 		}
@@ -221,6 +227,11 @@ public class TeleporterRemoteScreen extends AbstractContainerScreen<TeleporterRe
 	/** The «Map» tab, for a stand that drives it directly. */
 	public MapTabPage mapPage() {
 		return map;
+	}
+
+	/** The «Random» tab: what the map's «Random ›» opens, and what a stand photographs. */
+	public RandomTabPage randomPage() {
+		return random;
 	}
 
 	/** The «Stations» tab, for a stand that drives it directly. */

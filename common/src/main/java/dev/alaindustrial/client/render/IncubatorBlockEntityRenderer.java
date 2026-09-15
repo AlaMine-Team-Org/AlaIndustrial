@@ -33,6 +33,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
@@ -285,9 +286,23 @@ public final class IncubatorBlockEntityRenderer
 
 	@Override
 	public boolean shouldRenderOffScreen() {
-		// The item is drawn a block above this block entity, outside the section box the culler tests.
-		// Same reason the wind mill rotor opts out, and 26.2 has no getRenderBoundingBox to widen.
+		// The item, the ring and the bath are drawn in the dome's cell, a block above this block entity,
+		// which can be in view while this block is not. NeoForge culls by getRenderBoundingBox below
+		// before it ever reads this flag, so on that loader the box is what keeps them drawn.
 		return true;
+	}
+
+	/**
+	 * The box NeoForge tests against the view frustum before it draws this renderer, ahead of
+	 * {@link #shouldRenderOffScreen} (MOD-633). Its default is this block alone, so the dome's contents
+	 * were culled whenever the base dropped below the edge of the screen. The base and the dome instead.
+	 *
+	 * <p>No {@code @Override}: only NeoForge's {@code BlockEntityRenderer} declares this method, and vanilla
+	 * — so Fabric — never tests a block entity against the frustum. {@code OffScreenRendererBoxTest} on the
+	 * NeoForge lane fails if it stops overriding.
+	 */
+	public AABB getRenderBoundingBox(IncubatorBlockEntity blockEntity) {
+		return new AABB(blockEntity.getBlockPos()).expandTowards(0.0, DOME_LIFT, 0.0);
 	}
 
 	/**

@@ -26,10 +26,13 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
  * @param stationCapacity a station's buffer in EU, for the card's charge percentage and bar
  * @param rtpMinRadius nearest a random jump lands from the viewer, in blocks — the inner edge of the map's zone ring
  * @param rtpMaxRadius farthest a random jump lands, in blocks — the outer edge of that ring
+ * @param rtpCost the flat price of a random jump, for the «Random» tab's charge row (MOD-630)
+ * @param warmupSeconds how long a jump warms up, for the tab's "step away to cancel" line
  * @param stations one per bound point, in the remote's order
  */
 public record TeleportStationsPayload(int containerId, int cooldownSeconds, int weightPermille, int stationCapacity,
-		int rtpMinRadius, int rtpMaxRadius, List<Station> stations) implements CustomPacketPayload {
+		int rtpMinRadius, int rtpMaxRadius, int rtpCost, int warmupSeconds, List<Station> stations)
+		implements CustomPacketPayload {
 
 	public static final Type<TeleportStationsPayload> TYPE = new Type<>(Industrialization.id("teleport_stations"));
 
@@ -86,6 +89,8 @@ public record TeleportStationsPayload(int containerId, int cooldownSeconds, int 
 			ByteBufCodecs.VAR_INT, TeleportStationsPayload::stationCapacity,
 			ByteBufCodecs.VAR_INT, TeleportStationsPayload::rtpMinRadius,
 			ByteBufCodecs.VAR_INT, TeleportStationsPayload::rtpMaxRadius,
+			ByteBufCodecs.VAR_INT, TeleportStationsPayload::rtpCost,
+			ByteBufCodecs.VAR_INT, TeleportStationsPayload::warmupSeconds,
 			STATION.apply(ByteBufCodecs.list()), TeleportStationsPayload::stations,
 			TeleportStationsPayload::new);
 

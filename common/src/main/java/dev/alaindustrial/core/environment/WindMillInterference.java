@@ -13,20 +13,21 @@ import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * Rotor-interference check for the wind mill family (MOD-051). Each mill with an installed rotor
- * renders a flat 2×2-block disc in front of its {@code FACING} face (centre ~1.08 blocks from the
- * mill's own centre along {@code FACING} — the 0.5 half-block plus the renderer's 0.58 push, see
- * {@code WindMillRotorBlockEntityRenderer}). Two mills placed close enough that their discs
- * intersect look broken in-world: the blades overlap and, where the quads are coplanar (same push
- * depth), z-fight and flicker. {@link WindMillClearance} cannot catch this — the neighbour's rotor
- * is a client-side render, not a block.
+ * renders a flat 2×2-block disc just in front of its {@code FACING} face: its centre sits
+ * {@link WindMillRotorGeometry#DISC_PUSH} = 0.58 from the mill's block centre, 0.08 past the face.
+ * The renderer and this check read those numbers from {@link WindMillRotorGeometry} (MOD-634 — before
+ * that the check placed the disc half a block further out and stalled mills whose drawn blades never
+ * met). Two mills placed close enough that their discs intersect look broken in-world: the blades
+ * overlap and, where the quads are coplanar (same push depth), z-fight and flicker.
+ * {@link WindMillClearance} cannot catch this — the neighbour's rotor is a client-side render, not a
+ * block.
  *
- * <p>The check models each disc as an axis-aligned box: ±{@link #DISC_HALF_SIZE} along the two axes
- * of the rotation plane, ±{@link #DISC_HALF_DEPTH} along {@code FACING}. Two mills interfere when
- * their disc boxes overlap with positive volume — touching edge-to-edge (e.g. mills two blocks
- * apart, discs meeting exactly at the shared boundary) is <b>not</b> interference. One box rule
- * covers every layout: side-by-side coplanar discs, face-to-face mills across a one-block gap, and
- * perpendicular discs slicing through each other. Interference is symmetric by construction, so
- * <b>both</b> mills stall — there is no tie-break.
+ * <p>The check models each disc as an axis-aligned box (see {@link WindMillRotorGeometry}). Two mills
+ * interfere when their disc boxes overlap with positive volume — touching edge-to-edge (e.g. mills two
+ * blocks apart, discs meeting exactly at the shared boundary) is <b>not</b> interference. One box rule
+ * covers every layout: side-by-side coplanar discs, perpendicular discs slicing through each other, and
+ * the parallel discs of mills facing each other diagonally, one block ahead and one block up or down.
+ * Interference is symmetric by construction, so <b>both</b> mills stall — there is no tie-break.
  *
  * <p>A neighbour counts only when it has a rotor installed (slot 0 of its block entity): a bare
  * mill renders no disc, so there is nothing to clash with. Even a stalled neighbour's rotor counts —
@@ -34,26 +35,19 @@ import net.minecraft.world.level.block.state.BlockState;
  * (e.g. its chunk is not loaded at sample time) is treated as rotor-less; the next sample after the
  * chunk loads corrects the state.
  *
- * <p>Mills facing each other in <b>directly adjacent</b> blocks are not this check's problem: each
- * disc then sits inside the other mill's solid block, which {@link WindMillClearance} already
- * reports as an obstruction (higher priority).
+ * <p>Mills facing each other in <b>directly adjacent</b> blocks do have overlapping discs, but this
+ * check never reaches them: each disc sits inside the other mill's solid block, which
+ * {@link WindMillClearance} reports as an obstruction first (higher priority). Across one air block the
+ * two discs are 0.84 apart and both mills run.
  */
 public final class WindMillInterference {
-	/** Half-extent of the rotor disc in its rotation plane ({@code HALF_SIZE} in the renderer). */
-	private static final double DISC_HALF_SIZE = 1.0;
-	/** Half-thickness of the disc box along {@code FACING} — the quad is flat, this is tolerance. */
-	private static final double DISC_HALF_DEPTH = 0.1;
-	/** Distance from the mill's block centre to the disc centre along {@code FACING} (0.5 + 0.58). */
-	private static final double DISC_PUSH = 1.08;
 	/**
-	 * Chebyshev scan radius around the mill's own position. Each disc box reaches at most
-	 * {@code DISC_PUSH + DISC_HALF_DEPTH} ≈ 1.18 from its mill's centre along one axis, so two mills
-	 * whose centres are further than ~3.4 blocks apart on every axis cannot overlap; radius 3 covers
-	 * every reachable candidate.
+	 * Chebyshev scan radius around the mill's own position. A disc box stays within
+	 * {@link WindMillRotorGeometry#DISC_HALF_SIZE} = 1.0 of its mill's centre on every axis (along
+	 * {@code FACING} it reaches only {@code DISC_PUSH + DISC_HALF_DEPTH} = 0.68), so two mills can overlap
+	 * only when their centres are under 2 blocks apart on every axis; radius 3 covers every such candidate.
 	 */
 	private static final int SCAN_RADIUS = 3;
-	/** Interval-overlap slack so discs meeting exactly edge-to-edge do not count as overlapping. */
-	private static final double EPSILON = 1.0E-4;
 
 	private WindMillInterference() {
 	}
@@ -69,7 +63,6 @@ public final class WindMillInterference {
 	 * @return {@code true} if at least one neighbouring rotor disc overlaps this mill's disc
 	 */
 	public static boolean hasInterference(Level level, BlockPos pos, Direction facing) {
-		double[] own = discBox(pos, facing);
 		BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
 		for (int dx = -SCAN_RADIUS; dx <= SCAN_RADIUS; dx++) {
 			for (int dy = -SCAN_RADIUS; dy <= SCAN_RADIUS; dy++) {
@@ -85,8 +78,11 @@ public final class WindMillInterference {
 					if (!hasRotorInstalled(level, cursor)) {
 						continue;
 					}
-					double[] other = discBox(cursor, state.getValue(HorizontalMachineBlock.FACING));
-					if (boxesOverlap(own, other)) {
+					Direction other = state.getValue(HorizontalMachineBlock.FACING);
+					if (WindMillRotorGeometry.discsOverlap(
+							pos.getX(), pos.getY(), pos.getZ(), facing.getStepX(), facing.getStepY(), facing.getStepZ(),
+							cursor.getX(), cursor.getY(), cursor.getZ(),
+							other.getStepX(), other.getStepY(), other.getStepZ())) {
 						return true;
 					}
 				}
@@ -109,28 +105,5 @@ public final class WindMillInterference {
 	 */
 	private static boolean hasRotorInstalled(Level level, BlockPos at) {
 		return level.getBlockEntity(at) instanceof Container container && !container.getItem(0).isEmpty();
-	}
-
-	/**
-	 * Axis-aligned box of the rotor disc for a mill at {@code pos} facing {@code facing}, as
-	 * {@code {minX, minY, minZ, maxX, maxY, maxZ}}: disc centre pushed {@link #DISC_PUSH} from the
-	 * block centre along {@code facing}, ±{@link #DISC_HALF_DEPTH} along the facing axis and
-	 * ±{@link #DISC_HALF_SIZE} along the two plane axes.
-	 */
-	private static double[] discBox(BlockPos pos, Direction facing) {
-		double cx = pos.getX() + 0.5 + facing.getStepX() * DISC_PUSH;
-		double cy = pos.getY() + 0.5 + facing.getStepY() * DISC_PUSH;
-		double cz = pos.getZ() + 0.5 + facing.getStepZ() * DISC_PUSH;
-		double hx = facing.getAxis() == Direction.Axis.X ? DISC_HALF_DEPTH : DISC_HALF_SIZE;
-		double hy = facing.getAxis() == Direction.Axis.Y ? DISC_HALF_DEPTH : DISC_HALF_SIZE;
-		double hz = facing.getAxis() == Direction.Axis.Z ? DISC_HALF_DEPTH : DISC_HALF_SIZE;
-		return new double[] {cx - hx, cy - hy, cz - hz, cx + hx, cy + hy, cz + hz};
-	}
-
-	/** Positive-volume overlap on all three axes; edge contact (within {@link #EPSILON}) is not overlap. */
-	private static boolean boxesOverlap(double[] a, double[] b) {
-		return a[0] < b[3] - EPSILON && b[0] < a[3] - EPSILON
-				&& a[1] < b[4] - EPSILON && b[1] < a[4] - EPSILON
-				&& a[2] < b[5] - EPSILON && b[2] < a[5] - EPSILON;
 	}
 }

@@ -357,11 +357,12 @@ public final class WindMillScenarios {
 	}
 
 	/**
-	 * Two mills facing each other across a one-block gap: both discs live in front of their mills
-	 * and overlap inside the gap column, so both report MODE_INTERFERENCE (MOD-051).
-	 * Mirrors: WindMillGameTest.tcWindmill001Neg07_faceToFaceInterference
+	 * Control: two mills facing each other across a one-block gap. Each disc hangs 0.08 in front of its
+	 * own face, so the two sit 0.84 apart inside the gap and never meet — neither mill may report
+	 * MODE_INTERFERENCE (MOD-634; MOD-051 placed the discs half a block further out and stalled both).
+	 * Mirrors: WindMillGameTest.tcWindmill001Neg07_faceToFaceAcrossGapNotInterfering
 	 */
-	public static void tcWindmill001Neg07_faceToFaceInterference(GameTestHelper helper) {
+	public static void tcWindmill001Neg07_faceToFaceAcrossGapNotInterfering(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.WIND_MILL.get().defaultBlockState()
 				.setValue(HorizontalMachineBlock.FACING, Direction.EAST));
 		WindMillBlockEntity a = helper.getBlockEntity(POS, WindMillBlockEntity.class);
@@ -373,8 +374,17 @@ public final class WindMillScenarios {
 		setClear(helper);
 		drive(a, helper, Config.windMillSampleTicks + 1);
 		drive(b, helper, Config.windMillSampleTicks + 1);
-		assertMode(helper, a, "face-to-face mill A", WindMillBlockEntity.MODE_INTERFERENCE);
-		assertMode(helper, b, "face-to-face mill B", WindMillBlockEntity.MODE_INTERFERENCE);
+		for (WindMillBlockEntity mill : new WindMillBlockEntity[] {a, b}) {
+			int mode = mill.getDataAccess().get(3);
+			// NO_ROTOR, ROOFED and OBSTRUCTED all skip the interference scan, so any of them would pass a
+			// bare "not INTERFERENCE" without the check ever running on this layout.
+			if (mode == WindMillBlockEntity.MODE_INTERFERENCE || mode == WindMillBlockEntity.MODE_OBSTRUCTED
+					|| mode == WindMillBlockEntity.MODE_ROOFED || mode == WindMillBlockEntity.MODE_NO_ROTOR) {
+				helper.fail("face-to-face mill at " + mill.getBlockPos() + " across one air block: mode = " + mode
+						+ "; expected its blades free — not INTERFERENCE (" + WindMillBlockEntity.MODE_INTERFERENCE
+						+ "), and not a mode that skips the interference scan");
+			}
+		}
 		helper.succeed();
 	}
 

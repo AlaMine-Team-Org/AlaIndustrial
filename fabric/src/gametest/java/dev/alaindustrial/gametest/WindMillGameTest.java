@@ -194,15 +194,15 @@ public class WindMillGameTest {
 	}
 
 	/**
-	 * @implements TC-WINDMILL-001-NEG07 — two mills facing each other across a one-block gap: both discs
-	 *     live in front of their mills and overlap inside the gap column, so both report
-	 *     MODE_INTERFERENCE (MOD-051). (Directly adjacent face-to-face mills are OBSTRUCTED instead —
-	 *     each disc sits inside the other mill's solid block, which WindMillClearance already catches.)
+	 * @implements TC-WINDMILL-001-NEG07 — control: two mills facing each other across a one-block gap have
+	 *     discs 0.84 apart inside the gap, so neither reports MODE_INTERFERENCE (MOD-634). (Directly
+	 *     adjacent face-to-face mills are OBSTRUCTED — each disc sits inside the other mill's solid block,
+	 *     which WindMillClearance catches before the interference scan runs.)
 	 * @covers R-NRG-04
 	 */
 	@GameTest(skyAccess = true, maxTicks = 120)
-	public void tcWindmill001Neg07_faceToFaceInterference(GameTestHelper helper) {
-		WindMillScenarios.tcWindmill001Neg07_faceToFaceInterference(helper);
+	public void tcWindmill001Neg07_faceToFaceAcrossGapNotInterfering(GameTestHelper helper) {
+		WindMillScenarios.tcWindmill001Neg07_faceToFaceAcrossGapNotInterfering(helper);
 	}
 
 	/**

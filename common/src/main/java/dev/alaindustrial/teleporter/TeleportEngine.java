@@ -3,9 +3,11 @@ package dev.alaindustrial.teleporter;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.TeleporterBlock;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
+import dev.alaindustrial.core.teleport.RtpChecklist;
 import dev.alaindustrial.core.teleport.RtpSiteFinder;
 import dev.alaindustrial.item.teleport.TeleportPoint;
 import dev.alaindustrial.stats.PlayerStatsTracker;
+import java.util.EnumSet;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
@@ -239,6 +241,37 @@ public final class TeleportEngine {
 			return Denial.NOT_ENOUGH_EU;
 		}
 		return Denial.OK;
+	}
+
+	/**
+	 * Every condition a random jump paid by {@code payingStation} breaks right now — all of them, where
+	 * {@link #checkRtpPolicy} stops at the first (MOD-630). The rules are {@link RtpChecklist}'s, which the remote's
+	 * «Random» tab reads too, so the checklist a player sees is the one checked here.
+	 *
+	 * <p>Reads the live station, loading its chunk as {@link #checkRtpPolicy} does; the tab never calls this — it works
+	 * from the snapshot, which loads nothing.
+	 */
+	public static EnumSet<RtpChecklist.Check> rtpProblems(ServerPlayer player, TeleportPoint payingStation) {
+		boolean overworld = player.level().dimension() == Level.OVERWORLD;
+		int cooldown = TeleportWarmupManager.isOnCooldown(player) ? TeleportWarmupManager.cooldownSecondsLeft(player) : 0;
+		long cost = rtpCost();
+		RtpChecklist.Facts facts;
+		if (payingStation.dim() != player.level().dimension()) {
+			facts = new RtpChecklist.Facts(overworld, RtpChecklist.Access.OTHER_WORLD, false, false,
+					RtpChecklist.ENERGY_UNKNOWN, cost, cooldown);
+		} else {
+			TeleporterBlockEntity station = stationAt(player.level(), payingStation.pos());
+			if (station == null) {
+				facts = new RtpChecklist.Facts(overworld, RtpChecklist.Access.MISSING, false, false,
+						RtpChecklist.ENERGY_UNKNOWN, cost, cooldown);
+			} else {
+				RtpChecklist.Access access = station.allowsAccess(player.getUUID()) ? RtpChecklist.Access.OK
+						: RtpChecklist.Access.PRIVATE;
+				facts = new RtpChecklist.Facts(overworld, access, true, station.hasRtpModule(),
+						station.getEnergyStorage().getAmount(), cost, cooldown);
+			}
+		}
+		return RtpChecklist.failing(facts);
 	}
 
 	/**

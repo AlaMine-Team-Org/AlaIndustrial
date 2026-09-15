@@ -2,10 +2,16 @@ package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.block.TeleporterBlock;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
+import dev.alaindustrial.core.teleport.RtpChecklist;
 import dev.alaindustrial.item.teleport.TeleportPoint;
+import dev.alaindustrial.item.teleport.TeleportPoints;
+import dev.alaindustrial.menu.TeleporterRemoteMenu;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDataComponents;
 import dev.alaindustrial.teleporter.TeleportEngine;
+import dev.alaindustrial.teleporter.TeleportWarmupManager;
+import java.util.EnumSet;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
@@ -156,6 +162,64 @@ public final class RtpScenarios {
 		TeleportEngine.Denial with = TeleportEngine.checkRtpPolicy(player, point);
 		if (!with.allowed()) {
 			helper.fail("a fitted, charged, public station must allow the jump, got " + with);
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * @implements TC-TELE-004-FUN02 — the checklist reports every broken condition at once (MOD-630): a station with
+	 *     no chip and no charge shows both, where the refusal gate names only the first; fitting and charging it clears
+	 *     both.
+	 */
+	public static void tcTele004Fun02_checklistReportsEveryProblem(GameTestHelper helper) {
+		requireOverworld(helper);
+		TeleporterBlockEntity station = station(helper);
+		station.getEnergyStorage().setAmountUntracked(0);
+		ServerPlayer player = playerNearStation(helper);
+		TeleportPoint point = pointAt(helper, STATION);
+
+		EnumSet<RtpChecklist.Check> problems = TeleportEngine.rtpProblems(player, point);
+		if (!problems.equals(EnumSet.of(RtpChecklist.Check.CHIP, RtpChecklist.Check.CHARGE))) {
+			helper.fail("a public station with no chip and no charge must report exactly CHIP and CHARGE, got " + problems);
+		}
+		// The gate that refuses a press still stops at the first — that is why the checklist needed its own method.
+		TeleportEngine.Denial first = TeleportEngine.checkRtpPolicy(player, point);
+		if (first != TeleportEngine.Denial.RTP_NO_MODULE) {
+			helper.fail("the refusal gate must still name the first problem, RTP_NO_MODULE, got " + first);
+		}
+
+		station.setRtpModule(true);
+		station.getEnergyStorage().setAmountUntracked(station.getEnergyStorage().getCapacity());
+		EnumSet<RtpChecklist.Check> fixed = TeleportEngine.rtpProblems(player, point);
+		if (!fixed.isEmpty()) {
+			helper.fail("a fitted, fully charged public station must break no condition, got " + fixed);
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * @implements TC-TELE-004-NEG02 — the server checks a press itself (MOD-630): a random-jump press paid by a station
+	 *     with no chip starts no warmup, whatever the client's button showed.
+	 */
+	public static void tcTele004Neg02_pressOnBrokenStationStartsNothing(GameTestHelper helper) {
+		requireOverworld(helper);
+		TeleporterBlockEntity station = station(helper);
+		station.getEnergyStorage().setAmountUntracked(station.getEnergyStorage().getCapacity());
+		ServerPlayer player = playerNearStation(helper);
+		ItemStack remote = new ItemStack(ModContent.TELEPORTER_REMOTE.get());
+		remote.set(ModDataComponents.TELEPORTER_POINTS.get(), new TeleportPoints(List.of(pointAt(helper, STATION))));
+		player.setItemInHand(InteractionHand.MAIN_HAND, remote);
+
+		TeleporterRemoteMenu menu = new TeleporterRemoteMenu(0, player.getInventory());
+		boolean processed = menu.clickMenuButton(player,
+				TeleporterRemoteMenu.buttonId(TeleporterRemoteMenu.Action.RTP, 0));
+		// Without this, a menu that ignored the press for an unrelated reason would pass the check below vacuously.
+		if (!processed) {
+			helper.fail("the menu did not process the random-jump press at all");
+		}
+		if (TeleportWarmupManager.isWarming(player)) {
+			TeleportWarmupManager.cancel(player);
+			helper.fail("a random-jump press paid by a station with no chip started a warmup");
 		}
 		helper.succeed();
 	}

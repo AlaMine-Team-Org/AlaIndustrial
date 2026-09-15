@@ -127,6 +127,7 @@ public final class MachineGuiStands {
         // ── Teleporter Remote — the Stations tab: every lamp, three chips and a wrapped refusal (MOD-628) ──
         TeleporterRemoteGuiStand.shootStations(context);
         TeleporterRemoteGuiStand.shootMap(context);
+        TeleporterRemoteGuiStand.shootRandom(context);
 
         // ── Machines without custom screens (one shot each) ──────────────────────────
         shootMenu(context, "gui_moonlit_solar_panel", ModContent.MOONLIT_SOLAR_PANEL_MENU.get(), "Moonlit Solar Panel");

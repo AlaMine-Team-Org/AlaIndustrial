@@ -1028,8 +1028,8 @@ public final class NeoForgeGameTests {
 				WindMillScenarios::tcWindmill001Fun02_noRotorProducesNothing);
 		registerTest(event, "wind_mill_side_by_side_interference", 120, true, RIG_STRUCTURE, true,
 				WindMillScenarios::tcWindmill001Neg06_sideBySideInterference);
-		registerTest(event, "wind_mill_face_to_face_interference", 120, true, RIG_STRUCTURE, true,
-				WindMillScenarios::tcWindmill001Neg07_faceToFaceInterference);
+		registerTest(event, "wind_mill_face_to_face_across_gap_not_interfering", 120, true, RIG_STRUCTURE, true,
+				WindMillScenarios::tcWindmill001Neg07_faceToFaceAcrossGapNotInterfering);
 		registerTest(event, "wind_mill_late_rotor_triggers_interference", 160, true, RIG_STRUCTURE, true,
 				WindMillScenarios::tcWindmill001Neg08_lateRotorTriggersInterference);
 		registerTest(event, "wind_mill_spaced_mills_not_interfering", 120, true, RIG_STRUCTURE, true,
@@ -2332,6 +2332,8 @@ public final class NeoForgeGameTests {
 				RtpScenarios::tcTele004Fun01_chipFitsOnceAndIsConsumed);
 		registerTest(event, "tc_tele004_neg01_module_is_what_opens_the_gate", 40, true,
 				RtpScenarios::tcTele004Neg01_moduleIsWhatOpensTheGate);
+		registerTest(event, "tc_tele004_fun02_checklist_reports_every_problem", 40, true,
+				RtpScenarios::tcTele004Fun02_checklistReportsEveryProblem);
 		registerTest(event, "tc_tele004_nrg01_refused_jump_costs_nothing", 40, true,
 				RtpScenarios::tcTele004Nrg01_refusedJumpCostsNothing);
 		registerTest(event, "tc_tele004_nrg02_charges_exactly_the_flat_price", 40, true,

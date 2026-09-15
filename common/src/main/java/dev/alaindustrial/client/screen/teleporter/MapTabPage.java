@@ -1,6 +1,5 @@
 package dev.alaindustrial.client.screen.teleporter;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.client.ReadoutFormat;
 import dev.alaindustrial.client.hud.TeleportNotice;
@@ -21,7 +20,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -170,12 +168,11 @@ public final class MapTabPage implements TabPage {
 				Component.translatable("gui.alaindustrial.teleporter.teleport"),
 				b -> press(TeleporterRemoteMenu.Action.TELEPORT))
 				.bounds(x + TELEPORT_X, y + BTN_Y, TELEPORT_W, BTN_H).build());
-		// Until the «Random» tab ships (MOD-630) this still jumps at once; its price is flat, so the tooltip can tell it.
+		// «Random ›» only opens the «Random» tab with the same station (MOD-630): a random jump has five conditions, and
+		// that tab is where they are shown before anything is spent. The jump itself is pressed there.
 		rtpButton = screen.addPageWidget(Button.builder(
-				Component.translatable("gui.alaindustrial.teleporter.rtp"),
-				b -> press(TeleporterRemoteMenu.Action.RTP))
-				.tooltip(Tooltip.create(Component.translatable("gui.alaindustrial.teleporter.rtp.tooltip",
-						Config.teleporterRtpCost, Config.teleporterRtpRadius)))
+				Component.translatable(P + "button.random_tab"),
+				b -> screen.showPage(screen.randomPage()))
 				.bounds(x + RTP_X, y + BTN_Y, RTP_W, BTN_H).build());
 		setShown(shown);
 	}

@@ -28,6 +28,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.Unit;
 import net.minecraft.world.level.Level;
 import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.Nullable;
@@ -115,6 +116,19 @@ public final class GardenDroneBlockEntityRenderer<T extends GardenDroneStationBl
 	private static final float PITCH_AMPLITUDE = 0.24F;
 	/** Sideways drift amplitude mid-leg, in blocks — keeps the path off a dead-straight rail. */
 	private static final float SWAY_AMPLITUDE = 0.25F;
+	/**
+	 * How far the airframe can reach sideways past the cells at either end of a leg, in blocks: the sway
+	 * plus half the drone's span (about 0.47 at {@link #DRONE_SCALE}) is 0.72 beyond the cell centre, 0.22
+	 * past its edge; the rest is room for the lean.
+	 */
+	private static final double FLIGHT_MARGIN = 1.0;
+	/**
+	 * How far the drone can rise above the top of the higher cell of a leg, in blocks: standing on a
+	 * full-height target it rests about 1.24 over that cell's floor, the arc adds {@link #ARC_HEIGHT}, the
+	 * hopper and beacon about 0.4 more, the bob and the lean the last few hundredths — 3.43 in all, and
+	 * the box reaches 3.6.
+	 */
+	private static final double FLIGHT_HEADROOM = ARC_HEIGHT + 1.0;
 
 	private final Model.Simple hullModel;
 	private final Model.Simple trimModel;
@@ -381,6 +395,29 @@ public final class GardenDroneBlockEntityRenderer<T extends GardenDroneStationBl
 	@Override
 	public boolean shouldRenderOffScreen() {
 		return true;
+	}
+
+	/**
+	 * The box NeoForge tests against the view frustum before it draws this renderer, ahead of
+	 * {@link #shouldRenderOffScreen} (MOD-633). Its default is the station's own block, so a drone out in
+	 * the field was culled whenever its dock was out of view. Parked, the drone stands inside that block;
+	 * in the air, the box runs from the dock to the tile it is flying to, widened by {@link #FLIGHT_MARGIN}
+	 * and raised by {@link #FLIGHT_HEADROOM}. Read from the leg itself rather than from the station's
+	 * range, so it follows a skill that widens the zone without anyone having to update it.
+	 *
+	 * <p>No {@code @Override}: only NeoForge's {@code BlockEntityRenderer} declares this method, and vanilla
+	 * — so Fabric — never tests a block entity against the frustum. {@code OffScreenRendererBoxTest} on the
+	 * NeoForge lane fails if it stops overriding.
+	 */
+	public AABB getRenderBoundingBox(T blockEntity) {
+		AABB dock = new AABB(blockEntity.getBlockPos());
+		BlockPos target = blockEntity.droneTarget();
+		if (target == null) {
+			return dock;
+		}
+		return dock.minmax(new AABB(target))
+				.inflate(FLIGHT_MARGIN, 0.0, FLIGHT_MARGIN)
+				.expandTowards(0.0, FLIGHT_HEADROOM, 0.0);
 	}
 
 	@Override

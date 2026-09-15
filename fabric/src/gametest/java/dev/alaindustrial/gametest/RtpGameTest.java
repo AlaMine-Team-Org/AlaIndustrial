@@ -27,6 +27,16 @@ public class RtpGameTest {
 	}
 
 	@GameTest
+	public void tcTele004Fun02_checklistReportsEveryProblem(GameTestHelper helper) {
+		RtpScenarios.tcTele004Fun02_checklistReportsEveryProblem(helper);
+	}
+
+	@GameTest
+	public void tcTele004Neg02_pressOnBrokenStationStartsNothing(GameTestHelper helper) {
+		RtpScenarios.tcTele004Neg02_pressOnBrokenStationStartsNothing(helper);
+	}
+
+	@GameTest
 	public void tcTele004Nrg01_refusedJumpCostsNothing(GameTestHelper helper) {
 		RtpScenarios.tcTele004Nrg01_refusedJumpCostsNothing(helper);
 	}

@@ -7,13 +7,14 @@ import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * Blade-clearance check for the wind mill family. The rotor is a flat 2×2-block quad
- * ({@code HALF_SIZE = 1.0} in {@code WindMillRotorBlockEntityRenderer}) that floats ~0.58 block in
- * front of the mill's {@code FACING} face and spins around the axis pointing along {@code FACING}.
+ * ({@link WindMillRotorGeometry#DISC_HALF_SIZE} = 1.0) whose centre sits
+ * {@link WindMillRotorGeometry#DISC_PUSH} = 0.58 from the mill's block centre along {@code FACING} —
+ * 0.08 in front of the face — and spins around the axis pointing along {@code FACING}.
  *
- * <p>Because the 0.58 push moves the quad past the block boundary (0.5 + 0.58 &gt; 1.0, the centre lands
- * at ~1.08 from the mill's origin), the entire spinning disc lives in the <b>front neighbour's</b>
- * block space — the block at {@code pos.relative(facing)} — not in the mill's own block. The blade
- * tips reach a radius of √2 ≈ 1.41 from that front centre, so as the rotor turns it sweeps through:
+ * <p>Because the face is at 0.5 and the quad at 0.58, the spinning disc's plane lies in the
+ * <b>front neighbour's</b> cell — the block at {@code pos.relative(facing)} — not in the mill's own
+ * block. The blade tips reach a radius of √2 ≈ 1.41 from the rotor axis, so as the rotor turns they
+ * sweep through:
  *
  * <ul>
  *   <li><b>Front</b> — the block the disc lives in ({@code pos.relative(facing)}): the rotor physically
@@ -40,8 +41,8 @@ public final class WindMillClearance {
 	/**
 	 * True when any block the spinning blades would sweep through is solid enough to stop them. All
 	 * clearance positions are measured from the <b>front neighbour</b> ({@code pos.relative(facing)}),
-	 * because that is the block the rotor disc physically occupies (the renderer pushes the quad 0.58
-	 * blocks forward, past the mill's own boundary).
+	 * because that is the block the rotor disc physically occupies (the renderer hangs the quad 0.08 past
+	 * the mill's own face, see {@link WindMillRotorGeometry#DISC_PUSH}).
 	 *
 	 * @param level  the mill's level
 	 * @param pos    the mill's block position

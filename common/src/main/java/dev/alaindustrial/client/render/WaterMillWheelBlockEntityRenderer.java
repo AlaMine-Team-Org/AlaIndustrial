@@ -27,11 +27,14 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.sprite.SpriteGetter;
 import net.minecraft.client.resources.model.sprite.SpriteId;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.util.Unit;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
@@ -84,6 +87,8 @@ public final class WaterMillWheelBlockEntityRenderer<T extends WaterMillBlockEnt
 	private static final float RIM_FRONT = -0.4375F;
 	private static final float RIM_BACK = 0.4375F;
 	private static final float PADDLE_TILT = (float) Math.toRadians(8.0);
+	/** How far in front of the mill's centre the axle sits, along its facing, in blocks. */
+	private static final float WHEEL_PUSH = 1.02F;
 	private static final RenderType RENDER_TYPE =
 			PLANKS.renderType(ignored -> Sheets.cutoutBlockItemSheet());
 
@@ -91,6 +96,10 @@ public final class WaterMillWheelBlockEntityRenderer<T extends WaterMillBlockEnt
 	private final Model.Simple timberModel;
 	private final Model.Simple axleModel;
 	private final SpriteGetter sprites;
+	/** Farthest any drawn corner gets from the axle, in blocks — the paddle lips, not the rim. */
+	private final float wheelReach;
+	/** Farthest any drawn corner gets from the wheel's middle plane, in blocks — the axle's ends. */
+	private final float wheelDepth;
 
 	public WaterMillWheelBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
 		ModelPart root = context.bakeLayer(MODEL_LAYER);
@@ -101,6 +110,16 @@ public final class WaterMillWheelBlockEntityRenderer<T extends WaterMillBlockEnt
 		this.axleModel = new Model.Simple(root.getChild("axle"),
 				ignored -> AXLE_METAL.renderType(unused -> Sheets.cutoutBlockItemSheet()));
 		this.sprites = context.sprites();
+		// Measured off the baked model rather than restated: the paddles and the axle both stick out past
+		// the rim, and a hand-kept number would go stale the day either is resized. The rim is drawn by
+		// hand, outside the model, so it seeds the measurement.
+		float[] extent = {RIM_OUTER, RIM_BACK};
+		root.getExtentsForGui(new PoseStack(), corner -> {
+			extent[0] = Math.max(extent[0], (float) Math.hypot(corner.x(), corner.y()));
+			extent[1] = Math.max(extent[1], Math.abs(corner.z()));
+		});
+		this.wheelReach = extent[0];
+		this.wheelDepth = extent[1];
 	}
 
 	/**
@@ -169,9 +188,7 @@ public final class WaterMillWheelBlockEntityRenderer<T extends WaterMillBlockEnt
 	public void extractRenderState(T entity, State state, float partialTicks, Vec3 cameraPosition,
 			ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
 		BlockEntityRenderer.super.extractRenderState(entity, state, partialTicks, cameraPosition, breakProgress);
-		state.facing = entity.getBlockState().hasProperty(HorizontalMachineBlock.FACING)
-				? entity.getBlockState().getValue(HorizontalMachineBlock.FACING)
-				: Direction.NORTH;
+		state.facing = facing(entity.getBlockState());
 		state.production = entity.getDataAccess().get(2);
 		net.minecraft.world.item.ItemStack wheel = entity.getItem(WaterMillBlockEntity.WHEEL_SLOT);
 		state.installed = !wheel.isEmpty();
@@ -218,7 +235,7 @@ public final class WaterMillWheelBlockEntityRenderer<T extends WaterMillBlockEnt
 		poseStack.translate(0.5F, 0.5F, 0.5F);
 		rotateToFacing(poseStack, state.facing);
 		// Keep the axle exactly on the machine block's centre, both vertically and horizontally.
-		poseStack.translate(0.0F, 0.0F, -1.02F);
+		poseStack.translate(0.0F, 0.0F, -WHEEL_PUSH);
 		poseStack.mulPose(Axis.ZP.rotation(state.angle));
 
 		renderContinuousRim(poseStack, collector, sprites.get(state.body), state);
@@ -323,9 +340,36 @@ public final class WaterMillWheelBlockEntityRenderer<T extends WaterMillBlockEnt
 		return true;
 	}
 
+	/**
+	 * The box NeoForge tests against the view frustum before it draws this renderer, ahead of
+	 * {@link #shouldRenderOffScreen} (MOD-633). Its default is the mill's own block, so a wheel reaching
+	 * into view while that block was past the edge of the screen was culled whole. The box is the wheel:
+	 * {@link #wheelReach} across the plane it turns in, {@link #wheelDepth} along the axle.
+	 *
+	 * <p>No {@code @Override}: only NeoForge's {@code BlockEntityRenderer} declares this method, and vanilla
+	 * — so Fabric — never tests a block entity against the frustum. {@code OffScreenRendererBoxTest} on the
+	 * NeoForge lane fails if it stops overriding.
+	 */
+	public AABB getRenderBoundingBox(T blockEntity) {
+		BlockPos pos = blockEntity.getBlockPos();
+		Direction facing = facing(blockEntity.getBlockState());
+		double cx = pos.getX() + 0.5 + facing.getStepX() * WHEEL_PUSH;
+		double cy = pos.getY() + 0.5;
+		double cz = pos.getZ() + 0.5 + facing.getStepZ() * WHEEL_PUSH;
+		double hx = facing.getAxis() == Direction.Axis.X ? wheelDepth : wheelReach;
+		double hz = facing.getAxis() == Direction.Axis.Z ? wheelDepth : wheelReach;
+		return new AABB(cx - hx, cy - wheelReach, cz - hz, cx + hx, cy + wheelReach, cz + hz);
+	}
+
 	@Override
 	public int getViewDistance() {
 		return 96;
+	}
+
+	private static Direction facing(BlockState blockState) {
+		return blockState.hasProperty(HorizontalMachineBlock.FACING)
+				? blockState.getValue(HorizontalMachineBlock.FACING)
+				: Direction.NORTH;
 	}
 
 	private static float rotationAngle(WaterMillBlockEntity entity, float partialTicks, int production) {

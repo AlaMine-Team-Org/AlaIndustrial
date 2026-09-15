@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import dev.alaindustrial.registry.ModContent;
 import java.util.Optional;
@@ -89,6 +90,18 @@ public class TeleporterBlock extends HorizontalMachineBlock {
 	private static final VoxelShape FORMED_OUTLINE = Block.box(0.5, 0, 0.5, 15.5, 10, 15.5);
 	/** …and the floor underfoot stops at {@link #CAPSULE_FLOOR}. */
 	private static final VoxelShape FORMED_COLLISION = Block.box(0.5, 0, 0.5, 15.5, 9, 15.5);
+
+	/**
+	 * The space an assembled capsule fills: the station and the two glass cells above it.
+	 *
+	 * <p>A player standing on the capsule floor has their eyes inside it — {@link #CAPSULE_FLOOR} plus a
+	 * standing eye height is in the top cell. The door renderer relies on exactly that: a box the camera
+	 * stands in is in view whichever way the camera looks.
+	 */
+	public static AABB capsuleBounds(BlockPos station) {
+		return new AABB(station.getX(), station.getY(), station.getZ(),
+				station.getX() + 1, station.getY() + 3, station.getZ() + 1);
+	}
 
 	/**
 	 * How often a station with one glass on it looks for the second.

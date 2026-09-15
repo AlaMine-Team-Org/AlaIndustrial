@@ -17,8 +17,10 @@ import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.sprite.SpriteGetter;
 import net.minecraft.client.resources.model.sprite.SpriteId;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
@@ -192,6 +194,30 @@ public final class RadiantSolarPanelBlockEntityRenderer
 	@Override
 	public boolean shouldRenderOffScreen() {
 		return true;
+	}
+
+	/**
+	 * The box NeoForge tests against the view frustum before it draws this renderer, ahead of
+	 * {@link #shouldRenderOffScreen} (MOD-633). Its default is the core block alone — one corner of an
+	 * eight-block structure — so the wings were culled whenever that corner was out of view. The whole
+	 * structure instead: the wings stay inside it at every stage of the fold, their tips no higher than
+	 * about 15 of the canonical block's 16 pixels before {@link #STRUCTURE_SCALE}.
+	 *
+	 * <p>No {@code @Override}: only NeoForge's {@code BlockEntityRenderer} declares this method, and vanilla
+	 * — so Fabric — never tests a block entity against the frustum. {@code OffScreenRendererBoxTest} on the
+	 * NeoForge lane fails if it stops overriding.
+	 */
+	public AABB getRenderBoundingBox(RadiantSolarPanelBlockEntity blockEntity) {
+		BlockPos core = blockEntity.getBlockPos();
+		BlockState blockState = blockEntity.getBlockState();
+		if (!blockState.getValue(RadiantSolarPanelBlock.ASSEMBLED)) {
+			return new AABB(core);   // the one-block form draws nothing
+		}
+		float[] centre = ConcentratorPart.structureCentre(blockState.getValue(RadiantSolarPanelBlock.FACING));
+		double half = ConcentratorPart.CANONICAL_CENTRE;
+		double x = core.getX() + centre[0];
+		double z = core.getZ() + centre[1];
+		return new AABB(x - half, core.getY(), z - half, x + half, core.getY() + STRUCTURE_SCALE, z + half);
 	}
 
 	private static void submit(SubmitNodeCollector collector, PoseStack poseStack, CubeMesh mesh,

@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * The teleporter remote's tabs: «Stations» (MOD-628) — a list with every lamp a player can meet, three selections and a
- * refusal — and «Map» (MOD-629) — the approved mockup's frames A, B, C and I.
+ * refusal — «Map» (MOD-629) — the approved mockup's frames A, B, C and I — and «Random» (MOD-630) — frames G and D.
  *
  * <p><b>Built on the client's own menu</b>, like the reactor controller's stand. The menu reads the remote from the
  * player's hand, so a remote with bound points is put there, and the station snapshot a server would send is handed to
@@ -67,7 +67,7 @@ public final class TeleporterRemoteGuiStand {
 	private static final int KNOWN = TeleportStationsPayload.KNOWN;
 
 	/** What a server would say about those seven, in the same order: one of every lamp the tab draws. */
-	private static final TeleportStationsPayload SNAPSHOT = new TeleportStationsPayload(0, 0, 1_400, 500_000, 500, 5_000, List.of(
+	private static final TeleportStationsPayload SNAPSHOT = new TeleportStationsPayload(0, 0, 1_400, 500_000, 500, 5_000, 50_000, 5, List.of(
 			new TeleportStationsPayload.Station(KNOWN | OW | TeleportStationsPayload.LIVE | TeleportStationsPayload.FORMED,
 					TeleportEngine.Denial.OK, 412_000, 7_160, 0),
 			new TeleportStationsPayload.Station(KNOWN | OW | TeleportStationsPayload.FORMED | TeleportStationsPayload.CHIP,
@@ -206,8 +206,47 @@ public final class TeleporterRemoteGuiStand {
 		});
 	}
 
+	/**
+	 * Photographs the «Random» tab (MOD-630) as the approved mockup's frames G and D, from the «Map» frames' stations:
+	 * Teleporter 1 has no chip and is fourth in the switcher, Sky island is ready and third.
+	 */
+	public static void shootRandom(ClientGameTestContext context) {
+		double[] saved = new double[3];
+		context.runOnClient(mc -> {
+			saved[0] = mc.mouseHandler.xpos();
+			saved[1] = mc.mouseHandler.ypos();
+			saved[2] = mc.player.getYRot();
+		});
+		try {
+			shootMapFrame(context, "random_no_chip",
+					"Frame G. Random tab open: NO CHIP chip in the header; the switcher '‹ Teleporter 1 4 / 7 ›' with a "
+							+ "green lamp and the station's coordinates; 'This station pays · … EU flat · 500–5,000 blocks'; "
+							+ "five rows — Overworld, access, charge and recharged with green ticks, the chip row on a pink "
+							+ "background with a red cross; the box 'How to fit the chip' explaining the shift-right-click; "
+							+ "Jump somewhere random greyed",
+					MAP_MAIN, 0, false, TeleporterRemoteScreen::randomPage);
+			shootMapFrame(context, "random_ready",
+					"Frame D. Sky island picked: READY chip; the switcher '‹ Sky island 3 / 7 ›'; all five rows with green "
+							+ "ticks and no pink row; the box 'Lands 500–5,000 blocks from you' with the warmup explanation; "
+							+ "Jump somewhere random live",
+					MAP_MAIN, 5, false, TeleporterRemoteScreen::randomPage);
+		} finally {
+			context.getInput().setCursorPos(saved[0], saved[1]);
+			context.runOnClient(mc -> {
+				mc.player.setYRot((float) saved[2]);
+				mc.player.yRotO = (float) saved[2];
+			});
+			cleanUp(context);
+		}
+	}
+
 	private static Path shootMapFrame(ClientGameTestContext context, String state, String checks, List<MapStation> map,
 			int row, boolean hoverCluster) {
+		return shootMapFrame(context, state, checks, map, row, hoverCluster, TeleporterRemoteScreen::mapPage);
+	}
+
+	private static Path shootMapFrame(ClientGameTestContext context, String state, String checks, List<MapStation> map,
+			int row, boolean hoverCluster, Function<TeleporterRemoteScreen, TabPage> page) {
 		List<TeleportPoint> points = new ArrayList<>();
 		List<TeleportStationsPayload.Station> stations = new ArrayList<>();
 		context.runOnClient(mc -> {
@@ -223,8 +262,9 @@ public final class TeleporterRemoteGuiStand {
 		// Away from the panel unless the frame is about a hover.
 		context.getInput().setCursorPos(10, 10);
 		TeleportStationsPayload snapshot = new TeleportStationsPayload(0, 0, (int) Math.round(LOAD * 1000),
-				Config.teleporterBuffer, Config.teleporterRtpMinRadius, Config.teleporterRtpRadius, stations);
-		return shoot(context, state, checks, points, snapshot, TeleporterRemoteScreen::mapPage, row, false, hoverCluster);
+				Config.teleporterBuffer, Config.teleporterRtpMinRadius, Config.teleporterRtpRadius, Config.teleporterRtpCost,
+				(Config.teleporterWarmupTicks + 19) / 20, stations);
+		return shoot(context, state, checks, points, snapshot, page, row, false, hoverCluster);
 	}
 
 	/** What the server would send for a mockup station, priced the way {@code TeleportEngine#computeCost} prices it. */

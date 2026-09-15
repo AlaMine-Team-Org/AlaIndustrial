@@ -7,6 +7,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
+import dev.alaindustrial.core.environment.WindMillRotorGeometry;
 import dev.alaindustrial.core.machine.ComponentTier;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -20,8 +21,11 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.sprite.SpriteGetter;
 import net.minecraft.client.resources.model.sprite.SpriteId;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.LightCoordsUtil;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
@@ -57,7 +61,14 @@ public final class WindMillRotorBlockEntityRenderer<T extends MachineBlockEntity
 		}
 		return SPRITE;
 	}
-	private static final float HALF_SIZE = 1.0F;
+	/** Half-extent of the rotor quad, shared with the interference check (MOD-634). */
+	private static final float HALF_SIZE = (float) WindMillRotorGeometry.DISC_HALF_SIZE;
+	/**
+	 * How far in front of the mill's centre the rotor quad hangs, along its facing, in blocks. Read from the
+	 * class the interference check reads too: while each kept its own number, the check looked for the disc
+	 * half a block further out than it is drawn (MOD-634).
+	 */
+	private static final float ROTOR_PUSH = (float) WindMillRotorGeometry.DISC_PUSH;
 
 	private final SpriteGetter sprites;
 
@@ -74,9 +85,7 @@ public final class WindMillRotorBlockEntityRenderer<T extends MachineBlockEntity
 	public void extractRenderState(T entity, State state, float partialTicks, Vec3 cameraPosition,
 			ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
 		BlockEntityRenderer.super.extractRenderState(entity, state, partialTicks, cameraPosition, breakProgress);
-		state.facing = entity.getBlockState().hasProperty(HorizontalMachineBlock.FACING)
-				? entity.getBlockState().getValue(HorizontalMachineBlock.FACING)
-				: Direction.NORTH;
+		state.facing = facing(entity.getBlockState());
 		// Interference (MOD-051): when a neighbouring mill's rotor disc overlaps this one's, both
 		// mills stall and hide their blades — rendering two overlapping coplanar quads would clip
 		// and z-fight. Channel 3 is the synced mode code shared by the whole wind mill family.
@@ -105,7 +114,7 @@ public final class WindMillRotorBlockEntityRenderer<T extends MachineBlockEntity
 		poseStack.pushPose();
 		poseStack.translate(0.5F, 0.5F, 0.5F);
 		rotateToFacing(poseStack, state.facing);
-		poseStack.translate(0.0F, 0.0F, -0.58F);
+		poseStack.translate(0.0F, 0.0F, -ROTOR_PUSH);
 		poseStack.mulPose(Axis.ZP.rotation(state.angle));
 		TextureAtlasSprite sprite = sprites.get(state.sprite);
 		// The rotor is a decorative overhang drawn as a flat cutout quad in front of the block. It
@@ -124,9 +133,38 @@ public final class WindMillRotorBlockEntityRenderer<T extends MachineBlockEntity
 		return true;
 	}
 
+	/**
+	 * The box NeoForge tests against the view frustum before it draws this renderer, ahead of
+	 * {@link #shouldRenderOffScreen} (MOD-633). Its default is the mill's own block, so a blade reaching
+	 * into view while that block was past the edge of the screen was culled with the rest of the rotor. The
+	 * box is the disc the blades sweep — the square quad's corners, not its edges, as it turns.
+	 *
+	 * <p>No {@code @Override}: only NeoForge's {@code BlockEntityRenderer} declares this method, and vanilla
+	 * — so Fabric — never tests a block entity against the frustum. {@code OffScreenRendererBoxTest} on the
+	 * NeoForge lane fails if it stops overriding.
+	 */
+	public AABB getRenderBoundingBox(T blockEntity) {
+		BlockPos pos = blockEntity.getBlockPos();
+		Direction facing = facing(blockEntity.getBlockState());
+		double reach = HALF_SIZE * Math.sqrt(2.0);
+		double cx = pos.getX() + 0.5 + facing.getStepX() * ROTOR_PUSH;
+		double cy = pos.getY() + 0.5;
+		double cz = pos.getZ() + 0.5 + facing.getStepZ() * ROTOR_PUSH;
+		double hx = facing.getAxis() == Direction.Axis.X ? 0.0 : reach;
+		double hz = facing.getAxis() == Direction.Axis.Z ? 0.0 : reach;
+		// The disc is flat; the mill's own block gives the box its depth.
+		return new AABB(cx - hx, cy - reach, cz - hz, cx + hx, cy + reach, cz + hz).minmax(new AABB(pos));
+	}
+
 	@Override
 	public int getViewDistance() {
 		return 96;
+	}
+
+	private static Direction facing(BlockState blockState) {
+		return blockState.hasProperty(HorizontalMachineBlock.FACING)
+				? blockState.getValue(HorizontalMachineBlock.FACING)
+				: Direction.NORTH;
 	}
 
 	private static float rotationAngle(MachineBlockEntity entity, float partialTicks, int production) {

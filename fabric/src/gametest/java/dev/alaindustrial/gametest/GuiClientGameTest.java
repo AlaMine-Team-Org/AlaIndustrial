@@ -101,6 +101,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
                 RendererStands.checkEnergyCondenserCrystal(context, singleplayer);   // MOD-393 BER visual regression
                 RendererStands.checkThermalCentrifugeRotor(context, singleplayer); // MOD-424 BER visual regression
                 RendererStands.checkWorkstationScreens(context, singleplayer); // MOD-483 BER visual regression
+                TeleporterCapsuleStand.checkGlassFromInside(context, singleplayer); // MOD-632 door glass from inside
                 StorageModuleStands.checkStorageModuleSeams(context, singleplayer); // MOD-287 connected textures
                 // R-PHY-10: mc.debugHitboxes removed in MC 26.2; re-enable when API is found.
             }

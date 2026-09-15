@@ -28,6 +28,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -211,6 +212,23 @@ public final class TeleporterCapsuleDoorRenderer
 	@Override
 	public boolean shouldRenderOffScreen() {
 		return true;
+	}
+
+	/**
+	 * The box NeoForge tests against the view frustum before it draws this renderer (MOD-632).
+	 *
+	 * <p>NeoForge culls every block entity renderer by this box — globally rendered ones too, before it
+	 * looks at {@link #shouldRenderOffScreen} — and its default is the station's own block. From inside
+	 * the capsule that block is under the player's feet and out of view whenever they look ahead, so the
+	 * whole door, which is all the glass in front of them, vanished until they looked down. The whole
+	 * capsule instead: the arriving player stands inside it, and a box the camera is in is never culled.
+	 *
+	 * <p>No {@code @Override}: the method is declared only by NeoForge's {@code BlockEntityRenderer}, which
+	 * this class is compiled against there. On Fabric nothing calls it — vanilla does not test a block
+	 * entity against the frustum at all.
+	 */
+	public AABB getRenderBoundingBox(TeleporterBlockEntity blockEntity) {
+		return TeleporterBlock.capsuleBounds(blockEntity.getBlockPos());
 	}
 
 	private static void drawPieces(PoseStack.Pose pose, VertexConsumer out, State state, TextureAtlasSprite sprite,

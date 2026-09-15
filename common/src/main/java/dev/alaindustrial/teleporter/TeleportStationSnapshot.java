@@ -36,8 +36,10 @@ public final class TeleportStationSnapshot {
 		}
 		// The screen shows the pack's multiplier and draws the random-jump zone ring; both are server settings (MOD-629).
 		int weightPermille = (int) Math.round(TeleportEngine.weight(player) * 1000.0);
+		// The «Random» tab's charge row and warmup line read the server's price and warmup, not the client's (MOD-630).
 		return new TeleportStationsPayload(containerId, cooldown, weightPermille, Config.teleporterBuffer,
-				Config.teleporterRtpMinRadius, Config.teleporterRtpRadius, stations);
+				Config.teleporterRtpMinRadius, Config.teleporterRtpRadius, (int) TeleportEngine.rtpCost(),
+				(Config.teleporterWarmupTicks + 19) / 20, stations);
 	}
 
 	private static TeleportStationsPayload.Station station(ServerPlayer player, ServerLevel here,
