@@ -1,6 +1,7 @@
 package dev.alaindustrial.teleporter;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.block.TeleporterBlock;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.core.teleport.RtpSiteFinder;
 import dev.alaindustrial.item.teleport.TeleportPoint;
@@ -45,6 +46,8 @@ public final class TeleportEngine {
 		COOLDOWN("alaindustrial.teleporter.cooldown"),
 		NO_STATION("alaindustrial.teleporter.no_station"),
 		NO_ACCESS("alaindustrial.teleporter.no_access"),
+		// MOD-112: a jump lands inside the capsule, so a station without one is not a destination.
+		NOT_FORMED("alaindustrial.teleporter.not_formed"),
 		NOT_ENOUGH_EU("alaindustrial.teleporter.not_enough_eu"),
 		// --- random jump only (MOD-116) ---
 		RTP_NO_MODULE("alaindustrial.teleporter.rtp_no_module"),
@@ -95,6 +98,9 @@ public final class TeleportEngine {
 		}
 		if (!station.allowsAccess(player.getUUID())) {
 			return Denial.NO_ACCESS;
+		}
+		if (!TeleporterBlock.isFormed(station.getBlockState())) {
+			return Denial.NOT_FORMED;
 		}
 		if (station.getEnergyStorage().getAmount() < computeCost(player, point)) {
 			return Denial.NOT_ENOUGH_EU;
@@ -157,16 +163,19 @@ public final class TeleportEngine {
 			return false;
 		}
 		TeleporterBlockEntity station = stationAt(level, point.pos());
-		if (station == null || station.getEnergyStorage().getAmount() < cost) {
+		if (station == null || !TeleporterBlock.isFormed(station.getBlockState())
+				|| station.getEnergyStorage().getAmount() < cost) {
 			return false;
 		}
-		// Land on top of the station block, centred.
-		Vec3 target = new Vec3(point.pos().getX() + 0.5, point.pos().getY() + 1.0, point.pos().getZ() + 0.5);
+		// Land inside the capsule (MOD-112): on its floor, centred, facing the door — the one way out.
+		Vec3 target = new Vec3(point.pos().getX() + 0.5, point.pos().getY() + TeleporterBlock.CAPSULE_FLOOR,
+				point.pos().getZ() + 0.5);
 		if (!Level.isInSpawnableBounds(BlockPos.containing(target))) {
 			return false;
 		}
+		float facingDoor = station.getBlockState().getValue(TeleporterBlock.FACING).toYRot();
 		boolean moved = player.teleportTo(level, target.x, target.y, target.z, Set.<Relative>of(),
-				player.getYRot(), player.getXRot(), true);
+				facingDoor, player.getXRot(), true);
 		if (!moved) {
 			return false;
 		}

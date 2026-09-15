@@ -1,6 +1,7 @@
 package dev.alaindustrial.item.teleport;
 
 import dev.alaindustrial.block.TeleporterBlock;
+import dev.alaindustrial.block.TeleporterCapsuleBlock;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.item.misc.HintItem;
 import dev.alaindustrial.teleporter.TeleportEngine;
@@ -40,7 +41,8 @@ public class RtpChipItem extends HintItem {
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
 		Level level = context.getLevel();
-		BlockPos pos = context.getClickedPos();
+		// A click on the capsule's glass means its station (MOD-112).
+		BlockPos pos = TeleporterCapsuleBlock.stationPos(level, context.getClickedPos());
 		// Checked on both sides: a chip poked at dirt should behave like an ordinary item in hand,
 		// not swallow the click. Only a station is ours to answer for.
 		if (!(level.getBlockEntity(pos) instanceof TeleporterBlockEntity station)) {

@@ -1,0 +1,6 @@
+{
+	"parent": "alaindustrial:block/teleporter_capsule_middle",
+	"textures": {
+		"glass": "minecraft:block/pink_stained_glass"
+	}
+}

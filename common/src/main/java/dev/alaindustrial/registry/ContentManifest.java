@@ -585,6 +585,10 @@ public final class ContentManifest {
 	// Teleporter station (MOD-091); visible since MOD-093 completed the feature.
 	public static final BlockDef<TeleporterBlock> TELEPORTER =
 			block("teleporter", TeleporterBlock::new, s -> ModContent.TELEPORTER = s);
+	// MOD-112 — the two glass cells of an assembled teleporter capsule; placed by the station, never held.
+	public static final BlockDef<dev.alaindustrial.block.TeleporterCapsuleBlock> TELEPORTER_CAPSULE =
+			block("teleporter_capsule", dev.alaindustrial.block.TeleporterCapsuleBlock::new,
+					s -> ModContent.TELEPORTER_CAPSULE = s);
 	public static final BlockDef<ElectricFurnaceBlock> ELECTRIC_FURNACE =
 			block("electric_furnace", ElectricFurnaceBlock::new, s -> ModContent.ELECTRIC_FURNACE = s);
 	// Iron Furnace (MOD-115) — fuel-burning smelter between the stone and electric furnaces.
@@ -848,7 +852,7 @@ public final class ContentManifest {
 			FLUID_TANK, FLUID_TANK_ADVANCED, COPPER_CABLE, TIN_CABLE, GOLD_CABLE, ELECTRUM_CABLE, INSULATED_COPPER_CABLE,
 			INSULATED_TIN_CABLE, INSULATED_GOLD_CABLE, INSULATED_ELECTRUM_CABLE, ITEM_PIPE,
 			ITEM_PIPE_ADVANCED, FLUID_PIPE,
-			MACERATOR, BATTERY_BOX, CESU, TELEPORTER, ELECTRIC_FURNACE, IRON_FURNACE, EXTRACTOR,
+			MACERATOR, BATTERY_BOX, CESU, TELEPORTER, TELEPORTER_CAPSULE, ELECTRIC_FURNACE, IRON_FURNACE, EXTRACTOR,
 			COMPRESSOR, COMPONENT_REPAIR_BENCH, CANNING_MACHINE, SAWMILL, ASSEMBLER, POLYMERIZER, DISTILLATION_COLUMN,
 			DISTILLATION_COLUMN_MIDDLE, DISTILLATION_COLUMN_TOP, RECTIFICATION_SECTION, ALLOY_SMELTER,
 			VULCANIZER, GALVANIC_BATH, ELECTRIC_HEATER, CHARGE_PAD, ENERGY_CONDENSER,
@@ -1080,6 +1084,10 @@ public final class ContentManifest {
 			// A piston must not take it: the dome is half of a multiblock and its glass is remembered
 			// by the base below, so moving it away from its base would strand both.
 			Map.entry("incubator_dome", machine(p -> p.strength(1.0f, 2.0f).sound(SoundType.GLASS)
+					.noOcclusion().pushReaction(PushReaction.BLOCK))),
+			// MOD-112 — the capsule's glass cells, on the dome's terms: see-through, and not for a piston,
+			// which would carry a cell away from the station it belongs to.
+			Map.entry("teleporter_capsule", machine(p -> p.strength(1.0f, 2.0f).sound(SoundType.GLASS)
 					.noOcclusion().pushReaction(PushReaction.BLOCK))),
 			// Cotton trellis (MOD-280) — a plant, not a machine: no requiresCorrectToolForDrops (it comes
 			// apart by hand), and randomTicks() is load-bearing rather than decoration — without it the

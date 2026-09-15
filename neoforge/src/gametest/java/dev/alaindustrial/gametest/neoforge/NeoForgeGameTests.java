@@ -90,6 +90,7 @@ import dev.alaindustrial.gametest.TeleporterStationScenarios;
 import dev.alaindustrial.gametest.TeleporterGuiScenarios;
 import dev.alaindustrial.gametest.RtpScenarios;
 import dev.alaindustrial.gametest.TeleporterJumpScenarios;
+import dev.alaindustrial.gametest.TeleporterCapsuleScenarios;
 import dev.alaindustrial.gametest.OreScenarios;
 import dev.alaindustrial.gametest.EnergyCondenserScenarios;
 import dev.alaindustrial.gametest.OverclockerEffectScenarios;
@@ -2286,6 +2287,24 @@ public final class NeoForgeGameTests {
 				TeleporterJumpScenarios::tcTele002Sec02_remoteBindsToOwner);
 		registerTest(event, "tc_tele002_sta01_warmup_state_starts_clean", 40, true,
 				TeleporterJumpScenarios::tcTele002Sta01_warmupStateStartsClean);
+
+		// Teleporter capsule (MOD-112): assembly, the door, disassembly, the jump gate.
+		registerTest(event, "tc_tele005_fun01_two_glass_form_the_capsule", 40, true,
+				TeleporterCapsuleScenarios::tcTele005Fun01_twoGlassFormTheCapsule);
+		registerTest(event, "tc_tele005_fun02_second_glass_found_by_polling", 40, true,
+				TeleporterCapsuleScenarios::tcTele005Fun02_secondGlassFoundByPolling);
+		registerTest(event, "tc_tele005_fun03_door_opens_and_closes_itself", 120, true,
+				TeleporterCapsuleScenarios::tcTele005Fun03_doorOpensAndClosesItself);
+		registerTest(event, "tc_tele005_neg01_door_waits_for_an_occupied_doorway", 160, true,
+				TeleporterCapsuleScenarios::tcTele005Neg01_doorWaitsForAnOccupiedDoorway);
+		registerTest(event, "tc_tele005_neg02_click_during_slide_is_ignored", 40, true,
+				TeleporterCapsuleScenarios::tcTele005Neg02_clickDuringSlideIsIgnored);
+		registerTest(event, "tc_tele005_brk01_breaking_a_cell_returns_its_glass", 40, true,
+				TeleporterCapsuleScenarios::tcTele005Brk01_breakingACellReturnsItsGlass);
+		registerTest(event, "tc_tele005_brk02_breaking_the_station_frees_both_glasses", 40, true,
+				TeleporterCapsuleScenarios::tcTele005Brk02_breakingTheStationFreesBothGlasses);
+		registerTest(event, "tc_tele005_sec01_station_without_capsule_refuses_jump", 40, true,
+				TeleporterCapsuleScenarios::tcTele005Sec01_stationWithoutCapsuleRefusesJump);
 
 		// Teleporter random jump (MOD-116): the chip, the gate it opens, the energy accounting.
 		registerTest(event, "tc_tele004_fun01_chip_fits_once_and_is_consumed", 40, true,

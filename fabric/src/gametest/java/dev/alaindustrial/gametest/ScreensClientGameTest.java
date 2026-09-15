@@ -2,6 +2,7 @@ package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.block.DistillationColumnBlock;
 import dev.alaindustrial.block.FuelRodAssemblyBlock;
+import dev.alaindustrial.block.UpgradeTableBlock;
 import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.gametest.visual.MenuState;
@@ -21,8 +22,11 @@ import net.minecraft.client.CameraType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.locale.Language;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector2i;
@@ -166,9 +170,10 @@ public class ScreensClientGameTest implements FabricClientGameTest {
             // right click and nothing else, and it already carries every control the panel owns:
             // the switch, the three presets, the readout, the slider and the charge slot.
             new Screen("creative_energy_source", "creative_energy_source", "Creative Energy Source"),
-            // MOD-482: the upgrade table. Shot as a bare frame — the bench is hidden from players
-            // until its final model lands, so there is nothing to stage in its slots yet, and the
-            // frame is what the catalogue owes: every menu in the manifest has a picture.
+            // MOD-482: the upgrade table, a two-block bench. Only the ASSEMBLED table opens its menu — a
+            // loose casing passes the click through so a second casing can be placed on it — so the rig
+            // stacks two casings (see placeScreenBlock). Shot as a bare frame with empty slots: the
+            // frame guards the window itself, not a staged upgrade.
             new Screen("upgrade_table", "upgrade_table", "Upgrade Table"));
 
     /**
@@ -256,19 +261,56 @@ public class ScreensClientGameTest implements FabricClientGameTest {
     private static void buildRig(ClientGameTestContext context, TestSingleplayerContext singleplayer) {
         TestServerContext server = singleplayer.getServer();
         int lastX = FIRST_X + STEP_X * (SCREENS.size() - 1);
+        int minX = FIRST_X - 2;
+        int maxX = lastX + 2;
+        int minZ = RIG_Z - 2;
+        int maxZ = STAND_Z + 2;
+
+        // Load every chunk of the rig before the first command touches it (MOD-610). The row outgrew the
+        // chunks around the spawn when its 37th screen pushed the far edge to x=114: chunk 7 is loaded by
+        // then in some runs and not in others, and a /fill refuses the WHOLE box when any part of it is
+        // unloaded ("That position is not loaded" — a log line, not an error). In the runs that lost it
+        // there was no platform at all, the player fell through every screen, and the reactor controller
+        // — the one screen that waits 50 ticks before its click — was the first whose block was out of
+        // reach by then. Forced, so the chunks
+        // stay loaded while the player walks the row; loaded here synchronously, so the commands below
+        // do not race the chunk loader.
+        server.runOnServer(mc -> {
+            ServerLevel level = mc.overworld();
+            for (int cx = minX >> 4; cx <= maxX >> 4; cx++) {
+                for (int cz = minZ >> 4; cz <= maxZ >> 4; cz++) {
+                    level.setChunkForced(cx, cz, true);
+                    level.getChunk(cx, cz);
+                }
+            }
+        });
 
         server.runCommand("gamemode creative @p");
         // An empty hand is a precondition, not tidiness: right-clicking a block while holding an item
         // runs the ITEM's use handler first, so a stray stack would place a block instead of opening
         // the screen and the wait would time out on a scene that looks fine in the log.
         server.runCommand("clear @p");
-        server.runCommand("fill " + (FIRST_X - 2) + " " + FLOOR_Y + " " + (RIG_Z - 2) + " "
-                + (lastX + 2) + " " + FLOOR_Y + " " + (STAND_Z + 2) + " minecraft:smooth_stone");
-        server.runCommand("fill " + (FIRST_X - 2) + " " + BLOCK_Y + " " + (RIG_Z - 2) + " "
-                + (lastX + 2) + " " + (BLOCK_Y + 4) + " " + (STAND_Z + 2) + " minecraft:air");
+        server.runCommand("fill " + minX + " " + FLOOR_Y + " " + minZ + " "
+                + maxX + " " + FLOOR_Y + " " + maxZ + " minecraft:smooth_stone");
+        server.runCommand("fill " + minX + " " + BLOCK_Y + " " + minZ + " "
+                + maxX + " " + (BLOCK_Y + 4) + " " + maxZ + " minecraft:air");
 
         for (int i = 0; i < SCREENS.size(); i++) {
             placeScreenBlock(server, SCREENS.get(i), xOf(i));
+        }
+
+        // A command that fails only logs, so the platform is checked rather than assumed: a missing floor
+        // otherwise surfaces screens later as a menu timeout on whichever block the falling player lost
+        // first. Asked of the server, because the client need not hold the far end's chunk. The fill is
+        // all-or-nothing, so its far corner answers for the whole platform.
+        boolean[] floorLaid = new boolean[1];
+        server.runOnServer(mc -> floorLaid[0] =
+                mc.overworld().getBlockState(new BlockPos(maxX, FLOOR_Y, maxZ)).is(Blocks.SMOOTH_STONE));
+        if (!floorLaid[0]) {
+            throw new AssertionError("[SCREENS] the platform floor was not laid (no smooth stone at " + maxX
+                    + " " + FLOOR_Y + " " + maxZ + ") — the /fill was refused, most likely because part of the "
+                    + "rig lies in an unloaded chunk or the box exceeds the fill limit; every screen after this "
+                    + "would be opened by a player falling out of reach");
         }
         server.runCommand("tp @p " + xOf(0) + ".5 " + BLOCK_Y + " " + STAND_Z + ".5 180 0");
         singleplayer.getClientLevel().waitForChunksRender();
@@ -303,6 +345,21 @@ public class ScreensClientGameTest implements FabricClientGameTest {
         if (screen.blockId().equals("distillation_column")) {
             server.runOnServer(mc ->
                     DistillationColumnBlock.placeTower(mc.overworld(), new BlockPos(x, BLOCK_Y, RIG_Z)));
+            return;
+        }
+        if (screen.blockId().equals("upgrade_table")) {
+            // MOD-482: a lone casing is not a table and passes the click through, and a table assembles in
+            // setPlacedBy, which a programmatic placement never runs. Two casings, then the block's own
+            // assembly helper — the one the demo stand uses — so a change to how the pair forms cannot
+            // silently desync this rig.
+            server.runOnServer(mc -> {
+                ServerLevel level = mc.overworld();
+                BlockPos lower = new BlockPos(x, BLOCK_Y, RIG_Z);
+                BlockState casing = ModContent.UPGRADE_TABLE.get().defaultBlockState();
+                level.setBlockAndUpdate(lower, casing);
+                level.setBlockAndUpdate(lower.above(), casing);
+                UpgradeTableBlock.tryAssemble(level, lower.above());
+            });
             return;
         }
         if (screen.menuId().equals("double_chest")) {
@@ -514,7 +571,7 @@ public class ScreensClientGameTest implements FabricClientGameTest {
         context.runOnClient(mc -> mc.gameMode.useItem(mc.player, InteractionHand.MAIN_HAND));
         try {
             context.waitFor(mc -> mc.gui.screen() != null);
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | AssertionError e) {
             throw new AssertionError("[SCREENS] the teleporter remote did not open its screen on "
                     + "right-click — the item's use handler or its screen registration is broken", e);
         }
@@ -580,7 +637,7 @@ public class ScreensClientGameTest implements FabricClientGameTest {
         try {
             context.waitFor(mc -> code.equals(mc.getLanguageManager().getSelected())
                     && !Language.getInstance().getOrDefault(LOCALE_PROBE_KEY).equals(before));
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | AssertionError e) {
             throw new AssertionError("[SCREENS] switching the client language to " + code
                     + " never took effect — the resource reload did not finish, or " + LOCALE_PROBE_KEY
                     + " reads the same in both languages and can no longer serve as a probe", e);
@@ -734,7 +791,7 @@ public class ScreensClientGameTest implements FabricClientGameTest {
                 // only frame in a 236-frame run compared against a reference that outlives the run.
                 ShotRecorder.markReferenced("item_" + itemId + "_icon");
                 LOG.info("[ITEMS] {} icon matched template {} at {},{}", itemId, entry[1], at.x, at.y);
-            } catch (RuntimeException e) {
+            } catch (RuntimeException | AssertionError e) {
                 throw new AssertionError("[ITEMS] the inventory icon of '" + itemId + "' no longer "
                         + "matches the stored reference '" + entry[1] + "'. Either the item's art or its "
                         + "model changed, or the icon stopped being drawn at all. If the change is "

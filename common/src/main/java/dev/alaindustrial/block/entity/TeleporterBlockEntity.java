@@ -193,6 +193,90 @@ public class TeleporterBlockEntity extends MachineBlockEntity {
 				: Component.translatable("block.alaindustrial.teleporter.owned", getOwnerName());
 	}
 
+	// --- the capsule door's travel clock (MOD-112) ---
+	//
+	// Client-side only, like the reactor airlock's (ReactorDoorBlockEntity): nothing here is saved or
+	// synced. The door's open state lives in the capsule cell's block state, which the client already
+	// receives; this only remembers WHEN it last changed, so the renderer can draw the panels on their
+	// way. A client that never saw the change draws the door parked at whichever end the state names.
+
+	private static final long NO_DOOR_TRANSITION = Long.MIN_VALUE;
+	private boolean doorSeen;
+	private boolean doorWasOpen;
+	private long doorTransitionStart = NO_DOOR_TRANSITION;
+	/** Where the door stood when its current travel began: a reversed slide starts from here, not an end. */
+	private float doorFrom;
+	/**
+	 * Server side: when the door last moved. A click while its panels are still travelling is ignored —
+	 * the playtest's rapid clicking flipped the door every few ticks and the slide never got anywhere.
+	 * Not saved: after a reload the door has long since stopped.
+	 */
+	private long doorToggledAt = NO_DOOR_TRANSITION;
+
+	/** Whether a click may move the door at {@code gameTime}: not while it is still sliding. */
+	public boolean doorMayToggle(long gameTime) {
+		return doorToggledAt == NO_DOOR_TRANSITION || gameTime - doorToggledAt >= Config.teleporterCapsuleDoorSlideTicks;
+	}
+
+	/** Records that the door just moved; see {@link #doorMayToggle}. */
+	public void markDoorToggled(long gameTime) {
+		doorToggledAt = gameTime;
+	}
+
+	/** Keeps the clock while the capsule is off screen; see {@code TeleporterBlock#getTicker}. */
+	public void clientTick(Level clientLevel) {
+		observeDoor(dev.alaindustrial.block.TeleporterCapsuleBlock.isDoorOpen(clientLevel, worldPosition),
+				clientLevel.getGameTime());
+	}
+
+	/**
+	 * How far the door has sunk: {@code 0} shut, {@code 1} fully in the floor.
+	 *
+	 * <p>Game time and partial tick arrive apart, because a long-lived world's game time no longer fits a
+	 * float precisely — the airlock's clock explains the stutter that adding them first produces.
+	 */
+	public float doorOpenness(long gameTime, float partialTicks) {
+		boolean open = level != null
+				&& dev.alaindustrial.block.TeleporterCapsuleBlock.isDoorOpen(level, worldPosition);
+		// Caught here as well as in the ticker: a frame landing before the tick that would have noticed
+		// the change must start the slide itself rather than draw its far end.
+		observeDoor(open, gameTime);
+		return doorValueAt(gameTime, partialTicks);
+	}
+
+	/**
+	 * The door's position on its current travel. The travel runs from wherever the door stood when it
+	 * began, and takes time in proportion to the distance left — a door reversed a quarter of the way
+	 * down comes back in a quarter of the time instead of jumping to the far end and starting over.
+	 */
+	private float doorValueAt(long gameTime, float partialTicks) {
+		float target = doorWasOpen ? 1.0f : 0.0f;
+		float distance = Math.abs(target - doorFrom);
+		if (doorTransitionStart == NO_DOOR_TRANSITION || distance < 1.0e-4f) {
+			return target;
+		}
+		float span = Math.max(1.0f, Config.teleporterCapsuleDoorSlideTicks * distance);
+		float t = net.minecraft.util.Mth.clamp(((float) (gameTime - doorTransitionStart) + partialTicks) / span,
+				0.0f, 1.0f);
+		float eased = t * t * (3.0f - 2.0f * t);
+		return doorFrom + (target - doorFrom) * eased;
+	}
+
+	/** The first reading only takes the state: a door that comes into view already open does not slide. */
+	private void observeDoor(boolean open, long gameTime) {
+		if (!doorSeen) {
+			doorSeen = true;
+			doorWasOpen = open;
+			doorFrom = open ? 1.0f : 0.0f;
+			return;
+		}
+		if (open != doorWasOpen) {
+			doorFrom = doorValueAt(gameTime, 0.0f);
+			doorWasOpen = open;
+			doorTransitionStart = gameTime;
+		}
+	}
+
 	// --- persistence (26.2 ValueInput/ValueOutput) ---
 
 	@Override

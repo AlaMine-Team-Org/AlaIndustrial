@@ -144,6 +144,12 @@ public final class AlaCommonScenarios {
 			if (id.getPath().equals("incubator_dome")) {
 				continue;
 			}
+			// The Teleporter Capsule's glass cells (MOD-112) are the same story: placed by the station out
+			// of two glass blocks, and each drops the glass it was made of, never itself. The glass round
+			// trip is asserted in TeleporterCapsuleScenarios.
+			if (id.getPath().equals("teleporter_capsule")) {
+				continue;
+			}
 			// The Distillation Column's middle/top segments (MOD-251) are placed by the base and have
 			// empty loot tables on purpose: breaking ANY segment drops the whole tower as the base's
 			// item (with tank contents). The one-drop contract is asserted in the column's own gametest.
@@ -268,6 +274,11 @@ public final class AlaCommonScenarios {
 			// not by the player, and returns the original glass when broken. Occlusion is still asserted
 			// for it below by the base rule; only the block-item invariant is waived.
 			if (id.getPath().equals("incubator_dome")) {
+				continue;
+			}
+			// The Teleporter Capsule's glass cells (MOD-112): no block item on purpose — the station builds
+			// them from glass. Their loot table exists and hands that glass back.
+			if (id.getPath().equals("teleporter_capsule")) {
 				continue;
 			}
 			// The Distillation Column's middle/top segments (MOD-251): no block items on purpose — the

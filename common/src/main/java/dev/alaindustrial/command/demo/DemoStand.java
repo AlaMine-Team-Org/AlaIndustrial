@@ -858,6 +858,11 @@ public final class DemoStand {
 		chargeBuffer(level, origin, 30, 1, 12);
 		set(level, origin, 31, 1, 12, ModContent.COPPER_CABLE.get());
 		set(level, origin, 32, 1, 12, ModContent.TELEPORTER.get());
+		// MOD-112: a station is a jump destination only with its capsule, so the stand builds one from
+		// two glass blocks. The glass goes through the ledger; assembling swaps it in place.
+		set(level, origin, 32, 2, 12, net.minecraft.world.level.block.Blocks.GLASS);
+		set(level, origin, 32, 3, 12, net.minecraft.world.level.block.Blocks.GLASS);
+		dev.alaindustrial.block.TeleporterBlock.tryAssemble(level, origin.offset(32, 1, 12));
 	}
 
 	// --- helpers ---
@@ -892,6 +897,10 @@ public final class DemoStand {
 		chargeBuffer(level, origin, 22, 1, 1);
 		set(level, origin, 23, 1, 1, ModContent.ELECTRUM_CABLE.get());
 		set(level, origin, 24, 1, 1, ModContent.TELEPORTER.get());
+		// MOD-112: the same capsule as the misc zone's station, from two glass blocks.
+		set(level, origin, 24, 2, 1, net.minecraft.world.level.block.Blocks.GLASS);
+		set(level, origin, 24, 3, 1, net.minecraft.world.level.block.Blocks.GLASS);
+		dev.alaindustrial.block.TeleporterBlock.tryAssemble(level, origin.offset(24, 1, 1));
 	}
 
 	/**

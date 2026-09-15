@@ -104,7 +104,7 @@ public final class VisualWorld {
         try {
             context.waitFor(mc -> mc.gui.screen() instanceof AbstractContainerScreen<?>,
                     AWAIT_CONTAINER_SCREEN_TIMEOUT_TICKS);
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | AssertionError e) {
             throw new AssertionError("[VISUAL] no container screen appeared for " + what
                     + " — the menu never opened (wrong block, player out of reach, or the screen is not "
                     + "registered for this menu type)", e);
@@ -117,7 +117,7 @@ public final class VisualWorld {
             context.waitFor(mc -> mc.level != null
                     && BuiltInRegistries.BLOCK.getKey(mc.level.getBlockState(pos).getBlock())
                             .toString().equals(blockId));
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | AssertionError e) {
             throw new AssertionError("[VISUAL] the client never saw " + blockId + " at " + pos
                     + " — the setblock did not reach the client, or the chunk is not loaded there", e);
         }

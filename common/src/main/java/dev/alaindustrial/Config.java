@@ -623,6 +623,24 @@ public final class Config {
 	@Knob(section = Section.LOGISTICS, min = 1,
 			doc = "How many candidate spots a random jump tries before giving up. Giving up costs nothing.")
 	public static int teleporterRtpMaxAttempts = 8;
+	/**
+	 * Ticks the capsule door stays open after a click before shutting itself (MOD-112). Three seconds:
+	 * enough to step out after an arrival, short enough that a capsule is not left gaping.
+	 */
+	@Knob(section = Section.LOGISTICS, min = 1,
+			doc = "Ticks a teleporter capsule door stays open after a click before it closes itself.")
+	public static int teleporterCapsuleDoorOpenTicks = 60;
+	/** How long the door waits before re-testing a doorway someone is still standing in. */
+	@Knob(section = Section.LOGISTICS, min = 1,
+			doc = "Ticks a teleporter capsule door waits before re-testing a doorway that still has someone in it.")
+	public static int teleporterCapsuleDoorRecheckTicks = 10;
+	/**
+	 * Ticks the door panels take to sink into the floor or rise back, in either direction. Cosmetic: the
+	 * {@code open} state, and with it the collision, still flips in one tick.
+	 */
+	@Knob(section = Section.LOGISTICS, min = 1,
+			doc = "Ticks the capsule door takes to slide its full height; cosmetic only, the open state flips in one tick.")
+	public static int teleporterCapsuleDoorSlideTicks = 12;
 
 	// --- Storage / per-block buffers (EU) ---
 	@Knob(section = Section.STORAGE, min = 1,

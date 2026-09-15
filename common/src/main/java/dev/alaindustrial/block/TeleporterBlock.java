@@ -20,6 +20,21 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import dev.alaindustrial.registry.ModContent;
+import java.util.Optional;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.redstone.Orientation;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Teleporter station (spec: alaindustrial:teleporter) — the HV anchor a Teleporter Remote jumps to
@@ -49,15 +64,56 @@ public class TeleporterBlock extends HorizontalMachineBlock {
 	 */
 	public static final BooleanProperty UPGRADED = BooleanProperty.create("upgraded");
 
+	/**
+	 * Whether two glass blocks on this station have become its capsule (MOD-112) — and so whether a jump
+	 * may land here.
+	 *
+	 * <p>A block state rather than a block entity field, because two readers need it and both are
+	 * better served by a state: the model (a state reaches the client for free) and the jump rule (a
+	 * state is saved with the chunk, so a reload cannot disagree with what the player sees). The capsule
+	 * cells above hold the rest of the structure in their own states; see {@link TeleporterCapsuleBlock}.
+	 *
+	 * <p>Default {@code false}: a station saved before MOD-112 loads unassembled, as it truly is.
+	 */
+	public static final BooleanProperty FORMED = BooleanProperty.create("formed");
+
+	/**
+	 * Height a player stands at inside the capsule, in blocks above the station's own floor.
+	 *
+	 * <p>9/16 rather than the design's deck at 10/16: a player steps up 0.6 of a block, and a floor at
+	 * 0.625 would make the capsule a thing to jump into rather than walk into.
+	 */
+	public static final double CAPSULE_FLOOR = 9.0 / 16.0;
+
+	/** The assembled station is the capsule's base: its outline stops at the deck. */
+	private static final VoxelShape FORMED_OUTLINE = Block.box(0.5, 0, 0.5, 15.5, 10, 15.5);
+	/** …and the floor underfoot stops at {@link #CAPSULE_FLOOR}. */
+	private static final VoxelShape FORMED_COLLISION = Block.box(0.5, 0, 0.5, 15.5, 9, 15.5);
+
+	/**
+	 * How often a station with one glass on it looks for the second.
+	 *
+	 * <p>Polled, because vanilla does not tell a block about a change two cells above it: a glass placed
+	 * on top of the first notifies that first glass, which is vanilla and does nothing with it. The poll
+	 * exists only while exactly one glass sits on an unassembled station, and it stops the moment the
+	 * capsule forms or the glass goes.
+	 */
+	private static final int ASSEMBLY_POLL_TICKS = 4;
+
 	public TeleporterBlock(Properties properties) {
 		super(properties);
-		registerDefaultState(defaultBlockState().setValue(UPGRADED, false));
+		registerDefaultState(defaultBlockState().setValue(UPGRADED, false).setValue(FORMED, false));
 	}
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
-		builder.add(UPGRADED);
+		builder.add(UPGRADED, FORMED);
+	}
+
+	/** Whether {@code state} is a station whose capsule stands. */
+	public static boolean isFormed(BlockState state) {
+		return state.getBlock() instanceof TeleporterBlock && state.getValue(FORMED);
 	}
 
 	/**
@@ -86,6 +142,8 @@ public class TeleporterBlock extends HorizontalMachineBlock {
 		if (level.getBlockEntity(pos) instanceof TeleporterBlockEntity station && station.hasRtpModule()) {
 			showUpgraded(level, pos, state);
 		}
+		// Glass already waiting above — a player who built the capsule's glass first.
+		tryAssemble(level, pos);
 	}
 
 	@Override
@@ -127,16 +185,124 @@ public class TeleporterBlock extends HorizontalMachineBlock {
 	}
 
 	/**
-	 * No ticker on purpose. The station has nothing to do per tick: energy delivery is driven by the
-	 * network ({@code EnergyNetwork#tick} pushes straight into the buffer through the face port),
+	 * No server ticker on purpose. The station has nothing to do per tick: energy delivery is driven by
+	 * the network ({@code EnergyNetwork#tick} pushes straight into the buffer through the face port),
 	 * not by the consumer's own tick, so registering a ticker would only spin an empty
 	 * {@code onServerTick} 20×/s for every loaded station — exactly what the idle-sleep gate (R-29)
-	 * exists to avoid. MOD-092 brings back {@code machineTicker(level)} when the jump gives the
-	 * station real per-tick work.
+	 * exists to avoid.
+	 *
+	 * <p>The client does tick an assembled station (MOD-112), and only to keep the capsule door's travel
+	 * clock: a door nobody is looking at must still know when it last moved, or it would play its slide
+	 * the moment it came into view.
 	 */
 	@Override
+	@Nullable
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
 			BlockEntityType<T> type) {
-		return null;
+		if (!level.isClientSide() || !state.getValue(FORMED)) {
+			return null;
+		}
+		return (tickLevel, tickPos, tickState, blockEntity) -> {
+			if (blockEntity instanceof TeleporterBlockEntity station) {
+				station.clientTick(tickLevel);
+			}
+		};
+	}
+
+	// --- the capsule (MOD-112) -------------------------------------------------------------------
+
+	@Override
+	protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+		return state.getValue(FORMED) ? FORMED_OUTLINE : Shapes.block();
+	}
+
+	@Override
+	protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos,
+			CollisionContext context) {
+		return state.getValue(FORMED) ? FORMED_COLLISION : Shapes.block();
+	}
+
+	/**
+	 * An assembled station hides nothing of its neighbours: its base is inset from the block edge, and a
+	 * neighbour that stopped drawing its face toward it would show a hole straight through itself. The
+	 * loose station is still the full cube it always was, and keeps occluding like one.
+	 */
+	@Override
+	protected VoxelShape getOcclusionShape(BlockState state) {
+		return state.getValue(FORMED) ? Shapes.empty() : Shapes.block();
+	}
+
+	@Override
+	protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock,
+			@Nullable Orientation orientation, boolean movedByPiston) {
+		super.neighborChanged(state, level, pos, neighborBlock, orientation, movedByPiston);
+		tryAssemble(level, pos);
+	}
+
+	/**
+	 * The cell above is the capsule's middle or the capsule is gone. Losing it drops {@link #FORMED}
+	 * — the jump rule and the model follow — and glass left standing there starts the poll again.
+	 */
+	@Override
+	protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos,
+			Direction directionToNeighbour, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
+		if (directionToNeighbour == Direction.UP) {
+			boolean middle = neighbourState.getBlock() instanceof TeleporterCapsuleBlock
+					&& neighbourState.getValue(TeleporterCapsuleBlock.PART) == TeleporterCapsuleBlock.Part.MIDDLE;
+			if (state.getValue(FORMED) && !middle) {
+				state = state.setValue(FORMED, false);
+			}
+			if (!state.getValue(FORMED) && CapsuleGlass.of(neighbourState).isPresent()) {
+				ticks.scheduleTick(pos, this, ASSEMBLY_POLL_TICKS);
+			}
+		}
+		return super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random);
+	}
+
+	/** The poll booked by {@link #tryAssemble} while one glass waits for the second. */
+	@Override
+	protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+		tryAssemble(level, pos);
+	}
+
+	/**
+	 * Turn two blocks of glass on this station into its capsule.
+	 *
+	 * <p>{@code public static} on purpose: a game test places blocks straight into the world, and a
+	 * programmatic placement never calls {@code setPlacedBy} (MOD-015).
+	 *
+	 * <p><b>The order of the three writes matters.</b> The station goes first, so that when the middle
+	 * cell appears above it the station's own shape update already sees a formed station and keeps it;
+	 * the middle cell goes before the top one, so that the top cell's arrival is what the middle cell
+	 * checks its partner against. Written the other way round, a cell would read a neighbour that was not
+	 * a capsule yet and turn straight back into glass.
+	 */
+	public static void tryAssemble(Level level, BlockPos pos) {
+		if (level.isClientSide()) {
+			return;
+		}
+		BlockState station = level.getBlockState(pos);
+		if (!(station.getBlock() instanceof TeleporterBlock) || station.getValue(FORMED)) {
+			return;
+		}
+		Optional<CapsuleGlass> lower = CapsuleGlass.of(level.getBlockState(pos.above()));
+		if (lower.isEmpty()) {
+			return;
+		}
+		Optional<CapsuleGlass> upper = CapsuleGlass.of(level.getBlockState(pos.above(2)));
+		if (upper.isEmpty()) {
+			level.scheduleTick(pos, station.getBlock(), ASSEMBLY_POLL_TICKS);
+			return;
+		}
+		BlockState cell = ModContent.TELEPORTER_CAPSULE.get().defaultBlockState()
+				.setValue(TeleporterCapsuleBlock.FACING, station.getValue(FACING))
+				.setValue(TeleporterCapsuleBlock.OPEN, false);
+		level.setBlock(pos, station.setValue(FORMED, true), Block.UPDATE_ALL);
+		level.setBlock(pos.above(), cell.setValue(TeleporterCapsuleBlock.PART, TeleporterCapsuleBlock.Part.MIDDLE)
+				.setValue(TeleporterCapsuleBlock.GLASS, lower.get()), Block.UPDATE_ALL);
+		level.setBlock(pos.above(2), cell.setValue(TeleporterCapsuleBlock.PART, TeleporterCapsuleBlock.Part.TOP)
+				.setValue(TeleporterCapsuleBlock.GLASS, upper.get()), Block.UPDATE_ALL);
+		// The remote's "locked in" chime: the capsule is now somewhere a jump can land.
+		level.playSound(null, pos.above(), SoundEvents.END_PORTAL_FRAME_FILL, SoundSource.BLOCKS, 0.7f, 1.3f);
 	}
 }

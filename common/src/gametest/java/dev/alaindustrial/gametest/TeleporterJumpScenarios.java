@@ -1,6 +1,7 @@
 package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.block.TeleporterBlock;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.item.teleport.TeleportPoint;
 import dev.alaindustrial.registry.ModContent;
@@ -17,6 +18,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.block.Blocks;
 
 /**
  * L2 suite for the jump itself (MOD-092): the price, the policy gate, and the one thing that must
@@ -33,8 +35,19 @@ public final class TeleporterJumpScenarios {
 	private static final BlockPos STATION = new BlockPos(1, 2, 1);
 	private static final UUID STRANGER = UUID.fromString("00000000-0000-0000-0000-0000000000c3");
 
+	/**
+	 * An assembled station: the block, two glass on top, and the capsule built from them (MOD-112). A jump
+	 * lands inside the capsule, so a station without one refuses every jump — a test that wanted a loose
+	 * station would say so. {@code tryAssemble} is called by hand because a programmatic placement never
+	 * reaches {@code setPlacedBy}.
+	 */
 	private static TeleporterBlockEntity station(GameTestHelper helper) {
-		return AlaGameTestHelper.place(helper, STATION, ModContent.TELEPORTER.get(), TeleporterBlockEntity.class);
+		TeleporterBlockEntity station =
+				AlaGameTestHelper.place(helper, STATION, ModContent.TELEPORTER.get(), TeleporterBlockEntity.class);
+		helper.setBlock(STATION.above(), Blocks.GLASS);
+		helper.setBlock(STATION.above(2), Blocks.GLASS);
+		TeleporterBlock.tryAssemble(helper.getLevel(), helper.absolutePos(STATION));
+		return station;
 	}
 
 	private static TeleportPoint pointAt(GameTestHelper helper, BlockPos rel) {
@@ -174,7 +187,7 @@ public final class TeleporterJumpScenarios {
 	}
 
 	/**
-	 * @implements TC-TELE-002-FUN03 — a successful jump moves the player onto the station and
+	 * @implements TC-TELE-002-FUN03 — a successful jump moves the player into the station's capsule and
 	 *     charges exactly the quoted price, no more.
 	 */
 	public static void tcTele002Fun03_successMovesAndCharges(GameTestHelper helper) {
@@ -192,11 +205,19 @@ public final class TeleporterJumpScenarios {
 		if (station.getEnergyStorage().getAmount() != before - cost) {
 			helper.fail("charged " + (before - station.getEnergyStorage().getAmount()) + " EU, quoted " + cost);
 		}
-		// Landed on top of the station block, centred.
+		// Landed inside the capsule (MOD-112): on its floor, which sits in the station's own block, and
+		// clear of every wall — a landing that overlaps the barrel would push the player out through glass.
 		BlockPos landed = player.blockPosition();
-		BlockPos expected = helper.absolutePos(STATION).above();
+		BlockPos expected = helper.absolutePos(STATION);
 		if (!landed.equals(expected)) {
-			helper.fail("player landed at " + landed + ", expected on top of the station at " + expected);
+			helper.fail("player landed at " + landed + ", expected inside the capsule at " + expected);
+		}
+		double feet = player.getY() - expected.getY();
+		if (Math.abs(feet - TeleporterBlock.CAPSULE_FLOOR) > 1.0e-6) {
+			helper.fail("feet at +" + feet + " of the station, expected the capsule floor +" + TeleporterBlock.CAPSULE_FLOOR);
+		}
+		if (!helper.getLevel().noCollision(player)) {
+			helper.fail("the landing overlaps the capsule's collision");
 		}
 		helper.succeed();
 	}

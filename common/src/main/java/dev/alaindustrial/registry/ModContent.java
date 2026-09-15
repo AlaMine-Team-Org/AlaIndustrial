@@ -221,6 +221,8 @@ public final class ModContent {
 	public static Supplier<Block> MOB_REPELLER_HV = unbound("MOB_REPELLER_HV");
 	public static Supplier<Block> INCUBATOR = unbound("INCUBATOR");
 	public static Supplier<Block> INCUBATOR_DOME = unbound("INCUBATOR_DOME");
+	/** The glass cells of an assembled teleporter capsule (MOD-112). */
+	public static Supplier<Block> TELEPORTER_CAPSULE = unbound("TELEPORTER_CAPSULE");
 	/** Cotton trellis (MOD-280) — the mod's first crop: a two-block support carrying a perennial plant. */
 	public static Supplier<Block> TRELLIS = unbound("TRELLIS");
 	// MOD-537 — kok sagyz: the flower above ground, and the root column it grows downward.

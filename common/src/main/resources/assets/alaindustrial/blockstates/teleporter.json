@@ -1,34 +1,64 @@
 {
-  "variants": {
-    "facing=north,upgraded=false": {
-      "model": "alaindustrial:block/teleporter"
-    },
-    "facing=south,upgraded=false": {
-      "model": "alaindustrial:block/teleporter",
-      "y": 180
-    },
-    "facing=west,upgraded=false": {
-      "model": "alaindustrial:block/teleporter",
-      "y": 270
-    },
-    "facing=east,upgraded=false": {
-      "model": "alaindustrial:block/teleporter",
-      "y": 90
-    },
-    "facing=north,upgraded=true": {
-      "model": "alaindustrial:block/teleporter_upgraded"
-    },
-    "facing=south,upgraded=true": {
-      "model": "alaindustrial:block/teleporter_upgraded",
-      "y": 180
-    },
-    "facing=west,upgraded=true": {
-      "model": "alaindustrial:block/teleporter_upgraded",
-      "y": 270
-    },
-    "facing=east,upgraded=true": {
-      "model": "alaindustrial:block/teleporter_upgraded",
-      "y": 90
-    }
-  }
+	"variants": {
+		"facing=north,formed=false,upgraded=false": {
+			"model": "alaindustrial:block/teleporter"
+		},
+		"facing=north,formed=false,upgraded=true": {
+			"model": "alaindustrial:block/teleporter_upgraded"
+		},
+		"facing=north,formed=true,upgraded=false": {
+			"model": "alaindustrial:block/teleporter_formed"
+		},
+		"facing=north,formed=true,upgraded=true": {
+			"model": "alaindustrial:block/teleporter_formed_upgraded"
+		},
+		"facing=east,formed=false,upgraded=false": {
+			"model": "alaindustrial:block/teleporter",
+			"y": 90
+		},
+		"facing=east,formed=false,upgraded=true": {
+			"model": "alaindustrial:block/teleporter_upgraded",
+			"y": 90
+		},
+		"facing=east,formed=true,upgraded=false": {
+			"model": "alaindustrial:block/teleporter_formed",
+			"y": 90
+		},
+		"facing=east,formed=true,upgraded=true": {
+			"model": "alaindustrial:block/teleporter_formed_upgraded",
+			"y": 90
+		},
+		"facing=south,formed=false,upgraded=false": {
+			"model": "alaindustrial:block/teleporter",
+			"y": 180
+		},
+		"facing=south,formed=false,upgraded=true": {
+			"model": "alaindustrial:block/teleporter_upgraded",
+			"y": 180
+		},
+		"facing=south,formed=true,upgraded=false": {
+			"model": "alaindustrial:block/teleporter_formed",
+			"y": 180
+		},
+		"facing=south,formed=true,upgraded=true": {
+			"model": "alaindustrial:block/teleporter_formed_upgraded",
+			"y": 180
+		},
+		"facing=west,formed=false,upgraded=false": {
+			"model": "alaindustrial:block/teleporter",
+			"y": 270
+		},
+		"facing=west,formed=false,upgraded=true": {
+			"model": "alaindustrial:block/teleporter_upgraded",
+			"y": 270
+		},
+		"facing=west,formed=true,upgraded=false": {
+			"model": "alaindustrial:block/teleporter_formed",
+			"y": 270
+		},
+		"facing=west,formed=true,upgraded=true": {
+			"model": "alaindustrial:block/teleporter_formed_upgraded",
+			"y": 270
+		}
+	}
 }

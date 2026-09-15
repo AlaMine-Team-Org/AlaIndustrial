@@ -1,15 +1,17 @@
-## 0.1.168
+## 0.1.169
 
-<p><img alt="Ala Industrial 0.1.168 reactor Log tab with callouts" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.168/release-media/v0.1.168/changelog.png" width="720"></p>
+<p><img alt="A teleporter capsule of lime glass opening its sliding door" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.169/release-media/v0.1.169/changelog.webp" width="720"></p>
 
-Your reactor now keeps a log, and the Upgrade Table is here.
+The teleporter station now builds a glass capsule that you arrive inside.
 
 ### New
 
-- **Log tab on the reactor controller** — the last 100 things that happened to the reactor, newest first: the room sealing or breaking, the reaction starting and why it stopped, the siren, meltdowns, the accident countdown and who moved the rods. The log is saved with the world.
-- **Alerts filter and unread marks** — one button shows only warnings and alarms, and a red mark on the tab stays lit until you have read the alarm. Every player reads their own.
-- **Upgrade Table and Column Bore Module** — fit the module onto any electric drill for good, and it mines a column three blocks tall. Each extra block costs energy; press L to switch between column and single-block mining.
+- **Teleporter capsule** — put two blocks of any glass on a station and it becomes a capsule; jumps land you inside, facing the door.
+- **Sliding door** — click the glass: the front panels sink into the floor and rise again after 3 seconds, but never onto someone standing in the doorway.
+- **Your glass, your colour** — the capsule takes the colour of the lower glass: plain, stained or tinted.
 
-### Fixed
+### Changes
 
-- **The guide book caught up with the game** — new pages for the Mirror Concentrator, Advanced Fluid Tank, Carbon Ceramic, Diamond Chest, Choke, Ceramic Plate, Core Barrel, Carbon Briquette, Carbon Rod and the Upgrade Table, in every language.
+- **Stations need their capsule** — a station without two glass blocks on top refuses jumps; its energy, owner and bound remotes are kept.
+- **Lush cotton trellis** — the cotton plant grows through seven 3D stages with a leafy crown, flowers and open bolls.
+- **Breaking a capsule** gives back exactly the glass it was built from.

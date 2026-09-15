@@ -56,7 +56,8 @@ public class TeleporterRemoteItem extends Item {
 		if (!claimOwnership(stack, player)) {
 			return deny(player, TeleportEngine.Denial.NOT_YOUR_REMOTE);
 		}
-		BlockPos pos = context.getClickedPos();
+		// A click on the capsule's glass binds its station (MOD-112): that is what the player is pointing at.
+		BlockPos pos = dev.alaindustrial.block.TeleporterCapsuleBlock.stationPos(level, context.getClickedPos());
 		if (!(level.getBlockEntity(pos) instanceof TeleporterBlockEntity station)) {
 			// Not a station: open the list anyway. The remote's whole job is "get me home", and home is
 			// usually asked for from inside a mine, where there is no sky to click at — requiring empty

@@ -1,0 +1,289 @@
+{
+	"variants": {
+		"part=middle,facing=north,glass=clear": {
+			"model": "alaindustrial:block/teleporter_capsule_middle"
+		},
+		"part=middle,facing=north,glass=white": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_white"
+		},
+		"part=middle,facing=north,glass=orange": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_orange"
+		},
+		"part=middle,facing=north,glass=magenta": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_magenta"
+		},
+		"part=middle,facing=north,glass=light_blue": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_light_blue"
+		},
+		"part=middle,facing=north,glass=yellow": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_yellow"
+		},
+		"part=middle,facing=north,glass=lime": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_lime"
+		},
+		"part=middle,facing=north,glass=pink": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_pink"
+		},
+		"part=middle,facing=north,glass=gray": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_gray"
+		},
+		"part=middle,facing=north,glass=light_gray": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_light_gray"
+		},
+		"part=middle,facing=north,glass=cyan": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_cyan"
+		},
+		"part=middle,facing=north,glass=purple": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_purple"
+		},
+		"part=middle,facing=north,glass=blue": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_blue"
+		},
+		"part=middle,facing=north,glass=brown": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_brown"
+		},
+		"part=middle,facing=north,glass=green": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_green"
+		},
+		"part=middle,facing=north,glass=red": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_red"
+		},
+		"part=middle,facing=north,glass=black": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_black"
+		},
+		"part=middle,facing=north,glass=tinted": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_tinted"
+		},
+		"part=top,facing=north": {
+			"model": "alaindustrial:block/teleporter_capsule_top"
+		},
+		"part=middle,facing=east,glass=clear": {
+			"model": "alaindustrial:block/teleporter_capsule_middle",
+			"y": 90
+		},
+		"part=middle,facing=east,glass=white": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_white",
+			"y": 90
+		},
+		"part=middle,facing=east,glass=orange": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_orange",
+			"y": 90
+		},
+		"part=middle,facing=east,glass=magenta": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_magenta",
+			"y": 90
+		},
+		"part=middle,facing=east,glass=light_blue": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_light_blue",
+			"y": 90
+		},
+		"part=middle,facing=east,glass=yellow": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_yellow",
+			"y": 90
+		},
+		"part=middle,facing=east,glass=lime": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_lime",
+			"y": 90
+		},
+		"part=middle,facing=east,glass=pink": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_pink",
+			"y": 90
+		},
+		"part=middle,facing=east,glass=gray": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_gray",
+			"y": 90
+		},
+		"part=middle,facing=east,glass=light_gray": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_light_gray",
+			"y": 90
+		},
+		"part=middle,facing=east,glass=cyan": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_cyan",
+			"y": 90
+		},
+		"part=middle,facing=east,glass=purple": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_purple",
+			"y": 90
+		},
+		"part=middle,facing=east,glass=blue": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_blue",
+			"y": 90
+		},
+		"part=middle,facing=east,glass=brown": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_brown",
+			"y": 90
+		},
+		"part=middle,facing=east,glass=green": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_green",
+			"y": 90
+		},
+		"part=middle,facing=east,glass=red": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_red",
+			"y": 90
+		},
+		"part=middle,facing=east,glass=black": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_black",
+			"y": 90
+		},
+		"part=middle,facing=east,glass=tinted": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_tinted",
+			"y": 90
+		},
+		"part=top,facing=east": {
+			"model": "alaindustrial:block/teleporter_capsule_top",
+			"y": 90
+		},
+		"part=middle,facing=south,glass=clear": {
+			"model": "alaindustrial:block/teleporter_capsule_middle",
+			"y": 180
+		},
+		"part=middle,facing=south,glass=white": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_white",
+			"y": 180
+		},
+		"part=middle,facing=south,glass=orange": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_orange",
+			"y": 180
+		},
+		"part=middle,facing=south,glass=magenta": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_magenta",
+			"y": 180
+		},
+		"part=middle,facing=south,glass=light_blue": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_light_blue",
+			"y": 180
+		},
+		"part=middle,facing=south,glass=yellow": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_yellow",
+			"y": 180
+		},
+		"part=middle,facing=south,glass=lime": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_lime",
+			"y": 180
+		},
+		"part=middle,facing=south,glass=pink": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_pink",
+			"y": 180
+		},
+		"part=middle,facing=south,glass=gray": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_gray",
+			"y": 180
+		},
+		"part=middle,facing=south,glass=light_gray": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_light_gray",
+			"y": 180
+		},
+		"part=middle,facing=south,glass=cyan": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_cyan",
+			"y": 180
+		},
+		"part=middle,facing=south,glass=purple": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_purple",
+			"y": 180
+		},
+		"part=middle,facing=south,glass=blue": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_blue",
+			"y": 180
+		},
+		"part=middle,facing=south,glass=brown": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_brown",
+			"y": 180
+		},
+		"part=middle,facing=south,glass=green": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_green",
+			"y": 180
+		},
+		"part=middle,facing=south,glass=red": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_red",
+			"y": 180
+		},
+		"part=middle,facing=south,glass=black": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_black",
+			"y": 180
+		},
+		"part=middle,facing=south,glass=tinted": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_tinted",
+			"y": 180
+		},
+		"part=top,facing=south": {
+			"model": "alaindustrial:block/teleporter_capsule_top",
+			"y": 180
+		},
+		"part=middle,facing=west,glass=clear": {
+			"model": "alaindustrial:block/teleporter_capsule_middle",
+			"y": 270
+		},
+		"part=middle,facing=west,glass=white": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_white",
+			"y": 270
+		},
+		"part=middle,facing=west,glass=orange": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_orange",
+			"y": 270
+		},
+		"part=middle,facing=west,glass=magenta": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_magenta",
+			"y": 270
+		},
+		"part=middle,facing=west,glass=light_blue": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_light_blue",
+			"y": 270
+		},
+		"part=middle,facing=west,glass=yellow": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_yellow",
+			"y": 270
+		},
+		"part=middle,facing=west,glass=lime": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_lime",
+			"y": 270
+		},
+		"part=middle,facing=west,glass=pink": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_pink",
+			"y": 270
+		},
+		"part=middle,facing=west,glass=gray": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_gray",
+			"y": 270
+		},
+		"part=middle,facing=west,glass=light_gray": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_light_gray",
+			"y": 270
+		},
+		"part=middle,facing=west,glass=cyan": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_cyan",
+			"y": 270
+		},
+		"part=middle,facing=west,glass=purple": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_purple",
+			"y": 270
+		},
+		"part=middle,facing=west,glass=blue": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_blue",
+			"y": 270
+		},
+		"part=middle,facing=west,glass=brown": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_brown",
+			"y": 270
+		},
+		"part=middle,facing=west,glass=green": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_green",
+			"y": 270
+		},
+		"part=middle,facing=west,glass=red": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_red",
+			"y": 270
+		},
+		"part=middle,facing=west,glass=black": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_black",
+			"y": 270
+		},
+		"part=middle,facing=west,glass=tinted": {
+			"model": "alaindustrial:block/teleporter_capsule_middle_tinted",
+			"y": 270
+		},
+		"part=top,facing=west": {
+			"model": "alaindustrial:block/teleporter_capsule_top",
+			"y": 270
+		}
+	}
+}

@@ -16,6 +16,7 @@ import dev.alaindustrial.block.entity.ShieldingChestBlockEntity;
 import dev.alaindustrial.block.entity.SilverChestBlockEntity;
 import dev.alaindustrial.block.entity.StormWindMillBlockEntity;
 import dev.alaindustrial.block.entity.SprinklerBlockEntity;
+import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
@@ -31,6 +32,7 @@ import dev.alaindustrial.client.render.IncubatorBlockEntityRenderer;
 import dev.alaindustrial.client.render.IncubatorDomeTint;
 import dev.alaindustrial.client.render.ReactorDoorBlockEntityRenderer;
 import dev.alaindustrial.client.render.SprinklerHeadBlockEntityRenderer;
+import dev.alaindustrial.client.render.TeleporterCapsuleDoorRenderer;
 import dev.alaindustrial.client.render.ThermalCentrifugeBlockEntityRenderer;
 import dev.alaindustrial.client.render.WaterMillWheelBlockEntityRenderer;
 import dev.alaindustrial.client.render.WindMillRotorBlockEntityRenderer;
@@ -193,6 +195,10 @@ public final class ClientContentManifest {
 			// empty — everything the player sees of this door is drawn by the renderer.
 			renderer(ContentManifest.blockEntity("reactor_door", ReactorDoorBlockEntity.class),
 					ReactorDoorBlockEntityRenderer::new),
+			// Teleporter capsule (MOD-112): the door sinking into the floor. Bound to the station, which
+			// draws it across the two glass cells above; the rest of the capsule is chunk geometry.
+			renderer(ContentManifest.blockEntity("teleporter", TeleporterBlockEntity.class),
+					TeleporterCapsuleDoorRenderer::new),
 			// Insulating stand under a bare cable (MOD-279). All cable grades share one BlockEntityType,
 			// so this single registration covers every grade.
 			renderer(ContentManifest.blockEntity("copper_cable", CableBlockEntity.class),

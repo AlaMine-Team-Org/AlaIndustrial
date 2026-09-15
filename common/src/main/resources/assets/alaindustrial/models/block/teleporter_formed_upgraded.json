@@ -1,0 +1,7 @@
+{
+	"parent": "alaindustrial:block/teleporter_formed",
+	"textures": {
+		"particle": "alaindustrial:block/teleporter_capsule_body_upgraded",
+		"body": "alaindustrial:block/teleporter_capsule_body_upgraded"
+	}
+}
