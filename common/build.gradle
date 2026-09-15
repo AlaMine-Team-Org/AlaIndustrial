@@ -169,6 +169,10 @@ pitest {
                      'dev.alaindustrial.client.guide.GuidePaginator',
                      'dev.alaindustrial.client.hud.HudSmoother',
                      'dev.alaindustrial.client.sound.HumTeleportDetector',
+                     // MOD-629: the remote's «Map» tab geometry — scale, clusters, rim arrows, clicks,
+                     // the price rounded up. Minecraft-free precisely so L1 runs it (RemoteMapTest);
+                     // added here with the class, not a release later.
+                     'dev.alaindustrial.client.screen.teleporter.RemoteMap',
                      'dev.alaindustrial.entity.TemperedGearRoll',
                      // MOD-580: the magnet's two grades. Minecraft-free on purpose (Config plus an
                      // IntSupplier), so it belongs in the run rather than in excludedClasses; the

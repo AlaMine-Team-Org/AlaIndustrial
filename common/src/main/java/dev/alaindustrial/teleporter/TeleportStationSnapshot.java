@@ -1,5 +1,6 @@
 package dev.alaindustrial.teleporter;
 
+import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.item.teleport.TeleportPoint;
 import dev.alaindustrial.item.teleport.TeleportPoints;
@@ -33,7 +34,10 @@ public final class TeleportStationSnapshot {
 				stations.add(station(player, here, registry, points.get(i)));
 			}
 		}
-		return new TeleportStationsPayload(containerId, cooldown, stations);
+		// The screen shows the pack's multiplier and draws the random-jump zone ring; both are server settings (MOD-629).
+		int weightPermille = (int) Math.round(TeleportEngine.weight(player) * 1000.0);
+		return new TeleportStationsPayload(containerId, cooldown, weightPermille, Config.teleporterBuffer,
+				Config.teleporterRtpMinRadius, Config.teleporterRtpRadius, stations);
 	}
 
 	private static TeleportStationsPayload.Station station(ServerPlayer player, ServerLevel here,
@@ -55,8 +59,11 @@ public final class TeleportStationSnapshot {
 		} else {
 			entry = registry.find(point.dim(), point.pos()).orElse(null);
 			if (entry == null) {
+				// Unknown, but its price is not: it needs only the viewer and the point, so the «Map» card can show an
+				// estimate (MOD-629). Readiness stays unknown — the server checks the real station on the jump.
 				return new TeleportStationsPayload.Station(flags,
-						sameDimension ? TeleportEngine.Denial.OK : TeleportEngine.Denial.CROSS_DIM, 0, 0, 0);
+						sameDimension ? TeleportEngine.Denial.OK : TeleportEngine.Denial.CROSS_DIM, 0,
+						sameDimension ? TeleportEngine.computeCost(player, point) : 0, 0);
 			}
 			if (stationLevel != null) {
 				ago = (int) Math.min(Integer.MAX_VALUE, Math.max(0L, stationLevel.getGameTime() - entry.updatedGameTime()) / 20L);

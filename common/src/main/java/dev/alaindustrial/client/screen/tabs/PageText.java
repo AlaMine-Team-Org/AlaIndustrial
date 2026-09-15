@@ -32,6 +32,25 @@ public final class PageText {
 		graphics.pose().popMatrix();
 	}
 
+	/**
+	 * The width to wrap a text at. Right-to-left script is measured before it is shaped, and Arabic's joined letter forms
+	 * draw wider than the isolated ones the measure counted — a hint that "fit" on one line ran past the panel's edge
+	 * (MOD-629). Such text wraps a tenth early; left-to-right text wraps at the width it is given.
+	 */
+	public static int wrapWidth(Component text, int width) {
+		String plain = text.getString();
+		for (int i = 0; i < plain.length(); ) {
+			int codePoint = plain.codePointAt(i);
+			byte direction = Character.getDirectionality(codePoint);
+			if (direction == Character.DIRECTIONALITY_RIGHT_TO_LEFT
+					|| direction == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC) {
+				return Math.round(width * 0.9f);
+			}
+			i += Character.charCount(codePoint);
+		}
+		return width;
+	}
+
 	/** One line, shrunk to fit a width — but never below {@link #MIN_SCALE}. */
 	public static void scaledFit(GuiGraphicsExtractor graphics, Font font, Component text, int x, int y, int width,
 			int colour) {

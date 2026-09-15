@@ -18,11 +18,18 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
  * <p>Names and positions do not travel: the client already holds them in the remote's own component, and the
  * stations here follow that list's order.
  *
+ * <p>The header's settings come from the server's config, not the client's: a client's own file may say anything, and
+ * a screen that divided a charge by it would show 200 % on a server with a bigger buffer (MOD-629).
+ *
  * @param cooldownSeconds the viewer's own recharge, 0 when a jump may start now
+ * @param weightPermille how much the viewer's pack multiplies a jump's price, ×1000 — the «Map» card's «Load»
+ * @param stationCapacity a station's buffer in EU, for the card's charge percentage and bar
+ * @param rtpMinRadius nearest a random jump lands from the viewer, in blocks — the inner edge of the map's zone ring
+ * @param rtpMaxRadius farthest a random jump lands, in blocks — the outer edge of that ring
  * @param stations one per bound point, in the remote's order
  */
-public record TeleportStationsPayload(int containerId, int cooldownSeconds, List<Station> stations)
-		implements CustomPacketPayload {
+public record TeleportStationsPayload(int containerId, int cooldownSeconds, int weightPermille, int stationCapacity,
+		int rtpMinRadius, int rtpMaxRadius, List<Station> stations) implements CustomPacketPayload {
 
 	public static final Type<TeleportStationsPayload> TYPE = new Type<>(Industrialization.id("teleport_stations"));
 
@@ -44,7 +51,8 @@ public record TeleportStationsPayload(int containerId, int cooldownSeconds, List
 	 * @param denial why a targeted jump there would be refused, or {@code OK} — the station's side of
 	 *     {@link TeleportEngine#checkPolicy}, decided without loading its chunk
 	 * @param energy its charge; 0 when {@link #HIDDEN} or unknown
-	 * @param cost the exact price of a jump there for this viewer; 0 when hidden, unknown or in another dimension
+	 * @param cost the exact price of a jump there for this viewer; for a station with no record, the same price worked
+	 *     out without it (the price needs only the viewer and the point). 0 when hidden or in another dimension
 	 * @param updatedAgoSeconds how old the record is; 0 for a live read
 	 */
 	public record Station(int flags, TeleportEngine.Denial denial, long energy, long cost, int updatedAgoSeconds) {
@@ -74,6 +82,10 @@ public record TeleportStationsPayload(int containerId, int cooldownSeconds, List
 	public static final StreamCodec<RegistryFriendlyByteBuf, TeleportStationsPayload> CODEC = StreamCodec.composite(
 			ByteBufCodecs.VAR_INT, TeleportStationsPayload::containerId,
 			ByteBufCodecs.VAR_INT, TeleportStationsPayload::cooldownSeconds,
+			ByteBufCodecs.VAR_INT, TeleportStationsPayload::weightPermille,
+			ByteBufCodecs.VAR_INT, TeleportStationsPayload::stationCapacity,
+			ByteBufCodecs.VAR_INT, TeleportStationsPayload::rtpMinRadius,
+			ByteBufCodecs.VAR_INT, TeleportStationsPayload::rtpMaxRadius,
 			STATION.apply(ByteBufCodecs.list()), TeleportStationsPayload::stations,
 			TeleportStationsPayload::new);
 

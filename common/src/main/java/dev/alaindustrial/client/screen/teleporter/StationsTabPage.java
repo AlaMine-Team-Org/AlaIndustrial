@@ -16,7 +16,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -34,9 +33,8 @@ import org.jspecify.annotations.Nullable;
  * <p>Every coordinate is the approved mockup's (variant 6, frame E), read from its generator rather than off the
  * picture. Rows are drawn by hand, not as widgets, so they sit inside the dark well.
  *
- * <p><b>Teleport and Random live here until their own tabs ship.</b> The tabs arrive one release at a time, and the
- * remote must not lose an action in any of them; the «Map» tab (MOD-629) takes both buttons away, and this row returns
- * to the mockup's Delete, padlock and hint.
+ * <p>Teleport and Random moved to the «Map» tab when it shipped (MOD-629); the bottom row is the mockup's again —
+ * Delete, its padlock, and the hint saying what the padlock is for.
  *
  * <p>Nothing here decides anything: a click sends the server an index and the server re-reads the real remote. The
  * lamps come from {@link TeleportStationsPayload}, which the server builds without loading a chunk.
@@ -59,16 +57,10 @@ public final class StationsTabPage implements TabPage {
 	private static final int NAME_FIELD_X = 8, NAME_FIELD_Y = 144, NAME_FIELD_W = 150, NAME_FIELD_H = 18;
 	private static final int RENAME_X = 162, RENAME_W = 66;
 
-	/**
-	 * The action row. Delete and its padlock are the mockup's; Teleport and Random share the rest of the row until their
-	 * tabs take them (see the class comment). A vanilla button carries {@code width - 4} px of label and scrolls anything
-	 * longer, and the widest shipped labels are Teleport 83 px (es/pt) and Random 61 px (hi): no split of these 144 px
-	 * fits every language, so the wider button goes to the longer word.
-	 */
+	/** The bottom row: Delete, its padlock, and the hint beside them. */
 	private static final int BTN_ROW_Y = 166, BTN_H = 20;
 	private static final int DELETE_X = 8, DELETE_W = 58;
-	private static final int TELEPORT_X = 84, TELEPORT_W = 76;
-	private static final int RTP_X = 164, RTP_W = 64;
+	private static final int HINT_X = 86, HINT_Y = 168, HINT_W = 142, HINT_H = 16;
 
 	/** The padlock guarding Delete — the station screen's own two sprites, at the atlas coordinates they always had. */
 	private static final int LOCK_X = 70;
@@ -111,8 +103,6 @@ public final class StationsTabPage implements TabPage {
 	private @Nullable EditBox nameBox;
 	private @Nullable Button renameButton;
 	private @Nullable Button deleteButton;
-	private @Nullable Button teleportButton;
-	private @Nullable Button rtpButton;
 	private boolean shown = true;
 	/** First visible row — the scroll position. */
 	private int scroll;
@@ -124,6 +114,13 @@ public final class StationsTabPage implements TabPage {
 	private boolean deleteUnlocked;
 	/** Whether the opening auto-selection has happened; it must fire once, not every tick. */
 	private boolean autoSelected;
+	/**
+	 * The selection the name field shows, by index and by point. The «Map» tab moves the selection too, and a delete
+	 * shifts the list under the same index: a field that kept the deleted station's name lit Rename, and pressing it
+	 * renamed the neighbour.
+	 */
+	private int shownSelection = -1;
+	private @Nullable TeleportPoint shownPoint;
 
 	public StationsTabPage(TeleporterRemoteScreen screen) {
 		this.screen = screen;
@@ -159,25 +156,15 @@ public final class StationsTabPage implements TabPage {
 		deleteButton = screen.addPageWidget(Button.builder(
 				Component.translatable("gui.alaindustrial.teleporter.delete"), b -> confirmDelete())
 				.bounds(x + DELETE_X, y + BTN_ROW_Y, DELETE_W, BTN_H).build());
-		teleportButton = screen.addPageWidget(Button.builder(
-				Component.translatable("gui.alaindustrial.teleporter.teleport"),
-				b -> press(TeleporterRemoteMenu.Action.TELEPORT))
-				.bounds(x + TELEPORT_X, y + BTN_ROW_Y, TELEPORT_W, BTN_H).build());
-		// The random jump's price is flat, so its tooltip can tell it before the player commits (MOD-116).
-		rtpButton = screen.addPageWidget(Button.builder(
-				Component.translatable("gui.alaindustrial.teleporter.rtp"),
-				b -> press(TeleporterRemoteMenu.Action.RTP))
-				.tooltip(Tooltip.create(Component.translatable("gui.alaindustrial.teleporter.rtp.tooltip",
-						Config.teleporterRtpCost, Config.teleporterRtpRadius)))
-				.bounds(x + RTP_X, y + BTN_ROW_Y, RTP_W, BTN_H).build());
+		// The field is rebuilt on resize; it must show the selection again.
+		shownSelection = -1;
 		setShown(shown);
 	}
 
 	@Override
 	public void setShown(boolean shown) {
 		this.shown = shown;
-		for (var widget : new net.minecraft.client.gui.components.AbstractWidget[] {
-				nameBox, renameButton, deleteButton, teleportButton, rtpButton}) {
+		for (var widget : new net.minecraft.client.gui.components.AbstractWidget[] {nameBox, renameButton, deleteButton}) {
 			if (widget != null) {
 				widget.visible = shown;
 			}
@@ -188,16 +175,21 @@ public final class StationsTabPage implements TabPage {
 	public void tick() {
 		TeleporterRemoteMenu menu = screen.getMenu();
 		TeleportPoints points = menu.points();
-		// Land on the first station, so opening the remote and jumping home stays two clicks. Here rather than in init:
-		// the menu is not populated until the first tick, and only once — re-selecting every tick fights the player.
+		// Land on the station picked last time, else the first, so opening the remote and jumping stays two clicks. Here
+		// rather than in init: the menu is not populated until the first tick, and only once — re-selecting every tick
+		// fights the player.
 		if (!autoSelected && !points.isEmpty()) {
 			autoSelected = true;
-			select(0);
+			int remembered = screen.rememberedStation();
+			select(remembered >= 0 && remembered < points.size() ? remembered : 0);
 		}
 		// The server owns the list: a delete can shrink it under us.
 		scroll = Math.max(0, Math.min(scroll, Math.max(0, rowsInList(points) - ROWS)));
 		if (menu.getSelected() >= points.size()) {
 			menu.setSelected(-1);
+		}
+		if (menu.getSelected() != shownSelection || !java.util.Objects.equals(points.get(menu.getSelected()), shownPoint)) {
+			showSelection(menu.getSelected());
 		}
 		boolean hasSelection = menu.getSelected() >= 0;
 		if (renameButton != null) {
@@ -206,12 +198,6 @@ public final class StationsTabPage implements TabPage {
 		if (deleteButton != null) {
 			// Greyed until the padlock is open, so the guard is visible rather than a silent no-op.
 			deleteButton.active = hasSelection && deleteUnlocked;
-		}
-		if (teleportButton != null) {
-			teleportButton.active = hasSelection;
-		}
-		if (rtpButton != null) {
-			rtpButton.active = hasSelection;
 		}
 	}
 
@@ -275,16 +261,12 @@ public final class StationsTabPage implements TabPage {
 		}
 
 		drawLock(graphics, x, y);
+		drawHint(graphics, font, x, y);
 		drawNotice(graphics, font, x, y);
 	}
 
 	@Override
 	public boolean tooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		if (isOverLock(mouseX, mouseY)) {
-			graphics.setTooltipForNextFrame(screen.font(),
-					Component.translatable("gui.alaindustrial.teleporter_remote.stations.delete_hint"), mouseX, mouseY);
-			return true;
-		}
 		return false;
 	}
 
@@ -376,6 +358,10 @@ public final class StationsTabPage implements TabPage {
 	private static final int TONE_IDLE = 0xFFB9C0C7;
 
 	static Readiness readiness(TeleportStationsPayload.@Nullable Station station) {
+		// Another dimension first: the server refuses that jump whether or not it has a record of the station.
+		if (station != null && station.denial() == dev.alaindustrial.teleporter.TeleportEngine.Denial.CROSS_DIM) {
+			return Readiness.OTHER_WORLD;
+		}
 		if (station == null || !station.has(TeleportStationsPayload.KNOWN)) {
 			return Readiness.UNKNOWN;
 		}
@@ -393,7 +379,7 @@ public final class StationsTabPage implements TabPage {
 	}
 
 	/** The snapshot row for a bound point, or {@code null} while the snapshot is missing or behind the list. */
-	private static TeleportStationsPayload.@Nullable Station stationAt(@Nullable TeleportStationsPayload snapshot, int index) {
+	static TeleportStationsPayload.@Nullable Station stationAt(@Nullable TeleportStationsPayload snapshot, int index) {
 		if (snapshot == null || index < 0 || index >= snapshot.stations().size()) {
 			return null;
 		}
@@ -451,6 +437,26 @@ public final class StationsTabPage implements TabPage {
 		}
 		String ellipsis = "…";
 		return font.plainSubstrByWidth(name, Math.max(0, room - font.width(ellipsis))) + ellipsis;
+	}
+
+	/** What the padlock is for, beside it: two lines at {@link #SMALL}, or at 0.5 when a translation needs more. */
+	private static void drawHint(GuiGraphicsExtractor graphics, Font font, int x, int y) {
+		Component hint = Component.translatable("gui.alaindustrial.teleporter_remote.stations.delete_hint");
+		float scale = SMALL;
+		int wrap = PageText.wrapWidth(hint, HINT_W);
+		List<FormattedCharSequence> lines = font.split(hint, Math.round(wrap / scale));
+		if (lines.size() * font.lineHeight * scale > HINT_H + 0.01f) {
+			scale = 0.5f;
+			lines = font.split(hint, Math.round(wrap / scale));
+		}
+		int shownLines = Math.min(lines.size(), (int) Math.floor((HINT_H + 0.01f) / (font.lineHeight * scale)));
+		graphics.pose().pushMatrix();
+		graphics.pose().translate(x + HINT_X, y + HINT_Y);
+		graphics.pose().scale(scale, scale);
+		for (int i = 0; i < shownLines; i++) {
+			graphics.text(font, lines.get(i), 0, i * font.lineHeight, GuiStyle.TEXT_DIM, false);
+		}
+		graphics.pose().popMatrix();
 	}
 
 	/**
@@ -521,18 +527,25 @@ public final class StationsTabPage implements TabPage {
 		return !TeleportPoint.clampName(nameBox.getValue()).equals(point.name());
 	}
 
-	/** Selects a station as a click on its row does: the field takes its name and the padlock shuts. */
+	/** Selects a station as a click on its row does; the name field and the padlock follow on the next tick. */
 	public void select(int index) {
 		TeleporterRemoteMenu menu = screen.getMenu();
 		menu.setSelected(index);
-		// Moving to another row re-locks: an unlock is for the point the player was looking at.
-		deleteUnlocked = false;
+		screen.rememberStation(index);
 		screen.press(TeleporterRemoteMenu.Action.SELECT, index);
-		TeleportPoint point = menu.points().get(index);
-		if (nameBox != null && point != null) {
+		showSelection(index);
+	}
+
+	/** The field takes the selected point's name and the padlock shuts: an unlock is for the row it was opened on. */
+	private void showSelection(int index) {
+		shownSelection = index;
+		deleteUnlocked = false;
+		TeleportPoint point = screen.getMenu().points().get(index);
+		shownPoint = point;
+		if (nameBox != null) {
 			// The raw name, not the display one: an auto-named point shows an empty box, and renaming it back to empty is
 			// how a player gets the default back.
-			nameBox.setValue(point.name());
+			nameBox.setValue(point != null ? point.name() : "");
 		}
 	}
 

@@ -4,6 +4,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.client.hud.TeleportNotice;
 import dev.alaindustrial.client.screen.tabs.SideTabStrip;
 import dev.alaindustrial.client.screen.tabs.TabPage;
+import dev.alaindustrial.client.screen.teleporter.MapTabPage;
 import dev.alaindustrial.client.screen.teleporter.StationsTabPage;
 import dev.alaindustrial.menu.TeleporterRemoteMenu;
 import dev.alaindustrial.network.NetworkDispatcher;
@@ -32,8 +33,8 @@ import net.minecraft.world.entity.player.Inventory;
  * <p><b>The screen owns the frame, the pages own the rest.</b> The panel, the tab strip, the selected tab's name and the
  * readiness chip are the same on every tab; everything under the header belongs to the selected {@link TabPage}.
  *
- * <p>The tabs ship one release at a time (MOD-627). This release has one: «Stations». The strip is drawn from the first
- * tab anyway, because the frame the tabs share is part of what each of them ships.
+ * <p>The tabs ship one release at a time (MOD-627): «Map» (MOD-629) and «Stations» (MOD-628) so far. The selected
+ * station is one for the whole screen — picking it on either tab picks it on both.
  *
  * <p>Nothing here decides anything: a click sends the server an index and the server re-reads the real remote.
  */
@@ -57,17 +58,21 @@ public class TeleporterRemoteScreen extends AbstractContainerScreen<TeleporterRe
 	private static final int CHIP_H = 11;
 	private static final int CHIP_BACK = 0xFF2A2D33;
 
-	/** The tab a player last had open, for the next time they open a remote. Client-only by construction. */
-	private static int lastPage;
+	/** The tab a player last had open this session, or -1 before the first opening. Client-only by construction. */
+	private static int lastPage = -1;
+	/** The station a player last picked, so the next opening lands on it. */
+	private static int lastStation = -1;
 
 	private final SideTabStrip tabs = new SideTabStrip(TAB_TOP);
+	private final MapTabPage map = new MapTabPage(this);
 	private final StationsTabPage stations = new StationsTabPage(this);
-	private final List<TabPage> pages = List.of(stations);
+	private final List<TabPage> pages = List.of(map, stations);
 	private int selected;
+	/** Whether the opening tab has been chosen; {@code init} runs again on every resize and must not re-choose. */
+	private boolean pageChosen;
 
 	public TeleporterRemoteScreen(TeleporterRemoteMenu menu, Inventory inventory, Component title) {
 		super(menu, inventory, title, PANEL_W, PANEL_H);
-		this.selected = Math.min(lastPage, pages.size() - 1);
 	}
 
 	@Override
@@ -77,6 +82,12 @@ public class TeleporterRemoteScreen extends AbstractContainerScreen<TeleporterRe
 		TeleportNotice.clear();
 		for (TabPage page : pages) {
 			page.init();
+		}
+		if (!pageChosen) {
+			pageChosen = true;
+			// The map first; the tab last used after that; the list when there is nothing to put on a map.
+			selected = this.menu.points().isEmpty() ? pages.indexOf(stations)
+					: lastPage >= 0 && lastPage < pages.size() ? lastPage : pages.indexOf(map);
 		}
 		showSelected();
 	}
@@ -169,6 +180,9 @@ public class TeleporterRemoteScreen extends AbstractContainerScreen<TeleporterRe
 		if (pages.get(selected) == stations && stations.keyPressed(event)) {
 			return true;
 		}
+		if (pages.get(selected) == map && map.keyPressed(event)) {
+			return true;
+		}
 		return super.keyPressed(event);
 	}
 
@@ -204,9 +218,32 @@ public class TeleporterRemoteScreen extends AbstractContainerScreen<TeleporterRe
 
 	// ── What a page may use ─────────────────────────────────────────────────────────────────────────
 
+	/** The «Map» tab, for a stand that drives it directly. */
+	public MapTabPage mapPage() {
+		return map;
+	}
+
 	/** The «Stations» tab, for a stand that drives it directly. */
 	public StationsTabPage stationsPage() {
 		return stations;
+	}
+
+	/** Opens a tab as a click on it does — for a stand that photographs each tab. */
+	public void showPage(TabPage page) {
+		selectPage(pages.indexOf(page));
+	}
+
+	/** Picks a station for the whole screen, as a click on its row or its dot does. */
+	public void selectStation(int index) {
+		stations.select(index);
+	}
+
+	public void rememberStation(int index) {
+		lastStation = index;
+	}
+
+	public int rememberedStation() {
+		return lastStation;
 	}
 
 	public int left() {
