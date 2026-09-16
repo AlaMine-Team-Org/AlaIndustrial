@@ -15,6 +15,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
@@ -39,8 +41,11 @@ public final class TeleportWarmupManager {
 	 * an ordinary jump and {@code point} is the destination station. When it is set this is a random
 	 * jump: {@code point} is then the station that PAYS — the row the player had selected — and
 	 * {@code rtpTarget} is the spot the search rolled at trigger time.
+	 *
+	 * <p>{@code remote} is the stack the jump was started with (MOD-631): its log gets the jump's line even if the player
+	 * has switched to another item by the time the countdown ends.
 	 */
-	private record Warmup(TeleportPoint point, Vec3 origin, long startTick, @Nullable BlockPos rtpTarget) {
+	private record Warmup(TeleportPoint point, Vec3 origin, long startTick, @Nullable BlockPos rtpTarget, ItemStack remote) {
 	}
 
 	private static final Map<UUID, Warmup> WARMUPS = new HashMap<>();
@@ -108,7 +113,8 @@ public final class TeleportWarmupManager {
 
 	/** Begin the countdown. The caller has already run {@link TeleportEngine#checkPolicy}. */
 	public static void start(ServerPlayer player, TeleportPoint point) {
-		WARMUPS.put(player.getUUID(), new Warmup(point, player.position(), player.level().getGameTime(), null));
+		WARMUPS.put(player.getUUID(), new Warmup(point, player.position(), player.level().getGameTime(), null,
+				TeleporterRemoteItem.heldRemote(player)));
 	}
 
 	/**
@@ -121,7 +127,8 @@ public final class TeleportWarmupManager {
 	 */
 	public static void startRtp(ServerPlayer player, TeleportPoint payingStation, BlockPos target) {
 		WARMUPS.put(player.getUUID(),
-				new Warmup(payingStation, player.position(), player.level().getGameTime(), target));
+				new Warmup(payingStation, player.position(), player.level().getGameTime(), target,
+						TeleporterRemoteItem.heldRemote(player)));
 	}
 
 	/**
@@ -134,6 +141,33 @@ public final class TeleportWarmupManager {
 			if (reason != null) {
 				player.sendSystemMessage(reason.copy().withStyle(ChatFormatting.RED), true);
 			}
+		}
+	}
+
+	/**
+	 * The remote a jump's lines belong to (MOD-631): the one the jump was started with, wherever it now is in the player's
+	 * inventory — a player who switches to a pickaxe during the countdown still made the jump with the remote. When that
+	 * stack is gone (dropped, stored, replaced), the remote in hand; with none there, nothing is written.
+	 */
+	private static ItemStack logRemote(ServerPlayer player, Warmup warmup) {
+		ItemStack started = warmup.remote();
+		if (!started.isEmpty()) {
+			Inventory inventory = player.getInventory();
+			for (int i = 0; i < inventory.getContainerSize(); i++) {
+				if (inventory.getItem(i) == started) {
+					return started;
+				}
+			}
+		}
+		return TeleporterRemoteItem.heldRemote(player);
+	}
+
+	/** A hit broke the countdown: the player is told, and the remote's log keeps a line of it (MOD-631). */
+	public static void cancelHurt(ServerPlayer player) {
+		Warmup warmup = WARMUPS.get(player.getUUID());
+		cancel(player, Component.translatable("alaindustrial.teleporter.cancelled_hurt"));
+		if (warmup != null) {
+			TeleportLogs.cancelled(player, logRemote(player, warmup), warmup.point(), warmup.rtpTarget() != null, true);
 		}
 	}
 
@@ -185,6 +219,7 @@ public final class TeleportWarmupManager {
 				TeleportEffects.clear(player);
 				player.sendSystemMessage(Component.translatable("alaindustrial.teleporter.cancelled_moved")
 						.withStyle(ChatFormatting.RED), true);
+				TeleportLogs.cancelled(player, logRemote(player, warmup), warmup.point(), warmup.rtpTarget() != null, false);
 				continue;
 			}
 
@@ -201,9 +236,9 @@ public final class TeleportWarmupManager {
 			// so a failure here cannot leave a stuck warmup behind.
 			it.remove();
 			if (warmup.rtpTarget() != null) {
-				fireRtp(player, warmup.point(), warmup.rtpTarget());
+				fireRtp(player, warmup.point(), warmup.rtpTarget(), logRemote(player, warmup));
 			} else {
-				fire(player, warmup.point());
+				fire(player, warmup.point(), logRemote(player, warmup));
 			}
 		}
 	}
@@ -217,11 +252,12 @@ public final class TeleportWarmupManager {
 	 * trigger-time roll already pulled in. If the column has gone bad the jump is refused for free,
 	 * which is strictly better than honouring a stale answer and dropping somebody into lava.
 	 */
-	private static void fireRtp(ServerPlayer player, TeleportPoint payingStation, BlockPos rolled) {
+	private static void fireRtp(ServerPlayer player, TeleportPoint payingStation, BlockPos rolled, ItemStack remote) {
 		TeleportEngine.Denial denial = TeleportEngine.checkRtpPolicy(player, payingStation);
 		if (!denial.allowed()) {
 			TeleportEffects.clear(player);
 			player.sendSystemMessage(denial.message().copy().withStyle(ChatFormatting.RED), true);
+			TeleportLogs.refused(player, remote, payingStation, true, denial);
 			return;
 		}
 		BlockPos target = TeleportEngine.revalidateRtpSite(player, rolled);
@@ -229,6 +265,7 @@ public final class TeleportWarmupManager {
 			TeleportEffects.clear(player);
 			player.sendSystemMessage(TeleportEngine.Denial.RTP_NO_SAFE_SPOT.message()
 					.copy().withStyle(ChatFormatting.RED), true);
+			TeleportLogs.refused(player, remote, payingStation, true, TeleportEngine.Denial.RTP_NO_SAFE_SPOT);
 			return;
 		}
 		long cost = TeleportEngine.rtpCost();
@@ -236,8 +273,10 @@ public final class TeleportWarmupManager {
 			TeleportEffects.clear(player);
 			player.sendSystemMessage(TeleportEngine.Denial.RTP_NO_SAFE_SPOT.message()
 					.copy().withStyle(ChatFormatting.RED), true);
+			TeleportLogs.refused(player, remote, payingStation, true, TeleportEngine.Denial.RTP_NO_SAFE_SPOT);
 			return;
 		}
+		TeleportLogs.randomJumped(player, remote, payingStation, target, cost);
 		TeleportEffects.arrived(player);
 		COOLDOWNS.put(player.getUUID(), player.level().getGameTime() + Config.teleporterCooldownTicks);
 		// The coordinates go in the message because a random jump is the one case where the player has
@@ -250,7 +289,7 @@ public final class TeleportWarmupManager {
 	}
 
 	/** The authoritative re-check plus the jump itself. */
-	private static void fire(ServerPlayer player, TeleportPoint point) {
+	private static void fire(ServerPlayer player, TeleportPoint point, ItemStack remote) {
 		// Either hand — the same lookup the menu used to start this jump. Re-checking the main hand
 		// would refuse an off-hand jump as somebody else's remote right at the finish line.
 		TeleportEngine.Denial denial =
@@ -258,6 +297,7 @@ public final class TeleportWarmupManager {
 		if (!denial.allowed()) {
 			TeleportEffects.clear(player);
 			player.sendSystemMessage(denial.message().copy().withStyle(ChatFormatting.RED), true);
+			TeleportLogs.refused(player, remote, point, false, denial);
 			return;
 		}
 		long cost = TeleportEngine.computeCost(player, point);
@@ -265,8 +305,10 @@ public final class TeleportWarmupManager {
 			TeleportEffects.clear(player);
 			player.sendSystemMessage(Component.translatable("alaindustrial.teleporter.no_station")
 					.withStyle(ChatFormatting.RED), true);
+			TeleportLogs.refused(player, remote, point, false, TeleportEngine.Denial.NO_STATION);
 			return;
 		}
+		TeleportLogs.jumped(player, remote, point, cost);
 		// The screen is at its darkest right now; clearing it here is what makes the arrival read as
 		// eyes opening on somewhere new.
 		TeleportEffects.arrived(player);

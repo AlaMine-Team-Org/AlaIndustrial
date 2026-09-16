@@ -60,6 +60,7 @@ public final class ModDataComponents {
 	public static final Identifier TELEPORTER_RTP_MODULE_ID = Industrialization.id("teleporter_rtp_module");
 	public static final Identifier TELEPORTER_OWNER_ID = Industrialization.id("teleporter_owner");
 	public static final Identifier TELEPORTER_POINTS_ID = Industrialization.id("teleporter_points");
+	public static final Identifier TELEPORTER_LOG_ID = Industrialization.id("teleporter_log");
 	public static final Identifier FLUID_TANK_CONTENTS_ID = Industrialization.id("fluid_tank_contents");
 	public static final Identifier DISTILLATION_COLUMN_CONTENTS_ID = Industrialization.id("distillation_column_contents");
 	public static final Identifier MAGNET_ENABLED_ID = Industrialization.id("magnet_enabled");
@@ -224,6 +225,14 @@ public final class ModDataComponents {
 	 */
 	public static Supplier<DataComponentType<TeleportPoints>> TELEPORTER_POINTS = () -> {
 		throw new IllegalStateException("ModDataComponents.TELEPORTER_POINTS read before its loader bound it");
+	};
+
+	/**
+	 * The remote's log (MOD-631): its last jumps, refusals and edits, and how far its owner has read. Synced with the
+	 * stack like the points, so the screen reads it straight off the item and a creative-mode move keeps it.
+	 */
+	public static Supplier<DataComponentType<dev.alaindustrial.core.teleport.RemoteLog>> TELEPORTER_LOG = () -> {
+		throw new IllegalStateException("ModDataComponents.TELEPORTER_LOG read before its loader bound it");
 	};
 
 	/**
@@ -430,6 +439,14 @@ public final class ModDataComponents {
 				.build();
 	}
 
+	/** Build the {@code teleporter_log} type both loaders register (MOD-631). */
+	public static DataComponentType<dev.alaindustrial.core.teleport.RemoteLog> createTeleporterLog() {
+		return DataComponentType.<dev.alaindustrial.core.teleport.RemoteLog>builder()
+				.persistent(dev.alaindustrial.item.teleport.RemoteLogCodecs.CODEC)
+				.networkSynchronized(dev.alaindustrial.item.teleport.RemoteLogCodecs.STREAM_CODEC)
+				.build();
+	}
+
 	/** Build the {@code teleporter_private} type both loaders register (MOD-091). */
 	public static DataComponentType<Boolean> createTeleporterPrivate() {
 		return DataComponentType.<Boolean>builder()
@@ -606,5 +623,6 @@ public final class ModDataComponents {
 			new ComponentDef<>(TELEPORTER_OWNER_ID, ModDataComponents::createTeleporterOwner, c -> TELEPORTER_OWNER = c),
 			new ComponentDef<>(TELEPORTER_POINTS_ID, ModDataComponents::createTeleporterPoints, c -> TELEPORTER_POINTS = c),
 			new ComponentDef<>(DRILL_UPGRADES_ID, ModDataComponents::createDrillUpgrades, c -> DRILL_UPGRADES = c),
-			new ComponentDef<>(DRILL_COLUMN_ENABLED_ID, ModDataComponents::createDrillColumnEnabled, c -> DRILL_COLUMN_ENABLED = c));
+			new ComponentDef<>(DRILL_COLUMN_ENABLED_ID, ModDataComponents::createDrillColumnEnabled, c -> DRILL_COLUMN_ENABLED = c),
+			new ComponentDef<>(TELEPORTER_LOG_ID, ModDataComponents::createTeleporterLog, c -> TELEPORTER_LOG = c));
 }

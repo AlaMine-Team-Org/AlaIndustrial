@@ -9,6 +9,7 @@ import dev.alaindustrial.network.TeleportNoticePayload;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDataComponents;
 import dev.alaindustrial.teleporter.TeleportEngine;
+import dev.alaindustrial.teleporter.TeleportLogs;
 import dev.alaindustrial.teleporter.TeleportWarmupManager;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -79,6 +80,13 @@ public class TeleporterRemoteMenu extends AbstractContainerMenu {
 				: stack.getOrDefault(ModDataComponents.TELEPORTER_POINTS.get(), TeleportPoints.EMPTY);
 	}
 
+	/** The log on the live remote (MOD-631) — the client reads it straight off the synced stack. */
+	public dev.alaindustrial.core.teleport.RemoteLog log() {
+		ItemStack stack = remote();
+		return stack.isEmpty() ? dev.alaindustrial.core.teleport.RemoteLog.EMPTY
+				: stack.getOrDefault(ModDataComponents.TELEPORTER_LOG.get(), dev.alaindustrial.core.teleport.RemoteLog.EMPTY);
+	}
+
 	public int getSelected() {
 		return selected;
 	}
@@ -143,6 +151,11 @@ public class TeleporterRemoteMenu extends AbstractContainerMenu {
 		if (!(clicker instanceof ServerPlayer serverPlayer)) {
 			return false;
 		}
+		// MOD-631: "I have read the log up to N", above every action's id range (the highest is 399).
+		if (buttonId >= TeleportLogs.SEEN_BUTTON) {
+			TeleportLogs.markSeen(serverPlayer, remote(), buttonId - TeleportLogs.SEEN_BUTTON);
+			return true;
+		}
 		Action action = Action.decode(buttonId);
 		int index = buttonId % STRIDE;
 		if (action == null) {
@@ -160,8 +173,10 @@ public class TeleporterRemoteMenu extends AbstractContainerMenu {
 		switch (action) {
 			case SELECT -> setSelected(index);
 			case DELETE -> {
+				TeleportPoint deleted = points.get(index);
 				stack.set(ModDataComponents.TELEPORTER_POINTS.get(), points.without(index));
 				setSelected(-1);
+				TeleportLogs.deleted(serverPlayer, stack, deleted);
 				syncRemote(serverPlayer);
 			}
 			case TELEPORT -> startJump(serverPlayer, stack, points.get(index));
@@ -187,17 +202,16 @@ public class TeleporterRemoteMenu extends AbstractContainerMenu {
 	/** Same gate as right-clicking in the air with the remote, minus the item-in-hand plumbing. */
 	private void startJump(ServerPlayer serverPlayer, ItemStack stack, TeleportPoint point) {
 		if (TeleportWarmupManager.isWarming(serverPlayer)) {
-			deny(serverPlayer, TeleportEngine.Denial.ALREADY_WARMING);
+			deny(serverPlayer, TeleportEngine.Denial.ALREADY_WARMING, point, false);
 			return;
 		}
 		if (TeleportWarmupManager.isOnCooldown(serverPlayer)) {
-			notify(serverPlayer, Component.translatable("alaindustrial.teleporter.cooldown",
-					TeleportWarmupManager.cooldownSecondsLeft(serverPlayer)));
+			refuseCooldown(serverPlayer, point, false);
 			return;
 		}
 		TeleportEngine.Denial denial = TeleportEngine.checkPolicy(serverPlayer, stack, point);
 		if (!denial.allowed()) {
-			deny(serverPlayer, denial);
+			deny(serverPlayer, denial, point, false);
 			return;
 		}
 		TeleportWarmupManager.start(serverPlayer, point);
@@ -220,22 +234,21 @@ public class TeleporterRemoteMenu extends AbstractContainerMenu {
 	 */
 	private void startRandomJump(ServerPlayer serverPlayer, TeleportPoint payingStation) {
 		if (TeleportWarmupManager.isWarming(serverPlayer)) {
-			deny(serverPlayer, TeleportEngine.Denial.ALREADY_WARMING);
+			deny(serverPlayer, TeleportEngine.Denial.ALREADY_WARMING, payingStation, true);
 			return;
 		}
 		if (TeleportWarmupManager.isOnCooldown(serverPlayer)) {
-			notify(serverPlayer, Component.translatable("alaindustrial.teleporter.cooldown",
-					TeleportWarmupManager.cooldownSecondsLeft(serverPlayer)));
+			refuseCooldown(serverPlayer, payingStation, true);
 			return;
 		}
 		TeleportEngine.Denial denial = TeleportEngine.checkRtpPolicy(serverPlayer, payingStation);
 		if (!denial.allowed()) {
-			deny(serverPlayer, denial);
+			deny(serverPlayer, denial, payingStation, true);
 			return;
 		}
 		BlockPos target = TeleportEngine.findRtpSite(serverPlayer);
 		if (target == null) {
-			deny(serverPlayer, TeleportEngine.Denial.RTP_NO_SAFE_SPOT);
+			deny(serverPlayer, TeleportEngine.Denial.RTP_NO_SAFE_SPOT, payingStation, true);
 			return;
 		}
 		TeleportWarmupManager.startRtp(serverPlayer, payingStation, target);
@@ -245,8 +258,16 @@ public class TeleporterRemoteMenu extends AbstractContainerMenu {
 		serverPlayer.closeContainer();
 	}
 
-	private static void deny(ServerPlayer serverPlayer, TeleportEngine.Denial denial) {
+	/** Refuses a press, and writes the refusal into the remote's log (MOD-631) with the station it was about. */
+	private void deny(ServerPlayer serverPlayer, TeleportEngine.Denial denial, TeleportPoint point, boolean random) {
 		notify(serverPlayer, denial.message().copy());
+		TeleportLogs.refused(serverPlayer, remote(), point, random, denial);
+	}
+
+	private void refuseCooldown(ServerPlayer serverPlayer, TeleportPoint point, boolean random) {
+		int seconds = TeleportWarmupManager.cooldownSecondsLeft(serverPlayer);
+		notify(serverPlayer, Component.translatable("alaindustrial.teleporter.cooldown", seconds));
+		TeleportLogs.refusedCooldown(serverPlayer, remote(), point, random, seconds);
 	}
 
 	/**
@@ -276,7 +297,14 @@ public class TeleporterRemoteMenu extends AbstractContainerMenu {
 		if (!points.isValidIndex(index)) {
 			return;
 		}
-		stack.set(ModDataComponents.TELEPORTER_POINTS.get(), points.renamed(index, name));
+		TeleportPoints renamed = points.renamed(index, name);
+		stack.set(ModDataComponents.TELEPORTER_POINTS.get(), renamed);
+		TeleportPoint before = points.get(index);
+		TeleportPoint after = renamed.get(index);
+		// A press that changed nothing — the same name sent again — is not an event.
+		if (before != null && after != null && !before.displayName().getString().equals(after.displayName().getString())) {
+			TeleportLogs.renamed(serverPlayer, stack, before, after);
+		}
 		syncRemote(serverPlayer);
 	}
 

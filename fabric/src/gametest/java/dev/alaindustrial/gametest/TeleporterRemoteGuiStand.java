@@ -7,6 +7,7 @@ import dev.alaindustrial.client.hud.TeleportNotice;
 import dev.alaindustrial.client.screen.TeleporterRemoteScreen;
 import dev.alaindustrial.client.screen.tabs.TabPage;
 import dev.alaindustrial.client.screen.teleporter.RemoteMap;
+import dev.alaindustrial.core.teleport.RemoteLog;
 import dev.alaindustrial.gametest.visual.ShotRecorder;
 import dev.alaindustrial.item.teleport.TeleportPoint;
 import dev.alaindustrial.item.teleport.TeleportPoints;
@@ -30,7 +31,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * The teleporter remote's tabs: «Stations» (MOD-628) — a list with every lamp a player can meet, three selections and a
- * refusal — «Map» (MOD-629) — the approved mockup's frames A, B, C and I — and «Random» (MOD-630) — frames G and D.
+ * refusal — «Map» (MOD-629) — the approved mockup's frames A, B, C and I — «Random» (MOD-630) — frames G and D — and
+ * «Log» (MOD-631) — frames Zh and Z.
  *
  * <p><b>Built on the client's own menu</b>, like the reactor controller's stand. The menu reads the remote from the
  * player's hand, so a remote with bound points is put there, and the station snapshot a server would send is handed to
@@ -238,6 +240,111 @@ public final class TeleporterRemoteGuiStand {
 			});
 			cleanUp(context);
 		}
+	}
+
+	/** Frames Zh and Z: the log, newest last in sequence order: {@code (kind, random, station, renamedTo, a, b, c, minutes ago)}. */
+	private record LogLine(RemoteLog.Kind kind, boolean random, RemoteLog.Station station, RemoteLog.Station renamedTo,
+			int a, int b, int c, int minutesAgo) {
+	}
+
+	private static final RemoteLog.Station NONE = RemoteLog.Station.NONE;
+
+	/** Thirteen events, oldest first; the newest two refusals are unread. */
+	private static final List<LogLine> LOG_LINES = List.of(
+			new LogLine(RemoteLog.Kind.BOUND, false, new RemoteLog.Station("Home base", 0), NONE, 1, 16, 0, 180),
+			new LogLine(RemoteLog.Kind.REFUSED_NO_CHIP, true, new RemoteLog.Station("", 1), NONE, 0, 0, 0, 125),
+			new LogLine(RemoteLog.Kind.DELETED, false, new RemoteLog.Station("Old base", 0), NONE, 0, 0, 0, 120),
+			new LogLine(RemoteLog.Kind.JUMPED, false, new RemoteLog.Station("", 1), NONE, 7_160, 0, 0, 70),
+			new LogLine(RemoteLog.Kind.REFUSED_NO_ACCESS, false, new RemoteLog.Station("Alex's farm", 0), NONE, 0, 0, 0, 65),
+			new LogLine(RemoteLog.Kind.BOUND, false, new RemoteLog.Station("Sky island", 0), NONE, 7, 16, 0, 60),
+			new LogLine(RemoteLog.Kind.CANCELLED_MOVED, false, new RemoteLog.Station("Mine shaft", 0), NONE, 0, 0, 0, 41),
+			new LogLine(RemoteLog.Kind.RENAMED, false, new RemoteLog.Station("", 3), new RemoteLog.Station("Mine shaft", 0),
+					0, 0, 0, 40),
+			new LogLine(RemoteLog.Kind.RANDOM_JUMPED, true, new RemoteLog.Station("Sky island", 0), NONE, 2_310, -880,
+					50_000, 25),
+			new LogLine(RemoteLog.Kind.REFUSED_NOT_FORMED, false, new RemoteLog.Station("Reactor room", 0), NONE, 0, 0, 0, 9),
+			new LogLine(RemoteLog.Kind.JUMPED, false, new RemoteLog.Station("Mine shaft", 0), NONE, 14_135, 0, 0, 6),
+			new LogLine(RemoteLog.Kind.REFUSED_COOLDOWN, false, new RemoteLog.Station("Mine shaft", 0), NONE, 38, 0, 0, 4),
+			new LogLine(RemoteLog.Kind.REFUSED_NO_POWER, false, new RemoteLog.Station("Desert outpost", 0), NONE, 0, 0, 0,
+					2));
+	/** Read up to here: the last two lines are new. */
+	private static final int LOG_SEEN = 11;
+	/** Frame Z hovers the fifth refusal — the random jump refused for want of a chip. */
+	private static final int LOG_HOVER_ROW = 4;
+
+	/**
+	 * Photographs the «Log» tab (MOD-631) as the approved mockup's frames Zh and Z. The log is put on the remote in the
+	 * client's hand, which is where the tab reads it; the times count back from the client's clock, so "2 min ago" reads
+	 * the same on every run.
+	 */
+	public static void shootLog(ClientGameTestContext context) {
+		double[] saved = new double[2];
+		context.runOnClient(mc -> {
+			saved[0] = mc.mouseHandler.xpos();
+			saved[1] = mc.mouseHandler.ypos();
+		});
+		try {
+			shootLogFrame(context, "log_all",
+					"Frame Zh. Log tab open, a book on the fourth tab: filters All (pressed, greyed), Jumps and Refusals; "
+							+ "'13 events' on the right; eleven rows of a dark list with a scroll thumb, each with a lamp, "
+							+ "the event and how long ago — the top two refusals in bright white with a white dot before "
+							+ "'2 min ago' and '4 min ago'; exact prices on the jump rows; 'Keeps the last 50 events on this "
+							+ "remote' and the dot legend underneath",
+					null, false);
+			shootLogFrame(context, "log_refusals",
+					"Frame Z. Refusals pressed: '5 refusals', five rows with red and amber lamps, the first two still "
+							+ "marked new; the tooltip over the no-chip row gives the whole line, the server's reason and "
+							+ "'2 h ago · random jump' in grey — no player coordinates",
+					RemoteLog.Group.REFUSAL, true);
+		} finally {
+			context.getInput().setCursorPos(saved[0], saved[1]);
+			cleanUp(context);
+		}
+	}
+
+	private static Path shootLogFrame(ClientGameTestContext context, String state, String checks,
+			RemoteLog.Group filter, boolean hoverRow) {
+		LOG.info("[GUITEST][MOD-631] opening teleporter_remote/{}", state);
+		context.getInput().setCursorPos(10, 10);
+		context.runOnClient(mc -> {
+			long now = mc.level.getGameTime();
+			List<RemoteLog.Entry> entries = new ArrayList<>();
+			for (int i = 0; i < LOG_LINES.size(); i++) {
+				LogLine line = LOG_LINES.get(i);
+				entries.add(new RemoteLog.Entry(i + 1, now - line.minutesAgo() * 1_200L, line.kind(), line.random(),
+						line.station(), line.renamedTo(), line.a(), line.b(), line.c()));
+			}
+			ItemStack remote = new ItemStack(ModContent.TELEPORTER_REMOTE.get());
+			remote.set(ModDataComponents.TELEPORTER_POINTS.get(), new TeleportPoints(POINTS));
+			remote.set(ModDataComponents.TELEPORTER_LOG.get(), new RemoteLog(LOG_LINES.size() + 1, LOG_SEEN, entries));
+			mc.player.getInventory().setSelectedSlot(0);
+			mc.player.getInventory().setItem(0, remote);
+			MenuScreens.create(ModContent.TELEPORTER_REMOTE_MENU.get(), mc, 0,
+					Component.translatable("item.alaindustrial.teleporter_remote"));
+			if (!(mc.gui.screen() instanceof TeleporterRemoteScreen screen)) {
+				throw new AssertionError("[GUITEST][MOD-631] MenuScreens.create did not open the remote screen for " + state);
+			}
+			screen.getMenu().acceptStations(SNAPSHOT);
+		});
+		awaitMenuScreen(context);
+		context.waitTicks(SETTLE_TICKS);
+		double[] hover = new double[2];
+		context.runOnClient(mc -> {
+			if (!(mc.gui.screen() instanceof TeleporterRemoteScreen screen)) {
+				throw new AssertionError("[GUITEST][MOD-631] the remote screen closed before " + state);
+			}
+			screen.selectStation(HOME);
+			screen.showPage(screen.logPage());
+			screen.logPage().showOnly(filter);
+			double scale = mc.getWindow().getGuiScale();
+			hover[0] = (screen.left() + 60) * scale;
+			hover[1] = (screen.top() + 40 + LOG_HOVER_ROW * 11 + 5) * scale;
+		});
+		if (hoverRow) {
+			context.getInput().setCursorPos(hover[0], hover[1]);
+		}
+		context.waitTicks(1);
+		return ShotRecorder.captureScreen("teleporter_remote", state, ShotRecorder.rules("R-GUI-01", "R-GUI-03"), checks);
 	}
 
 	private static Path shootMapFrame(ClientGameTestContext context, String state, String checks, List<MapStation> map,

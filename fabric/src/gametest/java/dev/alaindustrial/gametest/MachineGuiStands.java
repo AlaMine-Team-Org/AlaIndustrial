@@ -128,6 +128,7 @@ public final class MachineGuiStands {
         TeleporterRemoteGuiStand.shootStations(context);
         TeleporterRemoteGuiStand.shootMap(context);
         TeleporterRemoteGuiStand.shootRandom(context);
+        TeleporterRemoteGuiStand.shootLog(context);
 
         // ── Machines without custom screens (one shot each) ──────────────────────────
         shootMenu(context, "gui_moonlit_solar_panel", ModContent.MOONLIT_SOLAR_PANEL_MENU.get(), "Moonlit Solar Panel");

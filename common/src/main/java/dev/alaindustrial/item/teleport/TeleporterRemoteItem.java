@@ -87,7 +87,10 @@ public class TeleporterRemoteItem extends Item {
 		// empty name rather than a formatted one is what keeps that default translatable — see
 		// TeleportPoint#displayName.
 		TeleportPoint point = new TeleportPoint(level.dimension(), pos, "", points.nextFreeNumber());
-		stack.set(ModDataComponents.TELEPORTER_POINTS.get(), points.with(point));
+		TeleportPoints bound = points.with(point);
+		stack.set(ModDataComponents.TELEPORTER_POINTS.get(), bound);
+		dev.alaindustrial.teleporter.TeleportLogs.bound(player, stack, point, bound.size(),
+				Math.max(1, dev.alaindustrial.Config.teleporterMaxPoints));
 		player.sendSystemMessage(Component.translatable("alaindustrial.teleporter.bound", point.displayName())
 				.withStyle(ChatFormatting.GREEN), true);
 		// A short confirmation chime at the station — binding is otherwise a silent click, and the

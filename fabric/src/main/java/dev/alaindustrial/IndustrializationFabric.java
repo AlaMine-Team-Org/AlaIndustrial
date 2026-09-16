@@ -405,9 +405,7 @@ public class IndustrializationFabric implements ModInitializer {
 		net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents.AFTER_DAMAGE.register(
 				(entity, source, baseDamage, damageTaken, blocked) -> {
 					if (entity instanceof net.minecraft.server.level.ServerPlayer player && damageTaken > 0.0f) {
-						dev.alaindustrial.teleporter.TeleportWarmupManager.cancel(player,
-								net.minecraft.network.chat.Component.translatable(
-										"alaindustrial.teleporter.cancelled_hurt"));
+						dev.alaindustrial.teleporter.TeleportWarmupManager.cancelHurt(player);
 					}
 				});
 		net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents.AFTER_DEATH.register((entity, source) -> {

@@ -311,8 +311,7 @@ public final class IndustrializationNeoForge {
 		NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.entity.living.LivingDamageEvent.Post event) -> {
 			if (event.getEntity() instanceof net.minecraft.server.level.ServerPlayer player
 					&& event.getHealthDamage() > 0.0f) {
-				dev.alaindustrial.teleporter.TeleportWarmupManager.cancel(player,
-						net.minecraft.network.chat.Component.translatable("alaindustrial.teleporter.cancelled_hurt"));
+				dev.alaindustrial.teleporter.TeleportWarmupManager.cancelHurt(player);
 			}
 		});
 		NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.entity.living.LivingDeathEvent event) -> {

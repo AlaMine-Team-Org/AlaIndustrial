@@ -4,6 +4,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.client.hud.TeleportNotice;
 import dev.alaindustrial.client.screen.tabs.SideTabStrip;
 import dev.alaindustrial.client.screen.tabs.TabPage;
+import dev.alaindustrial.client.screen.teleporter.LogTabPage;
 import dev.alaindustrial.client.screen.teleporter.MapTabPage;
 import dev.alaindustrial.client.screen.teleporter.RandomTabPage;
 import dev.alaindustrial.client.screen.teleporter.StationsTabPage;
@@ -34,8 +35,8 @@ import net.minecraft.world.entity.player.Inventory;
  * <p><b>The screen owns the frame, the pages own the rest.</b> The panel, the tab strip, the selected tab's name and the
  * readiness chip are the same on every tab; everything under the header belongs to the selected {@link TabPage}.
  *
- * <p>The tabs ship one release at a time (MOD-627): «Map» (MOD-629), «Random» (MOD-630) and «Stations» (MOD-628) so far.
- * The selected station is one for the whole screen — picking it on any tab picks it on all of them.
+ * <p>The tabs shipped one release at a time (MOD-627): «Map» (MOD-629), «Random» (MOD-630), «Stations» (MOD-628) and
+ * «Log» (MOD-631). The selected station is one for the whole screen — picking it on any tab picks it on all of them.
  *
  * <p>Nothing here decides anything: a click sends the server an index and the server re-reads the real remote.
  */
@@ -68,7 +69,8 @@ public class TeleporterRemoteScreen extends AbstractContainerScreen<TeleporterRe
 	private final MapTabPage map = new MapTabPage(this);
 	private final RandomTabPage random = new RandomTabPage(this);
 	private final StationsTabPage stations = new StationsTabPage(this);
-	private final List<TabPage> pages = List.of(map, random, stations);
+	private final LogTabPage log = new LogTabPage(this);
+	private final List<TabPage> pages = List.of(map, random, stations, log);
 	private int selected;
 	/** Whether the opening tab has been chosen; {@code init} runs again on every resize and must not re-choose. */
 	private boolean pageChosen;
@@ -239,6 +241,11 @@ public class TeleporterRemoteScreen extends AbstractContainerScreen<TeleporterRe
 		return stations;
 	}
 
+	/** The «Log» tab, for a stand that drives it directly. */
+	public LogTabPage logPage() {
+		return log;
+	}
+
 	/** Opens a tab as a click on it does — for a stand that photographs each tab. */
 	public void showPage(TabPage page) {
 		selectPage(pages.indexOf(page));
@@ -285,6 +292,11 @@ public class TeleporterRemoteScreen extends AbstractContainerScreen<TeleporterRe
 	public void press(TeleporterRemoteMenu.Action action, int index) {
 		this.minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId,
 				TeleporterRemoteMenu.buttonId(action, index));
+	}
+
+	/** A raw container-button id — the log's "read up to" mark, which is not an {@link TeleporterRemoteMenu.Action}. */
+	public void sendButton(int buttonId) {
+		this.minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, buttonId);
 	}
 
 	/** Rename carries a string, so it is the one action that needs the mod's own C2S payload. */

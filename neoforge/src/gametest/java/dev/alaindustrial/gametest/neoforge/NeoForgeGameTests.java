@@ -90,6 +90,7 @@ import dev.alaindustrial.gametest.TeleporterStationScenarios;
 import dev.alaindustrial.gametest.TeleporterGuiScenarios;
 import dev.alaindustrial.gametest.RtpScenarios;
 import dev.alaindustrial.gametest.TeleporterJumpScenarios;
+import dev.alaindustrial.gametest.TeleporterLogScenarios;
 import dev.alaindustrial.gametest.TeleporterCapsuleScenarios;
 import dev.alaindustrial.gametest.TeleporterRegistryScenarios;
 import dev.alaindustrial.gametest.OreScenarios;
@@ -2268,6 +2269,22 @@ public final class NeoForgeGameTests {
 				TeleporterGuiScenarios::tcTele003Sec03_onlyOwnerTogglesPrivacy);
 		registerTest(event, "tc_tele003_fun04_menu_reads_the_held_remote", 40, true,
 				TeleporterGuiScenarios::tcTele003Fun04_menuReadsTheHeldRemote);
+
+		// Teleporter remote log (MOD-631). FUN03 and FUN07 are Fabric-only — see LOADER_ONLY in gametest_lane_parity_check.py.
+		registerTest(event, "tc_tele007_fun01_binding_writes_a_line", 40, true,
+				TeleporterLogScenarios::tcTele007Fun01_bindingWritesALine);
+		registerTest(event, "tc_tele007_fun02_rename_and_delete_write_lines", 40, true,
+				TeleporterLogScenarios::tcTele007Fun02_renameAndDeleteWriteLines);
+		registerTest(event, "tc_tele007_fun04_jump_and_refusal_lines_carry_their_numbers", 40, true,
+				TeleporterLogScenarios::tcTele007Fun04_jumpAndRefusalLinesCarryTheirNumbers);
+		registerTest(event, "tc_tele007_fun05_repeats_merge_and_the_oldest_goes", 40, true,
+				TeleporterLogScenarios::tcTele007Fun05_repeatsMergeAndTheOldestGoes);
+		registerTest(event, "tc_tele007_fun06_read_mark_clears_the_badge", 40, true,
+				TeleporterLogScenarios::tcTele007Fun06_readMarkClearsTheBadge);
+		registerTest(event, "tc_tele007_neg01_no_remote_writes_nothing", 40, true,
+				TeleporterLogScenarios::tcTele007Neg01_noRemoteWritesNothing);
+		registerTest(event, "tc_tele007_sta01_log_travels_with_the_item", 40, true,
+				TeleporterLogScenarios::tcTele007Sta01_logTravelsWithTheItem);
 
 		// Teleporter jump: cost formula, policy gate, warmup.
 		registerTest(event, "tc_tele002_fun01_cost_formula", 40, true,
