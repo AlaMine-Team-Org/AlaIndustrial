@@ -1,9 +1,9 @@
-## 0.1.173
+## 0.1.174
 
-<p><img alt="Ala Industrial 0.1.173 update preview" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.173/release-media/v0.1.173/changelog.png" width="720"></p>
+<p><img alt="All seven growth stages of cotton on the trellis" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.174/release-media/v0.1.174/changelog.jpg" width="720"></p>
 
 1 update in this release.
 
-### New
+### Improved
 
-- **The teleporter remote has a Log tab.** The remote remembers its last 50 events: jumps with their exact price, random jumps with where you landed, refusals with the reason, cancellations and station edits. Filter by All, Jumps or Refusals; new lines stand out until you have looked, and an amber mark on the tab flags an unread refusal. The log lives in the remote and goes wherever it goes.
+- **Cotton has a brand-new look at all seven growth stages.** A wooden four-post frame that a leafy bush climbs, with yellow flowers in bloom and fluffy white bolls when ripe.

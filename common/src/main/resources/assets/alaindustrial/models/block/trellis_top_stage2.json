@@ -2,10 +2,138 @@
   "parent": "minecraft:block/block",
   "ambientocclusion": false,
   "textures": {
-    "body": "alaindustrial:block/trellis_cotton0",
+    "body": "alaindustrial:block/trellis_cotton2",
     "particle": "alaindustrial:block/trellis_post"
   },
   "elements": [
+    {
+      "from": [
+        -0.05,
+        0.0,
+        2.95
+      ],
+      "to": [
+        15.95,
+        16.0,
+        2.95
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0.14062,
+            0.14062,
+            2.10938,
+            2.12547
+          ],
+          "texture": "#body"
+        },
+        "south": {
+          "uv": [
+            2.10938,
+            0.14062,
+            0.14062,
+            2.12547
+          ],
+          "texture": "#body"
+        }
+      }
+    },
+    {
+      "from": [
+        -0.05,
+        0.0,
+        12.95
+      ],
+      "to": [
+        15.95,
+        16.0,
+        12.95
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            2.23438,
+            4.39062,
+            0.26562,
+            6.37547
+          ],
+          "texture": "#body"
+        },
+        "south": {
+          "uv": [
+            0.26562,
+            4.39062,
+            2.23438,
+            6.37547
+          ],
+          "texture": "#body"
+        }
+      }
+    },
+    {
+      "from": [
+        12.95,
+        0.0,
+        -0.05
+      ],
+      "to": [
+        12.95,
+        16.0,
+        15.95
+      ],
+      "faces": {
+        "east": {
+          "uv": [
+            2.76562,
+            4.39062,
+            4.73438,
+            6.37547
+          ],
+          "texture": "#body"
+        },
+        "west": {
+          "uv": [
+            4.73438,
+            4.39062,
+            2.76562,
+            6.37547
+          ],
+          "texture": "#body"
+        }
+      }
+    },
+    {
+      "from": [
+        2.95,
+        0.0,
+        -0.05
+      ],
+      "to": [
+        2.95,
+        16.0,
+        15.95
+      ],
+      "faces": {
+        "east": {
+          "uv": [
+            4.73438,
+            0.14062,
+            2.76562,
+            2.12547
+          ],
+          "texture": "#body"
+        },
+        "west": {
+          "uv": [
+            2.76562,
+            0.14062,
+            4.73438,
+            2.12547
+          ],
+          "texture": "#body"
+        }
+      }
+    },
     {
       "from": [
         10.7,

@@ -10,13 +10,13 @@
       "model": "alaindustrial:block/trellis_stage1"
     },
     "half=upper,age=1": {
-      "model": "alaindustrial:block/trellis_top_post"
+      "model": "alaindustrial:block/trellis_top_stage1"
     },
     "half=lower,age=2": {
       "model": "alaindustrial:block/trellis_stage2"
     },
     "half=upper,age=2": {
-      "model": "alaindustrial:block/trellis_top_post"
+      "model": "alaindustrial:block/trellis_top_stage2"
     },
     "half=lower,age=3": {
       "model": "alaindustrial:block/trellis_rooted"

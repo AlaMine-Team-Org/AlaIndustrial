@@ -6,6 +6,7 @@ import com.mojang.math.Axis;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
+import dev.alaindustrial.core.environment.WaterMillWheelGeometry;
 import dev.alaindustrial.core.machine.ComponentTier;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -82,13 +83,26 @@ public final class WaterMillWheelBlockEntityRenderer<T extends WaterMillBlockEnt
 	private static final int RIM_SEGMENTS = 24;
 	private static final int SPOKE_COUNT = 8;
 	private static final int PADDLE_COUNT = 12;
+	/**
+	 * Inner radius of the annular rim prism — how wide the ring is, not how far the wheel hangs off
+	 * the block. It only coincidentally shares its numeric value with {@link #WHEEL_PUSH} today, so
+	 * unlike the constants below it stays a local literal rather than a read of
+	 * {@link WaterMillWheelGeometry#DISC_PUSH}: collapsing the two would assert a relationship
+	 * between ring width and push distance that does not actually exist (MOD-635).
+	 */
 	private static final float RIM_INNER = 1.02F;
-	private static final float RIM_OUTER = 1.32F;
-	private static final float RIM_FRONT = -0.4375F;
-	private static final float RIM_BACK = 0.4375F;
+	/** Outer radius of the rim, shared with the interference/clearance checks (MOD-635). */
+	private static final float RIM_OUTER = (float) WaterMillWheelGeometry.DISC_HALF_SIZE;
+	private static final float RIM_FRONT = -(float) WaterMillWheelGeometry.DISC_HALF_DEPTH;
+	private static final float RIM_BACK = (float) WaterMillWheelGeometry.DISC_HALF_DEPTH;
 	private static final float PADDLE_TILT = (float) Math.toRadians(8.0);
-	/** How far in front of the mill's centre the axle sits, along its facing, in blocks. */
-	private static final float WHEEL_PUSH = 1.02F;
+	/**
+	 * How far in front of the mill's centre the axle sits, along its facing, in blocks. Read from the
+	 * class the interference and clearance checks read too: while each kept its own number, the wind
+	 * mill's rotor had exactly this drift and stalled mills whose drawn discs never met (MOD-634); this
+	 * keeps the water mill from repeating it (MOD-635).
+	 */
+	private static final float WHEEL_PUSH = (float) WaterMillWheelGeometry.DISC_PUSH;
 	private static final RenderType RENDER_TYPE =
 			PLANKS.renderType(ignored -> Sheets.cutoutBlockItemSheet());
 
