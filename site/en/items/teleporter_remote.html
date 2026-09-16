@@ -402,7 +402,7 @@
 
 <p>The "station + remote" pair is the entire teleport mechanic: a stationary anchor stores EU/FE, the wearable remote picks the target and pays for the jump out of the station's reserve.</p>
 
-<blockquote><strong>Mini-example:</strong> bind the remote to a station at base → go mining → right-click with the remote → teleport home. EU/FE for the jump comes out of the base, not your inventory.</blockquote>
+<blockquote><strong>Mini-example:</strong> bind the remote to a station at base → go mining → right-click with the remote → on the Map pick base's green dot ("Ready, the jump takes up to 7,200 EU/FE") → Teleport → you are home. EU/FE for the jump comes out of the base, not your inventory.</blockquote>
 
 <h2 id="energy">Energy</h2>
 
@@ -410,7 +410,25 @@
 
 <h2 id="how-its-used">How it's used</h2>
 
-<p>Shift-right-click on a placed <a href="../advanced-machines/teleporter.html">Teleporter station</a> binds the remote to that station. Right-click in the world with a bound remote triggers the jump to the station (if it has enough EU/FE).</p>
+<p>Shift-right-click on a placed <a href="../advanced-machines/teleporter.html">Teleporter station</a> or on the glass of its capsule binds the remote to that station. Right-click in the world with the remote opens its screen.</p>
+
+<p>The screen has four tabs, and they share the selected station. A station's colour is the same on all of them: green — a jump is possible, amber — the station has no capsule, red — not enough energy or the station is gone, grey — the station is in another dimension or is someone else's private one, "?" — the server has not seen that station yet. The selected station's state is spelled out in the screen's header (READY, NO POWER).</p>
+
+<p><strong>Map</strong> — the screen opens on it (on Stations when nothing is bound yet):</p>
+
+<p><strong>Radar.</strong> North is up, the white arrow is where the player is looking, the rings are 100, 1,000 and 5,000 blocks. The scale is logarithmic, so one circle holds both the station behind the wall and the one five kilometres away. A station past 5,000 blocks is a triangle on the rim. Someone else's private station is a grey plate with a padlock. <strong>Dots close together</strong> merge into a plate with a number: a click picks the next of them, hovering lists them all with their distances. The wheel over the radar and the ←/→ keys step through the stations from the nearest to the farthest. Stations in other dimensions are a "+N in the Nether" plate at the bottom of the radar, and a click on it picks them. <strong>The card</strong> for the selected station: distance and compass point, the jump's price, the charge with a bar (an amber tail is what the jump will spend, a red one what is missing), access, chip, capsule, how loaded the inventory is and how old the information is. The price is rounded <strong>up</strong> to a hundred: the screen never shows less than will be charged. <strong>The line under the radar</strong> says whether the station will take you, and if not, why — in full, never cut off. <strong>Teleport</strong> is live when the station is ready or the server has not seen it yet — then the station is checked on the jump. <strong>Random ›</strong> does not jump by itself: it opens the Random tab with the same station. For a station with a chip the radar dots the 500–5,000 block ring such a jump can land in. <strong>Someone else's private station</strong> shows only its name, coordinates and "Private": the server does not send its charge, price, chip or capsule. For a station with no record the card writes "≈price" — the price does not depend on the station itself — and "?" for the rest.</p>
+
+<p><strong>Random</strong> — a jump to a random safe spot on the surface, paid by the selected station:</p>
+
+<p><strong>The switcher "‹ name n/N ›"</strong> steps through the stations: those with a chip first, each group in the order they were bound. Someone else's private station counts among those without a chip. <strong>The line under it</strong> is the price and the range: "This station pays · 50,000 EU/FE flat · 500–5,000 blocks". <strong>Five checks, all at once:</strong> the player is in the Overworld, the station can be used, the chip is fitted, the charge is enough, the teleporter has recharged. Every broken condition shows red, not only the first. If the server has not seen the station, the chip and charge checks show "?". For someone else's private station only the access check is red; the screen says nothing about its chip or charge. <strong>The hint</strong> explains the first red check: how to fit the chip, how to charge the station, where to go back to. When everything is green it says how far away you will land and that walking away during the warmup cancels the jump for free. <strong>Jump somewhere random</strong> is live when no check is red. A "?" does not grey it out: such a station is checked by the server on the press. The server checks everything again anyway, and if no safe spot was found, the reason appears in the status.</p>
+
+<p><strong>Stations</strong> — the list of bound stations in the same colours. This is where a station is renamed and deleted: Delete only works after a click on the padlock. If a jump fell through, the reason appears at the bottom of the list.</p>
+
+<p><strong>Log</strong> — what happened to jumps made with this remote, newest first:</p>
+
+<p><strong>What is written:</strong> a jump with its exact price, a random jump with where it landed (X and Z), a refusal with its reason, a cancelled warmup (you moved or took damage), and binding, renaming and deleting a station. The player's own coordinates are never written. <strong>Filters</strong> All, Jumps and Refusals, with a count. Eleven rows show at once, the wheel scrolls the rest. A row's tooltip gives the whole line, the reason for a refusal and "how long ago · jump / random jump". <strong>Repeats do not spam:</strong> the same refusal for the same station within 10 seconds replaces the previous line. <strong>What is new</strong> since you last looked is bright, with a white dot before the time. The tab's badge lights only for an unread refusal; opening the tab reads it. <strong>The log lives in the remote itself</strong> — the last 50 events. Drop the remote, store it, lose it on death: the history and the list of stations with their coordinates go with the item, and a new remote starts with an empty log. A jump and its cancellation are written into the remote that started the jump, even if something else is in hand by the end of the countdown; if that remote has left the inventory, into the remote in hand. With neither, the event is not written.</p>
+
+<p>The server remembers an unloaded station as it saw it when its chunk was last loaded: the screen never loads a chunk for it.</p>
 
 <h2 id="block-properties">Block Properties</h2>
 

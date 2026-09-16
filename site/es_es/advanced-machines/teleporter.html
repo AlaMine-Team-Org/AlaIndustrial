@@ -402,15 +402,23 @@
 
 <h2 id="cómo-funciona">Cómo funciona</h2>
 
-<ol><li><strong>Coloca la estación</strong> en tu base y conéctala: en silencio acumula hasta 500,000 EU/FE.</li><li><strong>Mayús + clic derecho sobre ella con el mando</strong> — punto guardado. Ponle nombre, o déjalo como</li></ol>
-<p>«Teletransportador 1».</p>
+<ol><li><strong>Coloca la estación</strong> en tu base y conéctala: en silencio acumula hasta 500,000 EU/FE.</li><li><strong>Pon dos bloques de cristal encima</strong> — la estación se ensambla en una cápsula (ver más abajo).</li></ol>
+<p>Sin cápsula nadie puede saltar a la estación.</p>
+<ol><li><strong>Mayús + clic derecho sobre ella con el mando</strong> (también sirve el cristal de la cápsula) — punto</li></ol>
+<p>guardado. Ponle nombre, o déjalo como «Teletransportador 1».</p>
 <ol><li><strong>Clic derecho con el mando</strong> en cualquier lugar — se abre la lista con el primer punto ya</li></ol>
 <p>seleccionado.</p>
-<ol><li><strong>Pulsa Teletransportar</strong> — ya estás en casa.</li></ol>
+<ol><li><strong>Pulsa Teletransportar</strong> — ya estás en casa, dentro de la cápsula.</li></ol>
 
 <blockquote><strong>El mando funciona con cualquiera de las dos manos y no necesita cielo despejado apuntando arriba.</strong> Hacer clic en piedra, tierra o cualquier bloque sin acción propia también abre la lista: una mina no tiene cielo, y una mina es justo donde lo necesitas. Cofres, mesas de trabajo y máquinas siguen abriéndose con normalidad.</blockquote>
 
 <p>Un mando recuerda hasta <strong>16</strong> estaciones. Vincular la misma dos veces no hace nada: sin duplicados.</p>
+
+<h2 id="la-cápsula">La cápsula</h2>
+
+<p>La estación es la celda inferior de una multiestructura de <strong>1×1×3</strong>. Dos bloques de <strong>cualquier cristal vanilla</strong> justo encima convierten los tres bloques en una cápsula: una base de grafito, un tubo de cristal con una consola lateral y una corona con un resonador violeta. Un salto deja al jugador <strong>dentro</strong>, sobre el suelo de la cápsula, mirando a la puerta.</p>
+
+<p><strong>Qué cristal sirve.</strong> El cristal normal, los 16 cristales tintados y el cristal opaco. El cristal de otros mods no: la cápsula devuelve exactamente el cristal con el que se montó, y no tiene dónde apuntar un bloque que no conoce. <strong>Color.</strong> Todo el tubo toma el color del cristal <strong>de abajo</strong> y se ve como ese mismo cristal; el cristal normal da un tubo neutro y frío. El de arriba puede ser cualquiera: solo vuelves a verlo al desmontar la cápsula. <strong>El orden da igual.</strong> Puedes poner los cristales de uno en uno, o poner primero el cristal y luego la estación debajo. La estación nota el segundo cristal un instante después. <strong>La puerta.</strong> Clic derecho sobre el cristal de la cápsula — desde fuera o desde dentro — y los tres paneles frontales del tubo se hunden en el suelo. A los <strong>3 segundos</strong> la puerta sube sola, pero <strong>nunca mientras haya alguien en el hueco</strong>. El mismo clic cierra una puerta abierta; un clic mientras los paneles aún se mueven se ignora. Clic derecho sobre la base sigue abriendo la pantalla de la estación. <strong>Entrar.</strong> A una cápsula abierta se entra andando; no hace falta saltar. <strong>Desmontarla.</strong> Una celda rota con pico suelta su cristal; las que quedan en pie vuelven a ser cristal en su sitio, y la estación vuelve a ser un cubo. Si rompes la estación, los dos cristales se quedan donde están. El cristal no se puede ni duplicar ni perder. A mano, como el cristal vanilla, la celda se rompe sin soltar nada. <strong>La mejora también se ve en la cápsula.</strong> Una estación con Chip de salto aleatorio luce una franja verde azulada en el borde de su base. <strong>Estaciones antiguas.</strong> Una estación colocada antes de que existieran las cápsulas conserva sus EU/FE, su dueño y todos los mandos vinculados, pero un salto a ella se rechaza con «La estación no tiene cápsula» hasta que se le pongan dos cristales encima.</p>
 
 <h2 id="el-salto">El salto</h2>
 
@@ -468,7 +476,7 @@
 
 <p><strong>Pantalla de la estación:</strong> barra de carga, nombre del dueño y un interruptor Privado/Público tras un candado. Una estación pública se lee «Teletransportador — &amp;lt;dueño&amp;gt; (pública)» en su título.</p>
 
-<p><strong>Pantalla del mando:</strong> tus puntos con nombres y coordenadas, un campo para renombrar, Eliminar (tras el candado) y Teletransportar. Si un salto no puede empezar — estación sin carga, aún enfriándose, estación desaparecida — el motivo aparece como una <strong>banda roja dentro de la pantalla</strong> y se borra sola.</p>
+<p><strong>Pantalla del mando</strong> — dos pestañas. Mapa: un radar de tus estaciones vinculadas a tu alrededor (el color de un punto es su disponibilidad: verde; ámbar — sin cápsula; roja — sin energía; gris — otra dimensión o una estación privada de otro jugador), una tarjeta de la estación elegida con su precio, carga y cápsula, una línea que dice si te dejará pasar, y los botones Teletransportar y Aleatorio. Estaciones: la misma lista con luces, renombrar y Eliminar (tras el candado). El estado de la estación elegida en una palabra en la cabecera. Si un salto no puede empezar — estación sin carga, aún enfriándose, estación desaparecida — el motivo aparece <strong>dentro de la pantalla</strong> completo, sin cortes.</p>
 
 <h2 id="energía">Energía</h2>
 
@@ -480,7 +488,9 @@
 
 <h2 id="propiedades-del-bloque">Propiedades del bloque</h2>
 
-<p>Un cubo 16³ completo, roto con pico. Conserva su <strong>marca de privacidad y los EU/FE almacenados</strong> al romperse, pero <strong>olvida a su dueño</strong>: vuelve a colocar el bloque y es tuyo. La cara frontal es inerte; las otras cinco aceptan EU/FE.</p>
+<p>Una estación sin montar es un cubo 16³ completo, roto con pico. Montada, es la base de la cápsula: su contorno llega a 10/16 y su suelo a 9/16, y no tapa nada de sus vecinos. Conserva su <strong>marca de privacidad y los EU/FE almacenados</strong> al romperse, pero <strong>olvida a su dueño</strong>: vuelve a colocar el bloque y es tuyo. La cara frontal (el lado de la puerta) es inerte; las otras cinco aceptan EU/FE.</p>
+
+<p>Las celdas de cristal de la cápsula no tienen objeto ni están en la pestaña creativa: las coloca la estación. Dureza 1.0, sonido de cristal, los pistones no las mueven y dejan pasar la luz.</p>
 
 <h2 id="recetas">Recetas</h2>
 
