@@ -49,6 +49,8 @@ import net.minecraft.world.level.gamerules.GameRules;
  *   <li>MOD-287  — {@link StorageModuleStands#checkStorageModuleSeams} — storage-module connected textures
  *   <li>MOD-607  — {@link ThaiGuideBookStand#checkThaiLineBreaks}      — guide-book line breaks in Thai:
  *       no line may begin with a combining mark; mid-word breaks are counted, not enforced
+ *   <li>MOD-513  — {@link GuideBookRecordStand#check}                  — the login delivers the server's archive
+ *       record, the book's first page draws it, and a late or malformed value is handled
  * </ul>
  *
  * <p>Screenshots land in {@code build/run/clientGameTest/screenshots/}.
@@ -114,6 +116,10 @@ public class GuiClientGameTest implements FabricClientGameTest {
 
             // ── MOD-483: the skill wheel. Not a menu, so ScreensClientGameTest never sees it ──
             SkillTreeGuiStand.shootSkillTree(context);
+
+            // ── MOD-513: the archive record on the book's first page, from this lane's own login ──
+            // Before the RTL and Thai stands, so it reads the English book the lane starts in.
+            GuideBookRecordStand.check(context, singleplayer);
 
             // ── MOD-053: the same catalogue once in Arabic — R-GUI-15, the RTL layout audit ──
             // Runs after the English frames and restores en_us when done: a lane that left ar_sa

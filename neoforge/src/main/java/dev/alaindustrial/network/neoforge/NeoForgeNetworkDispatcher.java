@@ -23,6 +23,11 @@ public final class NeoForgeNetworkDispatcher implements NetworkDispatcher {
 	}
 
 	@Override
+	public boolean canSendToPlayer(ServerPlayer player, CustomPacketPayload.Type<?> type) {
+		return player.connection != null && player.connection.hasChannel(type);
+	}
+
+	@Override
 	public void sendToServer(CustomPacketPayload payload) {
 		ClientPacketDistributor.sendToServer(payload);
 	}

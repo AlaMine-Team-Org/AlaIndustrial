@@ -7,6 +7,7 @@ import dev.alaindustrial.client.guide.GuideContent.Page;
 import dev.alaindustrial.client.guide.GuideContent.Tab;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
@@ -58,6 +59,8 @@ public final class GuideBookScreen extends Screen {
 	// Entry mode: content reflowed into pages of rows.
 	private List<List<Row>> flowPages = List.of();
 	private int flowTop;
+	// The archive record the rows were laid out with (MOD-513); null = the pending mark was drawn.
+	private String recordShown;
 
 	public GuideBookScreen() {
 		super(Component.translatable("item.alaindustrial.guide_book"));
@@ -95,6 +98,7 @@ public final class GuideBookScreen extends Screen {
 		contentW = contentRight - contentX;
 		assert contentW == contentWidth(this.width) : "contentWidth() drifted from init()";
 		listIcons.clear();
+		recordShown = ArchiveRecordClient.current();
 
 		// Header buttons (right side): Close, and a compact icon Wiki button to its left.
 		Component closeLabel = Component.translatable("guide.alaindustrial.close");
@@ -192,6 +196,41 @@ public final class GuideBookScreen extends Screen {
 		addRenderableWidget(n);
 	}
 
+	/**
+	 * Lays the page out again when the archive record changed under an open book (MOD-513): the book
+	 * can be opened before the server's packet lands, and the pending mark must give way to the
+	 * record without the player closing and reopening it.
+	 */
+	@Override
+	public void tick() {
+		super.tick();
+		if (!Objects.equals(recordShown, ArchiveRecordClient.current())) {
+			rebuildWidgets();
+		}
+	}
+
+	/**
+	 * The text rows of the page on screen, top to bottom, as plain strings — what the L3 stand reads
+	 * to prove the record is drawn, not merely held (MOD-513). Empty in list mode.
+	 */
+	public List<String> visibleText() {
+		if (entry < 0 || flowPages.isEmpty()) {
+			return List.of();
+		}
+		List<String> lines = new ArrayList<>();
+		for (Row r : flowPages.get(clamp(page, flowPages.size()))) {
+			if (r.seq != null) {
+				StringBuilder sb = new StringBuilder();
+				r.seq.accept((index, style, codepoint) -> {
+					sb.appendCodePoint(codepoint);
+					return true;
+				});
+				lines.add(sb.toString());
+			}
+		}
+		return lines;
+	}
+
 	private void selectTab(int i) {
 		tab = i;
 		// A single-entry tab (the intro tabs) opens its one entry directly; multi-entry tabs show a list.
@@ -248,7 +287,9 @@ public final class GuideBookScreen extends Screen {
 						rows.add(new Row(Kind.HEADER, Component.literal(p.title).getVisualOrderText(),
 								GuiStyle.TEXT, null, lh + 3));
 					}
-					for (String para : p.text.split("\n\n")) {
+					// The welcome page's record is filled in here, at layout time: the JSON is the same for
+					// every player, the record is not (MOD-513).
+					for (String para : GuideRecordText.fill(p.text, recordShown).split("\n\n")) {
 						if (para.isBlank()) {
 							continue;
 						}

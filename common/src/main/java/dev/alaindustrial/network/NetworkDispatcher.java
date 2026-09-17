@@ -31,6 +31,15 @@ public interface NetworkDispatcher {
 	void sendToPlayer(ServerPlayer player, CustomPacketPayload payload);
 
 	/**
+	 * Whether this player's connection agreed to receive {@code type} (MOD-513). A sender that fires on
+	 * its own — a join hook, not a reply to the player — must ask first: NeoForge throws when a
+	 * connection never negotiated the channel, which every gametest mock player is, and the exception
+	 * escapes the join event. Fabric: {@code ServerPlayNetworking.canSend}; NeoForge:
+	 * {@code connection.hasChannel}.
+	 */
+	boolean canSendToPlayer(ServerPlayer player, CustomPacketPayload.Type<?> type);
+
+	/**
 	 * Send a payload from the client to the server (C2S). Callable only on the client thread; the
 	 * loader impl targets the local player's connection. No caller uses this yet (the mod is S2C-only
 	 * today) — it exists so a Phase-4 machine GUI can add a button/interaction packet without

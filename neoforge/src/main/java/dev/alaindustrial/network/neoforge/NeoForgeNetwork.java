@@ -71,6 +71,11 @@ public final class NeoForgeNetwork {
 		registrar.playToClient(TeleportNoticePayload.TYPE, TeleportNoticePayload.CODEC,
 				(payload, context) -> context.enqueueWork(
 						() -> NeoForgeNetworkClient.receiveNotice(payload)));
+		// MOD-513: the player's archive record for the guide book's first page — once per login.
+		registrar.playToClient(dev.alaindustrial.network.ArchiveRecordPayload.TYPE,
+				dev.alaindustrial.network.ArchiveRecordPayload.CODEC,
+				(payload, context) -> context.enqueueWork(
+						() -> NeoForgeNetworkClient.receiveArchiveRecord(payload)));
 		// The mod's first C2S payload (MOD-093): renaming a teleport point. Every other button on that
 		// screen rides vanilla's container-button packet, which needs no registration — only a name,
 		// being a string, needs a payload of our own.

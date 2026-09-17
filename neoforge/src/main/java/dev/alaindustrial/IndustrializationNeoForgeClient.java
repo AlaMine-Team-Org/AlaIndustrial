@@ -206,9 +206,12 @@ public final class IndustrializationNeoForgeClient {
 		});
 		// Leaving a world drops any fade in flight, so it cannot bleed into the next one (MOD-106) —
 		// the Fabric counterpart hangs off ClientPlayConnectionEvents.DISCONNECT.
+		// MOD-513: and the archive record, which belongs to the world being left.
 		NeoForge.EVENT_BUS.addListener(
-				(net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent.LoggingOut event) ->
-						dev.alaindustrial.client.hud.TeleportFadeHud.reset());
+				(net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent.LoggingOut event) -> {
+					dev.alaindustrial.client.hud.TeleportFadeHud.reset();
+					dev.alaindustrial.client.guide.ArchiveRecordClient.reset();
+				});
 	}
 
 	/** One fluid's {@code FluidModel.Unbaked} built from {@code block/<name>_still|_flow} (MOD-251). */

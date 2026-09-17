@@ -15,8 +15,8 @@
           "pages": [
             {
               "type": "text",
-              "title": "Welcome",
-              "text": "This is the guide to Ala Industrial — EU energy, generators, machines and cables.\n\nPick a section on the left, turn pages with the arrows. The \"Open Wiki\" button up top opens the full guide site."
+              "title": "ALA INDUSTRIAL GUIDE",
+              "text": "Record detected: {record}\n\nThis world contains a legacy layer: materials, energy systems, and unfinished work with no local origin record.\n\nYour record is open.\n\nStart with what the ground has already kept.\n\nNo prior records were included."
             },
             {
               "type": "text",

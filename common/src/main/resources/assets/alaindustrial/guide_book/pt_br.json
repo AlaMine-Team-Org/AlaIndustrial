@@ -15,8 +15,8 @@
           "pages": [
             {
               "type": "text",
-              "title": "Bem-vindo",
-              "text": "Este é o guia do Ala Industrial — energia EU, geradores, máquinas e cabos.\n\nEscolha uma seção à esquerda e vire as páginas com as setas. O botão \"Abrir wiki\" no topo abre o site completo do guia."
+              "title": "GUIA ALA INDUSTRIAL",
+              "text": "Registro detectado: {record}\n\nEste mundo contém uma camada herdada: materiais, sistemas de energia e trabalho inacabado sem registro de origem local.\n\nSeu registro está aberto.\n\nComece pelo que o solo já guardou.\n\nNenhum registro anterior foi incluído."
             },
             {
               "type": "text",

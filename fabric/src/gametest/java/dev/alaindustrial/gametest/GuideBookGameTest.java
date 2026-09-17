@@ -19,4 +19,22 @@ public class GuideBookGameTest {
 	public void tcGuide001Fun01_giveOnce(GameTestHelper helper) {
 		GuideBookGiverScenarios.giveOnce(helper);
 	}
+
+	/**
+	 * @implements TC-GUIDE-002-FUN01 — the archive record is the pure function of the world seed and
+	 *     the profile id, the same in every dimension and on every call (MOD-513).
+	 */
+	@GameTest
+	public void tcGuide002Fun01_recordFromSeedAndProfile(GameTestHelper helper) {
+		ArchiveRecordScenarios.recordComesFromTheWorldSeedAndTheProfile(helper);
+	}
+
+	/**
+	 * @implements TC-GUIDE-002-FUN02 — the record payload survives its codec intact and refuses an
+	 *     oversized string (MOD-513).
+	 */
+	@GameTest
+	public void tcGuide002Fun02_payloadRoundTrip(GameTestHelper helper) {
+		ArchiveRecordScenarios.payloadCarriesTheRecordIntact(helper);
+	}
 }

@@ -63,6 +63,7 @@ import dev.alaindustrial.gametest.KokSagyzScenarios;
 import dev.alaindustrial.gametest.MenuDataWidthScenarios;
 import dev.alaindustrial.gametest.EnergyPackScenarios;
 import dev.alaindustrial.gametest.JetpackScenarios;
+import dev.alaindustrial.gametest.ArchiveRecordScenarios;
 import dev.alaindustrial.gametest.GuideBookGiverScenarios;
 import dev.alaindustrial.gametest.MockPlayerScenarios;
 import dev.alaindustrial.gametest.PouchScenarios;
@@ -1101,6 +1102,12 @@ public final class NeoForgeGameTests {
 
 		// Guide Book (MOD-067, TC-GUIDE-001) — auto-give ledger; same body as the Fabric GuideBookGameTest.
 		registerTest(event, "guide_book_give_once", 40, true, GuideBookGiverScenarios::giveOnce);
+		// Archive record (MOD-513, TC-GUIDE-002) — the server's decision and the wire format; the send
+		// itself is not reachable with a mock player on this loader (its channels were never negotiated).
+		registerTest(event, "archive_record_from_seed_and_profile", 40, true,
+				ArchiveRecordScenarios::recordComesFromTheWorldSeedAndTheProfile);
+		registerTest(event, "archive_record_payload_round_trip", 40, true,
+				ArchiveRecordScenarios::payloadCarriesTheRecordIntact);
 
 		// Mock players (MOD-500) — the two properties ~100 other scenarios stand on: the in-level mock
 		// really is in the level, and a survival mock is billed for EU despite reporting CREATIVE.

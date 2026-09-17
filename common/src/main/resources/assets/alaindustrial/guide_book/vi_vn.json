@@ -15,8 +15,8 @@
           "pages": [
             {
               "type": "text",
-              "title": "Chào mừng",
-              "text": "Đây là sách hướng dẫn cho Ala Industrial — năng lượng EU, máy phát điện, máy móc và cáp.\n\nChọn một mục ở bên trái, lật trang bằng các mũi tên. Nút \"Mở wiki\" ở phía trên mở trang hướng dẫn đầy đủ."
+              "title": "SÁCH HƯỚNG DẪN ALA INDUSTRIAL",
+              "text": "Phát hiện hồ sơ: {record}\n\nThế giới này chứa một lớp di sản: vật liệu, hệ thống năng lượng và công việc dang dở không có hồ sơ nguồn gốc tại chỗ.\n\nHồ sơ của bạn đang mở.\n\nHãy bắt đầu từ những gì mặt đất đã lưu giữ.\n\nKhông kèm theo hồ sơ nào trước đó."
             },
             {
               "type": "text",

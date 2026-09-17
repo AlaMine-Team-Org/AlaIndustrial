@@ -42,6 +42,20 @@ class ShotFamiliesTest {
             "world_blueprint_in_hand_sticks",
             "worn_energy_pack_back");
 
+    /**
+     * MOD-513: the archive-record frame gets its own caption, and its prefix is narrow enough to leave
+     * the Thai book frame on the generic screen family it has always had.
+     */
+    @Test
+    void guideBookRecordFrameHasItsOwnFamily() {
+        ShotFamilies.Family record = ShotFamilies.of("gui_guide_book_record");
+        ShotFamilies.Family generic = ShotFamilies.of("gui_");
+        assertNotNull(record);
+        assertFalse(record.checks().equals(generic.checks()), "the record frame fell back to the generic caption");
+        assertTrue(record.rules().contains("R-GUI-03"), "the record frame must check that the value shown is the real one");
+        assertEquals(generic, ShotFamilies.of("gui_guide_book_thai"));
+    }
+
     @Test
     @DisplayName("every frame family that shipped without a rule now resolves to one")
     void everyRealFrameResolves() {

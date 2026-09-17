@@ -15,8 +15,8 @@
           "pages": [
             {
               "type": "text",
-              "title": "Benvenuto",
-              "text": "Questa è la guida ad Ala Industrial — energia EU, generatori, macchine e cavi.\n\nScegli una sezione a sinistra, sfoglia le pagine con le frecce. Il pulsante \"Apri wiki\" in alto apre il sito completo della guida."
+              "title": "GUIDA ALA INDUSTRIAL",
+              "text": "Scheda rilevata: {record}\n\nQuesto mondo contiene uno strato ereditato: materiali, sistemi energetici e lavori incompiuti senza registro d'origine locale.\n\nLa tua scheda è aperta.\n\nInizia da ciò che il terreno ha già custodito.\n\nNon sono state allegate schede precedenti."
             },
             {
               "type": "text",

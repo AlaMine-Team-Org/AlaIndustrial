@@ -9,8 +9,10 @@ import net.minecraft.world.level.Level;
 
 /**
  * The Guide Book (MOD-067): a read-only tutorial item. Right-click opens a full-screen, client-only
- * {@code GuideBookScreen} (no container, no {@code MenuType}, no networking) — its content is baked
- * per-locale JSON under {@code assets/alaindustrial/guide_book/}, generated from the OKF specs.
+ * {@code GuideBookScreen} (no container, no {@code MenuType}) — its content is baked per-locale JSON
+ * under {@code assets/alaindustrial/guide_book/}, generated from the OKF specs. The one value it shows
+ * that the JSON cannot hold is the player's archive record on the welcome page (MOD-513), which the
+ * server sends at login ({@code ArchiveRecordSync}); opening the book sends nothing.
  *
  * <p><b>26.2 API (verified against sources, MOD-067 audit):</b> {@code use} returns
  * {@link InteractionResult} (not the removed {@code InteractionResultHolder}); the screen is opened

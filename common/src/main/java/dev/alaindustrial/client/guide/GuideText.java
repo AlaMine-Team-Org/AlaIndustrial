@@ -85,14 +85,15 @@ public final class GuideText {
 		return starts;
 	}
 
-	/** The paragraph as rendered lines — {@link #lineStarts} turned into text. */
+	/**
+	 * The paragraph as rendered lines — {@link #lineStarts} turned into text, each without the line
+	 * feed it may end on ({@link GuideLines#slice}).
+	 */
 	public static List<FormattedCharSequence> split(Font font, String paragraph, int width) {
-		List<Integer> starts = lineStarts(font, paragraph, width);
-		List<FormattedCharSequence> lines = new ArrayList<>(starts.size());
-		for (int i = 0; i < starts.size(); i++) {
-			int from = starts.get(i);
-			int to = i + 1 < starts.size() ? starts.get(i + 1) : paragraph.length();
-			lines.add(Component.literal(paragraph.substring(from, to)).getVisualOrderText());
+		List<String> text = GuideLines.slice(paragraph, lineStarts(font, paragraph, width));
+		List<FormattedCharSequence> lines = new ArrayList<>(text.size());
+		for (String line : text) {
+			lines.add(Component.literal(line).getVisualOrderText());
 		}
 		return lines;
 	}

@@ -340,6 +340,8 @@ public final class IndustrializationNeoForge {
 					if (event.getEntity() instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
 						dev.alaindustrial.core.guide.GuideBookGiver.giveIfNeeded(serverPlayer);
 						dev.alaindustrial.chat.WelcomeMessage.sendIfNeeded(serverPlayer);
+						// MOD-513: the archive record for the book's first page, every login (Fabric twin).
+						dev.alaindustrial.core.guide.ArchiveRecordSync.sendOnJoin(serverPlayer);
 					}
 				});
 		// MOD-401: one sweep over everything that holds per-level state, instead of naming managers

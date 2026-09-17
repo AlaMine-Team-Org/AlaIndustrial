@@ -15,8 +15,8 @@
           "pages": [
             {
               "type": "text",
-              "title": "Hoş Geldiniz",
-              "text": "Bu, Ala Industrial kılavuzudur — EU enerjisi, jeneratörler, makineler ve kablolar.\n\nSoldan bir bölüm seçin, sayfaları oklarla çevirin. Yukarıdaki \"Wiki'yi aç\" düğmesi tam kılavuz sitesini açar."
+              "title": "ALA INDUSTRIAL KILAVUZU",
+              "text": "Kayıt algılandı: {record}\n\nBu dünya bir miras katmanı içeriyor: yerel köken kaydı olmayan malzemeler, enerji sistemleri ve yarım kalmış işler.\n\nKaydınız açık.\n\nToprağın zaten sakladığı şeylerle başlayın.\n\nÖnceki kayıtlar eklenmedi."
             },
             {
               "type": "text",

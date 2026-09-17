@@ -332,6 +332,10 @@ public class IndustrializationFabric implements ModInitializer {
 		PayloadTypeRegistry.clientboundPlay().register(
 				dev.alaindustrial.network.TeleportNoticePayload.TYPE,
 				dev.alaindustrial.network.TeleportNoticePayload.CODEC);
+		// MOD-513: the player's archive record for the guide book's first page — once per login.
+		PayloadTypeRegistry.clientboundPlay().register(
+				dev.alaindustrial.network.ArchiveRecordPayload.TYPE,
+				dev.alaindustrial.network.ArchiveRecordPayload.CODEC);
 		// The mod's first C2S payload (MOD-093): renaming a teleport point. Every other button on that
 		// screen rides vanilla's container-button packet, which needs no registration — only a name,
 		// being a string, needs a payload of our own.
@@ -427,9 +431,11 @@ public class IndustrializationFabric implements ModInitializer {
 		// MOD-067: auto-give the Guide Book on first join (once per player; SavedData ledger).
 		// MOD-596: and greet the world, once per world — both are loader-neutral logic in common/,
 		// riding the same join event so the order is fixed rather than accidental.
+		// MOD-513: and send the player their archive record for the book's first page, every login.
 		net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
 			dev.alaindustrial.core.guide.GuideBookGiver.giveIfNeeded(handler.player);
 			dev.alaindustrial.chat.WelcomeMessage.sendIfNeeded(handler.player);
+			dev.alaindustrial.core.guide.ArchiveRecordSync.sendOnJoin(handler.player);
 		});
 		// MOD-401: one sweep over everything that holds per-level state, instead of naming managers
 		// here. The by-name list is what leaked: the fluid manager was never added to it, so every

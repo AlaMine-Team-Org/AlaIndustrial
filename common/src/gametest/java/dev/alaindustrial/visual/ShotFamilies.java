@@ -84,6 +84,12 @@ public final class ShotFamilies {
                     "Skill wheel (MOD-483): the four branch captions stay pinned in their corners with "
                             + "their icons, no label crosses a node or the profile column, the board is "
                             + "clipped to its own panel at every zoom, and the hub reads as the centre")},
+            new Object[] {"gui_guide_book_record", new Family(ShotGroup.GUI, List.of("R-GUI-01", "R-GUI-03"),
+                    "Guide book welcome card (MOD-513): the ALA INDUSTRIAL GUIDE heading, then "
+                            + "'Record detected:' followed by a letter, a hyphen and three digits — the record the "
+                            + "server sent this player, never the {record} token or the '...' pending mark — "
+                            + "then the four remaining archive lines, each on its own, nothing clipped at the "
+                            + "panel edge")},
 
             // ── Block faces and world views ──────────────────────────────────────────────────
             new Object[] {"world_", new Family(ShotGroup.WORLD, List.of("R-VIS-04"),

@@ -15,8 +15,8 @@
           "pages": [
             {
               "type": "text",
-              "title": "Witaj",
-              "text": "To przewodnik po Ala Industrial — energia EU, generatory, maszyny i kable.\n\nWybierz sekcję po lewej, przewracaj strony strzałkami. Przycisk „Otwórz wiki” u góry otwiera pełną stronę przewodnika."
+              "title": "PRZEWODNIK ALA INDUSTRIAL",
+              "text": "Wykryto wpis: {record}\n\nTen świat zawiera warstwę spuścizny: materiały, systemy energetyczne i niedokończoną pracę bez lokalnego zapisu pochodzenia.\n\nTwój wpis jest otwarty.\n\nZacznij od tego, co ziemia już przechowała.\n\nWcześniejszych wpisów nie dołączono."
             },
             {
               "type": "text",

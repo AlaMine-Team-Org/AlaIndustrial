@@ -22,6 +22,11 @@ public final class FabricNetworkDispatcher implements NetworkDispatcher {
 	}
 
 	@Override
+	public boolean canSendToPlayer(ServerPlayer player, CustomPacketPayload.Type<?> type) {
+		return ServerPlayNetworking.canSend(player, type);
+	}
+
+	@Override
 	public void sendToServer(CustomPacketPayload payload) {
 		ClientPlayNetworking.send(payload);
 	}

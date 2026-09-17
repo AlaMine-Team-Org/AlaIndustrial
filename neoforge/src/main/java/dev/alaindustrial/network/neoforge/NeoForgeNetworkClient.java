@@ -86,6 +86,11 @@ public final class NeoForgeNetworkClient {
 		dev.alaindustrial.client.ReactorLogClient.receive(payload);
 	}
 
+	/** MOD-513: the player's archive record, through the same loader-neutral landing point Fabric uses. */
+	public static void receiveArchiveRecord(dev.alaindustrial.network.ArchiveRecordPayload payload) {
+		dev.alaindustrial.client.guide.ArchiveRecordClient.receive(payload.record());
+	}
+
 	/** MOD-628: the teleporter remote's stations, through the same loader-neutral landing point Fabric uses. */
 	public static void receiveTeleportStations(dev.alaindustrial.network.TeleportStationsPayload payload) {
 		dev.alaindustrial.client.TeleportStationsClient.receive(payload);

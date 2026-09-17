@@ -167,6 +167,14 @@ pitest {
     targetClasses = ['dev.alaindustrial.core.*',
                      'dev.alaindustrial.stats.LevelMath',
                      'dev.alaindustrial.client.guide.GuidePaginator',
+                     // MOD-513: the archive record's client half — the shape filter on what the server
+                     // sends and the token swap on the book page. Minecraft-free so GuideRecordTextTest
+                     // reaches them; ArchiveRecord itself is already under core.*.
+                     'dev.alaindustrial.client.guide.ArchiveRecordClient',
+                     'dev.alaindustrial.client.guide.GuideRecordText',
+                     // MOD-513: the book's line slicing, split out of GuideText so L1 can pin that no
+                     // rendered line keeps the line feed it broke on (GuideLinesTest).
+                     'dev.alaindustrial.client.guide.GuideLines',
                      'dev.alaindustrial.client.hud.HudSmoother',
                      'dev.alaindustrial.client.sound.HumTeleportDetector',
                      // MOD-629: the remote's «Map» tab geometry — scale, clusters, rim arrows, clicks,
@@ -530,6 +538,11 @@ pitest {
             'dev.alaindustrial.core.fluid.FluidMover',
             'dev.alaindustrial.core.GuideBookState',
             'dev.alaindustrial.core.guide.GuideBookGiver',
+            // MOD-513: the archive record's server bridge — both methods take a ServerPlayer and read its
+            // level seed and GameProfile, then hand a payload to the loader dispatcher. MC-only by
+            // construction; the arithmetic lives in ArchiveRecord (under core.*, L1: ArchiveRecordTest),
+            // and this bridge is covered by TC-GUIDE-002 on both L2 lanes and by the L3 login stand.
+            'dev.alaindustrial.core.guide.ArchiveRecordSync',
             // MOD-200: three classes of exactly the same shape as the siblings above that were added
             // AFTER the last edit of this list and never appended to it (MOD-175 / MOD-179 / the pump
             // work). They are Level/BlockPos/Direction/FluidState-coupled, so the L1 suite cannot reach

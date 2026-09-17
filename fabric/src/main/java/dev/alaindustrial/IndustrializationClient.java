@@ -202,8 +202,16 @@ public class IndustrializationClient implements ClientModInitializer {
 				dev.alaindustrial.network.TeleportFadePayload.TYPE,
 				(payload, context) -> context.client().execute(
 						() -> dev.alaindustrial.client.hud.TeleportFadeHud.receive(payload.strength())));
+		// MOD-513: the archive record belongs to the world the player is leaving — forget it with the fade.
 		net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents.DISCONNECT.register(
-				(handler, client) -> dev.alaindustrial.client.hud.TeleportFadeHud.reset());
+				(handler, client) -> {
+					dev.alaindustrial.client.hud.TeleportFadeHud.reset();
+					dev.alaindustrial.client.guide.ArchiveRecordClient.reset();
+				});
+		net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.registerGlobalReceiver(
+				dev.alaindustrial.network.ArchiveRecordPayload.TYPE,
+				(payload, context) -> context.client().execute(
+						() -> dev.alaindustrial.client.guide.ArchiveRecordClient.receive(payload.record())));
 		net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.registerGlobalReceiver(
 				dev.alaindustrial.network.TeleportNoticePayload.TYPE,
 				(payload, context) -> context.client().execute(

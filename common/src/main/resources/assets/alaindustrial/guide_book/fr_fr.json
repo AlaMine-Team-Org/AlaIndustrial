@@ -15,8 +15,8 @@
           "pages": [
             {
               "type": "text",
-              "title": "Bienvenue",
-              "text": "Voici le guide d’Ala Industrial — énergie EU, générateurs, machines et câbles.\n\nChoisissez une section à gauche, tournez les pages avec les flèches. Le bouton « Ouvrir le wiki » en haut ouvre le site complet du guide."
+              "title": "GUIDE ALA INDUSTRIAL",
+              "text": "Fiche détectée : {record}\n\nCe monde contient une strate héritée : matériaux, systèmes énergétiques et travaux inachevés sans registre d’origine local.\n\nVotre fiche est ouverte.\n\nCommencez par ce que le sol a déjà conservé.\n\nAucune fiche antérieure n’a été jointe."
             },
             {
               "type": "text",
