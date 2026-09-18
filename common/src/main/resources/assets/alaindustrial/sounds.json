@@ -290,5 +290,25 @@
         "preload": true
       }
     ]
+  },
+  "recycler_hum": {
+    "subtitle": "subtitles.alaindustrial.recycler_hum",
+    "sounds": [
+      {
+        "name": "alaindustrial:recycler_hum",
+        "stream": false,
+        "preload": true
+      }
+    ]
+  },
+  "fermenter_hum": {
+    "subtitle": "subtitles.alaindustrial.fermenter_hum",
+    "sounds": [
+      {
+        "name": "alaindustrial:fermenter_hum",
+        "stream": false,
+        "preload": true
+      }
+    ]
   }
 }

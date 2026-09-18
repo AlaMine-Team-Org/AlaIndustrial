@@ -101,6 +101,8 @@ public final class ModSounds {
 	public static Supplier<SoundEvent> REACTOR_SPINDOWN = unbound("REACTOR_SPINDOWN");
 	public static Supplier<SoundEvent> REACTOR_DOOR_OPEN = unbound("REACTOR_DOOR_OPEN");
 	public static Supplier<SoundEvent> REACTOR_DOOR_CLOSE = unbound("REACTOR_DOOR_CLOSE");
+	public static Supplier<SoundEvent> RECYCLER_HUM = unbound("RECYCLER_HUM");
+	public static Supplier<SoundEvent> FERMENTER_HUM = unbound("FERMENTER_HUM");
 
 	/**
 	 * Every sound event, in one shared registration order. Both loaders replay this list; see
@@ -180,7 +182,14 @@ public final class ModSounds {
 			variableRange("reactor_spindown", s -> REACTOR_SPINDOWN = s),
 			// The airlock, replacing vanilla IRON_DOOR_OPEN / IRON_DOOR_CLOSE.
 			variableRange("reactor_door_open", s -> REACTOR_DOOR_OPEN = s),
-			variableRange("reactor_door_close", s -> REACTOR_DOOR_CLOSE = s));
+			variableRange("reactor_door_close", s -> REACTOR_DOOR_CLOSE = s),
+			// MOD-447 — waste churning in a drum, deliberately quieter than the default: the block
+			// overrides humVolume() to 0.25 (down from 0.35), so the file itself still matches the
+			// mod's usual macerator_grind loudness anchor.
+			variableRange("recycler_hum", s -> RECYCLER_HUM = s),
+			// MOD-447 — wet, airy compost bubbling; default humVolume (0.35), no request to tune it
+			// quieter this time.
+			variableRange("fermenter_hum", s -> FERMENTER_HUM = s));
 
 	private ModSounds() {
 	}

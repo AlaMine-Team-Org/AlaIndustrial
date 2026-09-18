@@ -2,6 +2,9 @@ package dev.alaindustrial.block;
 
 import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.RecyclerBlockEntity;
+import dev.alaindustrial.registry.ModSounds;
+import java.util.function.Supplier;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.core.BlockPos;
@@ -21,7 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
  * in and the batch will pay ballast, three means the mix is right. The rule the machine is built around
  * is otherwise invisible from the outside.
  */
-public class RecyclerBlock extends LitMachineBlock {
+public class RecyclerBlock extends LitMachineBlock implements MachineHumProvider {
 	public static final MapCodec<RecyclerBlock> CODEC = simpleCodec(RecyclerBlock::new);
 
 	/** Fractions present in the current batch, 0..3 — the lamp count on the front face. */
@@ -51,6 +54,25 @@ public class RecyclerBlock extends LitMachineBlock {
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
 			BlockEntityType<T> type) {
-		return machineTicker(level);
+		// humMachineTicker, not machineTicker: the plain ticker returns null client-side, which
+		// is the entire difference between a voiced and a silent machine (MOD-447).
+		return humMachineTicker(level);
+	}
+
+	// --- Loop hum (pattern A: lit-based, MOD-447) ---
+
+	@Override
+	public Supplier<SoundEvent> humSound() {
+		return ModSounds.RECYCLER_HUM;
+	}
+
+	@Override
+	public float humVolume() {
+		// Quieter than the 0.35 default (owner's call, 2026-09-18): the drum full of tumbling
+		// scrap reads as busy work, not as something that should carry as far as a single
+		// stationary machine like the macerator. The .ogg itself is still normalised to the
+		// mod's usual macerator_grind loudness anchor — this is the separate, code-level knob,
+		// the same layered-attenuation idiom charge_pad/electric_heater use at 0.18.
+		return 0.25f;
 	}
 }

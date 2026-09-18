@@ -1,11 +1,14 @@
-## 0.1.176
+## 0.1.177
 
-<p><img alt="Abandoned lab entrances hidden in five biomes: plains, desert, snowy plains, grove and badlands" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.176/release-media/v0.1.176/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial 0.1.177 update preview: 31 sounds now, the Recycler and the Fermenter" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.177/release-media/v0.1.177/changelog.png" width="720"></p>
 
-Somebody worked down there before you — find their lab.
+Two more machines found their voice, and old alloys finally found a use.
 
 ### New
 
-- **Abandoned labs.** A rare copper hatch hidden under boulders leads 24–48 blocks down to one of seven labs.
-- **Read the plaque, then loot.** The wall keeps a previous researcher's record; the chest is trapped, with TNT under the floor.
-- **Engraved plates.** 17 decorative blocks — the digits and broken letters of the lab plaques. No recipe.
+- **The Recycler rattles.** Loose scrap tumbles in the drum while it grinds a batch — quieter than the mod's other machines.
+- **The Fermenter bubbles.** A wet, airy gurgle while a batch brews, going quiet when it's idle.
+
+### Improved
+
+- **Bronze, invar, cupronickel and electrum are useful now.** Their plates go into chokes, reactor parts, the upgrade table, the sprinkler, mill blades and bearings.
