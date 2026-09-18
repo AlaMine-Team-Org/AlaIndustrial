@@ -176,7 +176,8 @@ public final class CreativeTabContent {
 	 * <p>Energy first and in the order it flows — where it comes FROM, where it is KEPT, how it is
 	 * CARRIED, what SPENDS it — then the two logistics networks, then what the player holds, and only
 	 * then the raw materials and crafting parts everything above is built from. Blocks and the armour
-	 * lines close the list.
+	 * lines close the list; after them, outside both bands, come the decorative lab plaque plates
+	 * (MOD-513), which a player never builds with and only looks up.
 	 *
 	 * <p>Before this the tab had a {@code components()} section holding seventy entries: circuits,
 	 * gears, dusts, nuclear leftovers, the wrench, the chainsaw, a jetpack and three buckets of oil, in
@@ -198,6 +199,9 @@ public final class CreativeTabContent {
 		ShapeSorted sorted = new ShapeSorted();
 		fill(sorted);
 		sorted.drainTo(out);
+		// MOD-513 — the lab plaque plates close the tab, after both bands: pure decoration with no
+		// recipe and no function, so they must not sit among the blocks a player builds with.
+		labPlaque(out);
 	}
 
 	/**
@@ -449,6 +453,32 @@ public final class CreativeTabContent {
 		show(out, ModContent.SILVER_PLATE_BLOCK_ITEM);
 		show(out, ModContent.TEMPERED_IRON_PLATE_BLOCK_ITEM);
 		show(out, ModContent.INDUSTRIAL_WORKBENCH_ITEM);
+		labPlaque(out);
+	}
+
+	/**
+	 * The lab plaque plates (MOD-513): ten engraved digits and seven broken prefix letters. Decorative
+	 * only — no recipe, found in abandoned labs. Called from {@link #main} after the two bands, so they
+	 * close the mod's tab, and from {@link #buildingBlocks} for vanilla's Building Blocks.
+	 */
+	private static void labPlaque(Sink out) {
+		show(out, ModContent.ENGRAVED_PLATE_0_ITEM);
+		show(out, ModContent.ENGRAVED_PLATE_1_ITEM);
+		show(out, ModContent.ENGRAVED_PLATE_2_ITEM);
+		show(out, ModContent.ENGRAVED_PLATE_3_ITEM);
+		show(out, ModContent.ENGRAVED_PLATE_4_ITEM);
+		show(out, ModContent.ENGRAVED_PLATE_5_ITEM);
+		show(out, ModContent.ENGRAVED_PLATE_6_ITEM);
+		show(out, ModContent.ENGRAVED_PLATE_7_ITEM);
+		show(out, ModContent.ENGRAVED_PLATE_8_ITEM);
+		show(out, ModContent.ENGRAVED_PLATE_9_ITEM);
+		show(out, ModContent.BROKEN_ENGRAVED_PLATE_W_ITEM);
+		show(out, ModContent.BROKEN_ENGRAVED_PLATE_K_ITEM);
+		show(out, ModContent.BROKEN_ENGRAVED_PLATE_P_ITEM);
+		show(out, ModContent.BROKEN_ENGRAVED_PLATE_B_ITEM);
+		show(out, ModContent.BROKEN_ENGRAVED_PLATE_D_ITEM);
+		show(out, ModContent.BROKEN_ENGRAVED_PLATE_R_ITEM);
+		show(out, ModContent.BROKEN_ENGRAVED_PLATE_M_ITEM);
 	}
 
 	public static void naturalBlocks(Sink out) {

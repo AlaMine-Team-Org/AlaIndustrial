@@ -36,7 +36,26 @@ public final class ArchiveRecord {
 	 */
 	private static final long DOMAIN = 0x414C412D52454331L;
 
+	/** The same separation for a lab's historic number, so it never walks in step with a record. ASCII {@code ALA-LAB1}. */
+	private static final long LAB_DOMAIN = 0x414C412D4C414231L;
+
 	private ArchiveRecord() {
+	}
+
+	/**
+	 * The three digits on the plaque of the abandoned lab whose hatch is at ({@code x}, {@code y},
+	 * {@code z}) in the world generated from {@code worldSeed}: 0 to 999, written with leading zeros.
+	 *
+	 * <p>Like a record, derived rather than stored — every player who finds that lab reads the same
+	 * number, and a lab regenerated from the same seed carries it again. The letter before it is lost
+	 * by design, so this is only the number. Pinned by golden values for the same reason as {@link #of}.
+	 */
+	public static int labNumber(long worldSeed, int x, int y, int z) {
+		long h = mix(worldSeed ^ LAB_DOMAIN);
+		h = mix(h ^ x);
+		h = mix(h ^ y);
+		h = mix(h ^ z);
+		return (int) Long.remainderUnsigned(h, 1000);
 	}
 
 	/** The record of the player with {@code profileId} in the world generated from {@code worldSeed}. */

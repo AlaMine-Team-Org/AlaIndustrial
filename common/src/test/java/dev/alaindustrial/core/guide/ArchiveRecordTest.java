@@ -98,6 +98,42 @@ class ArchiveRecordTest {
 		assertEquals("N-077", ArchiveRecord.of(4_213_787_135_487_651_912L, ONES));
 	}
 
+	/**
+	 * A lab's plaque number is pinned the same way: change the mixing and every lab in every existing
+	 * world would read a different number on its next visit if it were ever regenerated.
+	 */
+	@Test
+	void goldenLabNumbersDoNotMove() {
+		assertEquals(LAB_GOLDEN[0], ArchiveRecord.labNumber(0L, 0, 0, 0));
+		assertEquals(LAB_GOLDEN[1], ArchiveRecord.labNumber(1L, 100, 64, -200));
+		assertEquals(LAB_GOLDEN[2], ArchiveRecord.labNumber(-1L, -30_000_000, -64, 30_000_000));
+		assertEquals(LAB_GOLDEN[3], ArchiveRecord.labNumber(4_213_787_135_487_651_912L, 8_032, 91, 8_021));
+	}
+
+	/** Each coordinate and the seed matter on their own, and the number always fits three digits. */
+	@Test
+	void labNumberUsesEveryInputAndStaysInRange() {
+		Random random = new Random(2_513L);
+		int changed = 0;
+		for (int i = 0; i < 1_000; i++) {
+			long seed = random.nextLong();
+			int x = random.nextInt(60_000_000) - 30_000_000;
+			int y = random.nextInt(384) - 64;
+			int z = random.nextInt(60_000_000) - 30_000_000;
+			int base = ArchiveRecord.labNumber(seed, x, y, z);
+			assertTrue(base >= 0 && base <= 999, "out of range: " + base);
+			changed += base != ArchiveRecord.labNumber(seed + 1, x, y, z) ? 1 : 0;
+			changed += base != ArchiveRecord.labNumber(seed, x + 1, y, z) ? 1 : 0;
+			changed += base != ArchiveRecord.labNumber(seed, x, y + 1, z) ? 1 : 0;
+			changed += base != ArchiveRecord.labNumber(seed, x, y, z + 1) ? 1 : 0;
+		}
+		// One in a thousand collides by chance; far more than that would mean an input is ignored.
+		assertTrue(changed > 3_950, "inputs changed the number only " + changed + " times of 4000");
+	}
+
+	/** Computed independently (a Python port of the mixing, checked against the record goldens above). */
+	private static final int[] LAB_GOLDEN = {314, 351, 340, 372};
+
 	/** Asking in any order, any number of times, gives the same answers: nothing is remembered between calls. */
 	@Test
 	void recordDoesNotDependOnCallOrder() {

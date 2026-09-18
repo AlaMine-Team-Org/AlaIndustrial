@@ -108,6 +108,23 @@
     "alaindustrial:smart_wire",
     "alaindustrial:monitor_core",
     "alaindustrial:monitor_panel",
-    "alaindustrial:diamond_chest"
+    "alaindustrial:diamond_chest",
+    "alaindustrial:engraved_plate_0",
+    "alaindustrial:engraved_plate_1",
+    "alaindustrial:engraved_plate_2",
+    "alaindustrial:engraved_plate_3",
+    "alaindustrial:engraved_plate_4",
+    "alaindustrial:engraved_plate_5",
+    "alaindustrial:engraved_plate_6",
+    "alaindustrial:engraved_plate_7",
+    "alaindustrial:engraved_plate_8",
+    "alaindustrial:engraved_plate_9",
+    "alaindustrial:broken_engraved_plate_w",
+    "alaindustrial:broken_engraved_plate_k",
+    "alaindustrial:broken_engraved_plate_p",
+    "alaindustrial:broken_engraved_plate_b",
+    "alaindustrial:broken_engraved_plate_d",
+    "alaindustrial:broken_engraved_plate_r",
+    "alaindustrial:broken_engraved_plate_m"
   ]
 }

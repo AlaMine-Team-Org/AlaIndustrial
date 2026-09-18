@@ -1,6 +1,7 @@
 package dev.alaindustrial.registry;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.worldgen.AbandonedLabFeature;
 import dev.alaindustrial.worldgen.OilGeyserFeature;
 import dev.alaindustrial.worldgen.OilLakeFeature;
 import dev.alaindustrial.worldgen.OilLakeFilter;
@@ -83,6 +84,15 @@ public final class ModWorldGen {
 	public static final TagKey<Biome> HAS_KOK_SAGYZ =
 			TagKey.create(Registries.BIOME, Industrialization.id("has_kok_sagyz"));
 
+	/**
+	 * Biomes where the abandoned lab of the lore can appear (MOD-513). Defaults to the forty land
+	 * biomes the entrance camouflage was approved for
+	 * ({@code data/alaindustrial/tags/worldgen/biome/has_abandoned_labs.json}); a pack can add a modded
+	 * biome (it gets the plains camouflage) or empty the tag to switch the labs off.
+	 */
+	public static final TagKey<Biome> HAS_ABANDONED_LABS =
+			TagKey.create(Registries.BIOME, Industrialization.id("has_abandoned_labs"));
+
 	public static void init() {
 		// MOD-238 audit: alaindustrial:oil_lake_filter, the placement modifier that keeps oil features
 		// out of villages/mineshafts/Ancient Cities. Registered before any datapack load, because the
@@ -91,6 +101,7 @@ public final class ModWorldGen {
 		Registry.register(BuiltInRegistries.PLACEMENT_MODIFIER_TYPE, OilLakeFilter.ID, OilLakeFilter.TYPE);
 		Registry.register(BuiltInRegistries.FEATURE, OilLakeFeature.ID, OilLakeFeature.INSTANCE);
 		Registry.register(BuiltInRegistries.FEATURE, OilGeyserFeature.ID, OilGeyserFeature.INSTANCE);
+		Registry.register(BuiltInRegistries.FEATURE, AbandonedLabFeature.ID, AbandonedLabFeature.INSTANCE);
 		BiomeModifications.addFeature(
 				BiomeSelectors.tag(HAS_UNDERGROUND_OIL_LAKES),
 				GenerationStep.Decoration.LAKES,
@@ -135,6 +146,12 @@ public final class ModWorldGen {
 				BiomeSelectors.tag(HAS_PALLADIUM_ORE),
 				GenerationStep.Decoration.UNDERGROUND_ORES,
 				ResourceKey.create(Registries.PLACED_FEATURE, Industrialization.id("palladium_ore")));
+		// MOD-513 — the abandoned lab. SURFACE_STRUCTURES, the step the entrance spec names: after the
+		// surface is laid, before trees and grass, so the site is judged on bare ground.
+		BiomeModifications.addFeature(
+				BiomeSelectors.tag(HAS_ABANDONED_LABS),
+				GenerationStep.Decoration.SURFACE_STRUCTURES,
+				ResourceKey.create(Registries.PLACED_FEATURE, Industrialization.id("abandoned_lab")));
 		BiomeModifications.addFeature(
 				BiomeSelectors.tag(HAS_KOK_SAGYZ),
 				GenerationStep.Decoration.VEGETAL_DECORATION,

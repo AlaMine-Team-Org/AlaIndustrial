@@ -1,0 +1,19 @@
+{
+	"variants": {
+		"facing=north": {
+			"model": "alaindustrial:block/broken_engraved_plate_p"
+		},
+		"facing=east": {
+			"model": "alaindustrial:block/broken_engraved_plate_p",
+			"y": 90
+		},
+		"facing=south": {
+			"model": "alaindustrial:block/broken_engraved_plate_p",
+			"y": 180
+		},
+		"facing=west": {
+			"model": "alaindustrial:block/broken_engraved_plate_p",
+			"y": 270
+		}
+	}
+}

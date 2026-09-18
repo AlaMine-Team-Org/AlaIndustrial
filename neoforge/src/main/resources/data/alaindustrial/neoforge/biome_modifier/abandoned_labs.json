@@ -1,0 +1,8 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#alaindustrial:has_abandoned_labs",
+  "features": [
+    "alaindustrial:abandoned_lab"
+  ],
+  "step": "surface_structures"
+}

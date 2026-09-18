@@ -101,6 +101,7 @@
       "dev.alaindustrial.gametest.StockDisplayFrameGameTest",
       "dev.alaindustrial.gametest.StorageClusterGameTest",
       "dev.alaindustrial.gametest.TeleporterCapsuleGameTest",
+      "dev.alaindustrial.gametest.AbandonedLabGameTest",
       "dev.alaindustrial.gametest.TeleporterGuiGameTest",
       "dev.alaindustrial.gametest.TeleporterJumpGameTest",
       "dev.alaindustrial.gametest.TeleporterLogGameTest",

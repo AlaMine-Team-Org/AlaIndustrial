@@ -36,6 +36,7 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -199,6 +200,7 @@ public final class DemoStand {
 			buildReactorZone(level, origin);
 			buildCrystalGreenhouse(level, origin);
 			buildReactorRoom(level, origin);
+			buildLabPlaque(level, origin);
 			buildShowcase(level, origin);
 		} finally {
 			closeLedger();
@@ -1277,6 +1279,32 @@ public final class DemoStand {
 			place(level, origin, origin.offset(14, by, bz + 4 + stage),
 					ModContent.IRRADIATED_SOIL.get().defaultBlockState()
 							.setValue(IrradiatedSoilBlock.INTENSITY, stage));
+		}
+	}
+
+	/**
+	 * Zone <b>lab plaque</b> (MOD-513, row z=17, x 32..41): the seventeen engraved plates the plaque of
+	 * an abandoned lab is built from — the ten digits in one row on the floor, the seven broken prefix
+	 * letters one level up. Purely decorative. They keep their default FACING=NORTH, so the engraving
+	 * faces the cameras like every machine front on the stand.
+	 *
+	 * <p>Row z=17 sits between the cable runs at z=16 and z=18, east of their furnaces at x=32; a plate
+	 * conducts nothing, so it cannot join the two runs into one network the way an energy block would.
+	 */
+	private static void buildLabPlaque(ServerLevel level, BlockPos origin) {
+		List<Supplier<Block>> digits = List.of(
+				ModContent.ENGRAVED_PLATE_0, ModContent.ENGRAVED_PLATE_1, ModContent.ENGRAVED_PLATE_2, ModContent.ENGRAVED_PLATE_3,
+				ModContent.ENGRAVED_PLATE_4, ModContent.ENGRAVED_PLATE_5, ModContent.ENGRAVED_PLATE_6,
+				ModContent.ENGRAVED_PLATE_7, ModContent.ENGRAVED_PLATE_8, ModContent.ENGRAVED_PLATE_9);
+		for (int i = 0; i < digits.size(); i++) {
+			set(level, origin, 32 + i, 1, 17, digits.get(i).get());
+		}
+		List<Supplier<Block>> letters = List.of(
+				ModContent.BROKEN_ENGRAVED_PLATE_W, ModContent.BROKEN_ENGRAVED_PLATE_K, ModContent.BROKEN_ENGRAVED_PLATE_P,
+				ModContent.BROKEN_ENGRAVED_PLATE_B, ModContent.BROKEN_ENGRAVED_PLATE_D,
+				ModContent.BROKEN_ENGRAVED_PLATE_R, ModContent.BROKEN_ENGRAVED_PLATE_M);
+		for (int i = 0; i < letters.size(); i++) {
+			set(level, origin, 34 + i, 2, 17, letters.get(i).get());
 		}
 	}
 

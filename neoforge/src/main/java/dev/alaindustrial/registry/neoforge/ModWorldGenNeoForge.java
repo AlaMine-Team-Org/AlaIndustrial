@@ -1,6 +1,7 @@
 package dev.alaindustrial.registry.neoforge;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.worldgen.AbandonedLabFeature;
 import dev.alaindustrial.worldgen.OilGeyserConfiguration;
 import dev.alaindustrial.worldgen.OilGeyserFeature;
 import dev.alaindustrial.worldgen.OilLakeConfiguration;
@@ -8,6 +9,7 @@ import dev.alaindustrial.worldgen.OilLakeFeature;
 import dev.alaindustrial.worldgen.OilLakeFilter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -45,6 +47,10 @@ public final class ModWorldGenNeoForge {
 	/** {@code alaindustrial:oil_geyser} — spout, shaft and flooded dome (MOD-248). */
 	public static final DeferredHolder<Feature<?>, Feature<OilGeyserConfiguration>> OIL_GEYSER =
 			FEATURES.register(OilGeyserFeature.ID.getPath(), () -> OilGeyserFeature.INSTANCE);
+
+	/** {@code alaindustrial:abandoned_lab} — the lore lab: camouflaged hatch, shaft, lab template (MOD-513). */
+	public static final DeferredHolder<Feature<?>, Feature<NoneFeatureConfiguration>> ABANDONED_LAB =
+			FEATURES.register(AbandonedLabFeature.ID.getPath(), () -> AbandonedLabFeature.INSTANCE);
 
 	private ModWorldGenNeoForge() {
 	}

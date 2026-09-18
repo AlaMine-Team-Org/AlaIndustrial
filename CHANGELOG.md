@@ -1,18 +1,11 @@
-## 0.1.175
+## 0.1.176
 
-<p><img alt="Ala Industrial 0.1.175 update preview: the Guide Book record" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.175/release-media/v0.1.175/changelog.png" width="720"></p>
+<p><img alt="Abandoned lab entrances hidden in five biomes: plains, desert, snowy plains, grove and badlands" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.176/release-media/v0.1.176/changelog.png" width="720"></p>
 
-The Guide Book now greets you with a record of your own.
+Somebody worked down there before you — find their lab.
 
 ### New
 
-- **Your own record on the first page.** Open the Guide Book and the welcome card reads
-  `Record detected: H-175` — a letter, a hyphen and three digits that belong to you.
-- **Same world, same record.** It is worked out from the world and your profile and never
-  stored, so it comes back the same every time you log in.
-- **One per player.** Everyone on a server reads their own record.
-
-### Fixed
-
-- **No more "LF" boxes at the end of list lines.** Numbered steps in the book showed a stray
-  glyph after every line.
+- **Abandoned labs.** A rare copper hatch hidden under boulders leads 24–48 blocks down to one of seven labs.
+- **Read the plaque, then loot.** The wall keeps a previous researcher's record; the chest is trapped, with TNT under the floor.
+- **Engraved plates.** 17 decorative blocks — the digits and broken letters of the lab plaques. No recipe.

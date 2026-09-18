@@ -1,0 +1,19 @@
+{
+	"variants": {
+		"facing=north": {
+			"model": "alaindustrial:block/engraved_plate_9"
+		},
+		"facing=east": {
+			"model": "alaindustrial:block/engraved_plate_9",
+			"y": 90
+		},
+		"facing=south": {
+			"model": "alaindustrial:block/engraved_plate_9",
+			"y": 180
+		},
+		"facing=west": {
+			"model": "alaindustrial:block/engraved_plate_9",
+			"y": 270
+		}
+	}
+}

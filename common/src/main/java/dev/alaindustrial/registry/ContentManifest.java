@@ -24,6 +24,7 @@ import dev.alaindustrial.block.DistillationColumnBlock;
 import dev.alaindustrial.block.DistillationColumnMiddleBlock;
 import dev.alaindustrial.block.DistillationColumnTopBlock;
 import dev.alaindustrial.block.ElectricFurnaceBlock;
+import dev.alaindustrial.block.EngravedPlateBlock;
 import dev.alaindustrial.block.ElectricHeaterBlock;
 import dev.alaindustrial.block.ElectrumChestBlock;
 import dev.alaindustrial.block.EnergyCondenserBlock;
@@ -576,6 +577,41 @@ public final class ContentManifest {
 	public static final BlockDef<MonitorPanelBlock> MONITOR_PANEL =
 			block("monitor_panel", MonitorPanelBlock::new,
 					s -> ModContent.MONITOR_PANEL = s);
+	// MOD-513 — the lab plaque: ten engraved digits and seven broken prefix letters. Decorative only.
+	public static final BlockDef<EngravedPlateBlock> ENGRAVED_PLATE_0 =
+			block("engraved_plate_0", EngravedPlateBlock::new, s -> ModContent.ENGRAVED_PLATE_0 = s);
+	public static final BlockDef<EngravedPlateBlock> ENGRAVED_PLATE_1 =
+			block("engraved_plate_1", EngravedPlateBlock::new, s -> ModContent.ENGRAVED_PLATE_1 = s);
+	public static final BlockDef<EngravedPlateBlock> ENGRAVED_PLATE_2 =
+			block("engraved_plate_2", EngravedPlateBlock::new, s -> ModContent.ENGRAVED_PLATE_2 = s);
+	public static final BlockDef<EngravedPlateBlock> ENGRAVED_PLATE_3 =
+			block("engraved_plate_3", EngravedPlateBlock::new, s -> ModContent.ENGRAVED_PLATE_3 = s);
+	public static final BlockDef<EngravedPlateBlock> ENGRAVED_PLATE_4 =
+			block("engraved_plate_4", EngravedPlateBlock::new, s -> ModContent.ENGRAVED_PLATE_4 = s);
+	public static final BlockDef<EngravedPlateBlock> ENGRAVED_PLATE_5 =
+			block("engraved_plate_5", EngravedPlateBlock::new, s -> ModContent.ENGRAVED_PLATE_5 = s);
+	public static final BlockDef<EngravedPlateBlock> ENGRAVED_PLATE_6 =
+			block("engraved_plate_6", EngravedPlateBlock::new, s -> ModContent.ENGRAVED_PLATE_6 = s);
+	public static final BlockDef<EngravedPlateBlock> ENGRAVED_PLATE_7 =
+			block("engraved_plate_7", EngravedPlateBlock::new, s -> ModContent.ENGRAVED_PLATE_7 = s);
+	public static final BlockDef<EngravedPlateBlock> ENGRAVED_PLATE_8 =
+			block("engraved_plate_8", EngravedPlateBlock::new, s -> ModContent.ENGRAVED_PLATE_8 = s);
+	public static final BlockDef<EngravedPlateBlock> ENGRAVED_PLATE_9 =
+			block("engraved_plate_9", EngravedPlateBlock::new, s -> ModContent.ENGRAVED_PLATE_9 = s);
+	public static final BlockDef<EngravedPlateBlock> BROKEN_ENGRAVED_PLATE_W =
+			block("broken_engraved_plate_w", EngravedPlateBlock::new, s -> ModContent.BROKEN_ENGRAVED_PLATE_W = s);
+	public static final BlockDef<EngravedPlateBlock> BROKEN_ENGRAVED_PLATE_K =
+			block("broken_engraved_plate_k", EngravedPlateBlock::new, s -> ModContent.BROKEN_ENGRAVED_PLATE_K = s);
+	public static final BlockDef<EngravedPlateBlock> BROKEN_ENGRAVED_PLATE_P =
+			block("broken_engraved_plate_p", EngravedPlateBlock::new, s -> ModContent.BROKEN_ENGRAVED_PLATE_P = s);
+	public static final BlockDef<EngravedPlateBlock> BROKEN_ENGRAVED_PLATE_B =
+			block("broken_engraved_plate_b", EngravedPlateBlock::new, s -> ModContent.BROKEN_ENGRAVED_PLATE_B = s);
+	public static final BlockDef<EngravedPlateBlock> BROKEN_ENGRAVED_PLATE_D =
+			block("broken_engraved_plate_d", EngravedPlateBlock::new, s -> ModContent.BROKEN_ENGRAVED_PLATE_D = s);
+	public static final BlockDef<EngravedPlateBlock> BROKEN_ENGRAVED_PLATE_R =
+			block("broken_engraved_plate_r", EngravedPlateBlock::new, s -> ModContent.BROKEN_ENGRAVED_PLATE_R = s);
+	public static final BlockDef<EngravedPlateBlock> BROKEN_ENGRAVED_PLATE_M =
+			block("broken_engraved_plate_m", EngravedPlateBlock::new, s -> ModContent.BROKEN_ENGRAVED_PLATE_M = s);
 	public static final BlockDef<MaceratorBlock> MACERATOR =
 			block("macerator", MaceratorBlock::new, s -> ModContent.MACERATOR = s);
 	public static final BlockDef<BatteryBoxBlock> BATTERY_BOX =
@@ -900,7 +936,10 @@ public final class ContentManifest {
 			DIAMOND_CHEST,
 			// MOD-480 — the monitoring wall: the wire that reads containers, the core that pays for the
 			// wall and holds its capacity cards, and the panel the numbers appear on.
-			SMART_WIRE, MONITOR_CORE, MONITOR_PANEL);
+			SMART_WIRE, MONITOR_CORE, MONITOR_PANEL,
+			// MOD-513 — the lab plaque plates, appended at the tail: replay order is load-bearing.
+			ENGRAVED_PLATE_0, ENGRAVED_PLATE_1, ENGRAVED_PLATE_2, ENGRAVED_PLATE_3, ENGRAVED_PLATE_4, ENGRAVED_PLATE_5, ENGRAVED_PLATE_6, ENGRAVED_PLATE_7, ENGRAVED_PLATE_8, ENGRAVED_PLATE_9,
+			BROKEN_ENGRAVED_PLATE_W, BROKEN_ENGRAVED_PLATE_K, BROKEN_ENGRAVED_PLATE_P, BROKEN_ENGRAVED_PLATE_B, BROKEN_ENGRAVED_PLATE_D, BROKEN_ENGRAVED_PLATE_R, BROKEN_ENGRAVED_PLATE_M);
 
 	/**
 	 * Wraps a machine/ore/material block's {@code strength/sound/…} chain with the shared base every such
@@ -972,6 +1011,24 @@ public final class ContentManifest {
 			Map.entry("smart_wire", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion())),
 			Map.entry("monitor_core", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("monitor_panel", machine(p -> p.strength(2.0f, 4.0f).sound(SoundType.METAL))),
+			// MOD-513 — the lab plaque plates: polished deepslate in hardness and sound.
+			Map.entry("engraved_plate_0", machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE))),
+			Map.entry("engraved_plate_1", machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE))),
+			Map.entry("engraved_plate_2", machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE))),
+			Map.entry("engraved_plate_3", machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE))),
+			Map.entry("engraved_plate_4", machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE))),
+			Map.entry("engraved_plate_5", machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE))),
+			Map.entry("engraved_plate_6", machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE))),
+			Map.entry("engraved_plate_7", machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE))),
+			Map.entry("engraved_plate_8", machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE))),
+			Map.entry("engraved_plate_9", machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE))),
+			Map.entry("broken_engraved_plate_w", machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE))),
+			Map.entry("broken_engraved_plate_k", machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE))),
+			Map.entry("broken_engraved_plate_p", machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE))),
+			Map.entry("broken_engraved_plate_b", machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE))),
+			Map.entry("broken_engraved_plate_d", machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE))),
+			Map.entry("broken_engraved_plate_r", machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE))),
+			Map.entry("broken_engraved_plate_m", machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE))),
 			Map.entry("macerator", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("battery_box", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.WOOD))),
 			// Metal, and tougher than the LV box it is built from — this tier is a steel shell, not a crate.
@@ -2023,6 +2080,23 @@ public final class ContentManifest {
 			blockItem("smart_wire", s -> ModContent.SMART_WIRE_ITEM = s),
 			blockItem("monitor_core", s -> ModContent.MONITOR_CORE_ITEM = s),
 			blockItem("monitor_panel", s -> ModContent.MONITOR_PANEL_ITEM = s),
+			blockItem("engraved_plate_0", s -> ModContent.ENGRAVED_PLATE_0_ITEM = s),
+			blockItem("engraved_plate_1", s -> ModContent.ENGRAVED_PLATE_1_ITEM = s),
+			blockItem("engraved_plate_2", s -> ModContent.ENGRAVED_PLATE_2_ITEM = s),
+			blockItem("engraved_plate_3", s -> ModContent.ENGRAVED_PLATE_3_ITEM = s),
+			blockItem("engraved_plate_4", s -> ModContent.ENGRAVED_PLATE_4_ITEM = s),
+			blockItem("engraved_plate_5", s -> ModContent.ENGRAVED_PLATE_5_ITEM = s),
+			blockItem("engraved_plate_6", s -> ModContent.ENGRAVED_PLATE_6_ITEM = s),
+			blockItem("engraved_plate_7", s -> ModContent.ENGRAVED_PLATE_7_ITEM = s),
+			blockItem("engraved_plate_8", s -> ModContent.ENGRAVED_PLATE_8_ITEM = s),
+			blockItem("engraved_plate_9", s -> ModContent.ENGRAVED_PLATE_9_ITEM = s),
+			blockItem("broken_engraved_plate_w", s -> ModContent.BROKEN_ENGRAVED_PLATE_W_ITEM = s),
+			blockItem("broken_engraved_plate_k", s -> ModContent.BROKEN_ENGRAVED_PLATE_K_ITEM = s),
+			blockItem("broken_engraved_plate_p", s -> ModContent.BROKEN_ENGRAVED_PLATE_P_ITEM = s),
+			blockItem("broken_engraved_plate_b", s -> ModContent.BROKEN_ENGRAVED_PLATE_B_ITEM = s),
+			blockItem("broken_engraved_plate_d", s -> ModContent.BROKEN_ENGRAVED_PLATE_D_ITEM = s),
+			blockItem("broken_engraved_plate_r", s -> ModContent.BROKEN_ENGRAVED_PLATE_R_ITEM = s),
+			blockItem("broken_engraved_plate_m", s -> ModContent.BROKEN_ENGRAVED_PLATE_M_ITEM = s),
 			item("capacity_card", dev.alaindustrial.item.misc.CapacityCardItem::new,
 					s -> ModContent.CAPACITY_CARD = s));
 

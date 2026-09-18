@@ -2,6 +2,7 @@ package dev.alaindustrial.gametest.neoforge;
 
 import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.gametest.AbandonedLabScenarios;
 import dev.alaindustrial.gametest.CeramicScenarios;
 import dev.alaindustrial.gametest.CrystalFarmScenarios;
 import dev.alaindustrial.gametest.FermenterScenarios;
@@ -2328,6 +2329,12 @@ public final class NeoForgeGameTests {
 				TeleporterCapsuleScenarios::tcTele005Brk01_breakingACellReturnsItsGlass);
 		registerTest(event, "tc_tele005_brk02_breaking_the_station_frees_both_glasses", 40, true,
 				TeleporterCapsuleScenarios::tcTele005Brk02_breakingTheStationFreesBothGlasses);
+
+		// Abandoned lab (MOD-513): the seven lab templates reach the game intact; biome injection parity.
+		registerTest(event, "lab_templates_reach_the_game_intact", 100, true,
+				AbandonedLabScenarios::labTemplatesReachTheGameIntact);
+		registerTest(event, "lab_is_injected_into_its_biomes", 100, true,
+				AbandonedLabScenarios::labIsInjectedIntoItsBiomes);
 		registerTest(event, "tc_tele005_sec01_station_without_capsule_refuses_jump", 40, true,
 				TeleporterCapsuleScenarios::tcTele005Sec01_stationWithoutCapsuleRefusesJump);
 

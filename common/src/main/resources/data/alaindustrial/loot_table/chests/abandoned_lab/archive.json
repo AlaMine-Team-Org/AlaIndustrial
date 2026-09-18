@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:chest",
+	"random_sequence": "alaindustrial:chests/abandoned_lab/archive",
+	"pools": [
+		{
+			"rolls": 1.0,
+			"entries": [
+				{ "type": "minecraft:loot_table", "value": "alaindustrial:chests/abandoned_lab/common" }
+			]
+		},
+		{
+			"rolls": 1.0,
+			"entries": [
+				{ "type": "minecraft:item", "name": "minecraft:paper", "functions": [{ "function": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 3.0, "max": 8.0 } }] },
+				{ "type": "minecraft:item", "name": "minecraft:book", "functions": [{ "function": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 1.0, "max": 2.0 } }] },
+				{ "type": "minecraft:item", "name": "minecraft:feather", "functions": [{ "function": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 1.0, "max": 3.0 } }] },
+				{ "type": "minecraft:item", "name": "minecraft:ink_sac", "functions": [{ "function": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 1.0, "max": 2.0 } }] }
+			]
+		}
+	]
+}
