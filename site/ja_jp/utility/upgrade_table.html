@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#16161a">
-<title>アップグレードテーブル — Ala Industrial — ガイド</title>
+<title>アップグレードテーブルケース — Ala Industrial — ガイド</title>
 <link rel="icon" href="../favicon.png" type="image/png">
 <script src="../../assets/guide-site.js" defer></script>
 <style>
@@ -376,6 +376,7 @@
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>農業</span><span class="cat-count" aria-label="6 ページ">6</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>高度なマシン</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <div class="group-title">その他</div>
+<a class="cat-link" href="../construction/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit.png" alt=""><span>建築ブロック</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="18 ページ">18</span></a>
 <div class="group-title">アイテム</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
@@ -383,12 +384,12 @@
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="25 ページ">25</span></a>
   </aside>
   <main class="content" id="main-content">
-    <div class="breadcrumbs"><a href="../index.html">ホーム</a><span class="sep">/</span><a href="../utility/index.html">ユーティリティ</a><span class="sep">/</span><span>アップグレードテーブル</span></div>
+    <div class="breadcrumbs"><a href="../index.html">ホーム</a><span class="sep">/</span><a href="../utility/index.html">ユーティリティ</a><span class="sep">/</span><span>アップグレードテーブルケース</span></div>
 <div class="block-card">
   <div class="card-head">
-    <img class="icon" src="../../assets/item/upgrade_table_3d.png" alt="アップグレードテーブル" width="64" height="64">
+    <img class="icon" src="../../assets/item/upgrade_table_3d.png" alt="アップグレードテーブルケース" width="64" height="64">
     <div class="info">
-      <h1>アップグレードテーブル</h1>
+      <h1>アップグレードテーブルケース</h1>
       <div class="block-id">alaindustrial:upgrade_table</div>
       <div class="tags"><span class="tag cat" style="background:#14b8a6">ユーティリティ</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">実装済み</span><span class="tag">utility</span><span class="tag">energy</span><span class="tag">multiblock</span><span class="tag">upgrade</span><span class="tag">tier-lv</span></div>
     </div>
@@ -400,6 +401,8 @@
 
 <p>組み立てはワークステーションと同じで、同一のケーシング2個を積むと金床の音とともに機械になります。どちらかの半分を壊すと、もう片方はケーシングに戻るので、入れたものはそのまま返ります。中に忘れた道具も消えません。ケーシングの中で待ち、それを壊したときに落ちます。</p>
 
+<p>アイテムと単体で置いたブロックの名前は <strong>「アップグレードテーブルケース」</strong> です。「アップグレードテーブル」という名前は組み立てた機械だけのもので、その画面のタイトルになっています。</p>
+
 <h2 id="エネルギー">エネルギー</h2>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>役割</td><td>消費側。正面以外のすべての面から受け取ります</td></tr><tr><td>消費</td><td>稼働中 8 EU/FE/t（）</td></tr><tr><td>所要</td><td>改造1回につき200ティック（）</td></tr><tr><td>1回の費用</td><td>1,600 EU/FE</td></tr><tr><td>バッファ</td><td>共通の機械バッファ（）</td></tr></tbody></table>
@@ -408,13 +411,13 @@
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>ID</td><td></td></tr><tr><td>硬さ / 爆発耐性</td><td>3.0 / 6.0</td></tr><tr><td>道具</td><td>ツルハシ</td></tr><tr><td>形</td><td>1×1×2、3状態：ケーシング、下、上</td></tr><tr><td>スロット</td><td>道具、モジュール＋アップグレードパネル</td></tr></tbody></table>
 
-<p><strong>見た目。</strong> ケーシングは正面に消灯したパネルのある完全なブロックです。組み立てたテーブルはワークステーションと同じ暗いガンメタルの組立治具で、下は明るい角柱に載ったキャビネット、正面に画面と3つのインジケーターと細い警告ストライプのあるパネル、側面にグリル、背面にソケットがあります。天板では2つのV字受けにドリルが寝ていて、その上に2本の柱と梁でできた門型フレームが立ち、梁からプレス台車が降りてきて真鍮のモジュールをドリルに押し当てます。稼働中はテーブルが動き出します。光が3つのインジケーターを順番に走り、画面のバーが上下し、台車のランプと梁のビーコンが明滅します。止まるとすべて消えて静止します。 <strong>当たり判定。</strong> 下半分は完全なブロックです。上半分はシルエットに沿った3つの立体で、前にドリルを載せたV字受け（高さ6ピクセル）、後ろに全高の門型フレーム、その間に台車です。門型フレームの手前、V字受けの上は空いていて、見たとおり何もなくクリックも当たりません。 <strong>組み立てたテーブルは隣のブロックを隠しません。</strong> ケーシングは完全なブロックで、ほかの固体ブロックと同じく隣のブロックの面を隠します。組み立てた上下の半分は何も隠しません。モデルはマスの内側にあって縁に隙間があるので、もし隣の面を隠すと、その隣のブロック越しに隙間が透けて見えてしまいます。 <strong>ケーブル</strong>は下半分の側面と背面につながります。グリルとソケットはマスの端いっぱいにあるので、線は隙間なく筐体まで届きます。</p>
+<p><strong>見た目。</strong> ケーシングは暗いガンメタルの完全なブロックです。6面すべてに暗い縁取りの中の縦の通気スリットがあり、正面にだけ小さな青緑のステータスランプが付いています。組み立てたテーブルはワークステーションと同じ暗いガンメタルの組立治具で、下は明るい角柱に載ったキャビネット、正面に画面と3つのインジケーターと細い警告ストライプのあるパネル、側面にグリル、背面にソケットがあります。天板では2つのV字受けにドリルが寝ていて、その上に2本の柱と梁でできた門型フレームが立ち、梁にはプレス台車が吊られ、その下のプレスヘッド（ピストンと型）が、ドリルの上に載った真鍮のモジュールの真上にあります。稼働中はテーブルが動き出します。光が3つのインジケーターを順番に走り、画面のバーが上下し、台車のランプと梁のビーコンが明滅し、プレスヘッドがおよそ2秒ごとにモジュールへ降りて一拍止まり、また上がります。動く部品はこれだけで、台車そのものは動きません。起動するとプレスはなめらかに調子を上げ、停止するとヘッドは上がった位置で止まります。止まるとすべて消えて静止します。 <strong>当たり判定。</strong> 下半分は完全なブロックです。上半分はシルエットに沿った3つの立体で、前にドリルを載せたV字受け（高さ6ピクセル）、後ろに全高の門型フレーム、その間に台車です。門型フレームの手前、V字受けの上は空いていて、見たとおり何もなくクリックも当たりません。 <strong>組み立てたテーブルは隣のブロックを隠しません。</strong> ケーシングは完全なブロックで、ほかの固体ブロックと同じく隣のブロックの面を隠します。組み立てた上下の半分は何も隠しません。モデルはマスの内側にあって縁に隙間があるので、もし隣の面を隠すと、その隣のブロック越しに隙間が透けて見えてしまいます。 <strong>ケーブル</strong>は下半分の側面と背面につながります。グリルとソケットはマスの端いっぱいにあるので、線は隙間なくキャビネットまで届きます。 <strong>ツールチップ。</strong> ケーシングにカーソルを合わせると、ケーシングを2個積めばテーブルになると教えてくれ、Shiftを押すとティア、用途、稼働コストを表示します。モジュールも同じく、ドリルに何を与えるかを示し、Shiftを押すとどこで取り付けるか、Lキーでオン・オフできることを表示します。</p>
 
 <h2 id="レシピ">レシピ</h2>
 
 <p>作業台で1回クラフトすると<strong>2個</strong>のケーシングができます。ワークステーションと同じく、ちょうどテーブル1台分です。</p>
 
-<table><thead><tr><th>何を</th><th>材料</th></tr></thead><tbody><tr><td>アップグレードテーブル（ケーシング2個）</td><td>5 × 焼き入れ鉄板、1 × 金床、2 × 電子回路、1 × マシンケース</td></tr></tbody></table>
+<table><thead><tr><th>何を</th><th>材料</th></tr></thead><tbody><tr><td>アップグレードテーブルケース ×2</td><td>5 × 焼き入れ鉄板、1 × 金床、2 × 電子回路、1 × マシンケース</td></tr></tbody></table>
 
 <p>テーブルは、その上で取り付けるモジュールより意図的に安くしてあります。テーブル自体は何も改造せず、進行を支えるのは柱状掘削モジュールだからです。</p>
 
@@ -424,10 +427,10 @@
 
 <h2 id="関連">関連</h2>
 
-<p>柱状掘削 — テーブルが受け取る最初のモジュール。 電動ドリル — 改造される道具。 ワークステーション — 同じ2ケーシングの組み立て。</p>
+<p>柱状掘削 — テーブルが受け取る最初のモジュール。 電動ドリル — 改造される道具。 ワークステーション — 同じ、2個の同一ブロックからの組み立て。</p>
 
 <h2>クラフト</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="アップグレードテーブル alaindustrial:upgrade_table" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="焼き入れ鉄板"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="焼き入れ鉄板" width="32" height="32"></div> <div class="cell placeholder" title="Anvil" aria-label="Anvil"><span>anvil</span></div> <div class="cell" title="焼き入れ鉄板"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="焼き入れ鉄板" width="32" height="32"></div> <div class="cell" title="電子回路"><img src="../../assets/item/electronic_circuit_3d.png" alt="電子回路" width="32" height="32"></div> <div class="cell" title="マシンケース"><img src="../../assets/item/machine_casing_3d.png" alt="マシンケース" width="32" height="32"></div> <div class="cell" title="電子回路"><img src="../../assets/item/electronic_circuit_3d.png" alt="電子回路" width="32" height="32"></div> <div class="cell" title="焼き入れ鉄板"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="焼き入れ鉄板" width="32" height="32"></div> <div class="cell" title="焼き入れ鉄板"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="焼き入れ鉄板" width="32" height="32"></div> <div class="cell" title="焼き入れ鉄板"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="焼き入れ鉄板" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="アップグレードテーブル"><img src="../../assets/item/upgrade_table_3d.png" alt="アップグレードテーブル" width="32" height="32"><span class="count">×2</span></div><div class="result-name">アップグレードテーブル</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="アップグレードテーブルケース alaindustrial:upgrade_table" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="焼き入れ鉄板"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="焼き入れ鉄板" width="32" height="32"></div> <div class="cell placeholder" title="Anvil" aria-label="Anvil"><span>anvil</span></div> <div class="cell" title="焼き入れ鉄板"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="焼き入れ鉄板" width="32" height="32"></div> <div class="cell" title="電子回路"><img src="../../assets/item/electronic_circuit_3d.png" alt="電子回路" width="32" height="32"></div> <div class="cell" title="マシンケース"><img src="../../assets/item/machine_casing_3d.png" alt="マシンケース" width="32" height="32"></div> <div class="cell" title="電子回路"><img src="../../assets/item/electronic_circuit_3d.png" alt="電子回路" width="32" height="32"></div> <div class="cell" title="焼き入れ鉄板"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="焼き入れ鉄板" width="32" height="32"></div> <div class="cell" title="焼き入れ鉄板"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="焼き入れ鉄板" width="32" height="32"></div> <div class="cell" title="焼き入れ鉄板"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="焼き入れ鉄板" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="アップグレードテーブルケース"><img src="../../assets/item/upgrade_table_3d.png" alt="アップグレードテーブルケース" width="32" height="32"><span class="count">×2</span></div><div class="result-name">アップグレードテーブルケース</div></div></div></div></div>
   </main>
 </div>
 

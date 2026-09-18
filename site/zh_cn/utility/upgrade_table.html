@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#16161a">
-<title>升级台 — Ala Industrial — 指南</title>
+<title>升级台外壳 — Ala Industrial — 指南</title>
 <link rel="icon" href="../favicon.png" type="image/png">
 <script src="../../assets/guide-site.js" defer></script>
 <style>
@@ -376,6 +376,7 @@
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="6 个页面">6</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">其他</div>
+<a class="cat-link" href="../construction/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit.png" alt=""><span>建筑方块</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="18 个页面">18</span></a>
 <div class="group-title">物品</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
@@ -383,12 +384,12 @@
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="25 个页面">25</span></a>
   </aside>
   <main class="content" id="main-content">
-    <div class="breadcrumbs"><a href="../index.html">首页</a><span class="sep">/</span><a href="../utility/index.html">实用方块</a><span class="sep">/</span><span>升级台</span></div>
+    <div class="breadcrumbs"><a href="../index.html">首页</a><span class="sep">/</span><a href="../utility/index.html">实用方块</a><span class="sep">/</span><span>升级台外壳</span></div>
 <div class="block-card">
   <div class="card-head">
-    <img class="icon" src="../../assets/item/upgrade_table_3d.png" alt="升级台" width="64" height="64">
+    <img class="icon" src="../../assets/item/upgrade_table_3d.png" alt="升级台外壳" width="64" height="64">
     <div class="info">
-      <h1>升级台</h1>
+      <h1>升级台外壳</h1>
       <div class="block-id">alaindustrial:upgrade_table</div>
       <div class="tags"><span class="tag cat" style="background:#14b8a6">实用方块</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">已实现</span><span class="tag">utility</span><span class="tag">energy</span><span class="tag">multiblock</span><span class="tag">upgrade</span><span class="tag">tier-lv</span></div>
     </div>
@@ -400,6 +401,8 @@
 
 <p>它的组装方式和工作站一样：两个相同的外壳上下叠放，伴着铁砧声变成机器。打掉任意一半，另一半会退回外壳，玩家拿回的正是自己放进去的东西。忘在里面的工具也不会消失：它留在外壳里，等外壳被打掉时掉出来。</p>
 
+<p>物品和单独放置的方块叫作 <strong>“升级台外壳”</strong>；“升级台”这个名字只属于组装好的机器——它是机器界面的标题。</p>
+
 <h2 id="能量">能量</h2>
 
 <table><thead><tr><th>项目</th><th>数值</th></tr></thead><tbody><tr><td>角色</td><td>消耗端；除正面外的所有面都接受能量</td></tr><tr><td>功率</td><td>工作时 8 EU/FE/t（）</td></tr><tr><td>时长</td><td>每次改造 200 刻（）</td></tr><tr><td>单次成本</td><td>1,600 EU/FE</td></tr><tr><td>缓冲</td><td>通用机器缓冲（）</td></tr></tbody></table>
@@ -408,13 +411,13 @@
 
 <table><thead><tr><th>属性</th><th>数值</th></tr></thead><tbody><tr><td>ID</td><td></td></tr><tr><td>硬度 / 爆炸抗性</td><td>3.0 / 6.0</td></tr><tr><td>工具</td><td>镐</td></tr><tr><td>形状</td><td>1×1×2，三种状态：外壳、下半、上半</td></tr><tr><td>槽位</td><td>工具、模块 + 升级面板</td></tr></tbody></table>
 
-<p><strong>外观。</strong> 外壳是一个完整方块，正面有一块熄灭的面板。组装好的升级台是一座装配台架，和工作站一样用深色枪灰金属：下面是立在浅色角柱上的柜体，正面是带屏幕、三个指示灯和一条窄警示条的面板，两侧是格栅，背面是插座；台面上两个 V 形托架里躺着电钻，上方是由两根立柱和一根横梁组成的龙门，压力滑架从横梁上降下，把黄铜模块压到电钻上。升级台工作时会“活”起来：一点亮光依次跑过三个指示灯，屏幕上的柱条起伏变化，滑架灯和横梁上的信标一明一暗地闪烁；不工作时全部熄灭、静止。 <strong>碰撞箱。</strong> 下半是完整方块。上半是贴合轮廓的三个体积：前面是带电钻的托架（高 6 像素），后面是全高的龙门，两者之间是滑架。龙门前方、托架上方是空的——看得见是空的，也点不到东西。 <strong>组装好的升级台不会遮住相邻方块。</strong> 外壳是完整方块，会像任何实心方块一样遮住相邻方块的那一面。组装好的两半什么都不遮：模型位于格子内部、边缘留有空隙，如果它遮住了相邻方块的面，玩家就会透过那个相邻方块直接看到空隙。 <strong>导线</strong>可以连到下半的侧面和背面：格栅和插座紧贴格子边缘，所以导线接到机身时没有缝隙。</p>
+<p><strong>外观。</strong> 外壳是一个深色枪灰金属的完整方块：六个面上都有竖向的通风百叶和一圈深色边框，只有正面多一盏青绿色的小状态灯。组装好的升级台是一座装配台架，和工作站一样用深色枪灰金属：下面是立在浅色角柱上的柜体，正面是带屏幕、三个指示灯和一条窄警示条的面板，两侧是格栅，背面是插座；台面上两个 V 形托架里躺着电钻，上方是由两根立柱和一根横梁组成的龙门，横梁上挂着压力滑架，滑架下方的压头——活塞加冲模——悬在躺在电钻上的黄铜模块上方。升级台工作时会“活”起来：一点亮光依次跑过三个指示灯，屏幕上的柱条起伏变化，滑架灯和横梁上的信标一明一暗地闪烁，压头大约每两秒压到模块上一次，停顿片刻再抬起。这是唯一会动的部件：滑架本身不动。开机时压头平稳地加速进入节奏，停机时压头停在抬起的位置；不工作时全部熄灭、静止。 <strong>碰撞箱。</strong> 下半是完整方块。上半是贴合轮廓的三个体积：前面是带电钻的托架（高 6 像素），后面是全高的龙门，两者之间是滑架。龙门前方、托架上方是空的——看得见是空的，也点不到东西。 <strong>组装好的升级台不会遮住相邻方块。</strong> 外壳是完整方块，会像任何实心方块一样遮住相邻方块的那一面。组装好的两半什么都不遮：模型位于格子内部、边缘留有空隙，如果它遮住了相邻方块的面，玩家就会透过那个相邻方块直接看到空隙。 <strong>导线</strong>可以连到下半的侧面和背面：格栅和插座紧贴格子边缘，所以导线接到柜体时没有缝隙。 <strong>提示。</strong> 把鼠标移到外壳上，会提示把两个外壳上下叠放来组装升级台，按住 Shift 还会显示等级、用途和运行成本；模块同样会说明它给电钻带来什么，按住 Shift 还会说明在哪里安装、用 L 键开关。</p>
 
 <h2 id="配方">配方</h2>
 
 <p>在工作台上合成一次得到<strong>两个</strong>外壳——正好够组装一台升级台，和工作站一样。</p>
 
-<table><thead><tr><th>产物</th><th>原料</th></tr></thead><tbody><tr><td>升级台（2 个外壳）</td><td>5 × 回火铁板、1 × 铁砧、2 × 电子电路、1 × 机器外壳</td></tr></tbody></table>
+<table><thead><tr><th>产物</th><th>原料</th></tr></thead><tbody><tr><td>升级台外壳 ×2</td><td>5 × 回火铁板、1 × 铁砧、2 × 电子电路、1 × 机器外壳</td></tr></tbody></table>
 
 <p>升级台故意比装在它上面的模块便宜：它本身什么也不改造，推进进度靠的是柱状开采模块。</p>
 
@@ -424,10 +427,10 @@
 
 <h2 id="相关">相关</h2>
 
-<p>柱状开采 — 升级台接受的第一个模块。 电钻 — 被改造的工具。 工作站 — 同样的双外壳组装。</p>
+<p>柱状开采 — 升级台接受的第一个模块。 电钻 — 被改造的工具。 工作站 — 同样由两个相同方块组装。</p>
 
 <h2>合成</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="升级台 alaindustrial:upgrade_table" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="回火铁板"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="回火铁板" width="32" height="32"></div> <div class="cell placeholder" title="Anvil" aria-label="Anvil"><span>anvil</span></div> <div class="cell" title="回火铁板"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="回火铁板" width="32" height="32"></div> <div class="cell" title="电子电路"><img src="../../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="机器外壳"><img src="../../assets/item/machine_casing_3d.png" alt="机器外壳" width="32" height="32"></div> <div class="cell" title="电子电路"><img src="../../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="回火铁板"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="回火铁板" width="32" height="32"></div> <div class="cell" title="回火铁板"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="回火铁板" width="32" height="32"></div> <div class="cell" title="回火铁板"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="回火铁板" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="升级台"><img src="../../assets/item/upgrade_table_3d.png" alt="升级台" width="32" height="32"><span class="count">×2</span></div><div class="result-name">升级台</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="升级台外壳 alaindustrial:upgrade_table" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="回火铁板"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="回火铁板" width="32" height="32"></div> <div class="cell placeholder" title="Anvil" aria-label="Anvil"><span>anvil</span></div> <div class="cell" title="回火铁板"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="回火铁板" width="32" height="32"></div> <div class="cell" title="电子电路"><img src="../../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="机器外壳"><img src="../../assets/item/machine_casing_3d.png" alt="机器外壳" width="32" height="32"></div> <div class="cell" title="电子电路"><img src="../../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="回火铁板"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="回火铁板" width="32" height="32"></div> <div class="cell" title="回火铁板"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="回火铁板" width="32" height="32"></div> <div class="cell" title="回火铁板"><img src="../../assets/item/tempered_iron_plate_3d.png" alt="回火铁板" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="升级台外壳"><img src="../../assets/item/upgrade_table_3d.png" alt="升级台外壳" width="32" height="32"><span class="count">×2</span></div><div class="result-name">升级台外壳</div></div></div></div></div>
   </main>
 </div>
 
