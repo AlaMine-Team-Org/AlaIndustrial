@@ -13,6 +13,7 @@ import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -231,6 +232,63 @@ public class UpgradeTableBlockEntity extends MachineBlockEntity
 		UpgradeTableBlock.setLit(level, getBlockPos(), working);
 	}
 
+	// --- client-side animation clock for the press head (read by UpgradeTableBlockEntityRenderer) ----
+
+	private static final long NO_TRANSITION = Long.MIN_VALUE;
+
+	/** How long the press takes to wind up or settle when the table starts or stops. Cosmetic. */
+	private static final int TRANSITION_TICKS = 20;
+
+	private boolean lastLit;
+	private boolean stateSeen;
+	private long transitionStart = NO_TRANSITION;
+
+	/**
+	 * First sighting only takes a reading: a table that comes into view already working must not
+	 * replay its own start-up. That makes this idempotent, which is what lets the renderer be the only
+	 * caller — the table has no client ticker, and none is needed.
+	 */
+	private void observe(boolean lit, long gameTime) {
+		if (!this.stateSeen) {
+			this.stateSeen = true;
+			this.lastLit = lit;
+			return;
+		}
+		if (lit != this.lastLit) {
+			this.lastLit = lit;
+			this.transitionStart = gameTime;
+		}
+	}
+
+	/**
+	 * The clock both halves read: the lower one's. The head is drawn by the upper half, but the lit
+	 * edge lands on both halves in one update, and one clock keeps them from ever disagreeing.
+	 */
+	public UpgradeTableBlockEntity animationClock() {
+		BlockState state = getBlockState();
+		if (this.level == null || !state.hasProperty(UpgradeTableBlock.PART)
+				|| state.getValue(UpgradeTableBlock.PART) != WorkstationPart.UPPER) {
+			return this;
+		}
+		return this.level.getBlockEntity(this.worldPosition.below())
+				instanceof UpgradeTableBlockEntity lower ? lower : this;
+	}
+
+	/** 0 = the press is parked, 1 = it strokes at full depth; eased, so it neither starts nor stops dead. */
+	public float pressAmplitude(long gameTime, float partialTicks) {
+		BlockState state = getBlockState();
+		boolean lit = state.hasProperty(UpgradeTableBlock.LIT) && state.getValue(UpgradeTableBlock.LIT);
+		observe(lit, gameTime);
+		if (this.transitionStart == NO_TRANSITION) {
+			return lit ? 1.0F : 0.0F;
+		}
+		// Subtract as longs before the cast: a float cannot hold consecutive ticks of an old world.
+		float elapsed = (float) (gameTime - this.transitionStart) + partialTicks;
+		float t = Mth.clamp(elapsed / TRANSITION_TICKS, 0.0F, 1.0F);
+		float eased = t * t * (3.0F - 2.0F * t);
+		return lit ? eased : 1.0F - eased;
+	}
+
 	private final ContainerData tableData = new ContainerData() {
 		@Override
 		public int get(int index) {
@@ -259,9 +317,16 @@ public class UpgradeTableBlockEntity extends MachineBlockEntity
 		return tableData;
 	}
 
+	/**
+	 * The GUI title. Deliberately a separate key from {@code block.alaindustrial.upgrade_table}
+	 * (MOD-482 rename): that key now names the loose casing — the thing the player crafts, holds
+	 * and places — while the screen only ever opens on the assembled machine, and needs its own
+	 * name for it. Same split the double chests already use ({@code container.alaindustrial.
+	 * iron_chest_double} vs. the single chest's block name).
+	 */
 	@Override
 	public Component getDisplayName() {
-		return Component.translatable("block.alaindustrial.upgrade_table");
+		return Component.translatable("container.alaindustrial.upgrade_table");
 	}
 
 	@Override

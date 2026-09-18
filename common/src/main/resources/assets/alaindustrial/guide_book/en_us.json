@@ -2693,8 +2693,20 @@
     {
       "id": "other",
       "title": "Other",
-      "icon": "alaindustrial:reactor_button",
+      "icon": "alaindustrial:engraved_plate_0",
       "entries": [
+        {
+          "id": "engraved_plate_0",
+          "title": "Engraved Plate 0",
+          "icon": "alaindustrial:engraved_plate_0",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Engraved Plate 0",
+              "text": "Decorative slate plates with an engraved digit or the fragment of a letter — the plaque of a previous record in abandoned labs is made of them. No recipe."
+            }
+          ]
+        },
         {
           "id": "reactor_button",
           "title": "Reactor Button",
@@ -3386,12 +3398,12 @@
         },
         {
           "id": "upgrade_table",
-          "title": "Upgrade Table",
+          "title": "Upgrade Table Casing",
           "icon": "alaindustrial:upgrade_table",
           "pages": [
             {
               "type": "text",
-              "title": "Upgrade Table",
+              "title": "Upgrade Table Casing",
               "text": "A bench that fits permanent upgrades onto powered tools. Assembled from two casings stacked one on the other."
             },
             {

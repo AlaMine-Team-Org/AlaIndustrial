@@ -434,6 +434,7 @@ pitest {
             // and what reads them is the client renderer.
             'dev.alaindustrial.client.render.WorkstationGeometry',
             'dev.alaindustrial.client.render.RadiantSolarPanelGeometry',
+            'dev.alaindustrial.client.render.UpgradeTableGeometry',
             // MOD-383: CanningRules answers "may this stack go in the machine", which means it reads
             // ItemStack / Items / DataComponents.FOOD — Minecraft types common's L1 classpath does not
             // have, so every mutant here would be a guaranteed NO_COVERAGE. The arithmetic it delegates

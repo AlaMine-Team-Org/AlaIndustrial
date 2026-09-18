@@ -1,12 +1,12 @@
 {
 	"parent": "minecraft:block/cube",
 	"textures": {
-		"particle": "alaindustrial:block/machine_side",
-		"down": "alaindustrial:block/machine_bottom",
-		"up": "alaindustrial:block/machine_top",
-		"north": "alaindustrial:block/upgrade_table_panel_off",
-		"east": "alaindustrial:block/machine_side",
-		"south": "alaindustrial:block/machine_back",
-		"west": "alaindustrial:block/machine_side"
+		"particle": "alaindustrial:block/upgrade_table_case_side",
+		"down": "alaindustrial:block/upgrade_table_case_bottom",
+		"up": "alaindustrial:block/upgrade_table_case_top",
+		"north": "alaindustrial:block/upgrade_table_case_front",
+		"east": "alaindustrial:block/upgrade_table_case_side",
+		"south": "alaindustrial:block/upgrade_table_case_side",
+		"west": "alaindustrial:block/upgrade_table_case_side"
 	}
 }

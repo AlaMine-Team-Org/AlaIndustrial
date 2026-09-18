@@ -2693,8 +2693,20 @@
     {
       "id": "other",
       "title": "Övrigt",
-      "icon": "alaindustrial:reactor_button",
+      "icon": "alaindustrial:engraved_plate_0",
       "entries": [
+        {
+          "id": "engraved_plate_0",
+          "title": "Graverad platta 0",
+          "icon": "alaindustrial:engraved_plate_0",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Graverad platta 0",
+              "text": "Dekorativa skifferplattor med en ingraverad siffra eller ett bokstavsfragment — av dem är skylten för en tidigare post i övergivna labb gjord. Inget recept."
+            }
+          ]
+        },
         {
           "id": "reactor_button",
           "title": "Reaktorknapp",
@@ -3386,12 +3398,12 @@
         },
         {
           "id": "upgrade_table",
-          "title": "Uppgraderingsbänk",
+          "title": "Uppgraderingsbänkshölje",
           "icon": "alaindustrial:upgrade_table",
           "pages": [
             {
               "type": "text",
-              "title": "Uppgraderingsbänk",
+              "title": "Uppgraderingsbänkshölje",
               "text": "En bänk som sätter permanenta uppgraderingar på eldrivna verktyg. Byggd av två höljen staplade på varandra."
             },
             {

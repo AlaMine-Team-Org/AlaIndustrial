@@ -2693,8 +2693,20 @@
     {
       "id": "other",
       "title": "Altro",
-      "icon": "alaindustrial:reactor_button",
+      "icon": "alaindustrial:engraved_plate_0",
       "entries": [
+        {
+          "id": "engraved_plate_0",
+          "title": "Lastra incisa 0",
+          "icon": "alaindustrial:engraved_plate_0",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lastra incisa 0",
+              "text": "Lastre decorative di ardesia con una cifra incisa o il frammento di una lettera: con esse è composta la targa della registrazione precedente nei laboratori abbandonati. Nessuna ricetta."
+            }
+          ]
+        },
         {
           "id": "reactor_button",
           "title": "Pulsante del reattore",
@@ -3386,12 +3398,12 @@
         },
         {
           "id": "upgrade_table",
-          "title": "Banco di potenziamento",
+          "title": "Telaio del banco di potenziamento",
           "icon": "alaindustrial:upgrade_table",
           "pages": [
             {
               "type": "text",
-              "title": "Banco di potenziamento",
+              "title": "Telaio del banco di potenziamento",
               "text": "Un banco che monta potenziamenti permanenti sugli utensili elettrici. Si assembla con due telai impilati uno sull'altro."
             },
             {

@@ -2693,8 +2693,20 @@
     {
       "id": "other",
       "title": "기타",
-      "icon": "alaindustrial:reactor_button",
+      "icon": "alaindustrial:engraved_plate_0",
       "entries": [
+        {
+          "id": "engraved_plate_0",
+          "title": "각인된 석판 0",
+          "icon": "alaindustrial:engraved_plate_0",
+          "pages": [
+            {
+              "type": "text",
+              "title": "각인된 석판 0",
+              "text": "숫자나 글자 조각이 새겨진 장식용 점판암 석판입니다. 버려진 연구소의 이전 기록 명판이 이것으로 만들어져 있습니다. 제작법 없음."
+            }
+          ]
+        },
         {
           "id": "reactor_button",
           "title": "원자로 버튼",
@@ -3386,12 +3398,12 @@
         },
         {
           "id": "upgrade_table",
-          "title": "업그레이드 작업대",
+          "title": "업그레이드 작업대 케이스",
           "icon": "alaindustrial:upgrade_table",
           "pages": [
             {
               "type": "text",
-              "title": "업그레이드 작업대",
+              "title": "업그레이드 작업대 케이스",
               "text": "전동 도구에 영구 업그레이드를 장착하는 작업대입니다. 케이싱 두 개를 위아래로 쌓아 만듭니다."
             },
             {

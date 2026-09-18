@@ -2693,8 +2693,20 @@
     {
       "id": "other",
       "title": "অন্যান্য",
-      "icon": "alaindustrial:reactor_button",
+      "icon": "alaindustrial:engraved_plate_0",
       "entries": [
+        {
+          "id": "engraved_plate_0",
+          "title": "খোদাই করা ফলক 0",
+          "icon": "alaindustrial:engraved_plate_0",
+          "pages": [
+            {
+              "type": "text",
+              "title": "খোদাই করা ফলক 0",
+              "text": "খোদাই করা অঙ্ক বা অক্ষরের টুকরো সহ সাজসজ্জার স্লেট ফলক — পরিত্যক্ত গবেষণাগারে আগের রেকর্ডের ফলক এগুলো দিয়েই তৈরি। কোনো রেসিপি নেই।"
+            }
+          ]
+        },
         {
           "id": "reactor_button",
           "title": "রিঅ্যাক্টর বোতাম",
@@ -3386,12 +3398,12 @@
         },
         {
           "id": "upgrade_table",
-          "title": "উন্নয়ন টেবিল",
+          "title": "উন্নয়ন টেবিল কেসিং",
           "icon": "alaindustrial:upgrade_table",
           "pages": [
             {
               "type": "text",
-              "title": "উন্নয়ন টেবিল",
+              "title": "উন্নয়ন টেবিল কেসিং",
               "text": "একটি টেবিল, যা বৈদ্যুতিক যন্ত্রে স্থায়ী উন্নয়ন লাগায়। একটির উপর আরেকটি বসানো দুটি কেসিং দিয়ে গড়া।"
             },
             {

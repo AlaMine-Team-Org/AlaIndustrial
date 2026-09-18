@@ -2693,8 +2693,20 @@
     {
       "id": "other",
       "title": "其他",
-      "icon": "alaindustrial:reactor_button",
+      "icon": "alaindustrial:engraved_plate_0",
       "entries": [
+        {
+          "id": "engraved_plate_0",
+          "title": "刻纹石板 0",
+          "icon": "alaindustrial:engraved_plate_0",
+          "pages": [
+            {
+              "type": "text",
+              "title": "刻纹石板 0",
+              "text": "刻有数字或字母残片的装饰板岩石板——废弃实验室里旧记录的铭牌就是用它们拼成的。无合成配方。"
+            }
+          ]
+        },
         {
           "id": "reactor_button",
           "title": "反应堆按钮",
@@ -3386,12 +3398,12 @@
         },
         {
           "id": "upgrade_table",
-          "title": "升级台",
+          "title": "升级台外壳",
           "icon": "alaindustrial:upgrade_table",
           "pages": [
             {
               "type": "text",
-              "title": "升级台",
+              "title": "升级台外壳",
               "text": "为电动工具装上永久升级的工作台。由两个上下叠放的外壳组装而成。"
             },
             {

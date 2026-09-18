@@ -48,10 +48,10 @@ import org.jspecify.annotations.Nullable;
  * and the menu exist in exactly one place and a hopper aimed at the top of the table cannot find a
  * second, empty inventory. The upper half is scenery that mirrors the lit state.
  *
- * <p><b>No block entity renderer.</b> The shape is static, so it lives in ordinary block models —
- * 26.2 allows arbitrary rotations there, which is what lets a model be more than a box. A renderer
- * would cost two client classes, an entry in the client manifest and a literal in the parity gate,
- * and buy nothing: nothing on this bench moves.
+ * <p><b>Static model, one moving part.</b> The bench lives in ordinary block models, baked into the
+ * chunk mesh. The press head alone is drawn by {@code UpgradeTableBlockEntityRenderer}, which lowers
+ * it onto the module while the table works; it is a separate group in the model source, so the static
+ * halves do not carry it.
  */
 public class UpgradeTableBlock extends HorizontalMachineBlock {
 

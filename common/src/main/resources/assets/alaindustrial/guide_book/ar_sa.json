@@ -2693,8 +2693,20 @@
     {
       "id": "other",
       "title": "أخرى",
-      "icon": "alaindustrial:reactor_button",
+      "icon": "alaindustrial:engraved_plate_0",
       "entries": [
+        {
+          "id": "engraved_plate_0",
+          "title": "لوح منقوش 0",
+          "icon": "alaindustrial:engraved_plate_0",
+          "pages": [
+            {
+              "type": "text",
+              "title": "لوح منقوش 0",
+              "text": "ألواح أردواز زخرفية منقوش عليها رقم أو جزء من حرف — منها تُصنع لوحة السجل السابق في المختبرات المهجورة. بلا وصفة."
+            }
+          ]
+        },
         {
           "id": "reactor_button",
           "title": "زر مفاعل",
@@ -3386,12 +3398,12 @@
         },
         {
           "id": "upgrade_table",
-          "title": "طاولة الترقية",
+          "title": "هيكل طاولة الترقية",
           "icon": "alaindustrial:upgrade_table",
           "pages": [
             {
               "type": "text",
-              "title": "طاولة الترقية",
+              "title": "هيكل طاولة الترقية",
               "text": "طاولة تركّب ترقيات دائمة على الأدوات الكهربائية. تُجمَّع من هيكلين موضوعين أحدهما فوق الآخر."
             },
             {

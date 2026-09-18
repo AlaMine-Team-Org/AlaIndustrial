@@ -2693,8 +2693,20 @@
     {
       "id": "other",
       "title": "Overig",
-      "icon": "alaindustrial:reactor_button",
+      "icon": "alaindustrial:engraved_plate_0",
       "entries": [
+        {
+          "id": "engraved_plate_0",
+          "title": "Gegraveerde plaat 0",
+          "icon": "alaindustrial:engraved_plate_0",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Gegraveerde plaat 0",
+              "text": "Decoratieve leistenen platen met een gegraveerd cijfer of een lettersplinter — het bord van een eerdere vastlegging in verlaten labs is ervan gemaakt. Geen recept."
+            }
+          ]
+        },
         {
           "id": "reactor_button",
           "title": "Reactorknop",
@@ -3386,12 +3398,12 @@
         },
         {
           "id": "upgrade_table",
-          "title": "Upgradetafel",
+          "title": "Upgradetafelbehuizing",
           "icon": "alaindustrial:upgrade_table",
           "pages": [
             {
               "type": "text",
-              "title": "Upgradetafel",
+              "title": "Upgradetafelbehuizing",
               "text": "Een tafel die blijvende upgrades op elektrisch gereedschap zet. Je bouwt hem uit twee op elkaar gestapelde behuizingen."
             },
             {

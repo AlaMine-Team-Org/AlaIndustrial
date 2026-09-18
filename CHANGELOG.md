@@ -1,14 +1,12 @@
-## 0.1.177
+## 0.1.178
 
-<p><img alt="Ala Industrial 0.1.177 update preview: 31 sounds now, the Recycler and the Fermenter" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.177/release-media/v0.1.177/changelog.png" width="720"></p>
+<p><img alt="The Upgrade Table pressing a module onto a drill" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.178/release-media/v0.1.178/changelog.webp" width="720"></p>
 
-Two more machines found their voice, and old alloys finally found a use.
-
-### New
-
-- **The Recycler rattles.** Loose scrap tumbles in the drum while it grinds a batch — quieter than the mod's other machines.
-- **The Fermenter bubbles.** A wet, airy gurgle while a batch brews, going quiet when it's idle.
+The Upgrade Table now looks and feels like a working machine.
 
 ### Improved
 
-- **Bronze, invar, cupronickel and electrum are useful now.** Their plates go into chokes, reactor parts, the upgrade table, the sprinkler, mill blades and bearings.
+- **The press moves.** While the table works, its press comes down onto the module and lifts again.
+- **Upgrade Table Casing.** The single block has a new name and its own look; stack two to build the table.
+- **New table screen** with a segmented energy gauge.
+- **Tooltips for the upgrade parts.** The Column Bore Module, the Core Barrel and the casing explain themselves — hold Shift for more.

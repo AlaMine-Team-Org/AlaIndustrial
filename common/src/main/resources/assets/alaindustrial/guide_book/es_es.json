@@ -2693,8 +2693,20 @@
     {
       "id": "other",
       "title": "Otros",
-      "icon": "alaindustrial:reactor_button",
+      "icon": "alaindustrial:engraved_plate_0",
       "entries": [
+        {
+          "id": "engraved_plate_0",
+          "title": "Placa grabada 0",
+          "icon": "alaindustrial:engraved_plate_0",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Placa grabada 0",
+              "text": "Placas decorativas de pizarra con un dígito grabado o un fragmento de letra: con ellas se compone la placa del registro anterior en los laboratorios abandonados. Sin receta."
+            }
+          ]
+        },
         {
           "id": "reactor_button",
           "title": "Botón de reactor",
@@ -3386,12 +3398,12 @@
         },
         {
           "id": "upgrade_table",
-          "title": "Mesa de mejoras",
+          "title": "Carcasa de mesa de mejoras",
           "icon": "alaindustrial:upgrade_table",
           "pages": [
             {
               "type": "text",
-              "title": "Mesa de mejoras",
+              "title": "Carcasa de mesa de mejoras",
               "text": "Una mesa que instala mejoras permanentes en herramientas eléctricas. Se monta con dos carcasas apiladas una sobre otra."
             },
             {

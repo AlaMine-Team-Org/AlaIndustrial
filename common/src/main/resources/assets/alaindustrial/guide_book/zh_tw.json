@@ -2693,8 +2693,20 @@
     {
       "id": "other",
       "title": "其他",
-      "icon": "alaindustrial:reactor_button",
+      "icon": "alaindustrial:engraved_plate_0",
       "entries": [
+        {
+          "id": "engraved_plate_0",
+          "title": "刻紋石板 0",
+          "icon": "alaindustrial:engraved_plate_0",
+          "pages": [
+            {
+              "type": "text",
+              "title": "刻紋石板 0",
+              "text": "刻有數字或字母殘片的裝飾板岩石板——廢棄實驗室裡舊紀錄的銘牌就是用它們拼成的。無合成配方。"
+            }
+          ]
+        },
         {
           "id": "reactor_button",
           "title": "反應爐按鈕",
@@ -3386,12 +3398,12 @@
         },
         {
           "id": "upgrade_table",
-          "title": "升級台",
+          "title": "升級台外殼",
           "icon": "alaindustrial:upgrade_table",
           "pages": [
             {
               "type": "text",
-              "title": "升級台",
+              "title": "升級台外殼",
               "text": "為電動工具裝上永久升級的工作台。由兩個上下疊放的外殼組裝而成。"
             },
             {

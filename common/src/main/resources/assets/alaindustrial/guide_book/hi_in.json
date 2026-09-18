@@ -2693,8 +2693,20 @@
     {
       "id": "other",
       "title": "अन्य",
-      "icon": "alaindustrial:reactor_button",
+      "icon": "alaindustrial:engraved_plate_0",
       "entries": [
+        {
+          "id": "engraved_plate_0",
+          "title": "उत्कीर्ण पट्टिका 0",
+          "icon": "alaindustrial:engraved_plate_0",
+          "pages": [
+            {
+              "type": "text",
+              "title": "उत्कीर्ण पट्टिका 0",
+              "text": "उकेरे गए अंक या अक्षर के टुकड़े वाली सजावटी स्लेट पट्टिकाएँ — परित्यक्त प्रयोगशालाओं में पिछले रिकॉर्ड की तख़्ती इन्हीं से बनी है। कोई नुस्खा नहीं।"
+            }
+          ]
+        },
         {
           "id": "reactor_button",
           "title": "रिएक्टर बटन",
@@ -3386,12 +3398,12 @@
         },
         {
           "id": "upgrade_table",
-          "title": "उन्नयन मेज",
+          "title": "उन्नयन मेज केसिंग",
           "icon": "alaindustrial:upgrade_table",
           "pages": [
             {
               "type": "text",
-              "title": "उन्नयन मेज",
+              "title": "उन्नयन मेज केसिंग",
               "text": "एक मेज जो बिजली के औज़ारों पर स्थायी उन्नयन लगाती है। एक के ऊपर एक रखे दो केसिंग से बनती है।"
             },
             {

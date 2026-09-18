@@ -2693,8 +2693,20 @@
     {
       "id": "other",
       "title": "Autre",
-      "icon": "alaindustrial:reactor_button",
+      "icon": "alaindustrial:engraved_plate_0",
       "entries": [
+        {
+          "id": "engraved_plate_0",
+          "title": "Plaque gravée 0",
+          "icon": "alaindustrial:engraved_plate_0",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Plaque gravée 0",
+              "text": "Plaques décoratives en ardoise gravées d’un chiffre ou d’un fragment de lettre — elles composent la plaque de l’ancien relevé dans les laboratoires abandonnés. Sans recette."
+            }
+          ]
+        },
         {
           "id": "reactor_button",
           "title": "Bouton de réacteur",
@@ -3386,12 +3398,12 @@
         },
         {
           "id": "upgrade_table",
-          "title": "Table d’amélioration",
+          "title": "Châssis de table d’amélioration",
           "icon": "alaindustrial:upgrade_table",
           "pages": [
             {
               "type": "text",
-              "title": "Table d’amélioration",
+              "title": "Châssis de table d’amélioration",
               "text": "Une table qui pose des améliorations permanentes sur les outils électriques. Assemblée à partir de deux boîtiers empilés l’un sur l’autre."
             },
             {

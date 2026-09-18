@@ -2693,8 +2693,20 @@
     {
       "id": "other",
       "title": "Lainnya",
-      "icon": "alaindustrial:reactor_button",
+      "icon": "alaindustrial:engraved_plate_0",
       "entries": [
+        {
+          "id": "engraved_plate_0",
+          "title": "Lempeng Berukir 0",
+          "icon": "alaindustrial:engraved_plate_0",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lempeng Berukir 0",
+              "text": "Lempeng batu sabak dekoratif dengan angka atau potongan huruf yang diukir — papan catatan sebelumnya di laboratorium terbengkalai tersusun darinya. Tanpa resep."
+            }
+          ]
+        },
         {
           "id": "reactor_button",
           "title": "Tombol Reaktor",
@@ -3386,12 +3398,12 @@
         },
         {
           "id": "upgrade_table",
-          "title": "Meja peningkatan",
+          "title": "Rangka meja peningkatan",
           "icon": "alaindustrial:upgrade_table",
           "pages": [
             {
               "type": "text",
-              "title": "Meja peningkatan",
+              "title": "Rangka meja peningkatan",
               "text": "Meja yang memasang peningkatan permanen pada perkakas listrik. Dirakit dari dua casing yang ditumpuk."
             },
             {

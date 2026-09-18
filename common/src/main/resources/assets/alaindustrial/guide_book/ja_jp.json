@@ -2693,8 +2693,20 @@
     {
       "id": "other",
       "title": "その他",
-      "icon": "alaindustrial:reactor_button",
+      "icon": "alaindustrial:engraved_plate_0",
       "entries": [
+        {
+          "id": "engraved_plate_0",
+          "title": "刻印石板 0",
+          "icon": "alaindustrial:engraved_plate_0",
+          "pages": [
+            {
+              "type": "text",
+              "title": "刻印石板 0",
+              "text": "数字や文字の欠片が刻まれた装飾用のスレート板。廃研究所にある以前の記録の銘板はこれで組まれている。レシピなし。"
+            }
+          ]
+        },
         {
           "id": "reactor_button",
           "title": "原子炉ボタン",
@@ -3386,12 +3398,12 @@
         },
         {
           "id": "upgrade_table",
-          "title": "アップグレードテーブル",
+          "title": "アップグレードテーブルケース",
           "icon": "alaindustrial:upgrade_table",
           "pages": [
             {
               "type": "text",
-              "title": "アップグレードテーブル",
+              "title": "アップグレードテーブルケース",
               "text": "電動工具に外せないアップグレードを取り付ける台。筐体を 2 つ積み重ねて組み立てます。"
             },
             {

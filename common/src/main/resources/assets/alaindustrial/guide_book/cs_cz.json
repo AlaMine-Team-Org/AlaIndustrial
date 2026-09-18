@@ -2693,8 +2693,20 @@
     {
       "id": "other",
       "title": "Ostatní",
-      "icon": "alaindustrial:reactor_button",
+      "icon": "alaindustrial:engraved_plate_0",
       "entries": [
+        {
+          "id": "engraved_plate_0",
+          "title": "Rytá deska 0",
+          "icon": "alaindustrial:engraved_plate_0",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Rytá deska 0",
+              "text": "Ozdobné břidlicové desky s vyrytou číslicí nebo úlomkem písmene — skládá se z nich tabulka předchozího záznamu v opuštěných laboratořích. Bez receptu."
+            }
+          ]
+        },
         {
           "id": "reactor_button",
           "title": "Tlačítko reaktoru",
@@ -3386,12 +3398,12 @@
         },
         {
           "id": "upgrade_table",
-          "title": "Stůl vylepšení",
+          "title": "Plášť stolu vylepšení",
           "icon": "alaindustrial:upgrade_table",
           "pages": [
             {
               "type": "text",
-              "title": "Stůl vylepšení",
+              "title": "Plášť stolu vylepšení",
               "text": "Stůl, který napájeným nástrojům natrvalo instaluje vylepšení. Sestavuje se ze dvou skříní postavených na sobě."
             },
             {

@@ -2693,8 +2693,20 @@
     {
       "id": "other",
       "title": "อื่น ๆ",
-      "icon": "alaindustrial:reactor_button",
+      "icon": "alaindustrial:engraved_plate_0",
       "entries": [
+        {
+          "id": "engraved_plate_0",
+          "title": "แผ่นสลัก 0",
+          "icon": "alaindustrial:engraved_plate_0",
+          "pages": [
+            {
+              "type": "text",
+              "title": "แผ่นสลัก 0",
+              "text": "แผ่นหินชนวนตกแต่งที่สลักตัวเลขหรือเศษตัวอักษร ป้ายบันทึกเก่าในห้องแล็บร้างทำจากแผ่นเหล่านี้ ไม่มีสูตรคราฟต์"
+            }
+          ]
+        },
         {
           "id": "reactor_button",
           "title": "ปุ่มเตาปฏิกรณ์",
@@ -3386,12 +3398,12 @@
         },
         {
           "id": "upgrade_table",
-          "title": "โต๊ะอัปเกรด",
+          "title": "โครงโต๊ะอัปเกรด",
           "icon": "alaindustrial:upgrade_table",
           "pages": [
             {
               "type": "text",
-              "title": "โต๊ะอัปเกรด",
+              "title": "โครงโต๊ะอัปเกรด",
               "text": "โต๊ะที่ติดตั้งอัปเกรดถาวรให้กับเครื่องมือไฟฟ้า ประกอบจากโครงเครื่องจักรสองชิ้นวางซ้อนกัน"
             },
             {

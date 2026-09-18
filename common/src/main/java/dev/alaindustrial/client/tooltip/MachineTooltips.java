@@ -26,6 +26,8 @@ import dev.alaindustrial.block.ThermalCentrifugeBlock;
 import dev.alaindustrial.block.VulcanizerBlock;
 import dev.alaindustrial.block.ElectricHeaterBlock;
 import dev.alaindustrial.block.SolarPanelBlock;
+import dev.alaindustrial.block.UpgradeTableBlock;
+import dev.alaindustrial.core.upgrade.OverclockMath;
 import dev.alaindustrial.item.misc.MutationGrades;
 import dev.alaindustrial.mutation.MutationGrade;
 import dev.alaindustrial.item.tool.AnalyzerMode;
@@ -138,10 +140,23 @@ public final class MachineTooltips {
 			addRotorTooltip(lines, detailed);
 			return;
 		}
+		if (stack.is(ModContent.DRILL_COLUMN_MODULE.get())) {
+			addColumnModuleTooltip(lines, detailed);
+			return;
+		}
+		if (stack.is(ModContent.CORE_BARREL.get())) {
+			lines.add(Component.translatable("tooltip.alaindustrial.core_barrel.role")
+					.withStyle(ChatFormatting.GRAY));
+			return;
+		}
 		if (!(stack.getItem() instanceof BlockItem bi)) {
 			return;
 		}
 		Block block = bi.getBlock();
+		if (block instanceof UpgradeTableBlock) {
+			addUpgradeTableTooltip(lines, detailed);
+			return;
+		}
 		if (!isMachineBlock(block)) {
 			return;
 		}
@@ -611,6 +626,45 @@ public final class MachineTooltips {
 		} else {
 			lines.add(Component.translatable("tooltip.alaindustrial.hold_shift")
 					.withStyle(ChatFormatting.DARK_GRAY));
+		}
+	}
+
+	private static void addColumnModuleTooltip(List<Component> lines, boolean detailed) {
+		lines.add(Component.translatable("tooltip.alaindustrial.drill_column_module.role")
+				.withStyle(ChatFormatting.GRAY));
+		if (!detailed) {
+			lines.add(Component.translatable("tooltip.alaindustrial.hold_shift")
+					.withStyle(ChatFormatting.DARK_GRAY));
+			return;
+		}
+		lines.add(Component.translatable("tooltip.alaindustrial.drill_column_module.fitting")
+				.withStyle(ChatFormatting.GRAY));
+		lines.add(Component.translatable("tooltip.alaindustrial.drill_column_module.toggle")
+				.withStyle(ChatFormatting.GRAY));
+	}
+
+	private static void addUpgradeTableTooltip(List<Component> lines, boolean detailed) {
+		lines.add(Component.translatable("tooltip.alaindustrial.upgrade_table.assemble")
+				.withStyle(ChatFormatting.GRAY));
+		if (!detailed) {
+			lines.add(Component.translatable("tooltip.alaindustrial.hold_shift")
+					.withStyle(ChatFormatting.DARK_GRAY));
+			return;
+		}
+		lines.add(tier());
+		lines.add(Component.translatable("tooltip.alaindustrial.upgrade_table.purpose")
+				.withStyle(ChatFormatting.GRAY));
+		if (AlaClientConfig.showEuNumbers) {
+			// The numbers the table really runs with no overclocker in it: the same speed knob the
+			// machine applies through ProcessingCycle, so a retuned server does not show the base 8 EU/t.
+			int euPerTick = OverclockMath.euPerTick(Config.upgradeTableEuPerTick,
+					Config.globalMachineSpeedMultiplier, Config.overclockerEuFactor, 0);
+			int ticks = Config.scaledDuration(Config.upgradeTableDuration);
+			String seconds = ticks % 20 == 0
+					? Integer.toString(ticks / 20)
+					: String.format(java.util.Locale.ROOT, "%.1f", ticks / 20f);
+			lines.add(Component.translatable("tooltip.alaindustrial.upgrade_table.cost", euPerTick, seconds)
+					.withStyle(ChatFormatting.GRAY));
 		}
 	}
 

@@ -20,6 +20,7 @@ import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
+import dev.alaindustrial.block.entity.UpgradeTableBlockEntity;
 import dev.alaindustrial.block.entity.WorkstationBlockEntity;
 import dev.alaindustrial.client.render.CableAccessoryBlockEntityRenderer;
 import dev.alaindustrial.client.render.ChestBlockEntityRenderer;
@@ -36,6 +37,7 @@ import dev.alaindustrial.client.render.TeleporterCapsuleDoorRenderer;
 import dev.alaindustrial.client.render.ThermalCentrifugeBlockEntityRenderer;
 import dev.alaindustrial.client.render.WaterMillWheelBlockEntityRenderer;
 import dev.alaindustrial.client.render.WindMillRotorBlockEntityRenderer;
+import dev.alaindustrial.client.render.UpgradeTableBlockEntityRenderer;
 import dev.alaindustrial.client.render.WorkstationBlockEntityRenderer;
 import dev.alaindustrial.registry.ContentManifest;
 import dev.alaindustrial.registry.ModContent;
@@ -168,6 +170,10 @@ public final class ClientContentManifest {
 			// loose casing nothing.
 			renderer(ContentManifest.blockEntity("workstation", WorkstationBlockEntity.class),
 					WorkstationBlockEntityRenderer::new),
+			// MOD-482: the Upgrade Table's press head, lowered onto the module while the table works.
+			// Drawn by the upper half only; the rest of the bench is chunk geometry.
+			renderer(ContentManifest.blockEntity("upgrade_table", UpgradeTableBlockEntity.class),
+					UpgradeTableBlockEntityRenderer::new),
 			// Garden Drone (MOD-277): the drone is geometry this renderer places above its station,
 			// not an entity.
 			renderer(ContentManifest.blockEntity("garden_drone_station", GardenDroneStationBlockEntity.class),

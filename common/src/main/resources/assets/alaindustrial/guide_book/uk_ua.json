@@ -2693,8 +2693,20 @@
     {
       "id": "other",
       "title": "Інше",
-      "icon": "alaindustrial:reactor_button",
+      "icon": "alaindustrial:engraved_plate_0",
       "entries": [
+        {
+          "id": "engraved_plate_0",
+          "title": "Гравірована плита 0",
+          "icon": "alaindustrial:engraved_plate_0",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Гравірована плита 0",
+              "text": "Декоративні сланцеві плити з вигравіюваною цифрою або уламком літери — з них складено табличку попереднього запису в покинутих лабораторіях. Без крафту."
+            }
+          ]
+        },
         {
           "id": "reactor_button",
           "title": "Реакторна кнопка",
@@ -3386,12 +3398,12 @@
         },
         {
           "id": "upgrade_table",
-          "title": "Стіл покращень",
+          "title": "Корпус стола покращень",
           "icon": "alaindustrial:upgrade_table",
           "pages": [
             {
               "type": "text",
-              "title": "Стіл покращень",
+              "title": "Корпус стола покращень",
               "text": "Стіл, що встановлює на електроінструмент постійні покращення. Збирається з двох заготовок, поставлених одна на одну."
             },
             {

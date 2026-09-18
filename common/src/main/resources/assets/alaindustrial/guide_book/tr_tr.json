@@ -2693,8 +2693,20 @@
     {
       "id": "other",
       "title": "Diğer",
-      "icon": "alaindustrial:reactor_button",
+      "icon": "alaindustrial:engraved_plate_0",
       "entries": [
+        {
+          "id": "engraved_plate_0",
+          "title": "Oymalı Levha 0",
+          "icon": "alaindustrial:engraved_plate_0",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Oymalı Levha 0",
+              "text": "Üzerine rakam ya da harf parçası oyulmuş dekoratif arduvaz levhalar — terk edilmiş laboratuvarlardaki önceki kaydın levhası bunlardan yapılmıştır. Tarifi yok."
+            }
+          ]
+        },
         {
           "id": "reactor_button",
           "title": "Reaktör Düğmesi",
@@ -3386,12 +3398,12 @@
         },
         {
           "id": "upgrade_table",
-          "title": "Yükseltme tezgâhı",
+          "title": "Yükseltme tezgâhı gövdesi",
           "icon": "alaindustrial:upgrade_table",
           "pages": [
             {
               "type": "text",
-              "title": "Yükseltme tezgâhı",
+              "title": "Yükseltme tezgâhı gövdesi",
               "text": "Elektrikli aletlere kalıcı yükseltmeler takan bir tezgâh. Üst üste konmuş iki gövdeden kurulur."
             },
             {

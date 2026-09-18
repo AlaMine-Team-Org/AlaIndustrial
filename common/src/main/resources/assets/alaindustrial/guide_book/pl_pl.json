@@ -2693,8 +2693,20 @@
     {
       "id": "other",
       "title": "Inne",
-      "icon": "alaindustrial:reactor_button",
+      "icon": "alaindustrial:engraved_plate_0",
       "entries": [
+        {
+          "id": "engraved_plate_0",
+          "title": "Grawerowana płyta 0",
+          "icon": "alaindustrial:engraved_plate_0",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Grawerowana płyta 0",
+              "text": "Dekoracyjne łupkowe płyty z wygrawerowaną cyfrą lub fragmentem litery — z nich złożona jest tabliczka poprzedniego zapisu w opuszczonych laboratoriach. Bez receptury."
+            }
+          ]
+        },
         {
           "id": "reactor_button",
           "title": "Przycisk reaktora",
@@ -3386,12 +3398,12 @@
         },
         {
           "id": "upgrade_table",
-          "title": "Stół ulepszeń",
+          "title": "Obudowa stołu ulepszeń",
           "icon": "alaindustrial:upgrade_table",
           "pages": [
             {
               "type": "text",
-              "title": "Stół ulepszeń",
+              "title": "Obudowa stołu ulepszeń",
               "text": "Stół, który montuje trwałe ulepszenia w narzędziach elektrycznych. Składa się go z dwóch obudów postawionych jedna na drugiej."
             },
             {
