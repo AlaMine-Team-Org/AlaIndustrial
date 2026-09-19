@@ -1495,5 +1495,11 @@
   "gui.alaindustrial.teleporter_remote.log.event.bound": "Прив'язано %s (%s / %s)",
   "gui.alaindustrial.teleporter_remote.log.event.renamed": "Перейменовано %s → %s",
   "gui.alaindustrial.teleporter_remote.log.event.deleted": "Видалено %s",
-  "gui.alaindustrial.teleporter_remote.log.event.unknown": "Невідома подія"
+  "gui.alaindustrial.teleporter_remote.log.event.unknown": "Невідома подія",
+  "block.alaindustrial.oil_fire": "Палаюча нафта",
+  "block.alaindustrial.soot_layer": "Сажа",
+  "item.alaindustrial.soot": "Сажа",
+  "jei.alaindustrial.soot.line1": "Не крафтиться: лишається там, де палаюча нафта догоріла сама.",
+  "jei.alaindustrial.soot.line2": "Кожна вигоріла клітинка з твердою підлогою: шанс шару сажі %s%%.",
+  "jei.alaindustrial.soot.line3": "Зберіть шар лопатою; 16 сажі в компресорі — вуглецевий брикет."
 }

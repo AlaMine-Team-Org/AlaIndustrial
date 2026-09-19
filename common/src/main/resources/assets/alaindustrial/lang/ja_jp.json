@@ -1495,5 +1495,11 @@
   "gui.alaindustrial.teleporter_remote.log.event.bound": "%s を登録 (%s / %s)",
   "gui.alaindustrial.teleporter_remote.log.event.renamed": "%s を名前変更 → %s",
   "gui.alaindustrial.teleporter_remote.log.event.deleted": "%s を削除",
-  "gui.alaindustrial.teleporter_remote.log.event.unknown": "不明な記録"
+  "gui.alaindustrial.teleporter_remote.log.event.unknown": "不明な記録",
+  "block.alaindustrial.oil_fire": "燃える石油",
+  "block.alaindustrial.soot_layer": "すす",
+  "item.alaindustrial.soot": "すす",
+  "jei.alaindustrial.soot.line1": "クラフトできない：燃える石油が自然に燃え尽きた場所に残る。",
+  "jei.alaindustrial.soot.line2": "下が固い床の燃え尽きたマスごとに、%s%%の確率ですすの層ができる。",
+  "jei.alaindustrial.soot.line3": "層はシャベルで壊す。すす16個は圧縮機でカーボン練炭になる。"
 }

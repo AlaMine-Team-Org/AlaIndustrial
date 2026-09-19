@@ -1495,5 +1495,11 @@
   "gui.alaindustrial.teleporter_remote.log.event.bound": "رُبطت %s (%s / %s)",
   "gui.alaindustrial.teleporter_remote.log.event.renamed": "أُعيدت تسمية %s ← %s",
   "gui.alaindustrial.teleporter_remote.log.event.deleted": "حُذفت %s",
-  "gui.alaindustrial.teleporter_remote.log.event.unknown": "حدث غير معروف"
+  "gui.alaindustrial.teleporter_remote.log.event.unknown": "حدث غير معروف",
+  "block.alaindustrial.oil_fire": "نفط مشتعل",
+  "block.alaindustrial.soot_layer": "سُخام",
+  "item.alaindustrial.soot": "سُخام",
+  "jei.alaindustrial.soot.line1": "لا يُصنع: يبقى حيث انطفأ النفط المشتعل من تلقاء نفسه.",
+  "jei.alaindustrial.soot.line2": "كل خلية محترقة فوقها أرضية صلبة: فرصة %s%% لطبقة سُخام.",
+  "jei.alaindustrial.soot.line3": "اكسر الطبقة بمجرفة؛ 16 سُخامًا تصنع قالبًا كربونيًا في الضاغط."
 }

@@ -1495,5 +1495,11 @@
   "gui.alaindustrial.teleporter_remote.log.event.bound": "Vinculada %s (%s / %s)",
   "gui.alaindustrial.teleporter_remote.log.event.renamed": "Renomeada %s → %s",
   "gui.alaindustrial.teleporter_remote.log.event.deleted": "Excluída %s",
-  "gui.alaindustrial.teleporter_remote.log.event.unknown": "Evento desconhecido"
+  "gui.alaindustrial.teleporter_remote.log.event.unknown": "Evento desconhecido",
+  "block.alaindustrial.oil_fire": "Petróleo em chamas",
+  "block.alaindustrial.soot_layer": "Fuligem",
+  "item.alaindustrial.soot": "Fuligem",
+  "jei.alaindustrial.soot.line1": "Não é fabricada: fica onde o petróleo em chamas se apagou sozinho.",
+  "jei.alaindustrial.soot.line2": "Cada célula queimada com chão sólido embaixo: %s%% de chance de uma camada de fuligem.",
+  "jei.alaindustrial.soot.line3": "Quebre a camada com uma pá; 16 de fuligem viram um briquete de carbono no compressor."
 }

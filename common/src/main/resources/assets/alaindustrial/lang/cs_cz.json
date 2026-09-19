@@ -1495,5 +1495,11 @@
   "gui.alaindustrial.teleporter_remote.log.event.bound": "Propojeno %s (%s / %s)",
   "gui.alaindustrial.teleporter_remote.log.event.renamed": "Přejmenováno %s → %s",
   "gui.alaindustrial.teleporter_remote.log.event.deleted": "Odstraněno %s",
-  "gui.alaindustrial.teleporter_remote.log.event.unknown": "Neznámá událost"
+  "gui.alaindustrial.teleporter_remote.log.event.unknown": "Neznámá událost",
+  "block.alaindustrial.oil_fire": "Hořící ropa",
+  "block.alaindustrial.soot_layer": "Saze",
+  "item.alaindustrial.soot": "Saze",
+  "jei.alaindustrial.soot.line1": "Nevyrábí se: zůstává tam, kde hořící ropa sama dohořela.",
+  "jei.alaindustrial.soot.line2": "Každé vyhořelé pole na pevné podlaze: %s%% šance na vrstvu sazí.",
+  "jei.alaindustrial.soot.line3": "Vrstvu sesbírejte lopatou; 16 sazí dá v kompresoru uhlíkovou briketu."
 }

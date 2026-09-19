@@ -1495,5 +1495,11 @@
   "gui.alaindustrial.teleporter_remote.log.event.bound": "%s liée (%s / %s)",
   "gui.alaindustrial.teleporter_remote.log.event.renamed": "%s renommée → %s",
   "gui.alaindustrial.teleporter_remote.log.event.deleted": "%s supprimée",
-  "gui.alaindustrial.teleporter_remote.log.event.unknown": "Événement inconnu"
+  "gui.alaindustrial.teleporter_remote.log.event.unknown": "Événement inconnu",
+  "block.alaindustrial.oil_fire": "Pétrole en feu",
+  "block.alaindustrial.soot_layer": "Suie",
+  "item.alaindustrial.soot": "Suie",
+  "jei.alaindustrial.soot.line1": "Ne se fabrique pas : il reste là où le pétrole en feu s'est éteint de lui-même.",
+  "jei.alaindustrial.soot.line2": "Chaque case brûlée sur un sol solide : %s%% de chances de laisser une couche de suie.",
+  "jei.alaindustrial.soot.line3": "Cassez la couche avec une pelle ; 16 suies donnent une briquette de carbone au compresseur."
 }

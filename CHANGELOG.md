@@ -1,13 +1,16 @@
-## 0.1.179
+## 0.1.180
 
-<p><img alt="Ala Industrial 0.1.179 Electric Bow compared with a vanilla bow" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.179/release-media/v0.1.179/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial 0.1.180 — an oil lake burning out and leaving soot" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.180/release-media/v0.1.180/changelog.webp" width="720"></p>
 
-A new powered weapon: the Electric Bow, the ranged partner of the Electric Saber.
+2 updates in this release.
 
 ### New
 
-- **Electric Bow.** Charged, it draws in 0.8 s instead of a full second.
-- **Faster arrows.** Arrows leave 15% faster: they fly further and flatter, hit one point harder and group twice as tight.
-- **150 EU per shot.** Arrows are still needed, and Power, Punch, Flame and Infinity all apply.
-- **Charge it or it's useless.** Flat, the arrow drops at your feet however far you draw, but the bow never breaks.
-- **Feels like a real bow.** The camera zooms in while you draw, and the lamps on the limbs light up as the shot builds.
+- **Soot.** Oil that burns out by itself leaves soot on the floor — a ragged black blot in about
+  one cell in five. Collect it with a shovel; the Compressor presses 16 soot into a Carbon
+  Briquette. Burning oil now burns deep lakes all the way to the bottom, rain or not.
+
+### Improved
+
+- **New electric tool icons.** The Electric Chainsaw, Hoe and Shovel — plain and diamond-tipped,
+  charged and flat — have been redrawn.

@@ -1495,5 +1495,11 @@
   "gui.alaindustrial.teleporter_remote.log.event.bound": "Collegata %s (%s / %s)",
   "gui.alaindustrial.teleporter_remote.log.event.renamed": "Rinominata %s → %s",
   "gui.alaindustrial.teleporter_remote.log.event.deleted": "Eliminata %s",
-  "gui.alaindustrial.teleporter_remote.log.event.unknown": "Evento sconosciuto"
+  "gui.alaindustrial.teleporter_remote.log.event.unknown": "Evento sconosciuto",
+  "block.alaindustrial.oil_fire": "Petrolio in fiamme",
+  "block.alaindustrial.soot_layer": "Fuliggine",
+  "item.alaindustrial.soot": "Fuliggine",
+  "jei.alaindustrial.soot.line1": "Non si fabbrica: resta dove il petrolio in fiamme si è spento da solo.",
+  "jei.alaindustrial.soot.line2": "Ogni cella bruciata su un pavimento solido: %s%% di probabilità di uno strato di fuliggine.",
+  "jei.alaindustrial.soot.line3": "Rompi lo strato con una pala; 16 fuliggine danno una mattonella di carbonio nel compressore."
 }

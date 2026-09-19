@@ -1763,6 +1763,8 @@ public final class NeoForgeGameTests {
 				OilScenarios::fun04BurnGateOnThenOff);
 		registerTest(event, "oil_burn_spreads_across_pool", 160, true,
 				OilScenarios::fun05BurnSpreadsAcrossPool);
+		registerTest(event, "oil_soot_only_where_oil_burnt_out", 1500, true,
+				OilScenarios::fun11SootOnlyWhereOilBurntOut);
 		registerTest(event, "oil_lava_neighbour_never_ignites", 160, true,
 				OilScenarios::neg02LavaNeighbourNeverIgnites);
 		registerTest(event, "oil_dispenser_empties_bucket", 120, true,

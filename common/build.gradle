@@ -241,6 +241,9 @@ pitest {
                      // corners, that every box is inside its block, and that the four rotations are
                      // each other's quarter turns — which is what a broken regeneration would break.
                      'dev.alaindustrial.block.ConcentratorCellGeometry',
+                     // MOD-638: the soot roll of a burnt-out oil fire — one comparison, Minecraft-free so
+                     // SootDepositTest can pin both ends of the chance and the exclusive boundary.
+                     'dev.alaindustrial.block.SootDeposit',
                      // MOD-604: the incubator chamber's generated silhouette. Minecraft-free for
                      // the same reason as the row above — it is nothing but numbers — and in the
                      // run rather than excluded because L1 reaches it: IncubatorDomeGeometryTest

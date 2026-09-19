@@ -191,19 +191,27 @@ public final class RecipeViewerInfo {
 	}
 
 	/**
-	 * Items whose real path is a hand-built press rather than a recipe (MOD-600).
+	 * Items whose real source is something done in the world rather than a recipe: a hand-built press
+	 * (MOD-600) or oil burning out (MOD-638).
 	 *
 	 * <p>The ceramic plate has exactly one recipe in the game — "plate back out of a ceramic block" —
 	 * so a player who opens the recipe viewer to ask "where do I get my FIRST plate" is shown a circle.
 	 * The answer is a quench press assembled from vanilla blocks, which no recipe can express; this
 	 * page is the only place the viewer can state it.
 	 */
-	public static List<Entry> pressMadeEntries() {
+	public static List<Entry> worldMadeEntries() {
 		return List.of(
 				new Entry(ModContent.CERAMIC_PLATE, "item.alaindustrial.ceramic_plate", List.of(
 						Line.of("jei.alaindustrial.ceramic_plate.line1"),
 						Line.of("jei.alaindustrial.ceramic_plate.line2"),
-						Line.of("jei.alaindustrial.ceramic_plate.line3"))));
+						Line.of("jei.alaindustrial.ceramic_plate.line3"))),
+				// Soot is not crafted at all: it lies where burning oil went out by itself. Without this
+				// page the viewer shows only what soot is FOR (the compressor), never where it comes from.
+				new Entry(ModContent.SOOT, "item.alaindustrial.soot", List.of(
+						Line.of("jei.alaindustrial.soot.line1"),
+						new Line("jei.alaindustrial.soot.line2", List.of(
+								() -> (int) Math.round(Config.oilSootChance * 100))),
+						Line.of("jei.alaindustrial.soot.line3"))));
 	}
 
 	private static Entry crystalPage(Supplier<? extends ItemLike> crystal, String id) {

@@ -392,6 +392,10 @@ public final class ModContent {
 	public static Supplier<Item> CARBON_ROD_DOUBLE = unbound("CARBON_ROD_DOUBLE");
 	/** MOD-590: two doubled rods fired with slag — the feedstock of the ceramic. */
 	public static Supplier<Item> CARBON_BRIQUETTE = unbound("CARBON_BRIQUETTE");
+	// MOD-638 — the fire a burning oil cell becomes, the soot layer it may leave, and the soot item.
+	public static Supplier<Block> OIL_FIRE = unbound("OIL_FIRE");
+	public static Supplier<Block> SOOT_LAYER = unbound("SOOT_LAYER");
+	public static Supplier<Item> SOOT = unbound("SOOT");
 	/** MOD-590: fired from a briquette and slag; four of them assemble into a block of ceramic. */
 	public static Supplier<Item> CERAMIC_PLATE = unbound("CERAMIC_PLATE");
 	public static Supplier<Item> RECYCLER_BLADES_IRON = unbound("RECYCLER_BLADES_IRON");

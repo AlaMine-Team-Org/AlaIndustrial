@@ -1,6 +1,7 @@
 package dev.alaindustrial.block;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.registry.ModContent;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.BlockPos;
@@ -16,7 +17,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -170,11 +170,12 @@ public class OilLiquidBlock extends LiquidBlock {
 	 * block update the replacement sends makes every adjacent oil cell schedule its own ignition
 	 * tick, which is the chain reaction.
 	 *
-	 * <p>Even if fire cannot survive at this cell it is placed anyway: it either burns out on its own
-	 * next fire tick or spreads first — both acceptable; the oil block itself is consumed either way.
+	 * <p>The cell becomes {@link OilFireBlock}, not vanilla fire (MOD-638): vanilla fire over another oil
+	 * cell is removed the moment it is placed — no sturdy floor — which stalled the burn of any lake
+	 * deeper than one block, and it carries no memory that it burnt oil, which soot needs.
 	 */
 	public static void ignite(Level level, BlockPos pos) {
-		level.setBlockAndUpdate(pos, BaseFireBlock.getState(level, pos));
+		level.setBlockAndUpdate(pos, ModContent.OIL_FIRE.get().defaultBlockState());
 		scheduleNeighbourIgnition(level, pos);
 	}
 

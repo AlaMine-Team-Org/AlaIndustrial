@@ -1495,5 +1495,11 @@
   "gui.alaindustrial.teleporter_remote.log.event.bound": "%s जोड़ा (%s / %s)",
   "gui.alaindustrial.teleporter_remote.log.event.renamed": "%s का नाम बदला → %s",
   "gui.alaindustrial.teleporter_remote.log.event.deleted": "%s हटाया",
-  "gui.alaindustrial.teleporter_remote.log.event.unknown": "अज्ञात घटना"
+  "gui.alaindustrial.teleporter_remote.log.event.unknown": "अज्ञात घटना",
+  "block.alaindustrial.oil_fire": "जलता कच्चा तेल",
+  "block.alaindustrial.soot_layer": "कालिख",
+  "item.alaindustrial.soot": "कालिख",
+  "jei.alaindustrial.soot.line1": "बनाया नहीं जाता: यह वहाँ रहता है जहाँ जलता कच्चा तेल अपने आप बुझ गया।",
+  "jei.alaindustrial.soot.line2": "नीचे ठोस फ़र्श वाले हर जले खाने पर कालिख की परत का %s%% मौका।",
+  "jei.alaindustrial.soot.line3": "परत को फावड़े से तोड़ें; 16 कालिख कंप्रेसर में एक कार्बन ब्रिकेट बनाती है।"
 }

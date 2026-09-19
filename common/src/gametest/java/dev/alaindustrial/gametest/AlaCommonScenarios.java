@@ -157,6 +157,11 @@ public final class AlaCommonScenarios {
 					|| id.getPath().equals("distillation_column_top")) {
 				continue;
 			}
+			// MOD-638: burning oil is fire — no item, no loot, like vanilla fire; the soot layer drops the
+			// `soot` item to a shovel, never itself. Both drop contracts are asserted in OilScenarios FUN11.
+			if (id.getPath().equals("oil_fire") || id.getPath().equals("soot_layer")) {
+				continue;
+			}
 			Block block = BuiltInRegistries.BLOCK.getValue(id);
 			// Liquid blocks (MOD-238 oil): like vanilla water/lava, the in-world block form of a fluid
 			// has no item and no loot — it is scooped with a bucket, never mined (LiquidBlock#getDrops
@@ -207,6 +212,11 @@ public final class AlaCommonScenarios {
 			// plant claimed — dug by hand, never tool-gated (and the flower is a VegetationBlock,
 			// exempted by the class rule two blocks below).
 			if (id.getPath().equals("kok_sagyz_root")) {
+				continue;
+			}
+			// MOD-638: oil fire breaks instantly and drops nothing, like vanilla fire; the soot layer is
+			// SHOVEL-gated like snow, not pickaxe-gated — its hand/shovel contract is in OilScenarios FUN11.
+			if (id.getPath().equals("oil_fire") || id.getPath().equals("soot_layer")) {
 				continue;
 			}
 			Block block = BuiltInRegistries.BLOCK.getValue(id);
@@ -315,7 +325,13 @@ public final class AlaCommonScenarios {
 			// block item (the hand-carried form is the bucket) and no loot table (LiquidBlock#getDrops
 			// is empty), so those two invariants are waived. The occlusion invariant still applies
 			// below: a liquid is a non-full-cube non-occluder and must stay that way.
-			boolean liquid = block instanceof net.minecraft.world.level.block.LiquidBlock;
+			boolean liquid = block instanceof net.minecraft.world.level.block.LiquidBlock
+					// MOD-638: oil fire is waived on the same grounds as a liquid — no item, no loot
+					// (vanilla fire has neither); its occlusion is still checked below.
+					|| id.getPath().equals("oil_fire");
+			// MOD-638: the soot layer's hand-held form is the `soot` item, a different id — like the
+			// kok-sagyz seeds above; its loot table exists and is checked.
+			seedItemCrop = seedItemCrop || id.getPath().equals("soot_layer");
 
 			// 1. Occlusion <=> full collision cube.
 			boolean fullCube = state.isCollisionShapeFullBlock(level, probe)

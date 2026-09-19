@@ -157,8 +157,9 @@ public class AlaJeiPlugin implements IModPlugin {
 			registration.addIngredientInfo((ItemLike) entry.owner().get(),
 					description.toArray(new Component[0]));
 		}
-		// MOD-600: the ceramic plate — made by a hand-built quench press, which no recipe can express.
-		for (RecipeViewerInfo.Entry entry : RecipeViewerInfo.pressMadeEntries()) {
+		// MOD-600 / MOD-638: the ceramic plate (a hand-built quench press) and soot (burnt-out oil) —
+		// sources no recipe can express.
+		for (RecipeViewerInfo.Entry entry : RecipeViewerInfo.worldMadeEntries()) {
 			List<Component> description = new ArrayList<>();
 			description.add(RecipeViewerInfo.title(entry));
 			description.addAll(RecipeViewerInfo.buildLines(entry));

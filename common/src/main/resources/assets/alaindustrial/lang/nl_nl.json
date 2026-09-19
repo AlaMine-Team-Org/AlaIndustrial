@@ -1495,5 +1495,11 @@
   "gui.alaindustrial.teleporter_remote.log.event.bound": "%s gekoppeld (%s / %s)",
   "gui.alaindustrial.teleporter_remote.log.event.renamed": "%s hernoemd → %s",
   "gui.alaindustrial.teleporter_remote.log.event.deleted": "%s verwijderd",
-  "gui.alaindustrial.teleporter_remote.log.event.unknown": "Onbekende gebeurtenis"
+  "gui.alaindustrial.teleporter_remote.log.event.unknown": "Onbekende gebeurtenis",
+  "block.alaindustrial.oil_fire": "Brandende aardolie",
+  "block.alaindustrial.soot_layer": "Roet",
+  "item.alaindustrial.soot": "Roet",
+  "jei.alaindustrial.soot.line1": "Niet te maken: het blijft liggen waar brandende aardolie vanzelf is uitgegaan.",
+  "jei.alaindustrial.soot.line2": "Elke uitgebrande cel op een vaste vloer: %s%% kans op een roetlaag.",
+  "jei.alaindustrial.soot.line3": "Breek de laag met een schep; 16 roet geven in de compressor een koolstofbriket."
 }

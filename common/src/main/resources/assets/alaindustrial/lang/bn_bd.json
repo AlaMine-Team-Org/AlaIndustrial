@@ -1495,5 +1495,11 @@
   "gui.alaindustrial.teleporter_remote.log.event.bound": "%s যুক্ত (%s / %s)",
   "gui.alaindustrial.teleporter_remote.log.event.renamed": "%s এর নাম বদল → %s",
   "gui.alaindustrial.teleporter_remote.log.event.deleted": "%s মুছে ফেলা হয়েছে",
-  "gui.alaindustrial.teleporter_remote.log.event.unknown": "অজানা ঘটনা"
+  "gui.alaindustrial.teleporter_remote.log.event.unknown": "অজানা ঘটনা",
+  "block.alaindustrial.oil_fire": "জ্বলন্ত তেল",
+  "block.alaindustrial.soot_layer": "ঝুল",
+  "item.alaindustrial.soot": "ঝুল",
+  "jei.alaindustrial.soot.line1": "তৈরি করা যায় না: জ্বলন্ত তেল নিজে নিভে গেলে সেখানে থেকে যায়।",
+  "jei.alaindustrial.soot.line2": "নিচে শক্ত মেঝে থাকা প্রতিটি পোড়া ঘরে ঝুলের স্তরের %s%% সম্ভাবনা।",
+  "jei.alaindustrial.soot.line3": "স্তরটি বেলচা দিয়ে ভাঙুন; ১৬টি ঝুল সংকোচক যন্ত্রে একটি কার্বন ব্রিকেট হয়।"
 }

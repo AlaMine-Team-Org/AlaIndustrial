@@ -142,8 +142,9 @@ public class AlaReiPlugin implements REIClientPlugin {
 			registry.add(new AlaInfoDisplay(entry, AlaInfoDisplay.PLANT_CATEGORY));
 		}
 		// MOD-600: the ceramic plate — its real source is a hand-built quench press, and the only recipe
-		// the game has for it runs the other way (plate back out of a block).
-		for (RecipeViewerInfo.Entry entry : RecipeViewerInfo.pressMadeEntries()) {
+		// the game has for it runs the other way (plate back out of a block). MOD-638: soot, which lies
+		// where burning oil went out by itself.
+		for (RecipeViewerInfo.Entry entry : RecipeViewerInfo.worldMadeEntries()) {
 			registry.add(new AlaInfoDisplay(entry, AlaInfoDisplay.CATEGORY));
 		}
 		// MOD-420: the geothermal generator and the energy condenser — no recipe kind, no recipe JSON,

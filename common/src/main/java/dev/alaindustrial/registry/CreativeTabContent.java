@@ -806,6 +806,7 @@ public final class CreativeTabContent {
 		// briquette, the briquette cuts into plates, four plates make the block.
 		show(out, ModContent.CARBON_ROD);
 		show(out, ModContent.CARBON_ROD_DOUBLE);
+		show(out, ModContent.SOOT);
 		show(out, ModContent.CARBON_BRIQUETTE);
 		show(out, ModContent.CERAMIC_PLATE);
 		show(out, ModContent.CARBON_CERAMIC_ITEM);

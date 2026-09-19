@@ -1,0 +1,81 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "alaindustrial:block/soot_layer_0"
+      },
+      {
+        "model": "alaindustrial:block/soot_layer_0",
+        "y": 90
+      },
+      {
+        "model": "alaindustrial:block/soot_layer_0",
+        "y": 180
+      },
+      {
+        "model": "alaindustrial:block/soot_layer_0",
+        "y": 270
+      },
+      {
+        "model": "alaindustrial:block/soot_layer_1"
+      },
+      {
+        "model": "alaindustrial:block/soot_layer_1",
+        "y": 90
+      },
+      {
+        "model": "alaindustrial:block/soot_layer_1",
+        "y": 180
+      },
+      {
+        "model": "alaindustrial:block/soot_layer_1",
+        "y": 270
+      },
+      {
+        "model": "alaindustrial:block/soot_layer_2"
+      },
+      {
+        "model": "alaindustrial:block/soot_layer_2",
+        "y": 90
+      },
+      {
+        "model": "alaindustrial:block/soot_layer_2",
+        "y": 180
+      },
+      {
+        "model": "alaindustrial:block/soot_layer_2",
+        "y": 270
+      },
+      {
+        "model": "alaindustrial:block/soot_layer_3"
+      },
+      {
+        "model": "alaindustrial:block/soot_layer_3",
+        "y": 90
+      },
+      {
+        "model": "alaindustrial:block/soot_layer_3",
+        "y": 180
+      },
+      {
+        "model": "alaindustrial:block/soot_layer_3",
+        "y": 270
+      },
+      {
+        "model": "alaindustrial:block/soot_layer_4"
+      },
+      {
+        "model": "alaindustrial:block/soot_layer_4",
+        "y": 90
+      },
+      {
+        "model": "alaindustrial:block/soot_layer_4",
+        "y": 180
+      },
+      {
+        "model": "alaindustrial:block/soot_layer_4",
+        "y": 270
+      }
+    ]
+  }
+}

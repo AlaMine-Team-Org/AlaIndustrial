@@ -3262,6 +3262,14 @@ public final class Config {
 			doc = "When true, oil ignites from adjacent fire or flint-and-steel and the burn spreads across the pool; lava alone does not ignite it. false = oil is inert.")
 	public static boolean oilBurns = true;
 
+	/**
+	 * MOD-638: chance (0..1) that an oil fire which went out by itself leaves a soot layer on its cell.
+	 * Rolled once per burnt cell, and only over a sturdy floor. 0 = never, 1 = always.
+	 */
+	@Knob(section = Section.WORLD, min = 0.0, floorTo = 0.0,
+			doc = "Chance (0..1) that a burnt-out oil fire leaves a soot layer on a solid floor under it (0 = never, 1 = always).")
+	public static double oilSootChance = 0.2;
+
 	// ---------------------------------------------------------------------------------------------
 	// MOD-402: file layout — schema version, thematic sections and the migration ladder.
 	// NOTE: none of this touches the Java API above. Every consumer keeps reading `Config.<field>`;

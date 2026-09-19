@@ -1495,5 +1495,11 @@
   "tooltip.alaindustrial.upgrade_table.assemble": "Stack two casings to build the Upgrade Table",
   "tooltip.alaindustrial.upgrade_table.cost": "%1$s EU/t for %2$s s per upgrade",
   "tooltip.alaindustrial.upgrade_table.purpose": "Fits modules onto powered tools for good",
-  "tooltip.alaindustrial.wind_gauge.usage": "Shift + right-click: measure the wind here"
+  "tooltip.alaindustrial.wind_gauge.usage": "Shift + right-click: measure the wind here",
+  "block.alaindustrial.oil_fire": "Burning Oil",
+  "block.alaindustrial.soot_layer": "Soot",
+  "item.alaindustrial.soot": "Soot",
+  "jei.alaindustrial.soot.line1": "Not crafted: it lies where burning oil went out by itself.",
+  "jei.alaindustrial.soot.line2": "Each burnt cell with a solid floor under it: %s%% chance of a soot layer.",
+  "jei.alaindustrial.soot.line3": "Break the layer with a shovel; 16 soot make a carbon briquette in the compressor."
 }

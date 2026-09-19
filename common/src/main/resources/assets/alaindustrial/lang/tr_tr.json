@@ -1495,5 +1495,11 @@
   "gui.alaindustrial.teleporter_remote.log.event.bound": "%s bağlandı (%s / %s)",
   "gui.alaindustrial.teleporter_remote.log.event.renamed": "%s yeniden adlandırıldı → %s",
   "gui.alaindustrial.teleporter_remote.log.event.deleted": "%s silindi",
-  "gui.alaindustrial.teleporter_remote.log.event.unknown": "Bilinmeyen olay"
+  "gui.alaindustrial.teleporter_remote.log.event.unknown": "Bilinmeyen olay",
+  "block.alaindustrial.oil_fire": "Yanan Petrol",
+  "block.alaindustrial.soot_layer": "İs",
+  "item.alaindustrial.soot": "İs",
+  "jei.alaindustrial.soot.line1": "Üretilmez: yanan petrolün kendiliğinden söndüğü yerde kalır.",
+  "jei.alaindustrial.soot.line2": "Altında sağlam zemin olan her yanmış hücre: %s%% is katmanı şansı.",
+  "jei.alaindustrial.soot.line3": "Katmanı kürekle kır; 16 is sıkıştırıcıda bir karbon briketi yapar."
 }

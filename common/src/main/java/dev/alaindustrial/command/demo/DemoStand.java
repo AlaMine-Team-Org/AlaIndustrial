@@ -767,6 +767,11 @@ public final class DemoStand {
 		// on fire (OilLiquidBlock ignition mechanic) and the stand would showcase a fire block instead.
 		set(level, origin, 34, -1, 12, FLOOR);
 		set(level, origin, 34, 0, 12, ModContent.OIL_BLOCK.get());
+		// Burning oil and its soot (MOD-638), on the east edge of the floor, away from the oil pool and
+		// from anything flammable. The fire is live: it burns out within seconds of the build and may
+		// itself leave soot — the coverage scan runs on the build tick, while it still stands.
+		set(level, origin, 41, 1, 14, ModContent.SOOT_LAYER.get());
+		set(level, origin, 41, 1, 16, ModContent.OIL_FIRE.get());
 		// Distillation fractions (MOD-251): the same sunken-pool pattern for diesel and fuel oil —
 		// water-like fluids, so no ignition spacing worries; two more one-block basins along z=12.
 		set(level, origin, 36, -1, 12, FLOOR);

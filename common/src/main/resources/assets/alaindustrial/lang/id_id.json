@@ -1495,5 +1495,11 @@
   "gui.alaindustrial.teleporter_remote.log.event.bound": "Mengikat %s (%s / %s)",
   "gui.alaindustrial.teleporter_remote.log.event.renamed": "Mengganti nama %s → %s",
   "gui.alaindustrial.teleporter_remote.log.event.deleted": "Menghapus %s",
-  "gui.alaindustrial.teleporter_remote.log.event.unknown": "Kejadian tak dikenal"
+  "gui.alaindustrial.teleporter_remote.log.event.unknown": "Kejadian tak dikenal",
+  "block.alaindustrial.oil_fire": "Minyak Bumi Terbakar",
+  "block.alaindustrial.soot_layer": "Jelaga",
+  "item.alaindustrial.soot": "Jelaga",
+  "jei.alaindustrial.soot.line1": "Tidak dapat dibuat: tertinggal di tempat minyak bumi terbakar padam dengan sendirinya.",
+  "jei.alaindustrial.soot.line2": "Setiap sel yang terbakar dengan lantai padat di bawahnya: peluang %s%% lapisan jelaga.",
+  "jei.alaindustrial.soot.line3": "Hancurkan lapisan dengan sekop; 16 jelaga menjadi briket karbon di kompresor."
 }

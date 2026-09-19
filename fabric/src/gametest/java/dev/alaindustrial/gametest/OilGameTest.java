@@ -141,4 +141,14 @@ public class OilGameTest {
 	public void tcOil001Neg04_hangingBasinIsRefused(GameTestHelper helper) {
 		OilScenarios.neg04HangingBasinIsRefused(helper);
 	}
+
+	/**
+	 * @implements TC-OIL-001-FUN11 — a burnt-out oil fire leaves soot only on a sturdy floor, never when
+	 * hanging or put out by a player; the layer drops soot to a shovel only and vanishes with its floor
+	 * (MOD-638).
+	 */
+	@GameTest(maxTicks = 1500)
+	public void tcOil001Fun11_sootOnlyWhereOilBurntOut(GameTestHelper helper) {
+		OilScenarios.fun11SootOnlyWhereOilBurntOut(helper);
+	}
 }

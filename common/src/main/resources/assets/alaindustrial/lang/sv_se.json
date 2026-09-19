@@ -1495,5 +1495,11 @@
   "gui.alaindustrial.teleporter_remote.log.event.bound": "Band %s (%s / %s)",
   "gui.alaindustrial.teleporter_remote.log.event.renamed": "Bytte namn på %s → %s",
   "gui.alaindustrial.teleporter_remote.log.event.deleted": "Tog bort %s",
-  "gui.alaindustrial.teleporter_remote.log.event.unknown": "Okänd händelse"
+  "gui.alaindustrial.teleporter_remote.log.event.unknown": "Okänd händelse",
+  "block.alaindustrial.oil_fire": "Brinnande olja",
+  "block.alaindustrial.soot_layer": "Sot",
+  "item.alaindustrial.soot": "Sot",
+  "jei.alaindustrial.soot.line1": "Tillverkas inte: det blir kvar där brinnande olja slocknade av sig själv.",
+  "jei.alaindustrial.soot.line2": "Varje utbränd ruta med fast golv under: %s%% chans till ett sotlager.",
+  "jei.alaindustrial.soot.line3": "Bryt lagret med en spade; 16 sot blir en kolbrikett i kompressorn."
 }

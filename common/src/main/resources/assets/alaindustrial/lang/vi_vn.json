@@ -1495,5 +1495,11 @@
   "gui.alaindustrial.teleporter_remote.log.event.bound": "Đã liên kết %s (%s / %s)",
   "gui.alaindustrial.teleporter_remote.log.event.renamed": "Đã đổi tên %s → %s",
   "gui.alaindustrial.teleporter_remote.log.event.deleted": "Đã xóa %s",
-  "gui.alaindustrial.teleporter_remote.log.event.unknown": "Sự kiện không rõ"
+  "gui.alaindustrial.teleporter_remote.log.event.unknown": "Sự kiện không rõ",
+  "block.alaindustrial.oil_fire": "Dầu mỏ đang cháy",
+  "block.alaindustrial.soot_layer": "Muội than",
+  "item.alaindustrial.soot": "Muội than",
+  "jei.alaindustrial.soot.line1": "Không chế tạo được: còn lại nơi dầu mỏ đang cháy tự tắt.",
+  "jei.alaindustrial.soot.line2": "Mỗi ô cháy hết có sàn cứng bên dưới: %s%% cơ hội để lại một lớp muội than.",
+  "jei.alaindustrial.soot.line3": "Phá lớp bằng xẻng; 16 muội than thành một bánh than nén trong máy nén."
 }

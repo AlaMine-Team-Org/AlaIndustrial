@@ -1495,5 +1495,11 @@
   "tooltip.alaindustrial.upgrade_table.assemble": "Два корпуса друг на друга — стол улучшений",
   "tooltip.alaindustrial.upgrade_table.cost": "%1$s EU/t, %2$s с на одно улучшение",
   "tooltip.alaindustrial.upgrade_table.purpose": "Навсегда ставит модули на электроинструмент",
-  "tooltip.alaindustrial.wind_gauge.usage": "Shift + ПКМ: замерить ветер здесь"
+  "tooltip.alaindustrial.wind_gauge.usage": "Shift + ПКМ: замерить ветер здесь",
+  "block.alaindustrial.oil_fire": "Горящая нефть",
+  "block.alaindustrial.soot_layer": "Сажа",
+  "item.alaindustrial.soot": "Сажа",
+  "jei.alaindustrial.soot.line1": "Не крафтится: остаётся там, где горящая нефть догорела сама.",
+  "jei.alaindustrial.soot.line2": "Каждая выгоревшая клетка с твёрдым полом: шанс слоя сажи %s%%.",
+  "jei.alaindustrial.soot.line3": "Соберите слой лопатой; 16 сажи в компрессоре — углеродный брикет."
 }

@@ -1495,5 +1495,11 @@
   "gui.alaindustrial.teleporter_remote.log.event.bound": "ผูก %s แล้ว (%s / %s)",
   "gui.alaindustrial.teleporter_remote.log.event.renamed": "เปลี่ยนชื่อ %s → %s",
   "gui.alaindustrial.teleporter_remote.log.event.deleted": "ลบ %s แล้ว",
-  "gui.alaindustrial.teleporter_remote.log.event.unknown": "เหตุการณ์ที่ไม่รู้จัก"
+  "gui.alaindustrial.teleporter_remote.log.event.unknown": "เหตุการณ์ที่ไม่รู้จัก",
+  "block.alaindustrial.oil_fire": "น้ำมันดิบที่ลุกไหม้",
+  "block.alaindustrial.soot_layer": "เขม่า",
+  "item.alaindustrial.soot": "เขม่า",
+  "jei.alaindustrial.soot.line1": "คราฟต์ไม่ได้: เหลืออยู่ตรงที่น้ำมันดิบที่ลุกไหม้ดับไปเอง",
+  "jei.alaindustrial.soot.line2": "ทุกช่องที่ไหม้หมดและมีพื้นแข็งอยู่ข้างใต้: โอกาส %s%% ที่จะเหลือชั้นเขม่า",
+  "jei.alaindustrial.soot.line3": "ทุบชั้นด้วยพลั่ว เขม่า 16 ชิ้นในเครื่องอัดได้แท่งคาร์บอนอัดหนึ่งแท่ง"
 }

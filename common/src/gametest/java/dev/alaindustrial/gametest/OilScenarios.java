@@ -482,6 +482,7 @@ public final class OilScenarios {
 		// Diagonal-only cell: its four horizontal faces are stone or wall, so the burn can reach it
 		// along an edge or not at all (MOD-250).
 		final BlockPos diagonal = new BlockPos(5, 2, 6);
+		final BlockPos wellBottom = new BlockPos(8, 2, 6);
 		boolean savedBurns = forceOilBurns(helper, true);
 		forceFireSpreadRadius(helper, 0);
 		basin(helper, 2, 2, 4, 2);
@@ -489,6 +490,21 @@ public final class OilScenarios {
 		helper.setBlock(new BlockPos(5, 2, 5), Blocks.STONE);
 		helper.setBlock(new BlockPos(4, 2, 6), Blocks.STONE);
 		level.setBlockAndUpdate(helper.absolutePos(diagonal), oilSource());
+		// A two-deep well (MOD-638): the burn must reach the cell UNDER a burning one. Vanilla fire over
+		// oil has no sturdy floor and was removed the moment it was placed, so the lower cell never saw
+		// it; oil fire survives over liquid.
+		for (int y = 2; y <= 3; y++) {
+			for (int x = 7; x <= 9; x++) {
+				for (int z = 5; z <= 7; z++) {
+					if (x != 8 || z != 6) {
+						helper.setBlock(new BlockPos(x, y, z), Blocks.STONE);
+					}
+				}
+			}
+		}
+		helper.setBlock(new BlockPos(8, 1, 6), Blocks.STONE);
+		level.setBlockAndUpdate(helper.absolutePos(wellBottom), oilSource());
+		level.setBlockAndUpdate(helper.absolutePos(wellBottom.above()), oilSource());
 		for (BlockPos cell : blocked) {
 			level.setBlockAndUpdate(helper.absolutePos(cell), oilSource());
 		}
@@ -522,6 +538,7 @@ public final class OilScenarios {
 			setFireSpreadRadius(helper, -1);
 			InteractionResult lit = useOnTopFace(helper, survivalPlayer(helper),
 					new ItemStack(Items.FLINT_AND_STEEL), new BlockPos(2, 1, 5));
+			dev.alaindustrial.block.OilLiquidBlock.ignite(level, helper.absolutePos(wellBottom.above()));
 			if (!lit.consumesAction()) {
 				Config.oilBurns = savedBurns;
 				helper.fail("flint and steel refused to light the west end of the pool: " + lit);
@@ -538,6 +555,12 @@ public final class OilScenarios {
 						return;
 					}
 				}
+				FluidState bottom = level.getFluidState(helper.absolutePos(wellBottom));
+				if (isOil(bottom)) {
+					helper.fail("the burn must reach the oil UNDER a burning cell: " + wellBottom
+							+ " still holds oil — the fire over it did not survive on a liquid floor");
+					return;
+				}
 				FluidState edge = level.getFluidState(helper.absolutePos(diagonal));
 				if (isOil(edge)) {
 					helper.fail("the burn must also cross an edge diagonal: " + diagonal + " still holds oil"
@@ -549,6 +572,85 @@ public final class OilScenarios {
 			} finally {
 				Config.oilBurns = savedBurns;
 			}
+		});
+	}
+
+	// ── FUN11: burnt-out oil fire leaves soot only on a floor; the layer drops soot to a shovel ────
+
+	/**
+	 * Force {@link Config#oilSootChance} for one test, restored on every exit path (same backstop as
+	 * {@link #forceOilBurns}). ONLY {@link #fun11SootOnlyWhereOilBurntOut} may call this: a second test
+	 * forcing the same global knob in a concurrent batch could restore the other one's value.
+	 */
+	private static void forceSootChance(GameTestHelper helper, double chance) {
+		double saved = Config.oilSootChance;
+		helper.runBeforeTestEnd(() -> Config.oilSootChance = saved);
+		Config.oilSootChance = chance;
+	}
+
+	/**
+	 * MOD-638, with the soot chance forced to 1 so every burnout that is ALLOWED to leave soot does:
+	 * <ul>
+	 *   <li><b>floor</b> — an oil cell on stone, lit through {@code OilLiquidBlock.ignite}, becomes
+	 *       {@code oil_fire}, burns out by itself and leaves a soot layer on the same cell;</li>
+	 *   <li><b>hanging</b> — oil fire with nothing under it burns out and leaves NOTHING (no sturdy top
+	 *       face: the layer would not survive);</li>
+	 *   <li><b>punched</b> — oil fire a player puts out never reaches its own burnout, so no soot even
+	 *       after its scheduled tick has long passed;</li>
+	 *   <li><b>shovel / hand</b> — a pre-placed layer broken with a shovel drops {@code soot}; broken by
+	 *       hand it is gone and drops nothing;</li>
+	 *   <li><b>floor removed</b> — a layer whose floor is dug out disappears with it.</li>
+	 * </ul>
+	 * The world does not need the fire-spread game rule: the cells are lit directly and the fire's own
+	 * burnout is not gated by it (unlike vanilla fire, which never ages in a playerless gametest). The
+	 * roll itself — chance 0, 1 and in between — is covered on the L1 lane ({@code SootDepositTest}).
+	 */
+	public static void fun11SootOnlyWhereOilBurntOut(GameTestHelper helper) {
+		ServerLevel level = helper.getLevel();
+		forceSootChance(helper, 1.0);
+		final BlockPos floorCell = new BlockPos(2, 2, 2);
+		final BlockPos hanging = new BlockPos(5, 4, 2);
+		final BlockPos punched = new BlockPos(8, 2, 2);
+		final BlockPos shovelCell = new BlockPos(2, 2, 6);
+		final BlockPos handCell = new BlockPos(5, 2, 6);
+		final BlockPos unfloored = new BlockPos(8, 2, 6);
+		for (BlockPos cell : new BlockPos[] { floorCell, punched, shovelCell, handCell, unfloored }) {
+			helper.setBlock(cell.below(), Blocks.STONE);
+		}
+		level.setBlockAndUpdate(helper.absolutePos(floorCell), oilSource());
+		dev.alaindustrial.block.OilLiquidBlock.ignite(level, helper.absolutePos(floorCell));
+		helper.setBlock(hanging, ModContent.OIL_FIRE.get());
+		helper.setBlock(punched, ModContent.OIL_FIRE.get());
+		for (BlockPos cell : new BlockPos[] { shovelCell, handCell, unfloored }) {
+			helper.setBlock(cell, ModContent.SOOT_LAYER.get());
+		}
+
+		helper.runAtTickTime(1, () -> {
+			if (!level.getBlockState(helper.absolutePos(floorCell)).is(ModContent.OIL_FIRE.get())
+					|| !level.getBlockState(helper.absolutePos(hanging)).is(ModContent.OIL_FIRE.get())) {
+				helper.fail("a lit oil cell and a placed oil fire must both be oil_fire before they burn out");
+				return;
+			}
+			ServerPlayer player = survivalPlayer(helper);
+			player.gameMode.destroyBlock(helper.absolutePos(punched));
+			player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.IRON_SHOVEL));
+			player.gameMode.destroyBlock(helper.absolutePos(shovelCell));
+			player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+			player.gameMode.destroyBlock(helper.absolutePos(handCell));
+			helper.setBlock(unfloored.below(), Blocks.AIR);
+		});
+		helper.runAtTickTime(5, () -> {
+			helper.assertItemEntityPresent(ModContent.SOOT.get(), shovelCell, 1.5);
+			helper.assertItemEntityNotPresent(ModContent.SOOT.get(), handCell, 1.5);
+			helper.assertBlockNotPresent(ModContent.SOOT_LAYER.get(), handCell);
+			helper.assertBlockNotPresent(ModContent.SOOT_LAYER.get(), unfloored);
+		});
+		// The two fires burn out on their own at a random tick: 1 in 4 per fire tick (30..39 game ticks),
+		// so 1500 ticks leaves a chance of about 1e-5 that either is still alight.
+		helper.succeedWhen(() -> {
+			helper.assertBlockPresent(ModContent.SOOT_LAYER.get(), floorCell);
+			helper.assertBlockPresent(Blocks.AIR, hanging);
+			helper.assertBlockPresent(Blocks.AIR, punched);
 		});
 	}
 

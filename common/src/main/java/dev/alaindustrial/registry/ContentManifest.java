@@ -58,7 +58,9 @@ import dev.alaindustrial.block.ModLiquidBlock;
 import dev.alaindustrial.block.MonitorCoreBlock;
 import dev.alaindustrial.block.MonitorPanelBlock;
 import dev.alaindustrial.block.MoonlitSolarPanelBlock;
+import dev.alaindustrial.block.OilFireBlock;
 import dev.alaindustrial.block.OilLiquidBlock;
+import dev.alaindustrial.block.SootLayerBlock;
 import dev.alaindustrial.block.PolymerizerBlock;
 import dev.alaindustrial.block.PumpBlock;
 import dev.alaindustrial.block.RadiantSolarPanelBlock;
@@ -860,6 +862,13 @@ public final class ContentManifest {
 	public static final BlockDef<ModLiquidBlock> FUEL_OIL =
 			block("fuel_oil", p -> new ModLiquidBlock(ModContent.FUEL_OIL.get(), p),
 					s -> ModContent.FUEL_OIL_BLOCK = s);
+	// MOD-638 — burning oil and what it leaves behind: the fire a burning oil cell turns into (its own
+	// block so "burnt out by itself" is unambiguous), and the soot layer that fire may leave on a
+	// solid floor. Neither has a BlockItem — nobody holds fire, and the layer drops the `soot` item.
+	public static final BlockDef<OilFireBlock> OIL_FIRE =
+			block("oil_fire", OilFireBlock::new, s -> ModContent.OIL_FIRE = s);
+	public static final BlockDef<SootLayerBlock> SOOT_LAYER =
+			block("soot_layer", SootLayerBlock::new, s -> ModContent.SOOT_LAYER = s);
 	// The organic chain (MOD-146/MOD-525): the machine that brews waste into biofuel, and the block
 	// that sprays what the column cracks out of it.
 	public static final BlockDef<FermenterBlock> FERMENTER =
@@ -940,7 +949,9 @@ public final class ContentManifest {
 			SMART_WIRE, MONITOR_CORE, MONITOR_PANEL,
 			// MOD-513 — the lab plaque plates, appended at the tail: replay order is load-bearing.
 			ENGRAVED_PLATE_0, ENGRAVED_PLATE_1, ENGRAVED_PLATE_2, ENGRAVED_PLATE_3, ENGRAVED_PLATE_4, ENGRAVED_PLATE_5, ENGRAVED_PLATE_6, ENGRAVED_PLATE_7, ENGRAVED_PLATE_8, ENGRAVED_PLATE_9,
-			BROKEN_ENGRAVED_PLATE_W, BROKEN_ENGRAVED_PLATE_K, BROKEN_ENGRAVED_PLATE_P, BROKEN_ENGRAVED_PLATE_B, BROKEN_ENGRAVED_PLATE_D, BROKEN_ENGRAVED_PLATE_R, BROKEN_ENGRAVED_PLATE_M);
+			BROKEN_ENGRAVED_PLATE_W, BROKEN_ENGRAVED_PLATE_K, BROKEN_ENGRAVED_PLATE_P, BROKEN_ENGRAVED_PLATE_B, BROKEN_ENGRAVED_PLATE_D, BROKEN_ENGRAVED_PLATE_R, BROKEN_ENGRAVED_PLATE_M,
+			// MOD-638 — burning oil and its soot, appended at the tail: replay order is load-bearing.
+			OIL_FIRE, SOOT_LAYER);
 
 	/**
 	 * Wraps a machine/ore/material block's {@code strength/sound/…} chain with the shared base every such
@@ -1267,7 +1278,16 @@ public final class ContentManifest {
 			// Not machine(...) - a liquid needs no tool and has no drops.
 			Map.entry("oil", p -> p.mapColor(MapColor.COLOR_BLACK).replaceable().noCollision()
 					.strength(100.0F).pushReaction(PushReaction.DESTROY).noLootTable().liquid()
-					.sound(SoundType.EMPTY)));
+					.sound(SoundType.EMPTY)),
+			// MOD-638 — oil fire: vanilla Blocks.FIRE's chain in 26.2 (replaceable, no collision, breaks
+			// instantly, full light, no drops).
+			Map.entry("oil_fire", p -> p.mapColor(MapColor.FIRE).replaceable().noCollision().instabreak()
+					.lightLevel(state -> 15).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY)
+					.noLootTable()),
+			// MOD-638 — the soot layer: snow-like — no collision, breaks with anything, drops only to a
+			// shovel (machine(...) adds requiresCorrectToolForDrops), destroyed by a piston.
+			Map.entry("soot_layer", machine(p -> p.mapColor(MapColor.COLOR_BLACK).noCollision().noOcclusion()
+					.strength(0.1F).sound(SoundType.SAND).pushReaction(PushReaction.DESTROY))));
 
 	/** The shared {@code Properties} chain for {@code id} (see {@link #BLOCK_PROPS}); throws if unknown. */
 	public static UnaryOperator<BlockBehaviour.Properties> blockProps(String id) {
@@ -2102,7 +2122,9 @@ public final class ContentManifest {
 			blockItem("broken_engraved_plate_r", s -> ModContent.BROKEN_ENGRAVED_PLATE_R_ITEM = s),
 			blockItem("broken_engraved_plate_m", s -> ModContent.BROKEN_ENGRAVED_PLATE_M_ITEM = s),
 			item("capacity_card", dev.alaindustrial.item.misc.CapacityCardItem::new,
-					s -> ModContent.CAPACITY_CARD = s));
+					s -> ModContent.CAPACITY_CARD = s),
+			// MOD-638 — what a shovel takes off a soot layer; the compressor presses 16 into a briquette.
+			plain("soot", s -> ModContent.SOOT = s));
 
 	// ─────────────────────────────────────────────────────────────────────────────────────────
 	// BlockEntity types (MOD-307)

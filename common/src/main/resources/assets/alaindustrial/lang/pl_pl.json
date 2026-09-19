@@ -1495,5 +1495,11 @@
   "gui.alaindustrial.teleporter_remote.log.event.bound": "Powiązano %s (%s / %s)",
   "gui.alaindustrial.teleporter_remote.log.event.renamed": "Zmieniono nazwę %s → %s",
   "gui.alaindustrial.teleporter_remote.log.event.deleted": "Usunięto %s",
-  "gui.alaindustrial.teleporter_remote.log.event.unknown": "Nieznane zdarzenie"
+  "gui.alaindustrial.teleporter_remote.log.event.unknown": "Nieznane zdarzenie",
+  "block.alaindustrial.oil_fire": "Płonąca ropa naftowa",
+  "block.alaindustrial.soot_layer": "Sadza",
+  "item.alaindustrial.soot": "Sadza",
+  "jei.alaindustrial.soot.line1": "Nie da się jej wytworzyć: zostaje tam, gdzie płonąca ropa naftowa zgasła sama.",
+  "jei.alaindustrial.soot.line2": "Każde wypalone pole na twardym podłożu: %s%% szans na warstwę sadzy.",
+  "jei.alaindustrial.soot.line3": "Zbierz warstwę łopatą; 16 sadzy daje w kompresorze brykiet węglowy."
 }

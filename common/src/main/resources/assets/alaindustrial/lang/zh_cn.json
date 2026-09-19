@@ -1495,5 +1495,11 @@
   "gui.alaindustrial.teleporter_remote.log.event.bound": "已绑定 %s（%s / %s）",
   "gui.alaindustrial.teleporter_remote.log.event.renamed": "已重命名 %s → %s",
   "gui.alaindustrial.teleporter_remote.log.event.deleted": "已删除 %s",
-  "gui.alaindustrial.teleporter_remote.log.event.unknown": "未知事件"
+  "gui.alaindustrial.teleporter_remote.log.event.unknown": "未知事件",
+  "block.alaindustrial.oil_fire": "燃烧的石油",
+  "block.alaindustrial.soot_layer": "烟灰",
+  "item.alaindustrial.soot": "烟灰",
+  "jei.alaindustrial.soot.line1": "无法合成：燃烧的石油自行熄灭后留在原地。",
+  "jei.alaindustrial.soot.line2": "每个下方有坚实地面的燃尽格子有 %s%% 的几率留下一层烟灰。",
+  "jei.alaindustrial.soot.line3": "用锹挖掉这一层；16 个烟灰在压缩机中压成一个碳压块。"
 }

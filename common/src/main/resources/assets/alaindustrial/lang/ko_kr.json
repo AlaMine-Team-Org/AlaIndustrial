@@ -1495,5 +1495,11 @@
   "gui.alaindustrial.teleporter_remote.log.event.bound": "%s 연결 (%s / %s)",
   "gui.alaindustrial.teleporter_remote.log.event.renamed": "%s 이름 변경 → %s",
   "gui.alaindustrial.teleporter_remote.log.event.deleted": "%s 삭제",
-  "gui.alaindustrial.teleporter_remote.log.event.unknown": "알 수 없는 기록"
+  "gui.alaindustrial.teleporter_remote.log.event.unknown": "알 수 없는 기록",
+  "block.alaindustrial.oil_fire": "불타는 석유",
+  "block.alaindustrial.soot_layer": "그을음",
+  "item.alaindustrial.soot": "그을음",
+  "jei.alaindustrial.soot.line1": "제작할 수 없음: 불타는 석유가 저절로 꺼진 자리에 남습니다.",
+  "jei.alaindustrial.soot.line2": "아래가 단단한 바닥인 다 탄 칸마다 %s%% 확률로 그을음 층이 생깁니다.",
+  "jei.alaindustrial.soot.line3": "층은 삽으로 부수세요. 그을음 16개는 압축기에서 탄소 연탄이 됩니다."
 }

@@ -1495,5 +1495,11 @@
   "gui.alaindustrial.teleporter_remote.log.event.bound": "%s gebunden (%s / %s)",
   "gui.alaindustrial.teleporter_remote.log.event.renamed": "%s umbenannt → %s",
   "gui.alaindustrial.teleporter_remote.log.event.deleted": "%s gelöscht",
-  "gui.alaindustrial.teleporter_remote.log.event.unknown": "Unbekanntes Ereignis"
+  "gui.alaindustrial.teleporter_remote.log.event.unknown": "Unbekanntes Ereignis",
+  "block.alaindustrial.oil_fire": "Brennendes Öl",
+  "block.alaindustrial.soot_layer": "Ruß",
+  "item.alaindustrial.soot": "Ruß",
+  "jei.alaindustrial.soot.line1": "Nicht herstellbar: bleibt zurück, wo brennendes Öl von selbst erloschen ist.",
+  "jei.alaindustrial.soot.line2": "Jede ausgebrannte Zelle mit festem Boden: %s%% Chance auf eine Rußschicht.",
+  "jei.alaindustrial.soot.line3": "Schicht mit einer Schaufel abbauen; 16 Ruß ergeben im Kompressor ein Kohlenstoffbrikett."
 }

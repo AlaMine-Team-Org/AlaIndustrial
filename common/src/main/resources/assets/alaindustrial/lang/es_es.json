@@ -1495,5 +1495,11 @@
   "gui.alaindustrial.teleporter_remote.log.event.bound": "Vinculada %s (%s / %s)",
   "gui.alaindustrial.teleporter_remote.log.event.renamed": "Renombrada %s → %s",
   "gui.alaindustrial.teleporter_remote.log.event.deleted": "Eliminada %s",
-  "gui.alaindustrial.teleporter_remote.log.event.unknown": "Evento desconocido"
+  "gui.alaindustrial.teleporter_remote.log.event.unknown": "Evento desconocido",
+  "block.alaindustrial.oil_fire": "Petróleo en llamas",
+  "block.alaindustrial.soot_layer": "Hollín",
+  "item.alaindustrial.soot": "Hollín",
+  "jei.alaindustrial.soot.line1": "No se fabrica: queda donde el petróleo en llamas se apagó solo.",
+  "jei.alaindustrial.soot.line2": "Cada celda quemada con suelo sólido debajo: %s%% de probabilidad de una capa de hollín.",
+  "jei.alaindustrial.soot.line3": "Rompe la capa con una pala; 16 de hollín dan una briqueta de carbono en el compresor."
 }
