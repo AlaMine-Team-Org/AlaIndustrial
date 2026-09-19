@@ -48,6 +48,7 @@ import dev.alaindustrial.gametest.ElectricToolTagScenarios;
 import dev.alaindustrial.gametest.EnchantableRosterScenarios;
 import dev.alaindustrial.gametest.ElectricShovelScenarios;
 import dev.alaindustrial.gametest.ElectricDrillScenarios;
+import dev.alaindustrial.gametest.ElectricBowScenarios;
 import dev.alaindustrial.gametest.ElectricSaberScenarios;
 import dev.alaindustrial.gametest.MagnetScenarios;
 import dev.alaindustrial.gametest.OilScenarios;
@@ -1254,6 +1255,16 @@ public final class NeoForgeGameTests {
 		registerTest(event, "saber_creative_spends_nothing", 40, true, ElectricSaberScenarios::fun06CreativeSpendsNothing);
 		registerTest(event, "saber_tags_and_enchants", 40, true, ElectricSaberScenarios::fun07TagsAndEnchants);
 		registerTest(event, "saber_shock_only_when_live", 40, true, ElectricSaberScenarios::fun08ShockOnlyWhenLive);
+		// Electric Bow (MOD-363, TC-BOW-001) — same loader-neutral bodies as the Fabric ElectricBowGameTest
+		// suite: charge slot, EU per shot, the live draw and launch, the charged flag, ammunition, tags.
+		registerTest(event, "bow_charge_in_battery_box", 80, true, ElectricBowScenarios::fun01ChargeInBatteryBox);
+		registerTest(event, "bow_live_shot_is_faster_and_pays", 40, true, ElectricBowScenarios::fun02LiveShotIsFasterAndPays);
+		registerTest(event, "bow_flat_shot_falls_short", 40, true, ElectricBowScenarios::fun03FlatShotFallsShort);
+		registerTest(event, "bow_charged_flag_follows_charge", 40, true, ElectricBowScenarios::fun04ChargedFlagFollowsCharge);
+		registerTest(event, "bow_creative_spends_nothing", 40, true, ElectricBowScenarios::fun05CreativeSpendsNothing);
+		registerTest(event, "bow_no_arrow_no_shot", 40, true, ElectricBowScenarios::fun06NoArrowNoShot);
+		registerTest(event, "bow_under_drawn_release_costs_nothing", 40, true, ElectricBowScenarios::fun07UnderDrawnReleaseCostsNothing);
+		registerTest(event, "bow_tags_and_enchants", 40, true, ElectricBowScenarios::fun08TagsAndEnchants);
 		// MOD-089 torch placement (TC-DRILL-001-FUN07/08/09): right-click places a torch from the inventory,
 		// prefers the enriched uranium torch, and still consumes when the clicked block is replaceable.
 		registerTest(event, "drill_place_torch_from_inventory", 40, true, ElectricDrillScenarios::fun07PlaceTorchFromInventory);

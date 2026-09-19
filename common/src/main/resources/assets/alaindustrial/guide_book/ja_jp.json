@@ -5230,6 +5230,43 @@
           ]
         },
         {
+          "id": "electric_bow",
+          "title": "電動弓",
+          "icon": "alaindustrial:electric_bow",
+          "pages": [
+            {
+              "type": "text",
+              "title": "電動弓",
+              "text": "充電式のEU弓。引き絞りは1秒ではなく0.8秒、矢は15%速く、ばらつきは半分、ダメージは1多い。1射150EUで、矢は通常どおり必要。空になると矢は足元に落ちる。決して壊れない。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "バッファ: 10 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:bow",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_bow",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electromagnet",
           "title": "電磁石",
           "icon": "alaindustrial:electromagnet",

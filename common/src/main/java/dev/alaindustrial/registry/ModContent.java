@@ -576,6 +576,8 @@ public final class ModContent {
 	public static Supplier<Item> ELECTRIC_HOE_DIAMOND_TIP = unbound("ELECTRIC_HOE_DIAMOND_TIP");
 	// Electric Saber (MOD-149) — the line's first weapon: EU per hit, degrades to a plain sword when flat.
 	public static Supplier<Item> ELECTRIC_SABER = unbound("ELECTRIC_SABER");
+	// Electric Bow (MOD-363) — the line's ranged weapon: EU per shot, degrades to a plain bow when flat.
+	public static Supplier<Item> ELECTRIC_BOW = unbound("ELECTRIC_BOW");
 	// Electromagnet (MOD-132) — EU item in any inventory slot that draws loose drops toward the carrier.
 	public static Supplier<Item> ELECTROMAGNET = unbound("ELECTROMAGNET");
 	public static Supplier<Item> ELECTROMAGNET_ADVANCED = unbound("ELECTROMAGNET_ADVANCED");

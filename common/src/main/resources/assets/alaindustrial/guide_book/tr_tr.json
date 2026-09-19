@@ -5230,6 +5230,43 @@
           ]
         },
         {
+          "id": "electric_bow",
+          "title": "Elektrikli yay",
+          "icon": "alaindustrial:electric_bow",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Elektrikli yay",
+              "text": "Şarj edilebilir bir EU yayı — tam germe 1 yerine 0,8 sn, ok %15 daha hızlı, iki kat daha isabetli ve bir puan daha fazla hasar; atış başına 150 EU, oklar yine gerekir. Boşken oklar ayağının dibine düşer; asla kırılmaz."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Tampon: 10 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:bow",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_bow",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electromagnet",
           "title": "Elektromıknatıs",
           "icon": "alaindustrial:electromagnet",

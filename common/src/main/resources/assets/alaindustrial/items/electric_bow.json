@@ -1,0 +1,73 @@
+{
+	"model": {
+		"type": "minecraft:condition",
+		"property": "minecraft:has_component",
+		"component": "alaindustrial:electric_bow_charged",
+		"on_true": {
+			"type": "minecraft:condition",
+			"property": "minecraft:using_item",
+			"on_false": {
+				"type": "minecraft:model",
+				"model": "alaindustrial:item/electric_bow"
+			},
+			"on_true": {
+				"type": "minecraft:range_dispatch",
+				"property": "minecraft:use_duration",
+				"scale": 0.0625,
+				"entries": [
+					{
+						"threshold": 0.65,
+						"model": {
+							"type": "minecraft:model",
+							"model": "alaindustrial:item/electric_bow_pulling_1"
+						}
+					},
+					{
+						"threshold": 0.9,
+						"model": {
+							"type": "minecraft:model",
+							"model": "alaindustrial:item/electric_bow_pulling_2"
+						}
+					}
+				],
+				"fallback": {
+					"type": "minecraft:model",
+					"model": "alaindustrial:item/electric_bow_pulling_0"
+				}
+			}
+		},
+		"on_false": {
+			"type": "minecraft:condition",
+			"property": "minecraft:using_item",
+			"on_false": {
+				"type": "minecraft:model",
+				"model": "alaindustrial:item/electric_bow_off"
+			},
+			"on_true": {
+				"type": "minecraft:range_dispatch",
+				"property": "minecraft:use_duration",
+				"scale": 0.05,
+				"entries": [
+					{
+						"threshold": 0.65,
+						"model": {
+							"type": "minecraft:model",
+							"model": "alaindustrial:item/electric_bow_off_pulling_1"
+						}
+					},
+					{
+						"threshold": 0.9,
+						"model": {
+							"type": "minecraft:model",
+							"model": "alaindustrial:item/electric_bow_off_pulling_2"
+						}
+					}
+				],
+				"fallback": {
+					"type": "minecraft:model",
+					"model": "alaindustrial:item/electric_bow_off_pulling_0"
+				}
+			}
+		}
+	}
+}

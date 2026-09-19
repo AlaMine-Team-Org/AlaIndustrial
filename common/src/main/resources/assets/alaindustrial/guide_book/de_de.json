@@ -5230,6 +5230,43 @@
           ]
         },
         {
+          "id": "electric_bow",
+          "title": "Elektrobogen",
+          "icon": "alaindustrial:electric_bow",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Elektrobogen",
+              "text": "Ein aufladbarer EU-Bogen — voll gespannt in 0,8 s statt 1, ein 15 % schnellerer Pfeil, doppelt so eng gestreut und ein Punkt mehr Schaden; 150 EU pro Schuss, Pfeile braucht er weiterhin. Leer fallen die Pfeile vor die Füße; er geht nie kaputt."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Puffer: 10 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:bow",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_bow",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electromagnet",
           "title": "Elektromagnet",
           "icon": "alaindustrial:electromagnet",

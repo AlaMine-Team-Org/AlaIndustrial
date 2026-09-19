@@ -5230,6 +5230,43 @@
           ]
         },
         {
+          "id": "electric_bow",
+          "title": "قوس كهربائي",
+          "icon": "alaindustrial:electric_bow",
+          "pages": [
+            {
+              "type": "text",
+              "title": "قوس كهربائي",
+              "text": "قوس EU قابل لإعادة الشحن — شدّ كامل في 0.8 ث بدل 1، وسهم أسرع بنسبة 15%، وتجمّع أضيق بمرتين، ونقطة ضرر إضافية؛ 150 EU لكل رمية، والسهام لا تزال مطلوبة. عند نفاد الشحن تسقط السهام عند قدميك؛ ولا ينكسر أبدا."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "الاحتياطي: 10 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:bow",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_bow",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electromagnet",
           "title": "مغناطيس كهربائي",
           "icon": "alaindustrial:electromagnet",

@@ -5230,6 +5230,43 @@
           ]
         },
         {
+          "id": "electric_bow",
+          "title": "Cung điện",
+          "icon": "alaindustrial:electric_bow",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cung điện",
+              "text": "Cây cung EU sạc lại được — kéo căng hết trong 0,8 giây thay vì 1, mũi tên nhanh hơn 15%, chụm gấp đôi và thêm một điểm sát thương; 150 EU mỗi phát, vẫn cần mũi tên. Hết năng lượng thì mũi tên rơi ngay dưới chân; không bao giờ hỏng."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Bộ đệm: 10 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:bow",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_bow",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electromagnet",
           "title": "Nam châm điện",
           "icon": "alaindustrial:electromagnet",

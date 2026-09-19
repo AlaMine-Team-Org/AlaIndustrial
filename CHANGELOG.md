@@ -1,12 +1,13 @@
-## 0.1.178
+## 0.1.179
 
-<p><img alt="The Upgrade Table pressing a module onto a drill" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.178/release-media/v0.1.178/changelog.webp" width="720"></p>
+<p><img alt="Ala Industrial 0.1.179 Electric Bow compared with a vanilla bow" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.179/release-media/v0.1.179/changelog.png" width="720"></p>
 
-The Upgrade Table now looks and feels like a working machine.
+A new powered weapon: the Electric Bow, the ranged partner of the Electric Saber.
 
-### Improved
+### New
 
-- **The press moves.** While the table works, its press comes down onto the module and lifts again.
-- **Upgrade Table Casing.** The single block has a new name and its own look; stack two to build the table.
-- **New table screen** with a segmented energy gauge.
-- **Tooltips for the upgrade parts.** The Column Bore Module, the Core Barrel and the casing explain themselves — hold Shift for more.
+- **Electric Bow.** Charged, it draws in 0.8 s instead of a full second.
+- **Faster arrows.** Arrows leave 15% faster: they fly further and flatter, hit one point harder and group twice as tight.
+- **150 EU per shot.** Arrows are still needed, and Power, Punch, Flame and Infinity all apply.
+- **Charge it or it's useless.** Flat, the arrow drops at your feet however far you draw, but the bow never breaks.
+- **Feels like a real bow.** The camera zooms in while you draw, and the lamps on the limbs light up as the shot builds.

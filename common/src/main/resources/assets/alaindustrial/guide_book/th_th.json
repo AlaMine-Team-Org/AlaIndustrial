@@ -5230,6 +5230,43 @@
           ]
         },
         {
+          "id": "electric_bow",
+          "title": "คันธนูไฟฟ้า",
+          "icon": "alaindustrial:electric_bow",
+          "pages": [
+            {
+              "type": "text",
+              "title": "คันธนูไฟฟ้า",
+              "text": "คันธนูที่ชาร์จซ้ำได้ด้วย EU — ง้างสุดใน 0.8 วินาทีแทน 1 วินาที ลูกธนูเร็วขึ้น 15% กลุ่มกระสุนแคบลงครึ่งหนึ่ง และความเสียหายเพิ่มอีกหนึ่งหน่วย ใช้ 150 EU ต่อการยิง และยังต้องใช้ลูกธนูเหมือนเดิม เมื่อประจุหมดลูกธนูจะตกลงตรงเท้า ไม่มีวันพัง"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "บัฟเฟอร์: 10,000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:bow",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_bow",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electromagnet",
           "title": "แม่เหล็กไฟฟ้า",
           "icon": "alaindustrial:electromagnet",

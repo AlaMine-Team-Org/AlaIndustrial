@@ -493,6 +493,7 @@ public final class IndustrializationNeoForge {
 				ModItemsNeoForge.ELECTRIC_SHOVEL_DIAMOND_TIP.get(), ModItemsNeoForge.ELECTRIC_HOE.get(),
 				ModItemsNeoForge.ELECTRIC_HOE_DIAMOND_TIP.get(),
 				ModItemsNeoForge.ELECTRIC_SABER.get(),
+				ModItemsNeoForge.ELECTRIC_BOW.get(),
 				ModItemsNeoForge.ELECTROMAGNET.get(),
 				ModItemsNeoForge.ELECTROMAGNET_ADVANCED.get(),
 				ModItemsNeoForge.JETPACK.get(),

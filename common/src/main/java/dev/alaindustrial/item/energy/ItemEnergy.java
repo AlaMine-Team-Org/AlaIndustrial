@@ -4,6 +4,7 @@ import dev.alaindustrial.item.tool.ElectricChainsawItem;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
 import dev.alaindustrial.item.tool.ElectricDrillNetheriteTipItem;
 import dev.alaindustrial.item.tool.ElectricHoeItem;
+import dev.alaindustrial.item.tool.ElectricBowItem;
 import dev.alaindustrial.item.tool.ElectricSaberItem;
 import dev.alaindustrial.item.tool.ElectricShovelItem;
 import dev.alaindustrial.item.tool.MagnetItem;
@@ -81,6 +82,9 @@ public final class ItemEnergy {
 		if (stack.getItem() instanceof ElectricSaberItem) {
 			return Config.electricSaberBuffer;
 		}
+		if (stack.getItem() instanceof ElectricBowItem) {
+			return Config.electricBowBuffer;
+		}
 		if (stack.getItem() instanceof MagnetItem magnet) {
 			return magnet.tier().buffer();
 		}
@@ -127,6 +131,9 @@ public final class ItemEnergy {
 		}
 		if (stack.getItem() instanceof ElectricSaberItem) {
 			return Config.electricSaberInputRate;
+		}
+		if (stack.getItem() instanceof ElectricBowItem) {
+			return Config.electricBowInputRate;
 		}
 		if (stack.getItem() instanceof MagnetItem magnet) {
 			return magnet.tier().inputRate();
@@ -175,6 +182,11 @@ public final class ItemEnergy {
 			// Same contract as the armour: damage, attack speed and reach follow the charge from the one
 			// place charge changes, so the tooltip can never promise a hit the weapon cannot land.
 			ElectricSaberItem.refreshAttributes(stack, clamped);
+		}
+		if (stack.getItem() instanceof ElectricBowItem) {
+			// Same contract again: the charged flag the client draws from follows the charge from the one
+			// place charge changes, so the lit bow and the powered shot can never disagree.
+			ElectricBowItem.refreshCharged(stack, clamped);
 		}
 	}
 

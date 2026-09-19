@@ -5230,6 +5230,43 @@
           ]
         },
         {
+          "id": "electric_bow",
+          "title": "전기 활",
+          "icon": "alaindustrial:electric_bow",
+          "pages": [
+            {
+              "type": "text",
+              "title": "전기 활",
+              "text": "충전식 EU 활 — 1초 대신 0.8초 만에 최대로 당겨지고, 화살은 15% 더 빠르며 탄착군이 두 배 좁고 피해가 1 더 높습니다. 발사당 150 EU이며 화살은 여전히 필요합니다. 방전되면 화살이 발밑에 떨어지며, 절대 부서지지 않습니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "버퍼: 10 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:bow",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_bow",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electromagnet",
           "title": "전자석",
           "icon": "alaindustrial:electromagnet",

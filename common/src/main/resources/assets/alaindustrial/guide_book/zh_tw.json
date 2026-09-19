@@ -5230,6 +5230,43 @@
           ]
         },
         {
+          "id": "electric_bow",
+          "title": "電動弓",
+          "icon": "alaindustrial:electric_bow",
+          "pages": [
+            {
+              "type": "text",
+              "title": "電動弓",
+              "text": "可充電的 EU 弓——滿弓只需 0.8 秒而非 1 秒，箭矢快 15%，散佈減半，傷害多 1 點；每次射擊 150 EU，仍需箭矢。電量耗盡時箭矢會落在腳下；永不損壞。"
+            },
+            {
+              "type": "stats",
+              "title": "數據",
+              "lines": [
+                "緩衝：10 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:bow",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_bow",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electromagnet",
           "title": "電磁鐵",
           "icon": "alaindustrial:electromagnet",

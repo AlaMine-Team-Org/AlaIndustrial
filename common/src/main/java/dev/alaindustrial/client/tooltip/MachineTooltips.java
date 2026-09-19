@@ -39,6 +39,7 @@ import dev.alaindustrial.item.tool.ElectricDrillNetheriteTipItem;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
 import dev.alaindustrial.item.tool.ElectricHoeDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricHoeItem;
+import dev.alaindustrial.item.tool.ElectricBowItem;
 import dev.alaindustrial.item.tool.ElectricSaberItem;
 import dev.alaindustrial.item.tool.ElectricShovelDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricShovelItem;
@@ -128,6 +129,10 @@ public final class MachineTooltips {
 		}
 		if (stack.getItem() instanceof ElectricSaberItem) {
 			addElectricSaberTooltip(stack, lines);
+			return;
+		}
+		if (stack.getItem() instanceof ElectricBowItem) {
+			addElectricBowTooltip(stack, lines);
 			return;
 		}
 		if (stack.getItem() instanceof JetpackItem) {
@@ -582,6 +587,27 @@ public final class MachineTooltips {
 					.withStyle(ChatFormatting.RED));
 		} else {
 			lines.add(Component.translatable("tooltip.alaindustrial.electric_saber.charge", eu, cap)
+					.withStyle(ChatFormatting.GOLD));
+		}
+	}
+
+	/**
+	 * Bow lines: what a powered shot buys and costs, then the charge — or, below one shot's worth, that
+	 * the bow is a plain bow until recharged. The threshold is the synced
+	 * {@link ElectricBowItem#showsCharged} flag rather than the local config, so the red line appears
+	 * exactly when the lit texture goes out.
+	 */
+	private static void addElectricBowTooltip(ItemStack stack, List<Component> lines) {
+		lines.add(Component.translatable("tooltip.alaindustrial.electric_bow.usage",
+						Config.electricBowEuPerShot)
+				.withStyle(ChatFormatting.GRAY));
+		long eu = ItemEnergy.get(stack);
+		long cap = ItemEnergy.capacity(stack);
+		if (!ElectricBowItem.showsCharged(stack)) {
+			lines.add(Component.translatable("tooltip.alaindustrial.electric_bow.depleted")
+					.withStyle(ChatFormatting.RED));
+		} else {
+			lines.add(Component.translatable("tooltip.alaindustrial.electric_bow.charge", eu, cap)
 					.withStyle(ChatFormatting.GOLD));
 		}
 	}

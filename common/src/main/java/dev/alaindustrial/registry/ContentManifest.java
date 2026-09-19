@@ -191,6 +191,7 @@ import dev.alaindustrial.item.tool.ElectricChainsawItem;
 import dev.alaindustrial.item.tool.ElectricDrillDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
 import dev.alaindustrial.item.tool.ElectricDrillNetheriteTipItem;
+import dev.alaindustrial.item.tool.ElectricBowItem;
 import dev.alaindustrial.item.tool.ElectricSaberItem;
 import dev.alaindustrial.item.tool.GeigerCounterItem;
 import dev.alaindustrial.item.tool.MagnetItem;
@@ -1863,6 +1864,9 @@ public final class ContentManifest {
 			loaderItem("electric_hoe_diamond_tip", s -> ModContent.ELECTRIC_HOE_DIAMOND_TIP = s),
 			// Electric Saber (MOD-149): the line's first weapon — EU per hit, plain sword when flat or off.
 			item("electric_saber", p -> new ElectricSaberItem(ElectricSaberItem.electricSaberProperties(p)), s -> ModContent.ELECTRIC_SABER = s),
+			// Electric Bow (MOD-363): the line's ranged weapon — EU per shot buys a faster draw and a faster,
+			// steadier arrow; arrows are still ammunition, and a flat bow is a plain bow.
+			item("electric_bow", p -> new ElectricBowItem(ElectricBowItem.electricBowProperties(p)), s -> ModContent.ELECTRIC_BOW = s),
 			// Electromagnet (MOD-132): EU item in any inventory slot that pulls loose drops toward the carrier.
 			item("electromagnet", p -> new MagnetItem(p.stacksTo(1)), s -> ModContent.ELECTROMAGNET = s),
 			item("electromagnet_advanced", p -> new MagnetItem(p.stacksTo(1), MagnetTier.ADVANCED),

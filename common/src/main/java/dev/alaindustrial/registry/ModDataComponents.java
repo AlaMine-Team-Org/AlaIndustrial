@@ -22,6 +22,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.Unit;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.material.Fluid;
@@ -69,6 +70,7 @@ public final class ModDataComponents {
 	public static final Identifier SOUL_VESSEL_KILLS_ID = Industrialization.id("soul_vessel_kills");
 	public static final Identifier REPAIR_COUNT_ID = Industrialization.id("repair_count");
 	public static final Identifier GEIGER_ALERT_ID = Industrialization.id("geiger_alert");
+	public static final Identifier ELECTRIC_BOW_CHARGED_ID = Industrialization.id("electric_bow_charged");
 	public static final Identifier DRILL_UPGRADES_ID = Industrialization.id("drill_upgrades");
 	public static final Identifier DRILL_COLUMN_ENABLED_ID = Industrialization.id("drill_column_enabled");
 
@@ -406,6 +408,32 @@ public final class ModDataComponents {
 	}
 
 	/**
+	 * Present on an Electric Bow that holds at least one powered shot (MOD-363) — the client-side mirror
+	 * of the server's charge check. The item model picks its lit textures and its draw-frame speed from
+	 * it, and the client FOV / hand-pose hooks read the draw time from it, so the animation, the zoom and
+	 * the shot the server actually fires can never disagree about which bow is in the hand.
+	 *
+	 * <p><b>Absent, not false, when flat</b> — a fresh bow and a drained one stay component-identical.
+	 * Written only by {@link dev.alaindustrial.item.tool.ElectricBowItem#refreshCharged}, i.e. from the one
+	 * place a powered item's charge changes, and only when the state flips.
+	 *
+	 * <p>{@code ignoreSwapAnimation()}: a worn Energy Pack tops the bow up in the hand, and the flip can
+	 * land mid-draw; without the flag it would replay the first-person re-equip animation right then.
+	 */
+	public static Supplier<DataComponentType<Unit>> ELECTRIC_BOW_CHARGED = () -> {
+		throw new IllegalStateException("ModDataComponents.ELECTRIC_BOW_CHARGED read before its loader bound it");
+	};
+
+	/** Build the {@code electric_bow_charged} type both loaders register (MOD-363). */
+	public static DataComponentType<Unit> createElectricBowCharged() {
+		return DataComponentType.<Unit>builder()
+				.persistent(Unit.CODEC)
+				.networkSynchronized(Unit.STREAM_CODEC)
+				.ignoreSwapAnimation()
+				.build();
+	}
+
+	/**
 	 * Rarity grade an item carries after a successful incubator mutation (MOD-118). Absent means the
 	 * ordinary outcome, so a common result stays component-identical to a plain vanilla item and keeps
 	 * stacking with it. Read/written only via {@link dev.alaindustrial.item.misc.MutationGrades}, which also
@@ -624,5 +652,7 @@ public final class ModDataComponents {
 			new ComponentDef<>(TELEPORTER_POINTS_ID, ModDataComponents::createTeleporterPoints, c -> TELEPORTER_POINTS = c),
 			new ComponentDef<>(DRILL_UPGRADES_ID, ModDataComponents::createDrillUpgrades, c -> DRILL_UPGRADES = c),
 			new ComponentDef<>(DRILL_COLUMN_ENABLED_ID, ModDataComponents::createDrillColumnEnabled, c -> DRILL_COLUMN_ENABLED = c),
-			new ComponentDef<>(TELEPORTER_LOG_ID, ModDataComponents::createTeleporterLog, c -> TELEPORTER_LOG = c));
+			new ComponentDef<>(TELEPORTER_LOG_ID, ModDataComponents::createTeleporterLog, c -> TELEPORTER_LOG = c),
+			new ComponentDef<>(ELECTRIC_BOW_CHARGED_ID, ModDataComponents::createElectricBowCharged,
+					c -> ELECTRIC_BOW_CHARGED = c));
 }

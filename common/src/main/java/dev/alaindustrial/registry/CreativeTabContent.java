@@ -622,6 +622,7 @@ public final class CreativeTabContent {
 		show(out, ModContent.ELECTRIC_HOE);
 		show(out, ModContent.ELECTRIC_HOE_DIAMOND_TIP);
 		show(out, ModContent.ELECTRIC_SABER);
+		show(out, ModContent.ELECTRIC_BOW);
 		show(out, ModContent.ELECTROMAGNET);
 		show(out, ModContent.ELECTROMAGNET_ADVANCED);
 		show(out, ModContent.JETPACK);

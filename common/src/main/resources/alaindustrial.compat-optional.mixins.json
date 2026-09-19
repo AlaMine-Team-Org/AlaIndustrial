@@ -12,7 +12,9 @@
     "ZombieSpawnEquipmentMixin"
   ],
   "client": [
+    "client.AbstractClientPlayerElectricBowMixin",
     "client.FogRendererAccessor",
+    "client.ItemInHandRendererElectricBowMixin",
     "client.LivingEntityRendererInvoker",
     "client.ScreenEffectRendererMixin",
     "client.VillagerRenderStateMixin",

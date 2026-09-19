@@ -1098,6 +1098,23 @@ public final class Config {
 			doc = "Seconds of Slowness II a powered saber hit leaves on the target (0 disables).")
 	public static int electricSaberShockSeconds = 2;
 
+	// --- Electric Bow (MOD-363, the line's ranged weapon) ---
+	/** Electric Bow EU buffer — the line's shared reservoir. At {@link #electricBowEuPerShot} per shot
+	 * this is 66 powered shots. */
+	@Knob(section = Section.TOOLS, min = 1,
+			doc = "Electric Bow EU buffer.")
+	public static int electricBowBuffer = 10_000;
+	/** EU spent per powered shot. Below it the bow still shoots, but as a plain bow and for free — see
+	 * ElectricBowItem. Arrows are still consumed either way: EU buys a better shot, not free ammunition.
+	 * One and a half times the saber's hit: a shot lands from forty blocks away. */
+	@Knob(section = Section.TOOLS, min = 1,
+			doc = "EU the bow spends per powered shot (below this it shoots as a plain bow for free).")
+	public static int electricBowEuPerShot = 150;
+	/** Max EU/tick the bow accepts while sitting in a charge slot — the LV ceiling, like its siblings. */
+	@Knob(section = Section.TOOLS, min = 1,
+			doc = "Max EU/t the bow accepts while charging in a slot.")
+	public static int electricBowInputRate = 32;
+
 	// --- Electromagnet (MOD-132, item-pull convenience) ---
 	/** Electromagnet EU buffer (tier 1). A modest LV reservoir: at {@link #magnetEuPerItem} per pulled
 	 * item·tick it reaps hundreds of drops before a recharge, and tops up in ~8 s at an LV charger. */

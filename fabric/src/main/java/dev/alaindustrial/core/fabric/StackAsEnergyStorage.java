@@ -75,6 +75,7 @@ public final class StackAsEnergyStorage implements EnergyStorage {
 				ModItems.ELECTRIC_CHAINSAW_DIAMOND_TIP, ModItems.ELECTRIC_SHOVEL,
 				ModItems.ELECTRIC_SHOVEL_DIAMOND_TIP,
 				ModItems.ELECTRIC_HOE, ModItems.ELECTRIC_HOE_DIAMOND_TIP, ModItems.ELECTRIC_SABER,
+				ModItems.ELECTRIC_BOW,
 				ModItems.ELECTROMAGNET,
 				ModItems.ELECTROMAGNET_ADVANCED,
 				ModItems.JETPACK,

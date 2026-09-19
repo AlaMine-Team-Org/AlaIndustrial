@@ -1,0 +1,6 @@
+{
+	"parent": "minecraft:item/bow",
+	"textures": {
+		"layer0": "alaindustrial:item/electric_bow_off_pulling_1"
+	}
+}
