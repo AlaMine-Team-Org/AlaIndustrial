@@ -24,9 +24,12 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -45,20 +48,38 @@ import org.jetbrains.annotations.Nullable;
 public class MonitorPanelBlock extends BaseEntityBlock {
 
 	public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
+	public static final BooleanProperty ACTIVE = BlockStateProperties.LIT;
+
+	private static final VoxelShape NORTH_SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 16.0, 4.1);
+	private static final VoxelShape EAST_SHAPE = Block.box(11.9, 0.0, 0.0, 16.0, 16.0, 16.0);
+	private static final VoxelShape SOUTH_SHAPE = Block.box(0.0, 0.0, 11.9, 16.0, 16.0, 16.0);
+	private static final VoxelShape WEST_SHAPE = Block.box(0.0, 0.0, 0.0, 4.1, 16.0, 16.0);
 
 	public MonitorPanelBlock(Properties properties) {
 		super(properties);
-		registerDefaultState(defaultBlockState().setValue(FACING, Direction.NORTH));
+		registerDefaultState(defaultBlockState().setValue(FACING, Direction.NORTH).setValue(ACTIVE, false));
 	}
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-		builder.add(FACING);
+		builder.add(FACING, ACTIVE);
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		return defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
+		return defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite())
+				.setValue(ACTIVE, false);
+	}
+
+	@Override
+	protected VoxelShape getShape(BlockState state, net.minecraft.world.level.BlockGetter level,
+			BlockPos pos, CollisionContext context) {
+		return switch (state.getValue(FACING)) {
+			case EAST -> EAST_SHAPE;
+			case SOUTH -> SOUTH_SHAPE;
+			case WEST -> WEST_SHAPE;
+			default -> NORTH_SHAPE;
+		};
 	}
 
 	@Override
