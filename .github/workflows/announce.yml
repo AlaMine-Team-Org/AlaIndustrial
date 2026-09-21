@@ -18,6 +18,9 @@ on:
       text:
         required: false
         type: string
+      channel:
+        required: false
+        type: string
     secrets:
       DISCORD_RELEASES_WEBHOOK:
         required: false
@@ -31,6 +34,14 @@ on:
         description: 'Optional custom message (Markdown). Empty = the changelog from the tag.'
         required: false
         type: string
+      channel:
+        description: 'Target Discord channel: releases (default) or news'
+        required: false
+        type: choice
+        default: releases
+        options:
+          - releases
+          - news
 
 jobs:
   announce:
@@ -43,11 +54,28 @@ jobs:
 
       - name: Announce release on Discord
         env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_RELEASES_WEBHOOK }}
+          DISCORD_RELEASES_WEBHOOK: ${{ secrets.DISCORD_RELEASES_WEBHOOK }}
+          DISCORD_NEWS_WEBHOOK: ${{ secrets.DISCORD_NEWS_WEBHOOK }}
           TAG: ${{ inputs.tag }}
           CUSTOM_TEXT: ${{ inputs.text || '' }}
+          CHANNEL: ${{ inputs.channel || 'releases' }}
         run: |
-          [ -n "$DISCORD_WEBHOOK" ] || { echo "::warning::DISCORD_RELEASES_WEBHOOK not set — skipping Discord announce"; exit 0; }
+          # Channel → webhook secret. A dispatch names its channel explicitly, so a missing
+          # secret is an ERROR there, never a quiet skip and never a fallback into the other
+          # channel (a post landing in the wrong channel is the incident this guards against).
+          # The workflow_call path stays warn-and-skip: release.yml treats announcement
+          # failures as warnings, and a called run always targets releases.
+          case "$CHANNEL" in
+            releases) DISCORD_WEBHOOK="$DISCORD_RELEASES_WEBHOOK" ;;
+            news)     DISCORD_WEBHOOK="$DISCORD_NEWS_WEBHOOK" ;;
+            *) echo "::error::unknown channel '$CHANNEL' (expected releases or news)"; exit 1 ;;
+          esac
+          if [ -z "$DISCORD_WEBHOOK" ]; then
+            if [ "${GITHUB_EVENT_NAME:-}" = "workflow_dispatch" ]; then
+              echo "::error::webhook secret for channel '$CHANNEL' is not set — nothing was posted"; exit 1
+            fi
+            echo "::warning::webhook for channel '$CHANNEL' not set — skipping Discord announce"; exit 0
+          fi
           VERSION="${TAG#v}"
 
           # Custom message mode: a dispatch may carry the exact post to send (Markdown), e.g. a
