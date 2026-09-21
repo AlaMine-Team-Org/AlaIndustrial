@@ -7,13 +7,21 @@ import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.monitor.MonitorNetworkManager;
 import dev.alaindustrial.item.misc.CapacityCardItem;
 import dev.alaindustrial.registry.ModContent;
+import dev.alaindustrial.menu.MonitorCoreMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.Containers;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -30,7 +38,7 @@ import net.minecraft.world.level.storage.ValueOutput;
  * not a place to keep one. That is the whole distance between this system and a digital storage
  * network.
  */
-public class MonitorCoreBlockEntity extends EnergyBlockEntity {
+public class MonitorCoreBlockEntity extends EnergyBlockEntity implements Container, MenuProvider {
 
 	/** Five to a side on the model — the rack the player reads at a glance. */
 	public static final int CARD_SLOTS = 10;
@@ -53,15 +61,78 @@ public class MonitorCoreBlockEntity extends EnergyBlockEntity {
 	/** How many panels the last scan actually served — what the next upkeep debit is priced on. */
 	private int servedPanels;
 
+	/** How many DIFFERENT items the wall is asking for, and whether the last scan could be paid for.
+	 * Both are facts of the network, not of this block, so the network publishes them here for the
+	 * screen to read — the alternative is a second sync path for two integers. */
+	private int watchedTypes;
+	private boolean powered;
+
+	/**
+	 * What the open screen reads. Index order is the contract with {@link MonitorCoreMenu}; changing it
+	 * without changing the menu silently renumbers every readout.
+	 */
+	private final ContainerData coreData = new ContainerData() {
+		@Override
+		public int get(int index) {
+			return switch (index) {
+				case 0 -> (int) Math.min(Integer.MAX_VALUE, getEnergyStorage().getAmount());
+				case 1 -> (int) Math.min(Integer.MAX_VALUE, getEnergyStorage().getCapacity());
+				case 2 -> trackableTypes();
+				case 3 -> seatedCards();
+				case 4 -> watchedTypes;
+				case 5 -> servedPanels;
+				case 6 -> upkeepPerTick();
+				case 7 -> powered ? 1 : 0;
+				default -> 0;
+			};
+		}
+
+		@Override
+		public void set(int index, int value) {
+			// Read-only: every number here is derived on the server.
+		}
+
+		@Override
+		public int getCount() {
+			return DATA_COUNT;
+		}
+	};
+
+	/** Number of synced values — mirrored by the menu's client-side stub. */
+	public static final int DATA_COUNT = 8;
+
+	/** What the wall costs right now: the core's own upkeep plus every panel showing a number. */
+	public int upkeepPerTick() {
+		return Math.max(0, Config.monitorCoreIdleEuPerTick)
+				+ servedPanels * Math.max(0, Config.monitorPanelEuPerTick);
+	}
+
+	/** Facts the network owns, handed over once per scan so the screen can show them. */
+	public void publishStats(int watched, boolean paid) {
+		this.watchedTypes = watched;
+		this.powered = paid;
+	}
+
+	public ContainerData getCoreData() {
+		return coreData;
+	}
+
 	public MonitorCoreBlockEntity(BlockPos pos, BlockState state) {
 		// A sink: nothing ever flows back out of a monitor core.
 		super(ModContent.MONITOR_CORE_BE.get(), pos, state, EnergyTier.LV,
 				EnergyTier.LV.capacity(), EnergyTier.LV.maxVoltage(), 0L);
 	}
 
-	/** How many distinct item types the fitted cards allow the wall to watch. */
+	/**
+	 * How many distinct item types the fitted cards allow the wall to watch.
+	 *
+	 * <p>A bare rack allows NOTHING (owner, 2026-09-20). The core used to hand out four types for
+	 * free, which made an unfitted rack and a working wall look like the same thing: the panels
+	 * showed numbers while every card slot stood empty, and nothing on the block said why. Cards are
+	 * the price of the feature, not an upgrade on top of it.
+	 */
 	public int trackableTypes() {
-		int total = Math.max(0, Config.monitorBaseTrackedTypes);
+		int total = 0;
 		for (ItemStack card : cards) {
 			if (card.getItem() instanceof CapacityCardItem capacityCard) {
 				total += capacityCard.trackedTypes();
@@ -79,6 +150,93 @@ public class MonitorCoreBlockEntity extends EnergyBlockEntity {
 			}
 		}
 		return seated;
+	}
+
+	// --- Container: the ten card slots, so the screen can hold them as ordinary slots -------------
+	//
+	// The rack used to be reachable only by right-clicking the block, which made a full rack refuse
+	// a card in silence. As a Container it is a normal inventory the menu shows — and, because
+	// BlockCapabilityRoster derives item capability from this interface, a hopper may feed cards too.
+	// Only capacity cards are ever accepted: canPlaceItem is the one gate both the menu and the
+	// loaders' automation go through.
+
+	@Override
+	public int getContainerSize() {
+		return CARD_SLOTS;
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return seatedCards() == 0;
+	}
+
+	@Override
+	public ItemStack getItem(int slot) {
+		return slot >= 0 && slot < cards.size() ? cards.get(slot) : ItemStack.EMPTY;
+	}
+
+	@Override
+	public ItemStack removeItem(int slot, int amount) {
+		ItemStack taken = ContainerHelper.removeItem(cards, slot, amount);
+		if (!taken.isEmpty()) {
+			onCardsChanged();
+		}
+		return taken;
+	}
+
+	@Override
+	public ItemStack removeItemNoUpdate(int slot) {
+		ItemStack taken = ContainerHelper.takeItem(cards, slot);
+		if (!taken.isEmpty()) {
+			onCardsChanged();
+		}
+		return taken;
+	}
+
+	@Override
+	public void setItem(int slot, ItemStack stack) {
+		if (slot < 0 || slot >= cards.size()) {
+			return;
+		}
+		cards.set(slot, stack);
+		if (stack.getCount() > getMaxStackSize()) {
+			stack.setCount(getMaxStackSize());
+		}
+		onCardsChanged();
+	}
+
+	/** One card per slot: the rack's ten sockets are ten cards, not ten stacks of them. */
+	@Override
+	public int getMaxStackSize() {
+		return 1;
+	}
+
+	@Override
+	public boolean canPlaceItem(int slot, ItemStack stack) {
+		return stack.getItem() instanceof CapacityCardItem;
+	}
+
+	@Override
+	public boolean stillValid(Player player) {
+		return Container.stillValidBlockEntity(this, player);
+	}
+
+	@Override
+	public void clearContent() {
+		cards.clear();
+		onCardsChanged();
+	}
+
+	// --- MenuProvider ------------------------------------------------------------------------------
+
+	@Override
+	public Component getDisplayName() {
+		return Component.translatable(getBlockState().getBlock().getDescriptionId());
+	}
+
+	@Override
+	public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
+		return new MonitorCoreMenu(syncId, inventory, this, coreData);
 	}
 
 	public ItemStack getCard(int slot) {

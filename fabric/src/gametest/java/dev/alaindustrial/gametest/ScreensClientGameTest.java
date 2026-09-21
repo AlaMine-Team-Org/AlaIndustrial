@@ -174,7 +174,9 @@ public class ScreensClientGameTest implements FabricClientGameTest {
             // loose casing passes the click through so a second casing can be placed on it — so the rig
             // stacks two casings (see placeScreenBlock). Shot as a bare frame with empty slots: the
             // frame guards the window itself, not a staged upgrade.
-            new Screen("upgrade_table", "upgrade_table", "Upgrade Table"));
+            new Screen("upgrade_table", "upgrade_table", "Upgrade Table"),
+            // MOD-480: the monitoring wall's core — a rack of ten card sockets plus its readouts.
+            new Screen("monitor_core", "monitor_core", "Monitor Core"));
 
     /**
      * Screens re-shot under a long locale. Russian labels run noticeably longer than English ones, so a

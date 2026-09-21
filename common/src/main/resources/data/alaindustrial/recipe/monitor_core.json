@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "A": "alaindustrial:reinforced_amethyst",
+    "P": "alaindustrial:electrum_plate",
+    "C": "alaindustrial:advanced_circuit",
+    "X": "alaindustrial:energy_crystal"
+  },
+  "pattern": [
+    "APA",
+    "CXC",
+    "APA"
+  ],
+  "result": {
+    "id": "alaindustrial:monitor_core"
+  }
+}

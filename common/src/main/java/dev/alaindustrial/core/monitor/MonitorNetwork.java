@@ -174,6 +174,8 @@ public final class MonitorNetwork {
 		}
 
 		boolean powered = core.payUpkeep(level, servedPanels);
+		// The screen reads these from the core; the network is the only thing that knows them.
+		core.publishStats(watched.size(), powered);
 
 		StockTally tally = new StockTally(served);
 		if (powered && !served.isEmpty()) {

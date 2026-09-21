@@ -30,10 +30,7 @@ jobs:
           fi
           echo "✅ Token is VALID — CurseForge accepted it."
           echo "Game-version entries returned: $(jq 'length' versions.json)"
-          echo "--- Is Minecraft 26.2 known to CurseForge? ---"
-          if jq -e '.[] | select(.name=="26.2")' versions.json >/dev/null; then
-            echo "✅ 26.2 is present — release mapping will work."
-          else
-            echo "⚠️ 26.2 NOT found yet. Newest versions CurseForge currently lists:"
-            jq -r '.[].name' versions.json | sort -Vr | head -12
-          fi
+          for MC in 26.2 26.3; do
+            ID=$(jq -er --arg mc "$MC" '[.[] | select(.name == $mc and .gameVersionTypeID != 1)] | if length == 1 then .[0].id else error("ambiguous or missing Minecraft") end' versions.json)
+            echo "Minecraft $MC: CurseForge ID $ID"
+          done

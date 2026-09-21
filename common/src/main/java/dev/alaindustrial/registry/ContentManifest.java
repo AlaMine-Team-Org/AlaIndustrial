@@ -239,6 +239,7 @@ import dev.alaindustrial.menu.MaceratorMenu;
 import dev.alaindustrial.menu.MobRepellerHvMenu;
 import dev.alaindustrial.menu.MobRepellerMenu;
 import dev.alaindustrial.menu.MobRepellerMvMenu;
+import dev.alaindustrial.menu.MonitorCoreMenu;
 import dev.alaindustrial.menu.MoonlitSolarPanelMenu;
 import dev.alaindustrial.menu.PolymerizerMenu;
 import dev.alaindustrial.menu.PumpMenu;
@@ -447,6 +448,10 @@ public final class ContentManifest {
 			menu("reactor_controller", ReactorControllerMenu::new,
 					s -> ModContent.REACTOR_CONTROLLER_MENU = s),
 			// MOD-479 — the creative energy source: switch, output presets, fine slider, charge slot.
+			// MOD-480: the monitoring wall's core — a rack of cards, not a machine, so its menu sits
+			// on the vanilla base rather than on MachineMenu.
+			menu("monitor_core", MonitorCoreMenu::new,
+					s -> ModContent.MONITOR_CORE_MENU = s),
 			menu("creative_energy_source", CreativeEnergySourceMenu::new,
 					s -> ModContent.CREATIVE_ENERGY_SOURCE_MENU = s));
 
@@ -1612,6 +1617,10 @@ public final class ContentManifest {
 			plain("irradiated_slag", s -> ModContent.IRRADIATED_SLAG = s),
 			plain("irradiated_diamond", s -> ModContent.IRRADIATED_DIAMOND = s),
 			plain("resonant_shard", s -> ModContent.RESONANT_SHARD = s),
+			// MOD-480: four amethyst shards alloyed around a silver core — the crystal the monitoring
+			// wall is built from. Alloyed rather than crafted: the price of the wall is a running
+			// machine, not a pattern on a bench.
+			plain("reinforced_amethyst", s -> ModContent.REINFORCED_AMETHYST = s),
 			plain("mutagen_dust", s -> ModContent.MUTAGEN_DUST = s),
 			// Oil → rubber chain: the polymerizer's product and the vulcanizer's cured output.
 			plain("raw_rubber", s -> ModContent.RAW_RUBBER = s),

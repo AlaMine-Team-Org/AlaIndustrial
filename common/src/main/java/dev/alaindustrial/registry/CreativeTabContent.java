@@ -597,6 +597,11 @@ public final class CreativeTabContent {
 		show(out, ModContent.SHIELDING_CHEST_ITEM);
 		show(out, ModContent.STORAGE_MODULE_ITEM);
 		show(out, ModContent.STOCK_DISPLAY_FRAME_ITEM);
+		// MOD-480: the monitoring wall — wire reads the chests, core powers and permits, panels show.
+		show(out, ModContent.MONITOR_CORE_ITEM);
+		show(out, ModContent.MONITOR_PANEL_ITEM);
+		show(out, ModContent.SMART_WIRE_ITEM);
+		show(out, ModContent.CAPACITY_CARD);
 	}
 
 	/** 7a - hand tools and instruments: everything useful with no charge in it. */
@@ -639,6 +644,8 @@ public final class CreativeTabContent {
 		show(out, ModContent.LAPOTRON_CRYSTAL);
 		show(out, ModContent.RESONANT_CRYSTAL_BLANK);
 		show(out, ModContent.RESONANT_CRYSTAL);
+		// MOD-480: the crystal the monitoring wall is built from — beside the crystals it sits with.
+		show(out, ModContent.REINFORCED_AMETHYST);
 	}
 
 	/** 8 - what goes into a machine's upgrade panel, and the chips that evolve a generator. */

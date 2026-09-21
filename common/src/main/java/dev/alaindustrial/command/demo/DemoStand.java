@@ -157,6 +157,8 @@ public final class DemoStand {
 			new TpPoint("misc", 33.0, 3.0, 6.5, 0.0f, 15.0f, false),
 			new TpPoint("reactor", 4.5, 4.0, 11.0, 0.0f, 10.0f, false),
 			new TpPoint("showcase", 21.0, 5.5, 17.0, 0.0f, 15.0f, false),
+			new TpPoint("itemless", 21.0, 9.0, 14.0, 0.0f, 45.0f, false),
+			new TpPoint("monitor", 35.5, 8.0, 12.0, 0.0f, 40.0f, false),
 			new TpPoint("night", 10.0, 4.0, 0.0, 0.0f, 20.0f, true));
 
 	/**
@@ -202,6 +204,8 @@ public final class DemoStand {
 			buildReactorRoom(level, origin);
 			buildLabPlaque(level, origin);
 			buildShowcase(level, origin);
+			buildItemlessRow(level, origin);
+			buildMonitorWall(level, origin);
 		} finally {
 			closeLedger();
 		}
@@ -1347,6 +1351,103 @@ public final class DemoStand {
 		}
 	}
 
+	/** Row z of the item-less blocks: on the floor in front of the farm row, clear of every zone. */
+	private static final int ITEMLESS_Z = 22;
+
+	/**
+	 * Zone <b>itemless</b>: every block that has no item — fluids, fire, soot, the upper column
+	 * sections, the dome, the kok-sagyz plant and root, the capsule cells. They cannot hang in a
+	 * frame, so the item wall cannot show them; here each stands on its own, every second column.
+	 * Fluids sit in sunken one-block basins (the pattern the oil and diesel pools use), the rest on
+	 * the floor. Derived from the registry, so a block added later joins the row by itself.
+	 */
+	private static void buildItemlessRow(ServerLevel level, BlockPos origin) {
+		List<Block> blocks = showcaseBlocks();
+		for (int i = 0; i < blocks.size() && 1 + 2 * i < WIDTH; i++) {
+			int x = 1 + 2 * i;
+			Block block = blocks.get(i);
+			if (block instanceof net.minecraft.world.level.block.LiquidBlock) {
+				set(level, origin, x, -1, ITEMLESS_Z, FLOOR);
+				set(level, origin, x, 0, ITEMLESS_Z, block);
+			} else if (block == ModContent.KOK_SAGYZ.get()) {
+				// A plant needs its root under it.
+				set(level, origin, x, 0, ITEMLESS_Z, ModContent.KOK_SAGYZ_ROOT.get());
+				set(level, origin, x, 1, ITEMLESS_Z, block);
+			} else {
+				set(level, origin, x, 1, ITEMLESS_Z, block);
+			}
+		}
+	}
+
+	/** Blocks of the mod with no item; shown by {@link #buildItemlessRow}. */
+	public static List<Block> showcaseBlocks() {
+		List<Block> blocks = new ArrayList<>();
+		for (Identifier id : BuiltInRegistries.BLOCK.keySet()) {
+			Block block = BuiltInRegistries.BLOCK.getValue(id);
+			if (Industrialization.MOD_ID.equals(id.getNamespace()) && block.asItem() == Items.AIR) {
+				blocks.add(block);
+			}
+		}
+		blocks.sort(Comparator.comparing(block -> BuiltInRegistries.BLOCK.getKey(block).toString()));
+		return blocks;
+	}
+
+	/** Row z of the monitoring wall (MOD-480): the free block at x 33..37, z 19..20 on the east side. */
+	private static final int MONITOR_Z = 19;
+	private static final int MONITOR_X = 33;
+
+	/**
+	 * Zone <b>monitor</b> (MOD-480): a working monitoring wall you can read from the camera — two
+	 * stocked chests, smart wires into a powered core, six panels on it, each watching one item.
+	 * Layout along x from {@code MONITOR_X} (all facing north): chest, wire, core, wire, chest; six
+	 * panels on the two levels above the wires and the core; a solar panel behind the core.
+	 */
+	private static void buildMonitorWall(ServerLevel level, BlockPos origin) {
+		set(level, origin, MONITOR_X, 1, MONITOR_Z, ModContent.IRON_CHEST.get());
+		fillSlot(level, origin, MONITOR_X, 1, MONITOR_Z, 0, new ItemStack(Items.DIAMOND, 37));
+		fillSlot(level, origin, MONITOR_X, 1, MONITOR_Z, 1, new ItemStack(Items.IRON_INGOT, 64));
+		fillSlot(level, origin, MONITOR_X, 1, MONITOR_Z, 2, new ItemStack(Items.IRON_INGOT, 64));
+		fillSlot(level, origin, MONITOR_X, 1, MONITOR_Z, 3, new ItemStack(Items.EMERALD, 5));
+		set(level, origin, MONITOR_X + 4, 1, MONITOR_Z, ModContent.IRON_CHEST.get());
+		fillSlot(level, origin, MONITOR_X + 4, 1, MONITOR_Z, 0, new ItemStack(Items.GOLD_INGOT, 48));
+		fillSlot(level, origin, MONITOR_X + 4, 1, MONITOR_Z, 1, new ItemStack(Items.REDSTONE, 64));
+		fillSlot(level, origin, MONITOR_X + 4, 1, MONITOR_Z, 2, new ItemStack(Items.REDSTONE, 64));
+		fillSlot(level, origin, MONITOR_X + 4, 1, MONITOR_Z, 3, new ItemStack(Items.REDSTONE, 64));
+		set(level, origin, MONITOR_X + 1, 1, MONITOR_Z, ModContent.SMART_WIRE.get());
+		set(level, origin, MONITOR_X + 3, 1, MONITOR_Z, ModContent.SMART_WIRE.get());
+		set(level, origin, MONITOR_X + 2, 1, MONITOR_Z, ModContent.MONITOR_CORE.get());
+		if (level.getBlockEntity(origin.offset(MONITOR_X + 2, 1, MONITOR_Z))
+				instanceof dev.alaindustrial.block.entity.MonitorCoreBlockEntity core) {
+			core.getEnergyStorage().setAmountUntracked(core.getEnergyStorage().getCapacity());
+			// A bare rack tracks nothing at all, so the stand fits the card that pays for the six
+			// panels below — without it every panel would show the yellow cross and the zone would
+			// demonstrate the failure mode instead of the feature.
+			core.insertCard(new ItemStack(ModContent.CAPACITY_CARD.get()));
+			core.setChangedQuietly();
+			core.wake();
+		} else {
+			missed(level, origin, MONITOR_X + 2, 1, MONITOR_Z, "has no monitor core to charge");
+		}
+		set(level, origin, MONITOR_X + 2, 1, MONITOR_Z + 1, ModContent.SOLAR_PANEL.get());
+		Item[][] filters = {
+				{Items.DIAMOND, Items.IRON_INGOT, Items.EMERALD},
+				{Items.GOLD_INGOT, Items.REDSTONE, Items.COAL},
+		};
+		for (int row = 0; row < filters.length; row++) {
+			for (int col = 0; col < filters[row].length; col++) {
+				int x = MONITOR_X + 1 + col;
+				int y = 2 + row;
+				set(level, origin, x, y, MONITOR_Z, ModContent.MONITOR_PANEL.get());
+				if (level.getBlockEntity(origin.offset(x, y, MONITOR_Z))
+						instanceof dev.alaindustrial.block.entity.MonitorPanelBlockEntity panel) {
+					panel.setFilter(new ItemStack(filters[row][col]));
+				} else {
+					missed(level, origin, x, y, MONITOR_Z, "has no monitor panel to set a filter on");
+				}
+			}
+		}
+	}
+
 	/**
 	 * EVERY item registered in the {@code alaindustrial} namespace, sorted by id — the exact
 	 * population the showcase wall displays and its gametest asserts, in the exact order the wall
@@ -1359,7 +1460,7 @@ public final class DemoStand {
 	 * of walking the whole stand. The wall is that index, and an index with a hundred holes in it is
 	 * the complaint the owner raised the first time they read it in game.
 	 *
-	 * <p>Nine blocks still cannot appear here, because they have no item at all: the five fluids
+	 * <p>Blocks with no item at all cannot appear here (they stand in the item-less row instead, see {@link #buildItemlessRow}): the five fluids
 	 * ({@code oil}, {@code diesel}, {@code fuel_oil}, {@code biofuel}, {@code nutrient_solution} —
 	 * their buckets do appear), the two upper distillation-column sections, the incubator dome and
 	 * the kok sagyz root block. None is a block a player ever holds, and each is placed on the stand

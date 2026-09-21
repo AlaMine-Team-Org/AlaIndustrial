@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "S": "alaindustrial:silver_plate",
+    "R": "minecraft:redstone",
+    "A": "alaindustrial:reinforced_amethyst",
+    "C": "alaindustrial:advanced_circuit"
+  },
+  "pattern": [
+    "SRS",
+    "RAR",
+    "SCS"
+  ],
+  "result": {
+    "id": "alaindustrial:capacity_card"
+  }
+}

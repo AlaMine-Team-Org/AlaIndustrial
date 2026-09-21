@@ -388,6 +388,24 @@ public final class DemoStandScenarios {
 			helper.fail("showcase wall does not display every mod item; missing: " + missing
 					+ " — the wall is full or the frame placement broke");
 		}
+
+		// Blocks with no item cannot hang in a frame: each stands in the item-less row (z=22).
+		Set<Identifier> missingBlocks = new HashSet<>();
+		List<Block> blocks = DemoStand.showcaseBlocks();
+		for (int i = 0; i < blocks.size(); i++) {
+			boolean found = false;
+			if (1 + 2 * i < DemoStand.WIDTH) {
+				for (int y = 0; y <= 1 && !found; y++) {
+					found = helper.getLevel().getBlockState(origin.offset(1 + 2 * i, y, 22)).is(blocks.get(i));
+				}
+			}
+			if (!found) {
+				missingBlocks.add(BuiltInRegistries.BLOCK.getKey(blocks.get(i)));
+			}
+		}
+		if (!missingBlocks.isEmpty()) {
+			helper.fail("item-less row does not show every block without an item; missing: " + missingBlocks);
+		}
 		helper.succeed();
 	}
 

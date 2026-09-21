@@ -40,7 +40,7 @@ dependencies {
     // The `common-api` artifact alone: `@JeiPlugin`, `IModPlugin` and every category/registration
     // interface used here live in it. The two loader-specific api jars carry only their own fluid
     // ingredient types, which this integration does not touch, and they stay in the loader modules.
-    compileOnly("mezz.jei:jei-26.2-common-api:${jei_version}@jar")
+    compileOnly("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}@jar")
 
     // Fabric and NeoForge both bundle Fabric Mixin, so it is safe to use in common.
     // Version cross-checked against both loaders' gradle.properties (MOD-022):

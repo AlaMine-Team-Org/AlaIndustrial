@@ -9,6 +9,7 @@ import dev.alaindustrial.menu.EnergyCondenserMenu;
 import dev.alaindustrial.menu.MobRepellerHvMenu;
 import dev.alaindustrial.menu.MobRepellerMenu;
 import dev.alaindustrial.menu.MobRepellerMvMenu;
+import dev.alaindustrial.menu.MonitorCoreMenu;
 import dev.alaindustrial.menu.CesuMenu;
 import dev.alaindustrial.menu.ChargePadMenu;
 import dev.alaindustrial.menu.ElectricHeaterMenu;
@@ -403,6 +404,7 @@ public final class ModContent {
 	public static Supplier<Item> RECYCLER_BLADES_DIAMOND = unbound("RECYCLER_BLADES_DIAMOND");
 	public static Supplier<Item> IRRADIATED_DIAMOND = unbound("IRRADIATED_DIAMOND");
 	public static Supplier<Item> RESONANT_SHARD = unbound("RESONANT_SHARD");
+	public static Supplier<Item> REINFORCED_AMETHYST = unbound("REINFORCED_AMETHYST");
 	public static Supplier<Item> MUTAGEN_DUST = unbound("MUTAGEN_DUST");
 	public static Supplier<Item> UNSTABLE_ISOTOPE = unbound("UNSTABLE_ISOTOPE");
 	public static Supplier<Item> MUTE_CHIP = unbound("MUTE_CHIP");
@@ -987,6 +989,7 @@ public final class ModContent {
 	// MOD-391 — one double-chest window for all three tiers: the visible size is always 6 rows and
 	// the total row count travels via ContainerData, so nothing tier-specific is left for the type.
 	public static Supplier<MenuType<DoubleChestMenu>> DOUBLE_CHEST_MENU = unbound("DOUBLE_CHEST_MENU");
+	public static Supplier<MenuType<MonitorCoreMenu>> MONITOR_CORE_MENU = unbound("MONITOR_CORE_MENU");
 
 	/** A placeholder handle that throws if read before the loader populated it. */
 	private static <T> Supplier<T> unbound(String name) {
