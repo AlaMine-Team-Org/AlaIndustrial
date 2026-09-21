@@ -1,6 +1,6 @@
 {
 	"model": {
 		"type": "minecraft:model",
-		"model": "alaindustrial:block/monitor_panel"
+		"model": "alaindustrial:block/monitor_panel_off"
 	}
 }

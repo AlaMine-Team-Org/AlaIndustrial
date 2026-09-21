@@ -1027,7 +1027,7 @@ public final class ContentManifest {
 			// the panels are machine casings.
 			Map.entry("smart_wire", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion())),
 			Map.entry("monitor_core", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
-			Map.entry("monitor_panel", machine(p -> p.strength(2.0f, 4.0f).sound(SoundType.METAL))),
+			Map.entry("monitor_panel", machine(p -> p.strength(2.0f, 4.0f).sound(SoundType.METAL).noOcclusion())),
 			// MOD-513 — the lab plaque plates: polished deepslate in hardness and sound.
 			Map.entry("engraved_plate_0", machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE))),
 			Map.entry("engraved_plate_1", machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE))),

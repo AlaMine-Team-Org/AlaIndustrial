@@ -45,8 +45,8 @@ public class MonitorPanelBlockEntityRenderer
 
 	private static final float TEXT_SCALE = 0.022F;
 
-	/** Face of the recessed screen: half a block, less the one-pixel bezel, plus a hair of clearance. */
-	private static final float SCREEN_DEPTH = 0.5F - 1.0F / 16.0F + 0.002F;
+	/** The generated screen plane is at model Z 0.6/16, i.e. this far from block centre. */
+	private static final float SCREEN_DEPTH = 0.4645F;
 
 	private final ItemModelResolver itemModelResolver;
 	private final Font font;
@@ -105,20 +105,19 @@ public class MonitorPanelBlockEntityRenderer
 		// Put +Z on the face the panel was placed looking out of, then step just clear of the surface.
 		poseStack.translate(0.5F, 0.5F, 0.5F);
 		poseStack.mulPose(Axis.YP.rotationDegrees(-state.facing.toYRot()));
-		// The screen is recessed one pixel behind the bezel, so everything drawn on it sits there too.
-		poseStack.translate(0.0F, 0.0F, SCREEN_DEPTH);
-
+		// The screen is recessed behind the bezel, so dynamic content sits on that exact plane.
 		poseStack.pushPose();
-		// Lifted out of the recess so the cube floats in the niche rather than sinking into the wall.
-		poseStack.translate(0.0F, 0.16F, 0.06F);
-		poseStack.scale(0.38F, 0.38F, 0.38F);
+		// A GUI item may be a 3D block. Flatten only its depth instead of moving it behind the opaque
+		// screen: that keeps the familiar inventory silhouette without looking like a floating model.
+		poseStack.translate(0.0F, 0.16F, SCREEN_DEPTH);
+		poseStack.scale(0.38F, 0.38F, 0.03F);
 		state.item.submit(poseStack, collector, state.lightCoords,
 				net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY, 0);
 		poseStack.popPose();
 
 		if (state.showText) {
 			poseStack.pushPose();
-			poseStack.translate(0.0F, -0.12F, 0.004F);
+			poseStack.translate(0.0F, -0.12F, SCREEN_DEPTH);
 			// Negative Y: glyph space grows downwards.
 			poseStack.scale(TEXT_SCALE, -TEXT_SCALE, TEXT_SCALE);
 			FormattedCharSequence text = Component.literal(label(state)).getVisualOrderText();

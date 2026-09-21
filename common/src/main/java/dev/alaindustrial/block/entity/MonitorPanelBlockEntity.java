@@ -3,6 +3,7 @@ package dev.alaindustrial.block.entity;
 import dev.alaindustrial.core.monitor.MonitorNetworkManager;
 import dev.alaindustrial.core.monitor.MonitorReadout;
 import dev.alaindustrial.registry.ModContent;
+import dev.alaindustrial.block.MonitorPanelBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -58,6 +59,7 @@ public class MonitorPanelBlockEntity extends BlockEntity {
 			this.readout = MonitorReadout.IDLE;
 			this.count = 0L;
 		}
+		updateActiveState();
 		sync();
 		if (level instanceof ServerLevel serverLevel) {
 			MonitorNetworkManager.demandChanged(serverLevel, worldPosition);
@@ -85,11 +87,27 @@ public class MonitorPanelBlockEntity extends BlockEntity {
 	}
 
 	public void ensureRegistered() {
-		if (registered || !(level instanceof ServerLevel serverLevel)) {
+		if (!(level instanceof ServerLevel serverLevel)) {
+			return;
+		}
+		updateActiveState();
+		if (registered) {
 			return;
 		}
 		registered = true;
 		MonitorNetworkManager.register(serverLevel, worldPosition);
+	}
+
+	/** Keep the chunk model's on/off skin in sync with the persisted watched-item slot. */
+	private void updateActiveState() {
+		if (level == null || level.isClientSide()) {
+			return;
+		}
+		BlockState state = getBlockState();
+		boolean active = !filter.isEmpty();
+		if (state.hasProperty(MonitorPanelBlock.ACTIVE) && state.getValue(MonitorPanelBlock.ACTIVE) != active) {
+			level.setBlock(worldPosition, state.setValue(MonitorPanelBlock.ACTIVE, active), 3);
+		}
 	}
 
 	@Override
