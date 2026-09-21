@@ -1,5 +1,6 @@
 # Installed into the PUBLIC repo at: .github/workflows/release.yml
-# Triggered by pushing a tag `vX.Y.Z`. Builds BOTH loaders (Fabric + NeoForge),
+# Triggered by pushing a release tag `vX.Y.Z-mc26.3` or `vX.Y.Z-mc26.2` (the axis-free
+# `vX.Y.Z` form remains valid only for the historical 26.2 releases). Builds BOTH loaders (Fabric + NeoForge),
 # publishes TWO files to CurseForge and TWO versions to Modrinth (one per
 # loader) with a MARKDOWN changelog, and creates one GitHub Release carrying
 # both jars.
@@ -92,7 +93,7 @@ jobs:
           # pattern like v[0-9]*.[0-9]*.[0-9]* happily accepts `v1.2.3; rm -rf /`. The tag
           # flows into later steps, so it must be pinned to exactly vMAJOR.MINOR.PATCH.
           if [[ ! "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-mc26\.[23])?$ ]]; then
-            echo "::error::'$TAG' is not a release tag (expected vX.Y.Z). Select the tag under 'Use workflow from' -> Tags, or fill in the 'tag' input."
+            echo "::error::'$TAG' is not a release tag (expected vX.Y.Z or vX.Y.Z-mc26.2 / vX.Y.Z-mc26.3). Select the tag under 'Use workflow from' -> Tags, or fill in the 'tag' input."
             exit 1
           fi
           echo "tag=$TAG"         >> "$GITHUB_OUTPUT"
