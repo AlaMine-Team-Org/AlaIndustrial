@@ -20,6 +20,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import net.minecraft.world.level.levelgen.structure.Structure;
@@ -75,8 +76,10 @@ class NeoForgeOilWorldGenTest {
 		assertTrue(BuiltInRegistries.PLACEMENT_MODIFIER_TYPE.containsKey(OilLakeFilter.ID),
 				"PLACEMENT_MODIFIER_TYPE missing " + OilLakeFilter.ID
 						+ " — the NeoForge DeferredRegister in ModWorldGenNeoForge regressed");
-		assertSame(OilLakeFilter.TYPE, BuiltInRegistries.PLACEMENT_MODIFIER_TYPE.getValue(OilLakeFilter.ID),
-				"a different instance is registered than the one OilLakeFilter#type() returns");
+		// 26.3 dropped the PlacementModifierType wrapper: the registry now holds the MapCodec a
+		// modifier hands back from codec(), so that codec IS the registered instance.
+		assertSame(OilLakeFilter.CODEC, BuiltInRegistries.PLACEMENT_MODIFIER_TYPE.getValue(OilLakeFilter.ID),
+				"a different instance is registered than the one OilLakeFilter#codec() returns");
 	}
 
 	/**
@@ -89,22 +92,30 @@ class NeoForgeOilWorldGenTest {
 	void everyOilFeatureRunsTheStructureFilter(String path, MinecraftServer server) {
 		List<PlacementModifier> placement = placedFeature(server, path).placement();
 		assertFalse(placement.isEmpty(), path + " has no placement modifiers at all");
-		assertInstanceOf(OilLakeFilter.class, placement.get(placement.size() - 1),
+		PlacementModifier last = placement.get(placement.size() - 1);
+		assertInstanceOf(OilLakeFilter.class, last,
 				"alaindustrial:" + path + " must end with alaindustrial:oil_lake_filter, but its last"
-						+ " modifier is " + placement.get(placement.size() - 1).type()
+						// 26.3: a modifier no longer carries a type() wrapper, so name the offending
+						// modifier by the registry id its codec is registered under.
+						+ " modifier is " + BuiltInRegistries.PLACEMENT_MODIFIER_TYPE.getKey(last.codec())
 						+ " — an oil lake could overwrite a village/mineshaft/Ancient City");
 	}
 
 	/**
-	 * The two custom feature types are in {@code BuiltInRegistries.FEATURE} (MOD-248). Without them
-	 * every oil configured feature fails to parse on its {@code "type"} line, which surfaces as "no
-	 * oil in the world" rather than as an error the player can act on.
+	 * The two custom feature types are in {@code BuiltInRegistries.FEATURE_TYPE} (MOD-248). Without
+	 * them every oil feature fails to parse on its {@code "type"} line, which surfaces as "no oil in
+	 * the world" rather than as an error the player can act on.
+	 *
+	 * <p>26.3 renamed the type registry: {@code BuiltInRegistries.FEATURE} used to hold the feature
+	 * TYPES, while {@code Registries.FEATURE} is now the datapack registry of configured features.
+	 * The types moved to {@code FEATURE_TYPE} and hold {@code MapCodec}s rather than {@code Feature}
+	 * instances — the ids, and therefore what this asserts, are unchanged.
 	 */
 	@ParameterizedTest(name = "feature type alaindustrial:{0} is registered")
 	@ValueSource(strings = { "oil_lake", "oil_geyser" })
 	void bothOilFeatureTypesAreRegistered(String path) {
-		assertTrue(BuiltInRegistries.FEATURE.containsKey(id(path)),
-				"FEATURE registry missing alaindustrial:" + path
+		assertTrue(BuiltInRegistries.FEATURE_TYPE.containsKey(id(path)),
+				"FEATURE_TYPE registry missing alaindustrial:" + path
 						+ " — the NeoForge DeferredRegister in ModWorldGenNeoForge regressed");
 	}
 
@@ -112,16 +123,20 @@ class NeoForgeOilWorldGenTest {
 	 * Every oil deposit tier resolves to a configured feature (MOD-248). The four placed features
 	 * above only prove the placement parsed; this proves the thing being placed exists and is of the
 	 * mod's own feature type rather than a leftover {@code minecraft:lake}.
+	 *
+	 * <p>26.3 folded the configured layer into the feature itself — a {@link Feature} IS its
+	 * configuration — so {@code worldgen/configured_feature/} became {@code worldgen/feature/} and
+	 * the datapack registry key is {@code Registries.FEATURE}. The type is no longer a separate
+	 * object reached through {@code ConfiguredFeature#feature()}; it is the {@code MapCodec} the
+	 * feature dispatches on, registered under the same id as before.
 	 */
 	@ParameterizedTest(name = "configured feature alaindustrial:{0} loads")
 	@ValueSource(strings = { "oil_lake_small", "oil_lake_medium", "oil_lake_large", "oil_geyser" })
 	void everyOilDepositTierLoads(String path, MinecraftServer server) {
-		Registry<net.minecraft.world.level.levelgen.feature.ConfiguredFeature<?, ?>> registry =
-				server.registryAccess().lookupOrThrow(Registries.CONFIGURED_FEATURE);
-		net.minecraft.world.level.levelgen.feature.ConfiguredFeature<?, ?> configured =
-				registry.getValue(id(path));
+		Registry<Feature> registry = server.registryAccess().lookupOrThrow(Registries.FEATURE);
+		Feature configured = registry.getValue(id(path));
 		assertNotNull(configured, "configured feature alaindustrial:" + path + " failed to load");
-		Identifier featureId = BuiltInRegistries.FEATURE.getKey(configured.feature());
+		Identifier featureId = BuiltInRegistries.FEATURE_TYPE.getKey(configured.codec());
 		assertTrue(featureId != null && Industrialization.MOD_ID.equals(featureId.getNamespace()),
 				"alaindustrial:" + path + " is built on " + featureId
 						+ " — the deposit tiers must use the mod's own size-aware feature");

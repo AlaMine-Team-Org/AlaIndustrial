@@ -38,12 +38,17 @@ import org.junit.jupiter.api.Test;
  */
 class NeoForgeBackendAgnosticRenderingTest {
 
-	/** Must stay identical to {@code ArchitectureRules.BACKEND_SPECIFIC_PACKAGES}. */
+	/**
+	 * Must stay identical to {@code ArchitectureRules.BACKEND_SPECIFIC_PACKAGES}, which carries the
+	 * reasoning — including why 26.3 replaced the two {@code com.mojang.blaze3d} backend packages
+	 * (deleted with the split into {@code com.mojang.renderpearl}) with the whole
+	 * {@code renderpearl.backend..} subtree, and why the {@code renderpearl.api..} frontend beside it
+	 * stays allowed.
+	 */
 	private static final String[] BACKEND_SPECIFIC_PACKAGES = {
 		"org.lwjgl.opengl..",
 		"org.lwjgl.vulkan..",
-		"com.mojang.blaze3d.opengl..",
-		"com.mojang.blaze3d.vulkan..",
+		"com.mojang.renderpearl.backend..",
 	};
 
 	private static JavaClasses productionClasses;
@@ -89,13 +94,23 @@ class NeoForgeBackendAgnosticRenderingTest {
 	 */
 	@Test
 	void aBackendPackageBanCanStillSeeBlaze3dFromThisLane() {
+		assertPackageBanIsNotBlind("com.mojang.blaze3d.vertex..",
+				"which the renderers demonstrably use");
+		// Since 26.3 the ban lives in com.mojang.renderpearl, not in com.mojang.blaze3d, so the probe
+		// above no longer touches the forbidden tree at all. Without this second one, a lane that could
+		// not see renderpearl would leave the real rule permanently and silently green.
+		assertPackageBanIsNotBlind("com.mojang.renderpearl.api..",
+				"the frontend sibling of the banned com.mojang.renderpearl.backend.. subtree");
+	}
+
+	private static void assertPackageBanIsNotBlind(String allowedSiblingPackage, String why) {
 		EvaluationResult result = noClasses()
-				.should().dependOnClassesThat().resideInAnyPackage("com.mojang.blaze3d.vertex..")
+				.should().dependOnClassesThat().resideInAnyPackage(allowedSiblingPackage)
 				.evaluate(productionClasses);
 
 		assertTrue(result.hasViolation(),
 				"a package ban shaped exactly like the rule above reported nothing against "
-						+ "com.mojang.blaze3d.vertex.., which the renderers demonstrably use — so the "
-						+ "real rule is blind on this lane too, and its green means nothing");
+						+ allowedSiblingPackage + ", " + why + " — so the real rule is blind on this "
+						+ "lane too, and its green means nothing");
 	}
 }

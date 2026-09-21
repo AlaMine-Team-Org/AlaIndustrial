@@ -1,15 +1,7 @@
 package dev.alaindustrial.registry.neoforge;
 
 import dev.alaindustrial.Industrialization;
-import dev.alaindustrial.item.tool.ElectricHoeDiamondTipItem;
-import dev.alaindustrial.item.tool.ElectricHoeItem;
-import dev.alaindustrial.item.tool.ElectricShovelDiamondTipItem;
-import dev.alaindustrial.item.tool.ElectricShovelItem;
 import dev.alaindustrial.item.tool.HammerItem;
-import dev.alaindustrial.item.tool.neoforge.ElectricHoeDiamondTipItemNeoForge;
-import dev.alaindustrial.item.tool.neoforge.ElectricHoeItemNeoForge;
-import dev.alaindustrial.item.tool.neoforge.ElectricShovelDiamondTipItemNeoForge;
-import dev.alaindustrial.item.tool.neoforge.ElectricShovelItemNeoForge;
 import dev.alaindustrial.item.tool.neoforge.HammerItemNeoForge;
 import dev.alaindustrial.registry.ContentManifest;
 import dev.alaindustrial.registry.ModContent;
@@ -33,7 +25,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
  * <p><b>What is left here is the NeoForge registration MECHANISM, and only that:</b> the
  * {@link DeferredRegister} (which must live on this side), its lazy {@code registerItem} — whose
  * {@code Properties} carry an id derived from the deferred key, so no {@code setId} here — and
- * {@link #LOADER_ITEMS}, the five items whose CLASS is NeoForge's rather than shared.
+ * {@link #LOADER_ITEMS}, the forge hammer whose CLASS is NeoForge's rather than shared.
  *
  * <p><b>Timing.</b> Every factory runs when the item {@code RegisterEvent} fires, by which point the
  * block, fluid and entity-type registries this loader populates are already filled (vanilla registry
@@ -47,25 +39,9 @@ public final class ModItemsNeoForge {
 	public static final DeferredRegister.Items ITEMS =
 			DeferredRegister.createItems(Industrialization.MOD_ID);
 
-	/**
-	 * The five items whose CLASS is NeoForge-specific — the manifest declares them with
-	 * {@code loaderItem(...)} and no shared factory, so this map is the only thing that can build them
-	 * here. A missing entry throws at startup rather than falling back to a shared class, which is
-	 * exactly the failure MOD-378 and MOD-379 each shipped once: the base hoe went out unable to till and
-	 * the base shovel unable to make paths, because they used the common class and NeoForge's patched
-	 * {@code HoeItem}/{@code ShovelItem} gate those actions behind an {@code ItemAbility} declaration.
-	 *
-	 * <p>The properties stay shared in every case — only the constructor differs.
-	 */
+	/** The forge hammer alone needs a loader-specific crafting-remainder hook. */
 	private static final Map<String, Function<Item.Properties, ? extends Item>> LOADER_ITEMS = Map.of(
-			"forge_hammer", p -> new HammerItemNeoForge(HammerItem.hammerProperties(p)),
-			"electric_shovel", p -> new ElectricShovelItemNeoForge(
-					ElectricShovelItem.electricShovelProperties(p)),
-			"electric_shovel_diamond_tip", p -> new ElectricShovelDiamondTipItemNeoForge(
-					ElectricShovelDiamondTipItem.electricShovelDiamondTipProperties(p)),
-			"electric_hoe", p -> new ElectricHoeItemNeoForge(ElectricHoeItem.electricHoeProperties(p)),
-			"electric_hoe_diamond_tip", p -> new ElectricHoeDiamondTipItemNeoForge(
-					ElectricHoeDiamondTipItem.electricHoeDiamondTipProperties(p)));
+			"forge_hammer", p -> new HammerItemNeoForge(HammerItem.hammerProperties(p)));
 
 	/**
 	 * Every manifest entry, queued on {@link #ITEMS} the moment this class loads. Declared right after
