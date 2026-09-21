@@ -15,6 +15,9 @@ on:
       tag:
         required: true
         type: string
+      text:
+        required: false
+        type: string
     secrets:
       DISCORD_RELEASES_WEBHOOK:
         required: false
@@ -23,6 +26,10 @@ on:
       tag:
         description: 'Release tag to announce, e.g. v0.1.51'
         required: true
+        type: string
+      text:
+        description: 'Optional custom message (Markdown). Empty = the changelog from the tag.'
+        required: false
         type: string
 
 jobs:
@@ -38,17 +45,25 @@ jobs:
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_RELEASES_WEBHOOK }}
           TAG: ${{ inputs.tag }}
+          CUSTOM_TEXT: ${{ inputs.text || '' }}
         run: |
           [ -n "$DISCORD_WEBHOOK" ] || { echo "::warning::DISCORD_RELEASES_WEBHOOK not set — skipping Discord announce"; exit 0; }
           VERSION="${TAG#v}"
 
-          # Description = player-facing CHANGELOG.md minus the "## X.Y.Z" heading and the
-          # <p><img> line (embeds render Markdown, not HTML; the media is attached below).
-          # "### Foo" is rewritten to bold: Markdown headers are unreliable inside embeds
-          # (dead in field values, inconsistent in descriptions), bold renders everywhere.
-          # Leading blank lines stripped. Embed description limit is 4096 chars; the release
-          # skill keeps changelogs to about one screen, well under that.
-          DESC="$(grep -vE '^## |<p><img' CHANGELOG.md | sed -E 's/^### (.*)$/**\1**/' | sed '/./,$!d')"
+          # Custom message mode: a dispatch may carry the exact post to send (Markdown), e.g. a
+          # short news item instead of the full changelog. Empty input keeps the default below,
+          # so the workflow_call path from release.yml is unchanged.
+          if [ -n "$CUSTOM_TEXT" ]; then
+            DESC="$CUSTOM_TEXT"
+          else
+            # Description = player-facing CHANGELOG.md minus the "## X.Y.Z" heading and the
+            # <p><img> line (embeds render Markdown, not HTML; the media is attached below).
+            # "### Foo" is rewritten to bold: Markdown headers are unreliable inside embeds
+            # (dead in field values, inconsistent in descriptions), bold renders everywhere.
+            # Leading blank lines stripped. Embed description limit is 4096 chars; the release
+            # skill keeps changelogs to about one screen, well under that.
+            DESC="$(grep -vE '^## |<p><img' CHANGELOG.md | sed -E 's/^### (.*)$/**\1**/' | sed '/./,$!d')"
+          fi
 
           # Release media. Two things used to go wrong here and both are fixed:
           #
