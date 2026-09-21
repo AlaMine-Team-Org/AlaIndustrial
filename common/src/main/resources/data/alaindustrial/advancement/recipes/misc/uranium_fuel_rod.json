@@ -24,7 +24,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "alaindustrial:uranium_fuel_rod"
+        "recipes": "alaindustrial:uranium_fuel_rod"
       }
     }
   },

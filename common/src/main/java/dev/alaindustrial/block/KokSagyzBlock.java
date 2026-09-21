@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.KokSagyzRootBlockEntity;
 import dev.alaindustrial.registry.ModContent;
@@ -11,6 +10,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BonemealSource;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
@@ -52,10 +52,6 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
  */
 public class KokSagyzBlock extends BushBlock {
 
-	// BushBlock declares codec() as MapCodec<BushBlock> (concrete class, no wildcard), so the field
-	// carries the supertype; the factory below is still this class.
-	public static final MapCodec<BushBlock> CODEC = simpleCodec(KokSagyzBlock::new);
-
 	/** Bare rosette — freshly planted, nothing to dig yet. */
 	public static final int AGE_ROSETTE = 0;
 	/** A bud has formed: the plant is established but carries no flower yet. */
@@ -73,11 +69,6 @@ public class KokSagyzBlock extends BushBlock {
 	public KokSagyzBlock(Properties properties) {
 		super(properties);
 		registerDefaultState(stateDefinition.any().setValue(AGE, AGE_ROSETTE));
-	}
-
-	@Override
-	public MapCodec<BushBlock> codec() {
-		return CODEC;
 	}
 
 	@Override
@@ -292,7 +283,6 @@ public class KokSagyzBlock extends BushBlock {
 		return true;
 	}
 
-
 	/**
 	 * Whether the column can still go one block deeper: either the flower sits on soil (no root
 	 * yet) or on the upper root over soil (no tip yet). A full column — root over tip, or a root
@@ -346,7 +336,7 @@ public class KokSagyzBlock extends BushBlock {
 	// --- bone meal (also the sprinkler's hook) ---
 
 	@Override
-	public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state) {
+	public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state, BonemealSource source) {
 		return state.getValue(AGE) < AGE_MATURE || canGrowRoot(level, pos);
 	}
 
@@ -356,7 +346,8 @@ public class KokSagyzBlock extends BushBlock {
 	 * still apply.
 	 */
 	@Override
-	public void performBonemeal(ServerLevel level, RandomSource random, BlockPos pos, BlockState state) {
+	public void performBonemeal(ServerLevel level, RandomSource random, BlockPos pos, BlockState state,
+			BonemealSource source) {
 		int age = state.getValue(AGE);
 		if (age < AGE_MATURE) {
 			level.setBlock(pos, state.setValue(AGE, age + 1), Block.UPDATE_CLIENTS);

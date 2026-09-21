@@ -40,7 +40,7 @@ dependencies {
     // The `common-api` artifact alone: `@JeiPlugin`, `IModPlugin` and every category/registration
     // interface used here live in it. The two loader-specific api jars carry only their own fluid
     // ingredient types, which this integration does not touch, and they stay in the loader modules.
-    compileOnly("mezz.jei:jei-26.2-common-api:${jei_version}@jar")
+    compileOnly("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}@jar")
 
     // Fabric and NeoForge both bundle Fabric Mixin, so it is safe to use in common.
     // Version cross-checked against both loaders' gradle.properties (MOD-022):
@@ -367,6 +367,16 @@ pitest {
     // (HudSmootherTest, LevelMathTest, GuidePaginatorTest, TemperedGearRollTest) invisible to PIT.
     targetTests = ['dev.alaindustrial.*Test']
     excludedClasses = [
+            // MOD-226: `client.tooltip.TooltipKeysClientHook` used to be listed here, and is not any
+            // more. It had become "Minecraft-free" by the target gate's reckoning purely as a side
+            // effect of the 26.3 input port — dropping the window argument dropped its last
+            // `net.minecraft.*` reference — while staying exactly as untestable as before: its whole
+            // body is InputConstants.isKeyDown, which reads the live SDL keyboard, and blaze3d is no
+            // more on `common/`'s test classpath than the Minecraft jar is. The fix belonged in the
+            // classifier, not in a name: pitest_check.py now counts com.mojang.blaze3d and
+            // com.mojang.renderpearl as Minecraft too (MINECRAFT_PACKAGES), so the class is MC-coupled
+            // again by rule and needs no entry. If a glob below ever grows to cover it, the gate's
+            // "MC-coupled class under a glob without an exclusion" check fails the build and says so.
             // MOD-480: the monitoring wall's server side. Every one of these takes a ServerLevel,
             // a BlockPos or an ItemStack — the network walks block entities, the scan resolves
             // containers, the tally compares stacks — so `common/`'s Minecraft-free test classpath
@@ -383,6 +393,14 @@ pitest {
             // tests (CeramicScenarios): the press pays more than a hand quench, and an unpowered or
             // waterless press pays nothing at all.
             'dev.alaindustrial.core.ceramic.QuenchPress',
+            // MOD-226: how long a stack burns in the generator and the iron furnace, on 26.3. Every
+            // member takes a ServerLevel, a BlockEntity or an ItemStack and the whole body is the
+            // LootContext that resolving a cooking_fuel burn time needs, so `common/`'s Minecraft-free
+            // test classpath cannot construct one call and all of its mutants would be NO_COVERAGE.
+            // There is barely anything to mutate either — one component check and one delegation, no
+            // branch of its own. What the two machines then DO with the number (the buffer-full pause,
+            // the smelts-per-fuel scaling) lives in them and is covered by their game tests.
+            'dev.alaindustrial.core.FurnaceFuel',
             // MOD-596: the per-world "already greeted" flag. It is a SavedData subclass whose whole
             // surface is Codec/SavedDataType/setDirty — net.minecraft types common/'s test classpath
             // does not carry, so every mutant of it would be a guaranteed NO_COVERAGE. There is also
@@ -610,6 +628,14 @@ pitest {
             // typed by GuiGraphicsExtractor, Component and ItemStack. There is no bytecode of its own to
             // mutate, and L1 could not load it anyway.
             'dev.alaindustrial.client.screen.reactor.ReactorTabPage',
+            // MOD-226: MC-coupled TRANSITIVELY, like the two entries above, and listed with its
+            // reason in pitest_check.py's TRANSITIVE_MC_COUPLING. 26.3 removed the block codec
+            // mechanism, so deleting this block's CODEC field and codec() override left a file that
+            // names no net.minecraft type at all — but it is a Block: its constructor takes
+            // BlockBehaviour.Properties and its supertype chain is Minecraft's, so L1 cannot load it,
+            // let alone construct one. Its only own behaviour is `offsetToBase() == 1`, covered by the
+            // distillation-column game tests on both lanes.
+            'dev.alaindustrial.block.DistillationColumnMiddleBlock',
             // NOTE: `dev.alaindustrial.Config` lived here as a deferred-coverage parking spot from
             // MOD-200 (135 mutants, only 35 killed) until MOD-204 wrote the full L1 suite
             // (ConfigSnapshotTest), which killed all 157 mutants it had at the time. It has moved to

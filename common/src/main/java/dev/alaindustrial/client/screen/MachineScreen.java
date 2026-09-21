@@ -1,5 +1,6 @@
 package dev.alaindustrial.client.screen;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.ProcessingMachineStatus;
@@ -726,13 +727,13 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
 		int btn = event.button();
 		// The gear always toggles the panel (it stays visible in the panel's transparent corner).
-		if (btn == 0 && this.menu.hasUpgradePanel()
+		if (btn == InputConstants.MOUSE_BUTTON_LEFT && this.menu.hasUpgradePanel()
 				&& panel.isOverGear(event.x(), event.y(), this.leftPos, this.topPos)) {
 			panel.onGearClick();
 			return true;
 		}
 		// MOD-125: the statistics tab, on every machine that shows one (see hasStatsTab).
-		if (btn == 0 && hasStatsTab() && statsPanel.isOverTab(event.x(), event.y(), this.leftPos, this.topPos)) {
+		if (btn == InputConstants.MOUSE_BUTTON_LEFT && hasStatsTab() && statsPanel.isOverTab(event.x(), event.y(), this.leftPos, this.topPos)) {
 			statsPanel.onTabClick();
 			return true;
 		}
@@ -740,30 +741,30 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 		// inside it except the close button — a readout takes no input.
 		if (this.menu.isStatsPanelOpen()
 				&& statsPanel.isOverPanel(event.x(), event.y(), this.leftPos, this.topPos)) {
-			if (btn == 0 && statsPanel.isOverClose(event.x(), event.y(), this.leftPos, this.topPos)) {
+			if (btn == InputConstants.MOUSE_BUTTON_LEFT && statsPanel.isOverClose(event.x(), event.y(), this.leftPos, this.topPos)) {
 				statsPanel.onCloseClick();
 				return true;
 			}
 			// A readout has nothing to click, so the whole surface is a drag handle.
-			if (btn == 0) {
+			if (btn == InputConstants.MOUSE_BUTTON_LEFT) {
 				statsPanel.beginDrag(event.x(), event.y());
 			}
 			return true;
 		}
 		// The open panel is modal over its footprint: consume every click so nothing beneath reacts.
 		if (this.menu.isPanelOpen() && panel.isOverPanel(event.x(), event.y(), this.leftPos, this.topPos)) {
-			if (btn == 0 && panel.isOverClose(event.x(), event.y(), this.leftPos, this.topPos)) {
+			if (btn == InputConstants.MOUSE_BUTTON_LEFT && panel.isOverClose(event.x(), event.y(), this.leftPos, this.topPos)) {
 				panel.onCloseClick();
 				return true;
 			}
-			MachineMenu.UpgradeSlot slot = (btn == 0 || btn == 1) ? upgradeSlotAt(event.x(), event.y()) : null;
+			MachineMenu.UpgradeSlot slot = (btn == InputConstants.MOUSE_BUTTON_LEFT || btn == InputConstants.MOUSE_BUTTON_RIGHT) ? upgradeSlotAt(event.x(), event.y()) : null;
 			if (slot != null) {
-				ContainerInput input = (btn == 0 && event.hasShiftDown())
+				ContainerInput input = (btn == InputConstants.MOUSE_BUTTON_LEFT && event.hasShiftDown())
 						? ContainerInput.QUICK_MOVE : ContainerInput.PICKUP;
 				this.slotClicked(slot, slot.index, btn, input);
 				return true;
 			}
-			if (btn == 0) {
+			if (btn == InputConstants.MOUSE_BUTTON_LEFT) {
 				panel.beginDrag(event.x(), event.y());
 			}
 			return true;
@@ -773,11 +774,11 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 
 	@Override
 	public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
-		if (panel.dragging() && event.button() == 0) {
+		if (panel.dragging() && event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
 			panel.dragTo(event.x(), event.y(), this.leftPos, this.topPos, this.width, this.height);
 			return true;
 		}
-		if (statsPanel.dragging() && event.button() == 0) {
+		if (statsPanel.dragging() && event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
 			statsPanel.dragTo(event.x(), event.y(), this.leftPos, this.topPos, this.width, this.height);
 			return true;
 		}
@@ -786,11 +787,11 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 
 	@Override
 	public boolean mouseReleased(MouseButtonEvent event) {
-		if (panel.dragging() && event.button() == 0) {
+		if (panel.dragging() && event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
 			panel.endDrag();
 			return true;
 		}
-		if (statsPanel.dragging() && event.button() == 0) {
+		if (statsPanel.dragging() && event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
 			statsPanel.endDrag();
 			return true;
 		}

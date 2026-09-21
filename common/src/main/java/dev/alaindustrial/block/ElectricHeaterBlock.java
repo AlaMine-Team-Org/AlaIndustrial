@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.ElectricHeaterBlockEntity;
 import dev.alaindustrial.registry.ModSounds;
 import java.util.function.Supplier;
@@ -9,7 +8,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -34,8 +32,6 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
  * exactly what this sound must not be, which is why the coil crackles instead.
  */
 public final class ElectricHeaterBlock extends HorizontalMachineBlock implements MachineHumProvider {
-	public static final MapCodec<ElectricHeaterBlock> CODEC = simpleCodec(ElectricHeaterBlock::new);
-
 	/** How hot the coils look; see {@link HeaterGlow} for why this is not the usual boolean LIT. */
 	public static final EnumProperty<HeaterGlow> GLOW = EnumProperty.create("glow", HeaterGlow.class);
 
@@ -60,11 +56,6 @@ public final class ElectricHeaterBlock extends HorizontalMachineBlock implements
 	public ElectricHeaterBlock(Properties properties) {
 		super(properties);
 		registerDefaultState(defaultBlockState().setValue(GLOW, HeaterGlow.COLD).setValue(DRAWING, false));
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

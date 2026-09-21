@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.RecyclerBlockEntity;
 import dev.alaindustrial.registry.ModSounds;
 import java.util.function.Supplier;
@@ -9,7 +8,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -25,8 +23,6 @@ import net.minecraft.world.level.block.state.BlockState;
  * is otherwise invisible from the outside.
  */
 public class RecyclerBlock extends LitMachineBlock implements MachineHumProvider {
-	public static final MapCodec<RecyclerBlock> CODEC = simpleCodec(RecyclerBlock::new);
-
 	/** Fractions present in the current batch, 0..3 — the lamp count on the front face. */
 	public static final IntegerProperty LAMPS = IntegerProperty.create("lamps", 0, 3);
 
@@ -39,11 +35,6 @@ public class RecyclerBlock extends LitMachineBlock implements MachineHumProvider
 	protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
 		builder.add(LAMPS);
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

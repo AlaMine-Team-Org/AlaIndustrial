@@ -1,5 +1,6 @@
 package dev.alaindustrial.client.screen;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import dev.alaindustrial.menu.AbstractScrollingChestMenu;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -158,7 +159,7 @@ public abstract class AbstractStorageScreen<M extends AbstractScrollingChestMenu
 
 	@Override
 	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-		if (event.button() == 0 && overScrollbar(event.x(), event.y())) {
+		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && overScrollbar(event.x(), event.y())) {
 			if (this.menu.isScrollable()) {
 				dragging = true;
 				scrollTo(rowAtMouse(event.y()));
@@ -171,7 +172,7 @@ public abstract class AbstractStorageScreen<M extends AbstractScrollingChestMenu
 
 	@Override
 	public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
-		if (dragging && event.button() == 0) {
+		if (dragging && event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
 			scrollTo(rowAtMouse(event.y()));
 			return true;
 		}
@@ -180,7 +181,7 @@ public abstract class AbstractStorageScreen<M extends AbstractScrollingChestMenu
 
 	@Override
 	public boolean mouseReleased(MouseButtonEvent event) {
-		if (dragging && event.button() == 0) {
+		if (dragging && event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
 			dragging = false;
 			return true;
 		}

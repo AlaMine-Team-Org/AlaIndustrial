@@ -1,10 +1,6 @@
 package dev.alaindustrial.registry;
 
 import dev.alaindustrial.Industrialization;
-import dev.alaindustrial.item.tool.ElectricHoeDiamondTipItem;
-import dev.alaindustrial.item.tool.ElectricHoeItem;
-import dev.alaindustrial.item.tool.ElectricShovelDiamondTipItem;
-import dev.alaindustrial.item.tool.ElectricShovelItem;
 import dev.alaindustrial.item.tool.HammerItem;
 import dev.alaindustrial.item.tool.HammerItemFabric;
 import java.util.LinkedHashMap;
@@ -36,7 +32,7 @@ import net.minecraft.world.level.ItemLike;
  *
  * <p><b>What is left here is the Fabric registration MECHANISM, and only that:</b> eager construction,
  * the {@code setId(key)} the loader has to stamp itself, {@code Registry.register}, and
- * {@link #LOADER_ITEMS} — the five items whose CLASS is Fabric's rather than shared.
+ * {@link #LOADER_ITEMS} — the forge hammer whose CLASS is Fabric's rather than shared.
  *
  * <p><b>The typed fields below are handles, not registrations.</b> They exist because a handful of
  * Fabric call sites (the item-energy and capsule capability registrations, two gametests, the tab icon)
@@ -44,38 +40,15 @@ import net.minecraft.world.level.ItemLike;
  * {@code ModContent}, which the replay binds.
  */
 public final class ModItems {
-	private ModItems() {
-	}
-
-	/**
-	 * The mod's own creative tab. Lists the release-visible blocks + items; pre-release blocks
-	 * (pump, non-copper cables) stay registered but are intentionally omitted from the tab — see
-	 * {@link #init()} and task MOD-010.
-	 */
 	public static final ResourceKey<CreativeModeTab> TAB =
 			ResourceKey.create(Registries.CREATIVE_MODE_TAB, Industrialization.id("main"));
 
-	/**
-	 * The five items whose CLASS is Fabric-specific — the manifest declares them with
-	 * {@code loaderItem(...)} and no shared factory, so this map is the only thing that can build them
-	 * here (and its NeoForge twin the only thing that can build them there). A missing entry throws at
-	 * startup rather than falling back to a shared class: see {@code ContentManifest#itemFactory}.
-	 *
-	 * <p>All five are loader-API seams, not content differences. The forge hammer's craft-remainder hook
-	 * has a different signature on each loader ({@code FabricItem#getCraftingRemainder(ItemStack)} here),
-	 * so the class differs while the properties stay shared in {@code HammerItem#hammerProperties}. The
-	 * four hoe/shovel tiers use the COMMON classes here precisely because Fabric has no
-	 * {@code ItemAbility}: NeoForge needs subclasses that declare {@code HOE_TILL} / {@code SHOVEL_FLATTEN}
-	 * (MOD-378/MOD-379), Fabric needs nothing of the sort.
-	 */
+	private ModItems() {
+	}
+
+	/** The forge hammer alone needs a loader-specific crafting-remainder hook. */
 	private static final Map<String, Function<Item.Properties, ? extends Item>> LOADER_ITEMS = Map.of(
-			"forge_hammer", p -> new HammerItemFabric(HammerItem.hammerProperties(p)),
-			"electric_shovel", p -> new ElectricShovelItem(ElectricShovelItem.electricShovelProperties(p)),
-			"electric_shovel_diamond_tip", p -> new ElectricShovelDiamondTipItem(
-					ElectricShovelDiamondTipItem.electricShovelDiamondTipProperties(p)),
-			"electric_hoe", p -> new ElectricHoeItem(ElectricHoeItem.electricHoeProperties(p)),
-			"electric_hoe_diamond_tip", p -> new ElectricHoeDiamondTipItem(
-					ElectricHoeDiamondTipItem.electricHoeDiamondTipProperties(p)));
+			"forge_hammer", p -> new HammerItemFabric(HammerItem.hammerProperties(p)));
 
 	/**
 	 * Every item, registered the moment this class loads. Declared FIRST on purpose: static fields

@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.RadiantSolarPanelBlockEntity;
 import dev.alaindustrial.core.environment.SolarSky;
 import java.util.List;
@@ -14,7 +13,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.Mirror;
@@ -48,8 +46,6 @@ import org.jspecify.annotations.Nullable;
  * assembled structure.
  */
 public class RadiantSolarPanelBlock extends AbstractSolarPanelBlock implements CableArmReach {
-	public static final MapCodec<RadiantSolarPanelBlock> CODEC = simpleCodec(RadiantSolarPanelBlock::new);
-
 	/** True once seven sections have closed around this block and it drives the whole structure. */
 	public static final BooleanProperty ASSEMBLED = BooleanProperty.create("assembled");
 
@@ -78,11 +74,6 @@ public class RadiantSolarPanelBlock extends AbstractSolarPanelBlock implements C
 		registerDefaultState(stateDefinition.any()
 				.setValue(ASSEMBLED, Boolean.FALSE)
 				.setValue(FACING, Direction.NORTH));
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

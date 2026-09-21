@@ -1,20 +1,52 @@
 {
-	"type": "minecraft:chest",
-	"random_sequence": "alaindustrial:chests/abandoned_lab/hermit",
-	"pools": [
-		{
-			"rolls": 1.0,
-			"entries": [
-				{ "type": "minecraft:loot_table", "value": "alaindustrial:chests/abandoned_lab/common" }
-			]
-		},
-		{
-			"rolls": 1.0,
-			"entries": [
-				{ "type": "minecraft:item", "name": "minecraft:baked_potato", "functions": [{ "function": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 2.0, "max": 4.0 } }] },
-				{ "type": "minecraft:item", "name": "minecraft:book" },
-				{ "type": "minecraft:item", "name": "minecraft:candle", "functions": [{ "function": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 1.0, "max": 2.0 } }] }
-			]
-		}
-	]
+  "type": "minecraft:chest",
+  "random_sequence": "alaindustrial:chests/abandoned_lab/hermit",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "entries": [
+        {
+          "type": "minecraft:loot_table",
+          "value": "alaindustrial:chests/abandoned_lab/common"
+        }
+      ]
+    },
+    {
+      "rolls": 1.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:baked_potato",
+          "modifier": [
+            {
+              "type": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2.0,
+                "max": 4.0
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:book"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:candle",
+          "modifier": [
+            {
+              "type": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1.0,
+                "max": 2.0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

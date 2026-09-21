@@ -43,15 +43,17 @@ dependencies {
     // JEI — the second recipe viewer on Fabric (MOD-541): players who install JEI instead of REI
     // must see the machine categories too (REI plugins are invisible to JEI and vice versa). Same
     // shape as REI above: APIs on the compile classpath, full JEI on the dev-run classpath only.
-    compileOnly("mezz.jei:jei-26.2-common-api:${jei_version}@jar")
-    compileOnly("mezz.jei:jei-26.2-fabric-api:${jei_version}@jar")
+    compileOnly("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}@jar")
+    compileOnly("mezz.jei:jei-${minecraft_version}-fabric-api:${jei_version}@jar")
 
-    // One viewer at a time in the dev client (MOD-541): REI by default, JEI with
-    //   ./gradlew :fabric:runClient -Pviewer=jei
+    // One viewer at a time in the dev client (MOD-541). On this game version JEI is the default:
+    // REI has no build for it yet, and its last jar hard-depends on the previous game version, so
+    // the loader refuses to start with it on the run classpath (MOD-226). The REI plugin still
+    // compiles against the older API above; opt back in with -Pviewer=rei once REI ships.
     // Both viewers at once stack two overlays over the same screen edge and hide regressions
     // instead of showing them, so the dev-run classpath carries exactly one of the two.
-    if ((project.findProperty('viewer') ?: 'rei').toString().equalsIgnoreCase('jei')) {
-        runtimeOnly("mezz.jei:jei-26.2-fabric:${jei_version}") {
+    if ((project.findProperty('viewer') ?: 'jei').toString().equalsIgnoreCase('jei')) {
+        runtimeOnly("mezz.jei:jei-${minecraft_version}-fabric:${jei_version}") {
             // JEI's POM drags fabric-api 0.158+ and Gradle's highest-wins resolution would
             // silently override our pinned fabric_version — the pin exists because 0.156+
             // ships fabric-client-gametest-api 6.0.0, which drops TestSingleplayerContext.

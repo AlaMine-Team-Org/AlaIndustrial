@@ -1,46 +1,47 @@
 {
-	"type": "minecraft:block",
-	"pools": [
-		{
-			"rolls": 1.0,
-			"entries": [
-				{
-					"type": "minecraft:alternatives",
-					"children": [
-						{
-							"type": "minecraft:item",
-							"name": "alaindustrial:kok_sagyz_root",
-							"conditions": [
-								{
-									"condition": "minecraft:block_state_property",
-										"block": "alaindustrial:kok_sagyz_root",
-										"properties": {
-											"tip": "true"
-										}
-									}
-								]
-							}
-						]
-					}
-				]
-			},
-			{
-				"rolls": 1.0,
-			"entries": [
-				{
-					"type": "minecraft:item",
-					"name": "alaindustrial:kok_sagyz_seeds"
-				}
-			],
-			"conditions": [
-				{
-					"condition": "minecraft:survives_explosion"
-				},
-				{
-					"condition": "minecraft:random_chance",
-					"chance": 0.35
-				}
-			]
-		}
-	]
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "entries": [
+        {
+          "type": "minecraft:alternatives",
+          "children": [
+            {
+              "type": "minecraft:item",
+              "name": "alaindustrial:kok_sagyz_root",
+              "condition": {
+                "type": "minecraft:match_block",
+                "blocks": "alaindustrial:kok_sagyz_root",
+                "state": {
+                  "tip": "true"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": 1.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "alaindustrial:kok_sagyz_seeds"
+        }
+      ],
+      "condition": {
+        "type": "minecraft:all_of",
+        "terms": [
+          {
+            "type": "minecraft:survives_explosion"
+          },
+          {
+            "type": "minecraft:random_chance",
+            "chance": 0.35
+          }
+        ]
+      }
+    }
+  ]
 }

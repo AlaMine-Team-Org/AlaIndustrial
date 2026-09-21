@@ -18,8 +18,11 @@ public abstract class RootInspectionRendererMixin {
 		var state = ((GameRenderer) (Object) this).gameRenderState().levelRenderState;
 		((RootInspectionState) state).alaindustrial$roots(renderLevel ? RootInspection.extract(delta) : RootInspection.Frame.EMPTY);
 	}
-	@Inject(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;render(Lcom/mojang/blaze3d/resource/GraphicsResourceAllocator;Lnet/minecraft/client/DeltaTracker;ZLnet/minecraft/client/renderer/state/level/CameraRenderState;Lorg/joml/Matrix4fc;Lcom/mojang/blaze3d/buffers/GpuBufferSlice;Lorg/joml/Vector4f;Z)V", shift = At.Shift.AFTER))
-	private void drawRoots(DeltaTracker delta, CallbackInfo ci) {
+	// 26.3: renderLevel takes no arguments any more (the DeltaTracker moved into the extracted state),
+	// and LevelRenderer.render dropped its DeltaTracker and Matrix4fc parameters while GpuBufferSlice
+	// moved to com.mojang.renderpearl.api.buffers — the whole descriptor below is the 26.3 one.
+	@Inject(method = "renderLevel()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;render(Lcom/mojang/blaze3d/resource/GraphicsResourceAllocator;ZLnet/minecraft/client/renderer/state/level/CameraRenderState;Lcom/mojang/renderpearl/api/buffers/GpuBufferSlice;Lorg/joml/Vector4f;ZZ)V", shift = At.Shift.AFTER))
+	private void drawRoots(CallbackInfo ci) {
 		GameRenderer renderer = (GameRenderer) (Object) this;
 		var state = renderer.gameRenderState().levelRenderState;
 		RootInspectionRenderer.draw(((RootInspectionState) state).alaindustrial$roots(), state.cameraRenderState, renderer.mainRenderTarget());

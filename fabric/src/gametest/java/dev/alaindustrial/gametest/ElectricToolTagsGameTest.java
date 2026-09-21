@@ -58,4 +58,14 @@ public class ElectricToolTagsGameTest {
 	public void tcEtool001Fun05_energyCaseRosterIsHonest(GameTestHelper helper) {
 		ElectricToolTagScenarios.fun05EnergyCaseRosterIsHonest(helper);
 	}
+
+	/**
+	 * @implements TC-ETOOL-001-FUN06 — every right-click tool of the line carries the block transformer
+	 *     its domain names in its BAKED default components; a delayed component that never resolved at
+	 *     registry bake is invisible to the source-level gate (MOD-226).
+	 */
+	@GameTest
+	public void tcEtool001Fun06_rightClickRosterDeclaresTransformer(GameTestHelper helper) {
+		ElectricToolTagScenarios.fun06RightClickRosterDeclaresTransformer(helper);
+	}
 }

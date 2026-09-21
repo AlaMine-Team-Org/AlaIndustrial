@@ -117,7 +117,7 @@ public final class RendererStands {
         TestServerContext server = singleplayer.getServer();
 
         server.runCommand("fill 96 99 96 104 103 104 minecraft:air");
-        singleplayer.getClientLevel().waitForChunksRender();
+        singleplayer.getConnection().waitForChunksRender();
         context.waitTicks(3);
 
         server.runCommand("fill 114 99 114 128 99 128 minecraft:smooth_stone");
@@ -153,7 +153,7 @@ public final class RendererStands {
         server.runCommand("setblock 119 102 120 minecraft:smooth_stone");
         server.runCommand("setblock 118 102 121 minecraft:water");
 
-        singleplayer.getClientLevel().waitForChunksRender();
+        singleplayer.getConnection().waitForChunksRender();
         context.waitTicks(20);
 
         String[][] millViews = {
@@ -163,7 +163,7 @@ public final class RendererStands {
         };
         for (String[] view : millViews) {
             server.runCommand("tp @p " + view[0]);
-            singleplayer.getClientLevel().waitForChunksRender();
+            singleplayer.getConnection().waitForChunksRender();
             context.waitTicks(5);
             LOG.info("[GUITEST][WMILL] {} -> {}",
                     view[1], takeCleanScreenshot(context, view[1]).toAbsolutePath());
@@ -174,7 +174,7 @@ public final class RendererStands {
         server.runCommand("time set midnight");
         context.waitTicks(10);
         server.runCommand("tp @p 120.5 101 128.5 180 8");
-        singleplayer.getClientLevel().waitForChunksRender();
+        singleplayer.getConnection().waitForChunksRender();
         context.waitTicks(5);
         LOG.info("[GUITEST][WMILL] wmill_night -> {}",
                 takeCleanScreenshot(context, "wmill_night").toAbsolutePath());
@@ -226,7 +226,7 @@ public final class RendererStands {
     private static void assertWheelPixelsInFrame(ClientGameTestContext context,
             TestSingleplayerContext singleplayer, TestServerContext server) {
         server.runCommand("tp @p 120.5 101 128.5 180 8");
-        singleplayer.getClientLevel().waitForChunksRender();
+        singleplayer.getConnection().waitForChunksRender();
         context.waitTicks(5);
         // Only now is the mill's chunk inside the client's view distance — while the player stands at
         // the previous rig 160 blocks away the client has no block entity there at all.
@@ -297,7 +297,7 @@ public final class RendererStands {
         // pixels.
         server.runCommand("tp @p " + (ORB_X + 0.5) + " " + (ORB_Y + 0.3) + " " + (ORB_Z + 2.2) + " 180 5");
         server.runCommand("gamemode spectator @p");
-        singleplayer.getClientLevel().waitForChunksRender();
+        singleplayer.getConnection().waitForChunksRender();
         context.waitTicks(10);
 
         Path withCrystal = takeCleanScreenshot(context, "condenser_crystal");
@@ -380,7 +380,7 @@ public final class RendererStands {
         server.runCommand("gamemode spectator @p");
         server.runCommand("tp @p " + (ROTOR_X + 0.5) + " " + (ROTOR_Y + 0.5 - EYE_HEIGHT) + " "
                 + (ROTOR_Z + 1.8) + " 180 0");
-        singleplayer.getClientLevel().waitForChunksRender();
+        singleplayer.getConnection().waitForChunksRender();
         // Only now is the machine's chunk inside the client's view distance — a client-side
         // getBlockEntity before the teleport returns null (MOD-231).
         context.waitTicks(20);
@@ -430,7 +430,7 @@ public final class RendererStands {
         // block's minimum corner, so the half-block has to be added before the standoff is subtracted.
         server.runCommand("tp @p " + (ROTOR_X + 0.5 - 1.3) + " " + (ROTOR_Y + 0.5 - EYE_HEIGHT) + " "
                 + (ROTOR_Z + 0.5) + " 270 0");
-        singleplayer.getClientLevel().waitForChunksRender();
+        singleplayer.getConnection().waitForChunksRender();
         context.waitTicks(5);
         LOG.info("[GUITEST][CENTRIFUGE] centrifuge_rotor_side -> {}",
                 takeCleanScreenshot(context, "centrifuge_rotor_side").toAbsolutePath());
@@ -517,7 +517,7 @@ public final class RendererStands {
         server.runCommand("fill 108 96 108 139 108 139 minecraft:air");
         context.waitTicks(5);
         server.runCommand("fill 116 -64 116 126 95 126 minecraft:air");
-        singleplayer.getClientLevel().waitForChunksRender();
+        singleplayer.getConnection().waitForChunksRender();
         context.waitTicks(3);
 
         // Clear weather is not cosmetic: rain flips the mills to MODE_GALE/MODE_STORM and draws a
@@ -547,7 +547,7 @@ public final class RendererStands {
 
         // Family portrait: all three rotors in one frame for the human reviewer.
         server.runCommand("tp @p 150.5 101 161.5 180 2");
-        singleplayer.getClientLevel().waitForChunksRender();
+        singleplayer.getConnection().waitForChunksRender();
         context.waitTicks(20);
         LOG.info("[GUITEST][WINDMILL] windmill_family -> {}",
                 takeCleanScreenshot(context, "windmill_family").toAbsolutePath());
@@ -569,7 +569,7 @@ public final class RendererStands {
         setRotor(server, WIND_MILLS[0][1], true);
         server.runCommand("time set midnight");
         server.runCommand("tp @p " + WIND_MILLS[0][2]);
-        singleplayer.getClientLevel().waitForChunksRender();
+        singleplayer.getConnection().waitForChunksRender();
         context.waitTicks(10);
         LOG.info("[GUITEST][WINDMILL] windmill_night -> {}",
                 takeCleanScreenshot(context, "windmill_night").toAbsolutePath());
@@ -585,7 +585,7 @@ public final class RendererStands {
 
         setRotor(server, x, true);
         server.runCommand("tp @p " + mill[2]);
-        singleplayer.getClientLevel().waitForChunksRender();
+        singleplayer.getConnection().waitForChunksRender();
         // Only now is the mill's chunk inside the client's view distance — a client-side
         // getBlockEntity before the teleport returns null (MOD-231). The wait also covers the mode /
         // production channels: they refresh on the sampling cadence, and re-installing the rotor
@@ -712,7 +712,7 @@ public final class RendererStands {
         server.runCommand("item replace block 143 100 143 container.1 with alaindustrial:uranium_ingot 8");
         server.runCommand("item replace block 143 100 143 container.2 with minecraft:lapis_lazuli 16");
 
-        singleplayer.getClientLevel().waitForChunksRender();
+        singleplayer.getConnection().waitForChunksRender();
         // Long enough for the generator to fill the buffer and the cycle to start (LIT turns on).
         context.waitTicks(120);
 
@@ -754,7 +754,7 @@ public final class RendererStands {
         };
         for (String[] view : views) {
             server.runCommand("tp @p " + view[0]);
-            singleplayer.getClientLevel().waitForChunksRender();
+            singleplayer.getConnection().waitForChunksRender();
             context.waitTicks(5);
             LOG.info("[GUITEST][INCU] {} -> {}",
                     view[1], takeCleanScreenshot(context, view[1]).toAbsolutePath());
@@ -765,7 +765,7 @@ public final class RendererStands {
         server.runCommand("time set midnight");
         context.waitTicks(10);
         server.runCommand("tp @p 148.5 102.5 148.5 135 12");
-        singleplayer.getClientLevel().waitForChunksRender();
+        singleplayer.getConnection().waitForChunksRender();
         context.waitTicks(5);
         LOG.info("[GUITEST][INCU] incubator_night -> {}",
                 takeCleanScreenshot(context, "incubator_night").toAbsolutePath());
@@ -789,7 +789,7 @@ public final class RendererStands {
         // camera level with the chamber at 101.5, which is the difference between the item filling a
         // few hundred pixels and being a speck at the bottom edge of the frame.
         server.runCommand("tp @p 147.5 100.0 144.9 180 0");
-        singleplayer.getClientLevel().waitForChunksRender();
+        singleplayer.getConnection().waitForChunksRender();
         context.waitTicks(10);
 
         context.runOnClient(mc -> {
@@ -876,7 +876,7 @@ public final class RendererStands {
         // Eye level with the monitors (one block up) and far enough back that both halves fit.
         server.runCommand("tp @p " + (WSTATION_X + 0.5) + " " + (WSTATION_Y + 1.5 - EYE_HEIGHT) + " "
                 + (WSTATION_Z + 3.2) + " 180 0");
-        singleplayer.getClientLevel().waitForChunksRender();
+        singleplayer.getConnection().waitForChunksRender();
         // Past the one-second fold-out, so the arm is settled and only the fans still move.
         context.waitTicks(30);
 

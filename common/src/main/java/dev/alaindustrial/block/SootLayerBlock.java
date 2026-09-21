@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -26,8 +25,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * washes it away without a drop (the loot table's {@code entity_properties} condition).
  */
 public class SootLayerBlock extends Block {
-	public static final MapCodec<SootLayerBlock> CODEC = simpleCodec(SootLayerBlock::new);
-
 	/**
 	 * Outline for the crosshair only — there is no collision. 14×3×14 covers the thick middle of every
 	 * blot in every turn; built once here, never inside {@link #getShape} (ADR-023).
@@ -36,11 +33,6 @@ public class SootLayerBlock extends Block {
 
 	public SootLayerBlock(BlockBehaviour.Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	protected MapCodec<? extends SootLayerBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
 import dev.alaindustrial.core.structure.RoomValidator;
 import dev.alaindustrial.registry.ModContent;
@@ -14,6 +13,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Prediction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -59,8 +59,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * GUI for nothing.
  */
 public class FuelRodAssemblyBlock extends BaseEntityBlock implements MachineHumProvider {
-
-	public static final MapCodec<FuelRodAssemblyBlock> CODEC = simpleCodec(FuelRodAssemblyBlock::new);
 
 	/** How many rods one assembly holds. Four reads clearly at 16 px and keeps the maths in round numbers. */
 	public static final int MAX_RODS = 4;
@@ -151,11 +149,6 @@ public class FuelRodAssemblyBlock extends BaseEntityBlock implements MachineHumP
 		super(properties);
 		registerDefaultState(defaultBlockState().setValue(RODS, 0).setValue(FUELLED, 0).setValue(WATER, 0)
 				.setValue(UP, false).setValue(DOWN, false).setValue(ACTIVE, false));
-	}
-
-	@Override
-	protected MapCodec<? extends FuelRodAssemblyBlock> codec() {
-		return CODEC;
 	}
 
 	@Override
@@ -331,7 +324,7 @@ public class FuelRodAssemblyBlock extends BaseEntityBlock implements MachineHumP
 			ItemStack removed = assembly.removeRod();
 			if (!removed.isEmpty()) {
 				if (!player.getInventory().add(removed)) {
-					player.drop(removed, false);
+					player.drop(removed, false, Prediction.SERVER_ONLY);
 				}
 				level.playSound(null, pos, SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.BLOCKS, 0.7f, 1.2f);
 				return InteractionResult.SUCCESS;

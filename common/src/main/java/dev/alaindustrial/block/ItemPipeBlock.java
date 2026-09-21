@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
 import dev.alaindustrial.core.item.ItemLookup;
 import dev.alaindustrial.core.item.ItemNetworkManager;
@@ -44,7 +43,6 @@ import dev.alaindustrial.registry.ModContent;
  * and its price in blockstates, is on {@link PipeFaceRender}.
  */
 public class ItemPipeBlock extends BaseEntityBlock {
-	public static final MapCodec<ItemPipeBlock> CODEC = simpleCodec(ItemPipeBlock::new);
 	private static final Map<Direction, EnumProperty<PipeFaceRender>> FACE_MODES = new EnumMap<>(Direction.class);
 	static {
 		FACE_MODES.put(Direction.DOWN,
@@ -67,9 +65,8 @@ public class ItemPipeBlock extends BaseEntityBlock {
 	}
 
 	/**
-	 * Which grade this pipe is (MOD-581). A field would have been simpler, but the block is built by
-	 * {@code simpleCodec}, which reconstructs from {@code Properties} alone and would hand every decoded
-	 * pipe the basic grade; a subclass carries the answer in its type instead, where nothing can lose it.
+	 * Which grade this pipe is (MOD-581). A subclass carries the answer in its type rather than a field,
+	 * so nothing can lose it: the two grades are separate blocks, exactly as the cable grades are.
 	 */
 	public PipeTier tier() {
 		return PipeTier.BASIC;
@@ -85,7 +82,6 @@ public class ItemPipeBlock extends BaseEntityBlock {
 		return PipeShapes.of(down, up, north, south, west, east);
 	}
 
-	@Override protected MapCodec<? extends BaseEntityBlock> codec() { return CODEC; }
 	@Override protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		FACE_MODES.values().forEach(builder::add);
 	}

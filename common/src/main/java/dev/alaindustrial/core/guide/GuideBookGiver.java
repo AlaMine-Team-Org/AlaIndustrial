@@ -4,6 +4,7 @@ import dev.alaindustrial.core.GuideBookState;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
@@ -44,7 +45,7 @@ public final class GuideBookGiver {
 		if (inventory.getItem(HOTBAR_LAST_SLOT).isEmpty()) {
 			inventory.setItem(HOTBAR_LAST_SLOT, book);
 		} else if (!player.addItem(book)) {
-			player.drop(book, false);
+			player.drop(book, false, Prediction.SERVER_ONLY);
 		}
 	}
 }

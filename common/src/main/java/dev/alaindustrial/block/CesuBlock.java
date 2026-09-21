@@ -1,11 +1,9 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.CesuBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -18,15 +16,8 @@ import net.minecraft.world.level.block.state.BlockState;
  * A cable therefore draws an arm only toward front and back, never toward the four sides.
  */
 public class CesuBlock extends HorizontalMachineBlock {
-	public static final MapCodec<CesuBlock> CODEC = simpleCodec(CesuBlock::new);
-
 	public CesuBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

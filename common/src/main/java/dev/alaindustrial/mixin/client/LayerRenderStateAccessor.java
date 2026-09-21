@@ -2,6 +2,7 @@ package dev.alaindustrial.mixin.client;
 
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.resources.model.cuboid.ItemTransform;
+import net.minecraft.client.resources.model.geometry.ItemQuads;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
@@ -42,4 +43,14 @@ public interface LayerRenderStateAccessor {
 	 */
 	@Accessor("usesBlockLight")
 	boolean alaindustrial$usesBlockLight();
+
+	/**
+	 * The geometry the layer will draw.
+	 *
+	 * <p>Until 26.2 the blueprint reshaped the product by mutating the list {@code prepareQuadList()}
+	 * handed back. 26.3 replaced that list with an immutable {@code ItemQuads} record behind a
+	 * write-only {@code setQuads}, so the quads to be reshaped can only be reached from here.
+	 */
+	@Accessor("quads")
+	ItemQuads alaindustrial$quads();
 }

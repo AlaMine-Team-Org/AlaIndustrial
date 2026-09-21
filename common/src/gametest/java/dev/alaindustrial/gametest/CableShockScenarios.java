@@ -78,7 +78,7 @@ public final class CableShockScenarios {
 		// malformed data/alaindustrial/damage_type/electric_shock.json on either loader.
 		ModDamageTypes.electricShock(helper.getLevel());
 
-		player.invulnerableTime = 0;
+		player.setInvulnerableTime(0);
 		boolean shockEnabledBeforeTest = Config.bareCableShockEnabled;
 		Config.bareCableShockEnabled = false;
 		try {
@@ -238,12 +238,12 @@ public final class CableShockScenarios {
 		int graceBefore = Config.shockGuardGraceTicks;
 		try {
 			// No stand: the MOD-260 contract is untouched — the guard never intercepts a bare segment.
-			player.invulnerableTime = 0;
+			player.setInvulnerableTime(0);
 			if (!bare.passesShockGuard(helper.getLevel(), cablePos, player)) {
 				helper.fail("bare cable without a stand was intercepted; MOD-260 regressed");
 				return;
 			}
-			if (player.invulnerableTime != 0) {
+			if (player.getInvulnerableTime() != 0) {
 				helper.fail("the no-stand path must not touch the invulnerability window");
 				return;
 			}
@@ -261,13 +261,13 @@ public final class CableShockScenarios {
 			// next tick of contact does not immediately roll again.
 			Config.shockGuardWoodHitChance = 0.0;
 			Config.shockGuardGraceTicks = 7;
-			player.invulnerableTime = 0;
+			player.setInvulnerableTime(0);
 			if (bare.passesShockGuard(helper.getLevel(), cablePos, player)) {
 				helper.fail("a stand with hit chance 0 still let the shock through");
 				return;
 			}
-			if (player.invulnerableTime != 7) {
-				helper.fail("blocked shock left no grace window; invulnerableTime=" + player.invulnerableTime);
+			if (player.getInvulnerableTime() != 7) {
+				helper.fail("blocked shock left no grace window; invulnerableTime=" + player.getInvulnerableTime());
 				return;
 			}
 			// Still inside that window: eligibility itself must now say no, which is what stops the reroll.
@@ -278,7 +278,7 @@ public final class CableShockScenarios {
 
 			// A stand that blocks nothing must behave exactly like no stand at all.
 			Config.shockGuardWoodHitChance = 1.0;
-			player.invulnerableTime = 0;
+			player.setInvulnerableTime(0);
 			if (!bare.passesShockGuard(helper.getLevel(), cablePos, player)) {
 				helper.fail("a stand with hit chance 1 wrongly absorbed the shock");
 				return;
@@ -310,7 +310,7 @@ public final class CableShockScenarios {
 
 		// Baseline: with no stand, a player at the cable's own level is eligible — MOD-260 behaviour.
 		snapToCentre(helper, player, CABLE);
-		player.invulnerableTime = 0;
+		player.setInvulnerableTime(0);
 		if (!bare.shouldShockPlayer(helper.getLevel(), cablePos, player)) {
 			helper.fail("bare cable did not reach a player at its own level; MOD-260 regressed");
 			return;
@@ -319,7 +319,7 @@ public final class CableShockScenarios {
 		cable.setShockGuard(Blocks.OAK_PLANKS);
 
 		// Beside/below the wire the stand is between them: no shock at all, whatever the chance says.
-		player.invulnerableTime = 0;
+		player.setInvulnerableTime(0);
 		if (bare.shouldShockPlayer(helper.getLevel(), cablePos, player)) {
 			helper.fail("a stand did not shield a player standing at the cable's own level");
 			return;
@@ -327,7 +327,7 @@ public final class CableShockScenarios {
 
 		// On top of the wire the player is above the plate and still eligible.
 		standOnCable(helper, player);
-		player.invulnerableTime = 0;
+		player.setInvulnerableTime(0);
 		if (!bare.shouldShockPlayer(helper.getLevel(), cablePos, player)) {
 			helper.fail("a stand wrongly shielded a player standing on top of the cable");
 			return;
@@ -360,7 +360,7 @@ public final class CableShockScenarios {
 
 		// The fixture has to be a live hazard, or every "no damage" assertion below is vacuous.
 		snapToCentre(helper, player, CABLE);
-		player.invulnerableTime = 0;
+		player.setInvulnerableTime(0);
 		if (!bare.shouldShockPlayer(helper.getLevel(), cablePos, player)) {
 			helper.fail("fixture cable was not a hazard; nothing below would prove anything");
 			return;
@@ -391,14 +391,14 @@ public final class CableShockScenarios {
 
 		// The real path: no damage lands, the suit is billed, and a contact window opens. Without that
 		// window both hazard paths re-enter next tick and the set is charged twenty times a second.
-		player.invulnerableTime = 0;
+		player.setInvulnerableTime(0);
 		if (bare.tryShockPlayer(helper.getLevel(), cablePos, player)) {
 			helper.fail("a full set still let the shock land");
 			return;
 		}
-		if (player.invulnerableTime != Config.shockGuardGraceTicks) {
+		if (player.getInvulnerableTime() != Config.shockGuardGraceTicks) {
 			helper.fail("an absorbed shock left no contact window; invulnerableTime="
-					+ player.invulnerableTime);
+					+ player.getInvulnerableTime());
 			return;
 		}
 		int helmetWear = player.getItemBySlot(EquipmentSlot.HEAD).getDamageValue();

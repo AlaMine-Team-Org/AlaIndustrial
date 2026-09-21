@@ -81,8 +81,9 @@ public class ArchitectureRules {
 	/**
 	 * Client-only Minecraft types stay inside the client packages (MOD-435).
 	 *
-	 * <p>A dedicated server ships without {@code net.minecraft.client} and {@code com.mojang.blaze3d}
-	 * at all. A block, item or menu class that references one of them at its top level — a field type,
+	 * <p>A dedicated server ships without {@code net.minecraft.client}, {@code com.mojang.blaze3d} and
+	 * — since 26.3 — {@code com.mojang.renderpearl} at all. A block, item or menu class that
+	 * references one of them at its top level — a field type,
 	 * a method signature, an {@code instanceof} — throws {@code NoClassDefFoundError} the moment the
 	 * server classloads it, and nothing in the dev client, where those classes are always present, will
 	 * show it. The mod's convention is an indirection: the item calls into a small class under
@@ -96,6 +97,16 @@ public class ArchitectureRules {
 	 * class. The rule guards the raw Minecraft client types, which is where the crash is.
 	 * {@code mixin.client..} is exempt because its accessors and mixins target client classes by design
 	 * and are only applied on the client.
+	 *
+	 * <p><b>26.3 added a third root: {@code com.mojang.renderpearl}.</b> The rendering stack was split
+	 * out of Blaze3D into that new tree (an {@code api} frontend, a {@code backend} with the OpenGL and
+	 * Vulkan implementations, a {@code frontend} and shared utilities), and it is client-only for the
+	 * same reason the other two are. Checked rather than assumed: in the 26.3 sources every file that
+	 * imports {@code com.mojang.renderpearl} lives in {@code net.minecraft.client} (80 files),
+	 * {@code com.mojang.renderpearl} itself (90) or {@code com.mojang.blaze3d} (19) — not one is under
+	 * {@code net/minecraft/server}, {@code net/minecraft/world} or {@code net/minecraft/core}. That is
+	 * the same shape {@code com.mojang.blaze3d} has, and Blaze3D now depends on renderpearl, so a
+	 * server without Blaze3D cannot have renderpearl either.
 	 *
 	 * <p><b>Scope includes {@code common/src/gametest}.</b> The {@link AnalyzeClasses} import reads
 	 * every {@code dev.alaindustrial} class on {@code :common}'s test runtime classpath, and
@@ -112,7 +123,8 @@ public class ArchitectureRules {
 	@ArchTest
 	static final ArchRule clientTypesStayInsideClientPackages = noClasses()
 			.that().resideOutsideOfPackages("dev.alaindustrial.client..", "dev.alaindustrial.mixin.client..")
-			.should().dependOnClassesThat().resideInAnyPackage("net.minecraft.client..", "com.mojang.blaze3d..")
+			.should().dependOnClassesThat().resideInAnyPackage("net.minecraft.client..",
+					"com.mojang.blaze3d..", "com.mojang.renderpearl..")
 			.because("a dedicated server has no client classes: a top-level reference to one from "
 					+ "block/item/menu code is a NoClassDefFoundError there and invisible in the dev "
 					+ "client. Put the client call in a class under dev.alaindustrial.client.. and reach "
@@ -129,8 +141,7 @@ public class ArchitectureRules {
 	static final String[] BACKEND_SPECIFIC_PACKAGES = {
 		"org.lwjgl.opengl..",
 		"org.lwjgl.vulkan..",
-		"com.mojang.blaze3d.opengl..",
-		"com.mojang.blaze3d.vulkan..",
+		"com.mojang.renderpearl.backend..",
 	};
 
 	/**
@@ -146,24 +157,46 @@ public class ArchitectureRules {
 	 * day the backend switches — the most expensive day to find it.
 	 *
 	 * <p><b>Both backends, not just OpenGL.</b> The mirror defect is real and would be easy to write
-	 * while "preparing for Vulkan": a direct {@code com.mojang.blaze3d.vulkan..} reference breaks the
-	 * mod for every player still on the OpenGL backend, which is today's default. The invariant is not
-	 * "leave OpenGL" but "depend on no backend at all", so the list forbids both, in both the LWJGL
-	 * bindings and Mojang's own backend implementations.
+	 * while "preparing for Vulkan": a direct Vulkan reference breaks the mod for every player still on
+	 * the OpenGL backend, which is today's default. The invariant is not "leave OpenGL" but "depend on
+	 * no backend at all", so the list forbids both, in both the LWJGL bindings and Mojang's own backend
+	 * implementations.
 	 *
-	 * <p><b>Deliberately NOT forbidden</b>, all verified present in the 26.2 client jar before this
-	 * rule was written (the task's acceptance criterion: never forbid a symbol that does not exist, or
-	 * the rule is a tautology that can never fail):
+	 * <p><b>26.3 moved Mojang's half of that list.</b> The renderer was split out of Blaze3D into
+	 * {@code com.mojang.renderpearl}, and the two packages this list used to name —
+	 * {@code com.mojang.blaze3d.opengl..} and {@code com.mojang.blaze3d.vulkan..} — no longer exist
+	 * (the 26.3 {@code com.mojang.blaze3d} tree is {@code audio}, {@code buffers}, {@code font},
+	 * {@code framegraph}, {@code pipeline}, {@code platform}, {@code resource}, {@code systems},
+	 * {@code vertex}). Leaving them in would have been exactly the tautology this rule refuses: a ban
+	 * on a symbol that cannot be referenced can never fail. Their replacement is the whole
+	 * {@code com.mojang.renderpearl.backend..} subtree, which is broader than the two entries it
+	 * replaces and deliberately so: alongside {@code backend.opengl} and {@code backend.vulkan} it
+	 * holds {@code backend.api}, {@code backend.common} and {@code backend.util}, and those are backend
+	 * plumbing shared between the two implementations, not a frontend anybody should be drawing
+	 * through. The sibling {@code com.mojang.renderpearl.api..} — the frontend the mod's own
+	 * {@code RenderPipeline} declarations already use — is a sibling of {@code backend}, not a child,
+	 * so it is untouched by the ban.
+	 *
+	 * <p><b>Deliberately NOT forbidden</b>, all verified present in the 26.3 client jar (the task's
+	 * acceptance criterion: never forbid a symbol that does not exist, or the rule is a tautology that
+	 * can never fail; the {@code org.lwjgl.opengl}/{@code org.lwjgl.vulkan} entries above were
+	 * re-checked the same way — both are still imported by {@code renderpearl.backend}):
 	 * <ul>
 	 *   <li>{@code com.mojang.blaze3d.systems.RenderSystem} — the abstraction itself, and it lives in
 	 *       {@code systems}, not in a backend package. {@code GlStateManager} needs no separate entry
-	 *       either: in 26.2 it sits INSIDE {@code com.mojang.blaze3d.opengl}, so the package ban already
-	 *       covers it.</li>
-	 *   <li>{@code com.mojang.blaze3d.vertex..} ({@code PoseStack}, {@code VertexConsumer}) and
-	 *       {@code com.mojang.blaze3d.platform.InputConstants} — the 22 legitimate uses in this mod.
-	 *       Banning {@code com.mojang.blaze3d..} wholesale would take all of them with it.</li>
-	 *   <li>{@code org.lwjgl.glfw..} — window and input bindings, not graphics. {@code ModKeyMappings}
-	 *       uses {@code GLFW}; a ban on {@code org.lwjgl..} would be red on the existing tree.</li>
+	 *       either: it moved with the renderer and now sits INSIDE
+	 *       {@code com.mojang.renderpearl.backend.opengl}, so the package ban still covers it.</li>
+	 *   <li>{@code com.mojang.blaze3d.vertex..} ({@code PoseStack}, {@code VertexConsumer}),
+	 *       {@code com.mojang.blaze3d.platform.InputConstants} and
+	 *       {@code com.mojang.renderpearl.api..} — the legitimate uses in this mod. Banning
+	 *       {@code com.mojang.blaze3d..} or {@code com.mojang.renderpearl..} wholesale would take all
+	 *       of them with it.</li>
+	 *   <li>{@code org.lwjgl.glfw..} — gone from the invariant, because 26.3 replaced GLFW with SDL3
+	 *       and the mod no longer names any LWJGL package at all: {@code ModKeyMappings} takes its
+	 *       defaults from {@code InputConstants.KEY_*} rather than from {@code GLFW.GLFW_KEY_*}. The
+	 *       reasoning it stood for survives in {@code org.lwjgl.sdl..}, which is window and input
+	 *       bindings rather than graphics and is therefore still NOT banned; a ban on
+	 *       {@code org.lwjgl..} wholesale would forbid a category this rule is not about.</li>
 	 * </ul>
 	 *
 	 * <p><b>Known blind spot: inlined constants.</b> A {@code static final int} such as

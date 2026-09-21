@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.ChargePadBlockEntity;
 import dev.alaindustrial.registry.ModSounds;
 import java.util.function.Supplier;
@@ -12,7 +11,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -41,8 +39,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  */
 public class ChargePadBlock extends AbstractMachineBlock implements MachineHumProvider {
 
-	public static final MapCodec<ChargePadBlock> CODEC = simpleCodec(ChargePadBlock::new);
-
 	/** What the indicator shows; see {@link ChargePadState} for why this is not the usual boolean LIT. */
 	public static final EnumProperty<ChargePadState> STATE =
 			EnumProperty.create("state", ChargePadState.class);
@@ -53,11 +49,6 @@ public class ChargePadBlock extends AbstractMachineBlock implements MachineHumPr
 	public ChargePadBlock(Properties properties) {
 		super(properties);
 		registerDefaultState(getStateDefinition().any().setValue(STATE, ChargePadState.IDLE));
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

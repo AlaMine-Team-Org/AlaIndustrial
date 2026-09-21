@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.menu.TeleporterStationMenu;
 import net.minecraft.core.BlockPos;
@@ -11,7 +10,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -48,8 +46,6 @@ import org.jspecify.annotations.Nullable;
  * recipe and its unlock advancement all arrived together.
  */
 public class TeleporterBlock extends HorizontalMachineBlock {
-	public static final MapCodec<TeleporterBlock> CODEC = simpleCodec(TeleporterBlock::new);
-
 	/**
 	 * Whether a Random Jump Chip is fitted (MOD-116) — a purely VISUAL mirror of
 	 * {@link TeleporterBlockEntity#hasRtpModule()}.
@@ -174,11 +170,6 @@ public class TeleporterBlock extends HorizontalMachineBlock {
 			boolean movedByPiston) {
 		dev.alaindustrial.teleporter.TeleporterRegistry.forget(level, pos);
 		super.affectNeighborsAfterRemoval(state, level, pos, movedByPiston);
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

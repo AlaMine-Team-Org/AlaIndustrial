@@ -31,11 +31,11 @@ slf4j = "2.0.9"
 
 # Fabric-only compile-time helpers pulled in by optional integrations.
 cloth-basic-math = "0.6.1"
-architectury = "21.0.7"
+architectury = "22.0.2"
 
 # Build plugins.
-fabric-loom = "1.17.12"
-neoforge-moddev = "2.0.141"
+fabric-loom = "1.17.21"
+neoforge-moddev = "2.0.147"
 pitest-plugin = "1.19.0"
 
 # Mutation-testing tool versions consumed by the pitest extension itself (not the

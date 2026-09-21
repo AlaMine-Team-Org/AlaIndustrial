@@ -117,6 +117,7 @@ import net.minecraft.gametest.framework.GameTestInstance;
 import net.minecraft.gametest.framework.TestData;
 import net.minecraft.gametest.framework.TestEnvironmentDefinition;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Rotation;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -529,6 +530,8 @@ public final class NeoForgeGameTests {
 				GeothermalLavaInputScenarios::fun04LavaCapsuleIsFurnaceFuel);
 		registerTest(event, "furnace_fuel_slot_caps_lava_capsule", 40, true,
 				GeothermalLavaInputScenarios::fun05FurnaceFuelSlotCapsOne);
+		registerTest(event, "capsule_saved_by_262_heals_fuel_on_load", 40, true,
+				GeothermalLavaInputScenarios::fun14CapsuleSavedBy262HealsFuelOnLoad);
 
 		// Machine processing negatives — shared MachineBlockEntity loop on the NeoForge lane. These close
 		// the coverage gap with the Fabric MachineGameTest (no-power, full-output jam, input-swap reset),
@@ -1341,6 +1344,13 @@ public final class NeoForgeGameTests {
 		registerTest(event, "hoe_charged_on_non_tillable_keeps_buffer", 40, true,
 				ElectricHoeScenarios::fun13ChargedHoeOnNonTillableKeepsBuffer);
 
+		// MOD-226 — the transformer is the mechanism on 26.3: a stripped component must PASS free, and
+		// the hoe's SECOND transformer rule (rooted dirt → dirt + hanging root) walks here.
+		registerTest(event, "hoe_without_transformer_passes_free", 40, true,
+				ElectricHoeScenarios::fun14HoeWithoutTransformerPassesFree);
+		registerTest(event, "hoe_tills_rooted_dirt_to_dirt", 40, true,
+				ElectricHoeScenarios::fun15TillsRootedDirtToDirt);
+
 		// MOD-389 (TC-ETOOL-001-FUN01..02): the three diamond-tipped upgrades belong to the same
 		// membership tags as their base tools, so the enchanting table accepts them — a recurrence of the
 		// MOD-057 defect, caught here on both loaders.
@@ -1360,6 +1370,11 @@ public final class NeoForgeGameTests {
 				ElectricToolTagScenarios::fun04BaseEnchantmentAccepted);
 		registerTest(event, "electric_tool_energy_case_roster", 40, true,
 				ElectricToolTagScenarios::fun05EnergyCaseRosterIsHonest);
+
+		// MOD-226 — the runtime half of the transformer gate: the BAKED default components of all four
+		// right-click tools, which a source-level rule cannot see.
+		registerTest(event, "right_click_roster_declares_transformer", 40, true,
+				ElectricToolTagScenarios::fun06RightClickRosterDeclaresTransformer);
 
 		// MOD-379 (TC-SHOVEL-001-FUN01..04): the shovel's right-click interactions. This lane is the one
 		// that matters — the shovel could not path or douse on NeoForge at all until the item declared
@@ -1387,6 +1402,8 @@ public final class NeoForgeGameTests {
 		registerTest(event, "shovel_diamond_tip_sneak_does_not_path", 40, true, ElectricShovelScenarios::fun12DiamondTipSneakDoesNotPath);
 		registerTest(event, "shovel_base_has_no_silk_mode", 40, true, ElectricShovelScenarios::fun13BaseShovelHasNoSilkMode);
 		registerTest(event, "shovel_diamond_tip_charge_in_battery_box", 80, true, ElectricShovelScenarios::fun14DiamondTipChargeInBatteryBox);
+		registerTest(event, "shovel_diamond_tip_douses_lit_campfire", 40, true,
+				ElectricShovelScenarios::fun15DiamondTipDousesLitCampfire);
 
 		// MOD-132 Electromagnet (suite TC-MAGNET-001) — same neutral bodies as the Fabric MagnetGameTest.
 		registerTest(event, "magnet_pulls_nearby_drop", 40, true, MagnetScenarios::fun01PullsNearbyDrop);
@@ -2936,6 +2953,7 @@ public final class NeoForgeGameTests {
 			Consumer<GameTestHelper> body) {
 		TestData<Holder<TestEnvironmentDefinition<?>>> data = new TestData<>(
 				emptyEnv,
+				Level.OVERWORLD,
 				RIG_STRUCTURE,
 				maxTicks,
 				0,          // setupTicks
@@ -2959,6 +2977,7 @@ public final class NeoForgeGameTests {
 			Identifier structure, boolean skyAccess, Consumer<GameTestHelper> body) {
 		TestData<Holder<TestEnvironmentDefinition<?>>> data = new TestData<>(
 				emptyEnv,
+				Level.OVERWORLD,
 				structure,
 				maxTicks,
 				0,          // setupTicks

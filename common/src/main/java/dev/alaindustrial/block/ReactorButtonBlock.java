@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.Config;
 import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
@@ -24,20 +23,8 @@ import net.minecraft.world.level.block.state.properties.BlockSetType;
  */
 public class ReactorButtonBlock extends ButtonBlock {
 
-	/**
-	 * Typed as {@code MapCodec<ButtonBlock>} rather than {@code MapCodec<ReactorButtonBlock>} because
-	 * {@link ButtonBlock#codec()} declares that exact return type — unlike the rest of the block
-	 * hierarchy, which uses a wildcard and lets subclasses narrow it.
-	 */
-	public static final MapCodec<ButtonBlock> CODEC =
-			simpleCodec(ReactorButtonBlock::new).xmap(b -> (ButtonBlock) b, b -> (ReactorButtonBlock) b);
-
 	public ReactorButtonBlock(Properties properties) {
 		super(BlockSetType.IRON, Config.reactorButtonPressTicks, properties);
 	}
 
-	@Override
-	public MapCodec<ButtonBlock> codec() {
-		return CODEC;
-	}
 }

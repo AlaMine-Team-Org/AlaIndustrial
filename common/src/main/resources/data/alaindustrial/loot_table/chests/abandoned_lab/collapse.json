@@ -1,20 +1,62 @@
 {
-	"type": "minecraft:chest",
-	"random_sequence": "alaindustrial:chests/abandoned_lab/collapse",
-	"pools": [
-		{
-			"rolls": 1.0,
-			"entries": [
-				{ "type": "minecraft:loot_table", "value": "alaindustrial:chests/abandoned_lab/common" }
-			]
-		},
-		{
-			"rolls": 1.0,
-			"entries": [
-				{ "type": "minecraft:item", "name": "minecraft:iron_pickaxe", "functions": [{ "function": "minecraft:set_damage", "damage": { "type": "minecraft:uniform", "min": 0.5, "max": 0.8 } }] },
-				{ "type": "minecraft:item", "name": "minecraft:iron_shovel", "functions": [{ "function": "minecraft:set_damage", "damage": { "type": "minecraft:uniform", "min": 0.5, "max": 0.8 } }] },
-				{ "type": "minecraft:item", "name": "minecraft:torch", "functions": [{ "function": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 6.0, "max": 12.0 } }] }
-			]
-		}
-	]
+  "type": "minecraft:chest",
+  "random_sequence": "alaindustrial:chests/abandoned_lab/collapse",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "entries": [
+        {
+          "type": "minecraft:loot_table",
+          "value": "alaindustrial:chests/abandoned_lab/common"
+        }
+      ]
+    },
+    {
+      "rolls": 1.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:iron_pickaxe",
+          "modifier": [
+            {
+              "type": "minecraft:set_damage",
+              "damage": {
+                "type": "minecraft:uniform",
+                "min": 0.5,
+                "max": 0.8
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:iron_shovel",
+          "modifier": [
+            {
+              "type": "minecraft:set_damage",
+              "damage": {
+                "type": "minecraft:uniform",
+                "min": 0.5,
+                "max": 0.8
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:torch",
+          "modifier": [
+            {
+              "type": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 6.0,
+                "max": 12.0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

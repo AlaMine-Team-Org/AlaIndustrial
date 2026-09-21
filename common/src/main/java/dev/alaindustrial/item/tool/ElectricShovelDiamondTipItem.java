@@ -20,6 +20,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.BlockTransformers;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.Tool;
 import net.minecraft.world.item.context.UseOnContext;
@@ -82,10 +83,12 @@ import net.minecraft.world.level.block.Block;
  * rendering.
  *
  * <h2>NeoForge</h2>
- * The inherited {@code useOn} delegates to {@code Items.DIAMOND_SHOVEL.useOn(context)}, which on NeoForge
- * is gated on the held item declaring the shovel {@code ItemAbility}. This class therefore has a loader
- * subclass, {@code ElectricShovelDiamondTipItemNeoForge} — extending the NeoForge base shovel instead is
- * not an option, because the shared logic below must stay in {@code common/} where both loaders run it.
+ * On 26.2 the inherited {@code useOn} delegated to {@code Items.DIAMOND_SHOVEL.useOn(context)}, which on
+ * NeoForge was gated on the held item declaring the shovel {@code ItemAbility} — hence the loader
+ * subclass {@code ElectricShovelDiamondTipItemNeoForge}. <b>26.3 deleted both halves of that</b>: the
+ * delegation (path-making is now the {@code minecraft:block_transformer} component this item declares)
+ * and the ability ({@code SHOVEL_FLATTEN} is gone from NeoForge; only {@code SHOVEL_DOUSE} survives, and
+ * it is answered from an item tag). The subclass is kept for now and is a no-op — see MOD-226.
  */
 public class ElectricShovelDiamondTipItem extends ElectricShovelItem {
 
@@ -115,10 +118,16 @@ public class ElectricShovelDiamondTipItem extends ElectricShovelItem {
 	 * deny-tag first, {@code minesAndDrops} on {@code #mineable/shovel} second — the first matching rule
 	 * wins. {@code damagePerBlock = 0} so nothing ever calls {@code hurtAndBreak}, and {@code stacksTo(1)}
 	 * is explicit because we skip {@code durability(...)}; see the base shovel's javadoc for why.
+	 *
+	 * <p>The {@code BLOCK_TRANSFORMER} declaration has to be repeated here for the same reason the rest of
+	 * this method is a copy: the upgrade builds its own {@code Properties} and inherits nothing from the
+	 * base shovel's factory. Leaving it out would make the upgrade the one tier that cannot path
+	 * (MOD-226).
 	 */
 	public static Properties electricShovelDiamondTipProperties(Properties props) {
 		HolderGetter<Block> blocks = BuiltInRegistries.acquireBootstrapRegistrationLookup(BuiltInRegistries.BLOCK);
 		return props.stacksTo(1)
+				.delayedHolderComponent(DataComponents.BLOCK_TRANSFORMER, BlockTransformers.SHOVEL)
 				.component(DataComponents.TOOL, new Tool(
 						List.of(
 								Tool.Rule.deniesDrops(blocks.getOrThrow(BlockTags.INCORRECT_FOR_DIAMOND_TOOL)),
@@ -173,10 +182,15 @@ public class ElectricShovelDiamondTipItem extends ElectricShovelItem {
 	 *
 	 * <p>This override is needed here and was <b>not</b> needed on the chainsaw upgrade, because the two
 	 * base tools differ: the base chainsaw's {@code useOn} does not consume (log stripping was given up),
-	 * while the base shovel's delegates to {@code Items.DIAMOND_SHOVEL.useOn}, which flattens grass
-	 * regardless of whether the player is sneaking. Without this, a shift-click on any flattenable block
-	 * would silently turn into a path and the toggle would be unreachable there — the drill has the same
-	 * conflict with its torch placement and solves it the same way.
+	 * while the base shovel's runs the shovel block transformer, which flattens grass regardless of
+	 * whether the player is sneaking. Without this, a shift-click on any flattenable block would silently
+	 * turn into a path and the toggle would be unreachable there — the drill has the same conflict with
+	 * its torch placement and solves it the same way.
+	 *
+	 * <p>26.3 adds a second, independent reason to keep it: {@code BlockTransformer.transformBlock} itself
+	 * bails out to {@code PASS} when the off-hand holds a {@code minecraft:blocks_attacks} item and the
+	 * player is <i>not</i> sneaking, so vanilla's own notion of "the player means something else by this
+	 * click" is now inside the transform. Sneaking is ours to claim, and this override still claims it.
 	 */
 	@Override
 	public InteractionResult useOn(UseOnContext context) {

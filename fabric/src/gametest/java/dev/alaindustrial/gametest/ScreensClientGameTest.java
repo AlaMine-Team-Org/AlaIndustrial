@@ -174,7 +174,9 @@ public class ScreensClientGameTest implements FabricClientGameTest {
             // loose casing passes the click through so a second casing can be placed on it — so the rig
             // stacks two casings (see placeScreenBlock). Shot as a bare frame with empty slots: the
             // frame guards the window itself, not a staged upgrade.
-            new Screen("upgrade_table", "upgrade_table", "Upgrade Table"));
+            new Screen("upgrade_table", "upgrade_table", "Upgrade Table"),
+            // MOD-480: the monitoring wall's core — a rack of ten card sockets plus its readouts.
+            new Screen("monitor_core", "monitor_core", "Monitor Core"));
 
     /**
      * Screens re-shot under a long locale. Russian labels run noticeably longer than English ones, so a
@@ -208,7 +210,7 @@ public class ScreensClientGameTest implements FabricClientGameTest {
 
             VisualWorld.quarantine(context, singleplayer);
             ShotRecorder.begin(context);
-            singleplayer.getClientLevel().waitForChunksRender();
+            singleplayer.getConnection().waitForChunksRender();
 
             buildRig(context, singleplayer);
             captureEveryScreen(context, singleplayer);
@@ -313,7 +315,7 @@ public class ScreensClientGameTest implements FabricClientGameTest {
                     + "would be opened by a player falling out of reach");
         }
         server.runCommand("tp @p " + xOf(0) + ".5 " + BLOCK_Y + " " + STAND_Z + ".5 180 0");
-        singleplayer.getClientLevel().waitForChunksRender();
+        singleplayer.getConnection().waitForChunksRender();
 
         // The one block in the rig that can stand there looking finished and still be the wrong
         // thing: a Distillation Column blank is the same block id as the tower's base, so waiting on
@@ -419,7 +421,7 @@ public class ScreensClientGameTest implements FabricClientGameTest {
             BlockPos pos = new BlockPos(xOf(i), BLOCK_Y, RIG_Z);
 
             server.runCommand("tp @p " + xOf(i) + ".5 " + BLOCK_Y + " " + STAND_Z + ".5 180 0");
-            singleplayer.getClientLevel().waitForChunksRender();
+            singleplayer.getConnection().waitForChunksRender();
             VisualWorld.awaitBlockOnClient(context, pos, "alaindustrial:" + screen.blockId());
 
             if (screen.blockId().equals("reactor_controller")) {
@@ -606,7 +608,7 @@ public class ScreensClientGameTest implements FabricClientGameTest {
             int index = indexOf(menuId);
             BlockPos pos = new BlockPos(xOf(index), BLOCK_Y, RIG_Z);
             server.runCommand("tp @p " + xOf(index) + ".5 " + BLOCK_Y + " " + STAND_Z + ".5 180 0");
-            singleplayer.getClientLevel().waitForChunksRender();
+            singleplayer.getConnection().waitForChunksRender();
 
             openByRightClick(context, pos, SCREENS.get(index));
             ShotRecorder.capture("locale_" + LONG_LOCALE + "_" + menuId, ShotGroup.LOCALE, menuId,
@@ -688,7 +690,7 @@ public class ScreensClientGameTest implements FabricClientGameTest {
         server.runCommand("fill " + (standX - 3) + " " + BLOCK_Y + " " + (standZ - 3) + " "
                 + (standX + 3) + " " + (BLOCK_Y + 3) + " " + (standZ + 3) + " minecraft:air");
         server.runCommand("tp @p " + standX + ".5 " + BLOCK_Y + " " + standZ + ".5 0 20");
-        singleplayer.getClientLevel().waitForChunksRender();
+        singleplayer.getConnection().waitForChunksRender();
 
         for (String[] sample : ITEM_SAMPLES) {
             captureOneItem(context, singleplayer, sample[0], sample[1], standX, standZ);

@@ -5,6 +5,7 @@ import dev.alaindustrial.block.entity.MachineBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Block;
 
@@ -77,6 +78,31 @@ public final class AlaGameTestHelper {
 	}
 
 	/**
+	 * Whether {@code result} is the SUCCESS an item's {@code useOn} returned, read AFTER the result
+	 * travelled through {@code ItemStack#useOn} (or the {@code gameMode.useItemOn} chain that calls
+	 * it). In 26.3 that wrapper attaches the post-interaction held stack to every
+	 * {@code InteractionResult.Success} ({@code heldItemTransformedTo}), so record equality with the
+	 * {@code SUCCESS} constant no longer holds on this path — the swing source is the part that
+	 * carries the semantics. {@code SUCCESS} means "handled, and the arm swings";
+	 * {@link #isNoSwingConsume} is the silent-refusal half of the same distinction.
+	 */
+	public static boolean isSwingSuccess(InteractionResult result) {
+		return result instanceof InteractionResult.Success success
+				&& success.swingSource() == InteractionResult.SwingSource.PREDICTED;
+	}
+
+	/**
+	 * Whether {@code result} is the {@code CONSUME} an item's {@code useOn} returned — "the click is
+	 * eaten, no arm swing, no off-hand fallback" — read through the 26.3 {@code ItemStack#useOn}
+	 * wrapper that enriches the item context; see {@link #isSwingSuccess} for why record equality
+	 * with the constant stopped working on that path.
+	 */
+	public static boolean isNoSwingConsume(InteractionResult result) {
+		return result instanceof InteractionResult.Success success
+				&& success.swingSource() == InteractionResult.SwingSource.NONE;
+	}
+
+	/**
 	 * The vanilla in-level mock player — and the ONLY call to it left in this repository (MOD-500).
 	 *
 	 * <p>{@code GameTestHelper#makeMockServerPlayerInLevel()} carries a bare
@@ -142,8 +168,11 @@ public final class AlaGameTestHelper {
 	 * <p>Every invulnerability path is cleared explicitly, because the tests that need a detached
 	 * player (cable shock, breaker, charge pad) exist to prove the player CAN be hurt or debited:
 	 * {@code abilities.instabuild}/{@code invulnerable} for the {@link #survivalPlayer} reasons,
-	 * {@code Entity#setInvulnerable(false)} for the entity-level flag, and {@code invulnerableTime = 0}
-	 * so the post-hit grace window never swallows the first hit. The position is the caller's job:
+	 * {@code Entity#setPermanentlyInvulnerable(false)} for the entity-level flag, and
+	 * {@code setInvulnerableTime(0)} so the post-hit grace window never swallows the first hit. In 26.3
+	 * {@code isInvulnerable()} became the OR of those two — a permanent flag and a live grace timer —
+	 * and each half now has its own accessor ({@code invulnerableTime} went private); clearing both is
+	 * the same two writes this method always made. The position is the caller's job:
 	 * the mock spawns at the world origin, and a test that reads "who is standing in this cell" must
 	 * {@code setPos} the player into it or it passes/fails for the wrong reason.
 	 */
@@ -151,8 +180,8 @@ public final class AlaGameTestHelper {
 		ServerPlayer player = (ServerPlayer) helper.makeMockServerPlayer(GameType.SURVIVAL);
 		player.getAbilities().instabuild = false;
 		player.getAbilities().invulnerable = false;
-		player.setInvulnerable(false);
-		player.invulnerableTime = 0;
+		player.setPermanentlyInvulnerable(false);
+		player.setInvulnerableTime(0);
 		return player;
 	}
 

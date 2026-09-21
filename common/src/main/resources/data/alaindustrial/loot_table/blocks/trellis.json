@@ -9,18 +9,21 @@
 					"name": "alaindustrial:trellis"
 				}
 			],
-			"conditions": [
-				{
-					"condition": "minecraft:survives_explosion"
-				},
-				{
-					"condition": "minecraft:block_state_property",
-					"block": "alaindustrial:trellis",
-					"properties": {
-						"half": "lower"
+			"condition": {
+				"type": "minecraft:all_of",
+				"terms": [
+					{
+						"type": "minecraft:survives_explosion"
+					},
+					{
+						"type": "minecraft:match_block",
+						"blocks": "alaindustrial:trellis",
+						"state": {
+							"half": "lower"
+						}
 					}
-				}
-			]
+				]
+			}
 		},
 		{
 			"rolls": 1.0,
@@ -31,86 +34,74 @@
 						{
 							"type": "minecraft:item",
 							"name": "alaindustrial:cotton_seeds",
-							"conditions": [
-								{
-									"condition": "minecraft:block_state_property",
-									"block": "alaindustrial:trellis",
-									"properties": {
-										"half": "lower",
-										"age": "1"
-									}
+							"condition": {
+								"type": "minecraft:match_block",
+								"blocks": "alaindustrial:trellis",
+								"state": {
+									"half": "lower",
+									"age": "1"
 								}
-							]
+							}
 						},
 						{
 							"type": "minecraft:item",
 							"name": "alaindustrial:cotton_seeds",
-							"conditions": [
-								{
-									"condition": "minecraft:block_state_property",
-									"block": "alaindustrial:trellis",
-									"properties": {
-										"half": "lower",
-										"age": "2"
-									}
+							"condition": {
+								"type": "minecraft:match_block",
+								"blocks": "alaindustrial:trellis",
+								"state": {
+									"half": "lower",
+									"age": "2"
 								}
-							]
+							}
 						},
 						{
 							"type": "minecraft:item",
 							"name": "alaindustrial:cotton_seeds",
-							"conditions": [
-								{
-									"condition": "minecraft:block_state_property",
-									"block": "alaindustrial:trellis",
-									"properties": {
-										"half": "lower",
-										"age": "3"
-									}
+							"condition": {
+								"type": "minecraft:match_block",
+								"blocks": "alaindustrial:trellis",
+								"state": {
+									"half": "lower",
+									"age": "3"
 								}
-							]
+							}
 						},
 						{
 							"type": "minecraft:item",
 							"name": "alaindustrial:cotton_seeds",
-							"conditions": [
-								{
-									"condition": "minecraft:block_state_property",
-									"block": "alaindustrial:trellis",
-									"properties": {
-										"half": "lower",
-										"age": "4"
-									}
+							"condition": {
+								"type": "minecraft:match_block",
+								"blocks": "alaindustrial:trellis",
+								"state": {
+									"half": "lower",
+									"age": "4"
 								}
-							]
+							}
 						},
 						{
 							"type": "minecraft:item",
 							"name": "alaindustrial:cotton_seeds",
-							"conditions": [
-								{
-									"condition": "minecraft:block_state_property",
-									"block": "alaindustrial:trellis",
-									"properties": {
-										"half": "lower",
-										"age": "5"
-									}
+							"condition": {
+								"type": "minecraft:match_block",
+								"blocks": "alaindustrial:trellis",
+								"state": {
+									"half": "lower",
+									"age": "5"
 								}
-							]
+							}
 						},
 						{
 							"type": "minecraft:item",
 							"name": "alaindustrial:cotton_seeds",
-							"conditions": [
-								{
-									"condition": "minecraft:block_state_property",
-									"block": "alaindustrial:trellis",
-									"properties": {
-										"half": "lower",
-										"age": "6"
-									}
+							"condition": {
+								"type": "minecraft:match_block",
+								"blocks": "alaindustrial:trellis",
+								"state": {
+									"half": "lower",
+									"age": "6"
 								}
-							]
+							}
 						}
 					]
 				}

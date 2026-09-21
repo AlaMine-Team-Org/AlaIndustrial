@@ -8,9 +8,9 @@
 				{
 					"type": "minecraft:item",
 					"name": "alaindustrial:cotton_fiber",
-					"functions": [
+					"modifier": [
 						{
-							"function": "minecraft:set_count",
+							"type": "minecraft:set_count",
 							"count": {
 								"type": "minecraft:uniform",
 								"min": 1.0,
@@ -29,12 +29,10 @@
 					"name": "alaindustrial:cotton_seeds"
 				}
 			],
-			"conditions": [
-				{
-					"condition": "minecraft:random_chance",
-					"chance": 0.35
-				}
-			]
+			"condition": {
+				"type": "minecraft:random_chance",
+				"chance": 0.35
+			}
 		}
 	]
 }

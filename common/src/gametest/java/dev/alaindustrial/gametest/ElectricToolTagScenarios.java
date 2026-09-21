@@ -216,6 +216,18 @@ public final class ElectricToolTagScenarios {
 		ElectricToolEnergyScenarios.energyCaseRosterIsHonest(helper);
 	}
 
+	/**
+	 * TC-ETOOL-001-FUN06 (MOD-226) — every right-click tool of the line carries the block transformer its
+	 * domain names, in its BAKED default components. See
+	 * {@link ElectricToolEnergyScenarios#rightClickRosterDeclaresTransformer} for why the source-level
+	 * gate alone cannot see a delayed component that never resolved.
+	 *
+	 * <p>Mirrors: ElectricToolTagsGameTest.tcEtool001Fun06_rightClickRosterDeclaresTransformer
+	 */
+	public static void fun06RightClickRosterDeclaresTransformer(GameTestHelper helper) {
+		ElectricToolEnergyScenarios.rightClickRosterDeclaresTransformer(helper);
+	}
+
 	private static Holder<Enchantment> enchantment(ServerLevel level, ResourceKey<Enchantment> key) {
 		return level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(key);
 	}

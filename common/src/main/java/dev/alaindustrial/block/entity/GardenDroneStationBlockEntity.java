@@ -36,6 +36,7 @@ import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BonemealSource;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -353,7 +354,7 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 			case FERTILIZE -> !items.get(FERTILIZER_SLOT).isEmpty()
 					&& CropMaturity.isFertilizable(level, target, state)
 					&& state.getBlock() instanceof BonemealableBlock bonemealable
-					&& bonemealable.isValidBonemealTarget(level, target, state);
+					&& bonemealable.isValidBonemealTarget(level, target, state, BonemealSource.INTERACTION);
 			case TILL -> isTillable(state)
 					&& level.getBlockState(target.above()).isAir()
 					&& hasUsableHoe();
@@ -437,8 +438,8 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 			return false;
 		}
 		RandomSource random = level.getRandom();
-		if (bonemealable.isBonemealSuccess(level, random, target, state)) {
-			bonemealable.performBonemeal(level, random, target, state);
+		if (bonemealable.isBonemealSuccess(level, random, target, state, BonemealSource.INTERACTION)) {
+			bonemealable.performBonemeal(level, random, target, state, BonemealSource.INTERACTION);
 		}
 		items.get(FERTILIZER_SLOT).shrink(1);
 		return true;
@@ -454,7 +455,8 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 		// The listener argument is null rather than a player: vanilla passes the player so they are
 		// EXCLUDED from the packet, having already predicted the sound client-side — a block entity
 		// predicts nothing, so excluding anyone would silence it for whoever stood closest.
-		level.playSound(null, target, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0F, 1.0F);
+		// 26.3 — the BlockPos overload takes the SoundEvent itself; the constant is a Holder.
+		level.playSound(null, target, SoundEvents.HOE_TILL.value(), SoundSource.BLOCKS, 1.0F, 1.0F);
 		wearHoe(level);
 		return true;
 	}

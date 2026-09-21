@@ -222,7 +222,10 @@ public final class IncubatorScenarios {
 		place(helper);
 		helper.setBlock(POS.above(), Blocks.GLASS);
 		BlockState dome = helper.getLevel().getBlockState(helper.absolutePos(POS.above()));
-		if (dome.getPistonPushReaction() != PushReaction.BLOCK) {
+		// 26.3 renamed the constants: the old BLOCK ("a piston refuses to move it") is IMMOVEABLE.
+		// Same value the dome is declared with in ContentManifest.BLOCK_PROPS, so this still asserts
+		// the declaration rather than a constant of its own choosing.
+		if (dome.getPistonPushReaction() != PushReaction.IMMOVEABLE) {
 			helper.fail("a piston can move the dome (push reaction " + dome.getPistonPushReaction() + ")");
 		}
 		helper.succeed();

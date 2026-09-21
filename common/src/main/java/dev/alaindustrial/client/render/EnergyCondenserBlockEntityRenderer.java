@@ -153,7 +153,7 @@ public final class EnergyCondenserBlockEntityRenderer
 			// The pivot is the middle of the block on X and Z; its height does not matter, because
 			// a turn about Y leaves everything on that axis where it was.
 			poseStack.translate(0.5F, 0.0F, 0.5F);
-			poseStack.mulPose(Axis.YP.rotation(state.angle));
+			poseStack.rotate(Axis.YP.rotation(state.angle));
 			poseStack.translate(-0.5F, 0.0F, -0.5F);
 			submit(collector, poseStack, SOLID_TYPE, stage.spin(), sprite);
 			submitOffset(collector, poseStack, stage.spinDown(), sprite, -state.spread);

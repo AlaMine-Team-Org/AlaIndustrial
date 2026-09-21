@@ -9,11 +9,9 @@
           "name": "alaindustrial:high_altitude_wind_mill"
         }
       ],
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ]
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      }
     }
   ]
 }

@@ -1,8 +1,17 @@
 {
   "type": "minecraft:block",
-  "pools": [{
-    "rolls": 1.0,
-    "entries": [{ "type": "minecraft:item", "name": "alaindustrial:distillation_column" }],
-    "conditions": [{ "condition": "minecraft:survives_explosion" }]
-  }]
+  "pools": [
+    {
+      "rolls": 1.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "alaindustrial:distillation_column"
+        }
+      ],
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      }
+    }
+  ]
 }

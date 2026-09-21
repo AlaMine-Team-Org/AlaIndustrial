@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -23,8 +22,6 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
  */
 public class ReactorShellBlock extends Block {
 
-	public static final MapCodec<ReactorShellBlock> CODEC = simpleCodec(ReactorShellBlock::new);
-
 	/** Whether this cell belongs to a shell that currently passes its scan. Cosmetic only. */
 	public static final BooleanProperty FORMED = BooleanProperty.create("formed");
 
@@ -38,11 +35,6 @@ public class ReactorShellBlock extends Block {
 	public ReactorShellBlock(Properties properties) {
 		super(properties);
 		registerDefaultState(defaultBlockState().setValue(FORMED, false).setValue(EDGE, false));
-	}
-
-	@Override
-	protected MapCodec<? extends ReactorShellBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

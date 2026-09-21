@@ -50,7 +50,7 @@ public final class RootInspectionStand {
         });
         server.runCommand("tp @p 26.5 100 4.5 180 15");
         VisualWorld.awaitNoScreen(context);
-        singleplayer.getClientLevel().waitForChunksRender();
+        singleplayer.getConnection().waitForChunksRender();
         context.waitTicks(15);
 
         var off = VisualStandSupport.takeCleanScreenshot(context, "root_inspect_off");

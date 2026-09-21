@@ -1278,12 +1278,6 @@ public final class Config {
 			doc = "EU per tick added for each panel that is actually displaying a count.")
 	public static int monitorPanelEuPerTick = 1;
 
-	/** Types a core tracks with no card fitted at all. One, so a freshly built wall shows something
-	 * immediately and the cards are an upgrade rather than a prerequisite nobody is told about. */
-	@Knob(section = Section.LOGISTICS, min = 0,
-			doc = "How many item types a Monitor Core tracks with no capacity card fitted.")
-	public static int monitorBaseTrackedTypes = 4;
-
 	/** How many different item types one capacity card lets the wall watch at once. */
 	@Knob(section = Section.LOGISTICS, min = 0,
 			doc = "How many distinct item types one Capacity Card lets a monitoring wall track.")

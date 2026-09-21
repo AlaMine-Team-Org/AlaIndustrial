@@ -67,7 +67,7 @@ public final class TeleporterCapsuleStand {
 			}
 		});
 		server.runCommand("tp @p " + (STATION_X + 0.5) + " " + (STATION_Y + 1) + " " + (STATION_Z + 5.5) + " 180 0");
-		singleplayer.getClientLevel().waitForChunksRender();
+		singleplayer.getConnection().waitForChunksRender();
 		server.runCommand("fill " + (STATION_X - 4) + " " + STATION_Y + " " + (STATION_Z - 4) + " "
 				+ (STATION_X + 4) + " " + (STATION_Y + 5) + " " + (STATION_Z + 4) + " minecraft:air");
 		server.runCommand("fill " + (STATION_X - 4) + " " + (STATION_Y - 1) + " " + (STATION_Z - 4) + " "
@@ -119,7 +119,7 @@ public final class TeleporterCapsuleStand {
 			// An arriving player: on the capsule floor, centred, facing the door.
 			server.runCommand("tp @p " + (STATION_X + 0.5) + " " + (STATION_Y + TeleporterBlock.CAPSULE_FLOOR) + " "
 					+ (STATION_Z + 0.5) + " 180 " + pitch);
-			singleplayer.getClientLevel().waitForChunksRender();
+			singleplayer.getConnection().waitForChunksRender();
 			context.waitTicks(10);
 			Path frame = takeCleanScreenshot(context, "capsule_inside_" + name + "_pitch" + pitch);
 			if (pitch == 0) {
@@ -128,7 +128,7 @@ public final class TeleporterCapsuleStand {
 		}
 		// The same capsule from outside, facing its door: the renderer's box change must not show here.
 		server.runCommand("tp @p " + (STATION_X + 0.5) + " " + (STATION_Y + 0.4) + " " + (STATION_Z - 3.0) + " 0 10");
-		singleplayer.getClientLevel().waitForChunksRender();
+		singleplayer.getConnection().waitForChunksRender();
 		context.waitTicks(10);
 		takeCleanScreenshot(context, "capsule_outside_" + name);
 		return ahead;

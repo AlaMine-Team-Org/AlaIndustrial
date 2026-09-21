@@ -5,12 +5,14 @@ import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FarmlandBlock;
@@ -270,7 +272,7 @@ public final class ElectricHoeScenarios {
 
 		InteractionResult result = useOnSoil(helper, player);
 
-		if (result != InteractionResult.CONSUME) {
+		if (!AlaGameTestHelper.isNoSwingConsume(result)) {
 			helper.fail("a flat hoe clicking tillable dirt must return CONSUME (refusal + message), got " + result);
 		}
 		helper.assertBlockPresent(Blocks.DIRT, SOIL);
@@ -334,7 +336,7 @@ public final class ElectricHoeScenarios {
 
 		InteractionResult result = useOnSoil(helper, player);
 
-		if (result != InteractionResult.CONSUME) {
+		if (!AlaGameTestHelper.isNoSwingConsume(result)) {
 			helper.fail("a hoe one EU below the till cost (" + below + ") must refuse with CONSUME, got " + result);
 		}
 		helper.assertBlockPresent(Blocks.DIRT, SOIL);
@@ -404,5 +406,78 @@ public final class ElectricHoeScenarios {
 	/** TC-HOE-001-PER01 — charge survives a copy, 0 EU drops the component, writes clamp. */
 	public static void per01ChargeRoundTrip(GameTestHelper helper) {
 		ElectricToolEnergyScenarios.chargeRoundTrip(helper, ENERGY);
+	}
+
+	// ── MOD-226 — the transformer is the mechanism, not the class ────────────────────────────────────
+
+	/**
+	 * TC-HOE-001-FUN14 (MOD-226) — a hoe whose {@code minecraft:block_transformer} was stripped from the
+	 * stack PASSES the click on and spends nothing.
+	 *
+	 * <p>On 26.3 applicability is a property of the STACK, not of the item class:
+	 * {@code VanillaTillables.wouldTill} reads the transformer the stack in hand carries, exactly as
+	 * {@code Item.useOn} does. This scenario is the mutation partner of the roster guard — it proves the
+	 * electric hoe's gates really key on that component, by removing it from a CHARGED hoe standing on
+	 * tillable dirt and demanding the pre-charge applicability gate answer "not mine": PASS (so the
+	 * off-hand still runs), the plot untouched, and the buffer exactly where it was. An implementation
+	 * that decided applicability from the class, or charged before asking, fails one of the three.
+	 */
+	public static void fun14HoeWithoutTransformerPassesFree(GameTestHelper helper) {
+		ServerPlayer player = survivalPlayer(helper);
+		long buffer = Config.electricHoeBuffer;
+		ItemStack stack = hoe(buffer);
+		stack.remove(DataComponents.BLOCK_TRANSFORMER);
+		player.setItemInHand(InteractionHand.MAIN_HAND, stack);
+		prepareSoil(helper, Blocks.DIRT);
+		helper.assertBlockPresent(Blocks.DIRT, SOIL);
+
+		InteractionResult result = useOnSoil(helper, player);
+
+		if (result != InteractionResult.PASS) {
+			helper.fail("a hoe with the transformer stripped must PASS the click on, got " + result);
+		}
+		helper.assertBlockPresent(Blocks.DIRT, SOIL);
+		long left = ItemEnergy.get(player.getMainHandItem());
+		if (left != buffer) {
+			helper.fail("a click the stripped hoe cannot act on must cost nothing, charge went " + buffer
+					+ " → " + left);
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * TC-HOE-001-FUN15 (MOD-226) — rooted dirt is a hoe conversion too: it becomes plain dirt, drops its
+	 * hanging root, and costs the till.
+	 *
+	 * <p>On 26.2 rooted dirt rode in {@code HoeItem.TILLABLES} beside grass and coarse dirt, and the
+	 * delegation carried it for free. On 26.3 it is the hoe transformer's SECOND entry — a separate
+	 * rule with its own loot table ({@code minecraft:till/rooted_dirt}) and drop strategy, no air-above
+	 * predicate — which makes it the one conversion whose wiring nothing else in this suite exercises:
+	 * tilling dirt and grass walks the FIRST entry only. This scenario walks the second.
+	 */
+	public static void fun15TillsRootedDirtToDirt(GameTestHelper helper) {
+		ServerPlayer player = survivalPlayer(helper);
+		long buffer = Config.electricHoeBuffer;
+		player.setItemInHand(InteractionHand.MAIN_HAND, hoe(buffer));
+		prepareSoil(helper, Blocks.ROOTED_DIRT);
+		helper.assertBlockPresent(Blocks.ROOTED_DIRT, SOIL);
+
+		InteractionResult result = useOnSoil(helper, player);
+
+		if (!result.consumesAction()) {
+			helper.fail("tilling rooted dirt must be a consumed action, got " + result);
+		}
+		helper.assertBlockPresent(Blocks.DIRT, SOIL);
+		long expected = buffer - Config.electricHoeTillEuCost;
+		long left = ItemEnergy.get(player.getMainHandItem());
+		if (left != expected) {
+			helper.fail("tilling rooted dirt must drain exactly electricHoeTillEuCost ("
+					+ Config.electricHoeTillEuCost + "), charge went " + buffer + " → " + left
+					+ ", expected " + expected);
+		}
+		// The second entry's own contract: the hanging root is loot of the transform itself, not of the
+		// block — dirt does not drop roots when broken.
+		helper.assertItemEntityPresent(Items.HANGING_ROOTS, SOIL, 2.0);
+		helper.succeed();
 	}
 }

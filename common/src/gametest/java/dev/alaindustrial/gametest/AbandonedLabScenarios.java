@@ -54,7 +54,7 @@ public final class AbandonedLabScenarios {
 		StructurePlaceSettings identity = new StructurePlaceSettings();
 		requireLootTable(helper, server, "common");
 		for (String lab : AbandonedLabFeature.LABS) {
-			Optional<StructureTemplate> found = server.getStructureManager()
+			Optional<StructureTemplate> found = server.getStructureTemplateManager()
 					.get(Industrialization.id("abandoned_lab/" + lab));
 			if (found.isEmpty()) {
 				helper.fail("lab template '" + lab + "' did not load");

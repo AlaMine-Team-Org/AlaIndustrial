@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.FluidTankBlockEntity;
 import dev.alaindustrial.core.fluid.FluidTankTier;
 import dev.alaindustrial.item.fluid.FluidTankBucketInteractions;
@@ -28,7 +27,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * buckets/capsules; every face remains available to loader fluid capabilities.
  */
 public final class FluidTankBlock extends BaseEntityBlock {
-	public static final MapCodec<FluidTankBlock> CODEC = simpleCodec(FluidTankBlock::new);
 	/**
 	 * Frame plus the glass walls. The baked model carries only the frame — plates and corner posts —
 	 * because the renderer draws the glass, and a shape cannot see it. Tracing the frame alone left
@@ -66,11 +64,6 @@ public final class FluidTankBlock extends BaseEntityBlock {
 	 */
 	public static FluidTankTier tierOf(Block block) {
 		return block == ModContent.FLUID_TANK_ADVANCED.get() ? FluidTankTier.ADVANCED : FluidTankTier.BASIC;
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

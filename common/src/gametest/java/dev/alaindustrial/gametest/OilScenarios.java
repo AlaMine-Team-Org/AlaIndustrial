@@ -14,7 +14,6 @@ import dev.alaindustrial.worldgen.OilLakeConfiguration;
 import dev.alaindustrial.worldgen.OilLakeFeature;
 import dev.alaindustrial.worldgen.OilLakeShape;
 import java.util.EnumSet;
-import java.util.Optional;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -40,7 +39,6 @@ import net.minecraft.world.level.block.entity.DispenserBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.material.FluidState;
@@ -1083,8 +1081,11 @@ public final class OilScenarios {
 
 	private static OilLakeConfiguration smallestDeposit() {
 		return new OilLakeConfiguration(
-				BlockStateProvider.simple(oilSource()),
-				BlockStateProvider.simple(Blocks.STONE),
+				// 26.3: the configuration carries Holder<BlockStateProvider>, and `simple` was renamed
+				// to `of` (with `holderOf` wrapping the same SimpleStateProvider in a direct holder).
+				// Same two providers as before — oil for the fluid, stone for the barrier.
+				BlockStateProvider.holderOf(oilSource()),
+				BlockStateProvider.holderOf(Blocks.STONE),
 				ConstantInt.of(3), ConstantInt.of(3), ConstantInt.of(3),
 				BlockPredicate.alwaysTrue(), BlockPredicate.alwaysTrue(), BlockPredicate.alwaysTrue());
 	}
@@ -1131,9 +1132,13 @@ public final class OilScenarios {
 						worldgen);
 			}
 		}
-		return OilLakeFeature.INSTANCE.place(new FeaturePlaceContext<>(Optional.empty(), level,
+		// 26.3: a Feature IS its configuration, so there is no shared INSTANCE and no
+		// FeaturePlaceContext any more — the configuration goes into the record and the four former
+		// context fields become the arguments of place(...). Same feature, same seed, same origin, same
+		// configuration as the FeaturePlaceContext carried.
+		return new OilLakeFeature(smallestDeposit()).place(level,
 				level.getChunkSource().getGenerator(), RandomSource.create(RIG_SEED),
-				helper.absolutePos(DEPOSIT_CENTRE), smallestDeposit()));
+				helper.absolutePos(DEPOSIT_CENTRE));
 	}
 
 	/** Oil sources anywhere in the rig. */

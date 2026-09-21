@@ -1,5 +1,6 @@
 package dev.alaindustrial.worldgen;
 
+import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.Industrialization;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -8,9 +9,9 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 
 /**
  * {@code alaindustrial:oil_geyser} (MOD-248) — the rarest and largest oil deposit in the mod, built
@@ -39,13 +40,17 @@ import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
  * build height are dropped by {@code ProtoChunk} rather than logged. The feature still checks
  * {@code isInsideBuildHeight} itself so the drop never happens silently.
  */
-public final class OilGeyserFeature extends Feature<OilGeyserConfiguration> {
+public record OilGeyserFeature(OilGeyserConfiguration config) implements Feature {
 
-	/** Registry id; the configured-feature JSON refers to the feature by this name. */
+	/**
+	 * Registry id of the feature TYPE; what either loader registers under it is {@link #CODEC}. See
+	 * {@link OilLakeFeature#ID} for why 26.3 registers a codec rather than an instance.
+	 */
 	public static final Identifier ID = Industrialization.id("oil_geyser");
 
-	/** Stateless; one shared instance, registered by each loader. */
-	public static final OilGeyserFeature INSTANCE = new OilGeyserFeature();
+	/** Feature-type codec: the configuration's fields, inlined, under the keys the JSON already uses. */
+	public static final MapCodec<OilGeyserFeature> CODEC =
+			OilGeyserConfiguration.MAP_CODEC.xmap(OilGeyserFeature::new, OilGeyserFeature::config);
 
 	/**
 	 * Vertical clearance the shaft must have between the terrain and the top of the dome. Below this
@@ -54,16 +59,15 @@ public final class OilGeyserFeature extends Feature<OilGeyserConfiguration> {
 	 */
 	private static final int MIN_SHAFT_LENGTH = 24;
 
-	private OilGeyserFeature() {
-		super(OilGeyserConfiguration.CODEC);
+	@Override
+	public MapCodec<OilGeyserFeature> codec() {
+		return CODEC;
 	}
 
 	@Override
-	public boolean place(FeaturePlaceContext<OilGeyserConfiguration> context) {
-		WorldGenLevel level = context.level();
-		RandomSource random = context.random();
-		OilGeyserConfiguration config = context.config();
-		BlockPos origin = context.origin();
+	public boolean place(WorldGenLevel level, ChunkGenerator chunkGenerator, RandomSource random,
+			BlockPos origin) {
+		OilGeyserConfiguration config = this.config;
 
 		int surfaceY = origin.getY();
 		int domeRadius = config.domeRadius().sample(random);
@@ -74,8 +78,8 @@ public final class OilGeyserFeature extends Feature<OilGeyserConfiguration> {
 			return false;
 		}
 
-		BlockState fluid = config.fluid().getState(level, random, origin);
-		BlockState barrier = config.barrier().getState(level, random, origin);
+		BlockState fluid = config.fluid().value().getState(level, random, origin);
+		BlockState barrier = config.barrier().value().getState(level, random, origin);
 
 		placeDome(level, config, new BlockPos(origin.getX(), domeCenterY, origin.getZ()), domeRadius,
 				fluid, barrier);

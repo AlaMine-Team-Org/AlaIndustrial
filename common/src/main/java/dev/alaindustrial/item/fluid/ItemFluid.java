@@ -59,5 +59,8 @@ public final class ItemFluid {
 		} else {
 			stack.set(ModDataComponents.CAPSULE_FLUID.get(), BuiltInRegistries.FLUID.wrapAsHolder(fluid));
 		}
+		// 26.3 — being furnace fuel is a per-stack component now, not a lookup a mixin could intercept, so
+		// a lava capsule has to carry it. Every filling route runs through here, which is the point.
+		CapsuleFuel.applyTo(stack, fluid == null ? Fluids.EMPTY : fluid);
 	}
 }

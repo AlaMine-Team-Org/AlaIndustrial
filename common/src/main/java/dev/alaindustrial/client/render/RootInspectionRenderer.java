@@ -1,17 +1,19 @@
 package dev.alaindustrial.client.render;
 
 import com.google.gson.Gson;
-import com.mojang.blaze3d.PrimitiveTopology;
-import com.mojang.blaze3d.pipeline.BlendFunction;
-import com.mojang.blaze3d.pipeline.ColorTargetState;
-import com.mojang.blaze3d.pipeline.DepthStencilState;
-import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.renderpearl.api.GpuFormat;
+import com.mojang.renderpearl.api.pipeline.BlendFunction;
+import com.mojang.renderpearl.api.pipeline.ColorTargetState;
+import com.mojang.renderpearl.api.pipeline.DepthStencilState;
+import com.mojang.renderpearl.api.pipeline.PrimitiveTopology;
+import com.mojang.renderpearl.api.pipeline.RenderPipeline;
+import com.mojang.renderpearl.api.pipeline.ShaderType;
+import com.mojang.renderpearl.api.textures.FilterMode;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.client.AlaClientConfig;
 import java.io.InputStreamReader;
@@ -85,20 +87,32 @@ public final class RootInspectionRenderer {
 	private static RenderPipeline geometryPipeline(String name, boolean blend, boolean depthWrite) {
 		RenderPipeline source = RenderPipelines.GUI_TEXTURED;
 		var builder = RenderPipeline.builder().withLocation(Industrialization.id("pipeline/root_inspect_" + name))
-				.withVertexShader(source.getVertexShader()).withFragmentShader(source.getFragmentShader())
+				.withVertexShader(source.getShaders().get(ShaderType.VERTEX))
+				.withFragmentShader(source.getShaders().get(ShaderType.FRAGMENT))
 				.withVertexBinding(0, DefaultVertexFormat.POSITION_TEX_COLOR)
 				.withPrimitiveTopology(PrimitiveTopology.TRIANGLES).withCull(true)
 				.withDepthStencilState(new DepthStencilState(DepthStencilState.DEFAULT.depthTest(), depthWrite))
 				.withColorTargetState(new ColorTargetState(blend ? Optional.of(BlendFunction.TRANSLUCENT) : Optional.empty(),
-						source.getColorTargetState().format(), ColorTargetState.WRITE_ALL));
+						sourceColorFormat(source), ColorTargetState.WRITE_ALL));
 		source.getBindGroupLayouts().forEach(builder::withBindGroupLayout);
 		return builder.build();
+	}
+
+	/**
+	 * The colour format the borrowed pipeline writes. 26.3 replaced {@code getColorTargetState()} with
+	 * a list of up to eight attachments; this renderer borrows a single-target vanilla pipeline, so the
+	 * first entry is the one it copied before.
+	 */
+	private static GpuFormat sourceColorFormat(RenderPipeline source) {
+		ColorTargetState state = source.getColorTargetStates().getFirst();
+		return state == null ? ColorTargetState.DEFAULT.format() : state.format();
 	}
 
 	private static RenderPipeline compositePipeline() {
 		RenderPipeline source = RenderPipelines.ENTITY_OUTLINE_BLIT;
 		var builder = RenderPipeline.builder().withLocation(Industrialization.id("pipeline/root_inspect_composite"))
-				.withVertexShader(source.getVertexShader()).withFragmentShader(source.getFragmentShader())
+				.withVertexShader(source.getShaders().get(ShaderType.VERTEX))
+				.withFragmentShader(source.getShaders().get(ShaderType.FRAGMENT))
 				.withPrimitiveTopology(PrimitiveTopology.TRIANGLES).withCull(false)
 				.withDepthStencilState(Optional.empty())
 				.withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT_PREMULTIPLIED_ALPHA));
@@ -119,7 +133,9 @@ public final class RootInspectionRenderer {
 	public static void draw(RootInspection.Frame frame, CameraRenderState camera, RenderTarget main) {
 		if (frame.plants().isEmpty() || frame.opacity() <= 0) return;
 		if (vertices == null) vertices = new StagedVertexBuffer(() -> "Ala root inspection", 65536);
-		if (target == null) target = new TextureTarget("Ala root inspection", main.width, main.height, true, main.getColorTexture().getFormat());
+		// 26.3 names both attachment formats instead of taking a "useDepth" flag; D32_FLOAT is exactly
+		// what the old flag created (26.2 RenderTarget#resize bytecode).
+		if (target == null) target = new TextureTarget("Ala root inspection", main.width, main.height, main.getColorTexture().getFormat(), GpuFormat.D32_FLOAT);
 		else if (target.width != main.width || target.height != main.height) target.resize(main.width, main.height);
 		// 26.2 uses reversed depth (GREATER_THAN_OR_EQUAL), so the empty target is cleared to zero.
 		// The clear IS the dim: everything the inspection does not draw composites as this wash, so
@@ -158,9 +174,9 @@ public final class RootInspectionRenderer {
 							ROOT_GAIN * frame.opacity(), frame.opacity()));
 			drawBatches(shells, SHELL, camera, new Vector4f(1));
 			try (var pass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(() -> "Ala root composite", main.getColorTextureView(), Optional.empty())) {
-				pass.setPipeline(COMPOSITE);
+				pass.setPipeline(RenderSystem.getCompiledPipeline(COMPOSITE));
 				RenderSystem.bindDefaultUniforms(pass);
-				pass.bindTexture("InSampler", target.getColorTextureView(), RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST));
+				pass.setUniform("InSampler", target.getColorTextureView(), RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST));
 				pass.draw(3, 1, 0, 0);
 			}
 		} finally {
@@ -182,10 +198,10 @@ public final class RootInspectionRenderer {
 			var texture = Minecraft.getInstance().getTextureManager().getTexture(entry.getKey());
 			try (var pass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(() -> "Ala root layer",
 					target.getColorTextureView(), Optional.empty(), target.getDepthTextureView(), OptionalDouble.empty())) {
-				pass.setPipeline(pipeline);
+				pass.setPipeline(RenderSystem.getCompiledPipeline(pipeline));
 				RenderSystem.bindDefaultUniforms(pass);
 				pass.setUniform("DynamicTransforms", transforms);
-				pass.bindTexture("Sampler0", texture.getTextureView(), RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST));
+				pass.setUniform("Sampler0", texture.getTextureView(), RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST));
 				pass.setVertexBuffer(0, info.vertexBuffer().slice());
 				if (info.indexBuffer() != null) {
 					pass.setIndexBuffer(info.indexBuffer(), info.indexType());

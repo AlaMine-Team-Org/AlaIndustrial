@@ -1,11 +1,12 @@
 package dev.alaindustrial.worldgen;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.Holder;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.util.valueproviders.IntProviders;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
-import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
 /**
@@ -24,17 +25,17 @@ import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvi
  * clamps it up if a dimension's floor sits higher than the configured value.
  */
 public record OilGeyserConfiguration(
-		BlockStateProvider fluid,
-		BlockStateProvider barrier,
+		Holder<BlockStateProvider> fluid,
+		Holder<BlockStateProvider> barrier,
 		IntProvider spoutHeight,
 		int domeCenterY,
 		IntProvider domeRadius,
-		BlockPredicate canReplace) implements FeatureConfiguration {
+		BlockPredicate canReplace) {
 
 	/** Largest dome half-extent that still fits the ±1-chunk write window with its shell. */
 	public static final int MAX_DOME_RADIUS = 12;
 
-	public static final Codec<OilGeyserConfiguration> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+	public static final MapCodec<OilGeyserConfiguration> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
 			BlockStateProvider.CODEC.fieldOf("fluid")
 					.forGetter(OilGeyserConfiguration::fluid),
 			BlockStateProvider.CODEC.fieldOf("barrier")

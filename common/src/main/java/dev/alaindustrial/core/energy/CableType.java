@@ -65,9 +65,7 @@ import java.util.function.IntSupplier;
  * the tier is exactly what made all four cables identical before.
  *
  * <p><b>Deliberately free of Minecraft types</b> (no {@code StringRepresentable}), so the L1 unit
- * suite — which runs without the game on the classpath — can assert the ladder directly. The
- * serialization codec that needs an MC type lives next to its only consumer, in
- * {@code CableBlock.TYPE_CODEC}.
+ * suite — which runs without the game on the classpath — can assert the ladder directly.
  */
 public enum CableType {
 	/** Cheapest grade: narrow but nearly lossless — the solar-farm wire. */

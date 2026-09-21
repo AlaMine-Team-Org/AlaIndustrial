@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
@@ -28,18 +27,11 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public class ReactorLampBlock extends ReactorShellBlock {
 
-	public static final MapCodec<ReactorLampBlock> CODEC = simpleCodec(ReactorLampBlock::new);
-
 	/** Bright enough to keep a sealed room mob-free at any size the cap allows. */
 	public static final int LIT_LEVEL = 15;
 
 	public ReactorLampBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	protected MapCodec<? extends ReactorLampBlock> codec() {
-		return CODEC;
 	}
 
 	/**

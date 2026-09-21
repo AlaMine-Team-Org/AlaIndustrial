@@ -163,9 +163,9 @@ public final class IndustrializationNeoForge {
 		// MOD-238 audit: alaindustrial:oil_lake_filter. Must be registered before datapack load —
 		// the oil-lake placed features name it, and an unknown placement modifier type fails parsing.
 		dev.alaindustrial.registry.neoforge.ModWorldGenNeoForge.PLACEMENT_MODIFIER_TYPES.register(modBus);
-		// MOD-248: alaindustrial:oil_lake + alaindustrial:oil_geyser. Same deadline for the same
-		// reason — an unknown "type" in a configured feature fails the whole file.
-		dev.alaindustrial.registry.neoforge.ModWorldGenNeoForge.FEATURES.register(modBus);
+		// MOD-248: alaindustrial:oil_lake + alaindustrial:oil_geyser. Same deadline, same reason — an
+		// unknown "type" fails the file. MOD-226: the 26.3 type registry is FEATURE_TYPE, of MapCodecs.
+		dev.alaindustrial.registry.neoforge.ModWorldGenNeoForge.FEATURE_TYPES.register(modBus);
 		// MOD-242: the world-gametest lane (instance-type DeferredRegister, RegisterGameTestsEvent listener,
 		// foreign-energy stand-in capability) lives in the `gametest` source set now — wired reflectively so
 		// production, which ships without those classes, has nothing to load. See bootstrapGameTests.

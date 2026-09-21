@@ -97,11 +97,18 @@ public final class ModWorldGen {
 		// MOD-238 audit: alaindustrial:oil_lake_filter, the placement modifier that keeps oil features
 		// out of villages/mineshafts/Ancient Cities. Registered before any datapack load, because the
 		// oil placed features name it and an unknown modifier type fails parsing. The same applies to
-		// the two feature types (MOD-248): an unknown "type" in a configured feature is a parse error.
-		Registry.register(BuiltInRegistries.PLACEMENT_MODIFIER_TYPE, OilLakeFilter.ID, OilLakeFilter.TYPE);
-		Registry.register(BuiltInRegistries.FEATURE, OilLakeFeature.ID, OilLakeFeature.INSTANCE);
-		Registry.register(BuiltInRegistries.FEATURE, OilGeyserFeature.ID, OilGeyserFeature.INSTANCE);
-		Registry.register(BuiltInRegistries.FEATURE, AbandonedLabFeature.ID, AbandonedLabFeature.INSTANCE);
+		// the three feature types (MOD-248, MOD-513): an unknown "type" in a feature is a parse error.
+		//
+		// MOD-226 (26.3): what goes into these two registries is the MapCodec, not an instance. Both
+		// PLACEMENT_MODIFIER_TYPE and the NEW FEATURE_TYPE are Registry<MapCodec<? extends X>> — a
+		// feature is now its own configuration (a record decoded from data/<ns>/worldgen/feature/),
+		// and BuiltInRegistries.FEATURE holds those decoded instances rather than the types. Verified
+		// against the 26.3 sources: Feature.DIRECT_CODEC dispatches on BuiltInRegistries.FEATURE_TYPE,
+		// PlacementModifier.CODEC on BuiltInRegistries.PLACEMENT_MODIFIER_TYPE.
+		Registry.register(BuiltInRegistries.PLACEMENT_MODIFIER_TYPE, OilLakeFilter.ID, OilLakeFilter.CODEC);
+		Registry.register(BuiltInRegistries.FEATURE_TYPE, OilLakeFeature.ID, OilLakeFeature.CODEC);
+		Registry.register(BuiltInRegistries.FEATURE_TYPE, OilGeyserFeature.ID, OilGeyserFeature.CODEC);
+		Registry.register(BuiltInRegistries.FEATURE_TYPE, AbandonedLabFeature.ID, AbandonedLabFeature.CODEC);
 		BiomeModifications.addFeature(
 				BiomeSelectors.tag(HAS_UNDERGROUND_OIL_LAKES),
 				GenerationStep.Decoration.LAKES,

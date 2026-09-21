@@ -1,11 +1,9 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -26,17 +24,10 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * Energy Condenser.
  */
 public final class ThermalCentrifugeBlock extends LitMachineBlock {
-	public static final MapCodec<ThermalCentrifugeBlock> CODEC = simpleCodec(ThermalCentrifugeBlock::new);
-
 	private static final VoxelShape SHAPE = Block.box(1, 0, 1, 15, 16, 15);
 
 	public ThermalCentrifugeBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

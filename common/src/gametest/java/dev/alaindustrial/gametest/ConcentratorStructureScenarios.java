@@ -586,6 +586,17 @@ public final class ConcentratorStructureScenarios {
 	 * @implements MOD-603 — sky is judged over the whole footprint, and above the structure
 	 */
 	public static void anyCoveredColumnStopsTheMachine(GameTestHelper helper) {
+		// MOD-226: this reads global sky state on its very first tick, and a neighbouring weather
+		// scenario in the same batch may have left rain running on the shared ServerLevel — the
+		// concentrator then honestly reports "not working" and the test blames the machine. Pin clear
+		// daytime first, so "idle" can only mean what this scenario says it means (a shaded column).
+		var level = helper.getLevel();
+		var server = level.getServer();
+		server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "time set day");
+		level.getWeatherData().setRaining(false);
+		level.getWeatherData().setThundering(false);
+		level.setRainLevel(0.0f);
+		level.updateSkyBrightness();
 		for (ConcentratorPart covered : ConcentratorPart.CELLS) {
 			Vec3i cell = covered.canonicalOffset();
 			if (cell == null || cell.getY() != 1) {

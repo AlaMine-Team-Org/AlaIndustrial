@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.world.level.block.LeverBlock;
 
 /**
@@ -28,20 +27,8 @@ import net.minecraft.world.level.block.LeverBlock;
  */
 public class ReactorLeverBlock extends LeverBlock {
 
-	/**
-	 * Typed as {@code MapCodec<LeverBlock>} rather than {@code MapCodec<ReactorLeverBlock>} because
-	 * {@link LeverBlock#codec()} declares that exact return type — the same narrowing the button has to
-	 * work around, and for the same reason.
-	 */
-	public static final MapCodec<LeverBlock> CODEC =
-			simpleCodec(ReactorLeverBlock::new).xmap(b -> (LeverBlock) b, b -> (ReactorLeverBlock) b);
-
 	public ReactorLeverBlock(Properties properties) {
 		super(properties);
 	}
 
-	@Override
-	public MapCodec<LeverBlock> codec() {
-		return CODEC;
-	}
 }

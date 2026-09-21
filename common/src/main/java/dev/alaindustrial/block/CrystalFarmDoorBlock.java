@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.Config;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -59,15 +58,8 @@ import net.minecraft.world.phys.BlockHitResult;
  */
 public class CrystalFarmDoorBlock extends DoorBlock {
 
-	public static final MapCodec<CrystalFarmDoorBlock> CODEC = simpleCodec(CrystalFarmDoorBlock::new);
-
 	public CrystalFarmDoorBlock(Properties properties) {
 		super(BlockSetType.COPPER, properties);
-	}
-
-	@Override
-	public MapCodec<? extends DoorBlock> codec() {
-		return CODEC;
 	}
 
 	private static int autoCloseTicks() {

@@ -29,6 +29,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.BonemealSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -330,7 +331,7 @@ public final class KokSagyzScenarios {
 		// and growRoot itself must also refuse for the sprinkler's sake).
 		if (ModContent.KOK_SAGYZ.get() instanceof KokSagyzBlock block
 				&& block.isValidBonemealTarget(helper.getLevel(), helper.absolutePos(POS),
-						helper.getBlockState(POS))) {
+						helper.getBlockState(POS), BonemealSource.INTERACTION)) {
 			helper.fail("bone meal still considers the full column a valid target");
 			return;
 		}
@@ -581,9 +582,13 @@ public final class KokSagyzScenarios {
 		helper.setBlock(FEAT_POS.below(), Blocks.GRASS_BLOCK);
 		helper.setBlock(FEAT_POS.below(2), Blocks.DIRT);
 
+		// 26.3 folded the configured layer into the feature itself: a Feature IS its configuration, so
+		// `worldgen/configured_feature/` became `worldgen/feature/` and the registry key is FEATURE.
+		// The registry id and the place(...) signature are unchanged, so this still asserts exactly what
+		// it did — the shipped JSON, resolved through the real registry, planting on grass.
 		var configured = level.registryAccess()
-				.lookupOrThrow(Registries.CONFIGURED_FEATURE)
-				.getOrThrow(ResourceKey.create(Registries.CONFIGURED_FEATURE,
+				.lookupOrThrow(Registries.FEATURE)
+				.getOrThrow(ResourceKey.create(Registries.FEATURE,
 						Industrialization.id("kok_sagyz")));
 		boolean placed = configured.value().place(level, level.getChunkSource().getGenerator(),
 				RandomSource.create(1L), helper.absolutePos(FEAT_POS));
@@ -791,12 +796,19 @@ public final class KokSagyzScenarios {
 	 * One bone-meal step on the flower, via the block's real {@code performBonemeal}: deterministic
 	 * (no chance roll, no light gate) and the exact path the sprinkler rides, so these scenarios
 	 * double as coverage for the sprinkler's growth hook.
+	 *
+	 * <p>26.3 added a {@link BonemealSource} argument to the bonemeal trio, so every caller now has to
+	 * say WHO is fertilising. {@code INTERACTION} is the player's bone meal — which is what these
+	 * scenarios simulate, and what {@code BoneMealItem} passes; {@code MOB} is the wandering-trader
+	 * path. {@code KokSagyzBlock} does not branch on it, so the argument changes nothing that is
+	 * asserted here, but picking the player's value keeps the simulated path the real one.
 	 */
 	private static void bonemeal(GameTestHelper helper, BlockPos pos) {
 		ServerLevel level = helper.getLevel();
 		BlockPos abs = helper.absolutePos(pos);
 		BlockState state = level.getBlockState(abs);
-		((KokSagyzBlock) state.getBlock()).performBonemeal(level, RandomSource.create(0L), abs, state);
+		((KokSagyzBlock) state.getBlock()).performBonemeal(level, RandomSource.create(0L), abs, state,
+				BonemealSource.INTERACTION);
 	}
 
 	/** Grows the root column under the flower at {@code pos} one step (bone meal's mature branch). */

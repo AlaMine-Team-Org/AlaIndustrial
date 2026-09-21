@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.Config;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -47,8 +46,6 @@ import net.minecraft.world.phys.BlockHitResult;
  */
 public class CrystalSeedbedBlock extends Block {
 
-	public static final MapCodec<CrystalSeedbedBlock> CODEC = simpleCodec(CrystalSeedbedBlock::new);
-
 	/**
 	 * Buds this bed can still put out before it needs feeding again; {@code 0} is the dead state the
 	 * player crafts and comes back to.
@@ -78,11 +75,6 @@ public class CrystalSeedbedBlock extends Block {
 	public CrystalSeedbedBlock(Properties properties) {
 		super(properties);
 		registerDefaultState(defaultBlockState().setValue(CHARGES, 0).setValue(TENDED, false));
-	}
-
-	@Override
-	protected MapCodec<? extends CrystalSeedbedBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

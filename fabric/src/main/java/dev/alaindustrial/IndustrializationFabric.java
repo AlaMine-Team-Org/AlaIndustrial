@@ -48,7 +48,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.NestedLootTable;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 
 /**
  * Fabric {@code ModInitializer} entrypoint. Loader-neutral constants/helpers live in
@@ -512,13 +512,25 @@ public class IndustrializationFabric implements ModInitializer {
 		// vanilla pools are untouched. Gated on Config.bonusChestEnabled here (NeoForge gates the same flag
 		// via the alaindustrial:bonus_chest_enabled loot condition on its Global Loot Modifier). source.isBuiltin()
 		// skips user datapacks that replace the bonus chest, respecting their override.
+		//
+		// MOD-226 (26.3): two signature changes in this block, both forced by vanilla.
+		// 1. A nested reference is a Holder<LootTable>, not a ResourceKey — loot tables became a
+		//    reloadable registry, and NestedLootTable now stores a HolderSet. The `registries`
+		//    argument the event hands us is Fabric's own LootTableHolderProvider (built in
+		//    ResourceManagerRegistryLoadTaskMixin), i.e. a HolderLookup.Provider that CAN resolve a
+		//    loot table while the loot registry is still loading — so getOrThrow(key) is the
+		//    intended route here, and the only one: a plain registryAccess() lookup would be
+		//    resolving a registry that does not exist yet at this point of the reload.
+		// 2. ConstantValue is gone; roll counts are Holder<ContextIntProvider> and the factory is
+		//    ContextIntProviders.exactly(int). One roll is already LootPool.Builder's default, but
+		//    it is stated rather than inherited, exactly as before.
 		LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
 			if (source.isBuiltin()
 					&& key == BuiltInLootTables.SPAWN_BONUS_CHEST
 					&& Config.bonusChestEnabled) {
 				tableBuilder.withPool(LootPool.lootPool()
-						.setRolls(ConstantValue.exactly(1.0f))
-						.add(NestedLootTable.lootTableReference(BonusChest.INJECT_TABLE)));
+						.setRolls(ContextIntProviders.exactly(1))
+						.add(NestedLootTable.lootTableReference(registries.getOrThrow(BonusChest.INJECT_TABLE))));
 			}
 			// MOD-534: the drill's smithing template, in the same four bastion chest tables vanilla puts
 			// its own netherite template in. Same shape as the bonus chest above — one added pool
@@ -528,8 +540,9 @@ public class IndustrializationFabric implements ModInitializer {
 			// item, and switching it off would strand the drill's top tier behind nothing.
 			if (source.isBuiltin() && DrillTemplateLoot.BASTION_TABLES.contains(key)) {
 				tableBuilder.withPool(LootPool.lootPool()
-						.setRolls(ConstantValue.exactly(1.0f))
-						.add(NestedLootTable.lootTableReference(DrillTemplateLoot.INJECT_TABLE)));
+						.setRolls(ContextIntProviders.exactly(1))
+						.add(NestedLootTable.lootTableReference(
+								registries.getOrThrow(DrillTemplateLoot.INJECT_TABLE))));
 			}
 			// MOD-280: cotton seeds from grass, the way wheat seeds are found. Same shape as above — one
 			// added pool referencing a shared sub-table, vanilla pools untouched — and the shears rule
@@ -541,8 +554,8 @@ public class IndustrializationFabric implements ModInitializer {
 			ResourceKey<LootTable> seedTable = source.isBuiltin() ? Trellis.GRASS_TABLES.get(key) : null;
 			if (seedTable != null) {
 				tableBuilder.withPool(LootPool.lootPool()
-						.setRolls(ConstantValue.exactly(1.0f))
-						.add(NestedLootTable.lootTableReference(seedTable)));
+						.setRolls(ContextIntProviders.exactly(1))
+						.add(NestedLootTable.lootTableReference(registries.getOrThrow(seedTable))));
 			}
 		});
 	}

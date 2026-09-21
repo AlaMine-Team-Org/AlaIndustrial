@@ -115,7 +115,7 @@ public final class WindMillRotorBlockEntityRenderer<T extends MachineBlockEntity
 		poseStack.translate(0.5F, 0.5F, 0.5F);
 		rotateToFacing(poseStack, state.facing);
 		poseStack.translate(0.0F, 0.0F, -ROTOR_PUSH);
-		poseStack.mulPose(Axis.ZP.rotation(state.angle));
+		poseStack.rotate(Axis.ZP.rotation(state.angle));
 		TextureAtlasSprite sprite = sprites.get(state.sprite);
 		// The rotor is a decorative overhang drawn as a flat cutout quad in front of the block. It
 		// spans 2×2 blocks (HALF_SIZE) and floats off the face, so positional block light at the BE's
@@ -175,9 +175,9 @@ public final class WindMillRotorBlockEntityRenderer<T extends MachineBlockEntity
 
 	private static void rotateToFacing(PoseStack poseStack, Direction facing) {
 		switch (facing) {
-			case SOUTH -> poseStack.mulPose(Axis.YP.rotationDegrees(180.0F));
-			case WEST -> poseStack.mulPose(Axis.YP.rotationDegrees(90.0F));
-			case EAST -> poseStack.mulPose(Axis.YP.rotationDegrees(-90.0F));
+			case SOUTH -> poseStack.rotate(Axis.YP.rotationDegrees(180.0F));
+			case WEST -> poseStack.rotate(Axis.YP.rotationDegrees(90.0F));
+			case EAST -> poseStack.rotate(Axis.YP.rotationDegrees(-90.0F));
 			default -> {
 			}
 		}

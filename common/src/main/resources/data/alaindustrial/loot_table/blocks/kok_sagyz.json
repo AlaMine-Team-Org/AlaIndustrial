@@ -9,15 +9,18 @@
 					"name": "alaindustrial:kok_sagyz_seeds"
 				}
 			],
-			"conditions": [
-				{
-					"condition": "minecraft:survives_explosion"
-				},
-				{
-					"condition": "minecraft:random_chance",
-					"chance": 0.35
-				}
-			]
+			"condition": {
+				"type": "minecraft:all_of",
+				"terms": [
+					{
+						"type": "minecraft:survives_explosion"
+					},
+					{
+						"type": "minecraft:random_chance",
+						"chance": 0.35
+					}
+				]
+			}
 		}
 	]
 }

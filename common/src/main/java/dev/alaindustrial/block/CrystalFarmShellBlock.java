@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -31,8 +30,6 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
  */
 public class CrystalFarmShellBlock extends Block {
 
-	public static final MapCodec<CrystalFarmShellBlock> CODEC = simpleCodec(CrystalFarmShellBlock::new);
-
 	/** Whether this cell belongs to a greenhouse that currently passes its scan. Cosmetic only. */
 	public static final BooleanProperty FORMED = BooleanProperty.create("formed");
 
@@ -46,11 +43,6 @@ public class CrystalFarmShellBlock extends Block {
 	public CrystalFarmShellBlock(Properties properties) {
 		super(properties);
 		registerDefaultState(defaultBlockState().setValue(FORMED, false).setValue(EDGE, false));
-	}
-
-	@Override
-	protected MapCodec<? extends CrystalFarmShellBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

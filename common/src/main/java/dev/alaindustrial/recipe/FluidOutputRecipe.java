@@ -8,7 +8,7 @@ import dev.alaindustrial.registry.ModRecipes;
 import java.util.List;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryCodecs;
+import net.minecraft.core.registries.codec.RegistryCodecs;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -45,7 +45,7 @@ public record FluidOutputRecipe(ModRecipes.FluidKind<FluidOutputRecipe> kind,
 	/** JSON form: {@code {fluid, amount?, fluid_results, energy?}}. */
 	public static MapCodec<FluidOutputRecipe> mapCodec(ModRecipes.FluidKind<FluidOutputRecipe> kind) {
 		return RecordCodecBuilder.mapCodec(instance -> instance.group(
-				RegistryCodecs.homogeneousList(Registries.FLUID).fieldOf("fluid")
+				RegistryCodecs.holderSet(Registries.FLUID).fieldOf("fluid")
 						.forGetter(FluidOutputRecipe::fluid),
 				Codec.intRange(1, Integer.MAX_VALUE).optionalFieldOf("amount", (int) FluidAmounts.BUCKET)
 						.forGetter(FluidOutputRecipe::amount),

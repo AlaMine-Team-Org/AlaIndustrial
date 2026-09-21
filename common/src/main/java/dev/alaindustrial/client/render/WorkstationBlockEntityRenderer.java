@@ -165,7 +165,7 @@ public final class WorkstationBlockEntityRenderer
 		// Negated: a blockstate `y` turns the model clockwise seen from above, a positive turn about
 		// +Y goes the other way.
 		poseStack.translate(0.5F, 0.0F, 0.5F);
-		poseStack.mulPose(Axis.YP.rotationDegrees(-state.yaw));
+		poseStack.rotate(Axis.YP.rotationDegrees(-state.yaw));
 		poseStack.translate(-0.5F, 0.0F, -0.5F);
 
 		if (state.lower) {
@@ -173,7 +173,7 @@ public final class WorkstationBlockEntityRenderer
 				float[] pivot = WorkstationGeometry.FAN_PIVOTS[i];
 				poseStack.pushPose();
 				poseStack.translate(pivot[0] * PIXEL, pivot[1] * PIXEL, pivot[2] * PIXEL);
-				poseStack.mulPose(Axis.ZP.rotation(
+				poseStack.rotate(Axis.ZP.rotation(
 						state.fanAngle * WorkstationGeometry.FAN_DIRECTION[i]));
 				poseStack.translate(-pivot[0] * PIXEL, -pivot[1] * PIXEL, -pivot[2] * PIXEL);
 				submit(collector, poseStack, type, FANS[i], sprite, state.lightCoords);
@@ -183,7 +183,7 @@ public final class WorkstationBlockEntityRenderer
 			float[] pivot = WorkstationGeometry.MONITORS_PIVOT;
 			poseStack.pushPose();
 			poseStack.translate(pivot[0] * PIXEL, pivot[1] * PIXEL, pivot[2] * PIXEL);
-			poseStack.mulPose(Axis.XP.rotationDegrees(state.tiltDegrees));
+			poseStack.rotate(Axis.XP.rotationDegrees(state.tiltDegrees));
 			poseStack.translate(-pivot[0] * PIXEL, -pivot[1] * PIXEL, -pivot[2] * PIXEL);
 			submit(collector, poseStack, type, MONITORS, sprite, state.lightCoords);
 			poseStack.popPose();

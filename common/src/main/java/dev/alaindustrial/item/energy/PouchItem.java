@@ -4,6 +4,7 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.registry.ModDataComponents;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Prediction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -61,7 +62,7 @@ public class PouchItem extends Item {
 		if (level instanceof ServerLevel) {
 			PouchContents.RemoveResult removed = contents.removeTop();
 			setContents(pouch, removed.contents());
-			player.getInventory().placeItemBackInInventory(removed.removed());
+			player.getInventory().placeItemBackInInventory(removed.removed(), Prediction.SERVER_ONLY);
 		}
 		playRemove(player);
 		return InteractionResult.SUCCESS;

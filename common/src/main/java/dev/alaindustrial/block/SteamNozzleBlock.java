@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.SteamNozzleBlockEntity;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
@@ -40,19 +39,12 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  */
 public class SteamNozzleBlock extends BaseEntityBlock {
 
-	public static final MapCodec<SteamNozzleBlock> CODEC = simpleCodec(SteamNozzleBlock::new);
-
 	/** Which way the mouth points. Set from the face the player clicked, so it always faces outward. */
 	public static final EnumProperty<Direction> FACING = BlockStateProperties.FACING;
 
 	public SteamNozzleBlock(Properties properties) {
 		super(properties);
 		registerDefaultState(defaultBlockState().setValue(FACING, Direction.NORTH));
-	}
-
-	@Override
-	protected MapCodec<? extends SteamNozzleBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

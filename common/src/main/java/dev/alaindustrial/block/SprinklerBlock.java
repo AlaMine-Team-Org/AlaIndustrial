@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.util.RandomSource;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.SprinklerBlockEntity;
@@ -22,7 +21,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -56,8 +54,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * no energy bar because this block takes no EU, and an always-empty bar would read as a fault.
  */
 public class SprinklerBlock extends AbstractMachineBlock {
-	public static final MapCodec<SprinklerBlock> CODEC = simpleCodec(SprinklerBlock::new);
-
 	/** True while the tank holds enough to spray — the renderer turns the head on this. */
 	public static final BooleanProperty SPRAYING = BooleanProperty.create("spraying");
 
@@ -95,11 +91,6 @@ public class SprinklerBlock extends AbstractMachineBlock {
 		registerDefaultState(getStateDefinition().any()
 				.setValue(SPRAYING, false)
 				.setValue(HANGING, false));
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

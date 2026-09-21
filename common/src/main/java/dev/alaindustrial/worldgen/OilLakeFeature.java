@@ -1,5 +1,6 @@
 package dev.alaindustrial.worldgen;
 
+import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.Industrialization;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
@@ -8,9 +9,9 @@ import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 
 /**
  * {@code alaindustrial:oil_lake} (MOD-248) — a size-parameterised oil deposit, the mod's own
@@ -37,19 +38,23 @@ import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
  * it is actively harmful — {@code OilLiquidBlock} schedules an ignition check from
  * {@code neighborChanged}.
  */
-public final class OilLakeFeature extends Feature<OilLakeConfiguration> {
-
-	/** Registry id; the configured-feature JSON refers to the feature by this name. */
-	public static final Identifier ID = Industrialization.id("oil_lake");
+public record OilLakeFeature(OilLakeConfiguration config) implements Feature {
 
 	/**
-	 * Stateless, so one shared instance is all either loader ever registers — Fabric eagerly,
-	 * NeoForge through a {@code DeferredRegister}. Mirrors how {@link OilLakeFilter} is shared.
+	 * Registry id of the feature TYPE. In 26.3 a {@code Feature} is its own configuration and lives in
+	 * a data-driven registry, so what either loader registers under this name is {@link #CODEC} — the
+	 * {@code MapCodec} — rather than a shared instance; each entry under
+	 * {@code data/alaindustrial/worldgen/feature/} is then an instance of this record.
 	 */
-	public static final OilLakeFeature INSTANCE = new OilLakeFeature();
+	public static final Identifier ID = Industrialization.id("oil_lake");
 
-	private OilLakeFeature() {
-		super(OilLakeConfiguration.CODEC);
+	/** Feature-type codec: the configuration's fields, inlined, exactly as the JSON already spells them. */
+	public static final MapCodec<OilLakeFeature> CODEC =
+			OilLakeConfiguration.MAP_CODEC.xmap(OilLakeFeature::new, OilLakeFeature::config);
+
+	@Override
+	public MapCodec<OilLakeFeature> codec() {
+		return CODEC;
 	}
 
 	// BlockStateBase#isSolid is soft-deprecated ("go through the state, not the block") — and going
@@ -58,11 +63,9 @@ public final class OilLakeFeature extends Feature<OilLakeConfiguration> {
 	// hold a fluid back".
 	@SuppressWarnings("deprecation")
 	@Override
-	public boolean place(FeaturePlaceContext<OilLakeConfiguration> context) {
-		WorldGenLevel level = context.level();
-		RandomSource random = context.random();
-		OilLakeConfiguration config = context.config();
-		BlockPos origin = context.origin();
+	public boolean place(WorldGenLevel level, ChunkGenerator chunkGenerator, RandomSource random,
+			BlockPos origin) {
+		OilLakeConfiguration config = this.config;
 
 		int horizontalRadius = config.horizontalRadius().sample(random);
 		int verticalRadius = config.verticalRadius().sample(random);
@@ -81,8 +84,8 @@ public final class OilLakeFeature extends Feature<OilLakeConfiguration> {
 				config.blobCount().sample(random), random::nextDouble);
 		BlockPos base = origin.offset(-horizontalRadius, -verticalRadius, -horizontalRadius);
 
-		BlockState fluid = config.fluid().getState(level, random, origin);
-		BlockState barrier = config.barrier().getState(level, random, origin);
+		BlockState fluid = config.fluid().value().getState(level, random, origin);
+		BlockState barrier = config.barrier().value().getState(level, random, origin);
 		BlockState caveAir = Blocks.CAVE_AIR.defaultBlockState();
 
 		BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();

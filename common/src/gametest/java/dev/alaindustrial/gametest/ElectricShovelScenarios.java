@@ -530,4 +530,34 @@ public final class ElectricShovelScenarios {
 		}
 		helper.succeed();
 	}
+
+	/**
+	 * TC-SHOVEL-001-FUN15 (MOD-226) — the diamond-tipped upgrade douses a lit campfire like the base
+	 * shovel does.
+	 *
+	 * <p>The mechanism moved under the item in 26.3: dousing no longer lives in {@code ShovelItem.useOn}
+	 * (the class is gone) but in {@code CampfireBlock.useItemOn}, which asks the hand stack for the
+	 * {@code minecraft:douses_campfires} item tag — a tag vanilla defines as {@code #minecraft:shovels}
+	 * and we APPEND both shovels to. That append is the whole contract on 26.3: FUN04 covers the base
+	 * shovel, and nothing else anywhere checks the upgrade, so a tag list edited down to the base tool
+	 * would silently take dousing away from the diamond tip alone. The click goes through
+	 * {@code gameMode.useItemOn} because that is where the block's tag check reads the stack from.
+	 */
+	public static void fun15DiamondTipDousesLitCampfire(GameTestHelper helper) {
+		ServerPlayer player = survivalPlayer(helper);
+		player.setItemInHand(InteractionHand.MAIN_HAND, diamondTipShovel(Config.electricShovelBuffer));
+		helper.setBlock(GROUND, Blocks.CAMPFIRE.defaultBlockState().setValue(CampfireBlock.LIT, Boolean.TRUE));
+		helper.setBlock(GROUND.above(), Blocks.AIR);
+
+		if (!litAtGround(helper)) {
+			helper.fail("fixture error: the campfire must start lit");
+		}
+
+		useOnGround(helper, player);
+
+		if (litAtGround(helper)) {
+			helper.fail("right-clicking a lit campfire with the diamond-tipped shovel must douse it");
+		}
+		helper.succeed();
+	}
 }

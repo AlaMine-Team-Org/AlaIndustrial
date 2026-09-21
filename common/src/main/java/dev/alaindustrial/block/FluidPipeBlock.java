@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.FluidPipeBlockEntity;
 import dev.alaindustrial.core.fluid.FluidLookup;
 import dev.alaindustrial.core.fluid.FluidNetworkManager;
@@ -44,8 +43,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * split is what keeps a line of hundreds of pipes off the per-frame renderer path entirely.
  */
 public final class FluidPipeBlock extends BaseEntityBlock {
-	public static final MapCodec<FluidPipeBlock> CODEC = simpleCodec(FluidPipeBlock::new);
-
 	/** True while the segment holds fluid — drives the visible core, not the colour. */
 	public static final BooleanProperty FILLED = BooleanProperty.create("filled");
 
@@ -71,11 +68,6 @@ public final class FluidPipeBlock extends BaseEntityBlock {
 			state = state.setValue(property, PipeFaceRender.DISABLED);
 		}
 		registerDefaultState(state);
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

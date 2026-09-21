@@ -372,13 +372,13 @@ public final class GardenDroneBlockEntityRenderer<T extends GardenDroneStationBl
 		poseStack.pushPose();
 		poseStack.translate(0.5F + state.offsetX, state.restHeight + state.offsetY + state.bob,
 				0.5F + state.offsetZ);
-		poseStack.mulPose(Axis.XP.rotation(state.tiltX));
-		poseStack.mulPose(Axis.ZP.rotation(state.tiltZ));
+		poseStack.rotate(Axis.XP.rotation(state.tiltX));
+		poseStack.rotate(Axis.ZP.rotation(state.tiltZ));
 		poseStack.scale(DRONE_SCALE, DRONE_SCALE, DRONE_SCALE);
 
-		collector.submitModel(hullModel, Unit.INSTANCE, poseStack, state.lightCoords,
+		ModelSubmit.withCrumbling(collector, hullModel, Unit.INSTANCE, poseStack, state.lightCoords,
 				OverlayTexture.NO_OVERLAY, -1, HULL, sprites, 0, state.breakProgress);
-		collector.submitModel(trimModel, Unit.INSTANCE, poseStack, state.lightCoords,
+		ModelSubmit.withCrumbling(collector, trimModel, Unit.INSTANCE, poseStack, state.lightCoords,
 				OverlayTexture.NO_OVERLAY, -1, TRIM, sprites, 0, state.breakProgress);
 
 		// Each rotor turns on its own pivot. Alternating direction between diagonals is what a real
@@ -386,7 +386,7 @@ public final class GardenDroneBlockEntityRenderer<T extends GardenDroneStationBl
 		for (int i = 0; i < ROTOR_COUNT; i++) {
 			rotorParts[i].yRot = (i % 2 == 0) ? state.bladeAngle : -state.bladeAngle;
 		}
-		collector.submitModel(rotorModel, Unit.INSTANCE, poseStack, state.lightCoords,
+		ModelSubmit.withCrumbling(collector, rotorModel, Unit.INSTANCE, poseStack, state.lightCoords,
 				OverlayTexture.NO_OVERLAY, -1, BLADES, sprites, 0, state.breakProgress);
 
 		poseStack.popPose();

@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.core.energy.EnergyHostRedirect;
 import java.util.List;
 import net.minecraft.core.BlockPos;
@@ -47,9 +46,6 @@ import org.jspecify.annotations.Nullable;
  * class only wires the hooks every way of changing the world arrives through.
  */
 public class ConcentratorSectionBlock extends Block implements EnergyHostRedirect, CableArmReach {
-	public static final MapCodec<ConcentratorSectionBlock> CODEC =
-			simpleCodec(ConcentratorSectionBlock::new);
-
 	/**
 	 * Which cell of a structure this block is, {@link ConcentratorPart#LOOSE} when none.
 	 *
@@ -68,11 +64,6 @@ public class ConcentratorSectionBlock extends Block implements EnergyHostRedirec
 		registerDefaultState(stateDefinition.any()
 				.setValue(PART, ConcentratorPart.LOOSE)
 				.setValue(FACING, Direction.NORTH));
-	}
-
-	@Override
-	protected MapCodec<? extends Block> codec() {
-		return CODEC;
 	}
 
 	@Override

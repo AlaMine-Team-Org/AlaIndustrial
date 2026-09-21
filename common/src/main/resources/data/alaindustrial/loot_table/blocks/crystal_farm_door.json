@@ -7,22 +7,18 @@
         {
           "type": "minecraft:item",
           "name": "alaindustrial:crystal_farm_door",
-          "conditions": [
-            {
-              "condition": "minecraft:block_state_property",
-              "block": "alaindustrial:crystal_farm_door",
-              "properties": {
-                "half": "lower"
-              }
+          "condition": {
+            "type": "minecraft:match_block",
+            "blocks": "alaindustrial:crystal_farm_door",
+            "state": {
+              "half": "lower"
             }
-          ]
+          }
         }
       ],
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ]
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      }
     }
   ]
 }

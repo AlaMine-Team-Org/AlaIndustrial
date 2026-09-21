@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "alaindustrial:fluid_tank_advanced"
+        "recipes": "alaindustrial:fluid_tank_advanced"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -34,7 +34,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "alaindustrial:reactor_port"
+        "recipes": "alaindustrial:reactor_port"
       }
     }
   },

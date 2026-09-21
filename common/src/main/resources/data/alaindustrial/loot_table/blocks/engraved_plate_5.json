@@ -9,11 +9,9 @@
 					"name": "alaindustrial:engraved_plate_5"
 				}
 			],
-			"conditions": [
-				{
-					"condition": "minecraft:survives_explosion"
-				}
-			]
+			"condition": {
+				"type": "minecraft:survives_explosion"
+			}
 		}
 	]
 }

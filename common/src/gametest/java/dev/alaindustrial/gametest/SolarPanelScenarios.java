@@ -13,6 +13,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
 
 /**
@@ -52,14 +53,25 @@ public final class SolarPanelScenarios {
 		level.updateSkyBrightness();
 	}
 
-	/** Turn on rain in the current (already-settled) time, synchronously: WeatherData + interpolated level. */
+	/**
+	 * Turn on rain in the current (already-settled) time, synchronously: WeatherData + interpolated level.
+	 *
+	 * <p>The 26.3 gametest world grew a desert overworld (GameTestServer switched to the
+	 * {@code flat_all_dimensions} preset; 26.2 staged on {@code flat}/plains), and precipitation is
+	 * biome-based by design (MOD-602) — a desert staging area classifies every storm as NONE and the
+	 * panel keeps working. Give this structure a precipitation biome before the rain, so what the
+	 * scenarios stage is what their names claim.
+	 */
 	private static void setRaining(GameTestHelper helper, boolean thunder) {
+		helper.setBiome(Biomes.PLAINS);
 		var level = helper.getLevel();
+		level.setRainLevel(1.0f); // isRaining() reads the interpolated rain level, not WeatherData
 		level.getWeatherData().setRaining(true);
 		if (thunder) {
 			level.getWeatherData().setThundering(true);
+			level.setThunderLevel(1.0f); // isThundering() multiplies by the rain level and reads the ramp,
+			// which starts at zero — set it so the staged storm is a storm, not a drizzle claiming to be one
 		}
-		level.setRainLevel(1.0f); // isRaining() reads the interpolated rain level, not WeatherData
 	}
 
 	private static SolarPanelBlockEntity panelAt(GameTestHelper helper) {

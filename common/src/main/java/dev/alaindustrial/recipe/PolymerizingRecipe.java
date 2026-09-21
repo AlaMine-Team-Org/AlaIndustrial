@@ -8,7 +8,7 @@ import dev.alaindustrial.registry.ModRecipes;
 import java.util.List;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryCodecs;
+import net.minecraft.core.registries.codec.RegistryCodecs;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -62,7 +62,7 @@ public record PolymerizingRecipe(ModRecipes.FluidKind<PolymerizingRecipe> kind,
 	/** JSON form: {@code {fluid, amount?, result, energy?}}. */
 	public static MapCodec<PolymerizingRecipe> mapCodec(ModRecipes.FluidKind<PolymerizingRecipe> kind) {
 		return RecordCodecBuilder.mapCodec(instance -> instance.group(
-				RegistryCodecs.homogeneousList(Registries.FLUID).fieldOf("fluid").forGetter(PolymerizingRecipe::fluid),
+				RegistryCodecs.holderSet(Registries.FLUID).fieldOf("fluid").forGetter(PolymerizingRecipe::fluid),
 				Codec.intRange(1, Integer.MAX_VALUE)
 						.optionalFieldOf("amount", (int) FluidAmounts.BUCKET).forGetter(PolymerizingRecipe::amount),
 				ItemStackTemplate.CODEC.fieldOf("result").forGetter(PolymerizingRecipe::result),

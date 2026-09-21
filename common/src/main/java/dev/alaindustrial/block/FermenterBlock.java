@@ -1,13 +1,11 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.FermenterBlockEntity;
 import dev.alaindustrial.registry.ModSounds;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -22,15 +20,8 @@ import net.minecraft.world.level.block.state.BlockState;
  * to stay clear of the polymerizer's thick tar-like boil.
  */
 public class FermenterBlock extends LitMachineBlock implements MachineHumProvider {
-	public static final MapCodec<FermenterBlock> CODEC = simpleCodec(FermenterBlock::new);
-
 	public FermenterBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

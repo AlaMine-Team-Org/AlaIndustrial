@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "S": "alaindustrial:silver_plate",
+    "G": "minecraft:glass",
+    "F": "alaindustrial:stock_display_frame",
+    "C": "alaindustrial:electronic_circuit"
+  },
+  "pattern": [
+    "SGS",
+    "GFG",
+    "SCS"
+  ],
+  "result": {
+    "id": "alaindustrial:monitor_panel"
+  }
+}

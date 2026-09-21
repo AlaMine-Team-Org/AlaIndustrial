@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.SmartWireBlockEntity;
 import dev.alaindustrial.core.monitor.ContainerScan;
 import dev.alaindustrial.core.monitor.MonitorNetworkManager;
@@ -44,8 +43,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  */
 public class SmartWireBlock extends BaseEntityBlock {
 
-	public static final MapCodec<SmartWireBlock> CODEC = simpleCodec(SmartWireBlock::new);
-
 	/** A 4px core so the wire reads as thinner and more delicate than the item pipe's 6px body. */
 	private static final VoxelShape CORE = Block.box(6, 6, 6, 10, 10, 10);
 
@@ -85,11 +82,6 @@ public class SmartWireBlock extends BaseEntityBlock {
 			state = state.setValue(prop, false);
 		}
 		registerDefaultState(state);
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

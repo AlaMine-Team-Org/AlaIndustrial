@@ -14,7 +14,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "alaindustrial:palladium_ingot_from_smelting_palladium_ore"
+        "recipes": "alaindustrial:palladium_ingot_from_smelting_palladium_ore"
       }
     }
   },

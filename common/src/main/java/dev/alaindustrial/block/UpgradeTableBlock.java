@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.UpgradeTableBlockEntity;
 import java.util.Map;
 import net.minecraft.core.BlockPos;
@@ -55,8 +54,6 @@ import org.jspecify.annotations.Nullable;
  */
 public class UpgradeTableBlock extends HorizontalMachineBlock {
 
-	public static final MapCodec<UpgradeTableBlock> CODEC = simpleCodec(UpgradeTableBlock::new);
-
 	/** Loose casing, lower half or upper half. See {@link WorkstationPart}. */
 	public static final EnumProperty<WorkstationPart> PART =
 			EnumProperty.create("part", WorkstationPart.class);
@@ -90,11 +87,6 @@ public class UpgradeTableBlock extends HorizontalMachineBlock {
 		registerDefaultState(defaultBlockState()
 				.setValue(PART, WorkstationPart.SINGLE)
 				.setValue(LIT, false));
-	}
-
-	@Override
-	protected MapCodec<? extends UpgradeTableBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

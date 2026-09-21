@@ -3,13 +3,14 @@ package dev.alaindustrial.entity;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.WalkTarget;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.entity.ai.util.LandRandomPos;
-import net.minecraft.world.entity.monster.EnderMan;
+import net.minecraft.world.entity.monster.Enderman;
 import net.minecraft.world.entity.monster.Shulker;
 import net.minecraft.world.entity.monster.Zoglin;
 import net.minecraft.world.entity.monster.breeze.Breeze;
@@ -83,7 +84,7 @@ public final class MobRepellerField {
 		if (mob instanceof Shulker) {
 			return false; // physically unmovable by design — the documented exception
 		}
-		if (mob instanceof EnderMan enderman) {
+		if (mob instanceof Enderman enderman) {
 			return teleportOut(enderman, center, radius);
 		}
 		if (isBrainMover(mob)) {
@@ -139,10 +140,13 @@ public final class MobRepellerField {
 	}
 
 	/** Step 4: the enderman is teleported to the field edge; running is meaningless for it. */
-	private static boolean teleportOut(EnderMan enderman, Vec3 center, int radius) {
+	private static boolean teleportOut(Enderman enderman, Vec3 center, int radius) {
 		Vec3 away = enderman.position().subtract(center);
 		Vec3 dir = away.horizontalDistanceSqr() < 1.0E-4 ? new Vec3(1, 0, 0) : away.normalize();
 		double edge = radius + 4.0;
-		return enderman.randomTeleport(center.x + dir.x * edge, enderman.getY(), center.z + dir.z * edge, true);
+		// 26.3 made the avoidance set an argument; pass the one vanilla's own enderman teleport uses,
+		// so the field cannot strand a mob somewhere the game would never have put it.
+		return enderman.randomTeleport(center.x + dir.x * edge, enderman.getY(), center.z + dir.z * edge,
+				true, BlockTags.ENDERMAN_DOES_NOT_TELEPORT_TO);
 	}
 }

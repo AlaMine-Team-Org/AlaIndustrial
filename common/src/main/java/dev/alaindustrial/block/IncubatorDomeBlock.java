@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.IncubatorBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -29,8 +28,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  */
 public class IncubatorDomeBlock extends Block {
 
-	public static final MapCodec<IncubatorDomeBlock> CODEC = simpleCodec(IncubatorDomeBlock::new);
-
 	/**
 	 * The chamber's stepped silhouette, measured off the model rather than approximated (MOD-604).
 	 *
@@ -56,11 +53,6 @@ public class IncubatorDomeBlock extends Block {
 
 	public IncubatorDomeBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	protected MapCodec<? extends Block> codec() {
-		return CODEC;
 	}
 
 	@Override

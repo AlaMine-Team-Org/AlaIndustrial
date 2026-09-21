@@ -1,6 +1,7 @@
 package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.core.FurnaceFuel;
 import dev.alaindustrial.block.IronFurnaceBlock;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
@@ -136,11 +137,9 @@ public class IronFurnaceBlockEntity extends BaseContainerBlockEntity implements 
 
 		// Light fresh fuel only when there is something to cook and the fire has gone out.
 		if (be.litTime <= 0 && canCook && !fuel.isEmpty()) {
-			// MOD-498 — FuelValues#burnDuration is deprecated only by NeoForge's patch (for
-			// ItemStack#getBurnTime), a NeoForge-side addition that vanilla does not declare. This class is
-			// shared code compiled for Fabric too, so only the deprecated form exists on both loaders.
-			@SuppressWarnings("deprecation")
-			int burn = level.fuelValues().burnDuration(fuel);
+			// 26.3 — fuel is the stack's own cooking_fuel component; resolving its burn time needs this
+			// furnace as loot context, exactly as a vanilla furnace resolves its own. See core/FurnaceFuel.
+			int burn = FurnaceFuel.burnDuration(level, be, fuel);
 			if (burn > 0) {
 				// Scale burn ticks by the speed ratio (cookTotal/200) so smelts-per-fuel stays vanilla
 				// (8/coal, 100/lava bucket): the iron furnace is faster but not more fuel-efficient.
@@ -252,7 +251,7 @@ public class IronFurnaceBlockEntity extends BaseContainerBlockEntity implements 
 			}
 			// Fuel, or an empty bucket going in on top of a lava bucket (vanilla furnace parity).
 			ItemStack current = items.get(FUEL_SLOT);
-			return level.fuelValues().isFuel(stack) || (stack.is(Items.BUCKET) && !current.is(Items.BUCKET));
+			return FurnaceFuel.isFuel(stack) || (stack.is(Items.BUCKET) && !current.is(Items.BUCKET));
 		}
 		return true;
 	}

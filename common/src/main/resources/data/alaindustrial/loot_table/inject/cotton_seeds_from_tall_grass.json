@@ -4,57 +4,61 @@
 	"pools": [
 		{
 			"rolls": 1.0,
-			"conditions": [
-				{
-					"condition": "minecraft:block_state_property",
-					"block": "minecraft:tall_grass",
-					"properties": {
-						"half": "lower"
-					}
-				},
-				{
-					"condition": "minecraft:location_check",
-					"offsetY": 1,
-					"predicate": {
-						"block": {
-							"blocks": "minecraft:tall_grass",
-							"state": {
-								"half": "upper"
+			"condition": {
+				"type": "minecraft:all_of",
+				"terms": [
+					{
+						"type": "minecraft:match_block",
+						"blocks": "minecraft:tall_grass",
+						"state": {
+							"half": "lower"
+						}
+					},
+					{
+						"type": "minecraft:location_check",
+						"offsetY": 1,
+						"predicate": {
+							"block": {
+								"blocks": "minecraft:tall_grass",
+								"state": {
+									"half": "upper"
+								}
 							}
 						}
 					}
-				}
-			],
+				]
+			},
 			"entries": [
 				{
 					"type": "minecraft:alternatives",
 					"children": [
 						{
 							"type": "minecraft:empty",
-							"conditions": [
-								{
-									"condition": "minecraft:match_tool",
-									"predicate": {
-										"items": "minecraft:shears"
-									}
+							"condition": {
+								"type": "minecraft:match_tool",
+								"predicate": {
+									"items": "minecraft:shears"
 								}
-							]
+							}
 						},
 						{
 							"type": "minecraft:item",
 							"name": "alaindustrial:cotton_seeds",
-							"conditions": [
+							"condition": {
+								"type": "minecraft:all_of",
+								"terms": [
+									{
+										"type": "minecraft:survives_explosion"
+									},
+									{
+										"type": "minecraft:random_chance",
+										"chance": 0.05
+									}
+								]
+							},
+							"modifier": [
 								{
-									"condition": "minecraft:survives_explosion"
-								},
-								{
-									"condition": "minecraft:random_chance",
-									"chance": 0.05
-								}
-							],
-							"functions": [
-								{
-									"function": "minecraft:apply_bonus",
+									"type": "minecraft:apply_bonus",
 									"enchantment": "minecraft:fortune",
 									"formula": "minecraft:uniform_bonus_count",
 									"parameters": {
@@ -62,7 +66,7 @@
 									}
 								},
 								{
-									"function": "minecraft:explosion_decay"
+									"type": "minecraft:explosion_decay"
 								}
 							]
 						}
@@ -72,57 +76,61 @@
 		},
 		{
 			"rolls": 1.0,
-			"conditions": [
-				{
-					"condition": "minecraft:block_state_property",
-					"block": "minecraft:tall_grass",
-					"properties": {
-						"half": "upper"
-					}
-				},
-				{
-					"condition": "minecraft:location_check",
-					"offsetY": -1,
-					"predicate": {
-						"block": {
-							"blocks": "minecraft:tall_grass",
-							"state": {
-								"half": "lower"
+			"condition": {
+				"type": "minecraft:all_of",
+				"terms": [
+					{
+						"type": "minecraft:match_block",
+						"blocks": "minecraft:tall_grass",
+						"state": {
+							"half": "upper"
+						}
+					},
+					{
+						"type": "minecraft:location_check",
+						"offsetY": -1,
+						"predicate": {
+							"block": {
+								"blocks": "minecraft:tall_grass",
+								"state": {
+									"half": "lower"
+								}
 							}
 						}
 					}
-				}
-			],
+				]
+			},
 			"entries": [
 				{
 					"type": "minecraft:alternatives",
 					"children": [
 						{
 							"type": "minecraft:empty",
-							"conditions": [
-								{
-									"condition": "minecraft:match_tool",
-									"predicate": {
-										"items": "minecraft:shears"
-									}
+							"condition": {
+								"type": "minecraft:match_tool",
+								"predicate": {
+									"items": "minecraft:shears"
 								}
-							]
+							}
 						},
 						{
 							"type": "minecraft:item",
 							"name": "alaindustrial:cotton_seeds",
-							"conditions": [
+							"condition": {
+								"type": "minecraft:all_of",
+								"terms": [
+									{
+										"type": "minecraft:survives_explosion"
+									},
+									{
+										"type": "minecraft:random_chance",
+										"chance": 0.05
+									}
+								]
+							},
+							"modifier": [
 								{
-									"condition": "minecraft:survives_explosion"
-								},
-								{
-									"condition": "minecraft:random_chance",
-									"chance": 0.05
-								}
-							],
-							"functions": [
-								{
-									"function": "minecraft:apply_bonus",
+									"type": "minecraft:apply_bonus",
 									"enchantment": "minecraft:fortune",
 									"formula": "minecraft:uniform_bonus_count",
 									"parameters": {
@@ -130,7 +138,7 @@
 									}
 								},
 								{
-									"function": "minecraft:explosion_decay"
+									"type": "minecraft:explosion_decay"
 								}
 							]
 						}

@@ -7,7 +7,9 @@ import dev.alaindustrial.item.assembler.AssemblyBlueprintItem;
 import dev.alaindustrial.mixin.client.ItemModelsAccessor;
 import dev.alaindustrial.mixin.client.ItemStackRenderStateAccessor;
 import dev.alaindustrial.mixin.client.LayerRenderStateAccessor;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.UnaryOperator;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.item.ItemModelResolver;
@@ -15,6 +17,7 @@ import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.resources.model.ResolvableModel;
 import net.minecraft.client.resources.model.cuboid.ItemTransform;
 import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.resources.model.geometry.ItemQuads;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -167,10 +170,7 @@ public final class BlueprintResultItemModel implements ItemModel {
 				.translation(0.0f, 0.0f, RELIEF_LIFT)
 				.scale(1.0f, 1.0f, RELIEF_DEPTH);
 		Matrix4f press = new Matrix4f(placed).invert().mul(relief).mul(placed);
-		List<BakedQuad> quads = layer.prepareQuadList();
-		for (int q = 0; q < quads.size(); q++) {
-			quads.set(q, reshape(quads.get(q), press));
-		}
+		mapQuads(layer, quad -> reshape(quad, press));
 		// The sheet's transform ends with translate(-0.5): undo it, `placed` already centres the product.
 		own.set(new Matrix4f().translation(0.5f, 0.5f, 0.5f).mul(placed));
 		layer.setItemTransform(sheet);
@@ -206,12 +206,32 @@ public final class BlueprintResultItemModel implements ItemModel {
 	 */
 	private static void liftSheetToBlockLighting(ItemStackRenderState.LayerRenderState[] layers, int sheetLayers) {
 		for (int i = 0; i < sheetLayers; i++) {
-			List<BakedQuad> quads = layers[i].prepareQuadList();
-			for (int q = 0; q < quads.size(); q++) {
-				quads.set(q, relabel(quads.get(q), Direction.UP));
-			}
+			mapQuads(layers[i], quad -> relabel(quad, Direction.UP));
 		}
 		layers[0].setUsesBlockLight(true);
+	}
+
+	/**
+	 * Rewrites every quad of one layer through {@code edit}, in place as far as the layer is concerned.
+	 *
+	 * <p>Until 26.2 this was a loop over the mutable list {@code prepareQuadList()} handed back. 26.3
+	 * keeps the geometry in an immutable {@code ItemQuads} record — read through
+	 * {@link LayerRenderStateAccessor}, written back through {@code setQuads} — so the list is rebuilt
+	 * and re-split. {@code ItemQuads.split} is vanilla's own partition into the solid and translucent
+	 * halves, and it reads the quad's material, which neither edit here touches: the two halves come
+	 * back exactly as they were.
+	 */
+	private static void mapQuads(ItemStackRenderState.LayerRenderState layer,
+			UnaryOperator<BakedQuad> edit) {
+		ItemQuads quads = ((LayerRenderStateAccessor) layer).alaindustrial$quads();
+		if (quads.isEmpty()) {
+			return;
+		}
+		List<BakedQuad> edited = new ArrayList<>(quads.all().size());
+		for (BakedQuad quad : quads.all()) {
+			edited.add(edit.apply(quad));
+		}
+		layer.setQuads(ItemQuads.split(edited));
 	}
 
 	/**

@@ -250,16 +250,16 @@ public final class WaterMillWheelBlockEntityRenderer<T extends WaterMillBlockEnt
 		rotateToFacing(poseStack, state.facing);
 		// Keep the axle exactly on the machine block's centre, both vertically and horizontally.
 		poseStack.translate(0.0F, 0.0F, -WHEEL_PUSH);
-		poseStack.mulPose(Axis.ZP.rotation(state.angle));
+		poseStack.rotate(Axis.ZP.rotation(state.angle));
 
 		renderContinuousRim(poseStack, collector, sprites.get(state.body), state);
-		collector.submitModel(planksModel, Unit.INSTANCE, poseStack,
+		ModelSubmit.withCrumbling(collector, planksModel, Unit.INSTANCE, poseStack,
 				state.lightCoords, OverlayTexture.NO_OVERLAY, -1,
 				state.body, sprites, 0, state.breakProgress);
-		collector.submitModel(timberModel, Unit.INSTANCE, poseStack,
+		ModelSubmit.withCrumbling(collector, timberModel, Unit.INSTANCE, poseStack,
 				state.lightCoords, OverlayTexture.NO_OVERLAY, -1,
 				state.spoke, sprites, 0, state.breakProgress);
-		collector.submitModel(axleModel, Unit.INSTANCE, poseStack,
+		ModelSubmit.withCrumbling(collector, axleModel, Unit.INSTANCE, poseStack,
 				state.lightCoords, OverlayTexture.NO_OVERLAY, -1,
 				state.axle, sprites, 0, state.breakProgress);
 		poseStack.popPose();
@@ -394,9 +394,9 @@ public final class WaterMillWheelBlockEntityRenderer<T extends WaterMillBlockEnt
 
 	private static void rotateToFacing(PoseStack poseStack, Direction facing) {
 		switch (facing) {
-			case SOUTH -> poseStack.mulPose(Axis.YP.rotationDegrees(180.0F));
-			case WEST -> poseStack.mulPose(Axis.YP.rotationDegrees(90.0F));
-			case EAST -> poseStack.mulPose(Axis.YP.rotationDegrees(-90.0F));
+			case SOUTH -> poseStack.rotate(Axis.YP.rotationDegrees(180.0F));
+			case WEST -> poseStack.rotate(Axis.YP.rotationDegrees(90.0F));
+			case EAST -> poseStack.rotate(Axis.YP.rotationDegrees(-90.0F));
 			default -> {
 			}
 		}

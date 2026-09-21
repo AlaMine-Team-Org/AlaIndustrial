@@ -1,5 +1,6 @@
 package dev.alaindustrial.client.screen;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.client.render.RepellerDomeRenderer;
 import dev.alaindustrial.item.misc.SoulVesselItem;
@@ -195,7 +196,7 @@ public abstract class AbstractMobRepellerScreen<T extends MobRepellerMenu> exten
 
 	@Override
 	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-		if (event.button() == 0 && !this.menu.isPanelOpen() && overButton(event.x(), event.y())
+		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && !this.menu.isPanelOpen() && overButton(event.x(), event.y())
 				&& this.minecraft != null && this.minecraft.gameMode != null) {
 			this.minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId,
 					MobRepellerMenu.BUTTON_TOGGLE_DOME);

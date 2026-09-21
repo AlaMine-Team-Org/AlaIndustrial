@@ -14,7 +14,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "alaindustrial:insulated_chestplate"
+        "recipes": "alaindustrial:insulated_chestplate"
       }
     }
   },

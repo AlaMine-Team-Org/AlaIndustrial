@@ -138,7 +138,8 @@ class ArchitectureRulesNegativeControl {
 	 *
 	 * <p><b>Why no violator class.</b> The other controls here import a hand-written violator, and the
 	 * obvious move would be a class calling {@code GL11.glEnable}. It does not compile: {@code :common}'s
-	 * test classpath is deliberately Minecraft-free, so {@code org.lwjgl..} and {@code com.mojang.blaze3d..}
+	 * test classpath is deliberately Minecraft-free, so {@code org.lwjgl..},
+	 * {@code com.mojang.blaze3d..} and {@code com.mojang.renderpearl..}
 	 * are absent from it (this was tried first — 17 "package does not exist" errors). Faking them by
 	 * declaring {@code org.lwjgl.opengl.GL11} inside our own test tree is worse than no control at all:
 	 * {@code common/src} is a published path (docs/publishing/sync_paths.txt), so counterfeit LWJGL
@@ -151,24 +152,45 @@ class ArchitectureRulesNegativeControl {
 	 * open question is therefore not "is the rule written correctly" — it is fluent ArchUnit, not a
 	 * custom condition, so the {@code satisfied}/{@code violated} inversion trap cannot apply — but
 	 * "can a package ban of this exact shape still SEE anything from here". This test answers that
-	 * empirically and permanently: it runs the same construction against
-	 * {@code com.mojang.blaze3d.vertex..}, the sibling package the real rule deliberately allows and
-	 * that 22 production classes depend on, and demands a violation.
+	 * empirically and permanently: it runs the same construction against packages the real rule
+	 * deliberately ALLOWS but that production code demonstrably depends on, and demands a violation
+	 * from each.
 	 *
-	 * <p>So if the import ever goes blind — Minecraft dropped from the production classpath, the
-	 * package renamed, ArchUnit changing what {@code dependOnClassesThat} reports — this goes red
-	 * instead of the real rule going quietly, permanently green.
+	 * <p><b>Two probes since 26.3, and the second one is the point.</b> The rule used to ban two
+	 * packages inside {@code com.mojang.blaze3d}, so the blaze3d probe below was a probe of the very
+	 * tree being banned. 26.3 split the renderer out into {@code com.mojang.renderpearl} and the ban
+	 * moved with it — which means the blaze3d probe alone would now prove nothing about the tree that
+	 * is actually forbidden: were {@code com.mojang.renderpearl} missing from this lane's view
+	 * entirely, the blaze3d probe would still be happily red-on-demand while the real rule sat
+	 * permanently, silently green. So the second probe asks the same question of
+	 * {@code com.mojang.renderpearl.api..}, the frontend sibling of the banned {@code backend}
+	 * subtree.
+	 *
+	 * <p>So if the import ever goes blind — Minecraft dropped from the production classpath, a
+	 * package renamed again, ArchUnit changing what {@code dependOnClassesThat} reports — this goes
+	 * red instead of the real rule going quietly, permanently green. It also goes red if production
+	 * code simply stops using one of the two probed packages; that is not a false alarm but the
+	 * honest answer, because at that moment the lane can no longer demonstrate that it sees the tree
+	 * at all, and somebody has to choose a new probe rather than inherit a blind rule.
 	 */
 	@Test
 	void aBackendPackageBanCanStillSeeBlaze3dFromThisLane() {
+		assertPackageBanIsNotBlind("com.mojang.blaze3d.vertex..",
+				"which the renderers demonstrably use");
+		assertPackageBanIsNotBlind("com.mojang.renderpearl.api..",
+				"which the root-inspection renderer's pipeline declarations demonstrably use, and "
+						+ "whose sibling com.mojang.renderpearl.backend.. is what the rule bans");
+	}
+
+	private static void assertPackageBanIsNotBlind(String allowedSiblingPackage, String why) {
 		EvaluationResult result = noClasses()
-				.should().dependOnClassesThat().resideInAnyPackage("com.mojang.blaze3d.vertex..")
+				.should().dependOnClassesThat().resideInAnyPackage(allowedSiblingPackage)
 				.evaluate(productionClasses);
 
 		assertTrue(result.hasViolation(),
 				"a package ban shaped exactly like renderingStaysBackendAgnostic reported nothing "
-						+ "against com.mojang.blaze3d.vertex.., which the renderers demonstrably use — "
-						+ "so the real rule is blind too, and its green means nothing");
+						+ "against " + allowedSiblingPackage + ", " + why
+						+ " — so the real rule is blind too, and its green means nothing");
 	}
 
 	@Test

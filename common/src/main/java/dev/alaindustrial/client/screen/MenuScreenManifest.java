@@ -156,5 +156,6 @@ public final class MenuScreenManifest {
 			// MOD-468 — last, at the same index as its MENUS entry.
 			screen(() -> ModContent.REACTOR_CONTROLLER_MENU.get(), ReactorControllerScreen::new),
 			// MOD-479 — last, at the same index as its MENUS entry.
+			screen(() -> ModContent.MONITOR_CORE_MENU.get(), MonitorCoreScreen::new),
 			screen(() -> ModContent.CREATIVE_ENERGY_SOURCE_MENU.get(), CreativeEnergySourceScreen::new));
 }

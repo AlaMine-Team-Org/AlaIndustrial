@@ -21,7 +21,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.BlockTransformers;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.Tool;
 import net.minecraft.world.item.context.UseOnContext;
@@ -49,21 +49,32 @@ import net.minecraft.world.level.block.state.BlockState;
  * is exactly what the "EU only, never breaks" model rules out. So the {@code TOOL} component is
  * assembled here by hand, mirroring what a diamond hoe would have produced, minus the durability.
  *
- * <h2>Tilling and the other right-click conversions — kept, but powered</h2>
- * {@code HoeItem.useOn} was disassembled before this class was written (project rule 1) and is
- * delegatable for the same three reasons the shovel's was:
- * <ul>
- * <li>it is {@code public};</li>
- * <li>its bytecode contains <b>no {@code aload_0}</b> — it reads nothing from {@code this}, only the
- * {@link UseOnContext} and the static {@code TILLABLES} map;</li>
- * <li>the only thing it does to the stack is {@code getItemInHand().hurtAndBreak(...)}, which routes
- * through {@code processDurabilityChange} and returns immediately on {@code !isDamageableItem()} — a
- * no-op for a tool with no {@code MAX_DAMAGE}, which is precisely what this item is.</li>
- * </ul>
- * So {@link #useOn} hands the context to the vanilla diamond hoe and the tool keeps every vanilla
- * conversion: dirt/grass/path → farmland, coarse dirt → dirt, rooted dirt → dirt (dropping a hanging
- * root). Delegation also beats re-implementing the table, because {@code TILLABLES} is mutable and
- * other mods add to it.
+ * <h2>Tilling and the other right-click conversions — kept, but powered (26.3: a component, MOD-226)</h2>
+ * Until 26.3 this was a delegation: {@code useOn} handed the context to {@code Items.DIAMOND_HOE},
+ * whose {@code HoeItem.useOn} read the static {@code TILLABLES} map and touched nothing on
+ * {@code this}. <b>That stopped working when 26.3 deleted {@code HoeItem}.</b> {@code Item.useOn} is
+ * now three lines and reads the <i>stack in hand</i>, not the receiver:
+ *
+ * <pre>{@code
+ * Holder<BlockTransformer> t = context.getItemInHand().get(DataComponents.BLOCK_TRANSFORMER);
+ * return t != null ? t.value().transformBlock(context) : InteractionResult.PASS;
+ * }</pre>
+ *
+ * so calling it on the diamond hoe with our stack in the context finds <i>our</i> (absent) component
+ * and answers {@code PASS} — a silent refusal that spends no EU and says nothing, which is exactly the
+ * class of defect the NeoForge ability gate produced twice before (MOD-378/379).
+ *
+ * <p>The fix is the vanilla declaration rather than a vanilla call: {@link #electricHoeProperties}
+ * attaches {@code minecraft:block_transformer} pointing at {@link BlockTransformers#HOE}, which is
+ * literally what {@code Item.Properties.hoe(...)} does for a vanilla hoe, and {@link #useOn} then calls
+ * {@code super.useOn}. The tool keeps every vanilla conversion — dirt/grass/path → farmland, coarse
+ * dirt → dirt, rooted dirt → dirt (dropping a hanging root) — and gains one property the old map never
+ * had: a datapack that edits {@code data/minecraft/block_transformer/hoe.json} is honoured here too.
+ *
+ * <p>The transform itself still cannot wear this tool out: for a non-stackable stack
+ * {@code transformBlock} ends in {@code hurtAndBreak(item_damage_per_use, …)}, which routes through
+ * {@code processDurabilityChange} and returns immediately on {@code !isDamageableItem()} — a no-op for a
+ * tool with no {@code MAX_DAMAGE}, which is precisely what this item is.
  *
  * <p>Unlike {@link ElectricShovelItem#useOn}, which makes dirt paths for free, this interaction
  * <b>costs EU</b> — see {@link #useOn} for the gate and the reasoning. The split is not arbitrary: a
@@ -111,10 +122,20 @@ public class ElectricHoeItem extends Item {
 	 * <p>{@code damagePerBlock = 0} means {@code super.mineBlock} never calls {@code hurtAndBreak} —
 	 * there is no durability to spend. {@code stacksTo(1)} is set explicitly because we skip
 	 * {@code durability(...)}, which is where a vanilla tool's max-stack-size of 1 normally comes from.
+	 *
+	 * <p>{@code delayedHolderComponent(BLOCK_TRANSFORMER, HOE)} is the second half of
+	 * {@code Properties.hoe(...)} — the half that carries the tilling, which on 26.3 is a data component
+	 * and not a class (MOD-226; see the class javadoc). It has to be <i>delayed</i> because
+	 * {@code block_transformer} is a datapack registry: no {@code Holder} for it exists while items are
+	 * being registered, and the initializer runs later, against the loaded registries. Because it lands
+	 * in the item's DEFAULT component map, stacks saved by 26.2 worlds pick it up on load without a
+	 * datafixer — an {@code ItemStack} is always rebuilt as {@code item.components()} plus the stack's
+	 * own patch.
 	 */
 	public static Properties electricHoeProperties(Properties props) {
 		HolderGetter<Block> blocks = BuiltInRegistries.acquireBootstrapRegistrationLookup(BuiltInRegistries.BLOCK);
 		return props.stacksTo(1)
+				.delayedHolderComponent(DataComponents.BLOCK_TRANSFORMER, BlockTransformers.HOE)
 				.component(DataComponents.TOOL, new Tool(
 						List.of(
 								Tool.Rule.deniesDrops(blocks.getOrThrow(BlockTags.INCORRECT_FOR_DIAMOND_TOOL)),
@@ -136,12 +157,10 @@ public class ElectricHoeItem extends Item {
 	// --- right-click: vanilla hoe conversions, powered ---
 
 	/**
-	 * Delegates to the vanilla diamond hoe's {@code useOn}, giving this tool every conversion a player
-	 * expects from a hoe — most visibly turning dirt, grass and dirt paths into farmland. See the class
-	 * javadoc for the disassembly that proves the delegation is safe.
-	 *
-	 * <p>The receiver has to be {@code Items.DIAMOND_HOE} rather than {@code super}: {@code useOn} is
-	 * virtual, and {@code Item.useOn} (our real superclass method) just returns {@code PASS}.
+	 * Runs the hoe block transformer this item declares, giving it every conversion a player expects from
+	 * a hoe — most visibly turning dirt, grass and dirt paths into farmland. {@code super.useOn} is
+	 * {@code Item.useOn}, which on 26.3 <i>is</i> the transformer runner; see the class javadoc for why
+	 * the old call into {@code Items.DIAMOND_HOE} silently stopped tilling (MOD-226).
 	 *
 	 * <p><b>Tilling is powered</b>, following the drill's torch (MOD-097) rather than the shovel's free
 	 * dirt paths: below {@link Config#electricHoeTillEuCost} the hoe tills nothing and says so on the
@@ -186,7 +205,7 @@ public class ElectricHoeItem extends Item {
 			return InteractionResult.CONSUME;
 		}
 
-		InteractionResult result = Items.DIAMOND_HOE.useOn(context);
+		InteractionResult result = super.useOn(context);
 		if (result.consumesAction() && player != null && !context.getLevel().isClientSide()) {
 			ItemEnergy.spend(hoe, Config.electricHoeTillEuCost, player);
 		}
@@ -198,15 +217,12 @@ public class ElectricHoeItem extends Item {
 	 * hoe neither swallows an unrelated right-click nor reports an empty buffer to a player who was not
 	 * tilling (MOD-389). Reads the world, changes nothing.
 	 *
-	 * <p>This is the one place where the two loaders genuinely disagree, so it is overridable rather than
-	 * static. The implementation here is vanilla's — {@link VanillaTillables} reads the real
-	 * {@code HoeItem.TILLABLES}, so modded tillables count too — and it is what Fabric runs. NeoForge
-	 * patches that map out of the flow and answers from the block instead, so
-	 * {@code ElectricHoeItemNeoForge} (and the upgrade's own NeoForge subclass, which cannot inherit it)
-	 * override this with {@code getToolModifiedState(…, HOE_TILL, simulate = true)}. A single shared
-	 * implementation would be wrong on one loader either way: vanilla's map misses what a NeoForge mod adds
-	 * through {@code BlockToolModificationEvent}, and NeoForge's copy of the rules drops vanilla's DOWN-face
-	 * check.
+	 * <p>It used to be the one place where the two loaders genuinely disagreed, which is why it is
+	 * overridable rather than static: on 26.2 NeoForge patched {@code HoeItem.TILLABLES} out of the flow
+	 * and answered from the block through {@code getToolModifiedState(…, HOE_TILL, …)}. <b>26.3 removed
+	 * that whole mechanism</b> — the map is gone, and so is the ability — so {@link VanillaTillables}
+	 * asks the same {@code block_transformer} this stack declares, on both loaders, and the two NeoForge
+	 * subclasses have nothing left to override here (MOD-226).
 	 */
 	protected boolean wouldTill(UseOnContext context) {
 		return VanillaTillables.wouldTill(context);

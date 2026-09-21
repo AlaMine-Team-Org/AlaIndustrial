@@ -63,7 +63,7 @@ public final class WorldBlockStands {
         server.runCommand("setblock 10 100 2 alaindustrial:insulated_copper_cable");
         server.runCommand("setblock 12 100 2 alaindustrial:insulated_tin_cable");
         server.runCommand("tp @p 9 103 8 180 25");
-        singleplayer.getClientLevel().waitForChunksRender();
+        singleplayer.getConnection().waitForChunksRender();
         context.waitTicks(10);
         LOG.info("[GUITEST] world screenshot -> {}", takeCleanScreenshot(context, "world_blocks").toAbsolutePath());
 
@@ -77,7 +77,7 @@ public final class WorldBlockStands {
         server.runCommand("setblock 5 101 5 alaindustrial:copper_cable");
         server.runCommand("setblock 5 102 4 alaindustrial:copper_cable");
         server.runCommand("tp @p 5 101 8 180 0");
-        singleplayer.getClientLevel().waitForChunksRender();
+        singleplayer.getConnection().waitForChunksRender();
         context.waitTicks(10);
         LOG.info("[GUITEST] cable screenshot -> {}", takeCleanScreenshot(context, "world_cables").toAbsolutePath());
 
@@ -91,12 +91,12 @@ public final class WorldBlockStands {
         server.runCommand("setblock 43 100 42 alaindustrial:solar_panel");
         server.runCommand("setblock 44 100 42 alaindustrial:moonlit_solar_panel");
         server.runCommand("tp @p 43 101 46 180 8");
-        singleplayer.getClientLevel().waitForChunksRender();
+        singleplayer.getConnection().waitForChunksRender();
         context.waitTicks(10);
         LOG.info("[GUITEST] panel-neighbour -> {}", takeCleanScreenshot(context, "panel_neighbour").toAbsolutePath());
         // Top-down on the same seam.
         server.runCommand("tp @p 43 103 42 180 80");
-        singleplayer.getClientLevel().waitForChunksRender();
+        singleplayer.getConnection().waitForChunksRender();
         context.waitTicks(10);
         LOG.info("[GUITEST] panel-neighbour top -> {}", takeCleanScreenshot(context, "panel_neighbour_top").toAbsolutePath());
     }
@@ -122,7 +122,7 @@ public final class WorldBlockStands {
         // appear in the background of six-face screenshots.
         server.runCommand("fill -5 99 -5 22 102 10 minecraft:air");
         server.runCommand("fill 38 99 38 48 102 48 minecraft:air");
-        singleplayer.getClientLevel().waitForChunksRender();
+        singleplayer.getConnection().waitForChunksRender();
         context.waitTicks(3);
 
         // Clean platform for this rig
@@ -131,7 +131,7 @@ public final class WorldBlockStands {
 
         // ── Generator (facing=south → front face points toward +Z) ──────────────────
         server.runCommand("setblock 60 100 60 alaindustrial:generator[facing=south]");
-        singleplayer.getClientLevel().waitForChunksRender();
+        singleplayer.getConnection().waitForChunksRender();
         context.waitTicks(5);
 
         // tp format: "x y z yaw pitch"
@@ -147,14 +147,14 @@ public final class WorldBlockStands {
         };
         for (String[] v : genViews) {
             server.runCommand("tp @p " + v[0]);
-            singleplayer.getClientLevel().waitForChunksRender();
+            singleplayer.getConnection().waitForChunksRender();
             context.waitTicks(5);
             LOG.info("[GUITEST][R-VIS-04] {} -> {}", v[1], takeCleanScreenshot(context, v[1]).toAbsolutePath());
         }
 
         // ── Solar Panel (thin top-slab model) ────────────────────────────────────────
         server.runCommand("setblock 60 100 60 alaindustrial:solar_panel");
-        singleplayer.getClientLevel().waitForChunksRender();
+        singleplayer.getConnection().waitForChunksRender();
         context.waitTicks(5);
 
         String[][] solarViews = {
@@ -166,7 +166,7 @@ public final class WorldBlockStands {
         };
         for (String[] v : solarViews) {
             server.runCommand("tp @p " + v[0]);
-            singleplayer.getClientLevel().waitForChunksRender();
+            singleplayer.getConnection().waitForChunksRender();
             context.waitTicks(5);
             LOG.info("[GUITEST][R-VIS-04] {} -> {}", v[1], takeCleanScreenshot(context, v[1]).toAbsolutePath());
         }
@@ -194,17 +194,17 @@ public final class WorldBlockStands {
 
         // Clear six-face survey rig so it doesn't bleed into background.
         server.runCommand("fill 54 99 54 66 102 66 minecraft:air");
-        singleplayer.getClientLevel().waitForChunksRender();
+        singleplayer.getConnection().waitForChunksRender();
         context.waitTicks(3);
 
         server.runCommand("fill 76 99 76 84 99 84 minecraft:smooth_stone");
         server.runCommand("gamemode spectator @p");
-        singleplayer.getClientLevel().waitForChunksRender();
+        singleplayer.getConnection().waitForChunksRender();
         context.waitTicks(3);
 
         // ── LV Generator ─────────────────────────────────────────────────────────────
         server.runCommand("setblock 80 100 80 alaindustrial:generator[facing=south]");
-        singleplayer.getClientLevel().waitForChunksRender();
+        singleplayer.getConnection().waitForChunksRender();
         // Camera: 1 blk from south face (Z=81), pitch=37 centres block vertically.
         server.runCommand("tp @p 80 100 82 180 37");
         context.waitTicks(5);
@@ -217,7 +217,7 @@ public final class WorldBlockStands {
 
         // ── Macerator (needs energy + raw ore) ───────────────────────────────────────
         server.runCommand("setblock 80 100 80 alaindustrial:macerator[facing=south]");
-        singleplayer.getClientLevel().waitForChunksRender();
+        singleplayer.getConnection().waitForChunksRender();
         context.waitTicks(5);
         LOG.info("[GUITEST][R-VIS-01] mac_idle -> {}", takeCleanScreenshot(context, "vis_mac_idle").toAbsolutePath());
 
@@ -229,7 +229,7 @@ public final class WorldBlockStands {
 
         // ── Electric Furnace ──────────────────────────────────────────────────────────
         server.runCommand("setblock 80 100 80 alaindustrial:electric_furnace[facing=south]");
-        singleplayer.getClientLevel().waitForChunksRender();
+        singleplayer.getConnection().waitForChunksRender();
         context.waitTicks(5);
         LOG.info("[GUITEST][R-VIS-01] furnace_idle -> {}", takeCleanScreenshot(context, "vis_furnace_idle").toAbsolutePath());
 
@@ -267,7 +267,7 @@ public final class WorldBlockStands {
 
         // Clear active-idle rig before shooting cable connectivity.
         server.runCommand("fill 74 99 74 86 102 86 minecraft:air");
-        singleplayer.getClientLevel().waitForChunksRender();
+        singleplayer.getConnection().waitForChunksRender();
         context.waitTicks(3);
 
         server.runCommand("fill 96 99 96 104 99 104 minecraft:smooth_stone");
@@ -275,7 +275,7 @@ public final class WorldBlockStands {
 
         // Centre cable at (100, 100, 100). Camera: SE iso, 1 blk diagonal, pitch=30 to centre.
         server.runCommand("setblock 100 100 100 alaindustrial:copper_cable");
-        singleplayer.getClientLevel().waitForChunksRender();
+        singleplayer.getConnection().waitForChunksRender();
         server.runCommand("tp @p 101 100 101 135 30");
         context.waitTicks(5);
         LOG.info("[GUITEST][R-CON-03] cable_alone -> {}", takeCleanScreenshot(context, "con_cable_alone").toAbsolutePath());
@@ -322,7 +322,7 @@ public final class WorldBlockStands {
         server.runCommand("gamemode survival @p");
         server.runCommand("item replace entity @p armor.chest with alaindustrial:energy_pack");
         server.runCommand("tp @p 9 101 8 180 0");
-        singleplayer.getClientLevel().waitForChunksRender();
+        singleplayer.getConnection().waitForChunksRender();
         context.waitTicks(20);
 
         context.runOnClient(mc -> mc.options.setCameraType(CameraType.THIRD_PERSON_BACK));

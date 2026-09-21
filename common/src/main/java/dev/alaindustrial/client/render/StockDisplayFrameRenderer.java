@@ -121,8 +121,8 @@ public class StockDisplayFrameRenderer extends ItemFrameRenderer<StockDisplayFra
 			xRot = -90 * direction.getAxisDirection().getStep();
 			yRot = 180.0F;
 		}
-		poseStack.mulPose(Axis.XP.rotationDegrees(xRot));
-		poseStack.mulPose(Axis.YP.rotationDegrees(yRot));
+		poseStack.rotate(Axis.XP.rotationDegrees(xRot));
+		poseStack.rotate(Axis.YP.rotationDegrees(yRot));
 
 		// Own frame geometry instead of the (cleared) vanilla frameModel: the same element boxes and
 		// UVs as vanilla models/block/template_item_frame.json, but the border samples the mod's
@@ -148,7 +148,7 @@ public class StockDisplayFrameRenderer extends ItemFrameRenderer<StockDisplayFra
 		// while the count is shown, the item moves up and shrinks to clear the bottom strip.
 		if (!state.item.isEmpty()) {
 			poseStack.pushPose();
-			poseStack.mulPose(Axis.ZP.rotationDegrees(state.rotation * 360.0F / 8.0F));
+			poseStack.rotate(Axis.ZP.rotationDegrees(state.rotation * 360.0F / 8.0F));
 			if (showCount) {
 				poseStack.translate(0.0F, ITEM_RAISE, 0.0F);
 				poseStack.scale(ITEM_SCALE_WITH_COUNT, ITEM_SCALE_WITH_COUNT, ITEM_SCALE_WITH_COUNT);
@@ -168,7 +168,7 @@ public class StockDisplayFrameRenderer extends ItemFrameRenderer<StockDisplayFra
 		// offset direction as the wall sign's TEXT_OFFSET (verified against StandingSignRenderer).
 		if (showCount) {
 			Font font = this.getFont();
-			poseStack.mulPose(Axis.YP.rotationDegrees(180.0F));
+			poseStack.rotate(Axis.YP.rotationDegrees(180.0F));
 			poseStack.translate(0.0F, TEXT_Y, 0.03F);
 			poseStack.scale(TEXT_SCALE, -TEXT_SCALE, TEXT_SCALE);
 			FormattedCharSequence text =

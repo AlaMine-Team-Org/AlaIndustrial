@@ -153,4 +153,14 @@ public class ElectricShovelGameTest {
 	public void tcShovel001Fun14_diamondTipChargeInBatteryBox(GameTestHelper helper) {
 		ElectricShovelScenarios.fun14DiamondTipChargeInBatteryBox(helper);
 	}
+
+	/**
+	 * @implements TC-SHOVEL-001-FUN15 — the diamond-tipped upgrade douses a lit campfire: on 26.3 the
+	 *     douses_campfires tag (#minecraft:shovels, which we append to) answers, not a shovel class
+	 *     (MOD-226).
+	 */
+	@GameTest
+	public void tcShovel001Fun15_diamondTipDousesLitCampfire(GameTestHelper helper) {
+		ElectricShovelScenarios.fun15DiamondTipDousesLitCampfire(helper);
+	}
 }

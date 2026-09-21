@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.ReactorDoorBlockEntity;
 import dev.alaindustrial.registry.ModSounds;
@@ -80,8 +79,6 @@ import net.minecraft.world.entity.player.Player;
  */
 public class ReactorDoorBlock extends Block implements EntityBlock {
 
-	public static final MapCodec<ReactorDoorBlock> CODEC = simpleCodec(ReactorDoorBlock::new);
-
 	public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
 	public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
 	public static final EnumProperty<DoorHingeSide> HINGE = BlockStateProperties.DOOR_HINGE;
@@ -106,11 +103,6 @@ public class ReactorDoorBlock extends Block implements EntityBlock {
 				.setValue(OPEN, false)
 				.setValue(POWERED, false)
 				.setValue(FORMED, false));
-	}
-
-	@Override
-	protected MapCodec<? extends ReactorDoorBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

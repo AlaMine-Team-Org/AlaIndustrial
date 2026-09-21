@@ -7,9 +7,9 @@
         {
           "type": "minecraft:item",
           "name": "alaindustrial:cesu",
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:copy_components",
+              "type": "minecraft:copy_components",
               "source": "block_entity",
               "include": [
                 "alaindustrial:stored_energy"
@@ -18,11 +18,9 @@
           ]
         }
       ],
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ]
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      }
     }
   ]
 }

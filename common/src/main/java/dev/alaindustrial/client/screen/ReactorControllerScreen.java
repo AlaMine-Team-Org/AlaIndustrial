@@ -1,5 +1,6 @@
 package dev.alaindustrial.client.screen;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.client.screen.reactor.ConsoleTabPage;
 import dev.alaindustrial.client.screen.reactor.CoolantTabPage;
@@ -215,7 +216,7 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 	@Override
 	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
 		// Not under an open statistics panel: it can be dragged over the strip, and a click on it belongs to it.
-		if (event.button() == 0 && !this.menu.isStatsPanelOpen()) {
+		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && !this.menu.isStatsPanelOpen()) {
 			int tab = tabAt(event.x(), event.y());
 			if (tab >= 0) {
 				if (tab != selected) {

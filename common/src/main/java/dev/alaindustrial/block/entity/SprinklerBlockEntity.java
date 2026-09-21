@@ -30,6 +30,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BonemealSource;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
@@ -280,11 +281,11 @@ public class SprinklerBlockEntity extends MachineBlockEntity implements FluidPor
 			}
 			BlockState state = level.getBlockState(target);
 			if (!(state.getBlock() instanceof BonemealableBlock bonemealable)
-					|| !bonemealable.isValidBonemealTarget(level, target, state)) {
+					|| !bonemealable.isValidBonemealTarget(level, target, state, BonemealSource.INTERACTION)) {
 				continue;
 			}
-			if (bonemealable.isBonemealSuccess(level, random, target, state)) {
-				bonemealable.performBonemeal(level, random, target, state);
+			if (bonemealable.isBonemealSuccess(level, random, target, state, BonemealSource.INTERACTION)) {
+				bonemealable.performBonemeal(level, random, target, state, BonemealSource.INTERACTION);
 			}
 			spend(price);
 			return true;

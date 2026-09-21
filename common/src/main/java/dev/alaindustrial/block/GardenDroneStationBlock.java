@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.GardenDroneStationBlockEntity;
 import dev.alaindustrial.registry.ModSounds;
 import java.util.function.Supplier;
@@ -9,7 +8,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -33,18 +31,11 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * it is drawn by the block entity's renderer, not an entity.
  */
 public class GardenDroneStationBlock extends AbstractMachineBlock implements MachineHumProvider {
-	public static final MapCodec<GardenDroneStationBlock> CODEC = simpleCodec(GardenDroneStationBlock::new);
-
 	/** Four-pixel dock plate; the drone parks on top of it. */
 	private static final VoxelShape SHAPE = Block.box(0, 0, 0, 16, 4, 16);
 
 	public GardenDroneStationBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

@@ -20,7 +20,6 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.minecraft.world.level.levelgen.placement.PlacementContext;
 import net.minecraft.world.level.levelgen.placement.PlacementFilter;
-import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
@@ -65,7 +64,7 @@ import net.minecraft.world.level.levelgen.structure.StructureStart;
  * <p>The sampling geometry itself lives in the Minecraft-free {@link OilLakeSamples} so it can be
  * unit-tested at L1.
  */
-public final class OilLakeFilter extends PlacementFilter {
+public final class OilLakeFilter implements PlacementFilter {
 
 	/** Registry id of this modifier type; the placed-feature JSON refers to it by this name. */
 	public static final Identifier ID = Industrialization.id("oil_lake_filter");
@@ -100,13 +99,6 @@ public final class OilLakeFilter extends PlacementFilter {
 					.forGetter(filter -> filter.yStep))
 			.apply(instance, OilLakeFilter::new));
 
-	/**
-	 * The modifier type object. Created eagerly in common (it is a plain lambda over {@link #CODEC},
-	 * not a registry read) and registered into {@code BuiltInRegistries.PLACEMENT_MODIFIER_TYPE} by
-	 * each loader — Fabric eagerly, NeoForge through a {@code DeferredRegister}.
-	 */
-	public static final PlacementModifierType<OilLakeFilter> TYPE = () -> CODEC;
-
 	private OilLakeFilter(int horizontalRadius, int minYOffset, int maxYOffset, int yStep) {
 		this.horizontalRadius = horizontalRadius;
 		this.minYOffset = minYOffset;
@@ -121,7 +113,7 @@ public final class OilLakeFilter extends PlacementFilter {
 	// leaves the region (see the class doc, MOD-246).
 	@SuppressWarnings("deprecation")
 	@Override
-	protected boolean shouldPlace(PlacementContext context, RandomSource random, BlockPos origin) {
+	public boolean shouldPlace(PlacementContext context, RandomSource random, BlockPos origin) {
 		WorldGenLevel level = context.getLevel();
 		if (!(level instanceof WorldGenRegion region)) {
 			// Not the chunk-decoration path (e.g. a /place command against a live level): there is no
@@ -190,8 +182,13 @@ public final class OilLakeFilter extends PlacementFilter {
 		return false;
 	}
 
+	/**
+	 * 26.3 dropped the {@code PlacementModifierType} wrapper: a modifier now hands back its
+	 * {@code MapCodec} directly, and that codec is what each loader registers into
+	 * {@code BuiltInRegistries.PLACEMENT_MODIFIER_TYPE} under {@link #ID}.
+	 */
 	@Override
-	public PlacementModifierType<?> type() {
-		return TYPE;
+	public MapCodec<OilLakeFilter> codec() {
+		return CODEC;
 	}
 }

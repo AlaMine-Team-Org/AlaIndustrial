@@ -14,7 +14,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "alaindustrial:fluid_pipe"
+        "recipes": "alaindustrial:fluid_pipe"
       }
     }
   },

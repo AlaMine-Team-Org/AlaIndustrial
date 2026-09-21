@@ -1,5 +1,6 @@
 package dev.alaindustrial.client.screen.teleporter;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.client.ReadoutFormat;
 import dev.alaindustrial.client.hud.TeleportNotice;
@@ -34,7 +35,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import org.joml.Vector2i;
 import org.jspecify.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
 
 /**
  * The remote's «Map» tab (MOD-629): a radar of the bound stations around the player, a card for the selected one, and a
@@ -545,7 +545,7 @@ public final class MapTabPage implements TabPage {
 	public boolean mouseClicked(MouseButtonEvent event) {
 		LocalPlayer player = screen.minecraftClient().player;
 		ClientLevel level = screen.minecraftClient().level;
-		if (event.button() != 0 || player == null || level == null || !overRadar(event.x(), event.y())) {
+		if (event.button() != InputConstants.MOUSE_BUTTON_LEFT || player == null || level == null || !overRadar(event.x(), event.y())) {
 			return false;
 		}
 		TeleportPoints points = screen.getMenu().points();
@@ -575,10 +575,10 @@ public final class MapTabPage implements TabPage {
 
 	/** ← and → walk the stations as the wheel does. Enter is not bound: a name just typed must not start a jump. */
 	public boolean keyPressed(KeyEvent event) {
-		if (event.key() == GLFW.GLFW_KEY_LEFT) {
+		if (event.key() == InputConstants.KEY_LEFT) {
 			return stepSelection(-1);
 		}
-		if (event.key() == GLFW.GLFW_KEY_RIGHT) {
+		if (event.key() == InputConstants.KEY_RIGHT) {
 			return stepSelection(1);
 		}
 		return false;

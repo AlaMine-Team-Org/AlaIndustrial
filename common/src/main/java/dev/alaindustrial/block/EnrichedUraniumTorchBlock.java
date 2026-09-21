@@ -1,7 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -27,8 +25,8 @@ import net.minecraft.world.level.material.FluidState;
  * <b>logged with water or with oil</b>: it can be placed submerged and keeps burning ("sealed uranium"
  * perk), and the fluid renders through its cell instead of leaving a hole in the pool (MOD-250).
  *
- * <p>Behaviour is inherited from {@link TorchBlock}/{@code BaseTorchBlock}; this subclass adds its own
- * {@link MapCodec}, the enhanced {@code animateTick}, and the {@link OilLoggedBlock} wiring
+ * <p>Behaviour is inherited from {@link TorchBlock}/{@code BaseTorchBlock}; this subclass adds the
+ * enhanced {@code animateTick} and the {@link OilLoggedBlock} wiring
  * (WATERLOGGED + OILLOGGED properties, fluid state, placement/updateShape), following the vanilla
  * {@code LadderBlock} pattern. The particle is supplied at construction from the loader-neutral
  * {@code ModParticles.ENRICHED_URANIUM_FLAME} facade by each loader's registry.
@@ -37,19 +35,10 @@ public class EnrichedUraniumTorchBlock extends TorchBlock implements OilLoggedBl
 
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-	public static final MapCodec<EnrichedUraniumTorchBlock> CODEC = RecordCodecBuilder.mapCodec(
-			i -> i.group(PARTICLE_OPTIONS_FIELD.forGetter(b -> b.flameParticle), propertiesCodec())
-					.apply(i, EnrichedUraniumTorchBlock::new));
-
 	public EnrichedUraniumTorchBlock(SimpleParticleType flameParticle, BlockBehaviour.Properties properties) {
 		super(flameParticle, properties);
 		this.registerDefaultState(this.stateDefinition.any()
 				.setValue(WATERLOGGED, false).setValue(OILLOGGED, false));
-	}
-
-	@Override
-	public MapCodec<? extends TorchBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

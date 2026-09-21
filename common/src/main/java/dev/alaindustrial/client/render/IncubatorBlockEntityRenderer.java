@@ -265,7 +265,7 @@ public final class IncubatorBlockEntityRenderer
 			TextureAtlasSprite sprite = sprites.get(RING_SPRITE);
 			poseStack.pushPose();
 			poseStack.translate(0.5F, RING_Y, 0.5F);
-			poseStack.mulPose(Axis.YP.rotation(state.ringAngle));
+			poseStack.rotate(Axis.YP.rotation(state.ringAngle));
 			collector.submitCustomGeometry(poseStack, RING_RENDER_TYPE,
 					(pose, consumer) -> renderRing(pose, consumer, sprite));
 			poseStack.popPose();
@@ -276,7 +276,7 @@ public final class IncubatorBlockEntityRenderer
 		}
 		poseStack.pushPose();
 		poseStack.translate(0.5F, CHAMBER_Y + state.bob, 0.5F);
-		poseStack.mulPose(Axis.YP.rotation(state.angle));
+		poseStack.rotate(Axis.YP.rotation(state.angle));
 		poseStack.scale(ITEM_SCALE, ITEM_SCALE, ITEM_SCALE);
 		// Full bright while irradiating: the item is lit by the emitter, not by the room.
 		int light = state.working ? LightCoordsUtil.FULL_BRIGHT : state.chamberLight;
@@ -421,7 +421,7 @@ public final class IncubatorBlockEntityRenderer
 		TextureAtlasSprite glass = sprites.get(RING_SPRITE);
 		poseStack.pushPose();
 		poseStack.translate(0.5F, 0.0F, 0.5F);
-		poseStack.mulPose(Axis.YP.rotationDegrees(-state.screenYaw));
+		poseStack.rotate(Axis.YP.rotationDegrees(-state.screenYaw));
 		poseStack.translate(-0.5F, 0.0F, -0.5F);
 		if (state.waterFill > 0.0F && state.waterSprite != null) {
 			TextureAtlasSprite water = state.waterSprite;
@@ -489,7 +489,7 @@ public final class IncubatorBlockEntityRenderer
 		TextureAtlasSprite sprite = sprites.get(PANEL_SPRITE_LIT);
 		poseStack.pushPose();
 		poseStack.translate(0.5F, 0.0F, 0.5F);
-		poseStack.mulPose(Axis.YP.rotationDegrees(-state.screenYaw));
+		poseStack.rotate(Axis.YP.rotationDegrees(-state.screenYaw));
 		poseStack.translate(-0.5F, 0.0F, -0.5F);
 		collector.submitCustomGeometry(poseStack, PANEL_RENDER_TYPE,
 				(pose, consumer) -> renderBars(pose, consumer, sprite, state));

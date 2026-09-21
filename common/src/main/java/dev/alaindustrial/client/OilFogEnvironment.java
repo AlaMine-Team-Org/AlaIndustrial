@@ -10,9 +10,11 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.fog.FogData;
 import net.minecraft.client.renderer.fog.environment.AtmosphericFogEnvironment;
 import net.minecraft.client.renderer.fog.environment.FogEnvironment;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.material.FogType;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3fc;
 
 /**
  * Near-black, arm's-length fog while the camera is inside oil (MOD-248) — the other half of the
@@ -89,10 +91,15 @@ public final class OilFogEnvironment extends FogEnvironment {
 		}
 	}
 
+	/**
+	 * 26.3 asks for the colour as a vector rather than as packed ARGB, so the fluid's own {@code int}
+	 * is unpacked here with the same helper vanilla's fog environments use. The value is per-frame and
+	 * per-fluid, so unlike vanilla's constants it cannot be hoisted into a field.
+	 */
 	@Override
-	public int getBaseColor(ClientLevel level, Camera camera, int renderDistance, float partialTicks) {
+	public Vector3fc getBaseColor(ClientLevel level, Camera camera, int renderDistance, float partialTicks) {
 		FluidImmersion profile = FluidImmersion.atEyes(camera.entity());
-		return profile != null ? profile.fogColor() : COLOR;
+		return ARGB.vector3fFromRGB24(profile != null ? profile.fogColor() : COLOR);
 	}
 
 	@Override

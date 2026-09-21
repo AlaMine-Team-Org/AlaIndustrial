@@ -5,7 +5,6 @@
   "compatibilityLevel": "JAVA_25",
   "mixins": [
     "ColumnBoreCrackMixin",
-    "FuelValuesMixin",
     "FurnaceFuelSlotMixin",
     "LivingEntityOilDrowningMixin",
     "SkeletonSpawnEquipmentMixin",
@@ -13,8 +12,9 @@
   ],
   "client": [
     "client.AbstractClientPlayerElectricBowMixin",
+    "client.FirstPersonHandsAndItemsElectricBowMixin",
+    "client.FirstPersonHandsAndItemsRendererElectricBowMixin",
     "client.FogRendererAccessor",
-    "client.ItemInHandRendererElectricBowMixin",
     "client.LivingEntityRendererInvoker",
     "client.ScreenEffectRendererMixin",
     "client.VillagerRenderStateMixin",

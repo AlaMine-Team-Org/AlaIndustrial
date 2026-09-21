@@ -165,12 +165,12 @@ public final class SprinklerHeadBlockEntityRenderer
 		// drawn the right way up under a ceiling would have its nozzles pointing into the block.
 		poseStack.translate(0.5F, state.hanging ? 1.0F - HEAD_Y : HEAD_Y, 0.5F);
 		if (state.hanging) {
-			poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
+			poseStack.rotate(Axis.XP.rotationDegrees(180.0F));
 		}
-		poseStack.mulPose(Axis.YP.rotation(state.angle));
-		collector.submitModel(hubModel, Unit.INSTANCE, poseStack, state.lightCoords,
+		poseStack.rotate(Axis.YP.rotation(state.angle));
+		ModelSubmit.withCrumbling(collector, hubModel, Unit.INSTANCE, poseStack, state.lightCoords,
 				OverlayTexture.NO_OVERLAY, -1, METAL, sprites, 0, state.breakProgress);
-		collector.submitModel(nozzleModel, Unit.INSTANCE, poseStack, state.lightCoords,
+		ModelSubmit.withCrumbling(collector, nozzleModel, Unit.INSTANCE, poseStack, state.lightCoords,
 				OverlayTexture.NO_OVERLAY, -1, NOZZLE, sprites, 0, state.breakProgress);
 		poseStack.popPose();
 	}

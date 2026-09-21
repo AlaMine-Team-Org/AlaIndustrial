@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -32,8 +31,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * is present the steam plume moves up here (the top segment yields it).
  */
 public class RectificationSectionBlock extends Block {
-	public static final MapCodec<RectificationSectionBlock> CODEC =
-			simpleCodec(RectificationSectionBlock::new);
 	public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
 	/** The chamfered column continues, with the tray fins around it (approximate, like the tower). */
@@ -47,11 +44,6 @@ public class RectificationSectionBlock extends Block {
 	public RectificationSectionBlock(Properties properties) {
 		super(properties);
 		registerDefaultState(defaultBlockState().setValue(LIT, false));
-	}
-
-	@Override
-	protected MapCodec<? extends Block> codec() {
-		return CODEC;
 	}
 
 	@Override

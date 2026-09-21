@@ -1,12 +1,17 @@
 package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.block.entity.GeothermalGeneratorBlockEntity;
+import dev.alaindustrial.core.FurnaceFuel;
 import dev.alaindustrial.core.fluid.FluidAmounts;
 import dev.alaindustrial.item.fluid.ItemFluid;
 import dev.alaindustrial.item.fluid.VanillaBucketDeposit;
 import dev.alaindustrial.registry.ModContent;
+import dev.alaindustrial.registry.ModDataComponents;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -16,7 +21,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.GameType;
-import net.minecraft.world.level.block.entity.FuelValues;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
@@ -27,7 +31,9 @@ import net.minecraft.world.phys.Vec3;
  * Same pattern as {@link CapsuleScenarios}: plain {@code Consumer<GameTestHelper>} bodies wrapped by the
  * Fabric {@code GeothermalLavaInputGameTest} suite and registered on the NeoForge {@code gameTestServer}
  * lane ({@code NeoForgeGameTests}), so both loaders exercise the SAME logic — the geothermal block entity,
- * the shared {@link VanillaBucketDeposit} interception helper, and the furnace-fuel mixins.
+ * the shared {@link VanillaBucketDeposit} interception helper, and the furnace-fuel rules. Since 26.3 the
+ * latter are the {@code minecraft:cooking_fuel} component the capsule carries ({@code CapsuleFuel}) plus the
+ * one remaining mixin, {@code FurnaceFuelSlotMixin}, which caps a lava capsule to one per fuel slot.
  */
 public final class GeothermalLavaInputScenarios {
 
@@ -137,23 +143,41 @@ public final class GeothermalLavaInputScenarios {
 	// ── FUN07: only a LAVA capsule is furnace fuel, at the lava-bucket burn time, remainder = empty capsule ──
 
 	/** Lava capsule is furnace fuel (lava-bucket burn time); water capsule is not. Traced by CAPS FUN04. */
-	// MOD-498 — FuelValues#burnDuration and Item#getCraftingRemainder() are deprecated by NeoForge only;
-	// vanilla marks neither. The replacements it names (ItemStack#getBurnTime(RecipeType, FuelValues) and
-	// the getCraftingRemainder(ItemStack) overload) are NeoForge-only API, and this scenario is shared
-	// code compiled against vanilla for the Fabric lane too. burnDuration is also exactly what the
-	// FuelValuesMixin under test injects into, so the test must call the same method the mod patches.
+	// MOD-498 — Item#getCraftingRemainder() is deprecated by NeoForge only; vanilla does not mark it.
+	// The replacement it names (the getCraftingRemainder(ItemStack) overload) is NeoForge-only API, and
+	// this scenario is shared code compiled against vanilla for the Fabric lane too.
+	//
+	// MOD-226 — 26.3 deleted the per-level FuelValues table: fuel is now the stack's own
+	// minecraft:cooking_fuel component and its burn time is a ResolvableInt that may point into the
+	// context_int_provider registry (every vanilla fuel's does), so resolving it needs a loot context.
+	// core/FurnaceFuel builds that context, and it is what BOTH of the mod's fuel-burning machines call,
+	// so asking it here still asks exactly what the game will ask. That is also why the geothermal
+	// generator is placed: the context wants the container the fuel sits in, and this scenario's rig
+	// already has one.
 	@SuppressWarnings("deprecation")
 	public static void fun04LavaCapsuleIsFurnaceFuel(GameTestHelper helper) {
-		FuelValues fuel = helper.getLevel().fuelValues();
-		int lavaBucketTime = fuel.burnDuration(new ItemStack(Items.LAVA_BUCKET));
-		ItemStack lava = capsule(Fluids.LAVA);
-		ItemStack water = capsule(Fluids.WATER);
-		if (!fuel.isFuel(lava) || fuel.burnDuration(lava) != lavaBucketTime) {
-			helper.fail("lava capsule must burn like a lava bucket (" + lavaBucketTime + "), got "
-					+ fuel.isFuel(lava) + "/" + fuel.burnDuration(lava));
+		GeothermalGeneratorBlockEntity machine = placeGeo(helper);
+		if (machine == null) {
 			return;
 		}
-		if (fuel.isFuel(water) || fuel.burnDuration(water) != 0) {
+		ServerLevel level = helper.getLevel();
+		int lavaBucketTime = FurnaceFuel.burnDuration(level, machine, new ItemStack(Items.LAVA_BUCKET));
+		if (lavaBucketTime <= 0) {
+			// Floor: if the lava bucket itself resolved to nothing, every comparison below would pass
+			// by both sides being zero — the vacuous-green failure mode this repository has been bitten
+			// by before.
+			helper.fail("a vanilla lava bucket resolved to " + lavaBucketTime
+					+ " ticks of burn time — the fuel lookup itself is broken, so this test proves nothing");
+			return;
+		}
+		ItemStack lava = capsule(Fluids.LAVA);
+		ItemStack water = capsule(Fluids.WATER);
+		if (!FurnaceFuel.isFuel(lava) || FurnaceFuel.burnDuration(level, machine, lava) != lavaBucketTime) {
+			helper.fail("lava capsule must burn like a lava bucket (" + lavaBucketTime + "), got "
+					+ FurnaceFuel.isFuel(lava) + "/" + FurnaceFuel.burnDuration(level, machine, lava));
+			return;
+		}
+		if (FurnaceFuel.isFuel(water) || FurnaceFuel.burnDuration(level, machine, water) != 0) {
 			helper.fail("a water capsule must NOT be furnace fuel");
 			return;
 		}
@@ -175,6 +199,62 @@ public final class GeothermalLavaInputScenarios {
 		int max = fuelSlot.getMaxStackSize(capsule(Fluids.LAVA));
 		if (max != 1) {
 			helper.fail("lava capsule must cap to 1 in a furnace fuel slot (no tare loss), was " + max);
+			return;
+		}
+		helper.succeed();
+	}
+
+	// ── FUN14 (MOD-226): a capsule saved by 26.2 heals its fuel component the moment it loads ────────
+
+	/**
+	 * A lava capsule the way 26.2 saved it — fluid component, no {@code cooking_fuel} — must burn the
+	 * moment it materialises (owner decision, 2026-09-22). The stack is built exactly the way the disk
+	 * codec builds one: the public {@code ItemStack(Holder, int, DataComponentPatch)} constructor with a
+	 * patch that carries the fluid and nothing else, which is the byte-level shape of a 26.2 world file.
+	 * That constructor is where {@code ItemStackLavaCapsuleHealMixin} lives, so constructing the stack IS
+	 * loading it — asserting right after construction asks what any furnace would ask the same tick.
+	 *
+	 * <p>The water twin must stay inert: the heal answers a component 26.2 capsules cannot carry, it must
+	 * not invent fuel for capsules that never had it.
+	 */
+	public static void fun14CapsuleSavedBy262HealsFuelOnLoad(GameTestHelper helper) {
+		GeothermalGeneratorBlockEntity machine = placeGeo(helper);
+		if (machine == null) {
+			return;
+		}
+		ServerLevel level = helper.getLevel();
+		int lavaBucketTime = FurnaceFuel.burnDuration(level, machine, new ItemStack(Items.LAVA_BUCKET));
+		if (lavaBucketTime <= 0) {
+			// Same floor as FUN04: with the fuel lookup itself broken, both sides of every comparison
+			// below would be zero and the test would pass vacuously.
+			helper.fail("a vanilla lava bucket resolved to " + lavaBucketTime
+					+ " ticks of burn time — the fuel lookup itself is broken, so this test proves nothing");
+			return;
+		}
+		ItemStack lava262 = new ItemStack(
+				BuiltInRegistries.ITEM.wrapAsHolder(ModContent.FILLED_VACUUM_CAPSULE.get()),
+				1,
+				DataComponentPatch.builder()
+						.set(ModDataComponents.CAPSULE_FLUID.get(),
+								BuiltInRegistries.FLUID.wrapAsHolder(Fluids.LAVA))
+						.build());
+		if (!FurnaceFuel.isFuel(lava262) || FurnaceFuel.burnDuration(level, machine, lava262) != lavaBucketTime) {
+			helper.fail("a lava capsule saved by 26.2 must burn like a lava bucket (" + lavaBucketTime
+					+ ") the moment it loads, got " + FurnaceFuel.isFuel(lava262) + "/"
+					+ FurnaceFuel.burnDuration(level, machine, lava262));
+			return;
+		}
+		ItemStack water262 = new ItemStack(
+				BuiltInRegistries.ITEM.wrapAsHolder(ModContent.FILLED_VACUUM_CAPSULE.get()),
+				1,
+				DataComponentPatch.builder()
+						.set(ModDataComponents.CAPSULE_FLUID.get(),
+								BuiltInRegistries.FLUID.wrapAsHolder(Fluids.WATER))
+						.build());
+		if (FurnaceFuel.isFuel(water262) || FurnaceFuel.burnDuration(level, machine, water262) != 0) {
+			helper.fail("a water capsule saved by 26.2 must NOT become fuel by healing ("
+					+ FurnaceFuel.isFuel(water262) + "/"
+					+ FurnaceFuel.burnDuration(level, machine, water262) + ")");
 			return;
 		}
 		helper.succeed();

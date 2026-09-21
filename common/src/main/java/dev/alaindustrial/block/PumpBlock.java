@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.PumpBlockEntity;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModSounds;
@@ -12,7 +11,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -43,15 +41,8 @@ import net.minecraft.world.phys.BlockHitResult;
  * the default (GUI on empty hand).
  */
 public class PumpBlock extends LitMachineBlock implements MachineHumProvider {
-	public static final MapCodec<PumpBlock> CODEC = simpleCodec(PumpBlock::new);
-
 	public PumpBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

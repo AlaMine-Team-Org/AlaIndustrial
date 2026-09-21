@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.DistillationColumnBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -8,7 +7,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -34,7 +32,6 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
  * {@link DistillationColumnBlockEntity}. {@code lit} drives the glowing-windows model.
  */
 public class DistillationColumnBlock extends AbstractMachineBlock {
-	public static final MapCodec<DistillationColumnBlock> CODEC = simpleCodec(DistillationColumnBlock::new);
 	public static final BooleanProperty LIT = BlockStateProperties.LIT;
 	/** {@code false} = a lone segment blank; {@code true} = the assembled tower's base (master). */
 	public static final BooleanProperty FORMED = BooleanProperty.create("formed");
@@ -61,11 +58,6 @@ public class DistillationColumnBlock extends AbstractMachineBlock {
 			net.minecraft.world.level.BlockGetter level, BlockPos pos,
 			net.minecraft.world.phys.shapes.CollisionContext context) {
 		return SHAPE;
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override
@@ -182,7 +174,11 @@ public class DistillationColumnBlock extends AbstractMachineBlock {
 			int coal = master.cleanFouling();
 			net.minecraft.world.level.block.Block.popResource(level, basePos.above(),
 					new ItemStack(net.minecraft.world.item.Items.COAL, coal));
-			level.playSound(null, basePos, net.minecraft.sounds.SoundEvents.AXE_SCRAPE,
+			// 26.3 turned SoundEvents.AXE_SCRAPE into a Holder.Reference, and Level has no
+			// (BlockPos, Holder) overload — the (x, y, z, Holder) one is what vanilla uses, and it is
+			// what the BlockPos overload delegates to with this very centring (Level#playSound, 26.3).
+			level.playSound(null, basePos.getX() + 0.5, basePos.getY() + 0.5, basePos.getZ() + 0.5,
+					net.minecraft.sounds.SoundEvents.AXE_SCRAPE,
 					net.minecraft.sounds.SoundSource.BLOCKS, 0.9F, 0.9F);
 			player.sendOverlayMessage(net.minecraft.network.chat.Component.translatable(
 					"gui.alaindustrial.distillation_column.cleaned", coal));

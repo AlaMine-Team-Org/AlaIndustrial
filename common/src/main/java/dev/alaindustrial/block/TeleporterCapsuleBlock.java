@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.registry.ModSounds;
@@ -51,8 +50,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * Only the middle cell keeps the schedule, so there is one timer per capsule.
  */
 public class TeleporterCapsuleBlock extends Block {
-
-	public static final MapCodec<TeleporterCapsuleBlock> CODEC = simpleCodec(TeleporterCapsuleBlock::new);
 
 	/** Which cell of the capsule this is. */
 	public enum Part implements StringRepresentable {
@@ -133,11 +130,6 @@ public class TeleporterCapsuleBlock extends Block {
 				.setValue(FACING, Direction.NORTH)
 				.setValue(OPEN, false)
 				.setValue(GLASS, CapsuleGlass.CLEAR));
-	}
-
-	@Override
-	protected MapCodec<? extends TeleporterCapsuleBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

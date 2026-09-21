@@ -17,7 +17,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.BlockTransformers;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.Tool;
 import net.minecraft.world.item.context.UseOnContext;
@@ -47,23 +47,28 @@ import net.minecraft.world.level.block.state.BlockState;
  * model this tool line is built on. So the {@code TOOL} component is assembled here by hand, mirroring
  * what {@code applyToolProperties} would have produced for a diamond shovel, minus the durability.
  *
- * <h2>Path-making and campfire dousing — kept, unlike the chainsaw's log stripping</h2>
- * The chainsaw had to give up log stripping because {@code AxeItem.STRIPPABLES} is
- * {@code protected static}. The shovel does <b>not</b> have to give up the equivalent, and
- * {@link #useOn} keeps it. {@code ShovelItem.useOn} was disassembled too, and it turns out to be
- * usable from outside:
+ * <h2>Path-making and campfire dousing — kept, and on 26.3 they are two different mechanisms</h2>
+ * The chainsaw had to give up log stripping because {@code AxeItem.STRIPPABLES} was
+ * {@code protected static}. The shovel never had to give up the equivalent, but on 26.3 it keeps it a
+ * different way (MOD-226), and the two halves split apart:
  * <ul>
- * <li>it is {@code public}, and its bytecode contains no {@code aload_0} — it reads nothing from
- * {@code this}, only the {@link UseOnContext} and the static {@code FLATTENABLES} map;</li>
- * <li>the only thing it does to the stack is
- * {@code context.getItemInHand().hurtAndBreak(1, player, slot)}, and {@code hurtAndBreak} routes
- * through {@code processDurabilityChange}, whose first act is {@code if (!isDamageableItem()) return
- * 0;} — a no-op for a tool with no {@code MAX_DAMAGE}, which is precisely what this item is.</li>
+ * <li><b>The dirt path is a data component.</b> {@code ShovelItem} is gone and {@code Item.useOn} reads
+ * {@code minecraft:block_transformer} off the <i>stack in hand</i>, so the old
+ * {@code Items.DIAMOND_SHOVEL.useOn(context)} delegation found our (absent) component and answered
+ * {@code PASS} — a silent no-op. {@link #electricShovelProperties} now declares
+ * {@link BlockTransformers#SHOVEL}, exactly as {@code Properties.shovel(...)} does for a vanilla shovel,
+ * and {@link #useOn} calls {@code super.useOn}.</li>
+ * <li><b>Dousing is a tag, and it never went through this method at all.</b>
+ * {@code CampfireBlock.useItemOn} tests {@code itemStack.is(ItemTags.DOUSES_CAMPFIRES)}, and the block's
+ * interaction runs before the item's ({@code ServerPlayerGameMode.useItemOn}). Vanilla defines that tag
+ * as {@code #minecraft:shovels}, which this item is already in, so dousing needs no code here on either
+ * loader — NeoForge's {@code IItemExtension.canPerformAction} answers {@code SHOVEL_DOUSE} from the very
+ * same tag.</li>
  * </ul>
- * So delegating to the vanilla diamond shovel's {@code useOn} with our own context is safe and
- * behaviourally exact. It is also strictly better than re-implementing the table: {@code FLATTENABLES}
- * is a mutable {@code HashMap} that other mods extend, so delegation picks up modded flattenables and
- * any loader patch to that method, while a hardcoded copy would freeze the vanilla list.
+ * The transform still cannot wear this tool out: for a non-stackable stack {@code transformBlock} ends in
+ * {@code hurtAndBreak(item_damage_per_use, …)}, which routes through {@code processDurabilityChange},
+ * whose first act is {@code if (!isDamageableItem()) return 0;} — a no-op for a tool with no
+ * {@code MAX_DAMAGE}, which is precisely what this item is.
  *
  * <p>The interaction is deliberately <b>free</b> — it is not gated on EU the way the drill's torch
  * placement is. Making a path is something a wooden shovel does; charging for it would contradict the
@@ -114,10 +119,19 @@ public class ElectricShovelItem extends Item {
 	 * <p>{@code damagePerBlock = 0} means {@code super.mineBlock} never calls {@code hurtAndBreak} —
 	 * there is no durability to spend. {@code stacksTo(1)} is set explicitly because we skip
 	 * {@code durability(...)}, which is where a vanilla tool's max-stack-size of 1 normally comes from.
+	 *
+	 * <p>{@code delayedHolderComponent(BLOCK_TRANSFORMER, SHOVEL)} is the second half of
+	 * {@code Properties.shovel(...)} — the half that carries path-making, which on 26.3 is a data
+	 * component and not a class (MOD-226; see the class javadoc). It has to be <i>delayed</i> because
+	 * {@code block_transformer} is a datapack registry: no {@code Holder} for it exists while items are
+	 * being registered. Because it lands in the item's DEFAULT component map, stacks saved by 26.2 worlds
+	 * pick it up on load without a datafixer — an {@code ItemStack} is always rebuilt as
+	 * {@code item.components()} plus the stack's own patch.
 	 */
 	public static Properties electricShovelProperties(Properties props) {
 		HolderGetter<Block> blocks = BuiltInRegistries.acquireBootstrapRegistrationLookup(BuiltInRegistries.BLOCK);
 		return props.stacksTo(1)
+				.delayedHolderComponent(DataComponents.BLOCK_TRANSFORMER, BlockTransformers.SHOVEL)
 				.component(DataComponents.TOOL, new Tool(
 						List.of(
 								Tool.Rule.deniesDrops(blocks.getOrThrow(BlockTags.INCORRECT_FOR_DIAMOND_TOOL)),
@@ -139,18 +153,18 @@ public class ElectricShovelItem extends Item {
 	// --- right-click: vanilla shovel interactions (dirt path, campfire dousing), free of charge ---
 
 	/**
-	 * Delegates to the vanilla diamond shovel's {@code useOn}, giving this tool the two interactions a
-	 * player expects from any shovel: turning grass/dirt/podzol/mycelium/rooted dirt into a dirt path,
-	 * and dousing a lit campfire. See the class javadoc for the disassembly that proves the delegation
-	 * is safe — {@code ShovelItem.useOn} touches no instance state and its {@code hurtAndBreak} call is
-	 * a no-op on an item without {@code MAX_DAMAGE}.
+	 * Runs the shovel block transformer this item declares, turning grass/dirt/podzol/mycelium/rooted dirt
+	 * into a dirt path. {@code super.useOn} is {@code Item.useOn}, which on 26.3 <i>is</i> the transformer
+	 * runner; see the class javadoc for why the old call into {@code Items.DIAMOND_SHOVEL} silently
+	 * stopped making paths (MOD-226).
 	 *
-	 * <p>The receiver has to be {@code Items.DIAMOND_SHOVEL} rather than {@code super}: {@code useOn} is
-	 * virtual, and {@code Item.useOn} (our real superclass method) just returns {@code PASS}.
+	 * <p>Campfire dousing — the shovel's other advertised right-click — does not pass through here at all
+	 * on 26.3: {@code CampfireBlock.useItemOn} decides it from the {@code #minecraft:douses_campfires}
+	 * item tag before the item's {@code useOn} is ever reached. See the class javadoc.
 	 */
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
-		return Items.DIAMOND_SHOVEL.useOn(context);
+		return super.useOn(context);
 	}
 
 	// --- digging: full speed while charged, hand speed when flat (drops kept either way) ---

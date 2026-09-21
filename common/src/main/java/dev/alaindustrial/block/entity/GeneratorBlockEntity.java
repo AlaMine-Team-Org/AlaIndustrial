@@ -1,12 +1,14 @@
 package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.core.FurnaceFuel;
 import dev.alaindustrial.skill.SkillMachine;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.menu.GeneratorMenu;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -47,11 +49,11 @@ public class GeneratorBlockEntity extends AbstractGeneratorBlockEntity implement
 		}
 		if (burnTime <= 0 && room) {
 			ItemStack fuel = items.get(FUEL_SLOT);
-			// MOD-498 — FuelValues#burnDuration(ItemStack) is deprecated by NeoForge only; vanilla does not
-			// deprecate it. The replacement NeoForge names, ItemStack#getBurnTime, is a NeoForge addition
-			// absent from vanilla, and this class is compiled for Fabric too, so it must use the vanilla form.
-			@SuppressWarnings("deprecation")
-			int duration = level.fuelValues().burnDuration(fuel);
+			// 26.3 — fuel is the stack's own cooking_fuel component and its burn time may be a registry
+			// reference, so resolving it needs this machine as loot context. See core/FurnaceFuel.
+			int duration = level instanceof ServerLevel serverLevel
+					? FurnaceFuel.burnDuration(serverLevel, this, fuel)
+					: 0;
 			if (duration > 0) {
 				// MOD-483 Steady Hands: fuel lasts longer. Applied to the burn LENGTH rather than to
 				// EU/t, because a solar panel makes 1 EU/t and a percentage of one is zero.
@@ -91,10 +93,9 @@ public class GeneratorBlockEntity extends AbstractGeneratorBlockEntity implement
 		if (stack.is(net.minecraft.world.item.Items.LAVA_BUCKET)) {
 			return false;
 		}
-		// Reject non-fuel (R-GUI-02). Burn values are per-level; level can be null on the client /
-		// before placement — stay permissive there (the server re-validates).
-		Level level = getLevel();
-		return level == null || level.fuelValues().burnDuration(stack) > 0;
+		// Reject non-fuel (R-GUI-02). Since 26.3 this is a property of the stack rather than of the
+		// level, so it answers the same on both sides and needs no permissive client branch.
+		return FurnaceFuel.isFuel(stack);
 	}
 
 	@Override

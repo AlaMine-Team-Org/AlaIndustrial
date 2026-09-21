@@ -9,14 +9,19 @@ import java.util.List;
 import java.util.function.IntSupplier;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.BlockTransformer;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.BlockTransformers;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -92,6 +97,9 @@ public final class ElectricToolEnergyScenarios {
 
 	/** Number of tools on the line that share this contract — the floor guarding a vacuous roster sweep. */
 	private static final int EXPECTED_TOOL_CASES = 3;
+
+	/** Number of right-click tools that must carry a block transformer — same anti-vacuous floor. */
+	private static final int EXPECTED_RIGHT_CLICK_TOOLS = 4;
 
 	/**
 	 * One tool's slice of the shared contract. Everything that can change at runtime is a supplier, so a
@@ -369,6 +377,60 @@ public final class ElectricToolEnergyScenarios {
 	}
 
 	// ── the roster guard ─────────────────────────────────────────────────────────────────────────────
+
+	/**
+	 * The runtime half of the {@code right-click-tools-declare-block-transformer} rule (MOD-226).
+	 *
+	 * <p>The text gate in {@code arch_check.py} reads the SOURCE: "a tool with a hand-built TOOL component
+	 * declares BLOCK_TRANSFORMER, of the family its mineable tag names". What it cannot see is whether the
+	 * declaration survived the registry bake — the component is a <i>delayed</i> one, resolved against the
+	 * loaded {@code block_transformer} registry after item registration, and a resolution that never landed
+	 * (a renamed datapack key, a bootstrap ordering change) leaves every source-level declaration green and
+	 * every stack in the game without a transformer: the hoe and the shovel silently stop tilling and
+	 * pathing, exactly the MOD-378/379 defect class, one mechanism later.
+	 *
+	 * <p>So this body asks the baked item: a freshly created stack of each of the four right-click tools
+	 * (base and diamond tip, hoe and shovel) must carry {@code minecraft:block_transformer} in its DEFAULT
+	 * components — that is what {@code Item.useOn} reads — and it must resolve to the family key the tool's
+	 * domain names. A wrong family is the subtler failure: a shovel re-pointed at the hoe transformer
+	 * would till instead of pathing, and every assertion about "its own action" elsewhere in these suites
+	 * would then be testing the wrong action.
+	 */
+	public static void rightClickRosterDeclaresTransformer(GameTestHelper helper) {
+		record RightClickTool(String name, Supplier<Item> item, ResourceKey<BlockTransformer> family) {}
+
+		List<RightClickTool> roster = List.of(
+				new RightClickTool("electric_hoe", ModContent.ELECTRIC_HOE, BlockTransformers.HOE),
+				new RightClickTool("electric_hoe_diamond_tip", ModContent.ELECTRIC_HOE_DIAMOND_TIP,
+						BlockTransformers.HOE),
+				new RightClickTool("electric_shovel", ModContent.ELECTRIC_SHOVEL, BlockTransformers.SHOVEL),
+				new RightClickTool("electric_shovel_diamond_tip", ModContent.ELECTRIC_SHOVEL_DIAMOND_TIP,
+						BlockTransformers.SHOVEL));
+
+		if (roster.size() != EXPECTED_RIGHT_CLICK_TOOLS) {
+			helper.fail("the right-click line covers " + EXPECTED_RIGHT_CLICK_TOOLS + " tools, the roster holds "
+					+ roster.size() + " — a sweep over a shrunken roster proves nothing");
+		}
+
+		for (RightClickTool tool : roster) {
+			ItemStack fresh = new ItemStack(tool.item().get());
+			Holder<BlockTransformer> transformer = fresh.get(DataComponents.BLOCK_TRANSFORMER);
+			if (transformer == null) {
+				helper.fail(tool.name + " carries no minecraft:block_transformer in its default components — "
+						+ "its right-click answers PASS on 26.3: no tilling, no path, no EU, no message "
+						+ "(the delayed component never resolved at registry bake)");
+			}
+			boolean rightFamily = transformer.unwrapKey()
+					.map(key -> key == tool.family)
+					.orElse(false);
+			if (!rightFamily) {
+				helper.fail(tool.name + " declares " + transformer.unwrapKey()
+						+ " but its domain is the " + tool.family + " family — it would perform the other "
+						+ "tool's action");
+			}
+		}
+		helper.succeed();
+	}
 
 	/**
 	 * The guard that makes the other eighteen tests mean what their names say.

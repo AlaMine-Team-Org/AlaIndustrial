@@ -9,11 +9,9 @@
           "name": "alaindustrial:enriched_uranium_torch"
         }
       ],
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ]
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      }
     }
   ],
   "random_sequence": "alaindustrial:blocks/enriched_uranium_torch"

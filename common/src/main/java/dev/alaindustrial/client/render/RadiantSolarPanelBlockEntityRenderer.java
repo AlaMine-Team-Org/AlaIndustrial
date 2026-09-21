@@ -163,7 +163,7 @@ public final class RadiantSolarPanelBlockEntityRenderer
 			// ConcentratorPart#structureCentre): the structure grows to one side of the core, and
 			// which side depends on which way it faces.
 			poseStack.translate(state.centreX, 0.0F, state.centreZ);
-			poseStack.mulPose(Axis.YP.rotationDegrees(-state.structureYaw));
+			poseStack.rotate(Axis.YP.rotationDegrees(-state.structureYaw));
 			// CANONICAL centre out, WORLD centre in — see ConcentratorPart#canonicalToWorld. The wing
 			// rows are canonical coordinates, so the turn has to leave that frame before the world
 			// offset is added; subtracting the world centre here instead cancels only facing north.
@@ -179,7 +179,7 @@ public final class RadiantSolarPanelBlockEntityRenderer
 			// space, so the rise must not be dragged round by the rotation.
 			poseStack.translate(0.0F, state.lift * PIXEL, 0.0F);
 			poseStack.translate(pivot[0] * PIXEL, pivot[1] * PIXEL, pivot[2] * PIXEL);
-			poseStack.mulPose(Axis.ZP.rotationDegrees(angle));
+			poseStack.rotate(Axis.ZP.rotationDegrees(angle));
 			poseStack.translate(-pivot[0] * PIXEL, -pivot[1] * PIXEL, -pivot[2] * PIXEL);
 			submit(collector, poseStack, WINGS[i], sprite, state.lightCoords);
 			poseStack.popPose();

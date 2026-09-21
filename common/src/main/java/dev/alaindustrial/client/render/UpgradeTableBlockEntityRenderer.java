@@ -139,7 +139,7 @@ public final class UpgradeTableBlockEntityRenderer
 		// Negated: a blockstate `y` turns the model clockwise seen from above, a positive turn about +Y
 		// goes the other way.
 		poseStack.translate(0.5F, 0.0F, 0.5F);
-		poseStack.mulPose(Axis.YP.rotationDegrees(-state.yaw));
+		poseStack.rotate(Axis.YP.rotationDegrees(-state.yaw));
 		poseStack.translate(-0.5F, -state.drop * PIXEL, -0.5F);
 		int light = state.lightCoords;
 		collector.submitCustomGeometry(poseStack, type,

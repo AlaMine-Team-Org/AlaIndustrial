@@ -68,7 +68,7 @@ if (!publishArtifacts) {
 // warnings before this change (48 deprecation + 29 `[removal]`), and MOD-226 (Minecraft 26.3) is the
 // kind of event that deprecates a lot at once. The number just has to be far out of reach.
 tasks.withType(JavaCompile).configureEach {
-    options.compilerArgs << '-Xlint:deprecation' << '-Xmaxwarns' << '2000'
+    options.compilerArgs << '-Xlint:deprecation' << '-Xmaxwarns' << '2000' << '-Xmaxerrs' << '5000'
 }
 
 tasks.withType(Jar).configureEach {

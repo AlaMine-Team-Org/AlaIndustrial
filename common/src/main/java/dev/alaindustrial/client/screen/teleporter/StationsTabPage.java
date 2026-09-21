@@ -11,6 +11,7 @@ import dev.alaindustrial.item.teleport.TeleportPoints;
 import dev.alaindustrial.menu.TeleporterRemoteMenu;
 import dev.alaindustrial.network.TeleportStationsPayload;
 import dev.alaindustrial.registry.ModContent;
+import com.mojang.blaze3d.platform.InputConstants;
 import java.util.List;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -276,7 +277,7 @@ public final class StationsTabPage implements TabPage {
 
 	@Override
 	public boolean mouseClicked(MouseButtonEvent event) {
-		if (event.button() != 0) {
+		if (event.button() != InputConstants.MOUSE_BUTTON_LEFT) {
 			return false;
 		}
 		if (isOverLock(event.x(), event.y())) {

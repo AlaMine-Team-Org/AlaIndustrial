@@ -1,12 +1,10 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.LightningRodGeneratorBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -43,9 +41,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * slab {@link #SHAPE} below (R-PHY-05).
  */
 public class LightningRodGeneratorBlock extends AbstractMachineBlock {
-	public static final MapCodec<LightningRodGeneratorBlock> CODEC =
-			simpleCodec(LightningRodGeneratorBlock::new);
-
 	public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
 	/**
@@ -74,11 +69,6 @@ public class LightningRodGeneratorBlock extends AbstractMachineBlock {
 	public LightningRodGeneratorBlock(Properties properties) {
 		super(properties);
 		registerDefaultState(defaultBlockState().setValue(LIT, false).setValue(TIPPED, false));
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

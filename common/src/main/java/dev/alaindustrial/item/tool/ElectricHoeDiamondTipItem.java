@@ -13,6 +13,7 @@ import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.component.BlockTransformers;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.Tool;
 import net.minecraft.world.item.context.UseOnContext;
@@ -99,10 +100,16 @@ public class ElectricHoeDiamondTipItem extends ElectricHoeItem {
 	 *
 	 * <p>Rule order is load-bearing and matches the base hoe: {@code deniesDrops} on the diamond deny-tag
 	 * first, {@code minesAndDrops} on {@code #mineable/hoe} second — the first matching rule wins.
+	 *
+	 * <p>The {@code BLOCK_TRANSFORMER} declaration has to be repeated here for the same reason the rest of
+	 * this method is a copy: the upgrade builds its own {@code Properties} and inherits nothing from the
+	 * base hoe's factory. Leaving it out would give the upgrade a {@code useOn} that reaches the
+	 * irrigation code and never tills (MOD-226) — the exact shape of the defect this replaced, one tier up.
 	 */
 	public static Properties electricHoeDiamondTipProperties(Properties props) {
 		HolderGetter<Block> blocks = BuiltInRegistries.acquireBootstrapRegistrationLookup(BuiltInRegistries.BLOCK);
 		return props.stacksTo(1)
+				.delayedHolderComponent(DataComponents.BLOCK_TRANSFORMER, BlockTransformers.HOE)
 				.component(DataComponents.TOOL, new Tool(
 						List.of(
 								Tool.Rule.deniesDrops(blocks.getOrThrow(BlockTags.INCORRECT_FOR_DIAMOND_TOOL)),

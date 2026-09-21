@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.MonitorCoreBlockEntity;
 import dev.alaindustrial.core.monitor.MonitorNetworkManager;
 import dev.alaindustrial.item.misc.CapacityCardItem;
@@ -36,8 +35,6 @@ import org.jetbrains.annotations.Nullable;
  */
 public class MonitorCoreBlock extends HorizontalMachineBlock {
 
-	public static final MapCodec<MonitorCoreBlock> CODEC = simpleCodec(MonitorCoreBlock::new);
-
 	/**
 	 * How many capacity cards are seated, 0..10 — in the block state so the rack SHOWS it.
 	 *
@@ -61,52 +58,45 @@ public class MonitorCoreBlock extends HorizontalMachineBlock {
 	}
 
 	@Override
-	protected MapCodec<? extends net.minecraft.world.level.block.BaseEntityBlock> codec() {
-		return CODEC;
-	}
-
-	@Override
 	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
 			Player player, InteractionHand hand, BlockHitResult hit) {
-		if (!(stack.getItem() instanceof CapacityCardItem)) {
-			// Not PASS: in 26.2 that would not fall through, so taking a card back with anything in
-			// hand would silently do nothing.
-			return InteractionResult.TRY_WITH_EMPTY_HAND;
-		}
-		if (level.isClientSide()) {
-			return InteractionResult.SUCCESS;
-		}
-		if (level.getBlockEntity(pos) instanceof MonitorCoreBlockEntity core && core.insertCard(stack)) {
-			if (!player.hasInfiniteMaterials()) {
-				stack.shrink(1);
+		// Everything now happens on the screen (MOD-480): a card goes into a socket the player can see,
+		// and a full rack refuses it visibly instead of swallowing the click. Sneaking with a card in
+		// hand still seats it in one move, because that is the gesture the player already learned.
+		if (player.isSecondaryUseActive() && stack.getItem() instanceof CapacityCardItem) {
+			if (level.isClientSide()) {
+				return InteractionResult.SUCCESS;
 			}
-			level.playSound(null, pos, SoundEvents.LODESTONE_PLACE, SoundSource.BLOCKS, 0.7f, 1.6f);
+			if (level.getBlockEntity(pos) instanceof MonitorCoreBlockEntity core && core.insertCard(stack)) {
+				if (!player.hasInfiniteMaterials()) {
+					stack.shrink(1);
+				}
+				level.playSound(null, pos, SoundEvents.LODESTONE_PLACE, SoundSource.BLOCKS, 0.7f, 1.6f);
+				return InteractionResult.SUCCESS;
+			}
+			// Rack full: say so rather than eating the click in silence.
+			player.sendOverlayMessage(net.minecraft.network.chat.Component.translatable(
+					"gui.alaindustrial.monitor_core.rack_full"));
 			return InteractionResult.SUCCESS;
 		}
-		return InteractionResult.CONSUME;
+		return openScreen(state, level, pos, player);
 	}
 
 	@Override
 	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos,
 			Player player, BlockHitResult hit) {
+		return openScreen(state, level, pos, player);
+	}
+
+	/** Open the rack. The core is a MenuProvider, so the screen is what answers every question now. */
+	private static InteractionResult openScreen(BlockState state, Level level, BlockPos pos, Player player) {
 		if (!(level.getBlockEntity(pos) instanceof MonitorCoreBlockEntity core)) {
 			return InteractionResult.PASS;
 		}
 		if (level.isClientSide()) {
 			return InteractionResult.SUCCESS;
 		}
-		ItemStack card = core.removeLastCard();
-		if (card.isEmpty()) {
-			// Nothing to take out, so the click reports what the wall is doing instead of doing
-			// nothing at all — the state of this system is otherwise invisible until a panel lights up.
-			player.sendOverlayMessage(net.minecraft.network.chat.Component.translatable(
-					"gui.alaindustrial.monitor_core.status", core.trackableTypes(), core.servedPanels()));
-			return InteractionResult.SUCCESS;
-		}
-		if (!player.getInventory().add(card)) {
-			player.drop(card, false);
-		}
-		level.playSound(null, pos, SoundEvents.LODESTONE_PLACE, SoundSource.BLOCKS, 0.7f, 1.2f);
+		player.openMenu(core);
 		return InteractionResult.SUCCESS;
 	}
 

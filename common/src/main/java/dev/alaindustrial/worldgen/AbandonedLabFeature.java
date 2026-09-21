@@ -1,5 +1,6 @@
 package dev.alaindustrial.worldgen;
 
+import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.EngravedPlateBlock;
 import dev.alaindustrial.core.guide.ArchiveRecord;
@@ -24,10 +25,9 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Half;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
-import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
@@ -48,13 +48,19 @@ import org.jspecify.annotations.Nullable;
  * shaft and around the whole lab, and every cell inside the ±1-chunk window this step may write to.
  * A rare find is allowed not to appear in a given spot; it is not allowed to appear half-built.
  */
-public final class AbandonedLabFeature extends Feature<NoneFeatureConfiguration> {
+public record AbandonedLabFeature() implements Feature {
 
-	/** Registry id; the configured-feature JSON refers to the feature by this name. */
+	/**
+	 * Registry id of the feature TYPE; what either loader registers under it is {@link #CODEC}. See
+	 * {@link OilLakeFeature#ID} for why 26.3 registers a codec rather than an instance.
+	 */
 	public static final Identifier ID = Industrialization.id("abandoned_lab");
 
-	/** Stateless; one shared instance, registered by each loader. */
-	public static final AbandonedLabFeature INSTANCE = new AbandonedLabFeature();
+	/**
+	 * The feature takes no configuration, which in 26.3 is a unit codec rather than the deleted
+	 * {@code NoneFeatureConfiguration} — so the JSON is the {@code "type"} line and nothing else.
+	 */
+	public static final MapCodec<AbandonedLabFeature> CODEC = MapCodec.unit(AbandonedLabFeature::new);
 
 	/**
 	 * The seven approved labs. Their templates live at
@@ -108,19 +114,17 @@ public final class AbandonedLabFeature extends Feature<NoneFeatureConfiguration>
 			ModContent.BROKEN_ENGRAVED_PLATE_D, ModContent.BROKEN_ENGRAVED_PLATE_R,
 			ModContent.BROKEN_ENGRAVED_PLATE_M);
 
-	private AbandonedLabFeature() {
-		super(NoneFeatureConfiguration.CODEC);
+	@Override
+	public MapCodec<AbandonedLabFeature> codec() {
+		return CODEC;
 	}
 
 	@Override
-	public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
-		WorldGenLevel level = context.level();
-		RandomSource random = context.random();
-		BlockPos origin = context.origin();
-
+	public boolean place(WorldGenLevel level, ChunkGenerator chunkGenerator, RandomSource random,
+			BlockPos origin) {
 		String lab = LABS.get(random.nextInt(LABS.size()));
 		Rotation rotation = Rotation.getRandom(random);
-		StructureTemplate template = level.getLevel().getServer().getStructureManager()
+		StructureTemplate template = level.getLevel().getServer().getStructureTemplateManager()
 				.getOrCreate(Industrialization.id("abandoned_lab/" + lab));
 		Shaft shaft = Shaft.of(template);
 		if (shaft == null) {

@@ -1,4 +1,17 @@
 {
-	"type": "minecraft:block",
-	"pools": [{ "rolls": 1.0, "entries": [{ "type": "minecraft:item", "name": "alaindustrial:solar_panel" }], "conditions": [{ "condition": "minecraft:survives_explosion" }] }]
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "alaindustrial:solar_panel"
+        }
+      ],
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      }
+    }
+  ]
 }

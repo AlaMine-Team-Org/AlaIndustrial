@@ -6,7 +6,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "c:ingots/palladium"
+            "items": "#c:ingots/palladium"
           }
         ]
       }
@@ -14,7 +14,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "alaindustrial:palladium_plate_from_hammering"
+        "recipes": "alaindustrial:palladium_plate_from_hammering"
       }
     }
   },

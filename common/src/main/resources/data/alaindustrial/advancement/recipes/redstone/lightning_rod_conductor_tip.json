@@ -14,7 +14,7 @@
 		"has_the_recipe": {
 			"trigger": "minecraft:recipe_unlocked",
 			"conditions": {
-				"recipe": "alaindustrial:lightning_rod_conductor_tip"
+				"recipes": "alaindustrial:lightning_rod_conductor_tip"
 			}
 		}
 	},

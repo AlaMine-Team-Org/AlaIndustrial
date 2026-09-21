@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "criteria": {
     "has_ingredient": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:raw_nickel" } ] } },
-    "has_the_recipe": { "trigger": "minecraft:recipe_unlocked", "conditions": { "recipe": "alaindustrial:nickel_ingot_from_smelting_raw_nickel" } }
+    "has_the_recipe": { "trigger": "minecraft:recipe_unlocked", "conditions": { "recipes": "alaindustrial:nickel_ingot_from_smelting_raw_nickel" } }
   },
   "requirements": [ [ "has_the_recipe", "has_ingredient" ] ],
   "rewards": {

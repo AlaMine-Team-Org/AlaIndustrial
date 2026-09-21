@@ -1,8 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.core.energy.CableType;
@@ -40,7 +37,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.StainedGlassBlock;
@@ -70,27 +66,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * specific block type, so any future half-block machine connects the same way.
  */
 public class CableBlock extends AbstractMachineBlock {
-	/**
-	 * Carries the grade's balance numbers (throughput/packet cap/loss) — see {@link CableType}. Cannot use
-	 * {@code simpleCodec} like the other blocks, because that requires a lone {@code (Properties)}
-	 * constructor; the extra field takes the same {@code RecordCodecBuilder} + {@code propertiesCodec()}
-	 * shape already used by {@link EnrichedUraniumTorchBlock}.
-	 */
-	private static final Codec<CableType> TYPE_CODEC = Codec.STRING.xmap(
-			s -> {
-				for (CableType t : CableType.values()) {
-					if (t.serializedName().equals(s)) {
-						return t;
-					}
-				}
-				return CableType.COPPER;
-			},
-			CableType::serializedName);
-
-	public static final MapCodec<CableBlock> CODEC = RecordCodecBuilder.mapCodec(
-			i -> i.group(TYPE_CODEC.fieldOf("cable_type").forGetter(CableBlock::type), propertiesCodec())
-					.apply(i, CableBlock::new));
-
 	private final CableType type;
 
 	/** Collision/outline that matches the model: a 6px core plus an arm toward each connection. */
@@ -231,11 +206,6 @@ public class CableBlock extends AbstractMachineBlock {
 		return !state.getValue(BREAKER_OPEN) && super.isCableConnectable(state, side);
 	}
 
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
-	}
-
 	/**
 	 * This cable's grade — the single place its throughput/packet cap/loss come from. Read by
 	 * {@link CableBlockEntity} at construction (via {@link #typeOf(BlockState)}) so the block entity is
@@ -285,7 +255,7 @@ public class CableBlock extends AbstractMachineBlock {
 			// every tick of contact — without this the set would be charged wear twenty times a second
 			// and a helmet would die in three seconds of standing still. Exactly the trap MOD-279's
 			// stand fell into; here it bites durability instead of the hit chance.
-			player.invulnerableTime = Config.shockGuardGraceTicks;
+			player.setInvulnerableTime(Config.shockGuardGraceTicks);
 			return false;
 		}
 
@@ -335,7 +305,7 @@ public class CableBlock extends AbstractMachineBlock {
 		if (level.getRandom().nextDouble() < guard.hitChance()) {
 			return true;
 		}
-		player.invulnerableTime = Config.shockGuardGraceTicks;
+		player.setInvulnerableTime(Config.shockGuardGraceTicks);
 		return false;
 	}
 
@@ -415,7 +385,7 @@ public class CableBlock extends AbstractMachineBlock {
 				&& !player.getAbilities().instabuild
 				&& !player.isSpectator()
 				&& !type.isInsulated()
-				&& player.invulnerableTime <= 0
+				&& player.getInvulnerableTime() <= 0
 				&& level.getBlockEntity(pos) instanceof CableBlockEntity cable
 				&& cable.isEnergizedForShock()
 				&& shockReachesPlayer(cable, pos, player);

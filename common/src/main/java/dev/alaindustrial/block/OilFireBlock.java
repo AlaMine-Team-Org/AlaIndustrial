@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
@@ -38,8 +37,6 @@ import net.minecraft.world.level.block.state.BlockState;
  * ticks, like vanilla fire; no block entity, no world scan.
  */
 public class OilFireBlock extends BaseFireBlock {
-	public static final MapCodec<OilFireBlock> CODEC = simpleCodec(OilFireBlock::new);
-
 	/** Vanilla fire's own damage per tick for ordinary (non-soul) fire. */
 	private static final float FIRE_DAMAGE = 1.0F;
 
@@ -56,11 +53,6 @@ public class OilFireBlock extends BaseFireBlock {
 
 	public OilFireBlock(BlockBehaviour.Properties properties) {
 		super(properties, FIRE_DAMAGE);
-	}
-
-	@Override
-	protected MapCodec<? extends BaseFireBlock> codec() {
-		return CODEC;
 	}
 
 	/** Nothing is "burnable" for this fire: it spreads only through the vanilla fire it seeds. */

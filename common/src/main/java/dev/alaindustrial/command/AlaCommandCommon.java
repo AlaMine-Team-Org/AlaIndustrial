@@ -20,6 +20,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Prediction;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
@@ -88,7 +89,7 @@ public final class AlaCommandCommon {
 									new net.minecraft.world.item.ItemStack(dev.alaindustrial.registry.ModContent.GUIDE_BOOK.get());
 							Component name = book.getDisplayName();
 							if (!player.addItem(book)) {
-								player.drop(book, false);
+								player.drop(book, false, Prediction.SERVER_ONLY);
 							}
 							ctx.getSource().sendSuccess(() -> Component.translatable(
 									"commands.give.success.single", 1, name, player.getDisplayName()), false);

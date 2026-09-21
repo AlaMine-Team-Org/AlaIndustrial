@@ -1,11 +1,11 @@
 package dev.alaindustrial.worldgen;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.Holder;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.util.valueproviders.IntProviders;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
-import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
 /**
@@ -29,16 +29,22 @@ import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvi
  * silently drops the block AND logs an error per attempt (and pauses the game outright in a dev
  * client, where {@code IS_RUNNING_IN_IDE} is set). {@value #MAX_HORIZONTAL_RADIUS} keeps two blocks
  * of margin; the codec range means a modpack gets a parse error rather than a corrupted lake.
+ *
+ * <p><b>26.3 shape.</b> {@code FeatureConfiguration} no longer exists: a {@code Feature} IS its own
+ * configuration, so this record is carried by {@link OilLakeFeature} and its {@link #MAP_CODEC} is
+ * inlined into that feature's codec — which is why it is a {@link MapCodec} rather than a
+ * {@code Codec}. The field names are unchanged, so the JSON of the three deposits keeps every key it
+ * had; only the wrapping {@code "config"} object is gone.
  */
 public record OilLakeConfiguration(
-		BlockStateProvider fluid,
-		BlockStateProvider barrier,
+		Holder<BlockStateProvider> fluid,
+		Holder<BlockStateProvider> barrier,
 		IntProvider horizontalRadius,
 		IntProvider verticalRadius,
 		IntProvider blobCount,
 		BlockPredicate canPlaceFeature,
 		BlockPredicate canReplaceWithAirOrFluid,
-		BlockPredicate canReplaceWithBarrier) implements FeatureConfiguration {
+		BlockPredicate canReplaceWithBarrier) {
 
 	/** Largest half-extent on X/Z a lake may claim — see the class doc for the derivation. */
 	public static final int MAX_HORIZONTAL_RADIUS = 14;
@@ -46,7 +52,7 @@ public record OilLakeConfiguration(
 	/** Smallest half-extent that still leaves room for a blob inside the grid (see the feature). */
 	public static final int MIN_HORIZONTAL_RADIUS = 3;
 
-	public static final Codec<OilLakeConfiguration> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+	public static final MapCodec<OilLakeConfiguration> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
 			BlockStateProvider.CODEC.fieldOf("fluid")
 					.forGetter(OilLakeConfiguration::fluid),
 			BlockStateProvider.CODEC.fieldOf("barrier")

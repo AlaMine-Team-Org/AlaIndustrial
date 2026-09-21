@@ -1,5 +1,6 @@
 package dev.alaindustrial.client.screen;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.SawmillMode;
 import dev.alaindustrial.menu.SawmillMenu;
@@ -123,7 +124,7 @@ public class SawmillScreen extends ProgressMachineScreen<SawmillMenu> {
 		// Only claim a click for a mode button when the modal upgrade panel is closed — while it is open
 		// MachineScreen.mouseClicked is modal over its footprint, so defer to super. (The default layout
 		// never overlaps the panel, but the button layout is an open question; this keeps it safe if retuned.)
-		if (event.button() == 0 && !this.menu.isPanelOpen()) {
+		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && !this.menu.isPanelOpen()) {
 			SawmillMode clicked = buttonAt(event.x(), event.y());
 			if (clicked != null) {
 				if (clicked != this.menu.getMode() && this.minecraft != null && this.minecraft.gameMode != null) {

@@ -1,5 +1,6 @@
 package dev.alaindustrial.client.screen;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.menu.TeleporterStationMenu;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -156,13 +157,13 @@ public class TeleporterStationScreen extends AbstractContainerScreen<TeleporterS
 	 */
 	@Override
 	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-		if (event.button() == 0 && this.menu.isOwner() && isOverLock(event.x(), event.y())) {
+		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && this.menu.isOwner() && isOverLock(event.x(), event.y())) {
 			unlocked = !unlocked;
 			this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(
 					unlocked ? SoundEvents.IRON_TRAPDOOR_OPEN : SoundEvents.IRON_TRAPDOOR_CLOSE, 1.0F));
 			return true;
 		}
-		if (event.button() == 0 && canToggle() && isOverPrivacyButton(event.x(), event.y())) {
+		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && canToggle() && isOverPrivacyButton(event.x(), event.y())) {
 			this.minecraft.gameMode.handleInventoryButtonClick(
 					this.menu.containerId, TeleporterStationMenu.BUTTON_TOGGLE_PRIVACY);
 			this.minecraft.getSoundManager().play(

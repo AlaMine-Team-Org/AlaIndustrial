@@ -92,7 +92,7 @@ public final class ModBlockProperties {
 	 */
 	public static BlockBehaviour.Properties applyTorch(BlockBehaviour.Properties p) {
 		return p.noCollision().instabreak().lightLevel(state -> 14).sound(SoundType.WOOD)
-				.pushReaction(PushReaction.DESTROY).noOcclusion();
+				.pushReaction(PushReaction.POPPED).noOcclusion();
 	}
 
 	/**

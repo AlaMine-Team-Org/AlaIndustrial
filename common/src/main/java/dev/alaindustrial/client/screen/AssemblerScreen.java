@@ -1,5 +1,6 @@
 package dev.alaindustrial.client.screen;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.AssemblerBlockEntity;
 import dev.alaindustrial.block.entity.AssemblerBlockEntity.AssemblerStatus;
@@ -473,7 +474,7 @@ public class AssemblerScreen extends MachineScreen<AssemblerMenu> {
 	 */
 	@Override
 	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-		if (event.button() == 0 && !this.menu.isPanelOpen() && this.minecraft != null
+		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && !this.menu.isPanelOpen() && this.minecraft != null
 				&& this.minecraft.gameMode != null) {
 			int tab = tabAt(event.x(), event.y());
 			if (tab >= 0) {

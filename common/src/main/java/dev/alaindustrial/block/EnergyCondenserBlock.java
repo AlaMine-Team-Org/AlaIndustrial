@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.EnergyCondenserBlockEntity;
 import dev.alaindustrial.registry.ModSounds;
 import java.util.function.Supplier;
@@ -8,7 +7,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -35,8 +33,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  */
 public class EnergyCondenserBlock extends AbstractMachineBlock implements MachineHumProvider {
 
-	public static final MapCodec<EnergyCondenserBlock> CODEC = simpleCodec(EnergyCondenserBlock::new);
-
 	/**
 	 * The frame's own extent, not a full cube: it is open, so the block declares {@code noOcclusion()},
 	 * and the block-standards gate rightly refuses "full cube that does not occlude" — that pair culls
@@ -54,11 +50,6 @@ public class EnergyCondenserBlock extends AbstractMachineBlock implements Machin
 	public EnergyCondenserBlock(Properties properties) {
 		super(properties);
 		registerDefaultState(getStateDefinition().any().setValue(BlockStateProperties.LIT, false));
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

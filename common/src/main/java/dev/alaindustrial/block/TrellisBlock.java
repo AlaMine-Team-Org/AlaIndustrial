@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.loot.Trellis;
 import dev.alaindustrial.registry.ModContent;
@@ -19,6 +18,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BonemealSource;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.FarmlandBlock;
@@ -63,8 +63,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  */
 public class TrellisBlock extends DoublePlantBlock implements BonemealableBlock {
 
-	public static final MapCodec<TrellisBlock> CODEC = simpleCodec(TrellisBlock::new);
-
 	/** Bare trellis: a support with nothing planted on it. A seed moves it to {@code AGE_EMPTY + 1}. */
 	public static final int AGE_EMPTY = 0;
 
@@ -100,11 +98,6 @@ public class TrellisBlock extends DoublePlantBlock implements BonemealableBlock 
 		registerDefaultState(stateDefinition.any()
 				.setValue(HALF, DoubleBlockHalf.LOWER)
 				.setValue(AGE, AGE_EMPTY));
-	}
-
-	@Override
-	public MapCodec<? extends DoublePlantBlock> codec() {
-		return CODEC;
 	}
 
 	@Override
@@ -266,7 +259,7 @@ public class TrellisBlock extends DoublePlantBlock implements BonemealableBlock 
 			return InteractionResult.PASS;
 		}
 		if (level instanceof ServerLevel server) {
-			dropFromBlockInteractLootTable(server, Trellis.HARVEST_TABLE, baseState, null,
+			dropFromBlockInteractLootTable(server, Trellis.HARVEST_TABLE, base, baseState, null,
 					player.getMainHandItem(), player, (dropLevel, drop) -> popResource(dropLevel, base, drop));
 			server.playSound(null, base, SoundEvents.WOOL_BREAK, SoundSource.BLOCKS, 1.0f, 0.9f);
 			setAge(server, base, baseState, AGE_MATURE);
@@ -277,7 +270,7 @@ public class TrellisBlock extends DoublePlantBlock implements BonemealableBlock 
 	// --- bone meal ---
 
 	@Override
-	public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state) {
+	public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state, BonemealSource source) {
 		BlockState baseState = level.getBlockState(lowerPos(state, pos));
 		if (!baseState.is(this)) {
 			return false;
@@ -293,7 +286,8 @@ public class TrellisBlock extends DoublePlantBlock implements BonemealableBlock 
 	 * moist and lit. Meal buys speed, not exemption.
 	 */
 	@Override
-	public boolean isBonemealSuccess(Level level, RandomSource random, BlockPos pos, BlockState state) {
+	public boolean isBonemealSuccess(Level level, RandomSource random, BlockPos pos, BlockState state,
+			BonemealSource source) {
 		return level instanceof ServerLevel server && canGrowAt(server, lowerPos(state, pos));
 	}
 
@@ -303,7 +297,8 @@ public class TrellisBlock extends DoublePlantBlock implements BonemealableBlock 
 	 * bone meal cannot turn the field into an on-demand cotton dispenser.
 	 */
 	@Override
-	public void performBonemeal(ServerLevel level, RandomSource random, BlockPos pos, BlockState state) {
+	public void performBonemeal(ServerLevel level, RandomSource random, BlockPos pos, BlockState state,
+			BonemealSource source) {
 		BlockPos base = lowerPos(state, pos);
 		BlockState baseState = level.getBlockState(base);
 		if (!canGrowAt(level, base)) {

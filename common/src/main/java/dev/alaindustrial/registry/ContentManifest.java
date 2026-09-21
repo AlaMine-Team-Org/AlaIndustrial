@@ -195,6 +195,11 @@ import dev.alaindustrial.item.tool.ElectricDrillItem;
 import dev.alaindustrial.item.tool.ElectricDrillNetheriteTipItem;
 import dev.alaindustrial.item.tool.ElectricBowItem;
 import dev.alaindustrial.item.tool.ElectricSaberItem;
+import dev.alaindustrial.item.tool.ElectricHoeItem;
+import dev.alaindustrial.item.tool.ElectricHoeDiamondTipItem;
+import dev.alaindustrial.item.tool.ElectricShovelItem;
+import dev.alaindustrial.item.tool.ElectricShovelDiamondTipItem;
+
 import dev.alaindustrial.item.tool.GeigerCounterItem;
 import dev.alaindustrial.item.tool.MagnetItem;
 import dev.alaindustrial.item.tool.MagnetTier;
@@ -239,6 +244,7 @@ import dev.alaindustrial.menu.MaceratorMenu;
 import dev.alaindustrial.menu.MobRepellerHvMenu;
 import dev.alaindustrial.menu.MobRepellerMenu;
 import dev.alaindustrial.menu.MobRepellerMvMenu;
+import dev.alaindustrial.menu.MonitorCoreMenu;
 import dev.alaindustrial.menu.MoonlitSolarPanelMenu;
 import dev.alaindustrial.menu.PolymerizerMenu;
 import dev.alaindustrial.menu.PumpMenu;
@@ -282,15 +288,12 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.BucketItem;
-import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.ShovelItem;
 import net.minecraft.world.item.SmithingTemplateItem;
 import net.minecraft.world.item.StandingAndWallBlockItem;
 import net.minecraft.world.item.component.Consumable;
@@ -447,6 +450,10 @@ public final class ContentManifest {
 			menu("reactor_controller", ReactorControllerMenu::new,
 					s -> ModContent.REACTOR_CONTROLLER_MENU = s),
 			// MOD-479 — the creative energy source: switch, output presets, fine slider, charge slot.
+			// MOD-480: the monitoring wall's core — a rack of cards, not a machine, so its menu sits
+			// on the vanilla base rather than on MachineMenu.
+			menu("monitor_core", MonitorCoreMenu::new,
+					s -> ModContent.MONITOR_CORE_MENU = s),
 			menu("creative_energy_source", CreativeEnergySourceMenu::new,
 					s -> ModContent.CREATIVE_ENERGY_SOURCE_MENU = s));
 
@@ -1098,7 +1105,7 @@ public final class ContentManifest {
 			Map.entry("reactor_outlet", machine(p -> p.strength(5.0f, 30.0f).sound(SoundType.METAL))),
 			Map.entry("reactor_port", machine(p -> p.strength(5.0f, 30.0f).sound(SoundType.METAL))),
 			Map.entry("reactor_door", machine(p -> p.strength(5.0f, 30.0f).sound(SoundType.METAL)
-					.noOcclusion().pushReaction(PushReaction.DESTROY))),
+					.noOcclusion().pushReaction(PushReaction.POPPED))),
 			Map.entry("reactor_controller", machine(p -> p.strength(5.0f, 30.0f).sound(SoundType.METAL))),
 			// MOD-471 — fallout. Soft as the dirt it replaces and no tool requirement: the scar is meant
 			// to be shovelled away by a player who would rather not wait for it to fade. randomTicks()
@@ -1111,12 +1118,12 @@ public final class ContentManifest {
 			// A button is not a wall: no tool requirement, no collision, and it must not resist an
 			// explosion the way the shell does, or it would survive a blast that took the wall with it.
 			Map.entry("reactor_button", p -> p.strength(0.5f).sound(SoundType.METAL).noCollision()
-					.pushReaction(PushReaction.DESTROY)),
+					.pushReaction(PushReaction.POPPED)),
 			// The lever is the button's twin down to the numbers: vanilla's own lever is
-			// noCollision + strength 0.5 + PushReaction.DESTROY, and ours differs only in the sound
+			// noCollision + strength 0.5 + PushReaction.POPPED, and ours differs only in the sound
 			// family. It must not out-live the wall it hangs on either.
 			Map.entry("reactor_lever", p -> p.strength(0.5f).sound(SoundType.METAL).noCollision()
-					.pushReaction(PushReaction.DESTROY)),
+					.pushReaction(PushReaction.POPPED)),
 			// Bolted to the outside of the shell: the shell's toughness, none of its bulk.
 			Map.entry("steam_nozzle", machine(p -> p.strength(4.0f, 20.0f).sound(SoundType.METAL)
 					.noOcclusion())),
@@ -1153,11 +1160,11 @@ public final class ContentManifest {
 			// A piston must not take it: the dome is half of a multiblock and its glass is remembered
 			// by the base below, so moving it away from its base would strand both.
 			Map.entry("incubator_dome", machine(p -> p.strength(1.0f, 2.0f).sound(SoundType.GLASS)
-					.noOcclusion().pushReaction(PushReaction.BLOCK))),
+					.noOcclusion().pushReaction(PushReaction.IMMOVEABLE))),
 			// MOD-112 — the capsule's glass cells, on the dome's terms: see-through, and not for a piston,
 			// which would carry a cell away from the station it belongs to.
 			Map.entry("teleporter_capsule", machine(p -> p.strength(1.0f, 2.0f).sound(SoundType.GLASS)
-					.noOcclusion().pushReaction(PushReaction.BLOCK))),
+					.noOcclusion().pushReaction(PushReaction.IMMOVEABLE))),
 			// Cotton trellis (MOD-280) — a plant, not a machine: no requiresCorrectToolForDrops (it comes
 			// apart by hand), and randomTicks() is load-bearing rather than decoration — without it the
 			// block never receives randomTick and the crop would simply never grow. Deliberately NOT
@@ -1165,12 +1172,12 @@ public final class ContentManifest {
 			// post rather than being walked through like wheat. A piston must not drag half a two-block
 			// plant away from its other half.
 			Map.entry("trellis", p -> p.strength(0.2f).sound(SoundType.GRASS)
-					.noOcclusion().randomTicks().pushReaction(PushReaction.DESTROY)),
+					.noOcclusion().randomTicks().pushReaction(PushReaction.POPPED)),
 			// MOD-537 — kok sagyz. A vanilla-flower block: instabreak, walked through, and randomTicks()
 			// is load-bearing (the plant advances on the random tick, like the trellis). A piston must
 			// not drag the flower away from the root column it owns.
 			Map.entry("kok_sagyz", p -> p.instabreak().sound(SoundType.GRASS)
-					.noCollision().randomTicks().pushReaction(PushReaction.DESTROY)),
+					.noCollision().randomTicks().pushReaction(PushReaction.POPPED)),
 			// The root is a full dirt-strength cube and ticks never: growth is driven from the flower
 			// above, so a random tick here would be work nothing reads.
 			Map.entry("kok_sagyz_root", p -> p.strength(0.6f).sound(SoundType.ROOTED_DIRT)),
@@ -1183,25 +1190,25 @@ public final class ContentManifest {
 			// state nothing owns any more — the sweep only reaches the box it remembers (found by audit).
 			// The incubator's dome is pinned for the same class of reason.
 			Map.entry("crystal_farm_floor", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
-					.pushReaction(PushReaction.BLOCK))),
+					.pushReaction(PushReaction.IMMOVEABLE))),
 			// noOcclusion is mandatory on the glazing: a transparent full cube that occludes would cull
 			// the room away behind it and the greenhouse would show nothing (the reactor glass note).
 			Map.entry("crystal_farm_glass", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.GLASS)
-					.noOcclusion().pushReaction(PushReaction.BLOCK))),
+					.noOcclusion().pushReaction(PushReaction.IMMOVEABLE))),
 			// A door is never a full cube, so noOcclusion is mandatory; pushReaction DESTROY keeps a
 			// piston from tearing one half of a two-block door away from the other.
 			Map.entry("crystal_farm_door", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.COPPER)
-					.noOcclusion().pushReaction(PushReaction.DESTROY))),
+					.noOcclusion().pushReaction(PushReaction.POPPED))),
 			Map.entry("crystal_farm_controller", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			// MOD-483. No noOcclusion: the default state is a loose casing, a full cube, and R-PHY-05
 			// reads exactly that state. pushReaction BLOCK because a piston that shoved one half clear
 			// would leave the other standing as a casing — legal, but not what the player asked for.
 			Map.entry("workstation", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
-					.pushReaction(PushReaction.BLOCK))),
+					.pushReaction(PushReaction.IMMOVEABLE))),
 			// The bed is a block of amethyst that happens to be machinery, so it sounds like the stone
 			// it is made of rather than like metal — the cue that it is the thing crystals come out of.
 			Map.entry("crystal_seedbed", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.AMETHYST)
-					.pushReaction(PushReaction.BLOCK))),
+					.pushReaction(PushReaction.IMMOVEABLE))),
 			Map.entry("tin_ore", machine(p -> p.strength(3.0f, 3.0f).sound(SoundType.STONE))),
 			Map.entry("deepslate_tin_ore", machine(p -> p.strength(4.5f, 3.0f).sound(SoundType.DEEPSLATE))),
 			Map.entry("silver_ore", machine(p -> p.strength(3.0f, 3.0f).sound(SoundType.STONE))),
@@ -1261,33 +1268,33 @@ public final class ContentManifest {
 			// Distillation fractions (MOD-251): same vanilla liquid-block chain as oil, their own
 			// map colours (diesel golden-yellow, fuel oil dark brown).
 			Map.entry("diesel", p -> p.mapColor(MapColor.COLOR_YELLOW).replaceable().noCollision()
-					.strength(100.0F).pushReaction(PushReaction.DESTROY).noLootTable().liquid()
+					.strength(100.0F).pushReaction(PushReaction.POPPED).noLootTable().liquid()
 					.sound(SoundType.EMPTY)),
 			Map.entry("fuel_oil", p -> p.mapColor(MapColor.TERRACOTTA_BROWN).replaceable().noCollision()
-					.strength(100.0F).pushReaction(PushReaction.DESTROY).noLootTable().liquid()
+					.strength(100.0F).pushReaction(PushReaction.POPPED).noLootTable().liquid()
 					.sound(SoundType.EMPTY)),
 			// The organic chain's two fluids (MOD-146/MOD-525): same vanilla liquid-block chain, their
 			// own map colours — biofuel olive, nutrient solution a brighter green.
 			Map.entry("biofuel", p -> p.mapColor(MapColor.COLOR_GREEN).replaceable().noCollision()
-					.strength(100.0F).pushReaction(PushReaction.DESTROY).noLootTable().liquid()
+					.strength(100.0F).pushReaction(PushReaction.POPPED).noLootTable().liquid()
 					.sound(SoundType.EMPTY)),
 			Map.entry("nutrient_solution", p -> p.mapColor(MapColor.EMERALD).replaceable().noCollision()
-					.strength(100.0F).pushReaction(PushReaction.DESTROY).noLootTable().liquid()
+					.strength(100.0F).pushReaction(PushReaction.POPPED).noLootTable().liquid()
 					.sound(SoundType.EMPTY)),
 			// Oil (MOD-238): the vanilla liquid-block chain (see Blocks.WATER in 26.2), dark map colour.
 			// Not machine(...) - a liquid needs no tool and has no drops.
 			Map.entry("oil", p -> p.mapColor(MapColor.COLOR_BLACK).replaceable().noCollision()
-					.strength(100.0F).pushReaction(PushReaction.DESTROY).noLootTable().liquid()
+					.strength(100.0F).pushReaction(PushReaction.POPPED).noLootTable().liquid()
 					.sound(SoundType.EMPTY)),
 			// MOD-638 — oil fire: vanilla Blocks.FIRE's chain in 26.2 (replaceable, no collision, breaks
 			// instantly, full light, no drops).
 			Map.entry("oil_fire", p -> p.mapColor(MapColor.FIRE).replaceable().noCollision().instabreak()
-					.lightLevel(state -> 15).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY)
+					.lightLevel(state -> 15).sound(SoundType.WOOL).pushReaction(PushReaction.POPPED)
 					.noLootTable()),
 			// MOD-638 — the soot layer: snow-like — no collision, breaks with anything, drops only to a
 			// shovel (machine(...) adds requiresCorrectToolForDrops), destroyed by a piston.
 			Map.entry("soot_layer", machine(p -> p.mapColor(MapColor.COLOR_BLACK).noCollision().noOcclusion()
-					.strength(0.1F).sound(SoundType.SAND).pushReaction(PushReaction.DESTROY))));
+					.strength(0.1F).sound(SoundType.SAND).pushReaction(PushReaction.POPPED))));
 
 	/** The shared {@code Properties} chain for {@code id} (see {@link #BLOCK_PROPS}); throws if unknown. */
 	public static UnaryOperator<BlockBehaviour.Properties> blockProps(String id) {
@@ -1421,11 +1428,13 @@ public final class ContentManifest {
 	 * {@link ModContent} slot, and the loader supplies the constructor through its own override map
 	 * (see {@code ModItems.LOADER_ITEMS} / {@code ModItemsNeoForge.LOADER_ITEMS}).
 	 *
-	 * <p>There are five, and each is a loader-API seam rather than a difference of content: the forge
-	 * hammer routes a craft-remainder hook whose signature differs on the two loaders, and the four
-	 * electric hoe/shovel tiers must declare NeoForge {@code ItemAbility}s that Fabric has no concept of
-	 * (MOD-378/MOD-379 — without them NeoForge's patched {@code HoeItem}/{@code ShovelItem} refuse to
-	 * till and make no paths).
+	 * <p>There are five. The forge hammer routes a craft-remainder hook whose signature differs on the two
+	 * loaders — a genuine loader-API seam. The four electric hoe/shovel tiers were one too until 26.3:
+	 * they had to declare NeoForge {@code ItemAbility}s that Fabric has no concept of (MOD-378/MOD-379 —
+	 * without them NeoForge's patched {@code HoeItem}/{@code ShovelItem} refused to till and made no
+	 * paths). <b>26.3 deleted those abilities and the patched classes with them</b> (MOD-226): tilling and
+	 * path-making are now the {@code minecraft:block_transformer} component, declared once in
+	 * {@code common/}, and the four NeoForge subclasses are no-ops kept only until the seam is retired.
 	 *
 	 * <p><b>There is deliberately no shared default.</b> A default would let a loader that forgot its
 	 * override ship the wrong class silently — which is exactly the defect MOD-378 and MOD-379 each
@@ -1612,6 +1621,10 @@ public final class ContentManifest {
 			plain("irradiated_slag", s -> ModContent.IRRADIATED_SLAG = s),
 			plain("irradiated_diamond", s -> ModContent.IRRADIATED_DIAMOND = s),
 			plain("resonant_shard", s -> ModContent.RESONANT_SHARD = s),
+			// MOD-480: four amethyst shards alloyed around a silver core — the crystal the monitoring
+			// wall is built from. Alloyed rather than crafted: the price of the wall is a running
+			// machine, not a pattern on a bench.
+			plain("reinforced_amethyst", s -> ModContent.REINFORCED_AMETHYST = s),
 			plain("mutagen_dust", s -> ModContent.MUTAGEN_DUST = s),
 			// Oil → rubber chain: the polymerizer's product and the vulcanizer's cured output.
 			plain("raw_rubber", s -> ModContent.RAW_RUBBER = s),
@@ -1703,15 +1716,17 @@ public final class ContentManifest {
 			plain("tempered_iron", s -> ModContent.TEMPERED_IRON = s),
 			item("tempered_iron_pickaxe", p -> new Item(p.pickaxe(ModToolMaterials.TEMPERED_IRON,
 					TemperedIronToolStats.PICKAXE.attackDamage(), TemperedIronToolStats.PICKAXE.attackSpeed())), s -> ModContent.TEMPERED_IRON_PICKAXE = s),
-			// Axe/Hoe/Shovel extend their vanilla subclasses so useOn (stripping/tilling/path) works —
-			// in 26.2 these subclasses still exist and carry that behavior; PickaxeItem/SwordItem were
-			// removed, so pickaxe/sword stay plain Item with .pickaxe()/.sword().
-			item("tempered_iron_axe", p -> new AxeItem(ModToolMaterials.TEMPERED_IRON,
-					TemperedIronToolStats.AXE.attackDamage(), TemperedIronToolStats.AXE.attackSpeed(), p), s -> ModContent.TEMPERED_IRON_AXE = s),
-			item("tempered_iron_hoe", p -> new HoeItem(ModToolMaterials.TEMPERED_IRON,
-					TemperedIronToolStats.HOE.attackDamage(), TemperedIronToolStats.HOE.attackSpeed(), p), s -> ModContent.TEMPERED_IRON_HOE = s),
-			item("tempered_iron_shovel", p -> new ShovelItem(ModToolMaterials.TEMPERED_IRON,
-					TemperedIronToolStats.SHOVEL.attackDamage(), TemperedIronToolStats.SHOVEL.attackSpeed(), p), s -> ModContent.TEMPERED_IRON_SHOVEL = s),
+			// 26.3 removed AxeItem/HoeItem/ShovelItem as well, so the whole line is a plain Item built
+			// from Item.Properties. Stripping, tilling and path-making are NOT lost with the subclasses:
+			// .axe()/.hoe()/.shovel() attach the BLOCK_TRANSFORMER data component (vanilla's own
+			// Items.IRON_AXE and friends are declared exactly this way), which is what performs the
+			// right-click conversion now.
+			item("tempered_iron_axe", p -> new Item(p.axe(ModToolMaterials.TEMPERED_IRON,
+					TemperedIronToolStats.AXE.attackDamage(), TemperedIronToolStats.AXE.attackSpeed())), s -> ModContent.TEMPERED_IRON_AXE = s),
+			item("tempered_iron_hoe", p -> new Item(p.hoe(ModToolMaterials.TEMPERED_IRON,
+					TemperedIronToolStats.HOE.attackDamage(), TemperedIronToolStats.HOE.attackSpeed())), s -> ModContent.TEMPERED_IRON_HOE = s),
+			item("tempered_iron_shovel", p -> new Item(p.shovel(ModToolMaterials.TEMPERED_IRON,
+					TemperedIronToolStats.SHOVEL.attackDamage(), TemperedIronToolStats.SHOVEL.attackSpeed())), s -> ModContent.TEMPERED_IRON_SHOVEL = s),
 			item("tempered_iron_sword", p -> new Item(p.sword(ModToolMaterials.TEMPERED_IRON,
 					TemperedIronToolStats.SWORD.attackDamage(), TemperedIronToolStats.SWORD.attackSpeed())), s -> ModContent.TEMPERED_IRON_SWORD = s),
 			// Tempered-iron armor (MOD-056). MC 26.2 has no ArmorItem: each piece is a plain Item whose
@@ -1873,15 +1888,15 @@ public final class ContentManifest {
 			item("electric_chainsaw_diamond_tip", p -> new ElectricChainsawDiamondTipItem(
 					ElectricChainsawDiamondTipItem.electricChainsawDiamondTipProperties(p)), s -> ModContent.ELECTRIC_CHAINSAW_DIAMOND_TIP = s),
 			// Electric Shovel (MOD-338): the earth-side member of the same line — an EU shovel for loose ground.
-			loaderItem("electric_shovel", s -> ModContent.ELECTRIC_SHOVEL = s),
+			item("electric_shovel", p -> new ElectricShovelItem(ElectricShovelItem.electricShovelProperties(p)), s -> ModContent.ELECTRIC_SHOVEL = s),
 			// Diamond-Tipped Electric Shovel (MOD-481): the shovel's upgrade tier — faster, and its drops switch
 			// between normal and Silk Touch on the fly.
-			loaderItem("electric_shovel_diamond_tip", s -> ModContent.ELECTRIC_SHOVEL_DIAMOND_TIP = s),
+			item("electric_shovel_diamond_tip", p -> new ElectricShovelDiamondTipItem(ElectricShovelDiamondTipItem.electricShovelDiamondTipProperties(p)), s -> ModContent.ELECTRIC_SHOVEL_DIAMOND_TIP = s),
 			// Electric Hoe (MOD-342): the farming member of the same line — an EU hoe that tills for free.
-			loaderItem("electric_hoe", s -> ModContent.ELECTRIC_HOE = s),
+			item("electric_hoe", p -> new ElectricHoeItem(ElectricHoeItem.electricHoeProperties(p)), s -> ModContent.ELECTRIC_HOE = s),
 			// Diamond-Tipped Electric Hoe (MOD-378): the hoe's upgrade tier — faster, and the plots it tills
 			// come out already watered.
-			loaderItem("electric_hoe_diamond_tip", s -> ModContent.ELECTRIC_HOE_DIAMOND_TIP = s),
+			item("electric_hoe_diamond_tip", p -> new ElectricHoeDiamondTipItem(ElectricHoeDiamondTipItem.electricHoeDiamondTipProperties(p)), s -> ModContent.ELECTRIC_HOE_DIAMOND_TIP = s),
 			// Electric Saber (MOD-149): the line's first weapon — EU per hit, plain sword when flat or off.
 			item("electric_saber", p -> new ElectricSaberItem(ElectricSaberItem.electricSaberProperties(p)), s -> ModContent.ELECTRIC_SABER = s),
 			// Electric Bow (MOD-363): the line's ranged weapon — EU per shot buys a faster draw and a faster,

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:simple_block",
+  "to_place": {
+    "id": "alaindustrial:kok_sagyz",
+    "properties": {
+      "age": "3"
+    }
+  }
+}

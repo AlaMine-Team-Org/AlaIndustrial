@@ -4,6 +4,7 @@ import dev.alaindustrial.core.teleport.RtpSiteFinder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -57,12 +58,6 @@ final class RtpTerrain implements RtpSiteFinder.Terrain {
 	 * occupy must be clear of both blocks and fluid, and a short list of surfaces that would hurt on
 	 * arrival is refused outright.
 	 */
-	// MOD-498 — BlockStateBase#blocksMotion() is a soft-deprecated legacy solidity heuristic (it defers to
-	// the equally deprecated isSolid(), backed by the legacySolid field, with hardcoded cobweb and
-	// bamboo-sapling exceptions). Nothing models it: getCollisionShape / isCollisionShapeFullBlock answer
-	// a different question. Vanilla itself reads it from non-deprecated code — Heightmap.MOTION_BLOCKING
-	// and the default isSuffocating predicate — and "can the player stand on this" is exactly that notion.
-	@SuppressWarnings("deprecation")
 	@Override
 	public int safeFeetY(int x, int z) {
 		BlockPos column = new BlockPos(x, level.getSeaLevel(), z);
@@ -75,7 +70,7 @@ final class RtpTerrain implements RtpSiteFinder.Terrain {
 
 		BlockPos feetPos = new BlockPos(x, feet, z);
 		BlockState ground = level.getBlockState(feetPos.below());
-		if (!ground.blocksMotion() || !ground.getFluidState().isEmpty() || isHostileFooting(ground)) {
+		if (!blocksMotion(ground) || !ground.getFluidState().isEmpty() || isHostileFooting(ground)) {
 			return RtpSiteFinder.NO_SITE;
 		}
 		if (!isClear(feetPos) || !isClear(feetPos.above())) {
@@ -89,15 +84,26 @@ final class RtpTerrain implements RtpSiteFinder.Terrain {
 		return level.getWorldBorder().isWithinBounds((double) x, (double) z);
 	}
 
+	/**
+	 * Does this cell stop a falling player — the notion the old {@code BlockStateBase#blocksMotion()}
+	 * stood for (MOD-498), which 26.3 deleted and replaced with data.
+	 *
+	 * <p>The heuristic used to be code: a {@code legacySolid} field plus hardcoded cobweb and
+	 * bamboo-sapling exceptions, soft-deprecated with nothing modelling it. It is now the block tag
+	 * {@code #minecraft:blocks_motion_in_heightmap}, and reading that tag is not an approximation of the
+	 * old call — it is the same oracle {@link Heightmap.Types#MOTION_BLOCKING_NO_LEAVES} itself consults,
+	 * which is the heightmap {@link #safeFeetY} asks for the candidate. Ground and headroom therefore
+	 * stay one predicate, which is what the two call sites need: otherwise a cell could count as both
+	 * solid footing and free headroom.
+	 */
+	private static boolean blocksMotion(BlockState state) {
+		return state.is(BlockTags.BLOCKS_MOTION_IN_HEIGHTMAP);
+	}
+
 	/** Room for the player: no block in the way and no fluid to arrive inside of. */
-	// MOD-498 — the negative half of the same legacy solidity heuristic used in safeFeetY above:
-	// blocksMotion() is soft-deprecated with no modelled replacement, and vanilla still reads it from
-	// non-deprecated code (Heightmap.MOTION_BLOCKING). It has to be the SAME predicate as the ground
-	// check, or a cell could count as both solid footing and free headroom.
-	@SuppressWarnings("deprecation")
 	private boolean isClear(BlockPos pos) {
 		BlockState state = level.getBlockState(pos);
-		return !state.blocksMotion() && state.getFluidState().isEmpty()
+		return !blocksMotion(state) && state.getFluidState().isEmpty()
 				&& !state.is(Blocks.FIRE) && !state.is(Blocks.SOUL_FIRE)
 				&& !state.is(Blocks.POWDER_SNOW) && !state.is(Blocks.SWEET_BERRY_BUSH);
 	}

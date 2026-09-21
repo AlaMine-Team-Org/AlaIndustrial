@@ -94,9 +94,9 @@ neoForge {
 
 dependencies {
     // JEI - optional dev/runtime recipe viewer. API only at compile time; full JEI only in dev runs.
-    compileOnly "mezz.jei:jei-26.2-common-api:${jei_version}@jar"
-    compileOnly "mezz.jei:jei-26.2-neoforge-api:${jei_version}@jar"
-    runtimeOnly "mezz.jei:jei-26.2-neoforge:${jei_version}@jar"
+    compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}@jar"
+    compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}@jar"
+    runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}@jar"
 
     // net.neoforged:testframework provides EphemeralTestServerProvider (verified coordinate from the
     // neoforge userdev config.json `testLibraries`). Pulled from the NeoForged maven (settings.gradle).

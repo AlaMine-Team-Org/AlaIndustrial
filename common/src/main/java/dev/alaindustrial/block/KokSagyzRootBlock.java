@@ -1,9 +1,9 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.KokSagyzRootBlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.Blocks;
@@ -48,8 +48,6 @@ import net.minecraft.world.item.ItemStack;
  */
 public class KokSagyzRootBlock extends Block implements EntityBlock {
 
-	public static final MapCodec<KokSagyzRootBlock> CODEC = simpleCodec(KokSagyzRootBlock::new);
-
 	/** {@code false}: the upper root under the flower. {@code true}: the harvestable tip below it. */
 	public static final BooleanProperty TIP = BooleanProperty.create("tip");
 
@@ -64,11 +62,6 @@ public class KokSagyzRootBlock extends Block implements EntityBlock {
 	}
 
 	@Override
-	protected MapCodec<? extends Block> codec() {
-		return CODEC;
-	}
-
-	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
 		builder.add(TIP);
@@ -76,7 +69,7 @@ public class KokSagyzRootBlock extends Block implements EntityBlock {
 
 	/** Restore the captured soil after ordinary loot handling, leaving the perennial flower alive. */
 	@Override
-	public void playerDestroy(net.minecraft.world.level.Level level, Player player, BlockPos pos, BlockState state,
+	public void playerDestroy(ServerLevel level, ServerPlayer player, BlockPos pos, BlockState state,
 			BlockEntity blockEntity, ItemStack tool) {
 		super.playerDestroy(level, player, pos, state, blockEntity, tool);
 		level.setBlockAndUpdate(pos, blockEntity instanceof KokSagyzRootBlockEntity root

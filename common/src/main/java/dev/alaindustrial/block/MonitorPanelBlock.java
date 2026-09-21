@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.MonitorPanelBlockEntity;
 import dev.alaindustrial.core.monitor.MonitorNetworkManager;
 import net.minecraft.core.BlockPos;
@@ -8,6 +7,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -44,18 +44,11 @@ import org.jetbrains.annotations.Nullable;
  */
 public class MonitorPanelBlock extends BaseEntityBlock {
 
-	public static final MapCodec<MonitorPanelBlock> CODEC = simpleCodec(MonitorPanelBlock::new);
-
 	public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
 
 	public MonitorPanelBlock(Properties properties) {
 		super(properties);
 		registerDefaultState(defaultBlockState().setValue(FACING, Direction.NORTH));
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override
@@ -129,7 +122,7 @@ public class MonitorPanelBlock extends BaseEntityBlock {
 		ItemStack filter = panel.getFilter().copy();
 		panel.setFilter(ItemStack.EMPTY);
 		if (!player.getInventory().add(filter)) {
-			player.drop(filter, false);
+			player.drop(filter, false, Prediction.SERVER_ONLY);
 		}
 		level.playSound(null, pos, SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.BLOCKS, 0.8f, 1.2f);
 		return InteractionResult.SUCCESS;

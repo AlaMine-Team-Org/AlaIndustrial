@@ -89,7 +89,7 @@ public final class IndustrialistScenarios {
 	 * the dev client don't break the test on every resize.
 	 */
 	public static void houseStructureLoads(GameTestHelper helper) {
-		var mgr = helper.getLevel().getServer().getStructureManager();
+		var mgr = helper.getLevel().getServer().getStructureTemplateManager();
 		var template = mgr.get(VillagePoolInjector.HOUSE_TEMPLATE);
 		helper.assertTrue(template.isPresent(),
 				"structure " + VillagePoolInjector.HOUSE_TEMPLATE + " must load through the game structure manager");

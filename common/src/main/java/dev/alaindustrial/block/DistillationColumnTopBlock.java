@@ -1,11 +1,9 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
@@ -15,16 +13,8 @@ import net.minecraft.world.level.block.state.BlockState;
  * the tower" always means the refinery is actually running.
  */
 public class DistillationColumnTopBlock extends DistillationColumnSegmentBlock {
-	public static final MapCodec<DistillationColumnTopBlock> CODEC =
-			simpleCodec(DistillationColumnTopBlock::new);
-
 	public DistillationColumnTopBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

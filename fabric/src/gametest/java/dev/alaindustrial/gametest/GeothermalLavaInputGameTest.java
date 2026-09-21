@@ -41,4 +41,13 @@ public class GeothermalLavaInputGameTest {
 	public void tcCaps001Fun05_furnaceFuelSlotCapsOne(GameTestHelper helper) {
 		GeothermalLavaInputScenarios.fun05FurnaceFuelSlotCapsOne(helper);
 	}
+
+	/**
+	 * @implements TC-CAPS-001-FUN14 — MOD-226: a capsule saved by 26.2 (fluid, no cooking_fuel) heals its
+	 * fuel component the moment it loads; a water capsule stays inert.
+	 */
+	@GameTest
+	public void tcCaps001Fun14_capsuleSavedBy262HealsFuelOnLoad(GameTestHelper helper) {
+		GeothermalLavaInputScenarios.fun14CapsuleSavedBy262HealsFuelOnLoad(helper);
+	}
 }

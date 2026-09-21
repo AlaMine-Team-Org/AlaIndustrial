@@ -1,16 +1,26 @@
 {
-	"type": "minecraft:block",
-	"pools": [{
-		"rolls": 1.0,
-		"entries": [{
-			"type": "minecraft:item",
-			"name": "alaindustrial:battery_box",
-			"functions": [{
-				"function": "minecraft:copy_components",
-				"source": "block_entity",
-				"include": ["alaindustrial:stored_energy"]
-			}]
-		}],
-		"conditions": [{ "condition": "minecraft:survives_explosion" }]
-	}]
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "alaindustrial:battery_box",
+          "modifier": [
+            {
+              "type": "minecraft:copy_components",
+              "source": "block_entity",
+              "include": [
+                "alaindustrial:stored_energy"
+              ]
+            }
+          ]
+        }
+      ],
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      }
+    }
+  ]
 }

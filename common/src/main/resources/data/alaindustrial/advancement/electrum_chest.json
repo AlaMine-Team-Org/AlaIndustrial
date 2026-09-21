@@ -16,12 +16,10 @@
     "electrum_chest": {
       "trigger": "minecraft:placed_block",
       "conditions": {
-        "location": [
-          {
-            "condition": "minecraft:block_state_property",
-            "block": "alaindustrial:electrum_chest"
-          }
-        ]
+        "location": {
+          "type": "minecraft:match_block",
+          "blocks": "alaindustrial:electrum_chest"
+        }
       }
     }
   },

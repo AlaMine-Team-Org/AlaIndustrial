@@ -193,7 +193,7 @@ public final class CableBreakerScenarios {
 		// never advances that clock — the flag would still read "live" no matter how many times we
 		// ticked. Real ticks have to pass for it to age out.
 		helper.runAfterDelay(3, () -> {
-			player.invulnerableTime = 0;
+			player.setInvulnerableTime(0);
 			if (cable(helper, FAR_CABLE).isEnergizedForShock()) {
 				helper.fail("the wire behind an open breaker still reads as energised");
 				return;

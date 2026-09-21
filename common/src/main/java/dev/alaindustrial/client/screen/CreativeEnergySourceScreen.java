@@ -1,5 +1,6 @@
 package dev.alaindustrial.client.screen;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.menu.CreativeEnergySourceMenu;
@@ -333,7 +334,7 @@ public class CreativeEnergySourceScreen extends MachineScreen<CreativeEnergySour
 		// Both panels are modal over their footprint and the statistics one can be DRAGGED across this
 		// screen, so a click meant for it would otherwise land on the switch or the slider underneath.
 		// Defer wholesale while either is open, the way the Sawmill defers to the upgrade panel.
-		if (event.button() == 0 && !this.menu.isPanelOpen() && !this.menu.isStatsPanelOpen()) {
+		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && !this.menu.isPanelOpen() && !this.menu.isStatsPanelOpen()) {
 			if (over(event.x(), event.y(), TOGGLE_X, TOGGLE_Y, TOGGLE_W, TOGGLE_H)) {
 				send(CreativeEnergySourceMenu.BUTTON_TOGGLE);
 				return true;
@@ -361,7 +362,7 @@ public class CreativeEnergySourceScreen extends MachineScreen<CreativeEnergySour
 
 	@Override
 	public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
-		if (dragging && event.button() == 0) {
+		if (dragging && event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
 			pendingOutput = stepAtMouse(event.x()) * CreativeEnergySourceMenu.OUTPUT_STEP;
 			dragTicks = DRAG_WATCHDOG_TICKS;
 			return true;
@@ -371,7 +372,7 @@ public class CreativeEnergySourceScreen extends MachineScreen<CreativeEnergySour
 
 	@Override
 	public boolean mouseReleased(MouseButtonEvent event) {
-		if (dragging && event.button() == 0) {
+		if (dragging && event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
 			dragging = false;
 			// The value stays on screen; requestStep arms the timeout that retires it once the server agrees.
 			requestStep(currentStep());

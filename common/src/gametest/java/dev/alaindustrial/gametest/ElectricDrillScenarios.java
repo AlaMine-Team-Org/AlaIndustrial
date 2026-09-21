@@ -271,7 +271,7 @@ public final class ElectricDrillScenarios {
 		player.getInventory().setItem(1, new ItemStack(Items.TORCH, 8));
 
 		InteractionResult result = useOnBlock(helper, player, floor);
-		if (result != InteractionResult.SUCCESS) {
+		if (!AlaGameTestHelper.isSwingSuccess(result)) {
 			helper.fail("right-click with torches in inventory must return SUCCESS, got " + result);
 		}
 		helper.assertBlockPresent(Blocks.TORCH, torchAt);
@@ -306,7 +306,7 @@ public final class ElectricDrillScenarios {
 		player.getInventory().setItem(2, new ItemStack(ModContent.ENRICHED_URANIUM_TORCH_ITEM.get(), 4));
 
 		InteractionResult result = useOnBlock(helper, player, floor);
-		if (result != InteractionResult.SUCCESS) {
+		if (!AlaGameTestHelper.isSwingSuccess(result)) {
 			helper.fail("right-click with both torch kinds must place the uranium torch, got " + result);
 		}
 		// Uranium standing torch placed (not the vanilla one), uranium stack decremented, vanilla untouched.
@@ -350,7 +350,7 @@ public final class ElectricDrillScenarios {
 
 		// Click the grass (its side) — BlockPlaceContext will treat it as replaceable.
 		InteractionResult result = useOnBlock(helper, player, grass);
-		if (result != InteractionResult.SUCCESS) {
+		if (!AlaGameTestHelper.isSwingSuccess(result)) {
 			helper.fail("placing a torch by clicking a replaceable block must return SUCCESS, got " + result);
 		}
 		helper.assertBlockPresent(Blocks.TORCH, torchAt);
@@ -389,7 +389,7 @@ public final class ElectricDrillScenarios {
 		player.getInventory().setItem(1, new ItemStack(Items.TORCH, 8));
 
 		InteractionResult result = useOnBlock(helper, player, floor);
-		if (result != InteractionResult.CONSUME) {
+		if (!AlaGameTestHelper.isNoSwingConsume(result)) {
 			helper.fail("a drill below the torch cost must refuse with CONSUME, got " + result);
 		}
 		// Nothing placed: the cell above the clicked floor is still air.

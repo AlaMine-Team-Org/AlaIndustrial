@@ -150,4 +150,22 @@ public class ElectricHoeGameTest {
 	public void tcHoe001Per01_chargeRoundTrip(GameTestHelper helper) {
 		ElectricHoeScenarios.per01ChargeRoundTrip(helper);
 	}
+
+	/**
+	 * @implements TC-HOE-001-FUN14 — a hoe with the block transformer stripped from the stack PASSES the
+	 *     click on and spends nothing: applicability on 26.3 is a property of the stack (MOD-226).
+	 */
+	@GameTest
+	public void tcHoe001Fun14_hoeWithoutTransformerPassesFree(GameTestHelper helper) {
+		ElectricHoeScenarios.fun14HoeWithoutTransformerPassesFree(helper);
+	}
+
+	/**
+	 * @implements TC-HOE-001-FUN15 — rooted dirt is a hoe conversion on 26.3's second transformer rule:
+	 *     becomes plain dirt, drops its hanging root, costs the till (MOD-226).
+	 */
+	@GameTest
+	public void tcHoe001Fun15_tillsRootedDirtToDirt(GameTestHelper helper) {
+		ElectricHoeScenarios.fun15TillsRootedDirtToDirt(helper);
+	}
 }

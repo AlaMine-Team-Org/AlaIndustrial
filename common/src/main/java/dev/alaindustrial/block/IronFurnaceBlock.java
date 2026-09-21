@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.IronFurnaceBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -28,17 +27,11 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
  * net.minecraft.world.inventory.FurnaceMenu}); only the title differs.
  */
 public class IronFurnaceBlock extends AbstractFurnaceBlock {
-	public static final MapCodec<IronFurnaceBlock> CODEC = simpleCodec(IronFurnaceBlock::new);
 	/** Alias of the vanilla furnace {@code lit} property, so the BE and light-level helper read one name. */
 	public static final BooleanProperty LIT = AbstractFurnaceBlock.LIT;
 
 	public IronFurnaceBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	protected MapCodec<? extends AbstractFurnaceBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:ore",
+  "size": 4,
+  "discard_chance_on_air_exposure": 0.5,
+  "targets": [
+    {
+      "target": {
+        "predicate_type": "minecraft:tag_match",
+        "tag": "minecraft:base_stone_nether"
+      },
+      "state": "alaindustrial:palladium_ore"
+    }
+  ]
+}

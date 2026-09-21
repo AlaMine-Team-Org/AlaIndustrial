@@ -1,7 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -26,8 +24,7 @@ import net.minecraft.world.level.material.FluidState;
  * standing torch. It has no BlockItem of its own — its drop and display name come from the standing torch via the
  * block {@code Properties.overrideLootTable(...)}/{@code overrideDescription(...)} set at registration.
  *
- * <p>The codec is typed {@code MapCodec<WallTorchBlock>} to satisfy the invariant return type of
- * {@link WallTorchBlock#codec()}. The particle getter downcasts to this concrete type because
+ * <p>The particle getter downcasts to this concrete type because
  * {@code flameParticle} is {@code protected} in {@code TorchBlock} and this subclass lives in a different
  * package, so it may be read only through a reference of this class.
  */
@@ -35,20 +32,10 @@ public class EnrichedUraniumWallTorchBlock extends WallTorchBlock implements Oil
 
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-	public static final MapCodec<WallTorchBlock> CODEC = RecordCodecBuilder.mapCodec(
-			i -> i.group(
-					PARTICLE_OPTIONS_FIELD.forGetter(b -> ((EnrichedUraniumWallTorchBlock) b).flameParticle),
-					propertiesCodec()).apply(i, EnrichedUraniumWallTorchBlock::new));
-
 	public EnrichedUraniumWallTorchBlock(SimpleParticleType flameParticle, BlockBehaviour.Properties properties) {
 		super(flameParticle, properties);
 		this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH)
 				.setValue(WATERLOGGED, false).setValue(OILLOGGED, false));
-	}
-
-	@Override
-	public MapCodec<WallTorchBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

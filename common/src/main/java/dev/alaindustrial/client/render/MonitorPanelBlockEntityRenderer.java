@@ -104,7 +104,7 @@ public class MonitorPanelBlockEntityRenderer
 		poseStack.pushPose();
 		// Put +Z on the face the panel was placed looking out of, then step just clear of the surface.
 		poseStack.translate(0.5F, 0.5F, 0.5F);
-		poseStack.mulPose(Axis.YP.rotationDegrees(-state.facing.toYRot()));
+		poseStack.rotate(Axis.YP.rotationDegrees(-state.facing.toYRot()));
 		// The screen is recessed one pixel behind the bezel, so everything drawn on it sits there too.
 		poseStack.translate(0.0F, 0.0F, SCREEN_DEPTH);
 
