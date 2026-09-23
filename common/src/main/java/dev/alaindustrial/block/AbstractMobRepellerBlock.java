@@ -1,5 +1,8 @@
 package dev.alaindustrial.block;
 
+import dev.alaindustrial.registry.ModSounds;
+import java.util.function.Supplier;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -18,8 +21,10 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
  * <p>Deliberately NOT {@link LitMachineBlock}: that base adds {@code FACING}, and a radial field
  * has no front — every face is equal, like the solar panel. The three tier blocks differ only in
  * which block entity they create (and their codec), mirroring the solar panel family layout.
+ *
+ * <p>Pattern A sound (MOD-447): {@link #LIT} is {@link LitMachineBlock#LIT}, so the default {@code isWorking} applies.
  */
-public abstract class AbstractMobRepellerBlock extends AbstractMachineBlock {
+public abstract class AbstractMobRepellerBlock extends AbstractMachineBlock implements MachineHumProvider {
 	public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
 	protected AbstractMobRepellerBlock(Properties properties) {
@@ -35,6 +40,12 @@ public abstract class AbstractMobRepellerBlock extends AbstractMachineBlock {
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
 			BlockEntityType<T> type) {
-		return machineTicker(level);
+		// humMachineTicker: the plain machineTicker is null client-side, so the loop would never start.
+		return humMachineTicker(level);
+	}
+
+	@Override
+	public Supplier<SoundEvent> humSound() {
+		return ModSounds.MOB_REPELLER_HUM;
 	}
 }

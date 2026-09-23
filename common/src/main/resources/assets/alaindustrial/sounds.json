@@ -310,5 +310,15 @@
         "preload": true
       }
     ]
+  },
+  "mob_repeller_hum": {
+    "subtitle": "subtitles.alaindustrial.mob_repeller_hum",
+    "sounds": [
+      {
+        "name": "alaindustrial:mob_repeller_hum",
+        "stream": false,
+        "preload": true
+      }
+    ]
   }
 }

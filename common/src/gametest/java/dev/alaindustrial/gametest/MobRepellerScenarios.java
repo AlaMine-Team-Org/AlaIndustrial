@@ -72,6 +72,7 @@ public final class MobRepellerScenarios {
 	public static void fun01ExpelsHostileAndBillsUpkeep(GameTestHelper helper) {
 		withIsolatedZone(() -> {
 			MobRepellerBlockEntity repeller = placePowered(helper);
+			repeller.setItem(repeller.upgradeSlotStart() + 2, new ItemStack(ModContent.STATS_CHIP.get()));
 			long before = repeller.getEnergyStorage().getAmount();
 
 			Zombie zombie = helper.spawn(EntityTypes.ZOMBIE, REPELLER.above());
@@ -88,6 +89,9 @@ public final class MobRepellerScenarios {
 			helper.assertTrue(spent == Config.mobRepellerEuPerTick,
 					"one powered tick must cost exactly " + Config.mobRepellerEuPerTick
 							+ " EU, spent " + spent);
+			helper.assertTrue(repeller.currentEuRate() == Config.mobRepellerEuPerTick,
+					"the statistics chip must see the upkeep as the block's rate, got "
+							+ repeller.currentEuRate());
 			helper.assertTrue(zombie.isAlive(), "the field expels mobs, it must never kill them");
 			helper.succeed();
 		});
@@ -140,6 +144,7 @@ public final class MobRepellerScenarios {
 	public static void fun04FullVesselEvolvesTier(GameTestHelper helper) {
 		MobRepellerBlockEntity repeller = placePowered(helper);
 		long charge = repeller.getEnergyStorage().getAmount();
+		repeller.setItem(repeller.upgradeSlotStart(), new ItemStack(ModContent.MUTE_CHIP.get()));
 		repeller.setItem(MobRepellerBlockEntity.VESSEL_SLOT, vessel(Config.mobRepellerEvolveKillsMv));
 
 		AlaGameTestHelper.drive(repeller, helper, 1);
@@ -153,6 +158,8 @@ public final class MobRepellerScenarios {
 						+ ", got " + evolved.getEnergyStorage().getAmount());
 		helper.assertTrue(evolved.fieldRange() == Config.mobRepellerRangeMv,
 				"the evolved block must run the MV radius");
+		helper.assertTrue(evolved.isMuted(),
+				"the mute chip must move to the evolved tier, not drop on the ground");
 		helper.succeed();
 	}
 
