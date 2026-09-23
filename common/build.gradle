@@ -308,6 +308,9 @@ pitest {
                      'dev.alaindustrial.block.entity.GardenDroneAction',
                      'dev.alaindustrial.block.entity.GardenDroneStatus',
                      'dev.alaindustrial.block.entity.VulcanizerStatus',
+                     // MOD-656: the workbench's "was this click a craft" rule, MC-free; L1 suite
+                     // WorkbenchCraftDetectorTest.
+                     'dev.alaindustrial.block.entity.WorkbenchCraftDetector',
                      // MOD-424: the centrifuge's status enum — MC-free like the six above, listed here
                      // WITH its L1 suite (ThermalCentrifugeStatusTest), not a release later.
                      'dev.alaindustrial.block.entity.ThermalCentrifugeStatus',

@@ -38,6 +38,7 @@ import dev.alaindustrial.block.GoldChestBlock;
 import dev.alaindustrial.block.HighAltitudeWindMillBlock;
 import dev.alaindustrial.block.IncubatorBlock;
 import dev.alaindustrial.block.IncubatorDomeBlock;
+import dev.alaindustrial.block.IndustrialWorkbenchBlock;
 import dev.alaindustrial.block.IrradiatedSoilBlock;
 import dev.alaindustrial.block.IronChestBlock;
 import dev.alaindustrial.block.IronFurnaceBlock;
@@ -271,7 +272,7 @@ public final class ModBlocksNeoForge {
 	public static final DeferredBlock<Block> SILVER_PLATE_BLOCK = handle(ContentManifest.SILVER_PLATE_BLOCK);
 	public static final DeferredBlock<Block> TEMPERED_IRON_PLATE_BLOCK =
 			handle(ContentManifest.TEMPERED_IRON_PLATE_BLOCK);
-	public static final DeferredBlock<Block> INDUSTRIAL_WORKBENCH = handle(ContentManifest.INDUSTRIAL_WORKBENCH);
+	public static final DeferredBlock<IndustrialWorkbenchBlock> INDUSTRIAL_WORKBENCH = handle(ContentManifest.INDUSTRIAL_WORKBENCH);
 	public static final DeferredBlock<EnrichedUraniumTorchBlock> ENRICHED_URANIUM_TORCH =
 			handle(ContentManifest.ENRICHED_URANIUM_TORCH);
 	public static final DeferredBlock<EnrichedUraniumWallTorchBlock> ENRICHED_URANIUM_WALL_TORCH =
