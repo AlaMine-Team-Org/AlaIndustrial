@@ -2,9 +2,9 @@
   "parent": "minecraft:block/block",
   "ambientocclusion": false,
   "textures": {
-    "particle": "alaindustrial:block/monitor_core_front_5",
-    "body": "alaindustrial:block/monitor_core_body",
-    "front": "alaindustrial:block/monitor_core_front_5"
+    "particle": "alaindustrial:block/monitor_core_front_8_off",
+    "body": "alaindustrial:block/monitor_core_body_off",
+    "front": "alaindustrial:block/monitor_core_front_8_off"
   },
   "elements": [
     {

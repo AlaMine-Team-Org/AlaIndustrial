@@ -1,167 +1,332 @@
 {
 	"variants": {
-		"cards=0,facing=north": {
+		"cards=0,facing=north,lit=false": {
+			"model": "alaindustrial:block/monitor_core_0_off"
+		},
+		"cards=0,facing=north,lit=true": {
 			"model": "alaindustrial:block/monitor_core_0"
 		},
-		"cards=0,facing=east": {
+		"cards=0,facing=east,lit=false": {
+			"model": "alaindustrial:block/monitor_core_0_off",
+			"y": 90
+		},
+		"cards=0,facing=east,lit=true": {
 			"model": "alaindustrial:block/monitor_core_0",
 			"y": 90
 		},
-		"cards=0,facing=south": {
+		"cards=0,facing=south,lit=false": {
+			"model": "alaindustrial:block/monitor_core_0_off",
+			"y": 180
+		},
+		"cards=0,facing=south,lit=true": {
 			"model": "alaindustrial:block/monitor_core_0",
 			"y": 180
 		},
-		"cards=0,facing=west": {
+		"cards=0,facing=west,lit=false": {
+			"model": "alaindustrial:block/monitor_core_0_off",
+			"y": 270
+		},
+		"cards=0,facing=west,lit=true": {
 			"model": "alaindustrial:block/monitor_core_0",
 			"y": 270
 		},
-		"cards=1,facing=north": {
+		"cards=1,facing=north,lit=false": {
+			"model": "alaindustrial:block/monitor_core_1_off"
+		},
+		"cards=1,facing=north,lit=true": {
 			"model": "alaindustrial:block/monitor_core_1"
 		},
-		"cards=1,facing=east": {
+		"cards=1,facing=east,lit=false": {
+			"model": "alaindustrial:block/monitor_core_1_off",
+			"y": 90
+		},
+		"cards=1,facing=east,lit=true": {
 			"model": "alaindustrial:block/monitor_core_1",
 			"y": 90
 		},
-		"cards=1,facing=south": {
+		"cards=1,facing=south,lit=false": {
+			"model": "alaindustrial:block/monitor_core_1_off",
+			"y": 180
+		},
+		"cards=1,facing=south,lit=true": {
 			"model": "alaindustrial:block/monitor_core_1",
 			"y": 180
 		},
-		"cards=1,facing=west": {
+		"cards=1,facing=west,lit=false": {
+			"model": "alaindustrial:block/monitor_core_1_off",
+			"y": 270
+		},
+		"cards=1,facing=west,lit=true": {
 			"model": "alaindustrial:block/monitor_core_1",
 			"y": 270
 		},
-		"cards=2,facing=north": {
+		"cards=2,facing=north,lit=false": {
+			"model": "alaindustrial:block/monitor_core_2_off"
+		},
+		"cards=2,facing=north,lit=true": {
 			"model": "alaindustrial:block/monitor_core_2"
 		},
-		"cards=2,facing=east": {
+		"cards=2,facing=east,lit=false": {
+			"model": "alaindustrial:block/monitor_core_2_off",
+			"y": 90
+		},
+		"cards=2,facing=east,lit=true": {
 			"model": "alaindustrial:block/monitor_core_2",
 			"y": 90
 		},
-		"cards=2,facing=south": {
+		"cards=2,facing=south,lit=false": {
+			"model": "alaindustrial:block/monitor_core_2_off",
+			"y": 180
+		},
+		"cards=2,facing=south,lit=true": {
 			"model": "alaindustrial:block/monitor_core_2",
 			"y": 180
 		},
-		"cards=2,facing=west": {
+		"cards=2,facing=west,lit=false": {
+			"model": "alaindustrial:block/monitor_core_2_off",
+			"y": 270
+		},
+		"cards=2,facing=west,lit=true": {
 			"model": "alaindustrial:block/monitor_core_2",
 			"y": 270
 		},
-		"cards=3,facing=north": {
+		"cards=3,facing=north,lit=false": {
+			"model": "alaindustrial:block/monitor_core_3_off"
+		},
+		"cards=3,facing=north,lit=true": {
 			"model": "alaindustrial:block/monitor_core_3"
 		},
-		"cards=3,facing=east": {
+		"cards=3,facing=east,lit=false": {
+			"model": "alaindustrial:block/monitor_core_3_off",
+			"y": 90
+		},
+		"cards=3,facing=east,lit=true": {
 			"model": "alaindustrial:block/monitor_core_3",
 			"y": 90
 		},
-		"cards=3,facing=south": {
+		"cards=3,facing=south,lit=false": {
+			"model": "alaindustrial:block/monitor_core_3_off",
+			"y": 180
+		},
+		"cards=3,facing=south,lit=true": {
 			"model": "alaindustrial:block/monitor_core_3",
 			"y": 180
 		},
-		"cards=3,facing=west": {
+		"cards=3,facing=west,lit=false": {
+			"model": "alaindustrial:block/monitor_core_3_off",
+			"y": 270
+		},
+		"cards=3,facing=west,lit=true": {
 			"model": "alaindustrial:block/monitor_core_3",
 			"y": 270
 		},
-		"cards=4,facing=north": {
+		"cards=4,facing=north,lit=false": {
+			"model": "alaindustrial:block/monitor_core_4_off"
+		},
+		"cards=4,facing=north,lit=true": {
 			"model": "alaindustrial:block/monitor_core_4"
 		},
-		"cards=4,facing=east": {
+		"cards=4,facing=east,lit=false": {
+			"model": "alaindustrial:block/monitor_core_4_off",
+			"y": 90
+		},
+		"cards=4,facing=east,lit=true": {
 			"model": "alaindustrial:block/monitor_core_4",
 			"y": 90
 		},
-		"cards=4,facing=south": {
+		"cards=4,facing=south,lit=false": {
+			"model": "alaindustrial:block/monitor_core_4_off",
+			"y": 180
+		},
+		"cards=4,facing=south,lit=true": {
 			"model": "alaindustrial:block/monitor_core_4",
 			"y": 180
 		},
-		"cards=4,facing=west": {
+		"cards=4,facing=west,lit=false": {
+			"model": "alaindustrial:block/monitor_core_4_off",
+			"y": 270
+		},
+		"cards=4,facing=west,lit=true": {
 			"model": "alaindustrial:block/monitor_core_4",
 			"y": 270
 		},
-		"cards=5,facing=north": {
+		"cards=5,facing=north,lit=false": {
+			"model": "alaindustrial:block/monitor_core_5_off"
+		},
+		"cards=5,facing=north,lit=true": {
 			"model": "alaindustrial:block/monitor_core_5"
 		},
-		"cards=5,facing=east": {
+		"cards=5,facing=east,lit=false": {
+			"model": "alaindustrial:block/monitor_core_5_off",
+			"y": 90
+		},
+		"cards=5,facing=east,lit=true": {
 			"model": "alaindustrial:block/monitor_core_5",
 			"y": 90
 		},
-		"cards=5,facing=south": {
+		"cards=5,facing=south,lit=false": {
+			"model": "alaindustrial:block/monitor_core_5_off",
+			"y": 180
+		},
+		"cards=5,facing=south,lit=true": {
 			"model": "alaindustrial:block/monitor_core_5",
 			"y": 180
 		},
-		"cards=5,facing=west": {
+		"cards=5,facing=west,lit=false": {
+			"model": "alaindustrial:block/monitor_core_5_off",
+			"y": 270
+		},
+		"cards=5,facing=west,lit=true": {
 			"model": "alaindustrial:block/monitor_core_5",
 			"y": 270
 		},
-		"cards=6,facing=north": {
+		"cards=6,facing=north,lit=false": {
+			"model": "alaindustrial:block/monitor_core_6_off"
+		},
+		"cards=6,facing=north,lit=true": {
 			"model": "alaindustrial:block/monitor_core_6"
 		},
-		"cards=6,facing=east": {
+		"cards=6,facing=east,lit=false": {
+			"model": "alaindustrial:block/monitor_core_6_off",
+			"y": 90
+		},
+		"cards=6,facing=east,lit=true": {
 			"model": "alaindustrial:block/monitor_core_6",
 			"y": 90
 		},
-		"cards=6,facing=south": {
+		"cards=6,facing=south,lit=false": {
+			"model": "alaindustrial:block/monitor_core_6_off",
+			"y": 180
+		},
+		"cards=6,facing=south,lit=true": {
 			"model": "alaindustrial:block/monitor_core_6",
 			"y": 180
 		},
-		"cards=6,facing=west": {
+		"cards=6,facing=west,lit=false": {
+			"model": "alaindustrial:block/monitor_core_6_off",
+			"y": 270
+		},
+		"cards=6,facing=west,lit=true": {
 			"model": "alaindustrial:block/monitor_core_6",
 			"y": 270
 		},
-		"cards=7,facing=north": {
+		"cards=7,facing=north,lit=false": {
+			"model": "alaindustrial:block/monitor_core_7_off"
+		},
+		"cards=7,facing=north,lit=true": {
 			"model": "alaindustrial:block/monitor_core_7"
 		},
-		"cards=7,facing=east": {
+		"cards=7,facing=east,lit=false": {
+			"model": "alaindustrial:block/monitor_core_7_off",
+			"y": 90
+		},
+		"cards=7,facing=east,lit=true": {
 			"model": "alaindustrial:block/monitor_core_7",
 			"y": 90
 		},
-		"cards=7,facing=south": {
+		"cards=7,facing=south,lit=false": {
+			"model": "alaindustrial:block/monitor_core_7_off",
+			"y": 180
+		},
+		"cards=7,facing=south,lit=true": {
 			"model": "alaindustrial:block/monitor_core_7",
 			"y": 180
 		},
-		"cards=7,facing=west": {
+		"cards=7,facing=west,lit=false": {
+			"model": "alaindustrial:block/monitor_core_7_off",
+			"y": 270
+		},
+		"cards=7,facing=west,lit=true": {
 			"model": "alaindustrial:block/monitor_core_7",
 			"y": 270
 		},
-		"cards=8,facing=north": {
+		"cards=8,facing=north,lit=false": {
+			"model": "alaindustrial:block/monitor_core_8_off"
+		},
+		"cards=8,facing=north,lit=true": {
 			"model": "alaindustrial:block/monitor_core_8"
 		},
-		"cards=8,facing=east": {
+		"cards=8,facing=east,lit=false": {
+			"model": "alaindustrial:block/monitor_core_8_off",
+			"y": 90
+		},
+		"cards=8,facing=east,lit=true": {
 			"model": "alaindustrial:block/monitor_core_8",
 			"y": 90
 		},
-		"cards=8,facing=south": {
+		"cards=8,facing=south,lit=false": {
+			"model": "alaindustrial:block/monitor_core_8_off",
+			"y": 180
+		},
+		"cards=8,facing=south,lit=true": {
 			"model": "alaindustrial:block/monitor_core_8",
 			"y": 180
 		},
-		"cards=8,facing=west": {
+		"cards=8,facing=west,lit=false": {
+			"model": "alaindustrial:block/monitor_core_8_off",
+			"y": 270
+		},
+		"cards=8,facing=west,lit=true": {
 			"model": "alaindustrial:block/monitor_core_8",
 			"y": 270
 		},
-		"cards=9,facing=north": {
+		"cards=9,facing=north,lit=false": {
+			"model": "alaindustrial:block/monitor_core_9_off"
+		},
+		"cards=9,facing=north,lit=true": {
 			"model": "alaindustrial:block/monitor_core_9"
 		},
-		"cards=9,facing=east": {
+		"cards=9,facing=east,lit=false": {
+			"model": "alaindustrial:block/monitor_core_9_off",
+			"y": 90
+		},
+		"cards=9,facing=east,lit=true": {
 			"model": "alaindustrial:block/monitor_core_9",
 			"y": 90
 		},
-		"cards=9,facing=south": {
+		"cards=9,facing=south,lit=false": {
+			"model": "alaindustrial:block/monitor_core_9_off",
+			"y": 180
+		},
+		"cards=9,facing=south,lit=true": {
 			"model": "alaindustrial:block/monitor_core_9",
 			"y": 180
 		},
-		"cards=9,facing=west": {
+		"cards=9,facing=west,lit=false": {
+			"model": "alaindustrial:block/monitor_core_9_off",
+			"y": 270
+		},
+		"cards=9,facing=west,lit=true": {
 			"model": "alaindustrial:block/monitor_core_9",
 			"y": 270
 		},
-		"cards=10,facing=north": {
+		"cards=10,facing=north,lit=false": {
+			"model": "alaindustrial:block/monitor_core_10_off"
+		},
+		"cards=10,facing=north,lit=true": {
 			"model": "alaindustrial:block/monitor_core_10"
 		},
-		"cards=10,facing=east": {
+		"cards=10,facing=east,lit=false": {
+			"model": "alaindustrial:block/monitor_core_10_off",
+			"y": 90
+		},
+		"cards=10,facing=east,lit=true": {
 			"model": "alaindustrial:block/monitor_core_10",
 			"y": 90
 		},
-		"cards=10,facing=south": {
+		"cards=10,facing=south,lit=false": {
+			"model": "alaindustrial:block/monitor_core_10_off",
+			"y": 180
+		},
+		"cards=10,facing=south,lit=true": {
 			"model": "alaindustrial:block/monitor_core_10",
 			"y": 180
 		},
-		"cards=10,facing=west": {
+		"cards=10,facing=west,lit=false": {
+			"model": "alaindustrial:block/monitor_core_10_off",
+			"y": 270
+		},
+		"cards=10,facing=west,lit=true": {
 			"model": "alaindustrial:block/monitor_core_10",
 			"y": 270
 		}

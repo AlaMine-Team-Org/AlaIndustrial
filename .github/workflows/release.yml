@@ -57,7 +57,7 @@ permissions:
 #     which lags from minutes to hours, so a serialized second run can still miss a file
 #     the first one just uploaded and publish a duplicate. Serialization narrows the
 #     window; it does not close it. Closing it needs the Core API with an x-api-key.
-#   * Discord announcement: NOT idempotent at all. A second successful run posts again.
+#   * Discord announcement: not sent from here (announce.yml, once per version).
 concurrency:
   # Prefixed with the workflow name: concurrency groups are repository-global, so an
   # unprefixed "release-vX.Y.Z" could collide with another workflow's group.
@@ -493,22 +493,5 @@ jobs:
           changelog-file: CHANGELOG.md
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-  # The Discord announcement lives in its own reusable workflow so it can be replayed for an
-  # already-published tag without re-running this job's build and upload steps (announce.yml,
-  # `workflow_dispatch`). Runs only on full success, so a broken publication never yields a
-  # "download here" post pointing at nothing; a failed announcement stays a warning, because
-  # the mod is live on every platform by the time it runs.
-  announce:
-    needs: release
-    # `vars.ANNOUNCE_DISCORD` is the deferral switch. Set the repository variable to `false` and a
-    # release publishes to the marketplaces without announcing — the point being a release that has
-    # to clear manual file review first: announcing "download here" while the file is still queued
-    # sends people to a page that has nothing new on it. Post it afterwards by running announce.yml
-    # by hand (`workflow_dispatch`) with the tag, then set the variable back. Unset or any other
-    # value keeps the default: announce on every successful release.
-    if: success() && vars.ANNOUNCE_DISCORD != 'false'
-    uses: ./.github/workflows/announce.yml
-    with:
-      # From `needs`, not `steps`: a job-level `with:` cannot see another job's steps.
-      tag: ${{ needs.release.outputs.tag }}
-    secrets: inherit
+  # No announcement here (MOD-647): a version ships as one tag per Minecraft line, and a post per tag
+  # duplicated the news. The release skill posts once, after every line is verified, via announce.yml.

@@ -1,37 +1,23 @@
 # Installed into the PUBLIC repo at: .github/workflows/announce.yml
 #
-# Posts the release announcement to Discord. Lives on its own so it can be re-run for a tag that
-# is already published (`workflow_dispatch`) without touching the marketplace upload steps — the
-# release job is a single job, so re-running it to fix an announcement would replay the whole
-# build and publish path.
+# Posts ONE Discord announcement per mod version (MOD-647). A version ships as one tag per
+# Minecraft line (vX.Y.Z-mc26.3, vX.Y.Z-mc26.2); a post per tag repeated the same news twice.
+# The release skill runs this once, after every line of the version is verified on the
+# marketplaces; release.yml no longer announces anything itself.
 #
-# Called by release.yml (`workflow_call`) at the end of a successful release, and runnable by hand
-# from the Actions tab when an announcement needs to be reposted.
+#   gh workflow run announce.yml -R AlaMine-Team-Org/AlaIndustrial -f version=X.Y.Z
 name: Announce
+run-name: Announce ${{ inputs.version }}${{ inputs.channel == 'news' && ' (news)' || '' }}
 
 on:
-  workflow_call:
-    inputs:
-      tag:
-        required: true
-        type: string
-      text:
-        required: false
-        type: string
-      channel:
-        required: false
-        type: string
-    secrets:
-      DISCORD_RELEASES_WEBHOOK:
-        required: false
   workflow_dispatch:
     inputs:
-      tag:
-        description: 'Release tag to announce, e.g. v0.1.51'
+      version:
+        description: 'Mod version, e.g. 0.1.183 (every Minecraft line released under it), or one tag, e.g. v0.1.183-mc26.2'
         required: true
         type: string
       text:
-        description: 'Optional custom message (Markdown). Empty = the changelog from the tag.'
+        description: 'Optional custom message (Markdown). Empty = the changelogs of the release.'
         required: false
         type: string
       channel:
@@ -42,6 +28,19 @@ on:
         options:
           - releases
           - news
+      force:
+        description: 'Post again even though this version was already announced'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  actions: read   # the duplicate guard reads this workflow's earlier runs
+
+concurrency:
+  group: ${{ github.workflow }}-${{ inputs.version }}
+  cancel-in-progress: false
 
 jobs:
   announce:
@@ -49,93 +48,104 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.tag }}
 
-      - name: Announce release on Discord
+      - name: Self-test the post composer
+        run: python .github/scripts/test-announcement.py
+
+      - name: Refuse a second post for the same version
+        if: ${{ !inputs.force && inputs.channel != 'news' && inputs.text == '' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION_INPUT: ${{ inputs.version }}
+        run: |
+          prior=$(gh run list -R "$GITHUB_REPOSITORY" --workflow announce.yml --status success --limit 100 \
+            --json databaseId,displayTitle \
+            --jq "[.[] | select(.displayTitle == \"Announce $VERSION_INPUT\" and .databaseId != $GITHUB_RUN_ID)] | length")
+          if [ "$prior" != "0" ]; then
+            echo "::error::$VERSION_INPUT was already announced ($prior earlier run). Re-run with force=true to post again."
+            exit 1
+          fi
+
+      - name: Collect the release lines and compose the post
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION_INPUT: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          case "$VERSION_INPUT" in
+            v*) TAGS="$VERSION_INPUT"; VERSION="${VERSION_INPUT#v}"; VERSION="${VERSION%%-mc*}" ;;
+            *)  VERSION="$VERSION_INPUT"
+                TAGS=$(git ls-remote --tags origin "refs/tags/v${VERSION}-mc*" | awk '{print $2}' \
+                       | { grep -v '\^{}$' || true; } | sed 's#refs/tags/##') ;;
+          esac
+          [ -n "$TAGS" ] || { echo "::error::no release tags found for $VERSION_INPUT"; exit 1; }
+          ARGS=()
+          for T in $TAGS; do
+            # A tag without its GitHub Release means that line never finished publishing.
+            gh release view "$T" -R "$GITHUB_REPOSITORY" >/dev/null \
+              || { echo "::error::$T has no GitHub Release — announce after every line is published"; exit 1; }
+            git fetch --quiet --depth 1 origin "refs/tags/$T:refs/tags/$T"
+            git show "$T:CHANGELOG.md" > "changelog-$T.md"
+            ARGS+=(--line "$T=changelog-$T.md")
+          done
+          python .github/scripts/compose-announcement.py --version "$VERSION" "${ARGS[@]}" --out post.json
+
+          # Release media of the leading line; `discord.<ext>` wins over `changelog.<ext>` (a still
+          # changelog image, or an animation that needs another container for Discord).
+          MT=$(jq -r .media_tag post.json)
+          MEDIA=""
+          for name in $(git ls-tree --name-only "$MT" "release-media/$MT/" | sort -r); do
+            base=$(basename "$name")
+            case "${base,,}" in
+              discord.png|discord.jpg|discord.jpeg|discord.webp|discord.gif|discord.mp4|discord.webm) MEDIA="$name"; break ;;
+            esac
+          done
+          if [ -z "$MEDIA" ]; then
+            for name in $(git ls-tree --name-only "$MT" "release-media/$MT/"); do
+              base=$(basename "$name")
+              case "${base,,}" in
+                changelog.png|changelog.jpg|changelog.jpeg|changelog.webp|changelog.gif) MEDIA="$name"; break ;;
+              esac
+            done
+          fi
+          if [ -n "$MEDIA" ]; then
+            git show "$MT:$MEDIA" > "media-$(basename "$MEDIA")"
+            echo "MEDIA=media-$(basename "$MEDIA")" >> "$GITHUB_ENV"
+          fi
+          echo "MEDIA_TAG=$MT" >> "$GITHUB_ENV"
+
+      - name: Announce on Discord
         env:
           DISCORD_RELEASES_WEBHOOK: ${{ secrets.DISCORD_RELEASES_WEBHOOK }}
           DISCORD_NEWS_WEBHOOK: ${{ secrets.DISCORD_NEWS_WEBHOOK }}
-          TAG: ${{ inputs.tag }}
           CUSTOM_TEXT: ${{ inputs.text || '' }}
           CHANNEL: ${{ inputs.channel || 'releases' }}
         run: |
-          # Channel → webhook secret. A dispatch names its channel explicitly, so a missing
-          # secret is an ERROR there, never a quiet skip and never a fallback into the other
-          # channel (a post landing in the wrong channel is the incident this guards against).
-          # The workflow_call path stays warn-and-skip: release.yml treats announcement
-          # failures as warnings, and a called run always targets releases.
+          # Channel → webhook secret. A missing secret is an ERROR, never a quiet skip and never a
+          # fallback into the other channel (a post landing in the wrong channel is the incident
+          # this guards against).
           case "$CHANNEL" in
             releases) DISCORD_WEBHOOK="$DISCORD_RELEASES_WEBHOOK" ;;
             news)     DISCORD_WEBHOOK="$DISCORD_NEWS_WEBHOOK" ;;
             *) echo "::error::unknown channel '$CHANNEL' (expected releases or news)"; exit 1 ;;
           esac
           if [ -z "$DISCORD_WEBHOOK" ]; then
-            if [ "${GITHUB_EVENT_NAME:-}" = "workflow_dispatch" ]; then
-              echo "::error::webhook secret for channel '$CHANNEL' is not set — nothing was posted"; exit 1
-            fi
-            echo "::warning::webhook for channel '$CHANNEL' not set — skipping Discord announce"; exit 0
-          fi
-          VERSION="${TAG#v}"
-
-          # Custom message mode: a dispatch may carry the exact post to send (Markdown), e.g. a
-          # short news item instead of the full changelog. Empty input keeps the default below,
-          # so the workflow_call path from release.yml is unchanged.
-          if [ -n "$CUSTOM_TEXT" ]; then
-            DESC="$CUSTOM_TEXT"
-          else
-            # Description = player-facing CHANGELOG.md minus the "## X.Y.Z" heading and the
-            # <p><img> line (embeds render Markdown, not HTML; the media is attached below).
-            # "### Foo" is rewritten to bold: Markdown headers are unreliable inside embeds
-            # (dead in field values, inconsistent in descriptions), bold renders everywhere.
-            # Leading blank lines stripped. Embed description limit is 4096 chars; the release
-            # skill keeps changelogs to about one screen, well under that.
-            DESC="$(grep -vE '^## |<p><img' CHANGELOG.md | sed -E 's/^### (.*)$/**\1**/' | sed '/./,$!d')"
+            echo "::error::webhook secret for channel '$CHANNEL' is not set — nothing was posted"; exit 1
           fi
 
-          # Release media. Two things used to go wrong here and both are fixed:
-          #
-          #  1. The extension was hardcoded to .png while prepare-release-image.sh accepts
-          #     png|jpg|jpeg|webp|gif — so 0.1.51, which shipped an animated .webp, announced
-          #     with no image at all. Any supported extension is picked up now.
-          #  2. The file was linked as `image.url` on the embed. Discord fetches those through
-          #     its media proxy, which is unreliable for animated formats. Uploading the file
-          #     with the webhook and pointing the embed at `attachment://<name>` keeps the same
-          #     look while giving Discord the real bytes to animate or play.
-          #
-          # `discord.<ext>` wins over `changelog.<ext>` when present: it is the escape hatch for
-          # a release whose changelog image is a still, or whose animation needs a different
-          # container for Discord specifically (mp4 plays with a scrubber, gif always animates).
-          MEDIA=""
-          for cand in "release-media/$TAG"/discord.* "release-media/$TAG"/changelog.*; do
-            case "${cand,,}" in
-              *.png|*.jpg|*.jpeg|*.webp|*.gif|*.mp4|*.webm)
-                [ -f "$cand" ] && { MEDIA="$cand"; break; } ;;
-            esac
-          done
-          ICON="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/$TAG/common/src/main/resources/assets/alaindustrial/icon-128.png"
-
-          # Player-facing download links. CurseForge has no clean per-loader URL without the
-          # file id (fragile on re-runs), so link the files page — the loader filter lives
-          # there. Modrinth version URLs are predictable. The GitHub Release is the embed's
-          # title link, so it is intentionally NOT repeated in this list (project decision).
-          CF="https://www.curseforge.com/minecraft/mc-mods/ala-industrial/files"
-          MR_F="https://modrinth.com/mod/ala-industrial/version/${VERSION}+fabric"
-          MR_N="https://modrinth.com/mod/ala-industrial/version/${VERSION}+neoforge"
-          GH="https://github.com/AlaMine-Team-Org/AlaIndustrial/releases/tag/$TAG"
-          DL="$(printf '%s\n%s' \
-            "**CurseForge** — [Fabric & NeoForge]($CF)" \
-            "**Modrinth** — [Fabric]($MR_F) · [NeoForge]($MR_N)")"
-
+          DESC="$(jq -r .description post.json)"
+          # Custom message mode: the exact post to send (Markdown), e.g. a short news item.
+          [ -n "$CUSTOM_TEXT" ] && DESC="$CUSTOM_TEXT"
+          ICON="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/$MEDIA_TAG/common/src/main/resources/assets/alaindustrial/icon-128.png"
           NAME=""
-          [ -n "$MEDIA" ] && NAME="$(basename "$MEDIA")"
+          [ -n "${MEDIA:-}" ] && NAME="$(basename "$MEDIA")"
           payload="$(jq -n \
             --arg username "Ala Industrial" \
             --arg avatar "$ICON" \
-            --arg title "Ala Industrial $TAG" \
-            --arg url "$GH" \
+            --arg title "$(jq -r .title post.json)" \
+            --arg url "$(jq -r .url post.json)" \
             --arg desc "$DESC" \
-            --arg dl "$DL" \
+            --arg dl "$(jq -r .downloads post.json)" \
             --arg name "$NAME" \
             '{
                username: $username,
@@ -149,26 +159,24 @@ jobs:
 
           # The payload reaches curl through a FILE, never inline. In `-F name=value` curl treats
           # `;` inside the value as the start of a field parameter (`;type=`, `;filename=`), so a
-          # changelog containing a semicolon — ours does — arrives at Discord as truncated JSON
-          # and is rejected: "Expected payload_json to be a valid JSON string" (HTTP 400, seen on
-          # the first attempt to attach 0.1.51's animation).
+          # changelog containing a semicolon arrives at Discord as truncated JSON (HTTP 400).
           printf '%s' "$payload" > disc_payload.json
 
-          if [ -n "$MEDIA" ]; then
+          if [ -n "${MEDIA:-}" ]; then
             echo "Attaching release media: $MEDIA ($(du -h "$MEDIA" | cut -f1))"
           else
-            echo "::warning::no release media found under release-media/$TAG — announcing text only"
+            echo "::warning::no release media under release-media/$MEDIA_TAG — announcing text only"
           fi
 
           # Discord sits behind Cloudflare, which 403s (error 1010) requests with a
           # default library User-Agent — a descriptive UA is required (verified in test).
           # Content-Type is NOT set by hand here: curl must pick the multipart boundary itself.
           for attempt in 1 2 3; do
-            if [ -n "$MEDIA" ]; then
+            if [ -n "${MEDIA:-}" ]; then
               code=$(curl -sS --connect-timeout 20 --max-time 120 -o disc_resp.json -w '%{http_code}' \
                 -H "User-Agent: AlaIndustrial-Release/1.0 (+https://github.com/AlaMine-Team-Org/AlaIndustrial)" \
                 -F "payload_json=<disc_payload.json;type=application/json" \
-                -F "files[0]=@$MEDIA" \
+                -F "files[0]=@$MEDIA;filename=$NAME" \
                 -X POST "$DISCORD_WEBHOOK")
             else
               code=$(curl -sS --connect-timeout 20 --max-time 60 -o disc_resp.json -w '%{http_code}' \
@@ -186,5 +194,7 @@ jobs:
               sleep 5
             fi
           done
-          echo "::warning::Discord announce failed after 3 attempts (last HTTP $code) — the release itself is fine."
-          exit 0
+          # A dispatched announcement is the whole job: failing to post is a red run, so the
+          # duplicate guard never counts it as done.
+          echo "::error::Discord announce failed after 3 attempts (last HTTP $code)"
+          exit 1
