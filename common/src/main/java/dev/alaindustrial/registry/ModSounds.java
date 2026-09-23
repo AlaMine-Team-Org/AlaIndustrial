@@ -103,6 +103,7 @@ public final class ModSounds {
 	public static Supplier<SoundEvent> REACTOR_DOOR_CLOSE = unbound("REACTOR_DOOR_CLOSE");
 	public static Supplier<SoundEvent> RECYCLER_HUM = unbound("RECYCLER_HUM");
 	public static Supplier<SoundEvent> FERMENTER_HUM = unbound("FERMENTER_HUM");
+	public static Supplier<SoundEvent> MOB_REPELLER_HUM = unbound("MOB_REPELLER_HUM");
 
 	/**
 	 * Every sound event, in one shared registration order. Both loaders replay this list; see
@@ -189,7 +190,9 @@ public final class ModSounds {
 			variableRange("recycler_hum", s -> RECYCLER_HUM = s),
 			// MOD-447 — wet, airy compost bubbling; default humVolume (0.35), no request to tune it
 			// quieter this time.
-			variableRange("fermenter_hum", s -> FERMENTER_HUM = s));
+			variableRange("fermenter_hum", s -> FERMENTER_HUM = s),
+			// MOD-447 — the guard field's sonar-like ping, shared by all three repeller tiers.
+			variableRange("mob_repeller_hum", s -> MOB_REPELLER_HUM = s));
 
 	private ModSounds() {
 	}

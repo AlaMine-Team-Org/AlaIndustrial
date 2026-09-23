@@ -10,6 +10,8 @@ import dev.alaindustrial.block.entity.ElectricFurnaceBlockEntity;
 import dev.alaindustrial.block.entity.ExtractorBlockEntity;
 import dev.alaindustrial.block.entity.GalvanicBathBlockEntity;
 import dev.alaindustrial.block.entity.GeothermalGeneratorBlockEntity;
+import dev.alaindustrial.block.entity.IncubatorBlockEntity;
+import dev.alaindustrial.block.entity.KokSagyzRootBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
 import dev.alaindustrial.block.entity.PumpBlockEntity;
@@ -26,6 +28,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FarmlandBlock;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.TagValueInput;
 
@@ -701,6 +705,84 @@ public final class PersistenceScenarios {
 		if (!untouched.getItem(BatteryBoxBlockEntity.DISCHARGE_SLOT).is(Items.REDSTONE)) {
 			helper.fail("a current-version save was migrated anyway: discharge="
 					+ untouched.getItem(BatteryBoxBlockEntity.DISCHARGE_SLOT));
+			return;
+		}
+		helper.succeed();
+	}
+
+	// -- MOD-645: a world saved on MC 26.2 opens on 26.3 ------------------------------------------
+
+	/**
+	 * @implements R-PER-01 -- hand-built 26.2 tags ({@code {Name[, Properties]}} — the shape
+	 *     {@code BlockState.CODEC} wrote before 26.3 replaced it with a string-or-{@code {id}}
+	 *     pair) load into the two block entities that persist a BlockState, and a re-save writes
+	 *     the 26.3 shape. Nothing here came from the current save path: this is the "a 26.2 world
+	 *     opens" guarantee, in the spirit of {@link #mod556_preRefactorSavesStillLoad}.
+	 * @covers R-PER-01
+	 *
+	 * <p>Without the legacy branch of the tolerant codec ({@code LegacyBlockStates}) the decode
+	 * fails and the reader's default kicks in: the incubator's dome quietly degrades to plain
+	 * glass and a sand-rooted kok-sagyz root forgets its sand growth bonus. The re-save assertion
+	 * pins the one-way migration: after one load+save the legacy shape is gone for good, so the
+	 * branch never fires again for that block.
+	 */
+	public static void mod645_mc262BlockStateTagsStillLoad(GameTestHelper helper) {
+		ServerLevel level = helper.getLevel();
+		RegistryAccess registries = level.registryAccess();
+		BlockPos abs = helper.absolutePos(POS);
+
+		// 1. Incubator dome: {Name} only — the on-disk shape of every real 26.2 save (dumped from
+		// the dev worlds: no Properties key, glass blocks carry none).
+		helper.setBlock(POS, ModContent.INCUBATOR.get());
+		CompoundTag dome = new CompoundTag();
+		dome.putString("Name", "minecraft:pink_stained_glass");
+		CompoundTag incubatorTag = new CompoundTag();
+		incubatorTag.put("DomeSource", dome);
+		IncubatorBlockEntity incubator = new IncubatorBlockEntity(abs, level.getBlockState(abs));
+		incubator.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, incubatorTag));
+		if (!incubator.domeSource().is(Blocks.STAINED_GLASS.pink())) {
+			helper.fail("a 26.2 DomeSource tag did not come back: " + incubator.domeSource());
+			return;
+		}
+
+		// 2. The re-save writes the 26.3 shape: a default state encodes as its plain registry name
+		// (a string tag), and the legacy compound is gone for good.
+		CompoundTag resaved = incubator.saveCustomOnly(registries);
+		if (!"minecraft:pink_stained_glass".equals(resaved.getStringOr("DomeSource", "<not a string>"))) {
+			helper.fail("a re-saved dome must write the 26.3 string shape, got: " + resaved.get("DomeSource"));
+			return;
+		}
+
+		// 3. Kok-sagyz root soil: {Name} only again — sand is the whole point (groundPercent keys
+		// the growth bonus on it, and playerDestroy hands the block back).
+		BlockPos absB = helper.absolutePos(POS_B);
+		helper.setBlock(POS_B, ModContent.KOK_SAGYZ_ROOT.get());
+		CompoundTag soilTag = new CompoundTag();
+		CompoundTag sand = new CompoundTag();
+		sand.putString("Name", "minecraft:sand");
+		soilTag.put("soil", sand);
+		KokSagyzRootBlockEntity sandyRoot = new KokSagyzRootBlockEntity(absB, level.getBlockState(absB));
+		sandyRoot.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, soilTag));
+		if (!sandyRoot.soil().is(Blocks.SAND)) {
+			helper.fail("a 26.2 soil tag did not come back: " + sandyRoot.soil());
+			return;
+		}
+
+		// 4. And with Properties: farmland is a valid rootable soil (SUPPORTS_CROPS) and carries
+		// moisture — the legacy branch must apply properties, not just the block name.
+		BlockPos absC = helper.absolutePos(POS_C);
+		helper.setBlock(POS_C, ModContent.KOK_SAGYZ_ROOT.get());
+		CompoundTag moistTag = new CompoundTag();
+		CompoundTag farmland = new CompoundTag();
+		farmland.putString("Name", "minecraft:farmland");
+		CompoundTag properties = new CompoundTag();
+		properties.putString("moisture", "7");
+		farmland.put("Properties", properties);
+		moistTag.put("soil", farmland);
+		KokSagyzRootBlockEntity moistRoot = new KokSagyzRootBlockEntity(absC, level.getBlockState(absC));
+		moistRoot.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, moistTag));
+		if (!moistRoot.soil().is(Blocks.FARMLAND) || moistRoot.soil().getValue(FarmlandBlock.MOISTURE) != 7) {
+			helper.fail("a 26.2 soil tag with Properties lost its properties: " + moistRoot.soil());
 			return;
 		}
 		helper.succeed();

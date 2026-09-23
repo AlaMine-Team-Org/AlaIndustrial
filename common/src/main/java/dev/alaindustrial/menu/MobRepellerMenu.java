@@ -24,9 +24,7 @@ import net.minecraft.world.level.block.Block;
  * slot acceptance) ride in through the constructor / the block entity, so the screen logic cannot
  * drift between tiers.
  *
- * <p>No upgrade panel ({@code hasUpgradePanel() == false} on the block entity): an overclocker or a
- * mute chip in a field block would be a dead promise, same reasoning as the Energy Condenser
- * (MOD-393). The client-side dummy is sized to the machine slot alone accordingly.
+ * <p>Standard upgrade panel since MOD-447; the overclock arm is locked because the block is not overclockable.
  *
  * <p>The dome toggle rides the vanilla container-button channel, not a payload of our own: the
  * screen ({@code AbstractMobRepellerScreen}) sends {@link #BUTTON_TOGGLE_DOME} through
@@ -57,10 +55,11 @@ public class MobRepellerMenu extends MachineMenu {
 		this.repeller = be;
 	}
 
-	/** Client side: dummy container of exactly the machine's one slot, no upgrade block. */
+	/** Client side: dummy container of the vessel slot plus the upgrade block. */
 	protected MobRepellerMenu(MenuType<? extends MobRepellerMenu> type, int syncId, Inventory playerInventory,
 			Block block) {
-		super(type, syncId, playerInventory, new SimpleContainer(1),
+		super(type, syncId, playerInventory,
+				new SimpleContainer(MobRepellerBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
 				new SimpleContainerData(MachineBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL, block);
 		this.repeller = null;
 	}
@@ -75,12 +74,6 @@ public class MobRepellerMenu extends MachineMenu {
 	/** Client side, LV — referenced by the {@code ContentManifest.MENUS} entry. */
 	public MobRepellerMenu(int syncId, Inventory playerInventory) {
 		this(ModContent.MOB_REPELLER_MENU.get(), syncId, playerInventory, ModContent.MOB_REPELLER.get());
-	}
-
-	/** No panel: see the class doc. */
-	@Override
-	public boolean hasUpgradePanel() {
-		return false;
 	}
 
 	/**

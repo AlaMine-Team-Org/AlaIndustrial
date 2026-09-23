@@ -7,6 +7,7 @@ import dev.alaindustrial.entity.MobRepellerField;
 import dev.alaindustrial.item.misc.SoulVesselItem;
 import dev.alaindustrial.menu.MobRepellerMenu;
 import dev.alaindustrial.registry.ModContent;
+import java.util.HashMap;
 import java.util.Map;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -40,8 +41,10 @@ import net.minecraft.world.level.block.state.BlockState;
  * chip evolution (MOD-211). The MV/HV subclasses override the four tier hooks and nothing else.
  */
 public class MobRepellerBlockEntity extends MachineBlockEntity implements MenuProvider {
-	/** The single vessel slot; upgrade slots do not exist here ({@link #hasUpgradePanel()}). */
+	/** The single vessel slot; the four upgrade slots follow it at the tail (MOD-080). */
 	public static final int VESSEL_SLOT = 0;
+	/** Machine slots before the upgrade panel — the vessel alone. The client menu stub sizes from this. */
+	public static final int SLOT_COUNT = 1;
 
 	/** Ticks until the next zone sweep; the per-tick upkeep drain is independent of this. */
 	private int sweepCooldown;
@@ -53,7 +56,7 @@ public class MobRepellerBlockEntity extends MachineBlockEntity implements MenuPr
 	protected MobRepellerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state,
 			EnergyTier tier, long capacity) {
 		// One machine slot (the vessel); consumer contract: maxInsert = tier voltage, no extraction.
-		super(type, pos, state, tier, 1, capacity, tier.maxVoltage(), 0L);
+		super(type, pos, state, tier, SLOT_COUNT, capacity, tier.maxVoltage(), 0L);
 	}
 
 	// --- tier hooks: the ONLY thing the MV/HV subclasses change ---
@@ -80,11 +83,7 @@ public class MobRepellerBlockEntity extends MachineBlockEntity implements MenuPr
 
 	// --- machine contract ---
 
-	/** No upgrade panel: overclockers/mute chips would be a dead promise on a field block. */
-	@Override
-	public boolean hasUpgradePanel() {
-		return false;
-	}
+	// Default upgrade panel (MOD-447): mute and stats chips work here; the overclock arm locks (not Overclockable).
 
 	/** Pure consumer on every face — the field is radial, so no face is special. */
 	@Override
@@ -100,7 +99,7 @@ public class MobRepellerBlockEntity extends MachineBlockEntity implements MenuPr
 		if (target != null) {
 			ItemStack vessel = items.get(VESSEL_SLOT);
 			if (!vessel.isEmpty() && SoulVesselItem.kills(vessel) >= evolveKillsNeeded()) {
-				evolveInto(level, pos, target, Map.of(VESSEL_SLOT, ItemStack.EMPTY));
+				evolveInto(level, pos, target, evolutionSlots());
 				return 0; // this block entity is gone after the transform
 			}
 		}
@@ -113,6 +112,7 @@ public class MobRepellerBlockEntity extends MachineBlockEntity implements MenuPr
 		//    documented to INVERT should it ever be built.
 		if (level.hasNeighborSignal(pos)) {
 			updateLit(false);
+			recordEuRate(0);
 			return IDLE_SLEEP_TICKS;
 		}
 
@@ -123,9 +123,11 @@ public class MobRepellerBlockEntity extends MachineBlockEntity implements MenuPr
 		if (!active) {
 			// Starved: sleep — energy delivery wakes this entity through the buffer's commit hook,
 			// same contract the electric heater relies on.
+			recordEuRate(0);
 			return IDLE_SLEEP_TICKS;
 		}
 		energy.drainInternal(cost);
+		recordEuRate(cost);
 		setChanged();
 		if (--sweepCooldown <= 0) {
 			sweepCooldown = Math.max(1, Config.mobRepellerScanIntervalTicks);
@@ -134,6 +136,16 @@ public class MobRepellerBlockEntity extends MachineBlockEntity implements MenuPr
 			}
 		}
 		return 0;
+	}
+
+	/** Slots the evolved tier receives: the vessel is consumed, the upgrade chips move across with the block. */
+	private Map<Integer, ItemStack> evolutionSlots() {
+		Map<Integer, ItemStack> slots = new HashMap<>();
+		slots.put(VESSEL_SLOT, ItemStack.EMPTY);
+		for (int i = 0; i < UPGRADE_SLOT_COUNT; i++) {
+			slots.put(upgradeSlotStart() + i, getUpgradeStack(i).copy());
+		}
+		return slots;
 	}
 
 	/**

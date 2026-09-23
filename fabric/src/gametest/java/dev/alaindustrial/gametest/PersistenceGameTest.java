@@ -124,4 +124,16 @@ public class PersistenceGameTest {
 	public void mod556Per03_dataVersionMatchesTheLadder(GameTestHelper helper) {
 		PersistenceScenarios.mod556_dataVersionMatchesTheLadder(helper);
 	}
+
+	// -- MOD-645: a world saved on MC 26.2 opens on 26.3 --
+
+	/**
+	 * Hand-built 26.2 {@code {Name[, Properties]}} tags load into the incubator's dome and the
+	 * kok-sagyz root's soil, and a re-save writes the 26.3 shape. Body:
+	 * {@link PersistenceScenarios#mod645_mc262BlockStateTagsStillLoad}.
+	 */
+	@GameTest
+	public void mod645Per01_mc262BlockStateTagsStillLoad(GameTestHelper helper) {
+		PersistenceScenarios.mod645_mc262BlockStateTagsStillLoad(helper);
+	}
 }

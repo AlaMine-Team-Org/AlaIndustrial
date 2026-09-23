@@ -691,7 +691,10 @@ public final class IncubatorBlockEntity extends MachineBlockEntity implements Ov
 		// exactly the machine those worlds already had.
 		fluidTank.load(input, "FluidTank");
 		waterBoosted = input.getBooleanOr("WaterBoosted", false);
-		domeSource = input.read("DomeSource", BlockState.CODEC)
+		// Tolerant read (MOD-645): a world saved on MC 26.2 carries {Name, Properties} — the shape
+		// BlockState.CODEC wrote before 26.3 changed it to a string-or-{id} pair. Without the legacy
+		// branch the decode fails and a coloured dome quietly degrades to the plain-glass default.
+		domeSource = input.read("DomeSource", LegacyBlockStates.TOLERANT_CODEC)
 				.orElse(Blocks.GLASS.defaultBlockState());
 		pendingOutcome = input.getString("PendingOutcome").map(IncubatorBlockEntity::outcomeByName)
 				.orElse(null);

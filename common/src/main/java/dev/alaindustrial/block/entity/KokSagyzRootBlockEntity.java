@@ -53,7 +53,10 @@ public class KokSagyzRootBlockEntity extends BlockEntity {
 	@Override
 	protected void loadAdditional(ValueInput input) {
 		super.loadAdditional(input);
-		soil = safeSoil(input.read("soil", BlockState.CODEC).orElse(Blocks.DIRT.defaultBlockState()));
+		// Tolerant read (MOD-645): {Name, Properties} from a 26.2 world is the pre-26.3 codec shape;
+		// sand must survive the trip or the root loses its sand growth bonus and diggers get dirt.
+		soil = safeSoil(input.read("soil", LegacyBlockStates.TOLERANT_CODEC)
+				.orElse(Blocks.DIRT.defaultBlockState()));
 	}
 
 	@Override

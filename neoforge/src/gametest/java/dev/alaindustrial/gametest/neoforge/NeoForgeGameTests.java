@@ -2063,6 +2063,9 @@ public final class NeoForgeGameTests {
 				PersistenceScenarios::mod556_preRefactorSavesStillLoad);
 		registerTest(event, "persistence_mod556_data_version_matches_the_ladder", 40, true,
 				PersistenceScenarios::mod556_dataVersionMatchesTheLadder);
+		// MOD-645: a world saved on MC 26.2 opens on 26.3 (pre-26.3 BlockState codec shape).
+		registerTest(event, "persistence_mod645_mc262_blockstate_tags_still_load", 40, true,
+				PersistenceScenarios::mod645_mc262BlockStateTagsStillLoad);
 		registerTest(event, "torch_torches_emit_vanilla_torch_light", 40, true,
 				EnrichedUraniumTorchScenarios::torchesEmitVanillaTorchLight);
 		registerTest(event, "torch_wall_torch_drops_standing_torch", 40, true,

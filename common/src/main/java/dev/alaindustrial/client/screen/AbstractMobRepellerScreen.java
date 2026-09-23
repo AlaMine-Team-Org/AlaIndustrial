@@ -105,6 +105,9 @@ public abstract class AbstractMobRepellerScreen<T extends MobRepellerMenu> exten
 	@Override
 	public void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		super.extractContents(graphics, mouseX, mouseY, partialTick);
+		if (this.menu.isPanelOpen()) {
+			return; // the modal upgrade panel owns this area
+		}
 		drawDomeButton(graphics, mouseX, mouseY);
 		drawVesselStatus(graphics);
 	}
@@ -185,7 +188,7 @@ public abstract class AbstractMobRepellerScreen<T extends MobRepellerMenu> exten
 	@Override
 	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		super.extractTooltip(graphics, mouseX, mouseY);
-		if (overButton(mouseX, mouseY)) {
+		if (!this.menu.isPanelOpen() && overButton(mouseX, mouseY)) {
 			graphics.setTooltipForNextFrame(this.font,
 					Component.translatable(domeShown()
 							? "gui.alaindustrial.mob_repeller.dome.hide"
