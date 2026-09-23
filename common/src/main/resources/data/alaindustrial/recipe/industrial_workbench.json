@@ -3,12 +3,14 @@
   "category": "misc",
   "key": {
     "T": "#c:ingots/tin",
+    "G": "alaindustrial:wooden_gear",
+    "C": "minecraft:crafting_table",
     "P": "#minecraft:planks"
   },
   "pattern": [
-    "TT",
-    "PP",
-    "PP"
+    "TGT",
+    "GCG",
+    "PPP"
   ],
   "result": {
     "id": "alaindustrial:industrial_workbench"

@@ -882,6 +882,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> CRYSTAL_FARM_CONTROLLER_BE = unbound("CRYSTAL_FARM_CONTROLLER_BE");
 	public static Supplier<BlockEntityType<?>> WORKSTATION_BE = unbound("WORKSTATION_BE");
 	public static Supplier<BlockEntityType<?>> KOK_SAGYZ_ROOT_BE = unbound("KOK_SAGYZ_ROOT_BE");
+	public static Supplier<BlockEntityType<?>> INDUSTRIAL_WORKBENCH_BE = unbound("INDUSTRIAL_WORKBENCH_BE");
 	public static Supplier<BlockEntityType<?>> ELECTRIC_HEATER_BE = unbound("ELECTRIC_HEATER_BE");
 	public static Supplier<BlockEntityType<?>> CHARGE_PAD_BE = unbound("CHARGE_PAD_BE");
 	public static Supplier<BlockEntityType<?>> ENERGY_CONDENSER_BE = unbound("ENERGY_CONDENSER_BE");

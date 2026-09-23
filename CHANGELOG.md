@@ -1,14 +1,14 @@
 # Changelog
 
-## 0.1.184
+## 0.1.185
 
-<p><img alt="Ala Industrial 0.1.184 - the new monitor core in a monitoring wall" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.184-mc26.3/release-media/v0.1.184-mc26.3/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial Minecraft mod: the Industrial Workbench remembers the last recipe and shows it as a ghost layout when reopened" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.185-mc26.3/release-media/v0.1.185-mc26.3/changelog.png" width="720"></p>
 
-1 update in this release. The monitoring wall's core gets a new look.
+1 update in this release. The Industrial Workbench becomes a real crafting table - one that remembers.
 
-### Improved
+### New
 
-- **The monitor core has a new model.** The flat cube gives way to a dark casing with amber
-  eyes, framed edges and the card rack on its front. The core glows while it has power and goes
-  dark without it, and every seated capacity card lights its slot in cyan. Labels on the core's
-  screen no longer run past the frame.
+- **The Industrial Workbench is now a crafting table that remembers.** Right-click opens an
+  ordinary 3×3 crafting grid with the recipe book; the next time you open it, the grid shows the
+  last recipe crafted on it as a translucent hint. It also has a new look and a new recipe: tin,
+  wooden gears and a plain crafting table in the middle.

@@ -44,6 +44,7 @@ import dev.alaindustrial.block.HighAltitudeWindMillBlock;
 import dev.alaindustrial.block.IncubatorBlock;
 import dev.alaindustrial.block.IncubatorDomeBlock;
 import dev.alaindustrial.block.IronChestBlock;
+import dev.alaindustrial.block.IndustrialWorkbenchBlock;
 import dev.alaindustrial.block.IronFurnaceBlock;
 import dev.alaindustrial.block.IrradiatedSoilBlock;
 import dev.alaindustrial.block.ItemPipeBlock;
@@ -123,6 +124,7 @@ import dev.alaindustrial.block.entity.GoldChestBlockEntity;
 import dev.alaindustrial.block.entity.HighAltitudeWindMillBlockEntity;
 import dev.alaindustrial.block.entity.IncubatorBlockEntity;
 import dev.alaindustrial.block.entity.IncubatorMode;
+import dev.alaindustrial.block.entity.IndustrialWorkbenchBlockEntity;
 import dev.alaindustrial.block.entity.IronChestBlockEntity;
 import dev.alaindustrial.block.entity.IronFurnaceBlockEntity;
 import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
@@ -843,8 +845,8 @@ public final class ContentManifest {
 	public static final BlockDef<Block> TEMPERED_IRON_PLATE_BLOCK =
 			block("tempered_iron_plate_block", Block::new, s -> ModContent.TEMPERED_IRON_PLATE_BLOCK = s);
 	// Industrial Workbench (MOD-062) — the Industrialist villager's job-site block.
-	public static final BlockDef<Block> INDUSTRIAL_WORKBENCH =
-			block("industrial_workbench", Block::new, s -> ModContent.INDUSTRIAL_WORKBENCH = s);
+	public static final BlockDef<IndustrialWorkbenchBlock> INDUSTRIAL_WORKBENCH =
+			block("industrial_workbench", IndustrialWorkbenchBlock::new, s -> ModContent.INDUSTRIAL_WORKBENCH = s);
 	// Enriched Uranium Torch (MOD-085) — vanilla-behaviour torch, light 14, green flame.
 	// The WALL variant must stay directly after the standing one: its BLOCK_PROPS entry reads the
 	// already-registered standing torch for its loot table and description.
@@ -2381,7 +2383,11 @@ public final class ContentManifest {
 			// MOD-483: one type for all three parts — the casing and the upper half carry an inert one,
 			// because a state whose block is an EntityBlock has to produce a block entity.
 			blockEntity("workstation", WorkstationBlockEntity.class, WorkstationBlockEntity::new,
-					s -> ModContent.WORKSTATION_BE = s, "workstation"));
+					s -> ModContent.WORKSTATION_BE = s, "workstation"),
+			// MOD-656: the workbench's memory of the last recipe crafted on it.
+			blockEntity("industrial_workbench", IndustrialWorkbenchBlockEntity.class,
+					IndustrialWorkbenchBlockEntity::new,
+					s -> ModContent.INDUSTRIAL_WORKBENCH_BE = s, "industrial_workbench"));
 
 	/**
 	 * The definition for block-entity {@code id}, checked against the type the caller expects.
