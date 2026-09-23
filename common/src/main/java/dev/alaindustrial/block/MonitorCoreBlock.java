@@ -20,6 +20,8 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
@@ -49,15 +51,22 @@ public class MonitorCoreBlock extends HorizontalMachineBlock {
 	public static final IntegerProperty CARDS =
 			IntegerProperty.create("cards", 0, MonitorCoreBlockEntity.CARD_SLOTS);
 
+	/**
+	 * Whether the core has power to run on (MOD-650). The designer's model has a lit and an unlit skin:
+	 * amber eyes and the seated cards' cyan glow go dark when the buffer is empty. Defaults to unlit,
+	 * so a core placed before this property existed loads dark and lights at its first server tick.
+	 */
+	public static final BooleanProperty LIT = BlockStateProperties.LIT;
+
 	public MonitorCoreBlock(Properties properties) {
 		super(properties);
-		registerDefaultState(defaultBlockState().setValue(CARDS, 0));
+		registerDefaultState(defaultBlockState().setValue(CARDS, 0).setValue(LIT, false));
 	}
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
-		builder.add(CARDS);
+		builder.add(CARDS, LIT);
 	}
 
 	@Override

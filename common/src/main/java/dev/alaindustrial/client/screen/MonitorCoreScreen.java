@@ -2,6 +2,7 @@ package dev.alaindustrial.client.screen;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.MonitorCoreBlockEntity;
+import dev.alaindustrial.client.screen.tabs.PageText;
 import dev.alaindustrial.menu.MonitorCoreMenu;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -57,6 +58,13 @@ public class MonitorCoreScreen extends AbstractContainerScreen<MonitorCoreMenu> 
 	// without it draws nothing at all — which is exactly how the first build shipped a blank panel.
 	private static final int TEXT = 0xFF3F3F3F;
 	private static final int TEXT_DIM = 0xFF6B6B6B;
+
+	/**
+	 * Where the right-hand column of text must stop: the panel's inner edge. A translated label that
+	 * runs longer shrinks to fit instead of spilling over the frame — the Russian "insert a capacity
+	 * card" status did exactly that (MOD-650).
+	 */
+	private static final int TEXT_RIGHT = 192;
 
 	/** Window size: the rack of five rows is what makes this taller than a machine screen. */
 	private static final int WIDTH = 200;
@@ -128,36 +136,41 @@ public class MonitorCoreScreen extends AbstractContainerScreen<MonitorCoreMenu> 
 	protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		super.extractLabels(graphics, mouseX, mouseY);
 		int allowance = this.menu.getAllowance();
-		graphics.text(this.font, Component.translatable("gui.alaindustrial.monitor_core.capacity"),
-				74, 22, TEXT, false);
-		graphics.text(this.font,
+		fit(graphics, Component.translatable("gui.alaindustrial.monitor_core.capacity"),
+				74, 22, TEXT);
+		fit(graphics,
 				Component.translatable("gui.alaindustrial.monitor_core.capacity_value",
 						this.menu.getWatchedTypes(), allowance),
-				74, 41, TEXT_DIM, false);
+				74, 41, TEXT_DIM);
 
-		graphics.text(this.font, Component.translatable("gui.alaindustrial.monitor_core.cards"),
-				74, 56, TEXT, false);
-		graphics.text(this.font,
+		fit(graphics, Component.translatable("gui.alaindustrial.monitor_core.cards"),
+				74, 56, TEXT);
+		fit(graphics,
 				Component.translatable("gui.alaindustrial.monitor_core.cards_value",
 						this.menu.getSeatedCards(),
 						MonitorCoreBlockEntity.CARD_SLOTS),
-				74, 75, TEXT_DIM, false);
+				74, 75, TEXT_DIM);
 
-		graphics.text(this.font, Component.translatable("gui.alaindustrial.monitor_core.energy"),
-				74, 90, TEXT, false);
-		graphics.text(this.font,
+		fit(graphics, Component.translatable("gui.alaindustrial.monitor_core.energy"),
+				74, 90, TEXT);
+		fit(graphics,
 				Component.translatable("gui.alaindustrial.monitor_core.energy_value",
 						this.menu.getEnergy(), this.menu.getCapacity()),
-				74, 101, TEXT_DIM, false);
-		graphics.text(this.font,
+				74, 101, TEXT_DIM);
+		fit(graphics,
 				Component.translatable("gui.alaindustrial.monitor_core.upkeep_value",
 						this.menu.getUpkeep(), this.menu.getServedPanels()),
-				74, 110, TEXT_DIM, false);
+				74, 110, TEXT_DIM);
 
-		graphics.text(this.font, Component.translatable(statusKey()), 85, 125, statusColour(), false);
+		fit(graphics, Component.translatable(statusKey()), 85, 125, statusColour());
 	}
 
-	private String statusKey() {
+	/** One label, shrunk if its translation is wider than the room left before the frame. */
+	private void fit(GuiGraphicsExtractor graphics, Component text, int x, int y, int colour) {
+		PageText.scaledFit(graphics, this.font, text, x, y, PageText.wrapWidth(text, TEXT_RIGHT - x), colour);
+	}
+
+private String statusKey() {
 		return switch (lampIndex()) {
 			case 1 -> "gui.alaindustrial.monitor_core.status.no_card";
 			case 2 -> "gui.alaindustrial.monitor_core.status.no_power";

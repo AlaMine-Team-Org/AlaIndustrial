@@ -335,6 +335,13 @@ public class MonitorCoreBlockEntity extends EnergyBlockEntity implements Contain
 	@Override
 	protected int onServerTick(Level level, BlockPos pos, BlockState state) {
 		ensureRegistered();
+		// The face lights while there is charge to run on. Checked here rather than in the network's
+		// scan: the scan runs only while panels are attached, and a freshly placed core on a live cable
+		// should light up before its first panel exists.
+		boolean lit = getEnergyStorage().getAmount() > 0L;
+		if (state.hasProperty(MonitorCoreBlock.LIT) && state.getValue(MonitorCoreBlock.LIT) != lit) {
+			level.setBlock(pos, state.setValue(MonitorCoreBlock.LIT, lit), 3);
+		}
 		// The network drives the wall; the core only has to stay enrolled and awake enough to notice
 		// power arriving. Never IDLE_SLEEP_TICKS: a block that consumes has nothing to be idle about.
 		return UPKEEP_INTERVAL_TICKS;
