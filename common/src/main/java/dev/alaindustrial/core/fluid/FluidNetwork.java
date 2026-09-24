@@ -134,6 +134,13 @@ public final class FluidNetwork {
 				if (mode == PipeFaceMode.DISABLED) {
 					continue;
 				}
+				// MOD-662: a pipe outside this network is never an endpoint — a steam line laid against a
+				// water line would otherwise find its neighbour's buffer through the fluid lookup and
+				// trade with it. Nor is a port that serves only the other family.
+				if (level.getBlockState(neighbour).getBlock() instanceof FluidPipeBlock
+						|| !FluidPipeBlock.shouldConnectTo(level, pos, dir)) {
+					continue;
+				}
 				FluidPort port = FluidLookup.get().find(level, neighbour, dir.getOpposite());
 				if (port == null) {
 					continue;

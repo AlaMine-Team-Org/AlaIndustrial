@@ -131,7 +131,7 @@ public final class ReactorMeltdown {
 	/**
 	 * A block of the room's contents, or {@code null} if the interior is already bare.
 	 *
-	 * <p><b>An ordinary fluid pipe goes first, wherever it is in the room.</b> That is a teaching order,
+	 * <p><b>An ordinary pipe goes first, wherever it is in the room</b> — fluid or steam (MOD-662). That is a teaching order,
 	 * not a physical one: the pipe is the one thing in a reactor room that a player builds out of a part
 	 * they already had rather than a part the reactor asked for, so it is the failure that best explains
 	 * itself. Everything else is drawn at random.
@@ -167,7 +167,8 @@ public final class ReactorMeltdown {
 	}
 
 	/**
-	 * The ordinary fluid pipe a WORKING room melts next, or {@code null} if it has none (MOD-660).
+	 * The ordinary pipe — fluid or steam — a WORKING room melts next, or {@code null} if it has none
+	 * (MOD-660, MOD-662).
 	 *
 	 * <p>A room does not have to overheat to eat its plumbing: the radiation of a running core is enough
 	 * for a plain pipe, which is why the reinforced grade exists. Only pipes are offered — the floor and
@@ -185,7 +186,9 @@ public final class ReactorMeltdown {
 	}
 
 	/**
-	 * The first ordinary fluid pipe standing inside the room, in a stable walk of the box.
+	 * The first ordinary pipe standing inside the room, in a stable walk of the box. The steam pipes are
+	 * {@link FluidPipeBlock}s too (MOD-662), so the plain one is found here and the reinforced one, which
+	 * is meltproof, is walked past like the reinforced fluid pipe.
 	 *
 	 * <p><b>A meltproof pipe is walked past, not returned.</b> The reinforced grade is a
 	 * {@link FluidPipeBlock} too; returning it would hand {@link #melt} a block it refuses, every round,

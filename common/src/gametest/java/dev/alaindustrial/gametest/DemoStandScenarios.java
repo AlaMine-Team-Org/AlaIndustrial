@@ -317,6 +317,9 @@ public final class DemoStandScenarios {
 	 * line, where a dry column would have climbed by a quarter of the scale. And every pipe of the loop
 	 * still stands, the ordinary ones outside the shell included: a working room melts ordinary pipe
 	 * INSIDE it, and the stand must not show that rule biting its own plumbing.
+	 *
+	 * <p>Since MOD-662 the exhaust half is steam pipe — fluid pipes no longer carry steam — so the steam
+	 * check above is also the proof that the stand's steam line is laid in the right family.
 	 */
 	public static void demoReactorRunsCoolOnItsOwnLoop(GameTestHelper helper) {
 		BlockPos origin = helper.absolutePos(ORIGIN);
@@ -357,23 +360,26 @@ public final class DemoStandScenarios {
 				helper.fail("the demo reactor room's exhaust does not carry the steam away: the column holds "
 						+ column.steamTank.amount + " mB of steam");
 			}
-			int[][] ordinary = {{11, 1, 33}, {11, 2, 33}, {3, 3, 33}};
-			int[][] reinforced = {{9, 2, 33}, {8, 2, 33}, {7, 3, 33}, {6, 3, 33}, {5, 3, 33}};
-			for (int[] c : ordinary) {
-				if (!helper.getLevel().getBlockState(origin.offset(c[0], c[1], c[2])).is(ModContent.FLUID_PIPE.get())) {
-					helper.fail("the ordinary pipe of the demo reactor loop at " + c[0] + "," + c[1] + "," + c[2]
-							+ " is gone");
-				}
-			}
-			for (int[] c : reinforced) {
-				if (!helper.getLevel().getBlockState(origin.offset(c[0], c[1], c[2]))
-						.is(ModContent.REINFORCED_FLUID_PIPE.get())) {
-					helper.fail("the reinforced pipe of the demo reactor loop at " + c[0] + "," + c[1] + "," + c[2]
-							+ " is gone");
-				}
-			}
+			assertLoopPipes(helper, origin, new int[][] {{11, 1, 33}, {11, 2, 33}}, ModContent.FLUID_PIPE.get(),
+					"ordinary water");
+			assertLoopPipes(helper, origin, new int[][] {{9, 2, 33}, {8, 2, 33}},
+					ModContent.REINFORCED_FLUID_PIPE.get(), "reinforced water");
+			assertLoopPipes(helper, origin, new int[][] {{7, 3, 33}, {6, 3, 33}, {5, 3, 33}},
+					ModContent.REINFORCED_STEAM_PIPE.get(), "reinforced steam");
+			assertLoopPipes(helper, origin, new int[][] {{3, 3, 33}}, ModContent.STEAM_PIPE.get(), "ordinary steam");
 			helper.succeed();
 		});
+	}
+
+	/** Each listed cell of the demo reactor loop still holds a pipe of {@code block}. */
+	private static void assertLoopPipes(GameTestHelper helper, BlockPos origin, int[][] cells,
+			net.minecraft.world.level.block.Block block, String what) {
+		for (int[] c : cells) {
+			if (!helper.getLevel().getBlockState(origin.offset(c[0], c[1], c[2])).is(block)) {
+				helper.fail("the " + what + " pipe of the demo reactor loop at " + c[0] + "," + c[1] + "," + c[2]
+						+ " is gone, found " + helper.getLevel().getBlockState(origin.offset(c[0], c[1], c[2])));
+			}
+		}
 	}
 
 	/** How long {@link #demoReactorRunsCoolOnItsOwnLoop} lets the room work; both lanes allow 100 more. */

@@ -424,6 +424,11 @@ pitest {
             // reactor room leaves it standing — is a tag and a picker, covered by the both-lane game
             // test aWorkingRoomMeltsPlainPipesAndSparesReinforcedOnes.
             'dev.alaindustrial.block.ReinforcedFluidPipeBlock',
+            // MOD-662: the two steam pipes, for the same reason — Blocks the classifier cannot see as
+            // such (one imports only PipeFamily, the other nothing). One override between them, the
+            // family, covered by the both-lane SteamPipeScenarios game tests.
+            'dev.alaindustrial.block.SteamPipeBlock',
+            'dev.alaindustrial.block.ReinforcedSteamPipeBlock',
             // MOD-145: the Recycler's two Minecraft-coupled waste classes. WasteClassifier reads
             // ItemStack/ItemTags/SoundType and BladeTier compares against registered items, so both
             // reference net.minecraft types that common/'s test classpath does not carry — their
@@ -631,6 +636,11 @@ pitest {
             'dev.alaindustrial.core.crop.CropMaturity',
             'dev.alaindustrial.core.fluid.FluidNetwork',
             'dev.alaindustrial.core.fluid.FluidNetworkManager',
+            // MOD-662: the pipe families and the one-off steam-line migration. Both read the world
+            // (block entities, block states, Fluid.is on a tag), so L1 cannot load them; the families,
+            // the migration's seven cases and the wave are covered by SteamPipeScenarios on both lanes.
+            'dev.alaindustrial.core.fluid.PipeFamily',
+            'dev.alaindustrial.core.fluid.SteamLineMigration',
             'dev.alaindustrial.core.heat.WorldHeatSources',
             // MOD-628: MC-coupled TRANSITIVELY, like PlayerStatsClientCache above. Since the tab strip
             // moved to client.screen.tabs, ReactorTabPage is an empty interface that only extends the

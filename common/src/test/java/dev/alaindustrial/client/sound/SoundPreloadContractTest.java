@@ -33,8 +33,16 @@ class SoundPreloadContractTest {
 	 */
 	private static final int MIN_SHIPPED_SOUNDS = 11;
 
-	/** Every {@code "name"} key, i.e. one per sound entry — the oracle for how many objects to expect. */
-	private static final Pattern SOUND_NAME = Pattern.compile("\"name\"\\s*:\\s*\"alaindustrial:([a-z0-9_]+)\"");
+	/**
+	 * Every {@code "name"} key, i.e. one per sound entry — the oracle for how many objects to expect.
+	 *
+	 * <p>Our own files and Minecraft's: since MOD-662 an event may name vanilla files by path
+	 * ({@code minecraft:block/potent_sulfur/geyser_continuous/eruption_active1}) instead of shipping a copy. Matching
+	 * only {@code alaindustrial:} would count those entries out of the oracle while the object scan still counted
+	 * them in, and the two totals would disagree over a legitimate file.
+	 */
+	private static final Pattern SOUND_NAME =
+			Pattern.compile("\"name\"\\s*:\\s*\"((?:alaindustrial|minecraft):[a-z0-9_/.]+)\"");
 
 	/** Sound entries are the only brace-free objects in the file, so this matches exactly one per entry. */
 	private static final Pattern SOUND_ENTRY = Pattern.compile("\\{[^{}]*}");
@@ -72,6 +80,19 @@ class SoundPreloadContractTest {
 	}
 
 	@Test
+	void detectorRejectsAVanillaFileReferencedWithoutPreload() {
+		String broken = """
+				{
+				  "block.steam_nozzle.vent": {
+				    "sounds": [{ "name": "minecraft:block/potent_sulfur/geyser_continuous/eruption_active1", "stream": false }]
+				  }
+				}""";
+
+		assertEquals(List.of("minecraft:block/potent_sulfur/geyser_continuous/eruption_active1"), violations(broken),
+				"a vanilla file our event plays is decoded on our first play() just the same, and must preload too");
+	}
+
+	@Test
 	void detectorExemptsAStreamedSound() {
 		String streamed = """
 				{
@@ -94,7 +115,7 @@ class SoundPreloadContractTest {
 			if (!name.find() || STREAMED.matcher(entry).find() || PRELOADED.matcher(entry).find()) {
 				continue;
 			}
-			broken.add("alaindustrial:" + name.group(1));
+			broken.add(name.group(1));
 		}
 		return broken;
 	}

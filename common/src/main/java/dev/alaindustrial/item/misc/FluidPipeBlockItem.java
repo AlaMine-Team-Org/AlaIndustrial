@@ -1,7 +1,10 @@
 package dev.alaindustrial.item.misc;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.block.FluidPipeBlock;
 import dev.alaindustrial.block.ReinforcedFluidPipeBlock;
+import dev.alaindustrial.block.ReinforcedSteamPipeBlock;
+import dev.alaindustrial.core.fluid.PipeFamily;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -21,6 +24,10 @@ import net.minecraft.world.level.block.Block;
  * <p>Both grades share this item class (MOD-660). What tells them apart on the tooltip is the one rule
  * that tells them apart in the world: the reinforced pipe says it survives a reactor, and the plain one
  * warns, behind Shift, that it does not.
+ *
+ * <p>The steam pipes share it too (MOD-662). Their first line says what they carry instead of the
+ * fluid pipe's, and behind Shift each family names the other one's job, since a player who laid steam
+ * through a fluid pipe before the split needs to hear it once.
  */
 public class FluidPipeBlockItem extends BlockItem {
 
@@ -36,11 +43,15 @@ public class FluidPipeBlockItem extends BlockItem {
 	@Override
 	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
 			Consumer<Component> adder, TooltipFlag flag) {
-		adder.accept(Component.translatable("item.alaindustrial.fluid_pipe.hint")
+		boolean steam = getBlock() instanceof FluidPipeBlock pipe && pipe.family() == PipeFamily.STEAM;
+		adder.accept(Component.translatable(steam
+						? "item.alaindustrial.steam_pipe.hint"
+						: "item.alaindustrial.fluid_pipe.hint")
 				.withStyle(ChatFormatting.GRAY));
 		adder.accept(Component.translatable("item.alaindustrial.fluid_pipe.hint2")
 				.withStyle(ChatFormatting.GRAY));
-		boolean reinforced = getBlock() instanceof ReinforcedFluidPipeBlock;
+		boolean reinforced = getBlock() instanceof ReinforcedFluidPipeBlock
+				|| getBlock() instanceof ReinforcedSteamPipeBlock;
 		if (reinforced) {
 			adder.accept(Component.translatable("item.alaindustrial.reinforced_fluid_pipe.hint")
 					.withStyle(ChatFormatting.DARK_AQUA));
@@ -55,6 +66,10 @@ public class FluidPipeBlockItem extends BlockItem {
 		String bucketsPerSecond = String.format(java.util.Locale.ROOT, "%.1f", perTick * 20 / 1000.0D);
 		adder.accept(Component.translatable("item.alaindustrial.fluid_pipe.tech.rate",
 						perTick, bucketsPerSecond)
+				.withStyle(ChatFormatting.DARK_GRAY));
+		adder.accept(Component.translatable(steam
+						? "item.alaindustrial.steam_pipe.tech.family"
+						: "item.alaindustrial.fluid_pipe.tech.steam")
 				.withStyle(ChatFormatting.DARK_GRAY));
 		adder.accept(Component.translatable(reinforced
 						? "item.alaindustrial.reinforced_fluid_pipe.tech.reactor"

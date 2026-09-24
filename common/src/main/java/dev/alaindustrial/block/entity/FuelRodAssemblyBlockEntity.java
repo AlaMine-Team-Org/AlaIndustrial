@@ -244,10 +244,20 @@ public class FuelRodAssemblyBlockEntity extends BlockEntity implements FluidPort
 				spent++;
 			}
 		}
-		boolean boiling = level != null && lastBoiledAt >= 0 && level.getGameTime() - lastBoiledAt <= BOILING_WINDOW_TICKS;
 		return new dev.alaindustrial.core.structure.ReactorZone.Column(worldPosition.getX(), worldPosition.getY(),
 				worldPosition.getZ(), damage, spent, waterTank.amount, waterTank.capacity, steamTank.amount,
-				steamTank.capacity, boiling);
+				steamTank.capacity, isBoiling());
+	}
+
+	/**
+	 * Whether this column boiled any water within the last second (MOD-621, MOD-662).
+	 *
+	 * <p>One rule for both readers: the «Coolant» tab's "working" mark and the steam puffs over a stack. A window
+	 * rather than "boiled this tick", because the controller drains columns in its own order and a pipe refills
+	 * them on its own tick — a working column can hold 0 mB at the instant it is asked.
+	 */
+	public boolean isBoiling() {
+		return level != null && lastBoiledAt >= 0 && level.getGameTime() - lastBoiledAt <= BOILING_WINDOW_TICKS;
 	}
 
 	private static boolean isFuelled(ItemStack stack) {

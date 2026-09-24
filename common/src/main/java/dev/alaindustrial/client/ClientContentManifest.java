@@ -281,5 +281,8 @@ public final class ClientContentManifest {
 			// MOD-118: the incubator dome takes the colour of the glass it was built from.
 			new BlockTintDef(List.of(IncubatorDomeTint.INSTANCE), () -> ModContent.INCUBATOR_DOME.get()),
 			new BlockTintDef(List.of(FluidPipeTint.INSTANCE), () -> ModContent.FLUID_PIPE.get()),
-			new BlockTintDef(List.of(FluidPipeTint.INSTANCE), () -> ModContent.REINFORCED_FLUID_PIPE.get()));
+			new BlockTintDef(List.of(FluidPipeTint.INSTANCE), () -> ModContent.REINFORCED_FLUID_PIPE.get()),
+			// MOD-662: the steam pipes show what they carry the same way.
+			new BlockTintDef(List.of(FluidPipeTint.INSTANCE), () -> ModContent.STEAM_PIPE.get()),
+			new BlockTintDef(List.of(FluidPipeTint.INSTANCE), () -> ModContent.REINFORCED_STEAM_PIPE.get()));
 }

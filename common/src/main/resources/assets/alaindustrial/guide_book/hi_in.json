@@ -184,7 +184,7 @@
             {
               "type": "text",
               "title": "भाप",
-              "text": "उबला पानी भाप बनकर स्तंभ में जमा होता है। उसे निकालना ज़रूरी है: स्तंभ के ऊपरी फलक से सुदृढ़ पाइप → रिएक्टर प्रवेश → बाहर एक भाप नोज़ल।\n\nनोज़ल का मुँह खुली हवा में होना चाहिए। दीवार में गड़ा नोज़ल कुछ नहीं छोड़ता, और उसके पीछे का पूरा चक्र ठप हो जाता है।"
+              "text": "उबला पानी भाप बनकर स्तंभ में जमा होता है। वह केवल भाप पाइपों से निकलती है — द्रव पाइप भाप नहीं ले जाता: स्तंभ के ऊपरी फलक से सुदृढ़ भाप पाइप → रिएक्टर प्रवेश → भाप पाइप → बाहर एक भाप नोज़ल।\n\nनोज़ल का मुँह खुली हवा में होना चाहिए। दीवार में गड़ा नोज़ल कुछ नहीं छोड़ता, और उसके पीछे का पूरा चक्र ठप हो जाता है।"
             }
           ]
         }
@@ -2033,6 +2033,36 @@
           ]
         },
         {
+          "id": "steam_pipe",
+          "title": "भाप पाइप",
+          "icon": "alaindustrial:steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "भाप पाइप",
+              "text": "भाप के लिए पाइप — रिएक्टर स्तंभों से भाप नोज़ल तक भाप ले जाता है और द्रव पाइप से कभी नहीं जुड़ता।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:steam_pipe",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "reinforced_fluid_pipe",
           "title": "सुदृढ़ द्रव पाइप",
           "icon": "alaindustrial:reinforced_fluid_pipe",
@@ -2058,6 +2088,36 @@
                 "alaindustrial:fluid_pipe"
               ],
               "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "reinforced_steam_pipe",
+          "title": "सुदृढ़ भाप पाइप",
+          "icon": "alaindustrial:reinforced_steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "सुदृढ़ भाप पाइप",
+              "text": "परिरक्षक मिश्रधातु के आवरण में भाप पाइप — चालू रिएक्टर कक्ष के अंदर स्तंभों से भाप निकालता है और पिघलता नहीं।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_steam_pipe",
               "result_count": 6
             }
           ]

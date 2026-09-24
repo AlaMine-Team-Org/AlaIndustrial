@@ -4,6 +4,7 @@ import dev.alaindustrial.block.FluidPipeBlock;
 import dev.alaindustrial.block.ItemPipeBlock;
 import dev.alaindustrial.block.entity.FluidPipeBlockEntity;
 import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
+import dev.alaindustrial.core.fluid.PipeFamily;
 import dev.alaindustrial.core.item.PipeFaceMode;
 import net.minecraft.core.Direction;
 import net.minecraft.ChatFormatting;
@@ -70,7 +71,10 @@ public final class WrenchItem extends Item {
 	private static InteractionResult cycleFluidPipeFace(UseOnContext context, ServerLevel level,
 			ServerPlayer player, FluidPipeBlockEntity pipe) {
 		Direction face = configuredFluidFace(context);
-		if (level.getBlockState(context.getClickedPos().relative(face)).getBlock() instanceof FluidPipeBlock) {
+		// A pipe of the same family is a joint (join/cut); a pipe of the other family (MOD-662) never joins,
+		// so its face is configured like any other face.
+		PipeFamily neighbour = FluidPipeBlock.familyAt(level, context.getClickedPos().relative(face));
+		if (neighbour != null && neighbour == FluidPipeBlock.familyAt(level, context.getClickedPos())) {
 			pipe.setFaceMode(face, pipe.faceMode(face) == PipeFaceMode.DISABLED
 					? PipeFaceMode.NEUTRAL : PipeFaceMode.DISABLED);
 		} else {

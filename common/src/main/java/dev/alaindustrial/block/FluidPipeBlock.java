@@ -3,6 +3,7 @@ package dev.alaindustrial.block;
 import dev.alaindustrial.block.entity.FluidPipeBlockEntity;
 import dev.alaindustrial.core.fluid.FluidLookup;
 import dev.alaindustrial.core.fluid.FluidNetworkManager;
+import dev.alaindustrial.core.fluid.PipeFamily;
 import dev.alaindustrial.core.item.PipeFaceMode;
 import dev.alaindustrial.core.item.PipeFaceRender;
 import dev.alaindustrial.registry.ModContent;
@@ -44,6 +45,11 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  *
  * <p>Not final since MOD-660: the {@link ReinforcedFluidPipeBlock reinforced grade} is the same pipe
  * in a shielded jacket and inherits every rule here, the shared block entity included.
+ *
+ * <p><b>Two families since MOD-662.</b> The {@link SteamPipeBlock steam pipes} are this pipe too, with
+ * one difference that lives in {@link #family()}: a pipe joins only pipes of its own family and reaches
+ * only for ports that serve it ({@link PipeFamily#portFamily}), and its segment holds only its own
+ * family's fluid. So a water line and a steam line can be laid side by side and never mix.
  */
 public class FluidPipeBlock extends BaseEntityBlock {
 	/** True while the segment holds fluid — drives the visible core, not the colour. */
@@ -62,6 +68,26 @@ public class FluidPipeBlock extends BaseEntityBlock {
 		FACE_MODES.put(Direction.SOUTH, EnumProperty.create("south_mode", PipeFaceRender.class));
 		FACE_MODES.put(Direction.WEST, EnumProperty.create("west_mode", PipeFaceRender.class));
 		FACE_MODES.put(Direction.EAST, EnumProperty.create("east_mode", PipeFaceRender.class));
+	}
+
+	/** Liquids — every fluid but steam (MOD-662). The steam pipes override this. */
+	public PipeFamily family() {
+		return PipeFamily.FLUID;
+	}
+
+	/** The family of the pipe standing at {@code pos}, or {@code null} when no pipe stands there. */
+	public static PipeFamily familyAt(BlockGetter level, BlockPos pos) {
+		return level.getBlockState(pos).getBlock() instanceof FluidPipeBlock pipe ? pipe.family() : null;
+	}
+
+	/**
+	 * Swapping one pipe for another keeps the segment (MOD-662). The world migration turns a fluid pipe
+	 * into a steam pipe in place; with the block entity kept, the buffer, the wrenched face modes and the
+	 * network registration all survive the swap. Any other change of block drops it as usual.
+	 */
+	@Override
+	protected boolean shouldChangedStateKeepBlockEntity(BlockState oldState) {
+		return oldState.getBlock() instanceof FluidPipeBlock;
 	}
 
 	public FluidPipeBlock(Properties properties) {
@@ -84,7 +110,7 @@ public class FluidPipeBlock extends BaseEntityBlock {
 		BlockState state = defaultBlockState();
 		for (Direction dir : Direction.values()) {
 			state = state.setValue(FACE_MODES.get(dir),
-					visibleRender(context.getLevel(), context.getClickedPos(), dir));
+					visibleRender(context.getLevel(), context.getClickedPos(), dir, family()));
 		}
 		return state;
 	}
@@ -92,7 +118,7 @@ public class FluidPipeBlock extends BaseEntityBlock {
 	@Override
 	protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess,
 			BlockPos pos, Direction direction, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
-		return state.setValue(FACE_MODES.get(direction), visibleRender(level, pos, direction));
+		return state.setValue(FACE_MODES.get(direction), visibleRender(level, pos, direction, family()));
 	}
 
 	@Override
@@ -106,10 +132,19 @@ public class FluidPipeBlock extends BaseEntityBlock {
 
 	/** Connection contract shared by state refresh and the graph manager. */
 	public static boolean shouldConnectTo(LevelReader level, BlockPos pos, Direction direction) {
+		return shouldConnectTo(level, pos, direction, familyOrDefault(level, pos));
+	}
+
+	/**
+	 * The same contract for a pipe of {@code family}, for the one caller whose pipe is not in the world
+	 * yet: {@code getStateForPlacement} runs before the block is placed, so the family cannot be read
+	 * from the position.
+	 */
+	private static boolean shouldConnectTo(LevelReader level, BlockPos pos, Direction direction, PipeFamily family) {
 		if (faceMode(level, pos, direction) == PipeFaceMode.DISABLED) {
 			return false;
 		}
-		if (!hasEndpointCandidate(level, pos, direction)) {
+		if (!hasEndpointCandidate(level, pos, direction, family)) {
 			return false;
 		}
 		BlockPos neighbour = pos.relative(direction);
@@ -124,12 +159,35 @@ public class FluidPipeBlock extends BaseEntityBlock {
 	 * (the item pipe learned this the hard way in MOD-234).
 	 */
 	public static boolean hasEndpointCandidate(LevelReader level, BlockPos pos, Direction direction) {
+		return hasEndpointCandidate(level, pos, direction, familyOrDefault(level, pos));
+	}
+
+	/**
+	 * {@link #hasEndpointCandidate(LevelReader, BlockPos, Direction)} for a pipe of {@code family}. A pipe
+	 * of the other family is a wall, not a port — it must NOT fall through to the fluid lookup, which
+	 * would find that pipe's buffer and hand it out as an endpoint. A port that serves only the other
+	 * family is a wall too: a fluid pipe laid on a column's top draws no arm toward it.
+	 */
+	private static boolean hasEndpointCandidate(LevelReader level, BlockPos pos, Direction direction,
+			PipeFamily family) {
 		BlockPos neighbour = pos.relative(direction);
-		if (level.getBlockState(neighbour).getBlock() instanceof FluidPipeBlock) {
-			return true;
+		if (level.getBlockState(neighbour).getBlock() instanceof FluidPipeBlock other) {
+			return other.family() == family;
 		}
-		return level instanceof Level world
-				&& FluidLookup.get().find(world, neighbour, direction.getOpposite()) != null;
+		if (!(level instanceof Level world)) {
+			return false;
+		}
+		PipeFamily served = PipeFamily.portFamily(world, neighbour, direction.getOpposite());
+		if (served != null && served != family) {
+			return false;
+		}
+		return FluidLookup.get().find(world, neighbour, direction.getOpposite()) != null;
+	}
+
+	/** The family at {@code pos}; a position with no pipe answers as a fluid pipe, as it always did. */
+	private static PipeFamily familyOrDefault(BlockGetter level, BlockPos pos) {
+		PipeFamily family = familyAt(level, pos);
+		return family == null ? PipeFamily.FLUID : family;
 	}
 
 	private static PipeFaceMode faceMode(LevelReader level, BlockPos pos, Direction direction) {
@@ -145,8 +203,9 @@ public class FluidPipeBlock extends BaseEntityBlock {
 	 * path that keeps a face current already keeps the low arm current — see the same method on the
 	 * item pipe for why that is the whole plumbing this feature needs.
 	 */
-	private static PipeFaceRender visibleRender(LevelReader level, BlockPos pos, Direction direction) {
-		if (!shouldConnectTo(level, pos, direction)) {
+	private static PipeFaceRender visibleRender(LevelReader level, BlockPos pos, Direction direction,
+			PipeFamily family) {
+		if (!shouldConnectTo(level, pos, direction, family)) {
 			return PipeFaceRender.DISABLED;
 		}
 		boolean low = direction.getAxis().isHorizontal()
@@ -178,8 +237,9 @@ public class FluidPipeBlock extends BaseEntityBlock {
 			return;
 		}
 		BlockState updated = current;
+		PipeFamily family = ((FluidPipeBlock) current.getBlock()).family();
 		for (Direction dir : Direction.values()) {
-			updated = updated.setValue(FACE_MODES.get(dir), visibleRender(level, pos, dir));
+			updated = updated.setValue(FACE_MODES.get(dir), visibleRender(level, pos, dir, family));
 		}
 		if (updated != current) {
 			level.setBlock(pos, updated, Block.UPDATE_CLIENTS);

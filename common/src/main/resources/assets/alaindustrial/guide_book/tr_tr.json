@@ -184,7 +184,7 @@
             {
               "type": "text",
               "title": "Buhar",
-              "text": "Kaynayan su buhara dönüşür ve kolonda birikir. Dışarı verilmesi gerekir: kolonun üst yüzünden güçlendirilmiş bir boru → reaktör girişi → dışarıda bir buhar memesi.\n\nMeme açık havaya bakmalı. Duvara gömülü meme hiçbir şey üflemez, arkasındaki devre de tıkanır."
+              "text": "Kaynayan su buhara dönüşür ve kolonda birikir. Yalnızca buhar borularından çıkar — sıvı borusu buhar taşımaz: kolonun üst yüzünden güçlendirilmiş buhar borusu → reaktör girişi → buhar borusu → dışarıda bir buhar memesi.\n\nMeme açık havaya bakmalı. Duvara gömülü meme hiçbir şey üflemez, arkasındaki devre de tıkanır."
             }
           ]
         }
@@ -2033,6 +2033,36 @@
           ]
         },
         {
+          "id": "steam_pipe",
+          "title": "Buhar Borusu",
+          "icon": "alaindustrial:steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Buhar Borusu",
+              "text": "Buhar için boru — buharı reaktör kolonlarından buhar memesine taşır ve sıvı borusuna asla bağlanmaz."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:steam_pipe",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "reinforced_fluid_pipe",
           "title": "Güçlendirilmiş Sıvı Borusu",
           "icon": "alaindustrial:reinforced_fluid_pipe",
@@ -2058,6 +2088,36 @@
                 "alaindustrial:fluid_pipe"
               ],
               "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "reinforced_steam_pipe",
+          "title": "Güçlendirilmiş Buhar Borusu",
+          "icon": "alaindustrial:reinforced_steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Güçlendirilmiş Buhar Borusu",
+              "text": "Koruyucu alaşım kılıflı bir buhar borusu — çalışan bir reaktör odasının içinde kolonlardan buharı taşır ve erimez."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_steam_pipe",
               "result_count": 6
             }
           ]

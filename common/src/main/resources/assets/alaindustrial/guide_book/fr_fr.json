@@ -184,7 +184,7 @@
             {
               "type": "text",
               "title": "Vapeur",
-              "text": "L’eau portée à ébullition devient de la vapeur et s’accumule dans la colonne. Il faut l’évacuer : un tuyau renforcé depuis la face supérieure de la colonne → entrée de réacteur → une buse à vapeur à l’extérieur.\n\nLa buse doit donner sur l’air libre. Enterrée dans un mur, elle ne rejette rien et le circuit se bloque derrière."
+              "text": "L’eau portée à ébullition devient de la vapeur et s’accumule dans la colonne. Elle ne sort que par des tuyaux à vapeur — un tuyau à fluides ne la transporte pas : un tuyau à vapeur renforcé depuis la face supérieure de la colonne → entrée de réacteur → tuyau à vapeur → une buse à vapeur à l’extérieur.\n\nLa buse doit donner sur l’air libre. Enterrée dans un mur, elle ne rejette rien et le circuit se bloque derrière."
             }
           ]
         }
@@ -2033,6 +2033,36 @@
           ]
         },
         {
+          "id": "steam_pipe",
+          "title": "Tuyau à vapeur",
+          "icon": "alaindustrial:steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tuyau à vapeur",
+              "text": "Un tuyau pour la vapeur — il la conduit des colonnes du réacteur vers une buse à vapeur et ne se raccorde jamais à un tuyau à fluides."
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:steam_pipe",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "reinforced_fluid_pipe",
           "title": "Tuyau à fluides renforcé",
           "icon": "alaindustrial:reinforced_fluid_pipe",
@@ -2058,6 +2088,36 @@
                 "alaindustrial:fluid_pipe"
               ],
               "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "reinforced_steam_pipe",
+          "title": "Tuyau à vapeur renforcé",
+          "icon": "alaindustrial:reinforced_steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tuyau à vapeur renforcé",
+              "text": "Un tuyau à vapeur dans une gaine d’alliage de blindage — il évacue la vapeur des colonnes à l’intérieur d’une salle de réacteur en marche et ne fond pas."
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_steam_pipe",
               "result_count": 6
             }
           ]

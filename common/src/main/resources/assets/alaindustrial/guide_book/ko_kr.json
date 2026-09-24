@@ -184,7 +184,7 @@
             {
               "type": "text",
               "title": "증기",
-              "text": "끓은 물은 증기가 되어 기둥에 쌓입니다. 반드시 빼내야 합니다. 기둥 윗면에서 강화 파이프 → 원자로 입구 → 바깥의 증기 노즐로.\n\n노즐은 트인 공기를 향해야 합니다. 벽에 파묻힌 노즐은 아무것도 내뿜지 못하고, 그 뒤의 회로가 멈춥니다."
+              "text": "끓은 물은 증기가 되어 기둥에 쌓입니다. 증기는 증기 파이프로만 빠져나갑니다 — 액체 파이프는 증기를 옮기지 않습니다. 기둥 윗면에서 강화 증기 파이프 → 원자로 입구 → 증기 파이프 → 바깥의 증기 노즐로.\n\n노즐은 트인 공기를 향해야 합니다. 벽에 파묻힌 노즐은 아무것도 내뿜지 못하고, 그 뒤의 회로가 멈춥니다."
             }
           ]
         }
@@ -2033,6 +2033,36 @@
           ]
         },
         {
+          "id": "steam_pipe",
+          "title": "증기 파이프",
+          "icon": "alaindustrial:steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "증기 파이프",
+              "text": "증기용 파이프 — 원자로 기둥에서 증기 노즐로 증기를 보내며 액체 파이프와는 절대 연결되지 않습니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:steam_pipe",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "reinforced_fluid_pipe",
           "title": "강화 액체 파이프",
           "icon": "alaindustrial:reinforced_fluid_pipe",
@@ -2058,6 +2088,36 @@
                 "alaindustrial:fluid_pipe"
               ],
               "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "reinforced_steam_pipe",
+          "title": "강화 증기 파이프",
+          "icon": "alaindustrial:reinforced_steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "강화 증기 파이프",
+              "text": "차폐 합금 외피를 두른 증기 파이프 — 가동 중인 원자로 방 안에서 기둥의 증기를 빼내며 녹지 않습니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_steam_pipe",
               "result_count": 6
             }
           ]

@@ -184,7 +184,7 @@
             {
               "type": "text",
               "title": "বাষ্প",
-              "text": "ফুটন্ত পানি বাষ্প হয়ে স্তম্ভে জমে। সেটা বের করে দিতে হয়: স্তম্ভের ওপরের তল থেকে সুরক্ষিত পাইপ → রিঅ্যাক্টর প্রবেশপথ → বাইরে একটা বাষ্প নজল।\n\nনজলের মুখ খোলা বাতাসের দিকে থাকতে হবে। দেয়ালে গাঁথা নজল কিছুই ছাড়ে না, আর তার পেছনের পুরো চক্র থেমে যায়।"
+              "text": "ফুটন্ত পানি বাষ্প হয়ে স্তম্ভে জমে। সেটা বের হয় শুধু বাষ্প পাইপ দিয়ে — তরল পাইপ বাষ্প বহন করে না: স্তম্ভের ওপরের তল থেকে সুরক্ষিত বাষ্প পাইপ → রিঅ্যাক্টর প্রবেশপথ → বাষ্প পাইপ → বাইরে একটা বাষ্প নজল।\n\nনজলের মুখ খোলা বাতাসের দিকে থাকতে হবে। দেয়ালে গাঁথা নজল কিছুই ছাড়ে না, আর তার পেছনের পুরো চক্র থেমে যায়।"
             }
           ]
         }
@@ -2033,6 +2033,36 @@
           ]
         },
         {
+          "id": "steam_pipe",
+          "title": "বাষ্প পাইপ",
+          "icon": "alaindustrial:steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "বাষ্প পাইপ",
+              "text": "বাষ্পের পাইপ — রিঅ্যাক্টর স্তম্ভ থেকে বাষ্প নজলে বাষ্প নিয়ে যায় এবং কখনো তরল পাইপের সাথে যুক্ত হয় না।"
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:steam_pipe",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "reinforced_fluid_pipe",
           "title": "সুরক্ষিত তরল পাইপ",
           "icon": "alaindustrial:reinforced_fluid_pipe",
@@ -2058,6 +2088,36 @@
                 "alaindustrial:fluid_pipe"
               ],
               "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "reinforced_steam_pipe",
+          "title": "সুরক্ষিত বাষ্প পাইপ",
+          "icon": "alaindustrial:reinforced_steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "সুরক্ষিত বাষ্প পাইপ",
+              "text": "পরিরক্ষক সংকরের আবরণে মোড়া বাষ্প পাইপ — চালু রিঅ্যাক্টরের ঘরের ভেতরে স্তম্ভ থেকে বাষ্প সরায় এবং গলে না।"
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_steam_pipe",
               "result_count": 6
             }
           ]

@@ -37,6 +37,8 @@
     "alaindustrial:fermenter",
     "alaindustrial:fluid_pipe",
     "alaindustrial:reinforced_fluid_pipe",
+    "alaindustrial:steam_pipe",
+    "alaindustrial:reinforced_steam_pipe",
     "alaindustrial:fluid_tank",
     "alaindustrial:fluid_tank_advanced",
     "alaindustrial:fuel_rod_assembly",

@@ -184,7 +184,7 @@
             {
               "type": "text",
               "title": "蒸汽",
-              "text": "烧开的水变成蒸汽，积在柱子里。必须把它导出去：从柱子的顶面接强化管道 → 反应堆入口 → 外面的蒸汽喷口。\n\n喷口必须朝着空旷处。埋在墙里的喷口什么也排不出去，它后面的整条回路都会堵死。"
+              "text": "烧开的水变成蒸汽，积在柱子里。蒸汽只能走蒸汽管道——流体管道不输送蒸汽：从柱子的顶面接强化蒸汽管道 → 反应堆入口 → 蒸汽管道 → 外面的蒸汽喷口。\n\n喷口必须朝着空旷处。埋在墙里的喷口什么也排不出去，它后面的整条回路都会堵死。"
             }
           ]
         }
@@ -2033,6 +2033,36 @@
           ]
         },
         {
+          "id": "steam_pipe",
+          "title": "蒸汽管道",
+          "icon": "alaindustrial:steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "蒸汽管道",
+              "text": "输送蒸汽的管道——把蒸汽从反应堆柱送到蒸汽喷口，绝不与流体管道相连。"
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:steam_pipe",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "reinforced_fluid_pipe",
           "title": "强化流体管道",
           "icon": "alaindustrial:reinforced_fluid_pipe",
@@ -2058,6 +2088,36 @@
                 "alaindustrial:fluid_pipe"
               ],
               "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "reinforced_steam_pipe",
+          "title": "强化蒸汽管道",
+          "icon": "alaindustrial:reinforced_steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "强化蒸汽管道",
+              "text": "包着屏蔽合金外壳的蒸汽管道——在工作中的反应堆房间里把蒸汽从柱子导出，不会熔化。"
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_steam_pipe",
               "result_count": 6
             }
           ]

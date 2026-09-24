@@ -184,7 +184,7 @@
             {
               "type": "text",
               "title": "Stoom",
-              "text": "Gekookt water wordt stoom en verzamelt zich in de kolom. Die moet eruit: een versterkte buis vanaf de bovenkant van de kolom → reactorinlaat → een stoommondstuk buiten.\n\nHet mondstuk moet de open lucht in wijzen. Ingemetseld in een muur blaast het niets af, en het circuit erachter loopt vast."
+              "text": "Gekookt water wordt stoom en verzamelt zich in de kolom. Die gaat er alleen via stoombuizen uit — een vloeistofbuis voert geen stoom: een versterkte stoombuis vanaf de bovenkant van de kolom → reactorinlaat → stoombuis → een stoommondstuk buiten.\n\nHet mondstuk moet de open lucht in wijzen. Ingemetseld in een muur blaast het niets af, en het circuit erachter loopt vast."
             }
           ]
         }
@@ -2033,6 +2033,36 @@
           ]
         },
         {
+          "id": "steam_pipe",
+          "title": "Stoombuis",
+          "icon": "alaindustrial:steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Stoombuis",
+              "text": "Een buis voor stoom — voert die van de reactorkolommen naar een stoommondstuk en sluit nooit aan op een vloeistofbuis."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:steam_pipe",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "reinforced_fluid_pipe",
           "title": "Versterkte vloeistofbuis",
           "icon": "alaindustrial:reinforced_fluid_pipe",
@@ -2058,6 +2088,36 @@
                 "alaindustrial:fluid_pipe"
               ],
               "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "reinforced_steam_pipe",
+          "title": "Versterkte stoombuis",
+          "icon": "alaindustrial:reinforced_steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Versterkte stoombuis",
+              "text": "Een stoombuis in een mantel van afschermlegering — voert stoom af van de kolommen in een werkende reactorruimte en smelt niet."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_steam_pipe",
               "result_count": 6
             }
           ]

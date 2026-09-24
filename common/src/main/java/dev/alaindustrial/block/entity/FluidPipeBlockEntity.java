@@ -8,6 +8,8 @@ import dev.alaindustrial.core.fluid.FluidNetworkManager;
 import dev.alaindustrial.core.fluid.FluidPort;
 import dev.alaindustrial.core.fluid.FluidPortHost;
 import dev.alaindustrial.core.fluid.FluidTank;
+import dev.alaindustrial.core.fluid.PipeFamily;
+import dev.alaindustrial.core.fluid.SteamLineMigration;
 import dev.alaindustrial.core.item.PipeFaceMode;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
@@ -36,6 +38,10 @@ import net.minecraft.world.level.storage.ValueOutput;
  * a second fluid while it holds one — so "you cannot mix water and lava in the same line" needs no
  * code of its own.
  *
+ * <p><b>One class for both families (MOD-662).</b> The steam pipes share this block entity; what a
+ * segment accepts is read live from the block it stands in ({@link #family()}), so a pipe that the world
+ * migration turns from fluid to steam keeps this very object — buffer, face modes and all.
+ *
  * <p><b>Transport, not a machine (MOD-400).</b> The segment holds a fluid buffer and nothing else: no
  * item inventory, no processing progress, no upgrade panel, no owner.
  */
@@ -43,12 +49,23 @@ public final class FluidPipeBlockEntity extends EnergyBlockEntity implements Flu
 
 	/** The segment's live buffer. Public for the same reason the tank block's is: direct drain/fill. */
 	public final FluidTank fluidBuffer = new FluidTank(Config.fluidPipeSegmentBuffer,
-			fluid -> !fluid.isEmpty(), fluid -> true, this::bufferChanged);
+			this::accepts, fluid -> true, this::bufferChanged);
+
+	/** Save key marking a segment written after pipes split into families (MOD-662). */
+	private static final String STEAM_SPLIT_KEY = "SteamSplit";
 
 	private int packedFaceModes;
 	private boolean registered;
 	/** Whether the once-per-load face re-derive has run — see {@link #validateShapeOnce}. */
 	private boolean shapeValidated;
+	/**
+	 * Loaded from a save written before the steam pipes existed (MOD-662): such a segment may be part of a
+	 * steam line laid in fluid pipe, and is checked by {@link SteamLineMigration} before anything else.
+	 * A segment placed in this session, or loaded from a newer save, is never legacy.
+	 */
+	private boolean legacy;
+	/** Whether this session's migration check has settled — see {@link #onServerTick}. */
+	private boolean migrationChecked;
 
 	public FluidPipeBlockEntity(BlockPos pos, BlockState state) {
 		super(ModContent.FLUID_PIPE_BE.get(), pos, state, EnergyTier.LV, 0, 0, 0);
@@ -57,8 +74,38 @@ public final class FluidPipeBlockEntity extends EnergyBlockEntity implements Flu
 	@Override
 	protected int onServerTick(Level level, BlockPos pos, BlockState state) {
 		ensureRegistered();
+		// MOD-662: the world migration runs from the segment's own tick — never from loadAdditional,
+		// where there is no level, and never from setRemoved, where touching the world deadlocks a 26.x
+		// server. An unanswered check (a neighbour not loaded yet) simply runs again next tick.
+		if (legacy && !migrationChecked) {
+			migrationChecked = SteamLineMigration.check(this, level, pos);
+		}
 		validateShapeOnce(level, pos);
 		return 0;
+	}
+
+	/** The family of the block this segment stands in; a fluid pipe's if that block is somehow not a pipe. */
+	public PipeFamily family() {
+		return getBlockState().getBlock() instanceof FluidPipeBlock pipe ? pipe.family() : PipeFamily.FLUID;
+	}
+
+	private boolean accepts(FluidHolder fluid) {
+		return family().accepts(fluid);
+	}
+
+	/** Whether this segment came from a save older than the pipe families and still awaits its check. */
+	public boolean isLegacy() {
+		return legacy;
+	}
+
+	/**
+	 * Ask a legacy segment to check itself again on its next tick — the migration's wave (MOD-662): a
+	 * neighbour that just became a steam pipe may be exactly the evidence this segment lacked.
+	 */
+	public void recheckMigration() {
+		if (legacy) {
+			migrationChecked = false;
+		}
 	}
 
 	/**
@@ -146,6 +193,9 @@ public final class FluidPipeBlockEntity extends EnergyBlockEntity implements Flu
 	protected void saveAdditional(ValueOutput output) {
 		super.saveAdditional(output);
 		output.putInt("FaceModes", packedFaceModes);
+		// MOD-662: the only key the steam split added. Old saves lack it and load unchanged; its absence is
+		// what marks a segment for the one-off migration check.
+		output.putBoolean(STEAM_SPLIT_KEY, true);
 		output.putLong("FluidMb", fluidBuffer.amount);
 		if (!fluidBuffer.fluid.isEmpty()) {
 			output.putString("FluidId", BuiltInRegistries.FLUID.getKey(fluidBuffer.fluid.fluid()).toString());
@@ -156,6 +206,8 @@ public final class FluidPipeBlockEntity extends EnergyBlockEntity implements Flu
 	protected void loadAdditional(ValueInput input) {
 		super.loadAdditional(input);
 		packedFaceModes = input.getIntOr("FaceModes", 0);
+		legacy = !input.getBooleanOr(STEAM_SPLIT_KEY, false);
+		migrationChecked = false;
 		Fluid fluid = resolveFluid(input.getStringOr("FluidId", ""));
 		long amount = Math.max(0L, Math.min(Config.fluidPipeSegmentBuffer, input.getLongOr("FluidMb", 0L)));
 		if (fluid == Fluids.EMPTY || amount == 0) {

@@ -559,6 +559,9 @@ public final class CreativeTabContent {
 		show(out, ModContent.FLUID_PIPE_ITEM);
 		// MOD-660: the reinforced grade beside the plain one, like the two tanks above.
 		show(out, ModContent.REINFORCED_FLUID_PIPE_ITEM);
+		// MOD-662: the steam family right after the fluid family, both grades together.
+		show(out, ModContent.STEAM_PIPE_ITEM);
+		show(out, ModContent.REINFORCED_STEAM_PIPE_ITEM);
 		// The item pipe sits next to the fluid pipe: the two carriers are one idea, and a player looking
 		// for "the pipe" should find both without scrolling to another group.
 		show(out, ModContent.ITEM_PIPE_ITEM);
