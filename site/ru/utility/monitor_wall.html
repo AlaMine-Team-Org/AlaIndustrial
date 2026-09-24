@@ -8,7 +8,66 @@
 <title>Стена мониторинга — Ala Industrial — Гайд</title>
 <link rel="icon" href="../favicon.png" type="image/png">
 <script src="../../assets/guide-site.js" defer></script>
-
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
 <style>
   
   @font-face {
@@ -341,9 +400,9 @@
 
 <p><strong>Стена мониторинга</strong> — «щиток склада»: ряд панелей у входа на базу показывает, сколько чего лежит в сундуках, не открывая ни одного из них. Состоит из трёх блоков и одного предмета:</p>
 
-<p><strong>Ядро мониторинга</strong> — мозг системы: принимает энергию кабелем, держит рэк на 10 карточек и раздаёт панелям числа. Без ядра стена не работает. <strong>Умный провод</strong> — линия, которая <strong>читает</strong> контейнеры, а не носит предметы: тянется от ядра к сундукам, бочкам, шалкерам и сундукам мода. <strong>Панель мониторинга</strong> — экран. Панели, поставленные вплотную друг к другу и к ядру, объединяются в одну систему — форма любая, стену можно гнуть углом или обернуть вокруг колонны. <strong>Карта ёмкости</strong> — вставляется в ядро и поднимает, сколько <strong>разных</strong> видов предметов система отслеживает одновременно.</p>
+<p><strong>Ядро мониторинга</strong> — мозг системы: принимает энергию кабелем, держит рэк на 10 карточек и раздаёт панелям числа. Без ядра стена не работает. Корпус — тёмный блок с янтарными «глазками», рёбрами-рамкой и стойкой карт на лицевой грани: ядро <strong>горит, пока в нём есть энергия</strong>, и гаснет без неё, а каждое занятое гнездо подсвечивается голубым. <strong>Умный провод</strong> — линия, которая <strong>читает</strong> контейнеры, а не носит предметы: тянется от ядра к сундукам, бочкам, шалкерам и сундукам мода. <strong>Панель мониторинга</strong> — экран. Корпус — тонкий настенный терминал: без предмета экран тёмный, с установленным фильтром — светится. Панели, поставленные вплотную друг к другу и к ядру, объединяются в одну систему — форма любая, стену можно гнуть углом или обернуть вокруг колонны. <strong>Карта ёмкости</strong> — вставляется в ядро: каждая карта разрешает отслеживать <strong>6 разных</strong> видов предметов (до 60 при полном рэке из 10 карт).</p>
 
-<blockquote><strong>Мини-пример:</strong> протяните умный провод от ядра к сундуку с рудой, поставьте рядом с ядром панель и положите в неё правым кликом алмаз → панель покажет, сколько алмазов в подключённых сундуках.</blockquote>
+<blockquote><strong>Мини-пример:</strong> вставьте в ядро карту ёмкости, протяните умный провод от ядра к сундуку с рудой, поставьте рядом с ядром панель и положите в неё правым кликом алмаз → панель покажет, сколько алмазов в подключённых сундуках.</blockquote>
 
 <h2 id="как-это-работает">Как это работает</h2>
 
@@ -351,7 +410,7 @@
 
 <h2 id="энергия-и-ёмкость">Энергия и ёмкость</h2>
 
-<p>Расход: базовый у ядра плюс доплата <strong>за каждую панель, которая реально показывает число</strong>. Пустая панель не стоит ничего. Ёмкость карточек ограничивает число <strong>видов</strong> предметов, а не панелей: две панели с одним и тем же предметом занимают одну ячейку ёмкости. Если ёмкости не хватает, гаснут всегда одни и те же панели (порядок геометрический и не меняется после перезахода в мир), а не случайные.</p>
+<p><strong>Укреплённый аметист — материал всей системы.</strong> Четыре осколка аметиста и серебряную пыль сплавляет легирующая печь; из него собираются и ядро, и карта ёмкости. Стена стоит не только ресурсов, но и работающей машины. <strong>Без карты ёмкости стена не показывает ничего.</strong> Пустой рэк = ноль отслеживаемых видов, все заполненные панели горят жёлтым <code>x</code>. Карта — цена системы, а не улучшение поверх работающей. Расход: базовый у ядра плюс доплата <strong>за каждую панель, которая реально показывает число</strong>. Пустая панель не стоит ничего. Ёмкость карточек ограничивает число <strong>видов</strong> предметов, а не панелей: две панели с одним и тем же предметом занимают одну ячейку ёмкости. Если ёмкости не хватает, гаснут всегда одни и те же панели (порядок геометрический и не меняется после перезахода в мир), а не случайные.</p>
 
 <h2 id="что-показывает-панель">Что показывает панель</h2>
 
@@ -361,15 +420,24 @@
 
 <h2 id="интерфейс">Интерфейс</h2>
 
-<p>Окна нет ни у одного блока системы.</p>
+<p><strong>Экран есть только у ядра.</strong> ПКМ по ядру открывает его:</p>
 
-<p>ПКМ по панели с предметом в руке → предмет становится фильтром. ПКМ по панели пустой рукой → фильтр возвращается. ПКМ по ядру с картой ёмкости → карта встаёт в свободное гнездо. ПКМ по ядру пустой рукой → возвращается последняя вставленная карта.</p>
+<p><strong>стойка из 10 гнёзд</strong> под карты ёмкости — карты кладутся и вынимаются перетаскиванием, по одной в гнездо; полная стойка честно отказывает («Рэк заполнен»), а не глотает предмет; <strong>четыре числа</strong> — ёмкость (сколько видов разрешено и сколько реально отслеживается), занятые гнёзда, запас энергии и содержание с числом питаемых панелей; <strong>лампа с одной фразой</strong> — «Стена работает», «Вставьте карту ёмкости» или «Не хватает энергии».</p>
+
+<p>Быстрый жест тоже остался: <strong>Shift+ПКМ по ядру с картой в руке</strong> ставит её в свободное гнездо, не открывая экран. Воронки и трубы подчиняются тому же правилу — в ядро проходят только карты, по одной в гнездо.</p>
+
+
+<p>ПКМ по панели с предметом в руке → предмет становится фильтром; ПКМ по панели пустой рукой → фильтр возвращается.</p>
 
 <h2 id="свойства-блока">Свойства блока</h2>
 
-<table><thead><tr><th>Блок</th><th>Форма и коллизия</th><th>Прочность</th><th>Инструмент</th></tr></thead><tbody><tr><td>Ядро мониторинга</td><td>полный куб, лицевая грань — рэк карт</td><td>3.0 / 6.0</td><td>кирка</td></tr><tr><td>Панель мониторинга</td><td>полный куб, лицевая грань — экран</td><td>2.0 / 4.0</td><td>кирка</td></tr><tr><td>Умный провод</td><td>тонкий сердечник 4×4×4 плюс рукав к каждому соединению</td><td>0.2 / 0.5</td><td>кирка</td></tr></tbody></table>
+<table><thead><tr><th>Блок</th><th>Форма и коллизия</th><th>Прочность</th><th>Инструмент</th></tr></thead><tbody><tr><td>Ядро мониторинга</td><td>полный куб (корпус с рамкой и стойкой карт на лицевой грани), светится, пока есть энергия</td><td>3.0 / 6.0</td><td>кирка</td></tr><tr><td>Панель мониторинга</td><td>тонкий настенный терминал: 4 пикселя в глубину, а не целый куб</td><td>2.0 / 4.0</td><td>кирка</td></tr><tr><td>Умный провод</td><td>тонкий сердечник 4×4×4 плюс рукав к каждому соединению</td><td>0.2 / 0.5</td><td>кирка</td></tr></tbody></table>
 
 <p>Ядро и панель ставятся лицом к игроку. Энергия входит в ядро с любой грани, кроме лицевой — кабель не тянет рукав к экрану, который игрок читает. Панели и провод энергию не принимают вовсе.</p>
+
+<h2 id="рецепты">Рецепты</h2>
+
+<table><thead><tr><th>Что</th><th>Где</th><th>Из чего</th></tr></thead><tbody><tr><td>Укреплённый аметист</td><td>сплавочная печь, 1200 EU/FE</td><td>4 осколка аметиста + серебряная пыль</td></tr><tr><td>Ядро мониторинга</td><td>верстак</td><td>4 укреплённых аметиста, 2 электрумовые пластины, 2 продвинутые схемы, энергокристалл в центре</td></tr><tr><td>Карта ёмкости</td><td>верстак</td><td>укреплённый аметист в центре, 4 серебряные пластины, 3 редстоуна, продвинутая схема</td></tr><tr><td>Панель мониторинга</td><td>верстак</td><td><a href="stock_display_frame.html">рамка-индикатор</a> в центре, 4 стекла, 4 серебряные пластины, электросхема</td></tr><tr><td>Умный провод ×4</td><td>верстак</td><td>золотой слиток, медный кабель, редстоун (столбиком)</td></tr></tbody></table>
 
 <h2 id="чем-это-не-applied-energistics">Чем это не Applied Energistics</h2>
 
@@ -377,11 +445,10 @@
 
 <h2 id="ограничения-текущей-версии">Ограничения текущей версии</h2>
 
-<p><strong>Система пока спрятана от игрока (решение владельца 2026-09-09).</strong> Блоки и карта зарегистрированы и работают, но рецептов у них нет и в креативной вкладке их нет — получить их можно только командой выдачи. Открывать будем, когда доделаем визуал и баланс.</p>
-
 <p>Ровно одно ядро на систему: второе ядро в той же связной стене останавливает её целиком. У карты один тир; лестница тиров и вторая ось (дальность провода) — открытые вопросы. Баланс (расход, ёмкость, интервал опроса) настраивается в конфиге и будет уточняться по игре.</p>
 
-
+<h2>Крафт</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="ядро мониторинга alaindustrial:monitor_core" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Укреплённый аметист"><img src="../../assets/item/reinforced_amethyst_3d.png" alt="Укреплённый аметист" width="32" height="32"></div> <div class="cell" title="Электрумовая пластина"><img src="../../assets/item/electrum_plate_3d.png" alt="Электрумовая пластина" width="32" height="32"></div> <div class="cell" title="Укреплённый аметист"><img src="../../assets/item/reinforced_amethyst_3d.png" alt="Укреплённый аметист" width="32" height="32"></div> <div class="cell" title="Продвинутая схема"><img src="../../assets/item/advanced_circuit_3d.png" alt="Продвинутая схема" width="32" height="32"></div> <div class="cell" title="Энергокристалл"><img src="../../assets/item/energy_crystal_3d.png" alt="Энергокристалл" width="32" height="32"></div> <div class="cell" title="Продвинутая схема"><img src="../../assets/item/advanced_circuit_3d.png" alt="Продвинутая схема" width="32" height="32"></div> <div class="cell" title="Укреплённый аметист"><img src="../../assets/item/reinforced_amethyst_3d.png" alt="Укреплённый аметист" width="32" height="32"></div> <div class="cell" title="Электрумовая пластина"><img src="../../assets/item/electrum_plate_3d.png" alt="Электрумовая пластина" width="32" height="32"></div> <div class="cell" title="Укреплённый аметист"><img src="../../assets/item/reinforced_amethyst_3d.png" alt="Укреплённый аметист" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Ядро мониторинга"><img src="../../assets/item/monitor_core_3d.png" alt="Ядро мониторинга" width="32" height="32"></div><div class="result-name">Ядро мониторинга</div></div></div></div></div>
   </main>
 </div>
 

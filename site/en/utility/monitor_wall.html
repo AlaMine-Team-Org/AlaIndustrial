@@ -8,7 +8,66 @@
 <title>Monitor Core — Ala Industrial — Guide</title>
 <link rel="icon" href="../favicon.png" type="image/png">
 <script src="../../assets/guide-site.js" defer></script>
-
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
 <style>
   
   @font-face {
@@ -340,9 +399,9 @@
 
 <p>The <strong>Monitoring Wall</strong> is a warehouse dashboard: a row of panels by your base entrance showing how much of each item is in your chests, without opening any of them. It is three blocks and one item:</p>
 
-<p><strong>Monitor Core</strong> — the brain: it takes power from a cable, holds a rack of 10 cards, and hands the panels their numbers. Without a core the wall does nothing. <strong>Smart Wire</strong> — a line that <strong>reads</strong> containers instead of carrying goods: run it from the core to chests, barrels, shulkers and the mod's own chests. <strong>Monitor Panel</strong> — the screen. Panels placed against each other and against the core join into one system, in any shape: a wall can turn a corner or wrap a pillar. <strong>Capacity Card</strong> — fitted into the core, it raises how many <strong>different</strong> item types the system tracks at once.</p>
+<p><strong>Monitor Core</strong> — the brain: it takes power from a cable, holds a rack of 10 cards, and hands the panels their numbers. Without a core the wall does nothing. The body is a dark block with amber eyes, framed edges and the card rack on its front: the core <strong>glows while it has power</strong> and goes dark without it, and every filled slot lights up cyan. <strong>Smart Wire</strong> — a line that <strong>reads</strong> containers instead of carrying goods: run it from the core to chests, barrels, shulkers and the mod's own chests. <strong>Monitor Panel</strong> — the screen. The body is a slim wall terminal: dark with no filter item, lit while one. Panels placed against each other and against the core join into one system, in any shape: a wall can turn a corner or wrap a pillar. <strong>Capacity Card</strong> — fitted into the core, each card lets the wall track <strong>6 different</strong> item types (up to 60 with a full rack of 10 cards).</p>
 
-<blockquote><strong>Mini-example:</strong> run a smart wire from the core to your ore chest, place a panel next to the core and right-click a diamond into it → the panel shows how many diamonds are in the wired chests.</blockquote>
+<blockquote><strong>Mini-example:</strong> fit a capacity card into the core, run a smart wire from the core to your ore chest, place a panel next to the core and right-click a diamond into it → the panel shows how many diamonds are in the wired chests.</blockquote>
 
 <h2 id="how-it-works">How it works</h2>
 
@@ -350,7 +409,7 @@
 
 <h2 id="energy-and-capacity">Energy and capacity</h2>
 
-<p>Upkeep: a base cost at the core plus a surcharge <strong>for every panel actually showing a number</strong>. An empty panel costs nothing. Card capacity limits the number of <strong>types</strong>, not of panels: two panels watching the same item take one slot of capacity. When capacity runs out, the same panels always go dark (the order is geometric and does not change across world reloads), never random ones.</p>
+<p><strong>Reinforced amethyst is what the system is built from.</strong> Four amethyst shards and a pinch of silver dust go into the Alloy Smelter; both the core and the capacity card are made of the result. The wall costs a running machine, not only materials. <strong>With no capacity card the wall shows nothing.</strong> A bare rack means zero tracked types, and every filled panel burns the yellow <code>x</code>. A card is the price of the system, not an upgrade on top of a working one. Upkeep: a base cost at the core plus a surcharge <strong>for every panel actually showing a number</strong>. An empty panel costs nothing. Card capacity limits the number of <strong>types</strong>, not of panels: two panels watching the same item take one slot of capacity. When capacity runs out, the same panels always go dark (the order is geometric and does not change across world reloads), never random ones.</p>
 
 <h2 id="what-a-panel-shows">What a panel shows</h2>
 
@@ -360,15 +419,24 @@
 
 <h2 id="interface">Interface</h2>
 
-<p>None of these blocks has a screen.</p>
+<p><strong>Only the core has a screen.</strong> Right-click the core to open it:</p>
 
-<p>Right-click a panel holding an item → the item becomes the filter. Right-click a panel empty-handed → the filter comes back. Right-click the core holding a capacity card → the card goes into the first free slot. Right-click the core empty-handed → the last fitted card comes back.</p>
+<p><strong>a rack of 10 slots</strong> for capacity cards — drag cards in and out, one per slot; a full rack refuses openly ("The rack is full") instead of swallowing the item; <strong>four numbers</strong> — capacity (how many types are allowed and how many are actually tracked), filled slots, stored energy, and upkeep with the number of panels it powers; <strong>a lamp with one line</strong> — "Wall is running", "Fit a capacity card" or "Not enough power".</p>
+
+<p>The quick gesture still works: <strong>Shift + right-click the core with a card in hand</strong> seats it in a free slot without opening the screen. Hoppers and pipes follow the same rule — only cards go into the core, one per slot.</p>
+
+
+<p>right-click a panel holding an item → the item becomes the filter; right-click a panel empty-handed → the filter comes back.</p>
 
 <h2 id="block-properties">Block properties</h2>
 
-<table><thead><tr><th>Block</th><th>Shape and collision</th><th>Strength</th><th>Tool</th></tr></thead><tbody><tr><td>Monitor Core</td><td>full cube, front face is the card rack</td><td>3.0 / 6.0</td><td>pickaxe</td></tr><tr><td>Monitor Panel</td><td>full cube, front face is the screen</td><td>2.0 / 4.0</td><td>pickaxe</td></tr><tr><td>Smart Wire</td><td>slim 4×4×4 core plus an arm toward each connection</td><td>0.2 / 0.5</td><td>pickaxe</td></tr></tbody></table>
+<table><thead><tr><th>Block</th><th>Shape and collision</th><th>Strength</th><th>Tool</th></tr></thead><tbody><tr><td>Monitor Core</td><td>full cube (a framed body with the card rack on its front), glows while powered</td><td>3.0 / 6.0</td><td>pickaxe</td></tr><tr><td>Monitor Panel</td><td>slim wall terminal: 4 pixels deep, not a whole cube</td><td>2.0 / 4.0</td><td>pickaxe</td></tr><tr><td>Smart Wire</td><td>slim 4×4×4 core plus an arm toward each connection</td><td>0.2 / 0.5</td><td>pickaxe</td></tr></tbody></table>
 
 <p>The core and the panel face the player when placed. Power enters the core through any face but the front — a cable never draws an arm across the screen the player is meant to read. Panels and the wire take no energy at all.</p>
+
+<h2 id="recipes">Recipes</h2>
+
+<table><thead><tr><th>What</th><th>Where</th><th>Made from</th></tr></thead><tbody><tr><td>Reinforced Amethyst</td><td>Alloy Smelter, 1200 EU/FE</td><td>4 amethyst shards + silver dust</td></tr><tr><td>Monitor Core</td><td>crafting table</td><td>4 reinforced amethyst, 2 electrum plates, 2 advanced circuits, an energy crystal in the middle</td></tr><tr><td>Capacity Card</td><td>crafting table</td><td>reinforced amethyst in the middle, 4 silver plates, 3 redstone, an advanced circuit</td></tr><tr><td>Monitor Panel</td><td>crafting table</td><td>a <a href="stock_display_frame.html">Stock Display Frame</a> in the middle, 4 glass, 4 silver plates, an electronic circuit</td></tr><tr><td>Smart Wire ×4</td><td>crafting table</td><td>gold ingot, copper cable, redstone (in a column)</td></tr></tbody></table>
 
 <h2 id="what-this-is-not-applied-energistics">What this is not: Applied Energistics</h2>
 
@@ -376,11 +444,10 @@
 
 <h2 id="limits-of-the-current-version">Limits of the current version</h2>
 
-<p><strong>The system is hidden from players for now (owner's decision, 2026-09-09).</strong> The blocks and the card are registered and working, but they have no recipes and no creative-tab entry — only a give command produces them. They open up once the looks and the balance are finished.</p>
-
 <p>Exactly one core per system: a second core in the same connected wall stops it entirely. The card has a single tier; a tier ladder and a second axis (wire reach) are open questions in. Balance (upkeep, capacity, scan interval) is configurable and will be tuned from play.</p>
 
-
+<h2>Crafting</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="monitor core alaindustrial:monitor_core" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Reinforced Amethyst"><img src="../../assets/item/reinforced_amethyst_3d.png" alt="Reinforced Amethyst" width="32" height="32"></div> <div class="cell" title="Electrum Plate"><img src="../../assets/item/electrum_plate_3d.png" alt="Electrum Plate" width="32" height="32"></div> <div class="cell" title="Reinforced Amethyst"><img src="../../assets/item/reinforced_amethyst_3d.png" alt="Reinforced Amethyst" width="32" height="32"></div> <div class="cell" title="Advanced Circuit"><img src="../../assets/item/advanced_circuit_3d.png" alt="Advanced Circuit" width="32" height="32"></div> <div class="cell" title="Energy Crystal"><img src="../../assets/item/energy_crystal_3d.png" alt="Energy Crystal" width="32" height="32"></div> <div class="cell" title="Advanced Circuit"><img src="../../assets/item/advanced_circuit_3d.png" alt="Advanced Circuit" width="32" height="32"></div> <div class="cell" title="Reinforced Amethyst"><img src="../../assets/item/reinforced_amethyst_3d.png" alt="Reinforced Amethyst" width="32" height="32"></div> <div class="cell" title="Electrum Plate"><img src="../../assets/item/electrum_plate_3d.png" alt="Electrum Plate" width="32" height="32"></div> <div class="cell" title="Reinforced Amethyst"><img src="../../assets/item/reinforced_amethyst_3d.png" alt="Reinforced Amethyst" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Monitor Core"><img src="../../assets/item/monitor_core_3d.png" alt="Monitor Core" width="32" height="32"></div><div class="result-name">Monitor Core</div></div></div></div></div>
   </main>
 </div>
 

@@ -8,7 +8,66 @@
 <title>Núcleo de monitoreo — Ala Industrial — Guía</title>
 <link rel="icon" href="../favicon.png" type="image/png">
 <script src="../../assets/guide-site.js" defer></script>
-
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
 <style>
   
   @font-face {
@@ -340,9 +399,9 @@
 
 <p>El <strong>muro de monitoreo</strong> es un panel de control de almacén: una fila de paneles junto a la entrada de tu base que muestra cuánto hay de cada objeto en tus cofres, sin abrir ninguno. Son tres bloques y un objeto:</p>
 
-<p><strong>Núcleo de monitoreo</strong> — el cerebro: toma energía de un cable, aloja un soporte de 10 tarjetas y entrega sus números a los paneles. Sin núcleo, el muro no hace nada. <strong>Cable inteligente</strong> — una línea que <strong>lee</strong> contenedores en vez de transportar mercancía: tiéndelo desde el núcleo hasta cofres, barriles, shulkers y los cofres del propio mod. <strong>Panel de monitoreo</strong> — la pantalla. Los paneles colocados unos contra otros y contra el núcleo se unen en un solo sistema, con cualquier forma: un muro puede doblar una esquina o envolver una columna. <strong>Tarjeta de capacidad</strong> — insertada en el núcleo, aumenta cuántos tipos <strong>diferentes</strong> de objetos sigue el sistema a la vez.</p>
+<p><strong>Núcleo de monitoreo</strong> — el cerebro: toma energía de un cable, aloja un soporte de 10 tarjetas y entrega sus números a los paneles. Sin núcleo, el muro no hace nada. El cuerpo es un bloque oscuro con ojos ámbar, bordes enmarcados y el soporte de tarjetas en su frente: el núcleo <strong>brilla mientras tiene energía</strong> y se apaga sin ella, y cada hueco ocupado se ilumina en cian. <strong>Cable inteligente</strong> — una línea que <strong>lee</strong> contenedores en vez de transportar mercancía: tiéndelo desde el núcleo hasta cofres, barriles, shulkers y los cofres del propio mod. <strong>Panel de monitoreo</strong> — la pantalla. El cuerpo es una terminal de pared delgada: oscura sin objeto asignado, iluminada cuando lo hay. Los paneles colocados unos contra otros y contra el núcleo se unen en un solo sistema, con cualquier forma: un muro puede doblar una esquina o envolver una columna. <strong>Tarjeta de capacidad</strong> — insertada en el núcleo, cada tarjeta permite al muro seguir <strong>6 tipos diferentes</strong> de objetos (hasta 60 con un soporte lleno de 10 tarjetas).</p>
 
-<blockquote><strong>Miniejemplo:</strong> tiende un cable inteligente desde el núcleo hasta tu cofre de menas, coloca un panel junto al núcleo y haz clic derecho con un diamante en la mano → el panel muestra cuántos diamantes hay en los cofres conectados.</blockquote>
+<blockquote><strong>Miniejemplo:</strong> inserta una tarjeta de capacidad en el núcleo, tiende un cable inteligente desde el núcleo hasta tu cofre de menas, coloca un panel junto al núcleo y haz clic derecho con un diamante en la mano → el panel muestra cuántos diamantes hay en los cofres conectados.</blockquote>
 
 <h2 id="cómo-funciona">Cómo funciona</h2>
 
@@ -350,7 +409,7 @@
 
 <h2 id="energía-y-capacidad">Energía y capacidad</h2>
 
-<p>Mantenimiento: un coste base en el núcleo más un recargo <strong>por cada panel que esté mostrando realmente un número</strong>. Un panel vacío no cuesta nada. La capacidad de las tarjetas limita el número de <strong>tipos</strong>, no de paneles: dos paneles que vigilen el mismo objeto ocupan un solo hueco de capacidad. Cuando la capacidad se agota, siempre se apagan los mismos paneles (el orden es geométrico y no cambia al recargar el mundo), nunca unos al azar.</p>
+<p><strong>La amatista reforzada es el material de todo el sistema.</strong> Cuatro fragmentos de amatista y polvo de plata se funden en el Horno de aleación; tanto el núcleo como la tarjeta de capacidad salen de ahí. El muro cuesta una máquina en marcha, no solo materiales. <strong>Sin tarjeta de capacidad el muro no muestra nada.</strong> Un bastidor vacío significa cero tipos rastreados, y todos los paneles con objeto asignado lucen la <code>x</code> amarilla. La tarjeta es el precio del sistema, no una mejora sobre algo que ya funciona. Mantenimiento: un coste base en el núcleo más un recargo <strong>por cada panel que esté mostrando realmente un número</strong>. Un panel vacío no cuesta nada. La capacidad de las tarjetas limita el número de <strong>tipos</strong>, no de paneles: dos paneles que vigilen el mismo objeto ocupan un solo hueco de capacidad. Cuando la capacidad se agota, siempre se apagan los mismos paneles (el orden es geométrico y no cambia al recargar el mundo), nunca unos al azar.</p>
 
 <h2 id="lo-que-muestra-un-panel">Lo que muestra un panel</h2>
 
@@ -360,15 +419,24 @@
 
 <h2 id="interfaz">Interfaz</h2>
 
-<p>Ninguno de estos bloques tiene pantalla.</p>
+<p><strong>Solo el núcleo tiene pantalla.</strong> Haz clic derecho en el núcleo para abrirla:</p>
 
-<p>Clic derecho en un panel con un objeto en la mano → ese objeto pasa a ser el filtro. Clic derecho en un panel con la mano vacía → el filtro vuelve a ti. Clic derecho en el núcleo con una tarjeta de capacidad → la tarjeta entra en el primer hueco libre. Clic derecho en el núcleo con la mano vacía → la última tarjeta insertada vuelve a ti.</p>
+<p><strong>un soporte de 10 huecos</strong> para tarjetas de capacidad — arrastra las tarjetas dentro y fuera, una por hueco; un soporte lleno se niega abiertamente («El bastidor está lleno») en vez de tragarse el objeto; <strong>cuatro números</strong> — capacidad (cuántos tipos se permiten y cuántos se siguen realmente), huecos ocupados, energía almacenada y mantenimiento con el número de paneles que alimenta; <strong>una lámpara con una línea</strong> — «El muro funciona», «Inserta una tarjeta de capacidad» o «Falta energía».</p>
+
+<p>El gesto rápido sigue funcionando: <strong>Mayús + clic derecho en el núcleo con una tarjeta en la mano</strong> la coloca en un hueco libre sin abrir la pantalla. Las tolvas y las tuberías siguen la misma regla: al núcleo solo entran tarjetas, una por hueco.</p>
+
+
+<p>clic derecho en un panel con un objeto en la mano → ese objeto pasa a ser el filtro; clic derecho en un panel con la mano vacía → el filtro vuelve a ti.</p>
 
 <h2 id="propiedades-del-bloque">Propiedades del bloque</h2>
 
-<table><thead><tr><th>Bloque</th><th>Forma y colisión</th><th>Resistencia</th><th>Herramienta</th></tr></thead><tbody><tr><td>Núcleo de monitoreo</td><td>cubo completo, la cara frontal es el soporte de tarjetas</td><td>3.0 / 6.0</td><td>pico</td></tr><tr><td>Panel de monitoreo</td><td>cubo completo, la cara frontal es la pantalla</td><td>2.0 / 4.0</td><td>pico</td></tr><tr><td>Cable inteligente</td><td>núcleo delgado de 4×4×4 más un brazo hacia cada conexión</td><td>0.2 / 0.5</td><td>pico</td></tr></tbody></table>
+<table><thead><tr><th>Bloque</th><th>Forma y colisión</th><th>Resistencia</th><th>Herramienta</th></tr></thead><tbody><tr><td>Núcleo de monitoreo</td><td>cubo completo (un cuerpo enmarcado con el soporte de tarjetas en su frente), brilla mientras tiene energía</td><td>3.0 / 6.0</td><td>pico</td></tr><tr><td>Panel de monitoreo</td><td>terminal de pared delgada: 4 píxeles de fondo, no un cubo entero</td><td>2.0 / 4.0</td><td>pico</td></tr><tr><td>Cable inteligente</td><td>núcleo delgado de 4×4×4 más un brazo hacia cada conexión</td><td>0.2 / 0.5</td><td>pico</td></tr></tbody></table>
 
 <p>El núcleo y el panel miran al jugador al colocarse. La energía entra al núcleo por cualquier cara menos la frontal — un cable nunca dibuja un brazo sobre la pantalla que el jugador debe leer. Los paneles y el cable no consumen energía en absoluto.</p>
+
+<h2 id="recetas">Recetas</h2>
+
+<table><thead><tr><th>Qué</th><th>Dónde</th><th>Con qué</th></tr></thead><tbody><tr><td>Amatista reforzada</td><td>Horno de aleaciones, 1200 EU/FE</td><td>4 fragmentos de amatista + polvo de plata</td></tr><tr><td>Núcleo de monitoreo</td><td>mesa de trabajo</td><td>4 amatistas reforzadas, 2 placas de electro, 2 circuitos avanzados, un cristal de energía en el centro</td></tr><tr><td>Tarjeta de capacidad</td><td>mesa de trabajo</td><td>amatista reforzada en el centro, 4 placas de plata, 3 de redstone, un circuito avanzado</td></tr><tr><td>Panel de monitoreo</td><td>mesa de trabajo</td><td>un <a href="stock_display_frame.html">Marco indicador de existencias</a> en el centro, 4 de cristal, 4 placas de plata, un circuito electrónico</td></tr><tr><td>Cable inteligente ×4</td><td>mesa de trabajo</td><td>lingote de oro, cable de cobre, redstone (en columna)</td></tr></tbody></table>
 
 <h2 id="lo-que-esto-no-es-applied-energistics">Lo que esto no es: Applied Energistics</h2>
 
@@ -376,11 +444,10 @@
 
 <h2 id="límites-de-la-versión-actual">Límites de la versión actual</h2>
 
-<p><strong>El sistema está oculto para los jugadores por ahora (decisión del autor, 2026-09-09).</strong> Los bloques y la tarjeta están registrados y funcionan, pero no tienen recetas ni entrada en la pestaña creativa — solo un comando give los produce. Se abrirán cuando el aspecto y el balance estén terminados.</p>
-
 <p>Exactamente un núcleo por sistema: un segundo núcleo en el mismo muro conectado lo detiene por completo. La tarjeta tiene un solo nivel; una escalera de niveles y un segundo eje (alcance del cable) son preguntas abiertas en. El balance (mantenimiento, capacidad, intervalo de escaneo) es configurable y se ajustará jugando.</p>
 
-
+<h2>Fabricación</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="núcleo de monitoreo alaindustrial:monitor_core" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Amatista reforzada"><img src="../../assets/item/reinforced_amethyst_3d.png" alt="Amatista reforzada" width="32" height="32"></div> <div class="cell" title="Placa de electro"><img src="../../assets/item/electrum_plate_3d.png" alt="Placa de electro" width="32" height="32"></div> <div class="cell" title="Amatista reforzada"><img src="../../assets/item/reinforced_amethyst_3d.png" alt="Amatista reforzada" width="32" height="32"></div> <div class="cell" title="Circuito avanzado"><img src="../../assets/item/advanced_circuit_3d.png" alt="Circuito avanzado" width="32" height="32"></div> <div class="cell" title="Cristal de energía"><img src="../../assets/item/energy_crystal_3d.png" alt="Cristal de energía" width="32" height="32"></div> <div class="cell" title="Circuito avanzado"><img src="../../assets/item/advanced_circuit_3d.png" alt="Circuito avanzado" width="32" height="32"></div> <div class="cell" title="Amatista reforzada"><img src="../../assets/item/reinforced_amethyst_3d.png" alt="Amatista reforzada" width="32" height="32"></div> <div class="cell" title="Placa de electro"><img src="../../assets/item/electrum_plate_3d.png" alt="Placa de electro" width="32" height="32"></div> <div class="cell" title="Amatista reforzada"><img src="../../assets/item/reinforced_amethyst_3d.png" alt="Amatista reforzada" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Núcleo de monitoreo"><img src="../../assets/item/monitor_core_3d.png" alt="Núcleo de monitoreo" width="32" height="32"></div><div class="result-name">Núcleo de monitoreo</div></div></div></div></div>
   </main>
 </div>
 

@@ -398,13 +398,21 @@
 
 <h2 id="сводка">Сводка</h2>
 
-<p><strong>Верстак индустриалиста</strong> — декоративный полный блок «стол с тисками» в стальной гамме мода и рабочее место (job site) новой профессии жителей — <strong>Индустриалиста</strong>. Работает ровно как ванильная пара «домна → бронник»: поставьте верстак рядом с безработным взрослым жителем — он подойдёт, займёт верстак и станет Индустриалистом.</p>
+<p><strong>Верстак индустриалиста</strong> — полный блок в стальной гамме мода: обычный <strong>верстак 3×3, который помнит последний крафт</strong> (см. «Верстак» ниже), и рабочее место (job site) новой профессии жителей — <strong>Индустриалиста</strong>. Работает ровно как ванильная пара «домна → бронник»: поставьте верстак рядом с безработным взрослым жителем — он подойдёт, займёт верстак и станет Индустриалистом.</p>
 
 <p>Индустриалист — <strong>скупщик ресурсов мода</strong>: платит изумрудами за олово, серебро, никель, уран и пыли, а на максимальном уровне сам продаёт электросхему и катушки — дорогой «шорткат» для тех, кому лень крафтить. Один верстак = один житель (как у всех ванильных профессий).</p>
 
 <h2 id="свойства-блока">Свойства блока</h2>
 
-<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Форма</td><td>полный блок (куб)</td></tr><tr><td>Прочность</td><td>2.5 (как ванильные верстаки)</td></tr><tr><td>Инструмент</td><td>кирка (без кирки не выпадает)</td></tr><tr><td>Звук</td><td>металл</td></tr><tr><td>Энергия</td><td>не требуется — это рабочее место жителя, не машина</td></tr><tr><td>Роль</td><td>POI-блок профессии «Индустриалист» (1 житель на верстак)</td></tr></tbody></table>
+<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Форма</td><td>полный блок (куб)</td></tr><tr><td>Прочность</td><td>2.5 (как ванильные верстаки)</td></tr><tr><td>Инструмент</td><td>кирка (без кирки не выпадает)</td></tr><tr><td>Звук</td><td>металл</td></tr><tr><td>Энергия</td><td>не требуется — это рабочее место жителя, не машина</td></tr><tr><td>Интерфейс</td><td>ванильный верстак 3×3 + подсказка последнего крафта</td></tr><tr><td>Роль</td><td>POI-блок профессии «Индустриалист» (1 житель на верстак)</td></tr></tbody></table>
+
+<h2 id="верстак">Верстак</h2>
+
+<p>ПКМ открывает <strong>обычное окно крафта 3×3</strong> — то же, что у ванильного верстака: книга рецептов, шифт-клик, любые рецепты игры и мода, кнопки переноса рецепта в JEI и REI. Предметы, оставшиеся в сетке, при закрытии возвращаются игроку, как у ванильного верстака.</p>
+
+<p><strong>Память крафта.</strong> Верстак запоминает рецепт, который на нём скрафтили последним. При следующем открытии сетка сразу показывает раскладку этого рецепта <strong>полупрозрачными предметами-подсказками</strong> — та же «призрачная» раскладка, что рисует книга рецептов, когда на рецепт не хватает ингредиентов. Подсказка ничего не весит: её нельзя взять, она не участвует в крафте и гаснет, как только игрок кладёт предмет в сетку. Скрафтили на этом верстаке что-то другое — в следующий раз он подскажет уже новый рецепт.</p>
+
+<p>Память у каждого верстака своя: верстак «для дверей» и верстак «для палок» помнят каждый своё, и помнят для всех игроков. Запоминается только то, что действительно скрафтили (ингредиенты израсходованы), — просто разложенный и не взятый рецепт не считается. Сломанный верстак память теряет. Рецепт, который удалил датапак, и особые рецепты без раскладки (окраска брони, копия карты) не подсказываются.</p>
 
 <h2 id="торги-индустриалиста">Торги Индустриалиста</h2>
 
@@ -420,12 +428,20 @@
 
 <p>В <strong>новых деревнях всех пяти биомов</strong> (равнины, пустыня, саванна, снега, тайга) с небольшим шансом генерируется <strong>дом Индустриалиста</strong> — каменный домик с верстаком, кроватью и жителем внутри. В уже сгенерированных деревнях и старых мирах дом не появится — там путь ванили: скрафтите верстак и поставьте его рядом с безработным жителем.</p>
 
+<h2 id="рецепт">Рецепт</h2>
+
+<p><strong>Верстак индустриалиста:</strong> сетка 3×3 заполнена целиком — сверху олово, деревянная шестерня, олово; посередине деревянная шестерня, <strong>обычный верстак</strong>, деревянная шестерня; снизу три любые доски. Индустриальный верстак собирается вокруг ванильного — поэтому и умеет всё то же самое, плюс помнит последний крафт.</p>
+
+<pre><code class="lang-">Олово Дер. шестерня Олово
+Дер. шест. Верстак Дер. шест.
+Доски Доски Доски</code></pre>
+
 <h2 id="прогрессия">Прогрессия</h2>
 
 <p>Тир: нет (рабочее место жителя). Нужен: <a href="../materials/tin.html">Олово</a> — два слитка на рецепт. Это ранний металл, так что нанять Индустриалиста можно уже в начале игры — и его первые скупки олова дают изумруды на первую электросхему.</p>
 
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="верстак индустриалиста alaindustrial:industrial_workbench" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Любой оловянный слиток"><img src="../../assets/item/tin_ingot_3d.png" alt="Любой оловянный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Любой оловянный слиток"><img src="../../assets/item/tin_ingot_3d.png" alt="Любой оловянный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell" title="Любые доски"><img src="../../assets/item/oak_planks_3d.png" alt="Любые доски" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Любые доски"><img src="../../assets/item/oak_planks_3d.png" alt="Любые доски" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell" title="Любые доски"><img src="../../assets/item/oak_planks_3d.png" alt="Любые доски" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Любые доски"><img src="../../assets/item/oak_planks_3d.png" alt="Любые доски" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Верстак индустриалиста"><img src="../../assets/item/industrial_workbench_3d.png" alt="Верстак индустриалиста" width="32" height="32"></div><div class="result-name">Верстак индустриалиста</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="верстак индустриалиста alaindustrial:industrial_workbench" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Любой оловянный слиток"><img src="../../assets/item/tin_ingot_3d.png" alt="Любой оловянный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Деревянная шестерня"><img src="../../assets/item/wooden_gear_3d.png" alt="Деревянная шестерня" width="32" height="32"></div> <div class="cell" title="Любой оловянный слиток"><img src="../../assets/item/tin_ingot_3d.png" alt="Любой оловянный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Деревянная шестерня"><img src="../../assets/item/wooden_gear_3d.png" alt="Деревянная шестерня" width="32" height="32"></div> <div class="cell" title="Crafting Table"><img src="../../assets/item/crafting_table_3d.png" alt="Crafting Table" width="32" height="32"></div> <div class="cell" title="Деревянная шестерня"><img src="../../assets/item/wooden_gear_3d.png" alt="Деревянная шестерня" width="32" height="32"></div> <div class="cell" title="Любые доски"><img src="../../assets/item/oak_planks_3d.png" alt="Любые доски" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Любые доски"><img src="../../assets/item/oak_planks_3d.png" alt="Любые доски" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Любые доски"><img src="../../assets/item/oak_planks_3d.png" alt="Любые доски" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Верстак индустриалиста"><img src="../../assets/item/industrial_workbench_3d.png" alt="Верстак индустриалиста" width="32" height="32"></div><div class="result-name">Верстак индустриалиста</div></div></div></div></div>
   </main>
 </div>
 

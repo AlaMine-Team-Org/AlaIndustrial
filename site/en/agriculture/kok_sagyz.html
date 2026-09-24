@@ -446,6 +446,8 @@
 
 <p>New roots store the state of the original ground separately for each segment: sand stays sand, red sand stays red sand, farmland keeps its recorded moisture. While a segment is occupied by a root it stays a root block: the behaviour of the original g does not tick. Harvesting restores the stored state and the ordinary rules apply again. Ground with a block entity of its own is never replaced — its data does not fit in a BlockState and would be lost. The consequence: on such ground the flower plants and ripens, but no root will ever grow under it. No vanilla block is like this; it concerns modded soils with a block entity only. Older segments, saved before the ground was stored, are shown and restored as dirt; their id and <code>tip</code> property are kept.</p>
 
+<p><strong>Worlds saved on Minecraft 26.2.</strong> Minecraft 26.3 changed the format used to store block state in the world file, and the ground saved by roots in the old format stopped reading back. Loading now understands both shapes — old and new — while saving always writes the new one: after the world has been loaded and saved once, root data moves to the new format for good. Without this a sandy root would silently lose its growth bonus and restore dirt instead of sand.</p>
+
 <p>Wild plants arrive <strong>with new chunks only</strong>: settled steppe will not sprout dandelions. One seed is enough forever, though — from another world, a friend, or a trip far enough out — after that the patch feeds itself.</p>
 
 <h2 id="block-properties">Block properties</h2>

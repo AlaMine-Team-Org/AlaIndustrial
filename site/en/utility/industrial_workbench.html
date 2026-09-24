@@ -397,13 +397,21 @@
 </div>
 <h2 id="summary">Summary</h2>
 
-<p>The <strong>Industrial Workbench</strong> is a decorative full block — a steel table with a vise — and the job site of a new villager profession: the <strong>Industrialist</strong>. It works exactly like the vanilla "blast furnace → armorer" pair: place the workbench next to an unemployed adult villager and he will walk over, claim it and become an Industrialist.</p>
+<p>The <strong>Industrial Workbench</strong> is a full block in the mod's steel colours: an ordinary <strong>3×3 crafting table that remembers the last craft</strong> (see "Workbench" below), and the job site of a new villager profession: the <strong>Industrialist</strong>. It works exactly like the vanilla "blast furnace → armorer" pair: place the workbench next to an unemployed adult villager and he will walk over, claim it and become an Industrialist.</p>
 
 <p>The Industrialist is a <strong>buyer of the mod's resources</strong>: he pays emeralds for tin, silver, nickel, uranium and dusts, and at the top level sells you the electronic circuit and copper coils — an expensive shortcut for players who would rather not craft them. One workbench = one villager, same as every vanilla profession.</p>
 
 <h2 id="block-properties">Block Properties</h2>
 
-<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full block (cube)</td></tr><tr><td>Hardness</td><td>2.5 (same as vanilla work stations)</td></tr><tr><td>Tool</td><td>pickaxe (no drop without one)</td></tr><tr><td>Sound</td><td>metal</td></tr><tr><td>Energy</td><td>none — this is a villager job site, not a machine</td></tr><tr><td>Role</td><td>POI block of the Industrialist profession (one villager per workbench)</td></tr></tbody></table>
+<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full block (cube)</td></tr><tr><td>Hardness</td><td>2.5 (same as vanilla work stations)</td></tr><tr><td>Tool</td><td>pickaxe (no drop without one)</td></tr><tr><td>Sound</td><td>metal</td></tr><tr><td>Energy</td><td>none — this is a villager job site, not a machine</td></tr><tr><td>Interface</td><td>vanilla 3×3 crafting grid + a hint of the last craft</td></tr><tr><td>Role</td><td>POI block of the Industrialist profession (one villager per workbench)</td></tr></tbody></table>
+
+<h2 id="workbench">Workbench</h2>
+
+<p>Right-click opens an <strong>ordinary 3×3 crafting window</strong> — the same one a vanilla crafting table has: the recipe book, shift-click, every recipe of the game and the mod, the recipe-transfer buttons of JEI and REI. Items left in the grid go back to the player on close, as with a vanilla table.</p>
+
+<p><strong>Craft memory.</strong> The workbench remembers the recipe last crafted on it. The next time it is opened, the grid already shows that recipe's layout as <strong>translucent hint items</strong> — the same "ghost" layout the recipe book draws when you lack the ingredients for a recipe. The hint weighs nothing: it cannot be taken, it takes no part in crafting and it disappears as soon as the player puts an item into the grid. Craft something else on this workbench and next time it hints the new recipe.</p>
+
+<p>Every workbench has its own memory: a "door" workbench and a "stick" workbench each remember their own, and remember it for every player. Only what was actually crafted is remembered (the ingredients were used up) — a recipe laid out but never taken does not count. A broken workbench loses its memory. A recipe removed by a datapack and special recipes with no layout (dyeing armour, copying a map) are not hinted.</p>
 
 <h2 id="industrialist-trades">Industrialist Trades</h2>
 
@@ -421,14 +429,18 @@
 
 <h2 id="recipes">Recipes</h2>
 
-<p><strong>Workbench:</strong> 2 × Tin Ingot on top, 4 × any planks below (2×3 shape — like the vanilla smithing table, but built on tin, the mod's early metal).</p>
+<p><strong>Industrial Workbench:</strong> the whole 3×3 grid is filled — top row tin ingot, wooden gear, tin ingot; middle row wooden gear, <strong>an ordinary crafting table</strong>, wooden gear; bottom row three planks of any kind. The industrial workbench is built around the vanilla one — which is why it does everything the vanilla table does, plus remembers the last craft.</p>
+
+<pre><code class="lang-">Tin Ingot Wooden Gear Tin Ingot
+Wooden Gear Crafting Table Wooden Gear
+Planks Planks Planks</code></pre>
 
 <h2 id="progression">Progression</h2>
 
 <p>Tier: none (villager job site). Needs: <a href="../materials/tin.html">Tin</a> — two ingots for the recipe. Tin is an early metal, so you can hire an Industrialist right at the start — and his first tin buys fund your first electronic circuit.</p>
 
 <h2>Crafting</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="industrial workbench alaindustrial:industrial_workbench" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Tin Ingot"><img src="../../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Tin Ingot"><img src="../../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell" title="Any Planks"><img src="../../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Planks"><img src="../../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell" title="Any Planks"><img src="../../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Planks"><img src="../../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Industrial Workbench"><img src="../../assets/item/industrial_workbench_3d.png" alt="Industrial Workbench" width="32" height="32"></div><div class="result-name">Industrial Workbench</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="industrial workbench alaindustrial:industrial_workbench" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Tin Ingot"><img src="../../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Wooden Gear"><img src="../../assets/item/wooden_gear_3d.png" alt="Wooden Gear" width="32" height="32"></div> <div class="cell" title="Any Tin Ingot"><img src="../../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Wooden Gear"><img src="../../assets/item/wooden_gear_3d.png" alt="Wooden Gear" width="32" height="32"></div> <div class="cell" title="Crafting Table"><img src="../../assets/item/crafting_table_3d.png" alt="Crafting Table" width="32" height="32"></div> <div class="cell" title="Wooden Gear"><img src="../../assets/item/wooden_gear_3d.png" alt="Wooden Gear" width="32" height="32"></div> <div class="cell" title="Any Planks"><img src="../../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Planks"><img src="../../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Planks"><img src="../../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Industrial Workbench"><img src="../../assets/item/industrial_workbench_3d.png" alt="Industrial Workbench" width="32" height="32"></div><div class="result-name">Industrial Workbench</div></div></div></div></div>
   </main>
 </div>
 

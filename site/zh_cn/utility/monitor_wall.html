@@ -8,7 +8,66 @@
 <title>监控核心 — Ala Industrial — 指南</title>
 <link rel="icon" href="../favicon.png" type="image/png">
 <script src="../../assets/guide-site.js" defer></script>
-
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
 <style>
   
   @font-face {
@@ -340,9 +399,9 @@
 
 <p><strong>监控墙</strong>是仓库的仪表盘：基地入口处的一排面板会显示各类物品在箱子里的数量，无需打开任何一个箱子。它由三个方块和一件物品组成：</p>
 
-<p><strong>监控核心</strong>（<code>monitor_core</code>）——系统的大脑：用线缆接受能量，容纳 10 张卡的插槽架，并把数字分发给各个面板。没有核心，整面墙都不工作。 <strong>智能线缆</strong>（<code>smart_wire</code>）——一条<strong>读取</strong>容器而非搬运物品的线路：从核心接到箱子、木桶、潜影盒以及本模组的箱子。 <strong>监控面板</strong>（<code>monitor_panel</code>）——屏幕。彼此相邻并与核心相邻的面板会合并成一个系统，形状随意：墙可以拐角，也可以环绕柱子。 <strong>容量卡</strong>（<code>capacity_card</code>）——插入核心，提升系统同时追踪的<strong>不同</strong>物品种类数量。</p>
+<p><strong>监控核心</strong>（<code>monitor_core</code>）——系统的大脑：用线缆接受能量，容纳 10 张卡的插槽架，并把数字分发给各个面板。没有核心，整面墙都不工作。本体是一块带琥珀色“眼睛”、边框分明、正面装有插卡架的深色方块：核心<strong>有能量时发光</strong>，断电时熄灭，每个已插卡的槽位都会亮起青色。 <strong>智能线缆</strong>（<code>smart_wire</code>）——一条<strong>读取</strong>容器而非搬运物品的线路：从核心接到箱子、木桶、潜影盒以及本模组的箱子。 <strong>监控面板</strong>（<code>monitor_panel</code>）——屏幕。本体是纤薄的墙面终端：未设置过滤物品时屏幕熄灭，设置后点亮。彼此相邻并与核心相邻的面板会合并成一个系统，形状随意：墙可以拐角，也可以环绕柱子。 <strong>容量卡</strong>（<code>capacity_card</code>）——插入核心，每张卡让监控墙多追踪 <strong>6 种不同</strong>物品（插满 10 张卡最多 60 种）。</p>
 
-<blockquote><strong>小例子：</strong> 从核心拉一条智能线缆到矿石箱，在核心旁放一块面板，右键把钻石放进去 → 面板会显示所连箱子里共有多少钻石。</blockquote>
+<blockquote><strong>小例子：</strong> 把一张容量卡插入核心，从核心拉一条智能线缆到矿石箱，在核心旁放一块面板，右键把钻石放进去 → 面板会显示所连箱子里共有多少钻石。</blockquote>
 
 <h2 id="工作方式">工作方式</h2>
 
@@ -350,7 +409,7 @@
 
 <h2 id="能量与容量">能量与容量</h2>
 
-<p>消耗：核心的基础消耗，加上<strong>每块真正显示数字的面板</strong>的附加消耗。空面板不消耗。 卡的容量限制的是<strong>种类</strong>数量而非面板数量：两块面板显示同一种物品只占用一格容量。 容量不足时，熄灭的永远是同样几块面板（顺序按几何位置确定，重进世界也不变），而不是随机的。</p>
+<p><strong>强化紫水晶是整套系统的材料。</strong> 四块紫水晶碎片加一份银粉放进合金炉；核心与容量卡都由它制成。这面墙的代价不只是材料，还有一台运转中的机器。 <strong>没有容量卡时整面墙什么都不显示。</strong> 空卡架意味着可追踪种类为零，所有已设置物品的面板都会显示黄色的 <code>x</code>。卡是这套系统的入场费，而不是锦上添花的升级。 消耗：核心的基础消耗，加上<strong>每块真正显示数字的面板</strong>的附加消耗。空面板不消耗。 卡的容量限制的是<strong>种类</strong>数量而非面板数量：两块面板显示同一种物品只占用一格容量。 容量不足时，熄灭的永远是同样几块面板（顺序按几何位置确定，重进世界也不变），而不是随机的。</p>
 
 <h2 id="面板显示什么">面板显示什么</h2>
 
@@ -360,15 +419,25 @@
 
 <h2 id="界面">界面</h2>
 
-<p>系统中的任何方块都没有界面窗口。</p>
+<p><strong>只有核心有界面。</strong> 右键核心即可打开：</p>
 
-<p>手持物品右键面板 → 该物品成为过滤器。 空手右键面板 → 取回过滤器。 手持容量卡右键核心 → 卡插入第一个空槽。 空手右键核心 → 取回最后插入的卡。</p>
+<p><strong>10 个槽位的插卡架</strong>，用于容量卡——拖动卡片放入或取出，每槽一张；架子满了会明确拒绝（“卡槽已满”），而不是吞掉物品； <strong>四个数字</strong>——容量（允许多少种、实际追踪多少种）、已占槽位、储存的能量，以及消耗与所供电的面板数量； <strong>一盏带一行文字的指示灯</strong>——“监控墙运行中”“请插入容量卡”或“能量不足”。</p>
+
+<p>快捷操作依然可用：<strong>手持卡片 Shift + 右键核心</strong>，无需打开界面即可插入空槽。漏斗和管道遵循同样的规则——只有卡片能进入核心，每槽一张。</p>
+
+<p>面板没有界面：</p>
+
+<p>手持物品右键面板 → 该物品成为过滤器； 空手右键面板 → 取回过滤器。</p>
 
 <h2 id="方块属性">方块属性</h2>
 
-<table><thead><tr><th>方块</th><th>形状与碰撞箱</th><th>硬度</th><th>工具</th></tr></thead><tbody><tr><td>监控核心</td><td>完整方块，正面为插卡架</td><td>3.0 / 6.0</td><td>镐</td></tr><tr><td>监控面板</td><td>完整方块，正面为屏幕</td><td>2.0 / 4.0</td><td>镐</td></tr><tr><td>智能线缆</td><td>4×4×4 细芯，另有指向每个连接的支臂</td><td>0.2 / 0.5</td><td>镐</td></tr></tbody></table>
+<table><thead><tr><th>方块</th><th>形状与碰撞箱</th><th>硬度</th><th>工具</th></tr></thead><tbody><tr><td>监控核心</td><td>完整方块（带边框的本体，正面为插卡架），有能量时发光</td><td>3.0 / 6.0</td><td>镐</td></tr><tr><td>监控面板</td><td>纤薄的墙面终端：厚 4 像素，不是完整方块</td><td>2.0 / 4.0</td><td>镐</td></tr><tr><td>智能线缆</td><td>4×4×4 细芯，另有指向每个连接的支臂</td><td>0.2 / 0.5</td><td>镐</td></tr></tbody></table>
 
 <p>核心与面板放置时朝向玩家。能量可从除正面以外的任意面进入核心——线缆不会把支臂搭到玩家要读的屏幕上。面板与线缆完全不接受能量。</p>
+
+<h2 id="配方">配方</h2>
+
+<table><thead><tr><th>物品</th><th>制作位置</th><th>材料</th></tr></thead><tbody><tr><td>强化紫水晶</td><td>合金熔炉，1200 EU/FE</td><td>4 个紫水晶碎片 + 银粉</td></tr><tr><td>监控核心</td><td>工作台</td><td>4 个强化紫水晶、2 块琥珀金板、2 个高级电路，中间放能量水晶</td></tr><tr><td>容量卡</td><td>工作台</td><td>中间放强化紫水晶，4 块银板、3 个红石粉、1 个高级电路</td></tr><tr><td>监控面板</td><td>工作台</td><td>中间放<a href="stock_display_frame.html">库存显示物品展示框</a>，4 个玻璃、4 块银板、1 个电子电路</td></tr><tr><td>智能线缆 ×4</td><td>工作台</td><td>金锭、铜缆、红石粉（竖排一列）</td></tr></tbody></table>
 
 <h2 id="它不是-applied-energistics">它不是 Applied Energistics</h2>
 
@@ -376,11 +445,10 @@
 
 <h2 id="当前版本的限制">当前版本的限制</h2>
 
-<p><strong>该系统暂时对玩家隐藏（所有者决定，2026-09-09）。</strong> 方块与卡片已注册且可用，但没有合成配方， 创造模式物品栏中也没有——只能通过给予命令获得。等外观与平衡完成后再开放。</p>
-
 <p>每个系统只能有一个核心：同一相连墙体中的第二个核心会让整面墙停止工作。 卡只有一个等级；等级阶梯与第二个维度（线缆距离）是 的开放问题。 平衡性（消耗、容量、扫描间隔）可在配置中调整，并将根据实机游玩继续调整。</p>
 
-
+<h2>合成</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="监控核心 alaindustrial:monitor_core" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="强化紫水晶"><img src="../../assets/item/reinforced_amethyst_3d.png" alt="强化紫水晶" width="32" height="32"></div> <div class="cell" title="琥珀金板"><img src="../../assets/item/electrum_plate_3d.png" alt="琥珀金板" width="32" height="32"></div> <div class="cell" title="强化紫水晶"><img src="../../assets/item/reinforced_amethyst_3d.png" alt="强化紫水晶" width="32" height="32"></div> <div class="cell" title="高级电路"><img src="../../assets/item/advanced_circuit_3d.png" alt="高级电路" width="32" height="32"></div> <div class="cell" title="能量水晶"><img src="../../assets/item/energy_crystal_3d.png" alt="能量水晶" width="32" height="32"></div> <div class="cell" title="高级电路"><img src="../../assets/item/advanced_circuit_3d.png" alt="高级电路" width="32" height="32"></div> <div class="cell" title="强化紫水晶"><img src="../../assets/item/reinforced_amethyst_3d.png" alt="强化紫水晶" width="32" height="32"></div> <div class="cell" title="琥珀金板"><img src="../../assets/item/electrum_plate_3d.png" alt="琥珀金板" width="32" height="32"></div> <div class="cell" title="强化紫水晶"><img src="../../assets/item/reinforced_amethyst_3d.png" alt="强化紫水晶" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="监控核心"><img src="../../assets/item/monitor_core_3d.png" alt="监控核心" width="32" height="32"></div><div class="result-name">监控核心</div></div></div></div></div>
   </main>
 </div>
 

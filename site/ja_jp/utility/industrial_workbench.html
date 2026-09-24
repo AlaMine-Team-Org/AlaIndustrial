@@ -397,13 +397,21 @@
 </div>
 <h2 id="概要">概要</h2>
 
-<p><strong>工業作業台</strong>は、モッドの鋼色調の「万力付き机」の装飾用フルブロックであり、新職業の村人 — <strong>産業家（Industrialist）</strong> — の職場（job site）です。バニラの「溶鉱炉 → 防具鍛冶」のペアと全く同じように 動きます：作業台を失業中の大人の村人のそばに置くと、彼が近づいて作業台を占い、産業家になります。</p>
+<p><strong>工業作業台</strong>は、モッドの鋼色調のフルブロックです：<strong>最後のクラフトを覚えている普通の 3×3 作業台</strong> （下の「作業台」を参照）であり、新職業の村人 — <strong>産業家（Industrialist）</strong> — の職場（job site）です。バニラの「溶鉱炉 → 防具鍛冶」のペアと全く同じように 動きます：作業台を失業中の大人の村人のそばに置くと、彼が近づいて作業台を占い、産業家になります。</p>
 
 <p>産業家は <strong>モッド資源の買い手</strong> です：錫、銀、ニッケル、ウラン、粉類と引き換えにエメラルドを支払い、 最大レベルでは電子回路やコイルを自ら売ります — クラフトが面倒な人向けの高価な「ショートカット」です。 作業台 1 つ = 村人 1 人（バニラのすべての職業と同じ）。</p>
 
 <h2 id="ブロックの性質">ブロックの性質</h2>
 
-<table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>形状</td><td>フルブロック（立方体）</td></tr><tr><td>硬度</td><td>2.5（バニラの作業台と同じ）</td></tr><tr><td>ツール</td><td>ツルハシ（ツルハシなしではドロップしない）</td></tr><tr><td>音</td><td>金属</td></tr><tr><td>エネルギー</td><td>不要 — これは村人の職場であり、機械ではない</td></tr><tr><td>役割</td><td>職業「産業家」の POI ブロック（作業台につき村人 1 人）</td></tr></tbody></table>
+<table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>形状</td><td>フルブロック（立方体）</td></tr><tr><td>硬度</td><td>2.5（バニラの作業台と同じ）</td></tr><tr><td>ツール</td><td>ツルハシ（ツルハシなしではドロップしない）</td></tr><tr><td>音</td><td>金属</td></tr><tr><td>エネルギー</td><td>不要 — これは村人の職場であり、機械ではない</td></tr><tr><td>インターフェース</td><td>バニラの 3×3 クラフト画面 + 最後のクラフトのヒント</td></tr><tr><td>役割</td><td>職業「産業家」の POI ブロック（作業台につき村人 1 人）</td></tr></tbody></table>
+
+<h2 id="作業台">作業台</h2>
+
+<p>右クリックで <strong>普通の 3×3 クラフト画面</strong> が開きます — バニラの作業台と同じものです：レシピ本、 シフトクリック、ゲームとモッドのすべてのレシピ、JEI と REI のレシピ転送ボタン。グリッドに残った アイテムは、バニラの作業台と同じく、閉じるとプレイヤーに戻ります。</p>
+
+<p><strong>クラフトの記憶。</strong> 作業台は、その上で最後にクラフトされたレシピを覚えています。次に開くと、 グリッドにそのレシピの配置が <strong>半透明のヒントアイテム</strong> として最初から表示されます — 材料が足りない ときにレシピ本が描くのと同じ「ゴースト」配置です。ヒントには重さがありません：取れず、クラフトに 参加せず、プレイヤーがグリッドにアイテムを置いた瞬間に消えます。この作業台で別のものをクラフト すれば、次回は新しいレシピをヒントとして示します。</p>
+
+<p>記憶は作業台ごとに別々です：「ドア用」の作業台と「棒用」の作業台はそれぞれ自分のレシピを覚え、 すべてのプレイヤーに対して覚えています。 覚えるのは実際にクラフトされたもの（材料が消費されたもの）だけです — 並べただけで取り出さな かったレシピは数えません。 壊した作業台は記憶を失います。 データパックで削除されたレシピと、配置のない特殊レシピ（防具の染色、地図の複製）はヒントに なりません。</p>
 
 <h2 id="産業家の取引">産業家の取引</h2>
 
@@ -421,14 +429,18 @@
 
 <h2 id="レシピ">レシピ</h2>
 
-<p><strong>作業台：</strong> 上部に錫インゴット 2 個、下部に任意の板材 4 個（2×3 の形 —— バニラ鍛造台に似ますが、モッドの初期金属である錫で作ります）。</p>
+<p><strong>工業作業台：</strong> 3×3 のグリッドをすべて埋めます — 上段に錫インゴット、木の歯車、錫インゴット； 中段に木の歯車、<strong>普通の作業台</strong>、木の歯車；下段に任意の板材 3 個。工業作業台はバニラの作業台を 中心に組み立てられます — だからバニラの作業台と同じことがすべてでき、さらに最後のクラフトを覚えています。</p>
+
+<pre><code class="lang-">錫インゴット 木の歯車 錫インゴット
+木の歯車 作業台 木の歯車
+板材 板材 板材</code></pre>
 
 <h2 id="進行">進行</h2>
 
 <p>ティア：なし（村人の職場）。 必要：<a href="../materials/tin.html">錫</a> — レシピにインゴット 2 つ。これは初期の金属なので、ゲーム序盤から 産業家を雇え — 彼の初期の錫買取が最初の電子回路用のエメラルドをくれます。</p>
 
 <h2>クラフト</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="工業作業台 alaindustrial:industrial_workbench" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="いずれかのスズインゴット"><img src="../../assets/item/tin_ingot_3d.png" alt="いずれかのスズインゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかのスズインゴット"><img src="../../assets/item/tin_ingot_3d.png" alt="いずれかのスズインゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell" title="いずれかの木材"><img src="../../assets/item/oak_planks_3d.png" alt="いずれかの木材" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの木材"><img src="../../assets/item/oak_planks_3d.png" alt="いずれかの木材" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell" title="いずれかの木材"><img src="../../assets/item/oak_planks_3d.png" alt="いずれかの木材" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの木材"><img src="../../assets/item/oak_planks_3d.png" alt="いずれかの木材" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="工業作業台"><img src="../../assets/item/industrial_workbench_3d.png" alt="工業作業台" width="32" height="32"></div><div class="result-name">工業作業台</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="工業作業台 alaindustrial:industrial_workbench" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="いずれかのスズインゴット"><img src="../../assets/item/tin_ingot_3d.png" alt="いずれかのスズインゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="木の歯車"><img src="../../assets/item/wooden_gear_3d.png" alt="木の歯車" width="32" height="32"></div> <div class="cell" title="いずれかのスズインゴット"><img src="../../assets/item/tin_ingot_3d.png" alt="いずれかのスズインゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="木の歯車"><img src="../../assets/item/wooden_gear_3d.png" alt="木の歯車" width="32" height="32"></div> <div class="cell" title="Crafting Table"><img src="../../assets/item/crafting_table_3d.png" alt="Crafting Table" width="32" height="32"></div> <div class="cell" title="木の歯車"><img src="../../assets/item/wooden_gear_3d.png" alt="木の歯車" width="32" height="32"></div> <div class="cell" title="いずれかの木材"><img src="../../assets/item/oak_planks_3d.png" alt="いずれかの木材" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの木材"><img src="../../assets/item/oak_planks_3d.png" alt="いずれかの木材" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの木材"><img src="../../assets/item/oak_planks_3d.png" alt="いずれかの木材" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="工業作業台"><img src="../../assets/item/industrial_workbench_3d.png" alt="工業作業台" width="32" height="32"></div><div class="result-name">工業作業台</div></div></div></div></div>
   </main>
 </div>
 

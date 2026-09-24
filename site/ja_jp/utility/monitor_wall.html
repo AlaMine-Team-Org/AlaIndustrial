@@ -8,7 +8,66 @@
 <title>モニターコア — Ala Industrial — ガイド</title>
 <link rel="icon" href="../favicon.png" type="image/png">
 <script src="../../assets/guide-site.js" defer></script>
-
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
 <style>
   
   @font-face {
@@ -340,9 +399,9 @@
 
 <p><strong>モニタリングウォール</strong>は倉庫のダッシュボードです。拠点の入口に並べたパネルが、どのアイテムがいくつチェストに入っているかを、どれ一つ開けずに表示します。3つのブロックと1つのアイテムで構成されます。</p>
 
-<p><strong>モニターコア</strong>（<code>monitor_core</code>）— システムの頭脳。ケーブルからエネルギーを受け取り、10枚のカードラックを持ち、各パネルに数値を配ります。コアがなければ壁は動きません。 <strong>スマートワイヤー</strong>（<code>smart_wire</code>）— アイテムを運ぶのではなく、コンテナを<strong>読む</strong>ための線。コアからチェスト、樽、シュルカー、そしてこのモッドのチェストへ引きます。 <strong>モニターパネル</strong>（<code>monitor_panel</code>）— 画面。互いに、そしてコアに接して置かれたパネルは1つのシステムにまとまります。形は自由で、壁を曲げても柱を囲んでも構いません。 <strong>容量カード</strong>（<code>capacity_card</code>）— コアに挿すと、システムが同時に追跡できるアイテムの<strong>種類数</strong>が増えます。</p>
+<p><strong>モニターコア</strong>（<code>monitor_core</code>）— システムの頭脳。ケーブルからエネルギーを受け取り、10枚のカードラックを持ち、各パネルに数値を配ります。コアがなければ壁は動きません。本体は琥珀色の目と縁取りのある暗いブロックで、正面にカードラックがあります。コアは<strong>エネルギーがある間は光り</strong>、なければ暗くなり、埋まったスロットはそれぞれシアンに光ります。 <strong>スマートワイヤー</strong>（<code>smart_wire</code>）— アイテムを運ぶのではなく、コンテナを<strong>読む</strong>ための線。コアからチェスト、樽、シュルカー、そしてこのモッドのチェストへ引きます。 <strong>モニターパネル</strong>（<code>monitor_panel</code>）— 画面。本体は薄型の壁掛けターミナルで、フィルターアイテムがない間は画面が暗く、セットすると光ります。互いに、そしてコアに接して置かれたパネルは1つのシステムにまとまります。形は自由で、壁を曲げても柱を囲んでも構いません。 <strong>容量カード</strong>（<code>capacity_card</code>）— コアに挿すと、カード1枚ごとにウォールが<strong>6種類</strong>のアイテムを追跡できます（10枚のフルラックで最大60種類）。</p>
 
-<blockquote><strong>ミニ例：</strong> コアから鉱石チェストへスマートワイヤーを引き、コアの隣にパネルを置いて右クリックでダイヤモンドを入れる → 接続されたチェスト内のダイヤモンドの合計が表示されます。</blockquote>
+<blockquote><strong>ミニ例：</strong> コアに容量カードを挿し、コアから鉱石チェストへスマートワイヤーを引き、コアの隣にパネルを置いて右クリックでダイヤモンドを入れる → 接続されたチェスト内のダイヤモンドの合計が表示されます。</blockquote>
 
 <h2 id="仕組み">仕組み</h2>
 
@@ -350,7 +409,7 @@
 
 <h2 id="エネルギーと容量">エネルギーと容量</h2>
 
-<p>消費：コア自体の基本消費に加え、<strong>実際に数値を表示しているパネル1枚ごと</strong>の追加消費。空のパネルは消費しません。 カードの容量が制限するのはパネル数ではなく<strong>種類数</strong>です。同じアイテムを見る2枚のパネルは容量を1つしか使いません。 容量が足りない場合、消えるのは常に同じパネルです（順序は幾何学的に決まり、ワールドに入り直しても変わりません）。ランダムではありません。</p>
+<p><strong>強化アメジストがこのシステムの素材です。</strong> アメジストの欠片4個と銀の粉を合金炉で溶かし合わせ、コアも容量カードもそこから作ります。ウォールの代価は素材だけでなく、動いている機械そのものです。 <strong>容量カードがなければウォールは何も表示しません。</strong> カードラックが空なら追跡できる種類は0で、アイテムを設定したパネルはすべて黄色の <code>x</code> になります。カードはこのシステムの前提条件であり、動いているものへの上乗せの強化ではありません。 消費：コア自体の基本消費に加え、<strong>実際に数値を表示しているパネル1枚ごと</strong>の追加消費。空のパネルは消費しません。 カードの容量が制限するのはパネル数ではなく<strong>種類数</strong>です。同じアイテムを見る2枚のパネルは容量を1つしか使いません。 容量が足りない場合、消えるのは常に同じパネルです（順序は幾何学的に決まり、ワールドに入り直しても変わりません）。ランダムではありません。</p>
 
 <h2 id="パネルの表示">パネルの表示</h2>
 
@@ -360,15 +419,25 @@
 
 <h2 id="インターフェース">インターフェース</h2>
 
-<p>このシステムのどのブロックにも画面はありません。</p>
+<p><strong>画面があるのはコアだけです。</strong> コアを右クリックすると開きます。</p>
 
-<p>アイテムを持ってパネルを右クリック → そのアイテムがフィルターになります。 素手でパネルを右クリック → フィルターが戻ります。 容量カードを持ってコアを右クリック → 空いている最初のスロットに挿さります。 素手でコアを右クリック → 最後に挿したカードが戻ります。</p>
+<p>容量カード用の<strong>10スロットのラック</strong> — カードはドラッグで出し入れし、1スロットに1枚。ラックが満杯なら、アイテムを飲み込まずにはっきり拒否します（「ラックがいっぱいです」）。 <strong>4つの数値</strong> — 容量（許可された種類数と実際に追跡している種類数）、埋まったスロット、蓄えたエネルギー、そして消費と給電しているパネルの数。 <strong>1行のランプ</strong> — 「ウォールは稼働中」「容量カードを入れてください」「エネルギーが足りません」のいずれか。</p>
+
+<p>素早い操作も引き続き使えます。<strong>カードを持ってコアをShift＋右クリック</strong>すると、画面を開かずに空きスロットへ挿さります。ホッパーやパイプも同じルールに従い、コアに入るのはカードだけ、1スロットに1枚です。</p>
+
+<p>パネルには画面がありません。</p>
+
+<p>アイテムを持ってパネルを右クリック → そのアイテムがフィルターになります。 素手でパネルを右クリック → フィルターが戻ります。</p>
 
 <h2 id="ブロックの特性">ブロックの特性</h2>
 
-<table><thead><tr><th>ブロック</th><th>形状と当たり判定</th><th>硬さ</th><th>道具</th></tr></thead><tbody><tr><td>モニターコア</td><td>完全な立方体、正面はカードラック</td><td>3.0 / 6.0</td><td>ツルハシ</td></tr><tr><td>モニターパネル</td><td>完全な立方体、正面は画面</td><td>2.0 / 4.0</td><td>ツルハシ</td></tr><tr><td>スマートワイヤー</td><td>4×4×4の細い芯と、各接続へ伸びるアーム</td><td>0.2 / 0.5</td><td>ツルハシ</td></tr></tbody></table>
+<table><thead><tr><th>ブロック</th><th>形状と当たり判定</th><th>硬さ</th><th>道具</th></tr></thead><tbody><tr><td>モニターコア</td><td>完全な立方体（正面にカードラックのある縁取りされた本体）、エネルギーがある間は光る</td><td>3.0 / 6.0</td><td>ツルハシ</td></tr><tr><td>モニターパネル</td><td>薄型の壁掛けターミナル：奥行き4ピクセルで、完全な立方体ではない</td><td>2.0 / 4.0</td><td>ツルハシ</td></tr><tr><td>スマートワイヤー</td><td>4×4×4の細い芯と、各接続へ伸びるアーム</td><td>0.2 / 0.5</td><td>ツルハシ</td></tr></tbody></table>
 
 <p>コアとパネルは設置時にプレイヤーの方を向きます。エネルギーは正面以外のどの面からもコアに入ります — プレイヤーが読む画面にケーブルのアームが伸びることはありません。パネルとワイヤーはエネルギーを一切受け取りません。</p>
+
+<h2 id="レシピ">レシピ</h2>
+
+<table><thead><tr><th>何を</th><th>どこで</th><th>材料</th></tr></thead><tbody><tr><td>強化アメジスト</td><td>合金炉、1200 EU/FE</td><td>アメジストの欠片4個＋銀の粉</td></tr><tr><td>モニターコア</td><td>作業台</td><td>強化アメジスト4個、エレクトラム板2枚、高度な回路2個、中央にエネルギークリスタル</td></tr><tr><td>容量カード</td><td>作業台</td><td>中央に強化アメジスト、銀板4枚、レッドストーンダスト3個、高度な回路</td></tr><tr><td>モニターパネル</td><td>作業台</td><td>中央に<a href="stock_display_frame.html">在庫表示額縁</a>、ガラス4個、銀板4枚、電子回路</td></tr><tr><td>スマートワイヤー×4</td><td>作業台</td><td>金インゴット、銅ケーブル、レッドストーンダスト（縦一列）</td></tr></tbody></table>
 
 <h2 id="applied-energisticsとの違い">Applied Energisticsとの違い</h2>
 
@@ -376,11 +445,10 @@
 
 <h2 id="現バージョンの制限">現バージョンの制限</h2>
 
-<p><strong>このシステムは現在プレイヤーから隠されています（オーナーの決定、2026-09-09）。</strong> ブロックと カードは登録済みで動作しますが、レシピはなくクリエイティブタブにも出ません — 入手はギブ コマンドのみです。見た目とバランスが仕上がり次第、公開します。</p>
-
 <p>1システムにつきコアは1つだけ。同じ接続された壁に2つ目のコアがあると、壁全体が停止します。 カードは1段階のみ。段階の階梯と第2の軸（ワイヤーの到達距離）はMOD-480の未決事項です。 バランス（消費、容量、走査間隔）は設定で調整でき、実際のプレイに基づいて調整していきます。</p>
 
-
+<h2>クラフト</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="モニターコア alaindustrial:monitor_core" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="強化アメジスト"><img src="../../assets/item/reinforced_amethyst_3d.png" alt="強化アメジスト" width="32" height="32"></div> <div class="cell" title="エレクトラム板"><img src="../../assets/item/electrum_plate_3d.png" alt="エレクトラム板" width="32" height="32"></div> <div class="cell" title="強化アメジスト"><img src="../../assets/item/reinforced_amethyst_3d.png" alt="強化アメジスト" width="32" height="32"></div> <div class="cell" title="高度な回路"><img src="../../assets/item/advanced_circuit_3d.png" alt="高度な回路" width="32" height="32"></div> <div class="cell" title="エネルギークリスタル"><img src="../../assets/item/energy_crystal_3d.png" alt="エネルギークリスタル" width="32" height="32"></div> <div class="cell" title="高度な回路"><img src="../../assets/item/advanced_circuit_3d.png" alt="高度な回路" width="32" height="32"></div> <div class="cell" title="強化アメジスト"><img src="../../assets/item/reinforced_amethyst_3d.png" alt="強化アメジスト" width="32" height="32"></div> <div class="cell" title="エレクトラム板"><img src="../../assets/item/electrum_plate_3d.png" alt="エレクトラム板" width="32" height="32"></div> <div class="cell" title="強化アメジスト"><img src="../../assets/item/reinforced_amethyst_3d.png" alt="強化アメジスト" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="モニターコア"><img src="../../assets/item/monitor_core_3d.png" alt="モニターコア" width="32" height="32"></div><div class="result-name">モニターコア</div></div></div></div></div>
   </main>
 </div>
 
