@@ -19,9 +19,12 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.util.Prediction;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
@@ -236,10 +239,7 @@ public final class AlaCommandCommon {
 							false, ctx.getSource().getServer());
 					level.getGameRules().set(net.minecraft.world.level.gamerules.GameRules.ADVANCE_WEATHER,
 							false, ctx.getSource().getServer());
-					ctx.getSource().sendSuccess(() -> Component.literal(
-							"Demo stand built at " + origin.toShortString()
-									+ ". Zones: /ala demo tp <" + tpNames() + ">").withStyle(HEADER),
-							true);
+					ctx.getSource().sendSuccess(() -> demoBuiltMessage(origin), true);
 					return Command.SINGLE_SUCCESS;
 				}))
 				.then(Commands.literal("clear").executes(ctx -> {
@@ -257,6 +257,24 @@ public final class AlaCommandCommon {
 									return builder.buildFuture();
 								})
 								.executes(AlaCommandCommon::demoTp)));
+	}
+
+	/**
+	 * The reply to {@code /ala demo build}: where the stand stands, and every camera zone as a clickable
+	 * {@code [zone]} that runs {@code /ala demo tp <zone>} — the stand is 88 blocks wide, and a list of
+	 * names to type is a poor map of it.
+	 */
+	private static Component demoBuiltMessage(BlockPos origin) {
+		MutableComponent msg = Component.literal("Demo stand built at " + origin.toShortString()
+				+ ". Click a zone to jump there:").withStyle(HEADER);
+		for (DemoStand.TpPoint point : DemoStand.TP_POINTS) {
+			String command = "/ala demo tp " + point.name();
+			msg.append(Component.literal(" [" + point.name() + "]").withStyle(Style.EMPTY
+					.withColor(ChatFormatting.GREEN)
+					.withClickEvent(new ClickEvent.RunCommand(command))
+					.withHoverEvent(new HoverEvent.ShowText(Component.literal(command)))));
+		}
+		return msg;
 	}
 
 	/** Teleport the calling player to the named stand camera point (and set the matching time of day). */

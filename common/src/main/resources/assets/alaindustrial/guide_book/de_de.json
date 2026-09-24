@@ -179,12 +179,12 @@
             {
               "type": "text",
               "title": "Der Wasserkreislauf",
-              "text": "Wasser führt die Wärme ab. Ein Reaktor mit genug Wasser bleibt nahe am unteren Ende der Anzeige, und Gelb bedeutet, dass das Wasser nicht mehr mitkommt.\n\nPumpe -> Rohr -> Reaktoreinlass -> Säule. Stelle die Rohrseiten am Einlass mit dem Schraubenschlüssel ein: außen entnehmen, innen einspeisen. Säule und Düse brauchen keinen Schlüssel — eine Säule nimmt Wasser nur auf und gibt Dampf nur ab."
+              "text": "Wasser führt die Wärme ab. Ein Reaktor mit genug Wasser bleibt nahe am unteren Ende der Anzeige, und Gelb bedeutet, dass das Wasser nicht mehr mitkommt.\n\nPumpe -> Rohr -> Reaktoreinlass -> verstärktes Rohr -> Säule. Verlege im Raum nur das verstärkte Rohr: Ein laufender Reaktor schmilzt ein gewöhnliches zu Lava. Stelle die Rohrseiten am Einlass mit dem Schraubenschlüssel ein: außen entnehmen, innen einspeisen. Säule und Düse brauchen keinen Schlüssel — eine Säule nimmt Wasser nur auf und gibt Dampf nur ab."
             },
             {
               "type": "text",
               "title": "Dampf",
-              "text": "Gekochtes Wasser wird zu Dampf und sammelt sich in der Säule. Er muss hinaus: ein Rohr von der Oberseite der Säule → Reaktoreinlass → eine Dampfdüse draußen.\n\nDie Düse muss ins Freie zeigen. In einer Wand vergraben bläst sie nichts ab, und der Kreislauf dahinter steht still."
+              "text": "Gekochtes Wasser wird zu Dampf und sammelt sich in der Säule. Er muss hinaus: ein verstärktes Rohr von der Oberseite der Säule → Reaktoreinlass → eine Dampfdüse draußen.\n\nDie Düse muss ins Freie zeigen. In einer Wand vergraben bläst sie nichts ab, und der Kreislauf dahinter steht still."
             }
           ]
         }
@@ -2029,6 +2029,36 @@
               ],
               "result_id": "alaindustrial:fluid_pipe",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reinforced_fluid_pipe",
+          "title": "Verstärktes Flüssigkeitsrohr",
+          "icon": "alaindustrial:reinforced_fluid_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Verstärktes Flüssigkeitsrohr",
+              "text": "Ein Flüssigkeitsrohr in einem Mantel aus Abschirmlegierung — das einzige Rohr, das ein laufender Reaktorraum nicht schmilzt."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
             }
           ]
         },

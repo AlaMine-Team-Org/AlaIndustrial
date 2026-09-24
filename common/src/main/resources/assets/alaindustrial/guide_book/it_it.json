@@ -179,12 +179,12 @@
             {
               "type": "text",
               "title": "Il circuito dell'acqua",
-              "text": "L'acqua porta via il calore. Un reattore con abbastanza acqua resta vicino al fondo dell'indicatore, e l'ambra significa che l'acqua non ce la fa più.\n\nPompa -> tubo -> ingresso del reattore -> colonna. Regola le facce del tubo all'ingresso con la chiave inglese: estrazione all'esterno, immissione all'interno. Colonna e ugello non richiedono chiave: una colonna prende solo acqua e restituisce solo vapore."
+              "text": "L'acqua porta via il calore. Un reattore con abbastanza acqua resta vicino al fondo dell'indicatore, e l'ambra significa che l'acqua non ce la fa più.\n\nPompa -> tubo -> ingresso del reattore -> tubo rinforzato -> colonna. Dentro la sala posa solo il tubo rinforzato: un reattore in funzione fonde quello normale in lava. Regola le facce del tubo all'ingresso con la chiave inglese: estrazione all'esterno, immissione all'interno. Colonna e ugello non richiedono chiave: una colonna prende solo acqua e restituisce solo vapore."
             },
             {
               "type": "text",
               "title": "Vapore",
-              "text": "L'acqua portata a bollore diventa vapore e si accumula nella colonna. Va fatto uscire: un tubo dalla faccia superiore della colonna → ingresso del reattore → un ugello del vapore all'esterno.\n\nL'ugello deve dare sull'aria aperta. Sepolto in una parete non scarica niente, e il circuito dietro si blocca."
+              "text": "L'acqua portata a bollore diventa vapore e si accumula nella colonna. Va fatto uscire: un tubo rinforzato dalla faccia superiore della colonna → ingresso del reattore → un ugello del vapore all'esterno.\n\nL'ugello deve dare sull'aria aperta. Sepolto in una parete non scarica niente, e il circuito dietro si blocca."
             }
           ]
         }
@@ -2029,6 +2029,36 @@
               ],
               "result_id": "alaindustrial:fluid_pipe",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reinforced_fluid_pipe",
+          "title": "Tubo per fluidi rinforzato",
+          "icon": "alaindustrial:reinforced_fluid_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tubo per fluidi rinforzato",
+              "text": "Un tubo per fluidi in una camicia di lega schermante — l'unico tubo che la sala di un reattore in funzione non fonde."
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
             }
           ]
         },

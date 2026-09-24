@@ -179,12 +179,12 @@
             {
               "type": "text",
               "title": "O circuito de água",
-              "text": "A água leva o calor embora. Um reator com água suficiente fica perto da base do medidor, e âmbar significa que a água não está dando conta.\n\nBomba -> tubo -> entrada do reator -> coluna. Ajuste as faces do tubo na entrada com a chave inglesa: extrair do lado de fora, inserir do lado de dentro. Coluna e bocal dispensam chave — uma coluna só aceita água e só devolve vapor."
+              "text": "A água leva o calor embora. Um reator com água suficiente fica perto da base do medidor, e âmbar significa que a água não está dando conta.\n\nBomba -> tubo -> entrada do reator -> cano reforçado -> coluna. Dentro da sala passe só o cano reforçado: um reator em operação derrete um comum e o transforma em lava. Ajuste as faces do tubo na entrada com a chave inglesa: extrair do lado de fora, inserir do lado de dentro. Coluna e bocal dispensam chave — uma coluna só aceita água e só devolve vapor."
             },
             {
               "type": "text",
               "title": "Vapor",
-              "text": "A água fervida vira vapor e se acumula na coluna. Ele precisa sair: um cano da face de cima da coluna → entrada do reator → um bocal de vapor lá fora.\n\nO bocal tem que dar para o ar livre. Enterrado numa parede não solta nada, e o circuito atrás dele trava."
+              "text": "A água fervida vira vapor e se acumula na coluna. Ele precisa sair: um cano reforçado da face de cima da coluna → entrada do reator → um bocal de vapor lá fora.\n\nO bocal tem que dar para o ar livre. Enterrado numa parede não solta nada, e o circuito atrás dele trava."
             }
           ]
         }
@@ -2029,6 +2029,36 @@
               ],
               "result_id": "alaindustrial:fluid_pipe",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reinforced_fluid_pipe",
+          "title": "Cano de fluidos reforçado",
+          "icon": "alaindustrial:reinforced_fluid_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cano de fluidos reforçado",
+              "text": "Um cano de fluidos com camisa de liga de blindagem — o único cano que uma sala de reator em operação não derrete."
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
             }
           ]
         },

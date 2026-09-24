@@ -808,6 +808,68 @@ public final class ReactorScenarios {
 	}
 
 	/**
+	 * A WORKING room melts its ordinary fluid pipes and spares the reinforced ones (MOD-660).
+	 *
+	 * <p><b>Three things are asserted, and each could pass without the others.</b> A room with no signal
+	 * melts nothing — the hazard hangs on the reaction, so the lever stays a real safety measure. A room
+	 * that is running but kept cold by water melts the plain pipe — the new rule, and it has to happen
+	 * with the core far below the meltdown line, or the meltdown pass would be taking the credit. And
+	 * the reinforced pipe survives while standing FIRST in the picker's walk of the box: before the fix
+	 * the walk returned it every round, {@code melt} refused it every round, and the plain pipe behind
+	 * it never went — a hazard stuck on the one block it cannot touch.
+	 */
+	public static void aWorkingRoomMeltsPlainPipesAndSparesReinforcedOnes(GameTestHelper helper) {
+		buildRoom(helper);
+		ReactorControllerBlockEntity brain = controller(helper);
+		FuelRodAssemblyBlockEntity column = placeColumn(helper);
+		for (int i = 0; i < FuelRodAssemblyBlock.MAX_RODS; i++) {
+			column.insertRod(new ItemStack(ModContent.URANIUM_FUEL_ROD.get()));
+		}
+		// (1,1,1) is the first cell of the walk (y, then z, then x); (3,3,3) is the last.
+		BlockPos reinforced = new BlockPos(1, 1, 1);
+		BlockPos plain = new BlockPos(3, 3, 3);
+		helper.setBlock(reinforced, ModContent.REINFORCED_FLUID_PIPE.get().defaultBlockState());
+		helper.setBlock(plain, ModContent.FLUID_PIPE.get().defaultBlockState());
+
+		// No signal: a sealed, fuelled room that is not reacting harms nothing, however long it stands.
+		int quiet = 2 * (Config.reactorPipeMeltIntervalTicks + Config.reactorMeltWarnTicks) + 80;
+		driveCooled(helper, brain, column, quiet);
+		if (brain.getStatus() != ReactorRoomStatus.FORMED) {
+			helper.fail("room did not seal: " + brain.getStatus());
+		}
+		if (!helper.getBlockState(plain).is(ModContent.FLUID_PIPE.get())) {
+			helper.fail("a room with no signal melted its pipe, leaving " + helper.getBlockState(plain));
+		}
+
+		helper.setBlock(CONTROLLER.west(), Blocks.REDSTONE_BLOCK.defaultBlockState());
+		driveCooled(helper, brain, column, quiet);
+		if (brain.isMeltingDown()) {
+			helper.fail("the rig overheated into a meltdown at "
+					+ ReactorCore.heatPercent(brain.getHeat(), Config.reactorHeatCapacity)
+					+ "% — the working-room rule was never isolated");
+		}
+		if (brain.getIdleReason() != ReactorIdleReason.RUNNING) {
+			helper.fail("reactor idle: " + brain.getIdleReason());
+		}
+		if (!helper.getBlockState(plain).is(Blocks.LAVA)) {
+			helper.fail("a working room left its ordinary fluid pipe standing: " + helper.getBlockState(plain));
+		}
+		if (!helper.getBlockState(reinforced).is(ModContent.REINFORCED_FLUID_PIPE.get())) {
+			helper.fail("a working room melted the reinforced pipe, leaving " + helper.getBlockState(reinforced));
+		}
+		helper.succeed();
+	}
+
+	/** Ticks the room with its column topped up, so the core stays far from the meltdown line. */
+	private static void driveCooled(GameTestHelper helper, ReactorControllerBlockEntity brain,
+			FuelRodAssemblyBlockEntity column, int ticks) {
+		for (int i = 0; i < ticks; i++) {
+			column.setTank(true, column.waterTank.capacity);
+			driveUnderLoad(helper, brain, 1);
+		}
+	}
+
+	/**
 	 * A shielded lever hung on the shell from the inside runs the reactor and stops it — and the room
 	 * still seals around it.
 	 *

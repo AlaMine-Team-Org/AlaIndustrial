@@ -179,12 +179,12 @@
             {
               "type": "text",
               "title": "Obieg wodny",
-              "text": "Woda odprowadza ciepło. Reaktor z wystarczającą ilością wody trzyma się przy dole wskaźnika, a żółty oznacza, że woda nie nadąża.\n\nPompa -> rura -> wlot reaktora -> kolumna. Ustaw ściany rury przy wlocie kluczem: na zewnątrz pobieranie, wewnątrz podawanie. Kolumna i dysza klucza nie potrzebują — kolumna tylko przyjmuje wodę i tylko oddaje parę."
+              "text": "Woda odprowadza ciepło. Reaktor z wystarczającą ilością wody trzyma się przy dole wskaźnika, a żółty oznacza, że woda nie nadąża.\n\nPompa -> rura -> wlot reaktora -> wzmocniona rura -> kolumna. Wewnątrz komory układaj tylko wzmocnioną rurę: pracujący reaktor topi zwykłą w lawę. Ustaw ściany rury przy wlocie kluczem: na zewnątrz pobieranie, wewnątrz podawanie. Kolumna i dysza klucza nie potrzebują — kolumna tylko przyjmuje wodę i tylko oddaje parę."
             },
             {
               "type": "text",
               "title": "Para",
-              "text": "Zagotowana woda zamienia się w parę i zbiera w kolumnie. Trzeba ją wyprowadzić: rura z górnej ściany kolumny → wlot reaktora → dysza parowa na zewnątrz.\n\nDysza musi patrzeć w otwarte powietrze. Wmurowana w ścianę nic nie wyrzuca, a obieg za nią staje."
+              "text": "Zagotowana woda zamienia się w parę i zbiera w kolumnie. Trzeba ją wyprowadzić: wzmocniona rura z górnej ściany kolumny → wlot reaktora → dysza parowa na zewnątrz.\n\nDysza musi patrzeć w otwarte powietrze. Wmurowana w ścianę nic nie wyrzuca, a obieg za nią staje."
             }
           ]
         }
@@ -2029,6 +2029,36 @@
               ],
               "result_id": "alaindustrial:fluid_pipe",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reinforced_fluid_pipe",
+          "title": "Wzmocniona rura na płyny",
+          "icon": "alaindustrial:reinforced_fluid_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Wzmocniona rura na płyny",
+              "text": "Rura na płyny w płaszczu ze stopu ekranującego — jedyna rura, której komora pracującego reaktora nie topi."
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
             }
           ]
         },

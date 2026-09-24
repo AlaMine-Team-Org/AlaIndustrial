@@ -179,12 +179,12 @@
             {
               "type": "text",
               "title": "Vodní okruh",
-              "text": "Teplo odvádí voda. Reaktor s dostatkem vody se drží u spodku ukazatele a oranžová znamená, že voda nestačí.\n\nČerpadlo -> trubka -> vstup reaktoru -> kolona. Montážním klíčem nastav strany trubky u vstupu: venku odebírání, uvnitř vkládání. Kolona a tryska klíč nepotřebují — kolona vodu jen přijímá a páru jen vydává."
+              "text": "Teplo odvádí voda. Reaktor s dostatkem vody se drží u spodku ukazatele a oranžová znamená, že voda nestačí.\n\nČerpadlo -> trubka -> vstup reaktoru -> zesílená trubka -> kolona. Uvnitř komory veď jen zesílenou trubku: pracující reaktor obyčejnou roztaví na lávu. Montážním klíčem nastav strany trubky u vstupu: venku odebírání, uvnitř vkládání. Kolona a tryska klíč nepotřebují — kolona vodu jen přijímá a páru jen vydává."
             },
             {
               "type": "text",
               "title": "Pára",
-              "text": "Vařící se voda se mění v páru a hromadí se v koloně. Ta musí ven: trubka z horní strany kolony -> vstup reaktoru -> parní tryska venku.\n\nTryska musí mířit do volného vzduchu. Zazděná ve stěně nic nevypustí a okruh za ní se zastaví."
+              "text": "Vařící se voda se mění v páru a hromadí se v koloně. Ta musí ven: zesílená trubka z horní strany kolony -> vstup reaktoru -> parní tryska venku.\n\nTryska musí mířit do volného vzduchu. Zazděná ve stěně nic nevypustí a okruh za ní se zastaví."
             }
           ]
         }
@@ -2029,6 +2029,36 @@
               ],
               "result_id": "alaindustrial:fluid_pipe",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reinforced_fluid_pipe",
+          "title": "Zesílená trubka na tekutiny",
+          "icon": "alaindustrial:reinforced_fluid_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Zesílená trubka na tekutiny",
+              "text": "Trubka na tekutiny v plášti ze stínicí slitiny — jediná trubka, kterou komora pracujícího reaktoru neroztaví."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Výroba podle vzoru",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
             }
           ]
         },

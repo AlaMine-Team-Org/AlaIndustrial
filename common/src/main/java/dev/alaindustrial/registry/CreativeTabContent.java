@@ -557,6 +557,8 @@ public final class CreativeTabContent {
 		// MOD-612: the two grades stand together — a player looking for "the tank" finds both.
 		show(out, ModContent.FLUID_TANK_ADVANCED_ITEM);
 		show(out, ModContent.FLUID_PIPE_ITEM);
+		// MOD-660: the reinforced grade beside the plain one, like the two tanks above.
+		show(out, ModContent.REINFORCED_FLUID_PIPE_ITEM);
 		// The item pipe sits next to the fluid pipe: the two carriers are one idea, and a player looking
 		// for "the pipe" should find both without scrolling to another group.
 		show(out, ModContent.ITEM_PIPE_ITEM);

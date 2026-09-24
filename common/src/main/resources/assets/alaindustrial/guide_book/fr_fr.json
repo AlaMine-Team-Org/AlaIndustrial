@@ -179,12 +179,12 @@
             {
               "type": "text",
               "title": "Le circuit d’eau",
-              "text": "L’eau emporte la chaleur. Un réacteur qui a assez d’eau reste près du bas de la jauge, et l’ambre signifie que l’eau ne suit plus.\n\nPompe -> tuyau -> entrée du réacteur -> colonne. Réglez les faces du tuyau à l’entrée avec la clé : extraction à l’extérieur, insertion à l’intérieur. La colonne et la buse n’ont pas besoin de clé — une colonne ne prend que de l’eau et ne rend que de la vapeur."
+              "text": "L’eau emporte la chaleur. Un réacteur qui a assez d’eau reste près du bas de la jauge, et l’ambre signifie que l’eau ne suit plus.\n\nPompe -> tuyau -> entrée du réacteur -> tuyau renforcé -> colonne. Dans la salle, ne posez que le tuyau renforcé : un réacteur en marche fait fondre un tuyau ordinaire en lave. Réglez les faces du tuyau à l’entrée avec la clé : extraction à l’extérieur, insertion à l’intérieur. La colonne et la buse n’ont pas besoin de clé — une colonne ne prend que de l’eau et ne rend que de la vapeur."
             },
             {
               "type": "text",
               "title": "Vapeur",
-              "text": "L’eau portée à ébullition devient de la vapeur et s’accumule dans la colonne. Il faut l’évacuer : un tuyau depuis la face supérieure de la colonne → entrée de réacteur → une buse à vapeur à l’extérieur.\n\nLa buse doit donner sur l’air libre. Enterrée dans un mur, elle ne rejette rien et le circuit se bloque derrière."
+              "text": "L’eau portée à ébullition devient de la vapeur et s’accumule dans la colonne. Il faut l’évacuer : un tuyau renforcé depuis la face supérieure de la colonne → entrée de réacteur → une buse à vapeur à l’extérieur.\n\nLa buse doit donner sur l’air libre. Enterrée dans un mur, elle ne rejette rien et le circuit se bloque derrière."
             }
           ]
         }
@@ -2029,6 +2029,36 @@
               ],
               "result_id": "alaindustrial:fluid_pipe",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reinforced_fluid_pipe",
+          "title": "Tuyau à fluides renforcé",
+          "icon": "alaindustrial:reinforced_fluid_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tuyau à fluides renforcé",
+              "text": "Un tuyau à fluides dans une gaine d’alliage de blindage — le seul tuyau qu’une salle de réacteur en marche ne fait pas fondre."
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
             }
           ]
         },

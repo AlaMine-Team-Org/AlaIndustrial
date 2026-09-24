@@ -153,6 +153,7 @@ public final class ModContent {
 	public static Supplier<Block> ITEM_PIPE = unbound("ITEM_PIPE");
 	public static Supplier<Block> ITEM_PIPE_ADVANCED = unbound("ITEM_PIPE_ADVANCED");
 	public static Supplier<Block> FLUID_PIPE = unbound("FLUID_PIPE");
+	public static Supplier<Block> REINFORCED_FLUID_PIPE = unbound("REINFORCED_FLUID_PIPE");
 	// Monitoring wall (MOD-480) — wire reads containers, core pays and allows, panels display.
 	public static Supplier<Block> SMART_WIRE = unbound("SMART_WIRE");
 	public static Supplier<Block> MONITOR_CORE = unbound("MONITOR_CORE");
@@ -716,6 +717,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> ITEM_PIPE_ITEM = unbound("ITEM_PIPE_ITEM");
 	public static Supplier<BlockItem> ITEM_PIPE_ADVANCED_ITEM = unbound("ITEM_PIPE_ADVANCED_ITEM");
 	public static Supplier<BlockItem> FLUID_PIPE_ITEM = unbound("FLUID_PIPE_ITEM");
+	public static Supplier<BlockItem> REINFORCED_FLUID_PIPE_ITEM = unbound("REINFORCED_FLUID_PIPE_ITEM");
 	public static Supplier<BlockItem> SMART_WIRE_ITEM = unbound("SMART_WIRE_ITEM");
 	public static Supplier<BlockItem> MONITOR_CORE_ITEM = unbound("MONITOR_CORE_ITEM");
 	public static Supplier<BlockItem> MONITOR_PANEL_ITEM = unbound("MONITOR_PANEL_ITEM");

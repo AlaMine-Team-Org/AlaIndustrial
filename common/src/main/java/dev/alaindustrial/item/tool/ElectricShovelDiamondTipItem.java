@@ -88,7 +88,8 @@ import net.minecraft.world.level.block.Block;
  * subclass {@code ElectricShovelDiamondTipItemNeoForge}. <b>26.3 deleted both halves of that</b>: the
  * delegation (path-making is now the {@code minecraft:block_transformer} component this item declares)
  * and the ability ({@code SHOVEL_FLATTEN} is gone from NeoForge; only {@code SHOVEL_DOUSE} survives, and
- * it is answered from an item tag). The subclass is kept for now and is a no-op — see MOD-226.
+ * it is answered from an item tag). With nothing left to override, the subclass was removed and both
+ * loaders now build this class directly (MOD-226).
  */
 public class ElectricShovelDiamondTipItem extends ElectricShovelItem {
 

@@ -39,7 +39,7 @@ import net.minecraft.world.Container;
  * lookup takes {@code energyPort()} straight from the block entity and already hands out the pipes'
  * ports — a pre-existing asymmetry, logged in MOD-433, deliberately not touched here.) The exclusion
  * is pinned by the both-loader gametest sweep {@code BlockCapabilityParityScenarios}, which asserts
- * independently — by id, not through this constant — that the two pipes expose no energy.
+ * independently — by id, not through this constant — that the pipes expose no energy.
  *
  * <p>The sprinkler (MOD-525) is the third, for a different reason: it extends {@code EnergyBlockEntity}
  * for the same tick/persistence scaffolding but draws no EU at all — a zero-capacity buffer and
@@ -55,10 +55,10 @@ public final class BlockCapabilityRoster {
 
 	/**
 	 * Block-entity ids that implement {@link EnergyPortHost} but must NOT publish an energy capability.
-	 * See the class doc for why these two, and why the list is closed by a gametest rather than by
+	 * See the class doc for why these, and why the list is closed by a gametest rather than by
 	 * convention.
 	 */
-	public static final Set<String> NO_ENERGY_CAPABILITY = Set.of("item_pipe", "fluid_pipe", "sprinkler");
+	public static final Set<String> NO_ENERGY_CAPABILITY = Set.of("item_pipe", "fluid_pipe", "reinforced_fluid_pipe", "sprinkler");
 
 	/** Every manifest entry whose block entity is an {@link EnergyPortHost}, minus {@link #NO_ENERGY_CAPABILITY}. */
 	public static List<ContentManifest.BlockEntityDef<?>> energyHosts() {

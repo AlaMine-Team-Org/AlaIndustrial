@@ -166,7 +166,32 @@ public final class ReactorMeltdown {
 		return null;
 	}
 
-	/** The first ordinary fluid pipe standing inside the room, in a stable walk of the box. */
+	/**
+	 * The ordinary fluid pipe a WORKING room melts next, or {@code null} if it has none (MOD-660).
+	 *
+	 * <p>A room does not have to overheat to eat its plumbing: the radiation of a running core is enough
+	 * for a plain pipe, which is why the reinforced grade exists. Only pipes are offered — the floor and
+	 * whatever else was carried in stay safe until a real meltdown — because the pipe is the one block
+	 * the reactor asked the player to build differently, and a hazard that takes only that block teaches
+	 * exactly that lesson.
+	 */
+	@Nullable
+	public static BlockPos pickIrradiatedPipe(ServerLevel level, int minX, int minY, int minZ,
+			int maxX, int maxY, int maxZ) {
+		if (maxX < minX || maxY < minY || maxZ < minZ) {
+			return null;
+		}
+		return findPipe(level, minX, minY, minZ, maxX, maxY, maxZ);
+	}
+
+	/**
+	 * The first ordinary fluid pipe standing inside the room, in a stable walk of the box.
+	 *
+	 * <p><b>A meltproof pipe is walked past, not returned.</b> The reinforced grade is a
+	 * {@link FluidPipeBlock} too; returning it would hand {@link #melt} a block it refuses, every round,
+	 * and the stable walk would find the same one again next round — the hazard stuck on the one pipe it
+	 * cannot touch while the ordinary pipe behind it survived (MOD-660).
+	 */
 	@Nullable
 	private static BlockPos findPipe(ServerLevel level, int minX, int minY, int minZ,
 			int maxX, int maxY, int maxZ) {
@@ -174,7 +199,8 @@ public final class ReactorMeltdown {
 		for (int y = minY; y <= maxY; y++) {
 			for (int z = minZ; z <= maxZ; z++) {
 				for (int x = minX; x <= maxX; x++) {
-					if (level.getBlockState(cursor.set(x, y, z)).getBlock() instanceof FluidPipeBlock) {
+					BlockState state = level.getBlockState(cursor.set(x, y, z));
+					if (state.getBlock() instanceof FluidPipeBlock && !isMeltproof(state)) {
 						return cursor.immutable();
 					}
 				}

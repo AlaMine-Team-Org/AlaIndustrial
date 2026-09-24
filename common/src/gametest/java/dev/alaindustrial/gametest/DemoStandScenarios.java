@@ -1,11 +1,19 @@
 package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.block.TrellisBlock;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.ElectricFurnaceBlockEntity;
+import dev.alaindustrial.block.entity.FluidTankBlockEntity;
+import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
+import dev.alaindustrial.block.entity.PumpBlockEntity;
+import dev.alaindustrial.block.entity.ReactorControllerBlockEntity;
+import dev.alaindustrial.block.entity.ReactorIdleReason;
+import dev.alaindustrial.block.entity.ReactorRoomStatus;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.core.structure.CrystalFarmRoom;
+import dev.alaindustrial.core.structure.ReactorCore;
 import dev.alaindustrial.core.structure.RoomFill;
 import dev.alaindustrial.core.structure.RoomScan;
 import dev.alaindustrial.core.structure.RoomValidator;
@@ -27,7 +35,9 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.LeverBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
@@ -55,7 +65,7 @@ import net.minecraft.world.phys.AABB;
  * </ol>
  *
  * <p>Each scenario anchors the stand inside its own structure envelope with a 1-block margin
- * ({@link #ORIGIN}); the envelope is 44×14×28 ({@code demo_stand_area}), sky access keeps the
+ * ({@link #ORIGIN}); the envelope is 90×14×52 ({@code demo_stand_area}), sky access keeps the
  * solar panels honest, though their output is deliberately not asserted (test-world time of day
  * is not fixed here).
  */
@@ -76,6 +86,7 @@ public final class DemoStandScenarios {
 
 	public static void demoStandBuildsCoversAndRuns(GameTestHelper helper) {
 		BlockPos origin = helper.absolutePos(ORIGIN);
+		assertArenaFitsStand(helper);
 		DemoStand.buildAll(helper.getLevel(), origin);
 
 		// --- the storage-module pair really is a pair (MOD-275 stage A) ---
@@ -83,7 +94,7 @@ public final class DemoStandScenarios {
 		// promised two merged into one warehouse. The block-coverage scan below cannot see that — the
 		// surviving module still ticks the "storage_module appears somewhere" box. Walking the cluster
 		// does: a single module walks to moduleCount() == 1.
-		if (StorageCluster.of(helper.getLevel(), origin.offset(32, 3, 10)).moduleCount() != 2) {
+		if (StorageCluster.of(helper.getLevel(), origin.offset(64, 3, 20)).moduleCount() != 2) {
 			helper.fail("the demo stand's two storage modules do not form one 2-module warehouse "
 					+ "— a second `set` on the same cell overwrote one of them");
 		}
@@ -98,7 +109,7 @@ public final class DemoStandScenarios {
 		// on ITS schedule, so on the tick the stand finishes building, its status is still the "never
 		// scanned" default — a first draft of this check read that default and reported a perfectly good
 		// room as broken.
-		BlockPos controllerPos = origin.offset(4, 2, 15);
+		BlockPos controllerPos = origin.offset(6, 2, 30);
 		BlockState controllerState = helper.getLevel().getBlockState(controllerPos);
 		if (!controllerState.is(ModContent.REACTOR_CONTROLLER.get())) {
 			helper.fail("the demo stand's reactor controller is missing from the room's north wall");
@@ -119,7 +130,7 @@ public final class DemoStandScenarios {
 		// kept being placed there after the greenhouse claimed x 8..12 — two holes punched straight
 		// through a shell whose entire point is that it closes. Every block of it is also somewhere else
 		// on the stand, so the coverage scan below never noticed.
-		BlockPos farmController = origin.offset(9, 2, 15);
+		BlockPos farmController = origin.offset(17, 2, 30);
 		BlockState farmState = helper.getLevel().getBlockState(farmController);
 		if (!farmState.is(ModContent.CRYSTAL_FARM_CONTROLLER.get())) {
 			helper.fail("the demo stand's greenhouse controller is missing from its north wall");
@@ -132,6 +143,24 @@ public final class DemoStandScenarios {
 			if (!greenhouse.sealed()) {
 				helper.fail("the demo stand's crystal greenhouse does not seal: " + greenhouse.status()
 						+ " at " + greenhouse.x() + "," + greenhouse.y() + "," + greenhouse.z());
+			}
+		}
+
+		// --- every camera point of /ala demo tp stands in open air (MOD-659) ---
+		// The stand is 88 wide and every point is a hand-tuned position, so a zone that grows into one
+		// would drop the tester into a wall. Points in front of the stand (z < 0) stand over whatever
+		// terrain the world has and are not this test's business.
+		for (DemoStand.TpPoint point : DemoStand.TP_POINTS) {
+			if (point.dz() < 0) {
+				continue;
+			}
+			BlockPos feet = origin.offset((int) Math.floor(point.dx()), (int) Math.floor(point.dy()),
+					(int) Math.floor(point.dz()));
+			if (!helper.getLevel().getBlockState(feet).isAir() || !helper.getLevel().getBlockState(feet.above()).isAir()) {
+				helper.fail("the '" + point.name() + "' camera point stands inside "
+						+ BuiltInRegistries.BLOCK.getKey(helper.getLevel().getBlockState(feet).getBlock())
+						+ " at local " + (feet.getX() - origin.getX()) + "," + (feet.getY() - origin.getY()) + ","
+						+ (feet.getZ() - origin.getZ()) + " — move it");
 			}
 		}
 
@@ -158,12 +187,12 @@ public final class DemoStandScenarios {
 		// --- liveness after 100 ticks of normal world ticking ---
 		helper.runAfterDelay(100, () -> {
 			BatteryBoxBlockEntity coalBattery = helper.getLevel()
-					.getBlockEntity(origin.offset(2, 1, 5)) instanceof BatteryBoxBlockEntity b ? b : null;
+					.getBlockEntity(origin.offset(4, 1, 9)) instanceof BatteryBoxBlockEntity b ? b : null;
 			if (coalBattery == null || coalBattery.getEnergyStorage().getAmount() <= 0) {
 				helper.fail("fuel generator delivered no EU to its battery box after 100 ticks");
 			}
 			BatteryBoxBlockEntity millBattery = helper.getLevel()
-					.getBlockEntity(origin.offset(17, 0, 5)) instanceof BatteryBoxBlockEntity b ? b : null;
+					.getBlockEntity(origin.offset(46, 0, 9)) instanceof BatteryBoxBlockEntity b ? b : null;
 			if (millBattery == null || millBattery.getEnergyStorage().getAmount() <= 0) {
 				helper.fail("water mill delivered no EU to its battery box after 100 ticks");
 			}
@@ -172,7 +201,7 @@ public final class DemoStandScenarios {
 			// through the 6-cable network. With the box mis-oriented (its output face away from the
 			// cables) the run is dead and this stays at zero, so the check fails on the pre-fix code.
 			ElectricFurnaceBlockEntity cableFurnace = helper.getLevel()
-					.getBlockEntity(origin.offset(23, 1, 14)) instanceof ElectricFurnaceBlockEntity f ? f : null;
+					.getBlockEntity(origin.offset(39, 1, 28)) instanceof ElectricFurnaceBlockEntity f ? f : null;
 			if (cableFurnace == null) {
 				helper.fail("cable-zone end furnace missing on the stand");
 			} else {
@@ -185,7 +214,7 @@ public final class DemoStandScenarios {
 			}
 
 			MaceratorBlockEntity macerator = helper.getLevel()
-					.getBlockEntity(origin.offset(2, 1, 10)) instanceof MaceratorBlockEntity m ? m : null;
+					.getBlockEntity(origin.offset(4, 1, 20)) instanceof MaceratorBlockEntity m ? m : null;
 			if (macerator == null) {
 				helper.fail("macerator block entity missing on the stand");
 			} else {
@@ -200,7 +229,7 @@ public final class DemoStandScenarios {
 			// MOD-294 loss lane: the 36-cable copper run is the demo's whole point — if EU never
 			// arrives at the far furnace, the lane is a dead prop, not a loss exhibit.
 			ElectricFurnaceBlockEntity laneFurnace = helper.getLevel()
-					.getBlockEntity(origin.offset(39, 1, 7)) instanceof ElectricFurnaceBlockEntity lf ? lf : null;
+					.getBlockEntity(origin.offset(41, 1, 14)) instanceof ElectricFurnaceBlockEntity lf ? lf : null;
 			if (laneFurnace == null) {
 				helper.fail("loss-lane end furnace missing on the stand");
 			} else {
@@ -215,7 +244,7 @@ public final class DemoStandScenarios {
 			// MOD-294 farm A: the LV-cycle chain's macerator works like its showcase sibling — the
 			// farm is "ready to test", not scenery.
 			MaceratorBlockEntity farmMacerator = helper.getLevel()
-					.getBlockEntity(origin.offset(6, 1, 23)) instanceof MaceratorBlockEntity fm ? fm : null;
+					.getBlockEntity(origin.offset(8, 1, 46)) instanceof MaceratorBlockEntity fm ? fm : null;
 			if (farmMacerator == null) {
 				helper.fail("LV-cycle farm macerator missing on the stand");
 			} else {
@@ -226,19 +255,176 @@ public final class DemoStandScenarios {
 					helper.fail("LV-cycle farm macerator shows no processing after 100 ticks");
 				}
 			}
+
+			// MOD-659: both pumps of the stand really drink. Each once stood over a pool BELOW itself, which
+			// is not its intake face, and moved nothing for as long as the stand had existed — no scenario
+			// looked, because a pump that does nothing looks exactly like a pump that has nothing to do.
+			//
+			// The farm's pump faces a raised water cistern: the water it drinks comes back (three sources in
+			// a row), so what proves it worked is fluid in the pump or in the tank at the end of its pipes.
+			PumpBlockEntity farmPump = helper.getLevel()
+					.getBlockEntity(origin.offset(23, 1, 46)) instanceof PumpBlockEntity p ? p : null;
+			FluidTankBlockEntity farmTank = helper.getLevel()
+					.getBlockEntity(origin.offset(27, 1, 46)) instanceof FluidTankBlockEntity t ? t : null;
+			if (farmPump == null || farmTank == null) {
+				helper.fail("the fluid farm's pump or its tank is missing from the stand");
+			} else if (farmPump.fluidTank.amount <= 0 && farmTank.fluidTank.amount <= 0) {
+				helper.fail("the fluid farm's pump drank nothing from its cistern after 100 ticks");
+			}
+			// MOD-660: the reactor room's pump reaches the column through both its walls. The room stands
+			// scrammed, so nothing boils: the column was left half full, and any water above that came
+			// through the pump, the ordinary pipe, the east inlet and the reinforced pipe — an inlet whose
+			// pipes were not wrenched to face it moves nothing, and this stays at exactly half.
+			FuelRodAssemblyBlockEntity demoColumn = demoReactorColumn(helper, origin);
+			if (demoColumn == null) {
+				helper.fail("the demo reactor room's fuel column is missing");
+			} else if (demoColumn.waterTank.amount <= demoColumn.waterTank.capacity / 2) {
+				helper.fail("the demo reactor room's pump brought no water into the column after 100 ticks: "
+						+ demoColumn.waterTank.amount + " mB of " + demoColumn.waterTank.capacity);
+			}
+			// The misc pump has ONE lava source to drink: it is gone from the cistern once the pump has.
+			if (helper.getLevel().getBlockState(origin.offset(69, 1, 19)).is(Blocks.LAVA)) {
+				helper.fail("the misc zone's pump left its lava cistern untouched after 100 ticks");
+			}
+
+			// MOD-659: the garden exhibits are still standing. The drone station beside them harvests every
+			// ripe crop in its zone as soon as it holds a drone and a hoe — and the stand once stocked it
+			// with both, so the two kok-sagyz plants (the "dandelions") and the ripe trellis it exists to
+			// SHOW were reaped within a minute of the build. An exhibit that is gone by the time the tester
+			// arrives is worth nothing, and no other check looks at a plant after the build tick.
+			BlockState trellis = helper.getLevel().getBlockState(origin.offset(84, 1, 20));
+			if (!trellis.is(ModContent.TRELLIS.get()) || trellis.getValue(TrellisBlock.AGE) != TrellisBlock.MAX_AGE) {
+				helper.fail("the ripe cotton trellis of the garden is no longer ripe after 100 ticks: " + trellis);
+			}
+			for (int kokX : new int[] {83, 84}) {
+				if (!helper.getLevel().getBlockState(origin.offset(kokX, 2, 19)).is(ModContent.KOK_SAGYZ.get())) {
+					helper.fail("the kok-sagyz plant at local x=" + kokX + " of the garden is gone after 100 ticks");
+				}
+			}
 			helper.succeed();
 		});
+	}
+
+	/**
+	 * The demo reactor room, started with its own lever, runs on its own loop and stays cold (MOD-660).
+	 *
+	 * <p>The stand builds the room scrammed, so the scenario above never sees the loop do its job. Here
+	 * the lever is flicked and the room left to work: after {@value #REACTOR_RUN_TICKS} ticks it must
+	 * be sealed and running, and each half of the loop answers for itself. <b>Water</b>: the column holds
+	 * more than the half it was built with, although it has boiled water all along — a dead feed would
+	 * leave it below half. <b>Steam</b>: the column's steam tank is nearly empty — a blocked exhaust keeps
+	 * everything the column boiled, some thousands of mB by then. <b>Heat</b>: far under the meltdown
+	 * line, where a dry column would have climbed by a quarter of the scale. And every pipe of the loop
+	 * still stands, the ordinary ones outside the shell included: a working room melts ordinary pipe
+	 * INSIDE it, and the stand must not show that rule biting its own plumbing.
+	 */
+	public static void demoReactorRunsCoolOnItsOwnLoop(GameTestHelper helper) {
+		BlockPos origin = helper.absolutePos(ORIGIN);
+		assertArenaFitsStand(helper);
+		DemoStand.buildAll(helper.getLevel(), origin);
+
+		BlockPos leverPos = origin.offset(6, 2, 31);
+		BlockState lever = helper.getLevel().getBlockState(leverPos);
+		if (!lever.is(ModContent.REACTOR_LEVER.get())) {
+			helper.fail("the demo reactor room has no reactor lever on its controller's back, found " + lever);
+			return;
+		}
+		helper.getLevel().setBlockAndUpdate(leverPos, lever.setValue(LeverBlock.POWERED, true));
+
+		helper.runAfterDelay(REACTOR_RUN_TICKS, () -> {
+			ReactorControllerBlockEntity brain = helper.getLevel()
+					.getBlockEntity(origin.offset(6, 2, 30)) instanceof ReactorControllerBlockEntity c ? c : null;
+			FuelRodAssemblyBlockEntity column = demoReactorColumn(helper, origin);
+			if (brain == null || column == null) {
+				helper.fail("the demo reactor room lost its controller or its column");
+				return;
+			}
+			if (brain.getStatus() != ReactorRoomStatus.FORMED) {
+				helper.fail("the demo reactor room is not sealed while running: " + brain.getStatus());
+			}
+			if (brain.getIdleReason() != ReactorIdleReason.RUNNING) {
+				helper.fail("the demo reactor room did not start on its lever: " + brain.getIdleReason());
+			}
+			long heatPercent = ReactorCore.heatPercent(brain.getHeat(), Config.reactorHeatCapacity);
+			if (brain.isMeltingDown() || heatPercent >= 10) {
+				helper.fail("the demo reactor room heats up on its own loop: " + heatPercent + "% of the scale");
+			}
+			if (column.waterTank.amount <= column.waterTank.capacity / 2) {
+				helper.fail("the demo reactor room's feed does not keep up: the column holds "
+						+ column.waterTank.amount + " mB of water");
+			}
+			if (column.steamTank.amount >= 1000) {
+				helper.fail("the demo reactor room's exhaust does not carry the steam away: the column holds "
+						+ column.steamTank.amount + " mB of steam");
+			}
+			int[][] ordinary = {{11, 1, 33}, {11, 2, 33}, {3, 3, 33}};
+			int[][] reinforced = {{9, 2, 33}, {8, 2, 33}, {7, 3, 33}, {6, 3, 33}, {5, 3, 33}};
+			for (int[] c : ordinary) {
+				if (!helper.getLevel().getBlockState(origin.offset(c[0], c[1], c[2])).is(ModContent.FLUID_PIPE.get())) {
+					helper.fail("the ordinary pipe of the demo reactor loop at " + c[0] + "," + c[1] + "," + c[2]
+							+ " is gone");
+				}
+			}
+			for (int[] c : reinforced) {
+				if (!helper.getLevel().getBlockState(origin.offset(c[0], c[1], c[2]))
+						.is(ModContent.REINFORCED_FLUID_PIPE.get())) {
+					helper.fail("the reinforced pipe of the demo reactor loop at " + c[0] + "," + c[1] + "," + c[2]
+							+ " is gone");
+				}
+			}
+			helper.succeed();
+		});
+	}
+
+	/** How long {@link #demoReactorRunsCoolOnItsOwnLoop} lets the room work; both lanes allow 100 more. */
+	private static final int REACTOR_RUN_TICKS = 400;
+
+	/** The fuel column in the middle of the demo reactor room, or {@code null} when it is not there. */
+	private static FuelRodAssemblyBlockEntity demoReactorColumn(GameTestHelper helper, BlockPos origin) {
+		return helper.getLevel().getBlockEntity(origin.offset(7, 2, 33))
+				instanceof FuelRodAssemblyBlockEntity column ? column : null;
+	}
+
+	/**
+	 * The arena must hold the stand and its one-cell ring. Nothing else ties the two sizes together: the
+	 * stand's constants live in {@code DemoStand}, the arena is a template resource on each lane
+	 * ({@code demo_stand_area}), and a stand larger than its arena writes OUTSIDE the rig, where nothing
+	 * scans it and nothing is reset between tests. It happened once in miniature (MOD-597, the vertical
+	 * margin) and MOD-659 doubled the stand, so the mismatch now fails loudly instead of silently.
+	 */
+	private static void assertArenaFitsStand(GameTestHelper helper) {
+		AABB arena = helper.getBounds();
+		double needX = ORIGIN.getX() + DemoStand.WIDTH + 1;
+		double needY = ORIGIN.getY() + DemoStand.HEIGHT + 1;
+		double needZ = ORIGIN.getZ() + DemoStand.DEPTH;
+		if (arena.getXsize() < needX || arena.getYsize() < needY || arena.getZsize() < needZ) {
+			helper.fail("the demo_stand_area arena is " + arena.getXsize() + "x" + arena.getYsize() + "x"
+					+ arena.getZsize() + " but the stand needs at least " + needX + "x" + needY + "x" + needZ
+					+ " — re-cut the arena (fabric .snbt and neoforge .nbt) to the DemoStand constants");
+		}
 	}
 
 	/** {@code clear} removes every stand block and entity above the restored floor — build → clear → scan. */
 	public static void demoStandClearLeavesNoBlocks(GameTestHelper helper) {
 		BlockPos origin = helper.absolutePos(ORIGIN);
+		assertArenaFitsStand(helper);
 		Map<BlockPos, Block> ringBefore = ringSnapshot(helper, origin);
+		// MOD-659: a stray block high above the stand — the crown of a tree, say — which the sweep has to
+		// take with it. The stand is HEIGHT tall but the sky over it is cleared up to CLEAR_HEIGHT, and a
+		// sweep that stops at the stand's own height leaves such a crown cut in half, hanging in the air.
+		BlockPos crown = origin.offset(5, DemoStand.CLEAR_HEIGHT, 5);
+		BlockPos farCrown = origin.offset(DemoStand.WIDTH - 1, DemoStand.CLEAR_HEIGHT, DemoStand.DEPTH - 1);
+		helper.getLevel().setBlockAndUpdate(crown, Blocks.OAK_LEAVES.defaultBlockState());
+		helper.getLevel().setBlockAndUpdate(farCrown, Blocks.OAK_LEAVES.defaultBlockState());
 		DemoStand.buildAll(helper.getLevel(), origin);
+		if (!helper.getLevel().getBlockState(crown).isAir() || !helper.getLevel().getBlockState(farCrown).isAir()) {
+			helper.fail("build left a block " + DemoStand.CLEAR_HEIGHT + " cells above the floor: the sky over the "
+					+ "stand is meant to be cleared that high");
+		}
 		DemoStand.clear(helper.getLevel(), origin);
 		for (int x = 0; x < DemoStand.WIDTH; x++) {
 			for (int z = 0; z < DemoStand.DEPTH; z++) {
-				for (int y = 1; y <= DemoStand.HEIGHT; y++) {
+				for (int y = 1; y <= DemoStand.CLEAR_HEIGHT; y++) {
 					if (!helper.getLevel().getBlockState(origin.offset(x, y, z)).isAir()) {
 						helper.fail("clear left a block at local (" + x + ", " + y + ", " + z + ")");
 					}
@@ -308,8 +494,8 @@ public final class DemoStandScenarios {
 	}
 
 	/**
-	 * The ring's local coordinates. The rig is 44x14x28 with {@link #ORIGIN} at (1,1,1), so local
-	 * x=-1..42 and z=-1..26 exist while the stand occupies x=0..41 and z=0..26 — a testable margin on
+	 * The ring's local coordinates. The rig is 90x14x52 with {@link #ORIGIN} at (1,1,1), so local
+	 * x=-1..88 and z=-1..50 exist while the stand occupies x=0..87 and z=0..50 — a testable margin on
 	 * three sides. The floor row (y=0) is included: {@code clear} restores grass only for x &lt; WIDTH,
 	 * so a floor block set one column out survives exactly like the column above it — and since
 	 * MOD-597 so are the {@code DEPTH_BELOW} dug levels, for exactly the same reason one level down.
@@ -334,6 +520,7 @@ public final class DemoStandScenarios {
 	 */
 	public static void demoStandRebuildIsIdempotent(GameTestHelper helper) {
 		BlockPos origin = helper.absolutePos(ORIGIN);
+		assertArenaFitsStand(helper);
 		DemoStand.buildAll(helper.getLevel(), origin);
 		Map<Integer, Integer> firstPass = blockMultiset(helper, origin);
 		DemoStand.buildAll(helper.getLevel(), origin);
@@ -370,6 +557,7 @@ public final class DemoStandScenarios {
 	 */
 	public static void demoStandShowcaseCoversItems(GameTestHelper helper) {
 		BlockPos origin = helper.absolutePos(ORIGIN);
+		assertArenaFitsStand(helper);
 		DemoStand.buildAll(helper.getLevel(), origin);
 
 		Set<Identifier> shown = new HashSet<>();
@@ -389,14 +577,15 @@ public final class DemoStandScenarios {
 					+ " — the wall is full or the frame placement broke");
 		}
 
-		// Blocks with no item cannot hang in a frame: each stands in the item-less row (z=22).
+		// Blocks with no item cannot hang in a frame: each stands in the item-less row.
 		Set<Identifier> missingBlocks = new HashSet<>();
 		List<Block> blocks = DemoStand.showcaseBlocks();
 		for (int i = 0; i < blocks.size(); i++) {
 			boolean found = false;
-			if (1 + 2 * i < DemoStand.WIDTH) {
+			if (DemoStand.itemlessX(i) < DemoStand.WIDTH) {
 				for (int y = 0; y <= 1 && !found; y++) {
-					found = helper.getLevel().getBlockState(origin.offset(1 + 2 * i, y, 22)).is(blocks.get(i));
+					found = helper.getLevel().getBlockState(origin.offset(DemoStand.itemlessX(i), y,
+							DemoStand.itemlessZ())).is(blocks.get(i));
 				}
 			}
 			if (!found) {
@@ -425,6 +614,7 @@ public final class DemoStandScenarios {
 	 */
 	public static void demoStandWritesEachCellOnce(GameTestHelper helper) {
 		BlockPos origin = helper.absolutePos(ORIGIN);
+		assertArenaFitsStand(helper);
 		DemoStand.buildAll(helper.getLevel(), origin);
 		List<String> problems = DemoStand.lastBuildProblems();
 		if (!problems.isEmpty()) {

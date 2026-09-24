@@ -179,12 +179,12 @@
             {
               "type": "text",
               "title": "Vattenkretsen",
-              "text": "Vattnet för bort värmen. En reaktor med tillräckligt med vatten ligger nära botten av mätaren, och gult betyder att vattnet inte hänger med.\n\nPump -> rör -> reaktorintag -> kolonn. Ställ in rörets sidor vid intaget med skiftnyckeln: uttag på utsidan, inmatning på insidan. Kolonnen och munstycket behöver ingen nyckel — en kolonn tar bara emot vatten och ger bara ifrån sig ånga."
+              "text": "Vattnet för bort värmen. En reaktor med tillräckligt med vatten ligger nära botten av mätaren, och gult betyder att vattnet inte hänger med.\n\nPump -> rör -> reaktorintag -> förstärkt rör -> kolonn. Inne i rummet lägger du bara det förstärkta röret: en reaktor i drift smälter ett vanligt till lava. Ställ in rörets sidor vid intaget med skiftnyckeln: uttag på utsidan, inmatning på insidan. Kolonnen och munstycket behöver ingen nyckel — en kolonn tar bara emot vatten och ger bara ifrån sig ånga."
             },
             {
               "type": "text",
               "title": "Ånga",
-              "text": "Kokat vatten blir ånga och samlas i pelaren. Den måste ut: ett rör från pelarens ovansida → reaktorinlopp → ett ångmunstycke utanför.\n\nMunstycket måste vetta mot fri luft. Inmurat i en vägg släpper det inte ut något, och kretsen bakom stannar."
+              "text": "Kokat vatten blir ånga och samlas i pelaren. Den måste ut: ett förstärkt rör från pelarens ovansida → reaktorinlopp → ett ångmunstycke utanför.\n\nMunstycket måste vetta mot fri luft. Inmurat i en vägg släpper det inte ut något, och kretsen bakom stannar."
             }
           ]
         }
@@ -2029,6 +2029,36 @@
               ],
               "result_id": "alaindustrial:fluid_pipe",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reinforced_fluid_pipe",
+          "title": "Förstärkt vätskerör",
+          "icon": "alaindustrial:reinforced_fluid_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Förstärkt vätskerör",
+              "text": "Ett vätskerör i en mantel av strålskärmslegering — det enda rör som ett reaktorrum i drift inte smälter."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
             }
           ]
         },

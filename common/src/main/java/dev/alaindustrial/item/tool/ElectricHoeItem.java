@@ -221,8 +221,8 @@ public class ElectricHoeItem extends Item {
 	 * overridable rather than static: on 26.2 NeoForge patched {@code HoeItem.TILLABLES} out of the flow
 	 * and answered from the block through {@code getToolModifiedState(…, HOE_TILL, …)}. <b>26.3 removed
 	 * that whole mechanism</b> — the map is gone, and so is the ability — so {@link VanillaTillables}
-	 * asks the same {@code block_transformer} this stack declares, on both loaders, and the two NeoForge
-	 * subclasses have nothing left to override here (MOD-226).
+	 * asks the same {@code block_transformer} this stack declares, on both loaders; the NeoForge
+	 * subclasses that used to override it were removed (MOD-226).
 	 */
 	protected boolean wouldTill(UseOnContext context) {
 		return VanillaTillables.wouldTill(context);

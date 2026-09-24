@@ -179,12 +179,12 @@
             {
               "type": "text",
               "title": "The water loop",
-              "text": "Water carries the heat away. A reactor with enough water sits near the bottom of the gauge, and amber means the water is not keeping up.\n\nPump -> pipe -> reactor inlet -> column. Wrench the pipe faces at the inlet: extract on the outside, insert on the inside. The column and the nozzle need no wrench — a column takes water only in and gives steam only out."
+              "text": "Water carries the heat away. A reactor with enough water sits near the bottom of the gauge, and amber means the water is not keeping up.\n\nPump -> pipe -> reactor inlet -> reinforced pipe -> column. Inside the room lay only the reinforced pipe: a working reactor melts an ordinary one into lava. Wrench the pipe faces at the inlet: extract on the outside, insert on the inside. The column and the nozzle need no wrench — a column takes water only in and gives steam only out."
             },
             {
               "type": "text",
               "title": "Steam",
-              "text": "Boiled water becomes steam and collects in the column. It has to leave: a pipe from the column's top face -> reactor inlet -> a steam nozzle outside.\n\nThe nozzle must face open air. Buried in a wall it vents nothing, and the loop behind it stalls."
+              "text": "Boiled water becomes steam and collects in the column. It has to leave: a reinforced pipe from the column's top face -> reactor inlet -> a steam nozzle outside.\n\nThe nozzle must face open air. Buried in a wall it vents nothing, and the loop behind it stalls."
             }
           ]
         }
@@ -2029,6 +2029,36 @@
               ],
               "result_id": "alaindustrial:fluid_pipe",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reinforced_fluid_pipe",
+          "title": "Reinforced Fluid Pipe",
+          "icon": "alaindustrial:reinforced_fluid_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reinforced Fluid Pipe",
+              "text": "A fluid pipe in a shielding-alloy jacket — the one pipe a working reactor room does not melt."
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
             }
           ]
         },

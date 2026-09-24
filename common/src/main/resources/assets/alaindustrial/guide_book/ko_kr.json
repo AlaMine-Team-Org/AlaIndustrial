@@ -179,12 +179,12 @@
             {
               "type": "text",
               "title": "물 회로",
-              "text": "물이 열을 빼냅니다. 물이 넉넉한 원자로는 계기 아래쪽에 머물고, 노란색은 물이 따라가지 못한다는 뜻입니다.\n\n펌프 -> 파이프 -> 원자로 입구 -> 기둥. 입구 쪽 파이프 면은 렌치로 설정하세요. 바깥쪽은 추출, 안쪽은 주입입니다. 기둥과 노즐에는 렌치가 필요 없습니다 — 기둥은 물만 받고 증기만 내보내니까요."
+              "text": "물이 열을 빼냅니다. 물이 넉넉한 원자로는 계기 아래쪽에 머물고, 노란색은 물이 따라가지 못한다는 뜻입니다.\n\n펌프 -> 파이프 -> 원자로 입구 -> 강화 파이프 -> 기둥. 방 안에는 강화 파이프만 까세요. 가동 중인 원자로는 일반 파이프를 녹여 용암으로 만듭니다. 입구 쪽 파이프 면은 렌치로 설정하세요. 바깥쪽은 추출, 안쪽은 주입입니다. 기둥과 노즐에는 렌치가 필요 없습니다 — 기둥은 물만 받고 증기만 내보내니까요."
             },
             {
               "type": "text",
               "title": "증기",
-              "text": "끓은 물은 증기가 되어 기둥에 쌓입니다. 반드시 빼내야 합니다. 기둥 윗면에서 배관 → 원자로 입구 → 바깥의 증기 노즐로.\n\n노즐은 트인 공기를 향해야 합니다. 벽에 파묻힌 노즐은 아무것도 내뿜지 못하고, 그 뒤의 회로가 멈춥니다."
+              "text": "끓은 물은 증기가 되어 기둥에 쌓입니다. 반드시 빼내야 합니다. 기둥 윗면에서 강화 파이프 → 원자로 입구 → 바깥의 증기 노즐로.\n\n노즐은 트인 공기를 향해야 합니다. 벽에 파묻힌 노즐은 아무것도 내뿜지 못하고, 그 뒤의 회로가 멈춥니다."
             }
           ]
         }
@@ -2029,6 +2029,36 @@
               ],
               "result_id": "alaindustrial:fluid_pipe",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reinforced_fluid_pipe",
+          "title": "강화 액체 파이프",
+          "icon": "alaindustrial:reinforced_fluid_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "강화 액체 파이프",
+              "text": "차폐 합금 외피를 두른 액체 파이프 — 가동 중인 원자로 방에서도 녹지 않는 유일한 파이프."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
             }
           ]
         },

@@ -179,12 +179,12 @@
             {
               "type": "text",
               "title": "水循环",
-              "text": "水会把热量带走。水量充足的反应堆停在刻度底部附近，黄色意味着水已经跟不上了。\n\n泵 -> 管道 -> 反应堆入口 -> 柱子。用扳手设置入口处管道的面：外侧抽取，内侧输入。柱子和喷口不需要扳手——柱子只进水、只出蒸汽。"
+              "text": "水会把热量带走。水量充足的反应堆停在刻度底部附近，黄色意味着水已经跟不上了。\n\n泵 -> 管道 -> 反应堆入口 -> 强化管道 -> 柱子。房间内只能铺强化管道：工作中的反应堆会把普通管道熔成岩浆。用扳手设置入口处管道的面：外侧抽取，内侧输入。柱子和喷口不需要扳手——柱子只进水、只出蒸汽。"
             },
             {
               "type": "text",
               "title": "蒸汽",
-              "text": "烧开的水变成蒸汽，积在柱子里。必须把它导出去：从柱子的顶面接管道 → 反应堆入口 → 外面的蒸汽喷口。\n\n喷口必须朝着空旷处。埋在墙里的喷口什么也排不出去，它后面的整条回路都会堵死。"
+              "text": "烧开的水变成蒸汽，积在柱子里。必须把它导出去：从柱子的顶面接强化管道 → 反应堆入口 → 外面的蒸汽喷口。\n\n喷口必须朝着空旷处。埋在墙里的喷口什么也排不出去，它后面的整条回路都会堵死。"
             }
           ]
         }
@@ -2029,6 +2029,36 @@
               ],
               "result_id": "alaindustrial:fluid_pipe",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reinforced_fluid_pipe",
+          "title": "强化流体管道",
+          "icon": "alaindustrial:reinforced_fluid_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "强化流体管道",
+              "text": "包着屏蔽合金外壳的流体管道——工作中的反应堆房间唯一熔不掉的管道。"
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
             }
           ]
         },

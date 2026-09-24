@@ -837,9 +837,11 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 	/**
 	 * One tick of whatever this reactor is currently destroying (MOD-469).
 	 *
-	 * <p>Two hazards, one schedule, because they can never be running at once: a sealed room melts its
-	 * own contents when it is allowed to overheat, and a reactor with no room melts the scenery around
-	 * it. A controller is one or the other.
+	 * <p>Three hazards, one schedule, because no two can be running at once: a sealed room melts its
+	 * own contents when it is allowed to overheat, a reactor with no room melts the scenery around it,
+	 * and a sealed room that is merely WORKING melts the ordinary fluid pipes inside it, one at a time
+	 * (MOD-660) — the reason the reinforced pipe exists. A meltdown already takes the plain pipes first,
+	 * so it overrides the working-room pass rather than running beside it.
 	 *
 	 * <p><b>The warning is issued even when the switch is off.</b> An operator who has turned the block
 	 * damage off should still be shown that their reactor has reached the state where it would have
@@ -872,7 +874,10 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		// a player switch it off by unplugging their machines (playtest finding 1). The redstone scram is
 		// still a real safety measure, and still the only one: no signal, no reaction, no melting.
 		boolean scenery = bare && reacting;
-		if (!melting && !scenery) {
+		// MOD-660: the working room's radiation, on the same REACTION signal as the scenery hazard and for
+		// the same reason — a full buffer does not make a core safe to stand a copper pipe beside.
+		boolean irradiating = !melting && status == ReactorRoomStatus.FORMED && reacting;
+		if (!melting && !scenery && !irradiating) {
 			meltTarget = null;
 			meltCountdown = 0;
 			return;
@@ -898,15 +903,21 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 			meltCooldown--;
 			return;
 		}
-		meltCooldown = melting
-				? Math.max(1, Config.reactorMeltdownIntervalTicks)
-				: ReactorCore.meltInterval(rods, Config.reactorBareMeltIntervalTicks,
-						Config.reactorBareMeltMinIntervalTicks);
-		BlockPos victim = melting
-				? ReactorMeltdown.pickContentsVictim(serverLevel, boxMinX, boxMinY, boxMinZ,
-						boxMaxX, boxMaxY, boxMaxZ, serverLevel.getRandom())
-				: ReactorMeltdown.pickSceneryVictim(serverLevel, hazardSource(serverLevel, pos),
-						Config.reactorBareMeltRadius, serverLevel.getRandom());
+		BlockPos victim;
+		if (melting) {
+			meltCooldown = Math.max(1, Config.reactorMeltdownIntervalTicks);
+			victim = ReactorMeltdown.pickContentsVictim(serverLevel, boxMinX, boxMinY, boxMinZ,
+					boxMaxX, boxMaxY, boxMaxZ, serverLevel.getRandom());
+		} else if (irradiating) {
+			meltCooldown = Math.max(1, Config.reactorPipeMeltIntervalTicks);
+			victim = ReactorMeltdown.pickIrradiatedPipe(serverLevel, boxMinX, boxMinY, boxMinZ,
+					boxMaxX, boxMaxY, boxMaxZ);
+		} else {
+			meltCooldown = ReactorCore.meltInterval(rods, Config.reactorBareMeltIntervalTicks,
+					Config.reactorBareMeltMinIntervalTicks);
+			victim = ReactorMeltdown.pickSceneryVictim(serverLevel, hazardSource(serverLevel, pos),
+					Config.reactorBareMeltRadius, serverLevel.getRandom());
+		}
 		if (victim == null) {
 			return;
 		}

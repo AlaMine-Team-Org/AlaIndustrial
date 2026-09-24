@@ -79,15 +79,15 @@ public final class BlockCapabilityParityScenarios {
 
 	/**
 	 * Restated by id, deliberately NOT read from {@link BlockCapabilityRoster#NO_ENERGY_CAPABILITY}
-	 * (see the class doc). All three extend {@code EnergyBlockEntity} with a zero-capacity buffer, so
+	 * (see the class doc). All four extend {@code EnergyBlockEntity} with a zero-capacity buffer, so
 	 * their {@code energyPort} is non-null on every face — the interface rule alone would expose them.
 	 *
-	 * <p>The two pipes carry energy scaffolding they never use; the sprinkler (MOD-525) is paid in
+	 * <p>The pipes carry energy scaffolding they never use; the sprinkler (MOD-525) is paid in
 	 * nutrient solution and reports {@code NONE} on every face, so an energy capability there would
 	 * offer the network an endpoint that can neither take nor give.
 	 */
 	private static final List<String> BLOCKS_NEVER_ENERGY =
-			List.of("item_pipe", "fluid_pipe", "sprinkler");
+			List.of("item_pipe", "fluid_pipe", "reinforced_fluid_pipe", "sprinkler");
 
 	/**
 	 * For every manifest block entity and every face: energy capability present ⇔ the block entity is

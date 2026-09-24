@@ -179,12 +179,12 @@
             {
               "type": "text",
               "title": "Sirkuit air",
-              "text": "Air membawa panas pergi. Reaktor dengan air yang cukup berada di dekat bagian bawah penunjuk, dan warna kuning berarti air tidak sanggup mengimbangi.\n\nPompa -> pipa -> saluran masuk reaktor -> kolom. Atur sisi pipa di saluran masuk dengan kunci pas: di luar menarik, di dalam memasukkan. Kolom dan nosel tidak butuh kunci pas — kolom hanya menerima air dan hanya mengeluarkan uap."
+              "text": "Air membawa panas pergi. Reaktor dengan air yang cukup berada di dekat bagian bawah penunjuk, dan warna kuning berarti air tidak sanggup mengimbangi.\n\nPompa -> pipa -> saluran masuk reaktor -> pipa diperkuat -> kolom. Di dalam ruangan pasang hanya pipa diperkuat: reaktor yang bekerja melelehkan pipa biasa menjadi lava. Atur sisi pipa di saluran masuk dengan kunci pas: di luar menarik, di dalam memasukkan. Kolom dan nosel tidak butuh kunci pas — kolom hanya menerima air dan hanya mengeluarkan uap."
             },
             {
               "type": "text",
               "title": "Uap",
-              "text": "Air yang mendidih menjadi uap dan menumpuk di dalam kolom. Uap itu harus dikeluarkan: pipa dari sisi atas kolom → saluran masuk reaktor → nosel uap di luar.\n\nNosel harus menghadap udara terbuka. Kalau tertanam di dinding, ia tidak membuang apa pun dan sirkuit di belakangnya macet."
+              "text": "Air yang mendidih menjadi uap dan menumpuk di dalam kolom. Uap itu harus dikeluarkan: pipa diperkuat dari sisi atas kolom → saluran masuk reaktor → nosel uap di luar.\n\nNosel harus menghadap udara terbuka. Kalau tertanam di dinding, ia tidak membuang apa pun dan sirkuit di belakangnya macet."
             }
           ]
         }
@@ -2029,6 +2029,36 @@
               ],
               "result_id": "alaindustrial:fluid_pipe",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reinforced_fluid_pipe",
+          "title": "Pipa Fluida Diperkuat",
+          "icon": "alaindustrial:reinforced_fluid_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Pipa Fluida Diperkuat",
+              "text": "Pipa fluida berselubung paduan perisai — satu-satunya pipa yang tidak dilelehkan ruang reaktor yang bekerja."
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
             }
           ]
         },

@@ -179,12 +179,12 @@
             {
               "type": "text",
               "title": "El circuito de agua",
-              "text": "El agua se lleva el calor. Un reactor con agua suficiente se queda cerca de la parte baja del indicador, y el ámbar significa que el agua se está quedando corta.\n\nBomba -> tubería -> entrada del reactor -> columna. Ajusta las caras de la tubería en la entrada con la llave inglesa: extraer por fuera, insertar por dentro. La columna y la boquilla no necesitan llave: una columna solo admite agua y solo entrega vapor."
+              "text": "El agua se lleva el calor. Un reactor con agua suficiente se queda cerca de la parte baja del indicador, y el ámbar significa que el agua se está quedando corta.\n\nBomba -> tubería -> entrada del reactor -> tubería reforzada -> columna. Dentro de la sala tiende solo la tubería reforzada: un reactor en funcionamiento funde una normal y la convierte en lava. Ajusta las caras de la tubería en la entrada con la llave inglesa: extraer por fuera, insertar por dentro. La columna y la boquilla no necesitan llave: una columna solo admite agua y solo entrega vapor."
             },
             {
               "type": "text",
               "title": "Vapor",
-              "text": "El agua hervida se convierte en vapor y se acumula en la columna. Hay que sacarlo: una tubería desde la cara superior de la columna → entrada del reactor → una boquilla de vapor fuera.\n\nLa boquilla tiene que mirar al aire libre. Enterrada en un muro no expulsa nada, y el circuito se atasca detrás."
+              "text": "El agua hervida se convierte en vapor y se acumula en la columna. Hay que sacarlo: una tubería reforzada desde la cara superior de la columna → entrada del reactor → una boquilla de vapor fuera.\n\nLa boquilla tiene que mirar al aire libre. Enterrada en un muro no expulsa nada, y el circuito se atasca detrás."
             }
           ]
         }
@@ -2029,6 +2029,36 @@
               ],
               "result_id": "alaindustrial:fluid_pipe",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reinforced_fluid_pipe",
+          "title": "Tubería de fluidos reforzada",
+          "icon": "alaindustrial:reinforced_fluid_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tubería de fluidos reforzada",
+              "text": "Una tubería de fluidos con camisa de aleación de blindaje: la única tubería que una sala de reactor en funcionamiento no funde."
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
             }
           ]
         },
