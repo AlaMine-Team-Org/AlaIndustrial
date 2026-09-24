@@ -184,7 +184,7 @@
             {
               "type": "text",
               "title": "Vapore",
-              "text": "L'acqua portata a bollore diventa vapore e si accumula nella colonna. Va fatto uscire: un tubo rinforzato dalla faccia superiore della colonna → ingresso del reattore → un ugello del vapore all'esterno.\n\nL'ugello deve dare sull'aria aperta. Sepolto in una parete non scarica niente, e il circuito dietro si blocca."
+              "text": "L'acqua portata a bollore diventa vapore e si accumula nella colonna. Esce solo dai tubi per vapore — un tubo per fluidi non lo trasporta: un tubo per vapore rinforzato dalla faccia superiore della colonna → ingresso del reattore → tubo per vapore → un ugello del vapore all'esterno.\n\nL'ugello deve dare sull'aria aperta. Sepolto in una parete non scarica niente, e il circuito dietro si blocca."
             }
           ]
         }
@@ -2033,6 +2033,36 @@
           ]
         },
         {
+          "id": "steam_pipe",
+          "title": "Tubo per vapore",
+          "icon": "alaindustrial:steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tubo per vapore",
+              "text": "Un tubo per il vapore — lo porta dalle colonne del reattore a un ugello del vapore e non si collega mai a un tubo per fluidi."
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:steam_pipe",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "reinforced_fluid_pipe",
           "title": "Tubo per fluidi rinforzato",
           "icon": "alaindustrial:reinforced_fluid_pipe",
@@ -2058,6 +2088,36 @@
                 "alaindustrial:fluid_pipe"
               ],
               "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "reinforced_steam_pipe",
+          "title": "Tubo per vapore rinforzato",
+          "icon": "alaindustrial:reinforced_steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tubo per vapore rinforzato",
+              "text": "Un tubo per vapore in una camicia di lega schermante — porta via il vapore dalle colonne dentro la sala di un reattore in funzione e non fonde."
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_steam_pipe",
               "result_count": 6
             }
           ]

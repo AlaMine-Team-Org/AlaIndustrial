@@ -37,6 +37,7 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
@@ -67,7 +68,7 @@ public final class ReactorScenarios {
 	private static final int SHELL_MAX = 4;
 
 	/** Middle of the west wall, the one face a controller can occupy in a room this size. */
-	private static final BlockPos CONTROLLER = new BlockPos(0, 2, 2);
+	static final BlockPos CONTROLLER = new BlockPos(0, 2, 2);
 
 	/** Interior floor, in the middle. */
 	private static final BlockPos COLUMN = new BlockPos(2, 1, 2);
@@ -464,10 +465,26 @@ public final class ReactorScenarios {
 
 			// ── phase one: the switch is off ──
 			Config.reactorMeltdownMeltsBlocks = false;
+			// MOD-662: a rack that reports boiling, so the only thing between it and a steam puff is the rule
+			// that a bare core has no loop to show. A bare core never boils by itself — without this the
+			// "no puffs" check below would pass on an empty question.
+			FuelRodAssemblyBlockEntity bareRack = helper.getBlockEntity(BARE_RACK, FuelRodAssemblyBlockEntity.class);
+			if (bareRack == null) {
+				helper.fail("bare fuel rack has no block entity");
+				return;
+			}
+			bareRack.setTank(true, bareRack.waterTank.capacity);
+			if (bareRack.boil(1) != 1 || !bareRack.isBoiling()) {
+				helper.fail("the bare rack could not be made to report boiling, so the puff check proves nothing");
+			}
 			driveAt(helper, brain, BARE_CONTROLLER, 160);
 
 			if (!brain.isBare()) {
 				helper.fail("a controller with racks in reach and no room did not enter bare mode");
+			}
+			if (brain.getSteamPuffsSent() != 0) {
+				helper.fail("a bare core puffed steam " + brain.getSteamPuffsSent()
+						+ " time(s): it has no loop, and a puff over it reports one that does not exist");
 			}
 			if (brain.getLastOutput() <= 0) {
 				helper.fail("bare reactor produced nothing — the whole point is that it is a generator");
@@ -819,6 +836,22 @@ public final class ReactorScenarios {
 	 * it never went — a hazard stuck on the one block it cannot touch.
 	 */
 	public static void aWorkingRoomMeltsPlainPipesAndSparesReinforcedOnes(GameTestHelper helper) {
+		workingRoomMeltsPlainAndSparesReinforced(helper, ModContent.REINFORCED_FLUID_PIPE.get(),
+				ModContent.FLUID_PIPE.get());
+	}
+
+	/**
+	 * The same rule for the steam family (MOD-662): a plain steam pipe inside a working room melts like a
+	 * plain fluid pipe, and the reinforced steam pipe — in {@code #alaindustrial:meltproof} — survives.
+	 * Both are {@code FluidPipeBlock}s, so the picker finds them without being told about steam.
+	 */
+	public static void aWorkingRoomMeltsPlainSteamPipesAndSparesReinforcedOnes(GameTestHelper helper) {
+		workingRoomMeltsPlainAndSparesReinforced(helper, ModContent.REINFORCED_STEAM_PIPE.get(),
+				ModContent.STEAM_PIPE.get());
+	}
+
+	private static void workingRoomMeltsPlainAndSparesReinforced(GameTestHelper helper, Block reinforcedPipe,
+			Block plainPipe) {
 		buildRoom(helper);
 		ReactorControllerBlockEntity brain = controller(helper);
 		FuelRodAssemblyBlockEntity column = placeColumn(helper);
@@ -828,8 +861,8 @@ public final class ReactorScenarios {
 		// (1,1,1) is the first cell of the walk (y, then z, then x); (3,3,3) is the last.
 		BlockPos reinforced = new BlockPos(1, 1, 1);
 		BlockPos plain = new BlockPos(3, 3, 3);
-		helper.setBlock(reinforced, ModContent.REINFORCED_FLUID_PIPE.get().defaultBlockState());
-		helper.setBlock(plain, ModContent.FLUID_PIPE.get().defaultBlockState());
+		helper.setBlock(reinforced, reinforcedPipe.defaultBlockState());
+		helper.setBlock(plain, plainPipe.defaultBlockState());
 
 		// No signal: a sealed, fuelled room that is not reacting harms nothing, however long it stands.
 		int quiet = 2 * (Config.reactorPipeMeltIntervalTicks + Config.reactorMeltWarnTicks) + 80;
@@ -837,7 +870,7 @@ public final class ReactorScenarios {
 		if (brain.getStatus() != ReactorRoomStatus.FORMED) {
 			helper.fail("room did not seal: " + brain.getStatus());
 		}
-		if (!helper.getBlockState(plain).is(ModContent.FLUID_PIPE.get())) {
+		if (!helper.getBlockState(plain).is(plainPipe)) {
 			helper.fail("a room with no signal melted its pipe, leaving " + helper.getBlockState(plain));
 		}
 
@@ -852,9 +885,9 @@ public final class ReactorScenarios {
 			helper.fail("reactor idle: " + brain.getIdleReason());
 		}
 		if (!helper.getBlockState(plain).is(Blocks.LAVA)) {
-			helper.fail("a working room left its ordinary fluid pipe standing: " + helper.getBlockState(plain));
+			helper.fail("a working room left its ordinary pipe standing: " + helper.getBlockState(plain));
 		}
-		if (!helper.getBlockState(reinforced).is(ModContent.REINFORCED_FLUID_PIPE.get())) {
+		if (!helper.getBlockState(reinforced).is(reinforcedPipe)) {
 			helper.fail("a working room melted the reinforced pipe, leaving " + helper.getBlockState(reinforced));
 		}
 		helper.succeed();
@@ -2062,7 +2095,7 @@ public final class ReactorScenarios {
 	// --- rig ---
 
 	/** The smallest room the scan accepts, with the controller in the middle of the west wall. */
-	private static void buildRoom(GameTestHelper helper) {
+	static void buildRoom(GameTestHelper helper) {
 		for (int x = 0; x <= SHELL_MAX; x++) {
 			for (int y = 0; y <= SHELL_MAX; y++) {
 				for (int z = 0; z <= SHELL_MAX; z++) {
@@ -2084,7 +2117,7 @@ public final class ReactorScenarios {
 				.setValue(HorizontalDirectionalBlock.FACING, Direction.WEST));
 	}
 
-	private static ReactorControllerBlockEntity controller(GameTestHelper helper) {
+	static ReactorControllerBlockEntity controller(GameTestHelper helper) {
 		ReactorControllerBlockEntity brain =
 				helper.getBlockEntity(CONTROLLER, ReactorControllerBlockEntity.class);
 		if (brain == null) {
@@ -2098,7 +2131,7 @@ public final class ReactorScenarios {
 		return placeColumnAt(helper, COLUMN);
 	}
 
-	private static FuelRodAssemblyBlockEntity placeColumnAt(GameTestHelper helper, BlockPos at) {
+	static FuelRodAssemblyBlockEntity placeColumnAt(GameTestHelper helper, BlockPos at) {
 		helper.setBlock(at, ModContent.FUEL_ROD_ASSEMBLY.get().defaultBlockState());
 		FuelRodAssemblyBlockEntity column = helper.getBlockEntity(at, FuelRodAssemblyBlockEntity.class);
 		if (column == null) {
@@ -2119,7 +2152,7 @@ public final class ReactorScenarios {
 	 * since idling costs no uranium — and a long run then measures a machine that spent most of it
 	 * switched off. Any scenario about heat has to keep the buffer open.
 	 */
-	private static void driveUnderLoad(GameTestHelper helper, ReactorControllerBlockEntity brain,
+	static void driveUnderLoad(GameTestHelper helper, ReactorControllerBlockEntity brain,
 			int ticks) {
 		BlockPos absolute = helper.absolutePos(CONTROLLER);
 		for (int i = 0; i < ticks; i++) {

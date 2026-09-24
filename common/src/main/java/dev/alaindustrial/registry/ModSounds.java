@@ -106,6 +106,12 @@ public final class ModSounds {
 	public static Supplier<SoundEvent> MOB_REPELLER_HUM = unbound("MOB_REPELLER_HUM");
 
 	/**
+	 * The steam nozzle's hiss (MOD-662). Our event over Minecraft's own geyser clips — {@code sounds.json} names
+	 * the vanilla files, nothing is copied — because vanilla's event for them has no subtitle.
+	 */
+	public static Supplier<SoundEvent> STEAM_NOZZLE_VENT = unbound("STEAM_NOZZLE_VENT");
+
+	/**
 	 * Every sound event, in one shared registration order. Both loaders replay this list; see
 	 * {@link SoundDef}. Order is not load-bearing (no entry reads another), but keep new entries
 	 * appended so a diff shows what was added rather than where it was inserted.
@@ -192,7 +198,10 @@ public final class ModSounds {
 			// quieter this time.
 			variableRange("fermenter_hum", s -> FERMENTER_HUM = s),
 			// MOD-447 — the guard field's sonar-like ping, shared by all three repeller tiers.
-			variableRange("mob_repeller_hum", s -> MOB_REPELLER_HUM = s));
+			variableRange("mob_repeller_hum", s -> MOB_REPELLER_HUM = s),
+			// MOD-662 — the first dotted id in this list, the vanilla shape `block.<block>.<action>`: it is a one-shot
+			// the block plays, not a loop, and it names vanilla geyser files rather than an .ogg of ours.
+			variableRange("block.steam_nozzle.vent", s -> STEAM_NOZZLE_VENT = s));
 
 	private ModSounds() {
 	}

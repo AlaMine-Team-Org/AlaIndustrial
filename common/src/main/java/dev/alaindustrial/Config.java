@@ -1672,6 +1672,27 @@ public final class Config {
 			doc = "Steam a nozzle holds, in mB.")
 	public static int reactorNozzleBuffer = 500;
 	/**
+	 * Ticks between the steam puffs a sealed room sends up over its boiling stacks (MOD-662). Purely visual:
+	 * the puffs are how a player sees from the floor which stacks are working and how full their steam is.
+	 */
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "Ticks between the steam puffs over a sealed reactor room's boiling column stacks.")
+	public static int reactorSteamPlumeIntervalTicks = 10;
+	/**
+	 * Boiling stacks that puff in one pulse. A room packed with towers takes turns rather than sending a
+	 * particle packet per stack every pulse — the readout is the same, the traffic is bounded.
+	 */
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "Boiling column stacks that puff steam in one pulse; the rest take turns on later pulses.")
+	public static int reactorSteamPlumeStacksPerPulse = 6;
+	/**
+	 * Ticks a steam nozzle collects what it vented before drawing one geyser burst for it (MOD-662). The
+	 * venting itself still happens every tick; only the picture is batched.
+	 */
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "Ticks a steam nozzle gathers its vented steam before drawing one geyser burst for it.")
+	public static int reactorNozzlePlumeIntervalTicks = 4;
+	/**
 	 * Heat a stopped room's shell sheds every tick no matter how cold it is — the floor of the cooling
 	 * curve. While the reaction runs the shell sheds nothing and the water is the only cooling (MOD-623).
 	 *
@@ -1723,7 +1744,8 @@ public final class Config {
 	// ── MOD-469: the meltdown and the bare reactor ────────────────────────────────────────────────
 	/**
 	 * Master switch for every block this feature turns into lava — the room's contents on an overheat,
-	 * the ordinary fluid pipes of a working room (MOD-660) AND the scenery around a bare core.
+	 * the ordinary pipes of a working room — fluid or steam (MOD-660, MOD-662) — AND the scenery around a
+	 * bare core.
 	 *
 	 * <p>Neither hazard ever takes the reactor's own parts — shell, racks, controller, button. The racks
 	 * are exempt even inside a meltdown: they are crafted around a shielding plate, and a part built to
@@ -1736,7 +1758,7 @@ public final class Config {
 	 * switch, one meaning.
 	 */
 	@Knob(section = Section.MACHINES,
-			doc = "When true, an overheating sealed room melts its own contents, a working sealed room melts the ordinary fluid pipes inside it, and a working bare reactor melts the scenery around it. false keeps every cue and changes no block.")
+			doc = "When true, an overheating sealed room melts its own contents, a working sealed room melts the ordinary fluid and steam pipes inside it, and a working bare reactor melts the scenery around it. false keeps every cue and changes no block.")
 	public static boolean reactorMeltdownMeltsBlocks = true;
 	/**
 	 * How far the bare-mode search may WALK from the controller before it gives up.
@@ -1819,7 +1841,8 @@ public final class Config {
 			doc = "Ticks between two blocks of the room's contents melting while the core is over the meltdown line.")
 	public static int reactorMeltdownIntervalTicks = 60;
 	/**
-	 * Ticks between two ordinary fluid pipes melting inside a WORKING sealed room (MOD-660).
+	 * Ticks between two ordinary pipes melting inside a WORKING sealed room (MOD-660) — fluid pipes and,
+	 * since MOD-662, steam pipes alike.
 	 *
 	 * <p>Slow on purpose: the lesson is "this room needs the reinforced pipe", not "you lost your
 	 * plumbing in a blink". Each pipe also gets the {@link #reactorMeltWarnTicks} warning, so one goes
@@ -1827,7 +1850,7 @@ public final class Config {
 	 * read the warning, and stop the core with the lever.
 	 */
 	@Knob(section = Section.MACHINES, min = 1,
-			doc = "Ticks between two ordinary fluid pipes melting inside a working sealed reactor room; the reinforced pipe is immune.")
+			doc = "Ticks between two ordinary fluid or steam pipes melting inside a working sealed reactor room; the reinforced pipes are immune.")
 	public static int reactorPipeMeltIntervalTicks = 120;
 	/**
 	 * Heat carried away by one melted block of the room's contents.

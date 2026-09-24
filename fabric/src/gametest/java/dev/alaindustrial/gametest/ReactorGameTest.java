@@ -67,6 +67,11 @@ public class ReactorGameTest {
 	}
 
 	@GameTest(maxTicks = 400)
+	public void aWorkingRoomMeltsPlainSteamPipesAndSparesReinforcedOnes(GameTestHelper helper) {
+		ReactorScenarios.aWorkingRoomMeltsPlainSteamPipesAndSparesReinforcedOnes(helper);
+	}
+
+	@GameTest(maxTicks = 400)
 	public void aShieldedLeverInsideTheRoomSealsAndScrams(GameTestHelper helper) {
 		ReactorScenarios.aShieldedLeverInsideTheRoomSealsAndScrams(helper);
 	}

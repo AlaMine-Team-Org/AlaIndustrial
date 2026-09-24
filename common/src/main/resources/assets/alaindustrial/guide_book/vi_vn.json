@@ -184,7 +184,7 @@
             {
               "type": "text",
               "title": "Hơi nước",
-              "text": "Nước sôi hóa thành hơi và dồn lại trong cột. Phải xả nó ra: một ống gia cố từ mặt trên của cột → cổng vào lò phản ứng → một vòi xả hơi ở ngoài.\n\nVòi phải hướng ra chỗ trống. Bị chôn trong tường thì nó không xả được gì, và vòng ống phía sau tắc luôn."
+              "text": "Nước sôi hóa thành hơi và dồn lại trong cột. Hơi chỉ thoát ra qua ống dẫn hơi nước — ống dẫn chất lỏng không dẫn hơi: một ống dẫn hơi nước gia cố từ mặt trên của cột → cổng vào lò phản ứng → ống dẫn hơi nước → một vòi xả hơi ở ngoài.\n\nVòi phải hướng ra chỗ trống. Bị chôn trong tường thì nó không xả được gì, và vòng ống phía sau tắc luôn."
             }
           ]
         }
@@ -2033,6 +2033,36 @@
           ]
         },
         {
+          "id": "steam_pipe",
+          "title": "Ống dẫn hơi nước",
+          "icon": "alaindustrial:steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ống dẫn hơi nước",
+              "text": "Ống dẫn hơi nước — dẫn hơi từ các cột lò phản ứng đến vòi xả hơi và không bao giờ nối với ống dẫn chất lỏng."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:steam_pipe",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "reinforced_fluid_pipe",
           "title": "Ống dẫn chất lỏng gia cố",
           "icon": "alaindustrial:reinforced_fluid_pipe",
@@ -2058,6 +2088,36 @@
                 "alaindustrial:fluid_pipe"
               ],
               "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "reinforced_steam_pipe",
+          "title": "Ống dẫn hơi nước gia cố",
+          "icon": "alaindustrial:reinforced_steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ống dẫn hơi nước gia cố",
+              "text": "Ống dẫn hơi nước bọc vỏ hợp kim che chắn — dẫn hơi ra khỏi các cột bên trong phòng lò phản ứng đang chạy và không bị nung chảy."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_steam_pipe",
               "result_count": 6
             }
           ]

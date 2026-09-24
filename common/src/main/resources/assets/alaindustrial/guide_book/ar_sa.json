@@ -184,7 +184,7 @@
             {
               "type": "text",
               "title": "بخار",
-              "text": "يغلي الماء فيصير بخارا ويتجمع في العمود. ولا بد له أن يخرج: أنبوب مدرّع من وجه العمود العلوي ← مدخل المفاعل ← فوهة بخار في الخارج.\n\nويجب أن تطل الفوهة على هواء مكشوف. فإن دفنت في جدار لم تصرف شيئا، وتوقفت الدورة خلفها."
+              "text": "يغلي الماء فيصير بخارا ويتجمع في العمود. ولا يخرج إلا عبر أنابيب البخار — فأنبوب السوائل لا ينقله: أنبوب بخار مدرّع من وجه العمود العلوي ← مدخل المفاعل ← أنبوب بخار ← فوهة بخار في الخارج.\n\nويجب أن تطل الفوهة على هواء مكشوف. فإن دفنت في جدار لم تصرف شيئا، وتوقفت الدورة خلفها."
             }
           ]
         }
@@ -2033,6 +2033,36 @@
           ]
         },
         {
+          "id": "steam_pipe",
+          "title": "أنبوب بخار",
+          "icon": "alaindustrial:steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "أنبوب بخار",
+              "text": "أنبوب للبخار — ينقله من أعمدة المفاعل إلى فوهة البخار ولا يتصل أبدًا بأنبوب سوائل."
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:steam_pipe",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "reinforced_fluid_pipe",
           "title": "أنبوب سوائل مدرّع",
           "icon": "alaindustrial:reinforced_fluid_pipe",
@@ -2058,6 +2088,36 @@
                 "alaindustrial:fluid_pipe"
               ],
               "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "reinforced_steam_pipe",
+          "title": "أنبوب بخار مدرّع",
+          "icon": "alaindustrial:reinforced_steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "أنبوب بخار مدرّع",
+              "text": "أنبوب بخار في غلاف من سبيكة التدريع — ينقل البخار من الأعمدة داخل غرفة مفاعل عامل ولا يذوب."
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_steam_pipe",
               "result_count": 6
             }
           ]

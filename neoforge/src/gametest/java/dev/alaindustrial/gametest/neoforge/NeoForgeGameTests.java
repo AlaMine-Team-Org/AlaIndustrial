@@ -15,6 +15,7 @@ import dev.alaindustrial.gametest.CableFaceParityScenarios;
 import dev.alaindustrial.gametest.DoubleChestScenarios;
 import dev.alaindustrial.gametest.ElectrumChestScenarios;
 import dev.alaindustrial.gametest.FluidPipeScenarios;
+import dev.alaindustrial.gametest.SteamPipeScenarios;
 import dev.alaindustrial.gametest.CableEnergyScenarios;
 import dev.alaindustrial.gametest.AdvancedCircuitScenarios;
 import dev.alaindustrial.gametest.CableInsulationScenarios;
@@ -32,6 +33,7 @@ import dev.alaindustrial.gametest.GeneratorEnergyScenarios;
 import dev.alaindustrial.gametest.LightningRodScenarios;
 import dev.alaindustrial.gametest.MachineEnergyScenarios;
 import dev.alaindustrial.gametest.ReactorScenarios;
+import dev.alaindustrial.gametest.ReactorSteamScenarios;
 import dev.alaindustrial.gametest.BatteryScenarios;
 import dev.alaindustrial.gametest.CrystalPrimingScenarios;
 import dev.alaindustrial.gametest.CesuScenarios;
@@ -258,6 +260,9 @@ public final class NeoForgeGameTests {
 		// MOD-660 — a working room takes its plain pipes, never the reinforced ones.
 		registerTest(event, "reactor_working_room_melts_plain_pipes", 400, true,
 				ReactorScenarios::aWorkingRoomMeltsPlainPipesAndSparesReinforcedOnes);
+		// MOD-662 — the same rule for the steam family.
+		registerTest(event, "reactor_working_room_melts_plain_steam_pipes", 400, true,
+				ReactorScenarios::aWorkingRoomMeltsPlainSteamPipesAndSparesReinforcedOnes);
 		// MOD-514 — the held-signal switch: it seals with the room, scrams it, and outlives a meltdown.
 		registerTest(event, "reactor_lever_seals_and_scrams", 400, true,
 				ReactorScenarios::aShieldedLeverInsideTheRoomSealsAndScrams);
@@ -291,6 +296,11 @@ public final class NeoForgeGameTests {
 		// MOD-622 — the Log tab's server half: one line per transition, kept across a reload, read per player.
 		registerTest(event, "reactor_event_log_records_each_transition_once", 100, true,
 				ReactorScenarios::theEventLogRecordsEachTransitionOnce);
+		// MOD-662 — what a working steam loop shows: puffs over each boiling stack, a geyser and a hiss at the nozzle.
+		registerTest(event, "reactor_boiling_room_puffs_over_each_stack", 400, true,
+				ReactorSteamScenarios::aBoilingRoomPuffsOverEachBoilingStack);
+		registerTest(event, "reactor_venting_nozzle_throws_a_geyser_and_hisses", 200, true,
+				ReactorSteamScenarios::aVentingNozzleThrowsAGeyserAndHisses);
 		// MOD-022 data-component seam: a charged battery box carries STORED_ENERGY on drop (frozen-registry
 		// fix — ModDataComponentsNeoForge). Fabric covers this via BatteryBoxGameTest; NeoForge world lane's first.
 		registerTest(event, "battery_box_drop_carries_energy", 40, true,
@@ -1591,6 +1601,26 @@ public final class NeoForgeGameTests {
 				FluidPipeScenarios::segmentRefusesASecondFluid);
 		registerTest(event, "fluid_pipe_broken_segment_loses_contents", 60, true,
 				FluidPipeScenarios::brokenSegmentLosesItsContentsWithoutDuplicating);
+		// MOD-662 — the two pipe families, and the world migration of old steam lines. The migration
+		// cases double as the proof that NeoForge's patched chunk keeps the block entity across the swap.
+		registerTest(event, "steam_pipe_families_never_join", 40, true,
+				SteamPipeScenarios::familiesNeverJoin);
+		registerTest(event, "steam_pipe_each_family_refuses_the_others_fluid", 40, true,
+				SteamPipeScenarios::eachFamilyRefusesTheOthersFluid);
+		registerTest(event, "steam_pipe_new_fluid_pipe_on_column_top_stays_disconnected", 40, true,
+				SteamPipeScenarios::aNewFluidPipeOnAColumnTopStaysDisconnected);
+		registerTest(event, "steam_pipe_migration_steam_filled_pipe", 40, true,
+				SteamPipeScenarios::migrationTurnsASteamFilledPipeIntoASteamPipe);
+		registerTest(event, "steam_pipe_migration_empty_pipe_on_column_top", 40, true,
+				SteamPipeScenarios::migrationTurnsAnEmptyPipeOnAColumnTop);
+		registerTest(event, "steam_pipe_migration_wave_converts_whole_line", 40, true,
+				SteamPipeScenarios::migrationWaveConvertsAWholeEmptyLine);
+		registerTest(event, "steam_pipe_migration_leaves_water_lines", 40, true,
+				SteamPipeScenarios::migrationLeavesWaterLinesAlone);
+		registerTest(event, "steam_pipe_migration_keeps_reinforced_grade", 40, true,
+				SteamPipeScenarios::migrationKeepsTheReinforcedGrade);
+		registerTest(event, "steam_pipe_migration_leaves_ambiguous_pipe", 40, true,
+				SteamPipeScenarios::migrationLeavesAnAmbiguousPipe);
 		// MOD-108: chest → pipe → MACHINE. The chest-to-chest cases above never touch a machine's
 		// automation gate (canPlaceItemThroughFace), which is exactly the path players build.
 		// MOD-178: source → three insert chests, first two full — the pipe must skip to the free one.

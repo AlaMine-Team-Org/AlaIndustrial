@@ -1379,10 +1379,11 @@ public final class DemoStand {
 	 * would boil its water dry, climb to the top and blow itself up some minutes after every
 	 * {@code /ala demo}. It stands sealed, fuelled and scrammed, and a reactor lever on the controller's
 	 * back, inside, starts it. Started, it holds: the room is plumbed (MOD-660) — a pump outside feeds
-	 * the east inlet through ordinary pipe, reinforced pipe inside carries the water to the column and
-	 * the steam from the column's top to the west inlet, and a nozzle outside vents it upward. Only the
-	 * reinforced grade stands inside, because a working room melts every ordinary fluid pipe within its
-	 * shell. The stand still does not start itself: a reactor running unattended in every world the
+	 * the east inlet through ordinary pipe, reinforced fluid pipe inside carries the water to the column,
+	 * reinforced STEAM pipe carries the steam from the column's top to the west inlet (MOD-662 — fluid
+	 * pipes no longer take steam), and an ordinary steam pipe outside feeds a nozzle that vents it upward.
+	 * Only the reinforced grades stand inside, because a working room melts every ordinary pipe within
+	 * its shell. The stand still does not start itself: a reactor running unattended in every world the
 	 * command is used in is a hazard to a tester who did not ask for one;</li>
 	 * <li>the <b>button needs its own post</b>. A button must hang on a solid block, and no shell cell
 	 * next to the doorway is available without punching a hole in the room, so a single casing block
@@ -1509,17 +1510,18 @@ public final class DemoStand {
 		pipeFace(level, origin, east - 3, by + 1, row, Direction.WEST, PipeFaceMode.INSERT);
 
 		// Steam exhaust, inside: steam leaves a column through its TOP face only, so the line starts
-		// directly above the rack and runs west, a level above the water line, to the west inlet.
-		set(level, origin, bx + mid, by + 2, row, ModContent.REINFORCED_FLUID_PIPE.get());
+		// directly above the rack and runs west, a level above the water line, to the west inlet. It is
+		// the steam family (MOD-662): a fluid pipe refuses steam and does not even reach for a column's top.
+		set(level, origin, bx + mid, by + 2, row, ModContent.REINFORCED_STEAM_PIPE.get());
 		pipeFace(level, origin, bx + mid, by + 2, row, Direction.DOWN, PipeFaceMode.EXTRACT);
-		set(level, origin, bx + 2, by + 2, row, ModContent.REINFORCED_FLUID_PIPE.get());
-		set(level, origin, bx + 1, by + 2, row, ModContent.REINFORCED_FLUID_PIPE.get());
+		set(level, origin, bx + 2, by + 2, row, ModContent.REINFORCED_STEAM_PIPE.get());
+		set(level, origin, bx + 1, by + 2, row, ModContent.REINFORCED_STEAM_PIPE.get());
 		pipeFace(level, origin, bx + 1, by + 2, row, Direction.WEST, PipeFaceMode.INSERT);
 
-		// Steam exhaust, outside: one ordinary pipe out of the inlet and the nozzle on top of it, mouth up
-		// into open air. A nozzle facing a block vents nothing, the columns stop boiling and the reactor
+		// Steam exhaust, outside: one ordinary steam pipe out of the inlet and the nozzle on top of it, mouth
+		// up into open air. A nozzle facing a block vents nothing, the columns stop boiling and the reactor
 		// overheats with its water still in it — the "exhaust blocked" state this loop exists to avoid.
-		set(level, origin, bx - 1, by + 2, row, ModContent.FLUID_PIPE.get());
+		set(level, origin, bx - 1, by + 2, row, ModContent.STEAM_PIPE.get());
 		pipeFace(level, origin, bx - 1, by + 2, row, Direction.EAST, PipeFaceMode.EXTRACT);
 		place(level, origin, origin.offset(bx - 1, by + 3, row),
 				ModContent.STEAM_NOZZLE.get().defaultBlockState()

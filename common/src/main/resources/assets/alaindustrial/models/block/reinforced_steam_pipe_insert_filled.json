@@ -1,0 +1,11 @@
+{
+  "parent": "alaindustrial:block/fluid_pipe_insert_filled",
+  "textures": {
+    "particle": "alaindustrial:block/reinforced_steam_pipe_ring",
+    "ring": "alaindustrial:block/reinforced_steam_pipe_ring",
+    "glass": {
+      "sprite": "alaindustrial:block/reinforced_steam_pipe_glass",
+      "force_translucent": true
+    }
+  }
+}

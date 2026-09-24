@@ -184,7 +184,7 @@
             {
               "type": "text",
               "title": "Dampf",
-              "text": "Gekochtes Wasser wird zu Dampf und sammelt sich in der Säule. Er muss hinaus: ein verstärktes Rohr von der Oberseite der Säule → Reaktoreinlass → eine Dampfdüse draußen.\n\nDie Düse muss ins Freie zeigen. In einer Wand vergraben bläst sie nichts ab, und der Kreislauf dahinter steht still."
+              "text": "Gekochtes Wasser wird zu Dampf und sammelt sich in der Säule. Er verlässt sie nur durch Dampfrohre – ein Flüssigkeitsrohr befördert ihn nicht: ein verstärktes Dampfrohr von der Oberseite der Säule → Reaktoreinlass → Dampfrohr → eine Dampfdüse draußen.\n\nDie Düse muss ins Freie zeigen. In einer Wand vergraben bläst sie nichts ab, und der Kreislauf dahinter steht still."
             }
           ]
         }
@@ -2033,6 +2033,36 @@
           ]
         },
         {
+          "id": "steam_pipe",
+          "title": "Dampfrohr",
+          "icon": "alaindustrial:steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Dampfrohr",
+              "text": "Ein Rohr für Dampf – leitet ihn von den Reaktorsäulen zu einer Dampfdüse und verbindet sich nie mit einem Flüssigkeitsrohr."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:steam_pipe",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "reinforced_fluid_pipe",
           "title": "Verstärktes Flüssigkeitsrohr",
           "icon": "alaindustrial:reinforced_fluid_pipe",
@@ -2058,6 +2088,36 @@
                 "alaindustrial:fluid_pipe"
               ],
               "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "reinforced_steam_pipe",
+          "title": "Verstärktes Dampfrohr",
+          "icon": "alaindustrial:reinforced_steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Verstärktes Dampfrohr",
+              "text": "Ein Dampfrohr in einem Mantel aus Abschirmlegierung – leitet Dampf von den Säulen in einem laufenden Reaktorraum ab und schmilzt nicht."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_steam_pipe",
               "result_count": 6
             }
           ]

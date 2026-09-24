@@ -184,7 +184,7 @@
             {
               "type": "text",
               "title": "Uap",
-              "text": "Air yang mendidih menjadi uap dan menumpuk di dalam kolom. Uap itu harus dikeluarkan: pipa diperkuat dari sisi atas kolom → saluran masuk reaktor → nosel uap di luar.\n\nNosel harus menghadap udara terbuka. Kalau tertanam di dinding, ia tidak membuang apa pun dan sirkuit di belakangnya macet."
+              "text": "Air yang mendidih menjadi uap dan menumpuk di dalam kolom. Uap hanya keluar lewat pipa uap — pipa fluida tidak mengalirkannya: pipa uap diperkuat dari sisi atas kolom → saluran masuk reaktor → pipa uap → nosel uap di luar.\n\nNosel harus menghadap udara terbuka. Kalau tertanam di dinding, ia tidak membuang apa pun dan sirkuit di belakangnya macet."
             }
           ]
         }
@@ -2033,6 +2033,36 @@
           ]
         },
         {
+          "id": "steam_pipe",
+          "title": "Pipa Uap",
+          "icon": "alaindustrial:steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Pipa Uap",
+              "text": "Pipa untuk uap — mengalirkannya dari kolom reaktor ke nosel uap dan tidak pernah tersambung ke pipa fluida."
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:steam_pipe",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "reinforced_fluid_pipe",
           "title": "Pipa Fluida Diperkuat",
           "icon": "alaindustrial:reinforced_fluid_pipe",
@@ -2058,6 +2088,36 @@
                 "alaindustrial:fluid_pipe"
               ],
               "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "reinforced_steam_pipe",
+          "title": "Pipa Uap Diperkuat",
+          "icon": "alaindustrial:reinforced_steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Pipa Uap Diperkuat",
+              "text": "Pipa uap berselubung paduan perisai — mengalirkan uap dari kolom di dalam ruang reaktor yang bekerja dan tidak meleleh."
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_steam_pipe",
               "result_count": 6
             }
           ]

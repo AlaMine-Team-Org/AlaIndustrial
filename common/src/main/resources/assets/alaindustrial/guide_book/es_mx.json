@@ -184,7 +184,7 @@
             {
               "type": "text",
               "title": "Vapor",
-              "text": "El agua hervida se convierte en vapor y se acumula en la columna. Hay que sacarlo: una tubería reforzada desde la cara superior de la columna → entrada del reactor → una boquilla de vapor fuera.\n\nLa boquilla tiene que mirar al aire libre. Enterrada en un muro no expulsa nada, y el circuito se atasca detrás."
+              "text": "El agua hervida se convierte en vapor y se acumula en la columna. Solo sale por tuberías de vapor —una tubería de fluidos no lo transporta—: una tubería de vapor reforzada desde la cara superior de la columna → entrada del reactor → tubería de vapor → una boquilla de vapor fuera.\n\nLa boquilla tiene que mirar al aire libre. Enterrada en un muro no expulsa nada, y el circuito se atasca detrás."
             }
           ]
         }
@@ -2033,6 +2033,36 @@
           ]
         },
         {
+          "id": "steam_pipe",
+          "title": "Tubería de vapor",
+          "icon": "alaindustrial:steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tubería de vapor",
+              "text": "Una tubería para vapor: lo lleva de las columnas del reactor a una boquilla de vapor y nunca se conecta a una tubería de fluidos."
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:steam_pipe",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "reinforced_fluid_pipe",
           "title": "Tubería de fluidos reforzada",
           "icon": "alaindustrial:reinforced_fluid_pipe",
@@ -2058,6 +2088,36 @@
                 "alaindustrial:fluid_pipe"
               ],
               "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "reinforced_steam_pipe",
+          "title": "Tubería de vapor reforzada",
+          "icon": "alaindustrial:reinforced_steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tubería de vapor reforzada",
+              "text": "Una tubería de vapor con camisa de aleación de blindaje: saca el vapor de las columnas dentro de una sala de reactor en funcionamiento y no se funde."
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_steam_pipe",
               "result_count": 6
             }
           ]

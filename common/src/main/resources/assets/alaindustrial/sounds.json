@@ -320,5 +320,45 @@
         "preload": true
       }
     ]
+  },
+  "block.steam_nozzle.vent": {
+    "subtitle": "subtitles.alaindustrial.block.steam_nozzle.vent",
+    "sounds": [
+      {
+        "name": "minecraft:block/potent_sulfur/geyser_continuous/eruption_active1",
+        "stream": false,
+        "preload": true
+      },
+      {
+        "name": "minecraft:block/potent_sulfur/geyser_continuous/eruption_active2",
+        "stream": false,
+        "preload": true
+      },
+      {
+        "name": "minecraft:block/potent_sulfur/geyser_continuous/eruption_active3",
+        "stream": false,
+        "preload": true
+      },
+      {
+        "name": "minecraft:block/potent_sulfur/geyser_continuous/eruption_active4",
+        "stream": false,
+        "preload": true
+      },
+      {
+        "name": "minecraft:block/potent_sulfur/geyser_continuous/eruption_active5",
+        "stream": false,
+        "preload": true
+      },
+      {
+        "name": "minecraft:block/potent_sulfur/geyser_continuous/eruption_active6",
+        "stream": false,
+        "preload": true
+      },
+      {
+        "name": "minecraft:block/potent_sulfur/geyser_continuous/eruption_active7",
+        "stream": false,
+        "preload": true
+      }
+    ]
   }
 }

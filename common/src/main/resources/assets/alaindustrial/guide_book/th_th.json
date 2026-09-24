@@ -184,7 +184,7 @@
             {
               "type": "text",
               "title": "ไอน้ำ",
-              "text": "น้ำที่เดือดจะกลายเป็นไอน้ำและสะสมอยู่ในคอลัมน์ มันต้องมีทางออก: ท่อเสริมเกราะจากด้านบนของคอลัมน์ -> ช่องรับเข้าเตาปฏิกรณ์ -> หัวฉีดไอน้ำด้านนอก\n\nหัวฉีดต้องหันหน้าออกสู่ที่โล่ง หากฝังอยู่ในผนัง มันจะระบายอะไรไม่ได้เลย และวงจรทั้งหมดข้างหลังก็จะค้าง"
+              "text": "น้ำที่เดือดจะกลายเป็นไอน้ำและสะสมอยู่ในคอลัมน์ ไอน้ำออกได้ทางท่อไอน้ำเท่านั้น ท่อของเหลวไม่ส่งไอน้ำ: ท่อไอน้ำเสริมเกราะจากด้านบนของคอลัมน์ -> ช่องรับเข้าเตาปฏิกรณ์ -> ท่อไอน้ำ -> หัวฉีดไอน้ำด้านนอก\n\nหัวฉีดต้องหันหน้าออกสู่ที่โล่ง หากฝังอยู่ในผนัง มันจะระบายอะไรไม่ได้เลย และวงจรทั้งหมดข้างหลังก็จะค้าง"
             }
           ]
         }
@@ -2033,6 +2033,36 @@
           ]
         },
         {
+          "id": "steam_pipe",
+          "title": "ท่อไอน้ำ",
+          "icon": "alaindustrial:steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ท่อไอน้ำ",
+              "text": "ท่อสำหรับไอน้ำ — ส่งไอน้ำจากคอลัมน์เตาปฏิกรณ์ไปยังหัวฉีดไอน้ำ และไม่เชื่อมกับท่อของเหลวเลย"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:steam_pipe",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "reinforced_fluid_pipe",
           "title": "ท่อของเหลวเสริมเกราะ",
           "icon": "alaindustrial:reinforced_fluid_pipe",
@@ -2058,6 +2088,36 @@
                 "alaindustrial:fluid_pipe"
               ],
               "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "reinforced_steam_pipe",
+          "title": "ท่อไอน้ำเสริมเกราะ",
+          "icon": "alaindustrial:reinforced_steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ท่อไอน้ำเสริมเกราะ",
+              "text": "ท่อไอน้ำหุ้มด้วยโลหะผสมกำบังรังสี — ส่งไอน้ำออกจากคอลัมน์ภายในห้องเตาปฏิกรณ์ที่ทำงานอยู่ และไม่หลอมละลาย"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_steam_pipe",
               "result_count": 6
             }
           ]

@@ -264,5 +264,12 @@ public final class ModTags {
 		/** Biofuel (MOD-146) — {@code c:biofuel}, still + flowing, same convention as {@link #C_OIL}. */
 		public static final TagKey<Fluid> C_BIOFUEL =
 				TagKey.create(Registries.FLUID, Identifier.fromNamespaceAndPath("c", "biofuel"));
+
+		/**
+		 * Steam (MOD-662) — {@code c:steam}, backed by {@code data/c/tags/fluid/steam.json}. The one fluid
+		 * a steam pipe carries and a liquid pipe refuses, read by tag so another mod's steam counts too.
+		 */
+		public static final TagKey<Fluid> C_STEAM =
+				TagKey.create(Registries.FLUID, Identifier.fromNamespaceAndPath("c", "steam"));
 	}
 }

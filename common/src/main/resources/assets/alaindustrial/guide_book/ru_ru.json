@@ -184,7 +184,7 @@
             {
               "type": "text",
               "title": "Пар",
-              "text": "Вскипевшая вода становится паром и копится в колонне. Его надо выводить: укреплённая труба с верхней грани колонны → реакторный ввод → паровая насадка снаружи.\n\nНасадка должна смотреть в открытый воздух. Упёртая в стену — молчит, и контур за ней встаёт."
+              "text": "Вскипевшая вода становится паром и копится в колонне. Выводят его только паровыми трубами — жидкостная пар не носит: укреплённая паровая труба с верхней грани колонны → реакторный ввод → паровая труба → паровая насадка снаружи.\n\nНасадка должна смотреть в открытый воздух. Упёртая в стену — молчит, и контур за ней встаёт."
             }
           ]
         }
@@ -2033,6 +2033,36 @@
           ]
         },
         {
+          "id": "steam_pipe",
+          "title": "Паровая труба",
+          "icon": "alaindustrial:steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Паровая труба",
+              "text": "Труба для пара — отводит его от реакторных колонн к паровой насадке и никогда не соединяется с жидкостными трубами."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:steam_pipe",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "reinforced_fluid_pipe",
           "title": "Укреплённая жидкостная труба",
           "icon": "alaindustrial:reinforced_fluid_pipe",
@@ -2058,6 +2088,36 @@
                 "alaindustrial:fluid_pipe"
               ],
               "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "reinforced_steam_pipe",
+          "title": "Укреплённая паровая труба",
+          "icon": "alaindustrial:reinforced_steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Укреплённая паровая труба",
+              "text": "Паровая труба в кожухе из экранирующего сплава — отводит пар от колонн внутри работающей реакторной комнаты и не плавится."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_steam_pipe",
               "result_count": 6
             }
           ]

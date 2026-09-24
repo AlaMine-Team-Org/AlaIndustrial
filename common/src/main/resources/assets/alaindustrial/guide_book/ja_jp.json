@@ -184,7 +184,7 @@
             {
               "type": "text",
               "title": "蒸気",
-              "text": "沸いた水は蒸気になってカラムに溜まる。これは外へ逃がさなければならない。カラムの上面から強化パイプ → 原子炉入口 → 外の蒸気ノズルへ。\n\nノズルは外気に向いていること。壁に埋まったノズルは何も吐き出さず、その先の回路が止まる。"
+              "text": "沸いた水は蒸気になってカラムに溜まる。蒸気は蒸気パイプでしか外へ出せない（液体パイプは蒸気を運ばない）。カラムの上面から強化蒸気パイプ → 原子炉入口 → 蒸気パイプ → 外の蒸気ノズルへ。\n\nノズルは外気に向いていること。壁に埋まったノズルは何も吐き出さず、その先の回路が止まる。"
             }
           ]
         }
@@ -2033,6 +2033,36 @@
           ]
         },
         {
+          "id": "steam_pipe",
+          "title": "蒸気パイプ",
+          "icon": "alaindustrial:steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "蒸気パイプ",
+              "text": "蒸気用のパイプ。原子炉カラムから蒸気ノズルへ蒸気を送り、液体パイプとは決してつながらない。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:steam_pipe",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "reinforced_fluid_pipe",
           "title": "強化液体パイプ",
           "icon": "alaindustrial:reinforced_fluid_pipe",
@@ -2058,6 +2088,36 @@
                 "alaindustrial:fluid_pipe"
               ],
               "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "reinforced_steam_pipe",
+          "title": "強化蒸気パイプ",
+          "icon": "alaindustrial:reinforced_steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "強化蒸気パイプ",
+              "text": "遮蔽合金の外装をまとった蒸気パイプ。稼働中の原子炉室の中でカラムから蒸気を運び出し、溶けない。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_steam_pipe",
               "result_count": 6
             }
           ]

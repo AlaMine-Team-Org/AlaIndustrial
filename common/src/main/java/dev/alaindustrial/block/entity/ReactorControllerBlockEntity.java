@@ -18,7 +18,7 @@ import dev.alaindustrial.registry.ModCriteria;
 import dev.alaindustrial.registry.ModSounds;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.List;
@@ -294,6 +294,24 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 	 * persisted — it is a live counter, not a record.
 	 */
 	private int meltsScheduled;
+
+	// ── MOD-662: steam puffs over boiling stacks ──
+	/** Controller ticks until the next puff pulse. A counter, not the game clock: it must advance per tick run. */
+	private int plumeCountdown;
+
+	/**
+	 * Where the next pulse starts in the list of boiling stacks, so a room with more of them than
+	 * {@code Config.reactorSteamPlumeStacksPerPulse} lets every stack take its turn. Not persisted.
+	 */
+	private int plumeCursor;
+
+	/**
+	 * Stacks this controller has puffed steam over since it was loaded — one per stack per pulse.
+	 *
+	 * <p>The same reason as {@link #meltsScheduled}: particles are drawn on the client, so the server side has no
+	 * other way to be asked whether it sent any. Not persisted — a live counter, not a record.
+	 */
+	private int steamPuffsSent;
 
 	/** Ticks until the next sweep. Zero means "scan on the next server tick". */
 	private int scanCooldown;
@@ -654,6 +672,9 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		settleInstability(liveRods);
 		if (!bare) {
 			settleStacks(columns);
+		}
+		if (sealed && !bare && level instanceof ServerLevel serverLevel) {
+			puffSteam(serverLevel, columns);
 		}
 		feedOutlets(level);
 		// Empty when bare, and that is the whole point (MOD-469 audit). The drone is painted ONTO the
@@ -1291,13 +1312,28 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		if (columns.size() < 2) {
 			return;
 		}
-		Map<Long, List<FuelRodAssemblyBlockEntity>> byColumn = new HashMap<>();
+		for (List<FuelRodAssemblyBlockEntity> run : stackRuns(columns)) {
+			settleRun(run);
+		}
+	}
+
+	/**
+	 * The columns grouped into unbroken vertical runs — stacks — each lowest first.
+	 *
+	 * <p>The one walk behind both readers of "a stack": {@link #settleStacks}, which makes a run hold its fluid as one
+	 * vessel, and {@link #puffSteam}, which puffs over the top of a run. Grouped in the order the columns come in, not
+	 * a hash order, so a room lists its stacks the same way every tick and on both loaders — the puff rotation reads
+	 * that order.
+	 */
+	private static List<List<FuelRodAssemblyBlockEntity>> stackRuns(List<FuelRodAssemblyBlockEntity> columns) {
+		Map<Long, List<FuelRodAssemblyBlockEntity>> byColumn = new LinkedHashMap<>();
 		for (FuelRodAssemblyBlockEntity column : columns) {
 			BlockPos at = column.getBlockPos();
 			// One key per (x, z): the vertical runs inside it are separated below, after sorting.
 			byColumn.computeIfAbsent(((long) at.getX() << 32) ^ (at.getZ() & 0xFFFFFFFFL),
 					key -> new ArrayList<>()).add(column);
 		}
+		List<List<FuelRodAssemblyBlockEntity>> runs = new ArrayList<>();
 		for (List<FuelRodAssemblyBlockEntity> shaft : byColumn.values()) {
 			shaft.sort(Comparator.comparingInt(column -> column.getBlockPos().getY()));
 			int runStart = 0;
@@ -1305,11 +1341,72 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 				boolean broken = i == shaft.size()
 						|| shaft.get(i).getBlockPos().getY() != shaft.get(i - 1).getBlockPos().getY() + 1;
 				if (broken) {
-					settleRun(shaft.subList(runStart, i));
+					runs.add(shaft.subList(runStart, i));
 					runStart = i;
 				}
 			}
 		}
+		return runs;
+	}
+
+	/**
+	 * Sends steam puffs up over the stacks that are boiling (MOD-662).
+	 *
+	 * <p><b>The puff is a readout, not an effect.</b> It answers from across the floor the two questions the
+	 * «Coolant» tab answers from the panel: is this stack working, and how full is its steam. So it appears only over
+	 * a stack that boiled within the last second, and it thickens with that stack's own steam — one small puff at
+	 * an empty vessel, four large ones near the top, and a heavier burst once the exhaust counts as blocked. A sealed
+	 * room only: a bare rack boils nothing, and a puff over it would report a loop that does not exist.
+	 *
+	 * <p>Only the 9-argument {@code sendParticles}: it is the one overload Minecraft 26.2 shares with 26.3.
+	 */
+	private void puffSteam(ServerLevel level, List<FuelRodAssemblyBlockEntity> columns) {
+		if (plumeCountdown > 0) {
+			plumeCountdown--;
+			return;
+		}
+		plumeCountdown = Math.max(1, Config.reactorSteamPlumeIntervalTicks) - 1;
+		List<List<FuelRodAssemblyBlockEntity>> boiling = new ArrayList<>();
+		for (List<FuelRodAssemblyBlockEntity> run : stackRuns(columns)) {
+			for (FuelRodAssemblyBlockEntity column : run) {
+				if (column.isBoiling()) {
+					boiling.add(run);
+					break;
+				}
+			}
+		}
+		if (boiling.isEmpty()) {
+			return;
+		}
+		int cap = Math.max(1, Config.reactorSteamPlumeStacksPerPulse);
+		int shown = Math.min(cap, boiling.size());
+		int start = Math.floorMod(plumeCursor, boiling.size());
+		plumeCursor = boiling.size() > cap ? start + shown : 0;
+		for (int i = 0; i < shown; i++) {
+			puffOver(level, boiling.get((start + i) % boiling.size()));
+		}
+	}
+
+	/** One stack's puff, over the top face of its topmost column, sized by the stack's own steam. */
+	private void puffOver(ServerLevel level, List<FuelRodAssemblyBlockEntity> run) {
+		long steam = 0;
+		long capacity = 0;
+		for (FuelRodAssemblyBlockEntity column : run) {
+			steam += column.steamTank.amount;
+			capacity += column.steamTank.capacity;
+		}
+		int percent = capacity <= 0 ? 0 : (int) Math.min(100, steam * 100 / capacity);
+		BlockPos top = run.get(run.size() - 1).getBlockPos();
+		double x = top.getX() + 0.5;
+		double y = top.getY() + 1.05;
+		double z = top.getZ() + 0.5;
+		level.sendParticles(new net.minecraft.core.particles.GeyserBaseParticleOptions(ParticleTypes.GEYSER_POOF, 0,
+				0.5f + 0.5f * percent / 100f), x, y, z, 1 + 3 * percent / 100, 0.25, 0.05, 0.25, 0.0);
+		if (percent >= dev.alaindustrial.core.structure.ReactorZone.STEAM_BLOCKED_PERCENT) {
+			level.sendParticles(new net.minecraft.core.particles.GeyserBaseParticleOptions(ParticleTypes.GEYSER_BASE, 1,
+					1.5f), x, y, z, 1, 0.1, 0.0, 0.1, 0.0);
+		}
+		steamPuffsSent++;
 	}
 
 	/** One unbroken tower: water poured in at the bottom, steam pushed up to the top. */
@@ -2068,6 +2165,11 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 	 * the right answer for a controller that has never sealed anything.
 	 */
 	// ── MOD-471 ──
+
+	/** Stacks this controller has puffed steam over since it was loaded (MOD-662) — "are the puffs being sent". */
+	public int getSteamPuffsSent() {
+		return steamPuffsSent;
+	}
 
 	/** Blocks this reactor has marked for melting since it was loaded — "is the hazard running". */
 	public int getMeltsScheduled() {

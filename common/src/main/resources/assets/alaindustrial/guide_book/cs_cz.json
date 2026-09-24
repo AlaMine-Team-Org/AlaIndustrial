@@ -184,7 +184,7 @@
             {
               "type": "text",
               "title": "Pára",
-              "text": "Vařící se voda se mění v páru a hromadí se v koloně. Ta musí ven: zesílená trubka z horní strany kolony -> vstup reaktoru -> parní tryska venku.\n\nTryska musí mířit do volného vzduchu. Zazděná ve stěně nic nevypustí a okruh za ní se zastaví."
+              "text": "Vařící se voda se mění v páru a hromadí se v koloně. Ven vede jen parními trubkami — trubka na tekutiny páru nevede: zesílená parní trubka z horní strany kolony -> vstup reaktoru -> parní trubka -> parní tryska venku.\n\nTryska musí mířit do volného vzduchu. Zazděná ve stěně nic nevypustí a okruh za ní se zastaví."
             }
           ]
         }
@@ -2033,6 +2033,36 @@
           ]
         },
         {
+          "id": "steam_pipe",
+          "title": "Parní trubka",
+          "icon": "alaindustrial:steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Parní trubka",
+              "text": "Trubka na páru — vede ji z kolon reaktoru do parní trysky a nikdy se nepropojí s trubkou na tekutiny."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Výroba podle vzoru",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:invar_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:steam_pipe",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "reinforced_fluid_pipe",
           "title": "Zesílená trubka na tekutiny",
           "icon": "alaindustrial:reinforced_fluid_pipe",
@@ -2058,6 +2088,36 @@
                 "alaindustrial:fluid_pipe"
               ],
               "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "reinforced_steam_pipe",
+          "title": "Zesílená parní trubka",
+          "icon": "alaindustrial:reinforced_steam_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Zesílená parní trubka",
+              "text": "Parní trubka v plášti ze stínicí slitiny — odvádí páru z kolon uvnitř komory pracujícího reaktoru a neroztaví se."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Výroba podle vzoru",
+              "grid": [
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:steam_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:steam_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_steam_pipe",
               "result_count": 6
             }
           ]
