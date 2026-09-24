@@ -6,8 +6,9 @@ import net.minecraft.gametest.framework.GameTestHelper;
 /**
  * MOD-058/MOD-294 fabric wrapper: the stand scenarios live in {@link DemoStandScenarios} (common)
  * so the NeoForge lane runs the identical checks — this class only pins the fabric-side test
- * configuration. Runs in a custom 44×14×28 empty structure ({@code demo_stand_area.snbt}) because
- * the stand does not fit the default 8×8×8 envelope; sky access keeps the solar panels honest,
+ * configuration. Runs in a custom 90×14×52 empty structure ({@code demo_stand_area.snbt} — the stand's
+ * width plus two, the height it needs, its depth plus one; the scenarios fail loudly if the two drift
+ * apart) because the stand does not fit the default 8×8×8 envelope; sky access keeps the solar panels honest,
  * though their output is deliberately not asserted (test-world time of day is not fixed here).
  */
 public class DemoStandGameTest {
@@ -15,6 +16,12 @@ public class DemoStandGameTest {
 	@GameTest(structure = "alaindustrial:demo_stand_area", maxTicks = 300, skyAccess = true)
 	public void demoStandBuildsCoversAndRuns(GameTestHelper helper) {
 		DemoStandScenarios.demoStandBuildsCoversAndRuns(helper);
+	}
+
+	/** MOD-660: the demo reactor room, started on its lever, stays cold on its own coolant loop. */
+	@GameTest(structure = "alaindustrial:demo_stand_area", maxTicks = 500, skyAccess = true)
+	public void demoReactorRunsCoolOnItsOwnLoop(GameTestHelper helper) {
+		DemoStandScenarios.demoReactorRunsCoolOnItsOwnLoop(helper);
 	}
 
 	/** {@code clear} removes every stand block and entity above the restored floor. */

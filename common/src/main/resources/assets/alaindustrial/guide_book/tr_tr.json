@@ -179,12 +179,12 @@
             {
               "type": "text",
               "title": "Su devresi",
-              "text": "Isıyı su alıp götürür. Yeterince suyu olan bir reaktör göstergenin alt kısmında durur; sarı ise suyun yetişemediği anlamına gelir.\n\nPompa -> boru -> reaktör girişi -> kolon. Girişteki boru yüzlerini İngiliz anahtarıyla ayarla: dışarıda çekme, içeride verme. Kolon ve nozul anahtar istemez — kolon suyu yalnızca alır, buharı yalnızca verir."
+              "text": "Isıyı su alıp götürür. Yeterince suyu olan bir reaktör göstergenin alt kısmında durur; sarı ise suyun yetişemediği anlamına gelir.\n\nPompa -> boru -> reaktör girişi -> güçlendirilmiş boru -> kolon. Odanın içine yalnızca güçlendirilmiş boru döşe: çalışan bir reaktör sıradan boruyu eritip lavaya çevirir. Girişteki boru yüzlerini İngiliz anahtarıyla ayarla: dışarıda çekme, içeride verme. Kolon ve nozul anahtar istemez — kolon suyu yalnızca alır, buharı yalnızca verir."
             },
             {
               "type": "text",
               "title": "Buhar",
-              "text": "Kaynayan su buhara dönüşür ve kolonda birikir. Dışarı verilmesi gerekir: kolonun üst yüzünden bir boru → reaktör girişi → dışarıda bir buhar memesi.\n\nMeme açık havaya bakmalı. Duvara gömülü meme hiçbir şey üflemez, arkasındaki devre de tıkanır."
+              "text": "Kaynayan su buhara dönüşür ve kolonda birikir. Dışarı verilmesi gerekir: kolonun üst yüzünden güçlendirilmiş bir boru → reaktör girişi → dışarıda bir buhar memesi.\n\nMeme açık havaya bakmalı. Duvara gömülü meme hiçbir şey üflemez, arkasındaki devre de tıkanır."
             }
           ]
         }
@@ -1157,7 +1157,7 @@
             {
               "type": "text",
               "title": "Reaktör Kolu",
-              "text": "Kalkan alaşımından bir kol: mühürlü bir odanın içinden tutulan bir sinyal — reaktörün acil durdurması; odanın kalkanını bozmaz, içeriğiyle birlikte erimez de."
+              "text": "Koruyucu alaşımdan bir kol: mühürlü bir odanın içinden tutulan bir sinyal — reaktörün acil durdurması; odanın kalkanını bozmaz, içeriğiyle birlikte erimez de."
             },
             {
               "type": "stats",
@@ -1194,7 +1194,7 @@
             {
               "type": "text",
               "title": "Yakıt Çubuğu",
-              "text": "Reaktörün yakıtı: zırh tabanı üzerindeki demir kovanda zenginleştirilmiş uranyum. 144.000 EU taşır, kalanını dayanıklılık olarak gösterir ve tükendiğinde geriye boş bir kılıf bırakır."
+              "text": "Reaktörün yakıtı: koruyucu taban üzerindeki demir kovanda zenginleştirilmiş uranyum. 144.000 EU taşır, kalanını dayanıklılık olarak gösterir ve tükendiğinde geriye boş bir kılıf bırakır."
             },
             {
               "type": "recipe",
@@ -2033,6 +2033,36 @@
           ]
         },
         {
+          "id": "reinforced_fluid_pipe",
+          "title": "Güçlendirilmiş Sıvı Borusu",
+          "icon": "alaindustrial:reinforced_fluid_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Güçlendirilmiş Sıvı Borusu",
+              "text": "Koruyucu alaşım kılıflı bir sıvı borusu — çalışan bir reaktör odasının eritmediği tek boru."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
+            }
+          ]
+        },
+        {
           "id": "fluid_tank",
           "title": "Taşınabilir Sıvı Tankı",
           "icon": "alaindustrial:fluid_tank",
@@ -2439,13 +2469,13 @@
         },
         {
           "id": "shielding_alloy_ingot",
-          "title": "Zırh Alaşımı Külçesi",
+          "title": "Koruyucu Alaşım Külçesi",
           "icon": "alaindustrial:shielding_alloy_ingot",
           "pages": [
             {
               "type": "text",
-              "title": "Zırh Alaşımı Külçesi",
-              "text": "Paladyum ile su verilmiş demirin alaşımı — bir reaktör odasının yapıldığı tek malzeme: külçe, zırh levhası ve ayrıca fakirleştirilmiş uranyum isteyen güçlendirilmiş zırh levhası."
+              "title": "Koruyucu Alaşım Külçesi",
+              "text": "Paladyum ile su verilmiş demirin alaşımı — bir reaktör odasının yapıldığı tek malzeme: külçe, koruyucu levha ve ayrıca fakirleştirilmiş uranyum isteyen güçlendirilmiş koruyucu levha."
             }
           ]
         },
@@ -2715,7 +2745,7 @@
             {
               "type": "text",
               "title": "Reaktör Düğmesi",
-              "text": "Zırh alaşımından bir düğme: mühürlü bir odanın içinden hava kilidine darbe göndermenin yolu; tıpkı bir vanilla düğmesi gibi yapılmıştır ama odanın var oluş nedenine dayanabilir."
+              "text": "Koruyucu alaşımdan bir düğme: mühürlü bir odanın içinden hava kilidine darbe göndermenin yolu; tıpkı bir vanilla düğmesi gibi yapılmıştır ama odanın var oluş nedenine dayanabilir."
             },
             {
               "type": "stats",
@@ -2789,7 +2819,7 @@
             {
               "type": "text",
               "title": "Reaktör Gövdesi",
-              "text": "Zırh alaşımından bir panel — bir reaktör odasının mühürlü kabuğunun yapılabileceği tek malzeme."
+              "text": "Koruyucu alaşımdan bir panel — bir reaktör odasının mühürlü kabuğunun yapılabileceği tek malzeme."
             },
             {
               "type": "stats",

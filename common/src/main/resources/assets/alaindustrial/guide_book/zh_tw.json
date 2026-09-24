@@ -179,12 +179,12 @@
             {
               "type": "text",
               "title": "水循環",
-              "text": "水會把熱量帶走。水量充足的反應爐停在刻度底部附近，黃色代表水已經跟不上了。\n\n泵 -> 管道 -> 反應爐入口 -> 柱子。用扳手設定入口處管道的面：外側抽取，內側輸入。柱子與噴口不需要扳手——柱子只進水、只出蒸汽。"
+              "text": "水會把熱量帶走。水量充足的反應爐停在刻度底部附近，黃色代表水已經跟不上了。\n\n泵 -> 管道 -> 反應爐入口 -> 強化管道 -> 柱子。房間內只能鋪強化管道：運轉中的反應爐會把普通管道熔成岩漿。用扳手設定入口處管道的面：外側抽取，內側輸入。柱子與噴口不需要扳手——柱子只進水、只出蒸汽。"
             },
             {
               "type": "text",
               "title": "蒸汽",
-              "text": "燒開的水變成蒸汽，積在柱子裡。必須把它導出去：從柱子的頂面接管線 → 反應爐入口 → 外面的蒸汽噴口。\n\n噴口必須朝著空曠處。埋在牆裡的噴口什麼也排不出去，它後面的整條迴路都會堵死。"
+              "text": "燒開的水變成蒸汽，積在柱子裡。必須把它導出去：從柱子的頂面接強化管道 → 反應爐入口 → 外面的蒸汽噴口。\n\n噴口必須朝著空曠處。埋在牆裡的噴口什麼也排不出去，它後面的整條迴路都會堵死。"
             }
           ]
         }
@@ -1269,7 +1269,7 @@
             {
               "type": "text",
               "title": "研磨機",
-              "text": "將礦石（礦石方塊與粗礦）粉碎成兩份粉末，以 LV 等級消耗 EU。"
+              "text": "將礦石（礦石方塊與原礦）粉碎成兩份粉末，以 LV 等級消耗 EU。"
             },
             {
               "type": "stats",
@@ -2033,6 +2033,36 @@
           ]
         },
         {
+          "id": "reinforced_fluid_pipe",
+          "title": "強化流體管道",
+          "icon": "alaindustrial:reinforced_fluid_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "強化流體管道",
+              "text": "包著屏蔽合金外殼的流體管道——運轉中的反應爐房間唯一熔不掉的管道。"
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
+            }
+          ]
+        },
+        {
           "id": "fluid_tank",
           "title": "便攜式流體儲罐",
           "icon": "alaindustrial:fluid_tank",
@@ -2259,7 +2289,7 @@
             {
               "type": "text",
               "title": "鎳礦石",
-              "text": "模組中最稀有的金屬——世界中的礦石以及粗礦 → 粉末 → 錠的加工鏈；用於 MV 合金與機器外殼的材料。"
+              "text": "模組中最稀有的金屬——世界中的礦石以及原礦 → 粉末 → 錠的加工鏈；用於 MV 合金與機器外殼的材料。"
             }
           ]
         },
@@ -2301,7 +2331,7 @@
             {
               "type": "text",
               "title": "錫礦石",
-              "text": "早期的模組金屬——世界中的礦石以及粗礦 → 粉末 → 錠的加工鏈；LV 線材與電路的基礎材料。"
+              "text": "早期的模組金屬——世界中的礦石以及原礦 → 粉末 → 錠的加工鏈；LV 線材與電路的基礎材料。"
             }
           ]
         },
@@ -2379,7 +2409,7 @@
             {
               "type": "text",
               "title": "銀礦石",
-              "text": "稀有的模組礦石金屬——礦石方塊以及粗礦 → 粉末 → 錠的加工鏈；中階電路與元件的材料。"
+              "text": "稀有的模組礦石金屬——礦石方塊以及原礦 → 粉末 → 錠的加工鏈；中階電路與元件的材料。"
             }
           ]
         },

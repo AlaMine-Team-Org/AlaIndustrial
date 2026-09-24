@@ -179,12 +179,12 @@
             {
               "type": "text",
               "title": "水の回路",
-              "text": "水が熱を運び去ります。水が十分な原子炉はゲージの下のほうにとどまり、黄色は「水が追いついていない」という意味です。\n\nポンプ -> パイプ -> 原子炉入口 -> カラム。入口側のパイプの面はレンチで設定します。外側は抽出、内側は排出です。カラムとノズルにレンチは不要です。カラムは水を受け取るだけ、蒸気を出すだけだからです。"
+              "text": "水が熱を運び去ります。水が十分な原子炉はゲージの下のほうにとどまり、黄色は「水が追いついていない」という意味です。\n\nポンプ -> パイプ -> 原子炉入口 -> 強化パイプ -> カラム。部屋の中には強化パイプだけを敷きます。稼働中の原子炉は普通のパイプを溶かして溶岩にしてしまいます。入口側のパイプの面はレンチで設定します。外側は抽出、内側は排出です。カラムとノズルにレンチは不要です。カラムは水を受け取るだけ、蒸気を出すだけだからです。"
             },
             {
               "type": "text",
               "title": "蒸気",
-              "text": "沸いた水は蒸気になってカラムに溜まる。これは外へ逃がさなければならない。カラムの上面からパイプ → 原子炉入口 → 外の蒸気ノズルへ。\n\nノズルは外気に向いていること。壁に埋まったノズルは何も吐き出さず、その先の回路が止まる。"
+              "text": "沸いた水は蒸気になってカラムに溜まる。これは外へ逃がさなければならない。カラムの上面から強化パイプ → 原子炉入口 → 外の蒸気ノズルへ。\n\nノズルは外気に向いていること。壁に埋まったノズルは何も吐き出さず、その先の回路が止まる。"
             }
           ]
         }
@@ -2029,6 +2029,36 @@
               ],
               "result_id": "alaindustrial:fluid_pipe",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reinforced_fluid_pipe",
+          "title": "強化液体パイプ",
+          "icon": "alaindustrial:reinforced_fluid_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "強化液体パイプ",
+              "text": "遮蔽合金の外装をまとった液体パイプ。稼働中の原子炉室でも溶けない唯一のパイプ。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
             }
           ]
         },

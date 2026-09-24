@@ -44,12 +44,23 @@ public final class VillagePoolInjector {
 	public static void inject(MinecraftServer server) {
 		Registry<StructureTemplatePool> pools =
 				server.registryAccess().lookupOrThrow(Registries.TEMPLATE_POOL);
+		// MOD-651: one summary line for the pools that took the house; a pool that did not is a WARN
+		// of its own below, because that one is worth a reader's attention.
+		List<String> injected = new java.util.ArrayList<>();
 		for (String biome : VILLAGE_BIOMES) {
 			Identifier poolId = Identifier.withDefaultNamespace("village/" + biome + "/houses");
 			pools.getOptional(poolId).ifPresentOrElse(
-					pool -> injectIntoSafely(pool, poolId),
+					pool -> {
+						if (injectIntoSafely(pool, poolId)) {
+							injected.add(biome);
+						}
+					},
 					() -> Industrialization.LOGGER.warn(
 							"[MOD-062] village pool {} not found; Industrialist house not injected there", poolId));
+		}
+		if (!injected.isEmpty()) {
+			Industrialization.LOGGER.info("[MOD-062] injected Industrialist house into village houses: {} (weight {})",
+					String.join(", ", injected), WEIGHT);
 		}
 	}
 
@@ -59,21 +70,23 @@ public final class VillagePoolInjector {
 	 * immutable/foreign implementation — either way a failed injection into one pool must degrade to
 	 * "no Industrialist house there", never abort server start for the whole modpack.
 	 */
-	private static void injectIntoSafely(StructureTemplatePool pool, Identifier poolId) {
+	private static boolean injectIntoSafely(StructureTemplatePool pool, Identifier poolId) {
 		try {
-			injectInto(pool, poolId);
+			return injectInto(pool);
 		} catch (RuntimeException e) {
 			Industrialization.LOGGER.warn(
 					"[MOD-062] could not inject the Industrialist house into {} (another mod likely altered the pool); skipping: {}",
 					poolId, e.toString());
+			return false;
 		}
 	}
 
-	private static void injectInto(StructureTemplatePool pool, Identifier poolId) {
+	/** Adds the house to {@code pool}; false when it was already there (a second call in one start). */
+	private static boolean injectInto(StructureTemplatePool pool) {
 		var templates = ((StructureTemplatePoolAccessor) (Object) pool).alaindustrial$getTemplates();
 		boolean present = templates.stream().anyMatch(VillagePoolInjector::isHouse);
 		if (present) {
-			return;
+			return false;
 		}
 		StructurePoolElement element =
 				StructurePoolElement.legacy(HOUSE_TEMPLATE.toString())
@@ -81,7 +94,7 @@ public final class VillagePoolInjector {
 		for (int i = 0; i < WEIGHT; i++) {
 			templates.add(element);
 		}
-		Industrialization.LOGGER.info("[MOD-062] injected Industrialist house into {} (weight {})", poolId, WEIGHT);
+		return true;
 	}
 
 	/** True when the element is our house (idempotency guard + gametest assert). */

@@ -1722,8 +1722,8 @@ public final class Config {
 
 	// ── MOD-469: the meltdown and the bare reactor ────────────────────────────────────────────────
 	/**
-	 * Master switch for every block this feature turns into lava — the room's contents on an overheat
-	 * AND the scenery around a bare core.
+	 * Master switch for every block this feature turns into lava — the room's contents on an overheat,
+	 * the ordinary fluid pipes of a working room (MOD-660) AND the scenery around a bare core.
 	 *
 	 * <p>Neither hazard ever takes the reactor's own parts — shell, racks, controller, button. The racks
 	 * are exempt even inside a meltdown: they are crafted around a shielding plate, and a part built to
@@ -1736,7 +1736,7 @@ public final class Config {
 	 * switch, one meaning.
 	 */
 	@Knob(section = Section.MACHINES,
-			doc = "When true, an overheating sealed room melts its own contents and a working bare reactor melts the scenery around it. false keeps every cue and changes no block.")
+			doc = "When true, an overheating sealed room melts its own contents, a working sealed room melts the ordinary fluid pipes inside it, and a working bare reactor melts the scenery around it. false keeps every cue and changes no block.")
 	public static boolean reactorMeltdownMeltsBlocks = true;
 	/**
 	 * How far the bare-mode search may WALK from the controller before it gives up.
@@ -1818,6 +1818,17 @@ public final class Config {
 	@Knob(section = Section.MACHINES, min = 1,
 			doc = "Ticks between two blocks of the room's contents melting while the core is over the meltdown line.")
 	public static int reactorMeltdownIntervalTicks = 60;
+	/**
+	 * Ticks between two ordinary fluid pipes melting inside a WORKING sealed room (MOD-660).
+	 *
+	 * <p>Slow on purpose: the lesson is "this room needs the reinforced pipe", not "you lost your
+	 * plumbing in a blink". Each pipe also gets the {@link #reactorMeltWarnTicks} warning, so one goes
+	 * every eight seconds and a line of five lasts about forty — long enough to see the first one go,
+	 * read the warning, and stop the core with the lever.
+	 */
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "Ticks between two ordinary fluid pipes melting inside a working sealed reactor room; the reinforced pipe is immune.")
+	public static int reactorPipeMeltIntervalTicks = 120;
 	/**
 	 * Heat carried away by one melted block of the room's contents.
 	 *

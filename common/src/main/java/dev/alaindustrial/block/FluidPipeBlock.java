@@ -42,8 +42,11 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * and batches those into the chunk mesh. The fluid TYPE cannot: the set of fluids is open and other
  * mods register into it at runtime, so it is read from the block entity by a tint source instead. That
  * split is what keeps a line of hundreds of pipes off the per-frame renderer path entirely.
+ *
+ * <p>Not final since MOD-660: the {@link ReinforcedFluidPipeBlock reinforced grade} is the same pipe
+ * in a shielded jacket and inherits every rule here, the shared block entity included.
  */
-public final class FluidPipeBlock extends BaseEntityBlock {
+public class FluidPipeBlock extends BaseEntityBlock {
 	public static final MapCodec<FluidPipeBlock> CODEC = simpleCodec(FluidPipeBlock::new);
 
 	/** True while the segment holds fluid — drives the visible core, not the colour. */

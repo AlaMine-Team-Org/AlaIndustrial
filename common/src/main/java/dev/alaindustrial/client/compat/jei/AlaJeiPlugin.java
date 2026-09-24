@@ -16,7 +16,9 @@ import dev.alaindustrial.registry.ModRecipes;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.constants.RecipeTypes;
@@ -106,6 +108,9 @@ public class AlaJeiPlugin implements IModPlugin {
 	@Override
 	public void registerRecipes(IRecipeRegistration registration) {
 		Collection<RecipeHolder<?>> recipes = clientSyncedRecipes();
+		// MOD-651: one summary line instead of one per family. docs/tools/jei_smoke_check.py reads it
+		// (the jei-smoke CI lane), so the `name=count` pairs are a contract, not decoration.
+		Map<String, Integer> counts = new LinkedHashMap<>();
 		for (ModRecipes.Kind kind : ModRecipes.kinds()) {
 			List<RecipeHolder<AlaProcessingRecipe>> machineRecipes = recipesFor(recipes, kind);
 			// MOD-086: the electric furnace also runs every vanilla smelt (RecipeType.SMELTING fallback),
@@ -114,29 +119,24 @@ public class AlaJeiPlugin implements IModPlugin {
 			if (kind == ModRecipes.SMELTING) {
 				machineRecipes.addAll(VanillaSmeltingMirror.mirrorAll(recipes));
 			}
-			Industrialization.LOGGER.info("Registering {} AlaIndustrial JEI recipe(s) for {}", machineRecipes.size(),
-					kind.id());
+			counts.put(kind.id(), machineRecipes.size());
 			registration.addRecipes(AlaJeiRecipeTypes.byKind(kind), machineRecipes);
 		}
 		// MOD-019: the Polymerizer's recipes live in their own class, so they are collected separately.
 		List<RecipeHolder<PolymerizingRecipe>> polymerizing = polymerizingRecipes(recipes);
-		Industrialization.LOGGER.info("Registering {} AlaIndustrial JEI recipe(s) for {}", polymerizing.size(),
-				ModRecipes.POLYMERIZING.id());
+		counts.put(ModRecipes.POLYMERIZING.id(), polymerizing.size());
 		registration.addRecipes(AlaJeiRecipeTypes.POLYMERIZING, polymerizing);
 		// MOD-064: likewise the alloy smelter's own recipe class.
 		List<RecipeHolder<AlloyingRecipe>> alloying = alloyingRecipes(recipes);
-		Industrialization.LOGGER.info("Registering {} AlaIndustrial JEI recipe(s) for {}", alloying.size(),
-				ModRecipes.ALLOYING.id());
+		counts.put(ModRecipes.ALLOYING.id(), alloying.size());
 		registration.addRecipes(AlaJeiRecipeTypes.ALLOYING, alloying);
 		// MOD-251: likewise the distillation column's own recipe class.
 		List<RecipeHolder<FluidOutputRecipe>> distilling = distillingRecipes(recipes);
-		Industrialization.LOGGER.info("Registering {} AlaIndustrial JEI recipe(s) for {}", distilling.size(),
-				ModRecipes.DISTILLING.id());
+		counts.put(ModRecipes.DISTILLING.id(), distilling.size());
 		registration.addRecipes(AlaJeiRecipeTypes.DISTILLING, distilling);
 		// MOD-383: one canning card per accepted food, derived from the (by now frozen) item registry
 		// rather than from the recipe map — this machine has no recipes to collect.
 		List<CanningExchange.Card> canning = CanningExchange.cards();
-		Industrialization.LOGGER.info("Registering {} AlaIndustrial JEI canning card(s)", canning.size());
 		registration.addRecipes(AlaJeiRecipeTypes.CANNING, canning);
 		// Informational pages (MOD-043): for blocks/items with no crafting recipe — the solar panel
 		// evolution line today — JEI's built-in ingredient info gives a paginated, auto-wrapping page.
@@ -180,8 +180,15 @@ public class AlaJeiPlugin implements IModPlugin {
 		// MOD-420: the geothermal generator and the energy condenser. These go into our own category
 		// rather than addIngredientInfo, because their GUI click areas have to open something focused.
 		List<RecipeViewerInfo.Entry> machineInfo = MachineInfoJeiCategory.pages();
-		Industrialization.LOGGER.info("Registering {} AlaIndustrial JEI machine-info page(s)", machineInfo.size());
 		registration.addRecipes(AlaJeiRecipeTypes.MACHINE_INFO, machineInfo);
+		Industrialization.LOGGER.info("Registered AlaIndustrial JEI recipes: {}; canning_cards={}; machine_info_pages={}",
+				summary(counts), canning.size(), machineInfo.size());
+	}
+
+	private static String summary(Map<String, Integer> counts) {
+		StringBuilder out = new StringBuilder();
+		counts.forEach((family, n) -> out.append(out.isEmpty() ? "" : ", ").append(family).append('=').append(n));
+		return out.toString();
 	}
 
 	@Override

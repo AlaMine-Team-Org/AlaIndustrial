@@ -179,12 +179,12 @@
             {
               "type": "text",
               "title": "Het watercircuit",
-              "text": "Water voert de warmte af. Een reactor met genoeg water blijft onderaan de meter, en amber betekent dat het water het niet bijhoudt.\n\nPomp -> buis -> reactorinlaat -> kolom. Zet de buiszijden bij de inlaat met de moersleutel: buiten onttrekken, binnen invoeren. Kolom en mondstuk hebben geen sleutel nodig — een kolom neemt alleen water op en geeft alleen stoom af."
+              "text": "Water voert de warmte af. Een reactor met genoeg water blijft onderaan de meter, en amber betekent dat het water het niet bijhoudt.\n\nPomp -> buis -> reactorinlaat -> versterkte buis -> kolom. Leg in de ruimte alleen de versterkte buis: een werkende reactor smelt een gewone tot lava. Zet de buiszijden bij de inlaat met de moersleutel: buiten onttrekken, binnen invoeren. Kolom en mondstuk hebben geen sleutel nodig — een kolom neemt alleen water op en geeft alleen stoom af."
             },
             {
               "type": "text",
               "title": "Stoom",
-              "text": "Gekookt water wordt stoom en verzamelt zich in de kolom. Die moet eruit: een leiding vanaf de bovenkant van de kolom → reactorinlaat → een stoommondstuk buiten.\n\nHet mondstuk moet de open lucht in wijzen. Ingemetseld in een muur blaast het niets af, en het circuit erachter loopt vast."
+              "text": "Gekookt water wordt stoom en verzamelt zich in de kolom. Die moet eruit: een versterkte buis vanaf de bovenkant van de kolom → reactorinlaat → een stoommondstuk buiten.\n\nHet mondstuk moet de open lucht in wijzen. Ingemetseld in een muur blaast het niets af, en het circuit erachter loopt vast."
             }
           ]
         }
@@ -2029,6 +2029,36 @@
               ],
               "result_id": "alaindustrial:fluid_pipe",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reinforced_fluid_pipe",
+          "title": "Versterkte vloeistofbuis",
+          "icon": "alaindustrial:reinforced_fluid_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Versterkte vloeistofbuis",
+              "text": "Een vloeistofbuis in een mantel van afschermlegering — de enige buis die een werkende reactorruimte niet smelt."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
             }
           ]
         },

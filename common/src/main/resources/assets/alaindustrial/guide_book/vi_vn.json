@@ -179,12 +179,12 @@
             {
               "type": "text",
               "title": "Vòng nước",
-              "text": "Nước mang nhiệt đi. Lò có đủ nước sẽ nằm gần đáy thanh đo, còn màu vàng nghĩa là nước không theo kịp.\n\nBơm -> ống -> cổng vào lò -> cột. Dùng cờ lê chỉnh các mặt ống ở cổng vào: bên ngoài rút ra, bên trong đưa vào. Cột và vòi phun không cần cờ lê — cột chỉ nhận nước và chỉ trả hơi."
+              "text": "Nước mang nhiệt đi. Lò có đủ nước sẽ nằm gần đáy thanh đo, còn màu vàng nghĩa là nước không theo kịp.\n\nBơm -> ống -> cổng vào lò -> ống gia cố -> cột. Bên trong phòng chỉ đặt ống gia cố: lò đang chạy sẽ nung chảy ống thường thành dung nham. Dùng cờ lê chỉnh các mặt ống ở cổng vào: bên ngoài rút ra, bên trong đưa vào. Cột và vòi phun không cần cờ lê — cột chỉ nhận nước và chỉ trả hơi."
             },
             {
               "type": "text",
               "title": "Hơi nước",
-              "text": "Nước sôi hóa thành hơi và dồn lại trong cột. Phải xả nó ra: một ống từ mặt trên của cột → cổng vào lò phản ứng → một vòi xả hơi ở ngoài.\n\nVòi phải hướng ra chỗ trống. Bị chôn trong tường thì nó không xả được gì, và vòng ống phía sau tắc luôn."
+              "text": "Nước sôi hóa thành hơi và dồn lại trong cột. Phải xả nó ra: một ống gia cố từ mặt trên của cột → cổng vào lò phản ứng → một vòi xả hơi ở ngoài.\n\nVòi phải hướng ra chỗ trống. Bị chôn trong tường thì nó không xả được gì, và vòng ống phía sau tắc luôn."
             }
           ]
         }
@@ -2029,6 +2029,36 @@
               ],
               "result_id": "alaindustrial:fluid_pipe",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reinforced_fluid_pipe",
+          "title": "Ống dẫn chất lỏng gia cố",
+          "icon": "alaindustrial:reinforced_fluid_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ống dẫn chất lỏng gia cố",
+              "text": "Ống dẫn chất lỏng bọc vỏ hợp kim che chắn — loại ống duy nhất mà phòng lò phản ứng đang chạy không nung chảy."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:fluid_pipe"
+              ],
+              "result_id": "alaindustrial:reinforced_fluid_pipe",
+              "result_count": 6
             }
           ]
         },

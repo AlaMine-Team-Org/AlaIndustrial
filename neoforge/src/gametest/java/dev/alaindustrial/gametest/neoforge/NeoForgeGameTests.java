@@ -255,6 +255,9 @@ public final class NeoForgeGameTests {
 				ReactorScenarios::onlyOneControllerBurnsASharedRack);
 		registerTest(event, "reactor_meltdown_spares_the_shell", 400, true,
 				ReactorScenarios::anOverheatingRoomMeltsItsContentsAndKeepsItsShell);
+		// MOD-660 — a working room takes its plain pipes, never the reinforced ones.
+		registerTest(event, "reactor_working_room_melts_plain_pipes", 400, true,
+				ReactorScenarios::aWorkingRoomMeltsPlainPipesAndSparesReinforcedOnes);
 		// MOD-514 — the held-signal switch: it seals with the room, scrams it, and outlives a meltdown.
 		registerTest(event, "reactor_lever_seals_and_scrams", 400, true,
 				ReactorScenarios::aShieldedLeverInsideTheRoomSealsAndScrams);
@@ -2533,12 +2536,14 @@ public final class NeoForgeGameTests {
 				helper -> BlockCapabilityParityScenarios.capabilitiesMatchPorts(helper, CAPABILITY_PROBES));
 
 		// MOD-294: the demo stand, mirrored onto this lane — same common bodies the Fabric
-		// DemoStandGameTest wrapper delegates to. The stand is 42×27×9, so these own a dedicated
-		// 44×14×28 envelope instead of the 8³ rig (force-loading, entity ticking and grid spacing
+		// DemoStandGameTest wrapper delegates to. The stand is 88×51×9, so these own a dedicated
+		// 90×14×52 envelope instead of the 8³ rig (force-loading, entity ticking and grid spacing
 		// are sized off the structure box — the MOD-335 lesson); sky access keeps the solar-fed
 		// zones honest for the liveness sweep.
 		registerTest(event, "demo_stand_builds_covers_and_runs", 300, true, DEMO_STAND_STRUCTURE, true,
 				DemoStandScenarios::demoStandBuildsCoversAndRuns);
+		registerTest(event, "demo_reactor_runs_cool_on_its_own_loop", 500, true, DEMO_STAND_STRUCTURE, true,
+				DemoStandScenarios::demoReactorRunsCoolOnItsOwnLoop);
 		registerTest(event, "demo_stand_clear_leaves_no_blocks", 100, true, DEMO_STAND_STRUCTURE, true,
 				DemoStandScenarios::demoStandClearLeavesNoBlocks);
 		registerTest(event, "demo_stand_rebuild_is_idempotent", 100, true, DEMO_STAND_STRUCTURE, true,
@@ -2916,9 +2921,9 @@ public final class NeoForgeGameTests {
 	private static final Identifier RIG_STRUCTURE = Industrialization.id("gametest_rig");
 
 	/**
-	 * The MOD-294 demo stand envelope: all-air 44×14×28, shipped in this source set as
+	 * The MOD-294 demo stand envelope: all-air 90×14×52, shipped in this source set as
 	 * {@code data/alaindustrial/structure/demo_stand_area.nbt} — the binary twin of the fabric
-	 * lane's {@code demo_stand_area.snbt}. The stand is 42×27×9 with a 1-block origin margin, so
+	 * lane's {@code demo_stand_area.snbt}. The stand is 88×51×9 with a 1-block origin margin, so
 	 * it cannot ride the 8³ rig (see the MOD-335 note above for everything the engine sizes off
 	 * the structure box).
 	 */

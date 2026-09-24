@@ -399,6 +399,13 @@ pitest {
             // is nothing to mutate either: two abstract accessors, no behaviour. What a frame
             // may contain is decided in KokSagyzRoots and covered by the kok sagyz game tests.
             'dev.alaindustrial.client.render.RootInspectionState',
+            // MOD-660: the reinforced fluid pipe. It IS a Block — it extends FluidPipeBlock, and on the
+            // 26.2 line it also carries its own block codec (BaseEntityBlock) — so constructing one needs
+            // BlockBehaviour.Properties from the Minecraft jar common/'s test classpath does not carry.
+            // Nor is there anything to mutate: one constructor and the codec accessor. Its only rule — a working
+            // reactor room leaves it standing — is a tag and a picker, covered by the both-lane game
+            // test aWorkingRoomMeltsPlainPipesAndSparesReinforcedOnes.
+            'dev.alaindustrial.block.ReinforcedFluidPipeBlock',
             // MOD-145: the Recycler's two Minecraft-coupled waste classes. WasteClassifier reads
             // ItemStack/ItemTags/SoundType and BladeTier compares against registered items, so both
             // reference net.minecraft types that common/'s test classpath does not carry — their
