@@ -527,11 +527,13 @@
         '<rect width="9" height="9" fill="#fcd12a" stroke="#101216" stroke-width="2"/></g>' +
         ticks + hits + '</svg>' +
         /* Text twin of the series for screen readers: the chart itself is opaque to
-           them, and hundreds of focusable points would make navigation unusable. */
-        '<table class="st-table"><caption>' + L.chart + '</caption><tbody>' +
+           them, and hundreds of focusable points would make navigation unusable. The
+           WRAPPER is what is hidden: a <table> ignores height and overflow, so hiding the
+           table itself left one row per day stretching the page (1500 px of void). */
+        '<div class="st-table"><table><caption>' + L.chart + '</caption><tbody>' +
         data.map(d => '<tr><th scope="row">' + (d.end && d.end !== d.date
           ? fmtDate(d.date) + ' — ' + fmtDate(d.end) : fmtDate(d.date)) +
-          '</th><td>' + nf.format(d.v) + '</td></tr>').join('') + '</tbody></table>';
+          '</th><td>' + nf.format(d.v) + '</td></tr>').join('') + '</tbody></table></div>';
 
       /* Footnote explaining the asterisk, shown only while the visible range
          actually contains such days. */

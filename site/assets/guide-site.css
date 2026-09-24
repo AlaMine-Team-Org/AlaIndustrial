@@ -155,3 +155,4 @@ body{font-size:20px;line-height:1.5;background:linear-gradient(90deg,#0e0e11,#17
 .pg-soil+.pg-soil{border-top:2px solid #5a4630}
 .pg-hint{margin:12px 0 0;color:#c7c8cd;font-size:17px;line-height:1.5}
 @media(max-width:760px){.pg{padding:13px}.pg-row{gap:10px;padding:9px 10px}.pg-row p{font-size:16px}}
+.variant-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:14px;margin:6px 0 26px}.variant-card{margin:0;padding:12px 10px 10px;display:flex;flex-direction:column;align-items:center;gap:6px;background:#22252a;border:3px solid var(--edge);box-shadow:4px 4px var(--edge)}.variant-card img{width:112px;height:112px;image-rendering:auto}.variant-card figcaption{text-align:center;font:18px/1.15 'VT323',monospace;color:#d8dde3}.variant-mark{display:block;margin-top:3px;color:var(--gold);font:700 24px/1 'VT323',monospace}
