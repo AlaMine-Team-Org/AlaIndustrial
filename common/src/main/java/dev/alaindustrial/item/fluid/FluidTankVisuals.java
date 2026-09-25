@@ -11,7 +11,8 @@ import net.minecraft.world.level.material.MapColor;
 /**
  * Loader-neutral fallback colours for a fluid that declares no tint source of its own — the mod's fluid
  * colour table. Read by the pipe core in-world ({@code FluidPipeTint}), the portable tank's item icon
- * ({@code FluidTankItemTintSource}) and its fill bar ({@code FluidTankBlockItem#getBarColor}).
+ * ({@code FluidTankItemTintSource}), its fill bar ({@code FluidTankBlockItem#getBarColor}) and the
+ * filled vacuum capsule ({@code CapsuleGlassTintSource}).
  */
 public final class FluidTankVisuals {
 	private static final int WATER = 0x3F76E4;
@@ -25,9 +26,8 @@ public final class FluidTankVisuals {
 	 * the golden ochre the fluid actually is, and a pipe carrying it read wrong next to the fluid it
 	 * came from.
 	 *
-	 * <p>The same three values are mirrored in {@code tools/textures_work/vacuum_capsule/
-	 * gen_vacuum_capsule.py}, which bakes them into the capsule's item textures (a baked sprite cannot
-	 * read this table). Change one, change both — nothing checks the pair.
+	 * <p>The vacuum capsule reads this table too (MOD-452, {@code CapsuleGlassTintSource}), so a capsule,
+	 * a tank and a pipe of the same fluid show one colour by construction — no sprite mirrors it any more.
 	 */
 	private static final int OIL = 0x14100E;
 	private static final int DIESEL = 0xB78515;

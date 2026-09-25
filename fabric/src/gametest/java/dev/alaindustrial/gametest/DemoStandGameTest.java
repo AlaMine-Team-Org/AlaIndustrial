@@ -47,4 +47,16 @@ public class DemoStandGameTest {
 	public void demoStandShowcaseCoversItems(GameTestHelper helper) {
 		DemoStandScenarios.demoStandShowcaseCoversItems(helper);
 	}
+
+	/** MOD-674: every showcase frame hangs in a free cell, with no fluid in or beside it. */
+	@GameTest(structure = "alaindustrial:demo_stand_area", maxTicks = 100, skyAccess = true)
+	public void demoStandFramesHangInFreeCells(GameTestHelper helper) {
+		DemoStandScenarios.demoStandFramesHangInFreeCells(helper);
+	}
+
+	/** MOD-674: drops that land on the stand after the build are swept away by themselves. */
+	@GameTest(structure = "alaindustrial:demo_stand_area", maxTicks = 200, skyAccess = true)
+	public void demoStandSweepsLateDrops(GameTestHelper helper) {
+		DemoStandScenarios.demoStandSweepsLateDrops(helper);
+	}
 }

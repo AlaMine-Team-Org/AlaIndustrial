@@ -423,6 +423,12 @@ pitest {
             // is nothing to mutate either: two abstract accessors, no behaviour. What a frame
             // may contain is decided in KokSagyzRoots and covered by the kok sagyz game tests.
             'dev.alaindustrial.client.render.RootInspectionState',
+            // MOD-452: the one place both loaders register the mod's item tint sources. It names no
+            // net.minecraft type itself, but each call lands in vanilla's late-bound ItemTintSources
+            // registry, which common/'s test classpath does not carry, so L1 cannot run it. Nor is
+            // there anything to mutate: two calls, no branch. Whether both sources are live on both
+            // loaders is what the dev clients show (a missing one leaves its item uncoloured).
+            'dev.alaindustrial.client.render.ModItemTintSources',
             // MOD-660: the reinforced fluid pipe. It imports nothing, so the classifier calls it
             // Minecraft-free, but it IS a Block — it extends FluidPipeBlock, and constructing one needs
             // BlockBehaviour.Properties from the Minecraft jar common/'s test classpath does not carry.

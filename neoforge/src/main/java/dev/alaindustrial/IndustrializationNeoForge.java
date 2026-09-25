@@ -305,6 +305,8 @@ public final class IndustrializationNeoForge {
 			// MOD-148: clear any jetpack flight-glow light block whose flight ended (land, logout,
 			// death, unequip) — the one cleanup path for every exit (see JetpackLight).
 			dev.alaindustrial.item.wearable.JetpackLight.sweep(event.getServer(), event.getServer().getTickCount());
+			// MOD-674: drops that rain onto the demo stand after it was built (decaying leaves).
+			dev.alaindustrial.command.demo.DemoStandDropSweeper.tick(event.getServer());
 		});
 		// Teleport warmup cancellation (MOD-092). Three hooks, not two: LivingDamageEvent.Post does
 		// not fire for a killing blow, and death does not disconnect the player.
