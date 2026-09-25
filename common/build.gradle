@@ -231,6 +231,12 @@ pitest {
                      // MOD-468 stage 3: the reason a reactor is idle. Same shape and same reason as
                      // the enum above — MC-free so the panel's diagnostics can be exercised by L1.
                      'dev.alaindustrial.block.entity.ReactorIdleReason',
+                     // MOD-668: when the charging station chimes "all charged". MC-free rule class,
+                     // added with the class and its L1 suite (ChargePadChimeTest).
+                     'dev.alaindustrial.block.entity.ChargePadChime',
+                     // MOD-672: the cable arm's reach into the assembled teleporter. MC-free so its
+                     // L1 suite (TeleporterCableArmTest) can re-measure the model and pin it.
+                     'dev.alaindustrial.block.TeleporterCableArm',
                      // MOD-473: the datapack names of the reactor advancement steps. MC-free so the
                      // name<->constant mapping the JSON depends on can be asserted on the L1 lane
                      // (ReactorMilestoneTest); added here WITH the class, not a release later.

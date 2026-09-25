@@ -2609,6 +2609,12 @@ public final class NeoForgeGameTests {
 		// the Fabric wrapper (annotation default 100 where it declares none). The wind-mill grade
 		// scenarios use the same raised rig as the wind-mill rate tests above (glass pillar to y=20,
 		// above the barrier ceiling), so skyAccess=false is not the obstacle earlier comments assumed.
+		registerTest(event, "mod661_water_washes_away_every_transport_line", 200, true,
+				dev.alaindustrial.gametest.FluidWashScenarios::waterWashesAwayEveryTransportLine);
+		registerTest(event, "pad_mod668_finished_charge_chimes_once", 100, true,
+				ChargePadScenarios::mod668FinishedChargeChimesOnce);
+		registerTest(event, "pad_mod668_arriving_full_is_silent", 100, true,
+				ChargePadScenarios::mod668ArrivingFullIsSilent);
 		registerTest(event, "pad_mod406_payouts_are_batched_not_per_tick", 100, true,
 				ChargePadScenarios::mod406PayoutsAreBatchedNotPerTick);
 		registerTest(event, "pad_mod406_batched_payout_matches_per_tick_total", 100, true,

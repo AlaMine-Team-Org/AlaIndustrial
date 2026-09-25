@@ -8,6 +8,7 @@ import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.item.energy.PlayerEuDistributor;
 import dev.alaindustrial.menu.ChargePadMenu;
 import dev.alaindustrial.registry.ModContent;
+import dev.alaindustrial.registry.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -80,6 +81,9 @@ public final class ChargePadBlockEntity extends MachineBlockEntity implements Me
 	 */
 	private static final int PAYOUT_INTERVAL_TICKS = 5;
 
+	/** Volume of the "all charged" chime (MOD-668): under the plate's vanilla clicks, over its hum. */
+	private static final float CHIME_VOLUME = 0.6f;
+
 	/**
 	 * Game time of the last {@link #chargePlayer} call, or -1 before the first one. Transient on purpose:
 	 * a station that loads from disk has nobody on it, whatever was true when the chunk was saved.
@@ -116,6 +120,12 @@ public final class ChargePadBlockEntity extends MachineBlockEntity implements Me
 	 */
 	private boolean clickOffPending;
 
+	/** When the "all charged" chime plays (MOD-668); reset by every fresh contact. */
+	private final ChargePadChime chime = new ChargePadChime();
+
+	/** How many times the chime has played since load — a test seam, see {@link #chimesPlayed()}. */
+	private int chimesPlayed;
+
 	public ChargePadBlockEntity(BlockPos pos, BlockState state) {
 		super(ModContent.CHARGE_PAD_BE.get(), pos, state, EnergyTier.LV, 0,
 				Config.chargePadBuffer, Config.chargePadInputRate, 0L);
@@ -143,6 +153,15 @@ public final class ChargePadBlockEntity extends MachineBlockEntity implements Me
 	 */
 	public boolean isClickOffPending() {
 		return clickOffPending;
+	}
+
+	/**
+	 * Test seam (MOD-668): how many "all charged" chimes this station has played since it loaded. A
+	 * gametest cannot hear, so it counts instead — the property worth guarding is "exactly one per
+	 * finished charge", and that is a number.
+	 */
+	public int chimesPlayed() {
+		return chimesPlayed;
 	}
 
 	/**
@@ -185,6 +204,7 @@ public final class ChargePadBlockEntity extends MachineBlockEntity implements Me
 			// a sprinting player clips through.
 			playClick(serverLevel, SoundEvents.METAL_PRESSURE_PLATE_CLICK_ON);
 			clickOffPending = true;
+			chime.onArrive();
 		}
 		lastContactTick = now;
 		// Wake first: the station may have been asleep when the player arrived, and the tick that
@@ -204,6 +224,7 @@ public final class ChargePadBlockEntity extends MachineBlockEntity implements Me
 			clearReadout();
 			lastPayoutState = ChargePadState.EMPTY;
 			updateIndicator(ChargePadState.EMPTY);
+			chime.onPayout(ChargePadChime.Payout.EMPTY);
 			return;
 		}
 		PlayerEuDistributor.Result payout = PlayerEuDistributor.distribute(player, budget,
@@ -220,6 +241,13 @@ public final class ChargePadBlockEntity extends MachineBlockEntity implements Me
 		updateReadout(payout, settled);
 		lastPayoutState = moved > 0 ? ChargePadState.CHARGING : ChargePadState.READY;
 		updateIndicator(lastPayoutState);
+		if (chime.onPayout(moved > 0 ? ChargePadChime.Payout.CHARGING : ChargePadChime.Payout.READY)) {
+			// MOD-668: positional and quiet, like the plate's clicks — whoever stands near hears it. `null`
+			// as the player: a block entity has no client-side prediction to exclude.
+			chimesPlayed++;
+			serverLevel.playSound(null, worldPosition, ModSounds.CHARGE_PAD_DONE.get(), SoundSource.BLOCKS,
+					CHIME_VOLUME, 1.0f);
+		}
 	}
 
 	/**

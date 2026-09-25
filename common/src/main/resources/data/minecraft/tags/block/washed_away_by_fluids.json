@@ -1,0 +1,20 @@
+{
+  "replace": false,
+  "values": [
+    "alaindustrial:copper_cable",
+    "alaindustrial:tin_cable",
+    "alaindustrial:gold_cable",
+    "alaindustrial:electrum_cable",
+    "alaindustrial:insulated_copper_cable",
+    "alaindustrial:insulated_tin_cable",
+    "alaindustrial:insulated_gold_cable",
+    "alaindustrial:insulated_electrum_cable",
+    "alaindustrial:item_pipe",
+    "alaindustrial:item_pipe_advanced",
+    "alaindustrial:fluid_pipe",
+    "alaindustrial:reinforced_fluid_pipe",
+    "alaindustrial:steam_pipe",
+    "alaindustrial:reinforced_steam_pipe",
+    "alaindustrial:smart_wire"
+  ]
+}

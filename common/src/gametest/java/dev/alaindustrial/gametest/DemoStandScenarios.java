@@ -184,8 +184,31 @@ public final class DemoStandScenarios {
 					+ " — add them to a DemoStand zone");
 		}
 
+		// --- MOD-661: no cable or pipe of the stand stands where flowing fluid reaches it ---
+		// Flowing fluid washes the mod's transport lines away, and the stand has water (the mill channel,
+		// the pump pools) and lava beside them. A line placed where fluid can reach it would be gone
+		// within seconds of `/ala demo build` — recorded here, checked once the fluid has settled.
+		List<BlockPos> lines = new ArrayList<>();
+		for (int x = 0; x < DemoStand.WIDTH; x++) {
+			for (int z = 0; z < DemoStand.DEPTH; z++) {
+				for (int y = -DemoStand.DEPTH_BELOW; y <= DemoStand.HEIGHT; y++) {
+					BlockPos pos = origin.offset(x, y, z);
+					if (FluidWashScenarios.isTransportLine(helper.getLevel().getBlockState(pos).getBlock())) {
+						lines.add(pos);
+					}
+				}
+			}
+		}
+
 		// --- liveness after 100 ticks of normal world ticking ---
 		helper.runAfterDelay(100, () -> {
+			for (BlockPos pos : lines) {
+				if (!FluidWashScenarios.isTransportLine(helper.getLevel().getBlockState(pos).getBlock())) {
+					helper.fail("MOD-661: flowing fluid washed a cable or pipe off the demo stand at local "
+							+ (pos.getX() - origin.getX()) + "," + (pos.getY() - origin.getY()) + ","
+							+ (pos.getZ() - origin.getZ()) + " — wall the fluid off or move the line");
+				}
+			}
 			BatteryBoxBlockEntity coalBattery = helper.getLevel()
 					.getBlockEntity(origin.offset(4, 1, 9)) instanceof BatteryBoxBlockEntity b ? b : null;
 			if (coalBattery == null || coalBattery.getEnergyStorage().getAmount() <= 0) {

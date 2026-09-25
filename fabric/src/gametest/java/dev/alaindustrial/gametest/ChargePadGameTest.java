@@ -127,6 +127,18 @@ public class ChargePadGameTest {
 	public void tcPad001Nrg02_bufferPersists(GameTestHelper helper) {
 		ChargePadScenarios.nrg02BufferPersists(helper);
 	}
+	/** @implements MOD-668 — a finished charge chimes exactly once. */
+	@GameTest
+	public void mod668FinishedChargeChimesOnce(GameTestHelper helper) {
+		ChargePadScenarios.mod668FinishedChargeChimesOnce(helper);
+	}
+
+	/** @implements MOD-668 — arriving already full is silent. */
+	@GameTest
+	public void mod668ArrivingFullIsSilent(GameTestHelper helper) {
+		ChargePadScenarios.mod668ArrivingFullIsSilent(helper);
+	}
+
 	/** @implements MOD-406 — batched payouts deliver exactly what per-tick payouts did. */
 	@GameTest
 	public void mod406BatchedPayoutMatchesPerTickTotal(GameTestHelper helper) {
