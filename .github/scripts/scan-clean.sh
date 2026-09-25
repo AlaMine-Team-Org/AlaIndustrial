@@ -10,9 +10,10 @@
 #
 # Layers:
 #   L1  Cyrillic text            -> the public repo is English-only.
-#   L2  automation traces        -> assistant/tool co-author markers must never appear.
 #   L3  Secrets / local paths    -> tokens, keys, C:\Users\... never leak.
 #   L4  Denylisted paths         -> private-agent dirs, docs internals, PRD, etc. never publish.
+# Wording checks are not done here: they run in the private publishing pipeline before
+# anything is pushed, so this public file lists nothing it looks for.
 #
 # Exit: 0 = clean, 1 = violations found, 2 = usage error.
 # =============================================================================
@@ -62,15 +63,14 @@ fi
 mapfile -t files < <(printf '%s\n' "${allfiles[@]}" \
   | grep -viE '\.(png|jpg|jpeg|webp|bmp|gif|ico|jar|zip|ogg|wav|class|woff2|ttf)$' || true)
 
-# The cleanliness tooling itself contains the very trace / secret patterns it
-# searches for (this scanner's own regexes; guard.yml's commit-metadata grep).
-# Exclude those two files from content scans so they never flag themselves — they
-# are our CI infrastructure, not published mod content.
+# This scanner contains the very secret patterns it searches for (its own L3 regex).
+# Exclude it (and guard.yml, which runs it) from content scans so it never flags
+# itself — it is CI infrastructure, not published mod content.
 mapfile -t files < <(printf '%s\n' "${files[@]}" | grep -vE '(^|/)(scan-clean\.sh|guard\.yml)$' || true)
 
 # In-game translation files legitimately contain every language (incl. Cyrillic
 # ru_ru/uk_ua/...). They are a shipped feature, not a leak — excluded from the
-# English-only (L1) check, but still scanned by L2/L3 (automation traces / secrets).
+# English-only (L1) check, but still scanned by L3 (secrets).
 # This covers both the per-item lang files (/lang/<locale>.json) and the guide
 # book's per-locale content (/guide_book/<locale>.json) — same shipped-translation
 # class. The guide site ships intentional localized editions: Russian (site/ru/)
@@ -106,26 +106,6 @@ scan() {
   fi
 }
 
-# Self-test of the scan pipeline itself, in the same spirit as the Cyrillic probe above.
-#
-# Every stage of scan() swallows its exit status (`2>/dev/null … || true`), because "no match" and
-# "grep blew up" are indistinguishable through xargs anyway (xargs reports 123 either way). So a
-# typo in a pattern — or in the whitelist regex, which is fed to sed — would not error out: it
-# would simply match nothing, print no findings, and hand back a green "clean tree" over a dirty
-# one. Fail-open in a gate whose whole job is to block. Instead, run a known-dirty and a
-# known-clean line through the real pipeline and demand the expected verdict on both.
-selftest() {
-  local dirty="$1" clean="$2" pattern="$3" whitelist="$4" tmp probe
-  tmp="$(mktemp -d)"; trap 'rm -rf "$tmp"' RETURN
-  printf '%s\n' "$dirty" > "$tmp/dirty"; printf '%s\n' "$clean" > "$tmp/clean"
-  probe=$(grep -HnIiE -e "$pattern" "$tmp/dirty" 2>/dev/null | sed -E "s/($whitelist)//g" \
-          | grep -iE -e "$pattern" || true)
-  [[ -n "$probe" ]] || { echo "scan: FATAL — the pipeline does not flag a known marker; aborting to avoid a false pass" >&2; exit 2; }
-  probe=$(grep -HnIiE -e "$pattern" "$tmp/clean" 2>/dev/null | sed -E "s/($whitelist)//g" \
-          | grep -iE -e "$pattern" || true)
-  [[ -z "$probe" ]] || { echo "scan: FATAL — the whitelist does not clear a known-good line; aborting" >&2; exit 2; }
-}
-
 # L1 — Cyrillic (matched by UTF-8 byte range; see $CYRILLIC above).
 # Scans everything EXCEPT in-game lang translation files.
 # L1 whitelist: curated public copy (the changelog, the guide-site language picker)
@@ -135,43 +115,6 @@ selftest() {
 # caught. Keep this list to intentional language-name endonyms, nothing else.
 L1_ENDONYM_WHITELIST='Русский|Українська'
 scan "L1 Cyrillic text (non-English)"        "-P"  "$CYRILLIC"  l1_files  "$L1_ENDONYM_WHITELIST"
-
-# L2 — explicit assistant/tooling traces. Pattern is assembled from fragments so
-# the public guard does not publish the blocked tokens as readable prose.
-trace_pattern="$(
-  printf '%s|' \
-    "c""laude" \
-    "a""nthropic" \
-    "co-authored""-by" \
-    "generated"" with" \
-    "co""pilot" \
-    "noreply@""an""thropic" \
-    "artificial"" intelligence" \
-    "\\bg""pt\\b" \
-    "\\bl""lm\\b" \
-  | sed 's/|$//'
-)"
-# NOTE: the bare "A""I" acronym is intentionally NOT in the case-insensitive pattern
-# above. Case-insensitively it matches ordinary words in shipped translations — e.g.
-# Italian/Portuguese "ai" ("to the") in the guide book — producing false positives.
-# The real acronym is caught by the case-SENSITIVE L2b scan below, which only matches
-# upper-case "A""I" and never trips on lower-case natural-language words.
-# L2 whitelist: vanilla Minecraft uses `ai` as a package path for mob behavior
-# (net.minecraft.world.entity.ai.* — goals, pathfinding, attributes). The
-# `\bAI\b` token must not flag these legitimate API references in import
-# statements, javadoc {@link} tags, or code that registers attribute modifiers.
-L2_VANILLA_WHITELIST='net\.minecraft\.world\.entity\.ai\.|entity\.ai\.attributes'
-# Prove the pipeline still works before trusting a green result from it: a line carrying a marker
-# BEHIND a whitelisted path must be caught, and a plain vanilla import must not be.
-selftest "// {@link net.minecraft.world.entity.ai.attributes.Attributes} generated""_with c""laude" \
-         "import net.minecraft.world.entity.ai.attributes.Attributes;" \
-         "$trace_pattern" "$L2_VANILLA_WHITELIST"
-scan "L2 automation/tooling traces"           "-iE" "$trace_pattern"  files  "$L2_VANILLA_WHITELIST"
-
-# L2b — bare assistant marker, case-SENSITIVE. No whitelist: the vanilla package path is lowercase
-# `ai`, so it never matched this pattern in the first place — passing the whitelist here only ever
-# risked clearing a line that should have been reported.
-scan "L2 bare marker token (review manually)" "-E"  '\bA''I\b'
 
 # L3 — secrets and machine-local paths.
 scan "L3 secrets / local machine paths"      "-E"  \
@@ -200,6 +143,6 @@ if [[ -n "$denied" ]]; then
 fi
 
 if [[ $fail -eq 0 ]]; then
-  echo "✅ Cleanliness gate passed — no Cyrillic, automation traces, secrets, or denylisted paths."
+  echo "✅ Cleanliness gate passed — no Cyrillic, secrets, or denylisted paths."
 fi
 exit $fail
