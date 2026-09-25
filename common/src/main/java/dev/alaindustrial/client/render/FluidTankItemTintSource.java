@@ -12,6 +12,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.Fluid;
 import org.jspecify.annotations.Nullable;
 
 /** Dynamic item tint for the fluid layer of the portable tank icon. */
@@ -27,18 +28,27 @@ public final class FluidTankItemTintSource implements ItemTintSource {
 				.put(Industrialization.id("fluid_tank"), MAP_CODEC);
 	}
 
-	// MOD-498 — FluidModel#tintSource() is deprecated by NeoForge only; in vanilla it is the plain record
-	// accessor. NeoForge's replacement, fluidTintSource(), returns its own FluidTintSource type, which
-	// does not exist in the vanilla classes this shared client code is compiled against for Fabric —
-	// and the calls below (color / colorInWorld) are on vanilla's BlockTintSource.
-	@SuppressWarnings("deprecation")
 	@Override
 	public int calculate(ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity) {
 		FluidTankContents contents = stack.get(ModDataComponents.FLUID_TANK_CONTENTS.get());
 		if (contents == null) {
 			return 0x00FFFFFF;
 		}
-		var fluid = contents.fluid().value();
+		return fluidColor(contents.fluid().value(), level, entity);
+	}
+
+	/**
+	 * The opaque colour an item icon paints a fluid with: its fluid model's tint source when it has one
+	 * (water follows the biome in the world), otherwise the mod's table in {@link FluidTankVisuals}.
+	 * Shared with the vacuum capsule ({@link CapsuleGlassTintSource}), so a tank and a capsule of the
+	 * same fluid cannot drift apart.
+	 */
+	// MOD-498 — FluidModel#tintSource() is deprecated by NeoForge only; in vanilla it is the plain record
+	// accessor. NeoForge's replacement, fluidTintSource(), returns its own FluidTintSource type, which
+	// does not exist in the vanilla classes this shared client code is compiled against for Fabric —
+	// and the calls below (color / colorInWorld) are on vanilla's BlockTintSource.
+	@SuppressWarnings("deprecation")
+	public static int fluidColor(Fluid fluid, @Nullable ClientLevel level, @Nullable LivingEntity entity) {
 		var state = fluid.defaultFluidState().createLegacyBlock();
 		var model = Minecraft.getInstance().getModelManager().getFluidStateModelSet()
 				.get(fluid.defaultFluidState());

@@ -248,6 +248,9 @@ public final class DemoStand {
 		} finally {
 			closeLedger();
 		}
+		// Leaves whose trunks were just cleared decay over the next minutes and rain drops onto the
+		// floor; the sweep above has already run, so arm the ones that follow (MOD-674).
+		DemoStandDropSweeper.arm(level, origin);
 	}
 
 	/**
@@ -271,6 +274,7 @@ public final class DemoStand {
 		// After the grass pass for the same reason buildAll sweeps after its floor pass: the
 		// floor-level water mill spills its wheel when its block is replaced.
 		killLooseEntities(level, origin);
+		DemoStandDropSweeper.arm(level, origin);
 	}
 
 	/**
@@ -1132,33 +1136,39 @@ public final class DemoStand {
 		fillSlot(level, origin, 10, 1, 46, 1, new ItemStack(Items.COAL, 64));
 		// Farm B — fluid line: battery box → pump facing a water cistern → fluid pipes → empty tank
 		// that visibly fills. The pump's IN faces are everything but its intake (PumpBlock), so the
-		// box's east output face meets one directly.
+		// box, standing on its south face, meets one directly.
 		//
 		// The pump drinks from the block IN FRONT of it (its FACING is its only intake face), so it
-		// faces SOUTH into a raised cistern: a walled 2x2 pool of sources. The pump removes the source it
+		// faces EAST into a raised cistern: a walled 2x2 pool of sources. The pump removes the source it
 		// drinks and the two beside the emptied cell refill it — the cistern is inexhaustible, like a
 		// vanilla pond. The stand used to sink one water cell UNDER the pump, which stands over nothing it
 		// can drink (MOD-659). Walled on every side, because flowing fluid washes the mod's pipes away
 		// (MOD-661): the three-in-a-row cistern this replaced had its east source right under the first
 		// pipe of the line and swept it off the stand.
-		place(level, origin, origin.offset(22, 1, 46), ModContent.BATTERY_BOX.get().defaultBlockState()
-				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
-		chargeBuffer(level, origin, 22, 1, 46);
-		place(level, origin, origin.offset(23, 1, 46), ModContent.PUMP.get().defaultBlockState()
+		//
+		// MOD-674: the whole line stands on rows z=45..48, one row clear of the showcase frames (z=49).
+		// The cistern's back wall used to be laid AT z=49, on top of the two lowest frames' cells: the
+		// frames could not hang there and left two holes in the wall, with water lying against it. Nothing
+		// of this farm stands on z=49 now, and the water is two cells from it. The pump is the pool's west
+		// wall beside its north row and the battery box is the west wall beside its south row.
+		place(level, origin, origin.offset(35, 1, 46), ModContent.PUMP.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.EAST));
+		chargeBuffer(level, origin, 35, 1, 46);
+		place(level, origin, origin.offset(35, 1, 47), ModContent.BATTERY_BOX.get().defaultBlockState()
 				.setValue(HorizontalMachineBlock.FACING, Direction.SOUTH));
-		chargeBuffer(level, origin, 23, 1, 46);
-		for (int cz = 47; cz <= 48; cz++) {
-			set(level, origin, 21, 1, cz, FLOOR);
-			set(level, origin, 22, 1, cz, Blocks.WATER);
-			set(level, origin, 23, 1, cz, Blocks.WATER);
-			set(level, origin, 24, 1, cz, FLOOR);
+		chargeBuffer(level, origin, 35, 1, 47);
+		for (int cx = 36; cx <= 37; cx++) {
+			set(level, origin, cx, 1, 45, FLOOR);
+			set(level, origin, cx, 1, 46, Blocks.WATER);
+			set(level, origin, cx, 1, 47, Blocks.WATER);
+			set(level, origin, cx, 1, 48, FLOOR);
 		}
-		set(level, origin, 22, 1, 49, FLOOR);
-		set(level, origin, 23, 1, 49, FLOOR);
-		for (int x = 24; x <= 26; x++) {
+		set(level, origin, 38, 1, 46, FLOOR);
+		set(level, origin, 38, 1, 47, FLOOR);
+		for (int x = 32; x <= 34; x++) {
 			set(level, origin, x, 1, 46, ModContent.FLUID_PIPE.get());
 		}
-		set(level, origin, 27, 1, 46, ModContent.FLUID_TANK.get());
+		set(level, origin, 31, 1, 46, ModContent.FLUID_TANK.get());
 		// Farm C — oil → rubber → cable: an open oil cell beside an oil-fed polymerizer, the
 		// heater+vulcanizer pair, and a chest with the chain's inputs and both cable grades to
 		// compare in hand.

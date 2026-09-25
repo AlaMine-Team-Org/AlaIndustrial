@@ -4,14 +4,50 @@
 		"property": "minecraft:component",
 		"component": "alaindustrial:capsule_fluid",
 		"cases": [
-			{ "when": "minecraft:water", "model": { "type": "minecraft:model", "model": "alaindustrial:item/vacuum_capsule_water" } },
-			{ "when": "minecraft:lava", "model": { "type": "minecraft:model", "model": "alaindustrial:item/vacuum_capsule_lava" } },
-			{ "when": "alaindustrial:oil", "model": { "type": "minecraft:model", "model": "alaindustrial:item/vacuum_capsule_oil" } },
-			{ "when": "alaindustrial:diesel", "model": { "type": "minecraft:model", "model": "alaindustrial:item/vacuum_capsule_diesel" } },
-			{ "when": "alaindustrial:fuel_oil", "model": { "type": "minecraft:model", "model": "alaindustrial:item/vacuum_capsule_fuel_oil" } },
-			{ "when": "alaindustrial:biofuel", "model": { "type": "minecraft:model", "model": "alaindustrial:item/vacuum_capsule_biofuel" } },
-			{ "when": "alaindustrial:nutrient_solution", "model": { "type": "minecraft:model", "model": "alaindustrial:item/vacuum_capsule_nutrient_solution" } }
+			{
+				"when": "minecraft:water",
+				"model": {
+					"type": "minecraft:model",
+					"model": "alaindustrial:item/vacuum_capsule_water"
+				}
+			},
+			{
+				"when": "minecraft:lava",
+				"model": {
+					"type": "minecraft:model",
+					"model": "alaindustrial:item/vacuum_capsule_lava"
+				}
+			}
 		],
-		"fallback": { "type": "minecraft:model", "model": "alaindustrial:item/vacuum_capsule_filled" }
+		"fallback": {
+			"type": "minecraft:model",
+			"model": "alaindustrial:item/vacuum_capsule_filled",
+			"tints": [
+				{
+					"type": "minecraft:constant",
+					"value": -1
+				},
+				{
+					"type": "alaindustrial:capsule_glass",
+					"glass": 14085368,
+					"opacity": 20
+				},
+				{
+					"type": "alaindustrial:capsule_glass",
+					"glass": 14085368,
+					"opacity": 38
+				},
+				{
+					"type": "alaindustrial:capsule_glass",
+					"glass": 8296106,
+					"opacity": 180
+				},
+				{
+					"type": "alaindustrial:capsule_glass",
+					"glass": 14085368,
+					"opacity": 180
+				}
+			]
+		}
 	}
 }

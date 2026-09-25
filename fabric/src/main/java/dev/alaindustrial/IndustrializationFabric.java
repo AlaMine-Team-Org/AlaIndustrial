@@ -402,6 +402,8 @@ public class IndustrializationFabric implements ModInitializer {
 			// offers one sound a second, so a denser rattle is unreachable from it. The sweep sets the
 			// step; this spends it.
 			dev.alaindustrial.core.radiation.GeigerTicker.tick(server);
+			// MOD-674: drops that rain onto the demo stand after it was built (decaying leaves).
+			dev.alaindustrial.command.demo.DemoStandDropSweeper.tick(server);
 		});
 		// Teleport warmup cancellation (MOD-092) — the mod's first player-event listeners. Three
 		// separate hooks are needed, not two: AFTER_DAMAGE does NOT fire for a killing blow, and

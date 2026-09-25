@@ -161,8 +161,8 @@ jobs:
               ;;
           esac
 
-      # Hard gate: never publish a tree that carries Cyrillic, forbidden vendor
-      # traces, secrets or denylisted paths — even if the guard workflow is skipped.
+      # Hard gate: never publish a tree that carries Cyrillic, secrets or denylisted
+      # paths — even if the guard workflow is skipped.
       - name: Cleanliness gate
         run: bash .github/scripts/scan-clean.sh .
 
@@ -219,6 +219,13 @@ jobs:
             --fabric "$FABRIC_JAR" \
             --neoforge "$NEOFORGE_JAR" \
             --output release-manifest.json
+          # SHA-512 next to the SHA-256: Modrinth reports sha1 and sha512 for every file, so this
+          # is the hash a post-release check can compare a Modrinth file against.
+          jq --arg fabric "$(sha512sum "$FABRIC_JAR" | cut -d' ' -f1)" \
+             --arg neoforge "$(sha512sum "$NEOFORGE_JAR" | cut -d' ' -f1)" \
+             '.artifacts |= map(.sha512 = (if .loader == "fabric" then $fabric else $neoforge end))' \
+             release-manifest.json > release-manifest.tmp
+          mv release-manifest.tmp release-manifest.json
           echo "version=$VERSION"          >> "$GITHUB_OUTPUT"
           echo "fabric_jar=$FABRIC_JAR"     >> "$GITHUB_OUTPUT"
           echo "neoforge_jar=$NEOFORGE_JAR" >> "$GITHUB_OUTPUT"
@@ -263,6 +270,7 @@ jobs:
           echo "Modrinth NeoForge target $VERSION+neoforge exists: $neoforge_exists"
 
       - name: Publish Fabric to Modrinth
+        id: mr_fabric
         if: steps.mode.outputs.publish_fabric == 'true' && steps.modrinth.outputs.fabric_exists != 'true'
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
@@ -291,8 +299,8 @@ jobs:
               primary_file: "fabric_file",
               environment: "client_and_server"
             }')
-          # Retry up to 5x, surfacing the Modrinth error body on failure (same pattern as the
-          # CurseForge upload steps — curl -sSf hides the response body on HTTP errors).
+          # Retry up to 5x, surfacing the Modrinth error body on failure. curl runs without -f
+          # (which would hide the response body on an HTTP error); the status is checked below.
           for attempt in 1 2 3 4 5; do
             code=$(curl -sS --connect-timeout 20 --max-time 180 -o modrinth_resp.json -w '%{http_code}' -X POST \
               "https://api.modrinth.com/v2/version" \
@@ -303,6 +311,7 @@ jobs:
             if [ "$code" -ge 200 ] && [ "$code" -lt 300 ]; then
               echo "Modrinth Fabric upload OK (HTTP $code)"
               cat modrinth_resp.json
+              echo "id=$(jq -r '.id // empty' modrinth_resp.json)" >> "$GITHUB_OUTPUT"
               exit 0
             fi
             echo "::warning::Modrinth Fabric upload attempt $attempt failed with HTTP $code; body:"
@@ -313,6 +322,7 @@ jobs:
           exit 1
 
       - name: Publish NeoForge to Modrinth
+        id: mr_neoforge
         if: steps.mode.outputs.publish_neoforge == 'true' && steps.modrinth.outputs.neoforge_exists != 'true'
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
@@ -353,6 +363,7 @@ jobs:
             if [ "$code" -ge 200 ] && [ "$code" -lt 300 ]; then
               echo "Modrinth NeoForge upload OK (HTTP $code)"
               cat modrinth_resp.json
+              echo "id=$(jq -r '.id // empty' modrinth_resp.json)" >> "$GITHUB_OUTPUT"
               exit 0
             fi
             echo "::warning::Modrinth NeoForge upload attempt $attempt failed with HTTP $code; body:"
@@ -406,6 +417,7 @@ jobs:
       # failure (one loader up, the other down) is unambiguous in the job log and
       # you re-run only what failed. Same changelog for both.
       - name: Publish Fabric to CurseForge
+        id: cf_fabric
         if: steps.mode.outputs.publish_fabric == 'true' && steps.curseforge.outputs.fabric_exists != 'true'
         env:
           CF_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
@@ -418,11 +430,12 @@ jobs:
             --arg name "$DISPLAY_NAME" \
             --argjson mc "$MC_ID" \
             '{changelog: $changelog, changelogType: "markdown", displayName: $name, gameVersions: [$mc, 7499, 9638, 9639], releaseType: "release"}')
-          # 16498 = Minecraft 26.2, 7499 = Fabric, 9638 = Client, 9639 = Server.
+          # $mc = this line's Minecraft version (resolved in "Resolve CurseForge loader IDs"),
+          # 7499 = Fabric, 9638 = Client, 9639 = Server.
           # Client/Server env tags are required since CurseForge started enforcing the
           # "environment group" (errorCode 1021) around 2026-07; prior releases uploaded
-          # without them. Retry up to 5x, but surface the CurseForge error body on the
-          # final failure (curl -sSf hides the response body on HTTP errors).
+          # without them. Retry up to 5x; curl runs without -f (which would hide the response
+          # body on an HTTP error), so the status is checked explicitly and the body is shown.
           for attempt in 1 2 3 4 5; do
             code=$(curl -sS --connect-timeout 20 --max-time 180 -o cf_resp.json -w '%{http_code}' -X POST \
               "https://minecraft.curseforge.com/api/projects/1597723/upload-file" \
@@ -432,6 +445,7 @@ jobs:
             if [ "$code" -ge 200 ] && [ "$code" -lt 300 ]; then
               echo "CurseForge Fabric upload OK (HTTP $code)"
               cat cf_resp.json
+              echo "file_id=$(jq -r '.id // empty' cf_resp.json)" >> "$GITHUB_OUTPUT"
               exit 0
             fi
             echo "::warning::CurseForge Fabric upload attempt $attempt failed with HTTP $code; body:"
@@ -442,6 +456,7 @@ jobs:
           exit 1
 
       - name: Publish NeoForge to CurseForge
+        id: cf_neoforge
         if: steps.mode.outputs.publish_neoforge == 'true' && steps.curseforge.outputs.neoforge_exists != 'true'
         env:
           CF_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
@@ -458,8 +473,9 @@ jobs:
             --arg release_type "$RELEASE_TYPE" \
             --argjson nf "$NEOFORGE_ID" \
             '{changelog: $changelog, changelogType: "markdown", displayName: $name, gameVersions: [$mc, $nf, 9638, 9639], releaseType: $release_type}')
-          # 16498 = Minecraft 26.2, $nf = NeoForge (resolved), 9638 = Client, 9639 = Server
-          # (required by CurseForge's "environment group" enforcement, see Fabric step).
+          # $mc = this line's Minecraft version and $nf = NeoForge (both resolved above),
+          # 9638 = Client, 9639 = Server (required by CurseForge's "environment group"
+          # enforcement, see the Fabric step).
           for attempt in 1 2 3 4 5; do
             code=$(curl -sS --connect-timeout 20 --max-time 180 -o cf_resp.json -w '%{http_code}' -X POST \
               "https://minecraft.curseforge.com/api/projects/1597723/upload-file" \
@@ -469,6 +485,7 @@ jobs:
             if [ "$code" -ge 200 ] && [ "$code" -lt 300 ]; then
               echo "CurseForge NeoForge upload OK (HTTP $code)"
               cat cf_resp.json
+              echo "file_id=$(jq -r '.id // empty' cf_resp.json)" >> "$GITHUB_OUTPUT"
               exit 0
             fi
             echo "::warning::CurseForge NeoForge upload attempt $attempt failed with HTTP $code; body:"
@@ -477,6 +494,58 @@ jobs:
           done
           echo "::error::CurseForge NeoForge upload failed after 5 attempts (last HTTP $code). Response body above."
           exit 1
+
+      # A machine-readable record of what this run published, attached to the GitHub Release so
+      # a post-release check can ask each marketplace about exactly these files instead of
+      # scanning listings. Only public identifiers and hashes; nothing from a response body.
+      # A target skipped because it already existed is still named: Modrinth by looking its
+      # version up by version_number, CurseForge as "preexisting" (its upload token cannot list
+      # files). Never fails the release over bookkeeping: a missing id is written as null and
+      # the check falls back to the listing for that loader.
+      - name: Record publication ids
+        env:
+          TAG: ${{ steps.rel.outputs.tag }}
+          VERSION: ${{ steps.game.outputs.identity }}
+          MR_FABRIC_ID: ${{ steps.mr_fabric.outputs.id }}
+          MR_NEOFORGE_ID: ${{ steps.mr_neoforge.outputs.id }}
+          CF_FABRIC_ID: ${{ steps.cf_fabric.outputs.file_id }}
+          CF_NEOFORGE_ID: ${{ steps.cf_neoforge.outputs.file_id }}
+          FABRIC_JAR: ${{ steps.meta.outputs.fabric_jar }}
+          NEOFORGE_JAR: ${{ steps.meta.outputs.neoforge_jar }}
+        run: |
+          modrinth_id() {  # $1 = id from the upload step (empty when skipped), $2 = version_number
+            if [[ "$1" =~ ^[A-Za-z0-9]{8}$ ]]; then printf '%s' "$1"; return; fi
+            curl -sSf --retry 5 --retry-delay 10 --retry-all-errors --connect-timeout 20 --max-time 60 \
+              "https://api.modrinth.com/v2/project/ACLWFBlU/version" \
+              -H "User-Agent: AlaMine-Team-Org/AlaIndustrial-release/1.0" \
+              | jq -r --arg v "$2" '[.[] | select(.version_number == $v) | .id][0] // empty' \
+              || true
+          }
+          cf_entry() {  # $1 = file id from the upload step; empty = the step was skipped
+            if [[ "$1" =~ ^[0-9]+$ ]]; then jq -n --argjson id "$1" '{fileId: $id}'
+            else jq -n '{fileId: null, preexisting: true}'; fi
+          }
+          MF="$(modrinth_id "$MR_FABRIC_ID" "$VERSION+fabric")"
+          MN="$(modrinth_id "$MR_NEOFORGE_ID" "$VERSION+neoforge")"
+          [[ -n "$MF" && -n "$MN" ]] || echo "::warning::a Modrinth version id could not be resolved; recorded as null"
+          jq -n \
+            --arg tag "$TAG" \
+            --arg mf "$MF" --arg mfv "$VERSION+fabric" \
+            --arg mn "$MN" --arg mnv "$VERSION+neoforge" \
+            --argjson cff "$(cf_entry "$CF_FABRIC_ID")" \
+            --argjson cfn "$(cf_entry "$CF_NEOFORGE_ID")" \
+            --arg sf "$(sha256sum "$FABRIC_JAR" | cut -d' ' -f1)" \
+            --arg sn "$(sha256sum "$NEOFORGE_JAR" | cut -d' ' -f1)" \
+            '{
+              tag: $tag,
+              modrinth: {
+                fabric:   {id: (if $mf == "" then null else $mf end), version_number: $mfv},
+                neoforge: {id: (if $mn == "" then null else $mn end), version_number: $mnv}
+              },
+              curseforge: {fabric: $cff, neoforge: $cfn},
+              sha256: {fabric: $sf, neoforge: $sn}
+            }' > publish-ids.json
+          cat publish-ids.json
 
       # One GitHub Release carrying BOTH loader jars. mc-publish renders Markdown
       # fine on GitHub.
@@ -487,6 +556,7 @@ jobs:
             ${{ steps.meta.outputs.fabric_jar }}
             ${{ steps.meta.outputs.neoforge_jar }}
             release-manifest.json
+            publish-ids.json
           name: Ala Industrial ${{ steps.rel.outputs.tag }}
           version: ${{ steps.rel.outputs.tag }}
           version-type: ${{ steps.game.outputs.neoforge_type }}

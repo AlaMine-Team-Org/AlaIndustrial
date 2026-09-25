@@ -2582,6 +2582,10 @@ public final class NeoForgeGameTests {
 				DemoStandScenarios::demoStandShowcaseCoversItems);
 		registerTest(event, "demo_stand_writes_each_cell_once", 100, true, DEMO_STAND_STRUCTURE, true,
 				DemoStandScenarios::demoStandWritesEachCellOnce);
+		registerTest(event, "demo_stand_frames_hang_in_free_cells", 100, true, DEMO_STAND_STRUCTURE, true,
+				DemoStandScenarios::demoStandFramesHangInFreeCells);
+		registerTest(event, "demo_stand_sweeps_late_drops", 200, true, DEMO_STAND_STRUCTURE, true,
+				DemoStandScenarios::demoStandSweepsLateDrops);
 
 		// ── MOD-445 — scenarios the lane-parity gate found registered on Fabric only ─────────────
 		// docs/tools/gametest_lane_parity_check.py compares the common scenario set with both lanes;

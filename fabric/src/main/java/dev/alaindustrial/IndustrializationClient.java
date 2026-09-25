@@ -134,13 +134,13 @@ public class IndustrializationClient implements ClientModInitializer {
 	}
 
 	/**
-	 * Initialises the client config screen state, the fluid-tank item tint source and the blueprint's
+	 * Initialises the client config screen state, the item tint sources and the blueprint's
 	 * product item-model type (MOD-275). Both render hooks add themselves to a vanilla late-bound
 	 * registry, so they only have to be in place before the first resource reload parses the models.
 	 */
 	private void initClientConfig() {
 		AlaClientConfig.init(FabricLoader.getInstance().getConfigDir());
-		dev.alaindustrial.client.render.FluidTankItemTintSource.register();
+		dev.alaindustrial.client.render.ModItemTintSources.register();
 		dev.alaindustrial.client.render.BlueprintResultItemModel.register();
 	}
 

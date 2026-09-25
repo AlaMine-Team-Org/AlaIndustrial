@@ -19,6 +19,7 @@ import dev.alaindustrial.core.structure.RoomScan;
 import dev.alaindustrial.core.structure.RoomValidator;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.command.demo.DemoStand;
+import dev.alaindustrial.command.demo.DemoStandDropSweeper;
 import dev.alaindustrial.storage.StorageCluster;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,13 +28,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.decoration.GlowItemFrame;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
@@ -283,12 +287,13 @@ public final class DemoStandScenarios {
 			// is not its intake face, and moved nothing for as long as the stand had existed — no scenario
 			// looked, because a pump that does nothing looks exactly like a pump that has nothing to do.
 			//
-			// The farm's pump faces a raised water cistern: the water it drinks comes back (three sources in
-			// a row), so what proves it worked is fluid in the pump or in the tank at the end of its pipes.
+			// The farm's pump faces a raised water cistern: the water it drinks comes back (a walled 2x2 pool
+			// of sources), so what proves it worked is fluid in the pump or in the tank at the end of its pipes.
+			// The line stands on rows z=45..48, clear of the showcase frames at z=49 (MOD-674).
 			PumpBlockEntity farmPump = helper.getLevel()
-					.getBlockEntity(origin.offset(23, 1, 46)) instanceof PumpBlockEntity p ? p : null;
+					.getBlockEntity(origin.offset(35, 1, 46)) instanceof PumpBlockEntity p ? p : null;
 			FluidTankBlockEntity farmTank = helper.getLevel()
-					.getBlockEntity(origin.offset(27, 1, 46)) instanceof FluidTankBlockEntity t ? t : null;
+					.getBlockEntity(origin.offset(31, 1, 46)) instanceof FluidTankBlockEntity t ? t : null;
 			if (farmPump == null || farmTank == null) {
 				helper.fail("the fluid farm's pump or its tank is missing from the stand");
 			} else if (farmPump.fluidTank.amount <= 0 && farmTank.fluidTank.amount <= 0) {
@@ -652,6 +657,84 @@ public final class DemoStandScenarios {
 					+ " — give each block its own cell in DemoStand");
 		}
 		helper.succeed();
+	}
+
+	/**
+	 * MOD-674: every showcase frame hangs in a FREE cell with no fluid in it or beside it.
+	 *
+	 * <p>The frames are entities placed on cells the wall's front row is supposed to leave empty, and a
+	 * frame added on a cell some other zone has filled is not refused - it simply cannot survive and
+	 * pops later, leaving a hole in the wall. The fluid farm's cistern did exactly that: its back wall
+	 * was laid on the two lowest frames' cells, and every other check stayed green because the frames
+	 * are counted the tick they are created. Asked of the cells directly, the defect is visible at once.
+	 */
+	public static void demoStandFramesHangInFreeCells(GameTestHelper helper) {
+		BlockPos origin = helper.absolutePos(ORIGIN);
+		assertArenaFitsStand(helper);
+		ServerLevel level = helper.getLevel();
+		DemoStand.buildAll(level, origin);
+
+		List<String> problems = new ArrayList<>();
+		for (GlowItemFrame frame : level.getEntitiesOfClass(GlowItemFrame.class, envelope(origin))) {
+			BlockPos cell = BlockPos.containing(frame.getBoundingBox().getCenter());
+			BlockPos local = cell.subtract(origin);
+			if (!level.getBlockState(cell).isAir()) {
+				problems.add("frame at local " + local.toShortString() + " is inside "
+						+ BuiltInRegistries.BLOCK.getKey(level.getBlockState(cell).getBlock()));
+				continue;
+			}
+			if (!level.getFluidState(cell).isEmpty()) {
+				problems.add("frame at local " + local.toShortString() + " stands in a fluid");
+				continue;
+			}
+			for (Direction side : Direction.Plane.HORIZONTAL) {
+				if (!level.getFluidState(cell.relative(side)).isEmpty()) {
+					problems.add("frame at local " + local.toShortString() + " has a fluid on its " + side
+							+ " side, which spreads into and washes the cell");
+					break;
+				}
+			}
+		}
+		if (!problems.isEmpty()) {
+			helper.fail(problems.size() + " showcase frame(s) cannot hang: " + String.join("; ", problems));
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * MOD-674: drops that land on the stand AFTER it was built are removed by themselves.
+	 *
+	 * <p>The stand is built into an ordinary world; the leaves around the trunks it clears decay minutes
+	 * later and shower saplings and sticks onto the floor. The build's own sweep has long finished by
+	 * then. Two late drops stand in for that - one on the floor, one high in the cleared column, still
+	 * falling - and after the sweep window's first stretch neither may be left.
+	 */
+	public static void demoStandSweepsLateDrops(GameTestHelper helper) {
+		BlockPos origin = helper.absolutePos(ORIGIN);
+		assertArenaFitsStand(helper);
+		ServerLevel level = helper.getLevel();
+		DemoStand.buildAll(level, origin);
+		if (DemoStandDropSweeper.pending() == 0) {
+			helper.fail("building the stand armed no drop sweep");
+		}
+		BlockPos low = origin.offset(1, 2, 1);
+		BlockPos high = origin.offset(DemoStand.WIDTH - 2, DemoStand.CLEAR_HEIGHT - 5, DemoStand.DEPTH - 2);
+		level.addFreshEntity(new ItemEntity(level, low.getX() + 0.5, low.getY(), low.getZ() + 0.5,
+				new ItemStack(Items.OAK_SAPLING)));
+		level.addFreshEntity(new ItemEntity(level, high.getX() + 0.5, high.getY(), high.getZ() + 0.5,
+				new ItemStack(Items.STICK)));
+		// The second sweep is at 100 ticks; the high drop is on the floor well before that.
+		helper.runAfterDelay(110, () -> {
+			AABB column = AABB.encapsulatingFullBlocks(origin.offset(-1, 0, -1),
+					origin.offset(DemoStand.WIDTH + 1, DemoStand.CLEAR_HEIGHT + 1, DemoStand.DEPTH + 1));
+			List<ItemEntity> left = level.getEntitiesOfClass(ItemEntity.class, column);
+			if (!left.isEmpty()) {
+				helper.fail(left.size() + " late item drop(s) still on the stand 110 ticks after the build: "
+						+ left.stream().map(d -> BuiltInRegistries.ITEM.getKey(d.getItem().getItem()).toString())
+								.sorted().toList());
+			}
+			helper.succeed();
+		});
 	}
 
 	/** The stand envelope as an entity query box — 1 block of slack on every horizontal side. */

@@ -1,4 +1,10 @@
 {
 	"parent": "minecraft:item/generated",
-	"textures": { "layer0": "alaindustrial:item/vacuum_capsule_filled" }
+	"textures": {
+		"layer0": "alaindustrial:item/vacuum_capsule_filled_frame",
+		"layer1": "alaindustrial:item/vacuum_capsule_filled_glass_1",
+		"layer2": "alaindustrial:item/vacuum_capsule_filled_glass_2",
+		"layer3": "alaindustrial:item/vacuum_capsule_filled_glass_3",
+		"layer4": "alaindustrial:item/vacuum_capsule_filled_glass_4"
+	}
 }
