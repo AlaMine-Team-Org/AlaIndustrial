@@ -22,6 +22,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import java.util.Optional;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -47,7 +48,7 @@ import org.jspecify.annotations.Nullable;
  * a station that banks EU with no way to spend it is not something to ship. The tab entry, the
  * recipe and its unlock advancement all arrived together.
  */
-public class TeleporterBlock extends HorizontalMachineBlock {
+public class TeleporterBlock extends HorizontalMachineBlock implements CableArmReach {
 	public static final MapCodec<TeleporterBlock> CODEC = simpleCodec(TeleporterBlock::new);
 
 	/**
@@ -240,6 +241,15 @@ public class TeleporterBlock extends HorizontalMachineBlock {
 	}
 
 	// --- the capsule (MOD-112) -------------------------------------------------------------------
+
+	/**
+	 * A formed station is met low and reached into (MOD-672, see {@link TeleporterCableArm}); a loose
+	 * block is a full cube met at the edge.
+	 */
+	@Override
+	public List<CableArmReach.Band> cableArmReach(BlockState state) {
+		return state.getValue(FORMED) ? TeleporterCableArm.BANDS : List.of();
+	}
 
 	@Override
 	protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {

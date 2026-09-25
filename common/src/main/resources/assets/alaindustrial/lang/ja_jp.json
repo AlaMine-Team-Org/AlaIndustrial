@@ -1211,6 +1211,7 @@
   "subtitles.alaindustrial.block.steam_nozzle.vent": "蒸気ノズルがシューッと鳴る",
   "subtitles.alaindustrial.canning_machine_hum": "缶詰機がカタカタ鳴る",
   "subtitles.alaindustrial.charge_pad_hum": "充電ステーションが低く唸る",
+  "subtitles.alaindustrial.charge_pad_done": "充電ステーションが充電を完了",
   "subtitles.alaindustrial.component_repair_bench_hum": "部品修理台がカンカン鳴る",
   "subtitles.alaindustrial.compressor_hum": "圧縮機がドスンと鳴る",
   "subtitles.alaindustrial.electric_furnace": "電気かまどが唸る",

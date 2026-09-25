@@ -1135,22 +1135,26 @@ public final class DemoStand {
 		// box's east output face meets one directly.
 		//
 		// The pump drinks from the block IN FRONT of it (its FACING is its only intake face), so it
-		// faces SOUTH into a raised cistern: three water sources in a row, walled on the floor. Three,
-		// because the pump removes the source it drinks and two sources beside the emptied cell refill
-		// it — the cistern is inexhaustible, like a vanilla pond. The stand used to sink one water cell
-		// UNDER the pump, which stands over nothing it can drink (MOD-659).
+		// faces SOUTH into a raised cistern: a walled 2x2 pool of sources. The pump removes the source it
+		// drinks and the two beside the emptied cell refill it — the cistern is inexhaustible, like a
+		// vanilla pond. The stand used to sink one water cell UNDER the pump, which stands over nothing it
+		// can drink (MOD-659). Walled on every side, because flowing fluid washes the mod's pipes away
+		// (MOD-661): the three-in-a-row cistern this replaced had its east source right under the first
+		// pipe of the line and swept it off the stand.
 		place(level, origin, origin.offset(22, 1, 46), ModContent.BATTERY_BOX.get().defaultBlockState()
 				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 		chargeBuffer(level, origin, 22, 1, 46);
 		place(level, origin, origin.offset(23, 1, 46), ModContent.PUMP.get().defaultBlockState()
 				.setValue(HorizontalMachineBlock.FACING, Direction.SOUTH));
 		chargeBuffer(level, origin, 23, 1, 46);
-		for (int cx = 22; cx <= 24; cx++) {
-			set(level, origin, cx, 1, 47, Blocks.WATER);
-			set(level, origin, cx, 1, 48, FLOOR);
+		for (int cz = 47; cz <= 48; cz++) {
+			set(level, origin, 21, 1, cz, FLOOR);
+			set(level, origin, 22, 1, cz, Blocks.WATER);
+			set(level, origin, 23, 1, cz, Blocks.WATER);
+			set(level, origin, 24, 1, cz, FLOOR);
 		}
-		set(level, origin, 21, 1, 47, FLOOR);
-		set(level, origin, 25, 1, 47, FLOOR);
+		set(level, origin, 22, 1, 49, FLOOR);
+		set(level, origin, 23, 1, 49, FLOOR);
 		for (int x = 24; x <= 26; x++) {
 			set(level, origin, x, 1, 46, ModContent.FLUID_PIPE.get());
 		}
@@ -1395,7 +1399,7 @@ public final class DemoStand {
 		// The room stands at x 4..10, z 30..36 (its north-west floor corner): west of the cable rows,
 		// which own x>=32 from z=28 to z=40, and clear of the reactor row of loose parts at z=42. Outside
 		// the 7x7 footprint stand only its exhaust (pipe and nozzle at x=3, z=33), its water feed (x 11..14,
-		// z 33..36 on this line, in the walkway to the greenhouse) and its control post (z=29).
+		// z 33..36, in the walkway to the greenhouse) and its control post (z=29).
 		final int bx = 4;
 		final int by = 1;
 		final int bz = 30;
@@ -1482,10 +1486,8 @@ public final class DemoStand {
 		// drinks from the block IN FRONT of it (FACING is its only intake), so it faces SOUTH into a 2x2
 		// pool of sources: it removes the one it drinks and the two beside it refill it. It pushes into
 		// the pipe at its west face by itself.
-		// 26.2 only: the pool is 2x2 and walled, not the 3-in-a-row of main (26.3). On 26.2 flowing
-		// water washes away any block that does not block motion (FlowingFluid.canHoldAnyFluid tests
-		// !blocksMotion(); 26.3 asks the #washed_away_by_fluids tag instead), and a fluid pipe does
-		// not — a source beside the pipe at the pump's west face swept it off the stand within a tick.
+		// The pool is walled: flowing fluid washes the mod's pipes away (MOD-661, both lines), and a
+		// source beside the pipe at the pump's west face would sweep it off the stand within a tick.
 		place(level, origin, origin.offset(east + 1, by, row), ModContent.PUMP.get().defaultBlockState()
 				.setValue(HorizontalMachineBlock.FACING, Direction.SOUTH));
 		chargeBuffer(level, origin, east + 1, by, row);

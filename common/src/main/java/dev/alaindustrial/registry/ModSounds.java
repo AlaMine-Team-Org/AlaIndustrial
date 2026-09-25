@@ -81,6 +81,7 @@ public final class ModSounds {
 	public static Supplier<SoundEvent> SAWMILL_HUM = unbound("SAWMILL_HUM");
 	public static Supplier<SoundEvent> POLYMERIZER_HUM = unbound("POLYMERIZER_HUM");
 	public static Supplier<SoundEvent> CHARGE_PAD_HUM = unbound("CHARGE_PAD_HUM");
+	public static Supplier<SoundEvent> CHARGE_PAD_DONE = unbound("CHARGE_PAD_DONE");
 	public static Supplier<SoundEvent> ENERGY_CONDENSER_HUM = unbound("ENERGY_CONDENSER_HUM");
 	public static Supplier<SoundEvent> COMPONENT_REPAIR_BENCH_HUM = unbound("COMPONENT_REPAIR_BENCH_HUM");
 	public static Supplier<SoundEvent> INCUBATOR_HUM = unbound("INCUBATOR_HUM");
@@ -149,6 +150,8 @@ public final class ModSounds {
 			variableRange("polymerizer_hum", s -> POLYMERIZER_HUM = s),
 			// The charging station runs on ChargePadState.CHARGING rather than `lit` (pattern C).
 			variableRange("charge_pad_hum", s -> CHARGE_PAD_HUM = s),
+			// MOD-668 — the station's one-shot "all charged" chime, two rising tones.
+			variableRange("charge_pad_done", s -> CHARGE_PAD_DONE = s),
 			variableRange("energy_condenser_hum", s -> ENERGY_CONDENSER_HUM = s),
 			// Soft rhythmic hammer taps with a metallic ring, playing only while a repair is running.
 			variableRange("component_repair_bench_hum", s -> COMPONENT_REPAIR_BENCH_HUM = s),

@@ -30,6 +30,7 @@
       "dev.alaindustrial.gametest.ConcentratorStructureGameTest",
       "dev.alaindustrial.gametest.CesuGameTest",
       "dev.alaindustrial.gametest.ChargePadGameTest",
+      "dev.alaindustrial.gametest.FluidWashGameTest",
       "dev.alaindustrial.gametest.ComponentRepairBenchGameTest",
       "dev.alaindustrial.gametest.ComponentTierGameTest",
       "dev.alaindustrial.gametest.CrystalFarmGameTest",

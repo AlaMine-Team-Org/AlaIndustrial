@@ -122,6 +122,15 @@ public class CreativeEnergySourceScreen extends MachineScreen<CreativeEnergySour
 		return TEXTURE;
 	}
 
+	/**
+	 * No statistics tab (MOD-671). The source has no upgrade panel, so the chip that feeds the statistics
+	 * can never be fitted — and a creative source that emits whatever it is set to has nothing to measure.
+	 */
+	@Override
+	protected boolean hasStatsTab() {
+		return false;
+	}
+
 	@Override
 	public void init() {
 		super.init();

@@ -2,18 +2,182 @@
   "multipart": [
     {
       "when": {
-        "filled": "false"
+        "AND": [
+          {
+            "north_mode": "disabled"
+          },
+          {
+            "filled": "false"
+          }
+        ]
       },
       "apply": {
-        "model": "alaindustrial:block/fluid_pipe_core"
+        "model": "alaindustrial:block/fluid_pipe_core_north"
       }
     },
     {
       "when": {
-        "filled": "true"
+        "AND": [
+          {
+            "south_mode": "disabled"
+          },
+          {
+            "filled": "false"
+          }
+        ]
       },
       "apply": {
-        "model": "alaindustrial:block/fluid_pipe_core_filled"
+        "model": "alaindustrial:block/fluid_pipe_core_south"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "east_mode": "disabled"
+          },
+          {
+            "filled": "false"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_core_east"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "west_mode": "disabled"
+          },
+          {
+            "filled": "false"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_core_west"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "up_mode": "disabled"
+          },
+          {
+            "filled": "false"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_core_up"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "down_mode": "disabled"
+          },
+          {
+            "filled": "false"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_core_down"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "north_mode": "disabled"
+          },
+          {
+            "filled": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_core_filled_north"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "south_mode": "disabled"
+          },
+          {
+            "filled": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_core_filled_south"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "east_mode": "disabled"
+          },
+          {
+            "filled": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_core_filled_east"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "west_mode": "disabled"
+          },
+          {
+            "filled": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_core_filled_west"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "up_mode": "disabled"
+          },
+          {
+            "filled": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_core_filled_up"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "down_mode": "disabled"
+          },
+          {
+            "filled": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_core_filled_down"
       }
     },
     {

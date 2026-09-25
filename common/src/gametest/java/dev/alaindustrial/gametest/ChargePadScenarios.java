@@ -562,6 +562,57 @@ public final class ChargePadScenarios {
 		}
 		helper.succeed();
 	}
+	// ── MOD-668: the "all charged" chime ─────────────────────────────────────────────────────────
+
+	/**
+	 * A drill a few payouts short of full is charged to the brim and the player stays on: the station
+	 * plays its chime exactly once. A gametest cannot hear, so it counts through
+	 * {@link ChargePadBlockEntity#chimesPlayed}; the rules themselves are pinned by ChargePadChimeTest.
+	 */
+	public static void mod668FinishedChargeChimesOnce(GameTestHelper helper) {
+		ChargePadBlockEntity pad = placePad(helper, Config.chargePadBuffer);
+		ServerPlayer player = survivalPlayer(helper);
+		ItemStack tool = drill(0);
+		long room = 3 * ItemEnergy.inputRate(tool);
+		ItemEnergy.set(tool, Math.max(0, ItemEnergy.capacity(tool) - room));
+		player.getInventory().setItem(0, tool);
+
+		// Contact calls within one tick batch exactly like consecutive ticks (MOD-406): the leading edge
+		// pays at once, then every fifth call. Sixty calls are a dozen payouts — the drill fills within
+		// the first few and the rest are READY, which is where a chime that repeats would show.
+		for (int i = 0; i < 60; i++) {
+			pad.chargePlayer(helper.getLevel(), player);
+		}
+		if (ItemEnergy.get(tool) != ItemEnergy.capacity(tool)) {
+			helper.fail("MOD-668: the drill must end full, holds " + ItemEnergy.get(tool));
+			return;
+		}
+		if (stateAt(helper) != ChargePadState.READY) {
+			helper.fail("MOD-668: indicator must read READY once everything is full, got " + stateAt(helper));
+			return;
+		}
+		if (pad.chimesPlayed() != 1) {
+			helper.fail("MOD-668: a finished charge must chime exactly once, chimed " + pad.chimesPlayed());
+			return;
+		}
+		helper.succeed();
+	}
+
+	/** A visitor who arrives already full hears nothing: there was no charge to finish. */
+	public static void mod668ArrivingFullIsSilent(GameTestHelper helper) {
+		ChargePadBlockEntity pad = placePad(helper, Config.chargePadBuffer);
+		ServerPlayer player = survivalPlayer(helper);
+		player.getInventory().setItem(0, drill(Config.electricDrillBuffer));
+		for (int i = 0; i < 60; i++) {
+			pad.chargePlayer(helper.getLevel(), player);
+		}
+		if (pad.chimesPlayed() != 0) {
+			helper.fail("MOD-668: a full visitor must not hear the chime, chimed " + pad.chimesPlayed());
+			return;
+		}
+		helper.succeed();
+	}
+
 	// ── MOD-406: paying in batches must not change how much is paid ──────────────────────────────
 
 	/**

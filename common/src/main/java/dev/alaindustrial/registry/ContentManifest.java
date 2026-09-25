@@ -1026,30 +1026,35 @@ public final class ContentManifest {
 			// and not a decorative number.
 			Map.entry("fluid_tank_advanced",
 					machine(p -> p.strength(4.0f, 12.0f).sound(SoundType.METAL).noOcclusion())),
-			Map.entry("copper_cable", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion())),
-			Map.entry("tin_cable", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion())),
-			Map.entry("gold_cable", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion())),
-			Map.entry("electrum_cable", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion())),
-			Map.entry("insulated_copper_cable", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.WOOL).noOcclusion())),
-			Map.entry("insulated_tin_cable", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.WOOL).noOcclusion())),
-			Map.entry("insulated_gold_cable", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.WOOL).noOcclusion())),
-			Map.entry("insulated_electrum_cable", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.WOOL).noOcclusion())),
-			Map.entry("item_pipe", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion())),
+			// MOD-661 — the transport lines (cables, pipes, the monitoring wire) are forced non-solid so
+			// flowing fluid washes them away whatever their shape. 26.2 decides that from blocksMotion(),
+			// which reads the collision box: a straight pipe is thin and washed, but one with arms up and
+			// down is a full block tall and counted solid, so the same pipe survived or not depending on
+			// its neighbours. 26.3 decides it from the #washed_away_by_fluids tag, which lists the same 15.
+			Map.entry("copper_cable", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion().forceSolidOff())),
+			Map.entry("tin_cable", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion().forceSolidOff())),
+			Map.entry("gold_cable", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion().forceSolidOff())),
+			Map.entry("electrum_cable", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion().forceSolidOff())),
+			Map.entry("insulated_copper_cable", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.WOOL).noOcclusion().forceSolidOff())),
+			Map.entry("insulated_tin_cable", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.WOOL).noOcclusion().forceSolidOff())),
+			Map.entry("insulated_gold_cable", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.WOOL).noOcclusion().forceSolidOff())),
+			Map.entry("insulated_electrum_cable", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.WOOL).noOcclusion().forceSolidOff())),
+			Map.entry("item_pipe", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion().forceSolidOff())),
 			Map.entry("item_pipe_advanced",
-					machine(p -> p.strength(0.3f, 0.6f).sound(SoundType.COPPER).noOcclusion())),
-			Map.entry("fluid_pipe", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion())),
+					machine(p -> p.strength(0.3f, 0.6f).sound(SoundType.COPPER).noOcclusion().forceSolidOff())),
+			Map.entry("fluid_pipe", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion().forceSolidOff())),
 			// MOD-660 — a pipe in shielding plate is tougher to break, not a reactor wall: well short of
 			// the casing's 5.0 / 30.0, well above the bare pipe it is built from.
 			Map.entry("reinforced_fluid_pipe",
-					machine(p -> p.strength(1.5f, 12.0f).sound(SoundType.METAL).noOcclusion())),
+					machine(p -> p.strength(1.5f, 12.0f).sound(SoundType.METAL).noOcclusion().forceSolidOff())),
 			// MOD-662 — the steam pipes take their fluid twins' numbers: the family changes what a pipe
 			// carries, not how hard it is to break.
-			Map.entry("steam_pipe", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion())),
+			Map.entry("steam_pipe", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion().forceSolidOff())),
 			Map.entry("reinforced_steam_pipe",
-					machine(p -> p.strength(1.5f, 12.0f).sound(SoundType.METAL).noOcclusion())),
+					machine(p -> p.strength(1.5f, 12.0f).sound(SoundType.METAL).noOcclusion().forceSolidOff())),
 			// MOD-480 — the monitoring wall. The wire is as fragile as the other conduits; the core and
 			// the panels are machine casings.
-			Map.entry("smart_wire", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion())),
+			Map.entry("smart_wire", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion().forceSolidOff())),
 			Map.entry("monitor_core", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("monitor_panel", machine(p -> p.strength(2.0f, 4.0f).sound(SoundType.METAL).noOcclusion())),
 			// MOD-513 — the lab plaque plates: polished deepslate in hardness and sound.
