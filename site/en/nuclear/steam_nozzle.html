@@ -369,7 +369,7 @@
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <div class="group-title">Logistics</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="2 pages">2</span></a>
-<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="5 pages">5</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="2 pages">2</span></a>
 <div class="group-title">World &amp; Automation</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="24 pages">24</span></a>
@@ -397,13 +397,13 @@
 </div>
 <h2 id="summary">Summary</h2>
 
-<p>The <strong>Steam Nozzle</strong> is the reactor's exhaust. Water boiled inside the <a href="fuel_rod_assembly.html">reactor columns</a> becomes steam, the steam piles up in the columns, and it has to go somewhere. The nozzle is that somewhere: it takes steam from an ordinary <a href="../fluid-transport/fluid_pipe.html">fluid pipe</a>, releases it into the block it faces, and the steam is gone. Nothing can ever be taken back out of it.</p>
+<p>The <strong>Steam Nozzle</strong> is the reactor's exhaust. Water boiled inside the <a href="fuel_rod_assembly.html">reactor columns</a> becomes steam, the steam piles up in the columns, and it has to go somewhere. The nozzle is that somewhere: it takes steam from a <strong>steam pipe</strong> (since steam travels only in steam pipes — a <a href="../fluid-transport/fluid_pipe.html">fluid pipe</a> does not carry it), releases it into the block it faces, and the steam is gone. Nothing can ever be taken back out of it.</p>
 
 <p>Why the exhaust is a block and not a rule. If steam simply evaporated inside the column the loop would be half a loop: the player would plumb water in and never think about cooling again. Steam that has to be piped back out turns cooling into a real circuit with two ends — and it gives the room its silhouette: pipes going in low, pipes coming out high, and something hissing at the end of them.</p>
 
 <h2 id="what-it-does">What it does</h2>
 
-<table><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody><tr><td>Accepts</td><td>steam only</td></tr><tr><td>Gives up</td><td><strong>nothing</strong> — not a drop can be extracted from its tank</td></tr><tr><td>Tank</td><td>= <strong>500 mB</strong></td></tr><tr><td>Vent rate</td><td>= <strong>100 mB/t</strong></td></tr><tr><td>Where a pipe connects</td><td>any face <strong>except</strong> the one the mouth points at</td></tr><tr><td>Particles</td><td><code>CLOUD</code> in front of the mouth, the number of puffs <strong>scaled</strong> to the real flow (1…8)</td></tr></tbody></table>
+<table><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody><tr><td>Accepts</td><td>steam only</td></tr><tr><td>Gives up</td><td><strong>nothing</strong> — not a drop can be extracted from its tank</td></tr><tr><td>Tank</td><td>= <strong>500 mB</strong></td></tr><tr><td>Vent rate</td><td>= <strong>100 mB/t</strong></td></tr><tr><td>Where a pipe connects</td><td>any face <strong>except</strong> the one the mouth points at</td></tr><tr><td>Particles</td><td>vanilla geyser: mouth up — a <code>GEYSER_PLUME</code> column (1…3 by flow) and two <code>GEYSER_BASE</code> puffs at the mouth; mouth sideways — <code>GEYSER_POOF</code> puffs (2…6 by flow); one burst every = <strong>4 ticks</strong></td></tr><tr><td>Sound</td><td>our own event <code>.steam_nozzle.vent</code> over the vanilla geyser clips — see «Sound»</td></tr></tbody></table>
 
 <p>The tank is deliberately tiny — five ticks of flow. Its job is to smooth a line that briefly outran the nozzle, not to store anything: a large one would let a player park steam in it waiting for stage 5's turbine, and "steam that reaches a nozzle is gone" would stop being the truth the whole loop is balanced against.</p>
 
@@ -427,7 +427,21 @@
 
 <p>Orientation comes from the face the player clicked: the mouth always points <strong>away</strong> from the surface the nozzle was pressed against. It can be hung from a ceiling or set into a floor just as well — the placement decides the direction, there is no separate rotation step.</p>
 
-<p>The steam level is <strong>never synced to clients</strong>: the puff is spawned with on the server, which broadcasts it to everyone in range by itself. There would be nothing to show anyway — steam is invisible on the model.</p>
+<p>The steam level is <strong>never synced to clients</strong>: the plume is spawned with on the server, which broadcasts it to everyone in range by itself. There would be nothing to show anyway — steam is invisible on the model.</p>
+
+<h3 id="the-plume-a-geyser-not-a-cloud">The plume: a geyser, not a cloud</h3>
+
+<p>Before the nozzle let out <code>CLOUD</code> puffs. Now it is the vanilla geyser — the same particles the world's sulfur geysers use, by reference, nothing copied. A nozzle facing <strong>up</strong> throws a <code>GEYSER_PLUME</code> column (= 1, the lowest column) and <code>GEYSER_BASE</code> puffs at the mouth. Geyser particles can only rise, so a nozzle facing <strong>sideways or down</strong> throws no column: it breathes <code>GEYSER_POOF</code> puffs out of its mouth, and they drift up like steam from a side spigot.</p>
+
+<p>Venting still happens <strong>every tick</strong>; only the picture is batched. The nozzle adds up what it released over = 4 ticks and draws one burst whose density is proportional to that sum: a trickle looks like a trickle, a full flow looks full. A geyser particle lives a second or more, and a burst every tick would pile into a white wall.</p>
+
+<h2 id="sound">Sound</h2>
+
+<table><thead><tr><th>Event</th><th>When</th><th>Volume / pitch</th></tr></thead><tbody><tr><td><code>.steam_nozzle.vent</code></td><td>venting starts (the step from idle)</td><td>0.5, pitch 0.9…1.1</td></tr><tr><td>the same</td><td>every 100 ticks while venting goes on</td><td>0.4, pitch 0.9…1.1</td></tr></tbody></table>
+
+<p>The event is <strong>ours</strong>, the files are <strong>vanilla</strong>: the mod's points at <code>minecraft:block/potent_sulfur/geyser_continuous/eruption_active1…7</code> (6–13 s clips) and copies nothing. Our own event exists for the subtitle: vanilla's event for these clips has none, and a sound a deaf player cannot read is half a readout. The subtitle is «Steam Nozzle hisses» in every locale of the mod.</p>
+
+<p>The clips are longer than the period, so a new one starts while the last still plays and the ear hears a steady hiss rather than a string of bursts. A nozzle whose line delivers in pulses flips between venting and idle every few ticks — so the hiss cannot start again sooner than <strong>20 ticks</strong> after the last start. With nothing to vent, it is silent. The timing is not saved: after a world load the nozzle simply starts afresh.</p>
 
 <h2 id="where-to-put-it">Where to put it</h2>
 
@@ -449,7 +463,7 @@ C C = machine casing ×1</code></pre>
 
 <h2 id="related">Related</h2>
 
-<p><a href="../materials/steam.html">Steam</a> — the fluid itself: why it has no world form and cannot be bucketed. <a href="fuel_rod_assembly.html">Reactor Column</a> — where the steam is born and why it has to leave. <a href="reactor_port.html">Reactor Inlet</a> — how steam gets out of a sealed room. <a href="reactor_controller.html">Reactor Controller</a> — where a stalled exhaust becomes visible. <a href="../fluid-transport/fluid_pipe.html">Fluid Pipe</a> — what carries the steam to the nozzle.</p>
+<p><a href="../materials/steam.html">Steam</a> — the fluid itself: why it has no world form and cannot be bucketed. <a href="fuel_rod_assembly.html">Reactor Column</a> — where the steam is born and why it has to leave. <a href="reactor_port.html">Reactor Inlet</a> — how steam gets out of a sealed room. <a href="reactor_controller.html">Reactor Controller</a> — where a stalled exhaust becomes visible. <a href="../fluid-transport/fluid_pipe.html">Fluid Pipe</a> — does <strong>not</strong> carry steam: since a steam pipe takes it to the nozzle.</p>
 
 <h2>Crafting</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="steam nozzle alaindustrial:steam_nozzle" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell empty"></div> <div class="cell" title="Iron Ingot"><img src="../../assets/item/iron_ingot_3d.png" alt="Iron Ingot" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="Iron Ingot"><img src="../../assets/item/iron_ingot_3d.png" alt="Iron Ingot" width="32" height="32"></div> <div class="cell" title="Fluid Pipe"><img src="../../assets/item/fluid_pipe_3d.png" alt="Fluid Pipe" width="32" height="32"></div> <div class="cell" title="Iron Ingot"><img src="../../assets/item/iron_ingot_3d.png" alt="Iron Ingot" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="Machine Casing"><img src="../../assets/item/machine_casing_3d.png" alt="Machine Casing" width="32" height="32"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Steam Nozzle"><img src="../../assets/item/steam_nozzle_3d.png" alt="Steam Nozzle" width="32" height="32"><span class="count">×2</span></div><div class="result-name">Steam Nozzle</div></div></div></div></div>

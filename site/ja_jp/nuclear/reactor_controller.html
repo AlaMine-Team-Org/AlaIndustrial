@@ -369,7 +369,7 @@
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>液体マシン</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <div class="group-title">物流</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>アイテム輸送</span><span class="cat-count" aria-label="2 ページ">2</span></a>
-<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>液体輸送</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>液体輸送</span><span class="cat-count" aria-label="5 ページ">5</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>液体貯蔵</span><span class="cat-count" aria-label="2 ページ">2</span></a>
 <div class="group-title">世界と自動化</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>素材</span><span class="cat-count" aria-label="24 ページ">24</span></a>
@@ -544,9 +544,15 @@
 
 <blockquote>既知の隙間: 読み込まれていないチャンクの制御装置は見えないので、チャンク境界の遠い端にあるラック が短いあいだ二重に数えられることがあります。隣が読み込まれるまでの数 EU/FE/t の話であり、チャンクの 強制読み込みで塞ぐのは病より重い薬です。</blockquote>
 
+<h3 id="被曝するパイプ-稼働の代償">被曝するパイプ: 稼働の代償</h3>
+
+<p>部屋が自分の配管に手を出すのに、過熱は必要ありません。<strong>反応が続いているあいだ</strong>——部屋が組み上がり、 信号が入り、ラックに燃料棒がある状態——放射線は （120 ティック）ごとに 部屋の中の<strong>普通の液体パイプ</strong>を 1 本、炎と煙で印し、 後にそれを溶岩に変えます。 パイプは 1 本ずつ、およそ 8 秒おきに失われます。</p>
+
+<p>対象は普通のパイプだけです。床やチェストなどそれ以外のものは、原子炉が動いているだけでは溶けません。 部屋の内側には<a href="../fluid-transport/reinforced_fluid_pipe.html">強化液体パイプ</a>が必要です——同じ遮蔽合金の 被覆をまとい、どこでも溶けません。停止した原子炉はパイプに手を出しません（）。</p>
+
 <h3 id="炉心溶融-過熱の代償">炉心溶融: 過熱の代償</h3>
 
-<p>の目盛りを越えると、密閉された部屋は<strong>自分の中身を溶かし</strong>はじめます。 床、普通のパイプ、そしてプレイヤーが中へ持ち込んだものすべてです。最初に失われるのは、どこに置かれて いようと必ず普通の液体パイプです。手元にあるもので組む部品だからこそ、何がまずかったのかをいちばん よく説明してくれます。</p>
+<p>の目盛りを越えると、密閉された部屋は<strong>自分の中身を溶かし</strong>はじめます。 床、普通のパイプ、そしてプレイヤーが中へ持ち込んだものすべてです。最初に失われるのは、どこに置かれて いようと必ず普通の液体パイプです。手元にあるもので組む部品だからこそ、何がまずかったのかをいちばん よく説明してくれます。強化パイプはここでも失われません。</p>
 
 <p><strong>シェル自体は無傷です。</strong> ケース、ガラス、ドア、入口、出力端子、そして制御装置自身は、内側の外の輪 の上に立っていて、選択対象にまったく入りません。部屋を建てたのはまさにこのためです——事故は内側に とどまります。</p>
 
@@ -627,7 +633,7 @@
 
 <p>熱のラベルの横には<strong>傾向の矢印</strong>があります: 直近 2 秒で熱が 2 % 以上上がれば上向き、同じだけ下がれば 下向きです。釣り合いの点にある原子炉は上下に 1 パーセントほど揺れ、それに合わせて点滅する矢印は何の 意味も持たなくなります。画面を開いてから最初の 2 秒は矢印がありません: まだ比べる相手が無いから です。</p>
 
-<p><strong>蒸気には専用のバーがあります。</strong> 90 % からラベルが「排気詰まり」に変わり、バーが黄色になります。 排気が詰まると、冷却水バーは安心させるように満杯のまま、熱だけが上がっていきます: 水はあるのに、 沸騰する先が無いのです。以前はそれを伝えるのが冷却水バーの黄色だけで、その色が何を意味するかは画面 のどこにも書かれていませんでした。</p>
+<p><strong>蒸気圧には専用のバーがあります</strong>（: ラベルは「蒸気」から「蒸気圧 N %」に変わりました）。カラムに たまった蒸気の量です。蒸気圧に新しいペナルティはありません——罰は以前のまま、蒸気の逃げ場がなければ沸騰が 止まり、熱が上がります。90 % からラベルが「蒸気圧 N % · 排気詰まり」に変わり、バーが黄色になります。 マウスを重ねると、蒸気は蒸気パイプを通って蒸気ノズルへ抜けると説明が出ます。「冷却水」タブの縦列パネルの 「蒸気」行は短いままです。「16000 / 16000 mB」の隣では、長い言語だと「蒸気圧」に当たる語が収まらず、 数字にかぶるラベルは短いラベルより悪いからです。 排気が詰まると、冷却水バーは安心させるように満杯のまま、熱だけが上がっていきます: 水はあるのに、 沸騰する先が無いのです。以前はそれを伝えるのが冷却水バーの黄色だけで、その色が何を意味するかは画面 のどこにも書かれていませんでした。</p>
 
 <p><strong>制御棒の深さ</strong>は、5 % 刻みのバニラのスライダーと、深さを 0 % にする停止ボタンです。値は 1 回の リクエストでサーバーへ送られます: スライダーを離したとき、または矢印キーを押したときです。経路は バニラのコンテナボタンのチャンネル（）で、ボタン番号がそのままパーセントでの深さ です。要求した値はサーバーが応えるまで画面に保たれますが、2 秒を超えることはありません。保たなければ ドラッグ中に数字が跳ね戻り、上限が無ければサーバーが拒んだリクエストが画面に永遠に残ってしまいます。</p>
 
@@ -635,7 +641,7 @@
 
 <p><strong>助言</strong>はタブの下にある暗い枠です: 状態の色の見出しと、何をすべきか。翻訳が長くなった場合、文の 途中で切るのではなく、文章全体を縮めます。</p>
 
-<table><thead><tr><th>状態</th><th>助言の内容</th></tr></thead><tbody><tr><td>カウントダウン</td><td>目盛りの頂点から降り、数秒間下に留まる。番号付きの脱出方法——水とレバー（むき出しの原子炉ではレバーとラックの取り外し: 水が無いため）</td></tr><tr><td>炉心溶融</td><td>深さを浅くするか水を送る。炉心溶融の閾値を示す</td></tr><tr><td>むき出しモード</td><td>ラックの周りのブロックが溶ける。不安定度 80 % からは「不安定度の限界」の警報</td></tr><tr><td>建設</td><td>このスキャナー判定に対して何を直すか。どこで直すかは「部屋」タブに</td></tr><tr><td>排気詰まり</td><td>蒸気ノズルを確認する</td></tr><tr><td>水が無い</td><td>水が無ければ原子炉を冷やすものは何も無く、事故に至る。原子炉入口から水を引き込む</td></tr><tr><td>過熱</td><td>水が熱をすべて運びきれていない。給水ラインを 1 本増やすか、深さを浅くする</td></tr><tr><td>水が足りない</td><td>水が運ぶ熱の割合を示す: 残りは原子炉を温める</td></tr><tr><td>停止中</td><td>この止まっている理由をどう直すか</td></tr><tr><td>正常</td><td>水が熱をすべて運び去っている</td></tr></tbody></table>
+<table><thead><tr><th>状態</th><th>助言の内容</th></tr></thead><tbody><tr><td>カウントダウン</td><td>目盛りの頂点から降り、数秒間下に留まる。番号付きの脱出方法——水とレバー（むき出しの原子炉ではレバーとラックの取り外し: 水が無いため）</td></tr><tr><td>炉心溶融</td><td>深さを浅くするか水を送る。炉心溶融の閾値を示す</td></tr><tr><td>むき出しモード</td><td>ラックの周りのブロックが溶ける。不安定度 80 % からは「不安定度の限界」の警報</td></tr><tr><td>建設</td><td>このスキャナー判定に対して何を直すか。どこで直すかは「部屋」タブに</td></tr><tr><td>排気詰まり</td><td>蒸気パイプと蒸気ノズルを確認する。流体パイプは蒸気を運ばない</td></tr><tr><td>水が無い</td><td>水が無ければ原子炉を冷やすものは何も無く、事故に至る。原子炉入口から水を引き込む</td></tr><tr><td>過熱</td><td>水が熱をすべて運びきれていない。給水ラインを 1 本増やすか、深さを浅くする</td></tr><tr><td>水が足りない</td><td>水が運ぶ熱の割合を示す: 残りは原子炉を温める</td></tr><tr><td>停止中</td><td>この止まっている理由をどう直すか</td></tr><tr><td>正常</td><td>水が熱をすべて運び去っている</td></tr></tbody></table>
 
 <p><strong>「水が無い」は温度に関係なく警告です。</strong> 燃料棒が働いているあいだ、水のほかに原子炉を冷やすもの は何も無いので、乾いた部屋は最初のティックから事故へ向かいます。熱の 95 % 以上を運ぶ水は十分と 見なします。ところどころのティックで 1 mB 遅れる供給で、プレートを点滅させてはいけないからです。</p>
 
@@ -709,7 +715,7 @@
 
 <p>グリッドの下には集計があります。乾いた縦列の数、排気が詰まった縦列の数、そして直近のティックに原子炉 が沸かして失った水の量です。その下が助言で、順番に見て最初に当てはまったものが出ます。</p>
 
-<table><thead><tr><th>回路の状態</th><th>助言</th></tr></thead><tbody><tr><td>むき出しモード</td><td>「むき出しモードに冷却系はありません」: 部屋の無いラックは水を温めず、水を必要ともしない</td></tr><tr><td>部屋が組み上がっていない</td><td>「部屋が密閉されていません」: 何を直すかは「部屋」タブが教える</td></tr><tr><td>部屋は組み上がっているがカラムが無い</td><td>「部屋にカラムがありません」</td></tr><tr><td>少なくとも 1 つの縦列で排気が詰まっている</td><td>「蒸気の逃げ場がありません」: 縦列を名指しし、その上の蒸気ノズルを確認させる——吹き出し口の前には空気が要る</td></tr><tr><td>どの縦列にも水が無い</td><td>「冷却系に水がありません」: 原子炉入口から水を引き込む</td></tr><tr><td>乾いた縦列がある</td><td>「水のない縦列があります」: 縦列を名指しする。横に並んだカラムは水を分け合わない</td></tr><tr><td>水が運ぶ熱が 95 % 未満</td><td>「冷却系が足りません」、熱の割合付き</td></tr><tr><td>すべて正常</td><td>「冷却系は正常です」</td></tr></tbody></table>
+<table><thead><tr><th>回路の状態</th><th>助言</th></tr></thead><tbody><tr><td>むき出しモード</td><td>「むき出しモードに冷却系はありません」: 部屋の無いラックは水を温めず、水を必要ともしない</td></tr><tr><td>部屋が組み上がっていない</td><td>「部屋が密閉されていません」: 何を直すかは「部屋」タブが教える</td></tr><tr><td>部屋は組み上がっているがカラムが無い</td><td>「部屋にカラムがありません」</td></tr><tr><td>少なくとも 1 つの縦列で排気が詰まっている</td><td>「蒸気の逃げ場がありません」: 蒸気圧がいっぱいの縦列を名指しし、その上から、口の前に空気があるノズルまで蒸気パイプを引かせる——流体パイプは蒸気を運ばない</td></tr><tr><td>どの縦列にも水が無い</td><td>「冷却系に水がありません」: 原子炉入口から水を引き込む</td></tr><tr><td>乾いた縦列がある</td><td>「水のない縦列があります」: 縦列を名指しする。横に並んだカラムは水を分け合わない</td></tr><tr><td>水が運ぶ熱が 95 % 未満</td><td>「冷却系が足りません」、熱の割合付き</td></tr><tr><td>すべて正常</td><td>「冷却系は正常です」</td></tr></tbody></table>
 
 <p>排気詰まりが先頭なのは、逃げ場の無い蒸気は、パイプが水を足している縦列でも沸騰を止めてしまい、それ より先に水を引いても無駄だからです。水のある縦列に並ぶ乾いた縦列は、ほぼ必ずまさにその配管ミスなので、 助言は部屋ではなく縦列を名指しします。もう一つの原因は、追いつかない給水ラインです。制御装置はリストの 順にカラムから水を沸かすので、パイプの補給が遅れている縦列はいずれ干上がります。そのため助言は、給水 ラインも確認するよう勧めます。幅が 17 マスを超える炉心（設定の部屋寸法の上限を初期値より上げた場合）は、 表示される北西の角で判定されます。切り取りの境目の向こうにある縦列は、集計にも助言にも入りません。</p>
 
@@ -803,7 +809,7 @@ D = 制御棒駆動機構 ×1</code></pre>
 
 <h2 id="関連項目">関連項目</h2>
 
-<p><a href="reactor_casing.html">原子炉ケース</a> — 何をスキャンするのか、幾何とクラフトの流れ。 <a href="reactor_door.html">エアロックドア</a> — 部屋への本来の入口。シェルに置くなら、 本物の通路を形成しなければなりません。 <a href="reactor_glass.html">原子炉ガラス</a>、<a href="reactor_lamp.html">ランプ</a>、 <a href="reactor_port.html">入口</a>、<a href="reactor_outlet.html">出力端子</a> — スキャナーが壁として 数える残りのブロック。 <a href="fuel_rod_assembly.html">原子炉カラム</a> — 燃やし、沸かし、組み直す対象。 <a href="uranium_fuel_rod.html">燃料棒</a>と<a href="empty_fuel_rod.html">燃料被覆管</a> — 消耗させる燃料と、 あとに残る被覆管。 <a href="../materials/steam.html">蒸気</a> — 回路の作動流体。 <a href="steam_nozzle.html">蒸気ノズル</a> — 回路の終端。これが働かない間は蒸気ゲージが黄色くなり、熱が 上がります。 <a href="reactor_button.html">原子炉ボタン</a> — この一式で唯一、スキャナーが壁として数え<strong>ない</strong>もの。 <a href="../components/resonance_chain.html">共振チェーン</a> — 制御回路のコイルの出どころ。 <a href="../fluid-machines/distillation_column.html">蒸留塔</a>と<a href="../agriculture/incubator.html">インキュベーター</a> — モッドのこれまでのマルチブロック 2 つ。どちらも固定形状の検査で、体積スキャナーはここで初めて 書かれました。</p>
+<p><a href="reactor_casing.html">原子炉ケース</a> — 何をスキャンするのか、幾何とクラフトの流れ。 <a href="reactor_door.html">エアロックドア</a> — 部屋への本来の入口。シェルに置くなら、 本物の通路を形成しなければなりません。 <a href="reactor_glass.html">原子炉ガラス</a>、<a href="reactor_lamp.html">ランプ</a>、 <a href="reactor_port.html">入口</a>、<a href="reactor_outlet.html">出力端子</a> — スキャナーが壁として 数える残りのブロック。 <a href="fuel_rod_assembly.html">原子炉カラム</a> — 燃やし、沸かし、組み直す対象。 <a href="uranium_fuel_rod.html">燃料棒</a>と<a href="empty_fuel_rod.html">燃料被覆管</a> — 消耗させる燃料と、 あとに残る被覆管。 <a href="../materials/steam.html">蒸気</a> — 回路の作動流体。 <a href="steam_nozzle.html">蒸気ノズル</a> — 回路の終端。これが働かない間は蒸気圧ゲージが黄色くなり、熱が 上がります。組み上がった部屋で沸騰している積み重ねの上には、制御装置が蒸気を出します——規則は <a href="fuel_rod_assembly.html">カラム</a>に。 <a href="reactor_button.html">原子炉ボタン</a> — この一式で唯一、スキャナーが壁として数え<strong>ない</strong>もの。 <a href="../components/resonance_chain.html">共振チェーン</a> — 制御回路のコイルの出どころ。 <a href="../fluid-machines/distillation_column.html">蒸留塔</a>と<a href="../agriculture/incubator.html">インキュベーター</a> — モッドのこれまでのマルチブロック 2 つ。どちらも固定形状の検査で、体積スキャナーはここで初めて 書かれました。</p>
 
 <h2>クラフト</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="原子炉制御装置 alaindustrial:reactor_controller" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="遮蔽板"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="遮蔽板" width="32" height="32"></div> <div class="cell" title="原子炉制御回路"><img src="../../assets/item/reactor_circuit_3d.png" alt="原子炉制御回路" width="32" height="32"></div> <div class="cell" title="遮蔽板"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="遮蔽板" width="32" height="32"></div> <div class="cell" title="強化遮蔽板"><img src="../../assets/item/shielding_alloy_reinforced_plate_3d.png" alt="強化遮蔽板" width="32" height="32"></div> <div class="cell" title="高度なマシンケース"><img src="../../assets/item/advanced_machine_casing_3d.png" alt="高度なマシンケース" width="32" height="32"></div> <div class="cell" title="強化遮蔽板"><img src="../../assets/item/shielding_alloy_reinforced_plate_3d.png" alt="強化遮蔽板" width="32" height="32"></div> <div class="cell" title="遮蔽板"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="遮蔽板" width="32" height="32"></div> <div class="cell" title="制御棒駆動装置"><img src="../../assets/item/control_rod_drive_3d.png" alt="制御棒駆動装置" width="32" height="32"></div> <div class="cell" title="遮蔽板"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="遮蔽板" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="原子炉制御装置"><img src="../../assets/item/reactor_controller_3d.png" alt="原子炉制御装置" width="32" height="32"></div><div class="result-name">原子炉制御装置</div></div></div></div></div>

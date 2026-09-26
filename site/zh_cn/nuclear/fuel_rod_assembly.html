@@ -369,7 +369,7 @@
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <div class="group-title">物流</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>物品物流</span><span class="cat-count" aria-label="2 个页面">2</span></a>
-<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="5 个页面">5</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="2 个页面">2</span></a>
 <div class="group-title">世界与自动化</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="24 个页面">24</span></a>
@@ -465,6 +465,8 @@
 
 <p>取蒸汽的管道必须接在柱子<strong>上方</strong>并设为"抽取"；供水的管道接在其他任意一面，设为"输入"。</p>
 
+<p>取走蒸汽要用<strong>蒸汽</strong>管道：流体管道不输送蒸汽（）。</p>
+
 <h3 id="一摞是一个容器旁边那根柱子是另一个">一摞是一个容器，旁边那根柱子是另一个</h3>
 
 <p>管道看到的端口，代表的是<strong>整摞竖直柱子</strong>，而不是单个方块：总量、总容量、自下而上灌注、自上而下 取汽。控制器每刻还会<strong>重新整理</strong>这一摞的内容——水沉到底部，蒸汽升到顶部。</p>
@@ -478,6 +480,14 @@
 <p>1 mB 水带走 <strong>2 点热量</strong>，并变成 <strong>1 mB 蒸汽</strong>——按体积一比一交换。</p>
 
 <p>沸腾同时受<strong>两个</strong>上限约束：柱子里还有多少水，以及还剩多少装蒸汽的空间。因此被蒸汽塞满的回路和 空水罐一样，都会可靠地让冷却停摆——水还在，刻度是满的，温度却在涨。这不是 bug，而是排气 （<a href="steam_nozzle.html">蒸汽喷口</a>）之所以必需的唯一理由。</p>
+
+<h3 id="沸腾一摞上方的蒸汽">沸腾一摞上方的蒸汽</h3>
+
+<p>一摞在沸腾时，它最上面那根柱子上方会冒出一团团蒸汽——原版间歇泉粒子 <code>GEYSER_POOF</code>（）。 这是读数，不是特效：站在房间地面上就能看到"冷却水"标签页在面板上显示的内容——这一摞在不在工作、 里面有多少蒸汽。</p>
+
+<table><thead><tr><th>项目</th><th>规则</th></tr></thead><tbody><tr><td>何时</td><td>这一摞在最近一秒内为反应提供过水（与"冷却水"标签页"沸腾"标记相同的时间窗）</td></tr><tr><td>何处</td><td>这一摞最顶上那根柱子上方——每摞一个点，不管有几根柱子</td></tr><tr><td>多久一次</td><td>每 = <strong>10 刻</strong></td></tr><tr><td>浓度</td><td>按这一摞的蒸汽压力（蒸汽 / 容量）：空容器上 1 小团，满容器上 4 大团</td></tr><tr><td>排气堵塞</td><td>蒸汽达 90 % 起——再加一团厚重的 <code>GEYSER_BASE</code></td></tr><tr><td>一次几摞</td><td>最多 = <strong>6</strong> 摞；沸腾的更多时轮流</td></tr></tbody></table>
+
+<p>蒸汽团由<a href="reactor_controller.html">控制器</a>发出，而且只在<strong>房间已组成</strong>时：裸露的架子什么也不烧， 在它上方冒蒸汽等于画出一条并不存在的回路。柱子依然没有自己的刻更新。</p>
 
 <h3 id="水位从外面看得见">水位从外面看得见</h3>
 

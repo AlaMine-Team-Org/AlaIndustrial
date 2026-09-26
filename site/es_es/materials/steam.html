@@ -310,7 +310,7 @@
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Máquinas de fluidos</span><span class="cat-count" aria-label="3 páginas">3</span></a>
 <div class="group-title">Logística</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Transporte de objetos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
-<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Transporte de fluidos</span><span class="cat-count" aria-label="1 página">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Transporte de fluidos</span><span class="cat-count" aria-label="5 páginas">5</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Almacenamiento de fluidos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
 <div class="group-title">Mundo y automatización</div>
 <a class="cat-link active" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Materiales</span><span class="cat-count" aria-label="24 páginas">24</span></a>
@@ -344,9 +344,11 @@
 
 <blockquote><strong>Miniejemplo:</strong> coloca un tanque portátil contra la sala y conduce el vapor por una tubería — una Cápsula de vacío también puede sacarlo del tanque, pero no hay nada que lo vierta de vuelta al mundo.</blockquote>
 
+<p>El vapor solo va por <a href="../fluid-transport/steam_pipe.html">tuberías de vapor</a>: la corriente y la <a href="../fluid-transport/reinforced_steam_pipe.html">reforzada</a>. Las tuberías de fluidos no lo aceptan ni se conectan con las de vapor, así que las líneas de agua y de vapor no se mezclan, aunque se tiendan pegadas.</p>
+
 <h2 id="propiedades-del-bloque">Propiedades del bloque</h2>
 
-<table><thead><tr><th>Qué</th><th>Valor</th></tr></thead><tbody><tr><td>Forma en el mundo</td><td>ninguna — no existe bloque de vapor</td></tr><tr><td>Física</td><td>ninguna: el vapor no fluye, no ahoga, no arde</td></tr><tr><td>Cubo</td><td>no hay</td></tr><tr><td>Cápsula</td><td>puede llenarse desde un tanque, no puede vaciarse al mundo</td></tr><tr><td>Almacenamiento y transporte</td><td>tanque, tubería de fluidos, cápsula</td></tr><tr><td>Tag</td><td><code>c:steam</code></td></tr></tbody></table>
+<table><thead><tr><th>Qué</th><th>Valor</th></tr></thead><tbody><tr><td>Forma en el mundo</td><td>ninguna — no existe bloque de vapor</td></tr><tr><td>Física</td><td>ninguna: el vapor no fluye, no ahoga, no arde</td></tr><tr><td>Cubo</td><td>no hay</td></tr><tr><td>Cápsula</td><td>puede llenarse desde un tanque, no puede vaciarse al mundo</td></tr><tr><td>Almacenamiento y transporte</td><td>tanque, tubería de vapor, cápsula</td></tr><tr><td>Tag</td><td><code>c:steam</code></td></tr></tbody></table>
 
 <h2 id="progresión">Progresión</h2>
 
@@ -354,7 +356,7 @@
 
 <h2 id="relacionado">Relacionado</h2>
 
-<p><a href="../nuclear/reactor_controller.html">Controlador de reactor</a> — el cerebro de la sala que produce el vapor. <a href="../nuclear/reactor_port.html">Entrada del reactor</a> — por donde los fluidos entran y salen de la sala. <a href="oil.html">Petróleo</a> — el caso contrario: un fluido que sí tiene forma en el mundo.</p>
+<p><a href="../nuclear/reactor_controller.html">Controlador de reactor</a> — el cerebro de la sala que produce el vapor. <a href="../nuclear/reactor_port.html">Entrada del reactor</a> — por donde los fluidos entran y salen de la sala. <a href="../fluid-transport/steam_pipe.html">Tubería de vapor</a> — la única tubería que transporta vapor. <a href="oil.html">Petróleo</a> — el caso contrario: un fluido que sí tiene forma en el mundo.</p>
 
 
   </main>

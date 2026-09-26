@@ -369,7 +369,7 @@
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Máquinas de fluidos</span><span class="cat-count" aria-label="3 páginas">3</span></a>
 <div class="group-title">Logística</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Transporte de objetos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
-<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Transporte de fluidos</span><span class="cat-count" aria-label="1 página">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Transporte de fluidos</span><span class="cat-count" aria-label="5 páginas">5</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Almacenamiento de fluidos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
 <div class="group-title">Mundo y automatización</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Materiales</span><span class="cat-count" aria-label="24 páginas">24</span></a>
@@ -473,6 +473,8 @@
 
 <p>Una tubería que recoge vapor debe estar <strong>encima</strong> de la columna en modo extracción; una tubería que suministra agua va en cualquier otra cara, en modo inserción.</p>
 
+<p>El vapor lo retira una tubería <strong>de vapor</strong>: una tubería de fluidos no lleva vapor.</p>
+
 <h3 id="una-pila-vertical-es-un-solo-recipiente-la-columna-de-al-lado-es-otro">Una pila vertical es un solo recipiente; la columna de al lado es otro</h3>
 
 <p>El puerto al que habla una tubería responde <strong>por toda la pila vertical</strong>, no por un bloque: cantidad total, capacidad total, llenado de abajo arriba, vapor tomado de arriba abajo. Cada tick el controlador además <strong>reasienta</strong> el contenido de la pila — el agua se hunde, el vapor sube.</p>
@@ -488,6 +490,14 @@
 <p>Un milicubo de agua se lleva = <strong>2 unidades de calor</strong> y se convierte en <strong>1 mB de vapor</strong> — uno a uno en volumen.</p>
 
 <p>La ebullición choca con <strong>dos</strong> límites a la vez: cuánta agua contiene la columna y cuánto sitio queda en ella para el vapor. Un circuito atascado de vapor deja de enfriar con la misma seguridad que un tanque de agua seco — el agua está, el indicador está lleno, y la temperatura sube. No es un fallo; es la única y exclusiva razón por la que el escape (<a href="steam_nozzle.html">boquilla de vapor</a>) es obligatorio.</p>
+
+<h3 id="vapor-sobre-una-pila-que-hierve">Vapor sobre una pila que hierve</h3>
+
+<p>Mientras una pila hierve, sobre su columna superior suben bocanadas de vapor — partículas de géiser vanilla, <code>GEYSER_POOF</code>. Son una lectura, no un efecto: desde el suelo de la sala se ve lo que la pestaña «Refrigerante» muestra en el panel — si la pila trabaja y cuánto vapor acumula.</p>
+
+<table><thead><tr><th>Qué</th><th>Regla</th></tr></thead><tbody><tr><td>Cuándo</td><td>la pila dio agua a la reacción en el último segundo (la misma ventana que la marca «hierve» de la pestaña «Refrigerante»)</td></tr><tr><td>Dónde</td><td>sobre la columna superior de la pila — un punto por pila, tenga las columnas que tenga</td></tr><tr><td>Cada cuánto</td><td>cada = <strong>10 ticks</strong></td></tr><tr><td>Densidad</td><td>según la presión de vapor de la pila (vapor / capacidad): de 1 bocanada pequeña sobre un recipiente vacío a 4 grandes sobre uno lleno</td></tr><tr><td>Escape bloqueado</td><td>desde el 90 % de vapor — una bocanada pesada <code>GEYSER_BASE</code> más</td></tr><tr><td>Pilas a la vez</td><td>como mucho = <strong>6</strong>; si hierven más, se turnan</td></tr></tbody></table>
+
+<p>Las bocanadas las envía el <a href="reactor_controller.html">controlador</a>, y solo con la <strong>sala sellada</strong>: un soporte al descubierto no hierve nada, y vapor sobre él dibujaría un circuito que no existe. La columna sigue sin tick propio.</p>
 
 <h3 id="el-nivel-del-agua-se-ve-desde-fuera">El nivel del agua se ve desde fuera</h3>
 

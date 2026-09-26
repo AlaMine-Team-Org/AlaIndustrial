@@ -369,7 +369,7 @@
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <div class="group-title">Logistics</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="2 pages">2</span></a>
-<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="5 pages">5</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="2 pages">2</span></a>
 <div class="group-title">World &amp; Automation</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="24 pages">24</span></a>
@@ -473,6 +473,8 @@
 
 <p>A pipe collecting steam must stand <strong>above</strong> the column in extract mode; a pipe supplying water goes on any other side, in insert mode.</p>
 
+<p>Steam is taken off by a <strong>steam</strong> pipe: a fluid pipe does not carry steam.</p>
+
 <h3 id="a-stack-is-one-vessel-the-column-next-to-it-is-another">A stack is one vessel; the column next to it is another</h3>
 
 <p>The port a pipe talks to reports <strong>for the whole vertical stack</strong>, not for one block: total amount, total capacity, filled from the bottom up, steam drawn from the top down. Every tick the controller also <strong>re-settles</strong> the stack's contents — water sinks, steam rises.</p>
@@ -488,6 +490,14 @@
 <p>One millibucket of water carries = <strong>2 units of heat</strong> away and turns into <strong>1 mB of steam</strong> — one to one by volume.</p>
 
 <p>Boiling runs into <strong>two</strong> limits at once: how much water the column holds, and how much room is left in it for steam. A loop choked with steam therefore stops cooling as surely as a dry water tank — the water is there, the gauge is full, and the temperature climbs. That is not a bug; it is the one and only reason the exhaust (<a href="steam_nozzle.html">steam nozzle</a>) is mandatory.</p>
+
+<h3 id="steam-over-a-boiling-stack">Steam over a boiling stack</h3>
+
+<p>While a stack boils, steam puffs rise over its top column — vanilla geyser particles, <code>GEYSER_POOF</code> . They are a readout, not an effect: from the room floor you see what the «Coolant» tab shows on the panel — whether the stack is working and how much steam it holds.</p>
+
+<table><thead><tr><th>What</th><th>Rule</th></tr></thead><tbody><tr><td>When</td><td>the stack gave the reaction water within the last second (the same window as the «boiling» mark on the «Coolant» tab)</td></tr><tr><td>Where</td><td>over the stack's top column — one point per stack, however many columns it has</td></tr><tr><td>How often</td><td>every = <strong>10 ticks</strong></td></tr><tr><td>Density</td><td>by the stack's steam pressure (steam / capacity): from 1 small puff over an empty vessel to 4 large ones over a full one</td></tr><tr><td>Exhaust blocked</td><td>from 90 % steam — one more heavy <code>GEYSER_BASE</code> puff</td></tr><tr><td>Stacks at once</td><td>at most = <strong>6</strong>; if more are boiling, they take turns</td></tr></tbody></table>
+
+<p>The <a href="reactor_controller.html">controller</a> sends the puffs, and only for a <strong>sealed room</strong>: a bare rack boils nothing, and steam over it would draw a loop that does not exist. The column still has no tick of its own.</p>
 
 <h3 id="the-water-level-is-visible-from-outside">The water level is visible from outside</h3>
 

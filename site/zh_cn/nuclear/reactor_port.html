@@ -369,7 +369,7 @@
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <div class="group-title">物流</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>物品物流</span><span class="cat-count" aria-label="2 个页面">2</span></a>
-<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="5 个页面">5</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="2 个页面">2</span></a>
 <div class="group-title">世界与自动化</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="24 个页面">24</span></a>
@@ -412,6 +412,8 @@
 <p>水往里走、蒸汽往外走，用的是<strong>同一种入口</strong>。不会再单独做一个"排汽口"：两种几乎一样、只是开孔不同的 方块，会让配方和纹理翻倍，还逼玩家记住该用哪一面朝外——而这本来就不是他真正要做的决定。入口忙的是 什么，取决于紧挨着它接了什么。</p>
 
 <p>入口不过滤流体。"这里只走水"这条规则待在它站得住脚的地方，也就是 <a href="fuel_rod_assembly.html">反应堆柱</a>本身：装着别种流体的管道，应该顶在不收它的机器上，而不是 顶在墙上。</p>
+
+<p>入口两种管道家族都能接：<a href="../fluid-transport/fluid_pipe.html">流体管道</a>和<a href="../fluid-transport/steam_pipe.html">蒸汽管道</a> 都可以接到它上面。水线用流体管道铺，蒸汽线用蒸汽管道铺：流体管道不接收蒸汽（）。</p>
 
 <p>实际结果：<strong>一个入口一次只服务一个方向。</strong>它的储罐里只能有一种流体，所以水线和蒸汽线要走不同的 入口。在 HV 上限满负荷运转的反应堆，需要<strong>六个入口供水、六个出汽</strong>。</p>
 
@@ -465,7 +467,7 @@ C = 反应堆外壳 ×1</code></pre>
 
 <h2 id="相关内容">相关内容</h2>
 
-<p><a href="reactor_casing.html">反应堆外壳</a>——外壳的其余部分、几何和合成链。 <a href="fuel_rod_assembly.html">反应堆柱</a>——墙那一侧站着什么，水又去了哪里。 <a href="steam_nozzle.html">蒸汽喷口</a>——排出来的蒸汽去哪儿。 <a href="../materials/steam.html">蒸汽</a>——入口输送的第二种流体。 <a href="reactor_controller.html">反应堆控制器</a>——把入口算作墙、并显示耗水量的那一位。 <a href="../fluid-transport/fluid_pipe.html">流体管道</a>——两侧接的是什么。 <a href="reactor_outlet.html">反应堆输出端</a>——同样的思路，但用于能量。</p>
+<p><a href="reactor_casing.html">反应堆外壳</a>——外壳的其余部分、几何和合成链。 <a href="fuel_rod_assembly.html">反应堆柱</a>——墙那一侧站着什么，水又去了哪里。 <a href="steam_nozzle.html">蒸汽喷口</a>——排出来的蒸汽去哪儿。 <a href="../materials/steam.html">蒸汽</a>——入口输送的第二种流体。 <a href="reactor_controller.html">反应堆控制器</a>——把入口算作墙、并显示耗水量的那一位。 <a href="../fluid-transport/fluid_pipe.html">流体管道</a>——外侧接的是什么。 <a href="../fluid-transport/reinforced_fluid_pipe.html">强化流体管道</a>——内侧接的是什么。 <a href="../fluid-transport/steam_pipe.html">蒸汽管道</a>和<a href="../fluid-transport/reinforced_steam_pipe.html">强化蒸汽管道</a>—— 外侧和内侧用什么引出排汽。 <a href="reactor_outlet.html">反应堆输出端</a>——同样的思路，但用于能量。</p>
 
 <h2>合成</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="反应堆入口 alaindustrial:reactor_port" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="橡胶"><img src="../../assets/item/rubber_3d.png" alt="橡胶" width="32" height="32"></div> <div class="cell" title="流体管道"><img src="../../assets/item/fluid_pipe_3d.png" alt="流体管道" width="32" height="32"></div> <div class="cell" title="橡胶"><img src="../../assets/item/rubber_3d.png" alt="橡胶" width="32" height="32"></div> <div class="cell" title="屏蔽板"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="屏蔽板" width="32" height="32"></div> <div class="cell" title="反应堆外壳"><img src="../../assets/item/reactor_casing_3d.png" alt="反应堆外壳" width="32" height="32"></div> <div class="cell" title="屏蔽板"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="屏蔽板" width="32" height="32"></div> <div class="cell" title="橡胶"><img src="../../assets/item/rubber_3d.png" alt="橡胶" width="32" height="32"></div> <div class="cell" title="流体管道"><img src="../../assets/item/fluid_pipe_3d.png" alt="流体管道" width="32" height="32"></div> <div class="cell" title="橡胶"><img src="../../assets/item/rubber_3d.png" alt="橡胶" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="反应堆入口"><img src="../../assets/item/reactor_port_3d.png" alt="反应堆入口" width="32" height="32"></div><div class="result-name">反应堆入口</div></div></div></div></div>

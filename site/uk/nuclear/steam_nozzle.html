@@ -369,7 +369,7 @@
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Машини для рідин</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <div class="group-title">Логістика</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Логістика предметів</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
-<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Логістика рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Логістика рідин</span><span class="cat-count" aria-label="5 сторінок">5</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Зберігання рідин</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
 <div class="group-title">Світ та автоматизація</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="24 сторінки">24</span></a>
@@ -397,13 +397,13 @@
 </div>
 <h2 id="зведення">Зведення</h2>
 
-<p><strong>Парова насадка</strong> — вихлоп реактора. Вода, що скипіла в <a href="fuel_rod_assembly.html">реакторних колонах</a>, стає парою, пара накопичується в колонах, і її треба кудись подіти. Насадка і є це «кудись»: вона приймає пару звичайною <a href="../fluid-transport/fluid_pipe.html">рідинною трубою</a>, випускає її в блок, на який дивиться, і пара зникає. Назад із неї нічого не дістати.</p>
+<p><strong>Парова насадка</strong> — вихлоп реактора. Вода, що скипіла в <a href="fuel_rod_assembly.html">реакторних колонах</a>, стає парою, пара накопичується в колонах, і її треба кудись подіти. Насадка і є це «кудись»: вона приймає пару <strong>паровою трубою</strong> (з пара ходить лише паровими трубами — <a href="../fluid-transport/fluid_pipe.html">рідинна труба</a> її не пропускає), випускає її в блок, на який дивиться, і пара зникає. Назад із неї нічого не дістати.</p>
 
 <p>Чому вихлоп зроблено блоком, а не правилом. Якби пара просто випаровувалася всередині колони, контур був би половиною контуру: гравець підвів би воду й забув про охолодження назавжди. Пара, яку треба вивести трубою назовні, перетворює охолодження на справжнє коло з двома кінцями — і заодно дає кімнаті її силует: труби входять низько, виходять високо, а на кінці щось шипить парою.</p>
 
 <h2 id="що-вона-робить">Що вона робить</h2>
 
-<table><thead><tr><th>Властивість</th><th>Значення</th></tr></thead><tbody><tr><td>Що приймає</td><td>лише пару</td></tr><tr><td>Що віддає</td><td><strong>нічого</strong> — з бака насадки не можна дістати ні краплі</td></tr><tr><td>Бак</td><td><strong>500 мБ</strong></td></tr><tr><td>Швидкість стравлювання</td><td><strong>100 мБ/т</strong></td></tr><tr><td>Куди під'єднується труба</td><td>будь-яка грань, <strong>крім</strong> тієї, куди дивиться розтруб</td></tr><tr><td>Частинки</td><td>хмарка перед розтрубом, кількість хмаринок <strong>пропорційна</strong> реальному потоку (1…8)</td></tr></tbody></table>
+<table><thead><tr><th>Властивість</th><th>Значення</th></tr></thead><tbody><tr><td>Що приймає</td><td>лише пару</td></tr><tr><td>Що віддає</td><td><strong>нічого</strong> — з бака насадки не можна дістати ні краплі</td></tr><tr><td>Бак</td><td><strong>500 мБ</strong></td></tr><tr><td>Швидкість стравлювання</td><td><strong>100 мБ/т</strong></td></tr><tr><td>Куди під'єднується труба</td><td>будь-яка грань, <strong>крім</strong> тієї, куди дивиться розтруб</td></tr><tr><td>Частинки</td><td>ванільний гейзер: розтруб угору — стовп <code>GEYSER_PLUME</code> (1…3 за потоком) і два клуби <code>GEYSER_BASE</code> біля розтруба; розтруб убік — клуби <code>GEYSER_POOF</code> (2…6 за потоком); один спалах на <strong>4 тики</strong></td></tr><tr><td>Звук</td><td>власна подія <code>.steam_nozzle.vent</code> на ванільних кліпах гейзера — див. «Звук»</td></tr></tbody></table>
 
 <p>Бак навмисне маленький — п'ять тиків потоку. Його завдання згладити лінію, яка на секунду обігнала насадку, а не бути сховищем: був би він великим, гравець паркував би в ньому пару, і «пара, що дійшла до насадки, втрачена» перестало б бути правдою, на якій побудовано весь баланс контуру.</p>
 
@@ -427,7 +427,21 @@
 
 <p>Орієнтація береться з грані, по якій гравець клацнув: розтруб завжди дивиться <strong>назовні</strong>, від тієї поверхні, до якої насадку притиснули. Насадку можна повісити і на стелю, і на підлогу — напрямок задає встановлення, а не окремий поворот.</p>
 
-<p>Рівень пари клієнту <strong>не синхронізується взагалі</strong>: хмаринка народжується на сервері й сама розсилається всім, хто поруч. Синхронізувати було б нічого показувати — на моделі пари не видно.</p>
+<p>Рівень пари клієнту <strong>не синхронізується взагалі</strong>: струмінь народжується на сервері й сам розсилається всім, хто поруч. Синхронізувати було б нічого показувати — на моделі пари не видно.</p>
+
+<h3 id="струмінь-гейзер-а-не-хмарка">Струмінь: гейзер, а не хмарка</h3>
+
+<p>До насадка пускала хмарки <code>CLOUD</code>. Тепер це ванільний гейзер — ті самі частинки, що в сірчаних гейзерів світу, за посиланням, без копіювання. Насадка, що дивиться <strong>вгору</strong>, кидає стовп <code>GEYSER_PLUME</code> (= 1 — найнижчий стовп) і клуби <code>GEYSER_BASE</code> біля розтруба. Частинки гейзера вміють лише підійматися, тому насадка, що дивиться <strong>вбік чи вниз</strong>, стовпа не кидає: вона видихає клуби <code>GEYSER_POOF</code> перед розтрубом, і ті йдуть угору, як пара з бічного патрубка.</p>
+
+<p>Стравлювання, як і раніше, йде <strong>щотіку</strong>; накопичується лише картинка. Насадка складає, скільки випустила за 4 тики, і малює один спалах, густота якого пропорційна цій сумі: тонкий струмінь виглядає тонким, повний потік — повним. Частинка гейзера живе секунду й більше, і спалах щотіку злився б у білу стіну.</p>
+
+<h2 id="звук">Звук</h2>
+
+<table><thead><tr><th>Подія</th><th>Коли</th><th>Гучність / тон</th></tr></thead><tbody><tr><td><code>.steam_nozzle.vent</code></td><td>початок стравлювання (перехід із простою)</td><td>0.5, тон 0.9…1.1</td></tr><tr><td>та сама</td><td>кожні 100 тиків, поки стравлювання триває</td><td>0.4, тон 0.9…1.1</td></tr></tbody></table>
+
+<p>Подія <strong>власна</strong>, а файли — <strong>ванільні</strong>: мода вказує на <code>minecraft:block/potent_sulfur/geyser_continuous/eruption_active1…7</code> (кліпи 6–13 с), нічого не копіюється. Власна подія знадобилася заради субтитра: у ванільної події цих кліпів субтитра немає, а звук, який глухий гравець не може прочитати, — половина індикатора. Субтитр — «Парова насадка шипить» у всіх локалях мода.</p>
+
+<p>Кліпи довші за період, тож новий починається, поки звучить попередній, і вухо чує рівне шипіння, а не низку хлопків. Насадка, лінія якої подає пару ривками, перемикається між «стравлює» і «стоїть» щокілька тиків — тому новий старт шипіння можливий не раніше ніж за <strong>20 тиків</strong> після попереднього. Коли стравлювати нічого — тиша. Моменти звуку не зберігаються: після завантаження світу насадка просто починає з нового старту.</p>
 
 <h2 id="де-її-ставити">Де її ставити</h2>
 
@@ -449,7 +463,7 @@ C C = корпус машини ×1</code></pre>
 
 <h2 id="повязане">Пов'язане</h2>
 
-<p><a href="../materials/steam.html">Пара</a> — сама рідина: чому її немає у світі й не можна набрати у відро. <a href="fuel_rod_assembly.html">Реакторна колона</a> — де народжується пара й чому вона має йти. <a href="reactor_port.html">Реакторний ввід</a> — як пара покидає герметичну кімнату. <a href="reactor_controller.html">Контролер реактора</a> — де видно, що вихлоп став. <a href="../fluid-transport/fluid_pipe.html">Рідинна труба</a> — чим пару доводять до насадки.</p>
+<p><a href="../materials/steam.html">Пара</a> — сама рідина: чому її немає у світі й не можна набрати у відро. <a href="fuel_rod_assembly.html">Реакторна колона</a> — де народжується пара й чому вона має йти. <a href="reactor_port.html">Реакторний ввід</a> — як пара покидає герметичну кімнату. <a href="reactor_controller.html">Контролер реактора</a> — де видно, що вихлоп став. <a href="../fluid-transport/fluid_pipe.html">Рідинна труба</a> — пару <strong>не</strong> пропускає: з її доводять до насадки паровою трубою.</p>
 
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="парова насадка alaindustrial:steam_nozzle" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаку</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell empty"></div> <div class="cell" title="Iron Ingot"><img src="../../assets/item/iron_ingot_3d.png" alt="Iron Ingot" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="Iron Ingot"><img src="../../assets/item/iron_ingot_3d.png" alt="Iron Ingot" width="32" height="32"></div> <div class="cell" title="Рідинна труба"><img src="../../assets/item/fluid_pipe_3d.png" alt="Рідинна труба" width="32" height="32"></div> <div class="cell" title="Iron Ingot"><img src="../../assets/item/iron_ingot_3d.png" alt="Iron Ingot" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="Машинний корпус"><img src="../../assets/item/machine_casing_3d.png" alt="Машинний корпус" width="32" height="32"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Парова насадка"><img src="../../assets/item/steam_nozzle_3d.png" alt="Парова насадка" width="32" height="32"><span class="count">×2</span></div><div class="result-name">Парова насадка</div></div></div></div></div>

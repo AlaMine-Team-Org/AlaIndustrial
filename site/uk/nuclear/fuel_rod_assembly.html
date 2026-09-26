@@ -369,7 +369,7 @@
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Машини для рідин</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <div class="group-title">Логістика</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Логістика предметів</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
-<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Логістика рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Логістика рідин</span><span class="cat-count" aria-label="5 сторінок">5</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Зберігання рідин</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
 <div class="group-title">Світ та автоматизація</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="24 сторінки">24</span></a>
@@ -465,6 +465,8 @@
 
 <p>Труба, що забирає пару, має стояти <strong>над</strong> колоною й працювати в режимі «видобування»; труба, що подає воду, — з будь-якого іншого боку і в режимі «видача».</p>
 
+<p>Пару забирає <strong>парова</strong> труба: рідинна пару не пропускає.</p>
+
 <h3 id="стопка-це-одна-посудина-а-сусідня-колона-інша">Стопка — це одна посудина, а сусідня колона — інша</h3>
 
 <p>Порт, який бачить труба, звітує <strong>за всю вертикальну стопку</strong>, а не за один блок: сумарний об'єм, сумарна ємність, заливка знизу вгору, відбір пари згори вниз. Щотика контролер ще й <strong>перезбирає</strong> вміст стопки — вода осідає вниз, пара підіймається вгору.</p>
@@ -478,6 +480,14 @@
 <p>Один мілібакет води забирає <strong>2 одиниці тепла</strong> і перетворюється на <strong>1 мБ пари</strong> — обмін один до одного за об'ємом.</p>
 
 <p>Кипіння впирається у <strong>два</strong> обмеження одразу: скільки в колоні води й скільки в ній лишилося місця під пару. Тому забитий парою контур зупиняє охолодження так само надійно, як порожній водяний бак, — вода на місці, шкала повна, а температура росте. Це не баг, а єдина причина, з якої вихлоп (<a href="steam_nozzle.html">парова насадка</a>) обов'язковий.</p>
+
+<h3 id="пара-над-киплячою-стопкою">Пара над киплячою стопкою</h3>
+
+<p>Поки стопка кипить, над її верхньою колоною здіймаються клуби пари — ванільні частинки гейзера <code>GEYSER_POOF</code>. Це індикатор, а не ефект: з підлоги кімнати видно те саме, що вкладка «Контур» показує на пульті, — чи працює стопка і скільки в ній пари.</p>
+
+<table><thead><tr><th>Що</th><th>Правило</th></tr></thead><tbody><tr><td>Коли</td><td>стопка віддала реакції воду за останню секунду (те саме вікно, що в позначки «кипить» на вкладці «Контур»)</td></tr><tr><td>Де</td><td>над верхньою колоною стопки — одна точка на стопку, скільки б колон у ній не стояло</td></tr><tr><td>Як часто</td><td>раз на = <strong>10 тиків</strong></td></tr><tr><td>Густота</td><td>за тиском пари стопки (пара / місткість): від 1 маленького клубу над порожньою посудиною до 4 великих над повною</td></tr><tr><td>Вихлоп забитий</td><td>з 90 % пари — ще один важкий клуб <code>GEYSER_BASE</code></td></tr><tr><td>Скільки стопок за раз</td><td>не більше = <strong>6</strong>; якщо кипить більше, стопки чергуються</td></tr></tbody></table>
+
+<p>Клуби шле <a href="reactor_controller.html">контролер</a> і лише <strong>зібраної кімнати</strong>: гола стійка нічого не кип'ятить, і пара над нею зображала б контур, якого немає. Свого тіку колона, як і раніше, не має.</p>
 
 <h3 id="рівень-води-видно-ззовні">Рівень води видно ззовні</h3>
 

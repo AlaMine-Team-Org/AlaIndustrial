@@ -310,7 +310,7 @@
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Машини для рідин</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <div class="group-title">Логістика</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Логістика предметів</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
-<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Логістика рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Логістика рідин</span><span class="cat-count" aria-label="5 сторінок">5</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Зберігання рідин</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
 <div class="group-title">Світ та автоматизація</div>
 <a class="cat-link active" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="24 сторінки">24</span></a>
@@ -344,9 +344,11 @@
 
 <blockquote><strong>Міні-приклад:</strong> приставте до кімнати переносний бак і ведіть пару трубою — вакуумною капсулою з бака її теж можна дістати, а от вилити назад у світ уже нічим.</blockquote>
 
+<p>Пара ходить лише <a href="../fluid-transport/steam_pipe.html">паровими трубами</a> — звичайною та <a href="../fluid-transport/reinforced_steam_pipe.html">укріпленою</a>. Рідинні труби її не приймають і з паровими не з'єднуються, тож лінії води й пари не змішаються, навіть прокладені впритул.</p>
+
 <h2 id="властивості-блока">Властивості блока</h2>
 
-<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Форма у світі</td><td>немає — блока пари не існує</td></tr><tr><td>Фізика</td><td>немає: пара не тече, не топить, не горить</td></tr><tr><td>Відро</td><td>немає</td></tr><tr><td>Капсула</td><td>набрати з бака можна, вилити у світ — ні</td></tr><tr><td>Зберігання й перенесення</td><td>бак, рідинна труба, капсула</td></tr><tr><td>Теґ</td><td><code>c:steam</code></td></tr></tbody></table>
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Форма у світі</td><td>немає — блока пари не існує</td></tr><tr><td>Фізика</td><td>немає: пара не тече, не топить, не горить</td></tr><tr><td>Відро</td><td>немає</td></tr><tr><td>Капсула</td><td>набрати з бака можна, вилити у світ — ні</td></tr><tr><td>Зберігання й перенесення</td><td>бак, парова труба, капсула</td></tr><tr><td>Теґ</td><td><code>c:steam</code></td></tr></tbody></table>
 
 <h2 id="прогресія">Прогресія</h2>
 
@@ -354,7 +356,7 @@
 
 <h2 id="повязане">Пов'язане</h2>
 
-<p><a href="../nuclear/reactor_controller.html">Контролер реактора</a> — мозок кімнати, яка пару виробляє. <a href="../nuclear/reactor_port.html">Гермоввід реактора</a> — через нього рідини входять у кімнату й виходять. <a href="oil.html">Нафта</a> — протилежний випадок: рідина, у якої форма у світі є.</p>
+<p><a href="../nuclear/reactor_controller.html">Контролер реактора</a> — мозок кімнати, яка пару виробляє. <a href="../nuclear/reactor_port.html">Гермоввід реактора</a> — через нього рідини входять у кімнату й виходять. <a href="../fluid-transport/steam_pipe.html">Парова труба</a> — єдина труба, яка носить пару. <a href="oil.html">Нафта</a> — протилежний випадок: рідина, у якої форма у світі є.</p>
 
 
   </main>

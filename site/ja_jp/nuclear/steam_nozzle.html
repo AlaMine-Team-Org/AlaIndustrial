@@ -369,7 +369,7 @@
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>液体マシン</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <div class="group-title">物流</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>アイテム輸送</span><span class="cat-count" aria-label="2 ページ">2</span></a>
-<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>液体輸送</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>液体輸送</span><span class="cat-count" aria-label="5 ページ">5</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>液体貯蔵</span><span class="cat-count" aria-label="2 ページ">2</span></a>
 <div class="group-title">世界と自動化</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>素材</span><span class="cat-count" aria-label="24 ページ">24</span></a>
@@ -397,13 +397,13 @@
 </div>
 <h2 id="概要">概要</h2>
 
-<p><strong>蒸気ノズル</strong>は原子炉の排気口です。<a href="fuel_rod_assembly.html">原子炉カラム</a>で沸いた水は蒸気に なり、蒸気はカラムにたまり、どこかへ逃がさなければなりません。ノズルがその「どこか」です。普通の <a href="../fluid-transport/fluid_pipe.html">流体パイプ</a>で蒸気を受け取り、自分が向いているブロックへ吹き出し、 蒸気はそこで消えます。ここから何かを取り戻すことはできません。</p>
+<p><strong>蒸気ノズル</strong>は原子炉の排気口です。<a href="fuel_rod_assembly.html">原子炉カラム</a>で沸いた水は蒸気に なり、蒸気はカラムにたまり、どこかへ逃がさなければなりません。ノズルがその「どこか」です。<strong>蒸気パイプ</strong>で蒸気を受け取り（ 以降、蒸気は蒸気パイプしか通りません—— <a href="../fluid-transport/fluid_pipe.html">流体パイプ</a>は蒸気を運びません）、自分が向いているブロックへ吹き出し、 蒸気はそこで消えます。ここから何かを取り戻すことはできません。</p>
 
 <p>なぜ排気を規則ではなくブロックにしたのか。もし蒸気がカラムの中で勝手に消えるなら、回路は半分しか ありません。プレイヤーは水をつないだきり、冷却のことを二度と考えなくなります。パイプで外へ出さねば ならない蒸気は、冷却を両端のある本物の循環に変えます。ついでに部屋の姿も決まります——パイプは低い ところから入り、高いところから出て、その先で何かが蒸気を噴いている、という姿です。</p>
 
 <h2 id="何をするか">何をするか</h2>
 
-<table><thead><tr><th>性質</th><th>値</th></tr></thead><tbody><tr><td>受け取るもの</td><td>蒸気のみ</td></tr><tr><td>渡すもの</td><td><strong>なし</strong> — ノズルのタンクから一滴も取り出せない</td></tr><tr><td>タンク</td><td><strong>500 mB</strong></td></tr><tr><td>排出速度</td><td><strong>100 mB/t</strong></td></tr><tr><td>パイプをつなぐ場所</td><td>吹き出し口が向いている面<strong>以外</strong>のどの面でも</td></tr><tr><td>パーティクル</td><td>吹き出し口の前の雲。雲の数は実際の流量に<strong>比例</strong>（1〜8）</td></tr></tbody></table>
+<table><thead><tr><th>性質</th><th>値</th></tr></thead><tbody><tr><td>受け取るもの</td><td>蒸気のみ</td></tr><tr><td>渡すもの</td><td><strong>なし</strong> — ノズルのタンクから一滴も取り出せない</td></tr><tr><td>タンク</td><td><strong>500 mB</strong></td></tr><tr><td>排出速度</td><td><strong>100 mB/t</strong></td></tr><tr><td>パイプをつなぐ場所</td><td>吹き出し口が向いている面<strong>以外</strong>のどの面でも</td></tr><tr><td>パーティクル</td><td>バニラの間欠泉: 吹き出し口が上向き——<code>GEYSER_PLUME</code> の柱（流量に応じて 1〜3）と口元に <code>GEYSER_BASE</code> 2 つ。横向き——<code>GEYSER_POOF</code>（流量に応じて 2〜6）。噴出は <strong>4 ティック</strong>に 1 回（）</td></tr><tr><td>音</td><td>自前のイベント <code>.steam_nozzle.vent</code>、中身はバニラの間欠泉の音——「音」を参照</td></tr></tbody></table>
 
 <p>タンクは意図して小さく、流量 5 ティック分しかありません。役目は一瞬ノズルを追い越したラインを ならすことであって、貯蔵ではありません。大きくすれば、プレイヤーはそこに蒸気を停めておくように なり、「ノズルに届いた蒸気は失われる」という、回路の釣り合いを支える前提が崩れます。</p>
 
@@ -427,7 +427,21 @@
 
 <p>向きはプレイヤーがクリックした面から決まります。吹き出し口は常に、押し当てた面から見て<strong>外</strong>を 向きます。天井にも床にも取り付けられます——向きを決めるのは設置であって、別途の回転ではありません。</p>
 
-<p>蒸気の残量はクライアントへ<strong>まったく同期されません</strong>。雲はサーバー側で生まれ、近くの全員へ自動的に 送られます。同期しても見せるものがありません——モデル上に蒸気は見えないからです。</p>
+<p>蒸気の残量はクライアントへ<strong>まったく同期されません</strong>。噴出はサーバー側で生まれ、近くの全員へ自動的に 送られます。同期しても見せるものがありません——モデル上に蒸気は見えないからです。</p>
+
+<h3 id="噴出-雲ではなく間欠泉">噴出: 雲ではなく間欠泉</h3>
+
+<p>以前、ノズルは <code>CLOUD</code> の雲を出していました。今はバニラの間欠泉です——ワールドの硫黄間欠泉と 同じパーティクルを参照しているだけで、何もコピーしていません。<strong>上</strong>を向いたノズルは <code>GEYSER_PLUME</code> の柱（ = 1、いちばん低い柱）を上げ、口元に <code>GEYSER_BASE</code> を出します。間欠泉のパーティクル は上昇しかできないので、<strong>横や下</strong>を向いたノズルは柱を上げず、口の前から <code>GEYSER_POOF</code> を吐き出し、 それが横の口から出た蒸気のように上へ流れます。</p>
+
+<p>排出は今も<strong>毎ティック</strong>行われます。まとめるのは見た目だけです。ノズルは 4 ティックの間に出した量を 合計し、その合計に比例した濃さで噴出を 1 回描きます。細い流れは細く、満流は満流に見えます。間欠泉の パーティクルは 1 秒以上残るため、毎ティック噴出させると白い壁になってしまいます。</p>
+
+<h2 id="音">音</h2>
+
+<table><thead><tr><th>イベント</th><th>いつ</th><th>音量 / ピッチ</th></tr></thead><tbody><tr><td><code>.steam_nozzle.vent</code></td><td>排出が始まったとき（停止からの切り替わり）</td><td>0.5、ピッチ 0.9〜1.1</td></tr><tr><td>同上</td><td>排出が続く間、100 ティックごと</td><td>0.4、ピッチ 0.9〜1.1</td></tr></tbody></table>
+
+<p>イベントは<strong>自前</strong>、音声ファイルは<strong>バニラ</strong>です。MOD の は <code>minecraft:block/potent_sulfur/geyser_continuous/eruption_active1…7</code>（6〜13 秒のクリップ）を指すだけ で、何もコピーしません。自前のイベントにしたのは字幕のためです。これらのクリップのバニラのイベント （<code>block.potent_sulfur.geyser_continuous_eruption_active</code>）には字幕がなく、耳の聞こえないプレイヤーが 読めない音は表示として半分しか働きません。字幕は MOD のすべての言語で「蒸気ノズルがシューッと鳴る」 です。</p>
+
+<p>クリップは周期より長いので、前のクリップが鳴っている間に次が始まり、ばらばらの破裂音ではなく途切れ ない噴気音に聞こえます。ラインが蒸気を途切れ途切れに送るノズルは数ティックごとに「排出中」と「停止」 を行き来するため、前回の開始から <strong>20 ティック</strong>経つまでは音を再開しません。排出するものがなければ 無音です。音のタイミングは保存されません。ワールドを読み込むと、ノズルは単に新しく鳴り始めます。</p>
 
 <h2 id="どこに設置するか">どこに設置するか</h2>
 
@@ -449,7 +463,7 @@ C C = 機械ケース ×1</code></pre>
 
 <h2 id="関連項目">関連項目</h2>
 
-<p><a href="../materials/steam.html">蒸気</a> — 流体そのもの。なぜワールドに存在せず、バケツで汲めないのか。 <a href="fuel_rod_assembly.html">原子炉カラム</a> — 蒸気が生まれる場所と、それが去らねばならない理由。 <a href="reactor_port.html">原子炉入口</a> — 蒸気が密閉された部屋を出る方法。 <a href="reactor_controller.html">原子炉制御装置</a> — 排気が詰まったことが分かる場所。 <a href="../fluid-transport/fluid_pipe.html">流体パイプ</a> — 蒸気をノズルまで運ぶもの。</p>
+<p><a href="../materials/steam.html">蒸気</a> — 流体そのもの。なぜワールドに存在せず、バケツで汲めないのか。 <a href="fuel_rod_assembly.html">原子炉カラム</a> — 蒸気が生まれる場所と、それが去らねばならない理由。 <a href="reactor_port.html">原子炉入口</a> — 蒸気が密閉された部屋を出る方法。 <a href="reactor_controller.html">原子炉制御装置</a> — 排気が詰まったことが分かる場所。 <a href="../fluid-transport/fluid_pipe.html">流体パイプ</a> — 蒸気は<strong>運びません</strong>。 以降、ノズルまで運ぶのは蒸気パイプです。</p>
 
 <h2>クラフト</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="蒸気ノズル alaindustrial:steam_nozzle" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell empty"></div> <div class="cell" title="鉄インゴット"><img src="../../assets/item/iron_ingot_3d.png" alt="鉄インゴット" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="鉄インゴット"><img src="../../assets/item/iron_ingot_3d.png" alt="鉄インゴット" width="32" height="32"></div> <div class="cell" title="液体パイプ"><img src="../../assets/item/fluid_pipe_3d.png" alt="液体パイプ" width="32" height="32"></div> <div class="cell" title="鉄インゴット"><img src="../../assets/item/iron_ingot_3d.png" alt="鉄インゴット" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="マシンケース"><img src="../../assets/item/machine_casing_3d.png" alt="マシンケース" width="32" height="32"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="蒸気ノズル"><img src="../../assets/item/steam_nozzle_3d.png" alt="蒸気ノズル" width="32" height="32"><span class="count">×2</span></div><div class="result-name">蒸気ノズル</div></div></div></div></div>

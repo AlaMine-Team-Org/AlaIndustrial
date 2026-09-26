@@ -310,7 +310,7 @@
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <div class="group-title">Logistics</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="2 pages">2</span></a>
-<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="5 pages">5</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="2 pages">2</span></a>
 <div class="group-title">World &amp; Automation</div>
 <a class="cat-link active" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="24 pages">24</span></a>
@@ -344,9 +344,11 @@
 
 <blockquote><strong>Mini-example:</strong> put a portable tank against the room and run the steam along a pipe — a Vacuum Capsule can pull it out of the tank as well, but there is nothing that will pour it back into the world.</blockquote>
 
+<p>Steam travels only along <a href="../fluid-transport/steam_pipe.html">steam pipes</a> — the ordinary and the <a href="../fluid-transport/reinforced_steam_pipe.html">reinforced</a> one. Fluid pipes do not accept it and do not connect to steam pipes, so water and steam lines never mix, even when laid right next to each other.</p>
+
 <h2 id="block-properties">Block Properties</h2>
 
-<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>World form</td><td>none — there is no steam block</td></tr><tr><td>Physics</td><td>none: steam does not flow, does not drown, does not burn</td></tr><tr><td>Bucket</td><td>none</td></tr><tr><td>Capsule</td><td>can be filled from a tank, cannot be emptied into the world</td></tr><tr><td>Storage and carrying</td><td>tank, fluid pipe, capsule</td></tr><tr><td>Tag</td><td><code>c:steam</code></td></tr></tbody></table>
+<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>World form</td><td>none — there is no steam block</td></tr><tr><td>Physics</td><td>none: steam does not flow, does not drown, does not burn</td></tr><tr><td>Bucket</td><td>none</td></tr><tr><td>Capsule</td><td>can be filled from a tank, cannot be emptied into the world</td></tr><tr><td>Storage and carrying</td><td>tank, steam pipe, capsule</td></tr><tr><td>Tag</td><td><code>c:steam</code></td></tr></tbody></table>
 
 <h2 id="progression">Progression</h2>
 
@@ -354,7 +356,7 @@
 
 <h2 id="related">Related</h2>
 
-<p><a href="../nuclear/reactor_controller.html">Reactor Controller</a> — the brain of the room that makes the steam. <a href="../nuclear/reactor_port.html">Reactor Port</a> — where fluids enter and leave the room. <a href="oil.html">Oil</a> — the opposite case: a fluid that does have a world form.</p>
+<p><a href="../nuclear/reactor_controller.html">Reactor Controller</a> — the brain of the room that makes the steam. <a href="../nuclear/reactor_port.html">Reactor Port</a> — where fluids enter and leave the room. <a href="../fluid-transport/steam_pipe.html">Steam Pipe</a> — the only pipe that carries steam. <a href="oil.html">Oil</a> — the opposite case: a fluid that does have a world form.</p>
 
 
   </main>

@@ -369,7 +369,7 @@
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Máquinas de fluidos</span><span class="cat-count" aria-label="3 páginas">3</span></a>
 <div class="group-title">Logística</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Transporte de objetos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
-<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Transporte de fluidos</span><span class="cat-count" aria-label="1 página">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Transporte de fluidos</span><span class="cat-count" aria-label="5 páginas">5</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Almacenamiento de fluidos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
 <div class="group-title">Mundo y automatización</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Materiales</span><span class="cat-count" aria-label="24 páginas">24</span></a>
@@ -397,13 +397,13 @@
 </div>
 <h2 id="resumen">Resumen</h2>
 
-<p>La <strong>Boquilla de vapor</strong> es el escape del reactor. El agua hervida dentro de las <a href="fuel_rod_assembly.html">columnas del reactor</a> se convierte en vapor, el vapor se acumula en las columnas, y tiene que ir a algún sitio. La boquilla es ese sitio: toma vapor de una <a href="../fluid-transport/fluid_pipe.html">tubería de fluidos</a> corriente, lo libera en el bloque al que mira, y el vapor desaparece. Nunca puede extraerse nada de ella.</p>
+<p>La <strong>Boquilla de vapor</strong> es el escape del reactor. El agua hervida dentro de las <a href="fuel_rod_assembly.html">columnas del reactor</a> se convierte en vapor, el vapor se acumula en las columnas, y tiene que ir a algún sitio. La boquilla es ese sitio: toma vapor de una <strong>tubería de vapor</strong> (desde el vapor solo viaja por tuberías de vapor — una <a href="../fluid-transport/fluid_pipe.html">tubería de fluidos</a> no lo lleva), lo libera en el bloque al que mira, y el vapor desaparece. Nunca puede extraerse nada de ella.</p>
 
 <p>Por qué el escape es un bloque y no una regla. Si el vapor simplemente se evaporara dentro de la columna, el circuito sería medio circuito: el jugador conectaría el agua y no volvería a pensar en la refrigeración. Un vapor que hay que conducir de vuelta afuera convierte la refrigeración en un circuito real con dos extremos — y le da a la sala su silueta: tuberías entrando abajo, tuberías saliendo arriba, y algo siseando al final de ellas.</p>
 
 <h2 id="qué-hace">Qué hace</h2>
 
-<table><thead><tr><th>Propiedad</th><th>Valor</th></tr></thead><tbody><tr><td>Acepta</td><td>solo vapor</td></tr><tr><td>Entrega</td><td><strong>nada</strong> — de su tanque no puede extraerse ni una gota</td></tr><tr><td>Tanque</td><td>= <strong>500 mB</strong></td></tr><tr><td>Ritmo de escape</td><td>= <strong>100 mB/t</strong></td></tr><tr><td>Dónde se conecta una tubería</td><td>cualquier cara <strong>excepto</strong> aquella a la que apunta la boca</td></tr><tr><td>Partículas</td><td><code>CLOUD</code> frente a la boca, el número de bocanadas <strong>escalado</strong> al flujo real (1…8)</td></tr></tbody></table>
+<table><thead><tr><th>Propiedad</th><th>Valor</th></tr></thead><tbody><tr><td>Acepta</td><td>solo vapor</td></tr><tr><td>Entrega</td><td><strong>nada</strong> — de su tanque no puede extraerse ni una gota</td></tr><tr><td>Tanque</td><td>= <strong>500 mB</strong></td></tr><tr><td>Ritmo de escape</td><td>= <strong>100 mB/t</strong></td></tr><tr><td>Dónde se conecta una tubería</td><td>cualquier cara <strong>excepto</strong> aquella a la que apunta la boca</td></tr><tr><td>Partículas</td><td>géiser vanilla: boca hacia arriba — una columna <code>GEYSER_PLUME</code> (1…3 según el flujo) y dos bocanadas <code>GEYSER_BASE</code> en la boca; boca de lado — bocanadas <code>GEYSER_POOF</code> (2…6 según el flujo); una ráfaga cada = <strong>4 ticks</strong></td></tr><tr><td>Sonido</td><td>evento propio <code>.steam_nozzle.vent</code> sobre los clips vanilla del géiser — ver «Sonido»</td></tr></tbody></table>
 
 <p>El tanque es deliberadamente diminuto — cinco ticks de flujo. Su trabajo es suavizar una línea que un instante corrió más que la boquilla, no almacenar nada: uno grande dejaría al jugador aparcar vapor a la espera de la turbina de la etapa 5, y «el vapor que llega a una boquilla desaparece» dejaría de ser la verdad contra la que se balancea todo el circuito.</p>
 
@@ -427,7 +427,21 @@
 
 <p>La orientación viene de la cara en la que el jugador hizo clic: la boca apunta siempre <strong>hacia fuera</strong> de la superficie contra la que se pegó la boquilla. Puede colgarse de un techo o empotrarse en un suelo igual de bien — la colocación decide la dirección, no hay paso de rotación aparte.</p>
 
-<p>El nivel de vapor <strong>jamás se sincroniza con los clientes</strong>: la bocanada se genera con en el servidor, que la difunde por sí solo a todos en radio. Tampoco habría nada que mostrar — el vapor es invisible en el modelo.</p>
+<p>El nivel de vapor <strong>jamás se sincroniza con los clientes</strong>: la columna se genera con en el servidor, que la difunde por sí solo a todos en radio. Tampoco habría nada que mostrar — el vapor es invisible en el modelo.</p>
+
+<h3 id="la-columna-un-géiser-no-una-nube">La columna: un géiser, no una nube</h3>
+
+<p>Antes de la boquilla soltaba bocanadas <code>CLOUD</code>. Ahora es el géiser vanilla — las mismas partículas de los géiseres de azufre del mundo, por referencia, sin copiar nada. Una boquilla que mira <strong>hacia arriba</strong> lanza una columna <code>GEYSER_PLUME</code> (= 1, la columna más baja) y bocanadas <code>GEYSER_BASE</code> en la boca. Las partículas de géiser solo suben, así que una boquilla que mira <strong>de lado o hacia abajo</strong> no lanza columna: exhala bocanadas <code>GEYSER_POOF</code> por la boca, y estas suben como el vapor de un grifo lateral.</p>
+
+<p>El venteo sigue ocurriendo <strong>cada tick</strong>; solo se agrupa la imagen. La boquilla suma lo que soltó en = 4 ticks y dibuja una ráfaga de densidad proporcional a esa suma: un hilo parece un hilo y un flujo completo parece completo. Una partícula de géiser vive un segundo o más, y una ráfaga por tick se amontonaría en una pared blanca.</p>
+
+<h2 id="sonido">Sonido</h2>
+
+<table><thead><tr><th>Evento</th><th>Cuándo</th><th>Volumen / tono</th></tr></thead><tbody><tr><td><code>.steam_nozzle.vent</code></td><td>empieza el venteo (el paso desde reposo)</td><td>0.5, tono 0.9…1.1</td></tr><tr><td>el mismo</td><td>cada 100 ticks mientras sigue el venteo</td><td>0.4, tono 0.9…1.1</td></tr></tbody></table>
+
+<p>El evento es <strong>propio</strong>, los archivos son <strong>vanilla</strong>: el del mod apunta a <code>minecraft:block/potent_sulfur/geyser_continuous/eruption_active1…7</code> (clips de 6–13 s) y no copia nada. El evento propio existe por el subtítulo: el evento vanilla de esos clips no tiene, y un sonido que un jugador sordo no puede leer es media lectura. El subtítulo es «La boquilla de vapor sisea» en todas las lenguas del mod.</p>
+
+<p>Los clips duran más que el periodo, así que uno nuevo empieza mientras suena el anterior y el oído oye un siseo continuo, no una serie de golpes. Una boquilla cuya línea entrega a tirones alterna entre ventear y reposar cada pocos ticks — por eso el siseo no puede volver a empezar antes de <strong>20 ticks</strong> desde el último inicio. Sin nada que ventear, silencio. Los tiempos no se guardan: tras cargar el mundo la boquilla simplemente empieza de nuevo.</p>
 
 <h2 id="dónde-ponerla">Dónde ponerla</h2>
 
@@ -449,7 +463,7 @@ C C = carcasa de máquina ×1</code></pre>
 
 <h2 id="relacionado">Relacionado</h2>
 
-<p><a href="../materials/steam.html">Vapor</a> — el fluido mismo: por qué no tiene forma en el mundo y no puede llevarse en cubo. <a href="fuel_rod_assembly.html">Columna del reactor</a> — dónde nace el vapor y por qué tiene que marcharse. <a href="reactor_port.html">Entrada del reactor</a> — cómo sale el vapor de una sala sellada. <a href="reactor_controller.html">Controlador de reactor</a> — dónde se hace visible un escape atascado. <a href="../fluid-transport/fluid_pipe.html">Tubería de fluidos</a> — lo que lleva el vapor hasta la boquilla.</p>
+<p><a href="../materials/steam.html">Vapor</a> — el fluido mismo: por qué no tiene forma en el mundo y no puede llevarse en cubo. <a href="fuel_rod_assembly.html">Columna del reactor</a> — dónde nace el vapor y por qué tiene que marcharse. <a href="reactor_port.html">Entrada del reactor</a> — cómo sale el vapor de una sala sellada. <a href="reactor_controller.html">Controlador de reactor</a> — dónde se hace visible un escape atascado. <a href="../fluid-transport/fluid_pipe.html">Tubería de fluidos</a> — <strong>no</strong> lleva vapor: desde lo lleva a la boquilla una tubería de vapor.</p>
 
 <h2>Fabricación</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="boquilla de vapor alaindustrial:steam_nozzle" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell empty"></div> <div class="cell" title="Iron Ingot"><img src="../../assets/item/iron_ingot_3d.png" alt="Iron Ingot" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="Iron Ingot"><img src="../../assets/item/iron_ingot_3d.png" alt="Iron Ingot" width="32" height="32"></div> <div class="cell" title="Tubería de fluidos"><img src="../../assets/item/fluid_pipe_3d.png" alt="Tubería de fluidos" width="32" height="32"></div> <div class="cell" title="Iron Ingot"><img src="../../assets/item/iron_ingot_3d.png" alt="Iron Ingot" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="Carcasa de máquina"><img src="../../assets/item/machine_casing_3d.png" alt="Carcasa de máquina" width="32" height="32"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Boquilla de vapor"><img src="../../assets/item/steam_nozzle_3d.png" alt="Boquilla de vapor" width="32" height="32"><span class="count">×2</span></div><div class="result-name">Boquilla de vapor</div></div></div></div></div>

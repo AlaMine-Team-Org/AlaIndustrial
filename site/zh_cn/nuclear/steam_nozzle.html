@@ -369,7 +369,7 @@
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <div class="group-title">物流</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>物品物流</span><span class="cat-count" aria-label="2 个页面">2</span></a>
-<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="5 个页面">5</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="2 个页面">2</span></a>
 <div class="group-title">世界与自动化</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="24 个页面">24</span></a>
@@ -397,13 +397,13 @@
 </div>
 <h2 id="概览">概览</h2>
 
-<p><strong>蒸汽喷口</strong>是反应堆的排气口。在<a href="fuel_rod_assembly.html">反应堆柱</a>里烧开的水会变成蒸汽， 蒸汽积在柱子里，总得有地方去。喷口就是那个"地方"：它用普通的 <a href="../fluid-transport/fluid_pipe.html">流体管道</a>接收蒸汽，把蒸汽放进它所朝向的那一格，蒸汽随即消失。 从它那里什么也取不回来。</p>
+<p><strong>蒸汽喷口</strong>是反应堆的排气口。在<a href="fuel_rod_assembly.html">反应堆柱</a>里烧开的水会变成蒸汽， 蒸汽积在柱子里，总得有地方去。喷口就是那个"地方"：它用<strong>蒸汽管道</strong>接收蒸汽（ 起蒸汽只走蒸汽管道—— <a href="../fluid-transport/fluid_pipe.html">流体管道</a>不输送它），把蒸汽放进它所朝向的那一格，蒸汽随即消失。 从它那里什么也取不回来。</p>
 
 <p>为什么排气要做成一个方块，而不是一条规则。如果蒸汽在柱子里直接蒸发掉，那这条回路就只有一半：玩家 接上水，从此再也不用管冷却了。必须用管道引到外面的蒸汽，把冷却变成一个有两端的完整回路——顺带也 给了房间一个轮廓：管道低处进、高处出，末端还有个东西在嘶嘶冒汽。</p>
 
 <h2 id="它做什么">它做什么</h2>
 
-<table><thead><tr><th>属性</th><th>数值</th></tr></thead><tbody><tr><td>接受什么</td><td>只接受蒸汽</td></tr><tr><td>交出什么</td><td><strong>什么都不给</strong>——喷口的储罐里一滴也取不出来</td></tr><tr><td>储罐</td><td><strong>500 mB</strong></td></tr><tr><td>排放速度</td><td><strong>100 mB/刻</strong></td></tr><tr><td>管道接在哪</td><td>除喷嘴朝向的那一面之外的<strong>任意面</strong></td></tr><tr><td>粒子</td><td>喷嘴前的云雾，云团数量与实际流量<strong>成正比</strong>（1…8）</td></tr></tbody></table>
+<table><thead><tr><th>属性</th><th>数值</th></tr></thead><tbody><tr><td>接受什么</td><td>只接受蒸汽</td></tr><tr><td>交出什么</td><td><strong>什么都不给</strong>——喷口的储罐里一滴也取不出来</td></tr><tr><td>储罐</td><td><strong>500 mB</strong></td></tr><tr><td>排放速度</td><td><strong>100 mB/刻</strong></td></tr><tr><td>管道接在哪</td><td>除喷嘴朝向的那一面之外的<strong>任意面</strong></td></tr><tr><td>粒子</td><td>原版间歇泉：喷嘴朝上——一道 <code>GEYSER_PLUME</code> 汽柱（按流量 1…3）加喷嘴处两团 <code>GEYSER_BASE</code>；喷嘴朝侧面——<code>GEYSER_POOF</code> 汽团（按流量 2…6）；每 <strong>4 刻</strong>（）一次喷发</td></tr><tr><td>声音</td><td>自有事件 <code>.steam_nozzle.vent</code>，使用原版间歇泉音频——见"声音"</td></tr></tbody></table>
 
 <p>储罐刻意做得很小——只有五刻的流量。它的任务是抹平某一秒里跑得比喷口快的那条线路，而不是当仓库： 若做得大了，玩家就会把蒸汽存在里面，而"到了喷口的蒸汽就没了"这条支撑整个回路平衡的事实也就不再 成立。</p>
 
@@ -427,7 +427,21 @@
 
 <p>朝向取自玩家点击的那一面：喷嘴永远朝<strong>外</strong>，背离被贴上的那个表面。喷口也可以挂在天花板或地面上 —方向由安装决定，而不是另外去转。</p>
 
-<p>蒸汽的储量<strong>完全不同步到客户端</strong>：云雾是在服务端生成的，会自己发给附近所有人。同步也没什么可显示 的——模型上看不见蒸汽。</p>
+<p>蒸汽的储量<strong>完全不同步到客户端</strong>：汽柱是在服务端生成的，会自己发给附近所有人。同步也没什么可显示 的——模型上看不见蒸汽。</p>
+
+<h3 id="汽柱间歇泉而不是云">汽柱：间歇泉，而不是云</h3>
+
+<p>之前，喷口放出的是 <code>CLOUD</code> 云团。现在它是原版间歇泉——与世界里硫磺间歇泉相同的粒子， 按引用使用，不做任何复制。朝<strong>上</strong>的喷口喷出一道 <code>GEYSER_PLUME</code> 汽柱（ = 1，最矮的 汽柱）并在喷嘴处冒出 <code>GEYSER_BASE</code> 汽团。间歇泉粒子只会上升，所以朝<strong>侧面或朝下</strong>的喷口不喷汽柱： 它从喷嘴前吐出 <code>GEYSER_POOF</code> 汽团，汽团像侧面管口冒出的蒸汽一样往上飘。</p>
+
+<p>排放依旧<strong>每刻</strong>都在进行；攒起来的只是画面。喷口把 4 刻内放出的量加起来，画一次喷发，浓度与这个 总量成正比：细流看上去就是细流，满流看上去就是满流。间歇泉粒子能存在一秒甚至更久，每刻一次喷发会 堆成一堵白墙。</p>
+
+<h2 id="声音">声音</h2>
+
+<table><thead><tr><th>事件</th><th>何时</th><th>音量 / 音调</th></tr></thead><tbody><tr><td><code>.steam_nozzle.vent</code></td><td>开始排放时（从空闲转入排放）</td><td>0.5，音调 0.9…1.1</td></tr><tr><td>同上</td><td>排放持续期间每 100 刻一次</td><td>0.4，音调 0.9…1.1</td></tr></tbody></table>
+
+<p>事件是<strong>自己的</strong>，音频文件是<strong>原版的</strong>：模组的 指向 <code>minecraft:block/potent_sulfur/geyser_continuous/eruption_active1…7</code>（6–13 秒的片段），不复制任何 文件。之所以要自有事件，是为了字幕：原版这组片段的事件 （<code>block.potent_sulfur.geyser_continuous_eruption_active</code>）没有字幕，而听障玩家读不到的声音只是半个 读数。字幕在模组的所有语言里都是"蒸汽喷口嘶嘶作响"。</p>
+
+<p>片段比周期长，所以新片段在上一个还在响时就开始，耳朵听到的是连续的嘶嘶声，而不是一连串的爆响。 管线断断续续供汽的喷口每隔几刻就会在"排放"和"停住"之间切换——所以距上一次开始不到 <strong>20 刻</strong>时 嘶嘶声不会重新开始。没有东西可排就安静。声音的时间点不保存：读档后喷口直接重新开始。</p>
 
 <h2 id="该把它装在哪儿">该把它装在哪儿</h2>
 
@@ -449,7 +463,7 @@ C C = 机器外壳 ×1</code></pre>
 
 <h2 id="相关内容">相关内容</h2>
 
-<p><a href="../materials/steam.html">蒸汽</a>——这种流体本身：为什么世界里没有它，也没法用桶装。 <a href="fuel_rod_assembly.html">反应堆柱</a>——蒸汽在哪里诞生，为什么它必须离开。 <a href="reactor_port.html">反应堆入口</a>——蒸汽怎么离开密封的房间。 <a href="reactor_controller.html">反应堆控制器</a>——从哪里能看出排气堵了。 <a href="../fluid-transport/fluid_pipe.html">流体管道</a>——用什么把蒸汽送到喷口。</p>
+<p><a href="../materials/steam.html">蒸汽</a>——这种流体本身：为什么世界里没有它，也没法用桶装。 <a href="fuel_rod_assembly.html">反应堆柱</a>——蒸汽在哪里诞生，为什么它必须离开。 <a href="reactor_port.html">反应堆入口</a>——蒸汽怎么离开密封的房间。 <a href="reactor_controller.html">反应堆控制器</a>——从哪里能看出排气堵了。 <a href="../fluid-transport/fluid_pipe.html">流体管道</a>——<strong>不</strong>输送蒸汽： 起由蒸汽管道把蒸汽送到喷口。</p>
 
 <h2>合成</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="蒸汽喷口 alaindustrial:steam_nozzle" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell empty"></div> <div class="cell" title="铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="铁锭" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="铁锭" width="32" height="32"></div> <div class="cell" title="流体管道"><img src="../../assets/item/fluid_pipe_3d.png" alt="流体管道" width="32" height="32"></div> <div class="cell" title="铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="铁锭" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="机器外壳"><img src="../../assets/item/machine_casing_3d.png" alt="机器外壳" width="32" height="32"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="蒸汽喷口"><img src="../../assets/item/steam_nozzle_3d.png" alt="蒸汽喷口" width="32" height="32"><span class="count">×2</span></div><div class="result-name">蒸汽喷口</div></div></div></div></div>

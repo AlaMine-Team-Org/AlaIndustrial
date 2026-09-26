@@ -369,7 +369,7 @@
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <div class="group-title">物流</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>物品物流</span><span class="cat-count" aria-label="2 个页面">2</span></a>
-<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="5 个页面">5</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="2 个页面">2</span></a>
 <div class="group-title">世界与自动化</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="24 个页面">24</span></a>
@@ -544,9 +544,15 @@
 
 <blockquote>已知的缝隙：位于未加载区块里的控制器是看不见的，因此区块边界远端的料架可能会短暂地被算两次。 这是在邻居加载之前每刻几点 EU/FE 的事；用强制加载区块去堵它，是比病更重的药。</blockquote>
 
+<h3 id="受辐照的管道运行的代价">受辐照的管道：运行的代价</h3>
+
+<p>房间不必过热，也会碰到自己的管线。<strong>只要反应还在进行</strong>——房间已组装、信号已接通、料架里有燃料棒—— 辐射就会每隔 （120 刻）用火焰和烟雾标记房间内的一根<strong>普通流体管道</strong>， 再过 把它变成岩浆。管道一根接一根地没，大约每 8 秒一根。</p>
+
+<p>只挑普通管道：地板、箱子和其他一切，单靠反应堆运行是不会熔掉的。房间内部要用 <a href="../fluid-transport/reinforced_fluid_pipe.html">强化流体管道</a>——它套着同一种屏蔽合金的外壳，在哪儿都不会熔。 停下的反应堆不碰管道（）。</p>
+
 <h3 id="堆芯熔毁过热的代价">堆芯熔毁：过热的代价</h3>
 
-<p>越过 这条线，封闭的房间就开始<strong>熔掉自己的内容物</strong>：地板、普通管道， 以及玩家带进去的一切。最先没的永远是普通的流体管道，不管它立在哪儿：这是用手边现成材料拼出来的那 部分，也正因如此，它最能说明是哪里出了岔子。</p>
+<p>越过 这条线，封闭的房间就开始<strong>熔掉自己的内容物</strong>：地板、普通管道， 以及玩家带进去的一切。最先没的永远是普通的流体管道，不管它立在哪儿：这是用手边现成材料拼出来的那 部分，也正因如此，它最能说明是哪里出了岔子。强化管道在这里也不会熔掉。</p>
 
 <p><strong>外壳本身完好无损。</strong>外壳方块、玻璃、门、入口、输出端和控制器本身都立在内部之外的那一圈上，根本 不会进入选择范围。房间要的就是这个：事故留在里面。</p>
 
@@ -627,7 +633,7 @@
 
 <p>热量标签旁边有一个<strong>趋势箭头</strong>：如果过去两秒内热量上升了 2 % 或更多，就朝上；下降了同样多，就朝下。 停在自己平衡点上的反应堆会上下晃动一个百分点，跟着它闪烁的箭头就不再有任何意义。打开屏幕后的头两秒 没有箭头：还没有可以比较的东西。</p>
 
-<p><strong>蒸汽有自己的条。</strong>从 90 % 起，它的标签变成"排气堵塞"，条也变黄。排气堵住时，冷却水条令人安心地满着， 热量却在上升：水就在那儿，只是没地方沸腾。以前只有冷却水条的黄色在说明这一点，而屏幕上没有任何地方 解释这个颜色是什么意思。</p>
+<p><strong>蒸汽压力有自己的条</strong>（：标签由"蒸汽"改为"蒸汽压力 N %"）。它表示柱子里积存了多少蒸汽；压力不带来 新的惩罚——惩罚照旧：蒸汽无处可去，沸腾停止，热量上升。从 90 % 起，它的标签变成"蒸汽压力 N % · 排气堵塞"， 条也变黄。悬停提示说明蒸汽经蒸汽管道排到蒸汽喷口。"冷却水"标签页竖列面板上的"蒸汽"一行保持简短： 在"16000 / 16000 mB"旁边，较长的语言放不下"蒸汽压力"，压到数字上的标签比简短的更糟。排气堵住时，冷却水条令人安心地满着， 热量却在上升：水就在那儿，只是没地方沸腾。以前只有冷却水条的黄色在说明这一点，而屏幕上没有任何地方 解释这个颜色是什么意思。</p>
 
 <p><strong>控制棒深度</strong>是原版滑块，步长 5 %，外加一个把深度设为 0 % 的停止按钮。数值以一次请求发往服务器：在 松开滑块或按下方向键的时候。它走的是原版容器按钮的通道（）；按钮编号就是以百分比表示 的深度。请求的数值会在屏幕上保持到服务器回应为止，但最长不超过两秒。不保持的话，拖动时数字会往回跳； 不设上限的话，被服务器拒绝的请求就会永远留在屏幕上。</p>
 
@@ -635,7 +641,7 @@
 
 <p><strong>建议</strong>是标签页底部的深色框：一个用状态颜色写的标题，以及该做什么。如果译文太长，文字会整体缩小， 而不是在句子中间被截断。</p>
 
-<table><thead><tr><th>状态</th><th>建议说什么</th></tr></thead><tbody><tr><td>倒计时</td><td>离开刻度顶端并在下方保持几秒；带编号的出路——水和拉杆（无壳反应堆则是拉杆和拆掉一个料架：它没有水）</td></tr><tr><td>熔毁</td><td>调低深度或供水；给出熔毁的阈值</td></tr><tr><td>无壳模式</td><td>料架周围的方块会熔化；不稳定度从 80 % 起发出"已达不稳定极限"警报</td></tr><tr><td>建造</td><td>针对这条扫描器结论该修什么；在哪儿——见"房间"标签页</td></tr><tr><td>排气堵塞</td><td>检查蒸汽喷口</td></tr><tr><td>没有水</td><td>没有水，就没有东西为反应堆降温，它会走到事故；通过反应堆入口引水进来</td></tr><tr><td>过热</td><td>水带不走全部热量；再加一条水管线或调低深度</td></tr><tr><td>水量不足</td><td>给出水带走的热量占比：其余部分在加热反应堆</td></tr><tr><td>停机</td><td>如何修好这一条具体的停机原因</td></tr><tr><td>正常</td><td>水带走了全部热量</td></tr></tbody></table>
+<table><thead><tr><th>状态</th><th>建议说什么</th></tr></thead><tbody><tr><td>倒计时</td><td>离开刻度顶端并在下方保持几秒；带编号的出路——水和拉杆（无壳反应堆则是拉杆和拆掉一个料架：它没有水）</td></tr><tr><td>熔毁</td><td>调低深度或供水；给出熔毁的阈值</td></tr><tr><td>无壳模式</td><td>料架周围的方块会熔化；不稳定度从 80 % 起发出"已达不稳定极限"警报</td></tr><tr><td>建造</td><td>针对这条扫描器结论该修什么；在哪儿——见"房间"标签页</td></tr><tr><td>排气堵塞</td><td>检查蒸汽管道和蒸汽喷口；流体管道不输送蒸汽</td></tr><tr><td>没有水</td><td>没有水，就没有东西为反应堆降温，它会走到事故；通过反应堆入口引水进来</td></tr><tr><td>过热</td><td>水带不走全部热量；再加一条水管线或调低深度</td></tr><tr><td>水量不足</td><td>给出水带走的热量占比：其余部分在加热反应堆</td></tr><tr><td>停机</td><td>如何修好这一条具体的停机原因</td></tr><tr><td>正常</td><td>水带走了全部热量</td></tr></tbody></table>
 
 <p><strong>"没有水"在任何温度下都是警告。</strong>燃料棒工作期间，除了水没有任何东西能给反应堆降温，所以干着的房间 从第一刻起就在走向事故。带走 95 % 及以上热量的水就算够用：个别几刻晚到 1 mB 的供水，不该让标牌闪烁。</p>
 
@@ -709,7 +715,7 @@
 
 <p>网格下方是汇总：有几个竖列干涸、几个排气堵塞，以及反应堆上一刻烧掉了多少水。再往下是建议，按顺序 取第一条符合的：</p>
 
-<table><thead><tr><th>回路里的情况</th><th>建议</th></tr></thead><tbody><tr><td>无壳模式</td><td>"无壳模式没有冷却回路"：没有房间的料架既不加热水，也不需要水</td></tr><tr><td>房间未成形</td><td>"房间未密封"：该修什么，"房间"标签页会告诉你</td></tr><tr><td>房间已成形，没有柱子</td><td>"房间里没有反应堆柱"</td></tr><tr><td>至少有一个竖列排气堵塞</td><td>"蒸汽无处可去"：点名该竖列，检查它上方的蒸汽喷口——喷口前方需要有空气</td></tr><tr><td>所有竖列都没有水</td><td>"冷却回路里没有水"：通过反应堆入口引水进来</td></tr><tr><td>有干涸的竖列</td><td>"有竖列没有水"：点名该竖列；并排站立的柱子彼此不分水</td></tr><tr><td>水带走的热量不到 95 %</td><td>"冷却回路不够用"，附热量占比</td></tr><tr><td>一切正常</td><td>"冷却回路正常"</td></tr></tbody></table>
+<table><thead><tr><th>回路里的情况</th><th>建议</th></tr></thead><tbody><tr><td>无壳模式</td><td>"无壳模式没有冷却回路"：没有房间的料架既不加热水，也不需要水</td></tr><tr><td>房间未成形</td><td>"房间未密封"：该修什么，"房间"标签页会告诉你</td></tr><tr><td>房间已成形，没有柱子</td><td>"房间里没有反应堆柱"</td></tr><tr><td>至少有一个竖列排气堵塞</td><td>"蒸汽无处可去"：点名该竖列，它的蒸汽压力已满；从它顶端接一条蒸汽管道到出口前方是空气的喷口——流体管道不输送蒸汽</td></tr><tr><td>所有竖列都没有水</td><td>"冷却回路里没有水"：通过反应堆入口引水进来</td></tr><tr><td>有干涸的竖列</td><td>"有竖列没有水"：点名该竖列；并排站立的柱子彼此不分水</td></tr><tr><td>水带走的热量不到 95 %</td><td>"冷却回路不够用"，附热量占比</td></tr><tr><td>一切正常</td><td>"冷却回路正常"</td></tr></tbody></table>
 
 <p>排气堵塞排在第一位：无处可去的蒸汽，即使在有管道补水的竖列里也会让沸腾停下，这之前引水毫无用处。 一个干涸竖列夹在有水的竖列之间，几乎总是那种接管错误，所以建议点名的是竖列，而不是房间。第二个原因是 跟不上的水管线：控制器按自己名单的顺序从柱子里烧水，管道补水滞后的竖列迟早会烧干——所以建议也会提议 检查水管线。宽度超过 17 格的堆芯（配置里的房间尺寸上限被调得高于出厂值）按显示出来的西北角来判定： 截断边缘之外的竖列既不计入汇总，也不进入建议。</p>
 
@@ -803,7 +809,7 @@ D = 控制棒驱动机构 ×1</code></pre>
 
 <h2 id="相关内容">相关内容</h2>
 
-<p><a href="reactor_casing.html">反应堆外壳</a>——它扫描的对象、几何和合成链。 <a href="reactor_door.html">气闸门</a>——房间的正规入口；若它立在外壳里，就必须构成真正的门洞。 <a href="reactor_glass.html">反应堆玻璃</a>、<a href="reactor_lamp.html">灯</a>、 <a href="reactor_port.html">入口</a>和<a href="reactor_outlet.html">输出端</a>——其余会被扫描器算作墙的 方块。 <a href="fuel_rod_assembly.html">反应堆柱</a>——它烧的、煮的和整理的对象。 <a href="uranium_fuel_rod.html">燃料棒</a>和<a href="empty_fuel_rod.html">燃料包壳</a>——它消耗的燃料， 以及留下的包壳。 <a href="../materials/steam.html">蒸汽</a>——回路的工质。 <a href="steam_nozzle.html">蒸汽喷口</a>——回路的末端；它不工作时蒸汽条会变黄、热量会上升。 <a href="reactor_button.html">反应堆按钮</a>——这套方块里唯一<strong>不</strong>被扫描器算作墙的一个。 <a href="../components/resonance_chain.html">共鸣链</a>——控制电路里的线圈从哪来。 <a href="../fluid-machines/distillation_column.html">蒸馏塔</a>和<a href="../agriculture/incubator.html">培育舱</a>——模组此前的 两个多方块结构；它们检查的都是固定形状，体积扫描器是在这里第一次写出来的。</p>
+<p><a href="reactor_casing.html">反应堆外壳</a>——它扫描的对象、几何和合成链。 <a href="reactor_door.html">气闸门</a>——房间的正规入口；若它立在外壳里，就必须构成真正的门洞。 <a href="reactor_glass.html">反应堆玻璃</a>、<a href="reactor_lamp.html">灯</a>、 <a href="reactor_port.html">入口</a>和<a href="reactor_outlet.html">输出端</a>——其余会被扫描器算作墙的 方块。 <a href="fuel_rod_assembly.html">反应堆柱</a>——它烧的、煮的和整理的对象。 <a href="uranium_fuel_rod.html">燃料棒</a>和<a href="empty_fuel_rod.html">燃料包壳</a>——它消耗的燃料， 以及留下的包壳。 <a href="../materials/steam.html">蒸汽</a>——回路的工质。 <a href="steam_nozzle.html">蒸汽喷口</a>——回路的末端；它不工作时蒸汽压力条会变黄、热量会上升。已组成房间里 正在沸腾的一摞上方，控制器会放出蒸汽团——规则见<a href="fuel_rod_assembly.html">反应堆柱</a>。 <a href="reactor_button.html">反应堆按钮</a>——这套方块里唯一<strong>不</strong>被扫描器算作墙的一个。 <a href="../components/resonance_chain.html">共鸣链</a>——控制电路里的线圈从哪来。 <a href="../fluid-machines/distillation_column.html">蒸馏塔</a>和<a href="../agriculture/incubator.html">培育舱</a>——模组此前的 两个多方块结构；它们检查的都是固定形状，体积扫描器是在这里第一次写出来的。</p>
 
 <h2>合成</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="反应堆控制器 alaindustrial:reactor_controller" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="屏蔽板"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="屏蔽板" width="32" height="32"></div> <div class="cell" title="反应堆控制电路"><img src="../../assets/item/reactor_circuit_3d.png" alt="反应堆控制电路" width="32" height="32"></div> <div class="cell" title="屏蔽板"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="屏蔽板" width="32" height="32"></div> <div class="cell" title="强化屏蔽板"><img src="../../assets/item/shielding_alloy_reinforced_plate_3d.png" alt="强化屏蔽板" width="32" height="32"></div> <div class="cell" title="高级机器外壳"><img src="../../assets/item/advanced_machine_casing_3d.png" alt="高级机器外壳" width="32" height="32"></div> <div class="cell" title="强化屏蔽板"><img src="../../assets/item/shielding_alloy_reinforced_plate_3d.png" alt="强化屏蔽板" width="32" height="32"></div> <div class="cell" title="屏蔽板"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="屏蔽板" width="32" height="32"></div> <div class="cell" title="控制棒驱动机构"><img src="../../assets/item/control_rod_drive_3d.png" alt="控制棒驱动机构" width="32" height="32"></div> <div class="cell" title="屏蔽板"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="屏蔽板" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="反应堆控制器"><img src="../../assets/item/reactor_controller_3d.png" alt="反应堆控制器" width="32" height="32"></div><div class="result-name">反应堆控制器</div></div></div></div></div>

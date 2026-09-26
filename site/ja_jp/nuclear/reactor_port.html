@@ -369,7 +369,7 @@
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>液体マシン</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <div class="group-title">物流</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>アイテム輸送</span><span class="cat-count" aria-label="2 ページ">2</span></a>
-<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>液体輸送</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>液体輸送</span><span class="cat-count" aria-label="5 ページ">5</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>液体貯蔵</span><span class="cat-count" aria-label="2 ページ">2</span></a>
 <div class="group-title">世界と自動化</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>素材</span><span class="cat-count" aria-label="24 ページ">24</span></a>
@@ -412,6 +412,8 @@
 <p>水は内へ、蒸気は外へ——通るのは<strong>同じ種類の入口</strong>です。専用の「排気口」は作りません。開口だけが違う そっくりなブロックを 2 種類にすれば、レシピもテクスチャも倍になり、どちら向きに置くかをプレイヤーに 覚えさせることになります。しかもそれは、本人が実際に決めているわけではない事柄です。入口が何に 使われるかは、すぐ隣に何をつないだかが決めます。</p>
 
 <p>入口は流体を選り分けません。「ここは水だけ」という規則は、それが筋の通る場所—— <a href="fuel_rod_assembly.html">原子炉カラム</a>自身——にあります。違う流体を運ぶパイプは、壁ではなく、 それを受け取らない機械の前で止まるべきです。</p>
+
+<p>入口は両方の系統のパイプに対応します。<a href="../fluid-transport/fluid_pipe.html">液体パイプ</a>も <a href="../fluid-transport/steam_pipe.html">蒸気パイプ</a>もつなげます。水の系統は液体パイプで、蒸気の系統は蒸気パイプで 引きます。液体パイプは蒸気を受け付けないためです（）。</p>
 
 <p>実務上の帰結: <strong>1 つの入口が一度に担うのは 1 方向だけです。</strong> タンクに入る流体は 1 種類なので、 水の系統と蒸気の系統は別々の入口に分けます。HV 上限で完全に配管した原子炉は、<strong>供給に 6 つ、排気に 6 つ</strong>の入口を要します。</p>
 
@@ -465,7 +467,7 @@ C = 原子炉ケース ×1</code></pre>
 
 <h2 id="関連項目">関連項目</h2>
 
-<p><a href="reactor_casing.html">原子炉ケース</a> — シェルの残り、幾何、クラフトの流れ。 <a href="fuel_rod_assembly.html">原子炉カラム</a> — 壁の向こうに立つものと、水の行き先。 <a href="steam_nozzle.html">蒸気ノズル</a> — 外へ出た蒸気の行き先。 <a href="../materials/steam.html">蒸気</a> — 入口が運ぶもうひとつの流体。 <a href="reactor_controller.html">原子炉制御装置</a> — 入口を壁として数え、水の消費を表示する側。 <a href="../fluid-transport/fluid_pipe.html">流体パイプ</a> — 両側につなぐもの。 <a href="reactor_outlet.html">原子炉出力端子</a> — 同じ考え方をエネルギーに適用したもの。</p>
+<p><a href="reactor_casing.html">原子炉ケース</a> — シェルの残り、幾何、クラフトの流れ。 <a href="fuel_rod_assembly.html">原子炉カラム</a> — 壁の向こうに立つものと、水の行き先。 <a href="steam_nozzle.html">蒸気ノズル</a> — 外へ出た蒸気の行き先。 <a href="../materials/steam.html">蒸気</a> — 入口が運ぶもうひとつの流体。 <a href="reactor_controller.html">原子炉制御装置</a> — 入口を壁として数え、水の消費を表示する側。 <a href="../fluid-transport/fluid_pipe.html">流体パイプ</a> — 外側につなぐもの。 <a href="../fluid-transport/reinforced_fluid_pipe.html">強化液体パイプ</a> — 内側につなぐもの。 <a href="../fluid-transport/steam_pipe.html">蒸気パイプ</a>と<a href="../fluid-transport/reinforced_steam_pipe.html">強化蒸気パイプ</a> — 外側と内側で排気を引くもの。 <a href="reactor_outlet.html">原子炉出力端子</a> — 同じ考え方をエネルギーに適用したもの。</p>
 
 <h2>クラフト</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="原子炉入口 alaindustrial:reactor_port" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="ゴム"><img src="../../assets/item/rubber_3d.png" alt="ゴム" width="32" height="32"></div> <div class="cell" title="液体パイプ"><img src="../../assets/item/fluid_pipe_3d.png" alt="液体パイプ" width="32" height="32"></div> <div class="cell" title="ゴム"><img src="../../assets/item/rubber_3d.png" alt="ゴム" width="32" height="32"></div> <div class="cell" title="遮蔽板"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="遮蔽板" width="32" height="32"></div> <div class="cell" title="原子炉ケース"><img src="../../assets/item/reactor_casing_3d.png" alt="原子炉ケース" width="32" height="32"></div> <div class="cell" title="遮蔽板"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="遮蔽板" width="32" height="32"></div> <div class="cell" title="ゴム"><img src="../../assets/item/rubber_3d.png" alt="ゴム" width="32" height="32"></div> <div class="cell" title="液体パイプ"><img src="../../assets/item/fluid_pipe_3d.png" alt="液体パイプ" width="32" height="32"></div> <div class="cell" title="ゴム"><img src="../../assets/item/rubber_3d.png" alt="ゴム" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="原子炉入口"><img src="../../assets/item/reactor_port_3d.png" alt="原子炉入口" width="32" height="32"></div><div class="result-name">原子炉入口</div></div></div></div></div>
