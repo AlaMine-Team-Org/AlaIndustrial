@@ -815,12 +815,12 @@ public final class Config {
 	 * the same rule as {@link #fluidPipeSegmentBuffer}. Twice the basic grade: 100 mB/tick, 2 buckets/s,
 	 * enough for a trunk fed by three pumps or drained from a tank.
 	 *
-	 * <p><b>A basic segment slows an advanced line — by physics, not by a rule.</b> It holds less, so
-	 * it hands on less per hop; there is no network-wide minimum (the item pipe needs one, MOD-581,
-	 * because its transfer is bufferless). Measured on a three-segment line: basic 16 mB/tick, advanced
-	 * 33, advanced with one basic segment in the middle 25 — each hop moves half the difference, so the
-	 * thick neighbours push the thin one and it does not drag the line all the way down. That is why
-	 * the advanced pipe is thicker: the slowing segment has to be findable by eye.
+	 * <p><b>A line runs at its thinnest segment — by physics, not by a rule.</b> A basic segment holds
+	 * 50 mB, and since MOD-677 a line flows (each segment hands its whole content one hop toward the
+	 * consumer), so one basic segment holds an advanced line at 50 mB/tick; there is no network-wide
+	 * minimum (the item pipe needs one, MOD-581, because its transfer is bufferless). Measured: 50 mB/t
+	 * over 3, 10 and 30 basic segments, 100 over 30 advanced, 50 for advanced-with-one-basic. That is
+	 * why the advanced pipe is thicker: the throttling segment has to be findable by eye.
 	 */
 	@Knob(section = Section.LOGISTICS, min = 1,
 			doc = "Per-segment buffer of the ADVANCED fluid pipe in mB — also its throughput. An ordinary pipe in the line slows it. Applies to newly placed pipes.")

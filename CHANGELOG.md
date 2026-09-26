@@ -1,15 +1,14 @@
 # Changelog
 
-## 0.1.190
+## 0.1.191
 
-<p><img alt="Ala Industrial Minecraft mod: thick brass-framed advanced fluid pipe carrying water beside a thin ordinary fluid pipe" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.190-mc26.3/release-media/v0.1.190-mc26.3/changelog.png" width="720"></p>
+Fluid pipes now carry their full rate over any distance.
 
-A second grade of the fluid pipe: twice the fluid over the same run.
+### Fixed
 
-### New
-
-- **Advanced Fluid Pipe.** A segment holds 100 mB instead of 50, so a line of these pipes carries
-  twice as much fluid as an ordinary line of the same length. The body is thicker, with brass
-  collars and rails, so an ordinary pipe left in the line, slowing it down, can be spotted at a
-  glance. It joins ordinary fluid pipes into one line and uses the same wrench modes. Recipe: four
-  fluid pipes, four reinforced bronze plates and one rubber make four.
+- **Fluid pipes carry their full rate at any length.** Each pipe used to pass on only half the
+  difference to the next one, so the flow faded along the line: three ordinary pipes carried
+  16 mB per tick and thirty barely half a millibucket. Fluid now flows to the consumer in full: the
+  ordinary pipe carries 50 mB per tick (1 bucket per second) and the Advanced Fluid Pipe 100, however
+  long the line. A line runs at its thinnest pipe, and a full tank nearby no longer cuts a farther
+  one off.
