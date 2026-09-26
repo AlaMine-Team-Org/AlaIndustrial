@@ -1023,7 +1023,7 @@
             {
               "type": "text",
               "title": "Vòi Xả Hơi",
-              "text": "Đầu cuối của vòng làm mát: nó lấy hơi từ ống, xả vào không khí thành một chùm và hủy nó đi — 100 mB/tick mỗi vòi."
+              "text": "Đầu cuối của vòng làm mát: nó lấy hơi từ ống hơi, phun lên không khí thành cột hơi rít lên như mạch nước phun và hủy nó đi — 100 mB/tick mỗi vòi."
             },
             {
               "type": "recipe",
@@ -2123,6 +2123,36 @@
           ]
         },
         {
+          "id": "fluid_pipe_advanced",
+          "title": "Ống dẫn chất lỏng nâng cấp",
+          "icon": "alaindustrial:fluid_pipe_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ống dẫn chất lỏng nâng cấp",
+              "text": "Cấp thứ hai của ống dẫn chất lỏng — gấp đôi lượng chất lỏng trên cùng một tuyến, trong thân ống dày hơn."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:rubber",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_pipe_advanced",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "fluid_tank",
           "title": "Bồn chất lỏng di động",
           "icon": "alaindustrial:fluid_tank",
@@ -2428,6 +2458,25 @@
               "type": "text",
               "title": "Dung dịch dinh dưỡng",
               "text": "Sản phẩm xanh rực từ việc chưng cất nhiên liệu sinh học lần thứ hai — chất lỏng duy nhất của mod mà không gì cháy được. Đối tượng tiêu thụ duy nhất của nó là vòi phun tưới, giúp cây trồng và tinh thể mọc nhanh hơn."
+            }
+          ]
+        },
+        {
+          "id": "soot",
+          "title": "Muội than",
+          "icon": "alaindustrial:soot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Muội than",
+              "text": "Còn lại trên nền ở nơi dầu tự cháy hết; thu bằng xẻng, và máy nén ép 16 muội than thành một bánh than nén."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 260 EU mỗi bánh"
+              ]
             }
           ]
         },
@@ -3233,14 +3282,14 @@
               "recipe_type": "Chế tạo định hình",
               "grid": [
                 "alaindustrial:tin_ingot",
+                "alaindustrial:wooden_gear",
                 "alaindustrial:tin_ingot",
-                "",
+                "alaindustrial:wooden_gear",
+                "minecraft:crafting_table",
+                "alaindustrial:wooden_gear",
                 "minecraft:oak_planks",
                 "minecraft:oak_planks",
-                "",
-                "minecraft:oak_planks",
-                "minecraft:oak_planks",
-                ""
+                "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1

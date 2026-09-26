@@ -33,6 +33,7 @@ import dev.alaindustrial.block.EnrichedUraniumWallTorchBlock;
 import dev.alaindustrial.block.ExtractorBlock;
 import dev.alaindustrial.block.FermenterBlock;
 import dev.alaindustrial.block.FluidPipeBlock;
+import dev.alaindustrial.block.AdvancedFluidPipeBlock;
 import dev.alaindustrial.block.ReinforcedFluidPipeBlock;
 import dev.alaindustrial.block.ReinforcedSteamPipeBlock;
 import dev.alaindustrial.block.SteamPipeBlock;
@@ -584,6 +585,10 @@ public final class ContentManifest {
 	public static final BlockDef<FluidPipeBlock> FLUID_PIPE =
 			block("fluid_pipe", FluidPipeBlock::new, s -> ModContent.FLUID_PIPE = s);
 	// MOD-660 — the fluid pipe in a shielding jacket, the one pipe a running reactor room does not melt.
+	// MOD-675 — the fluid pipe's second grade: twice the segment, twice the throughput, thicker body.
+	public static final BlockDef<AdvancedFluidPipeBlock> FLUID_PIPE_ADVANCED =
+			block("fluid_pipe_advanced", AdvancedFluidPipeBlock::new, s -> ModContent.FLUID_PIPE_ADVANCED = s);
+
 	public static final BlockDef<ReinforcedFluidPipeBlock> REINFORCED_FLUID_PIPE =
 			block("reinforced_fluid_pipe", ReinforcedFluidPipeBlock::new,
 					s -> ModContent.REINFORCED_FLUID_PIPE = s);
@@ -919,7 +924,7 @@ public final class ContentManifest {
 			WATER_MILL, WIND_MILL, HIGH_ALTITUDE_WIND_MILL, STORM_WIND_MILL, PUMP, GARDEN_DRONE_STATION,
 			FLUID_TANK, FLUID_TANK_ADVANCED, COPPER_CABLE, TIN_CABLE, GOLD_CABLE, ELECTRUM_CABLE, INSULATED_COPPER_CABLE,
 			INSULATED_TIN_CABLE, INSULATED_GOLD_CABLE, INSULATED_ELECTRUM_CABLE, ITEM_PIPE,
-			ITEM_PIPE_ADVANCED, FLUID_PIPE, REINFORCED_FLUID_PIPE, STEAM_PIPE, REINFORCED_STEAM_PIPE,
+			ITEM_PIPE_ADVANCED, FLUID_PIPE, FLUID_PIPE_ADVANCED, REINFORCED_FLUID_PIPE, STEAM_PIPE, REINFORCED_STEAM_PIPE,
 			MACERATOR, BATTERY_BOX, CESU, TELEPORTER, TELEPORTER_CAPSULE, ELECTRIC_FURNACE, IRON_FURNACE, EXTRACTOR,
 			COMPRESSOR, COMPONENT_REPAIR_BENCH, CANNING_MACHINE, SAWMILL, ASSEMBLER, POLYMERIZER, DISTILLATION_COLUMN,
 			DISTILLATION_COLUMN_MIDDLE, DISTILLATION_COLUMN_TOP, RECTIFICATION_SECTION, ALLOY_SMELTER,
@@ -1040,6 +1045,9 @@ public final class ContentManifest {
 			Map.entry("item_pipe_advanced",
 					machine(p -> p.strength(0.3f, 0.6f).sound(SoundType.COPPER).noOcclusion())),
 			Map.entry("fluid_pipe", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion())),
+			// MOD-675 — the advanced grade takes the advanced item pipe's numbers: a sturdier body, same family.
+			Map.entry("fluid_pipe_advanced",
+					machine(p -> p.strength(0.3f, 0.6f).sound(SoundType.COPPER).noOcclusion())),
 			// MOD-660 — a pipe in shielding plate is tougher to break, not a reactor wall: well short of
 			// the casing's 5.0 / 30.0, well above the bare pipe it is built from.
 			Map.entry("reinforced_fluid_pipe",
@@ -2012,6 +2020,8 @@ public final class ContentManifest {
 					p.useBlockDescriptionPrefix()), s -> ModContent.ITEM_PIPE_ADVANCED_ITEM = s),
 			blockItem("fluid_pipe", p -> new FluidPipeBlockItem(registeredBlock("fluid_pipe"),
 					p.useBlockDescriptionPrefix()), s -> ModContent.FLUID_PIPE_ITEM = s),
+			blockItem("fluid_pipe_advanced", p -> new FluidPipeBlockItem(registeredBlock("fluid_pipe_advanced"),
+					p.useBlockDescriptionPrefix()), s -> ModContent.FLUID_PIPE_ADVANCED_ITEM = s),
 			blockItem("reinforced_fluid_pipe", p -> new FluidPipeBlockItem(registeredBlock("reinforced_fluid_pipe"),
 					p.useBlockDescriptionPrefix()), s -> ModContent.REINFORCED_FLUID_PIPE_ITEM = s),
 			blockItem("steam_pipe", p -> new FluidPipeBlockItem(registeredBlock("steam_pipe"),
@@ -2305,7 +2315,7 @@ public final class ContentManifest {
 			blockEntity("copper_cable", CableBlockEntity.class, CableBlockEntity::new, s -> ModContent.COPPER_CABLE_BE = s, "copper_cable", "tin_cable", "gold_cable", "electrum_cable", "insulated_copper_cable", "insulated_tin_cable", "insulated_gold_cable", "insulated_electrum_cable"),
 			blockEntity("item_pipe", ItemPipeBlockEntity.class, ItemPipeBlockEntity::new,
 					s -> ModContent.ITEM_PIPE_BE = s, "item_pipe", "item_pipe_advanced"),
-			blockEntity("fluid_pipe", FluidPipeBlockEntity.class, FluidPipeBlockEntity::new, s -> ModContent.FLUID_PIPE_BE = s, "fluid_pipe", "reinforced_fluid_pipe", "steam_pipe", "reinforced_steam_pipe"),
+			blockEntity("fluid_pipe", FluidPipeBlockEntity.class, FluidPipeBlockEntity::new, s -> ModContent.FLUID_PIPE_BE = s, "fluid_pipe", "fluid_pipe_advanced", "reinforced_fluid_pipe", "steam_pipe", "reinforced_steam_pipe"),
 			blockEntity("smart_wire", SmartWireBlockEntity.class,
 					SmartWireBlockEntity::new,
 					s -> ModContent.SMART_WIRE_BE = s, "smart_wire"),

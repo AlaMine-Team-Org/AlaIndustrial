@@ -557,6 +557,8 @@ public final class CreativeTabContent {
 		// MOD-612: the two grades stand together — a player looking for "the tank" finds both.
 		show(out, ModContent.FLUID_TANK_ADVANCED_ITEM);
 		show(out, ModContent.FLUID_PIPE_ITEM);
+		// MOD-675: the second grade right after the first, as the item pipes stand.
+		show(out, ModContent.FLUID_PIPE_ADVANCED_ITEM);
 		// MOD-660: the reinforced grade beside the plain one, like the two tanks above.
 		show(out, ModContent.REINFORCED_FLUID_PIPE_ITEM);
 		// MOD-662: the steam family right after the fluid family, both grades together.

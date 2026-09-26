@@ -1023,7 +1023,7 @@
             {
               "type": "text",
               "title": "Dampfdüse",
-              "text": "Das Ende des Kühlkreislaufs: Sie nimmt Dampf aus einem Rohr, lässt ihn als Wolke in die Luft ab und vernichtet ihn — 100 mB/t je Düse."
+              "text": "Das Ende des Kühlkreislaufs: Sie nimmt Dampf aus einem Dampfrohr, stößt ihn zischend als Geysirfahne in die Luft und vernichtet ihn — 100 mB/t je Düse."
             },
             {
               "type": "recipe",
@@ -2123,6 +2123,36 @@
           ]
         },
         {
+          "id": "fluid_pipe_advanced",
+          "title": "Verbessertes Flüssigkeitsrohr",
+          "icon": "alaindustrial:fluid_pipe_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Verbessertes Flüssigkeitsrohr",
+              "text": "Die zweite Stufe des Flüssigkeitsrohrs — doppelt so viel Flüssigkeit auf derselben Strecke, in einem dickeren Körper."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:rubber",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_pipe_advanced",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "fluid_tank",
           "title": "Tragbarer Flüssigkeitstank",
           "icon": "alaindustrial:fluid_tank",
@@ -2428,6 +2458,25 @@
               "type": "text",
               "title": "Nährlösung",
               "text": "Das hellgrüne Produkt der zweiten Destillation von Biokraftstoff — das eine Fluid des Mods, in dem nichts brennt. Sein einziger Verbraucher ist der Sprinkler, der Feldfrüchte und Kristalle beschleunigt."
+            }
+          ]
+        },
+        {
+          "id": "soot",
+          "title": "Ruß",
+          "icon": "alaindustrial:soot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ruß",
+              "text": "Bleibt am Boden zurück, wo Öl von selbst ausgebrannt ist; wird mit einer Schaufel eingesammelt, und der Kompressor presst 16 Ruß zu einem Kohlenstoffbrikett."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 260 EU pro Brikett"
+              ]
             }
           ]
         },
@@ -3233,14 +3282,14 @@
               "recipe_type": "Geformtes Handwerk",
               "grid": [
                 "alaindustrial:tin_ingot",
+                "alaindustrial:wooden_gear",
                 "alaindustrial:tin_ingot",
-                "",
+                "alaindustrial:wooden_gear",
+                "minecraft:crafting_table",
+                "alaindustrial:wooden_gear",
                 "minecraft:oak_planks",
                 "minecraft:oak_planks",
-                "",
-                "minecraft:oak_planks",
-                "minecraft:oak_planks",
-                ""
+                "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1

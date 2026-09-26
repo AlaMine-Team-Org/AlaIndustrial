@@ -47,9 +47,12 @@ import net.minecraft.world.level.storage.ValueOutput;
  */
 public final class FluidPipeBlockEntity extends EnergyBlockEntity implements FluidPortHost {
 
-	/** The segment's live buffer. Public for the same reason the tank block's is: direct drain/fill. */
-	public final FluidTank fluidBuffer = new FluidTank(Config.fluidPipeSegmentBuffer,
-			this::accepts, fluid -> true, this::bufferChanged);
+	/**
+	 * The segment's live buffer. Public for the same reason the tank block's is: direct drain/fill.
+	 * Its size is the grade's ({@link FluidPipeBlock#segmentCapacity}, MOD-675), fixed when the segment
+	 * is created or loaded.
+	 */
+	public final FluidTank fluidBuffer;
 
 	/** Save key marking a segment written after pipes split into families (MOD-662). */
 	private static final String STEAM_SPLIT_KEY = "SteamSplit";
@@ -69,6 +72,13 @@ public final class FluidPipeBlockEntity extends EnergyBlockEntity implements Flu
 
 	public FluidPipeBlockEntity(BlockPos pos, BlockState state) {
 		super(ModContent.FLUID_PIPE_BE.get(), pos, state, EnergyTier.LV, 0, 0, 0);
+		this.fluidBuffer = new FluidTank(segmentCapacity(state), this::accepts, fluid -> true, this::bufferChanged);
+	}
+
+	/** The grade's segment size; the basic knob for a state that is somehow not a pipe. */
+	private static long segmentCapacity(BlockState state) {
+		return state.getBlock() instanceof FluidPipeBlock pipe
+				? pipe.segmentCapacity() : Math.max(1, Config.fluidPipeSegmentBuffer);
 	}
 
 	@Override
@@ -209,7 +219,7 @@ public final class FluidPipeBlockEntity extends EnergyBlockEntity implements Flu
 		legacy = !input.getBooleanOr(STEAM_SPLIT_KEY, false);
 		migrationChecked = false;
 		Fluid fluid = resolveFluid(input.getStringOr("FluidId", ""));
-		long amount = Math.max(0L, Math.min(Config.fluidPipeSegmentBuffer, input.getLongOr("FluidMb", 0L)));
+		long amount = Math.max(0L, Math.min(fluidBuffer.capacity, input.getLongOr("FluidMb", 0L)));
 		if (fluid == Fluids.EMPTY || amount == 0) {
 			fluidBuffer.fluid = FluidHolder.EMPTY;
 			fluidBuffer.amount = 0;

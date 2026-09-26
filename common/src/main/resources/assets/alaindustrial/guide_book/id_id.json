@@ -1023,7 +1023,7 @@
             {
               "type": "text",
               "title": "Nosel Uap",
-              "text": "Ujung terjauh dari sirkuit pendingin: ia mengambil uap dari pipa, melepasnya ke udara sebagai kepulan, dan memusnahkannya — 100 mB/t per nosel."
+              "text": "Ujung terjauh dari sirkuit pendingin: ia mengambil uap dari pipa uap, menyemburkannya ke udara sebagai kepulan geiser yang mendesis, dan memusnahkannya — 100 mB/t per nosel."
             },
             {
               "type": "recipe",
@@ -2123,6 +2123,36 @@
           ]
         },
         {
+          "id": "fluid_pipe_advanced",
+          "title": "Pipa Fluida Canggih",
+          "icon": "alaindustrial:fluid_pipe_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Pipa Fluida Canggih",
+              "text": "Tingkat kedua pipa fluida — dua kali lipat fluida di jalur yang sama, dengan badan yang lebih tebal."
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:rubber",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_pipe_advanced",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "fluid_tank",
           "title": "Tangki Fluida Portabel",
           "icon": "alaindustrial:fluid_tank",
@@ -2428,6 +2458,25 @@
               "type": "text",
               "title": "Larutan Nutrisi",
               "text": "Produk hijau terang hasil penyulingan bahan bakar hayati untuk kedua kalinya — satu-satunya fluida di mod yang tidak terbakar oleh apa pun. Satu-satunya konsumennya adalah penyemprot, yang mempercepat tanaman dan kristal."
+            }
+          ]
+        },
+        {
+          "id": "soot",
+          "title": "Jelaga",
+          "icon": "alaindustrial:soot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Jelaga",
+              "text": "Tertinggal di lantai tempat minyak habis terbakar dengan sendirinya; dikumpulkan dengan sekop, dan kompresor memadatkan 16 jelaga menjadi satu briket karbon."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Energi: 260 EU per briket"
+              ]
             }
           ]
         },
@@ -3233,14 +3282,14 @@
               "recipe_type": "Pembuatan Berpola",
               "grid": [
                 "alaindustrial:tin_ingot",
+                "alaindustrial:wooden_gear",
                 "alaindustrial:tin_ingot",
-                "",
+                "alaindustrial:wooden_gear",
+                "minecraft:crafting_table",
+                "alaindustrial:wooden_gear",
                 "minecraft:oak_planks",
                 "minecraft:oak_planks",
-                "",
-                "minecraft:oak_planks",
-                "minecraft:oak_planks",
-                ""
+                "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1

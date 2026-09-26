@@ -1023,7 +1023,7 @@
             {
               "type": "text",
               "title": "বাষ্প নজল",
-              "text": "শীতলীকরণ চক্রের শেষ প্রান্ত: এটি পাইপ থেকে বাষ্প নেয়, বাতাসে ধোঁয়ার মতো ছেড়ে দেয় এবং ধ্বংস করে ফেলে — প্রতি নজলে 100 mB/টিক।"
+              "text": "শীতলীকরণ চক্রের শেষ প্রান্ত: এটি বাষ্প পাইপ থেকে বাষ্প নেয়, হিসহিস শব্দে গিজারের মতো বাতাসে ছুড়ে দেয় এবং ধ্বংস করে ফেলে — প্রতি নজলে 100 mB/টিক।"
             },
             {
               "type": "recipe",
@@ -2123,6 +2123,36 @@
           ]
         },
         {
+          "id": "fluid_pipe_advanced",
+          "title": "উন্নত তরল পাইপ",
+          "icon": "alaindustrial:fluid_pipe_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "উন্নত তরল পাইপ",
+              "text": "তরল পাইপের দ্বিতীয় স্তর — একই পথে দ্বিগুণ তরল, আরও মোটা দেহে।"
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:rubber",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_pipe_advanced",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "fluid_tank",
           "title": "বহনযোগ্য তরল ট্যাংক",
           "icon": "alaindustrial:fluid_tank",
@@ -2428,6 +2458,25 @@
               "type": "text",
               "title": "পুষ্টি দ্রবণ",
               "text": "জৈব জ্বালানি দ্বিতীয়বার পাতনের উজ্জ্বল সবুজ ফল — মডের একমাত্র তরল যা কিছুতেই পোড়ে না। এর একমাত্র ভোক্তা স্প্রিংকলার, যা ফসল ও স্ফটিকের বৃদ্ধি ত্বরান্বিত করে।"
+            }
+          ]
+        },
+        {
+          "id": "soot",
+          "title": "ঝুল",
+          "icon": "alaindustrial:soot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ঝুল",
+              "text": "যেখানে তেল নিজে নিজে পুড়ে শেষ হয়েছে সেখানে মেঝেতে পড়ে থাকে; বেলচা দিয়ে তোলা যায়, আর সংকোচক যন্ত্র 16টি ঝুল চেপে একটি কার্বন ব্রিকেট বানায়।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: প্রতি ব্রিকেটে 260 EU"
+              ]
             }
           ]
         },
@@ -3233,14 +3282,14 @@
               "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
               "grid": [
                 "alaindustrial:tin_ingot",
+                "alaindustrial:wooden_gear",
                 "alaindustrial:tin_ingot",
-                "",
+                "alaindustrial:wooden_gear",
+                "minecraft:crafting_table",
+                "alaindustrial:wooden_gear",
                 "minecraft:oak_planks",
                 "minecraft:oak_planks",
-                "",
-                "minecraft:oak_planks",
-                "minecraft:oak_planks",
-                ""
+                "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1

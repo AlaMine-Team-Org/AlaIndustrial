@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": "alaindustrial:bronze_reinforced_plate",
+    "P": "alaindustrial:fluid_pipe",
+    "R": "alaindustrial:rubber"
+  },
+  "pattern": [
+    "BPB",
+    "PRP",
+    "BPB"
+  ],
+  "result": {
+    "id": "alaindustrial:fluid_pipe_advanced",
+    "count": 4
+  }
+}

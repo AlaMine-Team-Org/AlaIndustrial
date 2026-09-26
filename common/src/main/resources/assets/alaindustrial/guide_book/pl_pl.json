@@ -1023,7 +1023,7 @@
             {
               "type": "text",
               "title": "Dysza parowa",
-              "text": "Koniec obiegu chłodzenia: bierze parę z rury, wypuszcza ją w powietrze jako pióropusz i niszczy — 100 mB/t na dyszę."
+              "text": "Koniec obiegu chłodzenia: bierze parę z rury parowej, z sykiem wyrzuca ją w powietrze jak pióropusz gejzeru i niszczy — 100 mB/t na dyszę."
             },
             {
               "type": "recipe",
@@ -2123,6 +2123,36 @@
           ]
         },
         {
+          "id": "fluid_pipe_advanced",
+          "title": "Ulepszona rura na płyny",
+          "icon": "alaindustrial:fluid_pipe_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ulepszona rura na płyny",
+              "text": "Drugi stopień rury na płyny — dwa razy więcej płynu na tej samej trasie, w grubszym korpusie."
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:rubber",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_pipe_advanced",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "fluid_tank",
           "title": "Przenośny zbiornik na płyny",
           "icon": "alaindustrial:fluid_tank",
@@ -2428,6 +2458,25 @@
               "type": "text",
               "title": "Roztwór odżywczy",
               "text": "Jaskrawozielony produkt drugiej destylacji biopaliwa — jedyny płyn moda, w którym nic się nie pali. Jego jedyny konsument to zraszacz, który przyspiesza uprawy i kryształy."
+            }
+          ]
+        },
+        {
+          "id": "soot",
+          "title": "Sadza",
+          "icon": "alaindustrial:soot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Sadza",
+              "text": "Zostaje na podłożu tam, gdzie ropa sama się wypaliła; zbiera się ją łopatą, a kompresor prasuje 16 sadzy w jeden brykiet węglowy."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Energia: 260 EU na brykiet"
+              ]
             }
           ]
         },
@@ -3233,14 +3282,14 @@
               "recipe_type": "Wytwarzanie wg wzoru",
               "grid": [
                 "alaindustrial:tin_ingot",
+                "alaindustrial:wooden_gear",
                 "alaindustrial:tin_ingot",
-                "",
+                "alaindustrial:wooden_gear",
+                "minecraft:crafting_table",
+                "alaindustrial:wooden_gear",
                 "minecraft:oak_planks",
                 "minecraft:oak_planks",
-                "",
-                "minecraft:oak_planks",
-                "minecraft:oak_planks",
-                ""
+                "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1

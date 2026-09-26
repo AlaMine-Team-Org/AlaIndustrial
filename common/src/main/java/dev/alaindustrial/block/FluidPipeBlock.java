@@ -1,5 +1,6 @@
 package dev.alaindustrial.block;
 
+import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.FluidPipeBlockEntity;
 import dev.alaindustrial.core.fluid.FluidLookup;
 import dev.alaindustrial.core.fluid.FluidNetworkManager;
@@ -73,6 +74,15 @@ public class FluidPipeBlock extends BaseEntityBlock {
 	/** Liquids — every fluid but steam (MOD-662). The steam pipes override this. */
 	public PipeFamily family() {
 		return PipeFamily.FLUID;
+	}
+
+	/**
+	 * Millibuckets one segment of this pipe holds — and therefore moves per hop (MOD-675). The basic
+	 * grade and its reinforced and steam siblings read the one knob; the advanced grade overrides it.
+	 * Read live, so a reloaded config reaches pipes placed after the reload.
+	 */
+	public int segmentCapacity() {
+		return Math.max(1, Config.fluidPipeSegmentBuffer);
 	}
 
 	/** The family of the pipe standing at {@code pos}, or {@code null} when no pipe stands there. */
@@ -257,9 +267,15 @@ public class FluidPipeBlock extends BaseEntityBlock {
 
 	@Override
 	protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-		return PipeShapes.of(renderAt(state, Direction.DOWN), renderAt(state, Direction.UP),
+		return shapeFor(renderAt(state, Direction.DOWN), renderAt(state, Direction.UP),
 				renderAt(state, Direction.NORTH), renderAt(state, Direction.SOUTH),
 				renderAt(state, Direction.WEST), renderAt(state, Direction.EAST));
+	}
+
+	/** The geometry of this grade — a table read either way (ADR-023); the advanced grade is thicker. */
+	protected VoxelShape shapeFor(PipeFaceRender down, PipeFaceRender up, PipeFaceRender north,
+			PipeFaceRender south, PipeFaceRender west, PipeFaceRender east) {
+		return PipeShapes.of(down, up, north, south, west, east);
 	}
 
 	@Override

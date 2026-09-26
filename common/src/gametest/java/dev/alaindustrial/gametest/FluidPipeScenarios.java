@@ -202,4 +202,94 @@ public final class FluidPipeScenarios {
 		}
 		helper.succeed();
 	}
+
+	// --- MOD-675: the advanced grade ---
+
+	/**
+	 * One tank → three segments → tank line along X at row {@code z}; returns the destination tank, or
+	 * {@code null} after failing the test. Each line is its own network, so three rows run side by side.
+	 */
+	private static FluidTankBlockEntity buildLine(GameTestHelper helper, int z, net.minecraft.world.level.block.Block first,
+			net.minecraft.world.level.block.Block middle, net.minecraft.world.level.block.Block last) {
+		BlockPos source = new BlockPos(1, 2, z);
+		BlockPos[] segments = {new BlockPos(2, 2, z), new BlockPos(3, 2, z), new BlockPos(4, 2, z)};
+		BlockPos target = new BlockPos(5, 2, z);
+		helper.setBlock(source, ModContent.FLUID_TANK.get());
+		helper.setBlock(segments[0], first);
+		helper.setBlock(segments[1], middle);
+		helper.setBlock(segments[2], last);
+		helper.setBlock(target, ModContent.FLUID_TANK.get());
+		FluidTankBlockEntity sourceTank = tank(helper, source);
+		FluidTankBlockEntity targetTank = tank(helper, target);
+		FluidPipeBlockEntity in = pipe(helper, segments[0]);
+		FluidPipeBlockEntity out = pipe(helper, segments[2]);
+		FluidPipeBlockEntity mid = pipe(helper, segments[1]);
+		if (sourceTank == null || targetTank == null || in == null || mid == null || out == null) {
+			helper.fail("MOD-675 rig block entity missing on row " + z);
+			return null;
+		}
+		sourceTank.fluidTank.fluid = FluidHolder.of(Fluids.WATER);
+		sourceTank.fluidTank.amount = Config.fluidTankCapacity;
+		in.setFaceMode(Direction.WEST, PipeFaceMode.EXTRACT);
+		out.setFaceMode(Direction.EAST, PipeFaceMode.INSERT);
+		for (FluidPipeBlockEntity pipe : new FluidPipeBlockEntity[] {in, mid, out}) {
+			pipe.serverTick(helper.getLevel(), pipe.getBlockPos(), pipe.getBlockState());
+		}
+		return targetTank;
+	}
+
+	/**
+	 * MOD-675: an advanced segment holds the advanced knob, an advanced line delivers about twice what
+	 * a basic one does, and a single basic segment left in an advanced line slows it — measurably, but
+	 * not all the way to the basic rate, since each hop moves half the difference between neighbours.
+	 */
+	public static void advancedLineCarriesTwiceAndABasicSegmentSlowsIt(GameTestHelper helper) {
+		net.minecraft.world.level.block.Block basic = ModContent.FLUID_PIPE.get();
+		net.minecraft.world.level.block.Block advanced = ModContent.FLUID_PIPE_ADVANCED.get();
+		FluidTankBlockEntity basicOut = buildLine(helper, 1, basic, basic, basic);
+		FluidTankBlockEntity advancedOut = buildLine(helper, 3, advanced, advanced, advanced);
+		FluidTankBlockEntity mixedOut = buildLine(helper, 5, advanced, basic, advanced);
+		if (basicOut == null || advancedOut == null || mixedOut == null) {
+			return;
+		}
+		FluidPipeBlockEntity probe = pipe(helper, new BlockPos(3, 2, 3));
+		if (probe == null || probe.fluidBuffer.getCapacity() != Config.fluidPipeAdvancedSegmentBuffer) {
+			helper.fail("MOD-675 an advanced segment holds "
+					+ (probe == null ? "nothing" : probe.fluidBuffer.getCapacity() + " mB")
+					+ ", expected Config.fluidPipeAdvancedSegmentBuffer = " + Config.fluidPipeAdvancedSegmentBuffer);
+			return;
+		}
+		FluidPipeBlockEntity basicProbe = pipe(helper, new BlockPos(3, 2, 1));
+		if (basicProbe == null || basicProbe.fluidBuffer.getCapacity() != Config.fluidPipeSegmentBuffer) {
+			helper.fail("MOD-675 a basic segment no longer holds Config.fluidPipeSegmentBuffer");
+			return;
+		}
+		run(helper, 60);
+		long viaBasic = basicOut.fluidTank.amount;
+		long viaAdvanced = advancedOut.fluidTank.amount;
+		long viaMixed = mixedOut.fluidTank.amount;
+		String measured = " (basic " + viaBasic + " mB, advanced " + viaAdvanced + " mB, advanced with one basic "
+				+ viaMixed + " mB in 60 ticks)";
+		if (viaBasic <= 0) {
+			helper.fail("MOD-675 the basic reference line delivered nothing" + measured);
+			return;
+		}
+		if (viaAdvanced * 10 < viaBasic * 18) {
+			helper.fail("MOD-675 an advanced line does not carry about twice a basic one" + measured);
+			return;
+		}
+		// Measured (MOD-675): 923 / 1903 / 1450 mB. The basic segment does not pull the line all the way
+		// down to the basic rate — "half the difference per hop" lets its thick neighbours push it — but
+		// it must cost the line something visible, or the thicker body would be decoration.
+		if (viaMixed * 10 >= viaAdvanced * 9) {
+			helper.fail("MOD-675 a basic segment in an advanced line costs it nothing" + measured);
+			return;
+		}
+		if (viaMixed <= viaBasic) {
+			helper.fail("MOD-675 an advanced line with one basic segment is no faster than a basic line"
+					+ measured);
+			return;
+		}
+		helper.succeed();
+	}
 }

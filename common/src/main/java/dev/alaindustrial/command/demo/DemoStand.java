@@ -701,7 +701,8 @@ public final class DemoStand {
 	}
 
 	/**
-	 * Zone <b>transport</b> (rows z=16 and z=18, MOD-659): the two item-pipe grades and the fluid line.
+	 * Zone <b>transport</b> (rows z=16 and z=18, MOD-659): the two item-pipe grades and the two fluid-pipe
+	 * grades (MOD-675).
 	 * They used to stand at the very back of the stand, one row behind the showcase wall — invisible from
 	 * the front, with the two item grades stacked on top of each other and so, very likely, one network
 	 * (an advanced pipe IS an item pipe to its neighbour). Now each grade has its own row, one free row
@@ -741,6 +742,17 @@ public final class DemoStand {
 			set(level, origin, x, 1, 16, ModContent.FLUID_PIPE.get());
 		}
 		set(level, origin, 36, 1, 16, ModContent.FLUID_TANK.get());
+		// MOD-675: the advanced fluid pipe on its own row, the way the two item grades stand — separate
+		// networks, so the thick line and the thin one can be compared by eye.
+		set(level, origin, 30, 1, 18, ModContent.FLUID_TANK.get());
+		if (level.getBlockEntity(origin.offset(30, 1, 18)) instanceof FluidTankBlockEntity advancedSource) {
+			advancedSource.fluidTank.fluid = FluidHolder.of(Fluids.WATER);
+			advancedSource.fluidTank.amount = advancedSource.fluidTank.capacity;
+		}
+		for (int x = 31; x <= 35; x++) {
+			set(level, origin, x, 1, 18, ModContent.FLUID_PIPE_ADVANCED.get());
+		}
+		set(level, origin, 36, 1, 18, ModContent.FLUID_TANK.get());
 		// MOD-612: the advanced grade stands next to the basic one, both filled to their OWN capacity —
 		// side by side the taller fluid column and the belt around the frame are the whole point of the
 		// tier, and a stand that filled both to 8000 would hide it.

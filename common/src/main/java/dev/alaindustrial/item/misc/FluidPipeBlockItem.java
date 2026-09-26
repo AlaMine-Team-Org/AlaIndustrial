@@ -1,6 +1,7 @@
 package dev.alaindustrial.item.misc;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.block.AdvancedFluidPipeBlock;
 import dev.alaindustrial.block.FluidPipeBlock;
 import dev.alaindustrial.block.ReinforcedFluidPipeBlock;
 import dev.alaindustrial.block.ReinforcedSteamPipeBlock;
@@ -25,6 +26,9 @@ import net.minecraft.world.level.block.Block;
  * that tells them apart in the world: the reinforced pipe says it survives a reactor, and the plain one
  * warns, behind Shift, that it does not.
  *
+ * <p>The advanced grade shares it too (MOD-675): its rate line quotes its own, larger segment, and one
+ * extra line up front says what the grade is for.
+ *
  * <p>The steam pipes share it too (MOD-662). Their first line says what they carry instead of the
  * fluid pipe's, and behind Shift each family names the other one's job, since a player who laid steam
  * through a fluid pipe before the split needs to hear it once.
@@ -44,12 +48,20 @@ public class FluidPipeBlockItem extends BlockItem {
 	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
 			Consumer<Component> adder, TooltipFlag flag) {
 		boolean steam = getBlock() instanceof FluidPipeBlock pipe && pipe.family() == PipeFamily.STEAM;
-		adder.accept(Component.translatable(steam
-						? "item.alaindustrial.steam_pipe.hint"
-						: "item.alaindustrial.fluid_pipe.hint")
-				.withStyle(ChatFormatting.GRAY));
-		adder.accept(Component.translatable("item.alaindustrial.fluid_pipe.hint2")
-				.withStyle(ChatFormatting.GRAY));
+		boolean advanced = getBlock() instanceof AdvancedFluidPipeBlock;
+		if (advanced) {
+			// MOD-675: the second grade's player already knows what a fluid pipe does — one line says what
+			// this one adds; the rest waits behind Shift.
+			adder.accept(Component.translatable("item.alaindustrial.fluid_pipe_advanced.hint")
+					.withStyle(ChatFormatting.GOLD));
+		} else {
+			adder.accept(Component.translatable(steam
+							? "item.alaindustrial.steam_pipe.hint"
+							: "item.alaindustrial.fluid_pipe.hint")
+					.withStyle(ChatFormatting.GRAY));
+			adder.accept(Component.translatable("item.alaindustrial.fluid_pipe.hint2")
+					.withStyle(ChatFormatting.GRAY));
+		}
 		boolean reinforced = getBlock() instanceof ReinforcedFluidPipeBlock
 				|| getBlock() instanceof ReinforcedSteamPipeBlock;
 		if (reinforced) {
@@ -61,12 +73,21 @@ public class FluidPipeBlockItem extends BlockItem {
 					.withStyle(ChatFormatting.DARK_GRAY));
 			return;
 		}
-		int perTick = Math.max(1, Config.fluidPipeSegmentBuffer);
+		// The grade's own segment (MOD-675) — read from the block, so each grade quotes its own knob.
+		int perTick = getBlock() instanceof FluidPipeBlock pipe
+				? pipe.segmentCapacity() : Math.max(1, Config.fluidPipeSegmentBuffer);
 		// Buckets per second, to one decimal: 50 mB/t → 1.0 B/s. Players think in buckets.
 		String bucketsPerSecond = String.format(java.util.Locale.ROOT, "%.1f", perTick * 20 / 1000.0D);
 		adder.accept(Component.translatable("item.alaindustrial.fluid_pipe.tech.rate",
 						perTick, bucketsPerSecond)
 				.withStyle(ChatFormatting.DARK_GRAY));
+		if (advanced) {
+			// The advanced grade stops at what it adds: rate and the slowdown. Steam and the reactor are the
+			// basic and reinforced pipes' lines to say.
+			adder.accept(Component.translatable("item.alaindustrial.fluid_pipe_advanced.tech.slow")
+					.withStyle(ChatFormatting.DARK_GRAY));
+			return;
+		}
 		adder.accept(Component.translatable(steam
 						? "item.alaindustrial.steam_pipe.tech.family"
 						: "item.alaindustrial.fluid_pipe.tech.steam")

@@ -1023,7 +1023,7 @@
             {
               "type": "text",
               "title": "Parní tryska",
-              "text": "Koncový bod chladicího okruhu: přijímá páru z trubky, vypouští ji do vzduchu jako oblak a ničí ji — 100 mB/t na trysku."
+              "text": "Koncový bod chladicího okruhu: přijímá páru z parní trubky, se syčením ji vyhazuje do vzduchu jako gejzír a ničí ji — 100 mB/t na trysku."
             },
             {
               "type": "recipe",
@@ -2123,6 +2123,36 @@
           ]
         },
         {
+          "id": "fluid_pipe_advanced",
+          "title": "Pokročilá trubka na tekutiny",
+          "icon": "alaindustrial:fluid_pipe_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Pokročilá trubka na tekutiny",
+              "text": "Druhý stupeň trubky na tekutiny — dvojnásobek tekutiny na stejné trase, v silnějším těle."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Výroba podle vzoru",
+              "grid": [
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:rubber",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_pipe_advanced",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "fluid_tank",
           "title": "Přenosná nádrž na tekutiny",
           "icon": "alaindustrial:fluid_tank",
@@ -2428,6 +2458,25 @@
               "type": "text",
               "title": "Živný roztok",
               "text": "Jasně zelený produkt druhé destilace biopaliva — jediná tekutina modu, kterou nic nespaluje. Jejím jediným spotřebitelem je zavlažovač, který urychluje růst plodin a krystalů."
+            }
+          ]
+        },
+        {
+          "id": "soot",
+          "title": "Saze",
+          "icon": "alaindustrial:soot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Saze",
+              "text": "Zůstávají na zemi tam, kde ropa sama dohořela; sbírají se lopatou a kompresor lisuje 16 sazí do jedné uhlíkové brikety."
+            },
+            {
+              "type": "stats",
+              "title": "Parametry",
+              "lines": [
+                "Energie: 260 EU za briketu"
+              ]
             }
           ]
         },
@@ -3233,14 +3282,14 @@
               "recipe_type": "Výroba podle vzoru",
               "grid": [
                 "alaindustrial:tin_ingot",
+                "alaindustrial:wooden_gear",
                 "alaindustrial:tin_ingot",
-                "",
+                "alaindustrial:wooden_gear",
+                "minecraft:crafting_table",
+                "alaindustrial:wooden_gear",
                 "minecraft:oak_planks",
                 "minecraft:oak_planks",
-                "",
-                "minecraft:oak_planks",
-                "minecraft:oak_planks",
-                ""
+                "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1

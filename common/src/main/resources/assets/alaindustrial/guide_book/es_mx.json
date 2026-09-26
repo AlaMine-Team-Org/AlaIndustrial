@@ -1023,7 +1023,7 @@
             {
               "type": "text",
               "title": "Boquilla de vapor",
-              "text": "El extremo final del circuito de refrigeración: toma vapor de una tubería, lo suelta al aire como penacho y lo destruye — 100 mB/t por boquilla."
+              "text": "El extremo final del circuito de refrigeración: toma vapor de una tubería de vapor, lo lanza al aire entre silbidos como un penacho de géiser y lo destruye — 100 mB/t por boquilla."
             },
             {
               "type": "recipe",
@@ -2123,6 +2123,36 @@
           ]
         },
         {
+          "id": "fluid_pipe_advanced",
+          "title": "Tubería de fluidos avanzada",
+          "icon": "alaindustrial:fluid_pipe_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tubería de fluidos avanzada",
+              "text": "El segundo grado de la tubería de fluidos: el doble de fluido por el mismo recorrido, con un cuerpo más grueso."
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:rubber",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_pipe_advanced",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "fluid_tank",
           "title": "Tanque de fluidos portátil",
           "icon": "alaindustrial:fluid_tank",
@@ -2428,6 +2458,25 @@
               "type": "text",
               "title": "Solución nutritiva",
               "text": "El producto verde brillante de destilar biocombustible una segunda vez — el único fluido del mod donde nada arde. Su único consumidor es el aspersor, que acelera cultivos y cristales."
+            }
+          ]
+        },
+        {
+          "id": "soot",
+          "title": "Hollín",
+          "icon": "alaindustrial:soot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Hollín",
+              "text": "Queda en el suelo donde el petróleo se consumió por sí solo; se recoge con una pala, y el compresor prensa 16 de hollín en una briqueta de carbono."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Energía: 260 EU por briqueta"
+              ]
             }
           ]
         },
@@ -3233,14 +3282,14 @@
               "recipe_type": "Fabricación con forma",
               "grid": [
                 "alaindustrial:tin_ingot",
+                "alaindustrial:wooden_gear",
                 "alaindustrial:tin_ingot",
-                "",
+                "alaindustrial:wooden_gear",
+                "minecraft:crafting_table",
+                "alaindustrial:wooden_gear",
                 "minecraft:oak_planks",
                 "minecraft:oak_planks",
-                "",
-                "minecraft:oak_planks",
-                "minecraft:oak_planks",
-                ""
+                "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1

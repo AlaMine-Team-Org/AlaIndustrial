@@ -1023,7 +1023,7 @@
             {
               "type": "text",
               "title": "หัวฉีดไอน้ำ",
-              "text": "ปลายสุดของวงจรหล่อเย็น: มันรับไอน้ำจากท่อ ปล่อยออกสู่อากาศเป็นลำควันแล้วทำลายมันทิ้ง — 100 mB ต่อทิกต่อหัวฉีด"
+              "text": "ปลายสุดของวงจรหล่อเย็น: มันรับไอน้ำจากท่อไอน้ำ พ่นออกสู่อากาศเป็นลำไอเหมือนน้ำพุร้อนที่ส่งเสียงฟู่แล้วทำลายมันทิ้ง — 100 mB ต่อทิกต่อหัวฉีด"
             },
             {
               "type": "recipe",
@@ -2123,6 +2123,36 @@
           ]
         },
         {
+          "id": "fluid_pipe_advanced",
+          "title": "ท่อของเหลวขั้นสูง",
+          "icon": "alaindustrial:fluid_pipe_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ท่อของเหลวขั้นสูง",
+              "text": "ท่อของเหลวระดับที่สอง — ส่งของเหลวได้สองเท่าบนเส้นทางเดิม ด้วยตัวท่อที่หนากว่า"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:rubber",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_pipe_advanced",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "fluid_tank",
           "title": "ถังของเหลวแบบพกพา",
           "icon": "alaindustrial:fluid_tank",
@@ -2428,6 +2458,25 @@
               "type": "text",
               "title": "สารละลายธาตุอาหาร",
               "text": "ผลผลิตสีเขียวสดจากการกลั่นเชื้อเพลิงชีวภาพซ้ำเป็นครั้งที่สอง — ของเหลวชนิดเดียวของม็อดนี้ที่ไม่มีอะไรเผาไหม้ได้เลย ผู้ใช้งานเพียงรายเดียวคือสปริงเกลอร์ ซึ่งช่วยเร่งการเติบโตของพืชผลและคริสตัล"
+            }
+          ]
+        },
+        {
+          "id": "soot",
+          "title": "เขม่า",
+          "icon": "alaindustrial:soot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เขม่า",
+              "text": "หลงเหลืออยู่บนพื้นตรงที่น้ำมันไหม้จนดับไปเอง เก็บได้ด้วยพลั่ว และเครื่องอัดจะอัดเขม่า 16 ชิ้นเป็นแท่งคาร์บอนอัดหนึ่งแท่ง"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 260 EU ต่อแท่ง"
+              ]
             }
           ]
         },
@@ -3233,14 +3282,14 @@
               "recipe_type": "การคราฟต์แบบมีรูปแบบ",
               "grid": [
                 "alaindustrial:tin_ingot",
+                "alaindustrial:wooden_gear",
                 "alaindustrial:tin_ingot",
-                "",
+                "alaindustrial:wooden_gear",
+                "minecraft:crafting_table",
+                "alaindustrial:wooden_gear",
                 "minecraft:oak_planks",
                 "minecraft:oak_planks",
-                "",
-                "minecraft:oak_planks",
-                "minecraft:oak_planks",
-                ""
+                "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1

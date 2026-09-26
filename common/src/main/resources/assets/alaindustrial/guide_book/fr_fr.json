@@ -1023,7 +1023,7 @@
             {
               "type": "text",
               "title": "Buse à vapeur",
-              "text": "Le bout du circuit de refroidissement : elle prend la vapeur d’un tuyau, la relâche dans l’air en panache et la détruit — 100 mB/t par buse."
+              "text": "Le bout du circuit de refroidissement : elle prend la vapeur d’un tuyau à vapeur, la projette en l’air dans un panache sifflant de geyser et la détruit — 100 mB/t par buse."
             },
             {
               "type": "recipe",
@@ -2123,6 +2123,36 @@
           ]
         },
         {
+          "id": "fluid_pipe_advanced",
+          "title": "Tuyau à fluides avancé",
+          "icon": "alaindustrial:fluid_pipe_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tuyau à fluides avancé",
+              "text": "Le second grade du tuyau à fluides — deux fois plus de fluide sur le même trajet, dans un corps plus épais."
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:rubber",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_pipe_advanced",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "fluid_tank",
           "title": "Réservoir de fluide portable",
           "icon": "alaindustrial:fluid_tank",
@@ -2428,6 +2458,25 @@
               "type": "text",
               "title": "Solution nutritive",
               "text": "Le produit vert vif de la seconde distillation du biocarburant — le seul fluide du mod où rien ne brûle. Son unique consommateur est l’arroseur, qui accélère cultures et cristaux."
+            }
+          ]
+        },
+        {
+          "id": "soot",
+          "title": "Suie",
+          "icon": "alaindustrial:soot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Suie",
+              "text": "Reste au sol là où le pétrole a brûlé tout seul ; se ramasse à la pelle, et le compresseur presse 16 suies en une briquette de carbone."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiques",
+              "lines": [
+                "Énergie : 260 EU par briquette"
+              ]
             }
           ]
         },
@@ -3233,14 +3282,14 @@
               "recipe_type": "Fabrication façonnée",
               "grid": [
                 "alaindustrial:tin_ingot",
+                "alaindustrial:wooden_gear",
                 "alaindustrial:tin_ingot",
-                "",
+                "alaindustrial:wooden_gear",
+                "minecraft:crafting_table",
+                "alaindustrial:wooden_gear",
                 "minecraft:oak_planks",
                 "minecraft:oak_planks",
-                "",
-                "minecraft:oak_planks",
-                "minecraft:oak_planks",
-                ""
+                "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1

@@ -1023,7 +1023,7 @@
             {
               "type": "text",
               "title": "Stoommondstuk",
-              "text": "Het einde van het koelcircuit: het neemt stoom uit een buis, laat die als pluim in de lucht ontsnappen en vernietigt hem — 100 mB/t per mondstuk."
+              "text": "Het einde van het koelcircuit: het neemt stoom uit een stoombuis, blaast die sissend als een geiserpluim de lucht in en vernietigt hem — 100 mB/t per mondstuk."
             },
             {
               "type": "recipe",
@@ -2123,6 +2123,36 @@
           ]
         },
         {
+          "id": "fluid_pipe_advanced",
+          "title": "Geavanceerde vloeistofbuis",
+          "icon": "alaindustrial:fluid_pipe_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Geavanceerde vloeistofbuis",
+              "text": "De tweede graad van de vloeistofbuis — twee keer zoveel vloeistof over hetzelfde traject, in een dikker lichaam."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:rubber",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_pipe_advanced",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "fluid_tank",
           "title": "Draagbare vloeistoftank",
           "icon": "alaindustrial:fluid_tank",
@@ -2428,6 +2458,25 @@
               "type": "text",
               "title": "Voedingsoplossing",
               "text": "Het heldergroene product van biobrandstof een tweede keer destilleren — de enige vloeistof van de mod waarin niets brandt. De enige consument is de sproeier, die gewassen en kristallen versnelt."
+            }
+          ]
+        },
+        {
+          "id": "soot",
+          "title": "Roet",
+          "icon": "alaindustrial:soot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Roet",
+              "text": "Blijft op de grond achter waar olie vanzelf is uitgebrand; wordt met een schep verzameld, en de compressor perst 16 roet tot een koolstofbriket."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 260 EU per briket"
+              ]
             }
           ]
         },
@@ -3233,14 +3282,14 @@
               "recipe_type": "Gevormd vervaardigen",
               "grid": [
                 "alaindustrial:tin_ingot",
+                "alaindustrial:wooden_gear",
                 "alaindustrial:tin_ingot",
-                "",
+                "alaindustrial:wooden_gear",
+                "minecraft:crafting_table",
+                "alaindustrial:wooden_gear",
                 "minecraft:oak_planks",
                 "minecraft:oak_planks",
-                "",
-                "minecraft:oak_planks",
-                "minecraft:oak_planks",
-                ""
+                "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1
