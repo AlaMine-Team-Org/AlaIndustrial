@@ -11,7 +11,7 @@ package dev.alaindustrial.core.fluid;
  * {@code long} inputs. Extracting them puts the anti-slosh threshold and the intake-room test under
  * the L1 suite and into the mutation run, where the rest of the class can never go.
  *
- * <p><b>Behavioural identity.</b> {@link FluidNetwork#propagateOneHop} and
+ * <p><b>Behavioural identity.</b> {@link FluidNetwork#levelOneHop} and
  * {@link FluidNetwork#fillFromSources} call these helpers verbatim. The inline expressions they
  * replace were:
  * <ul>
@@ -65,7 +65,7 @@ final class FluidFlowMath {
 
 	/**
 	 * Whether the gap is too small to be worth a hop — the {@code continue} in
-	 * {@link FluidNetwork#propagateOneHop}. The threshold is {@code <= 1}, not {@code <= 0}, and that
+	 * {@link FluidNetwork#levelOneHop}. The threshold is {@code <= 1}, not {@code <= 0}, and that
 	 * is the deliberate off-by-one this class was extracted for: at a gap of exactly 1 the halving
 	 * below yields 0, so the hop would move nothing — {@code moveFluid} bails on {@code amount <= 0}
 	 * before it opens a transaction, so the waste is the call itself and not a transaction. The
@@ -82,7 +82,7 @@ final class FluidFlowMath {
 
 	/**
 	 * How much to hand over: half the gap, rounded towards zero. Half rather than all of it is the
-	 * anti-slosh rule itself ({@link FluidNetwork#propagateOneHop}'s javadoc: it "keeps a line from
+	 * anti-slosh rule itself ({@link FluidNetwork#levelOneHop}'s javadoc: it "keeps a line from
 	 * sloshing back and forth between two segments on consecutive ticks") — after the hop the giver is
 	 * still at or above the receiver, so the next tick does not send it straight back. Rounding
 	 * towards zero is load-bearing for the same reason: at a gap of 3 the hop is 1, not 2, because 2
@@ -116,5 +116,17 @@ final class FluidFlowMath {
 	 */
 	static boolean noRoomLeft(long room) {
 		return room <= 0;
+	}
+
+	/**
+	 * MOD-677: a donor's share for one of several nearer neighbours, in proportion to that
+	 * neighbour's free room; rounds down, and the caller hands the last neighbour whatever is left.
+	 * Zero total room gives zero, so a caller that forgot its own guard still moves nothing.
+	 */
+	static long proportionalShare(long available, long room, long totalRoom) {
+		if (totalRoom <= 0) {
+			return 0;
+		}
+		return available * room / totalRoom;
 	}
 }

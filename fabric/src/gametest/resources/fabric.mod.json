@@ -53,6 +53,7 @@
       "dev.alaindustrial.gametest.EnrichedUraniumTorchGameTest",
       "dev.alaindustrial.gametest.FluidGameTest",
       "dev.alaindustrial.gametest.FluidPipeGameTest",
+      "dev.alaindustrial.gametest.FluidLineThroughputGameTest",
       "dev.alaindustrial.gametest.SteamPipeGameTest",
       "dev.alaindustrial.gametest.FluidTankGameTest",
       "dev.alaindustrial.gametest.FluxweaveArmorGameTest",

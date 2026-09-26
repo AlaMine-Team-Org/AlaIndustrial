@@ -4,10 +4,13 @@ import dev.alaindustrial.block.FluidPipeBlock;
 import dev.alaindustrial.block.entity.FluidPipeBlockEntity;
 import dev.alaindustrial.core.energy.EnergyTransactions;
 import dev.alaindustrial.core.item.PipeFaceMode;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -21,9 +24,10 @@ import net.minecraft.server.level.ServerLevel;
  * buffers physically touching it, never from the far end of the network — which is what makes a long
  * run visibly fill up rather than deliver instantly.
  *
- * <p>Order within a tick is drain-first: push into sinks, then even out between segments, then pull
- * from sources. Draining first frees room in the segments that pulling is about to use, so a running
- * line moves fluid every tick instead of stalling behind its own full buffers.
+ * <p>Order within a tick is drain-first: push into sinks, then move one hop toward the consumers
+ * (MOD-677; levelling only when none takes anything), then pull from sources. Draining first frees
+ * room in the segments that pulling is about to use, so a running line moves fluid every tick
+ * instead of stalling behind its own full buffers.
  */
 public final class FluidNetwork {
 
@@ -190,12 +194,137 @@ public final class FluidNetwork {
 	}
 
 	/**
-	 * Even out neighbouring segments by one hop. Moving only half of the difference keeps a line from
-	 * sloshing back and forth between two segments on consecutive ticks. The arithmetic of that rule —
-	 * the gap, the {@code <= 1} threshold and the halving — lives in {@link FluidFlowMath}, where an L1
-	 * suite can reach it; this method keeps only the part that needs a world.
+	 * Move fluid one hop toward the consumers (MOD-677).
+	 *
+	 * <p><b>Flow, not levelling.</b> Until MOD-677 every hop moved HALF the difference between two
+	 * segments. That is diffusion: a line of n segments carried about capacity / n per tick — 16 mB/t
+	 * over three basic pipes, 0.5 over thirty — while the tooltip promised 50. Now each segment hands
+	 * its whole content to the neighbours one step nearer a consumer, so a line carries its thinnest
+	 * segment's worth per tick at any length, which is what a cable does (MOD-070) and what a player
+	 * expects of a pipe.
+	 *
+	 * <p><b>Toward consumers that take something, as the energy network does (MOD-252).</b> The
+	 * direction is a BFS from the sink segments whose consumer accepts fluid right now. Seeding from
+	 * every sink would let a full tank next to the line wall off a hungry one further on.
+	 *
+	 * <p><b>Nearest the consumers first.</b> Segments are visited in order of distance, so a segment
+	 * that has just emptied into the next one makes room for the one behind it in the same tick — and
+	 * each unit still moves exactly one hop, because a segment is visited once. A donor with several
+	 * eligible neighbours splits in proportion to their free room.
+	 *
+	 * <p>With no consumer taking anything the line fills evenly, as it always did ({@link #levelOneHop}).
 	 */
 	private void propagateOneHop() {
+		Map<BlockPos, Integer> distance = distanceFromHungrySinks();
+		if (distance.isEmpty()) {
+			levelOneHop();
+			return;
+		}
+		List<BlockPos> byDistance = new ArrayList<>(distance.keySet());
+		byDistance.sort(Comparator.<BlockPos>comparingInt(distance::get).thenComparingLong(BlockPos::asLong));
+		for (BlockPos pos : byDistance) {
+			int d = distance.get(pos);
+			if (d == 0) {
+				continue;   // a sink segment empties into its consumer in serveSinks
+			}
+			FluidPipeBlockEntity from = pipeAt(pos);
+			if (from == null || from.fluidBuffer.amount <= 0) {
+				continue;
+			}
+			FluidHolder fluid = from.fluidBuffer.fluid;
+			List<FluidPipeBlockEntity> nearer = new ArrayList<>(6);
+			long totalRoom = 0;
+			for (Direction dir : Direction.values()) {
+				BlockPos next = pos.relative(dir);
+				Integer nd = distance.get(next);
+				if (nd == null || nd != d - 1 || !FluidPipeBlock.shouldConnectTo(level, pos, dir)) {
+					continue;
+				}
+				FluidPipeBlockEntity to = pipeAt(next);
+				if (to == null || (to.fluidBuffer.amount > 0 && !to.fluidBuffer.fluid.equals(fluid))) {
+					continue;
+				}
+				long room = FluidFlowMath.room(to.fluidBuffer.getCapacity(), to.fluidBuffer.amount);
+				if (room > 0) {
+					nearer.add(to);
+					totalRoom += room;
+				}
+			}
+			long available = Math.min(from.fluidBuffer.amount, totalRoom);
+			long left = available;
+			for (int k = 0; k < nearer.size() && left > 0; k++) {
+				FluidPipeBlockEntity to = nearer.get(k);
+				long room = FluidFlowMath.room(to.fluidBuffer.getCapacity(), to.fluidBuffer.amount);
+				long share = k == nearer.size() - 1 ? left
+						: FluidFlowMath.proportionalShare(available, room, totalRoom);
+				long before = from.fluidBuffer.amount;
+				moveFluid(from.fluidBuffer, to.fluidBuffer, fluid, Math.min(share, left));
+				left -= before - from.fluidBuffer.amount;
+			}
+		}
+	}
+
+	/**
+	 * Distance, in hops, from every segment to the nearest sink segment whose consumer accepts the
+	 * network's fluid this tick. Empty when nothing is in the line or no consumer takes anything.
+	 */
+	private Map<BlockPos, Integer> distanceFromHungrySinks() {
+		FluidHolder anyFluid = FluidHolder.EMPTY;
+		for (BlockPos pos : pipes) {
+			FluidPipeBlockEntity pipe = pipeAt(pos);
+			if (pipe != null && pipe.fluidBuffer.amount > 0) {
+				anyFluid = pipe.fluidBuffer.fluid;
+				break;
+			}
+		}
+		Map<BlockPos, Integer> distance = new LinkedHashMap<>();
+		if (anyFluid.isEmpty()) {
+			return distance;
+		}
+		ArrayDeque<BlockPos> queue = new ArrayDeque<>();
+		for (Endpoint sink : sinks) {
+			if (!distance.containsKey(sink.pipe()) && consumerAccepts(sink, anyFluid)) {
+				distance.put(sink.pipe(), 0);
+				queue.add(sink.pipe());
+			}
+		}
+		while (!queue.isEmpty()) {
+			BlockPos pos = queue.poll();
+			int next = distance.get(pos) + 1;
+			for (Direction dir : Direction.values()) {
+				BlockPos n = pos.relative(dir);
+				if (pipes.contains(n) && !distance.containsKey(n)
+						&& FluidPipeBlock.shouldConnectTo(level, n, dir.getOpposite())) {
+					distance.put(n, next);
+					queue.add(n);
+				}
+			}
+		}
+		return distance;
+	}
+
+	/** Whether the consumer behind {@code sink} would take some fluid now — asked, never moved. */
+	private boolean consumerAccepts(Endpoint sink, FluidHolder networkFluid) {
+		FluidPipeBlockEntity pipe = pipeAt(sink.pipe());
+		FluidHolder offered = pipe != null && pipe.fluidBuffer.amount > 0 ? pipe.fluidBuffer.fluid : networkFluid;
+		BlockPos target = sink.pipe().relative(sink.side());
+		if (!level.isLoaded(target)) {
+			return false;
+		}
+		FluidPort port = FluidLookup.get().find(level, target, sink.side().getOpposite());
+		if (port == null || !port.supportsInsertion()) {
+			return false;
+		}
+		return EnergyTransactions.get().simulate(txn -> port.insert(offered, 1, txn)) > 0;
+	}
+
+	/**
+	 * Even out neighbouring segments by one hop — the pre-MOD-677 rule, kept for a line no consumer is
+	 * drinking from, where levelling is exactly right: it fills the line evenly and then sleeps. Moving
+	 * only half of the difference keeps two segments from sloshing on consecutive ticks; the arithmetic
+	 * (the gap, the {@code <= 1} threshold, the halving) lives in {@link FluidFlowMath}.
+	 */
+	private void levelOneHop() {
 		List<BlockPos> ordered = new ArrayList<>(pipes);
 		// asLong, not the translation-invariant PosOrder rule — kept deliberately (MOD-313): equalising
 		// halves the difference on every hop, so the pass converges to the same levels whatever order it

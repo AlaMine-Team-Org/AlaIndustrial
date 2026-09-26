@@ -240,8 +240,8 @@ public final class FluidPipeScenarios {
 
 	/**
 	 * MOD-675: an advanced segment holds the advanced knob, an advanced line delivers about twice what
-	 * a basic one does, and a single basic segment left in an advanced line slows it — measurably, but
-	 * not all the way to the basic rate, since each hop moves half the difference between neighbours.
+	 * a basic one does, and a single basic segment left in an advanced line holds it at the basic rate
+	 * (MOD-677: the line flows, so its thinnest segment decides).
 	 */
 	public static void advancedLineCarriesTwiceAndABasicSegmentSlowsIt(GameTestHelper helper) {
 		net.minecraft.world.level.block.Block basic = ModContent.FLUID_PIPE.get();
@@ -278,16 +278,14 @@ public final class FluidPipeScenarios {
 			helper.fail("MOD-675 an advanced line does not carry about twice a basic one" + measured);
 			return;
 		}
-		// Measured (MOD-675): 923 / 1903 / 1450 mB. The basic segment does not pull the line all the way
-		// down to the basic rate — "half the difference per hop" lets its thick neighbours push it — but
-		// it must cost the line something visible, or the thicker body would be decoration.
+		// MOD-677: the line now flows instead of levelling, so a basic segment caps an advanced line at
+		// the basic rate — exactly, not partly (before MOD-677 it was 1450 mB between 923 and 1903).
 		if (viaMixed * 10 >= viaAdvanced * 9) {
 			helper.fail("MOD-675 a basic segment in an advanced line costs it nothing" + measured);
 			return;
 		}
-		if (viaMixed <= viaBasic) {
-			helper.fail("MOD-675 an advanced line with one basic segment is no faster than a basic line"
-					+ measured);
+		if (viaMixed * 10 < viaBasic * 9 || viaMixed * 10 > viaBasic * 11) {
+			helper.fail("MOD-677 a basic segment should hold an advanced line at the basic rate" + measured);
 			return;
 		}
 		helper.succeed();

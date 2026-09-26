@@ -296,4 +296,25 @@ class FluidFlowMathTest {
 				Arguments.of(10_000L, 9999L)  // 1 mB of room in a large segment
 		);
 	}
+
+	// --- MOD-677: the donor's split between nearer neighbours ---
+
+	@Test
+	void proportionalShareFollowsFreeRoom() {
+		// 90 mB to hand out, neighbours with 30 and 60 mB of room: a third and two thirds.
+		assertEquals(30L, FluidFlowMath.proportionalShare(90L, 30L, 90L));
+		assertEquals(60L, FluidFlowMath.proportionalShare(90L, 60L, 90L));
+	}
+
+	@Test
+	void proportionalShareRoundsDownSoTheLastNeighbourTakesTheRest() {
+		// 10 mB over three equal neighbours: 3 each, the caller gives the remaining 4 to the last one.
+		assertEquals(3L, FluidFlowMath.proportionalShare(10L, 5L, 15L));
+	}
+
+	@Test
+	void proportionalShareIsZeroWithoutRoom() {
+		assertEquals(0L, FluidFlowMath.proportionalShare(50L, 0L, 0L));
+		assertEquals(0L, FluidFlowMath.proportionalShare(50L, 10L, -1L));
+	}
 }

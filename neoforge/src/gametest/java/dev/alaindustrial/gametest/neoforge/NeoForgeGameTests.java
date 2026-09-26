@@ -14,6 +14,7 @@ import dev.alaindustrial.gametest.ForeignMaterialScenarios;
 import dev.alaindustrial.gametest.CableFaceParityScenarios;
 import dev.alaindustrial.gametest.DoubleChestScenarios;
 import dev.alaindustrial.gametest.ElectrumChestScenarios;
+import dev.alaindustrial.gametest.FluidLineThroughputScenarios;
 import dev.alaindustrial.gametest.FluidPipeScenarios;
 import dev.alaindustrial.gametest.SteamPipeScenarios;
 import dev.alaindustrial.gametest.CableEnergyScenarios;
@@ -1601,6 +1602,13 @@ public final class NeoForgeGameTests {
 				FluidPipeScenarios::segmentRefusesASecondFluid);
 		registerTest(event, "fluid_pipe_broken_segment_loses_contents", 60, true,
 				FluidPipeScenarios::brokenSegmentLosesItsContentsWithoutDuplicating);
+		// MOD-677: a fluid line carries its segment per tick whatever its length.
+		registerTest(event, "fluid_line_basic_3", 60, true, FluidLineThroughputScenarios::basicLineOf3);
+		registerTest(event, "fluid_line_basic_10", 60, true, FluidLineThroughputScenarios::basicLineOf10);
+		registerTest(event, "fluid_line_basic_30", 60, true, FluidLineThroughputScenarios::basicLineOf30);
+		registerTest(event, "fluid_line_advanced_30", 60, true, FluidLineThroughputScenarios::advancedLineOf30);
+		registerTest(event, "fluid_line_thin_segment_caps", 60, true, FluidLineThroughputScenarios::thinSegmentCapsAThickLine);
+		registerTest(event, "fluid_line_full_near_tank", 60, true, FluidLineThroughputScenarios::fullNearTankDoesNotStarveAFarOne);
 		// MOD-675: the advanced grade — twice the throughput, a basic segment slows the line.
 		registerTest(event, "fluid_pipe_advanced_carries_twice", 100, true,
 				FluidPipeScenarios::advancedLineCarriesTwiceAndABasicSegmentSlowsIt);
