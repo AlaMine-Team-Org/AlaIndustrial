@@ -1023,7 +1023,7 @@
             {
               "type": "text",
               "title": "فوهة البخار",
-              "text": "الطرف البعيد من دورة التبريد: يأخذ البخار من الأنبوب ويطلقه في الهواء عمودا ثم يفنيه — 100 mB/t لكل فوهة."
+              "text": "الطرف البعيد من دورة التبريد: يأخذ البخار من أنبوب البخار ويقذفه في الهواء عمودا فوّارا كالينبوع الحار ثم يفنيه — 100 mB/t لكل فوهة."
             },
             {
               "type": "recipe",
@@ -2123,6 +2123,36 @@
           ]
         },
         {
+          "id": "fluid_pipe_advanced",
+          "title": "أنبوب سوائل متقدم",
+          "icon": "alaindustrial:fluid_pipe_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "أنبوب سوائل متقدم",
+              "text": "الدرجة الثانية من أنبوب السوائل — ضعف كمية السائل على المسار نفسه، بجسم أسمك."
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:rubber",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_pipe_advanced",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "fluid_tank",
           "title": "خزان سوائل محمول",
           "icon": "alaindustrial:fluid_tank",
@@ -2428,6 +2458,25 @@
               "type": "text",
               "title": "محلول مغذي",
               "text": "منتج التقطير الثاني للوقود الحيوي، أخضر زاهٍ — السائل الوحيد في المود الذي لا يحترق بشيء. مستهلكه الوحيد هو المرشة، التي تسرّع المحاصيل والبلورات."
+            }
+          ]
+        },
+        {
+          "id": "soot",
+          "title": "سُخام",
+          "icon": "alaindustrial:soot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "سُخام",
+              "text": "يبقى على الأرض حيث احترق النفط من تلقاء نفسه؛ يُجمع بالمجرفة، ويكبس الضاغط 16 سُخام في قالب كربوني واحد."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "الطاقة: 260 EU لكل قالب"
+              ]
             }
           ]
         },
@@ -3233,14 +3282,14 @@
               "recipe_type": "تصنيع مرتب",
               "grid": [
                 "alaindustrial:tin_ingot",
+                "alaindustrial:wooden_gear",
                 "alaindustrial:tin_ingot",
-                "",
+                "alaindustrial:wooden_gear",
+                "minecraft:crafting_table",
+                "alaindustrial:wooden_gear",
                 "minecraft:oak_planks",
                 "minecraft:oak_planks",
-                "",
-                "minecraft:oak_planks",
-                "minecraft:oak_planks",
-                ""
+                "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1

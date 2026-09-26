@@ -1023,7 +1023,7 @@
             {
               "type": "text",
               "title": "Ugello del vapore",
-              "text": "L'estremità del circuito di raffreddamento: prende il vapore da un tubo, lo rilascia in aria come pennacchio e lo distrugge — 100 mB/t per ugello."
+              "text": "L'estremità del circuito di raffreddamento: prende il vapore da un tubo per il vapore, lo scaglia in aria sibilando come un pennacchio di geyser e lo distrugge — 100 mB/t per ugello."
             },
             {
               "type": "recipe",
@@ -2123,6 +2123,36 @@
           ]
         },
         {
+          "id": "fluid_pipe_advanced",
+          "title": "Tubo per fluidi avanzato",
+          "icon": "alaindustrial:fluid_pipe_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tubo per fluidi avanzato",
+              "text": "Il secondo grado del tubo per fluidi — il doppio del fluido sullo stesso percorso, in un corpo più spesso."
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:rubber",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_pipe_advanced",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "fluid_tank",
           "title": "Serbatoio di fluidi portatile",
           "icon": "alaindustrial:fluid_tank",
@@ -2428,6 +2458,25 @@
               "type": "text",
               "title": "Soluzione nutritiva",
               "text": "Il prodotto verde brillante della seconda distillazione del biocarburante — l'unico fluido del mod in cui niente brucia. Il suo unico consumatore è l'irrigatore, che accelera colture e cristalli."
+            }
+          ]
+        },
+        {
+          "id": "soot",
+          "title": "Fuliggine",
+          "icon": "alaindustrial:soot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Fuliggine",
+              "text": "Resta a terra dove il petrolio si è consumato da solo; si raccoglie con una pala, e il compressore pressa 16 fuliggine in una mattonella di carbonio."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiche",
+              "lines": [
+                "Energia: 260 EU per mattonella"
+              ]
             }
           ]
         },
@@ -3233,14 +3282,14 @@
               "recipe_type": "Fabbricazione sagomata",
               "grid": [
                 "alaindustrial:tin_ingot",
+                "alaindustrial:wooden_gear",
                 "alaindustrial:tin_ingot",
-                "",
+                "alaindustrial:wooden_gear",
+                "minecraft:crafting_table",
+                "alaindustrial:wooden_gear",
                 "minecraft:oak_planks",
                 "minecraft:oak_planks",
-                "",
-                "minecraft:oak_planks",
-                "minecraft:oak_planks",
-                ""
+                "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1

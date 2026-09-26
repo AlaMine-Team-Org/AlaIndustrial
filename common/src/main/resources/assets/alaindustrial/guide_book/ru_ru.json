@@ -1023,7 +1023,7 @@
             {
               "type": "text",
               "title": "Паровая насадка",
-              "text": "Дальний конец охлаждающего контура: принимает пар по трубе, стравливает его в воздух облаком частиц и уничтожает — 100 мБ/т на насадку."
+              "text": "Дальний конец охлаждающего контура: принимает пар по паровой трубе, выбрасывает его в воздух струёй гейзера с шипением и уничтожает — 100 мБ/т на насадку."
             },
             {
               "type": "recipe",
@@ -2123,6 +2123,36 @@
           ]
         },
         {
+          "id": "fluid_pipe_advanced",
+          "title": "Улучшенная жидкостная труба",
+          "icon": "alaindustrial:fluid_pipe_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Улучшенная жидкостная труба",
+              "text": "Второй тир жидкостной трубы — вдвое больше жидкости за тот же путь, толще корпус."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:rubber",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_pipe_advanced",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "fluid_tank",
           "title": "Переносной бак для жидкости",
           "icon": "alaindustrial:fluid_tank",
@@ -2428,6 +2458,25 @@
               "type": "text",
               "title": "Питательный раствор",
               "text": "Ярко-зелёная жидкость второй перегонки биотоплива — единственная жидкость мода, которую ничто не жжёт. Её единственный потребитель — опрыскиватель, разгоняющий рост культур и кристаллов."
+            }
+          ]
+        },
+        {
+          "id": "soot",
+          "title": "Сажа",
+          "icon": "alaindustrial:soot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Сажа",
+              "text": "Остаётся на полу, где нефть выгорела сама; собирается лопатой, и 16 сажи компрессор прессует в углеродный брикет."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Энергия: 260 EU за брикет"
+              ]
             }
           ]
         },
@@ -3225,7 +3274,7 @@
             {
               "type": "text",
               "title": "Верстак индустриалиста",
-              "text": "Рабочее место жителя «Индустриалист» — скупщика ресурсов мода за изумруды. Поставьте рядом с безработным жителем, и он возьмёт профессию."
+              "text": "Верстак 3×3, который помнит последний крафт, и рабочее место жителя «Индустриалист» — скупщика ресурсов мода за изумруды."
             },
             {
               "type": "recipe",
@@ -3233,14 +3282,14 @@
               "recipe_type": "Крафт на верстаке",
               "grid": [
                 "alaindustrial:tin_ingot",
+                "alaindustrial:wooden_gear",
                 "alaindustrial:tin_ingot",
-                "",
+                "alaindustrial:wooden_gear",
+                "minecraft:crafting_table",
+                "alaindustrial:wooden_gear",
                 "minecraft:oak_planks",
                 "minecraft:oak_planks",
-                "",
-                "minecraft:oak_planks",
-                "minecraft:oak_planks",
-                ""
+                "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1

@@ -35,4 +35,10 @@ public final class FluidPipeGameTest {
 	public void mod151BrokenSegmentLosesItsContents(GameTestHelper helper) {
 		FluidPipeScenarios.brokenSegmentLosesItsContentsWithoutDuplicating(helper);
 	}
+
+	/** MOD-675: twice the throughput, and one basic segment slows an advanced line. */
+	@GameTest
+	public void mod675AdvancedLineCarriesTwice(GameTestHelper helper) {
+		FluidPipeScenarios.advancedLineCarriesTwiceAndABasicSegmentSlowsIt(helper);
+	}
 }

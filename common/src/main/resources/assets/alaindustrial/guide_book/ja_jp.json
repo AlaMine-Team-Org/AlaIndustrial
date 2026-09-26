@@ -1023,7 +1023,7 @@
             {
               "type": "text",
               "title": "蒸気ノズル",
-              "text": "冷却回路のいちばん端です。パイプから蒸気を受け取り、雲となって大気へ放出し、そのまま消し去ります——ノズル1個につき100 mB/t。"
+              "text": "冷却回路のいちばん端です。蒸気パイプから蒸気を受け取り、シューッと音を立てる間欠泉のように大気へ噴き上げ、そのまま消し去ります——ノズル1個につき100 mB/t。"
             },
             {
               "type": "recipe",
@@ -2123,6 +2123,36 @@
           ]
         },
         {
+          "id": "fluid_pipe_advanced",
+          "title": "高性能液体パイプ",
+          "icon": "alaindustrial:fluid_pipe_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "高性能液体パイプ",
+              "text": "液体パイプの第2段階です——同じ経路で2倍の液体を、より太い本体で運びます。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:rubber",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_pipe_advanced",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "fluid_tank",
           "title": "携帯用流体タンク",
           "icon": "alaindustrial:fluid_tank",
@@ -2428,6 +2458,25 @@
               "type": "text",
               "title": "養液",
               "text": "バイオ燃料をもう一度蒸留して得られる鮮やかな緑の生成物 — モッド唯一、何も燃えない液体です。唯一の消費者はスプリンクラーで、作物とクリスタルの成長を速めます。"
+            }
+          ]
+        },
+        {
+          "id": "soot",
+          "title": "すす",
+          "icon": "alaindustrial:soot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "すす",
+              "text": "石油がひとりでに燃え尽きた場所の床に残ります。シャベルで回収でき、圧縮機がすす16個をカーボン練炭1個に圧縮します。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: カーボン練炭1個につき260 EU"
+              ]
             }
           ]
         },
@@ -3233,14 +3282,14 @@
               "recipe_type": "定形クラフト",
               "grid": [
                 "alaindustrial:tin_ingot",
+                "alaindustrial:wooden_gear",
                 "alaindustrial:tin_ingot",
-                "",
+                "alaindustrial:wooden_gear",
+                "minecraft:crafting_table",
+                "alaindustrial:wooden_gear",
                 "minecraft:oak_planks",
                 "minecraft:oak_planks",
-                "",
-                "minecraft:oak_planks",
-                "minecraft:oak_planks",
-                ""
+                "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1

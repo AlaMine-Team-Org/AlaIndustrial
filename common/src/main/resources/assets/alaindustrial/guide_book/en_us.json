@@ -1023,7 +1023,7 @@
             {
               "type": "text",
               "title": "Steam Nozzle",
-              "text": "The far end of the cooling loop: it takes steam from a pipe, releases it into the air as a plume and destroys it — 100 mB/t per nozzle."
+              "text": "The far end of the cooling loop: it takes steam from a steam pipe, throws it into the air as a hissing geyser plume and destroys it — 100 mB/t per nozzle."
             },
             {
               "type": "recipe",
@@ -2123,6 +2123,36 @@
           ]
         },
         {
+          "id": "fluid_pipe_advanced",
+          "title": "Advanced Fluid Pipe",
+          "icon": "alaindustrial:fluid_pipe_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Advanced Fluid Pipe",
+              "text": "The fluid pipe's second grade — twice the fluid over the same run, in a thicker body."
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:rubber",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_pipe_advanced",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "fluid_tank",
           "title": "Portable Fluid Tank",
           "icon": "alaindustrial:fluid_tank",
@@ -2428,6 +2458,25 @@
               "type": "text",
               "title": "Nutrient Solution",
               "text": "The bright-green product of distilling biofuel a second time — the one mod fluid nothing burns. Its only consumer is the sprinkler, which speeds up crops and crystals."
+            }
+          ]
+        },
+        {
+          "id": "soot",
+          "title": "Soot",
+          "icon": "alaindustrial:soot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Soot",
+              "text": "Left on the floor where oil burnt out by itself; collected with a shovel, and the compressor presses 16 soot into a carbon briquette."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Energy: 260 EU per briquette"
+              ]
             }
           ]
         },
@@ -3233,14 +3282,14 @@
               "recipe_type": "Shaped Crafting",
               "grid": [
                 "alaindustrial:tin_ingot",
+                "alaindustrial:wooden_gear",
                 "alaindustrial:tin_ingot",
-                "",
+                "alaindustrial:wooden_gear",
+                "minecraft:crafting_table",
+                "alaindustrial:wooden_gear",
                 "minecraft:oak_planks",
                 "minecraft:oak_planks",
-                "",
-                "minecraft:oak_planks",
-                "minecraft:oak_planks",
-                ""
+                "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1

@@ -1023,7 +1023,7 @@
             {
               "type": "text",
               "title": "蒸汽噴口",
-              "text": "冷卻迴路的末端：它從管道取走蒸汽，以雲霧形式排入空氣並將其銷毀——每個噴口 100 mB/刻。"
+              "text": "冷卻迴路的末端：它從蒸汽管道取走蒸汽，像嘶嘶作響的間歇泉一樣噴入空氣並將其銷毀——每個噴口 100 mB/刻。"
             },
             {
               "type": "recipe",
@@ -2123,6 +2123,36 @@
           ]
         },
         {
+          "id": "fluid_pipe_advanced",
+          "title": "高級流體管道",
+          "icon": "alaindustrial:fluid_pipe_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "高級流體管道",
+              "text": "流體管道的第二級——同樣的線路輸送兩倍的流體，管身更粗。"
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:rubber",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_pipe_advanced",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "fluid_tank",
           "title": "便攜式流體儲罐",
           "icon": "alaindustrial:fluid_tank",
@@ -2428,6 +2458,25 @@
               "type": "text",
               "title": "營養液",
               "text": "生物燃料二次蒸餾的翠綠產物——模組中唯一不可燃燒的流體。它唯一的消費者是噴灌器，能加速作物和水晶的生長。"
+            }
+          ]
+        },
+        {
+          "id": "soot",
+          "title": "煙灰",
+          "icon": "alaindustrial:soot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "煙灰",
+              "text": "在石油自行燃盡的地方殘留在地面上；可用鏟子收集，壓縮機會將 16 個煙灰壓成一個碳壓塊。"
+            },
+            {
+              "type": "stats",
+              "title": "數據",
+              "lines": [
+                "能量：每個碳壓塊 260 EU"
+              ]
             }
           ]
         },
@@ -3233,14 +3282,14 @@
               "recipe_type": "有序合成",
               "grid": [
                 "alaindustrial:tin_ingot",
+                "alaindustrial:wooden_gear",
                 "alaindustrial:tin_ingot",
-                "",
+                "alaindustrial:wooden_gear",
+                "minecraft:crafting_table",
+                "alaindustrial:wooden_gear",
                 "minecraft:oak_planks",
                 "minecraft:oak_planks",
-                "",
-                "minecraft:oak_planks",
-                "minecraft:oak_planks",
-                ""
+                "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1

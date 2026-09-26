@@ -1601,6 +1601,9 @@ public final class NeoForgeGameTests {
 				FluidPipeScenarios::segmentRefusesASecondFluid);
 		registerTest(event, "fluid_pipe_broken_segment_loses_contents", 60, true,
 				FluidPipeScenarios::brokenSegmentLosesItsContentsWithoutDuplicating);
+		// MOD-675: the advanced grade — twice the throughput, a basic segment slows the line.
+		registerTest(event, "fluid_pipe_advanced_carries_twice", 100, true,
+				FluidPipeScenarios::advancedLineCarriesTwiceAndABasicSegmentSlowsIt);
 		// MOD-662 — the two pipe families, and the world migration of old steam lines. The migration
 		// cases double as the proof that NeoForge's patched chunk keeps the block entity across the swap.
 		registerTest(event, "steam_pipe_families_never_join", 40, true,

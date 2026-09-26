@@ -1023,7 +1023,7 @@
             {
               "type": "text",
               "title": "증기 노즐",
-              "text": "냉각 회로의 맨 끝입니다. 파이프에서 증기를 받아 공기 중으로 뿜어내고 그대로 없앱니다 — 노즐 하나당 100 mB/틱."
+              "text": "냉각 회로의 맨 끝입니다. 증기 파이프에서 증기를 받아 쉭쉭 소리를 내는 간헐천 기둥처럼 공기 중으로 뿜어내고 그대로 없앱니다 — 노즐 하나당 100 mB/틱."
             },
             {
               "type": "recipe",
@@ -2123,6 +2123,36 @@
           ]
         },
         {
+          "id": "fluid_pipe_advanced",
+          "title": "고급 액체 파이프",
+          "icon": "alaindustrial:fluid_pipe_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "고급 액체 파이프",
+              "text": "액체 파이프의 두 번째 등급 — 같은 경로로 두 배의 액체를, 더 굵은 몸체로 옮깁니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:rubber",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_pipe_advanced",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "fluid_tank",
           "title": "휴대용 유체 탱크",
           "icon": "alaindustrial:fluid_tank",
@@ -2428,6 +2458,25 @@
               "type": "text",
               "title": "양액",
               "text": "바이오 연료를 한 번 더 증류해 얻는 선명한 초록 생성물 — 모드에서 유일하게 아무것도 타지 않는 액체입니다. 유일한 소비자는 살수기로, 작물과 결정의 성장을 앞당깁니다."
+            }
+          ]
+        },
+        {
+          "id": "soot",
+          "title": "그을음",
+          "icon": "alaindustrial:soot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "그을음",
+              "text": "석유가 저절로 다 타 버린 자리의 바닥에 남습니다. 삽으로 모을 수 있으며, 압축기가 그을음 16개를 탄소 연탄 1개로 압축합니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 연탄 1개당 260 EU"
+              ]
             }
           ]
         },
@@ -3233,14 +3282,14 @@
               "recipe_type": "정형 제작",
               "grid": [
                 "alaindustrial:tin_ingot",
+                "alaindustrial:wooden_gear",
                 "alaindustrial:tin_ingot",
-                "",
+                "alaindustrial:wooden_gear",
+                "minecraft:crafting_table",
+                "alaindustrial:wooden_gear",
                 "minecraft:oak_planks",
                 "minecraft:oak_planks",
-                "",
-                "minecraft:oak_planks",
-                "minecraft:oak_planks",
-                ""
+                "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1

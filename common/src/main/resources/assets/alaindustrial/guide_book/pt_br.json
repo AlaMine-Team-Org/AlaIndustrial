@@ -1023,7 +1023,7 @@
             {
               "type": "text",
               "title": "Bocal de Vapor",
-              "text": "A ponta final do circuito de refrigeração: pega o vapor de um tubo, solta no ar como uma pluma e o destrói — 100 mB/t por bocal."
+              "text": "A ponta final do circuito de refrigeração: pega o vapor de um cano de vapor, lança no ar como uma pluma sibilante de gêiser e o destrói — 100 mB/t por bocal."
             },
             {
               "type": "recipe",
@@ -2123,6 +2123,36 @@
           ]
         },
         {
+          "id": "fluid_pipe_advanced",
+          "title": "Cano de fluidos avançado",
+          "icon": "alaindustrial:fluid_pipe_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cano de fluidos avançado",
+              "text": "O segundo grau do cano de fluidos — o dobro de fluido no mesmo trajeto, num corpo mais grosso."
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:rubber",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_pipe_advanced",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "fluid_tank",
           "title": "Tanque de fluidos portátil",
           "icon": "alaindustrial:fluid_tank",
@@ -2428,6 +2458,25 @@
               "type": "text",
               "title": "Solução Nutritiva",
               "text": "O produto verde-claro de destilar biocombustível uma segunda vez — o único fluido do mod em que nada queima. Seu único consumidor é o aspersor, que acelera plantações e cristais."
+            }
+          ]
+        },
+        {
+          "id": "soot",
+          "title": "Fuligem",
+          "icon": "alaindustrial:soot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Fuligem",
+              "text": "Fica no chão onde o petróleo queimou sozinho até se apagar; é coletada com uma pá, e o compressor prensa 16 fuligens em um briquete de carbono."
+            },
+            {
+              "type": "stats",
+              "title": "Estatísticas",
+              "lines": [
+                "Energia: 260 EU por briquete"
+              ]
             }
           ]
         },
@@ -3233,14 +3282,14 @@
               "recipe_type": "Fabricação com forma",
               "grid": [
                 "alaindustrial:tin_ingot",
+                "alaindustrial:wooden_gear",
                 "alaindustrial:tin_ingot",
-                "",
+                "alaindustrial:wooden_gear",
+                "minecraft:crafting_table",
+                "alaindustrial:wooden_gear",
                 "minecraft:oak_planks",
                 "minecraft:oak_planks",
-                "",
-                "minecraft:oak_planks",
-                "minecraft:oak_planks",
-                ""
+                "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1

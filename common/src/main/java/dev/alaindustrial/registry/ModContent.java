@@ -153,6 +153,7 @@ public final class ModContent {
 	public static Supplier<Block> ITEM_PIPE = unbound("ITEM_PIPE");
 	public static Supplier<Block> ITEM_PIPE_ADVANCED = unbound("ITEM_PIPE_ADVANCED");
 	public static Supplier<Block> FLUID_PIPE = unbound("FLUID_PIPE");
+	public static Supplier<Block> FLUID_PIPE_ADVANCED = unbound("FLUID_PIPE_ADVANCED");
 	public static Supplier<Block> REINFORCED_FLUID_PIPE = unbound("REINFORCED_FLUID_PIPE");
 	// MOD-662 — the steam family: steam only, never joined to the fluid pipes above.
 	public static Supplier<Block> STEAM_PIPE = unbound("STEAM_PIPE");
@@ -720,6 +721,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> ITEM_PIPE_ITEM = unbound("ITEM_PIPE_ITEM");
 	public static Supplier<BlockItem> ITEM_PIPE_ADVANCED_ITEM = unbound("ITEM_PIPE_ADVANCED_ITEM");
 	public static Supplier<BlockItem> FLUID_PIPE_ITEM = unbound("FLUID_PIPE_ITEM");
+	public static Supplier<BlockItem> FLUID_PIPE_ADVANCED_ITEM = unbound("FLUID_PIPE_ADVANCED_ITEM");
 	public static Supplier<BlockItem> REINFORCED_FLUID_PIPE_ITEM = unbound("REINFORCED_FLUID_PIPE_ITEM");
 	public static Supplier<BlockItem> STEAM_PIPE_ITEM = unbound("STEAM_PIPE_ITEM");
 	public static Supplier<BlockItem> REINFORCED_STEAM_PIPE_ITEM = unbound("REINFORCED_STEAM_PIPE_ITEM");

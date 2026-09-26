@@ -1023,7 +1023,7 @@
             {
               "type": "text",
               "title": "Buhar Memesi",
-              "text": "Soğutma devresinin en uç noktası: borudan buharı alır, havaya bir tüy gibi salar ve yok eder — nozul başına 100 mB/t."
+              "text": "Soğutma devresinin en uç noktası: buhar borusundan buharı alır, tıslayan bir gayzer sütunu gibi havaya fırlatır ve yok eder — nozul başına 100 mB/t."
             },
             {
               "type": "recipe",
@@ -2123,6 +2123,36 @@
           ]
         },
         {
+          "id": "fluid_pipe_advanced",
+          "title": "Gelişmiş Sıvı Borusu",
+          "icon": "alaindustrial:fluid_pipe_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Gelişmiş Sıvı Borusu",
+              "text": "Sıvı borusunun ikinci kademesi — aynı hatta iki kat sıvı, daha kalın bir gövdede."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:rubber",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_pipe_advanced",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "fluid_tank",
           "title": "Taşınabilir Sıvı Tankı",
           "icon": "alaindustrial:fluid_tank",
@@ -2428,6 +2458,25 @@
               "type": "text",
               "title": "Besin çözeltisi",
               "text": "Biyoyakıtın ikinci kez damıtılmasından elde edilen parlak yeşil ürün — modda hiçbir şeyin yanmadığı tek sıvı. Tek tüketicisi, ekinleri ve kristalleri hızlandıran püskürtücüdür."
+            }
+          ]
+        },
+        {
+          "id": "soot",
+          "title": "İs",
+          "icon": "alaindustrial:soot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "İs",
+              "text": "Petrolün kendi kendine yanıp söndüğü yerde zeminde kalır; kürekle toplanır ve sıkıştırıcı 16 isi bir karbon briketine presler."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: briket başına 260 EU"
+              ]
             }
           ]
         },
@@ -3233,14 +3282,14 @@
               "recipe_type": "Şekilli Üretim",
               "grid": [
                 "alaindustrial:tin_ingot",
+                "alaindustrial:wooden_gear",
                 "alaindustrial:tin_ingot",
-                "",
+                "alaindustrial:wooden_gear",
+                "minecraft:crafting_table",
+                "alaindustrial:wooden_gear",
                 "minecraft:oak_planks",
                 "minecraft:oak_planks",
-                "",
-                "minecraft:oak_planks",
-                "minecraft:oak_planks",
-                ""
+                "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1

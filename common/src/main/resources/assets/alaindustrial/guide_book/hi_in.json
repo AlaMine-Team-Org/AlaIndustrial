@@ -1023,7 +1023,7 @@
             {
               "type": "text",
               "title": "भाप नोज़ल",
-              "text": "शीतलन परिपथ का अंतिम छोर: यह पाइप से भाप लेता है, उसे हवा में गुबार की तरह छोड़ता है और नष्ट कर देता है — प्रति नोज़ल 100 mB/टिक।"
+              "text": "शीतलन परिपथ का अंतिम छोर: यह भाप पाइप से भाप लेता है, उसे फुफकारते गीज़र के गुबार की तरह हवा में उछालता है और नष्ट कर देता है — प्रति नोज़ल 100 mB/टिक।"
             },
             {
               "type": "recipe",
@@ -2123,6 +2123,36 @@
           ]
         },
         {
+          "id": "fluid_pipe_advanced",
+          "title": "उन्नत द्रव पाइप",
+          "icon": "alaindustrial:fluid_pipe_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "उन्नत द्रव पाइप",
+              "text": "द्रव पाइप का दूसरा दर्जा — उसी रास्ते पर दोगुना द्रव, ज़्यादा मोटे ढाँचे में।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:rubber",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_pipe_advanced",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "fluid_tank",
           "title": "पोर्टेबल द्रव टैंक",
           "icon": "alaindustrial:fluid_tank",
@@ -2428,6 +2458,25 @@
               "type": "text",
               "title": "पोषक घोल",
               "text": "जैव ईंधन की दूसरी बार आसवन से बना चमकीला हरा उत्पाद — मॉड का एकमात्र तरल जिसमें कुछ नहीं जलता। इसका एकमात्र उपभोक्ता छिड़काव यंत्र है, जो फसलों और क्रिस्टलों को तेज़ करता है।"
+            }
+          ]
+        },
+        {
+          "id": "soot",
+          "title": "कालिख",
+          "icon": "alaindustrial:soot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "कालिख",
+              "text": "जहाँ तेल अपने आप जलकर बुझ गया, वहाँ ज़मीन पर रह जाती है; फावड़े से इकट्ठी होती है, और कंप्रेसर 16 कालिख दबाकर एक कार्बन ब्रिकेट बनाता है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: प्रति ब्रिकेट 260 EU"
+              ]
             }
           ]
         },
@@ -3233,14 +3282,14 @@
               "recipe_type": "आकारित क्राफ्टिंग",
               "grid": [
                 "alaindustrial:tin_ingot",
+                "alaindustrial:wooden_gear",
                 "alaindustrial:tin_ingot",
-                "",
+                "alaindustrial:wooden_gear",
+                "minecraft:crafting_table",
+                "alaindustrial:wooden_gear",
                 "minecraft:oak_planks",
                 "minecraft:oak_planks",
-                "",
-                "minecraft:oak_planks",
-                "minecraft:oak_planks",
-                ""
+                "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1

@@ -1023,7 +1023,7 @@
             {
               "type": "text",
               "title": "Ångmunstycke",
-              "text": "Kylkretsens yttersta ände: den tar ånga från ett rör, släpper ut den i luften som en plym och förstör den — 100 mB/t per munstycke."
+              "text": "Kylkretsens yttersta ände: den tar ånga från ett ångrör, kastar ut den i luften som en väsande gejserplym och förstör den — 100 mB/t per munstycke."
             },
             {
               "type": "recipe",
@@ -2123,6 +2123,36 @@
           ]
         },
         {
+          "id": "fluid_pipe_advanced",
+          "title": "Avancerat vätskerör",
+          "icon": "alaindustrial:fluid_pipe_advanced",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Avancerat vätskerör",
+              "text": "Vätskerörets andra grad — dubbelt så mycket vätska över samma sträcka, i en tjockare kropp."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:rubber",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate",
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:bronze_reinforced_plate"
+              ],
+              "result_id": "alaindustrial:fluid_pipe_advanced",
+              "result_count": 4
+            }
+          ]
+        },
+        {
           "id": "fluid_tank",
           "title": "Bärbar vätsketank",
           "icon": "alaindustrial:fluid_tank",
@@ -2428,6 +2458,25 @@
               "type": "text",
               "title": "Näringslösning",
               "text": "Den klargröna produkten av att destillera biobränsle en andra gång — moddens enda fluid som inget brinner i. Dess enda konsument är spridaren, som skyndar på grödor och kristaller."
+            }
+          ]
+        },
+        {
+          "id": "soot",
+          "title": "Sot",
+          "icon": "alaindustrial:soot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Sot",
+              "text": "Blir kvar på marken där olja har brunnit ut av sig själv; samlas in med en spade, och kompressorn pressar 16 sot till en kolbrikett."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Energi: 260 EU per brikett"
+              ]
             }
           ]
         },
@@ -3233,14 +3282,14 @@
               "recipe_type": "Formad tillverkning",
               "grid": [
                 "alaindustrial:tin_ingot",
+                "alaindustrial:wooden_gear",
                 "alaindustrial:tin_ingot",
-                "",
+                "alaindustrial:wooden_gear",
+                "minecraft:crafting_table",
+                "alaindustrial:wooden_gear",
                 "minecraft:oak_planks",
                 "minecraft:oak_planks",
-                "",
-                "minecraft:oak_planks",
-                "minecraft:oak_planks",
-                ""
+                "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1
