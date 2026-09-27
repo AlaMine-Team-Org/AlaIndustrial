@@ -403,13 +403,13 @@
 
 <h2 id="compared-with-the-ordinary-pipe">Compared with the ordinary pipe</h2>
 
-<table><thead><tr><th></th><th>Fluid Pipe</th><th>Advanced Fluid Pipe</th></tr></thead><tbody><tr><td>Segment volume</td><td>50 mB</td><td><strong>100 mB</strong></td></tr><tr><td>Limit per hop</td><td>50 mB/tick</td><td><strong>100 mB/tick</strong></td></tr><tr><td>3-segment line, measured</td><td>~16 mB/tick</td><td><strong>~33 mB/tick</strong></td></tr><tr><td>4-segment line, measured</td><td>~12 mB/tick</td><td><strong>~25 mB/tick</strong></td></tr><tr><td>Body cross-section</td><td>4×4 pixels</td><td><strong>6×6 pixels</strong></td></tr><tr><td>Hardness</td><td>0.2</td><td>0.3</td></tr><tr><td>Recipe</td><td>silver and glass, makes 8</td><td>4 pipes, 4 reinforced bronze plates, rubber — makes 4</td></tr></tbody></table>
+<table><thead><tr><th></th><th>Fluid Pipe</th><th>Advanced Fluid Pipe</th></tr></thead><tbody><tr><td>Segment volume</td><td>50 mB</td><td><strong>100 mB</strong></td></tr><tr><td>Limit per hop</td><td>50 mB/tick</td><td><strong>100 mB/tick</strong></td></tr><tr><td>Line of 3, 10 or 30 segments, measured</td><td>50 mB/tick</td><td><strong>100 mB/tick</strong></td></tr><tr><td>Body cross-section</td><td>4×4 pixels</td><td><strong>6×6 pixels</strong></td></tr><tr><td>Hardness</td><td>0.2</td><td>0.3</td></tr><tr><td>Recipe</td><td>silver and glass, makes 8</td><td>4 pipes, 4 reinforced bronze plates, rubber — makes 4</td></tr></tbody></table>
 
-<p><strong>Fluid flows through the pipe; it does not teleport</strong>: every tick a segment hands its neighbour half the difference between their levels. So the real flow is below the segment volume and falls with the length of the line — but the advanced pipe always carries about twice what an ordinary one of the same length does.</p>
+<p><strong>Fluid flows through the pipe; it does not teleport</strong>: every tick a segment hands its content one pipe nearer the consumer. So a line carries a full segment per tick at any length — 50 mB/tick for the ordinary pipe, 100 for the advanced one — and the fluid itself takes as many ticks to reach the end as the line has pipes.</p>
 
 <h2 id="an-ordinary-pipe-in-an-advanced-line">An ordinary pipe in an advanced line</h2>
 
-<p>A forgotten ordinary pipe <strong>slows</strong> an advanced line: three segments with an ordinary one in the middle give ~25 mB/tick instead of ~33. The flow does not drop all the way to the ordinary line's rate — the thick neighbours push the thin segment. That is what the thick brass body is for: the thin pipe in a line can be seen.</p>
+<p>A forgotten ordinary pipe <strong>caps</strong> an advanced line at its own 50 mB/tick: a line runs at its thinnest pipe. That is what the thick brass body is for — the thin pipe in a line can be seen.</p>
 
 <h2 id="block-properties">Block properties</h2>
 

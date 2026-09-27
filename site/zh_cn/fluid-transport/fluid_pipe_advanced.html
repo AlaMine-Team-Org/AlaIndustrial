@@ -403,13 +403,13 @@
 
 <h2 id="与普通管道对比">与普通管道对比</h2>
 
-<table><thead><tr><th></th><th>流体管道</th><th>高级流体管道</th></tr></thead><tbody><tr><td>单段体积</td><td>50 mB</td><td><strong>100 mB</strong></td></tr><tr><td>每跳上限</td><td>50 mB/刻</td><td><strong>100 mB/刻</strong></td></tr><tr><td>3 段管线，实测</td><td>~16 mB/刻</td><td><strong>~33 mB/刻</strong></td></tr><tr><td>4 段管线，实测</td><td>~12 mB/刻</td><td><strong>~25 mB/刻</strong></td></tr><tr><td>管身截面</td><td>4×4 像素</td><td><strong>6×6 像素</strong></td></tr><tr><td>硬度</td><td>0.2</td><td>0.3</td></tr><tr><td>配方</td><td>银和玻璃，产出 8 根</td><td>4 根管道、4 块强化青铜板、橡胶——产出 4 根</td></tr></tbody></table>
+<table><thead><tr><th></th><th>流体管道</th><th>高级流体管道</th></tr></thead><tbody><tr><td>单段体积</td><td>50 mB</td><td><strong>100 mB</strong></td></tr><tr><td>每跳上限</td><td>50 mB/刻</td><td><strong>100 mB/刻</strong></td></tr><tr><td>3、10 或 30 段管线，实测</td><td>50 mB/刻</td><td><strong>100 mB/刻</strong></td></tr><tr><td>管身截面</td><td>4×4 像素</td><td><strong>6×6 像素</strong></td></tr><tr><td>硬度</td><td>0.2</td><td>0.3</td></tr><tr><td>配方</td><td>银和玻璃，产出 8 根</td><td>4 根管道、4 块强化青铜板、橡胶——产出 4 根</td></tr></tbody></table>
 
-<p><strong>流体沿管道流动，而不是瞬移</strong>：每刻一段会把两者液位差的一半交给相邻段。因此实际流量低于单段体积，并随 管线长度增加而下降——但高级管道的输送量始终约为同样长度普通管道的两倍。</p>
+<p><strong>流体沿管道流动，而不是瞬移</strong>：每刻一段会把其中的流体向消耗端推进一根管道。因此无论管线多长，每刻都能 输送一整段的体积——普通管道 50 mB/刻，高级管道 100——而流体本身到达末端所需的刻数等于管线中的管道数。</p>
 
 <h2 id="高级管线中的普通管道">高级管线中的普通管道</h2>
 
-<p>一根被遗忘的普通管道会<strong>拖慢</strong>高级管线：中间夹一段普通管道的 3 段管线只有 ~25 mB/刻，而不是 ~33。流量 不会一直降到普通管线的水平——粗的相邻段会推动细的那一段。粗大的黄铜管身正是为此：管线里的细管道一眼 就能看出来。</p>
+<p>一根被遗忘的普通管道会把高级管线<strong>限制</strong>在它自己的 50 mB/刻：管线的速度取决于其中最细的管道。粗大的黄铜 管身正是为此——管线里的细管道一眼就能看出来。</p>
 
 <h2 id="方块属性">方块属性</h2>
 

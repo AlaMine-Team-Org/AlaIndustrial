@@ -403,13 +403,13 @@
 
 <h2 id="comparada-con-la-tubería-corriente">Comparada con la tubería corriente</h2>
 
-<table><thead><tr><th></th><th>Tubería de fluidos</th><th>Tubería de fluidos avanzada</th></tr></thead><tbody><tr><td>Volumen del segmento</td><td>50 mB</td><td><strong>100 mB</strong></td></tr><tr><td>Límite por salto</td><td>50 mB/tick</td><td><strong>100 mB/tick</strong></td></tr><tr><td>Línea de 3 segmentos, medido</td><td>~16 mB/tick</td><td><strong>~33 mB/tick</strong></td></tr><tr><td>Línea de 4 segmentos, medido</td><td>~12 mB/tick</td><td><strong>~25 mB/tick</strong></td></tr><tr><td>Sección del cuerpo</td><td>4×4 píxeles</td><td><strong>6×6 píxeles</strong></td></tr><tr><td>Dureza</td><td>0.2</td><td>0.3</td></tr><tr><td>Receta</td><td>plata y vidrio, da 8</td><td>4 tuberías, 4 placas de bronce reforzadas, caucho — da 4</td></tr></tbody></table>
+<table><thead><tr><th></th><th>Tubería de fluidos</th><th>Tubería de fluidos avanzada</th></tr></thead><tbody><tr><td>Volumen del segmento</td><td>50 mB</td><td><strong>100 mB</strong></td></tr><tr><td>Límite por salto</td><td>50 mB/tick</td><td><strong>100 mB/tick</strong></td></tr><tr><td>Línea de 3, 10 o 30 segmentos, medido</td><td>50 mB/tick</td><td><strong>100 mB/tick</strong></td></tr><tr><td>Sección del cuerpo</td><td>4×4 píxeles</td><td><strong>6×6 píxeles</strong></td></tr><tr><td>Dureza</td><td>0.2</td><td>0.3</td></tr><tr><td>Receta</td><td>plata y vidrio, da 8</td><td>4 tuberías, 4 placas de bronce reforzadas, caucho — da 4</td></tr></tbody></table>
 
-<p><strong>El fluido fluye por la tubería; no se teletransporta</strong>: cada tick un segmento entrega a su vecino la mitad de la diferencia entre sus niveles. Por eso el caudal real está por debajo del volumen del segmento y cae con la longitud de la línea, pero la tubería avanzada siempre transporta más o menos el doble que una corriente de la misma longitud.</p>
+<p><strong>El fluido fluye por la tubería; no se teletransporta</strong>: cada tick un segmento pasa su contenido una tubería más cerca del consumidor. Por eso una línea transporta un segmento completo por tick a cualquier longitud (50 mB/tick la tubería corriente, 100 la avanzada) y el propio fluido tarda en llegar al final tantos ticks como tuberías tiene la línea.</p>
 
 <h2 id="una-tubería-corriente-en-una-línea-avanzada">Una tubería corriente en una línea avanzada</h2>
 
-<p>Una tubería corriente olvidada <strong>frena</strong> una línea avanzada: tres segmentos con uno corriente en medio dan ~25 mB/tick en lugar de ~33. El caudal no baja del todo al de la línea corriente: los vecinos gruesos empujan al segmento fino. Para eso sirve el grueso cuerpo de latón: la tubería fina de una línea se ve.</p>
+<p>Una tubería corriente olvidada <strong>limita</strong> una línea avanzada a sus propios 50 mB/tick: una línea va al ritmo de su tubería más fina. Para eso sirve el grueso cuerpo de latón: la tubería fina de una línea se ve.</p>
 
 <h2 id="propiedades-del-bloque">Propiedades del bloque</h2>
 
