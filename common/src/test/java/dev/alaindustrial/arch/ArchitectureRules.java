@@ -197,9 +197,9 @@ public class ArchitectureRules {
 	 * with the JVM run or with the base's absolute coordinates.
 	 *
 	 * <p><b>Deliberately NOT here: {@code dev.alaindustrial.client.render}.</b> Its two unordered sets
-	 * ({@code NetworkOverlayRenderer}'s joints and endpoints) are only ever asked {@code contains}; the
-	 * geometry that used to depend on them is now ordered inside {@link
-	 * dev.alaindustrial.network.NetworkTopology#tubeRuns} instead, where the guarantee belongs. Listing a
+	 * ({@code NetworkOverlayState}'s joints and endpoints) are only ever asked {@code contains}; the
+	 * geometry is drawn edge by edge from {@link
+	 * dev.alaindustrial.network.NetworkTopology#connectedAdjacency}, which is ordered itself. Listing a
 	 * package whose sets are never iterated would spend the rule's credibility on non-defects.
 	 */
 	private static final String[] ORDER_SENSITIVE_PACKAGES = {

@@ -8,6 +8,8 @@ import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.core.energy.EnergyNetwork;
 import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.item.tool.AnalyzerMode;
+import dev.alaindustrial.network.AnalyzerTotals;
+import dev.alaindustrial.network.NetworkTopology;
 import dev.alaindustrial.network.NetworkTraverser;
 import dev.alaindustrial.network.NetworkTraverser.TraversalResult;
 import dev.alaindustrial.registry.ModContent;
@@ -16,6 +18,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 /**
@@ -313,5 +316,248 @@ public final class NetworkAnalyzerScenarios {
 			return;
 		}
 		helper.succeed();
+	}
+
+	// ── MOD-665: the bug-fix pass ─────────────────────────────────────────────────────────────────────
+
+	/**
+	 * @implements MOD-665-D2 — at the network cap the networks already accepted are still collected:
+	 *     with a cap of 3 the start network and the two neighbours that fit (far-B, far-A) are shown, and
+	 *     only the third neighbour (far-C) is dropped
+	 * @covers MOD-665
+	 */
+	public static void mod665_traverseCapKeepsAcceptedNetworks(GameTestHelper helper) {
+		buildOrderRig(helper);
+		driveOrderRig(helper, 40);
+		EnergyNetwork start = NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(ORDER_STACK_BOTTOM));
+		if (start == null) {
+			helper.fail("the cable stack did not form a network");
+			return;
+		}
+		TraversalResult result = NetworkTraverser.traverse(helper.getLevel(), start, AnalyzerMode.TRAVERSE, 3);
+		if (!result.hitLimit()) {
+			helper.fail("three neighbours behind a cap of 3 must hit the limit");
+			return;
+		}
+		boolean farB = result.cables().contains(helper.absolutePos(ORDER_FAR_B));
+		boolean farA = result.cables().contains(helper.absolutePos(ORDER_FAR_A));
+		boolean farC = result.cables().contains(helper.absolutePos(ORDER_FAR_C));
+		if (!farB || !farA) {
+			helper.fail("networks accepted before the cap were dropped (D2): far-B=" + farB + " far-A=" + farA
+					+ " — the cap allows three networks, the picture must show three");
+			return;
+		}
+		if (farC) {
+			helper.fail("far-C is the fourth network and must be cut by the cap of 3");
+			return;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * @implements MOD-665-D3 — Traverse crosses a store only through a face that is an energy port: a
+	 *     cable of an unrelated network touching a Battery Box's inert top is not bridged into
+	 * @covers MOD-665
+	 */
+	public static void mod665_traverseIgnoresInertStorageFace(GameTestHelper helper) {
+		build(helper);
+		BlockPos top = BAT.above();
+		helper.setBlock(top, ModContent.COPPER_CABLE.get());
+		for (int i = 0; i < 40; i++) {
+			drive(helper, 1);
+			tickEntity(helper, top);
+		}
+		EnergyNetwork left = NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(CABLE_A));
+		EnergyNetwork right = NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(CABLE_B));
+		EnergyNetwork above = NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(top));
+		if (left == null || right == null || above == null || above == left || above == right) {
+			helper.fail("precondition: the cable on the box top must be a third, separate network (left=" + left
+					+ ", right=" + right + ", above=" + above + ")");
+			return;
+		}
+		TraversalResult result = NetworkTraverser.traverse(helper.getLevel(), left, AnalyzerMode.TRAVERSE, 32);
+		if (!result.cables().contains(helper.absolutePos(CABLE_B))) {
+			helper.fail("the real bridge through the box energy faces must still be crossed");
+			return;
+		}
+		if (result.cables().contains(helper.absolutePos(top))) {
+			helper.fail("Traverse crossed into a network through the Battery Box inert top face (D3)");
+			return;
+		}
+		helper.succeed();
+	}
+
+	/** A Battery Box in the middle of one bus: IN and OUT faces on the same network, a side touching it too. */
+	private static final BlockPos BUS_BAT = new BlockPos(3, 2, 1);
+	private static final BlockPos[] BUS_CABLES = {
+		new BlockPos(2, 2, 1), new BlockPos(4, 2, 1),
+		new BlockPos(2, 2, 2), new BlockPos(3, 2, 2), new BlockPos(4, 2, 2)};
+
+	private static void buildBusRig(GameTestHelper helper) {
+		helper.setBlock(BUS_BAT, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.EAST));
+		for (BlockPos cable : BUS_CABLES) {
+			helper.setBlock(cable, ModContent.COPPER_CABLE.get());
+		}
+		for (int i = 0; i < 20; i++) {
+			for (BlockPos cable : BUS_CABLES) {
+				tickEntity(helper, cable);
+			}
+			tickEntity(helper, BUS_BAT);
+			NetworkManager.tickAll(helper.getLevel());
+		}
+	}
+
+	/**
+	 * @implements MOD-665-D6 — a store that both feeds and draws from one network is listed once, as
+	 *     storage, in both modes — listed twice it was drawn as two cubes in one cell
+	 * @covers MOD-665
+	 */
+	public static void mod665_dualRoleStoreListedOnce(GameTestHelper helper) {
+		buildBusRig(helper);
+		BlockPos bat = helper.absolutePos(BUS_BAT);
+		EnergyNetwork bus = NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(BUS_CABLES[0]));
+		if (bus == null || !bus.diagnostics().producerPositions().contains(bat)
+				|| !bus.diagnostics().consumerPositions().contains(bat)) {
+			helper.fail("precondition: the box must be both a producer and a consumer of the bus, got "
+					+ (bus == null ? "no network" : bus.diagnostics().producerPositions() + " / "
+							+ bus.diagnostics().consumerPositions()));
+			return;
+		}
+		for (AnalyzerMode mode : AnalyzerMode.values()) {
+			TraversalResult r = NetworkTraverser.traverse(helper.getLevel(), bus, mode, 32);
+			int roles = (r.producers().contains(bat) ? 1 : 0) + (r.consumers().contains(bat) ? 1 : 0)
+					+ (r.storageSinks().contains(bat) ? 1 : 0);
+			if (roles != 1 || !r.storageSinks().contains(bat)) {
+				helper.fail(mode + ": the dual-role box must be exactly one node, storage — producers="
+						+ r.producers() + " consumers=" + r.consumers() + " storage=" + r.storageSinks());
+				return;
+			}
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * @implements MOD-665-D5 — the faces the payload reports for an endpoint are the energy ports really
+	 *     wired to the network: the bus box IN and OUT faces, not the inert side a cable merely touches
+	 * @covers MOD-665
+	 */
+	public static void mod665_endpointFacesAreRealPorts(GameTestHelper helper) {
+		buildBusRig(helper);
+		BlockPos bat = helper.absolutePos(BUS_BAT);
+		EnergyNetwork bus = NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(BUS_CABLES[0]));
+		if (bus == null) {
+			helper.fail("the bus did not form a network");
+			return;
+		}
+		TraversalResult r = NetworkTraverser.traverse(helper.getLevel(), bus, AnalyzerMode.STOP_AT_STORAGE, 32);
+		int expected = (1 << Direction.WEST.ordinal()) | (1 << Direction.EAST.ordinal());
+		Integer packed = r.endpointFaces().get(bat);
+		Integer faces = packed == null ? null : NetworkTopology.wiredFaces(packed);
+		if (faces == null || faces != expected) {
+			helper.fail("box faces " + (faces == null ? "missing" : Integer.toBinaryString(faces)) + ", expected "
+					+ Integer.toBinaryString(expected) + " (west + east) — the south side touches a cable but is "
+					+ "no port, and a leg drawn there is a wire the network does not have");
+			return;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * The pass-through rig: generator, cable, Battery Box, cable, macerator — the box turned so its
+	 * charging face ({@code FACING}, IN) meets the generator cable and its output face the machine cable.
+	 */
+	private static final BlockPos FLOW_GEN = new BlockPos(1, 2, 1);
+	private static final BlockPos FLOW_CABLE_A = new BlockPos(2, 2, 1);
+	private static final BlockPos FLOW_BAT = new BlockPos(3, 2, 1);
+	private static final BlockPos FLOW_CABLE_B = new BlockPos(4, 2, 1);
+	private static final BlockPos FLOW_MAC = new BlockPos(5, 2, 1);
+
+	private static void buildFlowRig(GameTestHelper helper) {
+		helper.setBlock(FLOW_GEN, ModContent.GENERATOR.get());
+		helper.setBlock(FLOW_CABLE_A, ModContent.COPPER_CABLE.get());
+		helper.setBlock(FLOW_BAT, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
+		helper.setBlock(FLOW_CABLE_B, ModContent.COPPER_CABLE.get());
+		helper.setBlock(FLOW_MAC, ModContent.MACERATOR.get());
+		if (be(helper, FLOW_GEN) instanceof GeneratorBlockEntity gen) {
+			gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
+		}
+		if (be(helper, FLOW_MAC) instanceof MaceratorBlockEntity mac) {
+			mac.setItem(MaceratorBlockEntity.INPUT_SLOT, new ItemStack(Items.RAW_IRON, 64));
+		}
+		for (int i = 0; i < 80; i++) {
+			for (BlockPos rel : new BlockPos[] {FLOW_GEN, FLOW_CABLE_A, FLOW_BAT, FLOW_CABLE_B, FLOW_MAC}) {
+				tickEntity(helper, rel);
+			}
+			NetworkManager.tickAll(helper.getLevel());
+		}
+	}
+
+	/**
+	 * @implements MOD-665-D11 — Traverse does not count the EU that passes through a store twice (once
+	 *     into the store on one side, again out of it into the machine on the other)
+	 * @covers MOD-665
+	 */
+	public static void mod665_traverseCountsPassThroughOnce(GameTestHelper helper) {
+		buildFlowRig(helper);
+		EnergyNetwork left = NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(FLOW_CABLE_A));
+		EnergyNetwork right = NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(FLOW_CABLE_B));
+		if (left == null || right == null || left == right) {
+			helper.fail("precondition: the box must split two networks (left=" + left + ", right=" + right + ")");
+			return;
+		}
+		long charged = NetworkTraverser.traverse(helper.getLevel(), left, AnalyzerMode.STOP_AT_STORAGE, 32).moved();
+		long fed = NetworkTraverser.traverse(helper.getLevel(), right, AnalyzerMode.STOP_AT_STORAGE, 32).moved();
+		if (charged <= 0 || fed <= 0) {
+			helper.fail("precondition: energy must flow on both sides of the box on the last tick — charged="
+					+ charged + " fed=" + fed);
+			return;
+		}
+		long total = NetworkTraverser.traverse(helper.getLevel(), left, AnalyzerMode.TRAVERSE, 32).moved();
+		if (total >= charged + fed) {
+			helper.fail("Traverse summed the box pass-through twice (D11): total " + total + " = charged "
+					+ charged + " + fed " + fed);
+			return;
+		}
+		if (total < fed) {
+			helper.fail("Traverse lost the machine share: total " + total + " < fed " + fed);
+			return;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * @implements MOD-665-D10 — once a network stops ticking (its generator removed) its last delivery is
+	 *     not reported as current
+	 * @covers MOD-665
+	 */
+	public static void mod665_movedGoesStaleWhenTheNetworkSleeps(GameTestHelper helper) {
+		buildFlowRig(helper);
+		EnergyNetwork left = NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(FLOW_CABLE_A));
+		if (left == null) {
+			helper.fail("the generator side did not form a network");
+			return;
+		}
+		long before = NetworkTraverser.traverse(helper.getLevel(), left, AnalyzerMode.STOP_AT_STORAGE, 32).moved();
+		if (before <= 0) {
+			helper.fail("precondition: the generator must be charging the box, moved=" + before);
+			return;
+		}
+		helper.setBlock(FLOW_GEN, Blocks.AIR);
+		helper.runAfterDelay(AnalyzerTotals.FRESH_WINDOW_TICKS + 10, () -> {
+			EnergyNetwork now = NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(FLOW_CABLE_A));
+			if (now == null) {
+				helper.fail("the cable lost its network");
+				return;
+			}
+			long after = NetworkTraverser.traverse(helper.getLevel(), now, AnalyzerMode.STOP_AT_STORAGE, 32).moved();
+			if (after != 0) {
+				helper.fail("the network has no source and has not ticked for a second, yet the analyzer still "
+						+ "reports " + after + " EU moved (D10) — the last delivery before the generator went");
+				return;
+			}
+			helper.succeed();
+		});
 	}
 }

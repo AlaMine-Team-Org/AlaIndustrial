@@ -3,7 +3,6 @@ package dev.alaindustrial.client.neoforge;
 import dev.alaindustrial.client.render.NetworkOverlayRenderer;
 import dev.alaindustrial.client.render.ConcentratorSchematicRenderer;
 import dev.alaindustrial.client.render.RepellerDomeRenderer;
-import dev.alaindustrial.network.neoforge.NeoForgeNetworkClient;
 import net.neoforged.neoforge.client.event.SubmitCustomGeometryEvent;
 
 /**
@@ -20,10 +19,10 @@ import net.neoforged.neoforge.client.event.SubmitCustomGeometryEvent;
  * {@code LevelRenderEvents.AFTER_TRANSLUCENT_FEATURES} hook — so the per-tick approximation (20 Hz
  * motion, pixel-sized flow points) is gone entirely (MOD-033, MOD-060).
  *
- * <p>Unlike Fabric, where the payload receiver pushes into the renderer, the NeoForge receive seam
- * ({@link NeoForgeNetworkClient}) just stores the latest payload — so this adapter polls it each
- * frame; {@link NetworkOverlayRenderer#updatePayload} compares by reference and recomputes topology
- * only when the payload actually changed.
+ * <p>The payload reaches the renderer the same way as on Fabric: the receive seam
+ * ({@link dev.alaindustrial.network.neoforge.NeoForgeNetworkClient}) pushes it into
+ * {@link NetworkOverlayRenderer#updatePayload}. (It used to be polled from a field here every frame —
+ * a field nothing cleared, MOD-665 D1.)
  */
 public final class NeoForgeNetworkVisualization {
 
@@ -33,7 +32,6 @@ public final class NeoForgeNetworkVisualization {
 	/** Game-bus listener: submit this frame's overlay geometry. Registered in
 	 * {@code IndustrializationNeoForgeClient}. */
 	public static void onSubmitCustomGeometry(SubmitCustomGeometryEvent event) {
-		NetworkOverlayRenderer.updatePayload(NeoForgeNetworkClient.latest());
 		NetworkOverlayRenderer.submitFrame(event.getSubmitNodeCollector(),
 				event.getLevelRenderState().cameraRenderState);
 		// MOD-278: the personal repeller dome rides the same frame point (see RepellerDomeRenderer).

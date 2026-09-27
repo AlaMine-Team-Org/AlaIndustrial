@@ -187,6 +187,14 @@ pitest {
                      // relation it guards — advanced reaches further, only advanced pulls experience —
                      // is what a wrong config edit would break silently.
                      'dev.alaindustrial.item.tool.MagnetTier',
+                     // MOD-665: the Network Analyzer fixes kept their arithmetic Minecraft-free so L1
+                     // could pin it (AnalyzerTotalsTest, PayloadBudgetTest, ScanThrottleTest,
+                     // AnalyzerClickTest, OverlayMathTest).
+                     'dev.alaindustrial.item.tool.AnalyzerClick',
+                     'dev.alaindustrial.item.tool.ScanThrottle',
+                     'dev.alaindustrial.network.AnalyzerTotals',
+                     'dev.alaindustrial.network.PayloadBudget',
+                     'dev.alaindustrial.client.render.OverlayMath',
                      // MOD-238 shipped the oil-lake sampling geometry Minecraft-free precisely so it
                      // could be unit-tested (OilLakeSamplesTest), then never added it here — the same
                      // "code added, list not updated" defect as the incubator trio below.
@@ -642,6 +650,11 @@ pitest {
             // typed by GuiGraphicsExtractor, Component and ItemStack. There is no bytecode of its own to
             // mutate, and L1 could not load it anyway.
             'dev.alaindustrial.client.screen.reactor.ReactorTabPage',
+            // MOD-665: names no net.minecraft type itself, but is MC-coupled transitively — its whole
+            // body calls the client holders it resets (the overlay renderer takes a SubmitNodeCollector),
+            // which L1 cannot load. Its one job, being called on disconnect by both loaders, is
+            // guarded by loader_parity_check.py.
+            'dev.alaindustrial.client.ClientDisconnectReset',
             // NOTE: `dev.alaindustrial.Config` lived here as a deferred-coverage parking spot from
             // MOD-200 (135 mutants, only 35 killed) until MOD-204 wrote the full L1 suite
             // (ConfigSnapshotTest), which killed all 157 mutants it had at the time. It has moved to

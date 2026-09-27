@@ -10,16 +10,33 @@ import net.minecraft.util.GsonHelper;
 
 /** Client-only visual and convenience settings, stored separately from server balance config. */
 public final class AlaClientConfig {
-	private static final int DEFAULT_NETWORK_COLOR = 0xFF11577A;
+	/**
+	 * Default start of the analyzer trace's colour ramp (MOD-665): a vivid blue, so the blue-to-yellow
+	 * trace reads as blue at a producer — the previous dark teal came out grey through the translucent
+	 * sheath.
+	 */
+	private static final int DEFAULT_NETWORK_COLOR = 0xFF3B82F6;
+	/** The default before MOD-665; an old file still holding it moves to {@link #DEFAULT_NETWORK_COLOR}. */
+	static final int OBSOLETE_DEFAULT_NETWORK_COLOR = 0xFF11577A;
 	private static final int[] NETWORK_COLOR_PRESETS = {
-			0xFF11577A, 0xFF22C55E, 0xFFF59E0B, 0xFF38BDF8, 0xFFE879F9, 0xFFE5E7EB
+			0xFF3B82F6, 0xFF22C55E, 0xFFF59E0B, 0xFF38BDF8, 0xFFE879F9, 0xFFE5E7EB
 	};
 
+	/**
+	 * Default opacity of the analyzer overlay (MOD-665): translucent, because the trace is always drawn
+	 * through walls now and an opaque one hides the very cables it follows.
+	 */
+	public static final int DEFAULT_NETWORK_ALPHA = 191;
+	/**
+	 * The key of the removed "through blocks" switch (MOD-665, D8). It is no longer read or written; its
+	 * presence marks a file saved by an older version, see {@link #load()}.
+	 */
+	public static final String OBSOLETE_THROUGH_BLOCKS_KEY = "networkOverlayThroughBlocks";
+
 	public static boolean networkOverlayEnabled = true;
-	public static boolean networkOverlayThroughBlocks = true;
 	public static boolean networkOverlayFlowDots = true;
-	public static int networkOverlayColor = DEFAULT_NETWORK_COLOR;
-	public static int networkOverlayAlpha = 255;
+	public static int networkOverlayColor = (DEFAULT_NETWORK_ALPHA << 24) | (DEFAULT_NETWORK_COLOR & 0x00FFFFFF);
+	public static int networkOverlayAlpha = DEFAULT_NETWORK_ALPHA;
 	public static boolean alwaysDetailedTooltips = false;
 	public static boolean showEuNumbers = true;
 	/** Worn-pack charge readout (MOD-065). On by default; toggled in-game with the H key. */
@@ -59,14 +76,13 @@ public final class AlaClientConfig {
 	}
 
 	public static Snapshot snapshot() {
-		return new Snapshot(networkOverlayEnabled, networkOverlayThroughBlocks, networkOverlayFlowDots,
+		return new Snapshot(networkOverlayEnabled, networkOverlayFlowDots,
 				networkOverlayColor, networkOverlayAlpha, alwaysDetailedTooltips, showEuNumbers, energyHudEnabled,
 				drillHudEnabled);
 	}
 
 	public static void apply(Snapshot snapshot) {
 		networkOverlayEnabled = snapshot.networkOverlayEnabled();
-		networkOverlayThroughBlocks = snapshot.networkOverlayThroughBlocks();
 		networkOverlayFlowDots = snapshot.networkOverlayFlowDots();
 		networkOverlayColor = withAlpha(snapshot.networkOverlayColor(), snapshot.networkOverlayAlpha());
 		networkOverlayAlpha = clamp(snapshot.networkOverlayAlpha(), 0, 255);
@@ -86,11 +102,22 @@ public final class AlaClientConfig {
 				try (BufferedReader reader = Files.newBufferedReader(path)) {
 					JsonObject o = GsonHelper.parse(reader);
 					networkOverlayEnabled = GsonHelper.getAsBoolean(o, "networkOverlayEnabled", networkOverlayEnabled);
-					networkOverlayThroughBlocks = GsonHelper.getAsBoolean(o, "networkOverlayThroughBlocks",
-							networkOverlayThroughBlocks);
 					networkOverlayFlowDots = GsonHelper.getAsBoolean(o, "networkOverlayFlowDots", networkOverlayFlowDots);
 					networkOverlayColor = parseColor(o, "networkOverlayColor", networkOverlayColor);
 					networkOverlayAlpha = clamp(GsonHelper.getAsInt(o, "networkOverlayAlpha", networkOverlayAlpha), 0, 255);
+					// MOD-665: a file from before the "through blocks" switch was removed holds 255, the old
+					// default, in nearly every case — the old version wrote its defaults out on first start.
+					// The trace is always see-through now and meant to be translucent, so that one value moves
+					// to the new default; any other opacity the player chose is kept.
+					if (o.has(OBSOLETE_THROUGH_BLOCKS_KEY) && networkOverlayAlpha == 255) {
+						networkOverlayAlpha = DEFAULT_NETWORK_ALPHA;
+					}
+					// The same holds for the colour: the old default moves to the new one, a colour the player
+					// picked stays.
+					if (o.has(OBSOLETE_THROUGH_BLOCKS_KEY)
+							&& (networkOverlayColor & 0x00FFFFFF) == (OBSOLETE_DEFAULT_NETWORK_COLOR & 0x00FFFFFF)) {
+						networkOverlayColor = DEFAULT_NETWORK_COLOR;
+					}
 					networkOverlayColor = withAlpha(networkOverlayColor, networkOverlayAlpha);
 					alwaysDetailedTooltips = GsonHelper.getAsBoolean(o, "alwaysDetailedTooltips", alwaysDetailedTooltips);
 					showEuNumbers = GsonHelper.getAsBoolean(o, "showEuNumbers", showEuNumbers);
@@ -129,7 +156,6 @@ public final class AlaClientConfig {
 	private static JsonObject toJson(Snapshot snapshot) {
 		JsonObject o = new JsonObject();
 		o.addProperty("networkOverlayEnabled", snapshot.networkOverlayEnabled());
-		o.addProperty("networkOverlayThroughBlocks", snapshot.networkOverlayThroughBlocks());
 		o.addProperty("networkOverlayFlowDots", snapshot.networkOverlayFlowDots());
 		o.addProperty("networkOverlayColor", colorString(snapshot.networkOverlayColor()));
 		o.addProperty("networkOverlayAlpha", snapshot.networkOverlayAlpha());
@@ -203,7 +229,6 @@ public final class AlaClientConfig {
 
 	public record Snapshot(
 			boolean networkOverlayEnabled,
-			boolean networkOverlayThroughBlocks,
 			boolean networkOverlayFlowDots,
 			int networkOverlayColor,
 			int networkOverlayAlpha,
@@ -212,54 +237,50 @@ public final class AlaClientConfig {
 			boolean energyHudEnabled,
 			boolean drillHudEnabled) {
 		public static Snapshot defaults() {
-			return new Snapshot(true, true, true, DEFAULT_NETWORK_COLOR, 255, false, true, true, true);
+			return new Snapshot(true, true, DEFAULT_NETWORK_COLOR, DEFAULT_NETWORK_ALPHA, false, true, true, true);
 		}
 
 		public Snapshot withNetworkOverlayEnabled(boolean value) {
-			return new Snapshot(value, networkOverlayThroughBlocks, networkOverlayFlowDots, networkOverlayColor,
+			return new Snapshot(value, networkOverlayFlowDots, networkOverlayColor,
 					networkOverlayAlpha, alwaysDetailedTooltips, showEuNumbers, energyHudEnabled, drillHudEnabled);
 		}
 
-		public Snapshot withNetworkOverlayThroughBlocks(boolean value) {
-			return new Snapshot(networkOverlayEnabled, value, networkOverlayFlowDots, networkOverlayColor,
-					networkOverlayAlpha, alwaysDetailedTooltips, showEuNumbers, energyHudEnabled, drillHudEnabled);
-		}
 
 		public Snapshot withNetworkOverlayFlowDots(boolean value) {
-			return new Snapshot(networkOverlayEnabled, networkOverlayThroughBlocks, value, networkOverlayColor,
+			return new Snapshot(networkOverlayEnabled, value, networkOverlayColor,
 					networkOverlayAlpha, alwaysDetailedTooltips, showEuNumbers, energyHudEnabled, drillHudEnabled);
 		}
 
 		public Snapshot withNetworkOverlayColor(int value) {
-			return new Snapshot(networkOverlayEnabled, networkOverlayThroughBlocks, networkOverlayFlowDots, value,
+			return new Snapshot(networkOverlayEnabled, networkOverlayFlowDots, value,
 					networkOverlayAlpha, alwaysDetailedTooltips, showEuNumbers, energyHudEnabled, drillHudEnabled);
 		}
 
 		public Snapshot withNetworkOverlayAlpha(int value) {
-			return new Snapshot(networkOverlayEnabled, networkOverlayThroughBlocks, networkOverlayFlowDots,
+			return new Snapshot(networkOverlayEnabled, networkOverlayFlowDots,
 					networkOverlayColor, clamp(value, 0, 255), alwaysDetailedTooltips, showEuNumbers, energyHudEnabled,
 					drillHudEnabled);
 		}
 
 		public Snapshot withAlwaysDetailedTooltips(boolean value) {
-			return new Snapshot(networkOverlayEnabled, networkOverlayThroughBlocks, networkOverlayFlowDots,
+			return new Snapshot(networkOverlayEnabled, networkOverlayFlowDots,
 					networkOverlayColor, networkOverlayAlpha, value, showEuNumbers, energyHudEnabled, drillHudEnabled);
 		}
 
 		public Snapshot withShowEuNumbers(boolean value) {
-			return new Snapshot(networkOverlayEnabled, networkOverlayThroughBlocks, networkOverlayFlowDots,
+			return new Snapshot(networkOverlayEnabled, networkOverlayFlowDots,
 					networkOverlayColor, networkOverlayAlpha, alwaysDetailedTooltips, value, energyHudEnabled,
 					drillHudEnabled);
 		}
 
 		public Snapshot withEnergyHudEnabled(boolean value) {
-			return new Snapshot(networkOverlayEnabled, networkOverlayThroughBlocks, networkOverlayFlowDots,
+			return new Snapshot(networkOverlayEnabled, networkOverlayFlowDots,
 					networkOverlayColor, networkOverlayAlpha, alwaysDetailedTooltips, showEuNumbers, value,
 					drillHudEnabled);
 		}
 
 		public Snapshot withDrillHudEnabled(boolean value) {
-			return new Snapshot(networkOverlayEnabled, networkOverlayThroughBlocks, networkOverlayFlowDots,
+			return new Snapshot(networkOverlayEnabled, networkOverlayFlowDots,
 					networkOverlayColor, networkOverlayAlpha, alwaysDetailedTooltips, showEuNumbers, energyHudEnabled,
 					value);
 		}

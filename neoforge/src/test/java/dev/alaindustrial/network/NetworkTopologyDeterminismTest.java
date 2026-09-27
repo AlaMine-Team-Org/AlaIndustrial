@@ -4,11 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.alaindustrial.network.NetworkTopology.NetworkEdge;
-import dev.alaindustrial.network.NetworkTopology.TubeRun;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import dev.alaindustrial.junit.StopEphemeralServerBeforeFmlTeardown;
 import net.minecraft.core.BlockPos;
 import net.neoforged.testframework.junit.EphemeralTestServerProvider;
@@ -20,7 +19,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * SHAPE and of nothing else (MOD-313).
  *
  * <p>The defect these pin is not "the numbers are wrong" — the overlay was always topologically correct.
- * It is that the same untouched base could be drawn with different tube runs from one scan to the next,
+ * It is that the same untouched base could be drawn differently from one scan to the next,
  * because the algorithms walked a {@code HashSet} of ABSOLUTE {@link BlockPos} and let bucket order pick
  * where each tube started. Two properties catch that, and neither is satisfied by "call it twice in one
  * JVM and compare" — a hash set is perfectly repeatable within a run:
@@ -29,9 +28,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
  *   <li><b>Translation invariance.</b> The same shape built somewhere else must give the same relative
  *       answer. This is what actually varies in game, and it is also what {@code BlockPos.asLong()} gets
  *       wrong (see {@code PosOrder}), so the fixture deliberately moves the build ACROSS y=0 and z=0.</li>
- *   <li><b>Independence from the caller's iteration order.</b> {@code tubeRuns} is handed a joint set by
- *       the renderer, which builds it as a plain {@code HashSet}; feeding the same joints in the opposite
- *       order must not move a single {@code from}/{@code to}.</li>
+ *   <li><b>Independence from the caller's iteration order.</b> Feeding the same cables and endpoints in
+ *       another order must not change a single edge.</li>
  * </ul>
  *
  * <p>Lives in {@code :neoforge:test} rather than the L1 suite because every signature here is on
@@ -91,25 +89,15 @@ class NetworkTopologyDeterminismTest {
 		List<BlockPos> producers = nodes.subList(5, 6);
 		List<BlockPos> consumers = nodes.subList(6, 7);
 		List<String> out = new ArrayList<>();
-		for (NetworkEdge edge : NetworkTopology.fullAdjacency(cables, producers, consumers)) {
-			out.add(edge.a().subtract(origin) + "->" + edge.b().subtract(origin));
+		Map<BlockPos, Integer> endpoints = new LinkedHashMap<>();
+		for (BlockPos pos : producers) {
+			endpoints.put(pos, NetworkTopology.ALL_FACES);
 		}
-		return out;
-	}
-
-	private static List<String> tubeRunsRelativeTo(BlockPos origin, boolean jointsDescending) {
-		List<BlockPos> nodes = shapeAt(origin);
-		List<NetworkEdge> edges = NetworkTopology.fullAdjacency(nodes, List.of(), List.of());
-		List<BlockPos> joints = new ArrayList<>(NetworkTopology.jointNodes(nodes, edges));
-		joints.sort(jointsDescending
-				? NetworkTopology.POSITION_ORDER.reversed()
-				: NetworkTopology.POSITION_ORDER);
-		// A LinkedHashSet so the ORDER the caller chose is what tubeRuns actually receives — with a plain
-		// HashSet both directions would collapse to the same bucket order and the case would be vacuous.
-		Set<BlockPos> jointSet = new LinkedHashSet<>(joints);
-		List<String> out = new ArrayList<>();
-		for (TubeRun run : NetworkTopology.tubeRuns(nodes, edges, jointSet)) {
-			out.add(run.from().subtract(origin) + "=>" + run.to().subtract(origin));
+		for (BlockPos pos : consumers) {
+			endpoints.put(pos, NetworkTopology.ALL_FACES);
+		}
+		for (NetworkEdge edge : NetworkTopology.connectedAdjacency(cables, endpoints)) {
+			out.add(edge.a().subtract(origin) + "->" + edge.b().subtract(origin));
 		}
 		return out;
 	}
@@ -135,35 +123,10 @@ class NetworkTopologyDeterminismTest {
 		List<BlockPos> nodes = shapeAt(FAR_FROM_ORIGIN);
 		List<BlockPos> reversed = new ArrayList<>(nodes);
 		java.util.Collections.reverse(reversed);
-		assertEquals(NetworkTopology.fullAdjacency(nodes, List.of(), List.of()),
-				NetworkTopology.fullAdjacency(reversed, List.of(), List.of()),
+		assertEquals(NetworkTopology.connectedAdjacency(nodes, Map.of()),
+				NetworkTopology.connectedAdjacency(reversed, Map.of()),
 				"the edge order followed the order the payload happened to list its cables in — swapping "
 						+ "the node set for an insertion-ordered one without also sorting would do this");
-	}
-
-	/**
-	 * @implements MOD-313 — tube runs keep their from/to when the same shape is rebuilt elsewhere
-	 */
-	@Test
-	void tubeRunsAreTheSameWhereverTheBaseStands() {
-		List<String> far = tubeRunsRelativeTo(FAR_FROM_ORIGIN, false);
-		List<String> across = tubeRunsRelativeTo(ACROSS_ORIGIN, false);
-		assertTrue(far.size() >= 3, "fixture must produce several tube runs, got " + far);
-		assertEquals(far, across,
-				"TubeRun.from/to flipped when the same shape was rebuilt across y=0/z=0");
-	}
-
-	/**
-	 * @implements MOD-313 — tube runs do not follow the order the renderer hands over its joint set
-	 */
-	@Test
-	void tubeRunsIgnoreTheOrderTheCallerListsJointsIn() {
-		List<String> ascending = tubeRunsRelativeTo(FAR_FROM_ORIGIN, false);
-		List<String> descending = tubeRunsRelativeTo(FAR_FROM_ORIGIN, true);
-		assertTrue(ascending.size() >= 3, "fixture must produce several tube runs, got " + ascending);
-		assertEquals(ascending, descending,
-				"reversing the joint set the renderer hands over changed TubeRun.from/to — the guarantee "
-						+ "must live inside tubeRuns, not in the caller's choice of collection");
 	}
 
 	/**
@@ -172,7 +135,7 @@ class NetworkTopologyDeterminismTest {
 	@Test
 	void jointNodesIterateInGeometricOrder() {
 		List<BlockPos> nodes = shapeAt(ACROSS_ORIGIN);
-		List<NetworkEdge> edges = NetworkTopology.fullAdjacency(nodes, List.of(), List.of());
+		List<NetworkEdge> edges = NetworkTopology.connectedAdjacency(nodes, Map.of());
 		List<BlockPos> joints = new ArrayList<>(NetworkTopology.jointNodes(nodes, edges));
 		assertTrue(joints.size() >= 4, "fixture must produce several joints, got " + joints);
 

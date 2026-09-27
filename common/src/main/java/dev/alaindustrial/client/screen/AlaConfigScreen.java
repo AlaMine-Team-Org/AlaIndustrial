@@ -43,9 +43,6 @@ public final class AlaConfigScreen extends Screen {
 		addToggle(bx, row, buttonWidth, "config.alaindustrial.network_overlay.enabled",
 				draft.networkOverlayEnabled(), value -> draft = draft.withNetworkOverlayEnabled(value));
 		row += ROW;
-		addToggle(bx, row, buttonWidth, "config.alaindustrial.network_overlay.through_blocks",
-				draft.networkOverlayThroughBlocks(), value -> draft = draft.withNetworkOverlayThroughBlocks(value));
-		row += ROW;
 		addToggle(bx, row, buttonWidth, "config.alaindustrial.network_overlay.flow_dots",
 				draft.networkOverlayFlowDots(), value -> draft = draft.withNetworkOverlayFlowDots(value));
 		row += ROW;

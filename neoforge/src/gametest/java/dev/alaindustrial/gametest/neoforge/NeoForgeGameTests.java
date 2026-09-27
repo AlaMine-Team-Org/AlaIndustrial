@@ -2296,6 +2296,19 @@ public final class NeoForgeGameTests {
 				NetworkAnalyzerScenarios::mod047_traverseCapFlagsLimit);
 		registerTest(event, "mod313_traverse_crosses_sinks_in_geometric_order", 40, true,
 				NetworkAnalyzerScenarios::mod313_traverseCrossesSinksInGeometricOrder);
+		// Network analyzer bug-fix pass (MOD-665).
+		registerTest(event, "mod665_traverse_cap_keeps_accepted_networks", 40, true,
+				NetworkAnalyzerScenarios::mod665_traverseCapKeepsAcceptedNetworks);
+		registerTest(event, "mod665_traverse_ignores_inert_storage_face", 40, true,
+				NetworkAnalyzerScenarios::mod665_traverseIgnoresInertStorageFace);
+		registerTest(event, "mod665_dual_role_store_listed_once", 40, true,
+				NetworkAnalyzerScenarios::mod665_dualRoleStoreListedOnce);
+		registerTest(event, "mod665_endpoint_faces_are_real_ports", 40, true,
+				NetworkAnalyzerScenarios::mod665_endpointFacesAreRealPorts);
+		registerTest(event, "mod665_traverse_counts_pass_through_once", 40, true,
+				NetworkAnalyzerScenarios::mod665_traverseCountsPassThroughOnce);
+		registerTest(event, "mod665_moved_goes_stale_when_the_network_sleeps", 100, true,
+				NetworkAnalyzerScenarios::mod665_movedGoesStaleWhenTheNetworkSleeps);
 
 		// Teleporter station: buffer, privacy, drops, role in the network.
 		registerTest(event, "tc_tele001_fun02_buffer_matches_config", 40, true,

@@ -4,6 +4,7 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -74,6 +75,18 @@ public final class EnergyNetwork {
 	private int producerCursor;
 	/** EU actually delivered by the most recent {@link #tick()} (0 if asleep/never ticked). */
 	private long lastTickMoved;
+	/** The part of {@link #lastTickMoved} that went into storage sinks (MOD-665). */
+	private long lastTickToStorage;
+	/** EU storage sources discharged into the line on the most recent {@link #tick()} (MOD-665). */
+	private long lastTickFromStorage;
+	/**
+	 * Game time of the most recent {@link #tick()} call, whatever it moved (MOD-665). A network that
+	 * went to sleep or was skipped by the per-tick budget keeps its last numbers; this stamp is what lets
+	 * a reader tell a current reading from a stale one instead of reporting yesterday's flow as today's.
+	 */
+	private long lastTickAt = Long.MIN_VALUE;
+	/** Producers that fed a cable on the last tick (MOD-665), see {@link EnergyLineDistributor#fed()}. */
+	private Set<BlockPos> lastTickFed = Set.of();
 	/**
 	 * Game time of the last tick on which a GENERATOR actually held EU to give (MOD-318). Read by
 	 * {@link dev.alaindustrial.block.entity.CableBlockEntity#isEnergizedForShock()} to answer "is this
@@ -189,6 +202,21 @@ public final class EnergyNetwork {
 		return lastTickMoved;
 	}
 
+	/** The part of {@link #lastTickMoved()} delivered into storage sinks (MOD-665). */
+	public long lastTickToStorage() {
+		return lastTickToStorage;
+	}
+
+	/** EU drawn out of storage sources into the line on the most recent tick (MOD-665). */
+	public long lastTickFromStorage() {
+		return lastTickFromStorage;
+	}
+
+	/** Game time of the most recent {@link #tick()} call, or {@link Long#MIN_VALUE} if never (MOD-665). */
+	public long lastTickAt() {
+		return lastTickAt;
+	}
+
 	/**
 	 * Was a generator holding EU to give on the current or immediately preceding tick (MOD-318)? The
 	 * one-tick grace is the same one {@code isEnergizedForShock} uses, and for the same reason: the
@@ -212,6 +240,26 @@ public final class EnergyNetwork {
 	 */
 	public EnergyNetworkDiagnostics diagnostics() {
 		return new EnergyNetworkDiagnostics(this);
+	}
+
+	/** The kernel's flow potential of a cable, see {@link EnergyTopologyCache#flowPotentialOrNull} (MOD-665). */
+	Integer flowPotentialAt(BlockPos pos) {
+		return topology.flowPotentialOrNull(pos);
+	}
+
+	/** Hop distance of a cable from the nearest supplying producer, or null (MOD-665). */
+	Integer producerDistanceAt(BlockPos pos) {
+		return topology.producerDistanceOrNull(pos);
+	}
+
+	/** Cables the downhill rule cannot reach, filled outward from the source instead (MOD-318, MOD-665). */
+	List<BlockPos> strandedCables() {
+		return topology.strandedFillOrder();
+	}
+
+	/** Producers that fed a cable on the last tick (MOD-665). */
+	Set<BlockPos> lastTickFed() {
+		return lastTickFed;
 	}
 
 	/** Positions of this network's producer endpoints — package-private, used by {@link EnergyNetworkDiagnostics}. */
@@ -458,6 +506,10 @@ public final class EnergyNetwork {
 	 * segment-to-segment flow contract (MOD-070) and the producer/storage partitioning.
 	 */
 	public long tick() {
+		lastTickAt = topology.level().getGameTime();
+		lastTickToStorage = 0L;
+		lastTickFromStorage = 0L;
+		lastTickFed = Set.of();
 		List<EnergyTopologyCache.Endpoint> producers = topology.producers();
 		if (producers.isEmpty()) {
 			// No source at all — nothing to serve and nothing to charge the line with.
@@ -631,7 +683,8 @@ public final class EnergyNetwork {
 				// gate a lone Battery Box's backup discharge would be dragged out into dead-end spurs it
 				// can only get back slowly (MOD-070's "a lone storage source does not fill the line").
 				hasSupply ? topology.strandedFillOrder() : List.of(), topology::producerDistanceOrNull);
-		long[] movedEu = {0L};
+		// [0] delivered in total, [1] of which into storage sinks, [2] drawn out of storage (MOD-665).
+		long[] movedEu = {0L, 0L, 0L};
 		long finalMachineDemand = machineDemand;
 		long finalGenSupply = genSupply;
 		Map<BlockPos, Long> finalCascadeAllowances = cascadeAllowances;
@@ -642,18 +695,23 @@ public final class EnergyNetwork {
 			// (a machine OR a BatteryBox) genuinely carries and displays the energy in transit, instead
 			// of the storage charge bypassing the wires.
 			movedEu[0] += distributor.serveConsumersFromLine(machines, packetCap, lossPerBlock, tx, producerCursor);
-			movedEu[0] += distributor.serveConsumersFromLine(sinks, packetCap, lossPerBlock, tx, producerCursor);
+			long intoStorage = distributor.serveConsumersFromLine(sinks, packetCap, lossPerBlock, tx, producerCursor);
+			movedEu[0] += intoStorage;
+			movedEu[1] = intoStorage;
 			// Replenish the line for next tick: generators fill it freely (inertia + a visible buffer);
 			// a storage source discharges into the line ONLY to cover the machine demand generators fall
 			// short of (backup power), never to hoard buffers or wash into another battery. With no
 			// generator present, storage discharges nothing, so two batteries can't drain each other.
-			distributor.chargeAndPropagateLine(generators, storageSources, finalMachineDemand, finalGenSupply,
+			movedEu[2] = distributor.chargeAndPropagateLine(generators, storageSources, finalMachineDemand, finalGenSupply,
 					packetCap, tx, producerCursor, finalCascadeAllowances, finalFeedAllowances);
 		});
 		// Advance the rotation cursor so the next tick starts at a different producer / face. Monotonic and
 		// masked non-negative (MOD-254); every use site re-applies the modulus against its own list size.
 		producerCursor = (producerCursor + 1) & Integer.MAX_VALUE;
 		lastTickMoved = movedEu[0];
+		lastTickToStorage = movedEu[1];
+		lastTickFromStorage = movedEu[2];
+		lastTickFed = Collections.unmodifiableSet(new LinkedHashSet<>(distributor.fed()));
 		// Refresh the cached line-full flag so the next isAwake() on a producer-only network can skip
 		// the O(cables) scan. Only meaningful on the no-consumer path (a consumer keeps the network
 		// awake unconditionally), but the cost is one scan that has already happened inside this tick's
