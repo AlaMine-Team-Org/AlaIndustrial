@@ -1355,6 +1355,7 @@
   "tooltip.alaindustrial.buffer": "Puffer: %s EU",
   "tooltip.alaindustrial.cable_loss": "Energieverlust: ~%s%%/Block über Distanz",
   "tooltip.alaindustrial.cable_safe": "Isoliert: Berührungssicher",
+  "message.alaindustrial.cable_dye.bare": "Nur isolierte Kabel lassen sich färben",
   "tooltip.alaindustrial.cable_shock_warning": "Warnung: Stromführendes blankes Kabel verursacht Stromschläge",
   "tooltip.alaindustrial.capacity": "Kapazität: %s EU",
   "tooltip.alaindustrial.core_barrel.role": "Bauteil des Säulenbohrmoduls",

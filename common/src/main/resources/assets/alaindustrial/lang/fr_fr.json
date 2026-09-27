@@ -1355,6 +1355,7 @@
   "tooltip.alaindustrial.buffer": "Tampon : %s EU",
   "tooltip.alaindustrial.cable_loss": "Perte d’énergie : ~%s%%/bloc sur la distance",
   "tooltip.alaindustrial.cable_safe": "Isolé : sans danger au toucher",
+  "message.alaindustrial.cable_dye.bare": "Seuls les câbles isolés peuvent être teints",
   "tooltip.alaindustrial.cable_shock_warning": "Danger : le câble nu sous tension électrocute au contact",
   "tooltip.alaindustrial.capacity": "Capacité : %s EU",
   "tooltip.alaindustrial.core_barrel.role": "Pièce du module de forage en colonne",

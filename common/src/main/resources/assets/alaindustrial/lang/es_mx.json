@@ -1355,6 +1355,7 @@
   "tooltip.alaindustrial.buffer": "Búfer: %s EU",
   "tooltip.alaindustrial.cable_loss": "Pérdida de energía: ~%s%%/bloque por distancia",
   "tooltip.alaindustrial.cable_safe": "Aislado: seguro al tacto",
+  "message.alaindustrial.cable_dye.bare": "Solo se pueden teñir los cables aislados",
   "tooltip.alaindustrial.cable_shock_warning": "Peligro: el cable desnudo con corriente electrocuta al tocarlo",
   "tooltip.alaindustrial.capacity": "Capacidad: %s EU",
   "tooltip.alaindustrial.core_barrel.role": "Pieza del módulo de perforación en columna",

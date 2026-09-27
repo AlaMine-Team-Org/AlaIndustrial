@@ -1355,6 +1355,7 @@
   "tooltip.alaindustrial.buffer": "বাফার: %s EU",
   "tooltip.alaindustrial.cable_loss": "শক্তি ক্ষয়: প্রতি ব্লক ~%s%% (দূরত্ব জুড়ে)",
   "tooltip.alaindustrial.cable_safe": "অন্তরিত: স্পর্শ করা নিরাপদ",
+  "message.alaindustrial.cable_dye.bare": "শুধু অন্তরিত কেবল রং করা যায়",
   "tooltip.alaindustrial.cable_shock_warning": "বিপদ: বিদ্যুৎবাহী খোলা কেবল স্পর্শ করলে শক দেয়",
   "tooltip.alaindustrial.capacity": "ধারণক্ষমতা: %s EU",
   "tooltip.alaindustrial.core_barrel.role": "স্তম্ভ খননের মডিউলের যন্ত্রাংশ",

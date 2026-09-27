@@ -1355,6 +1355,7 @@
   "tooltip.alaindustrial.buffer": "Zásobník: %s EU",
   "tooltip.alaindustrial.cable_loss": "Ztráta energie: ~%s%%/blok podle vzdálenosti",
   "tooltip.alaindustrial.cable_safe": "Izolovaný: bezpečný na dotek",
+  "message.alaindustrial.cable_dye.bare": "Obarvit lze jen izolované kabely",
   "tooltip.alaindustrial.cable_shock_warning": "Pozor: holý kabel pod proudem při dotyku dává ránu",
   "tooltip.alaindustrial.capacity": "Kapacita: %s EU",
   "tooltip.alaindustrial.core_barrel.role": "Součást modulu sloupcového vrtání",

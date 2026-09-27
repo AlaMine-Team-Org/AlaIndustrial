@@ -509,6 +509,11 @@ public class IndustrializationFabric implements ModInitializer {
 		UseBlockCallback.EVENT.register((player, level, hand, hit) ->
 				dev.alaindustrial.block.OilLiquidBlock.tryLight(level, player, hand, hit));
 
+		// MOD-666: a dye on an insulated cable paints it; with Shift, the whole run. Early seam because
+		// vanilla never lets a sneaking player's held item reach the block.
+		UseBlockCallback.EVENT.register((player, level, hand, hit) ->
+				dev.alaindustrial.block.CableDyeing.tryDye(level, player, hand, hit));
+
 		// MOD-119: inject the mod's starter items into the vanilla bonus chest. Adds one pool that
 		// references the shared sub-table alaindustrial:inject/bonus_chest (item list + balance live there);
 		// vanilla pools are untouched. Gated on Config.bonusChestEnabled here (NeoForge gates the same flag

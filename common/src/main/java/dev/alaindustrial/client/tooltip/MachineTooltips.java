@@ -87,6 +87,13 @@ public final class MachineTooltips {
 			ChatFormatting gradeColor = MutationGrades.vanillaRarity(grade).color();
 			lines.add(Component.translatable(grade.translationKey()).withStyle(gradeColor));
 		}
+		// MOD-666: a dyed cable names its colour with vanilla's own "Color: %s" line and colour names,
+		// so the line reads the same as dyed leather in every language the game ships.
+		net.minecraft.world.item.DyeColor cableColor = stack.get(dev.alaindustrial.registry.ModDataComponents.CABLE_COLOR.get());
+		if (cableColor != null) {
+			lines.add(Component.translatable("item.color",
+					Component.translatable("color.minecraft." + cableColor.getName())).withStyle(ChatFormatting.GRAY));
+		}
 		boolean detailed = shiftDown || AlaClientConfig.alwaysDetailedTooltips;
 		if (stack.getItem() instanceof NetworkAnalyzerItem) {
 			addNetworkAnalyzerTooltip(stack, lines, detailed);

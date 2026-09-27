@@ -13,6 +13,7 @@ import dev.alaindustrial.core.energy.ShockInsulation;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModCriteria;
 import dev.alaindustrial.registry.ModDamageTypes;
+import dev.alaindustrial.registry.ModDataComponents;
 import dev.alaindustrial.registry.ModTags;
 import java.util.EnumMap;
 import java.util.Map;
@@ -456,6 +457,19 @@ public class CableBlock extends AbstractMachineBlock {
 	 * than a consuming result, which is what preserves the MOD-039 fix: a consuming result here would
 	 * stop vanilla before {@code BlockItem.place} and make cables unplaceable flush against each other.
 	 */
+	/**
+	 * Middle-click gives back the segment's dye too (MOD-666): without this a dyed cable would be picked
+	 * as a plain one, and the player building a colour-coded line would have to re-dye every copy.
+	 */
+	@Override
+	protected ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData) {
+		ItemStack stack = super.getCloneItemStack(level, pos, state, includeData);
+		if (level.getBlockEntity(pos) instanceof CableBlockEntity cable && cable.color() != null) {
+			stack.set(ModDataComponents.CABLE_COLOR.get(), cable.color());
+		}
+		return stack;
+	}
+
 	@Override
 	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
 			Player player, InteractionHand hand, BlockHitResult hit) {

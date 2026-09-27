@@ -1,0 +1,40 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_insulated_gold_cable": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:insulated_gold_cable"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_insulated_gold_cable"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:cable_dyeing/insulated_gold_cable_white",
+      "alaindustrial:cable_dyeing/insulated_gold_cable_orange",
+      "alaindustrial:cable_dyeing/insulated_gold_cable_magenta",
+      "alaindustrial:cable_dyeing/insulated_gold_cable_light_blue",
+      "alaindustrial:cable_dyeing/insulated_gold_cable_yellow",
+      "alaindustrial:cable_dyeing/insulated_gold_cable_lime",
+      "alaindustrial:cable_dyeing/insulated_gold_cable_pink",
+      "alaindustrial:cable_dyeing/insulated_gold_cable_gray",
+      "alaindustrial:cable_dyeing/insulated_gold_cable_light_gray",
+      "alaindustrial:cable_dyeing/insulated_gold_cable_cyan",
+      "alaindustrial:cable_dyeing/insulated_gold_cable_purple",
+      "alaindustrial:cable_dyeing/insulated_gold_cable_blue",
+      "alaindustrial:cable_dyeing/insulated_gold_cable_brown",
+      "alaindustrial:cable_dyeing/insulated_gold_cable_green",
+      "alaindustrial:cable_dyeing/insulated_gold_cable_red",
+      "alaindustrial:cable_dyeing/insulated_gold_cable_black"
+    ]
+  }
+}

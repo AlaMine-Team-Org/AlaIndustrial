@@ -1,0 +1,40 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_insulated_electrum_cable": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:insulated_electrum_cable"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_insulated_electrum_cable"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:cable_dyeing/insulated_electrum_cable_white",
+      "alaindustrial:cable_dyeing/insulated_electrum_cable_orange",
+      "alaindustrial:cable_dyeing/insulated_electrum_cable_magenta",
+      "alaindustrial:cable_dyeing/insulated_electrum_cable_light_blue",
+      "alaindustrial:cable_dyeing/insulated_electrum_cable_yellow",
+      "alaindustrial:cable_dyeing/insulated_electrum_cable_lime",
+      "alaindustrial:cable_dyeing/insulated_electrum_cable_pink",
+      "alaindustrial:cable_dyeing/insulated_electrum_cable_gray",
+      "alaindustrial:cable_dyeing/insulated_electrum_cable_light_gray",
+      "alaindustrial:cable_dyeing/insulated_electrum_cable_cyan",
+      "alaindustrial:cable_dyeing/insulated_electrum_cable_purple",
+      "alaindustrial:cable_dyeing/insulated_electrum_cable_blue",
+      "alaindustrial:cable_dyeing/insulated_electrum_cable_brown",
+      "alaindustrial:cable_dyeing/insulated_electrum_cable_green",
+      "alaindustrial:cable_dyeing/insulated_electrum_cable_red",
+      "alaindustrial:cable_dyeing/insulated_electrum_cable_black"
+    ]
+  }
+}

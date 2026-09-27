@@ -43,6 +43,7 @@ on:
 
 permissions:
   contents: write   # needed to create the GitHub Release
+  actions: read     # MOD-678: find and download the jars of the green pre-tag Tests run
 
 # A delayed tag-push event can be delivered AFTER a manual recovery run has started —
 # that is precisely the incident shape above. Two CONCURRENT runs would both pass the
@@ -180,7 +181,39 @@ jobs:
       # `:neoforge:test` came back FROM-CACHE in one second and the gate stayed green without
       # executing anything. The cache still pays for itself here through dependencies and the asset
       # root, which this flag does not touch.
+      # MOD-678: the same commit was already built and game-tested by the manual Tests run that gates
+      # the tag (release-pair.sh). When that run is green and kept its jars, publish those jars instead
+      # of building and testing the same tree again. The match is by commit: the run's head_sha must be
+      # the tagged commit, and verify-artifacts below still checks each jar's version and loader. No
+      # such run - the build and game tests below run as before.
+      - name: Reuse the jars of the green pre-tag check
+        id: reuse
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          SHA="$(git rev-parse HEAD)"
+          RUN="$(gh run list -R "$REPO" --workflow test.yml --event workflow_dispatch --status success \
+                 --limit 20 --json databaseId,headSha --jq "[.[] | select(.headSha == \"$SHA\")][0].databaseId // empty")"
+          if [ -z "$RUN" ]; then
+            echo "no green manual Tests run on $SHA - building here"
+            echo "reused=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          mkdir -p /tmp/verified
+          if ! gh run download "$RUN" -R "$REPO" -n release-jars -D /tmp/verified; then
+            echo "::warning::Tests run $RUN on $SHA kept no jars - building here"
+            echo "reused=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          mkdir -p fabric/build/libs neoforge/build/libs
+          find /tmp/verified -name 'alaindustrial-fabric-*.jar'   -exec cp {} fabric/build/libs/ \;
+          find /tmp/verified -name 'alaindustrial-neoforge-*.jar' -exec cp {} neoforge/build/libs/ \;
+          echo "reusing the jars of Tests run $RUN (commit $SHA)"
+          echo "reused=true" >> "$GITHUB_OUTPUT"
+
       - name: Build
+        if: steps.reuse.outputs.reused != 'true'
         run: |
           export ALA_BUILD_TIME="$(date -u +%Y-%m-%dT%H:%M)"
           ./gradlew build --no-daemon --stacktrace --no-build-cache
@@ -190,6 +223,7 @@ jobs:
       # NeoForge gameTestServer world tests. Required tests gate the build; tests
       # marked optional (unfinished features) only warn.
       - name: Game tests (both loaders)
+        if: steps.reuse.outputs.reused != 'true'
         run: ./gradlew :fabric:runGameTest :neoforge:runGameTests --no-daemon --stacktrace --no-build-cache
 
       # Resolve BOTH production jars and validate them before any upload. Guards:

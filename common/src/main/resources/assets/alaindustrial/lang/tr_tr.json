@@ -1355,6 +1355,7 @@
   "tooltip.alaindustrial.buffer": "Tampon: %s EU",
   "tooltip.alaindustrial.cable_loss": "Enerji kaybı: ~%s%%/blok (mesafeyle artar)",
   "tooltip.alaindustrial.cable_safe": "Yalıtımlı: dokunmak güvenli",
+  "message.alaindustrial.cable_dye.bare": "Yalnızca yalıtımlı kablolar boyanabilir",
   "tooltip.alaindustrial.cable_shock_warning": "Tehlike: enerjili çıplak kablo temas edince çarpar",
   "tooltip.alaindustrial.capacity": "Kapasite: %s EU",
   "tooltip.alaindustrial.core_barrel.role": "Sütun delme modülünün parçası",

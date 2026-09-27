@@ -1,18 +1,11 @@
 # Changelog
 
-## 0.1.192
+## 0.1.193
 
-<p><img alt="Ala Industrial Minecraft mod: network analyzer beam with sparks running from a nuclear reactor outlet along copper cable into a storage block" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.192-mc26.2/release-media/v0.1.192-mc26.2/changelog.webp" width="720"></p>
+<p><img alt="Ala Industrial Minecraft mod: insulated energy cables dyed in different colours, with the grade flecks still visible" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.193-mc26.2/release-media/v0.1.193-mc26.2/changelog.png" width="720"></p>
 
-The Network Analyzer's energy trace now looks like a beam and shows where the energy really goes.
+Insulated cables can now be dyed, so every line of a big grid gets its own colour.
 
-### Fixed
+### New
 
-- **The trace reads as a beam.** A bright core in a soft glow, shading from blue at the source to warm
-  yellow at the far end, with solid sparks that no longer vanish or break apart from any angle.
-- **Sparks follow the real flow of energy.** They run from generators, solar panels, the nuclear
-  reactor's outlet and discharging storage to the machines and storage that need power. Distant sources
-  show too, a full storage block no longer swallows every spark, and sparks never run head-on.
-- **A more honest highlight.** It clears when you leave the world or change dimension, draws wires only
-  where the network really connects, and right-clicking the air clears it. It is always visible through
-  walls; the "Through blocks" setting is gone.
+- Insulated cables can be dyed in 16 colours: right-click with a dye paints a segment, Shift + right-click paints the whole connected run of the same grade (one dye per 8 segments), and 8 cables around a dye on a crafting table give 8 dyed ones. Only the black rubber changes colour - the grade's coloured flecks stay. The colour is purely cosmetic and is kept when the cable is broken or picked with the middle mouse button.

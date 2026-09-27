@@ -77,8 +77,39 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      # MOD-678: a manual run is the pre-tag check of a release commit (release-pair.sh). Its jars are
+      # what release.yml publishes for the tag on this commit, so it builds them the way a release does:
+      # stamped with the publish time and with no task result taken from the build cache (a result
+      # served from it is a test that did not run against this tree).
       - name: Unit tests + build
-        run: ./gradlew build --no-daemon --stacktrace
+        env:
+          RELEASE_CHECK: ${{ github.event_name == 'workflow_dispatch' }}
+        run: |
+          EXTRA=""
+          if [ "$RELEASE_CHECK" = true ]; then
+            export ALA_BUILD_TIME="$(date -u +%Y-%m-%dT%H:%M)"
+            EXTRA="--no-build-cache"
+          fi
+          ./gradlew build --no-daemon --stacktrace $EXTRA
 
       - name: Game tests (both loaders, in-world behaviour)
-        run: ./gradlew :fabric:runGameTest :neoforge:runGameTests --no-daemon --stacktrace
+        env:
+          RELEASE_CHECK: ${{ github.event_name == 'workflow_dispatch' }}
+        run: |
+          EXTRA=""
+          [ "$RELEASE_CHECK" != true ] || EXTRA="--no-build-cache"
+          ./gradlew :fabric:runGameTest :neoforge:runGameTests --no-daemon --stacktrace $EXTRA
+
+      # MOD-678: release.yml takes these very jars for the tag on this commit instead of building and
+      # game-testing the same tree a third time (~5 min per line). Kept three days: a release follows
+      # its pre-tag check within the hour.
+      - name: Keep the verified jars for the release
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-jars
+          path: |
+            fabric/build/libs/alaindustrial-fabric-*.jar
+            neoforge/build/libs/alaindustrial-neoforge-*.jar
+          retention-days: 3
+          if-no-files-found: error

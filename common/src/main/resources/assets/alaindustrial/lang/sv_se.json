@@ -1355,6 +1355,7 @@
   "tooltip.alaindustrial.buffer": "Buffert: %s EU",
   "tooltip.alaindustrial.cable_loss": "Energiförlust: ~%s%%/block över avstånd",
   "tooltip.alaindustrial.cable_safe": "Isolerad: säker att röra",
+  "message.alaindustrial.cable_dye.bare": "Endast isolerade kablar kan färgas",
   "tooltip.alaindustrial.cable_shock_warning": "Varning: strömförande oskyddad kabel ger elstöt vid kontakt",
   "tooltip.alaindustrial.capacity": "Kapacitet: %s EU",
   "tooltip.alaindustrial.core_barrel.role": "Del till pelarborrmodulen",

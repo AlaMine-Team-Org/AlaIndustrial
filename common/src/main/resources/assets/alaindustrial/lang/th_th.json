@@ -1355,6 +1355,7 @@
   "tooltip.alaindustrial.buffer": "บัฟเฟอร์: %s EU",
   "tooltip.alaindustrial.cable_loss": "การสูญเสียพลังงาน: ประมาณ %s%% ต่อบล็อกตามระยะทาง",
   "tooltip.alaindustrial.cable_safe": "หุ้มฉนวนแล้ว: แตะได้อย่างปลอดภัย",
+  "message.alaindustrial.cable_dye.bare": "ย้อมสีได้เฉพาะสายเคเบิลหุ้มฉนวนเท่านั้น",
   "tooltip.alaindustrial.cable_shock_warning": "คำเตือน: สายเปลือยที่มีไฟจะช็อตเมื่อสัมผัส",
   "tooltip.alaindustrial.capacity": "ความจุ: %s EU",
   "tooltip.alaindustrial.core_barrel.role": "ชิ้นส่วนของโมดูลเจาะเป็นแนวตั้ง",

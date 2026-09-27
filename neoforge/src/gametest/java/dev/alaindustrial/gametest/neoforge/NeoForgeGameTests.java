@@ -21,6 +21,7 @@ import dev.alaindustrial.gametest.CableEnergyScenarios;
 import dev.alaindustrial.gametest.AdvancedCircuitScenarios;
 import dev.alaindustrial.gametest.CableInsulationScenarios;
 import dev.alaindustrial.gametest.CableBreakerScenarios;
+import dev.alaindustrial.gametest.CableDyeScenarios;
 import dev.alaindustrial.gametest.CableShockScenarios;
 import dev.alaindustrial.gametest.ChargePadScenarios;
 import dev.alaindustrial.gametest.MobRepellerScenarios;
@@ -409,6 +410,12 @@ public final class NeoForgeGameTests {
 				CableBreakerScenarios::tcBrk001Fun01_removingBreakerRestoresTheLine);
 		registerTest(event, "tc_brk001_vis01_open_breaker_gaps_the_run", 80, true,
 				CableBreakerScenarios::tcBrk001Vis01_openBreakerGapsTheRun);
+		registerTest(event, "tc_dye001_nrg01_dyed_line_carries_energy", 80, true,
+				CableDyeScenarios::tcDye001Nrg01_dyedLineCarriesEnergy);
+		registerTest(event, "tc_dye001_per01_colour_round_trips_through_the_item", 80, true,
+				CableDyeScenarios::tcDye001Per01_colourRoundTripsThroughTheItem);
+		registerTest(event, "tc_dye001_run01_run_stops_at_another_grade", 80, true,
+				CableDyeScenarios::tcDye001Run01_runStopsAtAnotherGrade);
 		registerTest(event, "mod260_retained_buffer_is_safe", 80, true,
 				CableShockScenarios::retainedBufferIsSafe);
 		registerTest(event, "mod269_proximity_radius_respects_cover_and_config", 80, true,

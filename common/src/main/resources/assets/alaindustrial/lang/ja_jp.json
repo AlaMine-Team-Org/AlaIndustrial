@@ -1355,6 +1355,7 @@
   "tooltip.alaindustrial.buffer": "バッファ: %s EU",
   "tooltip.alaindustrial.cable_loss": "エネルギー損失: 1ブロックあたり約%s%%",
   "tooltip.alaindustrial.cable_safe": "絶縁済み：触れても安全",
+  "message.alaindustrial.cable_dye.bare": "染色できるのは絶縁ケーブルだけです",
   "tooltip.alaindustrial.cable_shock_warning": "危険：通電中の裸ケーブルは接触すると感電します",
   "tooltip.alaindustrial.capacity": "容量: %s EU",
   "tooltip.alaindustrial.core_barrel.role": "柱状掘削モジュールの部品",

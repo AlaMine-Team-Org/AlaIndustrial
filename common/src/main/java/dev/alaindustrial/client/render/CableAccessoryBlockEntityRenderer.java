@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.alaindustrial.block.AbstractMachineBlock;
 import dev.alaindustrial.block.CableArmReach;
 import dev.alaindustrial.block.CableBlock;
+import dev.alaindustrial.block.CableColors;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.core.energy.ShockGuardMaterial;
@@ -159,12 +160,30 @@ public final class CableAccessoryBlockEntityRenderer
 	 */
 	private static final Direction[] BAND_FACES = {Direction.WEST, Direction.EAST, Direction.NORTH};
 
+	/**
+	 * The untinted flecks layer of each insulated grade (MOD-666), {@code null} for a bare grade. An
+	 * insulated continuation draws the grade's grey {@code _sleeve} texture tinted with the segment's
+	 * dye, then these flecks over it, exactly like the baked arm it continues.
+	 */
+	private static final SpriteId[] FLECK_SPRITES = cableSprites("_cable_flecks");
+
 	private static SpriteId[] cableSprites() {
 		CableType[] types = CableType.values();
 		SpriteId[] out = new SpriteId[types.length];
 		for (CableType type : types) {
-			out[type.ordinal()] = Sheets.BLOCKS_MAPPER.apply(
-					Identifier.fromNamespaceAndPath("alaindustrial", type.serializedName() + "_cable"));
+			out[type.ordinal()] = Sheets.BLOCKS_MAPPER.apply(Identifier.fromNamespaceAndPath("alaindustrial",
+					type.serializedName() + (type.isInsulated() ? "_cable_sleeve" : "_cable")));
+		}
+		return out;
+	}
+
+	private static SpriteId[] cableSprites(String suffix) {
+		CableType[] types = CableType.values();
+		SpriteId[] out = new SpriteId[types.length];
+		for (CableType type : types) {
+			out[type.ordinal()] = type.isInsulated()
+					? Sheets.BLOCKS_MAPPER.apply(Identifier.fromNamespaceAndPath("alaindustrial", type.serializedName() + suffix))
+					: null;
 		}
 		return out;
 	}
@@ -232,6 +251,8 @@ public final class CableAccessoryBlockEntityRenderer
 		}
 		if (state.anyReach) {
 			state.cableSprite = CABLE_SPRITES[entity.cableType().ordinal()];
+			state.fleckSprite = FLECK_SPRITES[entity.cableType().ordinal()];
+			state.sleeveTint = entity.cableType().isInsulated() ? CableColors.sleeve(entity.color()) : 0xFFFFFFFF;
 			state.shading = level instanceof BlockAndTintGetter tint ? tint.cardinalLighting() : CardinalLighting.DEFAULT;
 		}
 	}
@@ -366,6 +387,8 @@ public final class CableAccessoryBlockEntityRenderer
 			return;
 		}
 		TextureAtlasSprite sprite = sprites.get(state.cableSprite);
+		TextureAtlasSprite flecks = state.fleckSprite == null ? null : sprites.get(state.fleckSprite);
+		int tint = state.sleeveTint;
 		int light = state.lightCoords;
 		List<List<CableArmReach.Band>> reach = List.copyOf(state.reach); // the lambda may run after this state is reused
 		CardinalLighting shading = state.shading;
@@ -373,7 +396,10 @@ public final class CableAccessoryBlockEntityRenderer
 			for (Direction toward : Direction.Plane.HORIZONTAL) {
 				List<CableArmReach.Band> bands = reach.get(toward.get2DDataValue());
 				if (!bands.isEmpty()) {
-					continuation(pose, consumer, sprite, light, shading, toward, bands);
+					continuation(pose, consumer, sprite, tint, light, shading, toward, bands);
+					if (flecks != null) {
+						continuation(pose, consumer, flecks, 0xFFFFFFFF, light, shading, toward, bands);
+					}
 				}
 			}
 		});
@@ -388,7 +414,7 @@ public final class CableAccessoryBlockEntityRenderer
 	 * facing.
 	 */
 	private static void continuation(PoseStack.Pose pose, VertexConsumer consumer, TextureAtlasSprite sprite,
-			int light, CardinalLighting shading, Direction toward, List<CableArmReach.Band> bands) {
+			int tint, int light, CardinalLighting shading, Direction toward, List<CableArmReach.Band> bands) {
 		float x0 = (float) CableBlock.SLEEVE_MIN;
 		float x1 = (float) CableBlock.SLEEVE_MAX;
 		int quarters = switch (toward) {
@@ -405,16 +431,16 @@ public final class CableAccessoryBlockEntityRenderer
 			float below = i == 0 ? 0.0F : bands.get(i - 1).depth();
 			float above = i + 1 == bands.size() ? 0.0F : bands.get(i + 1).depth();
 			for (Direction face : BAND_FACES) {
-				sleeveFace(pose, consumer, sprite, light, shading, quarters, face,
+				sleeveFace(pose, consumer, sprite, tint, light, shading, quarters, face,
 						continuationUv(face, 0.0F, depth, bottom, top), x0, bottom, -depth, x1, top, 0.0F);
 			}
 			// Top and bottom only where they are not the inside of the next band.
 			if (depth > above) {
-				sleeveFace(pose, consumer, sprite, light, shading, quarters, Direction.UP,
+				sleeveFace(pose, consumer, sprite, tint, light, shading, quarters, Direction.UP,
 						continuationUv(Direction.UP, above, depth, bottom, top), x0, bottom, -depth, x1, top, -above);
 			}
 			if (depth > below) {
-				sleeveFace(pose, consumer, sprite, light, shading, quarters, Direction.DOWN,
+				sleeveFace(pose, consumer, sprite, tint, light, shading, quarters, Direction.DOWN,
 						continuationUv(Direction.DOWN, below, depth, bottom, top), x0, bottom, -depth, x1, top, -below);
 			}
 		}
@@ -426,14 +452,17 @@ public final class CableAccessoryBlockEntityRenderer
 	 * ends up facing.
 	 */
 	private static void sleeveFace(PoseStack.Pose pose, VertexConsumer consumer, TextureAtlasSprite sprite,
-			int light, CardinalLighting shading, int quarters, Direction face, float[] uv,
+			int tint, int light, CardinalLighting shading, int quarters, Direction face, float[] uv,
 			float x0, float y0, float z0, float x1, float y1, float z1) {
 		Direction faces = face;
 		for (int q = 0; q < quarters && faces.getAxis().isHorizontal(); q++) {
 			faces = faces.getClockWise();
 		}
-		int grey = Math.min(255, Math.round(255.0F * shading.byFace(faces)));
-		int color = 0xFF000000 | grey << 16 | grey << 8 | grey;
+		float shade = shading.byFace(faces);
+		int color = 0xFF000000
+				| Math.min(255, Math.round(((tint >> 16) & 0xFF) * shade)) << 16
+				| Math.min(255, Math.round(((tint >> 8) & 0xFF) * shade)) << 8
+				| Math.min(255, Math.round((tint & 0xFF) * shade));
 		FaceInfo info = FaceInfo.fromFacing(face);
 		for (int i = 0; i < 4; i++) {
 			FaceInfo.VertexInfo corner = info.getVertexInfo(i);
@@ -699,6 +728,11 @@ public final class CableAccessoryBlockEntityRenderer
 		/** This cable grade's texture, set only when some arm continues. */
 		@Nullable
 		private SpriteId cableSprite;
+		/** The grade's untinted flecks over the sleeve (MOD-666); {@code null} for a bare grade. */
+		@Nullable
+		private SpriteId fleckSprite;
+		/** The sleeve's dye multiply, opaque white for a bare grade. */
+		private int sleeveTint = 0xFFFFFFFF;
 		/** The level's per-face shading, the same the baked arm is multiplied by. */
 		private CardinalLighting shading = CardinalLighting.DEFAULT;
 

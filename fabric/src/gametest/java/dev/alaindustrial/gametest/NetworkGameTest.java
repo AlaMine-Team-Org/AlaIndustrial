@@ -434,6 +434,21 @@ public class NetworkGameTest {
 	}
 
 	@GameTest(maxTicks = 80)
+	public void tcDye001Nrg01_dyedLineCarriesEnergy(GameTestHelper helper) {
+		CableDyeScenarios.tcDye001Nrg01_dyedLineCarriesEnergy(helper);
+	}
+
+	@GameTest(maxTicks = 80)
+	public void tcDye001Per01_colourRoundTripsThroughTheItem(GameTestHelper helper) {
+		CableDyeScenarios.tcDye001Per01_colourRoundTripsThroughTheItem(helper);
+	}
+
+	@GameTest(maxTicks = 80)
+	public void tcDye001Run01_runStopsAtAnotherGrade(GameTestHelper helper) {
+		CableDyeScenarios.tcDye001Run01_runStopsAtAnotherGrade(helper);
+	}
+
+	@GameTest(maxTicks = 80)
 	public void mod260_retainedBufferIsSafe(GameTestHelper helper) {
 		CableShockScenarios.retainedBufferIsSafe(helper);
 	}
