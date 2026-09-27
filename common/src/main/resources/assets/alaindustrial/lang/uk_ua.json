@@ -1355,6 +1355,7 @@
   "tooltip.alaindustrial.buffer": "Буфер: %s EU",
   "tooltip.alaindustrial.cable_loss": "Втрати енергії: ~%s%%/блок на дистанції",
   "tooltip.alaindustrial.cable_safe": "Ізольовано: безпечно торкатися",
+  "message.alaindustrial.cable_dye.bare": "Фарбувати можна лише ізольовані кабелі",
   "tooltip.alaindustrial.cable_shock_warning": "Небезпечно: оголений кабель під напругою б'є струмом",
   "tooltip.alaindustrial.capacity": "Ємність: %s EU",
   "tooltip.alaindustrial.core_barrel.role": "Деталь модуля колонного буріння",

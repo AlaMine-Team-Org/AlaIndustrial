@@ -1504,6 +1504,7 @@
   "tooltip.alaindustrial.buffer": "Буфер: %s EU",
   "tooltip.alaindustrial.cable_loss": "Потери энергии: ~%s%%/блок на дистанции",
   "tooltip.alaindustrial.cable_safe": "Изолирован: безопасен при касании",
+  "message.alaindustrial.cable_dye.bare": "Красить можно только изолированные кабели",
   "tooltip.alaindustrial.cable_shock_warning": "Опасно: запитанный голый кабель бьёт током",
   "tooltip.alaindustrial.capacity": "Ёмкость: %s EU",
   "tooltip.alaindustrial.core_barrel.role": "Деталь модуля колонного бурения",

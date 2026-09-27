@@ -1,19 +1,134 @@
 {
-  "parent": "minecraft:block/block",  "textures": {
-    "all": "alaindustrial:block/insulated_tin_cable",
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sleeve": "alaindustrial:block/insulated_tin_cable_sleeve",
+    "flecks": "alaindustrial:block/insulated_tin_cable_flecks",
     "particle": "alaindustrial:block/insulated_tin_cable"
   },
   "elements": [
     {
       "name": "arm_north",
-      "from": [5, 5, 0],
-      "to": [11, 11, 5],
+      "from": [
+        5,
+        5,
+        0
+      ],
+      "to": [
+        11,
+        11,
+        5
+      ],
       "faces": {
-        "down":  { "uv": [5, 11, 11, 16], "texture": "#all" },
-        "up":    { "uv": [5, 11, 11, 16], "texture": "#all" },
-        "north": { "uv": [5, 5, 11, 11], "texture": "#all" },
-        "west":  { "uv": [0, 5, 5, 11], "texture": "#all" },
-        "east":  { "uv": [0, 5, 5, 11], "texture": "#all" }
+        "down": {
+          "uv": [
+            5,
+            11,
+            11,
+            16
+          ],
+          "texture": "#sleeve",
+          "tintindex": 0
+        },
+        "up": {
+          "uv": [
+            5,
+            11,
+            11,
+            16
+          ],
+          "texture": "#sleeve",
+          "tintindex": 0
+        },
+        "north": {
+          "uv": [
+            5,
+            5,
+            11,
+            11
+          ],
+          "texture": "#sleeve",
+          "tintindex": 0
+        },
+        "west": {
+          "uv": [
+            0,
+            5,
+            5,
+            11
+          ],
+          "texture": "#sleeve",
+          "tintindex": 0
+        },
+        "east": {
+          "uv": [
+            0,
+            5,
+            5,
+            11
+          ],
+          "texture": "#sleeve",
+          "tintindex": 0
+        }
+      }
+    },
+    {
+      "name": "arm_north_flecks",
+      "from": [
+        5,
+        5,
+        0
+      ],
+      "to": [
+        11,
+        11,
+        5
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            5,
+            11,
+            11,
+            16
+          ],
+          "texture": "#flecks"
+        },
+        "up": {
+          "uv": [
+            5,
+            11,
+            11,
+            16
+          ],
+          "texture": "#flecks"
+        },
+        "north": {
+          "uv": [
+            5,
+            5,
+            11,
+            11
+          ],
+          "texture": "#flecks"
+        },
+        "west": {
+          "uv": [
+            0,
+            5,
+            5,
+            11
+          ],
+          "texture": "#flecks"
+        },
+        "east": {
+          "uv": [
+            0,
+            5,
+            5,
+            11
+          ],
+          "texture": "#flecks"
+        }
       }
     }
   ]

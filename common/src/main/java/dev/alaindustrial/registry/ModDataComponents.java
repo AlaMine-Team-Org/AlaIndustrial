@@ -65,6 +65,7 @@ public final class ModDataComponents {
 	public static final Identifier FLUID_TANK_CONTENTS_ID = Industrialization.id("fluid_tank_contents");
 	public static final Identifier DISTILLATION_COLUMN_CONTENTS_ID = Industrialization.id("distillation_column_contents");
 	public static final Identifier MAGNET_ENABLED_ID = Industrialization.id("magnet_enabled");
+	public static final Identifier CABLE_COLOR_ID = Industrialization.id("cable_color");
 	public static final Identifier STEP_ASSIST_ENABLED_ID = Industrialization.id("step_assist_enabled");
 	public static final Identifier SABER_ACTIVE_ID = Industrialization.id("saber_active");
 	public static final Identifier SOUL_VESSEL_KILLS_ID = Industrialization.id("soul_vessel_kills");
@@ -245,6 +246,24 @@ public final class ModDataComponents {
 	public static Supplier<DataComponentType<Boolean>> MAGNET_ENABLED = () -> {
 		throw new IllegalStateException("ModDataComponents.MAGNET_ENABLED read before its loader bound it");
 	};
+
+	/**
+	 * Dye colour of an insulated cable (MOD-666). Absent = the plain black rubber every cable had before
+	 * dyeing existed, so an undyed stack stays component-identical to one crafted before this change and
+	 * keeps stacking with it, while two different colours never merge. The placed segment keeps the
+	 * colour in {@link dev.alaindustrial.block.entity.CableBlockEntity}; the loot table copies it back.
+	 */
+	public static Supplier<DataComponentType<net.minecraft.world.item.DyeColor>> CABLE_COLOR = () -> {
+		throw new IllegalStateException("ModDataComponents.CABLE_COLOR read before its loader bound it");
+	};
+
+	/** Build the {@code cable_color} type both loaders register (MOD-666). */
+	public static DataComponentType<net.minecraft.world.item.DyeColor> createCableColor() {
+		return DataComponentType.<net.minecraft.world.item.DyeColor>builder()
+				.persistent(net.minecraft.world.item.DyeColor.CODEC)
+				.networkSynchronized(net.minecraft.world.item.DyeColor.STREAM_CODEC)
+				.build();
+	}
 
 	/** Build the {@code magnet_enabled} type both loaders register (MOD-132). */
 	public static DataComponentType<Boolean> createMagnetEnabled() {
@@ -654,5 +673,6 @@ public final class ModDataComponents {
 			new ComponentDef<>(DRILL_COLUMN_ENABLED_ID, ModDataComponents::createDrillColumnEnabled, c -> DRILL_COLUMN_ENABLED = c),
 			new ComponentDef<>(TELEPORTER_LOG_ID, ModDataComponents::createTeleporterLog, c -> TELEPORTER_LOG = c),
 			new ComponentDef<>(ELECTRIC_BOW_CHARGED_ID, ModDataComponents::createElectricBowCharged,
-					c -> ELECTRIC_BOW_CHARGED = c));
+					c -> ELECTRIC_BOW_CHARGED = c),
+			new ComponentDef<>(CABLE_COLOR_ID, ModDataComponents::createCableColor, c -> CABLE_COLOR = c));
 }

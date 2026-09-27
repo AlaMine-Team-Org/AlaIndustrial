@@ -1355,6 +1355,7 @@
   "tooltip.alaindustrial.buffer": "버퍼: %s EU",
   "tooltip.alaindustrial.cable_loss": "에너지 손실: 거리 블록당 약 %s%%",
   "tooltip.alaindustrial.cable_safe": "절연됨: 만져도 안전함",
+  "message.alaindustrial.cable_dye.bare": "절연 케이블만 염색할 수 있습니다",
   "tooltip.alaindustrial.cable_shock_warning": "위험: 전류가 흐르는 피복 없는 케이블은 접촉 시 감전됩니다",
   "tooltip.alaindustrial.capacity": "용량: %s EU",
   "tooltip.alaindustrial.core_barrel.role": "기둥 굴착 모듈의 부품",

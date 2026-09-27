@@ -1355,6 +1355,7 @@
   "tooltip.alaindustrial.buffer": "Bufor: %s EU",
   "tooltip.alaindustrial.cable_loss": "Strata energii: ~%s%%/blok na dystansie",
   "tooltip.alaindustrial.cable_safe": "Izolowany: bezpieczny w dotyku",
+  "message.alaindustrial.cable_dye.bare": "Farbować można tylko kable izolowane",
   "tooltip.alaindustrial.cable_shock_warning": "Uwaga: odsłonięty przewód pod napięciem poraża przy dotknięciu",
   "tooltip.alaindustrial.capacity": "Pojemność: %s EU",
   "tooltip.alaindustrial.core_barrel.role": "Część modułu wiercenia kolumnowego",

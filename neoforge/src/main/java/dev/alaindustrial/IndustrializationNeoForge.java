@@ -402,6 +402,16 @@ public final class IndustrializationNeoForge {
 				event.setCanceled(true);
 			}
 		});
+		// MOD-666: a dye on an insulated cable paints it; with Shift, the whole run. Early seam because
+		// vanilla never lets a sneaking player's held item reach the block.
+		NeoForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock event) -> {
+			InteractionResult result = dev.alaindustrial.block.CableDyeing.tryDye(
+					event.getLevel(), event.getEntity(), event.getHand(), event.getHitVec());
+			if (result != InteractionResult.PASS) {
+				event.setCancellationResult(result);
+				event.setCanceled(true);
+			}
+		});
 		// /ala build-visibility command (version + status + net), available to everyone; the hidden
 		// /ala demo subtree (MOD-058) registers only outside production (or with -Dalaindustrial.demo=true).
 		NeoForge.EVENT_BUS.addListener(

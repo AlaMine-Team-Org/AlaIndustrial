@@ -13,5 +13,6 @@ public final class ModItemTintSources {
 	public static void register() {
 		FluidTankItemTintSource.register();
 		CapsuleGlassTintSource.register();
+		CableColorTintSource.register();
 	}
 }

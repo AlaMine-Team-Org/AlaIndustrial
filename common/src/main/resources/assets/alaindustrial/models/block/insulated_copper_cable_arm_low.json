@@ -1,34 +1,261 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "all": "alaindustrial:block/insulated_copper_cable",
+    "sleeve": "alaindustrial:block/insulated_copper_cable_sleeve",
+    "flecks": "alaindustrial:block/insulated_copper_cable_flecks",
     "particle": "alaindustrial:block/insulated_copper_cable"
   },
   "elements": [
     {
       "name": "arm_north_half_bridge",
-      "from": [5, 5, 2],
-      "to": [11, 11, 5],
+      "from": [
+        5,
+        5,
+        2
+      ],
+      "to": [
+        11,
+        11,
+        5
+      ],
       "faces": {
-        "down":  { "uv": [5, 11, 11, 14], "texture": "#all" },
-        "up":    { "uv": [5, 11, 11, 14], "texture": "#all" },
-        "north": { "uv": [5, 5, 11, 11], "texture": "#all" },
-        "south": { "uv": [5, 5, 11, 11], "texture": "#all" },
-        "west":  { "uv": [2, 5, 5, 11], "texture": "#all" },
-        "east":  { "uv": [2, 5, 5, 11], "texture": "#all" }
+        "down": {
+          "uv": [
+            5,
+            11,
+            11,
+            14
+          ],
+          "texture": "#sleeve",
+          "tintindex": 0
+        },
+        "up": {
+          "uv": [
+            5,
+            11,
+            11,
+            14
+          ],
+          "texture": "#sleeve",
+          "tintindex": 0
+        },
+        "north": {
+          "uv": [
+            5,
+            5,
+            11,
+            11
+          ],
+          "texture": "#sleeve",
+          "tintindex": 0
+        },
+        "south": {
+          "uv": [
+            5,
+            5,
+            11,
+            11
+          ],
+          "texture": "#sleeve",
+          "tintindex": 0
+        },
+        "west": {
+          "uv": [
+            2,
+            5,
+            5,
+            11
+          ],
+          "texture": "#sleeve",
+          "tintindex": 0
+        },
+        "east": {
+          "uv": [
+            2,
+            5,
+            5,
+            11
+          ],
+          "texture": "#sleeve",
+          "tintindex": 0
+        }
+      }
+    },
+    {
+      "name": "arm_north_half_bridge_flecks",
+      "from": [
+        5,
+        5,
+        2
+      ],
+      "to": [
+        11,
+        11,
+        5
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            5,
+            11,
+            11,
+            14
+          ],
+          "texture": "#flecks"
+        },
+        "up": {
+          "uv": [
+            5,
+            11,
+            11,
+            14
+          ],
+          "texture": "#flecks"
+        },
+        "north": {
+          "uv": [
+            5,
+            5,
+            11,
+            11
+          ],
+          "texture": "#flecks"
+        },
+        "south": {
+          "uv": [
+            5,
+            5,
+            11,
+            11
+          ],
+          "texture": "#flecks"
+        }
       }
     },
     {
       "name": "arm_north_half_drop",
-      "from": [5, 2, 0],
-      "to": [11, 8, 2],
+      "from": [
+        5,
+        2,
+        0
+      ],
+      "to": [
+        11,
+        8,
+        2
+      ],
       "faces": {
-        "down":  { "uv": [5, 0, 11, 2], "texture": "#all" },
-        "up":    { "uv": [5, 0, 11, 2], "texture": "#all" },
-        "north": { "uv": [5, 2, 11, 8], "texture": "#all" },
-        "south": { "uv": [5, 2, 11, 8], "texture": "#all" },
-        "west":  { "uv": [0, 2, 2, 8], "texture": "#all" },
-        "east":  { "uv": [0, 2, 2, 8], "texture": "#all" }
+        "down": {
+          "uv": [
+            5,
+            0,
+            11,
+            2
+          ],
+          "texture": "#sleeve",
+          "tintindex": 0
+        },
+        "up": {
+          "uv": [
+            5,
+            0,
+            11,
+            2
+          ],
+          "texture": "#sleeve",
+          "tintindex": 0
+        },
+        "north": {
+          "uv": [
+            5,
+            2,
+            11,
+            8
+          ],
+          "texture": "#sleeve",
+          "tintindex": 0
+        },
+        "south": {
+          "uv": [
+            5,
+            2,
+            11,
+            8
+          ],
+          "texture": "#sleeve",
+          "tintindex": 0
+        },
+        "west": {
+          "uv": [
+            0,
+            2,
+            2,
+            8
+          ],
+          "texture": "#sleeve",
+          "tintindex": 0
+        },
+        "east": {
+          "uv": [
+            0,
+            2,
+            2,
+            8
+          ],
+          "texture": "#sleeve",
+          "tintindex": 0
+        }
+      }
+    },
+    {
+      "name": "arm_north_half_drop_flecks",
+      "from": [
+        5,
+        2,
+        0
+      ],
+      "to": [
+        11,
+        8,
+        2
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            5,
+            0,
+            11,
+            2
+          ],
+          "texture": "#flecks"
+        },
+        "up": {
+          "uv": [
+            5,
+            0,
+            11,
+            2
+          ],
+          "texture": "#flecks"
+        },
+        "north": {
+          "uv": [
+            5,
+            2,
+            11,
+            8
+          ],
+          "texture": "#flecks"
+        },
+        "south": {
+          "uv": [
+            5,
+            2,
+            11,
+            8
+          ],
+          "texture": "#flecks"
+        }
       }
     }
   ]

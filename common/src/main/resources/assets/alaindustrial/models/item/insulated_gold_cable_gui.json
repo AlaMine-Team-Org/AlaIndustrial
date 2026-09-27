@@ -1,4 +1,7 @@
 {
-	"parent": "minecraft:item/generated",
-	"textures": { "layer0": "alaindustrial:item/preview_3d/insulated_gold_cable" }
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "alaindustrial:item/preview_3d/insulated_gold_cable_sleeve",
+    "layer1": "alaindustrial:item/preview_3d/insulated_gold_cable_flecks"
+  }
 }

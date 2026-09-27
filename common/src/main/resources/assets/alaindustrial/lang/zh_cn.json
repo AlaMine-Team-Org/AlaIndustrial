@@ -1355,6 +1355,7 @@
   "tooltip.alaindustrial.buffer": "缓冲：%s EU",
   "tooltip.alaindustrial.cable_loss": "能量损耗：每格距离约%s%%",
   "tooltip.alaindustrial.cable_safe": "已绝缘：触碰安全",
+  "message.alaindustrial.cable_dye.bare": "只有绝缘线缆可以染色",
   "tooltip.alaindustrial.cable_shock_warning": "危险：通电的裸露电缆会在接触时电击玩家",
   "tooltip.alaindustrial.capacity": "容量：%s EU",
   "tooltip.alaindustrial.core_barrel.role": "柱状开采模块的部件",

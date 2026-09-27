@@ -26,6 +26,7 @@ import dev.alaindustrial.client.render.CableAccessoryBlockEntityRenderer;
 import dev.alaindustrial.client.render.ChestBlockEntityRenderer;
 import dev.alaindustrial.client.render.EnergyCondenserBlockEntityRenderer;
 import dev.alaindustrial.client.render.RadiantSolarPanelBlockEntityRenderer;
+import dev.alaindustrial.client.render.CableSleeveTint;
 import dev.alaindustrial.client.render.FluidPipeTint;
 import dev.alaindustrial.client.render.FluidTankBlockEntityRenderer;
 import dev.alaindustrial.client.render.GardenDroneBlockEntityRenderer;
@@ -285,5 +286,10 @@ public final class ClientContentManifest {
 			new BlockTintDef(List.of(FluidPipeTint.INSTANCE), () -> ModContent.REINFORCED_FLUID_PIPE.get()),
 			// MOD-662: the steam pipes show what they carry the same way.
 			new BlockTintDef(List.of(FluidPipeTint.INSTANCE), () -> ModContent.STEAM_PIPE.get()),
-			new BlockTintDef(List.of(FluidPipeTint.INSTANCE), () -> ModContent.REINFORCED_STEAM_PIPE.get()));
+			new BlockTintDef(List.of(FluidPipeTint.INSTANCE), () -> ModContent.REINFORCED_STEAM_PIPE.get()),
+			// MOD-666: the rubber sleeve of an insulated cable takes its dye.
+			new BlockTintDef(List.of(CableSleeveTint.INSTANCE), () -> ModContent.INSULATED_COPPER_CABLE.get()),
+			new BlockTintDef(List.of(CableSleeveTint.INSTANCE), () -> ModContent.INSULATED_TIN_CABLE.get()),
+			new BlockTintDef(List.of(CableSleeveTint.INSTANCE), () -> ModContent.INSULATED_GOLD_CABLE.get()),
+			new BlockTintDef(List.of(CableSleeveTint.INSTANCE), () -> ModContent.INSULATED_ELECTRUM_CABLE.get()));
 }

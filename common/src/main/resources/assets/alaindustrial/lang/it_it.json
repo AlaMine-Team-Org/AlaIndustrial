@@ -1355,6 +1355,7 @@
   "tooltip.alaindustrial.buffer": "Buffer: %s EU",
   "tooltip.alaindustrial.cable_loss": "Perdita di energia: ~%s%%/blocco sulla distanza",
   "tooltip.alaindustrial.cable_safe": "Isolato: sicuro al tatto",
+  "message.alaindustrial.cable_dye.bare": "Solo i cavi isolati possono essere tinti",
   "tooltip.alaindustrial.cable_shock_warning": "Pericolo: il cavo scoperto sotto tensione folgora al contatto",
   "tooltip.alaindustrial.capacity": "Capacità: %s EU",
   "tooltip.alaindustrial.core_barrel.role": "Componente del modulo di perforazione a colonna",

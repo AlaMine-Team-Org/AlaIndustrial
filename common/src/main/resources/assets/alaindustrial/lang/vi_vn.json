@@ -1355,6 +1355,7 @@
   "tooltip.alaindustrial.buffer": "Bộ đệm: %s EU",
   "tooltip.alaindustrial.cable_loss": "Hao tổn năng lượng: ~%s%%/khối theo khoảng cách",
   "tooltip.alaindustrial.cable_safe": "Đã cách điện: an toàn khi chạm",
+  "message.alaindustrial.cable_dye.bare": "Chỉ có thể nhuộm cáp cách điện",
   "tooltip.alaindustrial.cable_shock_warning": "Nguy hiểm: cáp trần có điện gây giật khi chạm vào",
   "tooltip.alaindustrial.capacity": "Dung lượng: %s EU",
   "tooltip.alaindustrial.core_barrel.role": "Bộ phận của mô-đun khoan cột",

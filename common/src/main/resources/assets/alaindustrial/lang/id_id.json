@@ -1355,6 +1355,7 @@
   "tooltip.alaindustrial.buffer": "Bufer: %s EU",
   "tooltip.alaindustrial.cable_loss": "Rugi energi: ~%s%%/blok sepanjang jarak",
   "tooltip.alaindustrial.cable_safe": "Terisolasi: aman disentuh",
+  "message.alaindustrial.cable_dye.bare": "Hanya kabel berinsulasi yang bisa diwarnai",
   "tooltip.alaindustrial.cable_shock_warning": "Bahaya: kabel telanjang beraliran listrik menyetrum saat disentuh",
   "tooltip.alaindustrial.capacity": "Kapasitas: %s EU",
   "tooltip.alaindustrial.core_barrel.role": "Bagian dari modul bor kolom",

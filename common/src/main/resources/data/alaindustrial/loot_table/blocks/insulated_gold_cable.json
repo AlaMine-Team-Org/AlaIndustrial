@@ -6,7 +6,16 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "alaindustrial:insulated_gold_cable"
+          "name": "alaindustrial:insulated_gold_cable",
+          "modifier": [
+            {
+              "type": "minecraft:copy_components",
+              "source": "block_entity",
+              "include": [
+                "alaindustrial:cable_color"
+              ]
+            }
+          ]
         }
       ],
       "condition": {

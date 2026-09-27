@@ -8,12 +8,16 @@ import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.core.energy.ShockGuardMaterial;
 import dev.alaindustrial.registry.ModContent;
+import dev.alaindustrial.registry.ModDataComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -84,6 +88,15 @@ public class CableBlockEntity extends EnergyBlockEntity {
 	private boolean breakerClosed = true;
 
 	/**
+	 * Dye colour of an insulated segment (MOD-666), or {@code null} for the plain black rubber. Purely
+	 * cosmetic: nothing in the energy network reads it. Kept here rather than as a block-state property,
+	 * because each grade already has 2 048 states and a colour property would multiply them by seventeen
+	 * (ADR-023). Persists, and a save from before dyeing reads back as undyed.
+	 */
+	@Nullable
+	private DyeColor color;
+
+	/**
 	 * Persist the cable-segment buffer (through {@code super}) and the insulating stand. Since MOD-400
 	 * the cable is an {@link EnergyBlockEntity}, so the base writes nothing but the {@code "Energy"}
 	 * key — the {@code Progress}/{@code MaxProgress}/{@code items} keys of the machine path are gone
@@ -112,6 +125,10 @@ public class CableBlockEntity extends EnergyBlockEntity {
 			output.putBoolean("Breaker", true);
 			output.putBoolean("BreakerClosed", breakerClosed);
 		}
+		// Only a dyed segment writes the key, for the same per-cable NBT reason as the breaker above.
+		if (color != null) {
+			output.putString("Color", color.getSerializedName());
+		}
 	}
 
 	@Override
@@ -122,6 +139,70 @@ public class CableBlockEntity extends EnergyBlockEntity {
 		// Default true, mirroring the field: a save from before MOD-276 has neither key and must read
 		// back as "no breaker, line closed" — the state every existing world is in.
 		breakerClosed = input.getBooleanOr("BreakerClosed", true);
+		DyeColor previous = color;
+		color = readColor(input.getStringOr("Color", ""));
+		// The colour lives in this entity, not in the block state, so a changed colour arriving from the
+		// server does not re-mesh the chunk by itself: the baked tint of the sleeve would stay stale until
+		// something else touched the section. On the client, sendBlockUpdated marks the section for rebuild
+		// unconditionally (UPDATE_IMMEDIATE: this frame). Not setBlocksDirty — that one rebuilds only when
+		// the model of old and new state differs, and here the state is the same (playtest, MOD-666).
+		if (previous != color && level != null && level.isClientSide()) {
+			BlockState state = getBlockState();
+			level.sendBlockUpdated(worldPosition, state, state, Block.UPDATE_IMMEDIATE);
+		}
+	}
+
+	/** A persisted colour name back to its dye, or {@code null} for absent or unknown names. */
+	@Nullable
+	private static DyeColor readColor(String name) {
+		if (name.isEmpty()) {
+			return null;
+		}
+		for (DyeColor dye : DyeColor.values()) {
+			if (dye.getSerializedName().equals(name)) {
+				return dye;
+			}
+		}
+		return null;
+	}
+
+	/** This segment's dye (MOD-666), or {@code null} when it is plain black rubber. */
+	@Nullable
+	public DyeColor color() {
+		return color;
+	}
+
+	/**
+	 * Dye this segment ({@code dye}) or strip it back to plain rubber ({@code null}). Only insulated
+	 * grades carry a colour: a bare segment refuses and reports {@code false}, as does a segment that
+	 * already has this colour — so a caller charging a dye per changed segment never charges for a
+	 * no-op.
+	 */
+	public boolean setColor(@Nullable DyeColor dye) {
+		if (color == dye || (dye != null && !cableType().isInsulated())) {
+			return false;
+		}
+		color = dye;
+		setChanged();
+		syncBlockEntityToClient();
+		return true;
+	}
+
+	@Override
+	protected void collectImplicitComponents(DataComponentMap.Builder builder) {
+		super.collectImplicitComponents(builder);
+		if (color != null) {
+			builder.set(ModDataComponents.CABLE_COLOR.get(), color);
+		}
+	}
+
+	@Override
+	protected void applyImplicitComponents(DataComponentGetter getter) {
+		super.applyImplicitComponents(getter);
+		DyeColor dye = getter.get(ModDataComponents.CABLE_COLOR.get());
+		// A colour on a bare-grade stack (a command, another mod) is dropped rather than stored: the bare
+		// models have no tinted sleeve to show it on.
+		color = dye != null && cableType().isInsulated() ? dye : null;
 	}
 
 	/**

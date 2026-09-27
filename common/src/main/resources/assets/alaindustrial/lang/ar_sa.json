@@ -1355,6 +1355,7 @@
   "tooltip.alaindustrial.buffer": "الاحتياطي: %s EU",
   "tooltip.alaindustrial.cable_loss": "فقد الطاقة: نحو %s%%/كتلة عبر المسافة",
   "tooltip.alaindustrial.cable_safe": "معزول: آمن للمس",
+  "message.alaindustrial.cable_dye.bare": "يمكن صبغ الكابلات المعزولة فقط",
   "tooltip.alaindustrial.cable_shock_warning": "تحذير: الكابل المكهرب العاري يصعق عند اللمس",
   "tooltip.alaindustrial.capacity": "السعة: %s EU",
   "tooltip.alaindustrial.core_barrel.role": "جزء من وحدة الحفر العمودي",

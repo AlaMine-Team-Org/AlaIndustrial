@@ -1504,6 +1504,7 @@
   "tooltip.alaindustrial.buffer": "Buffer: %s EU",
   "tooltip.alaindustrial.cable_loss": "Energy loss: ~%s%%/block over distance",
   "tooltip.alaindustrial.cable_safe": "Insulated: safe to touch",
+  "message.alaindustrial.cable_dye.bare": "Only insulated cables can be dyed",
   "tooltip.alaindustrial.cable_shock_warning": "Warning: energized bare cable shocks on contact",
   "tooltip.alaindustrial.capacity": "Capacity: %s EU",
   "tooltip.alaindustrial.core_barrel.role": "Part of the Column Bore Module",

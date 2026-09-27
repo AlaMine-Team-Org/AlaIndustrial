@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "group": "dyed_insulated_copper_cable",
+  "key": {
+    "C": "alaindustrial:insulated_copper_cable",
+    "D": "minecraft:yellow_dye"
+  },
+  "pattern": [
+    "CCC",
+    "CDC",
+    "CCC"
+  ],
+  "result": {
+    "id": "alaindustrial:insulated_copper_cable",
+    "count": 8,
+    "components": {
+      "alaindustrial:cable_color": "yellow"
+    }
+  }
+}

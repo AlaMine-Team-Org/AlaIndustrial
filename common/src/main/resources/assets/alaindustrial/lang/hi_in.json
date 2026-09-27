@@ -1355,6 +1355,7 @@
   "tooltip.alaindustrial.buffer": "बफ़र: %s EU",
   "tooltip.alaindustrial.cable_loss": "ऊर्जा हानि: प्रति ब्लॉक ~%s%% (दूरी के साथ)",
   "tooltip.alaindustrial.cable_safe": "रोधित: छूना सुरक्षित है",
+  "message.alaindustrial.cable_dye.bare": "केवल इंसुलेटेड केबल ही रंगे जा सकते हैं",
   "tooltip.alaindustrial.cable_shock_warning": "खतरा: सक्रिय खुली केबल छूने पर बिजली का झटका देती है",
   "tooltip.alaindustrial.capacity": "क्षमता: %s EU",
   "tooltip.alaindustrial.core_barrel.role": "स्तंभ खनन मॉड्यूल का पुर्ज़ा",

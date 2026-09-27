@@ -1355,6 +1355,7 @@
   "tooltip.alaindustrial.buffer": "Buffer: %s EU",
   "tooltip.alaindustrial.cable_loss": "Perda de energia: ~%s%%/bloco pela distância",
   "tooltip.alaindustrial.cable_safe": "Isolado: seguro ao toque",
+  "message.alaindustrial.cable_dye.bare": "Só cabos isolados podem ser tingidos",
   "tooltip.alaindustrial.cable_shock_warning": "Perigo: cabo desencapado energizado dá choque ao contato",
   "tooltip.alaindustrial.capacity": "Capacidade: %s EU",
   "tooltip.alaindustrial.core_barrel.role": "Peça do módulo de perfuração em coluna",
