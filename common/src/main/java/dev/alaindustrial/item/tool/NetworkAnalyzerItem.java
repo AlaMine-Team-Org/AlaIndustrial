@@ -7,9 +7,11 @@ import dev.alaindustrial.network.NetworkAnalyzerPayload;
 import dev.alaindustrial.network.NetworkDispatcher;
 import dev.alaindustrial.network.NetworkTraverser;
 import dev.alaindustrial.network.NetworkTraverser.TraversalResult;
+import dev.alaindustrial.network.PayloadBudget;
 import dev.alaindustrial.registry.ModDataComponents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -32,25 +34,25 @@ import net.minecraft.world.level.Level;
  *   <li><b>STOP_AT_STORAGE</b> — show only the clicked cable's own network (original MOD-016).</li>
  * </ul>
  *
- * <p>Shift + right-click in the air / off-network cycles the mode; right-clicking a cable always
- * scans in the current mode (Shift held or not). The split is: a click aimed at a cable is a
- * diagnostic action, a click aimed anywhere else is a mode switch.
+ * <p>What a click does is one table, {@link AnalyzerClick}: a click on a network scans (Shift or not);
+ * anywhere else Shift switches the mode and a plain click clears the highlight — in the air too (D9).
  */
 public class NetworkAnalyzerItem extends Item {
+	/** Server-wide scan rate limit (D4) — one per JVM is enough, it is keyed by player. */
+	private static final ScanThrottle THROTTLE = new ScanThrottle();
+
 	public NetworkAnalyzerItem(Properties properties) {
 		super(properties);
 	}
 
-	/** Right-click in the air (no block target): only meaning is to switch the mode (Shift held). */
+	/** Right-click in the air (no block target). */
 	@Override
 	public InteractionResult use(Level level, Player player, InteractionHand hand) {
 		if (!(level instanceof ServerLevel serverLevel) || !(player instanceof ServerPlayer serverPlayer)) {
 			return InteractionResult.SUCCESS;
 		}
-		ItemStack stack = player.getItemInHand(hand);
-		if (player.isSecondaryUseActive()) {
-			switchMode(serverLevel, serverPlayer, stack);
-		}
+		act(AnalyzerClick.decide(false, player.isSecondaryUseActive()), serverLevel, serverPlayer,
+				player.getItemInHand(hand));
 		return InteractionResult.SUCCESS;
 	}
 
@@ -60,20 +62,14 @@ public class NetworkAnalyzerItem extends Item {
 			return InteractionResult.SUCCESS;
 		}
 		ItemStack stack = context.getItemInHand();
-		// Shift + right-click that is NOT aimed at a cable network = mode switch (no scan).
-		if (context.isSecondaryUseActive()) {
-			EnergyNetwork aimed = NetworkManager.networkAt(level, context.getClickedPos());
-			if (aimed == null) {
-				switchMode(level, player, stack);
-				return InteractionResult.SUCCESS;
-			}
-			// Shift + right-click ON a cable: scan in the current mode (decision Q1 of MOD-047).
-		}
 		EnergyNetwork net = NetworkManager.networkAt(level, context.getClickedPos());
-		if (net == null) {
-			NetworkDispatcher.get().sendToPlayer(player, NetworkAnalyzerPayload.empty(level.dimension()));
-			player.sendOverlayMessage(
-					Component.translatable("gui.alaindustrial.network_analyzer.none").withStyle(ChatFormatting.GRAY));
+		AnalyzerClick.Action action = AnalyzerClick.decide(net != null, context.isSecondaryUseActive());
+		if (action != AnalyzerClick.Action.SCAN) {
+			act(action, level, player, stack);
+			return InteractionResult.SUCCESS;
+		}
+		if (!THROTTLE.tryScan(player.getUUID(), context.getClickedPos().asLong(), level.getGameTime())) {
+			// Holding the use key repeats this every four ticks; the picture already shown stands (D4).
 			return InteractionResult.SUCCESS;
 		}
 		AnalyzerMode mode = stack.get(ModDataComponents.NETWORK_ANALYZER_MODE.get());
@@ -86,25 +82,52 @@ public class NetworkAnalyzerItem extends Item {
 				new NetworkScanData(result.cableCount(), result.producerList().size(), result.consumerList().size(),
 						result.storageList().size(), result.supply(), result.demand(), result.moved()));
 		// Loader-neutral dispatch (MOD-022): NetworkDispatcher replaces the Fabric-direct ServerPlayNetworking.
-		NetworkDispatcher.get().sendToPlayer(player,
-				new NetworkAnalyzerPayload(level.dimension(), result.cableList(), result.producerList(),
-						result.consumerList(), result.storageList(), mode, result.supply(), result.demand(),
-						result.moved()));
-		player.sendOverlayMessage(Component
-				.translatable("gui.alaindustrial.network_analyzer.stats", result.cableCount(), result.producerList().size(),
-						result.consumerList().size(), result.storageList().size(), result.supply(), result.demand(),
-						result.moved())
-				.withStyle(ChatFormatting.AQUA));
-		if (result.hitLimit()) {
-			player.sendOverlayMessage(Component
-					.translatable("gui.alaindustrial.network_analyzer.traverse_limit", Config.networkAnalyzerMaxTraversedNetworks)
-					.withStyle(ChatFormatting.YELLOW));
-		}
+		NetworkAnalyzerPayload payload = NetworkAnalyzerPayload.of(level.dimension(), result, mode,
+				context.getClickedPos(), PayloadBudget.MAX_POSITIONS);
+		NetworkDispatcher.get().sendToPlayer(player, payload);
+		player.sendOverlayMessage(readout(result, payload.truncated(), Config.networkAnalyzerMaxTraversedNetworks));
 		return InteractionResult.SUCCESS;
 	}
 
+	/**
+	 * The one actionbar line a scan produces (D7). The actionbar holds a single message and the last one
+	 * sent wins, so the traverse-limit warning used to wipe out the statistics it was sent after. The
+	 * notes now ride on the same line.
+	 */
+	public static Component readout(TraversalResult result, boolean truncated, int networkLimit) {
+		MutableComponent line = Component.translatable("gui.alaindustrial.network_analyzer.stats", result.cableCount(),
+				result.producerList().size(), result.consumerList().size(), result.storageList().size(),
+				result.supply(), result.demand(), result.moved()).withStyle(ChatFormatting.AQUA);
+		if (result.hitLimit()) {
+			line.append(Component.literal(" "))
+					.append(Component.translatable("gui.alaindustrial.network_analyzer.note.limit", networkLimit)
+							.withStyle(ChatFormatting.YELLOW));
+		}
+		if (truncated) {
+			line.append(Component.literal(" "))
+					.append(Component.translatable("gui.alaindustrial.network_analyzer.note.truncated",
+							PayloadBudget.MAX_POSITIONS).withStyle(ChatFormatting.YELLOW));
+		}
+		return line;
+	}
+
+	/** The non-scan actions of {@link AnalyzerClick}. */
+	private static void act(AnalyzerClick.Action action, ServerLevel level, ServerPlayer player, ItemStack stack) {
+		switch (action) {
+			case SWITCH_MODE -> switchMode(player, stack);
+			case CLEAR -> {
+				NetworkDispatcher.get().sendToPlayer(player, NetworkAnalyzerPayload.empty(level.dimension()));
+				player.sendOverlayMessage(Component.translatable("gui.alaindustrial.network_analyzer.none")
+						.withStyle(ChatFormatting.GRAY));
+			}
+			case SCAN -> {
+				// Only reachable through useOn, which handles it itself.
+			}
+		}
+	}
+
 	/** Cycle the mode on the tool and tell the player what it is now. */
-	private static void switchMode(ServerLevel level, ServerPlayer player, ItemStack stack) {
+	private static void switchMode(ServerPlayer player, ItemStack stack) {
 		AnalyzerMode current = stack.get(ModDataComponents.NETWORK_ANALYZER_MODE.get());
 		AnalyzerMode next = (current == null ? AnalyzerMode.TRAVERSE : current).next();
 		stack.set(ModDataComponents.NETWORK_ANALYZER_MODE.get(), next);

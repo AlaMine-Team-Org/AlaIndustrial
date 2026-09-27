@@ -202,12 +202,10 @@ public class IndustrializationClient implements ClientModInitializer {
 				dev.alaindustrial.network.TeleportFadePayload.TYPE,
 				(payload, context) -> context.client().execute(
 						() -> dev.alaindustrial.client.hud.TeleportFadeHud.receive(payload.strength())));
-		// MOD-513: the archive record belongs to the world the player is leaving — forget it with the fade.
+		// Leaving a world drops the client state that belongs to it (MOD-106 fade, MOD-513 archive record,
+		// MOD-665 analyzer trace) — one shared list, the NeoForge counterpart hangs off LoggingOut.
 		net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents.DISCONNECT.register(
-				(handler, client) -> {
-					dev.alaindustrial.client.hud.TeleportFadeHud.reset();
-					dev.alaindustrial.client.guide.ArchiveRecordClient.reset();
-				});
+				(handler, client) -> dev.alaindustrial.client.ClientDisconnectReset.run());
 		net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.registerGlobalReceiver(
 				dev.alaindustrial.network.ArchiveRecordPayload.TYPE,
 				(payload, context) -> context.client().execute(

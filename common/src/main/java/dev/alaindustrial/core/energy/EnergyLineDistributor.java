@@ -235,16 +235,16 @@ final class EnergyLineDistributor {
 	 * through them would add noise without adding coverage. Scenarios that ARE about the cascade pass
 	 * allowances explicitly.
 	 */
-	void chargeAndPropagateLine(List<LiveProducer> generators, List<LiveProducer> storageSources,
+	long chargeAndPropagateLine(List<LiveProducer> generators, List<LiveProducer> storageSources,
 			long machineDemand, long genSupply, long packetCap, EnergyPort.Txn tx, int rotation) {
-		chargeAndPropagateLine(generators, storageSources, machineDemand, genSupply, packetCap, tx, rotation,
-				null);
+		return chargeAndPropagateLine(generators, storageSources, machineDemand, genSupply, packetCap, tx,
+				rotation, null);
 	}
 
-	void chargeAndPropagateLine(List<LiveProducer> generators, List<LiveProducer> storageSources,
+	long chargeAndPropagateLine(List<LiveProducer> generators, List<LiveProducer> storageSources,
 			long machineDemand, long genSupply, long packetCap, EnergyPort.Txn tx, int rotation,
 			Map<BlockPos, Long> cascadeAllowances) {
-		chargeAndPropagateLine(generators, storageSources, machineDemand, genSupply, packetCap, tx,
+		return chargeAndPropagateLine(generators, storageSources, machineDemand, genSupply, packetCap, tx,
 				rotation, cascadeAllowances, java.util.Map.of());
 	}
 
@@ -267,8 +267,12 @@ final class EnergyLineDistributor {
 	 * independently guarantees the same thing by only computing the later allowances when the earlier
 	 * stages are closed; stating it in both places is deliberate, because a future fourth stage will be
 	 * added at exactly one of them.
+	 *
+	 * <p>Returns the EU drawn out of storage sources into the line this tick, whichever stage drew it
+	 * (MOD-665): the Network Analyzer needs it to count energy that passes THROUGH a store only once
+	 * across the networks the store bridges. Generator draw is not included.
 	 */
-	void chargeAndPropagateLine(List<LiveProducer> generators, List<LiveProducer> storageSources,
+	long chargeAndPropagateLine(List<LiveProducer> generators, List<LiveProducer> storageSources,
 			long machineDemand, long genSupply, long packetCap, EnergyPort.Txn tx, int rotation,
 			Map<BlockPos, Long> cascadeAllowances, Map<BlockPos, Long> feedAllowances) {
 		propagateLineOneHop(packetCap, tx, rotation);
@@ -292,13 +296,13 @@ final class EnergyLineDistributor {
 		// the wires — this closes the dual-role wash the audit flagged.
 		long storageBudget = storageBudget(machineDemand, genSupply);
 		if (storageBudget > 0 && !storageSources.isEmpty()) {
-			chargeLineFrom(storageSources, packetCap, storageBudget, tx, rotation);
+			long drawn = chargeLineFrom(storageSources, packetCap, storageBudget, tx, rotation);
 			// Backup power and cascade are mutually exclusive, and the caller has already guaranteed it
 			// (EnergyNetwork only computes allowances when this budget is 0). Returning here states the
 			// same invariant at the point it protects: two storage stages in one tick would each start a
 			// fresh per-source `fromThis`, letting one battery inject 2 × packetCap and quietly break the
 			// tier ceiling this class documents on chargeLineFrom.
-			return;
+			return drawn;
 		}
 		// MOD-314: the cascade — a fuller store topping up an emptier one once machines are satisfied.
 		// Per-donor budgets, never a shared pool: eligibility is decided per (donor, sink) pair, so a
@@ -306,27 +310,30 @@ final class EnergyLineDistributor {
 		// that is — washing energy backwards while looking like a cascade. Iterating `storageSources`
 		// rather than the map keeps the order the topology fixed (MOD-304).
 		if (cascadeAllowances != null && !cascadeAllowances.isEmpty()) {
+			long drawn = 0;
 			for (LiveProducer donor : storageSources) {
 				Long allowance = cascadeAllowances.get(donor.pos());
 				if (allowance != null && allowance > 0) {
-					chargeLineFrom(List.of(donor), packetCap, allowance, tx, rotation);
+					drawn += chargeLineFrom(List.of(donor), packetCap, allowance, tx, rotation);
 				}
 			}
-			return;
+			return drawn;
 		}
 		// MOD-353: stage three — a store trickling into a sink the cascade refuses. Reached only when the
 		// two stages above moved nothing, so the "one source ≤ packetCap per tick" invariant holds.
 		// Per-donor budgets for the same reason the cascade uses them: a single shared scalar would let a
 		// donor below its own reserve spend an allowance opened by one that is above it.
 		if (feedAllowances == null || feedAllowances.isEmpty()) {
-			return;
+			return 0L;
 		}
+		long drawn = 0;
 		for (LiveProducer donor : storageSources) {
 			Long allowance = feedAllowances.get(donor.pos());
 			if (allowance != null && allowance > 0) {
-				chargeLineFrom(List.of(donor), packetCap, allowance, tx, rotation);
+				drawn += chargeLineFrom(List.of(donor), packetCap, allowance, tx, rotation);
 			}
 		}
+		return drawn;
 	}
 
 	/**
@@ -356,6 +363,17 @@ final class EnergyLineDistributor {
 	 * one — exactly what a one-block machine with three cables on it does. For every ordinary source the
 	 * host is its own position, so nothing else changes.
 	 */
+	/**
+	 * The producers (generators and stores) that put EU into a cable this tick — what the Network Analyzer
+	 * draws its sparks from (MOD-665). Read after the tick: a generator refilled from outside between two
+	 * network ticks, such as a reactor outlet, is empty whenever it is looked at and yet feeds every tick.
+	 */
+	private final Set<BlockPos> fed = new LinkedHashSet<>();
+
+	Set<BlockPos> fed() {
+		return fed;
+	}
+
 	private long chargeLineFrom(List<LiveProducer> sources, long packetCap, long totalBudget,
 			EnergyPort.Txn tx, int rotation) {
 		int sourceCount = sources.size();
@@ -393,6 +411,7 @@ final class EnergyLineDistributor {
 					buf.insert(got, tx);
 					fromThis += got;
 					drawn += got;
+					fed.add(prod.pos());
 				}
 			}
 			drawnByHost.put(prod.host(), fromThis);

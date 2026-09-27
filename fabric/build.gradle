@@ -131,6 +131,7 @@ loom {
         // GUI-only screenshot mode: ./gradlew :fabric:runClientGameTest -Pguionly
         configureEach {
             if (project.findProperty("rootonly") != null) vmArg("-Dalaindustrial.rootonly=1")
+            if (project.findProperty("overlayonly") != null) vmArg("-Dalaindustrial.overlayonly=1")
             if (project.findProperty("rootprobe") != null) vmArg("-Dalaindustrial.rootprobe=1")
             if (project.findProperty("guionly") != null) {
                 vmArg("-Dalaindustrial.guionly=1")
