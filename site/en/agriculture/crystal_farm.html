@@ -427,9 +427,7 @@
 
 <p>The scan is invisible, so forming shows itself three ways at once:</p>
 
-<ul><li><strong>the shell loses its seams</strong> — the decking and the glazing each have a second texture with no</li></ul>
-<p>frame, and a finished room reads as one surface instead of a stack of crates; along the outline the frame stays, tracing the silhouette;</p>
-<ul><li><strong>a sound</strong> — one chord at the moment it closes, only on the transition;</li><li><strong>particles</strong> — a flash along the seam of the floor.</li></ul>
+<ul><li><strong>the shell loses its seams</strong> — the decking and the glazing each have a second texture with no frame, and a finished room reads as one surface instead of a stack of crates; along the outline the frame stays, tracing the silhouette;</li><li><strong>a sound</strong> — one chord at the moment it closes, only on the transition;</li><li><strong>particles</strong> — a flash along the seam of the floor.</li></ul>
 
 <p>Take a wall apart and the shell snaps straight back to its crumbly look.</p>
 
@@ -447,10 +445,7 @@
 
 <p>It is crafted <strong>dead</strong> — the same crystalline stone as vanilla budding amethyst, only with the colour gone out of it. Feed it an amethyst shard (right-click), and it fills with colour and starts bearing.</p>
 
-<ul><li><strong>One shard per click.</strong> The charge shows in the line above the hotbar, and the pitch of the sound</li></ul>
-<p>climbs as it fills.</p>
-<ul><li><strong>A block of amethyst</strong> counts as four shards — exactly what vanilla puts into its recipe.</li><li><strong>You can top it up at any time</strong>, without waiting for the charge to run out.</li><li>The ceiling is <strong>16 buds</strong> in the queue. A block of amethyst is <strong>refused</strong> by an almost-full bed:</li></ul>
-<p>it gives four buds at once, and taking it for a single free slot would silently burn three quarters of a scarce item. Shards can always top it up.</p>
+<ul><li><strong>One shard per click.</strong> The charge shows in the line above the hotbar, and the pitch of the sound climbs as it fills.</li><li><strong>A block of amethyst</strong> counts as four shards — exactly what vanilla puts into its recipe.</li><li><strong>You can top it up at any time</strong>, without waiting for the charge to run out.</li><li>The ceiling is <strong>16 buds</strong> in the queue. A block of amethyst is <strong>refused</strong> by an almost-full bed: it gives four buds at once, and taking it for a single free slot would silently burn three quarters of a scarce item. Shards can always top it up.</li></ul>
 
 <p>Clusters grow on the seedbed's free faces, going through the vanilla stages <code>small bud → medium → large → cluster</code>. A finished cluster is knocked down with a <strong>pickaxe</strong> and gives <strong>4 shards</strong> (vanilla table, Fortune applies). An unripe bud gives nothing — as in vanilla.</p>
 
@@ -496,10 +491,7 @@
 
 <p>So the door closes not for the mechanics, but because a greenhouse standing wide open looks bad, and because the room is otherwise sealed — a door left open is exactly the way mobs walk in.</p>
 
-<ul><li><strong>Nothing holds the door open, redstone included.</strong> A signal used to mean "this one is being held</li></ul>
-<p>open on purpose" and the timer stood down; the greenhouse is now shut unconditionally. The cost is named rather than hidden: under a lever left up the door opens once, closes after five seconds, and will not open again until the signal is toggled — the close deliberately does not clear <code>POWERED</code>, or vanilla would open the door on the very next neighbour update and it would flap for as long as the lever is up. A bay driven by a button pulse is unaffected.</p>
-<ul><li><strong>The door will not close on anyone standing in the doorway</strong> — the check covers both halves and</li></ul>
-<p>counts living creatures only: a shard dropped underfoot does not hold the door. Since redstone stopped holding it, this is the only thing between the timer and a door shut in someone's face.</p>
+<ul><li><strong>Nothing holds the door open, redstone included.</strong> A signal used to mean "this one is being held open on purpose" and the timer stood down; the greenhouse is now shut unconditionally. The cost is named rather than hidden: under a lever left up the door opens once, closes after five seconds, and will not open again until the signal is toggled — the close deliberately does not clear <code>POWERED</code>, or vanilla would open the door on the very next neighbour update and it would flap for as long as the lever is up. A bay driven by a button pulse is unaffected.</li><li><strong>The door will not close on anyone standing in the doorway</strong> — the check covers both halves and counts living creatures only: a shard dropped underfoot does not hold the door. Since redstone stopped holding it, this is the only thing between the timer and a door shut in someone's face.</li></ul>
 
 <h2 id="block-properties">Block properties</h2>
 
@@ -515,10 +507,7 @@
 
 <h2 id="progression">Progression</h2>
 
-<ul><li>Tier: LV, and even that is optional.</li><li>Wakes the branch up: <code>resonant_shard</code>, <code>spatial_crystal</code>, and through them the Resonance Coil, the</li></ul>
-<p>teleport chip, the Lapotron Crystal and the Resonant Crystal.</p>
-<ul><li>Requires a geode found first — the first shards come from there. The greenhouse makes the source</li></ul>
-<p>renewable; it does not conjure it out of nothing.</p>
+<ul><li>Tier: LV, and even that is optional.</li><li>Wakes the branch up: <code>resonant_shard</code>, <code>spatial_crystal</code>, and through them the Resonance Coil, the teleport chip, the Lapotron Crystal and the Resonant Crystal.</li><li>Requires a geode found first — the first shards come from there. The greenhouse makes the source renewable; it does not conjure it out of nothing.</li></ul>
 
 <h2 id="performance">Performance</h2>
 
@@ -526,10 +515,7 @@
 
 <h2 id="related">Related</h2>
 
-<ul><li><a href="incubator.html">Incubator</a> — the neighbouring genre: probabilistic instant mutation against</li></ul>
-<p>deterministic growth over time.</p>
-<ul><li><a href="trellis.html">Trellis</a> — the precedent for perennial growth with no block entity.</li><li><a href="../nuclear/reactor_controller.html">Reactor Controller</a> — the neighbouring multiblock; all they</li></ul>
-<p>share is the geometry of the shell, the scanners differ (a box against a volume flood fill).</p>
+<ul><li><a href="incubator.html">Incubator</a> — the neighbouring genre: probabilistic instant mutation against deterministic growth over time.</li><li><a href="trellis.html">Trellis</a> — the precedent for perennial growth with no block entity.</li><li><a href="../nuclear/reactor_controller.html">Reactor Controller</a> — the neighbouring multiblock; all they share is the geometry of the shell, the scanners differ (a box against a volume flood fill).</li></ul>
 
 <h2>Crafting</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="greenhouse controller alaindustrial:crystal_farm_controller" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Greenhouse Decking"><img src="../../assets/item/crystal_farm_floor_3d.png" alt="Greenhouse Decking" width="32" height="32"></div> <div class="cell" title="Amethyst Shard"><img src="../../assets/item/amethyst_shard_3d.png" alt="Amethyst Shard" width="32" height="32"></div> <div class="cell" title="Greenhouse Decking"><img src="../../assets/item/crystal_farm_floor_3d.png" alt="Greenhouse Decking" width="32" height="32"></div> <div class="cell" title="Electronic Circuit"><img src="../../assets/item/electronic_circuit_3d.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Machine Casing"><img src="../../assets/item/machine_casing_3d.png" alt="Machine Casing" width="32" height="32"></div> <div class="cell" title="Electronic Circuit"><img src="../../assets/item/electronic_circuit_3d.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Greenhouse Decking"><img src="../../assets/item/crystal_farm_floor_3d.png" alt="Greenhouse Decking" width="32" height="32"></div> <div class="cell" title="Greenhouse Decking"><img src="../../assets/item/crystal_farm_floor_3d.png" alt="Greenhouse Decking" width="32" height="32"></div> <div class="cell" title="Greenhouse Decking"><img src="../../assets/item/crystal_farm_floor_3d.png" alt="Greenhouse Decking" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Greenhouse Controller"><img src="../../assets/item/crystal_farm_controller_3d.png" alt="Greenhouse Controller" width="32" height="32"></div><div class="result-name">Greenhouse Controller</div></div></div></div></div>

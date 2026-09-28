@@ -423,7 +423,7 @@
 
 <p>Blueprints are polled <strong>round-robin</strong>, and the cursor position persists between cycles. A blueprint is skipped if any of the following holds:</p>
 
-<p>the store is missing an ingredient; there is no room for the result in the output area; the blueprint's recipe no longer exists (e.g. after a datapack change).</p>
+<ul><li>the store is missing an ingredient;</li><li>there is no room for the result in the output area;</li><li>the blueprint's recipe no longer exists (e.g. after a datapack change).</li></ul>
 
 <p>If no blueprint is ready, the machine sleeps and wakes when the store or the charge changes.</p>
 
@@ -433,9 +433,7 @@
 
 <p>The order is strict; deviating breaks either the result or the return of remainders:</p>
 
-<ol><li>Build the input from the blueprint grid and check every ingredient against the store.</li><li>Check that the result fits the output area <strong>and the remainders fit the store</strong>. If not, do not</li></ol>
-<p>start the operation at all — this is what protects against item loss.</p>
-<ol><li>Spend EU/FE and advance progress.</li><li>On completion: take the recipe result, then the remainders, and only then consume the ingredients.</li></ol>
+<ol><li>Build the input from the blueprint grid and check every ingredient against the store.</li><li>Check that the result fits the output area <strong>and the remainders fit the store</strong>. If not, do not start the operation at all — this is what protects against item loss.</li><li>Spend EU/FE and advance progress.</li><li>On completion: take the recipe result, then the remainders, and only then consume the ingredients.</li></ol>
 
 <p>Steps 1–2 run on <strong>copies</strong> of the store and the output area: an operation is either worked out in full or not begun, and what is written back to the world is exactly the arrays the fitting check ran on. The check and the act are the same code, so "it will fit" and "it was placed" cannot drift apart.</p>
 
@@ -449,12 +447,7 @@
 
 <p>With substitution on, the order is:</p>
 
-<ol><li><strong>The item the player recorded comes first.</strong> As long as the store holds it, that is what is</li></ol>
-<p>taken. Refined Storage does not do this, and it is a standing player complaint.</p>
-<ol><li><strong>If it is out of stock, candidates come from the <code>Ingredient</code> of that particular recipe slot</strong>,</li></ol>
-<p>in the recipe's own order. Never "from the tag in general": a recipe written as <code>#minecraft:planks</code> (sticks, crafting table, bowl) has twelve candidates, while <code>oak_stairs</code>, whose ingredient is literally <code>minecraft:oak_planks</code>, has none at all and never substitutes. The "any planks in the blueprint, oak and birch in the store, which stairs do I get" situation <strong>cannot arise</strong>: vanilla family recipes are per-species.</p>
-<ol><li><strong>A stand-in is accepted only if re-assembling gives the same result</strong> — the recipe still matches</li></ol>
-<p>and the assembled stack equals what the blueprint promises in its tooltip, components and count included. If it does not, the operation never starts: no EU/FE spent, nothing taken from the store.</p>
+<ol><li><strong>The item the player recorded comes first.</strong> As long as the store holds it, that is what is taken. Refined Storage does not do this, and it is a standing player complaint.</li><li><strong>If it is out of stock, candidates come from the <code>Ingredient</code> of that particular recipe slot</strong>, in the recipe's own order. Never "from the tag in general": a recipe written as <code>#minecraft:planks</code> (sticks, crafting table, bowl) has twelve candidates, while <code>oak_stairs</code>, whose ingredient is literally <code>minecraft:oak_planks</code>, has none at all and never substitutes. The "any planks in the blueprint, oak and birch in the store, which stairs do I get" situation <strong>cannot arise</strong>: vanilla family recipes are per-species.</li><li><strong>A stand-in is accepted only if re-assembling gives the same result</strong> — the recipe still matches and the assembled stack equals what the blueprint promises in its tooltip, components and count included. If it does not, the operation never starts: no EU/FE spent, nothing taken from the store.</li></ol>
 
 <p>The positions come from <code>Recipe.placementInfoslotsToIngredientIndex</code> is a list parallel to the recipe's placement slots whose value indexes <code>ingredients</code> (or −1 for a cell the recipe leaves empty). For a <code>ShapedRecipe</code> those slots are the pattern cells, so the index is mapped onto the 3×3 grid through the same trim — and, for a mirrored match, the same reflection — as the remainder return. Anything that is not a <code>ShapedRecipe</code> (shapeless above all) has no positions by definition; there every ingredient of the recipe is offered for every filled cell, and step 3 is what keeps that honest.</p>
 
@@ -492,12 +485,12 @@
 
 <p>What the machine is doing right now:</p>
 
-<p>three blueprint slots — the queue, the active one ringed; <strong>the active blueprint's 3×3 layout and its product</strong> — view only (see below); the 6-slot output area; an energy bar and a progress bar; a status line: <em>working / no blueprint / missing materials / output full / no energy / recipe not found</em>. You must be able to tell the reasons apart — otherwise "the machine is idle" is indistinguishable from "the machine is broken".</p>
+<ul><li>three blueprint slots — the queue, the active one ringed;</li><li><strong>the active blueprint's 3×3 layout and its product</strong> — view only (see below);</li><li>the 6-slot output area;</li><li>an energy bar and a progress bar;</li><li>a status line: <em>working / no blueprint / missing materials / output full / no energy / recipe not found</em>. You must be able to tell the reasons apart — otherwise "the machine is idle" is indistinguishable from "the machine is broken".</li></ul>
 
 <h3 id="the-record-tab">The "Record" tab</h3>
 
 
-<p>a 3×3 grid of ghost cells; a result preview — what that layout makes; a slot for a blank blueprint; a "Write" button — turns the blank into a recorded blueprint; the square arrow button to the left of "Write" — the <a href="#ingredient-substitution">substitution toggle</a> for the blueprint on show: grey arrows for off, green for on.</p>
+<ul><li>a 3×3 grid of ghost cells;</li><li>a result preview — what that layout makes;</li><li>a slot for a blank blueprint;</li><li>a "Write" button — turns the blank into a recorded blueprint;</li><li>the square arrow button to the left of "Write" — the <a href="#ingredient-substitution">substitution toggle</a> for the blueprint on show: grey arrows for off, green for on.</li></ul>
 
 <p>Grid cells are filled by clicking: hover a cell and click while holding an item on the cursor and one copy of it lands in the cell; clicking with an empty cursor clears it. Nothing is consumed — the grid shows a layout, it does not hold one.</p>
 
@@ -523,7 +516,7 @@
 
 <p><strong>Storage window</strong> — this is the <a href="../utility/storage_module.html">Storage Module</a>'s own window, opened by right-clicking a module rather than by a button in the Assembler:</p>
 
-<p>the shared storage grid, 3 to 12 rows depending on how many modules are connected; no scrolling, no scrollbar, no search — the 108-slot cap was picked so everything fits one screen.</p>
+<ul><li>the shared storage grid, 3 to 12 rows depending on how many modules are connected;</li><li>no scrolling, no scrollbar, no search — the 108-slot cap was picked so everything fits one screen.</li></ul>
 
 <p>The storage window is the very same one the storage module opens.</p>
 
@@ -541,7 +534,7 @@
 
 <h2 id="recipes">Recipes</h2>
 
-<p>No processing recipes — the machine uses vanilla <code>minecraft:crafting</code></p>
+<ul><li>No processing recipes — the machine uses vanilla <code>minecraft:crafting</code></li></ul>
 
 <p>The composition follows the genre pattern — a tier casing, two circuits, an "identity" part and a "storage" part, with the four corners taken by the mechanics that move the parts:</p>
 
@@ -551,11 +544,11 @@
 
 <h2 id="progression">Progression</h2>
 
-<p>Tier: MV — the <strong>first MV machine in the mod</strong>, the anchor of the MV phase Requires: a <a href="../utility/storage_module.html">Storage Module</a> (with no store the machine has nowhere to draw from) and an Assembly Blueprint Since it also requires a finished oil line — not directly, but through the <a href="../components/advanced_machine_casing.html">Advanced Machine Casing</a>, which now seats 2 <a href="../components/advanced_circuit.html">Advanced Circuits</a>, each costing 4 rubber. The assembler's own crafting grid is unchanged, but its full cost grew by those 2 circuits, and it can no longer be built before a <a href="polymerizer.html">Polymerizer</a> and a <a href="vulcanizer.html">Vulcanizer</a> Upgrades into: nothing. On-demand autocrafting (order "make 64 X" with a sub-craft tree) is a separate future system, not an upgrade to this machine</p>
+<ul><li>Tier: MV — the <strong>first MV machine in the mod</strong>, the anchor of the MV phase</li><li>Requires: a <a href="../utility/storage_module.html">Storage Module</a> (with no store the machine has nowhere to draw from) and an Assembly Blueprint</li><li>Since it also requires a finished oil line — not directly, but through the <a href="../components/advanced_machine_casing.html">Advanced Machine Casing</a>, which now seats 2 <a href="../components/advanced_circuit.html">Advanced Circuits</a>, each costing 4 rubber. The assembler's own crafting grid is unchanged, but its full cost grew by those 2 circuits, and it can no longer be built before a <a href="polymerizer.html">Polymerizer</a> and a <a href="vulcanizer.html">Vulcanizer</a></li><li>Upgrades into: nothing. On-demand autocrafting (order "make 64 X" with a sub-craft tree) is a separate future system, not an upgrade to this machine</li></ul>
 
 <h2 id="related">Related</h2>
 
-<p><a href="../utility/storage_module.html">Storage Module</a> — the store the Assembler draws from Assembly Blueprint — the item that holds a recipe <a href="../energy-transfer/gold_cable.html">Gold Cable</a> — powering an MV machine <a href="../item-transport/item_pipe.html">Item Pipe</a> — fills the store, empties the output <a href="sawmill.html">Sawmill</a> — reference for a machine with switchable modes in its GUI</p>
+<ul><li><a href="../utility/storage_module.html">Storage Module</a> — the store the Assembler draws from</li><li>Assembly Blueprint — the item that holds a recipe</li><li><a href="../energy-transfer/gold_cable.html">Gold Cable</a> — powering an MV machine</li><li><a href="../item-transport/item_pipe.html">Item Pipe</a> — fills the store, empties the output</li><li><a href="sawmill.html">Sawmill</a> — reference for a machine with switchable modes in its GUI</li></ul>
 
 <h2>Crafting</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="assembler alaindustrial:assembler" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Iron Gear"><img src="../../assets/item/iron_gear_3d.png" alt="Iron Gear" width="32" height="32"></div> <div class="cell" title="Crafting Table"><img src="../../assets/item/crafting_table_3d.png" alt="Crafting Table" width="32" height="32"></div> <div class="cell" title="Iron Gear"><img src="../../assets/item/iron_gear_3d.png" alt="Iron Gear" width="32" height="32"></div> <div class="cell" title="Electronic Circuit"><img src="../../assets/item/electronic_circuit_3d.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Advanced Machine Casing"><img src="../../assets/item/advanced_machine_casing_3d.png" alt="Advanced Machine Casing" width="32" height="32"></div> <div class="cell" title="Electronic Circuit"><img src="../../assets/item/electronic_circuit_3d.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Iron Gear"><img src="../../assets/item/iron_gear_3d.png" alt="Iron Gear" width="32" height="32"></div> <div class="cell" title="Storage Module"><img src="../../assets/item/storage_module_3d.png" alt="Storage Module" width="32" height="32"></div> <div class="cell" title="Iron Gear"><img src="../../assets/item/iron_gear_3d.png" alt="Iron Gear" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Assembler"><img src="../../assets/item/assembler_3d.png" alt="Assembler" width="32" height="32"></div><div class="result-name">Assembler</div></div></div></div></div>

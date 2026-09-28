@@ -423,7 +423,7 @@
 
 <p>Los planos se consultan por turnos (<strong>round-robin</strong>) y la posición del cursor persiste entre ciclos. Un plano se salta si se cumple cualquiera de estas condiciones:</p>
 
-<p>al almacén le falta un ingrediente; no hay sitio para el resultado en la zona de salida; la receta del plano ya no existe (p. ej., tras un cambio de datapack).</p>
+<ul><li>al almacén le falta un ingrediente;</li><li>no hay sitio para el resultado en la zona de salida;</li><li>la receta del plano ya no existe (p. ej., tras un cambio de datapack).</li></ul>
 
 <p>Si ningún plano está listo, la máquina duerme y despierta cuando cambian el almacén o la carga.</p>
 
@@ -433,10 +433,7 @@
 
 <p>El orden es estricto; desviarse rompe el resultado o la devolución de restos:</p>
 
-<ol><li>Construye la entrada desde la cuadrícula del plano y comprueba cada ingrediente contra el almacén.</li><li>Comprueba que el resultado cabe en la zona de salida <strong>y que los restos caben en el almacén</strong>. Si</li></ol>
-<p>no, la operación ni siquiera empieza — esto es lo que protege contra la pérdida de objetos.</p>
-<ol><li>Gasta EU/FE y avanza el progreso.</li><li>Al completar: toma el resultado de la receta, luego los restos, y solo entonces consume los</li></ol>
-<p>ingredientes.</p>
+<ol><li>Construye la entrada desde la cuadrícula del plano y comprueba cada ingrediente contra el almacén.</li><li>Comprueba que el resultado cabe en la zona de salida <strong>y que los restos caben en el almacén</strong>. Si no, la operación ni siquiera empieza — esto es lo que protege contra la pérdida de objetos.</li><li>Gasta EU/FE y avanza el progreso.</li><li>Al completar: toma el resultado de la receta, luego los restos, y solo entonces consume los ingredientes.</li></ol>
 
 <p>Los pasos 1–2 se ejecutan sobre <strong>copias</strong> del almacén y de la zona de salida: una operación o se resuelve por completo o no empieza, y lo que se escribe de vuelta al mundo son exactamente los arrays sobre los que corrió la comprobación de encaje. La comprobación y el acto son el mismo código, así que «cabe» y «se colocó» no pueden divergir.</p>
 
@@ -450,12 +447,7 @@
 
 <p>Con la sustitución activada, el orden es:</p>
 
-<ol><li><strong>El objeto que grabó el jugador va primero.</strong> Mientras el almacén lo tenga, eso es lo que se</li></ol>
-<p>toma. Refined Storage no hace esto, y es una queja constante de los jugadores.</p>
-<ol><li><strong>Si está agotado, los candidatos salen del <code>Ingredient</code> de esa ranura concreta de la receta</strong>, en</li></ol>
-<p>el orden propio de la receta. Nunca «de la etiqueta en general»: una receta escrita como <code>#minecraft:planks</code> (palos, mesa de trabajo, cuenco) tiene doce candidatos, mientras que <code>oak_stairs</code>, cuyo ingrediente es literalmente <code>minecraft:oak_planks</code>, no tiene ninguno y jamás sustituye. La situación «cualquier tablón en el plano, roble y abedul en el almacén, ¿qué escaleras salen?» <strong>no puede darse</strong>: las recetas familiares de vanilla son por especie.</p>
-<ol><li><strong>Un sustituto se acepta solo si reensamblar da el mismo resultado</strong> — la receta sigue coincidiendo</li></ol>
-<p>y la pila ensamblada equivale a lo que promete el plano en su descripción, componentes y cantidad incluidos. Si no, la operación nunca empieza: ni EU/FE gastados, nada tomado del almacén.</p>
+<ol><li><strong>El objeto que grabó el jugador va primero.</strong> Mientras el almacén lo tenga, eso es lo que se toma. Refined Storage no hace esto, y es una queja constante de los jugadores.</li><li><strong>Si está agotado, los candidatos salen del <code>Ingredient</code> de esa ranura concreta de la receta</strong>, en el orden propio de la receta. Nunca «de la etiqueta en general»: una receta escrita como <code>#minecraft:planks</code> (palos, mesa de trabajo, cuenco) tiene doce candidatos, mientras que <code>oak_stairs</code>, cuyo ingrediente es literalmente <code>minecraft:oak_planks</code>, no tiene ninguno y jamás sustituye. La situación «cualquier tablón en el plano, roble y abedul en el almacén, ¿qué escaleras salen?» <strong>no puede darse</strong>: las recetas familiares de vanilla son por especie.</li><li><strong>Un sustituto se acepta solo si reensamblar da el mismo resultado</strong> — la receta sigue coincidiendo y la pila ensamblada equivale a lo que promete el plano en su descripción, componentes y cantidad incluidos. Si no, la operación nunca empieza: ni EU/FE gastados, nada tomado del almacén.</li></ol>
 
 <p>Las posiciones salen de <code>Recipe.placementInfoslotsToIngredientIndex</code> es una lista paralela a las ranuras de colocación de la receta cuyo valor indexa <code>ingredients</code> (o −1 para una celda que la receta deja vacía). Para una <code>ShapedRecipe</code> esas ranuras son las celdas del patrón, así que el índice se proyecta sobre la cuadrícula 3×3 con el mismo recorte — y, para una coincidencia espejada, la misma reflexión — que la devolución de restos. Todo lo que no sea una <code>ShapedRecipe</code> (sobre todo lo sin forma) no tiene posiciones por definición; allí cada ingrediente de la receta se ofrece para cada celda llena, y el paso 3 es lo que mantiene eso honesto.</p>
 
@@ -493,13 +485,13 @@
 
 <p>Lo que la máquina está haciendo ahora mismo:</p>
 
-<p>tres ranuras de planos — la cola, la activa marcada con un anillo; <strong>la disposición 3×3 del plano activo y su producto</strong> — solo vista (ver más abajo); la zona de salida de 6 ranuras; una barra de energía y una barra de progreso; una línea de estado: <em>trabajando / sin plano / faltan materiales / salida llena / sin energía / receta no encontrada</em>. Debes poder distinguir los motivos — si no, «la máquina está inactiva» es indistinguible de «la máquina está rota».</p>
+<ul><li>tres ranuras de planos — la cola, la activa marcada con un anillo;</li><li><strong>la disposición 3×3 del plano activo y su producto</strong> — solo vista (ver más abajo);</li><li>la zona de salida de 6 ranuras;</li><li>una barra de energía y una barra de progreso;</li><li>una línea de estado: <em>trabajando / sin plano / faltan materiales / salida llena / sin energía / receta no encontrada</em>. Debes poder distinguir los motivos — si no, «la máquina está inactiva» es indistinguible de «la máquina está rota».</li></ul>
 
 <h3 id="la-pestaña-grabar">La pestaña «Grabar»</h3>
 
 <p>Lo que implica redactar una receta:</p>
 
-<p>una cuadrícula 3×3 de celdas fantasma; una vista previa del resultado — lo que esa disposición fabrica; una ranura para un plano en blanco; un botón «Grabar» — convierte el blanco en un plano grabado; el botón de flecha cuadrada a la izquierda de «Grabar» — el <a href="#sustitución-de-ingredientes">interruptor de sustitución</a> para el plano en exhibición: flechas grises para desactivado, verdes para activado.</p>
+<ul><li>una cuadrícula 3×3 de celdas fantasma;</li><li>una vista previa del resultado — lo que esa disposición fabrica;</li><li>una ranura para un plano en blanco;</li><li>un botón «Grabar» — convierte el blanco en un plano grabado;</li><li>el botón de flecha cuadrada a la izquierda de «Grabar» — el <a href="#sustitución-de-ingredientes">interruptor de sustitución</a> para el plano en exhibición: flechas grises para desactivado, verdes para activado.</li></ul>
 
 <p>Las celdas de la cuadrícula se rellenan con clics: pasa el cursor sobre una celda y haz clic sosteniendo un objeto en el cursor y una copia cae en la celda; hacer clic con el cursor vacío la limpia. No se consume nada — la cuadrícula muestra una disposición, no la guarda.</p>
 
@@ -525,7 +517,7 @@
 
 <p>La <strong>ventana de almacenamiento</strong> es la ventana propia del <a href="../utility/storage_module.html">Módulo de almacenamiento</a>, abierta con clic derecho sobre un módulo y no mediante un</p>
 
-<p>la cuadrícula de almacenamiento compartida, de 3 a 12 filas según cuántos módulos estén conectados; sin desplazamiento, sin barra de desplazamiento, sin búsqueda — el tope de 108 ranuras se eligió para que todo quepa en una pantalla.</p>
+<ul><li>la cuadrícula de almacenamiento compartida, de 3 a 12 filas según cuántos módulos estén conectados;</li><li>sin desplazamiento, sin barra de desplazamiento, sin búsqueda — el tope de 108 ranuras se eligió para que todo quepa en una pantalla.</li></ul>
 
 <p>La ventana de almacenamiento es exactamente la misma que abre el módulo de almacenamiento.</p>
 
@@ -543,7 +535,7 @@
 
 <h2 id="recetas">Recetas</h2>
 
-<p>Sin recetas de procesamiento — la máquina usa <code>minecraft:crafting</code> de vanilla</p>
+<ul><li>Sin recetas de procesamiento — la máquina usa <code>minecraft:crafting</code> de vanilla</li></ul>
 
 <p>La composición sigue el patrón del género — una carcasa de nivel, dos circuitos, una pieza de «identidad» y una pieza de «almacenamiento», con las cuatro esquinas tomadas por la mecánica que</p>
 
@@ -553,14 +545,14 @@
 
 <h2 id="progresión">Progresión</h2>
 
-<p>Nivel: MV — la <strong>primera máquina MV del mod</strong>, el ancla de la fase MV. Requiere: un <a href="../utility/storage_module.html">Módulo de almacenamiento</a> (sin almacén la máquina no tiene de dónde sacar) y un Plano de ensamblaje. Desde también requiere una línea de petróleo terminada — no directamente, sino a través de la <a href="../components/advanced_machine_casing.html">Carcasa de máquina avanzada</a>, que ahora asienta 2 <a href="../components/advanced_circuit.html">Circuitos avanzados</a>, cada uno con un coste de 4 caucho. La cuadrícula de fabricación del propio ensamblador no cambia, pero su coste total creció con esos 2 circuitos, y ya no puede construirse antes de un <a href="polymerizer.html">Polimerizador</a> y un <a href="vulcanizer.html">Vulcanizador</a>. Mejora hacia: nada. La autofabricación bajo demanda (ordenar «haz 64 X» con un árbol de sub-fabricaciones) es un sistema futuro aparte, no una mejora de esta máquina.</p>
+<ul><li>Nivel: MV — la <strong>primera máquina MV del mod</strong>, el ancla de la fase MV.</li><li>Requiere: un <a href="../utility/storage_module.html">Módulo de almacenamiento</a> (sin almacén la máquina no tiene de dónde sacar) y un Plano de ensamblaje.</li><li>Desde también requiere una línea de petróleo terminada — no directamente, sino a través de la <a href="../components/advanced_machine_casing.html">Carcasa de máquina avanzada</a>, que ahora asienta 2 <a href="../components/advanced_circuit.html">Circuitos avanzados</a>, cada uno con un coste de 4 caucho. La cuadrícula de fabricación del propio ensamblador no cambia, pero su coste total creció con esos 2 circuitos, y ya no puede construirse antes de un <a href="polymerizer.html">Polimerizador</a> y un <a href="vulcanizer.html">Vulcanizador</a>.</li><li>Mejora hacia: nada. La autofabricación bajo demanda (ordenar «haz 64 X» con un árbol de sub-fabricaciones) es un sistema futuro aparte, no una mejora de esta máquina.</li></ul>
 
 <h2 id="relacionado">Relacionado</h2>
 
-<p><a href="../utility/storage_module.html">Módulo de almacenamiento</a> — el almacén del que tira el Ensamblador. Plano de ensamblaje — el objeto que guarda una receta. <a href="../energy-transfer/gold_cable.html">Cable de oro</a> — alimentar una máquina MV. <a href="../item-transport/item_pipe.html">Tubería de objetos</a> — llena el almacén, vacía la salida. <a href="sawmill.html">Aserradero</a> — referencia de una máquina con modos conmutables en su GUI.</p>
+<ul><li><a href="../utility/storage_module.html">Módulo de almacenamiento</a> — el almacén del que tira el Ensamblador.</li><li>Plano de ensamblaje — el objeto que guarda una receta.</li><li><a href="../energy-transfer/gold_cable.html">Cable de oro</a> — alimentar una máquina MV.</li><li><a href="../item-transport/item_pipe.html">Tubería de objetos</a> — llena el almacén, vacía la salida.</li><li><a href="sawmill.html">Aserradero</a> — referencia de una máquina con modos conmutables en su GUI.</li></ul>
 
 <h2>Fabricación</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="ensamblador alaindustrial:assembler" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Engranaje de hierro"><img src="../../assets/item/iron_gear_3d.png" alt="Engranaje de hierro" width="32" height="32"></div> <div class="cell" title="Crafting Table"><img src="../../assets/item/crafting_table_3d.png" alt="Crafting Table" width="32" height="32"></div> <div class="cell" title="Engranaje de hierro"><img src="../../assets/item/iron_gear_3d.png" alt="Engranaje de hierro" width="32" height="32"></div> <div class="cell" title="Circuito electrónico"><img src="../../assets/item/electronic_circuit_3d.png" alt="Circuito electrónico" width="32" height="32"></div> <div class="cell" title="Carcasa de máquina avanzada"><img src="../../assets/item/advanced_machine_casing_3d.png" alt="Carcasa de máquina avanzada" width="32" height="32"></div> <div class="cell" title="Circuito electrónico"><img src="../../assets/item/electronic_circuit_3d.png" alt="Circuito electrónico" width="32" height="32"></div> <div class="cell" title="Engranaje de hierro"><img src="../../assets/item/iron_gear_3d.png" alt="Engranaje de hierro" width="32" height="32"></div> <div class="cell" title="Módulo de almacenamiento"><img src="../../assets/item/storage_module_3d.png" alt="Módulo de almacenamiento" width="32" height="32"></div> <div class="cell" title="Engranaje de hierro"><img src="../../assets/item/iron_gear_3d.png" alt="Engranaje de hierro" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Ensamblador"><img src="../../assets/item/assembler_3d.png" alt="Ensamblador" width="32" height="32"></div><div class="result-name">Ensamblador</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="ensamblador alaindustrial:assembler" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Fabricación con forma</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Engranaje de hierro"><img src="../../assets/item/iron_gear_3d.png" alt="Engranaje de hierro" width="32" height="32"></div> <div class="cell" title="Mesa de trabajo"><img src="../../assets/item/crafting_table_3d.png" alt="Mesa de trabajo" width="32" height="32"></div> <div class="cell" title="Engranaje de hierro"><img src="../../assets/item/iron_gear_3d.png" alt="Engranaje de hierro" width="32" height="32"></div> <div class="cell" title="Circuito electrónico"><img src="../../assets/item/electronic_circuit_3d.png" alt="Circuito electrónico" width="32" height="32"></div> <div class="cell" title="Carcasa de máquina avanzada"><img src="../../assets/item/advanced_machine_casing_3d.png" alt="Carcasa de máquina avanzada" width="32" height="32"></div> <div class="cell" title="Circuito electrónico"><img src="../../assets/item/electronic_circuit_3d.png" alt="Circuito electrónico" width="32" height="32"></div> <div class="cell" title="Engranaje de hierro"><img src="../../assets/item/iron_gear_3d.png" alt="Engranaje de hierro" width="32" height="32"></div> <div class="cell" title="Módulo de almacenamiento"><img src="../../assets/item/storage_module_3d.png" alt="Módulo de almacenamiento" width="32" height="32"></div> <div class="cell" title="Engranaje de hierro"><img src="../../assets/item/iron_gear_3d.png" alt="Engranaje de hierro" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Mesa de trabajo" title="Mesa de trabajo" width="30" height="30"><div class="arrow" aria-label="Fabricación">▶</div></div><div class="recipe-result"><div class="cell result" title="Ensamblador"><img src="../../assets/item/assembler_3d.png" alt="Ensamblador" width="32" height="32"></div><div class="result-name">Ensamblador</div></div></div></div></div>
   </main>
 </div>
 

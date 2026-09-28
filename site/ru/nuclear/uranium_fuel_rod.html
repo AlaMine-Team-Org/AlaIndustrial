@@ -406,7 +406,7 @@
 
 <p>Реактор мог бы жечь <code>refined_uranium</code> напрямую, и на одну ступень цепочки стало бы меньше. Так не</p>
 
-<p><strong>Сборка держит стержни, а не слиток.</strong> Топливо здесь физическое: его видно в прозрачной стойке, и «четыре стержня» читаются как объект, а «четыре слитка в стойке» — нет. <strong>Экранирующая пластина в рецепте — это оболочка.</strong> Тот же материал, из которого построена комната; для игрока связь читается без объяснений. <strong>Ступень даёт место для развития.</strong> MOX, обеднённый уран и стержни других сортов встают в ту же форму, не трогая переработку руды. <strong>И она же даёт многоразовость.</strong> Оболочку можно вернуть, урановую таблетку — нет. Без этой ступени дозаправка реактора не отличалась бы от первой закладки (см. <a href="empty_fuel_rod.html">оболочку ТВЭЛ</a>).</p>
+<ul><li><strong>Сборка держит стержни, а не слиток.</strong> Топливо здесь физическое: его видно в прозрачной стойке, и «четыре стержня» читаются как объект, а «четыре слитка в стойке» — нет.</li><li><strong>Экранирующая пластина в рецепте — это оболочка.</strong> Тот же материал, из которого построена комната; для игрока связь читается без объяснений.</li><li><strong>Ступень даёт место для развития.</strong> MOX, обеднённый уран и стержни других сортов встают в ту же форму, не трогая переработку руды.</li><li><strong>И она же даёт многоразовость.</strong> Оболочку можно вернуть, урановую таблетку — нет. Без этой ступени дозаправка реактора не отличалась бы от первой закладки (см. <a href="empty_fuel_rod.html">оболочку ТВЭЛ</a>).</li></ul>
 
 <h2 id="как-он-горит">Как он горит</h2>
 
@@ -435,13 +435,13 @@
 
 <p>С этапа 4 остаток живёт <strong>в самом предмете</strong>, поэтому терять его больше незачем:</p>
 
-<p>ПКМ пустой рукой отдаёт стержень со всей его прочностью; слом колонны (в том числе крипером) роняет всё содержимое, недогоревшее в том числе; вставленный обратно стержень продолжает с того места, где остановился.</p>
+<ul><li>ПКМ пустой рукой отдаёт стержень со всей его прочностью;</li><li>слом колонны (в том числе крипером) роняет всё содержимое, недогоревшее в том числе;</li><li>вставленный обратно стержень продолжает с того места, где остановился.</li></ul>
 
 <p>Выгоревший стержень не исчезает, а <strong>становится <a href="empty_fuel_rod.html">оболочкой ТВЭЛ</a></strong> прямо в стойке. Обеднённого стержня на выходе по-прежнему нет: предмет <code>depleted_uranium</code> в моде есть и приходит другим путём (мутация); связать его с реактором — открытый вопрос.</p>
 
 <h2 id="рецепты">Рецепты</h2>
 
-<p>Крафт — <strong>бесформенный</strong>, ×1 за раз.</p>
+<ul><li>Крафт — <strong>бесформенный</strong>, ×1 за раз.</li></ul>
 
 <pre><code class="lang-">оболочка ТВЭЛ + обогащённый уран → ТВЭЛ</code></pre>
 
@@ -457,11 +457,11 @@
 
 <h2 id="прогрессия">Прогрессия</h2>
 
-<p>Тир: нет (у предмета нет энергии; реактор, который он питает, — HV). Требует: <code>refined_uranium</code> (уран + <a href="../machines/thermal_centrifuge.html">термоцентрифуга</a> + <a href="../machines/compressor.html">компрессор</a>) и <a href="empty_fuel_rod.html">оболочку ТВЭЛ</a> — то есть палладий, а значит Ад. Открывает: выработку <a href="reactor_controller.html">реакторной комнаты</a>. Пустая комната — это диагностическое устройство; стержни делают её генератором. Развитие: MOX-стержень и стержни других сортов — за рамками эпика (см. `FUTURE_CONTENT.md`, <code>fuel_rod_mox</code>).</p>
+<ul><li>Тир: нет (у предмета нет энергии; реактор, который он питает, — HV).</li><li>Требует: <code>refined_uranium</code> (уран + <a href="../machines/thermal_centrifuge.html">термоцентрифуга</a> + <a href="../machines/compressor.html">компрессор</a>) и <a href="empty_fuel_rod.html">оболочку ТВЭЛ</a> — то есть палладий, а значит Ад.</li><li>Открывает: выработку <a href="reactor_controller.html">реакторной комнаты</a>. Пустая комната — это диагностическое устройство; стержни делают её генератором.</li><li>Развитие: MOX-стержень и стержни других сортов — за рамками эпика (см. `FUTURE_CONTENT.md`, <code>fuel_rod_mox</code>).</li></ul>
 
 <h2 id="связанное">Связанное</h2>
 
-<p><a href="empty_fuel_rod.html">Оболочка ТВЭЛ</a> — оболочка, из которой он собирается и в которую превращается. <a href="fuel_rod_assembly.html">Реакторная колонна</a> — куда он вставляется и как изнашивается. <a href="reactor_controller.html">Контроллер реактора</a> — что его жжёт и во что превращает. <a href="../machines/thermal_centrifuge.html">Термоцентрифуга</a> и <a href="../machines/compressor.html">компрессор</a> — две машины, делающие обогащённый уран. <a href="../machines/macerator.html">Дробитель</a> — начало цепочки, руда в пыль.</p>
+<ul><li><a href="empty_fuel_rod.html">Оболочка ТВЭЛ</a> — оболочка, из которой он собирается и в которую превращается.</li><li><a href="fuel_rod_assembly.html">Реакторная колонна</a> — куда он вставляется и как изнашивается.</li><li><a href="reactor_controller.html">Контроллер реактора</a> — что его жжёт и во что превращает.</li><li><a href="../machines/thermal_centrifuge.html">Термоцентрифуга</a> и <a href="../machines/compressor.html">компрессор</a> — две машины, делающие обогащённый уран.</li><li><a href="../machines/macerator.html">Дробитель</a> — начало цепочки, руда в пыль.</li></ul>
 
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="твэл alaindustrial:uranium_fuel_rod" data-type="minecraft:crafting_shapeless"><div class="recipe-header"><span class="recipe-type">Бесформенный крафт</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Оболочка ТВЭЛ"><img src="../../assets/item/empty_fuel_rod_3d.png" alt="Оболочка ТВЭЛ" width="32" height="32"></div> <div class="cell" title="Обогащённый уран (U-235)"><img src="../../assets/item/refined_uranium_3d.png" alt="Обогащённый уран (U-235)" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="ТВЭЛ"><img src="../../assets/item/uranium_fuel_rod_3d.png" alt="ТВЭЛ" width="32" height="32"></div><div class="result-name">ТВЭЛ</div></div></div></div></div>

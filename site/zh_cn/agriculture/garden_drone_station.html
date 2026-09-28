@@ -397,7 +397,7 @@
 </div>
 <h2 id="概览">概览</h2>
 
-<p><strong>园艺无人机基站</strong>——1×1 的方块底座（如同扫地机器人的基座），无人机会从中升空并巡视基站 周围半径 4 格的区域。无人机不是 Entity，而是由基站本身的 绘制的对象 —视觉上它看起来和移动起来都像飞行器，但物理上始终「属于」基站方块，无法离开其区域。</p>
+<p><strong>园艺无人机基站</strong>——1×1 的方块底座（如同扫地机器人的基座），无人机会从中升空并巡视基站 周围半径 4 格的区域。无人机不是 Entity，而是由基站本身的 绘制的对象 视觉上它看起来和移动起来都像飞行器，但物理上始终「属于」基站方块，无法离开其区域。</p>
 
 <p>玩家把种子和骨粉放进基站，接上 EU/FE——无人机就会自己维护农田：犁空闲的土地、在合适土壤 上方的空格子里播种、用骨粉加速未成熟作物的生长，并把成熟作物直接运回其输出槽（世界中不出现 <code>ItemEntity</code>）。它取代了计划中但未实现的「自动作物护理」（<code>crop_matron</code>）和「收割机」 （<code>crop_harvester</code>）——一个方块替代两个，不重复机制。</p>
 
@@ -429,13 +429,13 @@
 
 <p><strong>飞行声音。</strong> 无人机在空中时，能听到轻柔的循环螺旋桨声，且<strong>来自无人机本身</strong>——声源随其 移动，而非挂在基站上。这是正确的：无人机飞出数格并从头顶掠过，若嗡嗡声来自基座则会被读作 错误。听觉半径 8 格、音量 0.22——模组中最低：这是唯一一个自己开向玩家的声音，也是唯一一个 几乎整个工作周期都在响的声音。在基座上以及无人机停留在被处理格子上的那几刻——安静。</p>
 
-<p><strong>犁地声音。</strong> 犁地时，无人机会发出与玩家手动锄地相同的原版锄声（<code>minecraft:item.hoe.till</code>） —音量和 pitch 也相同。四个动作中只有犁地配音：它有明确的原版参考，而种植、施肥和采集 没有。</p>
+<p><strong>犁地声音。</strong> 犁地时，无人机会发出与玩家手动锄地相同的原版锄声（<code>minecraft:item.hoe.till</code>） 音量和 pitch 也相同。四个动作中只有犁地配音：它有明确的原版参考，而种植、施肥和采集 没有。</p>
 
 <p>完成工作后，无人机<strong>在格子上停留 6 刻</strong>，然后才返航。没有这一停顿，动作和返航段会在同一刻 开始：无人机在一帧内既触碰农田又从其上脱离，读起来像弹跳而非机器做活。停顿只在远端—— 在基座上它会改变动作发生的刻，而那正是所有测试场景计数的刻。</p>
 
 <p><strong>扫描区域。</strong> 基站周围半径 4 格（）正好是一整块标准的 9×9 田地 （2 × 4 + 1）：基座位于其正中，够得到任何一个角。这是<strong>第一等级</strong>的无人机，服务这样一块 田地——下一个等级仍有可改进的余地：同时服务多块田地，或把区域扩得比一块更大。 区域内的目标列表<strong>会缓存</strong>，并在半径内的方块更新时失效；缓存完整重建不超过每 = <strong>20</strong> 刻一次。接触区域内任何位置之前必须检查 <code>level.isLoaded</code>——基站不强制同步加载未加载的区块。</p>
 
-<p><strong>作物成熟度</strong>由<a href="../items/scythe.html">大镰刀</a>复用的通用谓词决定（同一个类决定收成是否就绪 —南瓜/西瓜茎、仙人掌/甘蔗底部、浆果丛和原版 <code>CropBlock</code> 在两处统一处理，没有边缘情况 分歧的风险）。</p>
+<p><strong>作物成熟度</strong>由<a href="../items/scythe.html">大镰刀</a>复用的通用谓词决定（同一个类决定收成是否就绪 南瓜/西瓜茎、仙人掌/甘蔗底部、浆果丛和原版 <code>CropBlock</code> 在两处统一处理，没有边缘情况 分歧的风险）。</p>
 
 <p><strong>施肥</strong>通过标准的原版接口 <code>BonemealableBlock</code>（<a href="trellis.html">棚架</a>用于棉花的 同一组三个方法）——效果等同于手动骨粉，但无玩家、无模拟点击的粒子。</p>
 
@@ -449,7 +449,7 @@
 
 <h2 id="界面">界面</h2>
 
-<p>类型：<strong>container</strong>（基站 GUI）。 显示：能量缓存（条）、种子/肥料/输出槽、基站状态（缺资源 / 工作中 / 本周期全部完成 —可从远处通过无人机模型上的灯颜色读出）。</p>
+<ul><li>类型：<strong>container</strong>（基站 GUI）。</li><li>显示：能量缓存（条）、种子/肥料/输出槽、基站状态（缺资源 / 工作中 / 本周期全部完成 可从远处通过无人机模型上的灯颜色读出）。</li></ul>
 
 <h2 id="方块属性">方块属性</h2>
 
@@ -459,15 +459,15 @@
 
 <h2 id="配方">配方</h2>
 
-<p>合成：（铁/钢外壳、电子电路、作为 「向内收集」的漏斗、作为螺钉的铜）。 没有加工配方——基站不加工物品。</p>
+<ul><li>合成：（铁/钢外壳、电子电路、作为 「向内收集」的漏斗、作为螺钉的铜）。</li><li>没有加工配方——基站不加工物品。</li></ul>
 
 <h2 id="进阶">进阶</h2>
 
-<p>等级：LV。 供电：来自任何 LV 源，例如<a href="../generators/generator.html">发电机</a>。 取代（在 中，无代码）：「自动作物护理」（<code>crop_matron</code>）和「收割机」 （<code>crop_harvester</code>）——一个方块替代两个固定方块，结果相同。 需要：合成用的电子电路（与本模组大多数 LV 机器一样）。</p>
+<ul><li>等级：LV。</li><li>供电：来自任何 LV 源，例如<a href="../generators/generator.html">发电机</a>。</li><li>取代（在 中，无代码）：「自动作物护理」（<code>crop_matron</code>）和「收割机」 （<code>crop_harvester</code>）——一个方块替代两个固定方块，结果相同。</li><li>需要：合成用的电子电路（与本模组大多数 LV 机器一样）。</li></ul>
 
 <h2 id="相关内容">相关内容</h2>
 
-<p><a href="sprinkler.html">喷灌器</a>——同一块田里的邻居，两者职责不重叠。无人机站是<strong>点式工人</strong>：一次动作只作用一格，用骨粉和 EU/FE 付费，它翻地、播种、收割。喷灌器是<strong>被动范围</strong>：既不碰土也不碰庄稼，只让周围一切生长的东西长得更快，付的是营养液。它们本来就该摆在一起。 <a href="../items/scythe.html">大镰刀</a>——可复用作物成熟度谓词的来源。 <a href="trellis.html">棚架</a>——本模组中已有的 <code>BonemealableBlock</code> 先例。 <a href="incubator.html">培育舱</a>——带按索引标签验证的多槽物品栏和超出基础的 <code>ContainerData</code> 的范例。 <a href="../fluid-machines/pump.html">抽水泵</a>——带限制的区域扫描范例，以及机器在自己的 tick 中 无玩家地改变世界方块的唯一先例。 <a href="../machines/electric_heater.html">电热器</a>——「仅因有用的刻消耗 EU/FE」（需求驱动）的范例。</p>
+<ul><li><a href="sprinkler.html">喷灌器</a>——同一块田里的邻居，两者职责不重叠。无人机站是<strong>点式工人</strong>：一次动作只作用一格，用骨粉和 EU/FE 付费，它翻地、播种、收割。喷灌器是<strong>被动范围</strong>：既不碰土也不碰庄稼，只让周围一切生长的东西长得更快，付的是营养液。它们本来就该摆在一起。</li><li><a href="../items/scythe.html">大镰刀</a>——可复用作物成熟度谓词的来源。</li><li><a href="trellis.html">棚架</a>——本模组中已有的 <code>BonemealableBlock</code> 先例。</li><li><a href="incubator.html">培育舱</a>——带按索引标签验证的多槽物品栏和超出基础的 <code>ContainerData</code> 的范例。</li><li><a href="../fluid-machines/pump.html">抽水泵</a>——带限制的区域扫描范例，以及机器在自己的 tick 中 无玩家地改变世界方块的唯一先例。</li><li><a href="../machines/electric_heater.html">电热器</a>——「仅因有用的刻消耗 EU/FE」（需求驱动）的范例。</li></ul>
 
 <h2>合成</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="园艺无人机基站 alaindustrial:garden_drone_station" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="任意铜锭"><img src="../../assets/item/copper_ingot_3d.png" alt="任意铜锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铜锭"><img src="../../assets/item/copper_ingot_3d.png" alt="任意铜锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="电子电路"><img src="../../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="园艺无人机基站"><img src="../../assets/item/garden_drone_station_3d.png" alt="园艺无人机基站" width="32" height="32"></div><div class="result-name">园艺无人机基站</div></div></div></div></div>

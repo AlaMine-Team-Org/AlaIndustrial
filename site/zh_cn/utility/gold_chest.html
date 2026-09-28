@@ -413,25 +413,25 @@
 
 <p>普通的容器窗口——没有能量或进度指示（箱子不是机器）。由于第六行的存在，窗口比银箱子高； 两个标签——网格上方的「金箱子」和下方的「物品栏」——都位于左侧。</p>
 
-<p>比银箱子高一行——因为有第六行槽位。 没有能量/进度指示（箱子不是机器）。 <strong>两个标签都在左侧：</strong> 箱子网格上方的标题「金箱子」（）和箱子与 玩家物品栏之间的「物品栏」标签。</p>
+<ul><li>比银箱子高一行——因为有第六行槽位。</li><li>没有能量/进度指示（箱子不是机器）。</li><li><strong>两个标签都在左侧：</strong> 箱子网格上方的标题「金箱子」（）和箱子与 玩家物品栏之间的「物品栏」标签。</li></ul>
 
 <h2 id="渲染与动画">渲染与动画</h2>
 
 <p>在世界中，它是一个带有独立金色材质和盖子的立体 3D 箱子，盖子会平滑开关——和原版木箱 以及本模组之前的等级完全一样，只是颜色是金的。物品栏中的图标也是立体的。</p>
 
-<p><strong>3D 模型：</strong> 复用原版箱子模型（盖子 / 锁扣 / 底座），从自有图层 烘焙。 <strong>材质</strong>——独立的，格式和路径与原版箱子相同：正确的深度、剔除和 mipmap，没有白色描边。 <strong>盖子动画：</strong> openness 由客户端 ticker 平滑插值；开盖曲线与原版一致（<code>1 - (1-open)³</code>）。 <strong>朝向旋转：</strong> 放置时箱子朝向玩家（绕中心-顶部旋转 yaw）。 <strong>物品图标</strong>——箱子的 3D 渲染（）。</p>
+<ul><li><strong>3D 模型：</strong> 复用原版箱子模型（盖子 / 锁扣 / 底座），从自有图层 烘焙。</li><li><strong>材质</strong>——独立的，格式和路径与原版箱子相同：正确的深度、剔除和 mipmap，没有白色描边。</li><li><strong>盖子动画：</strong> openness 由客户端 ticker 平滑插值；开盖曲线与原版一致（<code>1 - (1-open)³</code>）。</li><li><strong>朝向旋转：</strong> 放置时箱子朝向玩家（绕中心-顶部旋转 yaw）。</li><li><strong>物品图标</strong>——箱子的 3D 渲染（）。</li></ul>
 
 <h2 id="声音">声音</h2>
 
 <p>开关箱子的声音<strong>复用铁箱子的采样</strong>——所有等级共用金属声，正如原版的木质声音为所有木种 共用一样。没有单独的 <code>gold_chest_open/close</code> 事件，所以字幕显示「铁箱子开启/关闭」。</p>
 
-<p>音量 <strong>0.42</strong>（与之前的等级相同——比原版 0.5 更轻），随机 pitch 0.9–1.0。 开关声音与铁箱子共用，没有独立的金色音效。</p>
+<ul><li>音量 <strong>0.42</strong>（与之前的等级相同——比原版 0.5 更轻），随机 pitch 0.9–1.0。</li><li>开关声音与铁箱子共用，没有独立的金色音效。</li></ul>
 
 <h2 id="大型箱子">大型箱子</h2>
 
 <p>两个朝向相同、紧挨着放置的金箱子会<strong>合并成一个拥有 108 格的大型箱子</strong>——规则与原版完全 一致:不潜行放置时,新箱子会自动与相邻的单个箱子相连;潜行点击单个箱子的侧面则是有意连接; 潜行放在别处则保持单个。不同等级的箱子不会合并。</p>
 
-<p><strong>大型箱子的界面</strong>显示 6 行,其余行通过右侧滚动条查看(与仓储模块的窗口一致);Shift 点击 也能放入看不见的行。 <strong>箱盖与声音</strong>共用:两半的箱盖同步开启,声音只在接缝处播放一次。 <strong>自动化把大型箱子当作一个容器</strong>:漏斗、投掷器和物品管道在一半装满后会继续装入另一半。 <strong>破坏其中一半</strong>后,另一半恢复为单个箱子;每一半只掉落自己的物品。打开的界面此时会关闭。 库存展示框挂在任意一半上都显示两半的总数。</p>
+<ul><li><strong>大型箱子的界面</strong>显示 6 行,其余行通过右侧滚动条查看(与仓储模块的窗口一致);Shift 点击 也能放入看不见的行。</li><li><strong>箱盖与声音</strong>共用:两半的箱盖同步开启,声音只在接缝处播放一次。</li><li><strong>自动化把大型箱子当作一个容器</strong>:漏斗、投掷器和物品管道在一半装满后会继续装入另一半。</li><li><strong>破坏其中一半</strong>后,另一半恢复为单个箱子;每一半只掉落自己的物品。打开的界面此时会关闭。</li><li>库存展示框挂在任意一半上都显示两半的总数。</li></ul>
 
 <p>随大型箱子一起,所有等级还获得了两个原版便利:<strong>比较器</strong>可读取箱子的装满程度(大型箱子读取 合计值,两半读数相同),箱子也支持像原版一样<strong>含水(waterlogged)</strong>。</p>
 
@@ -447,11 +447,11 @@
 
 <h2 id="进阶">进阶</h2>
 
-<p>箱子系列：原版 <code>copper_chest</code>（27）→ <strong>铁箱子（36）</strong> → <strong>银箱子（45）</strong> → <strong>金箱子（54）</strong> → <a href="electrum_chest.html">琥珀金箱子</a>（81）。</p>
+<ul><li>箱子系列：原版 <code>copper_chest</code>（27）→ <strong>铁箱子（36）</strong> → <strong>银箱子（45）</strong> → <strong>金箱子（54）</strong> → <a href="electrum_chest.html">琥珀金箱子</a>（81）。</li></ul>
 
 <h2 id="相关内容">相关内容</h2>
 
-<p><a href="silver_chest.html">银箱子</a>——上一等级，本方块的模板。 <a href="iron_chest.html">铁箱子</a>——所有箱子等级的参考实现。 <a href="../energy-storage/battery_box.html">储能库</a>——本模组的另一种「存储」方块，但用于能量。</p>
+<ul><li><a href="silver_chest.html">银箱子</a>——上一等级，本方块的模板。</li><li><a href="iron_chest.html">铁箱子</a>——所有箱子等级的参考实现。</li><li><a href="../energy-storage/battery_box.html">储能库</a>——本模组的另一种「存储」方块，但用于能量。</li></ul>
 
 <h2>合成</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="金箱子 alaindustrial:gold_chest" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="任意金锭"><img src="../../assets/item/gold_ingot_3d.png" alt="任意金锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意金锭"><img src="../../assets/item/gold_ingot_3d.png" alt="任意金锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意金锭"><img src="../../assets/item/gold_ingot_3d.png" alt="任意金锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意金锭"><img src="../../assets/item/gold_ingot_3d.png" alt="任意金锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="银箱子"><img src="../../assets/item/silver_chest_3d.png" alt="银箱子" width="32" height="32"></div> <div class="cell" title="任意金锭"><img src="../../assets/item/gold_ingot_3d.png" alt="任意金锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意金锭"><img src="../../assets/item/gold_ingot_3d.png" alt="任意金锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意金锭"><img src="../../assets/item/gold_ingot_3d.png" alt="任意金锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意金锭"><img src="../../assets/item/gold_ingot_3d.png" alt="任意金锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="金箱子"><img src="../../assets/item/gold_chest_3d.png" alt="金箱子" width="32" height="32"></div><div class="result-name">金箱子</div></div></div></div></div>

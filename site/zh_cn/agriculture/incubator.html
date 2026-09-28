@@ -433,7 +433,7 @@
 
 <h2 id="物品栏">物品栏</h2>
 
-<p>五个槽：芯片、燃料（铀）、被诱变物品、结果、灰渣。结果和灰渣仅对玩家只读；灰渣槽的自动化 —仅 pull。</p>
+<p>五个槽：芯片、燃料（铀）、被诱变物品、结果、灰渣。结果和灰渣仅对玩家只读；灰渣槽的自动化 仅 pull。</p>
 
 <table><thead><tr><th>槽</th><th>接受</th><th>行为</th></tr></thead><tbody><tr><td>芯片</td><td><code>#</code>（3 种芯片）</td><td>1 件；不消耗；设定模式；空槽 = 机器不工作；自动化不取出</td></tr><tr><td>燃料</td><td><code>#</code>（= <code>uranium_ingot</code>）</td><td>放入组装好的机器时立即取出 1 锭；电荷 = 3 次尝试</td></tr><tr><td>输入</td><td>在所选模式下有诱变配方的物品</td><td>1 叠；每次尝试消耗 1（失败时损失）</td></tr><tr><td>结果</td><td>诱变结果或 <code>irradiated_slag</code></td><td>1 叠；仅 fill</td></tr><tr><td>灰渣</td><td><code>depleted_uranium</code></td><td>1 叠；每耗尽一锭 +1；仅 pull</td></tr></tbody></table>
 
@@ -449,7 +449,7 @@
 
 <p>双层多方块，轮廓不同：沉重的机械下部和轻盈的玻璃腔室上部——不是「两个立方体叠在一起」。</p>
 
-<p><strong>底座</strong>——由 51 个元素构成的技术基座：工作面上有屏幕和弹匣，侧面有通风口，中段在上下两条满幅 带之间内凹半个像素。从外部看它仍是<strong>完整的 16³ 立方体</strong>：碰撞体完整，方块遮挡邻居并完全阻隔 光线。内凹的带是凹槽而非开口，上下被满幅带封住，因此遮挡邻居不会向视线暴露任何东西。背面是营养 液槽的进水口和旁边的观察窗：不打开界面也能从外面看出水位。 <strong>穹顶</strong>——没有粗横梁的透明腔室：玻璃筒身、两级肩部和紧凑的顶盖。<strong>不是完整立方体</strong>，因此 ；其形状与碰撞体按轮廓逐级收进（由模型生成的五个盒体）。由任意 <code>c:glass</code> 标签 玻璃自动放置。原始玻璃类型会被记住，因此： 拆解多方块时返还<strong>恰好你的玻璃</strong>——不丢失任何东西； <strong>彩色玻璃给穹顶染色</strong>——17 种着色变体，无需新配方：16 种染色玻璃加无色。框架和顶盖的 金属罩始终是深色金属（金属罩下方的薄玻璃板会与筒身一同染色）。 被辐照物品在腔室中央悬浮并缓慢旋转；工作时——粒子、辉光脉动，以及在腔室地板上方旋转的 发射器环。</p>
+<ul><li><strong>底座</strong>——由 51 个元素构成的技术基座：工作面上有屏幕和弹匣，侧面有通风口，中段在上下两条满幅 带之间内凹半个像素。从外部看它仍是<strong>完整的 16³ 立方体</strong>：碰撞体完整，方块遮挡邻居并完全阻隔 光线。内凹的带是凹槽而非开口，上下被满幅带封住，因此遮挡邻居不会向视线暴露任何东西。背面是营养 液槽的进水口和旁边的观察窗：不打开界面也能从外面看出水位。</li><li><strong>穹顶</strong>——没有粗横梁的透明腔室：玻璃筒身、两级肩部和紧凑的顶盖。<strong>不是完整立方体</strong>，因此 ；其形状与碰撞体按轮廓逐级收进（由模型生成的五个盒体）。由任意 <code>c:glass</code> 标签 玻璃自动放置。原始玻璃类型会被记住，因此：<ul><li>拆解多方块时返还<strong>恰好你的玻璃</strong>——不丢失任何东西；</li><li><strong>彩色玻璃给穹顶染色</strong>——17 种着色变体，无需新配方：16 种染色玻璃加无色。框架和顶盖的 金属罩始终是深色金属（金属罩下方的薄玻璃板会与筒身一同染色）。</li></ul></li><li>被辐照物品在腔室中央悬浮并缓慢旋转；工作时——粒子、辉光脉动，以及在腔室地板上方旋转的 发射器环。</li></ul>
 
 <h2 id="声音">声音</h2>
 
@@ -491,11 +491,11 @@
 
 <h2 id="进阶">进阶</h2>
 
-<p>等级：LV。在最初的机器（macerator/extractor）之后建造，那时有稳定的铀矿脉和 EU/FE 网络。 引入 7 个新物品：<code>depleted_uranium</code>、<code>irradiated_diamond</code>、<code>mutagen_dust</code>、 <code>resonant_shard</code>、<code>unstable_isotope</code>、<code>irradiated_slag</code>（5 % 尝试的副产物——本版本无消费者， 为未来铺垫）+ 三种模式芯片。 <strong>材料上的「基因」等级</strong>给再次突变的成功率加成（+5/+10/+15 pp）——消费者将出现在未来的 农业/核能阶段。 突变成就：「有什么变了」（任何突变物品）、「无中生有」（<code>create</code> 模式材料）、「五十分之一」 （传说结果）。</p>
+<ul><li>等级：LV。在最初的机器（macerator/extractor）之后建造，那时有稳定的铀矿脉和 EU/FE 网络。</li><li>引入 7 个新物品：<code>depleted_uranium</code>、<code>irradiated_diamond</code>、<code>mutagen_dust</code>、 <code>resonant_shard</code>、<code>unstable_isotope</code>、<code>irradiated_slag</code>（5 % 尝试的副产物——本版本无消费者， 为未来铺垫）+ 三种模式芯片。</li><li><strong>材料上的「基因」等级</strong>给再次突变的成功率加成（+5/+10/+15 pp）——消费者将出现在未来的 农业/核能阶段。</li><li>突变成就：「有什么变了」（任何突变物品）、「无中生有」（<code>create</code> 模式材料）、「五十分之一」 （传说结果）。</li></ul>
 
 <h2 id="相关内容">相关内容</h2>
 
-<p><a href="../materials/uranium.html">铀</a>——燃料锭。 核能主题（）——<code>depleted_uranium</code> 的去处。 <a href="../advanced-machines/teleporter.html">传送器多方块</a>——结构上的相关任务。 <a href="../machines/sawmill.html">锯木机</a>——可切换模式机器的范例。 <a href="../generators/solar_panel.html">太阳能板</a>——设定模式的芯片槽的范例。</p>
+<ul><li><a href="../materials/uranium.html">铀</a>——燃料锭。</li><li>核能主题（）——<code>depleted_uranium</code> 的去处。</li><li><a href="../advanced-machines/teleporter.html">传送器多方块</a>——结构上的相关任务。</li><li><a href="../machines/sawmill.html">锯木机</a>——可切换模式机器的范例。</li><li><a href="../generators/solar_panel.html">太阳能板</a>——设定模式的芯片槽的范例。</li></ul>
 
 <h2>合成</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="培育舱 alaindustrial:incubator" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="任意穹顶玻璃"><img src="../../assets/item/glass_3d.png" alt="任意穹顶玻璃" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意穹顶玻璃"><img src="../../assets/item/glass_3d.png" alt="任意穹顶玻璃" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意穹顶玻璃"><img src="../../assets/item/glass_3d.png" alt="任意穹顶玻璃" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铀板"><img src="../../assets/item/uranium_plate_3d.png" alt="任意铀板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="机器外壳"><img src="../../assets/item/machine_casing_3d.png" alt="机器外壳" width="32" height="32"></div> <div class="cell" title="任意铀板"><img src="../../assets/item/uranium_plate_3d.png" alt="任意铀板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铁板"><img src="../../assets/item/iron_plate_3d.png" alt="任意铁板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="电子电路"><img src="../../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="任意铁板"><img src="../../assets/item/iron_plate_3d.png" alt="任意铁板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="培育舱"><img src="../../assets/item/incubator_3d.png" alt="培育舱" width="32" height="32"></div><div class="result-name">培育舱</div></div></div></div></div>

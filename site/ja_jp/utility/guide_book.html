@@ -405,23 +405,19 @@
 
 <h2 id="入手方法">入手方法</h2>
 
-<p><strong>初回ログイン時の自動配付。</strong> プレイヤーが初めてワールドに入る際、本がインベントリに <strong>ちょうど 1 回だけ</strong> 配られます。「すでに配った人」のフラグは <strong>ワールドごとのセーブデータ</strong> （複数 UUID を持つ <code>SavedData</code>）に保存され、死亡 / リスポーン / ディメンション変更を耐え、 再ログインでも重複配付されません。 <strong>モッド更新時の既存プレイヤー</strong> も 1 回だけ本を受け取ります。その UUID はまだ「配付済み」集合に ないため、更新後の初回ログインで本が配られ、UUID が追加されます。 <strong>紛失時の復元</strong> — 2 つの保険があり、どちらも自動配付をブロックしません： <strong>クラフト</strong>（安価、LV で利用可能、設計図によるゲートなし）。 <strong><code>/alaindustrial guide</code></strong> コマンド（既存の <code>/ala</code> コマンドを再利用、本を配付/表示）。 プレイヤーがチュートリアルなしで取り残されることはありません。 自動配付時にインベントリが満杯なら — 本はプレイヤーの足元に落ちます（失われません）。</p>
+<ul><li><strong>初回ログイン時の自動配付。</strong> プレイヤーが初めてワールドに入る際、本がインベントリに <strong>ちょうど 1 回だけ</strong> 配られます。「すでに配った人」のフラグは <strong>ワールドごとのセーブデータ</strong> （複数 UUID を持つ <code>SavedData</code>）に保存され、死亡 / リスポーン / ディメンション変更を耐え、 再ログインでも重複配付されません。</li><li><strong>モッド更新時の既存プレイヤー</strong> も 1 回だけ本を受け取ります。その UUID はまだ「配付済み」集合に ないため、更新後の初回ログインで本が配られ、UUID が追加されます。</li><li><strong>紛失時の復元</strong> — 2 つの保険があり、どちらも自動配付をブロックしません：<ul><li><strong>クラフト</strong>（安価、LV で利用可能、設計図によるゲートなし）。</li><li><strong><code>/alaindustrial guide</code></strong> コマンド（既存の <code>/ala</code> コマンドを再利用、本を配付/表示）。 プレイヤーがチュートリアルなしで取り残されることはありません。</li></ul></li><li>自動配付時にインベントリが満杯なら — 本はプレイヤーの足元に落ちます（失われません）。</li></ul>
 
 <h2 id="インターフェース">インターフェース</h2>
 
 <p>右クリックで開く — <strong>全画面ウィンドウ</strong>（チェストではなく、スロットもインベントリもありません）。 構成は以下の通りです：</p>
 
-<p><strong>タブ（最上位の章）</strong> は左/上に — wiki サイトのカテゴリグループ分けに加え、先頭のオンボーディング セクションを再現します：</p>
-<ol><li><strong>ここから始める</strong>（Getting Started） — 手動オンボーディング：最初の発電機 → 最初のケーブル →</li></ol>
-<p>最初の機械。</p>
-<ol><li><strong>エネルギー</strong> — EU/FE とは、ティア LV/MV/HV、ケーブルと距離ごとの損失、面ポート。</li><li><strong>発電機</strong>、4. <strong>機械</strong>、5. <strong>貯蔵</strong>、6. <strong>エネルギー伝送</strong>、</li><li><strong>材料</strong>、8. <strong>アイテムとツール</strong>、9. <strong>コンポーネント</strong>、10. <strong>ユーティリティ</strong>。</li></ol>
-<p>タブ内の <strong>エントリー一覧</strong>（ブロック / アイテム / メカニクスごとに 1 つ）、スクロール付き。 <strong>エントリーページ</strong> — ページごとのナビゲーション（前/次の矢印）と一覧へ「戻る」ボタンを 持つ見開き。 本文内の <strong>クリック可能なリンク</strong> — 別のエントリーへ（そして v1.1 ではその中のアンカーへ）移動。 ページ上の <strong>レシピウィジェット</strong> — クラフト/加工のグリッド（材料と結果を描画、JEI/REI 未導入でも動作）。 テキストは行で折り返され、長い一覧はスクロールします。</p>
+<ul><li><strong>タブ（最上位の章）</strong> は左/上に — wiki サイトのカテゴリグループ分けに加え、先頭のオンボーディング セクションを再現します：<ol><li><strong>ここから始める</strong>（Getting Started） — 手動オンボーディング：最初の発電機 → 最初のケーブル → 最初の機械。</li><li><strong>エネルギー</strong> — EU/FE とは、ティア LV/MV/HV、ケーブルと距離ごとの損失、面ポート。</li><li><strong>発電機</strong>、4. <strong>機械</strong>、5. <strong>貯蔵</strong>、6. <strong>エネルギー伝送</strong>、</li><li><strong>材料</strong>、8. <strong>アイテムとツール</strong>、9. <strong>コンポーネント</strong>、10. <strong>ユーティリティ</strong>。</li></ol></li><li>タブ内の <strong>エントリー一覧</strong>（ブロック / アイテム / メカニクスごとに 1 つ）、スクロール付き。</li><li><strong>エントリーページ</strong> — ページごとのナビゲーション（前/次の矢印）と一覧へ「戻る」ボタンを 持つ見開き。</li><li>本文内の <strong>クリック可能なリンク</strong> — 別のエントリーへ（そして v1.1 ではその中のアンカーへ）移動。</li><li>ページ上の <strong>レシピウィジェット</strong> — クラフト/加工のグリッド（材料と結果を描画、JEI/REI 未導入でも動作）。</li><li>テキストは行で折り返され、長い一覧はスクロールします。</li></ul>
 
 <p>視覚的に本はモッドのスタイルに合わせてあり — ほかのインターフェースと同じパレットとベベル付き パネルです。</p>
 
 <h2 id="コンテント">コンテント</h2>
 
-<p>本はすでにゲームに存在するすべてのブロックとアイテムをカバーします。それぞれについて簡潔な説明、 特性（ティア、EU/FE、バッファ）、クラフトレシピ。 本の中の数値（EU/FE、ティア、バッファ、レシピ）はモッドの wiki サイトと同じソースから取られるため、 つねにゲームと一致し — 食い違いはありません。 まだ追加されていない計画中のブロックは本には入りません — まだゲームにないものを約束しません。 枠となる章「ここから始める」と「エネルギー」は新規プレイヤー向けの入門チュートリアルとして 書かれています。</p>
+<ul><li>本はすでにゲームに存在するすべてのブロックとアイテムをカバーします。それぞれについて簡潔な説明、 特性（ティア、EU/FE、バッファ）、クラフトレシピ。</li><li>本の中の数値（EU/FE、ティア、バッファ、レシピ）はモッドの wiki サイトと同じソースから取られるため、 つねにゲームと一致し — 食い違いはありません。</li><li>まだ追加されていない計画中のブロックは本には入りません — まだゲームにないものを約束しません。</li><li>枠となる章「ここから始める」と「エネルギー」は新規プレイヤー向けの入門チュートリアルとして 書かれています。</li></ul>
 
 <h2 id="ブロックの性質">ブロックの性質</h2>
 
@@ -435,15 +431,15 @@
 
 <h2 id="進行">進行</h2>
 
-<p>ティア：なし（ユーティリティで、エネルギー連鎖の一部ではありません）。すぐ利用可能 — これは進行の 中の段階ではなく、入口です。モッドの実際の進行（鉱石 → 発電機 → ケーブル → 機械 → ティア）を プレイヤーに沿って導きます。</p>
+<ul><li>ティア：なし（ユーティリティで、エネルギー連鎖の一部ではありません）。すぐ利用可能 — これは進行の 中の段階ではなく、入口です。モッドの実際の進行（鉱石 → 発電機 → ケーブル → 機械 → ティア）を プレイヤーに沿って導きます。</li></ul>
 
 <h2 id="ローカライズ">ローカライズ</h2>
 
-<p><strong>v1：<code>en_us</code> + <code>ru_ru</code></strong> — 章の完全なコンテント（ソースは <code>en_us</code>、モッド全体と同じ）。 残りのロケール（生成される <code>en_us</code> と <code>ru_ru</code> を除く）は翻訳マップから組み立てられます（<code>build_book_locale.py apply</code>）。 章のコンテントは完全に翻訳済みで、本はモッドの全ロケールに存在します。 本の全テキストは lang キー経由です。ハードコード文字列はありません（プロジェクトのルール）。</p>
+<ul><li><strong>v1：<code>en_us</code> + <code>ru_ru</code></strong> — 章の完全なコンテント（ソースは <code>en_us</code>、モッド全体と同じ）。</li><li>残りのロケール（生成される <code>en_us</code> と <code>ru_ru</code> を除く）は翻訳マップから組み立てられます（<code>build_book_locale.py apply</code>）。 章のコンテントは完全に翻訳済みで、本はモッドの全ロケールに存在します。</li><li>本の全テキストは lang キー経由です。ハードコード文字列はありません（プロジェクトのルール）。</li></ul>
 
 <h2 id="関連項目">関連項目</h2>
 
-<p>本はモッドの wiki サイトと同じソースから作られています：同じ内容と同じ数値ですが、 プレイヤーの手の中に直接あります。</p>
+<ul><li>本はモッドの wiki サイトと同じソースから作られています：同じ内容と同じ数値ですが、 プレイヤーの手の中に直接あります。</li></ul>
 
 <h2>クラフト</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="ガイドブック alaindustrial:guide_book" data-type="minecraft:crafting_shapeless"><div class="recipe-header"><span class="recipe-type">不定形クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="本"><img src="../../assets/item/book_3d.png" alt="本" width="32" height="32"></div> <div class="cell" title="木の歯車"><img src="../../assets/item/wooden_gear_3d.png" alt="木の歯車" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="ガイドブック"><img src="../../assets/item/guide_book_3d.png" alt="ガイドブック" width="32" height="32"></div><div class="result-name">ガイドブック</div></div></div></div></div>

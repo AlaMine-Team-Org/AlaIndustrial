@@ -419,11 +419,11 @@
 
 <p>仪器有两种诊断模式。所选模式存储在物品本身，并在退出世界时保留。</p>
 
-<p><strong>贯通模式（默认）。</strong> 储能库被视为电网的一部分：分析仪会穿过它，把 <strong>整条</strong> 相连的电缆系统都高亮出来——哪怕拓扑上这是通过储能库连接的几条独立电网。便于把整套能量系统一览无余。 <strong>停于储能。</strong> 只显示一条电网——也就是所点电缆所在的那一条；遍历会在储能库处停下。便于对单个区段做定点诊断。</p>
+<ul><li><strong>贯通模式（默认）。</strong> 储能库被视为电网的一部分：分析仪会穿过它，把 <strong>整条</strong> 相连的电缆系统都高亮出来——哪怕拓扑上这是通过储能库连接的几条独立电网。便于把整套能量系统一览无余。</li><li><strong>停于储能。</strong> 只显示一条电网——也就是所点电缆所在的那一条；遍历会在储能库处停下。便于对单个区段做定点诊断。</li></ul>
 
 <p>如何切换和使用：</p>
 
-<p><strong>Shift + 右键</strong> 空中或非电网物（包括别人的方块）会在模式 1↔2 之间切换，并在 actionbar 中输出新模式名称。 <strong>对电缆右键</strong>（带不带 Shift 都行）——按当前模式扫描。点击电缆永远是诊断性的，Shift 不会切换模式。 <strong>对另一条电网的电缆右键</strong> ——把高亮换成新的电网。 <strong>对电网之外右键</strong>（空中或没有电网的方块）——重置高亮。 <strong>在电缆上按住右键</strong> 没有用处：重新扫描最多每半秒一次，同一根电缆每两秒一次；等待期间继续显示原来的画面。</p>
+<ul><li><strong>Shift + 右键</strong> 空中或非电网物（包括别人的方块）会在模式 1↔2 之间切换，并在 actionbar 中输出新模式名称。</li><li><strong>对电缆右键</strong>（带不带 Shift 都行）——按当前模式扫描。点击电缆永远是诊断性的，Shift 不会切换模式。</li><li><strong>对另一条电网的电缆右键</strong> ——把高亮换成新的电网。</li><li><strong>对电网之外右键</strong>（空中或没有电网的方块）——重置高亮。</li><li><strong>在电缆上按住右键</strong> 没有用处：重新扫描最多每半秒一次，同一根电缆每两秒一次；等待期间继续显示原来的画面。</li></ul>
 
 <p>扫描会显示什么：actionbar 输出一行——电缆数、发电装置数、用电装置数、储能装置数，以及 EU/FE/刻的供给/需求和上一刻传输的 EU/FE。贯通模式下是所有遍历到的电网的汇总，经过储能库的能量只算一次，而不是两次（一侧充电时一次、另一侧向机器放电时又一次）。在最近一秒内没有运行的电网（例如发电机被拆掉）显示 0，而不是最后一次的旧数值。</p>
 
@@ -449,11 +449,11 @@ UUU</code></pre>
 
 <h2 id="进阶">进阶</h2>
 
-<p>没有能量等级——它是一件诊断工具，从第一条电网开始就有用，并随电网复杂度增长而一直有用。</p>
+<ul><li>没有能量等级——它是一件诊断工具，从第一条电网开始就有用，并随电网复杂度增长而一直有用。</li></ul>
 
 <h2 id="相关内容">相关内容</h2>
 
-<p><a href="electronic_circuit.html">电子电路</a> — 核心组件。 <a href="../materials/tin.html">锡</a> — 外壳。 <a href="../energy-transfer/copper_cable.html">铜缆</a> — 仪器点选的对象。</p>
+<ul><li><a href="electronic_circuit.html">电子电路</a> — 核心组件。</li><li><a href="../materials/tin.html">锡</a> — 外壳。</li><li><a href="../energy-transfer/copper_cable.html">铜缆</a> — 仪器点选的对象。</li></ul>
 
 <h2>合成</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="电网分析仪 alaindustrial:network_analyzer" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="任意锡锭"><img src="../../assets/item/tin_ingot_3d.png" alt="任意锡锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意锡锭"><img src="../../assets/item/tin_ingot_3d.png" alt="任意锡锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意锡锭"><img src="../../assets/item/tin_ingot_3d.png" alt="任意锡锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意锡锭"><img src="../../assets/item/tin_ingot_3d.png" alt="任意锡锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="电子电路"><img src="../../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="任意锡锭"><img src="../../assets/item/tin_ingot_3d.png" alt="任意锡锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铜锭"><img src="../../assets/item/copper_ingot_3d.png" alt="任意铜锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铜锭"><img src="../../assets/item/copper_ingot_3d.png" alt="任意铜锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铜锭"><img src="../../assets/item/copper_ingot_3d.png" alt="任意铜锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="电网分析仪"><img src="../../assets/item/network_analyzer_3d.png" alt="电网分析仪" width="32" height="32"></div><div class="result-name">电网分析仪</div></div></div></div></div>

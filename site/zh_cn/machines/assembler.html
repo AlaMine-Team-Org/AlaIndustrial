@@ -423,7 +423,7 @@
 
 <p>蓝图按 <strong>轮转</strong>（round-robin）方式轮询，游标位置会在循环之间保留。出现以下任一情况时，蓝图会被跳过：</p>
 
-<p>仓库中缺少某项原料； 输出区放不下产物； 该蓝图的配方不存在（例如更换数据包后消失了）。</p>
+<ul><li>仓库中缺少某项原料；</li><li>输出区放不下产物；</li><li>该蓝图的配方不存在（例如更换数据包后消失了）。</li></ul>
 
 <p>如果没有任何蓝图就绪，机器会进入休眠，并在仓库或能量发生变化时醒来。</p>
 
@@ -485,13 +485,13 @@
 
 <p>机器当前正在做的事：</p>
 
-<p>三个蓝图槽位即队列，活动蓝图带边框； <strong>活动蓝图的 3×3 布局及其产物</strong>，仅作展示（见下）； 6 格输出区； 能量条与进度条； 状态行：<em>运行中 / 无蓝图 / 缺原料 / 输出已满 / 无能量 / 配方未找到</em>。玩家需要能区分空闲的原因，否则 "机器停着" 与 "机器坏了" 将无从分辨。</p>
+<ul><li>三个蓝图槽位即队列，活动蓝图带边框；</li><li><strong>活动蓝图的 3×3 布局及其产物</strong>，仅作展示（见下）；</li><li>6 格输出区；</li><li>能量条与进度条；</li><li>状态行：<em>运行中 / 无蓝图 / 缺原料 / 输出已满 / 无能量 / 配方未找到</em>。玩家需要能区分空闲的原因，否则 "机器停着" 与 "机器坏了" 将无从分辨。</li></ul>
 
 <h3 id="写入-标签页">"写入" 标签页</h3>
 
 <p>构思配方时所用：</p>
 
-<p>3×3 幽灵格子网格； 结果预览，即该布局会合成出什么； 空白蓝图槽； "写入" 按钮，把空白蓝图变成已记录的蓝图； "写入" 左侧的方形箭头按钮，即所显示蓝图的 <a href="#原料替换">替换开关</a>：灰色箭头表示关闭，绿色表示开启。</p>
+<ul><li>3×3 幽灵格子网格；</li><li>结果预览，即该布局会合成出什么；</li><li>空白蓝图槽；</li><li>"写入" 按钮，把空白蓝图变成已记录的蓝图；</li><li>"写入" 左侧的方形箭头按钮，即所显示蓝图的 <a href="#原料替换">替换开关</a>：灰色箭头表示关闭，绿色表示开启。</li></ul>
 
 <p>网格格子通过点击填充：将物品悬停在光标上点击某个格子，该格子就会放入一份它的副本；空光标点击则清除该格。期间物品 <strong>不会被消耗</strong>：网格只是展示布局，而非存储它。</p>
 
@@ -517,7 +517,7 @@
 
 <p><strong>仓库窗口</strong> 即 <a href="../utility/storage_module.html">存储模块</a> 的窗口，通过右键模块本身打开，而非组装机里的按钮：</p>
 
-<p>整体仓库网格，按连接的模块数有 3–12 行； 没有翻页、滚动条和搜索，108 格的上限正是为了让一切都能塞进屏幕。</p>
+<ul><li>整体仓库网格，按连接的模块数有 3–12 行；</li><li>没有翻页、滚动条和搜索，108 格的上限正是为了让一切都能塞进屏幕。</li></ul>
 
 <p>仓库窗口与储存模块打开的窗口相同。</p>
 
@@ -535,7 +535,7 @@
 
 <h2 id="配方">配方</h2>
 
-<p>合成： 没有加工配方，机器使用原版 <code>minecraft:crafting</code></p>
+<ul><li>合成：</li><li>没有加工配方，机器使用原版 <code>minecraft:crafting</code></li></ul>
 
 <p>按照该品类的范式组装：对应等级的机器外壳 + 两张蓝图 + "身份" + "存储"，四个角则填以驱动这些部件运转的机械结构：</p>
 
@@ -547,14 +547,14 @@
 
 <h2 id="进阶">进阶</h2>
 
-<p>等级：MV — <strong>本模组第一台 MV 机器</strong>，MV 阶段的锚点。 需要：<a href="../utility/storage_module.html">存储模块</a>（没有仓库，机器无处取原料）和 装配蓝图。 自 起还要求已打通石油产线，不是直接的，而是通过 <a href="../components/advanced_machine_casing.html">高级机器外壳</a>：其中现在要放 2 张 <a href="../components/advanced_circuit.html">高级电路</a>，而每张高级电路需要 4 份橡胶。组装机自身的合成网格没有变化，但其总成本因此多了这 2 张电路，在建造 <a href="polymerizer.html">聚合机</a> 和 <a href="vulcanizer.html">硫化机</a> 之前已无法造出组装机。 升级方向：无。"按需自动合成"（下达 "做 64 个 X" 的订单，附带子合成的依赖树）是一个独立的未来系统，并非本机的升级。</p>
+<ul><li>等级：MV — <strong>本模组第一台 MV 机器</strong>，MV 阶段的锚点。</li><li>需要：<a href="../utility/storage_module.html">存储模块</a>（没有仓库，机器无处取原料）和 装配蓝图。</li><li>自 起还要求已打通石油产线，不是直接的，而是通过 <a href="../components/advanced_machine_casing.html">高级机器外壳</a>：其中现在要放 2 张 <a href="../components/advanced_circuit.html">高级电路</a>，而每张高级电路需要 4 份橡胶。组装机自身的合成网格没有变化，但其总成本因此多了这 2 张电路，在建造 <a href="polymerizer.html">聚合机</a> 和 <a href="vulcanizer.html">硫化机</a> 之前已无法造出组装机。</li><li>升级方向：无。"按需自动合成"（下达 "做 64 个 X" 的订单，附带子合成的依赖树）是一个独立的未来系统，并非本机的升级。</li></ul>
 
 <h2 id="相关内容">相关内容</h2>
 
-<p><a href="../utility/storage_module.html">存储模块</a> — 组装机取原料的仓库 装配蓝图 — 存储配方的物品 <a href="../energy-transfer/gold_cable.html">金缆</a> — MV 机器的能源供应 <a href="../item-transport/item_pipe.html">物品管道</a> — 填充仓库、取走输出 <a href="sawmill.html">锯木机</a> — 在 GUI 中可切换模式的机器范例</p>
+<ul><li><a href="../utility/storage_module.html">存储模块</a> — 组装机取原料的仓库</li><li>装配蓝图 — 存储配方的物品</li><li><a href="../energy-transfer/gold_cable.html">金缆</a> — MV 机器的能源供应</li><li><a href="../item-transport/item_pipe.html">物品管道</a> — 填充仓库、取走输出</li><li><a href="sawmill.html">锯木机</a> — 在 GUI 中可切换模式的机器范例</li></ul>
 
 <h2>合成</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="组装机 alaindustrial:assembler" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="铁齿轮"><img src="../../assets/item/iron_gear_3d.png" alt="铁齿轮" width="32" height="32"></div> <div class="cell" title="Crafting Table"><img src="../../assets/item/crafting_table_3d.png" alt="Crafting Table" width="32" height="32"></div> <div class="cell" title="铁齿轮"><img src="../../assets/item/iron_gear_3d.png" alt="铁齿轮" width="32" height="32"></div> <div class="cell" title="电子电路"><img src="../../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="高级机器外壳"><img src="../../assets/item/advanced_machine_casing_3d.png" alt="高级机器外壳" width="32" height="32"></div> <div class="cell" title="电子电路"><img src="../../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="铁齿轮"><img src="../../assets/item/iron_gear_3d.png" alt="铁齿轮" width="32" height="32"></div> <div class="cell" title="存储模块"><img src="../../assets/item/storage_module_3d.png" alt="存储模块" width="32" height="32"></div> <div class="cell" title="铁齿轮"><img src="../../assets/item/iron_gear_3d.png" alt="铁齿轮" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="组装机"><img src="../../assets/item/assembler_3d.png" alt="组装机" width="32" height="32"></div><div class="result-name">组装机</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="组装机 alaindustrial:assembler" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="铁齿轮"><img src="../../assets/item/iron_gear_3d.png" alt="铁齿轮" width="32" height="32"></div> <div class="cell" title="工作台"><img src="../../assets/item/crafting_table_3d.png" alt="工作台" width="32" height="32"></div> <div class="cell" title="铁齿轮"><img src="../../assets/item/iron_gear_3d.png" alt="铁齿轮" width="32" height="32"></div> <div class="cell" title="电子电路"><img src="../../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="高级机器外壳"><img src="../../assets/item/advanced_machine_casing_3d.png" alt="高级机器外壳" width="32" height="32"></div> <div class="cell" title="电子电路"><img src="../../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="铁齿轮"><img src="../../assets/item/iron_gear_3d.png" alt="铁齿轮" width="32" height="32"></div> <div class="cell" title="存储模块"><img src="../../assets/item/storage_module_3d.png" alt="存储模块" width="32" height="32"></div> <div class="cell" title="铁齿轮"><img src="../../assets/item/iron_gear_3d.png" alt="铁齿轮" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="组装机"><img src="../../assets/item/assembler_3d.png" alt="组装机" width="32" height="32"></div><div class="result-name">组装机</div></div></div></div></div>
   </main>
 </div>
 

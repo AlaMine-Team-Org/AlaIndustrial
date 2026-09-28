@@ -425,7 +425,7 @@
 
 <p><strong>汲み取り。</strong> ポンプは（プレイヤーに向く面で）自分の正面のブロックから液体を探します。そこに液体本体または 繋がる流れる液体があれば — ポンプはそれを伝って（任意の液体の）最寄りの源まで到達します。ワールドに 液体がない場合、隣接タンクからバケツ 1 つ取るのを試みます — すでに保持しているのと同種、タンクが空なら 隣接が渡す任意の種類。ワールドでの源検索の制限：</p>
 
-<p><strong>半径：</strong> ポンプから 32 ブロックまで。 <strong>訪問数上限：</strong> 1 回の走査あたり最大 512 ブロック（大規模な流出でのラグ対策）。 <strong>間隔：</strong> 検索試行の間に 1 秒（20 ティック）— 成功後も失敗後も。</p>
+<ul><li><strong>半径：</strong> ポンプから 32 ブロックまで。</li><li><strong>訪問数上限：</strong> 1 回の走査あたり最大 512 ブロック（大規模な流出でのラグ対策）。</li><li><strong>間隔：</strong> 検索試行の間に 1 秒（20 ティック）— 成功後も失敗後も。</li></ul>
 
 <p>見つかった源はバケツでタンクへ取り入れられ、ワールドの源ブロック自体は <strong>取り返しがつかず消滅</strong> （枯渇）します。流れている非源液体は汲み上げられません — それは源への検索を導くだけで、源除去後に バニラの規則で逆流します。タンクがすでに別種の液体を保持する場合、検索は起動すらしません — ポンプは ティックを無駄にしません。</p>
 
@@ -469,7 +469,7 @@
 
 <p>ポンプには 2 つのスロット（バケツ用）と 2 つのバーインジケータを備えた画面があります。</p>
 
-<p>タイプ：2 つのスロット（バケツ用）と 2 つのバーを持つ <strong>GUI</strong>： 左 — タンク内の液体レベル（下から上に伸びる）。タンクは <strong>液体そのものの実際のテクスチャ</strong>（ブロック の still テクスチャ、ネイティブのティント付き）で埋まり、16×16 タイルを並べレベルで切り抜いたもの — 水は水に、溶岩は溶岩に見えます。モッド液体は自動的に自身のテクスチャで描かれます：バニラの液体 モデルから取られ、モッドアトラスに液体ごとの個別テクスチャは不要です。 右 — エネルギーバッファ。 ツールチップはホバー時に液体名 + mB と EU/FE / バッファ容量を表示します。 ブロック状態：ポンプは設置時に「プレイヤー向き」に回転し（その面で液体を汲み取り）、稼働中に光ります。</p>
+<ul><li>タイプ：2 つのスロット（バケツ用）と 2 つのバーを持つ <strong>GUI</strong>：<ul><li>左 — タンク内の液体レベル（下から上に伸びる）。タンクは <strong>液体そのものの実際のテクスチャ</strong>（ブロック の still テクスチャ、ネイティブのティント付き）で埋まり、16×16 タイルを並べレベルで切り抜いたもの — 水は水に、溶岩は溶岩に見えます。モッド液体は自動的に自身のテクスチャで描かれます：バニラの液体 モデルから取られ、モッドアトラスに液体ごとの個別テクスチャは不要です。</li><li>右 — エネルギーバッファ。</li><li>ツールチップはホバー時に液体名 + mB と EU/FE / バッファ容量を表示します。</li></ul></li><li>ブロック状態：ポンプは設置時に「プレイヤー向き」に回転し（その面で液体を汲み取り）、稼働中に光ります。</li></ul>
 
 <h2 id="ブロックの性質">ブロックの性質</h2>
 
@@ -487,17 +487,17 @@
 
 <p>作業台でのレシピ 1 つ：鉄の筐体、バケツ 2 つ、<a href="../components/index.html">電子回路</a>。図のバケツ 2 つはブロックの 本質 — 液体の運び — を反映し、電子回路が機械の低ティアを示します。</p>
 
-<p>クラフト：</p>
+<ul><li>クラフト：</li></ul>
 
 <h2 id="進行">進行</h2>
 
 <p>初期 LV 機械 — 安定した発電機とクラフト用の電子回路が揃えばすぐ置けます。溶岩バケツの手動運びから 解放します。</p>
 
-<p>ティア：LV 電源：LV ソースから、例えば<a href="../generators/generator.html">発電機</a>。 用途：<a href="../generators/geothermal_generator.html">地熱発電機</a>への溶岩の自動供給（バケツ手動でなく液体で）。 将来の液体連鎖のための水の運搬。 必要：<a href="../components/index.html">電子回路</a>（クラフト用）。</p>
+<ul><li>ティア：LV</li><li>電源：LV ソースから、例えば<a href="../generators/generator.html">発電機</a>。</li><li>用途：<a href="../generators/geothermal_generator.html">地熱発電機</a>への溶岩の自動供給（バケツ手動でなく液体で）。 将来の液体連鎖のための水の運搬。</li><li>必要：<a href="../components/index.html">電子回路</a>（クラフト用）。</li></ul>
 
 <h2 id="関連項目">関連項目</h2>
 
-<p><a href="../generators/geothermal_generator.html">地熱発電機</a> — ポンプからの溶岩の主な消費者。 <a href="../generators/generator.html">発電機</a> — ポンプの典型的な LV 電源。 <a href="../components/index.html">コンポーネント</a> — クラフト用の電子回路。 I/O ネットワークの論理 — ブロックの面ごとの液体供給の仕組み。</p>
+<ul><li><a href="../generators/geothermal_generator.html">地熱発電機</a> — ポンプからの溶岩の主な消費者。</li><li><a href="../generators/generator.html">発電機</a> — ポンプの典型的な LV 電源。</li><li><a href="../components/index.html">コンポーネント</a> — クラフト用の電子回路。</li><li>I/O ネットワークの論理 — ブロックの面ごとの液体供給の仕組み。</li></ul>
 
 <h2>クラフト</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="ポンプ alaindustrial:pump" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="いずれかの鉄インゴット"><img src="../../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="バケツ"><img src="../../assets/item/bucket_3d.png" alt="バケツ" width="32" height="32"></div> <div class="cell" title="いずれかの鉄インゴット"><img src="../../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの鉄インゴット"><img src="../../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="バケツ"><img src="../../assets/item/bucket_3d.png" alt="バケツ" width="32" height="32"></div> <div class="cell" title="いずれかの鉄インゴット"><img src="../../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの鉄インゴット"><img src="../../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="電子回路"><img src="../../assets/item/electronic_circuit_3d.png" alt="電子回路" width="32" height="32"></div> <div class="cell" title="いずれかの鉄インゴット"><img src="../../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="ポンプ"><img src="../../assets/item/pump_3d.png" alt="ポンプ" width="32" height="32"></div><div class="result-name">ポンプ</div></div></div></div></div>

@@ -449,7 +449,7 @@
 
 <h2 id="インターフェース">インターフェース</h2>
 
-<p>タイプ：<strong>container</strong>（ステーションの GUI）。 表示：エネルギーバッファ（バー）、種/肥料/出力スロット、ステーション状態（資源なし / 稼働中 / サイクル完了 — ドローンモデルの灯火の色で遠くから読める）。</p>
+<ul><li>タイプ：<strong>container</strong>（ステーションの GUI）。</li><li>表示：エネルギーバッファ（バー）、種/肥料/出力スロット、ステーション状態（資源なし / 稼働中 / サイクル完了 — ドローンモデルの灯火の色で遠くから読める）。</li></ul>
 
 <h2 id="ブロックの性質">ブロックの性質</h2>
 
@@ -459,15 +459,15 @@
 
 <h2 id="レシピ">レシピ</h2>
 
-<p>クラフト：（鉄/鋼の筐体、電子回路、 「中に集める」ホッパー、ネジとしての銅）。 加工レシピはありません — ステーションはアイテムを加工しません。</p>
+<ul><li>クラフト：（鉄/鋼の筐体、電子回路、 「中に集める」ホッパー、ネジとしての銅）。</li><li>加工レシピはありません — ステーションはアイテムを加工しません。</li></ul>
 
 <h2 id="進行">進行</h2>
 
-<p>ティア：LV。 電源：任意の LV ソースから、例えば<a href="../generators/generator.html">発電機</a>。 置き換え（バックログ、コードなし）：「作物自動管理」（<code>crop_matron</code>）と「収穫機」（<code>crop_harvester</code>） 2 つの定置ブロックでなく 1 ブロックで同じ結果。 必要：クラフト用の電子回路（モッドの大部分の LV 機械と同様）。</p>
+<ul><li>ティア：LV。</li><li>電源：任意の LV ソースから、例えば<a href="../generators/generator.html">発電機</a>。</li><li>置き換え（バックログ、コードなし）：「作物自動管理」（<code>crop_matron</code>）と「収穫機」（<code>crop_harvester</code>） 2 つの定置ブロックでなく 1 ブロックで同じ結果。</li><li>必要：クラフト用の電子回路（モッドの大部分の LV 機械と同様）。</li></ul>
 
 <h2 id="関連項目">関連項目</h2>
 
-<p><a href="sprinkler.html">スプリンクラー</a> — 同じ畑に並ぶ隣人で、役割は重なりません。ステーションは<strong>一点働き</strong>：1マスに1アクション、骨粉とEUで支払い、耕し、植え、収穫します。スプリンクラーは<strong>受動的な範囲</strong>：土にも作物にも触れず、周囲で育つものすべてを速めるだけで、支払いは養液です。両者は並べて置くためのものです。 <a href="../items/scythe.html">大鎌</a> — 再利用可能な作物成熟度述語の供給源。 <a href="trellis.html">トレリス</a> — モッド内の既存の <code>BonemealableBlock</code> の先例。 <a href="incubator.html">インキュベーター</a> — インデックスでタグ検証するマルチスロットインベントリと 基盤より広い <code>ContainerData</code> の見本。 <a href="../fluid-machines/pump.html">ポンプ</a> — リミット付き範囲走査の見本と、機械が自身のティックからプレイヤー なしでワールドブロックを変更する唯一の先例。 <a href="../machines/electric_heater.html">電気ヒーター</a> — 「有用ティックでのみ EU/FE」（需要駆動）の見本。</p>
+<ul><li><a href="sprinkler.html">スプリンクラー</a> — 同じ畑に並ぶ隣人で、役割は重なりません。ステーションは<strong>一点働き</strong>：1マスに1アクション、骨粉とEUで支払い、耕し、植え、収穫します。スプリンクラーは<strong>受動的な範囲</strong>：土にも作物にも触れず、周囲で育つものすべてを速めるだけで、支払いは養液です。両者は並べて置くためのものです。</li><li><a href="../items/scythe.html">大鎌</a> — 再利用可能な作物成熟度述語の供給源。</li><li><a href="trellis.html">トレリス</a> — モッド内の既存の <code>BonemealableBlock</code> の先例。</li><li><a href="incubator.html">インキュベーター</a> — インデックスでタグ検証するマルチスロットインベントリと 基盤より広い <code>ContainerData</code> の見本。</li><li><a href="../fluid-machines/pump.html">ポンプ</a> — リミット付き範囲走査の見本と、機械が自身のティックからプレイヤー なしでワールドブロックを変更する唯一の先例。</li><li><a href="../machines/electric_heater.html">電気ヒーター</a> — 「有用ティックでのみ EU/FE」（需要駆動）の見本。</li></ul>
 
 <h2>クラフト</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="ガーデンドローンステーション alaindustrial:garden_drone_station" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="いずれかの銅インゴット"><img src="../../assets/item/copper_ingot_3d.png" alt="いずれかの銅インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの鉄インゴット"><img src="../../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの銅インゴット"><img src="../../assets/item/copper_ingot_3d.png" alt="いずれかの銅インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの鉄インゴット"><img src="../../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="電子回路"><img src="../../assets/item/electronic_circuit_3d.png" alt="電子回路" width="32" height="32"></div> <div class="cell" title="いずれかの鉄インゴット"><img src="../../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの鉄インゴット"><img src="../../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの鉄インゴット"><img src="../../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの鉄インゴット"><img src="../../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="ガーデンドローンステーション"><img src="../../assets/item/garden_drone_station_3d.png" alt="ガーデンドローンステーション" width="32" height="32"></div><div class="result-name">ガーデンドローンステーション</div></div></div></div></div>

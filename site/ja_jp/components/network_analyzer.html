@@ -419,10 +419,10 @@
 
 <p>このツールには2つの診断モードがあります。選択されたモードはアイテム自体に保存され、ワールド退出後も保持されます。</p>
 
-<p><strong>スルー（デフォルト）。</strong> エネルギー貯蔵庫はネットワークの一部とみなされます。アナライザーはこれを通り抜け、<strong>接続された</strong> ケーブルシステム全体をハイライトします。トポロジー的には貯蔵庫を介して接続された複数の別々のネットワークであっても同様です。エネルギーシステム全体を見るのに便利です。 <strong>貯蔵庫まで。</strong> 正確に1つのネットワーク（クリックされたケーブルがあるネットワーク）を表示します。巡回は貯蔵庫で停止します。1つのセグメントの的を絞った診断に便利です。</p>
+<ul><li><strong>スルー（デフォルト）。</strong> エネルギー貯蔵庫はネットワークの一部とみなされます。アナライザーはこれを通り抜け、<strong>接続された</strong> ケーブルシステム全体をハイライトします。トポロジー的には貯蔵庫を介して接続された複数の別々のネットワークであっても同様です。エネルギーシステム全体を見るのに便利です。</li><li><strong>貯蔵庫まで。</strong> 正確に1つのネットワーク（クリックされたケーブルがあるネットワーク）を表示します。巡回は貯蔵庫で停止します。1つのセグメントの的を絞った診断に便利です。</li></ul>
 
 
-<p><strong>Shift + 右クリック</strong> を空やネットワーク以外（他人のブロックを含む）に対して行うと、モードが 1↔2 で切り替わり、新しいモード名がアクションバーに表示されます。 <strong>ケーブルの右クリック</strong>（Shift あり/なし）— 現在のモードでスキャンします。ケーブルのクリックは常に診断的で、Shift は切り替えません。 <strong>別のネットワークのケーブルの右クリック</strong> — ハイライトを新しいネットワークに切り替えます。 <strong>ネットワーク外の右クリック</strong>（空やネットワークのないブロック）— ハイライトをリセットします。 <strong>ケーブル上で右クリックを押し続けても</strong> 意味はありません: 再スキャンは最短でも0.5秒に1回、同じケーブルなら2秒に1回で、その間は表示中の図がそのまま残ります。</p>
+<ul><li><strong>Shift + 右クリック</strong> を空やネットワーク以外（他人のブロックを含む）に対して行うと、モードが 1↔2 で切り替わり、新しいモード名がアクションバーに表示されます。</li><li><strong>ケーブルの右クリック</strong>（Shift あり/なし）— 現在のモードでスキャンします。ケーブルのクリックは常に診断的で、Shift は切り替えません。</li><li><strong>別のネットワークのケーブルの右クリック</strong> — ハイライトを新しいネットワークに切り替えます。</li><li><strong>ネットワーク外の右クリック</strong>（空やネットワークのないブロック）— ハイライトをリセットします。</li><li><strong>ケーブル上で右クリックを押し続けても</strong> 意味はありません: 再スキャンは最短でも0.5秒に1回、同じケーブルなら2秒に1回で、その間は表示中の図がそのまま残ります。</li></ul>
 
 <p>スキャンが表示するもの: アクションバーに1行が出力されます — ケーブル、電源、消費者、貯蔵庫の数、ならびに EU/FE/t の供給/需要と直前のティックに通過した EU/FE 量。スルーモードでは通過したすべてのネットワークの合計で、貯蔵庫を通過したエネルギーは2回ではなく1回だけ数えられます（片側での充電時と、反対側でのマシンへの放電時）。直前の1秒間動いていないネットワーク（例えば発電機を撤去した場合）は、古い最後の値ではなく 0 を表示します。</p>
 
@@ -448,11 +448,11 @@ UUU</code></pre>
 
 <h2 id="進行">進行</h2>
 
-<p>エネルギーティアなし — 診断ツールであり、最初のネットワークから複雑さが増すにつれて有用です。</p>
+<ul><li>エネルギーティアなし — 診断ツールであり、最初のネットワークから複雑さが増すにつれて有用です。</li></ul>
 
 <h2 id="関連項目">関連項目</h2>
 
-<p><a href="electronic_circuit.html">電子回路</a> — 中心コンポーネント。 <a href="../materials/tin.html">スズ</a> — ケース。 <a href="../energy-transfer/copper_cable.html">銅ケーブル</a> — ツールでクリックする対象。</p>
+<ul><li><a href="electronic_circuit.html">電子回路</a> — 中心コンポーネント。</li><li><a href="../materials/tin.html">スズ</a> — ケース。</li><li><a href="../energy-transfer/copper_cable.html">銅ケーブル</a> — ツールでクリックする対象。</li></ul>
 
 <h2>クラフト</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="ネットワークアナライザー alaindustrial:network_analyzer" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="いずれかのスズインゴット"><img src="../../assets/item/tin_ingot_3d.png" alt="いずれかのスズインゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかのスズインゴット"><img src="../../assets/item/tin_ingot_3d.png" alt="いずれかのスズインゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかのスズインゴット"><img src="../../assets/item/tin_ingot_3d.png" alt="いずれかのスズインゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかのスズインゴット"><img src="../../assets/item/tin_ingot_3d.png" alt="いずれかのスズインゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="電子回路"><img src="../../assets/item/electronic_circuit_3d.png" alt="電子回路" width="32" height="32"></div> <div class="cell" title="いずれかのスズインゴット"><img src="../../assets/item/tin_ingot_3d.png" alt="いずれかのスズインゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの銅インゴット"><img src="../../assets/item/copper_ingot_3d.png" alt="いずれかの銅インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの銅インゴット"><img src="../../assets/item/copper_ingot_3d.png" alt="いずれかの銅インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの銅インゴット"><img src="../../assets/item/copper_ingot_3d.png" alt="いずれかの銅インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="ネットワークアナライザー"><img src="../../assets/item/network_analyzer_3d.png" alt="ネットワークアナライザー" width="32" height="32"></div><div class="result-name">ネットワークアナライザー</div></div></div></div></div>

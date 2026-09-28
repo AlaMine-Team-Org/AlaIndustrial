@@ -405,23 +405,19 @@
 
 <h2 id="如何获得">如何获得</h2>
 
-<p><strong>首次进入时自动发放。</strong> 玩家首次进入世界时，书会被放入物品栏<strong>恰好一次</strong>。「已发放给 谁」的标志存储在<strong>世界级存档</strong>（含多个 UUID 的 <code>SavedData</code>）中——经历死亡/重生/跨维度 都不会丢失，重复进入也不会重复发放。 <strong>模组更新后的现有玩家</strong>也会收到一次：他们的 UUID 尚不在「已发放」集合中 → 更新后首次 进入时书会被发放，UUID 也会被加入。 <strong>丢失时恢复</strong>——两道保险，且都不影响自动发放： <strong>合成</strong>（便宜，LV 即可，无需蓝图门槛）； <strong><code>/alaindustrial guide</code></strong> 命令（复用现有的 <code>/ala</code> 命令；发放/打开书）。玩家永远不会 缺少教程。 如果自动发放时物品栏已满——书会掉落在玩家脚下（不会丢失）。</p>
+<ul><li><strong>首次进入时自动发放。</strong> 玩家首次进入世界时，书会被放入物品栏<strong>恰好一次</strong>。「已发放给 谁」的标志存储在<strong>世界级存档</strong>（含多个 UUID 的 <code>SavedData</code>）中——经历死亡/重生/跨维度 都不会丢失，重复进入也不会重复发放。</li><li><strong>模组更新后的现有玩家</strong>也会收到一次：他们的 UUID 尚不在「已发放」集合中 → 更新后首次 进入时书会被发放，UUID 也会被加入。</li><li><strong>丢失时恢复</strong>——两道保险，且都不影响自动发放：<ul><li><strong>合成</strong>（便宜，LV 即可，无需蓝图门槛）；</li><li><strong><code>/alaindustrial guide</code></strong> 命令（复用现有的 <code>/ala</code> 命令；发放/打开书）。玩家永远不会 缺少教程。</li></ul></li><li>如果自动发放时物品栏已满——书会掉落在玩家脚下（不会丢失）。</li></ul>
 
 <h2 id="界面">界面</h2>
 
 <p>右键打开——<strong>全屏窗口</strong>（不是箱子：没有槽位、没有物品栏）。由以下部分组成：</p>
 
-<p><strong>标签页（顶层章节）</strong>位于左侧/顶部——复刻 wiki 站点的分类分组，加上一个引导性的 新手章节：</p>
-<ol><li><strong>从何开始</strong>（Getting Started）——手动新手引导：第一台发电机 → 第一根电缆 → 第一台</li></ol>
-<p>机器；</p>
-<ol><li><strong>能量</strong>——什么是 EU/FE、LV/MV/HV 等级、电缆与距离损耗、端口朝向；</li><li><strong>发电机</strong>，4. <strong>机器</strong>，5. <strong>储能</strong>，6. <strong>能量传输</strong>，</li><li><strong>材料</strong>，8. <strong>物品与工具</strong>，9. <strong>组件</strong>，10. <strong>实用</strong>。</li></ol>
-<p><strong>标签内的条目列表</strong>（每个方块/物品/机制一条），可滚动。 <strong>条目页面</strong>——跨页排版，带分页导航（前进/后退箭头）和返回列表的「返回」按钮。 <strong>文本中的可点击链接</strong>——跳转到另一条目（v1.1 起支持跳到条目内的锚点）。 <strong>页面上的配方小部件</strong>——合成/加工网格（绘制原料和产物；不依赖 JEI/REI 即可工作）。 文本按行换行，长列表可滚动。</p>
+<ul><li><strong>标签页（顶层章节）</strong>位于左侧/顶部——复刻 wiki 站点的分类分组，加上一个引导性的 新手章节：<ol><li><strong>从何开始</strong>（Getting Started）——手动新手引导：第一台发电机 → 第一根电缆 → 第一台 机器；</li><li><strong>能量</strong>——什么是 EU/FE、LV/MV/HV 等级、电缆与距离损耗、端口朝向；</li><li><strong>发电机</strong>，4. <strong>机器</strong>，5. <strong>储能</strong>，6. <strong>能量传输</strong>，</li><li><strong>材料</strong>，8. <strong>物品与工具</strong>，9. <strong>组件</strong>，10. <strong>实用</strong>。</li></ol></li><li><strong>标签内的条目列表</strong>（每个方块/物品/机制一条），可滚动。</li><li><strong>条目页面</strong>——跨页排版，带分页导航（前进/后退箭头）和返回列表的「返回」按钮。</li><li><strong>文本中的可点击链接</strong>——跳转到另一条目（v1.1 起支持跳到条目内的锚点）。</li><li><strong>页面上的配方小部件</strong>——合成/加工网格（绘制原料和产物；不依赖 JEI/REI 即可工作）。</li><li>文本按行换行，长列表可滚动。</li></ul>
 
 <p>视觉上，指南书沿用模组的风格——与其余界面相同的配色和面板斜面。</p>
 
 <h2 id="内容">内容</h2>
 
-<p>书涵盖游戏中已有的所有方块和物品：每个都有简短描述、属性（等级、EU/FE、缓存）和合成配方。 书中的数值（EU/FE、等级、缓存、配方）来自与模组 wiki 站点相同的数据源，因此永远与游戏 一致——不会出现偏差。 尚未添加或仅计划中的方块不会进入书中：它不会承诺尚未存在的内容。 外围章节「从何开始」和「能量」作为面向新手的基础教程撰写。</p>
+<ul><li>书涵盖游戏中已有的所有方块和物品：每个都有简短描述、属性（等级、EU/FE、缓存）和合成配方。</li><li>书中的数值（EU/FE、等级、缓存、配方）来自与模组 wiki 站点相同的数据源，因此永远与游戏 一致——不会出现偏差。</li><li>尚未添加或仅计划中的方块不会进入书中：它不会承诺尚未存在的内容。</li><li>外围章节「从何开始」和「能量」作为面向新手的基础教程撰写。</li></ul>
 
 <h2 id="方块属性">方块属性</h2>
 
@@ -435,15 +431,15 @@
 
 <h2 id="进阶">进阶</h2>
 
-<p>等级：无（实用工具，不参与能量链）。即时可用——这是进入进度的入口，而不是进度的一阶。 它引导玩家沿模组真正的进度推进（矿石 → 发电机 → 电缆 → 机器 → 等级）。</p>
+<ul><li>等级：无（实用工具，不参与能量链）。即时可用——这是进入进度的入口，而不是进度的一阶。 它引导玩家沿模组真正的进度推进（矿石 → 发电机 → 电缆 → 机器 → 等级）。</li></ul>
 
 <h2 id="本地化">本地化</h2>
 
-<p><strong>v1：<code>en_us</code> + <code>ru_ru</code></strong>——完整的章节内容（来源是 <code>en_us</code>，与整个模组一致）。 其余语言（生成的 <code>en_us</code> 与 <code>ru_ru</code> 除外）由翻译映射组装（<code>build_book_locale.py apply</code>）：章节内容已完整翻译，本书存在于模组的全部语言中。 书中所有文本都走 lang 键；没有硬编码字符串（项目规则）。</p>
+<ul><li><strong>v1：<code>en_us</code> + <code>ru_ru</code></strong>——完整的章节内容（来源是 <code>en_us</code>，与整个模组一致）。</li><li>其余语言（生成的 <code>en_us</code> 与 <code>ru_ru</code> 除外）由翻译映射组装（<code>build_book_locale.py apply</code>）：章节内容已完整翻译，本书存在于模组的全部语言中。</li><li>书中所有文本都走 lang 键；没有硬编码字符串（项目规则）。</li></ul>
 
 <h2 id="相关内容">相关内容</h2>
 
-<p>指南书由与模组 wiki 站点相同的数据源生成：相同的内容和相同的数值，但就在玩家手中。</p>
+<ul><li>指南书由与模组 wiki 站点相同的数据源生成：相同的内容和相同的数值，但就在玩家手中。</li></ul>
 
 <h2>合成</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="指南书 alaindustrial:guide_book" data-type="minecraft:crafting_shapeless"><div class="recipe-header"><span class="recipe-type">无序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="书"><img src="../../assets/item/book_3d.png" alt="书" width="32" height="32"></div> <div class="cell" title="木齿轮"><img src="../../assets/item/wooden_gear_3d.png" alt="木齿轮" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="指南书"><img src="../../assets/item/guide_book_3d.png" alt="指南书" width="32" height="32"></div><div class="result-name">指南书</div></div></div></div></div>

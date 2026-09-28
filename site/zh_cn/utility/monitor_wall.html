@@ -399,17 +399,17 @@
 
 <p><strong>监控墙</strong>是仓库的仪表盘：基地入口处的一排面板会显示各类物品在箱子里的数量，无需打开任何一个箱子。它由三个方块和一件物品组成：</p>
 
-<p><strong>监控核心</strong>（<code>monitor_core</code>）——系统的大脑：用线缆接受能量，容纳 10 张卡的插槽架，并把数字分发给各个面板。没有核心，整面墙都不工作。本体是一块带琥珀色“眼睛”、边框分明、正面装有插卡架的深色方块：核心<strong>有能量时发光</strong>，断电时熄灭，每个已插卡的槽位都会亮起青色。 <strong>智能线缆</strong>（<code>smart_wire</code>）——一条<strong>读取</strong>容器而非搬运物品的线路：从核心接到箱子、木桶、潜影盒以及本模组的箱子。 <strong>监控面板</strong>（<code>monitor_panel</code>）——屏幕。本体是纤薄的墙面终端：未设置过滤物品时屏幕熄灭，设置后点亮。彼此相邻并与核心相邻的面板会合并成一个系统，形状随意：墙可以拐角，也可以环绕柱子。 <strong>容量卡</strong>（<code>capacity_card</code>）——插入核心，每张卡让监控墙多追踪 <strong>6 种不同</strong>物品（插满 10 张卡最多 60 种）。</p>
+<ul><li><strong>监控核心</strong>（<code>monitor_core</code>）——系统的大脑：用线缆接受能量，容纳 10 张卡的插槽架，并把数字分发给各个面板。没有核心，整面墙都不工作。本体是一块带琥珀色“眼睛”、边框分明、正面装有插卡架的深色方块：核心<strong>有能量时发光</strong>，断电时熄灭，每个已插卡的槽位都会亮起青色。</li><li><strong>智能线缆</strong>（<code>smart_wire</code>）——一条<strong>读取</strong>容器而非搬运物品的线路：从核心接到箱子、木桶、潜影盒以及本模组的箱子。</li><li><strong>监控面板</strong>（<code>monitor_panel</code>）——屏幕。本体是纤薄的墙面终端：未设置过滤物品时屏幕熄灭，设置后点亮。彼此相邻并与核心相邻的面板会合并成一个系统，形状随意：墙可以拐角，也可以环绕柱子。</li><li><strong>容量卡</strong>（<code>capacity_card</code>）——插入核心，每张卡让监控墙多追踪 <strong>6 种不同</strong>物品（插满 10 张卡最多 60 种）。</li></ul>
 
 <blockquote><strong>小例子：</strong> 把一张容量卡插入核心，从核心拉一条智能线缆到矿石箱，在核心旁放一块面板，右键把钻石放进去 → 面板会显示所连箱子里共有多少钻石。</blockquote>
 
 <h2 id="工作方式">工作方式</h2>
 
-<p>一块面板对应一种物品。想看更多种类，就多建面板。 核心每秒<strong>对整面墙只遍历一次</strong>已连接的容器并分发数字，因此大墙对服务器的负担不比小墙高——它只是更费电。 只统计顶层槽位；系统不会深入箱子里的潜影盒——与<a href="stock_display_frame.html">库存显示相框</a>规则相同。 大箱子按一个容器统计。 战利品尚未生成的容器完全不读取：查看它等于在没有玩家的情况下展开战利品表，会永久清空别人的箱子。</p>
+<ul><li>一块面板对应一种物品。想看更多种类，就多建面板。</li><li>核心每秒<strong>对整面墙只遍历一次</strong>已连接的容器并分发数字，因此大墙对服务器的负担不比小墙高——它只是更费电。</li><li>只统计顶层槽位；系统不会深入箱子里的潜影盒——与<a href="stock_display_frame.html">库存显示相框</a>规则相同。</li><li>大箱子按一个容器统计。</li><li>战利品尚未生成的容器完全不读取：查看它等于在没有玩家的情况下展开战利品表，会永久清空别人的箱子。</li></ul>
 
 <h2 id="能量与容量">能量与容量</h2>
 
-<p><strong>强化紫水晶是整套系统的材料。</strong> 四块紫水晶碎片加一份银粉放进合金炉；核心与容量卡都由它制成。这面墙的代价不只是材料，还有一台运转中的机器。 <strong>没有容量卡时整面墙什么都不显示。</strong> 空卡架意味着可追踪种类为零，所有已设置物品的面板都会显示黄色的 <code>x</code>。卡是这套系统的入场费，而不是锦上添花的升级。 消耗：核心的基础消耗，加上<strong>每块真正显示数字的面板</strong>的附加消耗。空面板不消耗。 卡的容量限制的是<strong>种类</strong>数量而非面板数量：两块面板显示同一种物品只占用一格容量。 容量不足时，熄灭的永远是同样几块面板（顺序按几何位置确定，重进世界也不变），而不是随机的。</p>
+<ul><li><strong>强化紫水晶是整套系统的材料。</strong> 四块紫水晶碎片加一份银粉放进合金炉；核心与容量卡都由它制成。这面墙的代价不只是材料，还有一台运转中的机器。</li><li><strong>没有容量卡时整面墙什么都不显示。</strong> 空卡架意味着可追踪种类为零，所有已设置物品的面板都会显示黄色的 <code>x</code>。卡是这套系统的入场费，而不是锦上添花的升级。</li><li>消耗：核心的基础消耗，加上<strong>每块真正显示数字的面板</strong>的附加消耗。空面板不消耗。</li><li>卡的容量限制的是<strong>种类</strong>数量而非面板数量：两块面板显示同一种物品只占用一格容量。</li><li>容量不足时，熄灭的永远是同样几块面板（顺序按几何位置确定，重进世界也不变），而不是随机的。</li></ul>
 
 <h2 id="面板显示什么">面板显示什么</h2>
 
@@ -421,13 +421,13 @@
 
 <p><strong>只有核心有界面。</strong> 右键核心即可打开：</p>
 
-<p><strong>10 个槽位的插卡架</strong>，用于容量卡——拖动卡片放入或取出，每槽一张；架子满了会明确拒绝（“卡槽已满”），而不是吞掉物品； <strong>四个数字</strong>——容量（允许多少种、实际追踪多少种）、已占槽位、储存的能量，以及消耗与所供电的面板数量； <strong>一盏带一行文字的指示灯</strong>——“监控墙运行中”“请插入容量卡”或“能量不足”。</p>
+<ul><li><strong>10 个槽位的插卡架</strong>，用于容量卡——拖动卡片放入或取出，每槽一张；架子满了会明确拒绝（“卡槽已满”），而不是吞掉物品；</li><li><strong>四个数字</strong>——容量（允许多少种、实际追踪多少种）、已占槽位、储存的能量，以及消耗与所供电的面板数量；</li><li><strong>一盏带一行文字的指示灯</strong>——“监控墙运行中”“请插入容量卡”或“能量不足”。</li></ul>
 
 <p>快捷操作依然可用：<strong>手持卡片 Shift + 右键核心</strong>，无需打开界面即可插入空槽。漏斗和管道遵循同样的规则——只有卡片能进入核心，每槽一张。</p>
 
 <p>面板没有界面：</p>
 
-<p>手持物品右键面板 → 该物品成为过滤器； 空手右键面板 → 取回过滤器。</p>
+<ul><li>手持物品右键面板 → 该物品成为过滤器；</li><li>空手右键面板 → 取回过滤器。</li></ul>
 
 <h2 id="方块属性">方块属性</h2>
 
@@ -445,7 +445,7 @@
 
 <h2 id="当前版本的限制">当前版本的限制</h2>
 
-<p>每个系统只能有一个核心：同一相连墙体中的第二个核心会让整面墙停止工作。 卡只有一个等级；等级阶梯与第二个维度（线缆距离）是 的开放问题。 平衡性（消耗、容量、扫描间隔）可在配置中调整，并将根据实机游玩继续调整。</p>
+<ul><li>每个系统只能有一个核心：同一相连墙体中的第二个核心会让整面墙停止工作。</li><li>卡只有一个等级；等级阶梯与第二个维度（线缆距离）是 的开放问题。</li><li>平衡性（消耗、容量、扫描间隔）可在配置中调整，并将根据实机游玩继续调整。</li></ul>
 
 <h2>合成</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="监控核心 alaindustrial:monitor_core" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="强化紫水晶"><img src="../../assets/item/reinforced_amethyst_3d.png" alt="强化紫水晶" width="32" height="32"></div> <div class="cell" title="琥珀金板"><img src="../../assets/item/electrum_plate_3d.png" alt="琥珀金板" width="32" height="32"></div> <div class="cell" title="强化紫水晶"><img src="../../assets/item/reinforced_amethyst_3d.png" alt="强化紫水晶" width="32" height="32"></div> <div class="cell" title="高级电路"><img src="../../assets/item/advanced_circuit_3d.png" alt="高级电路" width="32" height="32"></div> <div class="cell" title="能量水晶"><img src="../../assets/item/energy_crystal_3d.png" alt="能量水晶" width="32" height="32"></div> <div class="cell" title="高级电路"><img src="../../assets/item/advanced_circuit_3d.png" alt="高级电路" width="32" height="32"></div> <div class="cell" title="强化紫水晶"><img src="../../assets/item/reinforced_amethyst_3d.png" alt="强化紫水晶" width="32" height="32"></div> <div class="cell" title="琥珀金板"><img src="../../assets/item/electrum_plate_3d.png" alt="琥珀金板" width="32" height="32"></div> <div class="cell" title="强化紫水晶"><img src="../../assets/item/reinforced_amethyst_3d.png" alt="强化紫水晶" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="监控核心"><img src="../../assets/item/monitor_core_3d.png" alt="监控核心" width="32" height="32"></div><div class="result-name">监控核心</div></div></div></div></div>

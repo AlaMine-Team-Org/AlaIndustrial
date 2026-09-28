@@ -423,7 +423,7 @@
 
 <p><strong>抽取。</strong> 泵从正对自己的方块（朝向玩家的那一面）开始寻找流体。如果那里本身就是流体或与 之相连的流动水洼——泵沿其到达最近的源（任何流体）。如果世界中没有流体，则尝试从相邻 储罐取一桶——与已持有相同类型的，空储罐时则取邻居愿意给出的任何类型。世界中搜索源的限制：</p>
 
-<p><strong>半径：</strong> 距泵最多 32 格； <strong>访问上限：</strong> 单次扫描最多 512 个方块（防止大型泄漏造成的卡顿）； <strong>间隔：</strong> 搜索尝试之间 1 秒（20 刻）——成功和失败后均如此。</p>
+<ul><li><strong>半径：</strong> 距泵最多 32 格；</li><li><strong>访问上限：</strong> 单次扫描最多 512 个方块（防止大型泄漏造成的卡顿）；</li><li><strong>间隔：</strong> 搜索尝试之间 1 秒（20 刻）——成功和失败后均如此。</li></ul>
 
 <p>找到的源被以一桶量取入储罐，而世界中的源方块<strong>不可逆地消失</strong>（被抽干）。流动的非源流体不 被抽取——它只把搜索导向源，源被移除后按原版规则重新散开。如果储罐已持有另一种流体，搜索 甚至不启动——泵不会浪费这一刻。</p>
 
@@ -467,7 +467,7 @@
 
 <p>泵有图形界面，带两个槽（用于桶）和两条指示条。</p>
 
-<p>类型：<strong>GUI</strong>，两个槽（桶）和两条条： 左侧——储罐中的液位（从下往上增长）。储罐用<strong>流体本身的实际材质</strong>（其方块的 still 材质带原生 tint）填充，按 16×16 平铺并根据液位裁剪——水看起来像水，熔岩像熔岩。模组 流体自动以其材质绘制：取自原版的流体模型，模组图集中不需要为每种流体准备单独材质。 右侧——能量缓存。 悬停时工具提示显示流体名称 + mB 体积和 EU/FE / 缓存容量。 方块状态：放置时泵「面向玩家」（它用这一面抽取流体），工作时亮起。</p>
+<ul><li>类型：<strong>GUI</strong>，两个槽（桶）和两条条：<ul><li>左侧——储罐中的液位（从下往上增长）。储罐用<strong>流体本身的实际材质</strong>（其方块的 still 材质带原生 tint）填充，按 16×16 平铺并根据液位裁剪——水看起来像水，熔岩像熔岩。模组 流体自动以其材质绘制：取自原版的流体模型，模组图集中不需要为每种流体准备单独材质。</li><li>右侧——能量缓存。</li><li>悬停时工具提示显示流体名称 + mB 体积和 EU/FE / 缓存容量。</li></ul></li><li>方块状态：放置时泵「面向玩家」（它用这一面抽取流体），工作时亮起。</li></ul>
 
 <h2 id="方块属性">方块属性</h2>
 
@@ -483,22 +483,22 @@
 
 <h2 id="配方">配方</h2>
 
-<p>工作台上一个配方：铁外壳、两个桶和<a href="../components/index.html">电子电路</a>。配方中的两个桶反映方块的本质 —输送流体；电子电路设定机器的低等级。</p>
+<p>工作台上一个配方：铁外壳、两个桶和<a href="../components/index.html">电子电路</a>。配方中的两个桶反映方块的本质 输送流体；电子电路设定机器的低等级。</p>
 
-<p>合成：</p>
+<ul><li>合成：</li></ul>
 
 <h2 id="进阶">进阶</h2>
 
 <p>早期 LV 机器——有了稳定的发电机和合成用的电子电路后即可放置。免除了手动处理熔岩桶的麻烦。</p>
 
-<p>等级：LV 供电：来自 LV 源，例如<a href="../generators/generator.html">发电机</a>。 用途：以流体方式自动给<a href="../generators/geothermal_generator.html">地热发电机</a>供熔岩，替代手动 桶；为未来的流体链输送水。 需要：合成用的<a href="../components/index.html">电子电路</a>。</p>
+<ul><li>等级：LV</li><li>供电：来自 LV 源，例如<a href="../generators/generator.html">发电机</a>。</li><li>用途：以流体方式自动给<a href="../generators/geothermal_generator.html">地热发电机</a>供熔岩，替代手动 桶；为未来的流体链输送水。</li><li>需要：合成用的<a href="../components/index.html">电子电路</a>。</li></ul>
 
 <h2 id="相关内容">相关内容</h2>
 
-<p><a href="../generators/geothermal_generator.html">地热发电机</a>——泵的熔岩主要消费者。 <a href="../generators/generator.html">发电机</a>——泵的典型 LV 供电来源。 <a href="../components/index.html">组件</a>——合成用的电子电路。 I/O 网络逻辑——方块各面流体供应的工作方式。</p>
+<ul><li><a href="../generators/geothermal_generator.html">地热发电机</a>——泵的熔岩主要消费者。</li><li><a href="../generators/generator.html">发电机</a>——泵的典型 LV 供电来源。</li><li><a href="../components/index.html">组件</a>——合成用的电子电路。</li><li>I/O 网络逻辑——方块各面流体供应的工作方式。</li></ul>
 
 <h2>合成</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="抽水泵 alaindustrial:pump" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="桶"><img src="../../assets/item/bucket_3d.png" alt="桶" width="32" height="32"></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="桶"><img src="../../assets/item/bucket_3d.png" alt="桶" width="32" height="32"></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="电子电路"><img src="../../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="抽水泵"><img src="../../assets/item/pump_3d.png" alt="抽水泵" width="32" height="32"></div><div class="result-name">抽水泵</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="抽水泵 alaindustrial:pump" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="铁桶"><img src="../../assets/item/bucket_3d.png" alt="铁桶" width="32" height="32"></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="铁桶"><img src="../../assets/item/bucket_3d.png" alt="铁桶" width="32" height="32"></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="电子电路"><img src="../../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="抽水泵"><img src="../../assets/item/pump_3d.png" alt="抽水泵" width="32" height="32"></div><div class="result-name">抽水泵</div></div></div></div></div>
   </main>
 </div>
 

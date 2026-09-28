@@ -415,10 +415,7 @@
 
 <p>扫描分两趟，这不是实现细节，而是那些提示之所以有用的原因。</p>
 
-<ol><li><strong>六面墙</strong>——从控制器面前的格子出发，沿 ±X、±Y、±Z 各找一面。每面墙不是靠一条射线找，而是靠最多</li></ol>
-<p><strong>九条平行射线</strong>：这一格自己的射线，加上与方向垂直的平面上它周围八格的射线。墙立在多数射线停下的 地方；票数相同时，这一格自己的射线胜出，其次是较近的那面墙。本身就是外壳方块的相邻格（控制器所在 的墙、这一格下面的地板）不投票。如果没有一条射线找到外壳，房间就"在这个方向上没有边界"——要么它 太大，要么它有一面被打穿了。</p>
-<ol><li><strong>沿整个周长巡视</strong>，范围由这六面墙确定。正是这一趟能在 14³ 的外壳里任何位置找出缺失的格子并说出</li></ol>
-<p>它的坐标。找到第一个洞之后，巡视<strong>不会中断</strong>，而是继续数出其余所有的洞：前 12 个按坐标记住，之后 只计数。只要还没有洞，同一趟里还会统计控制器数量、记住门的格子、算出玻璃的占比。</p>
+<ol><li><strong>六面墙</strong>——从控制器面前的格子出发，沿 ±X、±Y、±Z 各找一面。每面墙不是靠一条射线找，而是靠最多 <strong>九条平行射线</strong>：这一格自己的射线，加上与方向垂直的平面上它周围八格的射线。墙立在多数射线停下的 地方；票数相同时，这一格自己的射线胜出，其次是较近的那面墙。本身就是外壳方块的相邻格（控制器所在 的墙、这一格下面的地板）不投票。如果没有一条射线找到外壳，房间就"在这个方向上没有边界"——要么它 太大，要么它有一面被打穿了。</li><li><strong>沿整个周长巡视</strong>，范围由这六面墙确定。正是这一趟能在 14³ 的外壳里任何位置找出缺失的格子并说出 它的坐标。找到第一个洞之后，巡视<strong>不会中断</strong>，而是继续数出其余所有的洞：前 12 个按坐标记住，之后 只计数。只要还没有洞，同一趟里还会统计控制器数量、记住门的格子、算出玻璃的占比。</li></ol>
 
 <p><strong>为什么用投票，而不是一条射线</strong>（实机测试，）。每个方向只有一条射线时，它撞上的是它唯一那一列 上立着的东西。天花板正中的两个洞，其中一个正在控制器面前那一格的上方，就把射线放上了天，于是天花板有 洞的房间被判成没有天花板的房间——"未找到墙"而不是"外壳有破口"。反过来，房间内部同一列上多出来的一块 外壳，会让射线停在真正的天花板下面，房间就"缩小"了。相邻的射线在这两种情况下都占上风。</p>
 
@@ -540,7 +537,7 @@
 
 <p>两个控制器挨着同一坨料架，会各自把整坨都算一遍——这就是凭空生出来的能量。规则有两条，而且一次扫描 就都能解决，不需要往存档里记任何账：</p>
 
-<p><strong>别人封闭房间里的料架，从外面谁也看不见。</strong>把无壳控制器摆在一台正在运转的反应堆旁边，是喂不到 自己的。 <strong>两个无壳控制器之间，料架归较近的那个。</strong>平局按坐标判，而不是只按距离：一条各方各算各的规则， 会把同一根料架同时判给两边。</p>
+<ul><li><strong>别人封闭房间里的料架，从外面谁也看不见。</strong>把无壳控制器摆在一台正在运转的反应堆旁边，是喂不到 自己的。</li><li><strong>两个无壳控制器之间，料架归较近的那个。</strong>平局按坐标判，而不是只按距离：一条各方各算各的规则， 会把同一根料架同时判给两边。</li></ul>
 
 <blockquote>已知的缝隙：位于未加载区块里的控制器是看不见的，因此区块边界远端的料架可能会短暂地被算两次。 这是在邻居加载之前每刻几点 EU/FE 的事；用强制加载区块去堵它，是比病更重的药。</blockquote>
 
@@ -566,10 +563,7 @@
 
 <p>两种模式毁方块的方式完全一样，而且总会提前警告——<strong>就在那块方块上，指名道姓地</strong>。</p>
 
-<ol><li>某一块被选中。它身上冒出火焰和烟，还有嘶嘶声。</li><li>过 （两秒）。来得及走开，或者把立在它上面的东西撤掉——这点余地正是危险</li></ol>
-<p>和惩罚的区别。</p>
-<ol><li>方块变成熔岩<strong>源</strong>。挑选时优先考虑<strong>头顶是空气</strong>的格子：围着料架的那个球有一半埋在地下，</li></ol>
-<p>没有这条规则的话，大部分损毁都在脚底下悄悄啃石头，而看得见的疤痕只有宣称半径的一半宽。 如果玩家在这段时间里把它挖掉了，什么也不会发生：这个选择会被重新核对，而不是闭着眼执行。</p>
+<ol><li>某一块被选中。它身上冒出火焰和烟，还有嘶嘶声。</li><li>过 （两秒）。来得及走开，或者把立在它上面的东西撤掉——这点余地正是危险 和惩罚的区别。</li><li>方块变成熔岩<strong>源</strong>。挑选时优先考虑<strong>头顶是空气</strong>的格子：围着料架的那个球有一半埋在地下， 没有这条规则的话，大部分损毁都在脚底下悄悄啃石头，而看得见的疤痕只有宣称半径的一半宽。 如果玩家在这段时间里把它挖掉了，什么也不会发生：这个选择会被重新核对，而不是闭着眼执行。</li></ol>
 
 <p>两种模式下都<strong>不会</strong>熔化的东西：空气、内部含有流体的一切（包括含水方块——水在哪里都能止住熔岩，把 屋子灌满水是正当的战术），以及一切不可破坏的方块——判定依据是方块自身的属性而不是一张名字清单， 所以别的模组自带的基岩自然而然也会被尊重。</p>
 
@@ -613,7 +607,7 @@
 
 <h2 id="界面">界面</h2>
 
-<p>类型：一个没有任何槽位、<strong>也没有玩家物品栏</strong>的屏幕——控制器是用来读的，不是用来装东西的。刻意不设 槽位：空槽位会招来漏斗。玩家物品栏的几排格子会占去面板的下半部分，而点它们什么也不会发生。 没有升级面板：控制器不是加工机器，四个隐藏的升级槽会许诺它做不到的事。 没有进度箭头：反应堆没有"正在进行"的操作。</p>
+<ul><li>类型：一个没有任何槽位、<strong>也没有玩家物品栏</strong>的屏幕——控制器是用来读的，不是用来装东西的。刻意不设 槽位：空槽位会招来漏斗。玩家物品栏的几排格子会占去面板的下半部分，而点它们什么也不会发生。</li><li>没有升级面板：控制器不是加工机器，四个隐藏的升级槽会许诺它做不到的事。</li><li>没有进度箭头：反应堆没有"正在进行"的操作。</li></ul>
 
 <p><strong>带标签页的屏幕。</strong>面板为 236×184，左侧边缘排着标签页，用的是游戏自带进度屏幕的贴图：每个标签页以 一个物品作图标，并带有显示名称的提示。标签页一个一个地加入，没有"留给以后"的空标签页。目前有五个 标签页——"控制台"、"房间"、"堆芯"、"冷却水"和"日志"。关着的标签页上可能亮着标记：红色表示警报，黄色表示警告。最后打开的标签页会被记住， 直到游戏重启。</p>
 
@@ -791,7 +785,7 @@
 
 <h2 id="配方">配方</h2>
 
-<p>合成：每次 <strong>×1</strong>。</p>
+<ul><li>合成：每次 <strong>×1</strong>。</li></ul>
 
 <pre><code class="lang-">S C S S = 屏蔽板 ×4
 R A R R = 强化屏蔽板 ×2
@@ -805,11 +799,11 @@ D = 控制棒驱动机构 ×1</code></pre>
 
 <h2 id="进阶">进阶</h2>
 
-<p>等级：<strong>HV</strong>——最高 512 EU/FE/刻 的发电方。 需要：屏蔽板与强化屏蔽板（材料链见<a href="reactor_casing.html">反应堆外壳</a>）、 <a href="../components/advanced_machine_casing.html">高级机器外壳</a>、 <a href="../components/advanced_circuit.html">高级电路</a>、钯板、 <a href="../components/resonance_chain.html">共鸣线圈</a>。 解锁：反应堆房间本身——没有控制器，这堆方块就只是一堆方块。</p>
+<ul><li>等级：<strong>HV</strong>——最高 512 EU/FE/刻 的发电方。</li><li>需要：屏蔽板与强化屏蔽板（材料链见<a href="reactor_casing.html">反应堆外壳</a>）、 <a href="../components/advanced_machine_casing.html">高级机器外壳</a>、 <a href="../components/advanced_circuit.html">高级电路</a>、钯板、 <a href="../components/resonance_chain.html">共鸣线圈</a>。</li><li>解锁：反应堆房间本身——没有控制器，这堆方块就只是一堆方块。</li></ul>
 
 <h2 id="相关内容">相关内容</h2>
 
-<p><a href="reactor_casing.html">反应堆外壳</a>——它扫描的对象、几何和合成链。 <a href="reactor_door.html">气闸门</a>——房间的正规入口；若它立在外壳里，就必须构成真正的门洞。 <a href="reactor_glass.html">反应堆玻璃</a>、<a href="reactor_lamp.html">灯</a>、 <a href="reactor_port.html">入口</a>和<a href="reactor_outlet.html">输出端</a>——其余会被扫描器算作墙的 方块。 <a href="fuel_rod_assembly.html">反应堆柱</a>——它烧的、煮的和整理的对象。 <a href="uranium_fuel_rod.html">燃料棒</a>和<a href="empty_fuel_rod.html">燃料包壳</a>——它消耗的燃料， 以及留下的包壳。 <a href="../materials/steam.html">蒸汽</a>——回路的工质。 <a href="steam_nozzle.html">蒸汽喷口</a>——回路的末端；它不工作时蒸汽压力条会变黄、热量会上升。已组成房间里 正在沸腾的一摞上方，控制器会放出蒸汽团——规则见<a href="fuel_rod_assembly.html">反应堆柱</a>。 <a href="reactor_button.html">反应堆按钮</a>——这套方块里唯一<strong>不</strong>被扫描器算作墙的一个。 <a href="../components/resonance_chain.html">共鸣链</a>——控制电路里的线圈从哪来。 <a href="../fluid-machines/distillation_column.html">蒸馏塔</a>和<a href="../agriculture/incubator.html">培育舱</a>——模组此前的 两个多方块结构；它们检查的都是固定形状，体积扫描器是在这里第一次写出来的。</p>
+<ul><li><a href="reactor_casing.html">反应堆外壳</a>——它扫描的对象、几何和合成链。</li><li><a href="reactor_door.html">气闸门</a>——房间的正规入口；若它立在外壳里，就必须构成真正的门洞。</li><li><a href="reactor_glass.html">反应堆玻璃</a>、<a href="reactor_lamp.html">灯</a>、 <a href="reactor_port.html">入口</a>和<a href="reactor_outlet.html">输出端</a>——其余会被扫描器算作墙的 方块。</li><li><a href="fuel_rod_assembly.html">反应堆柱</a>——它烧的、煮的和整理的对象。</li><li><a href="uranium_fuel_rod.html">燃料棒</a>和<a href="empty_fuel_rod.html">燃料包壳</a>——它消耗的燃料， 以及留下的包壳。</li><li><a href="../materials/steam.html">蒸汽</a>——回路的工质。</li><li><a href="steam_nozzle.html">蒸汽喷口</a>——回路的末端；它不工作时蒸汽压力条会变黄、热量会上升。已组成房间里 正在沸腾的一摞上方，控制器会放出蒸汽团——规则见<a href="fuel_rod_assembly.html">反应堆柱</a>。</li><li><a href="reactor_button.html">反应堆按钮</a>——这套方块里唯一<strong>不</strong>被扫描器算作墙的一个。</li><li><a href="../components/resonance_chain.html">共鸣链</a>——控制电路里的线圈从哪来。</li><li><a href="../fluid-machines/distillation_column.html">蒸馏塔</a>和<a href="../agriculture/incubator.html">培育舱</a>——模组此前的 两个多方块结构；它们检查的都是固定形状，体积扫描器是在这里第一次写出来的。</li></ul>
 
 <h2>合成</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="反应堆控制器 alaindustrial:reactor_controller" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="屏蔽板"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="屏蔽板" width="32" height="32"></div> <div class="cell" title="反应堆控制电路"><img src="../../assets/item/reactor_circuit_3d.png" alt="反应堆控制电路" width="32" height="32"></div> <div class="cell" title="屏蔽板"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="屏蔽板" width="32" height="32"></div> <div class="cell" title="强化屏蔽板"><img src="../../assets/item/shielding_alloy_reinforced_plate_3d.png" alt="强化屏蔽板" width="32" height="32"></div> <div class="cell" title="高级机器外壳"><img src="../../assets/item/advanced_machine_casing_3d.png" alt="高级机器外壳" width="32" height="32"></div> <div class="cell" title="强化屏蔽板"><img src="../../assets/item/shielding_alloy_reinforced_plate_3d.png" alt="强化屏蔽板" width="32" height="32"></div> <div class="cell" title="屏蔽板"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="屏蔽板" width="32" height="32"></div> <div class="cell" title="控制棒驱动机构"><img src="../../assets/item/control_rod_drive_3d.png" alt="控制棒驱动机构" width="32" height="32"></div> <div class="cell" title="屏蔽板"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="屏蔽板" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="反应堆控制器"><img src="../../assets/item/reactor_controller_3d.png" alt="反应堆控制器" width="32" height="32"></div><div class="result-name">反应堆控制器</div></div></div></div></div>

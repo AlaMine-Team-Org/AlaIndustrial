@@ -405,7 +405,7 @@
 
 <p>El reactor podría quemar <code>refined_uranium</code> tal cual, un paso más corto. Deliberadamente no</p>
 
-<p><strong>Una pila guarda barras, no lingotes.</strong> El combustible aquí es físico: se ve dentro de la pila transparente, y «cuatro barras» se lee como un objeto mientras «cuatro lingotes en una pila» no. <strong>La placa de blindaje de la receta es la vaina.</strong> Es el mismo material del que se construye la sala; la conexión no necesita explicación al jugador. <strong>El paso deja sitio para crecer.</strong> El MOX, el uranio empobrecido y otros grados de barra encajan en la misma forma sin tocar el procesado de menas. <strong>Y ese mismo paso es el que hace reutilizable la carcasa.</strong> La vaina puede volver; la pastilla de uranio no. Sin este paso, recargar un reactor costaría exactamente lo mismo que la primera carga (ver la <a href="empty_fuel_rod.html">vaina de barra</a>).</p>
+<ul><li><strong>Una pila guarda barras, no lingotes.</strong> El combustible aquí es físico: se ve dentro de la pila transparente, y «cuatro barras» se lee como un objeto mientras «cuatro lingotes en una pila» no.</li><li><strong>La placa de blindaje de la receta es la vaina.</strong> Es el mismo material del que se construye la sala; la conexión no necesita explicación al jugador.</li><li><strong>El paso deja sitio para crecer.</strong> El MOX, el uranio empobrecido y otros grados de barra encajan en la misma forma sin tocar el procesado de menas.</li><li><strong>Y ese mismo paso es el que hace reutilizable la carcasa.</strong> La vaina puede volver; la pastilla de uranio no. Sin este paso, recargar un reactor costaría exactamente lo mismo que la primera carga (ver la <a href="empty_fuel_rod.html">vaina de barra</a>).</li></ul>
 
 <h2 id="cómo-se-quema">Cómo se quema</h2>
 
@@ -435,13 +435,13 @@
 
 <p>Desde la etapa 4 el resto vive <strong>en el propio objeto</strong>, así que no queda nada que tirar:</p>
 
-<p>el clic derecho con la mano vacía devuelve la barra con toda su durabilidad; romper la columna (un creeper incluido) suelta todo lo cargado, barras medio quemadas entre ello; una barra vuelta a meter continúa desde donde se detuvo.</p>
+<ul><li>el clic derecho con la mano vacía devuelve la barra con toda su durabilidad;</li><li>romper la columna (un creeper incluido) suelta todo lo cargado, barras medio quemadas entre ello;</li><li>una barra vuelta a meter continúa desde donde se detuvo.</li></ul>
 
 <p>Una barra agotada no desaparece — se <strong>convierte en <a href="empty_fuel_rod.html">vaina de barra</a></strong> allí mismo donde está. Sigue sin haber barra agotada en la salida: <code>depleted_uranium</code> existe en el mod y llega por otra ruta (mutación); conectarlo al reactor es una pregunta abierta.</p>
 
 <h2 id="recetas">Recetas</h2>
 
-<p>Fabricación — <strong>sin forma</strong>, x1 por vez.</p>
+<ul><li>Fabricación — <strong>sin forma</strong>, x1 por vez.</li></ul>
 
 <pre><code class="lang-">vaina de barra + uranio enriquecido -&gt; barra de combustible</code></pre>
 
@@ -457,14 +457,14 @@
 
 <h2 id="progresión">Progresión</h2>
 
-<p>Nivel: ninguno (el objeto no lleva energía; el reactor que alimenta es HV). Necesita: <code>refined_uranium</code> (uranio + <a href="../machines/thermal_centrifuge.html">centrifugadora térmica</a> + <a href="../machines/compressor.html">compresor</a>) y una <a href="empty_fuel_rod.html">vaina de barra</a> — eso es paladio, y por tanto el Nether. Desbloquea: salida de la <a href="reactor_controller.html">sala del reactor</a>. Una sala vacía es un aparato de diagnóstico; las barras la convierten en generador. Crecimiento: el MOX y otros grados de barra quedan fuera de este epic (ver `FUTURE_CONTENT.md`, <code>fuel_rod_mox</code>).</p>
+<ul><li>Nivel: ninguno (el objeto no lleva energía; el reactor que alimenta es HV).</li><li>Necesita: <code>refined_uranium</code> (uranio + <a href="../machines/thermal_centrifuge.html">centrifugadora térmica</a> + <a href="../machines/compressor.html">compresor</a>) y una <a href="empty_fuel_rod.html">vaina de barra</a> — eso es paladio, y por tanto el Nether.</li><li>Desbloquea: salida de la <a href="reactor_controller.html">sala del reactor</a>. Una sala vacía es un aparato de diagnóstico; las barras la convierten en generador.</li><li>Crecimiento: el MOX y otros grados de barra quedan fuera de este epic (ver `FUTURE_CONTENT.md`, <code>fuel_rod_mox</code>).</li></ul>
 
 <h2 id="relacionado">Relacionado</h2>
 
-<p><a href="empty_fuel_rod.html">Vaina de barra</a> — la carcasa de la que se construye y en la que se convierte. <a href="fuel_rod_assembly.html">Columna del reactor</a> — a dónde va y cómo se desgasta. <a href="reactor_controller.html">Controlador de reactor</a> — lo que la quema y en qué se convierte. <a href="../machines/thermal_centrifuge.html">Centrifugadora térmica</a> y <a href="../machines/compressor.html">Compresor</a> las dos máquinas que hacen el uranio enriquecido. <a href="../machines/macerator.html">Triturador</a> — el comienzo de la cadena, la mena en polvo.</p>
+<ul><li><a href="empty_fuel_rod.html">Vaina de barra</a> — la carcasa de la que se construye y en la que se convierte.</li><li><a href="fuel_rod_assembly.html">Columna del reactor</a> — a dónde va y cómo se desgasta.</li><li><a href="reactor_controller.html">Controlador de reactor</a> — lo que la quema y en qué se convierte.</li><li><a href="../machines/thermal_centrifuge.html">Centrifugadora térmica</a> y <a href="../machines/compressor.html">Compresor</a> las dos máquinas que hacen el uranio enriquecido.</li><li><a href="../machines/macerator.html">Triturador</a> — el comienzo de la cadena, la mena en polvo.</li></ul>
 
 <h2>Fabricación</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="barra de combustible alaindustrial:uranium_fuel_rod" data-type="minecraft:crafting_shapeless"><div class="recipe-header"><span class="recipe-type">Shapeless Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Vaina de barra"><img src="../../assets/item/empty_fuel_rod_3d.png" alt="Vaina de barra" width="32" height="32"></div> <div class="cell" title="Uranio enriquecido (U-235)"><img src="../../assets/item/refined_uranium_3d.png" alt="Uranio enriquecido (U-235)" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Barra de combustible"><img src="../../assets/item/uranium_fuel_rod_3d.png" alt="Barra de combustible" width="32" height="32"></div><div class="result-name">Barra de combustible</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="barra de combustible alaindustrial:uranium_fuel_rod" data-type="minecraft:crafting_shapeless"><div class="recipe-header"><span class="recipe-type">Fabricación sin forma</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Vaina de barra"><img src="../../assets/item/empty_fuel_rod_3d.png" alt="Vaina de barra" width="32" height="32"></div> <div class="cell" title="Uranio enriquecido (U-235)"><img src="../../assets/item/refined_uranium_3d.png" alt="Uranio enriquecido (U-235)" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Mesa de trabajo" title="Mesa de trabajo" width="30" height="30"><div class="arrow" aria-label="Fabricación">▶</div></div><div class="recipe-result"><div class="cell result" title="Barra de combustible"><img src="../../assets/item/uranium_fuel_rod_3d.png" alt="Barra de combustible" width="32" height="32"></div><div class="result-name">Barra de combustible</div></div></div></div></div>
   </main>
 </div>
 

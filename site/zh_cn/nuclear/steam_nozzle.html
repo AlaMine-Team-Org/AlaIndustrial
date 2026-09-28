@@ -425,7 +425,7 @@
 
 <table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>形状</td><td>沿喷嘴方向的 10×10×10——<strong>不是</strong>完整方块：接管从墙面伸出 16 像素中的 10</td></tr><tr><td>遮挡</td><td>非完整方块</td></tr><tr><td>硬度</td><td>4.0</td></tr><tr><td>爆炸抗性</td><td>20.0</td></tr><tr><td>工具</td><td>镐（掉落必需）</td></tr><tr><td>声音</td><td>金属</td></tr><tr><td>朝向</td><td>六个方向都可以</td></tr><tr><td>自带储罐</td><td>500 mB，<strong>只在服务端</strong>进行刻更新</td></tr></tbody></table>
 
-<p>朝向取自玩家点击的那一面：喷嘴永远朝<strong>外</strong>，背离被贴上的那个表面。喷口也可以挂在天花板或地面上 —方向由安装决定，而不是另外去转。</p>
+<p>朝向取自玩家点击的那一面：喷嘴永远朝<strong>外</strong>，背离被贴上的那个表面。喷口也可以挂在天花板或地面上 方向由安装决定，而不是另外去转。</p>
 
 <p>蒸汽的储量<strong>完全不同步到客户端</strong>：汽柱是在服务端生成的，会自己发给附近所有人。同步也没什么可显示 的——模型上看不见蒸汽。</p>
 
@@ -449,7 +449,7 @@
 
 <h2 id="配方">配方</h2>
 
-<p>合成：每次 <strong>×2</strong>。</p>
+<ul><li>合成：每次 <strong>×2</strong>。</li></ul>
 
 <pre><code class="lang-">I I = 铁锭 ×3
 I P I P = 流体管道 ×1
@@ -459,11 +459,11 @@ C C = 机器外壳 ×1</code></pre>
 
 <h2 id="进阶">进阶</h2>
 
-<p>等级：无（这个方块不涉及能量）。 需要：<a href="../fluid-transport/fluid_pipe.html">流体管道</a>和机器外壳——也就是早在反应堆之前就掌握了的普通 流体物流。 解锁：闭合的冷却回路。没有排气，柱子里的蒸汽罐会灌满，沸腾随之停止，也就没有冷却了。</p>
+<ul><li>等级：无（这个方块不涉及能量）。</li><li>需要：<a href="../fluid-transport/fluid_pipe.html">流体管道</a>和机器外壳——也就是早在反应堆之前就掌握了的普通 流体物流。</li><li>解锁：闭合的冷却回路。没有排气，柱子里的蒸汽罐会灌满，沸腾随之停止，也就没有冷却了。</li></ul>
 
 <h2 id="相关内容">相关内容</h2>
 
-<p><a href="../materials/steam.html">蒸汽</a>——这种流体本身：为什么世界里没有它，也没法用桶装。 <a href="fuel_rod_assembly.html">反应堆柱</a>——蒸汽在哪里诞生，为什么它必须离开。 <a href="reactor_port.html">反应堆入口</a>——蒸汽怎么离开密封的房间。 <a href="reactor_controller.html">反应堆控制器</a>——从哪里能看出排气堵了。 <a href="../fluid-transport/fluid_pipe.html">流体管道</a>——<strong>不</strong>输送蒸汽： 起由蒸汽管道把蒸汽送到喷口。</p>
+<ul><li><a href="../materials/steam.html">蒸汽</a>——这种流体本身：为什么世界里没有它，也没法用桶装。</li><li><a href="fuel_rod_assembly.html">反应堆柱</a>——蒸汽在哪里诞生，为什么它必须离开。</li><li><a href="reactor_port.html">反应堆入口</a>——蒸汽怎么离开密封的房间。</li><li><a href="reactor_controller.html">反应堆控制器</a>——从哪里能看出排气堵了。</li><li><a href="../fluid-transport/fluid_pipe.html">流体管道</a>——<strong>不</strong>输送蒸汽： 起由蒸汽管道把蒸汽送到喷口。</li></ul>
 
 <h2>合成</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="蒸汽喷口 alaindustrial:steam_nozzle" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell empty"></div> <div class="cell" title="铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="铁锭" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="铁锭" width="32" height="32"></div> <div class="cell" title="流体管道"><img src="../../assets/item/fluid_pipe_3d.png" alt="流体管道" width="32" height="32"></div> <div class="cell" title="铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="铁锭" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="机器外壳"><img src="../../assets/item/machine_casing_3d.png" alt="机器外壳" width="32" height="32"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="蒸汽喷口"><img src="../../assets/item/steam_nozzle_3d.png" alt="蒸汽喷口" width="32" height="32"><span class="count">×2</span></div><div class="result-name">蒸汽喷口</div></div></div></div></div>

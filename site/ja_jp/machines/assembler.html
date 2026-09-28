@@ -423,7 +423,7 @@
 
 <p>設計図は <strong>ラウンドロビン</strong> で照会され、カーソル位置はサイクル間で保持されます。次のいずれか1つでも該当すると設計図はスキップされます：</p>
 
-<p>倉庫に材料が足りない； 出力ゾーンに結果を置く場所がない； 設計図のレシピが存在しない（データパックの変更後になくなったなど）。</p>
+<ul><li>倉庫に材料が足りない；</li><li>出力ゾーンに結果を置く場所がない；</li><li>設計図のレシピが存在しない（データパックの変更後になくなったなど）。</li></ul>
 
 <p>どの設計図も準備できていない場合、機械はスリープに入り、倉庫やチャージの変化で目覚めます。</p>
 
@@ -485,13 +485,13 @@
 
 <p>機械が今していること：</p>
 
-<p>3つの設計図スロット — キューで、アクティブなものに枠； <strong>アクティブ設計図の3×3 レイアウトとその産物</strong> — 表示のみ（後述）； 6スロットの出力ゾーン； エネルギーバーと進行バー； ステータス行：<em>稼働中 / 設計図なし / 材料不足 / 出力満杯 / エネルギーなし / レシピが見つかりません</em>。プレイヤーはアイドリングの理由を区別できなければなりません — さもなければ「機械が止まっている」と「機械が壊れた」が区別できません。</p>
+<ul><li>3つの設計図スロット — キューで、アクティブなものに枠；</li><li><strong>アクティブ設計図の3×3 レイアウトとその産物</strong> — 表示のみ（後述）；</li><li>6スロットの出力ゾーン；</li><li>エネルギーバーと進行バー；</li><li>ステータス行：<em>稼働中 / 設計図なし / 材料不足 / 出力満杯 / エネルギーなし / レシピが見つかりません</em>。プレイヤーはアイドリングの理由を区別できなければなりません — さもなければ「機械が止まっている」と「機械が壊れた」が区別できません。</li></ul>
 
 <h3 id="記録タブ">「記録」タブ</h3>
 
 <p>レシピを組み立てるときにすること：</p>
 
-<p>ゴーストセルの3×3 グリッド； 結果のプレビュー — このレイアウトが何を作るか； 空のブランクスロット； 「記録」ボタン — ブランクを記録済み設計図に変える； 「記録」の左にある矢印付きの四角いボタン — 表示中の設計図の <a href="#材料の代替">代替トグル</a>：グレーの矢印は無効、緑は有効。</p>
+<ul><li>ゴーストセルの3×3 グリッド；</li><li>結果のプレビュー — このレイアウトが何を作るか；</li><li>空のブランクスロット；</li><li>「記録」ボタン — ブランクを記録済み設計図に変える；</li><li>「記録」の左にある矢印付きの四角いボタン — 表示中の設計図の <a href="#材料の代替">代替トグル</a>：グレーの矢印は無効、緑は有効。</li></ul>
 
 <p>グリッドのセルはクリックで埋まります：アイテムをカーソルに持った状態でセルに合わせてクリックすると、コピー1つがセルに置かれます。空のカーソルでのクリックはセルをクリアします。このときアイテムは <strong>消費されません</strong>：グリッドはレイアウトを表示するもので、保存するものではありません。</p>
 
@@ -517,7 +517,7 @@
 
 <p><strong>倉庫ウィンドウ</strong> は <a href="../utility/storage_module.html">ストレージモジュール</a> のウィンドウで、組立機のボタンではなく、モジュール自体を右クリックで開きます：</p>
 
-<p>共通倉庫のグリッド、接続されたモジュール数に応じて3〜12列； スクロール、スクロールバー、検索はありません — 108スロットの上限はすべて画面に収まるように選ばれています。</p>
+<ul><li>共通倉庫のグリッド、接続されたモジュール数に応じて3〜12列；</li><li>スクロール、スクロールバー、検索はありません — 108スロットの上限はすべて画面に収まるように選ばれています。</li></ul>
 
 <p>倉庫ウィンドウは、ストレージモジュールが開くものと同じです。</p>
 
@@ -535,7 +535,7 @@
 
 <h2 id="レシピ">レシピ</h2>
 
-<p>クラフト： 処理レシピはありません — 機械はバニラの <code>minecraft:crafting</code> を使用</p>
+<ul><li>クラフト：</li><li>処理レシピはありません — 機械はバニラの <code>minecraft:crafting</code> を使用</li></ul>
 
 <p>ジャンルのお手本に沿った構成です — ティア別ケース + 設計図2枚 + 「同一性」+「保管」で、4つの角はこれらの部品を動かす機構で埋まります：</p>
 
@@ -547,14 +547,14 @@
 
 <h2 id="進行">進行</h2>
 
-<p>ティア：MV — <strong>モッド初の MV マシン</strong>、MV フェーズの錨 必要：<a href="../utility/storage_module.html">ストレージモジュール</a>（倉庫がなければ原料の調達先がない）と 組立設計図 以降、完成した石油ラインも必要 — 直接ではなく <a href="../components/advanced_machine_casing.html">高度なマシンケース</a> 経由で：そこには <a href="../components/advanced_circuit.html">高度な回路</a> が2つ入り、それぞれがゴム ×4 です。組立機自身のクラフトグリッドは変わっていませんが、完全なコストはこの回路2つ分増え、<a href="polymerizer.html">重合機</a> と <a href="vulcanizer.html">加硫機</a> の構築前に組立機を作ることはもうできません 発展先：なし。「オンデマンドのオートクラフト」（「Xを64個作る」とそのサブクラフトツリー付き）は別の将来システムであり、この機械のアップグレードではありません</p>
+<ul><li>ティア：MV — <strong>モッド初の MV マシン</strong>、MV フェーズの錨</li><li>必要：<a href="../utility/storage_module.html">ストレージモジュール</a>（倉庫がなければ原料の調達先がない）と 組立設計図</li><li>以降、完成した石油ラインも必要 — 直接ではなく <a href="../components/advanced_machine_casing.html">高度なマシンケース</a> 経由で：そこには <a href="../components/advanced_circuit.html">高度な回路</a> が2つ入り、それぞれがゴム ×4 です。組立機自身のクラフトグリッドは変わっていませんが、完全なコストはこの回路2つ分増え、<a href="polymerizer.html">重合機</a> と <a href="vulcanizer.html">加硫機</a> の構築前に組立機を作ることはもうできません</li><li>発展先：なし。「オンデマンドのオートクラフト」（「Xを64個作る」とそのサブクラフトツリー付き）は別の将来システムであり、この機械のアップグレードではありません</li></ul>
 
 <h2 id="関連項目">関連項目</h2>
 
-<p><a href="../utility/storage_module.html">ストレージモジュール</a> — 機械が原料を取り出す倉庫 組立設計図 — レシピを保持するアイテム <a href="../energy-transfer/gold_cable.html">金ケーブル</a> — MV マシンの給電 <a href="../item-transport/item_pipe.html">アイテムパイプ</a> — 倉庫を満たし、出力を引き出す <a href="sawmill.html">製材機</a> — GUI で切り替え可能なモードを持つ機械のお手本</p>
+<ul><li><a href="../utility/storage_module.html">ストレージモジュール</a> — 機械が原料を取り出す倉庫</li><li>組立設計図 — レシピを保持するアイテム</li><li><a href="../energy-transfer/gold_cable.html">金ケーブル</a> — MV マシンの給電</li><li><a href="../item-transport/item_pipe.html">アイテムパイプ</a> — 倉庫を満たし、出力を引き出す</li><li><a href="sawmill.html">製材機</a> — GUI で切り替え可能なモードを持つ機械のお手本</li></ul>
 
 <h2>クラフト</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="組立機 alaindustrial:assembler" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="鉄の歯車"><img src="../../assets/item/iron_gear_3d.png" alt="鉄の歯車" width="32" height="32"></div> <div class="cell" title="Crafting Table"><img src="../../assets/item/crafting_table_3d.png" alt="Crafting Table" width="32" height="32"></div> <div class="cell" title="鉄の歯車"><img src="../../assets/item/iron_gear_3d.png" alt="鉄の歯車" width="32" height="32"></div> <div class="cell" title="電子回路"><img src="../../assets/item/electronic_circuit_3d.png" alt="電子回路" width="32" height="32"></div> <div class="cell" title="高度なマシンケース"><img src="../../assets/item/advanced_machine_casing_3d.png" alt="高度なマシンケース" width="32" height="32"></div> <div class="cell" title="電子回路"><img src="../../assets/item/electronic_circuit_3d.png" alt="電子回路" width="32" height="32"></div> <div class="cell" title="鉄の歯車"><img src="../../assets/item/iron_gear_3d.png" alt="鉄の歯車" width="32" height="32"></div> <div class="cell" title="ストレージモジュール"><img src="../../assets/item/storage_module_3d.png" alt="ストレージモジュール" width="32" height="32"></div> <div class="cell" title="鉄の歯車"><img src="../../assets/item/iron_gear_3d.png" alt="鉄の歯車" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="組立機"><img src="../../assets/item/assembler_3d.png" alt="組立機" width="32" height="32"></div><div class="result-name">組立機</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="組立機 alaindustrial:assembler" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="鉄の歯車"><img src="../../assets/item/iron_gear_3d.png" alt="鉄の歯車" width="32" height="32"></div> <div class="cell" title="作業台"><img src="../../assets/item/crafting_table_3d.png" alt="作業台" width="32" height="32"></div> <div class="cell" title="鉄の歯車"><img src="../../assets/item/iron_gear_3d.png" alt="鉄の歯車" width="32" height="32"></div> <div class="cell" title="電子回路"><img src="../../assets/item/electronic_circuit_3d.png" alt="電子回路" width="32" height="32"></div> <div class="cell" title="高度なマシンケース"><img src="../../assets/item/advanced_machine_casing_3d.png" alt="高度なマシンケース" width="32" height="32"></div> <div class="cell" title="電子回路"><img src="../../assets/item/electronic_circuit_3d.png" alt="電子回路" width="32" height="32"></div> <div class="cell" title="鉄の歯車"><img src="../../assets/item/iron_gear_3d.png" alt="鉄の歯車" width="32" height="32"></div> <div class="cell" title="ストレージモジュール"><img src="../../assets/item/storage_module_3d.png" alt="ストレージモジュール" width="32" height="32"></div> <div class="cell" title="鉄の歯車"><img src="../../assets/item/iron_gear_3d.png" alt="鉄の歯車" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="組立機"><img src="../../assets/item/assembler_3d.png" alt="組立機" width="32" height="32"></div><div class="result-name">組立機</div></div></div></div></div>
   </main>
 </div>
 

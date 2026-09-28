@@ -405,7 +405,7 @@
 
 <p>The reactor could burn <code>refined_uranium</code> straight away, one step shorter. That is deliberately not</p>
 
-<p><strong>A rack holds rods, not ingots.</strong> The fuel here is physical: it is visible inside the transparent rack, and "four rods" reads as an object where "four ingots in a rack" does not. <strong>The shielding plate in the recipe is the sheath.</strong> It is the same material the room is built from; the connection needs no explaining to the player. <strong>The step leaves room to grow.</strong> MOX, depleted uranium and other grades of rod fit the same shape without touching ore processing. <strong>And the same step is what makes the casing reusable.</strong> The sheath can come back; the uranium pellet cannot. Without this step, refuelling a reactor would cost exactly what the first load did (see the <a href="empty_fuel_rod.html">fuel rod cladding</a>).</p>
+<ul><li><strong>A rack holds rods, not ingots.</strong> The fuel here is physical: it is visible inside the transparent rack, and "four rods" reads as an object where "four ingots in a rack" does not.</li><li><strong>The shielding plate in the recipe is the sheath.</strong> It is the same material the room is built from; the connection needs no explaining to the player.</li><li><strong>The step leaves room to grow.</strong> MOX, depleted uranium and other grades of rod fit the same shape without touching ore processing.</li><li><strong>And the same step is what makes the casing reusable.</strong> The sheath can come back; the uranium pellet cannot. Without this step, refuelling a reactor would cost exactly what the first load did (see the <a href="empty_fuel_rod.html">fuel rod cladding</a>).</li></ul>
 
 <h2 id="how-it-burns">How it burns</h2>
 
@@ -435,13 +435,13 @@
 
 <p>Since stage 4 the remainder lives <strong>on the item itself</strong>, so there is nothing left to throw away:</p>
 
-<p>right-clicking empty-handed hands the rod back with all its durability; breaking the column (a creeper included) drops everything racked, half-burnt rods among it; a rod put back in carries on from where it stopped.</p>
+<ul><li>right-clicking empty-handed hands the rod back with all its durability;</li><li>breaking the column (a creeper included) drops everything racked, half-burnt rods among it;</li><li>a rod put back in carries on from where it stopped.</li></ul>
 
 <p>A burnt-out rod does not vanish — it <strong>becomes a <a href="empty_fuel_rod.html">fuel rod cladding</a></strong> right where it stands. There is still no depleted rod on the output: <code>depleted_uranium</code> exists in the mod and arrives by another route (mutation); wiring it to the reactor is an open question.</p>
 
 <h2 id="recipes">Recipes</h2>
 
-<p>Craft — <strong>shapeless</strong>, x1 at a time.</p>
+<ul><li>Craft — <strong>shapeless</strong>, x1 at a time.</li></ul>
 
 <pre><code class="lang-">fuel rod cladding + enriched uranium -&gt; fuel rod</code></pre>
 
@@ -457,11 +457,11 @@
 
 <h2 id="progression">Progression</h2>
 
-<p>Tier: none (the item carries no energy; the reactor it feeds is HV). Needs: <code>refined_uranium</code> (uranium + <a href="../machines/thermal_centrifuge.html">thermal centrifuge</a> + <a href="../machines/compressor.html">compressor</a>) and a <a href="empty_fuel_rod.html">fuel rod cladding</a> — that is palladium, and therefore the Nether. Unlocks: output from the <a href="reactor_controller.html">reactor room</a>. An empty room is a diagnostic device; rods make it a generator. Growth: MOX and other grades of rod are outside this epic (see `FUTURE_CONTENT.md`, <code>fuel_rod_mox</code>).</p>
+<ul><li>Tier: none (the item carries no energy; the reactor it feeds is HV).</li><li>Needs: <code>refined_uranium</code> (uranium + <a href="../machines/thermal_centrifuge.html">thermal centrifuge</a> + <a href="../machines/compressor.html">compressor</a>) and a <a href="empty_fuel_rod.html">fuel rod cladding</a> — that is palladium, and therefore the Nether.</li><li>Unlocks: output from the <a href="reactor_controller.html">reactor room</a>. An empty room is a diagnostic device; rods make it a generator.</li><li>Growth: MOX and other grades of rod are outside this epic (see `FUTURE_CONTENT.md`, <code>fuel_rod_mox</code>).</li></ul>
 
 <h2 id="related">Related</h2>
 
-<p><a href="empty_fuel_rod.html">Fuel Rod Cladding</a> — the casing it is built from and turns back into. <a href="fuel_rod_assembly.html">Reactor Column</a> — where it goes and how it wears down. <a href="reactor_controller.html">Reactor Controller</a> — what burns it and what it becomes. <a href="../machines/thermal_centrifuge.html">Thermal Centrifuge</a> and <a href="../machines/compressor.html">Compressor</a> — the two machines that make enriched uranium. <a href="../machines/macerator.html">Macerator</a> — the start of the chain, ore into dust.</p>
+<ul><li><a href="empty_fuel_rod.html">Fuel Rod Cladding</a> — the casing it is built from and turns back into.</li><li><a href="fuel_rod_assembly.html">Reactor Column</a> — where it goes and how it wears down.</li><li><a href="reactor_controller.html">Reactor Controller</a> — what burns it and what it becomes.</li><li><a href="../machines/thermal_centrifuge.html">Thermal Centrifuge</a> and <a href="../machines/compressor.html">Compressor</a> — the two machines that make enriched uranium.</li><li><a href="../machines/macerator.html">Macerator</a> — the start of the chain, ore into dust.</li></ul>
 
 <h2>Crafting</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="fuel rod alaindustrial:uranium_fuel_rod" data-type="minecraft:crafting_shapeless"><div class="recipe-header"><span class="recipe-type">Shapeless Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Fuel Rod Cladding"><img src="../../assets/item/empty_fuel_rod_3d.png" alt="Fuel Rod Cladding" width="32" height="32"></div> <div class="cell" title="Enriched Uranium (U-235)"><img src="../../assets/item/refined_uranium_3d.png" alt="Enriched Uranium (U-235)" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Fuel Rod"><img src="../../assets/item/uranium_fuel_rod_3d.png" alt="Fuel Rod" width="32" height="32"></div><div class="result-name">Fuel Rod</div></div></div></div></div>
