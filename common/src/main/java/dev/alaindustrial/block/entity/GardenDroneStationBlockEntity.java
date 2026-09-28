@@ -66,7 +66,7 @@ import org.jetbrains.annotations.Nullable;
  *     place when the station itself changes a tile.</li>
  * </ul>
  */
-public final class GardenDroneStationBlockEntity extends MachineBlockEntity implements MenuProvider {
+public final class GardenDroneStationBlockEntity extends MachineBlockEntity implements MenuProvider, BatteryFed {
 
 	public static final int SEED_SLOT = 0;
 	public static final int FERTILIZER_SLOT = 1;

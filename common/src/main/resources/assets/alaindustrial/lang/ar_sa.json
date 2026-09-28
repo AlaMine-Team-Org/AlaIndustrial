@@ -788,6 +788,8 @@
   "gui.alaindustrial.upgrade_table.no_module": "أضف وحدة ترقية",
   "gui.alaindustrial.upgrade_table.no_tool": "ضع أداة كهربائية",
   "gui.alaindustrial.upgrade_table.ready": "جارٍ تركيب الترقية",
+  "gui.alaindustrial.battery_drawer": "خانة البطارية",
+  "gui.alaindustrial.battery_drawer.hint": "تشغّل الآلة من بطارية دون كابل",
   "gui.alaindustrial.upgrades": "الترقيات",
   "gui.alaindustrial.upgrades.overclock": "الرقائق: %1$s · سرعة ×%2$s · سحب ×%3$s",
   "gui.alaindustrial.vulcanizer.heat.campfire": "موقد · ×%s",

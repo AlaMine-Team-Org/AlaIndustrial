@@ -788,6 +788,8 @@
   "gui.alaindustrial.upgrade_table.no_module": "Agrega un módulo de mejora",
   "gui.alaindustrial.upgrade_table.no_tool": "Coloca una herramienta eléctrica",
   "gui.alaindustrial.upgrade_table.ready": "Instalando la mejora",
+  "gui.alaindustrial.battery_drawer": "Ranura de batería",
+  "gui.alaindustrial.battery_drawer.hint": "Alimenta la máquina con una batería, sin cable",
   "gui.alaindustrial.upgrades": "Mejoras",
   "gui.alaindustrial.upgrades.overclock": "Chips: %1$s · velocidad ×%2$s · consumo ×%3$s",
   "gui.alaindustrial.vulcanizer.heat.campfire": "Fogata · ×%s",

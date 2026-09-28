@@ -48,7 +48,7 @@ import net.minecraft.world.level.block.state.BlockState;
  * counter, sleep — are run by a shared {@link ProcessingCycle} (MOD-557), which is also what the
  * machines outside this family now use instead of writing the sequence out again.
  */
-public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockEntity implements Overclockable {
+public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockEntity implements Overclockable, BatteryFed {
 	/** Input slot index, shared by every processing machine. Subclasses re-export as {@code public} ({@code CompressorBlockEntity.INPUT_SLOT} etc.) for callers. */
 	protected static final int INPUT_SLOT = 0;
 	/** Output slot index, shared by every processing machine. Subclasses re-export as {@code public}. */

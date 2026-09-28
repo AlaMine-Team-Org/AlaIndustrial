@@ -788,6 +788,8 @@
   "gui.alaindustrial.upgrade_table.no_module": "Voeg een upgrademodule toe",
   "gui.alaindustrial.upgrade_table.no_tool": "Plaats elektrisch gereedschap",
   "gui.alaindustrial.upgrade_table.ready": "Upgrade wordt ingebouwd",
+  "gui.alaindustrial.battery_drawer": "Batterijvak",
+  "gui.alaindustrial.battery_drawer.hint": "Voedt de machine uit een batterij, zonder kabel",
   "gui.alaindustrial.upgrades": "Verbeteringen",
   "gui.alaindustrial.upgrades.overclock": "Chips: %1$s · snelheid ×%2$s · verbruik ×%3$s",
   "gui.alaindustrial.vulcanizer.heat.campfire": "Kampvuur · ×%s",

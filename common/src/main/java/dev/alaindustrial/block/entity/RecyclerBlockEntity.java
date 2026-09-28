@@ -45,7 +45,7 @@ import net.minecraft.world.level.storage.ValueOutput;
  *       automatable rather than a walk to the base.</li>
  * </ul>
  */
-public class RecyclerBlockEntity extends MachineBlockEntity implements MenuProvider {
+public class RecyclerBlockEntity extends MachineBlockEntity implements MenuProvider, BatteryFed {
 	public static final int INPUT_SLOT = 0;
 	public static final int SLAG_SLOT = 1;
 	public static final int ASH_SLOT = 2;

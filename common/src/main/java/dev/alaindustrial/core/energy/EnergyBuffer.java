@@ -174,6 +174,28 @@ public class EnergyBuffer implements EnergyPort, EnergyPort.Participant {
 	}
 
 	/**
+	 * Take in EU handed over by an item in this block's own slot — a battery in a machine's drawer
+	 * (MOD-679). Returns what was actually stored.
+	 *
+	 * <p>Counted as energy received, not as generated: to the statistics panel a battery is an outside
+	 * source exactly like a cable, and booking it under {@code generated} would print a "Generated" line on
+	 * a consumer and inflate its window rate. Untracked like its two neighbours — the item move is the
+	 * machine's own bookkeeping inside its tick, not a transaction a simulation could roll back.
+	 */
+	public long receiveInternal(long eu) {
+		if (eu <= 0) {
+			return 0L;
+		}
+		long stored = Math.min(eu, capacity - amount);
+		amount += stored;
+		if (countersEnabled) {
+			totalEnergyIn += stored;
+		}
+		settledAmount += stored;
+		return stored;
+	}
+
+	/**
 	 * Set the stored charge outright: reading a save, restoring from an item component, or arranging a
 	 * test fixture. Not for gameplay — a machine that "sets" its charge is losing or creating EU
 	 * without saying where it went.

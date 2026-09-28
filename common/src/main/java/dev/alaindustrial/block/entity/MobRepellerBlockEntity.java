@@ -40,7 +40,7 @@ import net.minecraft.world.level.block.state.BlockState;
  * {@link MachineBlockEntity#evolveInto} carries energy and ownership exactly like the solar panel's
  * chip evolution (MOD-211). The MV/HV subclasses override the four tier hooks and nothing else.
  */
-public class MobRepellerBlockEntity extends MachineBlockEntity implements MenuProvider {
+public class MobRepellerBlockEntity extends MachineBlockEntity implements MenuProvider, BatteryFed {
 	/** The single vessel slot; the four upgrade slots follow it at the tail (MOD-080). */
 	public static final int VESSEL_SLOT = 0;
 	/** Machine slots before the upgrade panel — the vessel alone. The client menu stub sizes from this. */
@@ -144,6 +144,10 @@ public class MobRepellerBlockEntity extends MachineBlockEntity implements MenuPr
 		slots.put(VESSEL_SLOT, ItemStack.EMPTY);
 		for (int i = 0; i < UPGRADE_SLOT_COUNT; i++) {
 			slots.put(upgradeSlotStart() + i, getUpgradeStack(i).copy());
+		}
+		// The battery drawer (MOD-679) travels too — left behind, it would vanish with the old block.
+		if (hasBatterySlot()) {
+			slots.put(batterySlotIndex(), getItem(batterySlotIndex()).copy());
 		}
 		return slots;
 	}

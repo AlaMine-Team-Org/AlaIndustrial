@@ -69,7 +69,7 @@ import net.minecraft.world.level.storage.ValueOutput;
  * the second to the bottom (fuel-oil) tank — deterministic for datapacks, and the reason the two
  * output tanks carry no fluid filter of their own.
  */
-public class DistillationColumnBlockEntity extends MachineBlockEntity implements Overclockable, FluidPortHost, MenuProvider {
+public class DistillationColumnBlockEntity extends MachineBlockEntity implements Overclockable, FluidPortHost, MenuProvider, BatteryFed {
 	/** Filled oil container in — emptied into the middle (oil) tank. */
 	public static final int OIL_FILL_INPUT_SLOT = 0;
 	/** The emptied oil container drops here. */

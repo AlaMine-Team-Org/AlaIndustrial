@@ -788,6 +788,8 @@
   "gui.alaindustrial.upgrade_table.no_module": "Aggiungi un modulo di potenziamento",
   "gui.alaindustrial.upgrade_table.no_tool": "Inserisci un utensile elettrico",
   "gui.alaindustrial.upgrade_table.ready": "Montaggio del potenziamento",
+  "gui.alaindustrial.battery_drawer": "Slot batteria",
+  "gui.alaindustrial.battery_drawer.hint": "Alimenta la macchina con una batteria, senza cavo",
   "gui.alaindustrial.upgrades": "Potenziamenti",
   "gui.alaindustrial.upgrades.overclock": "Chip: %1$s · velocità ×%2$s · consumo ×%3$s",
   "gui.alaindustrial.vulcanizer.heat.campfire": "Falò · ×%s",

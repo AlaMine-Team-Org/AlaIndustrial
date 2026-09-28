@@ -54,7 +54,7 @@ import net.minecraft.world.level.block.state.BlockState;
  * <p>Sync channels: 0 energy, 1 capacity, 2 progress, 3 maxProgress, 4 {@link RepairStatus} code.
  */
 public class ComponentRepairBenchBlockEntity extends MachineBlockEntity
-		implements MenuProvider, Overclockable {
+		implements MenuProvider, Overclockable, BatteryFed {
 
 	/** The rotor/wheel being repaired. Stays in place across the whole operation. */
 	public static final int TARGET_SLOT = 0;

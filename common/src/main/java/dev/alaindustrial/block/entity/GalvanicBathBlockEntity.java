@@ -57,7 +57,7 @@ import net.minecraft.world.level.storage.ValueOutput;
  * <p><b>Fibre is a tag.</b> The shipped recipe accepts {@code #alaindustrial:fiber} — vanilla string
  * or our own cotton fibre (MOD-280) — so a spider farm and a trellis are equally valid ways in.
  */
-public class GalvanicBathBlockEntity extends MachineBlockEntity implements Overclockable, FluidPortHost, MenuProvider {
+public class GalvanicBathBlockEntity extends MachineBlockEntity implements Overclockable, FluidPortHost, MenuProvider, BatteryFed {
 	/** Fibre input: vanilla string or cotton fibre, matched by tag through the recipe. */
 	public static final int FIBER_SLOT = 0;
 	/** The silver that gets deposited onto the fibre. */

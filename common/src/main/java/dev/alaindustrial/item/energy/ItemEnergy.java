@@ -313,4 +313,33 @@ public final class ItemEnergy {
 		add(stack, perItem);
 		return perItem * count;
 	}
+
+	// --- Discharge: an item handing its charge to a block (MOD-679) --------------------------------------
+
+	/**
+	 * Whether {@code stack} can give EU back. Holding a buffer is not enough: a crystal blank only ever
+	 * fills up (MOD-504), so a slot that accepted it on {@code capacity > 0} alone would keep it forever
+	 * and never move a single EU.
+	 */
+	public static boolean canDischarge(ItemStack stack) {
+		return !stack.isEmpty() && !(stack.getItem() instanceof CrystalBlankItem) && capacity(stack) > 0;
+	}
+
+	/**
+	 * Take up to {@code budget} EU out of the whole stack and return what actually left it (never
+	 * negative). One implementation for every discharge slot — the Battery Box, the CESU and the battery
+	 * drawer of the machines — so the stack rule of {@link #stackAdd} (a share per item, nothing below
+	 * {@code count}) is the same wherever a battery is drained.
+	 *
+	 * <p>Moves the charge with {@code stackAdd}, never {@code spend}: spending carries the creative guard
+	 * (EU as tool wear), which is right for an item being used and wrong for a transfer the player asked
+	 * for by putting the item in the slot.
+	 */
+	public static long discharge(ItemStack source, long budget) {
+		if (budget <= 0 || !canDischarge(source)) {
+			return 0L;
+		}
+		long want = Math.min(budget, stackGet(source));
+		return want <= 0 ? 0L : -stackAdd(source, -want);
+	}
 }

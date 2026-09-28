@@ -53,7 +53,7 @@ import net.minecraft.world.level.storage.ValueOutput;
  * geothermal generator's lava): oil that entered the machine is feedstock, not storage, so a neighbour
  * cannot siphon it out and the machine cannot be used as a fluid buffer.
  */
-public class PolymerizerBlockEntity extends MachineBlockEntity implements Overclockable, FluidPortHost, MenuProvider {
+public class PolymerizerBlockEntity extends MachineBlockEntity implements Overclockable, FluidPortHost, MenuProvider, BatteryFed {
 	/** Filled-container input: an oil bucket (or capsule/foreign cell) placed here is emptied into the tank. */
 	public static final int FILL_INPUT_SLOT = 0;
 	/** The emptied container drops here after its fluid moved into the tank. */

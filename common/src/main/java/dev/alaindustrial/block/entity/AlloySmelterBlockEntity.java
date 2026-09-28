@@ -35,7 +35,7 @@ import net.minecraft.world.level.block.state.BlockState;
  *
  * <p>The one genuinely new rule here is the input filter — see {@link #canPlaceItem}.
  */
-public final class AlloySmelterBlockEntity extends MachineBlockEntity implements Overclockable, MenuProvider {
+public final class AlloySmelterBlockEntity extends MachineBlockEntity implements Overclockable, MenuProvider, BatteryFed {
 	public static final int INPUT_SLOT_0 = 0;
 	public static final int INPUT_SLOT_1 = 1;
 	public static final int INPUT_SLOT_2 = 2;

@@ -788,6 +788,8 @@
   "gui.alaindustrial.upgrade_table.no_module": "Přidej modul vylepšení",
   "gui.alaindustrial.upgrade_table.no_tool": "Vlož napájený nástroj",
   "gui.alaindustrial.upgrade_table.ready": "Instaluje se vylepšení",
+  "gui.alaindustrial.battery_drawer": "Slot baterie",
+  "gui.alaindustrial.battery_drawer.hint": "Napájí stroj z baterie, bez kabelu",
   "gui.alaindustrial.upgrades": "Vylepšení",
   "gui.alaindustrial.upgrades.overclock": "Čipy: %1$s · rychlost ×%2$s · odběr ×%3$s",
   "gui.alaindustrial.vulcanizer.heat.campfire": "Táborák · ×%s",

@@ -99,6 +99,7 @@ import dev.alaindustrial.block.WorkstationBlock;
 import dev.alaindustrial.block.entity.AlloySmelterBlockEntity;
 import dev.alaindustrial.block.entity.AssemblerBlockEntity;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
+import dev.alaindustrial.block.entity.BatteryFed;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.CanningMachineBlockEntity;
 import dev.alaindustrial.block.entity.CesuBlockEntity;
@@ -2466,6 +2467,25 @@ public final class ContentManifest {
 		for (BlockEntityDef<?> def : BLOCK_ENTITIES) {
 			if (def.blocks().contains(path)) {
 				return Overclockable.class.isAssignableFrom(def.type());
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Whether {@code block}'s machine has a battery drawer (MOD-679) — the {@link BatteryFed} twin of
+	 * {@link #isOverclockable}, and for the same reason: the menu lays out the drawer slot on the client,
+	 * where no block entity exists, so the block alone has to answer.
+	 */
+	public static boolean isBatteryFed(Block block) {
+		Identifier key = BuiltInRegistries.BLOCK.getKey(block);
+		if (!Industrialization.MOD_ID.equals(key.getNamespace())) {
+			return false;
+		}
+		String path = key.getPath();
+		for (BlockEntityDef<?> def : BLOCK_ENTITIES) {
+			if (def.blocks().contains(path)) {
+				return BatteryFed.class.isAssignableFrom(def.type());
 			}
 		}
 		return false;

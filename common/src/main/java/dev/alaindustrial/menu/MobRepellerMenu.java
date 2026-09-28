@@ -84,6 +84,9 @@ public class MobRepellerMenu extends MachineMenu {
 	 */
 	@Override
 	public boolean clickMenuButton(Player player, int buttonId) {
+		if (buttonId == BUTTON_BATTERY_DRAWER) {
+			return super.clickMenuButton(player, buttonId); // the battery drawer (MOD-679)
+		}
 		if (buttonId != BUTTON_TOGGLE_DOME || repeller == null
 				|| !(player instanceof ServerPlayer serverPlayer)
 				|| !(repeller.getLevel() instanceof ServerLevel serverLevel)) {

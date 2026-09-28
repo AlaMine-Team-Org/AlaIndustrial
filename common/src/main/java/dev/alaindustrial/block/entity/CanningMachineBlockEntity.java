@@ -38,7 +38,7 @@ import net.minecraft.world.level.storage.ValueOutput;
  * steak costs — punishing precisely the scrap-consolidation this machine exists for.
  */
 public final class CanningMachineBlockEntity extends MachineBlockEntity
-		implements Overclockable, MenuProvider {
+		implements Overclockable, MenuProvider, BatteryFed {
 	public static final int FOOD_SLOT = 0;
 	public static final int CAN_SLOT = 1;
 	public static final int OUTPUT_SLOT = 2;

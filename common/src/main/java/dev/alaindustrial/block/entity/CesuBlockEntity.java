@@ -111,8 +111,7 @@ public class CesuBlockEntity extends MachineBlockEntity implements MenuProvider 
 		if (room <= 0) {
 			return;
 		}
-		long budget = Math.min(Math.min(ItemEnergy.stackGet(source), room), EnergyTier.MV.maxVoltage());
-		long moved = -ItemEnergy.stackAdd(source, -budget);
+		long moved = ItemEnergy.discharge(source, Math.min(room, EnergyTier.MV.maxVoltage()));
 		if (moved <= 0) {
 			return;
 		}

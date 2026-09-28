@@ -788,6 +788,8 @@
   "gui.alaindustrial.upgrade_table.no_module": "ใส่โมดูลอัปเกรด",
   "gui.alaindustrial.upgrade_table.no_tool": "ใส่เครื่องมือไฟฟ้า",
   "gui.alaindustrial.upgrade_table.ready": "กำลังติดตั้งอัปเกรด",
+  "gui.alaindustrial.battery_drawer": "ช่องแบตเตอรี่",
+  "gui.alaindustrial.battery_drawer.hint": "จ่ายไฟให้เครื่องจากแบตเตอรี่ โดยไม่ต้องใช้สายเคเบิล",
   "gui.alaindustrial.upgrades": "อัปเกรด",
   "gui.alaindustrial.upgrades.overclock": "ชิป: %1$s · ความเร็ว ×%2$s · การใช้ไฟ ×%3$s",
   "gui.alaindustrial.vulcanizer.heat.campfire": "กองไฟ · ×%s",

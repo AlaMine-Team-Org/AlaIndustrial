@@ -121,6 +121,12 @@ public abstract class EnergyBlockEntity extends BlockEntity implements EnergyPor
 	 */
 	public final void serverTick(Level level, BlockPos pos, BlockState state) {
 		flushVisualSync();
+		// Ahead of the sleep gate on purpose (MOD-679): a starving machine sleeps between checks, and a
+		// battery drained only on its waking ticks would feed it once every IDLE_SLEEP_TICKS. Charge that
+		// arrived is the same news a cable delivery is, so it wakes the block the same way.
+		if (pullStoredCharge()) {
+			sleepTicks = 0;
+		}
 		if (sleepTicks > 0) {
 			sleepTicks--;
 			return;
@@ -134,6 +140,15 @@ public abstract class EnergyBlockEntity extends BlockEntity implements EnergyPor
 	 * ticks. Was {@code serverTick} before the idle-sleep gate (R-29) was introduced.
 	 */
 	protected abstract int onServerTick(Level level, BlockPos pos, BlockState state);
+
+	/**
+	 * Move charge from an item this block holds into its buffer, every tick, before the sleep gate. Returns
+	 * whether any EU arrived. Default: nothing to pull — only a machine with a battery drawer overrides it
+	 * ({@link MachineBlockEntity}, MOD-679).
+	 */
+	protected boolean pullStoredCharge() {
+		return false;
+	}
 
 	/** Wake a sleeping block so its next {@link #serverTick} runs {@link #onServerTick} immediately. */
 	public void wake() {

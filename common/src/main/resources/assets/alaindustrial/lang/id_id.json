@@ -788,6 +788,8 @@
   "gui.alaindustrial.upgrade_table.no_module": "Tambahkan modul peningkatan",
   "gui.alaindustrial.upgrade_table.no_tool": "Masukkan perkakas listrik",
   "gui.alaindustrial.upgrade_table.ready": "Memasang peningkatan",
+  "gui.alaindustrial.battery_drawer": "Slot baterai",
+  "gui.alaindustrial.battery_drawer.hint": "Menyalakan mesin dari baterai, tanpa kabel",
   "gui.alaindustrial.upgrades": "Peningkatan",
   "gui.alaindustrial.upgrades.overclock": "Chip: %1$s · kecepatan ×%2$s · konsumsi ×%3$s",
   "gui.alaindustrial.vulcanizer.heat.campfire": "Api unggun · ×%s",

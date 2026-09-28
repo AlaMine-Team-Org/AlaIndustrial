@@ -7,6 +7,7 @@ import dev.alaindustrial.core.energy.EnergyPort;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.upgrade.OverclockMath;
+import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.item.misc.OverclockerChipItem;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.skill.SkillMachine;
@@ -54,6 +55,8 @@ public abstract class MachineBlockEntity extends EnergyBlockEntity implements Wo
 	protected final NonNullList<ItemStack> items;
 	/** Count of machine-specific slots (indices 0..baseSlots-1); upgrade slots follow at the tail. */
 	protected final int baseSlots;
+	/** Container index of the battery drawer slot (MOD-679), or -1 for a machine without one. */
+	private final int batterySlot;
 	protected int progress;
 	protected int maxProgress;
 
@@ -79,7 +82,15 @@ public abstract class MachineBlockEntity extends EnergyBlockEntity implements Wo
 		// (0=input, 1=output, …)
 		// and their gametests untouched. `this instanceof` is well-defined here: the object's runtime
 		// type is the concrete subclass throughout super-construction.
-		int total = slots + (this instanceof MenuProvider && hasUpgradePanel() ? UPGRADE_SLOT_COUNT : 0);
+		boolean panel = this instanceof MenuProvider && hasUpgradePanel();
+		int total = slots + (panel ? UPGRADE_SLOT_COUNT : 0);
+		// The battery drawer (MOD-679) goes AFTER the upgrade block, at the very end: a save written before
+		// the drawer existed then loads with every index where it was and the new slot simply empty — no
+		// data migration, unlike MOD-083, whose slot went in front of the chips and moved them.
+		if (panel && this instanceof BatteryFed) {
+			total++;
+		}
+		this.batterySlot = this instanceof BatteryFed && panel ? total - 1 : -1;
 		this.items = NonNullList.withSize(total, ItemStack.EMPTY);
 	}
 
@@ -598,7 +609,47 @@ public abstract class MachineBlockEntity extends EnergyBlockEntity implements Wo
 	/** The stack in upgrade-block index {@code i} (0-based), or empty when there are no upgrade slots. */
 	public ItemStack getUpgradeStack(int i) {
 		int idx = baseSlots + i;
-		return idx >= baseSlots && idx < items.size() ? items.get(idx) : ItemStack.EMPTY;
+		return i >= 0 && i < UPGRADE_SLOT_COUNT && idx < items.size() && idx != batterySlot
+				? items.get(idx) : ItemStack.EMPTY;
+	}
+
+	// --- Battery drawer (MOD-679): one slot whose item the machine drains into its own buffer ---
+
+	/** Whether this machine has a battery drawer. */
+	public boolean hasBatterySlot() {
+		return batterySlot >= 0;
+	}
+
+	/** Container index of the battery drawer slot, or -1 when there is none. The last index when present. */
+	public int batterySlotIndex() {
+		return batterySlot;
+	}
+
+	/**
+	 * Drain the drawer's item into the buffer, at most one tier-voltage packet per tick — the most a cable
+	 * of this machine's tier could deliver in the same tick, so a battery is a portable wire, not a faster
+	 * one. Bounded by the room left too, so a full machine leaves the battery alone.
+	 */
+	@Override
+	protected boolean pullStoredCharge() {
+		if (batterySlot < 0) {
+			return false;
+		}
+		ItemStack source = items.get(batterySlot);
+		if (source.isEmpty()) {
+			return false;
+		}
+		long room = energy.getCapacity() - energy.getAmount();
+		if (room <= 0) {
+			return false;
+		}
+		long moved = ItemEnergy.discharge(source, Math.min(room, tier.maxVoltage()));
+		if (moved <= 0) {
+			return false;
+		}
+		energy.receiveInternal(moved);
+		setChanged();
+		return true;
 	}
 
 	/**
