@@ -8,66 +8,7 @@
 <title>Броня из Флюкс-ткани — Ala Industrial — Гайд</title>
 <link rel="icon" href="../favicon.png" type="image/png">
 <script src="../../assets/guide-site.js" defer></script>
-<style>
-  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
-  .recipe-card { background:var(--panel); border:2px solid var(--line2);
-    padding:10px 12px 12px; image-rendering:pixelated; }
-  .recipe-header { display:flex; justify-content:space-between; align-items:center;
-    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
-  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
-  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
-  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
-  
-  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
-    gap:2px; padding:4px; background:#6a6a6a;
-    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
-  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
-  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
-  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
-  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
-    text-align:center; line-height:1; }
-  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
-  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
-  
-  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
-    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
-    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
-                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
-  
-  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
-    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
-  .cell img { width:32px; height:32px; image-rendering:pixelated; }
-  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
-  .cell.result img { width:34px; height:34px; }
-  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
-    border:1px solid var(--line2); font-size:13px; padding:0 3px;
-    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
-    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
-  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
-    font-family:'VT323',monospace; line-height:1.05; }
-  .ricon-ph { font-size:16px; color:var(--muted2); }
-  
-  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
-    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
-    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
-  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
-    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
-    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
-  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
-  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
-  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
-    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
-    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
-  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
-  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
-  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
-  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
-    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
-  
-  .recipe-card.hidden { display:none; }
-  .recipe-section.hidden { display:none; }
-</style>
+
 <style>
   
   @font-face {
@@ -381,7 +322,7 @@
 <div class="group-title">Предметы</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="29 страниц">29</span></a>
-<a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="26 страниц">26</span></a>
+<a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="30 страниц">30</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="../items/index.html">Игровые предметы</a><span class="sep">/</span><span>Броня из Флюкс-ткани</span></div>
@@ -390,7 +331,7 @@
     <img class="icon" src="../../assets/item/fluxweave_chestplate_3d.png" alt="Броня из Флюкс-ткани" width="64" height="64">
     <div class="info">
       <h1>Броня из Флюкс-ткани</h1>
-      <div class="block-id">alaindustrial:fluxweave_chestplate</div>
+      <div class="block-id">alaindustrial:fluxweave_armor</div>
       <div class="tags"><span class="tag cat" style="background:#d97706">Игровые предметы</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">Реализовано</span><span class="tag">armor</span><span class="tag">fluxweave</span><span class="tag">eu-armor</span><span class="tag">tier-lv</span></div>
     </div>
   </div>
@@ -402,6 +343,8 @@
 
 <p>Ключевое правило: <strong>заряд включает бонусы, но не выключает защиту</strong>. На нуле EU/FE комплект продолжает работать как обычная броня своего материала — он не ломается, не пропадает и не теряет ни очка брони.</p>
 
+<p>Каждая часть комплекта — на своей странице, со своим рецептом: <a href="fluxweave_helmet.html">Флюкс-шлем</a>, <a href="fluxweave_chestplate.html">Флюкс-нагрудник</a>, <a href="fluxweave_leggings.html">Флюкс-поножи</a>, <a href="fluxweave_boots.html">Флюкс-ботинки</a>. Здесь — то, что верно для всех четырёх, и бонус за полный комплект.</p>
+
 <h2 id="энергия">Энергия</h2>
 
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Буфер (EU/FE)</td><td><strong>15 000</strong> на каждый предмет</td></tr><tr><td>Макс. вход (EU/FE/такт)</td><td><strong>32</strong> (потолок LV)</td></tr><tr><td>Пассивный расход</td><td><strong>1 EU/FE/сек</strong> на надетый заряженный предмет</td></tr><tr><td>Событийный расход</td><td><strong>200 EU/FE</strong> за пол-сердца регенерации сет-бонуса</td></tr></tbody></table>
@@ -412,7 +355,7 @@
 
 <p>Все бонусы — <strong>атрибуты</strong>, а не зелья: без частиц, без иконок на HUD и без конфликта с настоящими зельями. Действуют, только пока в предмете есть заряд.</p>
 
-<table><thead><tr><th>Слот</th><th>Защита</th><th>Бонус при заряде</th><th>Конфиг</th></tr></thead><tbody><tr><td>Шлем</td><td>2</td><td>Дыхание под водой (шанс не тратить воздух, как Respiration) + скорость плавания</td><td>3, 50</td></tr><tr><td>Нагрудник</td><td>6</td><td>Доп. стойкость к сильным ударам + сопротивление отбрасыванию</td><td>2, 10</td></tr><tr><td>Поножи</td><td>5</td><td>Скорость бега (пассивно) + <strong>шаг-ассист по тумблеру</strong></td><td>12, 60</td></tr><tr><td>Ботинки</td><td>2</td><td><strong>Частичное</strong> смягчение урона от падения</td><td>50</td></tr><tr><td>Сет 4/4</td><td>—</td><td>Мини-регенерация ниже полного здоровья</td><td>200</td></tr></tbody></table>
+<table><thead><tr><th>Слот</th><th>Защита</th><th>Бонус при заряде</th></tr></thead><tbody><tr><td><a href="fluxweave_helmet.html">Шлем</a></td><td>2</td><td>Дыхание под водой (шанс не тратить воздух, как Respiration) + скорость плавания</td></tr><tr><td><a href="fluxweave_chestplate.html">Нагрудник</a></td><td>6</td><td>Доп. стойкость к сильным ударам + сопротивление отбрасыванию</td></tr><tr><td><a href="fluxweave_leggings.html">Поножи</a></td><td>5</td><td>Скорость бега (пассивно) + <strong>шаг-ассист по тумблеру</strong></td></tr><tr><td><a href="fluxweave_boots.html">Ботинки</a></td><td>2</td><td><strong>Частичное</strong> смягчение урона от падения</td></tr><tr><td>Сет 4/4</td><td>—</td><td>Мини-регенерация ниже полного здоровья (оплачивает шлем)</td></tr></tbody></table>
 
 <p><strong>Шаг-ассист выключен по умолчанию.</strong> Включается клавишей (по умолчанию <strong>G</strong>, категория Ala Industrial). Флаг хранится на самих поножах, поэтому переживает перезаход и путешествует с предметом. Автоматический шаг меняет ощущение от передвижения, и это не всем удобно — поэтому он ждёт, пока его попросят.</p>
 
@@ -434,10 +377,9 @@
 
 <h2 id="рецепты">Рецепты</h2>
 
-<p>Каждый предмет требует <strong>четыре разных компонента</strong>: Флюкс-ткань, электронную схему, <a href="../components/battery.html">батарейку</a> и закалённое железо как силовой каркас. Ни один рецепт не сводится к «один материал на всю форму».</p>
+<p>Каждый предмет требует <strong>четыре разных компонента</strong>: Флюкс-ткань, электронную схему, <a href="../components/battery.html">батарейку</a> и закалённое железо как силовой каркас. Ни один рецепт не сводится к «один материал на всю форму». Схема каждого рецепта — на странице самой детали: <a href="fluxweave_helmet.html">шлем</a>, <a href="fluxweave_chestplate.html">нагрудник</a>, <a href="fluxweave_leggings.html">поножи</a>, <a href="fluxweave_boots.html">ботинки</a>.</p>
 
-
-<p>Заряд вложенной батарейки переходит в готовый предмет (все четыре рецепта типа ,: полная батарея на 2 000 EU/FE выходит из верстака уже заряженной — бонусы доступны сразу, без отдельной зарядки.</p>
+<p>Заряд вложенной батарейки переходит в готовый предмет: полная батарея на 2 000 EU/FE выходит из верстака уже заряженной — бонусы доступны сразу, без отдельной зарядки. На весь комплект уходит 10 Флюкс-тканей — 40 Флюкс-нитей.</p>
 
 <h2 id="прогрессия">Прогрессия</h2>
 
@@ -445,10 +387,9 @@
 
 <h2 id="связанное">Связанное</h2>
 
-<p><a href="../machines/galvanic_bath.html">Электрованна</a> — производит Флюкс-нить <a href="tempered_iron_armor.html">Броня из закалённого железа</a> — обычный набор без EU/FE <a href="energy_pack.html">Энергоранец</a> — эталон носимого EU/FE-предмета</p>
+<p><a href="fluxweave_helmet.html">Флюкс-шлем</a>, <a href="fluxweave_chestplate.html">Флюкс-нагрудник</a>, <a href="fluxweave_leggings.html">Флюкс-поножи</a>, <a href="fluxweave_boots.html">Флюкс-ботинки</a> — части комплекта <a href="../components/fluxweave.html">Флюкс-нить и Флюкс-ткань</a> — материал комплекта <a href="../machines/galvanic_bath.html">Электрованна</a> — производит Флюкс-нить <a href="tempered_iron_armor.html">Броня из закалённого железа</a> — обычный набор без EU/FE <a href="energy_pack.html">Энергоранец</a> — эталон носимого EU/FE-предмета</p>
 
-<h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="флюкс-нагрудник alaindustrial:fluxweave_chestplate" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Флюкс-ткань"><img src="../../assets/item/fluxweave_cloth_3d.png" alt="Флюкс-ткань" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="Флюкс-ткань"><img src="../../assets/item/fluxweave_cloth_3d.png" alt="Флюкс-ткань" width="32" height="32"></div> <div class="cell" title="Флюкс-ткань"><img src="../../assets/item/fluxweave_cloth_3d.png" alt="Флюкс-ткань" width="32" height="32"></div> <div class="cell" title="Электронная схема"><img src="../../assets/item/electronic_circuit_3d.png" alt="Электронная схема" width="32" height="32"></div> <div class="cell" title="Флюкс-ткань"><img src="../../assets/item/fluxweave_cloth_3d.png" alt="Флюкс-ткань" width="32" height="32"></div> <div class="cell" title="Закалённое железо"><img src="../../assets/item/tempered_iron_3d.png" alt="Закалённое железо" width="32" height="32"></div> <div class="cell" title="Батарея"><img src="../../assets/item/battery_3d.png" alt="Батарея" width="32" height="32"></div> <div class="cell" title="Закалённое железо"><img src="../../assets/item/tempered_iron_3d.png" alt="Закалённое железо" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Флюкс-нагрудник"><img src="../../assets/item/fluxweave_chestplate_3d.png" alt="Флюкс-нагрудник" width="32" height="32"></div><div class="result-name">Флюкс-нагрудник</div></div></div></div></div>
+
   </main>
 </div>
 
