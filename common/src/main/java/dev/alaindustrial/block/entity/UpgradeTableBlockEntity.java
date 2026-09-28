@@ -44,7 +44,7 @@ import org.jspecify.annotations.Nullable;
  * The upper half is scenery that mirrors the lit state.
  */
 public class UpgradeTableBlockEntity extends MachineBlockEntity
-		implements MenuProvider, Overclockable {
+		implements MenuProvider, Overclockable, BatteryFed {
 
 	/** The tool being upgraded. Stays in place across the whole operation and leaves as itself. */
 	public static final int TOOL_SLOT = 0;

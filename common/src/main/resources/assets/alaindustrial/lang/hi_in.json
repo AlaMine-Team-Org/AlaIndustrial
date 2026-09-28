@@ -788,6 +788,8 @@
   "gui.alaindustrial.upgrade_table.no_module": "एक उन्नयन मॉड्यूल जोड़ें",
   "gui.alaindustrial.upgrade_table.no_tool": "एक बिजली का औज़ार रखें",
   "gui.alaindustrial.upgrade_table.ready": "उन्नयन लगाया जा रहा है",
+  "gui.alaindustrial.battery_drawer": "बैटरी स्लॉट",
+  "gui.alaindustrial.battery_drawer.hint": "मशीन को बिना केबल के बैटरी से चलाता है",
   "gui.alaindustrial.upgrades": "अपग्रेड",
   "gui.alaindustrial.upgrades.overclock": "चिप: %1$s · गति ×%2$s · खपत ×%3$s",
   "gui.alaindustrial.vulcanizer.heat.campfire": "अलाव · ×%s",

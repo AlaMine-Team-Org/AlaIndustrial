@@ -70,7 +70,7 @@ import net.minecraft.world.level.storage.ValueOutput;
  * {@link EnergyTransactions}. Each loader supplies its own adapter
  * ({@code TankAsFluidStorage}/{@code TankAsResourceHandler}) — see {@link FluidPort} class doc.
  */
-public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost, MenuProvider {
+public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost, MenuProvider, BatteryFed {
 	/** Top row — fill the tank: a full lava/water bucket placed here is emptied into the tank. */
 	public static final int FILL_INPUT_SLOT = 0;
 	/** Top row — fill the tank: the empty bucket drops here after filling. */

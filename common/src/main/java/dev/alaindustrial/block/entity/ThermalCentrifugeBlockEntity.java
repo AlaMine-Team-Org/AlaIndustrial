@@ -57,7 +57,7 @@ import net.minecraft.world.level.storage.ValueOutput;
  * make the spin-up rule meaningless, because a player could park at full speed for nothing.
  */
 public final class ThermalCentrifugeBlockEntity extends MachineBlockEntity
-		implements Overclockable, MenuProvider, HeatConsumer {
+		implements Overclockable, MenuProvider, HeatConsumer, BatteryFed {
 	public static final int INPUT_SLOT = 0;
 	public static final int OUTPUT_SLOT = 1;
 	public static final int SLOT_COUNT = 2;

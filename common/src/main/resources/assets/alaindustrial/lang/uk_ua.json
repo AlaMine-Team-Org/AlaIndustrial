@@ -788,6 +788,8 @@
   "gui.alaindustrial.upgrade_table.no_module": "Додайте модуль покращення",
   "gui.alaindustrial.upgrade_table.no_tool": "Вставте електроінструмент",
   "gui.alaindustrial.upgrade_table.ready": "Встановлення покращення",
+  "gui.alaindustrial.battery_drawer": "Слот батареї",
+  "gui.alaindustrial.battery_drawer.hint": "Живить машину від батареї, без кабелю",
   "gui.alaindustrial.upgrades": "Покращення",
   "gui.alaindustrial.upgrades.overclock": "Чипів: %1$s · швидкість ×%2$s · витрата ×%3$s",
   "gui.alaindustrial.vulcanizer.heat.campfire": "Багаття · ×%s",

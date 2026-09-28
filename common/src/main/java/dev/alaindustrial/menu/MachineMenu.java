@@ -1,14 +1,18 @@
 package dev.alaindustrial.menu;
 
+import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
+import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.item.misc.OverclockerChipItem;
 import dev.alaindustrial.network.MachineStatsPayload;
 import dev.alaindustrial.network.NetworkDispatcher;
 import dev.alaindustrial.registry.ContentManifest;
 import dev.alaindustrial.registry.ModTags;
 import java.util.function.BooleanSupplier;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -67,6 +71,23 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 	private boolean panelOpen;
 	/** Client-only: whether the statistics panel is expanded (MOD-125). Docks opposite the upgrade panel. */
 	private boolean statsPanelOpen;
+	/**
+	 * Whether the battery drawer (MOD-679) is open. Unlike the two panels this one is known to BOTH sides:
+	 * the client tells the server through {@link #BUTTON_BATTERY_DRAWER}, because shift-click routing runs
+	 * on the server and must only send a battery into a drawer the player can see.
+	 */
+	private boolean batteryDrawerOpen;
+	/** Menu index of the battery drawer slot, or -1 when this machine has no drawer. */
+	private int batteryMenuIndex = -1;
+
+	/**
+	 * {@code clickMenuButton} id that toggles the battery drawer. Far above every id a machine menu uses
+	 * for its own buttons (the sawmill's modes, the repeller's dome, the assembler's grid), so a subclass
+	 * that handles its own ids first and then defers to {@code super} cannot mistake it for one of them.
+	 */
+	public static final int BUTTON_BATTERY_DRAWER = 679_000;
+	/** Empty-slot hint of the battery drawer: a sprite in the GUI atlas ({@code textures/gui/sprites/}). */
+	public static final Identifier BATTERY_SLOT_HINT = Industrialization.id("container/slot/battery");
 
 	protected MachineMenu(MenuType<?> type, int syncId, Inventory playerInventory,
 			Container machine, ContainerData data, ContainerLevelAccess access, Block block) {
@@ -81,6 +102,7 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 		if (hasPlayerInventory()) {
 			addPlayerInventory(playerInventory);
 		}
+		addBatterySlot();
 		addDataSlots(data);
 	}
 
@@ -109,6 +131,12 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 	 * both sides agree even though the client is backed by a dummy container.
 	 */
 	protected final int baseSlotCount() {
+		// Server side the container IS the block entity, which knows its own layout, including the battery
+		// drawer slot (MOD-679) that sits after the upgrade block and would throw a size-based guess off by
+		// one. The client stub holds only machine + upgrade slots, so the formula below still holds there.
+		if (machine instanceof MachineBlockEntity be) {
+			return be.upgradeSlotStart();
+		}
 		return hasUpgradePanel() ? machine.getContainerSize() - UPGRADE_SLOT_COUNT : machine.getContainerSize();
 	}
 
@@ -244,6 +272,82 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 	public boolean togglePanel() {
 		panelOpen = !panelOpen;
 		return panelOpen;
+	}
+
+	// --- Battery drawer (MOD-679) ------------------------------------------------------------------
+
+	/** Whether this machine has a battery drawer, decided from the block so both sides agree. */
+	public boolean hasBatteryDrawer() {
+		return hasUpgradePanel() && ContentManifest.isBatteryFed(block);
+	}
+
+	/**
+	 * Append the drawer slot LAST, after the player inventory, so every index a menu already had, and
+	 * every test and quick-move range built on them, stays exactly where it was.
+	 *
+	 * <p>Server side the slot is bound to the block entity's drawer index. The client stub container has no
+	 * room for it, and needs none: vanilla syncs a slot's item by MENU index, so a one-slot container of its
+	 * own is enough to hold what the server sends. It starts off-screen; the screen places it once it knows
+	 * where its energy bar is ({@link #placeBatterySlot}).
+	 */
+	private void addBatterySlot() {
+		if (!hasBatteryDrawer()) {
+			return;
+		}
+		if (machine instanceof MachineBlockEntity be) {
+			if (!be.hasBatterySlot()) {
+				return; // defensive: block and block entity disagree; no drawer beats a shifted menu
+			}
+			batteryMenuIndex = slots.size();
+			addSlot(new BatterySlot(machine, be.batterySlotIndex(), -1000, -1000, this::isBatteryDrawerOpen));
+		} else {
+			batteryMenuIndex = slots.size();
+			addSlot(new BatterySlot(new SimpleContainer(1), 0, -1000, -1000, this::isBatteryDrawerOpen));
+		}
+	}
+
+	/** The drawer slot, or {@code null} when this machine has none. */
+	public @Nullable Slot batterySlot() {
+		return batteryMenuIndex >= 0 ? slots.get(batteryMenuIndex) : null;
+	}
+
+	/**
+	 * Move the drawer slot to ({@code x}, {@code y}); client-only, called by the screen. Same rebuild-and-
+	 * swap as {@link #repositionUpgradeSlots}: {@link Slot#x} is final, and the item lives in the container.
+	 */
+	public void placeBatterySlot(int x, int y) {
+		if (batteryMenuIndex < 0) {
+			return;
+		}
+		Slot old = slots.get(batteryMenuIndex);
+		if (old.x == x && old.y == y) {
+			return;
+		}
+		BatterySlot moved = new BatterySlot(old.container, old.getContainerSlot(), x, y, this::isBatteryDrawerOpen);
+		moved.index = batteryMenuIndex;
+		slots.set(batteryMenuIndex, moved);
+	}
+
+	public boolean isBatteryDrawerOpen() {
+		return batteryDrawerOpen;
+	}
+
+	/** Set the drawer state locally; the screen pairs it with {@link #BUTTON_BATTERY_DRAWER} to the server. */
+	public void setBatteryDrawerOpen(boolean open) {
+		batteryDrawerOpen = open;
+	}
+
+	/**
+	 * The drawer toggle, server side. A subclass with buttons of its own handles its ids and defers the
+	 * rest here with {@code super}, so the drawer works in every machine without each one knowing of it.
+	 */
+	@Override
+	public boolean clickMenuButton(Player player, int id) {
+		if (id == BUTTON_BATTERY_DRAWER && batteryMenuIndex >= 0) {
+			batteryDrawerOpen = !batteryDrawerOpen;
+			return true;
+		}
+		return super.clickMenuButton(player, id);
 	}
 
 	// --- Statistics panel (MOD-125) ---------------------------------------------------------------
@@ -481,7 +585,18 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 			int base = baseSlotCount();
 			int invStart = base + (hasUpgradePanel() ? UPGRADE_SLOT_COUNT : 0);
 			int invEnd = invStart + 36;
-			if (index < invStart) {
+			boolean fromDrawer = index == batteryMenuIndex;
+			if (fromDrawer) {
+				// The drawer (MOD-679, after the inventory) -> back into the player inventory.
+				if (!moveItemStackTo(stack, invStart, invEnd, true)) {
+					return ItemStack.EMPTY;
+				}
+			} else if (index >= invStart && batteryDrawerOpen && batteryMenuIndex >= 0
+					&& ItemEnergy.canDischarge(stack)
+					&& moveItemStackTo(stack, batteryMenuIndex, batteryMenuIndex + 1, false)) {
+				// A battery from the inventory goes to the drawer, but only while it is OPEN, so a closed
+				// drawer never swallows a drill the player meant to put somewhere else.
+			} else if (index < invStart) {
 				// A machine or upgrade slot → dump into the player inventory.
 				if (!moveItemStackTo(stack, invStart, invEnd, true)) {
 					return ItemStack.EMPTY;
@@ -503,7 +618,7 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 			} else {
 				slot.setChanged();
 			}
-			if (index < invStart) {
+			if (index < invStart || fromDrawer) {
 				// Tell the slot what actually left it (MOD-492). Vanilla's own quick-move does this —
 				// CraftingMenu and AbstractFurnaceMenu both end with slot.onTake — and ours did not, so a
 				// slot that charges for its product on onTake was free to shift-click past. That is how the
@@ -562,6 +677,36 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 		@Override
 		public boolean mayPlace(ItemStack stack) {
 			return kind.accepts(stack);
+		}
+	}
+
+	/**
+	 * The battery drawer slot (MOD-679). Hidden while the drawer is closed: vanilla gates drawing, hovering
+	 * and clicking on {@link Slot#isActive()}. Takes anything that can give EU back; a crystal blank is
+	 * refused because it only ever fills up. Hoppers never reach it: the block entity leaves it out of
+	 * {@code getSlotsForFace}, like the upgrade slots.
+	 */
+	public static final class BatterySlot extends Slot {
+		private final BooleanSupplier visible;
+
+		public BatterySlot(Container container, int index, int x, int y, BooleanSupplier visible) {
+			super(container, index, x, y);
+			this.visible = visible;
+		}
+
+		@Override
+		public boolean isActive() {
+			return visible.getAsBoolean();
+		}
+
+		@Override
+		public boolean mayPlace(ItemStack stack) {
+			return ItemEnergy.canDischarge(stack);
+		}
+
+		@Override
+		public Identifier getNoItemIcon() {
+			return BATTERY_SLOT_HINT;
 		}
 	}
 

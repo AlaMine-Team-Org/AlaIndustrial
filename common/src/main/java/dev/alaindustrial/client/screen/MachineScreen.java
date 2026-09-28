@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.Rect2i;
@@ -65,6 +67,8 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 
 	private UpgradePanelController panel;
 	private StatsPanelController statsPanel;
+	/** The battery drawer's key and geometry (MOD-679); follows whichever energy bar this screen draws. */
+	private final BatteryDrawerController drawer = new BatteryDrawerController();
 
 	public MachineScreen(T menu, Inventory inventory, Component title) {
 		super(menu, inventory, title);
@@ -82,6 +86,10 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 		// (Re)build the panel controller — re-clamps the persisted offset to this screen size on resize.
 		this.panel = new UpgradePanelController(this.menu, this.leftPos, this.topPos, this.width, this.height);
 		this.statsPanel = new StatsPanelController(this.menu, this.leftPos, this.topPos, this.width, this.height);
+		// A player who opened the drawer on the last machine finds it open on this one (session memory).
+		if (this.menu.hasBatteryDrawer() && BatteryDrawerController.rememberedOpen && !this.menu.isBatteryDrawerOpen()) {
+			toggleBatteryDrawer(false);
+		}
 	}
 
 	// --- Rendering: subclass frame in the background, upgrade panel as a top overlay ---
@@ -89,7 +97,43 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 	@Override
 	public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		super.extractBackground(graphics, mouseX, mouseY, partialTick);
+		// The drawer goes down BEFORE the frame, so the frame's edge covers its inner end and it reads as
+		// sliding out from behind the machine (MOD-679). Its geometry is the bar from the previous frame.
+		boolean drawerShown = this.menu.hasBatteryDrawer() && drawer.placed();
+		if (drawerShown && this.menu.isBatteryDrawerOpen()) {
+			graphics.blit(RenderPipelines.GUI_TEXTURED, BatteryDrawerController.ATLAS,
+					this.leftPos + drawer.drawerX(), this.topPos + drawer.drawerY(),
+					(float) drawer.drawerU(), (float) BatteryDrawerController.DRAWER_V,
+					BatteryDrawerController.DRAWER_W, BatteryDrawerController.DRAWER_H,
+					BatteryDrawerController.ATLAS_W, BatteryDrawerController.ATLAS_H);
+		}
 		drawMachineFrame(graphics, mouseX, mouseY, partialTick);
+		if (drawerShown) {
+			int u = this.menu.isBatteryDrawerOpen() ? BatteryDrawerController.KEY_U_ON
+					: drawer.isOverKey(mouseX, mouseY, this.leftPos, this.topPos)
+							? BatteryDrawerController.KEY_U_HOVER : BatteryDrawerController.KEY_U_OFF;
+			graphics.blit(RenderPipelines.GUI_TEXTURED, BatteryDrawerController.ATLAS,
+					this.leftPos + drawer.keyX(), this.topPos + drawer.keyY(),
+					(float) u, (float) BatteryDrawerController.KEY_V,
+					BatteryDrawerController.KEY_W, BatteryDrawerController.KEY_H,
+					BatteryDrawerController.ATLAS_W, BatteryDrawerController.ATLAS_H);
+		}
+	}
+
+	/**
+	 * Open or close the battery drawer (MOD-679): locally at once, and on the server through the vanilla
+	 * menu-button channel, since shift-click routing runs there and must know the drawer is open.
+	 */
+	private void toggleBatteryDrawer(boolean sound) {
+		boolean open = !this.menu.isBatteryDrawerOpen();
+		this.menu.setBatteryDrawerOpen(open);
+		BatteryDrawerController.rememberedOpen = open;
+		if (this.minecraft != null && this.minecraft.gameMode != null) {
+			this.minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, MachineMenu.BUTTON_BATTERY_DRAWER);
+		}
+		if (sound) {
+			AbstractWidget.playButtonClickSound(Minecraft.getInstance().getSoundManager());
+		}
 	}
 
 	/** Each machine screen draws its own frame + dynamic sprites here (was its {@code extractBackground} body). */
@@ -166,6 +210,10 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 	 * internally so callers no longer pass the atlas explicitly.
 	 */
 	protected int renderEnergyBar(GuiGraphicsExtractor graphics, EnergyBarSpec spec) {
+		if (this.menu.hasBatteryDrawer() && drawer.track(spec, this.imageWidth)) {
+			// The bar tells the drawer where it lives; the slot follows (MOD-679).
+			this.menu.placeBatterySlot(drawer.slotItemX(), drawer.slotItemY());
+		}
 		int capacity = this.menu.getCapacity();
 		int energy = this.menu.getEnergy();
 		int eFill = capacity > 0 ? (int) ((long) energy * EnergyBarSpec.HEIGHT / capacity) : 0;
@@ -665,6 +713,14 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 					Component.translatable("gui.alaindustrial.stats.title"), mouseX, mouseY);
 			return;
 		}
+		if (this.menu.hasBatteryDrawer() && drawer.isOverKey(mouseX, mouseY, this.leftPos, this.topPos)) {
+			List<FormattedCharSequence> lines = new ArrayList<>();
+			lines.addAll(this.font.split(Component.translatable("gui.alaindustrial.battery_drawer"), 200));
+			lines.addAll(this.font.split(Component.translatable("gui.alaindustrial.battery_drawer.hint")
+					.withStyle(ChatFormatting.GRAY), 200));
+			graphics.setTooltipForNextFrame(this.font, lines, mouseX, mouseY);
+			return;
+		}
 		if (this.menu.isStatsPanelOpen()
 				&& statsPanel.isOverPanel(mouseX, mouseY, this.leftPos, this.topPos)) {
 			// Modal over its own footprint: the row tooltips are emitted while drawing, and nothing from
@@ -718,6 +774,9 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 		if (this.menu.isStatsPanelOpen()) {
 			areas.add(statsPanel.panelArea(this.leftPos, this.topPos));
 		}
+		if (this.menu.hasBatteryDrawer() && this.menu.isBatteryDrawerOpen() && drawer.placed()) {
+			areas.add(drawer.drawerArea(this.leftPos, this.topPos));
+		}
 		return areas;
 	}
 
@@ -726,6 +785,12 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 	@Override
 	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
 		int btn = event.button();
+		// The battery key (MOD-679) sits inside the frame, where nothing else answers a click.
+		if (btn == InputConstants.MOUSE_BUTTON_LEFT && this.menu.hasBatteryDrawer()
+				&& drawer.isOverKey(event.x(), event.y(), this.leftPos, this.topPos)) {
+			toggleBatteryDrawer(true);
+			return true;
+		}
 		// The gear always toggles the panel (it stays visible in the panel's transparent corner).
 		if (btn == InputConstants.MOUSE_BUTTON_LEFT && this.menu.hasUpgradePanel()
 				&& panel.isOverGear(event.x(), event.y(), this.leftPos, this.topPos)) {
@@ -801,6 +866,10 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 	@Override
 	protected boolean hasClickedOutside(double mx, double my, int guiLeft, int guiTop) {
 		if (this.menu.isPanelOpen() && panel.isOverPanel(mx, my, this.leftPos, this.topPos)) {
+			return false;
+		}
+		// The open drawer sticks out of the frame; a click on it is not a click that drops the held stack.
+		if (this.menu.isBatteryDrawerOpen() && drawer.isOverDrawer(mx, my, this.leftPos, this.topPos)) {
 			return false;
 		}
 		return super.hasClickedOutside(mx, my, guiLeft, guiTop);

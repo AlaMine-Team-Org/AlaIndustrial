@@ -788,6 +788,8 @@
   "gui.alaindustrial.upgrade_table.no_module": "업그레이드 모듈을 넣으세요",
   "gui.alaindustrial.upgrade_table.no_tool": "전동 도구를 넣으세요",
   "gui.alaindustrial.upgrade_table.ready": "업그레이드 장착 중",
+  "gui.alaindustrial.battery_drawer": "배터리 슬롯",
+  "gui.alaindustrial.battery_drawer.hint": "케이블 없이 배터리로 기계에 전력을 공급합니다",
   "gui.alaindustrial.upgrades": "업그레이드",
   "gui.alaindustrial.upgrades.overclock": "칩: %1$s · 속도 ×%2$s · 소비 ×%3$s",
   "gui.alaindustrial.vulcanizer.heat.campfire": "모닥불 · ×%s",

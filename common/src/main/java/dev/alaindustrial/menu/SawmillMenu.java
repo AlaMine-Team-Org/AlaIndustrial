@@ -61,6 +61,9 @@ public class SawmillMenu extends MachineMenu {
 	 */
 	@Override
 	public boolean clickMenuButton(Player player, int buttonId) {
+		if (buttonId == BUTTON_BATTERY_DRAWER) {
+			return super.clickMenuButton(player, buttonId); // the battery drawer (MOD-679)
+		}
 		if (sawmill == null || !(player instanceof ServerPlayer)
 				|| buttonId < 0 || buttonId >= SawmillMode.values().length) {
 			return false;

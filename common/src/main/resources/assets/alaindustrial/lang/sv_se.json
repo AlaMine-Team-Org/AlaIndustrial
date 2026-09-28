@@ -788,6 +788,8 @@
   "gui.alaindustrial.upgrade_table.no_module": "Lägg till en uppgraderingsmodul",
   "gui.alaindustrial.upgrade_table.no_tool": "Lägg i ett eldrivet verktyg",
   "gui.alaindustrial.upgrade_table.ready": "Monterar uppgraderingen",
+  "gui.alaindustrial.battery_drawer": "Batterifack",
+  "gui.alaindustrial.battery_drawer.hint": "Driver maskinen med ett batteri, utan kabel",
   "gui.alaindustrial.upgrades": "Uppgraderingar",
   "gui.alaindustrial.upgrades.overclock": "Chip: %1$s · hastighet ×%2$s · förbrukning ×%3$s",
   "gui.alaindustrial.vulcanizer.heat.campfire": "Lägereld · ×%s",

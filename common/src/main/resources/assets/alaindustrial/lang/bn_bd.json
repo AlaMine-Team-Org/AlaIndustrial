@@ -788,6 +788,8 @@
   "gui.alaindustrial.upgrade_table.no_module": "একটি উন্নয়ন মডিউল যোগ করুন",
   "gui.alaindustrial.upgrade_table.no_tool": "একটি বৈদ্যুতিক যন্ত্র রাখুন",
   "gui.alaindustrial.upgrade_table.ready": "উন্নয়ন লাগানো হচ্ছে",
+  "gui.alaindustrial.battery_drawer": "ব্যাটারি স্লট",
+  "gui.alaindustrial.battery_drawer.hint": "তার ছাড়াই ব্যাটারি থেকে যন্ত্র চালায়",
   "gui.alaindustrial.upgrades": "আপগ্রেড",
   "gui.alaindustrial.upgrades.overclock": "চিপ: %1$s · গতি ×%2$s · খরচ ×%3$s",
   "gui.alaindustrial.vulcanizer.heat.campfire": "আগুনের কুণ্ড · ×%s",

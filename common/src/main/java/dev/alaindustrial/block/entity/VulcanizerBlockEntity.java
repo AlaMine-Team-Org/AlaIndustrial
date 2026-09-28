@@ -31,7 +31,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 
 /** Two-input LV processing machine: raw rubber + sulfur dust + external heat → rubber. */
 public final class VulcanizerBlockEntity extends MachineBlockEntity
-		implements Overclockable, MenuProvider, HeatConsumer {
+		implements Overclockable, MenuProvider, HeatConsumer, BatteryFed {
 	public static final int RAW_RUBBER_SLOT = 0;
 	public static final int SULFUR_SLOT = 1;
 	public static final int OUTPUT_SLOT = 2;

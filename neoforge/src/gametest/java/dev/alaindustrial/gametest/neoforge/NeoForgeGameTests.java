@@ -36,6 +36,7 @@ import dev.alaindustrial.gametest.LightningRodScenarios;
 import dev.alaindustrial.gametest.MachineEnergyScenarios;
 import dev.alaindustrial.gametest.ReactorScenarios;
 import dev.alaindustrial.gametest.ReactorSteamScenarios;
+import dev.alaindustrial.gametest.BatteryDrawerScenarios;
 import dev.alaindustrial.gametest.BatteryScenarios;
 import dev.alaindustrial.gametest.CrystalPrimingScenarios;
 import dev.alaindustrial.gametest.CesuScenarios;
@@ -328,6 +329,16 @@ public final class NeoForgeGameTests {
 				CrystalPrimingScenarios::crystal02BlankRefusesToDischarge);
 		registerTest(event, "crystal_every_tier_finishes_into_its_own", 40, true,
 				CrystalPrimingScenarios::crystal03EveryTierFinishesIntoItsOwn);
+		registerTest(event, "battery_drawer_drains_stack_into_buffer", 40, true,
+				BatteryDrawerScenarios::drawer01DrainsStackIntoBuffer);
+		registerTest(event, "battery_drawer_drains_while_the_machine_sleeps", 40, true,
+				BatteryDrawerScenarios::drawer02DrainsWhileTheMachineSleeps);
+		registerTest(event, "battery_drawer_slot_is_last_and_hidden", 40, true,
+				BatteryDrawerScenarios::drawer03SlotIsLastAndHiddenFromAutomation);
+		registerTest(event, "battery_drawer_only_consumers", 40, true,
+				BatteryDrawerScenarios::drawer04OnlyConsumersHaveADrawer);
+		registerTest(event, "battery_drawer_blank_refused_full_machine_waits", 40, true,
+				BatteryDrawerScenarios::drawer05BlankRefusedAndFullMachineWaits);
 		registerTest(event, "battery_charging_a_stack_costs_per_item", 40, true,
 				BatteryScenarios::battery01ChargingAStackCostsPerItem);
 		registerTest(event, "battery_full_stack_still_charges", 40, true,

@@ -788,6 +788,8 @@
   "gui.alaindustrial.upgrade_table.no_module": "Bir yükseltme modülü ekle",
   "gui.alaindustrial.upgrade_table.no_tool": "Elektrikli bir alet koy",
   "gui.alaindustrial.upgrade_table.ready": "Yükseltme takılıyor",
+  "gui.alaindustrial.battery_drawer": "Pil yuvası",
+  "gui.alaindustrial.battery_drawer.hint": "Makineyi kablosuz, bir pille çalıştırır",
   "gui.alaindustrial.upgrades": "Yükseltmeler",
   "gui.alaindustrial.upgrades.overclock": "Çip: %1$s · hız ×%2$s · tüketim ×%3$s",
   "gui.alaindustrial.vulcanizer.heat.campfire": "Kamp ateşi · ×%s",

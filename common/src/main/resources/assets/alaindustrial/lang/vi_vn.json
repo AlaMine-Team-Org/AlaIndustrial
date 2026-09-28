@@ -788,6 +788,8 @@
   "gui.alaindustrial.upgrade_table.no_module": "Thêm một mô-đun nâng cấp",
   "gui.alaindustrial.upgrade_table.no_tool": "Đặt một dụng cụ điện vào",
   "gui.alaindustrial.upgrade_table.ready": "Đang lắp nâng cấp",
+  "gui.alaindustrial.battery_drawer": "Ô pin",
+  "gui.alaindustrial.battery_drawer.hint": "Cấp điện cho máy từ pin, không cần cáp",
   "gui.alaindustrial.upgrades": "Nâng cấp",
   "gui.alaindustrial.upgrades.overclock": "Chip: %1$s · tốc độ ×%2$s · tiêu thụ ×%3$s",
   "gui.alaindustrial.vulcanizer.heat.campfire": "Lửa trại · ×%s",

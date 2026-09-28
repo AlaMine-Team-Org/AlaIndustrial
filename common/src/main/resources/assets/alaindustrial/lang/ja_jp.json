@@ -788,6 +788,8 @@
   "gui.alaindustrial.upgrade_table.no_module": "アップグレードモジュールを入れてください",
   "gui.alaindustrial.upgrade_table.no_tool": "電動工具を入れてください",
   "gui.alaindustrial.upgrade_table.ready": "改造を取り付け中",
+  "gui.alaindustrial.battery_drawer": "電池スロット",
+  "gui.alaindustrial.battery_drawer.hint": "ケーブルなしで電池から機械に給電します",
   "gui.alaindustrial.upgrades": "アップグレード",
   "gui.alaindustrial.upgrades.overclock": "チップ: %1$s ・速度 ×%2$s ・消費 ×%3$s",
   "gui.alaindustrial.vulcanizer.heat.campfire": "焚き火 · ×%s",

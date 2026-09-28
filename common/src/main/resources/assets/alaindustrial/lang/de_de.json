@@ -788,6 +788,8 @@
   "gui.alaindustrial.upgrade_table.no_module": "Lege ein Aufrüstmodul dazu",
   "gui.alaindustrial.upgrade_table.no_tool": "Lege ein Elektrowerkzeug ein",
   "gui.alaindustrial.upgrade_table.ready": "Aufrüstung wird eingebaut",
+  "gui.alaindustrial.battery_drawer": "Batterieplatz",
+  "gui.alaindustrial.battery_drawer.hint": "Versorgt die Maschine aus einer Batterie, ohne Kabel",
   "gui.alaindustrial.upgrades": "Verbesserungen",
   "gui.alaindustrial.upgrades.overclock": "Chips: %1$s · Tempo ×%2$s · Verbrauch ×%3$s",
   "gui.alaindustrial.vulcanizer.heat.campfire": "Lagerfeuer · ×%s",

@@ -788,6 +788,8 @@
   "gui.alaindustrial.upgrade_table.no_module": "Dodaj moduł ulepszenia",
   "gui.alaindustrial.upgrade_table.no_tool": "Włóż narzędzie elektryczne",
   "gui.alaindustrial.upgrade_table.ready": "Montowanie ulepszenia",
+  "gui.alaindustrial.battery_drawer": "Gniazdo baterii",
+  "gui.alaindustrial.battery_drawer.hint": "Zasila maszynę z baterii, bez kabla",
   "gui.alaindustrial.upgrades": "Ulepszenia",
   "gui.alaindustrial.upgrades.overclock": "Układy: %1$s · szybkość ×%2$s · pobór ×%3$s",
   "gui.alaindustrial.vulcanizer.heat.campfire": "Ognisko · ×%s",

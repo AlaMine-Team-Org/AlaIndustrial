@@ -788,6 +788,8 @@
   "gui.alaindustrial.upgrade_table.no_module": "放入一个升级模块",
   "gui.alaindustrial.upgrade_table.no_tool": "放入一件电动工具",
   "gui.alaindustrial.upgrade_table.ready": "正在安装改造",
+  "gui.alaindustrial.battery_drawer": "电池槽",
+  "gui.alaindustrial.battery_drawer.hint": "无需线缆，用电池为机器供电",
   "gui.alaindustrial.upgrades": "升级",
   "gui.alaindustrial.upgrades.overclock": "芯片：%1$s · 速度 ×%2$s · 消耗 ×%3$s",
   "gui.alaindustrial.vulcanizer.heat.campfire": "营火 · ×%s",
